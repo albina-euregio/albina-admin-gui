@@ -57,17 +57,24 @@
   </ng-template>
   <ng-template pTemplate="body" let-observation>
     <tr (click)="onClick(observation)" style="cursor: pointer" [ngStyle]="getTableRowStyle(observation)">
-      <td style="padding: 1rem 0;white-space: nowrap">
-        {{ observation.eventDate | localizedDate : "dd.MM.yyyy HH:mm" }}
-      </td>
-      <td style="padding: 1rem 0">{{ observation.authorName }}</td>
-      <td style="padding: 1rem 0">
-        {{ observation.locationName }}
-        <i
-          *ngIf="observation.latitude && observation.longitude"
-          class="fa fa-map-marker"
-          title="{{ 'observations.hasCoordinates' | translate }}"
-        ></i>
+      <td colspan="3" style="padding: 1rem 0">
+        <span class="text-truncate d-block" style="width: 30em">
+          <i class="fa fa-calendar"></i>
+          {{ observation.eventDate | localizedDate : "dd.MM.yyyy HH:mm" }}
+        </span>
+        <span class="text-truncate d-block" style="width: 30em">
+          <i class="fa fa-user"></i>
+          {{ observation.authorName }}
+        </span>
+        <span class="text-truncate d-block" style="width: 30em">
+          <i class="fa fa-globe"></i>
+          {{ observation.locationName }}
+          <i
+            *ngIf="observation.latitude && observation.longitude"
+            class="fa fa-map-marker"
+            title="{{ 'observations.hasCoordinates' | translate }}"
+          ></i>
+        </span>
       </td>
       <td style="padding: 0">
         <span *ngFor="let problem of observation.avalancheProblems">
