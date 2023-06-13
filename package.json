@@ -17,7 +17,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start-dev": "ng serve --configuration development",
+    "start-dev": "ng serve --configuration=development",
     "start-aran": "ng serve --configuration=aran",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -39,7 +39,7 @@
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
     "@angular/upgrade": "^16.0.0",
-    "@asymmetrik/ngx-leaflet": "^15.0.1",
+    "@asymmetrik/ngx-leaflet": "^16.0.1",
     "@auth0/angular-jwt": "^5.1.2",
     "@ngx-translate/core": "^14.0.0",
     "@types/geojson": "^7946.0.10",
