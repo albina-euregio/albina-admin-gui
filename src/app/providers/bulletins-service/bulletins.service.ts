@@ -177,6 +177,34 @@ export class BulletinsService {
     this.activeDate = date;
   }
 
+  /**
+   * Returns a date that's offset from the activeDate by a given amount.
+   * 
+   * @param offset - Number of days to offset. Can be positive (future) or negative (past).
+   * @returns Date offset from the activeDate or null if not found or out of bounds.
+   */
+  private getDateOffset(offset: number): Date | null {
+    if (!this.activeDate) {
+        return null;
+    }
+
+    const index = this.dates.findIndex(d => d.getTime() === this.activeDate.getTime());
+
+    if (index === -1 || index + offset < 0 || index + offset >= this.dates.length) {
+        return null;
+    }
+
+    return this.dates[index + offset];
+  }
+
+  getNextDate(): Date | null {
+    return this.getDateOffset(1);
+  }
+
+  getPreviousDate(): Date | null {
+    return this.getDateOffset(-1);
+  }
+
   getCopyDate(): Date {
     return this.copyDate;
   }
