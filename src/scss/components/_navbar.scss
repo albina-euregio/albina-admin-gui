@@ -1,4 +1,10 @@
-.logo {
-    height: 32px;
-    width: auto;
+.navbar {
+    .navbar__logo {
+        height: 32px;
+        width: auto;
+    }
+
+    .navbar__lang-toggle {
+        text-transform: uppercase;
+    }
 }

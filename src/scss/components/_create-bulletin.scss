@@ -1,0 +1,18 @@
+.create-bulletin {
+    .create-bulletin__map {
+        height: 100vh;
+        width: 100%;
+    }
+
+    .create-bulletin__map--afternoon {
+        visibility: hidden;
+    }
+
+    .create-bulletin__map--am {
+        height: 50vh;
+        visibility: visible;
+    }
+
+    .create-bulletin__map-label {
+    }
+}

@@ -1,3 +1,6 @@
+@import "@phosphor-icons/web/light";
+@import "@phosphor-icons/web/bold";
+
 @import "bootstrap/scss/functions";
 
 // Abstracts
@@ -15,7 +18,11 @@
 
 // Base
 @import "base/typography";
+@import "base/buttons";
 
 // Components
+@import "components/app";
 @import "components/navbar";
 //@import "components/footer";
+@import "components/bulletins";
+@import "components/create-bulletin";

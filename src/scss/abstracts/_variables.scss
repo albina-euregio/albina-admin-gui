@@ -1,4 +1,4 @@
-$white: #ffffff;
+$white: #fff !default;
 $gray-100: #f2f7fa !default;
 $gray-200: #e6eef2 !default;
 $gray-300: #dce5ea !default;
@@ -8,16 +8,16 @@ $gray-600: #838e94 !default;
 $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
-$black: #000000;
+$black: #000 !default;
 
-$primary-color: #19abff;
-$primary-subtle-color: #bdddf1;
-$primary-dark-color: #1e83ba;
-$primary-pale-color: #eaf4fb;
+$primary: #19abff;
+$primary-subtle: #bdddf1;
+$primary-dark: #1e83ba;
+$primary-pale: #eaf4fb;
 
-$secondary-color: #838e94;
-$secondary-dark-color: #343a40;
-$secondary-light-color: #e6eef2;
+$secondary: #838e94;
+$secondary-dark: #343a40;
+$secondary-light: #e6eef2;
 
 $success: #198754;
 $success-subtle: #d1e7dd;
@@ -33,5 +33,16 @@ $avalanche-2: #ffff00;
 $avalanche-3: #ff9900;
 $avalanche-4: #ff0000;
 $avalanche-5: #000000;
+
+// Borders
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+
+// Buttons
+$btn-padding-x: 40px;
+$input-btn-font-size: 12px;
+
+// Forms
 
 // Navbar
