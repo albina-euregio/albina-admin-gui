@@ -292,7 +292,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.showAfternoonMap = false;
 
     this.isAccordionDangerRatingOpen = false;
-    this.isAccordionAvalancheProblemOpen = false;
+    this.isAccordionAvalancheProblemOpen = true;
     this.isAccordionDangerDescriptionOpen = false;
     this.isAccordionSnowpackStructureOpen = false;
     this.isAccordionTendencyOpen = false;
@@ -427,6 +427,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.autoSave && this.autoSave !== undefined) {
       this.autoSave.unsubscribe();
     }
+  }
+
+  // #TODO
+  loadBulletin(date) {
+    this.bulletinsService.setActiveDate(date);
+    this.bulletinsService.setIsUpdate(false);
+    this.bulletinsService.setIsEditable(false);
   }
 
   downloadJsonBulletin() {
@@ -724,19 +731,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     const map = document.getElementById("map");
     const afternoonMap = document.getElementById("afternoonMap");
     if (this.showAfternoonMap) {
-      map.classList.remove("col-md-12");
-      map.classList.add("col-md-6");
-      afternoonMap.classList.remove("col-md-0");
-      afternoonMap.classList.add("col-md-6");
-      afternoonMap.style.borderBottom = "1px solid";
-      afternoonMap.style.borderLeft = "1px solid";
-      afternoonMap.style.borderColor = "#cfd8dc";
+      map.classList.add("create-bulletin__map--am");
+      afternoonMap.classList.add("create-bulletin__map--am");
     } else {
-      map.classList.remove("col-md-6");
-      map.classList.add("col-md-12");
-      afternoonMap.classList.remove("col-md-6");
-      afternoonMap.classList.add("col-md-0");
-      afternoonMap.style.border = "";
+      map.classList.remove("create-bulletin__map--am");
+      afternoonMap.classList.remove("create-bulletin__map--am");
     }
     this.initMaps();
     this.updateInternalBulletins();

@@ -131,6 +131,7 @@
       "ownRegions" : "Eigene Regionen",
       "foreignRegions": "Fremde Regionen",
       "externalRegions": "Externe Regionen",
+      "mapSelectRegion": "Regionen auf der Karte auswählen.",
       "label" : {
         "avalancheProblems" : "Lawinenproblem",
         "aspects" : "Expositionen",
