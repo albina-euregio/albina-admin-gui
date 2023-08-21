@@ -21,6 +21,7 @@ export class FullLayoutComponent {
   public disabled: boolean = false;
   public status: { isopen: boolean } = { isopen: false };
   public showChat: boolean;
+  public isNavCollapsed = true;
 
   public message: string;
 
