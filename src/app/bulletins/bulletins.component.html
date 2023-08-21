@@ -1,84 +1,77 @@
-<div class="animated fadeIn">
+<div class="bulletins animated fadeIn">
   <!--/.row-->
-  <div class="row">
+  <div class="row mt-5">
     <div class="col-lg-12">
-      <div class="card">
-        <div class="card-header">
-          <i class="fa fa-snowflake-o"></i>{{ "bulletins.title" | translate }}
-        </div>
 
-        <div class="card-block">
-          <table class="table table-bordered table-striped table-condensed" style="margin-bottom: 0">
-            <thead>
-              <tr>
-                <th>{{ "bulletins.table.title.date" | translate }}</th>
-                <th>{{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}</th>
-                <th *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">{{ "bulletins.table.title.status." + region | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let date of bulletinsService.dates" style="height: 52px" (click)="editBulletin(date, false)" [style.color]="isPast(date) && !isToday(date) ? 'rgba(0,0,0,0.5)' : ''">
-                <td>{{ date | localizedDate:'fullDate' }}</td>
-                <td [style.background-color]="bulletinsService.isLocked(date, authenticationService.getActiveRegionId()) ? 'rgba(255,0,0,0.2)' : ''" [style.background-color]="'rgba(0,0,0,0.05)'">
-                  <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined" class="badge badge-danger">{{ "bulletins.table.status.missing" | translate }}</span>
-                  <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.draft" class="badge badge-warning">{{ "bulletins.table.status.draft" | translate }}</span>
-                  <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.submitted" class="badge badge-success">{{ "bulletins.table.status.submitted" | translate }}</span>
-                  <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.published" class="badge badge-done">{{ "bulletins.table.status.published" | translate }}</span>
-                  <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.updated" class="badge badge-warning">{{ "bulletins.table.status.updated" | translate }}</span>
-                  <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.resubmitted" class="badge badge-success">{{ "bulletins.table.status.resubmitted" | translate }}</span>
-                  <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.republished" class="badge badge-done">{{ "bulletins.table.status.republished" | translate }}</span>
-                  <i *ngIf="bulletinsService.isLocked(date, authenticationService.getActiveRegionId())" class="fa fa-lock float-right"></i>
-                </td>
-                <td *ngFor="let region of authenticationService.getActiveRegion().neighborRegions" [style.background-color]="bulletinsService.isLocked(date, region) ? 'rgba(255,0,0,0.2)' : ''">
-                  <span *ngIf="getRegionStatus(region, date) === bulletinStatus.missing || getRegionStatus(region, date) === undefined" class="badge badge-danger">{{ "bulletins.table.status.missing" | translate }}</span>
-                  <span *ngIf="getRegionStatus(region, date) === bulletinStatus.draft" class="badge badge-warning">{{ "bulletins.table.status.draft" | translate }}</span>
-                  <span *ngIf="getRegionStatus(region, date) === bulletinStatus.submitted" class="badge badge-success">{{ "bulletins.table.status.submitted" | translate }}</span>
-                  <span *ngIf="getRegionStatus(region, date) === bulletinStatus.published" class="badge badge-done">{{ "bulletins.table.status.published" | translate }}</span>
-                  <span *ngIf="getRegionStatus(region, date) === bulletinStatus.updated" class="badge badge-warning">{{ "bulletins.table.status.updated" | translate }}</span>
-                  <span *ngIf="getRegionStatus(region, date) === bulletinStatus.resubmitted" class="badge badge-success">{{ "bulletins.table.status.resubmitted" | translate }}</span>
-                  <span *ngIf="getRegionStatus(region, date) === bulletinStatus.republished" class="badge badge-done">{{ "bulletins.table.status.republished" | translate }}</span>
-                  <i *ngIf="bulletinsService.isLocked(date, region)" class="fa fa-lock float-right"></i>
-                </td>
-                <td style="width: 200px">
-                  <!-- create -->
-                  <!-- <button *ngIf="showCreateButton(date)" type="button" class="btn btn-primary btn-sm float-right" (click)="editBulletin(date, false)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.create' | translate }}"><i class="fa fa-plus"></i></button> -->
-                  <!-- publish all -->
-                  <button *ngIf="showPublishAllButton(date)" type="button" class="btn btn-danger btn-sm" (click)="publishAll($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.publishAll' | translate }}"><i class="fa fa-warning"></i></button>
-                  <!-- caaml -->
-                  <button *ngIf="showCaamlButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="showCaaml($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.caaml' | translate }}"><i class="fa fa-file-text"></i></button>
-                  <!-- json -->
-                  <button *ngIf="showJsonButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="showJson($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.json' | translate }}"><i class="fa fa-file-text"></i></button>
-                  <!-- info -->
-                  <button *ngIf="showInfoButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="showPublicationInfo($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.info' | translate }}"><i class="fa fa-info"></i></button>
-                  <!-- media file -->
-                  <button *ngIf="showMediaFileButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="openMediaFileDialog($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.mediaFile' | translate }}"><i class="fa fa-microphone"></i></button>
-                  <!-- copy -->
-                  <button *ngIf="showCopyButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="copy($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.copy' | translate }}"><i class="fa fa-copy"></i></button>
-                  <!-- preview -->
-                  <button *ngIf="showPreviewButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="preview($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.preview' | translate }}"><i class="fa fa-eye"></i></button>
-                  <!-- paste -->
-                  <button *ngIf="showPasteButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="paste($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.paste' | translate }}"><i class="fa fa-paste"></i></button>
-                  <!-- cancel -->
-                  <button *ngIf="showPasteButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="cancelCopy($event)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.cancel' | translate }}"><i class="fa fa-close"></i></button>
-                  <!-- submit -->
-                  <button *ngIf="showSubmitButton(date)" type="button" class="btn btn-primary btn-sm float-right" (click)="submit($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.submit' | translate }}"><i class="fa fa-send"></i></button>
-                  <!-- publish update (not 5PM nor 8AM) -->
-                  <button *ngIf="showPublishButton(date)" type="button" class="btn btn-danger btn-sm float-right" (click)="publish($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.publish' | translate }}"><i class="fa fa-send"></i></button>
-                  <!-- spinning icon -->
-                  <button *ngIf="showSpinningIconButton(date)" type="button" class="btn btn-primary btn-sm float-right"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
-                  <!-- edit -->
-                  <button *ngIf="showEditButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="edit($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.edit' | translate }}"><i class="fa fa-pencil"></i></button>
-                  <!-- update -->
-                  <button *ngIf="showUpdateButton(date)" type="button" class="btn btn-danger btn-sm float-right" (click)="createUpdate($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.update' | translate }}"><i class="fa fa-plus"></i></button>
-                  <!-- check -->
-                  <button *ngIf="showCheckButton(date)" type="button" class="btn btn-primary btn-sm float-right" (click)="check($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.check' | translate }}"><i class="fa fa-check"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+            <th>{{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}</th>
+            <th class="text-center" *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">{{ "bulletins.table.title.status." + region | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let date of bulletinsService.dates" style="height: 52px" (click)="editBulletin(date, false)" [style.color]="isPast(date) && !isToday(date) ? 'rgba(0,0,0,0.5)' : ''">
+            <td>{{ date | localizedDate:'fullDate' }}</td>
+            <td class="text-center" [style.background-color]="bulletinsService.isLocked(date, authenticationService.getActiveRegionId()) ? 'rgba(255,0,0,0.2)' : ''" [style.background-color]="'rgba(0,0,0,0.05)'">
+              <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined" class="badge bg-danger"><i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span>
+              <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.draft" class="badge bg-warning"><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span>
+              <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.submitted" class="badge bg-success"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span>
+              <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.published" class="badge bg-done"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span>
+              <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.updated" class="badge bg-warning"><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span>
+              <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.resubmitted" class="badge bg-success"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span>
+              <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.republished" class="badge bg-done"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span>
+              <i *ngIf="bulletinsService.isLocked(date, authenticationService.getActiveRegionId())" class="ph-bold ph-lock"></i>
+            </td>
+            <td class="text-center" *ngFor="let region of authenticationService.getActiveRegion().neighborRegions" [style.background-color]="bulletinsService.isLocked(date, region) ? 'rgba(255,0,0,0.2)' : ''">
+              <span *ngIf="getRegionStatus(region, date) === bulletinStatus.missing || getRegionStatus(region, date) === undefined" class="badge bg-danger"><i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span>
+              <span *ngIf="getRegionStatus(region, date) === bulletinStatus.draft" class="badge bg-warning"><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span>
+              <span *ngIf="getRegionStatus(region, date) === bulletinStatus.submitted" class="badge bg-success"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span>
+              <span *ngIf="getRegionStatus(region, date) === bulletinStatus.published" class="badge bg-done"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span>
+              <span *ngIf="getRegionStatus(region, date) === bulletinStatus.updated" class="badge bg-warning"><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span>
+              <span *ngIf="getRegionStatus(region, date) === bulletinStatus.resubmitted" class="badge bg-success"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span>
+              <span *ngIf="getRegionStatus(region, date) === bulletinStatus.republished" class="badge bg-done"><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span>
+              <i *ngIf="bulletinsService.isLocked(date, region)" class="ph-bold ph-lock"></i>
+            </td>
+            <td style="width: 200px">
+              <!-- create -->
+              <!-- <button *ngIf="showCreateButton(date)" type="button" class="btn btn-primary btn-sm float-right" (click)="editBulletin(date, false)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.create' | translate }}"><i class="fa fa-plus"></i></button> -->
+              <!-- publish all -->
+              <button *ngIf="showPublishAllButton(date)" type="button" class="btn btn-danger btn-sm" (click)="publishAll($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.publishAll' | translate }}"><i class="fa fa-warning"></i></button>
+              <!-- caaml -->
+              <button *ngIf="showCaamlButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="showCaaml($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.caaml' | translate }}"><i class="fa fa-file-text"></i></button>
+              <!-- json -->
+              <button *ngIf="showJsonButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="showJson($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.json' | translate }}"><i class="fa fa-file-text"></i></button>
+              <!-- info -->
+              <button *ngIf="showInfoButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="showPublicationInfo($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.info' | translate }}"><i class="fa fa-info"></i></button>
+              <!-- media file -->
+              <button *ngIf="showMediaFileButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="openMediaFileDialog($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.mediaFile' | translate }}"><i class="fa fa-microphone"></i></button>
+              <!-- copy -->
+              <button *ngIf="showCopyButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="copy($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.copy' | translate }}"><i class="fa fa-copy"></i></button>
+              <!-- preview -->
+              <button *ngIf="showPreviewButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="preview($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.preview' | translate }}"><i class="fa fa-eye"></i></button>
+              <!-- paste -->
+              <button *ngIf="showPasteButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="paste($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.paste' | translate }}"><i class="fa fa-paste"></i></button>
+              <!-- cancel -->
+              <button *ngIf="showPasteButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="cancelCopy($event)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.cancel' | translate }}"><i class="fa fa-close"></i></button>
+              <!-- submit -->
+              <button *ngIf="showSubmitButton(date)" type="button" class="btn btn-primary btn-sm float-right" (click)="submit($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.submit' | translate }}"><i class="fa fa-send"></i></button>
+              <!-- publish update (not 5PM nor 8AM) -->
+              <button *ngIf="showPublishButton(date)" type="button" class="btn btn-danger btn-sm float-right" (click)="publish($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.publish' | translate }}"><i class="fa fa-send"></i></button>
+              <!-- spinning icon -->
+              <button *ngIf="showSpinningIconButton(date)" type="button" class="btn btn-primary btn-sm float-right"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
+              <!-- edit -->
+              <button *ngIf="showEditButton(date)" type="button" class="btn btn-secondary btn-sm" (click)="edit($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.edit' | translate }}"><i class="fa fa-pencil"></i></button>
+              <!-- update -->
+              <button *ngIf="showUpdateButton(date)" type="button" class="btn btn-danger btn-sm float-right" (click)="createUpdate($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.update' | translate }}"><i class="fa fa-plus"></i></button>
+              <!-- check -->
+              <button *ngIf="showCheckButton(date)" type="button" class="btn btn-primary btn-sm float-right" (click)="check($event, date)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.check' | translate }}"><i class="fa fa-check"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
     <!--/.col-->
   </div>
   <!--/.row-->
