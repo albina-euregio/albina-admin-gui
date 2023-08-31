@@ -2949,4 +2949,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       return true;
     }
   }
+
+  getRegionNames(bulletin): string {
+    const regionNames = bulletin.savedRegions.map(
+      regionCode => this.regionsService.getRegionName(regionCode)
+    );
+    return regionNames.join(', ');
+  }
 }
