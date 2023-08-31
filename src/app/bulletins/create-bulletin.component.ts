@@ -31,6 +31,7 @@ import "leaflet.sync";
 import { Renderer2 } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
+import { Console } from "console";
 
 declare var L: any;
 
@@ -327,6 +328,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit() {
+    this.initializeComponent();
+  }
+
+  initializeComponent() {
     // for reload iframe on change language
     this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
       () => this.pmUrl = this.getTextcatUrl()
@@ -429,11 +434,22 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  // #TODO
   loadBulletin(date) {
-    this.bulletinsService.setActiveDate(date);
-    this.bulletinsService.setIsUpdate(false);
-    this.bulletinsService.setIsEditable(false);
+    if (this.authenticationService.getActiveRegionId() && this.authenticationService.getActiveRegionId() !== undefined && (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) || this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))) {
+      this.bulletinsService.setIsUpdate(false);
+      this.bulletinsService.setActiveDate(date);
+
+      if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
+        this.bulletinsService.lockRegion(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate());
+        this.bulletinsService.setIsEditable(true);
+        this.initializeComponent();
+      }
+    } else {
+      this.bulletinsService.setActiveDate(date);
+      this.bulletinsService.setIsUpdate(false);
+      this.bulletinsService.setIsEditable(false);
+      this.initializeComponent();
+    }
   }
 
   downloadJsonBulletin() {
@@ -978,6 +994,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   selectBulletin(bulletin: BulletinModel) {
+    console.log(bulletin);
     if (!this.editRegions) {
       if (this.checkAvalancheProblems()) {
         this.deselectBulletin();
