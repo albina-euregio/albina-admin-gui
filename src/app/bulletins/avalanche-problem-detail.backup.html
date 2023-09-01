@@ -1,77 +1,90 @@
 <div class="avalanche-problem-container">
-  <div class="form-group">
-    <label class="form-label" for="">{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
-    <div *ngIf="!disabled" class="avalanche-problem-detail__problem-icons">
+  <div class="form-group row">
+    <label class="col-md-12 form-control-label" for="textarea-input"
+      ><strong>{{ "bulletins.create.label.avalancheProblems" | translate }}</strong></label
+    >
+    <div *ngIf="!disabled" class="col-md-12">
       <img
         *ngIf="isAvalancheProblem('new_snow')"
         src="./assets/img/New_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.new_snow)"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('new_snow')"
         src="./assets/img/New_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.new_snow)"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('wind_slab')"
         src="./assets/img/Drifting_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wind_slab)"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('wind_slab')"
         src="./assets/img/Drifting_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wind_slab)"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('persistent_weak_layers')"
         src="./assets/img/Persistent_weak_layers_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('persistent_weak_layers')"
         src="./assets/img/Persistent_weak_layers_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('wet_snow')"
         src="./assets/img/Wet_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wet_snow)"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('wet_snow')"
         src="./assets/img/Wet_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wet_snow)"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('gliding_snow')"
         src="./assets/img/Gliding_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.gliding_snow)"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('gliding_snow')"
         src="./assets/img/Gliding_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.gliding_snow)"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="authenticationService.getActiveRegion().enableAvalancheProblemCornices && isAvalancheProblem('cornices')"
         src="./assets/img/Cornices_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.cornices)"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="
@@ -79,7 +92,8 @@
         "
         src="./assets/img/Cornices_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.cornices)"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
@@ -89,7 +103,8 @@
         "
         src="./assets/img/No_distinct_problem_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.no_distinct_problem)"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="
@@ -98,82 +113,96 @@
         "
         src="./assets/img/No_distinct_problem_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.no_distinct_problem)"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
     </div>
-    <div *ngIf="disabled" class="avalanche-problem-detail__problem-icons">
+    <div *ngIf="disabled" class="col-md-12">
       <img
         *ngIf="isAvalancheProblem('new_snow')"
         src="./assets/img/New_snow_c.svg"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('new_snow')"
         src="./assets/img/New_snow_bw.svg"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('wind_slab')"
         src="./assets/img/Drifting_snow_c.svg"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('wind_slab')"
         src="./assets/img/Drifting_snow_bw.svg"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('persistent_weak_layers')"
         src="./assets/img/Persistent_weak_layers_c.svg"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('persistent_weak_layers')"
         src="./assets/img/Persistent_weak_layers_bw.svg"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('wet_snow')"
         src="./assets/img/Wet_snow_c.svg"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('wet_snow')"
         src="./assets/img/Wet_snow_bw.svg"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('gliding_snow')"
         src="./assets/img/Gliding_snow_c.svg"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="!isAvalancheProblem('gliding_snow')"
         src="./assets/img/Gliding_snow_bw.svg"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('cornices')"
         src="./assets/img/Cornices_c.svg"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="
           authenticationService.getActiveRegion().enableAvalancheProblemCornices && !isAvalancheProblem('cornices')
         "
         src="./assets/img/Cornices_bw.svg"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
 
       <img
         *ngIf="isAvalancheProblem('no_distinct_problem')"
         src="./assets/img/No_distinct_problem_c.svg"
-        class="avalanche-problem-detail__problem-icon"
+        width="90"
+        style="padding-right: 15px"
       />
       <img
         *ngIf="
@@ -181,20 +210,24 @@
           !isAvalancheProblem('no_distinct_problem')
         "
         src="./assets/img/No_distinct_problem_bw.svg"
-        class="avalanche-problem-detail__problem-icon is-disabled"
+        width="90"
+        style="opacity: 0.3; padding-right: 15px"
       />
     </div>
   </div>
-
   <div class="form-group row">
     <div class="col-md-6">
-      <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
+      <label class="form-control-label" for="textarea-input"
+        ><strong>{{ "bulletins.create.label.aspects" | translate }}</strong></label
+      >
       <div>
         <app-aspects [(aspects)]="avalancheProblemModel.aspects" [disabled]="disabled" [size]="150"></app-aspects>
       </div>
     </div>
     <div class="col-md-6">
-      <label class="form-label" for="">{{ "bulletins.create.label.elevation" | translate }}</label>
+      <label class="form-control-label" for="textarea-input"
+        ><strong>{{ "bulletins.create.label.elevation" | translate }}</strong></label
+      >
       <div>
         <table>
           <tbody>

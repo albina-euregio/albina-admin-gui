@@ -1,0 +1,23 @@
+.accordion-header {
+  justify-content: space-between;
+  display: flex;
+  padding: $accordion-padding-y $accordion-padding-x;
+}
+.accordion-button {
+  @include font-m-bold;
+  padding: 0;
+}
+
+.accordion-button:not(.collapsed) {
+  box-shadow: none;
+}
+.accordion-button::after {
+  // Icon
+  order: -1;
+  margin-left: 0;
+  margin-right: $space-2;
+}
+
+.accordion-body {
+  padding-bottom: $space-6;
+}

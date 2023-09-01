@@ -132,6 +132,8 @@
       "foreignRegions": "Fremde Regionen",
       "externalRegions": "Externe Regionen",
       "mapSelectRegion": "Regionen auf der Karte auswählen.",
+      "statusHeader": "Status der Lawinenvorhersage",
+      "suggestions": "Vorschläge",
       "label" : {
         "avalancheProblems" : "Lawinenproblem",
         "aspects" : "Expositionen",
@@ -145,6 +147,11 @@
         "elevationLow" : "Über",
         "tendencyComment" : "Beschreibung der Tendenz",
         "notes" : "Notizen"
+      },
+      "copyRegion": {
+        "label": "Warnregion in einem anderen Bericht einfügen",
+        "select": "Einfügen in...",
+        "currentBulletin": "Diesen Bericht"
       },
       "title" : {
         "avalancheProblem" : "Lawinenprobleme",

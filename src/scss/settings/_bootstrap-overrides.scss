@@ -1,0 +1,110 @@
+// Spaces
+
+$spacers: (
+  0: $space-0,
+  1: $space-1,
+  2: $space-2,
+  3: $space-3,
+  4: $space-4,
+  6: $space-6,
+  8: $space-8,
+  16: $space-16,
+  32: $space-32
+);
+
+// Colors
+$white: #fff;
+$gray-100: #f2f7fa;
+$gray-200: #e6eef2;
+$gray-300: #dce5ea;
+$gray-400: #c5d2d8;
+$gray-500: #b3bfc5;
+$gray-600: #838e94;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
+$primary: $albina-blue;
+$primary-subtle: $albina-blue-subtle;
+$primary-dark: $albina-blue-dark;
+$primary-pale: $albina-blue-pale;
+
+$secondary: $gray-600;
+$secondary-dark: $gray-800;
+$secondary-light: $gray-200;
+
+$success: #198754;
+$success-subtle: #d1e7dd;
+$danger: #dc3545;
+$danger-subtle: #f8d7da;
+$warning: #f5e960;
+$warning-subtle: #ffffcc;
+$info: #19abff;
+$info-subtle: #f6fbfd;
+
+// Typography
+
+$h1-font-size: 14px;
+$h2-font-size: 14px;
+$h3-font-size: 14px;
+$h4-font-size: 14px;
+$h5-font-size: 14px;
+$h6-font-size: 14px;
+
+$headings-margin-bottom: 0;
+
+$font-sizes: (
+  1: $h1-font-size,
+  2: $h2-font-size,
+  3: $h3-font-size,
+  4: $h4-font-size,
+  5: $h5-font-size,
+  6: $h6-font-size
+);
+
+// Borders
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+
+// Buttons
+$btn-padding-x: $space-2;
+$btn-padding-y: $space-2;
+
+// Dropdowns
+$dropdown-border-color: $gray-300;
+
+// Accordions
+$accordion-button-focus-box-shadow: none;
+$accordion-button-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzAwMDAwMCIgdmlld0JveD0iMCAwIDI1NiAyNTYiPjxwYXRoIGQ9Ik0yMTMuNjYsMTAxLjY2bC04MCw4MGE4LDgsMCwwLDEtMTEuMzIsMGwtODAtODBBOCw4LDAsMCwxLDUzLjY2LDkwLjM0TDEyOCwxNjQuNjlsNzQuMzQtNzQuMzVhOCw4LDAsMCwxLDExLjMyLDExLjMyWiI+PC9wYXRoPjwvc3ZnPg==");
+$accordion-button-active-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzAwMDAwMCIgdmlld0JveD0iMCAwIDI1NiAyNTYiPjxwYXRoIGQ9Ik0xODEuNjYsMTMzLjY2bC04MCw4MGE4LDgsMCwwLDEtMTEuMzItMTEuMzJMMTY0LjY5LDEyOCw5MC4zNCw1My42NmE4LDgsMCwwLDEsMTEuMzItMTEuMzJsODAsODBBOCw4LDAsMCwxLDE4MS42NiwxMzMuNjZaIj48L3BhdGg+PC9zdmc+");
+$accordion-padding-x: $space-6;
+$accordion-padding-y: $space-6;
+$accordion-body-padding-y: 0;
+$accordion-body-padding-x: $space-6;
+$accordion-bg: transparent;
+$accordion-button-bg: transparent;
+$accordion-button-active-bg: transparent;
+
+// Forms
+$input-border-color: $gray-400;
+$form-label-font-weight: 600;
+$form-label-margin-bottom: $space-1;
+
+// Navbar
+
+// Badges
+$badge-font-size: 10px;
+$badge-font-weight: 600;
+.badge {
+  text-transform: uppercase;
+}
+
+.badge.bg-warning {
+  color: $black;
+}
+
+.badge.bg-orange {
+  background-color: $orange;
+}

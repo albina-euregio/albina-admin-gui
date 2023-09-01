@@ -1,0 +1,21 @@
+$avatar-size: 24px;
+
+.user-avatar {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: $space-2;
+  align-items: center;
+}
+
+.user-avatar__img {
+  width: $avatar-size;
+  height: $avatar-size;
+  object-fit: cover;
+  border-radius: $avatar-size;
+  border: 1px solid $gray-300;
+}
+
+.user-avatar__name {
+  @include font-s;
+  color: $secondary;
+}

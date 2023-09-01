@@ -1,28 +1,30 @@
-@import "@phosphor-icons/web/light";
+@import "@phosphor-icons/web/regular";
 @import "@phosphor-icons/web/bold";
 
 @import "bootstrap/scss/functions";
 
-// Abstracts
-@import "abstracts/variables";
-@import "abstracts/mixins";
-@import "abstracts/functions";
-
-// Default bootstrap variables
-@import "bootstrap/scss/variables";
-
-@import "abstracts/colors";
+// settings
+@import "settings/units";
+@import "settings/mixins";
+@import "settings/functions";
+@import "settings/colors";
+@import "settings/typography";
 
 // Bootstrap
+@import "settings/bootstrap-overrides";
+@import "bootstrap/scss/variables";
 @import "bootstrap/scss/bootstrap";
 
 // Base
-@import "base/typography";
-@import "base/buttons";
+@import "components/buttons";
+@import "components/navbar";
+@import "components/avatars";
+@import "components/accordion";
+@import "components/banner";
+//@import "components/footer";
 
 // Components
-@import "components/app";
-@import "components/navbar";
-//@import "components/footer";
-@import "components/bulletins";
-@import "components/create-bulletin";
+@import "sections/app";
+@import "sections/bulletins";
+@import "sections/create-bulletin";
+@import "sections/create-bulletin-form";

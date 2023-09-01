@@ -127,6 +127,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   public showTranslationsSnowpackStructureComment: boolean;
   public showTranslationsTendencyComment: boolean;
 
+  public showStatusOfAllRegions: boolean = false;
+
   public loadingErrorModalRef: BsModalRef;
   @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
 
@@ -182,11 +184,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     public bulletinsService: BulletinsService,
     private dialog: MatDialog,
     private localStorageService: LocalStorageService,
-    private authenticationService: AuthenticationService,
+    public authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private settingsService: SettingsService,
     private constantsService: ConstantsService,
-    private regionsService: RegionsService,
+    public regionsService: RegionsService,
     public copyService: CopyService,
     private mapService: MapService,
     private applicationRef: ApplicationRef,
@@ -974,7 +976,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.editBulletinRegions();
   }
 
-  copyBulletin() {
+  copyBulletin(srcBulletin: BulletinModel) { 
+    this.selectBulletin(srcBulletin);
+      
     this.setTexts();
     if (this.checkAvalancheProblems()) {
       if (this.activeBulletin) {
@@ -993,8 +997,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
+  toggleBulletin(bulletin: BulletinModel) {
+    if (this.activeBulletin && bulletin === this.activeBulletin) {
+      this.deselectBulletin();
+    } else {
+      this.selectBulletin(bulletin);
+    }
+  }
+  
   selectBulletin(bulletin: BulletinModel) {
-    console.log(bulletin);
     if (!this.editRegions) {
       if (this.checkAvalancheProblems()) {
         this.deselectBulletin();
@@ -2955,5 +2966,21 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       regionCode => this.regionsService.getRegionName(regionCode)
     );
     return regionNames.join(', ');
+  }
+
+  getActiveRegionStatus(date) {
+    const regionStatusMap = this.bulletinsService.statusMap.get(this.authenticationService.getActiveRegionId());
+    if (regionStatusMap)
+      return regionStatusMap.get(date.getTime());
+    else
+      return Enums.BulletinStatus.missing;
+  }
+
+  getRegionStatus(region, date) {
+    const regionStatusMap = this.bulletinsService.statusMap.get(region);
+    if (regionStatusMap)
+      return regionStatusMap.get(date.getTime());
+    else
+      return Enums.BulletinStatus.missing;
   }
 }
