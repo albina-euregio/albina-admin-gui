@@ -7,7 +7,7 @@
         <h1 class="create-bulletin__current-date font-m-bold">
           {{ bulletinsService.getActiveDate() | localizedDate : "EEEE," }}<br />
           {{ bulletinsService.getActiveDate() | localizedDate : "d. MMMM y" }}
-        </h1> 
+        </h1>
         <nav class="btn-group create-bulleting__days-nav">
           <button
             type="button"
@@ -418,14 +418,21 @@
       </div>
     </div>
 
-    <div class="region-form__banner banner banner-warning-strong">
+    <div
+      *ngIf="bulletinsService.getIsEditable() && hasSuggestions(activeBulletin) && !editRegions"
+      class="region-form__banner banner banner-warning-strong"
+    >
       <p class="banner__text">
         <i class="ph ph-lightbulb"></i>
         There are suggestions for this region
       </p>
       <div class="btn-group banner__actions">
-        <button type="button" class="btn btn-sm btn-outline-dark"><i class="ph ph-x"></i> <span>Decline</span></button>
-        <button type="button" class="btn btn-sm btn-dark"><i class="ph ph-check"></i><span>Accept</span></button>
+        <button (click)="rejectSuggestions($event, activeBulletin)" type="button" class="btn btn-sm btn-outline-dark">
+          <i class="ph ph-x"></i> <span>Decline</span>
+        </button>
+        <button (click)="acceptSuggestions($event, activeBulletin)" type="button" class="btn btn-sm btn-dark">
+          <i class="ph ph-check"></i><span>Accept</span>
+        </button>
       </div>
     </div>
 
@@ -439,147 +446,113 @@
       </div>
     </div>
     <main class="region-form__content">
-      <div class="accordion accordion-flush" id="region-form-accordion">
+      <accordion class="accordion">
         <!-- Avalanche problems -->
-        <div class="accordion-item">
-          <h2 class="accordion-header accordion-header--with-buttons">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#region-form-avalanche-problems"
-              aria-expanded="false"
-              aria-controls="region-form-avalanche-problems"
-            >
-              {{ "bulletins.create.title.avalancheProblem" | translate }}
-            </button>
+        <accordion-group
+          class="accordion-group"
+          [isOpen]="isAccordionAvalancheProblemOpen"
+          (isOpenChange)="accordionChanged($event, 'avalancheProblem')"
+        >
+          <div accordion-heading class="accordion-header accordion-header--with-buttons">
+            <h2 class="accordion-header__title">
+              <i *ngIf="!isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-right"></i>
+              <i *ngIf="isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-down"></i>
+              {{ "bulletins.create.title.avalancheProblem" | translate
+              }}<span *ngIf="activeBulletin.hasDaytimeDependency"
+                >&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span
+              >
+            </h2>
 
             <div class="btn-group accordion-header__buttons">
-              <button
-                *ngIf="activeBulletin.hasDaytimeDependency"
-                [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
-                type="reset"
-                class="btn btn-sm btn-icon btn-primary"
-                (click)="daytimeDependencyChanged($event, false)"
-                data-toggle="tooltip"
+              <div
+                class="form-check"
                 title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
+                (click)="
+                  daytimeDependencyChanged($event, !activeBulletin.hasDaytimeDependency); $event.stopPropagation()
+                "
               >
-                <i class="ph ph-clock"></i>
-              </button>
-
-              <button
-                *ngIf="!activeBulletin.hasDaytimeDependency"
-                [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
-                type="reset"
-                class="btn btn-sm btn-icon btn-bare"
-                (click)="daytimeDependencyChanged($event, true)"
-                data-toggle="tooltip"
-                title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
-              >
-                <i class="ph ph-clock"></i>
-              </button>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [(ngModel)]="activeBulletin.hasDaytimeDependency"
+                  id="daytimeDependency"
+                />
+                <label class="form-label" for="daytimeDependency"> AM/PM </label>
+              </div>
 
               <button
                 [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)"
                 *ngIf="bulletinsService.getIsEditable()"
-                (click)="createAvalancheProblem(false)"
-                class="btn btn-primary btn-icon btn-sm ml-1"
+                (click)="createAvalancheProblem(false); $event.stopPropagation()"
+                class="btn btn-primary btn-icon btn-sm ml-2"
                 title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
               >
                 <i class="ph ph-plus"></i>
               </button>
             </div>
-          </h2>
-          <!-- Avalanche problems panel content -->
-          <div
-            id="region-form-avalanche-problems"
-            class="accordion-collapse -collapse show"
-            data-bs-parent="#region-form-accordion"
-          >
-            <div class="accordion-body">
-              <div class="form-group row">
-                <div *ngIf="!activeBulletin.hasDaytimeDependency" class="col-md-12">
-                  <app-avalanche-problem
-                    [bulletinModel]="activeBulletin"
-                    [bulletinDaytimeDescription]="activeBulletin.forenoon"
-                    [afternoon]="false"
-                    [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
-                  ></app-avalanche-problem>
-                </div>
-                <div *ngIf="activeBulletin.hasDaytimeDependency" class="col-md-6" style="float: left">
-                  <div style="font-size: 16px">
-                    <label class="form-control-label" for="text-input"
-                      ><strong>{{ "bulletins.create.title.forenoon" | translate }}</strong></label
-                    >
-                  </div>
-                  <div style="height: 40px">
-                    <div style="text-align: right; float: left; margin-right: 10px">
-                      <button
-                        [disabled]="
-                          editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)
-                        "
-                        *ngIf="bulletinsService.getIsEditable()"
-                        (click)="createAvalancheProblem(false)"
-                        class="btn btn-sm btn-primary px-3"
-                      >
-                        <i class="fa fa-plus"></i>{{ "bulletins.create.createAvalancheProblem" | translate }}
-                      </button>
-                    </div>
-                  </div>
-                  <app-avalanche-problem
-                    [bulletinModel]="activeBulletin"
-                    [bulletinDaytimeDescription]="activeBulletin.forenoon"
-                    [afternoon]="false"
-                    [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
-                  ></app-avalanche-problem>
-                </div>
-                <div *ngIf="activeBulletin.hasDaytimeDependency" class="col-md-6" style="float: right">
-                  <div style="font-size: 16px">
-                    <label class="form-control-label" for="text-input"
-                      ><strong>{{ "bulletins.create.title.afternoon" | translate }}</strong></label
-                    >
-                  </div>
-                  <div style="height: 40px">
-                    <div style="text-align: right; float: left; margin-right: 10px">
-                      <button
-                        [disabled]="
-                          editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)
-                        "
-                        *ngIf="bulletinsService.getIsEditable()"
-                        (click)="createAvalancheProblem(true)"
-                        class="btn btn-sm btn-primary px-3"
-                      >
-                        <i class="fa fa-plus"></i>{{ "bulletins.create.createAvalancheProblem" | translate }}
-                      </button>
-                    </div>
-                  </div>
-                  <app-avalanche-problem
-                    [bulletinModel]="activeBulletin"
-                    [bulletinDaytimeDescription]="activeBulletin.afternoon"
-                    [afternoon]="true"
-                    [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
-                  ></app-avalanche-problem>
-                </div>
-              </div>
-            </div>
-            <!-- End Avalanche problems panel content -->
           </div>
-        </div>
+          <!-- Avalanche problems panel content -->
+          <div class="form-group row">
+            <app-avalanche-problem
+              [bulletinModel]="activeBulletin"
+              [bulletinDaytimeDescription]="activeBulletin.forenoon"
+              [afternoon]="false"
+              [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+            ></app-avalanche-problem>
+          </div>
+          <!-- End Avalanche problems panel content -->
+        </accordion-group>
+        <accordion-group
+          *ngIf="activeBulletin.hasDaytimeDependency"
+          #accordionAvalancheProblemAfternoon
+          class="accordion-group"
+        >
+          <div accordion-heading class="accordion-header accordion-header--with-buttons">
+            <h2 class="accordion-header__title">
+              <i *ngIf="accordionAvalancheProblemAfternoon.isOpen" class="accordion__arrow ph ph-caret-down"></i>
+              <i *ngIf="!accordionAvalancheProblemAfternoon.isOpen" class="accordion__arrow ph ph-caret-right"></i>
+              <span
+                >{{ "bulletins.create.title.avalancheProblem" | translate }}
+                {{ "bulletins.create.title.afternoon" | translate }}</span
+              >
+            </h2>
+
+            <div class="btn-group accordion-header__buttons">
+              <button
+                [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)"
+                *ngIf="bulletinsService.getIsEditable()"
+                (click)="createAvalancheProblem(true); $event.stopPropagation()"
+                class="btn btn-primary btn-icon btn-sm"
+                title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
+              >
+                <i class="ph ph-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group row">
+            <app-avalanche-problem
+              [bulletinModel]="activeBulletin"
+              [bulletinDaytimeDescription]="activeBulletin.afternoon"
+              [afternoon]="true"
+              [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+            ></app-avalanche-problem>
+          </div>
+        </accordion-group>
         <!-- End avalance problems -->
         <!-- Danger description -->
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#region-form-danger-description"
-              aria-expanded="false"
-              aria-controls="region-form-danger-description"
-            >
-              {{ "bulletins.create.title.dangerDescription" | translate }}
-            </button>
-          </h2>
+        <accordion-group
+          [isOpen]="isAccordionDangerDescriptionOpen"
+          (isOpenChange)="accordionChanged($event, 'dangerDescription')"
+        >
+          <div accordion-heading class="accordion-header">
+            <h2 class="accordion-header__title">
+              <i *ngIf="!isAccordionDangerDescriptionOpen" class="accordion__arrow ph ph-caret-right"></i>
+              <i *ngIf="isAccordionDangerDescriptionOpen" class="accordion__arrow ph ph-caret-down"></i>
+              <span>
+                {{ "bulletins.create.title.dangerDescription" | translate }}
+              </span>
+            </h2>
+          </div>
           <!-- Danger description panel content -->
           <div
             id="region-form-danger-description"
@@ -1382,22 +1355,22 @@
               </div>
             </div>
           </div>
-        </div>
+        </accordion-group>
         <!-- End danger description -->
         <!-- Snowpack structure -->
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button
-              class="accordion-button collapsed"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#region-form-snowpack-structure"
-              aria-expanded="false"
-              aria-controls="region-form-snowpack-structure"
-            >
-              {{ "bulletins.create.title.snowpackStructure" | translate }}
-            </button>
-          </h2>
+        <accordion-group
+          [isOpen]="isAccordionSnowpackStructureOpen"
+          (isOpenChange)="accordionChanged($event, 'snowpackStructure')"
+        >
+          <div accordion-heading class="accordion-header">
+            <h2 class="accordion-header__title">
+              <i *ngIf="!isAccordionSnowpackStructureOpen" class="accordion__arrow ph ph-caret-right"></i>
+              <i *ngIf="isAccordionSnowpackStructureOpen" class="accordion__arrow ph ph-caret-down"></i>
+              <span>
+                {{ "bulletins.create.title.snowpackStructure" | translate }}
+              </span>
+            </h2>
+          </div>
           <div
             id="region-form-snowpack-structure"
             class="accordion-collapse -collapse show"
@@ -1737,412 +1710,385 @@
             </div>
           </div>
           <!-- End snowpack structure-->
+        </accordion-group>
 
+        <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'tendency')">
           <!-- Tendency -->
-          <div class="accordion-item">
-            <h2 class="accordion-header accordion-header--with-buttons">
-              <button
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#region-form-tendency"
-                aria-expanded="false"
-                aria-controls="region-form-tendency"
-              >
+          <div accordion-heading class="accordion-header">
+            <h2 class="accordion-header__title">
+              <i *ngIf="!isAccordionTendencyOpen" class="accordion__arrow ph ph-caret-right"></i>
+              <i *ngIf="isAccordionTendencyOpen" class="accordion__arrow ph ph-caret-down"></i>
+
+              <span>
                 {{ "bulletins.create.title.tendency" | translate }}
-              </button>
+              </span>
             </h2>
-            <div
-              id="region-form-tendency"
-              class="accordion-collapse -collapse show"
-              data-bs-parent="#region-form-accordion"
-            >
-              <div class="accordion-body">
-                <div class="form-group row">
-                  <div class="col-md-12">
-                    <table>
-                      <tbody>
-                        <tr style="height: 60px">
-                          <td *ngIf="activeBulletin.tendency === 'decreasing'">
-                            <button
-                              [disabled]="
-                                loading ||
-                                !bulletinsService.getIsEditable() ||
-                                editRegions ||
-                                !isCreator(activeBulletin)
-                              "
-                              type="reset"
-                              class="btn btn-primary"
-                              (click)="setTendency($event, undefined)"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.create.tooltip.tendency.decreasing' | translate }}"
-                            >
-                              <i class="fa fa-arrow-down"></i>{{ "tendency.decreasing" | translate }}
-                            </button>
-                          </td>
-                          <td *ngIf="activeBulletin.tendency !== 'decreasing'">
-                            <button
-                              [disabled]="
-                                loading ||
-                                !bulletinsService.getIsEditable() ||
-                                editRegions ||
-                                !isCreator(activeBulletin)
-                              "
-                              type="reset"
-                              class="btn btn-secondary"
-                              (click)="setTendency($event, 'decreasing')"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.create.tooltip.tendency.decreasing' | translate }}"
-                            >
-                              <i class="fa fa-arrow-down"></i>{{ "tendency.decreasing" | translate }}
-                            </button>
-                          </td>
-                          <td *ngIf="activeBulletin.tendency === 'steady'">
-                            <button
-                              [disabled]="
-                                loading ||
-                                !bulletinsService.getIsEditable() ||
-                                editRegions ||
-                                !isCreator(activeBulletin)
-                              "
-                              type="reset"
-                              class="btn btn-primary"
-                              (click)="setTendency($event, undefined)"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.create.tooltip.tendency.steady' | translate }}"
-                            >
-                              <i class="fa fa-arrow-right"></i>{{ "tendency.steady" | translate }}
-                            </button>
-                          </td>
-                          <td *ngIf="activeBulletin.tendency !== 'steady'">
-                            <button
-                              [disabled]="
-                                loading ||
-                                !bulletinsService.getIsEditable() ||
-                                editRegions ||
-                                !isCreator(activeBulletin)
-                              "
-                              type="reset"
-                              class="btn btn-secondary"
-                              (click)="setTendency($event, 'steady')"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.create.tooltip.tendency.steady' | translate }}"
-                            >
-                              <i class="fa fa-arrow-right"></i>{{ "tendency.steady" | translate }}
-                            </button>
-                          </td>
-                          <td *ngIf="activeBulletin.tendency === 'increasing'">
-                            <button
-                              [disabled]="
-                                loading ||
-                                !bulletinsService.getIsEditable() ||
-                                editRegions ||
-                                !isCreator(activeBulletin)
-                              "
-                              type="reset"
-                              class="btn btn-primary"
-                              (click)="setTendency($event, undefined)"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.create.tooltip.tendency.increasing' | translate }}"
-                            >
-                              <i class="fa fa-arrow-up"></i>{{ "tendency.increasing" | translate }}
-                            </button>
-                          </td>
-                          <td *ngIf="activeBulletin.tendency !== 'increasing'">
-                            <button
-                              [disabled]="
-                                loading ||
-                                !bulletinsService.getIsEditable() ||
-                                editRegions ||
-                                !isCreator(activeBulletin)
-                              "
-                              type="reset"
-                              class="btn btn-secondary"
-                              (click)="setTendency($event, 'increasing')"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.create.tooltip.tendency.increasing' | translate }}"
-                            >
-                              <i class="fa fa-arrow-up"></i>{{ "tendency.increasing" | translate }}
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+          </div>
+
+          <div>
+            <div class="form-group row">
+              <div class="col-md-12">
+                <table>
+                  <tbody>
+                    <tr style="height: 60px">
+                      <td *ngIf="activeBulletin.tendency === 'decreasing'">
+                        <button
+                          [disabled]="
+                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                          "
+                          type="reset"
+                          class="btn btn-primary"
+                          (click)="setTendency($event, undefined)"
+                          data-toggle="tooltip"
+                          title="{{ 'bulletins.create.tooltip.tendency.decreasing' | translate }}"
+                        >
+                          <i class="fa fa-arrow-down"></i>{{ "tendency.decreasing" | translate }}
+                        </button>
+                      </td>
+                      <td *ngIf="activeBulletin.tendency !== 'decreasing'">
+                        <button
+                          [disabled]="
+                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                          "
+                          type="reset"
+                          class="btn btn-secondary"
+                          (click)="setTendency($event, 'decreasing')"
+                          data-toggle="tooltip"
+                          title="{{ 'bulletins.create.tooltip.tendency.decreasing' | translate }}"
+                        >
+                          <i class="fa fa-arrow-down"></i>{{ "tendency.decreasing" | translate }}
+                        </button>
+                      </td>
+                      <td *ngIf="activeBulletin.tendency === 'steady'">
+                        <button
+                          [disabled]="
+                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                          "
+                          type="reset"
+                          class="btn btn-primary"
+                          (click)="setTendency($event, undefined)"
+                          data-toggle="tooltip"
+                          title="{{ 'bulletins.create.tooltip.tendency.steady' | translate }}"
+                        >
+                          <i class="fa fa-arrow-right"></i>{{ "tendency.steady" | translate }}
+                        </button>
+                      </td>
+                      <td *ngIf="activeBulletin.tendency !== 'steady'">
+                        <button
+                          [disabled]="
+                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                          "
+                          type="reset"
+                          class="btn btn-secondary"
+                          (click)="setTendency($event, 'steady')"
+                          data-toggle="tooltip"
+                          title="{{ 'bulletins.create.tooltip.tendency.steady' | translate }}"
+                        >
+                          <i class="fa fa-arrow-right"></i>{{ "tendency.steady" | translate }}
+                        </button>
+                      </td>
+                      <td *ngIf="activeBulletin.tendency === 'increasing'">
+                        <button
+                          [disabled]="
+                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                          "
+                          type="reset"
+                          class="btn btn-primary"
+                          (click)="setTendency($event, undefined)"
+                          data-toggle="tooltip"
+                          title="{{ 'bulletins.create.tooltip.tendency.increasing' | translate }}"
+                        >
+                          <i class="fa fa-arrow-up"></i>{{ "tendency.increasing" | translate }}
+                        </button>
+                      </td>
+                      <td *ngIf="activeBulletin.tendency !== 'increasing'">
+                        <button
+                          [disabled]="
+                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                          "
+                          type="reset"
+                          class="btn btn-secondary"
+                          (click)="setTendency($event, 'increasing')"
+                          data-toggle="tooltip"
+                          title="{{ 'bulletins.create.tooltip.tendency.increasing' | translate }}"
+                        >
+                          <i class="fa fa-arrow-up"></i>{{ "tendency.increasing" | translate }}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="form-group row" style="margin-bottom: 0">
+              <div class="col-md-12">
                 <div class="form-group row" style="margin-bottom: 0">
-                  <div class="col-md-12">
+                  <div class="col-md-8">
+                    <div style="margin-bottom: 10px; padding-left: 0px" class="col-md-12">
+                      <label class="form-control-label" for="text-input" style="padding-right: 10px"
+                        ><strong>{{ "bulletins.create.label.tendencyComment" | translate }}</strong></label
+                      >
+                      <button
+                        style="margin-left: 5px"
+                        [disabled]="
+                          loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        "
+                        type="reset"
+                        class="btn btn-sm btn-primary"
+                        data-toggle="tooltip"
+                        title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
+                        (click)="
+                          openTextcat(
+                            $event,
+                            'activeTendencyComment',
+                            this.settingsService.getLangString(),
+                            this.activeTendencyCommentTextcat
+                          )
+                        "
+                      >
+                        <i class="fa fa-pencil"></i>
+                      </button>
+                      <button
+                        *ngIf="!copyService.isCopyTextcat()"
+                        style="margin-left: 5px"
+                        [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                        type="reset"
+                        class="btn btn-sm btn-secondary"
+                        data-toggle="tooltip"
+                        title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
+                        (click)="copyTextcat($event, 'tendencyComment')"
+                      >
+                        <i class="fa fa-copy"></i>
+                      </button>
+                      <button
+                        *ngIf="copyService.isCopyTextcat()"
+                        style="margin-left: 5px"
+                        [disabled]="
+                          loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        "
+                        type="reset"
+                        class="btn btn-sm btn-secondary"
+                        data-toggle="tooltip"
+                        title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
+                        (click)="pasteTextcat($event, 'tendencyComment')"
+                      >
+                        <i class="fa fa-paste"></i>
+                      </button>
+                      <button
+                        style="margin-left: 5px"
+                        [disabled]="
+                          loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        "
+                        type="reset"
+                        class="btn btn-sm btn-secondary"
+                        data-toggle="tooltip"
+                        title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
+                        (click)="deleteTextcat($event, 'tendencyComment')"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
                     <div class="form-group row" style="margin-bottom: 0">
-                      <div class="col-md-8">
-                        <div style="margin-bottom: 10px; padding-left: 0px" class="col-md-12">
-                          <label class="form-control-label" for="text-input" style="padding-right: 10px"
-                            ><strong>{{ "bulletins.create.label.tendencyComment" | translate }}</strong></label
-                          >
-                          <button
-                            style="margin-left: 5px"
-                            [disabled]="
-                              loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                            "
-                            type="reset"
-                            class="btn btn-sm btn-primary"
-                            data-toggle="tooltip"
-                            title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
-                            (click)="
-                              openTextcat(
-                                $event,
-                                'activeTendencyComment',
-                                this.settingsService.getLangString(),
-                                this.activeTendencyCommentTextcat
-                              )
-                            "
-                          >
-                            <i class="fa fa-pencil"></i>
-                          </button>
-                          <button
-                            *ngIf="!copyService.isCopyTextcat()"
-                            style="margin-left: 5px"
-                            [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
-                            type="reset"
-                            class="btn btn-sm btn-secondary"
-                            data-toggle="tooltip"
-                            title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
-                            (click)="copyTextcat($event, 'tendencyComment')"
-                          >
-                            <i class="fa fa-copy"></i>
-                          </button>
-                          <button
-                            *ngIf="copyService.isCopyTextcat()"
-                            style="margin-left: 5px"
-                            [disabled]="
-                              loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                            "
-                            type="reset"
-                            class="btn btn-sm btn-secondary"
-                            data-toggle="tooltip"
-                            title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
-                            (click)="pasteTextcat($event, 'tendencyComment')"
-                          >
-                            <i class="fa fa-paste"></i>
-                          </button>
-                          <button
-                            style="margin-left: 5px"
-                            [disabled]="
-                              loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                            "
-                            type="reset"
-                            class="btn btn-sm btn-secondary"
-                            data-toggle="tooltip"
-                            title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
-                            (click)="deleteTextcat($event, 'tendencyComment')"
-                          >
-                            <i class="fa fa-trash"></i>
-                          </button>
-                        </div>
-                        <div class="form-group row" style="margin-bottom: 0">
-                          <div class="col-md-12">
-                            <textarea
-                              *ngIf="this.settingsService.getLangString() === 'de'"
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentDe | html"
-                            ></textarea>
-                            <textarea
-                              *ngIf="this.settingsService.getLangString() === 'it'"
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentIt | html"
-                            ></textarea>
-                            <textarea
-                              *ngIf="this.settingsService.getLangString() === 'en'"
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentEn | html"
-                            ></textarea>
-                            <textarea
-                              *ngIf="this.settingsService.getLangString() === 'fr'"
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentFr | html"
-                            ></textarea>
-                            <textarea
-                              *ngIf="this.settingsService.getLangString() === 'es'"
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentEs | html"
-                            ></textarea>
-                            <textarea
-                              *ngIf="this.settingsService.getLangString() === 'ca'"
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentCa | html"
-                            ></textarea>
-                            <textarea
-                              *ngIf="this.settingsService.getLangString() === 'oc'"
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentOc | html"
-                            ></textarea>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-4" style="margin-bottom: 0">
-                        <div style="margin-bottom: 10px; padding-left: 0px" class="col-md-12">
-                          <label class="form-control-label" for="text-input"
-                            ><strong>{{ "bulletins.create.label.notes" | translate }}</strong></label
-                          >
-                        </div>
-                        <div class="form-group row" style="margin-bottom: 0">
-                          <div class="col-md-12">
-                            <textarea
-                              rows="9"
-                              class="form-control"
-                              [disabled]="false"
-                              [(ngModel)]="activeTendencyCommentNotes"
-                              placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
-                            ></textarea>
-                          </div>
-                        </div>
+                      <div class="col-md-12">
+                        <textarea
+                          *ngIf="this.settingsService.getLangString() === 'de'"
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentDe | html"
+                        ></textarea>
+                        <textarea
+                          *ngIf="this.settingsService.getLangString() === 'it'"
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentIt | html"
+                        ></textarea>
+                        <textarea
+                          *ngIf="this.settingsService.getLangString() === 'en'"
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentEn | html"
+                        ></textarea>
+                        <textarea
+                          *ngIf="this.settingsService.getLangString() === 'fr'"
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentFr | html"
+                        ></textarea>
+                        <textarea
+                          *ngIf="this.settingsService.getLangString() === 'es'"
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentEs | html"
+                        ></textarea>
+                        <textarea
+                          *ngIf="this.settingsService.getLangString() === 'ca'"
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentCa | html"
+                        ></textarea>
+                        <textarea
+                          *ngIf="this.settingsService.getLangString() === 'oc'"
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentOc | html"
+                        ></textarea>
                       </div>
                     </div>
+                  </div>
+                  <div class="col-md-4" style="margin-bottom: 0">
+                    <div style="margin-bottom: 10px; padding-left: 0px" class="col-md-12">
+                      <label class="form-control-label" for="text-input"
+                        ><strong>{{ "bulletins.create.label.notes" | translate }}</strong></label
+                      >
+                    </div>
+                    <div class="form-group row" style="margin-bottom: 0">
+                      <div class="col-md-12">
+                        <textarea
+                          rows="9"
+                          class="form-control"
+                          [disabled]="false"
+                          [(ngModel)]="activeTendencyCommentNotes"
+                          placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                    <label *ngIf="showTranslationsTendencyComment" (click)="setShowTranslations('tendencyComment')"
-                      ><i class="fa fa-angle-up"></i>{{ "bulletins.create.title.hideTranslations" | translate }}</label
-                    >
-                    <label *ngIf="!showTranslationsTendencyComment" (click)="setShowTranslations('tendencyComment')"
-                      ><i class="fa fa-angle-down"></i
-                      >{{ "bulletins.create.title.showTranslations" | translate }}</label
-                    >
+                <label *ngIf="showTranslationsTendencyComment" (click)="setShowTranslations('tendencyComment')"
+                  ><i class="fa fa-angle-up"></i>{{ "bulletins.create.title.hideTranslations" | translate }}</label
+                >
+                <label *ngIf="!showTranslationsTendencyComment" (click)="setShowTranslations('tendencyComment')"
+                  ><i class="fa fa-angle-down"></i>{{ "bulletins.create.title.showTranslations" | translate }}</label
+                >
 
-                    <div *ngIf="showTranslationsTendencyComment" class="form-group row">
-                      <div *ngIf="this.settingsService.getLangString() !== 'de'" class="col-md-4">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <textarea
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentDe | html"
-                            ></textarea>
-                          </div>
-                        </div>
+                <div *ngIf="showTranslationsTendencyComment" class="form-group row">
+                  <div *ngIf="this.settingsService.getLangString() !== 'de'" class="col-md-4">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <textarea
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentDe | html"
+                        ></textarea>
                       </div>
-                      <div *ngIf="this.settingsService.getLangString() !== 'it'" class="col-md-4">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <textarea
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentIt | html"
-                            ></textarea>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                  <div *ngIf="this.settingsService.getLangString() !== 'it'" class="col-md-4">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <textarea
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentIt | html"
+                        ></textarea>
                       </div>
-                      <div *ngIf="this.settingsService.getLangString() !== 'en'" class="col-md-4">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <textarea
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentEn | html"
-                            ></textarea>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                  <div *ngIf="this.settingsService.getLangString() !== 'en'" class="col-md-4">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <textarea
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentEn | html"
+                        ></textarea>
                       </div>
-                      <div *ngIf="this.settingsService.getLangString() !== 'fr'" class="col-md-4">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <textarea
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentFr | html"
-                            ></textarea>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                  <div *ngIf="this.settingsService.getLangString() !== 'fr'" class="col-md-4">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <textarea
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentFr | html"
+                        ></textarea>
                       </div>
-                      <div *ngIf="this.settingsService.getLangString() !== 'es'" class="col-md-4">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <textarea
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentEs | html"
-                            ></textarea>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                  <div *ngIf="this.settingsService.getLangString() !== 'es'" class="col-md-4">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <textarea
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentEs | html"
+                        ></textarea>
                       </div>
-                      <div *ngIf="this.settingsService.getLangString() !== 'ca'" class="col-md-4">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <textarea
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentCa | html"
-                            ></textarea>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                  <div *ngIf="this.settingsService.getLangString() !== 'ca'" class="col-md-4">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <textarea
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentCa | html"
+                        ></textarea>
                       </div>
-                      <div *ngIf="this.settingsService.getLangString() !== 'oc'" class="col-md-4">
-                        <div class="form-group row">
-                          <div class="col-md-12">
-                            <textarea
-                              id="textarea-input"
-                              name="textarea-input"
-                              rows="9"
-                              class="form-control"
-                              [disabled]="true"
-                              [ngModel]="activeTendencyCommentOc | html"
-                            ></textarea>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                  <div *ngIf="this.settingsService.getLangString() !== 'oc'" class="col-md-4">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <textarea
+                          id="textarea-input"
+                          name="textarea-input"
+                          rows="9"
+                          class="form-control"
+                          [disabled]="true"
+                          [ngModel]="activeTendencyCommentOc | html"
+                        ></textarea>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- End tendency -->
           </div>
           <!-- End tendency-->
-        </div>
-      </div>
+        </accordion-group>
+      </accordion>
 
       <accordion class="region-form__accordion">
         <!-- Avalanche problem -->
@@ -3845,6 +3791,7 @@
         <i class="fa fa-check"></i>
       </button>
     </div>
+
     <div id="map" class="create-bulletin__map"></div>
     <div id="afternoonMap" class="create-bulletin__map create-bulletin__map--afternoon"></div>
   </div>
@@ -3867,7 +3814,37 @@
       <div class="region-thumb__avalanche-info">
         <app-danger-rating-icon [bulletin]="bulletin"></app-danger-rating-icon>
 
-        Lawinenproblem(e) / Seehöhe(n)
+        <!-- TODO: Lawinenproblem(e) -->
+        Lawinenproblem(e)
+        <!-- TODO: Lawinenproblem(e) -->
+
+        <!-- Seehöhe(n) -->
+        <ng-container *ngIf="bulletin.forenoon.hasElevationDependency">
+          <div style="vertical-align: middle; width: max-content">
+            <i class="fa fa-sort"></i>
+            <b>
+              {{
+                bulletin.forenoon.treeline
+                  ? ("bulletins.create.tooltip.treeline" | translate)
+                  : activeBulletin.forenoon.elevation + " m"
+              }}
+            </b>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="bulletin.hasDaytimeDependency && bulletin.afternoon.hasElevationDependency">
+          <div style="vertical-align: middle; width: max-content">
+            <i class="fa fa-sort"></i>
+            <b>
+              {{
+                bulletin.afternoon.treeline
+                  ? ("bulletins.create.tooltip.treeline" | translate)
+                  : activeBulletin.afternoon.elevation + " m"
+              }}
+            </b>
+          </div>
+        </ng-container>
+        <!-- Seehöhe(n) -->
 
         <span *ngIf="hasSuggestions(bulletin)" class="badge bg-orange">
           <i class="ph-bold ph-lightbulb"></i> {{ "bulletins.create.suggestions" | translate }}
@@ -3970,11 +3947,15 @@
 <ng-template #loadAutoSaveTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.create.loadAutoSaveDialog.message" | translate }}</p>
-    <button [disabled]="loadingModal" type="button" class="btn btn-primary" (click)="loadAutoSaveModalConfirm($event)">
-      {{ "bulletins.create.loadAutoSaveDialog.accept" | translate }}
-    </button>
-    <button [disabled]="loadingModal" type="button" class="btn btn-default" (click)="loadAutoSaveModalDecline($event)">
+  </div>
+  <div class="modal-footer">
+    <button [disabled]="loadingModal" type="button" class="btn btn-bare" (click)="loadAutoSaveModalDecline($event)">
       {{ "bulletins.create.loadAutoSaveDialog.reject" | translate }}
+    </button>
+
+    <button [disabled]="loadingModal" type="button" class="btn btn-primary" (click)="loadAutoSaveModalConfirm($event)">
+      <i class="ph ph-check"></i>
+      <span>{{ "bulletins.create.loadAutoSaveDialog.accept" | translate }}</span>
     </button>
   </div>
 </ng-template>

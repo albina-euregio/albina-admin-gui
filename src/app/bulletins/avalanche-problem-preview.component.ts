@@ -20,7 +20,6 @@ export class AvalancheProblemPreviewComponent {
   @Input() disabled: boolean;
 
   avalancheProblemEnum = Enums.AvalancheProblem;
-  directionEnum = Enums.Direction;
 
   constructor(
     public translateService: TranslateService,

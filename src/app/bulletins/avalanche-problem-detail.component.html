@@ -256,6 +256,9 @@
                 </button>
               </td>
             </tr>
+
+            
+
             <tr style="height: 60px">
               <td style="padding-right: 10px; vertical-align: baseline">
                 <label class="switch switch-default switch-pill switch-primary">
@@ -316,6 +319,40 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- Seehöhe Gefahr nach oben/unten erweitern -->
+        <div *ngIf="avalancheProblemModel.hasElevationHigh() && avalancheProblemModel.hasElevationLow()">
+          <h2>Erweitere die Lawinengefahr</h2>
+          
+          <!-- UP Button -->
+          <button
+              [disabled]="disabled"
+              type="reset"
+              class="btn btn-sm" 
+              [ngClass]="{'btn-primary': isDangerRatingDirection('up'), 'btn-secondary': !isDangerRatingDirection('up')}"
+              (click)="setDangerRatingDirection($event, isDangerRatingDirection('up') ? undefined : directionEnum.up)"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
+          >
+              <i class="fa fa-chevron-up"></i>
+          </button>
+      
+          <!-- DOWN Button -->
+          <button
+              [disabled]="disabled"
+              type="reset"
+              class="btn btn-sm" 
+              [ngClass]="{'btn-primary': isDangerRatingDirection('down'), 'btn-secondary': !isDangerRatingDirection('down')}"
+              (click)="setDangerRatingDirection($event, isDangerRatingDirection('down') ? undefined : directionEnum.down)"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"
+          >
+              <i class="fa fa-chevron-down"></i>
+          </button>
+        </div>
+        <!-- Seehöhe Gefahr nach oben/unten erweitern -->
+
+
       </div>
     </div>
   </div>

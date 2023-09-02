@@ -48,13 +48,14 @@ $icon-button-size-sm: $space-6;
 }
 
 .btn-bare {
-    border: none;
+    border-color: transparent;
     background: transparent;
     &:hover,
     &:focus,
     &:active,
     &.show {
         background-color: $gray-100;
+        border-color: $gray-100;
     }
 }
 

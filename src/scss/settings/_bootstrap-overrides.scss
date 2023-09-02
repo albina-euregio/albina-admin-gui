@@ -80,7 +80,7 @@ $accordion-button-focus-box-shadow: none;
 $accordion-button-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzAwMDAwMCIgdmlld0JveD0iMCAwIDI1NiAyNTYiPjxwYXRoIGQ9Ik0yMTMuNjYsMTAxLjY2bC04MCw4MGE4LDgsMCwwLDEtMTEuMzIsMGwtODAtODBBOCw4LDAsMCwxLDUzLjY2LDkwLjM0TDEyOCwxNjQuNjlsNzQuMzQtNzQuMzVhOCw4LDAsMCwxLDExLjMyLDExLjMyWiI+PC9wYXRoPjwvc3ZnPg==");
 $accordion-button-active-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0iIzAwMDAwMCIgdmlld0JveD0iMCAwIDI1NiAyNTYiPjxwYXRoIGQ9Ik0xODEuNjYsMTMzLjY2bC04MCw4MGE4LDgsMCwwLDEtMTEuMzItMTEuMzJMMTY0LjY5LDEyOCw5MC4zNCw1My42NmE4LDgsMCwwLDEsMTEuMzItMTEuMzJsODAsODBBOCw4LDAsMCwxLDE4MS42NiwxMzMuNjZaIj48L3BhdGg+PC9zdmc+");
 $accordion-padding-x: $space-6;
-$accordion-padding-y: $space-6;
+$accordion-padding-y: $space-4;
 $accordion-body-padding-y: 0;
 $accordion-body-padding-x: $space-6;
 $accordion-bg: transparent;
@@ -91,6 +91,8 @@ $accordion-button-active-bg: transparent;
 $input-border-color: $gray-400;
 $form-label-font-weight: 600;
 $form-label-margin-bottom: $space-1;
+$form-check-input-checked-color: white;
+$form-check-input-checked-bg-color: $black;
 
 // Navbar
 
@@ -107,4 +109,12 @@ $badge-font-weight: 600;
 
 .badge.bg-orange {
   background-color: $orange;
+}
+
+// Modal
+$modal-footer-margin-between: $space-1;
+$modal-footer-gap: $space-1;
+
+.modal-footer {
+  padding: $space-2 $space-4 !important;
 }

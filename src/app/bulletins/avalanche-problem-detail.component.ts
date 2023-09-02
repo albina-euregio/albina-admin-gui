@@ -31,6 +31,8 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   public terrainFeatureEn: string;
   public terrainFeatureFr: string;
 
+  directionEnum = Enums.Direction;
+
   constructor(
     public settingsService: SettingsService,
     public authenticationService: AuthenticationService,
@@ -143,5 +145,20 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.terrainFeatureIt = undefined;
     this.terrainFeatureEn = undefined;
     this.terrainFeatureFr = undefined;
+  }
+
+  isDangerRatingDirection(dir) {
+    if (this.avalancheProblemModel && this.avalancheProblemModel.getDangerRatingDirection() === dir) {
+      return true;
+    }
+    return false;
+  }
+
+  setDangerRatingDirection(event, dir: string) {
+    event.stopPropagation();
+    this.avalancheProblemModel.setDangerRatingDirection(Enums.Direction[dir]);
+    this.bulletinDaytimeDescription.updateDangerRating();
+    this.mapService.updateAggregatedRegion(this.bulletin);
+    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 }

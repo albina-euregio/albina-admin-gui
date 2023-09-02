@@ -34,25 +34,34 @@ $region-form-border: 1px solid $gray-300;
 }
 
 // Avalanche problems form
+.accordion-header__title {
+  .form-check {
+    margin-bottom: 0;
+  }
+}
 .avalanche-problems__accordion {
+  accordion-group {
+    border: $region-form-border !important;
+  }
+
   app-avalanche-problem-preview {
     width: 100%;
   }
-  .accordion-item + .accordion-item {
+  accordion-group + accordion-group {
     margin-top: $space-2;
   }
-  .accordion-header {
+  .panel-heading {
     background: $gray-100;
-    border: $region-form-border;
     align-items: center;
     padding: $space-2 $space-4;
   }
-  .accordion-body {
-    border-left: $region-form-border;
-    border-right: $region-form-border;
+  .panel-body {
+    border-top: $region-form-border;
     padding: $space-4;
   }
 }
+app-avalanche-problem-preview,
+.avalanche-problem-preview__header,
 .avalanche-problem__preview,
 .avalanche-problem-preview__info {
   display: flex;
@@ -62,6 +71,7 @@ $region-form-border: 1px solid $gray-300;
 
 .avalanche-problem__preview {
   justify-content: space-between;
+  width: 100%;
 }
 
 .avalanche-problem-preview__info-item {

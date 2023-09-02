@@ -15,16 +15,18 @@
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/bootstrap";
 
-// Base
+// Components
 @import "components/buttons";
 @import "components/navbar";
 @import "components/avatars";
 @import "components/accordion";
 @import "components/banner";
 //@import "components/footer";
+@import "components/map";
 
-// Components
+// Sections
 @import "sections/app";
 @import "sections/bulletins";
 @import "sections/create-bulletin";
 @import "sections/create-bulletin-form";
+
