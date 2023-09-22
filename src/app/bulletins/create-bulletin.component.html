@@ -3770,26 +3770,21 @@
 
   <!-- Map -->
   <div class="create-bulletin__map-container">
-    <div class="create-bulletin__map-label" *ngIf="editRegions">
-      <i class="ph-bold ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
-      <button
-        type="reset"
-        class="btn btn-sm btn-danger"
-        (click)="discardBulletin($event, bulletin)"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.discardChanges' | translate }}"
-      >
-        <i class="fa fa-close"></i>
-      </button>
-      <button
-        type="reset"
-        class="btn btn-sm btn-primary"
-        (click)="saveBulletin($event, bulletin)"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.saveChanges' | translate }}"
-      >
-        <i class="fa fa-check"></i>
-      </button>
+    <div class="floating-action create-region-floating-action" *ngIf="editRegions">
+      <div class="floating-action__text">
+        <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
+      </div>
+      <div class="floating-action__actions btn-toolbar">
+        <button type="reset" class="btn btn-bare" (click)="discardBulletin($event, bulletin)">
+          <!-- TODO: translation -->
+          <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
+        </button>
+        <button type="reset" class="btn btn-primary" (click)="saveBulletin($event, bulletin)">
+          <i class="ph-bold ph-check"></i>
+          <!-- TODO: translation -->
+          <span>{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
+        </button>
+      </div>
     </div>
 
     <div id="map" class="create-bulletin__map"></div>

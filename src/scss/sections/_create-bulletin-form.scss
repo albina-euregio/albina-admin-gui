@@ -103,3 +103,16 @@ app-avalanche-problem-preview,
     opacity: 0.3;
   }
 }
+
+// Elevation
+.avalanche-problem-detail__elevation {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: $space-2;
+
+  input[type="checkbox"] {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+}

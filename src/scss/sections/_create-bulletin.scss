@@ -1,9 +1,22 @@
+$header-nav-height: 56px;
+$bulletin-height: calc(100vh - $header-nav-height);
 // Layout
 .create-bulletin {
     display: flex;
     align-items: stretch;
+    height: $bulletin-height;
 }
 
+.create-bulletin__sidebar,
+.create-bulletin__region-form {
+    height: $bulletin-height;
+    overflow: scroll;
+}
+
+.create-bulletin__map-container {
+    height: $bulletin-height;
+    overflow: hidden;
+}
 // Sidebar
 $sidebar-width: 256px;
 $sidebar-padding: $space-4;
@@ -11,6 +24,7 @@ $sidebar-border: 1px solid $gray-300;
 
 .create-bulletin__sidebar {
     width: $sidebar-width;
+    flex: 0 0 $sidebar-width;
     border-right: $sidebar-border;
 }
 

@@ -1,6 +1,12 @@
 $icon-button-size-md: $space-8;
 $icon-button-size-sm: $space-6;
 
+/* Buttons with icon: label should be wrapped in a span tag.
+<button>
+<i class="ph ph-icon"></i>
+<span>Button label</span>
+*/
+
 .btn:not(.btn-icon) i:first-child {
     margin-right: $space-2;
 }
