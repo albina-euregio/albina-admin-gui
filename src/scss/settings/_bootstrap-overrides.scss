@@ -102,6 +102,14 @@ $badge-font-size: 10px;
 $badge-font-weight: 600;
 .badge {
   text-transform: uppercase;
+  height: 20px;
+  display: inline-flex !important;
+  gap: $space-1;
+  align-items: center;
+
+  i {
+    font-size: 14px;
+  }
 }
 
 .badge.bg-warning {

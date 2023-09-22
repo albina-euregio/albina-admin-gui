@@ -1,9 +1,10 @@
 $region-form-padding: $space-6;
 $region-form-border: 1px solid $gray-300;
+$region-form-width: 512px;
 .create-bulletin__region-form {
   border-right: $region-form-border;
   width: calc(50vw - ($sidebar-width/2));
-  min-width: 380px;
+  min-width: $region-form-width;
   display: flex;
   flex-flow: column;
 }

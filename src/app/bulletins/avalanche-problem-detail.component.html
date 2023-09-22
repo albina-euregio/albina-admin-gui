@@ -310,7 +310,7 @@
               class="btn btn-sm btn-outline-secondary"
               [ngClass]="{
                 'btn-dark': isDangerRatingDirection('down'),
-                'btn-outline': !isDangerRatingDirection('down')
+                'btn-outline-secondary': !isDangerRatingDirection('down')
               }"
               (click)="
                 setDangerRatingDirection($event, isDangerRatingDirection('down') ? undefined : directionEnum.down)

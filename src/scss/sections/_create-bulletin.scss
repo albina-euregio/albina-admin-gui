@@ -75,8 +75,7 @@ $sidebar-border: 1px solid $gray-300;
 }
 
 // Regions list
-.create-bulletin__regions {
-}
+
 .create-bulletin__region-divider {
     padding: $space-2 $sidebar-padding;
     background: $gray-100;
@@ -108,17 +107,34 @@ $sidebar-border: 1px solid $gray-300;
 
     &:hover,
     &.region-thumb--active {
-        background: $gray-100;
+        background: $primary-pale;
+    }
+    &:hover {
         .region-thumb__actions {
             opacity: 1;
         }
     }
 }
 
+.region-thumb__avalanche-info {
+    display: flex;
+    flex-flow: row wrap;
+    gap: $space-1;
+    align-items: center;
+}
+.region-thumb__avalanche-problem-icon {
+    width: 20px;
+    height: 20px;
+    border: 1px solid $gray-400;
+}
 // TODO: app-danger-rating-icon
 .grid-container {
     display: inline-grid;
     grid-template-columns: 10px 10px;
     grid-template-rows: 10px 10px;
     vertical-align: top;
+}
+
+// Responsive layout
+@include media-breakpoint-down(lg) {
 }

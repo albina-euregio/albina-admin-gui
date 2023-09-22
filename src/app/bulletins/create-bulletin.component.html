@@ -402,7 +402,9 @@
         {{ "bulletins.create.regionEditable" | translate }}
       </p>
       <div class="btn-group banner__actions">
-        <button type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-map-trifold"></i></button>
+        <button type="button" class="btn btn-sm btn-icon btn-outline-primary">
+          <i class="ph ph-map-trifold"></i>
+        </button>
         <button type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
         <button type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-trash"></i></button>
       </div>
@@ -2166,35 +2168,31 @@
         <app-danger-rating-icon [bulletin]="bulletin"></app-danger-rating-icon>
 
         <!-- TODO: Lawinenproblem(e) -->
-        Lawinenproblem(e)
+        <img src="./assets/img/Drifting_snow_c.svg" class="region-thumb__avalanche-problem-icon" />
         <!-- TODO: Lawinenproblem(e) -->
 
         <!-- Seehöhe(n) -->
-        <ng-container *ngIf="bulletin.forenoon.hasElevationDependency">
-          <div style="vertical-align: middle; width: max-content">
-            <i class="fa fa-sort"></i>
-            <b>
-              {{
-                bulletin.forenoon.treeline
-                  ? ("bulletins.create.tooltip.treeline" | translate)
-                  : activeBulletin.forenoon.elevation + " m"
-              }}
-            </b>
-          </div>
-        </ng-container>
 
-        <ng-container *ngIf="bulletin.hasDaytimeDependency && bulletin.afternoon.hasElevationDependency">
-          <div style="vertical-align: middle; width: max-content">
-            <i class="fa fa-sort"></i>
-            <b>
-              {{
-                bulletin.afternoon.treeline
-                  ? ("bulletins.create.tooltip.treeline" | translate)
-                  : activeBulletin.afternoon.elevation + " m"
-              }}
-            </b>
-          </div>
-        </ng-container>
+        <span class="badge text-bg-light" *ngIf="bulletin.forenoon.hasElevationDependency">
+          <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
+          {{
+            bulletin.forenoon.treeline
+              ? ("bulletins.create.tooltip.treeline" | translate)
+              : activeBulletin.forenoon.elevation + " m"
+          }}
+        </span>
+
+        <span
+          class="badge text-bg-light"
+          *ngIf="bulletin.hasDaytimeDependency && bulletin.afternoon.hasElevationDependency"
+        >
+          <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
+          {{
+            bulletin.afternoon.treeline
+              ? ("bulletins.create.tooltip.treeline" | translate)
+              : activeBulletin.afternoon.elevation + " m"
+          }}
+        </span>
         <!-- Seehöhe(n) -->
 
         <span *ngIf="hasSuggestions(bulletin)" class="badge bg-orange">
