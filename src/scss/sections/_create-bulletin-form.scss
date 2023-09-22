@@ -130,7 +130,7 @@ app-avalanche-problem-preview,
   .avalanche-problem-detail__elevation-inputs {
     display: flex;
     flex-flow: row nowrap;
-    gap: $space-2;
+    gap: $space-1;
     input {
       flex-basis: 0 0 80px;
       width: 80px;
@@ -171,4 +171,10 @@ app-avalanche-problem-preview,
 
 .region-form__translation-toggle {
   margin: $space-1 0;
+}
+
+.region-form__danger-patterns {
+  select + select {
+    margin-top: $space-1;
+  }
 }

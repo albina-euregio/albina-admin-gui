@@ -59,3 +59,7 @@
 .font-xs {
   @include font-xs;
 }
+
+.font-tight {
+  letter-spacing: -0.5px;
+}

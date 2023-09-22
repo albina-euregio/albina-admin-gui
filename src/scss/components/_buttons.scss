@@ -43,6 +43,7 @@ $icon-button-size-sm: $space-6;
 }
 
 .btn-outline-secondary {
+    color: $black;
     &:hover,
     &:active,
     &:focus {
