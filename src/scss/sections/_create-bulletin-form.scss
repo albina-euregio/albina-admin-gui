@@ -4,6 +4,8 @@ $region-form-border: 1px solid $gray-300;
   border-right: $region-form-border;
   width: calc(50vw - ($sidebar-width/2));
   min-width: 380px;
+  display: flex;
+  flex-flow: column;
 }
 
 .region-form__header {
@@ -31,6 +33,10 @@ $region-form-border: 1px solid $gray-300;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  bottom: 0;
+  z-index: 1000;
+  margin-top: auto;
 }
 
 // Avalanche problems form
@@ -109,10 +115,60 @@ app-avalanche-problem-preview,
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  margin-bottom: $space-2;
+  justify-content: space-between;
   gap: $space-2;
 
   input[type="checkbox"] {
     flex-grow: 0;
     flex-shrink: 0;
   }
+  label {
+    margin-bottom: 0;
+  }
+
+  .avalanche-problem-detail__elevation-inputs {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: $space-2;
+    input {
+      flex-basis: 0 0 80px;
+      width: 80px;
+    }
+  }
+}
+
+.avalanche-problem__elevation-change-danger-rating {
+  .btn-group {
+    width: 100%;
+  }
+}
+
+.avalanche-problem-detail__override {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: $space-2;
+  img {
+    height: 60px;
+  }
+}
+
+// Danger description
+
+.region-form__translation-block {
+  .region-form__translation-item + .region-form__translation-item {
+    margin-top: $space-1;
+  }
+  .input-group-text {
+    @include font-s-medium;
+    width: 26px;
+    padding: 0;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+  }
+}
+
+.region-form__translation-toggle {
+  margin: $space-1 0;
 }

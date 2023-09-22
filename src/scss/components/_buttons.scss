@@ -7,6 +7,10 @@ $icon-button-size-sm: $space-6;
 <span>Button label</span>
 */
 
+.btn span {
+    font-weight: 500;
+}
+
 .btn:not(.btn-icon) i:first-child {
     margin-right: $space-2;
 }
@@ -35,6 +39,17 @@ $icon-button-size-sm: $space-6;
     &:disabled {
         color: $primary !important;
         background: $primary-pale;
+    }
+}
+
+.btn-outline-secondary {
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: white;
+    }
+    &:disabled {
+        opacity: 0.4;
     }
 }
 

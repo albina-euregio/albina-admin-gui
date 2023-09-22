@@ -20,6 +20,10 @@ accordion-group {
     padding: $accordion-padding-y $accordion-padding-x;
     background: white;
   }
+  .panel-body {
+    padding-left: $accordion-padding-x;
+    padding-right: $accordion-padding-x;
+  }
 }
 
 .accordion__arrow {

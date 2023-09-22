@@ -187,197 +187,129 @@
   </div>
 
   <div class="form-group row">
-    <div class="col-md-6">
+    <div class="col-md-5">
       <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
       <div>
         <app-aspects [(aspects)]="avalancheProblemModel.aspects" [disabled]="disabled" [size]="150"></app-aspects>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-7">
       <label class="form-label" for="">{{ "bulletins.create.label.elevation" | translate }}</label>
+      <!-- Elevation (high) -->
       <div class="avalanche-problem-detail__elevation">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          [disabled]="disabled"
-          (change)="setUseElevationHigh($event)"
-          [(ngModel)]="useElevationHigh"
-        />
-        <label for="">{{ "bulletins.create.label.elevationHigh" | translate }}</label>
-        <input
-          step="100"
-          min="0"
-          max="9000"
-          id="inputElevationHigh"
-          class="form-control"
-          size="14"
-          type="number"
-          name="elevation-input"
-          [disabled]="disabled || avalancheProblemModel.treelineHigh || !useElevationHigh"
-          [(ngModel)]="avalancheProblemModel.elevationHigh"
-          (change)="updateElevationHigh()"
-        />
-        <span class="input-group-text">m</span>
-        <button
-          [disabled]="disabled || !useElevationHigh"
-          type="reset"
-          class="btn btn-secondary btn-icon btn-outline-secondary"
-          (click)="treelineHighClicked($event)"
-          data-toggle="tooltip"
-          title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
-        >
-          <i class="ph ph-tree-evergreen"></i>
-        </button>
+        <div class="avalanche-problem-detail__elevation-label form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [disabled]="disabled"
+            (change)="setUseElevationHigh($event)"
+            [(ngModel)]="useElevationHigh"
+          />
+          <label class="form-label" for="">{{ "bulletins.create.label.elevationHigh" | translate }}</label>
+        </div>
+        <div class="avalanche-problem-detail__elevation-inputs">
+          <div class="input-group">
+            <input
+              step="100"
+              min="0"
+              max="9000"
+              id="inputElevationHigh"
+              class="form-control"
+              size="14"
+              type="number"
+              name="elevation-input"
+              [disabled]="disabled || avalancheProblemModel.treelineHigh || !useElevationHigh"
+              [(ngModel)]="avalancheProblemModel.elevationHigh"
+              (change)="updateElevationHigh()"
+            />
+            <span class="input-group-text">m</span>
+          </div>
+          <button
+            [disabled]="disabled || !useElevationHigh"
+            type="reset"
+            class="btn btn-icon btn-outline-secondary"
+            (click)="treelineHighClicked($event)"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+          >
+            <i class="ph ph-tree-evergreen"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Elevation (low) -->
+      <div class="avalanche-problem-detail__elevation">
+        <div class="form-check avalanche-problem-detail__elevation-label">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [disabled]="disabled"
+            (change)="setUseElevationLow($event)"
+            [(ngModel)]="useElevationLow"
+          />
+          <label class="form-label" for="">{{ "bulletins.create.label.elevationLow" | translate }}</label>
+        </div>
+        <div class="avalanche-problem-detail__elevation-inputs">
+          <div class="input-group">
+            <input
+              step="100"
+              min="0"
+              max="9000"
+              id="inputElevationLow"
+              class="form-control"
+              size="14"
+              type="number"
+              name="elevation-input"
+              [disabled]="disabled || avalancheProblemModel.treelineLow || !useElevationLow"
+              [(ngModel)]="avalancheProblemModel.elevationLow"
+              (change)="updateElevationLow()"
+            />
+            <span class="input-group-text">m</span>
+          </div>
+          <button
+            [disabled]="disabled || !useElevationLow"
+            type="reset"
+            class="btn btn-icon btn-outline-secondary"
+            (click)="treelineLowClicked($event)"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+          >
+            <i class="ph ph-tree-evergreen"></i>
+          </button>
+        </div>
       </div>
       <div>
-        <table>
-          <tbody>
-            <tr style="height: 60px">
-              <td style="padding-right: 10px; vertical-align: baseline">
-                <label class="switch switch-default switch-pill switch-primary">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [disabled]="disabled"
-                    (change)="setUseElevationHigh($event)"
-                    [(ngModel)]="useElevationHigh"
-                  />
-                </label>
-              </td>
-              <td style="padding-right: 10px; vertical-align: baseline">
-                {{ "bulletins.create.label.elevationHigh" | translate }}
-              </td>
-              <td class="input-prepend input-group">
-                <input
-                  step="100"
-                  min="0"
-                  max="9000"
-                  id="inputElevationHigh"
-                  class="form-control"
-                  size="14"
-                  type="number"
-                  name="elevation-input"
-                  [disabled]="disabled || avalancheProblemModel.treelineHigh || !useElevationHigh"
-                  [(ngModel)]="avalancheProblemModel.elevationHigh"
-                  (change)="updateElevationHigh()"
-                />
-                <span class="input-group-addon">m</span>
-              </td>
-              <td style="padding-left: 10px; vertical-align: baseline" *ngIf="!avalancheProblemModel.treelineHigh">
-                <button
-                  [disabled]="disabled || !useElevationHigh"
-                  type="reset"
-                  class="btn btn-secondary"
-                  (click)="treelineHighClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
-                >
-                  <i class="fa fa-tree"></i>
-                </button>
-              </td>
-              <td style="padding-left: 10px; vertical-align: baseline" *ngIf="avalancheProblemModel.treelineHigh">
-                <button
-                  [disabled]="disabled || !useElevationHigh"
-                  type="reset"
-                  class="btn btn-primary"
-                  (click)="treelineHighClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
-                >
-                  <i class="fa fa-tree"></i>
-                </button>
-              </td>
-            </tr>
-
-            <tr style="height: 60px">
-              <td style="padding-right: 10px; vertical-align: baseline">
-                <label class="switch switch-default switch-pill switch-primary">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [disabled]="disabled"
-                    (change)="setUseElevationLow($event)"
-                    [(ngModel)]="useElevationLow"
-                  />
-                  <span class="switch-label"></span>
-                  <span class="switch-handle"></span>
-                </label>
-              </td>
-              <td style="padding-right: 10px; vertical-align: baseline">
-                {{ "bulletins.create.label.elevationLow" | translate }}
-              </td>
-              <td class="input-prepend input-group">
-                <input
-                  step="100"
-                  min="0"
-                  max="9000"
-                  id="inputElevationLow"
-                  class="form-control"
-                  size="14"
-                  type="number"
-                  name="elevation-input"
-                  [disabled]="disabled || avalancheProblemModel.treelineLow || !useElevationLow"
-                  [(ngModel)]="avalancheProblemModel.elevationLow"
-                  (change)="updateElevationLow()"
-                />
-                <span class="input-group-addon">m</span>
-              </td>
-              <td style="padding-left: 10px; vertical-align: baseline" *ngIf="!avalancheProblemModel.treelineLow">
-                <button
-                  [disabled]="disabled || !useElevationLow"
-                  type="reset"
-                  class="btn btn-secondary"
-                  (click)="treelineLowClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
-                >
-                  <i class="fa fa-tree"></i>
-                </button>
-              </td>
-              <td style="padding-left: 10px; vertical-align: baseline" *ngIf="avalancheProblemModel.treelineLow">
-                <button
-                  [disabled]="disabled || !useElevationLow"
-                  type="reset"
-                  class="btn btn-primary"
-                  (click)="treelineLowClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
-                >
-                  <i class="fa fa-tree"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- Seehöhe Gefahr nach oben/unten erweitern -->
-        <div *ngIf="avalancheProblemModel.hasElevationHigh() && avalancheProblemModel.hasElevationLow()">
-          <label>{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
+        <!-- Extend sea level danger up/down -->
+        <div
+          class="avalanche-problem__elevation-change-danger-rating"
+          *ngIf="avalancheProblemModel.hasElevationHigh() && avalancheProblemModel.hasElevationLow()"
+        >
+          <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
 
           <!-- UP Button -->
-          <div class="btn-toolbar">
+          <div class="btn-group">
             <button
               [disabled]="disabled"
               type="reset"
-              class="btn btn-sm"
+              class="btn btn-sm btn-outline-secondary"
               [ngClass]="{
-                'btn-secondary': isDangerRatingDirection('up'),
-                'btn-outline': !isDangerRatingDirection('up')
+                'btn-dark': isDangerRatingDirection('up'),
+                'btn-outline-secondary': !isDangerRatingDirection('up')
               }"
               (click)="setDangerRatingDirection($event, isDangerRatingDirection('up') ? undefined : directionEnum.up)"
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
             >
               <i class="ph ph-arrow-up-right"></i>
+              <span>{{ "bulletins.create.tooltip.dangerRatingDirectionUp" | translate }}</span>
             </button>
 
             <!-- DOWN Button -->
             <button
               [disabled]="disabled"
               type="reset"
-              class="btn btn-sm"
+              class="btn btn-sm btn-outline-secondary"
               [ngClass]="{
-                'btn-secondary': isDangerRatingDirection('down'),
+                'btn-dark': isDangerRatingDirection('down'),
                 'btn-outline': !isDangerRatingDirection('down')
               }"
               (click)="
@@ -387,11 +319,12 @@
               title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"
             >
               <i class="ph ph-arrow-down-right"></i>
+              <span>{{ "bulletins.create.tooltip.dangerRatingDirectionDown" | translate }}</span>
             </button>
           </div>
-          <!-- End of toolbar-->
+          <!-- End of btn-group -->
         </div>
-        <!-- Seehöhe Gefahr nach oben/unten erweitern -->
+        <!-- End of Extend sea level danger up/down  -->
       </div>
     </div>
   </div>
