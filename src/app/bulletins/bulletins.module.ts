@@ -29,7 +29,9 @@ import { NgxSliderModule } from '../ngx-slider/lib/slider.module';
 import { PipeModule } from "../pipes/pipes.module";
 import { DatePipe } from "@angular/common";
 
+// Bootstrap ngx
 import { AccordionModule } from "ngx-bootstrap/accordion";
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
     imports: [
@@ -40,6 +42,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
         ConfirmDialogModule,
         PipeModule.forRoot(),
         AccordionModule.forRoot(),
+        BsDropdownModule.forRoot(),
         NgxSliderModule
     ],
     exports: [

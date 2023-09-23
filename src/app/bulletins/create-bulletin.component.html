@@ -364,27 +364,27 @@
   <!-- Form -->
   <div *ngIf="activeBulletin && !showNewBulletinModal" class="create-bulletin__region-form">
     <header class="region-form__header"> 
-      <div class="region-form__header-actions btn-group">
-        <div class="dropdown">
-          <button
-            class="btn btn-bare btn-sm btn-icon btn-bare--grey"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i class="ph-bold ph-dots-three"></i>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li>
+      <div class="region-form__header-actions btn-group" dropdown>
+        <button
+          dropdownToggle
+          class="btn btn-bare btn-sm btn-icon btn-bare--grey"
+          type="button"
+          aria-controls="dropdownMenu"
+        >
+          <i class="ph-bold ph-dots-three"></i>
+        </button>
+        <ul id="dropdownMenu" *dropdownMenu class="dropdown-menu dropdown-menu-end">
+          <li>
               <button class="dropdown-item">
-                <i class="ph icon-md ph-square-split-horizontal"></i> Karte auf der Seite
+                  <i class="ph icon-md ph-square-split-horizontal"></i> Karte auf der Seite
               </button>
-            </li>
-            <li>
-              <button class="dropdown-item"><i class="ph icon-md ph-square-split-vertical"></i> Karte oben</button>
-            </li>
-          </ul>
-        </div>
+          </li>
+          <li>
+              <button class="dropdown-item">
+                  <i class="ph icon-md ph-square-split-vertical"></i> Karte oben
+              </button>
+          </li>
+        </ul>
         <button (click)="deselectBulletin()" class="btn btn-bare btn-sm btn-icon btn-bare--grey">
           <i class="ph-bold ph-x"></i>
         </button>
@@ -414,15 +414,17 @@
       </div>
     </div>
 
+    <!-- To be implemented
     <div class="region-form__banner banner banner-warning">
       <p class="banner__text">
         <i class="ph ph-pencil-slash"></i>
         {{ "bulletins.create.regionLocked" | translate }}
       </p>
       <div class="btn-group banner__actions">
-        <button type="button" class="btn btn-sm btn-dark"><i class="ph ph-pencil-line"></i> <span>Edit</span></button>
+        <button type="button" class="btn btn-sm btn-dark"><i class="ph ph-pencil-line"></i> <span>{{ "bulletins.create.edit" | translate }}</span></button>
       </div>
     </div>
+    -->
 
     <div
       *ngIf="bulletinsService.getIsEditable() && hasSuggestions(activeBulletin) && !editRegions"
@@ -449,7 +451,7 @@
       </p>
       <div class="btn-group banner__actions">
         <button type="button" class="btn btn-sm btn-dark">
-          <i class="ph ph-pencil"></i> <span>{{ "bulletins.create.regionLockedPublished" | translate }} </span>
+          <i class="ph ph-pencil"></i> <span>{{ "bulletins.create.edit" | translate }} </span>
         </button>
       </div>
     </div>
