@@ -56,7 +56,7 @@
       "frequency" : "Häufigkeit",
       "avalancheSize" : "Lawinengröße",
       "dangerRating" : "Gefahrenstufe",
-      "override" : "(Gefahrenstufe überschreiben)",
+      "override" : "Gefahrenstufe überschreiben",
       "matrix" : "Matrix",
       "referToFairStability" : "Siehe mittlere Stabilität",
       "referToPoorStability" : "Siehe schlechte Stabilität",
@@ -102,9 +102,10 @@
         "daytimeDependency" : "Tageszeitliche Abhängigkeit",
         "treeline" : "Waldgrenze",
         "tendency" : {
-          "decreasing" : "Lawinengefahr nimmt ab",
-          "steady" : "Lawinengefahr bleibt unverändert",
-          "increasing" : "Lawinengefahr steigt"
+          "decreasing" : "Sinkt",
+          "steady" : "Bleibt gleich",
+          "increasing" : "Steigt",
+          "danger": "Lawinengefahr"
         },
         "complexity" : {
           "easy" : "Die Beurteilung im Gelände ist einfach",
@@ -120,8 +121,8 @@
         },
         "moveUpAvalancheProblem" : "Lawinenproblem nach oben schieben",
         "moveDownAvalancheProblem" : "Lawinenproblem nach unten schieben",
-        "dangerRatingDirectionUp" : "Erweitere die Gefahrenstufe nach oben",
-        "dangerRatingDirectionDown" : "Erweitere die Gefahrenstufe nach unten"
+        "dangerRatingDirectionUp" : "Nach oben",
+        "dangerRatingDirectionDown" : "Nach unten"
       },
       "save" : " Speichern",
       "discard" : " Verwerfen",
@@ -137,6 +138,12 @@
       "statusHeader": "Status der Lawinenvorhersage",
       "suggestions": "Vorschläge",
       "noBulletinsForSelectedDay": "Es sind noch keine Regionen für diesen Tag definiert.",
+      "autosave": "Automatisch gespeichert",
+      "regionEditable": "Diese Region ist editierbar.", 
+      "regionLocked": "Diese Region ist gesperrt.",
+      "edit": "Editieren",
+      "regionLockedPublished": "Diese Region wurde bereits publiziert.",
+      "changeDangerRatingElevation": "Erweitere die Lawinengefahr",
       "label" : {
         "avalancheProblems" : "Lawinenproblem",
         "aspects" : "Expositionen",
