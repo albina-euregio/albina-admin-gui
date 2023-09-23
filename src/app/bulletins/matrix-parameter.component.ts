@@ -20,6 +20,7 @@ export class MatrixParameterComponent implements OnChanges {
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() matrixInformation: MatrixInformationModel;
   @Input() disabled: boolean;
+  @Input() count: number;
 
   dangerRatingEnabled: boolean;
   languageCode = Enums.LanguageCode;

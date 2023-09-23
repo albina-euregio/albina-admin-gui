@@ -23,8 +23,16 @@
     opacity: 1;
   }
 }
-.bulletins-table__body .bulletins-table__day--past td {
-  background: $gray-100;
+.bulletins-table__body .bulletins-table__day--past {
+  td {
+    background: $gray-100;
+  }
+  time {
+    color: $gray-600;
+  }
+  .badge {
+    opacity: 0.5;
+  }
 }
 
 .bulletins-table__day {

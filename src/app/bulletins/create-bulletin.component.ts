@@ -129,6 +129,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   public showStatusOfAllRegions: boolean = false;
 
+  public showNewBulletinModal: boolean = false;
+
   public loadingErrorModalRef: BsModalRef;
   @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
 
@@ -720,7 +722,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private onMapClick() {
-    if (!this.editRegions) {
+    if (this.showNewBulletinModal && !this.editRegions) {
       const test = this.mapService.getClickedRegion();
       for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
         if (bulletin.getSavedRegions().indexOf(test) > -1 || bulletin.getPublishedRegions().indexOf(test) > -1 ) {
@@ -959,6 +961,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     // TODO websocket: unlock bulletin
     // TODO websocket: lock bulletin
 
+    this.showNewBulletinModal = true;
+
     let bulletin: BulletinModel;
     if (copy && this.copyService.getBulletin()) {
       bulletin = this.copyService.getBulletin();
@@ -974,6 +978,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.selectBulletin(bulletin);
     this.mapService.selectAggregatedRegion(bulletin);
     this.editBulletinRegions();
+    // Always create 1 problem
+    this.createAvalancheProblem(false);
   }
 
   copyBulletin(srcBulletin: BulletinModel) { 
@@ -1479,6 +1485,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   saveBulletin(event) {
     event.stopPropagation();
 
+    this.showNewBulletinModal = false;
+
     // save selected regions to active bulletin
     const regions = this.mapService.getSelectedRegions();
 
@@ -1621,8 +1629,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   discardBulletin(event, bulletin?: BulletinModel) {
     event.stopPropagation();
+    this.showNewBulletinModal = false;
     this.editRegions = false;
-
+    
     if (bulletin !== undefined && bulletin.getSavedRegions().length === 0) {
       this.delBulletin(bulletin);
     }

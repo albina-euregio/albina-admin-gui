@@ -16,7 +16,7 @@
     class="frequency-slider"
     [(value)]="matrixInformation.frequencyValue"
     [options]="frequencyOptions"
-    (userChange)="onFrequencyValueChange($event)"
+    (userChange)="onFrequencyValueChange($event)" 
   ></ngx-slider>
 </div>
 <!-- End of frequency slider -->
@@ -185,6 +185,7 @@
     </button>
     <div *ngIf="!disabled" class="form-check ml-3">
       <input
+      [id]="count + '-overrideCheckbox'"
         type="checkbox"
         class="form-check-input"
         [disabled]="
@@ -198,7 +199,7 @@
         (click)="setDangerRatingEnabled(event)"
       />
 
-      <label *ngIf="!disabled" class="form-label" for="textarea-input">{{ "matrix.label.override" | translate }}</label>
+      <label *ngIf="!disabled" class="form-label" [attr.for]="count + '-overrideCheckbox'">{{ "matrix.label.override" | translate }}</label>
     </div>
   </div>
 </div>

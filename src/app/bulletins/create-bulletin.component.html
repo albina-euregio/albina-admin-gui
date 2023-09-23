@@ -318,10 +318,14 @@
       <!-- End own regions header -->
       <!-- List of own regions -->
       <nav class="create-bulletin__region-list">
-        <ng-container *ngFor="let bulletin of getOwnBulletins()">
-          <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
+        <!-- Show the list of bulletins if there are any -->
+        <ng-container *ngIf="getOwnBulletins().length; else noBulletinsTemplate">
+            <ng-container *ngFor="let bulletin of getOwnBulletins()">
+                <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
+            </ng-container>
         </ng-container>
       </nav>
+    
     </div>
 
     <div class="create-bulletin__regions">
@@ -358,8 +362,8 @@
   <!-- End Sidebar -->
 
   <!-- Form -->
-  <div *ngIf="activeBulletin" class="create-bulletin__region-form">
-    <header class="region-form__header">
+  <div *ngIf="activeBulletin && !showNewBulletinModal" class="create-bulletin__region-form">
+    <header class="region-form__header"> 
       <div class="region-form__header-actions btn-group">
         <div class="dropdown">
           <button
@@ -381,7 +385,7 @@
             </li>
           </ul>
         </div>
-        <button class="btn btn-bare btn-sm btn-icon btn-bare--grey">
+        <button (click)="deselectBulletin()" class="btn btn-bare btn-sm btn-icon btn-bare--grey">
           <i class="ph-bold ph-x"></i>
         </button>
       </div>
@@ -391,7 +395,7 @@
 
         <div class="user-avatar region-form__author">
           {{ activeBulletin.getAuthor().getImage() }}
-          <img src="{{ activeBulletin.getAuthor().getImage() }}" class="user-avatar__img" />
+          <img *ngIf="activeBulletin.getAuthor().getImage()" src="{{ activeBulletin.getAuthor().getImage() }}" class="user-avatar__img" />
           <span class="user-avatar__name">{{ activeBulletin.getAuthor().getName() }}</span>
         </div>
       </div>
@@ -2128,18 +2132,17 @@
 
   <!-- Map -->
   <div class="create-bulletin__map-container">
-    <div class="floating-action create-region-floating-action" *ngIf="editRegions">
+    <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
       <div class="floating-action__text">
         <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
       </div>
       <div class="floating-action__actions btn-toolbar">
-        <button type="reset" class="btn btn-bare" (click)="discardBulletin($event, bulletin)">
-          <!-- TODO: translation -->
+        {{ bulletin }}
+        <button type="reset" class="btn btn-bare" (click)="discardBulletin($event, activeBulletin)">
           <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
         </button>
-        <button type="reset" class="btn btn-primary" (click)="saveBulletin($event, bulletin)">
+        <button type="button" class="btn btn-primary" (click)="saveBulletin($event, activeBulletin)">
           <i class="ph-bold ph-check"></i>
-          <!-- TODO: translation -->
           <span>{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
         </button>
       </div>
@@ -2150,6 +2153,11 @@
   </div>
   <!-- End Map -->
 </div>
+
+<!-- Display this template when there are no bulletins -->
+<ng-template #noBulletinsTemplate>
+  <p>{{ "bulletins.create.noBulletinsForSelectedDay" | translate }}</p>
+</ng-template>
 
 <ng-template #bulletinTemplate let-bulletin="bulletin">
   <div
@@ -2167,9 +2175,13 @@
       <div class="region-thumb__avalanche-info">
         <app-danger-rating-icon [bulletin]="bulletin"></app-danger-rating-icon>
 
-        <!-- TODO: Lawinenproblem(e) -->
-        <img src="./assets/img/Drifting_snow_c.svg" class="region-thumb__avalanche-problem-icon" />
-        <!-- TODO: Lawinenproblem(e) -->
+        <!-- Lawinenproblem(e) -->
+        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem1" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem2" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem3" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem4" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem5" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <!-- Lawinenproblem(e) -->        
 
         <!-- Seehöhe(n) -->
 
