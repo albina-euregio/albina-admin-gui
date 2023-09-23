@@ -17,6 +17,7 @@ import { CaamlComponent } from "./caaml.component";
 import { JsonComponent } from "./json.component";
 import { TabsComponent } from "./tabs.component";
 import { TabComponent } from "./tab.component";
+import { AvalancheProblemIconsComponent } from './avalanche-problem-icons/avalanche-problem-icons.component';
 
 // Bulletins Routing
 import { BulletinsRoutingModule } from "./bulletins-routing.module";
@@ -29,7 +30,6 @@ import { PipeModule } from "../pipes/pipes.module";
 import { DatePipe } from "@angular/common";
 
 import { AccordionModule } from "ngx-bootstrap/accordion";
-
 
 @NgModule({
     imports: [
@@ -60,7 +60,8 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
         CaamlComponent,
         JsonComponent,
         TabsComponent,
-        TabComponent
+        TabComponent,
+        AvalancheProblemIconsComponent
     ],
     providers: [DatePipe]
 })
