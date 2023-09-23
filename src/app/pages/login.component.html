@@ -41,6 +41,8 @@
 <ng-template #errorTemplate>
   <div class="modal-body text-center">
     <p>{{ "login.errorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="errorModalConfirm()">{{ "login.errorDialog.accept" | translate }}</button>
   </div>
 </ng-template>

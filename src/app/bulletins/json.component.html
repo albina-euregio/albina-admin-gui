@@ -26,6 +26,8 @@
 <ng-template #jsonNotLoadedTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.json.jsonNotLoadedDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="jsonNotLoadedModalConfirm()">{{ "bulletins.json.jsonNotLoadedDialog.accept" | translate }}</button>
   </div>
 </ng-template>
@@ -33,6 +35,8 @@
 <ng-template #noJsonTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.json.noJsonDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="noJsonModalConfirm()">{{ "bulletins.json.noJsonDialog.accept" | translate }}</button>
   </div>
 </ng-template>
