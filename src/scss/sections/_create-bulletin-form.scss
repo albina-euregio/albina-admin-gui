@@ -20,6 +20,11 @@ $region-form-width: 512px;
 
 .region-form__header-actions {
   order: 2;
+
+  .dropdown-menu.show {
+    position: absolute;
+    top: 32px !important;
+  }
 }
 
 // Region form actions banner

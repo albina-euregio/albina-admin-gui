@@ -131,6 +131,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   public showNewBulletinModal: boolean = false;
 
+  public isCompactMapLayout: boolean = false;
+
   public loadingErrorModalRef: BsModalRef;
   @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
 
@@ -734,6 +736,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
       }
     }
+  }
+
+  setMapLayout(bulletin, isCompact: boolean): void {
+    // Show the map on top of form (compact) or right next to the form?
+    this.isCompactMapLayout = isCompact;
+
+    setTimeout(() => {
+      this.initMaps();
+      this.updateInternalBulletins();
+
+      if (bulletin) {
+        this.selectBulletin(bulletin);
+      }
+    }, 10);
   }
 
   setTendency(event, tendency) {
