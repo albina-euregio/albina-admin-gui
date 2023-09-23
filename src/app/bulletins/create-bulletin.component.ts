@@ -1673,7 +1673,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
           () => {
             this.localStorageService.clear();
             this.loading = false;
-            this.goBack();
+            //this.goBack();
             console.log("Bulletins changed on server.");
           },
           () => {
@@ -1687,7 +1687,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
           () => {
             this.localStorageService.clear();
             this.loading = false;
-            this.goBack();
+            //this.goBack();
             console.log("Bulletins saved on server.");
           },
           () => {
