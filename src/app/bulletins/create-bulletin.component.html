@@ -361,17 +361,8 @@
   </aside>
   <!-- End Sidebar -->
 
-  <ng-container *ngIf="isCompactMapLayout; else normalLayout">
-    <div class="create-bulleting__compact">
-      <ng-container *ngTemplateOutlet="layoutContent"></ng-container>
-    </div>
-  </ng-container>
-  
-  <ng-template #normalLayout>
-    <ng-container *ngTemplateOutlet="layoutContent"></ng-container>
-  </ng-template>
-  
-  <ng-template #layoutContent>
+
+  <div class="create-bulletin__default-layout" [ngClass]="{ 'create-bulletin__compact-layout': (activeBulletin !== undefined && isCompactMapLayout) }">
     <!-- Form -->
     <div *ngIf="activeBulletin && !showNewBulletinModal" class="create-bulletin__region-form">
       <header class="region-form__header"> 
@@ -2146,13 +2137,12 @@
     <!-- End Form -->
 
     <!-- Map -->
-    <div class="create-bulletin__map-container">
+    <div class="create-bulletin__map-container" [ngClass]="{ 'create-bulletin__map-container--am-pm': (activeBulletin !== undefined && activeBulletin.hasDaytimeDependency) }">
       <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
         <div class="floating-action__text">
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
         </div>
         <div class="floating-action__actions btn-toolbar">
-          {{ bulletin }}
           <button type="reset" class="btn btn-bare" (click)="discardBulletin($event, activeBulletin)">
             <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
           </button>
@@ -2163,11 +2153,11 @@
         </div>
       </div>
 
-      <div id="map" class="create-bulletin__map"></div>
-      <div id="afternoonMap" class="create-bulletin__map create-bulletin__map--afternoon"></div>
+      <div id="map" class="create-bulletin__map create-bulletin__map--am"></div>
+      <div id="afternoonMap" class="create-bulletin__map create-bulletin__map--pm"></div>
     </div>
     <!-- End Map -->
-  </ng-template>
+  </div>
 </div>
 
 <!-- Display this template when there are no bulletins -->
@@ -2192,21 +2182,19 @@
         <app-danger-rating-icon [bulletin]="bulletin"></app-danger-rating-icon>
 
         <!-- Lawinenproblem(e) -->
-        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem1" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
-        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem2" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
-        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem3" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
-        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem4" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
-        <app-avalanche-problem-icons [avalancheProblem]="bulletin.forenoon.avalancheProblem5" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
-        <!-- Lawinenproblem(e) -->        
-
+        <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem1" [avalancheProblem]="bulletin.forenoon.avalancheProblem1" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem2" [avalancheProblem]="bulletin.forenoon.avalancheProblem2" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem3" [avalancheProblem]="bulletin.forenoon.avalancheProblem3" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem4" [avalancheProblem]="bulletin.forenoon.avalancheProblem4" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem5" [avalancheProblem]="bulletin.forenoon.avalancheProblem5" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <!-- Lawinenproblem(e) -->
         <!-- Seehöhe(n) -->
-
         <span class="badge text-bg-light" *ngIf="bulletin.forenoon.hasElevationDependency">
           <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
           {{
             bulletin.forenoon.treeline
               ? ("bulletins.create.tooltip.treeline" | translate)
-              : activeBulletin.forenoon.elevation + " m"
+              : bulletin.forenoon.elevation + " m"
           }}
         </span>
 
@@ -2218,7 +2206,7 @@
           {{
             bulletin.afternoon.treeline
               ? ("bulletins.create.tooltip.treeline" | translate)
-              : activeBulletin.afternoon.elevation + " m"
+              : bulletin.afternoon.elevation + " m"
           }}
         </span>
         <!-- Seehöhe(n) -->

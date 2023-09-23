@@ -210,6 +210,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.externBulletinsList = new Array<BulletinModel>();
     // this.preventClick = false;
     // this.timer = 0;
+
+    // Set initial value based on the current window width
+    this.isCompactMapLayout = window.innerWidth < 768;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    console.log('onresize');
+    console.log(event.target.innerWidth);
+    this.isCompactMapLayout = event.target.innerWidth < 768;
   }
 
   showDialog(pmData) {
@@ -741,14 +751,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   setMapLayout(bulletin, isCompact: boolean): void {
     // Show the map on top of form (compact) or right next to the form?
     this.isCompactMapLayout = isCompact;
-
+    
     setTimeout(() => {
-      this.initMaps();
-      this.updateInternalBulletins();
-
-      if (bulletin) {
-        this.selectBulletin(bulletin);
-      }
+      this.mapService.map.invalidateSize();
     }, 10);
   }
 
@@ -1126,6 +1131,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         this.applicationRef.tick();
       }
     }
+
+    setTimeout(() => {
+      this.mapService.map.invalidateSize();
+    }, 10);
   }
 
   daytimeDependencyChanged(event, value) {

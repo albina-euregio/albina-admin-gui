@@ -1,14 +1,13 @@
 // Map
 .create-bulletin__map-container, .create-bulletin__map {
-    height: 100vh;
     width: 100%;
+    overflow: hidden;
 }
 
-.create-bulletin__map--afternoon {
+.create-bulletin__map--pm {
     visibility: hidden;
 }
 
 .create-bulletin__map--am {
-    height: 50vh;
-    visibility: visible;
+    visibility: visible;    
 }
