@@ -200,14 +200,14 @@
         <div class="avalanche-problem-detail__elevation-label form-check">
           <input
             id="elevationHighCheckbox"
-            [id]="count + '-elevationHighCheckbox'"
+            [id]="forLabelId('elevationHighCheckbox')"
             type="checkbox"
-            class="form-check-input"
+            class="form-check-input" 
             [disabled]="disabled"
             (change)="setUseElevationHigh($event)"
             [(ngModel)]="useElevationHigh"
           />
-          <label class="form-label" [attr.for]="count + '-elevationHighCheckbox'">{{ "bulletins.create.label.elevationHigh" | translate }}</label>
+          <label class="form-label" [attr.for]="forLabelId('elevationHighCheckbox')">{{ "bulletins.create.label.elevationHigh" | translate }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
           <div class="input-group">
@@ -247,14 +247,14 @@
       <div class="avalanche-problem-detail__elevation">
         <div class="form-check avalanche-problem-detail__elevation-label">
           <input
-            [id]="count + '-elevationLowCheckbox'"
+            [id]="forLabelId('elevationLowCheckbox')"
             type="checkbox"
             class="form-check-input"
             [disabled]="disabled"
             (change)="setUseElevationLow($event)"
             [(ngModel)]="useElevationLow"
           />
-          <label class="form-label" [attr.for]="count + '-elevationLowCheckbox'">{{ "bulletins.create.label.elevationLow" | translate }}</label>
+          <label class="form-label" [attr.for]="forLabelId('elevationLowCheckbox')">{{ "bulletins.create.label.elevationLow" | translate }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
           <div class="input-group">
@@ -347,6 +347,7 @@
       [(matrixInformation)]="avalancheProblemModel.matrixInformation"
       [disabled]="disabled"
       [count]="count"
+      [afternoon]="afternoon"
     ></app-matrix-parameter>
     <app-matrix
       [(bulletin)]="bulletin"
@@ -365,6 +366,7 @@
       [(matrixInformation)]="avalancheProblemModel.matrixInformation"
       [disabled]="disabled"
       [count]="count"
+      [afternoon]="afternoon"
     ></app-matrix-parameter>
   </div>
 </div>

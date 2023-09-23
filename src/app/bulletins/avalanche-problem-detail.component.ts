@@ -18,6 +18,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   @Input() avalancheProblemModel: AvalancheProblemModel;
   @Input() disabled: boolean;
   @Input() count: number;
+  @Input() afternoon: boolean;
 
   avalancheProblemEnum = Enums.AvalancheProblem;
   snowpackStability = Enums.SnowpackStability;
@@ -51,6 +52,10 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     } else {
       this.useElevationLow = false;
     }
+  }
+
+  public forLabelId(key: string): string {
+    return this.count + (this.afternoon ? '_pm_' : '_am_') + key;
   }
 
   isAvalancheProblem(avalancheProblem) {

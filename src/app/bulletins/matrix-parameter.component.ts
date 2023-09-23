@@ -21,9 +21,14 @@ export class MatrixParameterComponent implements OnChanges {
   @Input() matrixInformation: MatrixInformationModel;
   @Input() disabled: boolean;
   @Input() count: number;
+  @Input() afternoon: boolean;
 
   dangerRatingEnabled: boolean;
   languageCode = Enums.LanguageCode;
+
+  public forLabelId(key: string): string {
+    return this.count + (this.afternoon ? '_pm_' : '_am_') + key;
+  }
 
   snowpackStabilityOptions: Options = {
     floor: 25,
