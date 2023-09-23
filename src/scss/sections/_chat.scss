@@ -1,7 +1,9 @@
+$header-nav-height: 56px;
+
 .chat {
   position: fixed;
   right: 0;
-  top: 0;
+  top: $header-nav-height;
   background: $white;
   bottom: 0;
   overflow: hidden;

@@ -22,6 +22,7 @@ export class FullLayoutComponent {
   public status: { isopen: boolean } = { isopen: false };
   public showChat: boolean;
   public isNavCollapsed = true;
+  public isChatVisible = false;
 
   public message: string;
 
@@ -52,6 +53,10 @@ export class FullLayoutComponent {
     if (this.showChat && this.authenticationService.isUserLoggedIn()) {
       this.chatService.connect();
     }
+  }
+
+  public toggleChat() {
+    this.isChatVisible = !this.isChatVisible;
   }
 
   getStyle() {

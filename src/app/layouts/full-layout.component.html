@@ -150,6 +150,7 @@
       <li *ngIf="showChat && authenticationService.isEuregio()" class="nav-item">
         <a
           *ngIf="authenticationService.getActiveRegionId() && authenticationService.getActiveRegionId() !== undefined"
+          (click)="toggleChat()"
           class="nav-link"
           >Chat <i class="ph-bold ph-chats-circle"></i
           ><span *ngIf="showBadge()" class="badge badge-pill bg-danger">{{
@@ -171,6 +172,7 @@
   <aside
     class="aside-menu chat"
     style="overflow: auto"
+    [ngStyle]="{'display': isChatVisible ? 'block' : 'none'}"
     *ngIf="
       authenticationService.getActiveRegionId() &&
       authenticationService.getActiveRegionId() !== undefined &&
