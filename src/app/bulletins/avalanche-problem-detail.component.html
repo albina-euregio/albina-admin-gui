@@ -199,13 +199,15 @@
       <div class="avalanche-problem-detail__elevation">
         <div class="avalanche-problem-detail__elevation-label form-check">
           <input
+            id="elevationHighCheckbox"
+            [id]="count + '-elevationHighCheckbox'"
             type="checkbox"
             class="form-check-input"
             [disabled]="disabled"
             (change)="setUseElevationHigh($event)"
             [(ngModel)]="useElevationHigh"
           />
-          <label class="form-label" for="">{{ "bulletins.create.label.elevationHigh" | translate }}</label>
+          <label class="form-label" [attr.for]="count + '-elevationHighCheckbox'">{{ "bulletins.create.label.elevationHigh" | translate }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
           <div class="input-group">
@@ -227,7 +229,11 @@
           <button
             [disabled]="disabled || !useElevationHigh"
             type="reset"
-            class="btn btn-icon btn-outline-secondary"
+            class="btn btn-icon"
+            [ngClass]="{
+              'btn-outline-secondary': !avalancheProblemModel.treelineHigh, 
+              'btn-dark': avalancheProblemModel.treelineHigh
+            }"
             (click)="treelineHighClicked($event)"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
@@ -236,17 +242,19 @@
           </button>
         </div>
       </div>
+      
       <!-- Elevation (low) -->
       <div class="avalanche-problem-detail__elevation">
         <div class="form-check avalanche-problem-detail__elevation-label">
           <input
+            [id]="count + '-elevationLowCheckbox'"
             type="checkbox"
             class="form-check-input"
             [disabled]="disabled"
             (change)="setUseElevationLow($event)"
             [(ngModel)]="useElevationLow"
           />
-          <label class="form-label" for="">{{ "bulletins.create.label.elevationLow" | translate }}</label>
+          <label class="form-label" [attr.for]="count + '-elevationLowCheckbox'">{{ "bulletins.create.label.elevationLow" | translate }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
           <div class="input-group">
@@ -268,7 +276,11 @@
           <button
             [disabled]="disabled || !useElevationLow"
             type="reset"
-            class="btn btn-icon btn-outline-secondary"
+            class="btn btn-icon"
+            [ngClass]="{
+              'btn-outline-secondary': !avalancheProblemModel.treelineLow, 
+              'btn-dark': avalancheProblemModel.treelineLow
+            }"
             (click)="treelineLowClicked($event)"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
@@ -334,6 +346,7 @@
       [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
       [(matrixInformation)]="avalancheProblemModel.matrixInformation"
       [disabled]="disabled"
+      [count]="count"
     ></app-matrix-parameter>
     <app-matrix
       [(bulletin)]="bulletin"
@@ -351,6 +364,7 @@
       [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
       [(matrixInformation)]="avalancheProblemModel.matrixInformation"
       [disabled]="disabled"
+      [count]="count"
     ></app-matrix-parameter>
   </div>
 </div>

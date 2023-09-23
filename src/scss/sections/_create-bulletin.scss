@@ -5,6 +5,7 @@ $bulletin-height: calc(100vh - $header-nav-height);
     display: flex;
     align-items: stretch;
     height: $bulletin-height;
+    background: white;
 }
 
 .create-bulletin__sidebar,

@@ -449,7 +449,7 @@ export class MapService {
   private onEachFeatureClosure(mapService, regionsService, overlayMaps) {
     return function onEachFeature(feature, layer) {
       layer.on({
-        click: function(e) {
+        click: function (e) {
           if (feature.properties.selected && feature.properties.selected === true) {
             if (e.originalEvent.ctrlKey) {
               const regions = regionsService.getLevel1Regions(feature.properties.id);
@@ -516,7 +516,7 @@ export class MapService {
 
   private onEachAggregatedRegionsFeatureAM(feature, layer) {
     layer.on({
-      click: function(e) {
+      click: function (e) {
         feature.properties.selected = true;
       },
       mouseover: function(e) {
@@ -544,7 +544,7 @@ export class MapService {
 
   private onEachAggregatedRegionsFeaturePM(feature, layer) {
     layer.on({
-      click: function(e) {
+      click: function (e) {
         feature.properties.selected = true;
       }
     });

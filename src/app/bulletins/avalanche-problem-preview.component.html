@@ -1,5 +1,17 @@
 <div class="avalanche-problem__preview">
   <div class="avalanche-problem-preview__info">
+    <h2 class="accordion-header__title" 
+        *ngIf="!isAvalancheProblem('new_snow') && 
+              !isAvalancheProblem('wind_slab') && 
+              !isAvalancheProblem('persistent_weak_layers') && 
+              !isAvalancheProblem('wet_snow') && 
+              !isAvalancheProblem('gliding_snow') && 
+              !isAvalancheProblem('favourable_situation') &&
+              !isAvalancheProblem('cornices') &&
+              !isAvalancheProblem('no_distinct_problem')">
+      {{ 'bulletins.create.createAvalancheProblem' | translate }}
+    </h2>
+
     <!-- Danger rating -->
     <div class="avalanche-problem-preview__info-item">
       <img
@@ -32,42 +44,7 @@
 
     <!-- Avalanche problem icon -->
     <div class="avalanche-problem-preview__info-item">
-      <img
-        *ngIf="isAvalancheProblem('new_snow')"
-        src="./assets/img/New_snow_c.svg"
-        class="avalanche-problem-preview__problem-icon"
-      />
-      <img
-        *ngIf="isAvalancheProblem('wind_slab')"
-        src="./assets/img/Drifting_snow_c.svg"
-        class="avalanche-problem-preview__problem-icon"
-      />
-      <img *ngIf="isAvalancheProblem('persistent_weak_layers')" src="./assets/img/Persistent_weak_layers_c.svg" />
-      <img
-        *ngIf="isAvalancheProblem('wet_snow')"
-        src="./assets/img/Wet_snow_c.svg"
-        class="avalanche-problem-preview__problem-icon"
-      />
-      <img
-        *ngIf="isAvalancheProblem('gliding_snow')"
-        src="./assets/img/Gliding_snow_c.svg"
-        class="avalanche-problem-preview__problem-icon"
-      />
-      <img
-        *ngIf="isAvalancheProblem('favourable_situation')"
-        src="./assets/img/Favourable_situation_c.svg"
-        class="avalanche-problem-preview__problem-icon"
-      />
-      <img
-        *ngIf="isAvalancheProblem('cornices')"
-        src="./assets/img/Cornices_c.svg"
-        class="avalanche-problem-preview__problem-icon"
-      />
-      <img
-        *ngIf="isAvalancheProblem('no_distinct_problem')"
-        src="./assets/img/No_distinct_problem_c.svg"
-        class="avalanche-problem-preview__problem-icon"
-      />
+      <app-avalanche-problem-icons [avalancheProblem]="avalancheProblem" [iconClass]="'avalanche-problem-preview__problem-icon'"></app-avalanche-problem-icons>
     </div>
     <!-- End avalanche problem icon-->
 

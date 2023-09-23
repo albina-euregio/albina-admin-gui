@@ -38,7 +38,7 @@
 .bulletins-table__day {
   @include font-m-bold;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row;
   justify-content: space-between;
   align-items: center;
   button {

@@ -7,6 +7,7 @@ $region-form-width: 512px;
   min-width: $region-form-width;
   display: flex;
   flex-flow: column;
+  background: $white;
 }
 
 .region-form__header {

@@ -88,6 +88,8 @@
         "edit" : "Region editieren",
         "copy" : "Region kopieren",
         "delete" : "Region löschen",
+        "createRegion": "Region erstellen",
+        "cancel": "Abbrechen",
         "acceptSuggestion" : "Vorgeschlagene Regionen annehmen",
         "rejectSuggestion" : "Vorgeschlagene Regionen ablehnen",
         "saveChanges" : "Änderungen speichern",
@@ -134,6 +136,7 @@
       "mapSelectRegion": "Regionen auf der Karte auswählen.",
       "statusHeader": "Status der Lawinenvorhersage",
       "suggestions": "Vorschläge",
+      "noBulletinsForSelectedDay": "Es sind noch keine Regionen für diesen Tag definiert.",
       "label" : {
         "avalancheProblems" : "Lawinenproblem",
         "aspects" : "Expositionen",

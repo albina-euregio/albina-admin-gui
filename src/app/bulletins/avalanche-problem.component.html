@@ -1,5 +1,5 @@
 <accordion class="avalanche-problems__accordion">
-  <accordion-group *ngIf="hasAvalancheProblem(1)" #accordionAvalancheProblem1>
+  <accordion-group *ngIf="hasAvalancheProblem(1)" #accordionAvalancheProblem1 [isOpen]="true">
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-right"></i>
@@ -17,6 +17,7 @@
         [bulletin]="bulletinModel"
         [bulletinDaytimeDescription]="bulletinDaytimeDescription"
         [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem1"
+        [count]="1"
         [disabled]="disabled"
       ></app-avalanche-problem-detail>
     </div>
@@ -40,6 +41,7 @@
         [bulletin]="bulletinModel"
         [bulletinDaytimeDescription]="bulletinDaytimeDescription"
         [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem2"
+        [count]="2"
         [disabled]="disabled"
       ></app-avalanche-problem-detail>
     </div>
@@ -63,6 +65,7 @@
         [bulletin]="bulletinModel"
         [bulletinDaytimeDescription]="bulletinDaytimeDescription"
         [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem3"
+        [count]="3"
         [disabled]="disabled"
       ></app-avalanche-problem-detail>
     </div>
@@ -86,6 +89,7 @@
         [bulletin]="bulletinModel"
         [bulletinDaytimeDescription]="bulletinDaytimeDescription"
         [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem4"
+        [count]="4"
         [disabled]="disabled"
       ></app-avalanche-problem-detail>
     </div>
@@ -109,6 +113,7 @@
         [bulletin]="bulletinModel"
         [bulletinDaytimeDescription]="bulletinDaytimeDescription"
         [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem5"
+        [count]="5"
         [disabled]="disabled"
       ></app-avalanche-problem-detail>
     </div>

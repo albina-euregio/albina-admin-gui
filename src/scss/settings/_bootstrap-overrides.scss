@@ -127,3 +127,17 @@ $modal-footer-gap: $space-1;
 .modal-footer {
   padding: $space-2 $space-4 !important;
 }
+
+// Dropdowns
+.dropdown-header {
+  @include font-xs;
+}
+
+.dropdown-item {
+  display: flex !important;
+  align-items: center;
+  gap: $space-1;
+}
+.dropdown-item .ph-check:last-child {
+  margin-left: auto;
+}

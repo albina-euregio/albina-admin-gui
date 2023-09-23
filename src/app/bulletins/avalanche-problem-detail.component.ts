@@ -17,6 +17,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() avalancheProblemModel: AvalancheProblemModel;
   @Input() disabled: boolean;
+  @Input() count: number;
 
   avalancheProblemEnum = Enums.AvalancheProblem;
   snowpackStability = Enums.SnowpackStability;
