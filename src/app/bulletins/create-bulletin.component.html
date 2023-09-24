@@ -341,7 +341,7 @@
   <!-- End Sidebar -->
 
 
-  <div class="create-bulletin__default-layout" [ngClass]="{ 'create-bulletin__compact-layout': (activeBulletin !== undefined && isCompactMapLayout) }">
+  <div class="create-bulletin__default-layout" [ngClass]="{ 'create-bulletin__compact-layout': (activeBulletin !== undefined && !editRegions && isCompactMapLayout) }">
     <!-- Form -->
     <div *ngIf="activeBulletin && !showNewBulletinModal" class="create-bulletin__region-form">
       <header class="region-form__header"> 
@@ -357,12 +357,12 @@
           <ul id="dropdownMenu" *dropdownMenu class="dropdown-menu dropdown-menu-end">
             <li *ngIf="isCompactMapLayout">
                 <button class="dropdown-item" (click)="setMapLayout(activeBulletin, false)">
-                    <i class="ph icon-md ph-square-split-horizontal"></i> Karte auf der Seite
+                    <i class="ph icon-md ph-square-split-horizontal"></i> {{ 'bulletins.create.mapLeft' | translate }}
                 </button>
             </li>
             <li *ngIf="!isCompactMapLayout">
                 <button class="dropdown-item" (click)="setMapLayout(activeBulletin, true)">
-                    <i class="ph icon-md ph-square-split-vertical"></i> Karte oben
+                    <i class="ph icon-md ph-square-split-vertical"></i> {{ 'bulletins.create.mapTop' | translate }}
                 </button>
             </li>
           </ul>
@@ -387,11 +387,11 @@
           {{ "bulletins.create.regionEditable" | translate }}
         </p>
         <div class="btn-group banner__actions">
-          <button type="button" class="btn btn-sm btn-icon btn-outline-primary">
+          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin)" (click)="editBulletin($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
             <i class="ph ph-map-trifold"></i>
           </button>
-          <button type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
-          <button type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-trash"></i></button>
+          <button *ngIf="!hasSuggestions(activeBulletin) && !copyService.isCopyBulletin()" (click)="openCopyRegionModal(copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
+          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin) && isCreator(activeBulletin)" (click)="deleteBulletin($event, activeBulletin)"  data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.delete' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-trash"></i></button>
         </div>
       </div>
 
@@ -424,10 +424,10 @@
           </button>
         </div>
       </div>
-
+      <!-- To be implemented
       <div class="region-form__banner banner banner-warning">
         <p class="banner__text">
-          <i class="ph ph-warning"></i>
+          <i class="ph ph-warning"></i> 
           {{ "bulletins.create.regionLockedPublished" | translate }}
         </p>
         <div class="btn-group banner__actions">
@@ -436,6 +436,7 @@
           </button>
         </div>
       </div>
+      -->
       <main class="region-form__content">
         <accordion class="accordion">
           <!-- Avalanche problems -->
@@ -2127,7 +2128,8 @@
           </button>
           <button type="button" class="btn btn-primary" (click)="saveBulletin($event, activeBulletin)">
             <i class="ph-bold ph-check"></i>
-            <span>{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
+            <span *ngIf="activeBulletin.savedRegions.length == 0">{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
+            <span *ngIf="activeBulletin.savedRegions.length > 0">{{ 'bulletins.create.tooltip.saveChanges' | translate }}</span>
           </button>
         </div>
       </div>

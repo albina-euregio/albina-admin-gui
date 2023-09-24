@@ -144,6 +144,8 @@
       "edit": "Editieren",
       "regionLockedPublished": "Diese Region wurde bereits veröffentlicht.",
       "changeDangerRatingElevation": "Erweitere die Lawinengefahr",
+      "mapTop": "Karte oben",
+      "mapLeft": "Karte auf der Seite",
       "label" : {
         "avalancheProblems" : "Lawinenproblem",
         "aspects" : "Expositionen",

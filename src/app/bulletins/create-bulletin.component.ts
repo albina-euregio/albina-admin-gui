@@ -1569,6 +1569,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   editBulletin(event) {
     event.stopPropagation();
+    this.showNewBulletinModal = true;
     this.editBulletinRegions();
   }
 
