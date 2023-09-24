@@ -142,7 +142,7 @@
       "regionEditable": "Diese Region ist editierbar.", 
       "regionLocked": "Diese Region ist gesperrt.",
       "edit": "Editieren",
-      "regionLockedPublished": "Diese Region wurde bereits publiziert.",
+      "regionLockedPublished": "Diese Region wurde bereits veröffentlicht.",
       "changeDangerRatingElevation": "Erweitere die Lawinengefahr",
       "label" : {
         "avalancheProblems" : "Lawinenproblem",

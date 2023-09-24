@@ -1,5 +1,5 @@
 <div class="bulletins animated fadeIn container">
-  <table class="table table-bordered">
+  <table class="table table-bordered responsive-table">
     <thead class="bulletins-table__header">
       <tr>
         <th></th>
@@ -16,7 +16,7 @@
           'bulletins-table__day--past': isPast(date) && !isToday(date)
         }"
       >
-        <td>
+        <td [attr.data-label]="'bulletins.table.title.date' | translate ">
           <div class="bulletins-table__day">
             <time>
               {{ date | localizedDate : "fullDate" }}
@@ -26,7 +26,7 @@
             </button>
           </div>
         </td>
-        <td class="bulletins-table__region-status">
+        <td class="bulletins-table__region-status" [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate">
           <span
             *ngIf="getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined"
             class="badge bg-danger"
@@ -66,6 +66,7 @@
         <td
           class="bulletins-table__region-status"
           *ngFor="let region of authenticationService.getActiveRegion().neighborRegions"
+          [attr.data-label]="'bulletins.table.title.status.' + region | translate"
           [style.background-color]="bulletinsService.isLocked(date, region) ? 'rgba(255,0,0,0.2)' : ''"
         >
           <span

@@ -132,6 +132,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   public showNewBulletinModal: boolean = false;
 
   public isCompactMapLayout: boolean = false;
+  private selectedCopyRegionDate: string;
+  private bulletinCopy: BulletinModel;
+  private bulletinMarkedDelete: BulletinModel;
+
 
   public loadingErrorModalRef: BsModalRef;
   @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
@@ -168,6 +172,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   public loadSnowpackStructureCommentExampleTextModalRef: BsModalRef;
   @ViewChild("loadSnowpackStructureCommentExampleTextTemplate") loadSnowpackStructureCommentExampleTextTemplate: TemplateRef<any>;
+
+  public copyRegionModalRef: BsModalRef;
+  @ViewChild("copyRegionTemplate") copyRegionTemplate: TemplateRef<any>;
 
   public pmUrl: SafeUrl;
 
@@ -217,8 +224,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    console.log('onresize');
-    console.log(event.target.innerWidth);
     this.isCompactMapLayout = event.target.innerWidth < 768;
   }
 
@@ -450,15 +455,81 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
+  // TODO: move to service to share with bulletins.component
+  isPast(date: Date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (today.getTime() > date.getTime()) {
+      return true;
+    }
+    return false;
+  }
+
+  isToday(date: Date) {
+    if (date !== undefined) {
+      const today = new Date();
+      const hours = today.getHours();
+      today.setHours(0, 0, 0, 0);
+      if (today.getTime() === date.getTime()) {
+        return true;
+      }
+      if (hours >= 17) {
+        today.setDate(today.getDate() + 1);
+        if (today.getTime() === date.getTime()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  isEditable(date) {
+    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) {
+      return true;
+    }
+    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) {
+      return true;
+    }
+    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+      return true;
+    }
+    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+      return true;
+    }
+    if (this.bulletinsService.getIsUpdate()) {
+      return true;
+    }
+
+    if (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published && !this.bulletinsService.getIsUpdate()) ||
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished && !this.bulletinsService.getIsUpdate()) ||
+      this.bulletinsService.isLocked(date, this.authenticationService.getActiveRegionId()) ||
+      this.isPast(date) ||
+      this.isToday(date)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  // TODO: move to service to share with bulletins.component
+
   loadBulletin(date) {
+    this.deselectBulletin();
+
     if (this.authenticationService.getActiveRegionId() && this.authenticationService.getActiveRegionId() !== undefined && (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) || this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))) {
       this.bulletinsService.setIsUpdate(false);
       this.bulletinsService.setActiveDate(date);
 
-      if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
-        this.bulletinsService.lockRegion(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate());
-        this.bulletinsService.setIsEditable(true);
+      if (!this.isEditable(date)) {
+        this.bulletinsService.setIsEditable(false);
         this.initializeComponent();
+      } else {
+        if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
+          this.bulletinsService.lockRegion(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate());
+          this.bulletinsService.setIsEditable(true);
+          this.initializeComponent();
+        }
       }
     } else {
       this.bulletinsService.setActiveDate(date);
@@ -977,18 +1048,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.addInternalBulletin(bulletin);
   }
 
+
   createBulletin(copy) {
 
     // TODO websocket: unlock bulletin
     // TODO websocket: lock bulletin
-
-    this.showNewBulletinModal = true;
 
     let bulletin: BulletinModel;
     if (copy && this.copyService.getBulletin()) {
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
+      this.showNewBulletinModal = true;
       bulletin = new BulletinModel();
       bulletin.setAuthor(this.authenticationService.getAuthor());
       bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
@@ -1003,9 +1074,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.createAvalancheProblem(false);
   }
 
-  copyBulletin(srcBulletin: BulletinModel) { 
-    this.selectBulletin(srcBulletin);
-      
+  copyBulletin() {
     this.setTexts();
     if (this.checkAvalancheProblems()) {
       if (this.activeBulletin) {
@@ -1413,8 +1482,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  deleteBulletin(event) {
+  deleteBulletin(event, bulletin: BulletinModel) {
     event.stopPropagation();
+    this.bulletinMarkedDelete = bulletin;
     this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate);
   }
 
@@ -1492,6 +1562,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.updateInternalBulletins();
     this.updateExternalBulletins();
     this.deselectBulletin(true);
+
+    // Auto save after delete
+    this.save();
   }
 
   editBulletin(event) {
@@ -2311,7 +2384,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
 
         if (!hit && this.getOwnBulletins().length === 0 && this.bulletinsService.getIsEditable() && !this.bulletinsService.getIsUpdate() && !this.bulletinsService.getIsSmallChange()) {
-          this.createInitialAggregatedRegion();
+          //this.createInitialAggregatedRegion();
         }
 
         this.updateInternalBulletins();
@@ -2334,7 +2407,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   deleteAggregatedRegionModalConfirm(): void {
     this.deleteAggregatedRegionModalRef.hide();
-    this.delBulletin(this.activeBulletin);
+    this.delBulletin(this.bulletinMarkedDelete);
 
     // TODO websocket: unlock region
 
@@ -2365,6 +2438,34 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   discardModalDecline(): void {
     this.discardModalRef.hide();
   }
+
+
+  openCopyRegionModal(template: TemplateRef<any>, bulletin: BulletinModel) {
+    this.bulletinCopy = bulletin;
+    this.copyRegionModalRef = this.modalService.show(template, this.config);
+  }
+
+  copyRegionModalConfirm(): void {
+    console.log('copy region');
+    console.log(this.bulletinCopy);
+    this.selectBulletin(this.bulletinCopy);
+    this.copyBulletin(); 
+
+    if (this.copyService.isCopyBulletin()) {
+      console.log('passte region');
+      this.createBulletin(true);
+    }
+
+    this.copyRegionModalRef.hide();
+  }
+
+  copyRegionModalDecline(): void {
+    if (this.copyService.isCopyBulletin()) {
+      this.copyService.resetCopyBulletin();
+    }    
+    this.copyRegionModalRef.hide();
+  }
+
 
   openSaveErrorModal(template: TemplateRef<any>) {
     this.saveErrorModalRef = this.modalService.show(template, this.config);

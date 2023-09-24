@@ -214,26 +214,6 @@
 
     <!-- End report buttons -->
 
-    <!-- Copy bulletin -->
-    <div *ngIf="bulletinsService.getIsEditable() && this.copyService.isCopyBulletin()">
-      <h5>{{ "bulletins.create.copyRegion.label" | translate }}</h5>
-
-      {{ "bulletins.create.copyRegion.select" | translate }}
-
-      {{ "bulletins.create.copyRegion.currentBulletin" | translate }}
-      <button [disabled]="editRegions || loading" (click)="createBulletin(true)" class="btn btn-sm btn-danger px-3">
-        <i class="fa fa-paste"></i>{{ "bulletins.create.pasteAggregatedRegion" | translate }}
-      </button>
-      <button
-        [disabled]="editRegions || loading"
-        (click)="copyService.resetCopyBulletin()"
-        class="btn btn-sm btn-secondary px-3"
-      >
-        <i class="fa fa-close"></i>{{ "bulletins.create.cancelCopyBulletin" | translate }}
-      </button>
-    </div>
-    <!-- End copy bulletin -->
-
     <!-- List of regions -->
     <div class="create-bulletin__regions">
       <!-- Own regions -->
@@ -242,76 +222,75 @@
           {{ "bulletins.create.ownRegions" | translate }}
         </h5>
         <div *ngIf="bulletinsService.getIsEditable()" class="btn-group region-divider__actions">
-          <div class="region-divider__actions-dropdown mr-1">
-            <button
-              class="btn btn-sm btn-icon btn-bare--grey"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="ph-bold ph-dots-three-circle"></i>
-            </button>
-
-            <ul class="dropdown-menu">
-              <li>
-                <button
-                  *ngIf="!bulletinsService.getIsUpdate()"
-                  [disabled]="editRegions || loading"
-                  type="reset"
-                  class="dropdown-item"
-                  (click)="loadBulletinsFromYesterday()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
-                >
-                  <i class="ph-bold ph-copy icon-md"></i>
-                  {{ "bulletins.create.tooltip.loadBulletin" | translate }}
-                </button>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-
-              <li>
-                <button
-                  *ngIf="!bulletinsService.getIsUpdate()"
-                  [disabled]="editRegions || loading"
+          <div class="region-divider__actions-dropdown mr-1" bsDropdown>
+              <button
+                  class="btn btn-sm btn-icon btn-bare--grey"
                   type="button"
-                  class="dropdown-item"
-                  (click)="jsonBulletinUploader.click()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
-                >
-                  <i class="ph-bold ph-upload-simple icon-md"></i>
-                  {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
-                </button>
-                <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
-              </li>
-
-              <li>
-                <button
-                  *ngIf="!bulletinsService.getIsUpdate()"
-                  [disabled]="editRegions || loading"
-                  type="button"
-                  class="dropdown-item"
-                  (click)="downloadJsonBulletin()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
-                >
-                  <i class="ph-bold ph-download-simple icon-md"></i>
-                  {{ "bulletins.create.tooltip.downloadJsonBulletin" | translate }}
-                </button>
-              </li>
-            </ul>
+                  bsDropdownToggle
+              >
+                  <i class="ph-bold ph-dots-three-circle"></i>
+              </button>
+      
+              <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropown">
+                <li>
+                  <button
+                    *ngIf="!bulletinsService.getIsUpdate()"
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="loadBulletinsFromYesterday()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
+                  >
+                    <i class="ph-bold ph-copy icon-md"></i>
+                    {{ "bulletins.create.tooltip.loadBulletin" | translate }}
+                  </button>
+                </li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+  
+                <li>
+                  <button
+                    *ngIf="!bulletinsService.getIsUpdate()"
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="jsonBulletinUploader.click()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
+                  >
+                    <i class="ph-bold ph-upload-simple icon-md"></i>
+                    {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
+                  </button>
+                  <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
+                </li>
+  
+                <li>
+                  <button
+                    *ngIf="!bulletinsService.getIsUpdate()"
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="downloadJsonBulletin()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
+                  >
+                    <i class="ph-bold ph-download-simple icon-md"></i>
+                    {{ "bulletins.create.tooltip.downloadJsonBulletin" | translate }}
+                  </button>
+                </li>
+              </ul>
           </div>
           <button
-            [disabled]="editRegions || loading"
-            *ngIf="bulletinsService.getIsEditable() && !this.copyService.isCopyBulletin()"
-            (click)="createBulletin(false)"
-            class="btn btn-sm btn-icon btn-primary"
-            type="button"
-            title="{{ 'bulletins.create.createAggregatedRegion' | translate }}"
+              [disabled]="editRegions || loading"
+              *ngIf="bulletinsService.getIsEditable() && !this.copyService.isCopyBulletin()"
+              (click)="createBulletin(false)"
+              class="btn btn-sm btn-icon btn-primary"
+              type="button"
+              title="{{ 'bulletins.create.createAggregatedRegion' | translate }}"
           >
-            <i class="ph-bold ph-plus"></i>
+              <i class="ph-bold ph-plus"></i>
           </button>
         </div>
       </header>
@@ -2162,7 +2141,10 @@
 
 <!-- Display this template when there are no bulletins -->
 <ng-template #noBulletinsTemplate>
-  <p>{{ "bulletins.create.noBulletinsForSelectedDay" | translate }}</p>
+  <div class="create-bulletin__nobulletins">
+    <i class="ph ph-mountains"></i>
+    <p>{{ "bulletins.create.noBulletinsForSelectedDay" | translate }}</p>
+  </div>
 </ng-template>
 
 <ng-template #bulletinTemplate let-bulletin="bulletin">
@@ -2223,7 +2205,7 @@
         [disabled]="loading"
         type="button"
         class="btn btn-sm btn-bare btn-sm btn-icon"
-        (click)="copyBulletin(bulletin)"
+        (click)="openCopyRegionModal(copyRegionTemplate, bulletin)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.copy' | translate }}"
       >
@@ -2494,6 +2476,29 @@
       (click)="loadSnowpackStructureCommentExampleTextCancel()"
     >
       {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.cancel" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #copyRegionTemplate let-bulletin="bulletin">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ "bulletins.create.copyRegion.label" | translate }} {{ bulletin }}</h4>
+  </div>
+  <div class="modal-body">
+    {{ "bulletins.create.copyRegion.select" | translate }}
+
+    <select [(ngModel)]="selectedCopyRegionDate">
+      <option *ngFor="let date of bulletinsService.dates" [value]="date">{{ date | localizedDate : "EEEE, d. MMMM y"  }}</option>
+    </select>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-bare" (click)="copyRegionModalDecline()">
+      <span>{{ "bulletins.create.cancelCopyBulletin" | translate }}</span>
+    </button>
+
+    <button type="button" class="btn btn-primary" (click)="copyRegionModalConfirm()">
+      <i class="ph ph-copy-simple"></i><span>{{ "bulletins.create.pasteAggregatedRegion" | translate }}</span>
     </button>
   </div>
 </ng-template>
