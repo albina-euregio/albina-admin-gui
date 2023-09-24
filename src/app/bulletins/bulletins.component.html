@@ -14,7 +14,7 @@
         *ngFor="let date of bulletinsService.dates"
         [ngClass]="{
           'bulletins-table__day--past': isPast(date) && !isToday(date)
-        }"
+        }" 
       >
         <td [attr.data-label]="'bulletins.table.title.date' | translate ">
           <div class="bulletins-table__day">
@@ -200,32 +200,9 @@
           >
             <i class="fa fa-close"></i>
           </button>
-          <!-- submit -->
-          <button
-            *ngIf="showSubmitButton(date)"
-            type="button"
-            class="btn btn-primary btn-sm float-right"
-            (click)="submit($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.submit' | translate }}"
-          >
-            <i class="fa fa-send"></i>
-          </button>
-          <!-- publish update (not 5PM nor 8AM) -->
-          <button
-            *ngIf="showPublishButton(date)"
-            type="button"
-            class="btn btn-danger btn-sm float-right"
-            (click)="publish($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.publish' | translate }}"
-          >
-            <i class="fa fa-send"></i>
-          </button>
-          <!-- spinning icon -->
-          <button *ngIf="showSpinningIconButton(date)" type="button" class="btn btn-primary btn-sm float-right">
-            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-          </button>
+          
+          
+          
           <!-- edit -->
           <button
             *ngIf="showEditButton(date)"
@@ -237,17 +214,7 @@
           >
             <i class="fa fa-pencil"></i>
           </button>
-          <!-- update -->
-          <button
-            *ngIf="showUpdateButton(date)"
-            type="button"
-            class="btn btn-danger btn-sm float-right"
-            (click)="createUpdate($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.update' | translate }}"
-          >
-            <i class="fa fa-plus"></i>
-          </button>
+          
           <!-- check -->
           <button
             *ngIf="showCheckButton(date)"
@@ -287,27 +254,9 @@
   </div>
 </ng-template>
 
-<ng-template #submitBulletinsErrorTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.submitBulletinsErrorDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="submitBulletinsErrorModalConfirm()">
-      {{ "bulletins.table.submitBulletinsErrorDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
 
-<ng-template #submitBulletinsDuplicateRegionTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.submitBulletinsDuplicateRegionDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="submitBulletinsDuplicateRegionModalConfirm()">
-      {{ "bulletins.table.submitBulletinsDuplicateRegionDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
+
+
 
 <ng-template #checkBulletinsErrorTemplate>
   <div class="modal-body text-center">

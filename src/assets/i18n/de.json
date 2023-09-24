@@ -68,11 +68,11 @@
     "loadingPreview" : "Erzeuge PDF Vorschau ...",
     "tooltip" : {
       "publish" : "Update zur Lawinenvorhersage sofort publizieren",
-      "submit" : "Lawinenvorhersage absenden",
+      "submit" : "Vorhersage abschicken",
       "copy" : "Lawinenvorhersage kopieren",
       "cancel" : "Kopieren abbrechen",
       "paste" : "Lawinenvorhersage einfügen",
-      "update" : "Update zur Lawinenvorhersage erstellen",
+      "update" : "Update abschicken",
       "caaml" : "CAAML anzeigen",
       "json" : "JSON anzeigen",
       "edit" : "Lawinenvorhersage editieren (keine erneute Veröffentlichung)",
@@ -81,7 +81,8 @@
       "check" : "Lawinenvorhersage prüfen",
       "info" : "Publikationsstatus anzeigen",
       "publishAll" : "Alle Regionen publizieren",
-      "mediaFile" : "Mediendatei hochladen"
+      "mediaFile" : "Mediendatei hochladen",
+      "publishUpdate": "Update publizieren"
     },
     "create" : {
       "tooltip" : {
@@ -253,7 +254,11 @@
         "published" : "publiziert",
         "updated" : "verändert",
         "resubmitted" : "Update gesendet",
-        "republished" : "Update publiziert"
+        "republished" : "Update publiziert",
+        "submitted-info": "Wird um 17 Uhr veröffentlicht",
+        "resubmitted-info": "Wird um 8 Uhr veröffentlicht",
+        "published-info" : "Wurde um 17 Uhr veröffentlicht",
+        "republished-info" : "Wurde um 8 Uhr veröffentlicht"
       },
       "publishBulletinsDialog" : {
         "message" : "Willst du die Lawinenvorhersage publizieren?",

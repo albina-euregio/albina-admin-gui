@@ -38,6 +38,7 @@
           <span>{{ "bulletins.create.statusHeader" | translate }}</span>
           <i class="icon-md ph-bold ph-caret-up-down"></i>
         </h2>
+
         <div *ngIf="!showStatusOfAllRegions">
           <span
             *ngIf="
@@ -54,27 +55,27 @@
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted"
-            class="badge bg-success"
+            class="badge bg-primary"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"
-            class="badge bg-done"
+            class="badge bg-success"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated"
-            class="badge bg-warning"
+            class="badge bg-orange"
             ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"
-            class="badge bg-success"
+            class="badge bg-primary"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"
-            class="badge bg-done"
+            class="badge bg-success"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
           >
         </div>
@@ -102,27 +103,27 @@
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted"
-            class="badge bg-success"
+            class="badge bg-primary"
             ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"
-            class="badge bg-done"
+            class="badge bg-success"
             ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated"
-            class="badge bg-warning"
+            class="badge bg-orange"
             ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"
-            class="badge bg-success"
+            class="badge bg-primary"
             ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
           >
           <span
             *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"
-            class="badge bg-done"
+            class="badge bg-success"
             ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
           >
         </li>
@@ -145,32 +146,64 @@
           >
           <span
             *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.submitted"
-            class="badge bg-success"
+            class="badge bg-primary"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
           >
           <span
             *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.published"
-            class="badge bg-done"
+            class="badge bg-success"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
           >
           <span
             *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.updated"
-            class="badge bg-warning"
+            class="badge bg-orange"
             ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
           >
           <span
             *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"
-            class="badge bg-success"
+            class="badge bg-primary"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
           >
           <span
             *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.republished"
-            class="badge bg-done"
+            class="badge bg-success"
             ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
           >
         </li>
       </ul>
       <!-- End status of all regions-->
+
+      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted"><i class="ph ph-info"></i> {{ "bulletins.table.status.submitted-info" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"><i class="ph ph-info"></i> {{ "bulletins.table.status.resubmitted-info" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"><i class="ph ph-info"></i> {{ "bulletins.table.status.published-info" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"><i class="ph ph-info"></i> {{ "bulletins.table.status.republished-info" | translate }}</span>
+
+      <!-- submit -->
+      <button *ngIf="showSubmitButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="submit($event, bulletinsService.getActiveDate())">
+        <i class="ph ph-paper-plane-tilt"></i>
+        <span>{{ 'bulletins.tooltip.submit' | translate }}</span>
+      </button>
+
+      <!-- update -->
+      <button *ngIf="showUpdateButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="createUpdate($event)">
+        <i class="ph ph-paper-plane-tilt"></i>
+        <span>{{ 'bulletins.tooltip.update' | translate }}</span>
+      </button>
+
+      <div class="d-flex">
+        <!-- publish update (not 5PM nor 8AM) -->
+        <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
+            <i class="ph ph-paper-plane-tilt"></i>
+            <span>{{ 'bulletins.tooltip.publishUpdate' | translate }}</span>
+        </button>
+    
+        <!-- spinning icon -->
+        <button *ngIf="showSpinningIconButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons--small ml-2">
+            <i class="ph ph-bell-slash"></i>
+        </button>
+      </div>
+    
+
     </header>
     <!-- End sidebar header -->
 
@@ -231,7 +264,7 @@
                   <i class="ph-bold ph-dots-three-circle"></i>
               </button>
       
-              <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropown">
+              <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
                 <li>
                   <button
                     *ngIf="!bulletinsService.getIsUpdate()"
@@ -2501,6 +2534,39 @@
 
     <button type="button" class="btn btn-primary" (click)="copyRegionModalConfirm()">
       <i class="ph ph-copy-simple"></i><span>{{ "bulletins.create.pasteAggregatedRegion" | translate }}</span>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #submitBulletinsDuplicateRegionTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.submitBulletinsDuplicateRegionDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="submitBulletinsDuplicateRegionModalConfirm()">
+      {{ "bulletins.table.submitBulletinsDuplicateRegionDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #checkBulletinsErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #submitBulletinsErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.submitBulletinsErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="submitBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.submitBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
 </ng-template>
