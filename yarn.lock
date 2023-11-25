@@ -6299,10 +6299,10 @@ ngx-bootstrap@^11.0.2:
   dependencies:
     tslib "^2.3.0"
 
-ngx-echarts@^16.2.0:
-  version "16.2.0"
-  resolved "https://registry.yarnpkg.com/ngx-echarts/-/ngx-echarts-16.2.0.tgz#82fa419a41f430807ed3a29dbbc1aa4ede6f8058"
-  integrity sha512-yhuDbp6qdkmR4kRVLS06Z0Iumod7xOj5n/Z++clRiKM24OQ4sM8WuOTicdfWy6eeYDNywdGSrri4Y5SUGRD8bg==
+ngx-echarts@^17.1.0:
+  version "17.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-echarts/-/ngx-echarts-17.1.0.tgz#f3895eb3a630fb70cd673fca5aedbd5beba9dbf7"
+  integrity sha512-DSNF/aKmJSxJWb9UwPUgNtY8Ma9SmViDBRacvAwpakc/5mJerunxndDgoBQkYk5JFKAjXX6bp4ZWLRKL3/5AGA==
   dependencies:
     tslib "^2.3.0"
 
