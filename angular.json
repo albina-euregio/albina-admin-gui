@@ -102,24 +102,24 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "albina-admin-gui:build"
+            "buildTarget": "albina-admin-gui:build"
           },
           "configurations": {
             "development": {
-              "browserTarget": "albina-admin-gui:build:development"
+              "buildTarget": "albina-admin-gui:build:development"
             },
             "production": {
-              "browserTarget": "albina-admin-gui:build:production"
+              "buildTarget": "albina-admin-gui:build:production"
             },
             "aran": {
-              "browserTarget": "albina-admin-gui:build:aran"
+              "buildTarget": "albina-admin-gui:build:aran"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "albina-admin-gui:build"
+            "buildTarget": "albina-admin-gui:build"
           }
         },
         "test": {
