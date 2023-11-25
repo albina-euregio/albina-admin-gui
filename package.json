@@ -60,7 +60,7 @@
     "papaparse": "^5.4.1",
     "primeflex": "^3.3.0",
     "primeicons": "^6.0.1",
-    "primeng": "^15.4.1",
+    "primeng": "^16.9.1",
     "rbush": "^3.0.1",
     "rxjs": "7.8.1",
     "zone.js": "~0.13.0"
