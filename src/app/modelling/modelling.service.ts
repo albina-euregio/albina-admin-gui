@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { Observable, of } from "rxjs";
 import { catchError, flatMap, last, map } from "rxjs/operators";
-import * as Papa from "papaparse";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
 import { geoJSON, LatLng } from "leaflet";
@@ -48,11 +47,15 @@ export class ModellingService {
     public regionsService: RegionsService
   ) {}
 
-  private parseCSV(text: string) {
-    return Papa.parse(text, {
-      header: true,
-      skipEmptyLines: true,
-      comments: "#"
+  private parseCSV<T>(text: string) {
+    const lines = text
+      .split(/\r?\n/)
+      .filter((line) => !!line && !line.startsWith("#"))
+      .map((line) => line.split(/;/));
+    const [header, ...rest] = lines;
+    return rest.map((row) => {
+      const entries = row.map((cell, index) => [header[index], cell]);
+      return Object.fromEntries(entries) as T;
     });
   }
 
@@ -91,12 +94,12 @@ export class ModellingService {
   }
 
   private getZamgMultiModelPoints(): Observable<GenericObservation[]> {
-    const url = this.constantsService.zamgModelsUrl+"snowgridmultimodel_stationlist.txt";
+    const url = this.constantsService.zamgModelsUrl + "snowgridmultimodel_stationlist.txt";
 
     return this.http.get(url, { responseType: "text" }).pipe(
-      map((response) => this.parseCSV(response.toString().replace(/^#\s*/, ""))),
+      map((response) => this.parseCSV<MultimodelPointCsv>(response.toString().replace(/^#\s*/, ""))),
       map((points) =>
-        points.data
+        points
           .map((row: MultimodelPointCsv): GenericObservation => {
             const id = row.statnr;
             const regionCode = row.code;
