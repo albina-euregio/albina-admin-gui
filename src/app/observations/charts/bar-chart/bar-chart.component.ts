@@ -1,7 +1,8 @@
-import { Component, Input, SimpleChanges, OnChanges, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component } from "@angular/core";
 import { BaseComponent } from "../base/base-chart.component";
-import { TranslateService } from "@ngx-translate/core";
-import { formatDate } from "@angular/common";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { CommonModule, formatDate } from "@angular/common";
+import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 const barWidth = 3;
 const defaultDataBarOptions = {
   type: "bar",
@@ -29,6 +30,9 @@ const fDate = (aDate) => {
 }
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, NgxEchartsDirective, TranslateModule],
+  providers: [provideEcharts()],
   selector: "app-bar-chart",
   templateUrl: "./bar-chart.component.html",
   styleUrls: ["./bar-chart.component.scss"]

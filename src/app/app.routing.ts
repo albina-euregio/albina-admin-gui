@@ -23,7 +23,7 @@ export const routes: Routes = [
     path: "observations",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./observations/observations.module").then(m => m.ObservationsModule)
+    loadChildren: () => import("./observations/routes")
   },
   {
     path: "admin",

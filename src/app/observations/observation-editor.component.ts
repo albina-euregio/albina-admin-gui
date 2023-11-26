@@ -1,15 +1,35 @@
 import { Component, Input } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Observation, EventType } from "./models/observation.model";
 import { Feature, Point } from "geojson";
-import { SelectItem } from "primeng/api";
+import { SelectItem, SharedModule } from "primeng/api";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { geocoders } from "leaflet-control-geocoder";
-// import { ElevationService } from "app/providers/map-service/elevation.service";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
-import { Aspect } from "app/observations/models/generic-observation.model";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { InputTextModule } from "primeng/inputtext";
+import { FormsModule } from "@angular/forms";
+import { DropdownModule } from "primeng/dropdown";
+import { CommonModule } from "@angular/common";
 
 @Component({
+  standalone: true,
+  imports: [
+    AutoCompleteModule,
+    CommonModule,
+    DropdownModule,
+    FormsModule,
+    InputTextareaModule,
+    InputTextModule,
+    SharedModule,
+    TranslateModule,
+  ],
+  providers: [
+    TranslateService,
+    GeocodingService,
+    CoordinateDataService
+  ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
   styleUrls: ["observation-editor.component.scss"],

@@ -8,7 +8,7 @@ import {
   HostListener,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ObservationsService } from "./observations.service";
 import {
   RegionsService,
@@ -31,7 +31,7 @@ import {
   Stability,
 } from "./models/generic-observation.model";
 
-import { MenuItem } from "primeng/api";
+import { MenuItem, SharedModule } from "primeng/api";
 
 import { saveAs } from "file-saver";
 
@@ -39,9 +39,20 @@ import { LatLng, Marker } from "leaflet";
 
 import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationFilterService } from "./observation-filter.service";
-import { formatDate } from "@angular/common";
+import { formatDate, CommonModule } from "@angular/common";
 import type { Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
+import { PipeModule } from "../pipes/pipes.module";
+import { DialogModule } from "primeng/dialog";
+import { BarChartComponent } from "./charts/bar-chart/bar-chart.component";
+import { RoseChartComponent } from "./charts/rose-chart/rose-chart.component";
+import { MenubarModule } from "primeng/menubar";
+import { InputTextModule } from "primeng/inputtext";
+import { CalendarModule } from "primeng/calendar";
+import { MultiSelectModule } from "primeng/multiselect";
+import { FormsModule } from "@angular/forms";
+import { ToggleButtonModule } from "primeng/togglebutton";
+import { ButtonModule } from "primeng/button";
 
 //import { BarChart } from "./charts/bar-chart/bar-chart.component";
 declare var L: any;
@@ -52,8 +63,34 @@ export interface MultiselectDropdownData {
 }
 
 @Component({
+  standalone: true,
+  imports: [
+    BarChartComponent,
+    ButtonModule,
+    CalendarModule,
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    InputTextModule,
+    MenubarModule,
+    MultiSelectModule,
+    ObservationTableComponent,
+    PipeModule,
+    RoseChartComponent,
+    SharedModule,
+    ToggleButtonModule,
+    TranslateModule,
+  ],
+  providers: [
+    BaseMapService,
+    ElevationService,
+    ObservationFilterService,
+    ObservationsService,
+    RegionsService,
+    TranslateService,
+  ],
   templateUrl: "observations.component.html",
-  styleUrls: ["./observations.component.scss"],
+  styleUrls: ["./observations.component.scss"]
 })
 export class ObservationsComponent
   implements AfterContentInit, AfterViewInit, OnDestroy
