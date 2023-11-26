@@ -59,27 +59,27 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
 
   public readonly allSources: MultiselectDropdownData[] = [
     {
-      id: "multimodel",
+      id: ForecastSource.multimodel,
       fillColor: "green",
       name: this.translateService.instant("sidebar.modellingZamg"),
     },
     {
-      id: "meteogram",
+      id: ForecastSource.meteogram,
       fillColor: "MediumVioletRed",
       name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
     },
     {
-      id: "qfa",
+      id: ForecastSource.qfa,
       fillColor: "red",
       name: this.translateService.instant("sidebar.qfa"),
     },
     {
-      id: "observed_profile",
+      id: ForecastSource.observed_profile,
       fillColor: "#f8d229",
       name: this.translateService.instant("sidebar.modellingSnowpack"),
     },
     {
-      id: "alpsolut_profile",
+      id: ForecastSource.alpsolut_profile,
       fillColor: "#d95f0e",
       name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
     },

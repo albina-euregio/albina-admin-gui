@@ -61,6 +61,7 @@
     "primeng": "^16.9.1",
     "rbush": "^3.0.1",
     "rxjs": "7.8.1",
+    "zod": "^3.22.4",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {

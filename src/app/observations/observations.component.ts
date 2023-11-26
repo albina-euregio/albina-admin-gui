@@ -26,6 +26,7 @@ import {
   DangerPattern,
   ImportantObservation,
   Stability,
+  genericObservationSchema,
 } from "./models/generic-observation.model";
 
 import { MenuItem, SharedModule } from "primeng/api";
@@ -266,6 +267,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.loading = this.observationsService.loadAll();
     this.loading
       .forEach((observation) => {
+        try {
+          genericObservationSchema.parse(observation);
+        } catch (err) {
+          console.warn("Observation does not match schema", observation, err);
+        }
         if (this.filter.inDateRange(observation)) {
           if (observation.$source === ObservationSource.AvalancheWarningService) {
             observation = this.parseObservation(observation);
