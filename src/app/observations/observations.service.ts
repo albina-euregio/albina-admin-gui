@@ -29,11 +29,10 @@ import {
   LwdKipSprengerfolg,
 } from "./models/lwdkip.model";
 import { ApiWikisnowECT, convertWikisnow, WikisnowECT } from "./models/wikisnow.model";
+import { getAwsObservers } from "./models/aws-observer.model";
 import { TranslateService } from "@ngx-translate/core";
 import { from, merge, Observable, of, onErrorResumeNext } from "rxjs";
 import { catchError, filter, last, map, mergeAll, mergeMap } from "rxjs/operators";
-import BeobachterAT from "./data/Beobachter-AT.json";
-import BeobachterIT from "./data/Beobachter-IT.json";
 import { ObservationFilterService } from "./observation-filter.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ElevationService } from "../providers/map-service/elevation.service";
@@ -290,28 +289,7 @@ export class ObservationsService {
   }
 
   getObservers(): Observable<GenericObservation> {
-    const eventDate = new Date();
-    eventDate.setHours(0, 0, 0, 0);
-    return of(BeobachterAT, BeobachterIT).pipe(
-      mergeAll(),
-      map(
-        (observer): GenericObservation => ({
-          $data: observer,
-          $externalURL: `https://wiski.tirol.gv.at/lawine/grafiken/800/beobachter/${observer["plot.id"]}.png`,
-          $source: ObservationSource.Observer,
-          $type: ObservationType.TimeSeries,
-          aspect: undefined,
-          authorName: observer.name,
-          content: "",
-          elevation: undefined,
-          eventDate,
-          latitude: +observer.latitude,
-          locationName: observer.name.replace("Beobachter", "").trim(),
-          longitude: +observer.longitude,
-          region: "",
-        }),
-      ),
-    );
+    return of(...getAwsObservers());
   }
 
   getLoLaKronos(
