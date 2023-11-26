@@ -3,8 +3,13 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 import { ModellingService, SnowpackPlots } from "./modelling.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { TranslateModule } from "@ngx-translate/core";
+import { NgFor } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
+  standalone: true,
+  imports: [FormsModule, NgFor, TranslateModule],
   templateUrl: "./snowpack.component.html"
 })
 export class SnowpackComponent implements OnInit {

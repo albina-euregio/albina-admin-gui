@@ -3,8 +3,13 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 import { ModellingService } from "./modelling.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { TranslateModule } from "@ngx-translate/core";
+import { NgFor } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
+  standalone: true,
+  imports: [FormsModule, NgFor, TranslateModule],
   templateUrl: "./snowpack.meteo.component.html"
 })
 export class SnowpackMeteoComponent implements OnInit {
@@ -26,11 +31,7 @@ export class SnowpackMeteoComponent implements OnInit {
   }
 
   updatePlotUrl() {
-    const url = [
-      this.constantsService.snowpackModelsUrl,
-      this.snowpackMeteoPlot,
-      ".html"
-    ].join("");
+    const url = [this.constantsService.snowpackModelsUrl, this.snowpackMeteoPlot, ".html"].join("");
     this.plotUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 

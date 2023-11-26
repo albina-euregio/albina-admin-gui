@@ -4,11 +4,16 @@ import { AlpsolutObservation, ModellingService } from "./modelling.service";
 import { QfaResult, QfaService } from "app/providers/qfa-service/qfa.service";
 import { ParamService } from "app/providers/qfa-service/param.service";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
-import { formatDate } from "@angular/common";
+import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
+import { SharedModule } from "primeng/api";
+import { DialogModule } from "primeng/dialog";
+import { ButtonModule } from "primeng/button";
+import { FormsModule } from "@angular/forms";
+import { MultiSelectModule } from "primeng/multiselect";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;
@@ -17,6 +22,18 @@ export interface MultiselectDropdownData {
 }
 
 @Component({
+  standalone: true,
+  imports: [
+    ButtonModule,
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    KeyValuePipe,
+    MultiSelectModule,
+    SharedModule,
+    KeyValuePipe,
+    TranslateModule,
+  ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa.component.scss", "./qfa.table.scss", "./qfa.params.scss"]
 })

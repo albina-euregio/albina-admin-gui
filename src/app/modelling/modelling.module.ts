@@ -14,8 +14,19 @@ import { ButtonModule } from "primeng/button";
 import { RegionsService } from "../providers/regions-service/regions.service";
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ModellingRoutingModule, TranslateModule, DialogModule, MultiSelectModule, ButtonModule],
-  providers: [ModellingService, RegionsService],
-  declarations: [IndexComponent, SnowpackComponent, SnowpackMeteoComponent, ForecastComponent]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ModellingRoutingModule,
+    TranslateModule,
+    DialogModule,
+    MultiSelectModule,
+    ButtonModule,
+    IndexComponent,
+    SnowpackComponent,
+    SnowpackMeteoComponent,
+    ForecastComponent
+  ],
+  providers: [ModellingService, RegionsService]
 })
 export class ModellingModule {}
