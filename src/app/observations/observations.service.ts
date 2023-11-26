@@ -15,7 +15,12 @@ import {
   toLawisProfileDetails,
   toLawisProfile,
 } from "./models/lawis.model";
-import { GenericObservation, ObservationSource, ObservationType, Aspect } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ObservationSource,
+  ObservationType,
+  degreeToAspect,
+} from "./models/generic-observation.model";
 import {
   ArcGisApi,
   ArcGisLayer,
@@ -37,35 +42,7 @@ import { ObservationFilterService } from "./observation-filter.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { LatLng } from "leaflet";
-
-interface FotoWebcamEU {
-  id: string;
-  name: string;
-  title: string;
-  keywords: string;
-  offline: boolean;
-  hidden: boolean;
-  imgurl: string;
-  link: string;
-  localLink: string;
-  modtime: number;
-  details: number;
-  sortscore: string;
-  country: string;
-  latitude: number;
-  longitude: number;
-  elevation: number;
-  direction: number;
-  focalLen: number;
-  radius_km: number;
-  sector: number;
-  partner: boolean;
-  captureInterval: number;
-}
-
-interface FotoWebcamEUResponse {
-  cams: FotoWebcamEU[];
-}
+import { FotoWebcamEU, FotoWebcamEUResponse, convertFotoWebcamEU, addLolaCadsData } from "./models/foto-webcam.model";
 
 interface PanomaxCam {
   id: string;
@@ -374,13 +351,6 @@ export class ObservationsService {
       );
   }
 
-  degreeToAspect(degree: number): Aspect {
-    const aspects = Object.values(Aspect);
-
-    const n = (Math.round((degree * 8) / 360) + 8) % 8;
-    return aspects[n];
-  }
-
   getLolaCads(cam: GenericObservation): Observable<any> {
     const lolaCadsApi = "https://api.avalanche.report/www.lola-cads.info/LWDprocessPhotoURL";
     const token =
@@ -443,7 +413,7 @@ export class ObservationsService {
                   longitude: cam.longitude,
                   locationName: res[0].instance.name,
                   region: this.regionsService.getRegionForLatLng(latlng)?.id,
-                  aspect: cam.viewAngle !== 360 ? this.degreeToAspect(cam.zeroDirection) : undefined,
+                  aspect: cam.viewAngle !== 360 ? degreeToAspect(cam.zeroDirection) : undefined,
                 };
                 return response;
               }),
@@ -456,66 +426,29 @@ export class ObservationsService {
     );
   }
 
+  augmentRegion(observation: GenericObservation) {
+    if (observation.latitude && observation.longitude) {
+      const ll = new LatLng(observation.latitude, observation.longitude);
+      observation.region = this.regionsService.getRegionForLatLng(ll)?.id;
+    }
+    return observation;
+  }
+
   getFotoWebcamsEU(): Observable<GenericObservation> {
     const { observationApi: api } = this.constantsService;
 
     return this.http.get<FotoWebcamEUResponse>(api.FotoWebcamsEU).pipe(
-      mergeMap((res: FotoWebcamEUResponse) => {
-        const cams = res.cams
-          .map((webcam: FotoWebcamEU) => {
-            const latlng = new LatLng(webcam.latitude, webcam.longitude);
-
-            webcam["latest"] = webcam.imgurl;
-            const cam: GenericObservation = {
-              $data: webcam,
-              $externalURL: webcam.link,
-              $source: ObservationSource.FotoWebcamsEU,
-              $type: ObservationType.Webcam,
-              authorName: "foto-webcam.eu",
-              content: webcam.title,
-              elevation: webcam.elevation,
-              eventDate: new Date(webcam.modtime * 1000),
-              latitude: webcam.latitude,
-              longitude: webcam.longitude,
-              locationName: webcam.name,
-              region: this.regionsService.getRegionForLatLng(latlng)?.id,
-              aspect: this.degreeToAspect(webcam.direction),
-            };
-            return cam;
-          })
-          .filter((observation) => observation.$data.offline === false)
-          .filter((observation) => observation.region !== undefined);
-
-        const observables = from(cams);
-        // get lola-cads data for each webcam
-        return observables;
-      }),
+      mergeMap(({ cams }: FotoWebcamEUResponse) =>
+        from(
+          cams
+            .map((webcam: FotoWebcamEU) => this.augmentRegion(convertFotoWebcamEU(webcam)))
+            .filter((observation) => observation.$data.offline === false)
+            .filter((observation) => observation.region !== undefined),
+        ),
+      ),
       mergeMap((cam: GenericObservation) => {
         if (cam.$data["latest"].includes("foto-webcam.eu")) {
-          // console.log(cam.$data["latest"]);
-          return this.getLolaCads(cam).pipe(
-            map((lolaCadsData) => {
-              // console.log(lolaCadsData);
-              if (lolaCadsData.length === 0) return cam;
-
-              const response: GenericObservation = {
-                $data: cam,
-                $externalURL: cam.$externalURL,
-                $source: ObservationSource.FotoWebcamsEU,
-                $type: ObservationType.Avalanche,
-                authorName: `foto-webcam.eu, ${lolaCadsData[0].label}, ${Math.round(lolaCadsData[0].conf * 100)}%`,
-                content: cam.content,
-                elevation: cam.elevation,
-                eventDate: new Date(Date.now()),
-                latitude: cam.latitude,
-                longitude: cam.longitude,
-                locationName: cam.locationName,
-                region: cam.region,
-                aspect: cam.aspect,
-              };
-              return response;
-            }),
-          );
+          return this.getLolaCads(cam).pipe(map((lolaCadsData) => addLolaCadsData(cam, lolaCadsData)));
         } else {
           return of(cam);
         }

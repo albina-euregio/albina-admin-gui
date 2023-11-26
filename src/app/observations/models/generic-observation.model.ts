@@ -271,3 +271,9 @@ export function toGeoJSON(observations: GenericObservation[]) {
   };
   return collection;
 }
+
+export function degreeToAspect(degree: number): Aspect {
+  const aspects = Object.values(Aspect);
+  const n = (Math.round((degree * 8) / 360) + 8) % 8;
+  return aspects[n];
+}
