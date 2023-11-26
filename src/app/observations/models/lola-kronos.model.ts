@@ -6,7 +6,7 @@ import {
   imageCountString,
   ImportantObservation,
   ObservationSource,
-  ObservationType
+  ObservationType,
 } from "./generic-observation.model";
 
 export interface LolaKronosApi {
@@ -122,7 +122,7 @@ export enum DangerPattern {
   Gm7 = "GM7",
   Gm8 = "GM8",
   Gm9 = "GM9",
-  Gm10 = "GM10"
+  Gm10 = "GM10",
 }
 
 export enum DangerSign {
@@ -130,7 +130,7 @@ export enum DangerSign {
   GlideCracks = "glideCracks",
   NoDangerSigns = "noDangerSigns",
   ShootingCracks = "shootingCracks",
-  Whumpfing = "whumpfing"
+  Whumpfing = "whumpfing",
 }
 
 export interface Problem {
@@ -293,44 +293,28 @@ export interface Temperature {
 export function convertLoLaKronos(
   kronos: LolaKronosApi,
   urlPrefix: string,
-  source?: ObservationSource
+  source?: ObservationSource,
 ): GenericObservation[] {
   return [
     ...kronos.lolaAvalancheEvent.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.Avalanche,
-        urlPrefix + "avalancheEvent/"
-      )
+      convertLoLaToGeneric(obs, ObservationType.Avalanche, urlPrefix + "avalancheEvent/"),
     ),
     ...kronos.lolaEvaluation.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.Evaluation,
-        urlPrefix + "evaluation/"
-      )
+      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "evaluation/"),
     ),
     ...kronos.lolaSimpleObservation.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.SimpleObservation,
-        urlPrefix + "simpleObservation/"
-      )
+      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "simpleObservation/"),
     ),
     ...kronos.lolaSnowProfile.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.Profile,
-        urlPrefix + "snowProfile/"
-      )
-    )
+      convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "snowProfile/"),
+    ),
   ];
 }
 
 export function convertLoLaToGeneric(
   obs: LolaSimpleObservation | LolaAvalancheEvent | LolaSnowProfile | LolaEvaluation,
   $type: ObservationType,
-  urlPrefix: string
+  urlPrefix: string,
 ): GenericObservation {
   return {
     $data: obs,
@@ -345,21 +329,32 @@ export function convertLoLaToGeneric(
     elevation: (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
-    latitude: ((obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position)?.lat,
+    latitude: (
+      (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position
+    )?.lat,
     locationName:
-      (obs as LolaSimpleObservation | LolaAvalancheEvent).locationDescription ?? (obs as LolaSnowProfile | LolaEvaluation).placeDescription,
-    longitude: ((obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position)?.lng,
+      (obs as LolaSimpleObservation | LolaAvalancheEvent).locationDescription ??
+      (obs as LolaSnowProfile | LolaEvaluation).placeDescription,
+    longitude: (
+      (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position
+    )?.lng,
     avalancheProblems: getAvalancheProblems(obs as LolaEvaluation),
     dangerPatterns: (obs as LolaEvaluation).dangerPatterns?.map((dp) => getDangerPattern(dp)) || [],
     region: obs.regionName,
     importantObservations: [
       (obs as LolaSimpleObservation).snowLine ? ImportantObservation.SnowLine : undefined,
-      (obs as LolaSimpleObservation).snowSurface?.includes("surfaceHoar") ? ImportantObservation.SurfaceHoar : undefined,
-      (obs as LolaSimpleObservation).snowSurface?.includes("veryLightNewSnow") ? ImportantObservation.VeryLightNewSnow : undefined,
+      (obs as LolaSimpleObservation).snowSurface?.includes("surfaceHoar")
+        ? ImportantObservation.SurfaceHoar
+        : undefined,
+      (obs as LolaSimpleObservation).snowSurface?.includes("veryLightNewSnow")
+        ? ImportantObservation.VeryLightNewSnow
+        : undefined,
       (obs as LolaSimpleObservation).snowSurface?.includes("graupel") ? ImportantObservation.Graupel : undefined,
-      (obs as LolaSimpleObservation).snowSurface?.includes("iceFormation") ? ImportantObservation.IceFormation : undefined,
-      (obs as LolaSimpleObservation).stabilityTests?.length > 0 ? ImportantObservation.StabilityTest : undefined
-    ].filter(o => !!o)
+      (obs as LolaSimpleObservation).snowSurface?.includes("iceFormation")
+        ? ImportantObservation.IceFormation
+        : undefined,
+      (obs as LolaSimpleObservation).stabilityTests?.length > 0 ? ImportantObservation.StabilityTest : undefined,
+    ].filter((o) => !!o),
   };
 }
 

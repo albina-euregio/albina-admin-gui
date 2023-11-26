@@ -16,9 +16,7 @@ export interface GenericObservation<Data = any> {
   /**
    * Additional information to display as table rows in the observation dialog
    */
-  $extraDialogRows?:
-    | ObservationTableRow[]
-    | ((t: TranslationFunction) => ObservationTableRow[]);
+  $extraDialogRows?: ObservationTableRow[] | ((t: TranslationFunction) => ObservationTableRow[]);
   /**
    * Snowpack stability that can be inferred from this observation
    */
@@ -153,12 +151,7 @@ export enum ObservationSource {
   Panomax = "Panomax",
 }
 
-export type ForecastSource =
-  | "multimodel"
-  | "meteogram"
-  | "qfa"
-  | "observed_profile"
-  | "alpsolut_profile";
+export type ForecastSource = "multimodel" | "meteogram" | "qfa" | "observed_profile" | "alpsolut_profile";
 
 export enum ObservationType {
   SimpleObservation = "SimpleObservation",
@@ -219,10 +212,7 @@ export interface ObservationTableRow {
   value?: string;
 }
 
-export function toObservationTable(
-  observation: GenericObservation,
-  t: (key: string) => string
-): ObservationTableRow[] {
+export function toObservationTable(observation: GenericObservation, t: (key: string) => string): ObservationTableRow[] {
   return [
     { label: t("observations.eventDate"), date: observation.eventDate },
     { label: t("observations.reportDate"), date: observation.reportDate },
@@ -231,18 +221,13 @@ export function toObservationTable(
     { label: t("observations.elevation"), number: observation.elevation },
     {
       label: t("observations.aspect"),
-      value:
-        observation.aspect !== undefined
-          ? t("aspect." + observation.aspect)
-          : undefined,
+      value: observation.aspect !== undefined ? t("aspect." + observation.aspect) : undefined,
     },
     { label: t("observations.comment"), value: observation.content },
   ];
 }
 
-export function toAspect(
-  aspect: number | string | undefined
-): Aspect | undefined {
+export function toAspect(aspect: number | string | undefined): Aspect | undefined {
   enum NumericAspect {
     N = 1,
     NE = 2,
@@ -271,18 +256,14 @@ export function toGeoJSON(observations: GenericObservation[]) {
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates: [
-          o.longitude ?? 0.0,
-          o.latitude ?? 0.0,
-          o.elevation ?? 0.0,
-        ],
+        coordinates: [o.longitude ?? 0.0, o.latitude ?? 0.0, o.elevation ?? 0.0],
       },
       properties: {
         ...o,
         ...(o.$data || {}),
         $data: undefined,
       },
-    })
+    }),
   );
   const collection: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",

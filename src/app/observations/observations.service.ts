@@ -2,10 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import {
-  convertObservationToGeneric,
-  Observation,
-} from "./models/observation.model";
+import { convertObservationToGeneric, Observation } from "./models/observation.model";
 import { convertLoLaKronos, LolaKronosApi } from "./models/lola-kronos.model";
 import {
   Profile,
@@ -18,12 +15,7 @@ import {
   toLawisProfileDetails,
   toLawisProfile,
 } from "./models/lawis.model";
-import {
-  GenericObservation,
-  ObservationSource,
-  ObservationType,
-  Aspect,
-} from "./models/generic-observation.model";
+import { GenericObservation, ObservationSource, ObservationType, Aspect } from "./models/generic-observation.model";
 import {
   ArcGisApi,
   ArcGisLayer,
@@ -36,21 +28,10 @@ import {
   LwdKipSperren,
   LwdKipSprengerfolg,
 } from "./models/lwdkip.model";
-import {
-  ApiWikisnowECT,
-  convertWikisnow,
-  WikisnowECT,
-} from "./models/wikisnow.model";
+import { ApiWikisnowECT, convertWikisnow, WikisnowECT } from "./models/wikisnow.model";
 import { TranslateService } from "@ngx-translate/core";
 import { from, merge, Observable, of, onErrorResumeNext } from "rxjs";
-import {
-  catchError,
-  filter,
-  last,
-  map,
-  mergeAll,
-  mergeMap,
-} from "rxjs/operators";
+import { catchError, filter, last, map, mergeAll, mergeMap } from "rxjs/operators";
 import BeobachterAT from "./data/Beobachter-AT.json";
 import BeobachterIT from "./data/Beobachter-IT.json";
 import { ObservationFilterService } from "./observation-filter.service";
@@ -166,7 +147,7 @@ export class ObservationsService {
     public translateService: TranslateService,
     public constantsService: ConstantsService,
     public regionsService: RegionsService,
-    public elevationService: ElevationService
+    public elevationService: ElevationService,
   ) {}
 
   loadAll(): Observable<GenericObservation<any>> {
@@ -181,7 +162,7 @@ export class ObservationsService {
       this.getWikisnowECT(),
       this.getObservations(),
       // this.getFotoWebcamsEU(),
-      this.getPanomax()
+      this.getPanomax(),
     );
   }
 
@@ -189,16 +170,12 @@ export class ObservationsService {
     const url = this.constantsService.getServerUrl() + "observations/" + id;
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers };
-    return this.http
-      .get<Observation>(url, options)
-      .pipe(map((o) => convertObservationToGeneric(o)));
+    return this.http.get<Observation>(url, options).pipe(map((o) => convertObservationToGeneric(o)));
   }
 
   private getLwdKipLayer<T extends object>(name: string, params: Record<string, string>) {
     if (!this.lwdKipLayers) {
-      const url =
-        this.constantsService.getServerUrl() +
-        "observations/lwdkip/layers?f=json";
+      const url = this.constantsService.getServerUrl() + "observations/lwdkip/layers?f=json";
       const headers = this.authenticationService.newAuthHeader();
       this.lwdKipLayers = this.http.get<ArcGisApi>(url, { headers }).pipe(
         map((data) => {
@@ -208,83 +185,58 @@ export class ObservationsService {
             throw new Error("No LWDKIP layers found!");
           }
           return data.layers;
-        })
+        }),
       );
     }
     const lwdKipLayers = this.lwdKipLayers.pipe(last());
     return lwdKipLayers.pipe(
       mergeMap((layers) => {
-        const layer = layers.find(
-          (l) => l.name.trim() === name && l.type === "Feature Layer"
-        );
+        const layer = layers.find((l) => l.name.trim() === name && l.type === "Feature Layer");
         if (!layer) {
           throw new Error("No LWDKIP layer for " + name);
         }
-        const url =
-          this.constantsService.getServerUrl() +
-          "observations/lwdkip/" +
-          layer.id;
+        const url = this.constantsService.getServerUrl() + "observations/lwdkip/" + layer.id;
         const headers = this.authenticationService.newAuthHeader();
-        return this.http
-          .get<T | { error: { message: string } }>(url, { headers, params })
-          .pipe(
-            map((data) => {
-              if ("error" in data) {
-                console.error(
-                  "Failed fetching LWDKIP " + name,
-                  new Error(data.error?.message)
-                );
-                return { features: [] };
-              }
-              return data;
-            })
-          );
-      })
+        return this.http.get<T | { error: { message: string } }>(url, { headers, params }).pipe(
+          map((data) => {
+            if ("error" in data) {
+              console.error("Failed fetching LWDKIP " + name, new Error(data.error?.message));
+              return { features: [] };
+            }
+            return data;
+          }),
+        );
+      }),
     );
   }
 
   getLwdKipObservations(): Observable<GenericObservation> {
-    const startDate = this.filter.startDate
-      .toISOString()
-      .slice(0, "2006-01-02T15:04:05".length)
-      .replace("T", " ");
-    const endDate = this.filter.endDate
-      .toISOString()
-      .slice(0, "2006-01-02T15:04:05".length)
-      .replace("T", " ");
+    const startDate = this.filter.startDate.toISOString().slice(0, "2006-01-02T15:04:05".length).replace("T", " ");
+    const endDate = this.filter.endDate.toISOString().slice(0, "2006-01-02T15:04:05".length).replace("T", " ");
     const params: Record<string, string> = {
       where: `BEOBDATUM > TIMESTAMP '${startDate}' AND BEOBDATUM < TIMESTAMP '${endDate}'`,
       outFields: "*",
       datumTransformation: "5891",
       f: "geojson",
     };
-    const o0 = this.getLwdKipLayer<LwdKipBeobachtung>(
-      "Beobachtungen",
-      params
-    ).pipe(
+    const o0 = this.getLwdKipLayer<LwdKipBeobachtung>("Beobachtungen", params).pipe(
       mergeMap((featureCollection) => featureCollection.features),
-      map((feature) => convertLwdKipBeobachtung(feature))
+      map((feature) => convertLwdKipBeobachtung(feature)),
     );
-    const o1 = this.getLwdKipLayer<LwdKipSprengerfolg>(
-      "Sprengerfolg",
-      params
-    ).pipe(
+    const o1 = this.getLwdKipLayer<LwdKipSprengerfolg>("Sprengerfolg", params).pipe(
       mergeMap((featureCollection) => featureCollection.features),
-      map((feature) => convertLwdKipSprengerfolg(feature))
+      map((feature) => convertLwdKipSprengerfolg(feature)),
     );
-    const o2 = this.getLwdKipLayer<LwdKipLawinenabgang>(
-      "Lawinenabgänge",
-      params
-    ).pipe(
+    const o2 = this.getLwdKipLayer<LwdKipLawinenabgang>("Lawinenabgänge", params).pipe(
       mergeMap((featureCollection) => featureCollection.features),
-      map((feature) => convertLwdKipLawinenabgang(feature))
+      map((feature) => convertLwdKipLawinenabgang(feature)),
     );
     const o3 = this.getLwdKipLayer<LwdKipSperren>("aktive_Sperren", {
       ...params,
       where: "1=1",
     }).pipe(
       mergeMap((featureCollection) => featureCollection.features),
-      map((feature) => convertLwdKipSperren(feature))
+      map((feature) => convertLwdKipSperren(feature)),
     );
     return merge(o0, o1, o2, o3);
   }
@@ -300,52 +252,38 @@ export class ObservationsService {
     const headers = this.authenticationService.newAuthHeader();
     return this.http.get<Observation[]>(url, { headers }).pipe(
       mergeAll(),
-      map((o) => convertObservationToGeneric(o))
+      map((o) => convertObservationToGeneric(o)),
     );
   }
 
-  postObservation(
-    observation: Observation
-  ): Observable<GenericObservation<Observation>> {
+  postObservation(observation: Observation): Observable<GenericObservation<Observation>> {
     observation = this.serializeObservation(observation);
     const url = this.constantsService.getServerUrl() + "observations";
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers };
-    return this.http
-      .post<Observation>(url, observation, options)
-      .pipe(map((o) => convertObservationToGeneric(o)));
+    return this.http.post<Observation>(url, observation, options).pipe(map((o) => convertObservationToGeneric(o)));
   }
 
-  putObservation(
-    observation: Observation
-  ): Observable<GenericObservation<Observation>> {
+  putObservation(observation: Observation): Observable<GenericObservation<Observation>> {
     observation = this.serializeObservation(observation);
-    const url =
-      this.constantsService.getServerUrl() + "observations/" + observation.id;
+    const url = this.constantsService.getServerUrl() + "observations/" + observation.id;
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers };
-    return this.http
-      .put<Observation>(url, observation, options)
-      .pipe(map((o) => convertObservationToGeneric(o)));
+    return this.http.put<Observation>(url, observation, options).pipe(map((o) => convertObservationToGeneric(o)));
   }
 
   private serializeObservation(observation: Observation): Observation {
     return {
       ...observation,
       eventDate:
-        typeof observation.eventDate === "object"
-          ? getISOString(observation.eventDate)
-          : observation.eventDate,
+        typeof observation.eventDate === "object" ? getISOString(observation.eventDate) : observation.eventDate,
       reportDate:
-        typeof observation.reportDate === "object"
-          ? getISOString(observation.reportDate)
-          : observation.reportDate,
+        typeof observation.reportDate === "object" ? getISOString(observation.reportDate) : observation.reportDate,
     };
   }
 
   async deleteObservation(observation: Observation): Promise<void> {
-    const url =
-      this.constantsService.getServerUrl() + "observations/" + observation.id;
+    const url = this.constantsService.getServerUrl() + "observations/" + observation.id;
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers };
     await this.http.delete(url, options).toPromise();
@@ -371,8 +309,8 @@ export class ObservationsService {
           locationName: observer.name.replace("Beobachter", "").trim(),
           longitude: +observer.longitude,
           region: "",
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -380,7 +318,7 @@ export class ObservationsService {
     source:
       | ObservationSource.LoLaKronos
       | ObservationSource.LoLaAvalancheFeedbackAT5
-      | ObservationSource.LoLaAvalancheFeedbackAT8
+      | ObservationSource.LoLaAvalancheFeedbackAT8,
   ): Observable<GenericObservation> {
     const { observationApi: api, observationWeb: web } = this.constantsService;
     const timeframe = this.startDateString + "/" + this.endDateString;
@@ -393,14 +331,8 @@ export class ObservationsService {
     const { observationApi: api } = this.constantsService;
     return this.http.get<ApiWikisnowECT>(api.WikisnowECT).pipe(
       mergeMap((api) => api.data),
-      map<WikisnowECT, GenericObservation>((wikisnow) =>
-        convertWikisnow(wikisnow)
-      ),
-      filter(
-        (observation) =>
-          this.filter.inDateRange(observation) &&
-          this.filter.inMapBounds(observation)
-      )
+      map<WikisnowECT, GenericObservation>((wikisnow) => convertWikisnow(wikisnow)),
+      filter((observation) => this.filter.inDateRange(observation) && this.filter.inMapBounds(observation)),
     );
   }
 
@@ -415,29 +347,21 @@ export class ObservationsService {
           "&endDate=" +
           this.endDateString +
           "&_=" +
-          nowWithHourPrecision()
+          nowWithHourPrecision(),
       )
       .pipe(
         mergeAll(),
-        map<Profile, GenericObservation<Profile>>((lawis) =>
-          toLawisProfile(lawis, web["Lawis-Profile"])
-        ),
+        map<Profile, GenericObservation<Profile>>((lawis) => toLawisProfile(lawis, web["Lawis-Profile"])),
         filter((observation) => this.filter.inMapBounds(observation)),
         mergeMap((profile) => {
           if (!LAWIS_FETCH_DETAILS) {
             return of(profile);
           }
-          return from(
-            this.getCachedOrFetchLowPriority<ProfileDetails>(
-              api.Lawis + "profile/" + profile.$data.id
-            )
-          ).pipe(
-            map<ProfileDetails, GenericObservation>((lawisDetails) =>
-              toLawisProfileDetails(profile, lawisDetails)
-            ),
-            catchError(() => of(profile))
+          return from(this.getCachedOrFetchLowPriority<ProfileDetails>(api.Lawis + "profile/" + profile.$data.id)).pipe(
+            map<ProfileDetails, GenericObservation>((lawisDetails) => toLawisProfileDetails(profile, lawisDetails)),
+            catchError(() => of(profile)),
           );
-        })
+        }),
       );
   }
 
@@ -452,29 +376,23 @@ export class ObservationsService {
           "&endDate=" +
           this.endDateString +
           "&_=" +
-          nowWithHourPrecision()
+          nowWithHourPrecision(),
       )
       .pipe(
         mergeAll(),
-        map<Incident, GenericObservation<Incident>>((lawis) =>
-          toLawisIncident(lawis, web["Lawis-Incident"])
-        ),
+        map<Incident, GenericObservation<Incident>>((lawis) => toLawisIncident(lawis, web["Lawis-Incident"])),
         filter((observation) => this.filter.inMapBounds(observation)),
         mergeMap((incident) => {
           if (!LAWIS_FETCH_DETAILS) {
             return of(incident);
           }
           return from(
-            this.getCachedOrFetchLowPriority<IncidentDetails>(
-              api.Lawis + "incident/" + incident.$data.id
-            )
+            this.getCachedOrFetchLowPriority<IncidentDetails>(api.Lawis + "incident/" + incident.$data.id),
           ).pipe(
-            map<IncidentDetails, GenericObservation>((lawisDetails) =>
-              toLawisIncidentDetails(incident, lawisDetails)
-            ),
-            catchError(() => of(incident))
+            map<IncidentDetails, GenericObservation>((lawisDetails) => toLawisIncidentDetails(incident, lawisDetails)),
+            catchError(() => of(incident)),
           );
-        })
+        }),
       );
   }
 
@@ -486,8 +404,7 @@ export class ObservationsService {
   }
 
   getLolaCads(cam: GenericObservation): Observable<any> {
-    const lolaCadsApi =
-      "https://api.avalanche.report/www.lola-cads.info/LWDprocessPhotoURL";
+    const lolaCadsApi = "https://api.avalanche.report/www.lola-cads.info/LWDprocessPhotoURL";
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2xhQWNjZXNzIjpmYWxzZSwibHdkQWNjZXNzIjp0cnVlLCJpYXQiOjE2Nzk1ODA3NjYsImV4cCI6MTcxMTExNjc2Nn0.IpZ4Nkkmvw0IiEi3Hvh9Pt4RvtJv7KktMLQCwdhVtBU";
 
@@ -513,8 +430,7 @@ export class ObservationsService {
   //get panomax cams and fetch lola cads data for each
   getPanomax(): Observable<GenericObservation> {
     const { observationApi: api } = this.constantsService;
-    const baseURL =
-      "https://api.avalanche.report/api.panomax.com/1.0/instances/thumbnails/";
+    const baseURL = "https://api.avalanche.report/api.panomax.com/1.0/instances/thumbnails/";
 
     // make request to observationApi.panomax and make a request to the thumbnail url for each result.instance.id
     return this.http.get<PanomaxCamResponse>(api.Panomax).pipe(
@@ -524,48 +440,41 @@ export class ObservationsService {
           // make request to each thumbnail url
           .filter((webcam: PanomaxInstance) => {
             const region = this.regionsService.getRegionForLatLng(
-              new LatLng(webcam.cam.latitude, webcam.cam.longitude)
+              new LatLng(webcam.cam.latitude, webcam.cam.longitude),
             );
             return region !== undefined;
           })
           .map((webcam: PanomaxInstance) => {
-            return this.http
-
-              .get<PanomaxThumbnailResponse[]>(baseURL + webcam.id)
-              .pipe(
-                map((res: PanomaxThumbnailResponse[]) => {
-                  const cam = res[0].instance.cam;
-                  //set res[0].latest to the latest image from res[0].images
-                  res[0]["latest"] =
-                    res[0].images[Object.keys(res[0].images).sort().pop()];
-                  res[0]["latest"] = res[0]["latest"].small;
-                  const latlng = new LatLng(cam.latitude, cam.longitude);
-                  const response: GenericObservation = {
-                    $data: res[0],
-                    $externalURL: res[0].url,
-                    $source: ObservationSource.Panomax,
-                    $type: ObservationType.Webcam,
-                    authorName: "panomax.com",
-                    content: cam.name,
-                    elevation: cam.elevation,
-                    eventDate: new Date(Date.now()),
-                    latitude: cam.latitude,
-                    longitude: cam.longitude,
-                    locationName: res[0].instance.name,
-                    region: this.regionsService.getRegionForLatLng(latlng)?.id,
-                    aspect:
-                      cam.viewAngle !== 360
-                        ? this.degreeToAspect(cam.zeroDirection)
-                        : undefined,
-                  };
-                  return response;
-                })
-              );
+            return this.http.get<PanomaxThumbnailResponse[]>(baseURL + webcam.id).pipe(
+              map((res: PanomaxThumbnailResponse[]) => {
+                const cam = res[0].instance.cam;
+                //set res[0].latest to the latest image from res[0].images
+                res[0]["latest"] = res[0].images[Object.keys(res[0].images).sort().pop()];
+                res[0]["latest"] = res[0]["latest"].small;
+                const latlng = new LatLng(cam.latitude, cam.longitude);
+                const response: GenericObservation = {
+                  $data: res[0],
+                  $externalURL: res[0].url,
+                  $source: ObservationSource.Panomax,
+                  $type: ObservationType.Webcam,
+                  authorName: "panomax.com",
+                  content: cam.name,
+                  elevation: cam.elevation,
+                  eventDate: new Date(Date.now()),
+                  latitude: cam.latitude,
+                  longitude: cam.longitude,
+                  locationName: res[0].instance.name,
+                  region: this.regionsService.getRegionForLatLng(latlng)?.id,
+                  aspect: cam.viewAngle !== 360 ? this.degreeToAspect(cam.zeroDirection) : undefined,
+                };
+                return response;
+              }),
+            );
           });
 
         const observables = from(cams);
         return observables.pipe(mergeAll());
-      })
+      }),
     );
   }
 
@@ -616,9 +525,7 @@ export class ObservationsService {
                 $externalURL: cam.$externalURL,
                 $source: ObservationSource.FotoWebcamsEU,
                 $type: ObservationType.Avalanche,
-                authorName: `foto-webcam.eu, ${
-                  lolaCadsData[0].label
-                }, ${Math.round(lolaCadsData[0].conf * 100)}%`,
+                authorName: `foto-webcam.eu, ${lolaCadsData[0].label}, ${Math.round(lolaCadsData[0].conf * 100)}%`,
                 content: cam.content,
                 elevation: cam.elevation,
                 eventDate: new Date(Date.now()),
@@ -629,12 +536,12 @@ export class ObservationsService {
                 aspect: cam.aspect,
               };
               return response;
-            })
+            }),
           );
         } else {
           return of(cam);
         }
-      })
+      }),
     );
   }
 
@@ -662,15 +569,11 @@ export class ObservationsService {
   }
 
   private get startDateString(): string {
-    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(
-      this.filter.startDate
-    );
+    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.filter.startDate);
   }
 
   private get endDateString(): string {
-    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(
-      this.filter.endDate
-    );
+    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.filter.endDate);
   }
 }
 
