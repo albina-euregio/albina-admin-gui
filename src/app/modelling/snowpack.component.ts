@@ -12,7 +12,7 @@ import { FormsModule } from "@angular/forms";
   standalone: true,
   imports: [FormsModule, NgFor, TranslateModule],
   providers: [ModellingService, RegionsService],
-  templateUrl: "./snowpack.component.html"
+  templateUrl: "./snowpack.component.html",
 })
 export class SnowpackComponent implements OnInit {
   snowpackPlots: SnowpackPlots;
@@ -25,7 +25,7 @@ export class SnowpackComponent implements OnInit {
   constructor(
     private constantsService: ConstantsService,
     private modellingService: ModellingService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
@@ -39,7 +39,7 @@ export class SnowpackComponent implements OnInit {
   updatePlotUrl() {
     const url = [
       this.constantsService.snowpackModelsUrl,
-      `${this.plotType}_plot_${this.aspect}_${this.station}.html`
+      `${this.plotType}_plot_${this.aspect}_${this.station}.html`,
     ].join("");
     this.plotUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }

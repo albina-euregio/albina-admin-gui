@@ -10,7 +10,7 @@ import { FormsModule } from "@angular/forms";
 @Component({
   standalone: true,
   imports: [FormsModule, NgFor, TranslateModule],
-  templateUrl: "./snowpack.meteo.component.html"
+  templateUrl: "./snowpack.meteo.component.html",
 })
 export class SnowpackMeteoComponent implements OnInit {
   snowpackMeteoPlots: string[];
@@ -21,7 +21,7 @@ export class SnowpackMeteoComponent implements OnInit {
   constructor(
     private constantsService: ConstantsService,
     private modellingService: ModellingService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {

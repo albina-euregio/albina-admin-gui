@@ -36,7 +36,7 @@ export interface MultiselectDropdownData {
   ],
   providers: [ModellingService, RegionsService],
   templateUrl: "./forecast.component.html",
-  styleUrls: ["./qfa.component.scss", "./qfa.table.scss", "./qfa.params.scss"]
+  styleUrls: ["./qfa.component.scss", "./qfa.table.scss", "./qfa.params.scss"],
 })
 export class ForecastComponent implements AfterViewInit, OnDestroy {
   layout = "map" as const;
@@ -52,7 +52,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     meteogram: [],
     qfa: [],
     observed_profile: [],
-    alpsolut_profile: []
+    alpsolut_profile: [],
   };
   observationConfigurations = new Set<string>();
   observationConfiguration: string | undefined;
@@ -61,28 +61,28 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     {
       id: "multimodel",
       fillColor: "green",
-      name: this.translateService.instant("sidebar.modellingZamg")
+      name: this.translateService.instant("sidebar.modellingZamg"),
     },
     {
       id: "meteogram",
       fillColor: "MediumVioletRed",
-      name: this.translateService.instant("sidebar.modellingZamgMeteogram")
+      name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
     },
     {
       id: "qfa",
       fillColor: "red",
-      name: this.translateService.instant("sidebar.qfa")
+      name: this.translateService.instant("sidebar.qfa"),
     },
     {
       id: "observed_profile",
       fillColor: "#f8d229",
-      name: this.translateService.instant("sidebar.modellingSnowpack")
+      name: this.translateService.instant("sidebar.modellingSnowpack"),
     },
     {
       id: "alpsolut_profile",
       fillColor: "#d95f0e",
-      name: this.translateService.instant("sidebar.modellingSnowpackMeteo")
-    }
+      name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
+    },
   ];
 
   public allRegions: RegionProperties[];
@@ -105,7 +105,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     private qfaService: QfaService,
     public paramService: ParamService,
     private sanitizer: DomSanitizer,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
   files = {};
@@ -168,14 +168,14 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       `<i class="fa fa-asterisk"></i> ${region || undefined}`,
       `<i class="fa fa-globe"></i> ${locationName || undefined}`,
       this.allSources.find((s) => s.id === $source)?.name,
-      `<div hidden>${region}</div>`
+      `<div hidden>${region}</div>`,
     ]
       .filter((s) => !/undefined/.test(s))
       .join("<br>");
 
     const marker = new CircleMarker(
       { lat: latitude, lng: longitude },
-      this.getModelPointOptions($source as ForecastSource)
+      this.getModelPointOptions($source as ForecastSource),
     )
       .on("click", callback)
       .bindTooltip(tooltip);
@@ -217,7 +217,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         latitude: ll.lat,
         longitude: ll.lng,
         region: this.regionsService.getRegionForLatLng(new LatLng(ll.lat, ll.lng))?.id,
-        locationName: cityName
+        locationName: cityName,
       } as GenericObservation;
       this.drawMarker(point);
       this.modelPoints.push(point);
@@ -251,7 +251,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       color: "black",
       weight: 1,
       opacity: 1,
-      fillOpacity: 1
+      fillOpacity: 1,
     };
   }
 
@@ -330,11 +330,11 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       let points = this.dropDownOptions[this.selectedModelType];
       if (this.showObservationConfigurations && this.observationConfiguration) {
         points = points.filter(
-          (p) => (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration
+          (p) => (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration,
         );
       }
       const index = points.findIndex(
-        (p) => p.region === this.selectedModelPoint.region && p.locationName === this.selectedModelPoint.locationName
+        (p) => p.region === this.selectedModelPoint.region && p.locationName === this.selectedModelPoint.locationName,
       );
       if (type === "next") {
         const newIndex = index + 1 < points.length - 1 ? index + 1 : 0;
@@ -371,7 +371,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         (p) =>
           p.region === this.selectedModelPoint.region &&
           p.locationName === this.selectedModelPoint.locationName &&
-          (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration
+          (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration,
       ) ?? this.selectedModelPoint;
   }
 
