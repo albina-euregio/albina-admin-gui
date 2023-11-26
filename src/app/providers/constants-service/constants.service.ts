@@ -30,7 +30,7 @@ export class ConstantsService {
     [ObservationSource.FotoWebcamsEU]:
       "https://admin.avalanche.report/foto-webcam.eu/metadata.php",
     [ObservationSource.Panomax]:
-      "https://api.avalanche.report/api.panomax.com/1.0/maps/panomaxweb",
+      "https://api.avalanche.report/api.panomax.com/1.0",
   };
 
   public observationWeb = {

@@ -15,12 +15,7 @@ import {
   toLawisProfileDetails,
   toLawisProfile,
 } from "./models/lawis.model";
-import {
-  GenericObservation,
-  ObservationSource,
-  ObservationType,
-  degreeToAspect,
-} from "./models/generic-observation.model";
+import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import {
   ArcGisApi,
   ArcGisLayer,
@@ -43,74 +38,7 @@ import { RegionsService } from "../providers/regions-service/regions.service";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { LatLng } from "leaflet";
 import { FotoWebcamEU, FotoWebcamEUResponse, convertFotoWebcamEU, addLolaCadsData } from "./models/foto-webcam.model";
-
-interface PanomaxCam {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  zeroDirection: number;
-  viewAngle: number;
-  iconUrl: string;
-  mapMarkerGravity: string;
-  nightVision: boolean;
-  types?: any[];
-  elevation?: number;
-  tourCam?: boolean;
-  country?: string;
-  countryName?: string;
-  firstPano?: string;
-  lastPano?: string;
-}
-
-interface PanomaxInstance {
-  id: number;
-  name: string;
-  frontentryUrl?: string;
-  logo?: string;
-  initialDirection: number;
-  cam: PanomaxCam;
-}
-
-interface PanomaxThumbnailResponse {
-  mode: string;
-  name: string;
-  url: string;
-  tourCam: boolean;
-  zeroDirection: number;
-  viewAngle: number;
-  initialDirection: number;
-  clipping: any;
-  logo: string;
-  images: any;
-  instance: PanomaxInstance;
-  culture: any;
-  country: string;
-  position: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-interface PanomaxCamResponse {
-  id: string;
-  slug: string;
-  type: string;
-  minLatitude: number;
-  maxLatitude: number;
-  minLongitude: number;
-  maxLongitude: number;
-  otherInstances: any[];
-  instanceLogos: any[];
-  hotSpots: any[];
-  categories: any[];
-  sources: any[];
-  clusteringZoomLevel: number;
-  refreshInterval: number;
-  instances: {
-    [key: string]: PanomaxInstance;
-  };
-}
+import { PanomaxCamResponse, PanomaxThumbnailResponse, convertPanomax } from "./models/panomax.model";
 
 @Injectable()
 export class ObservationsService {
@@ -378,51 +306,17 @@ export class ObservationsService {
   //get panomax cams and fetch lola cads data for each
   getPanomax(): Observable<GenericObservation> {
     const { observationApi: api } = this.constantsService;
-    const baseURL = "https://api.avalanche.report/api.panomax.com/1.0/instances/thumbnails/";
 
     // make request to observationApi.panomax and make a request to the thumbnail url for each result.instance.id
-    return this.http.get<PanomaxCamResponse>(api.Panomax).pipe(
-      mergeMap((res: PanomaxCamResponse) => {
-        const cams = Object.values(res.instances)
-
-          // make request to each thumbnail url
-          .filter((webcam: PanomaxInstance) => {
-            const region = this.regionsService.getRegionForLatLng(
-              new LatLng(webcam.cam.latitude, webcam.cam.longitude),
-            );
-            return region !== undefined;
-          })
-          .map((webcam: PanomaxInstance) => {
-            return this.http.get<PanomaxThumbnailResponse[]>(baseURL + webcam.id).pipe(
-              map((res: PanomaxThumbnailResponse[]) => {
-                const cam = res[0].instance.cam;
-                //set res[0].latest to the latest image from res[0].images
-                res[0]["latest"] = res[0].images[Object.keys(res[0].images).sort().pop()];
-                res[0]["latest"] = res[0]["latest"].small;
-                const latlng = new LatLng(cam.latitude, cam.longitude);
-                const response: GenericObservation = {
-                  $data: res[0],
-                  $externalURL: res[0].url,
-                  $source: ObservationSource.Panomax,
-                  $type: ObservationType.Webcam,
-                  authorName: "panomax.com",
-                  content: cam.name,
-                  elevation: cam.elevation,
-                  eventDate: new Date(Date.now()),
-                  latitude: cam.latitude,
-                  longitude: cam.longitude,
-                  locationName: res[0].instance.name,
-                  region: this.regionsService.getRegionForLatLng(latlng)?.id,
-                  aspect: cam.viewAngle !== 360 ? degreeToAspect(cam.zeroDirection) : undefined,
-                };
-                return response;
-              }),
-            );
-          });
-
-        const observables = from(cams);
-        return observables.pipe(mergeAll());
-      }),
+    return this.http.get<PanomaxCamResponse>(api.Panomax + "/maps/panomaxweb").pipe(
+      mergeMap(({ instances }: PanomaxCamResponse) => Object.values(instances)),
+      filter(({ cam }) => !!this.regionsService.getRegionForLatLng(new LatLng(cam.latitude, cam.longitude))?.id),
+      mergeMap((webcam) =>
+        this.http.get<PanomaxThumbnailResponse[]>(api.Panomax + "/instances/thumbnails/" + webcam.id).pipe(
+          filter((thumbs) => !!thumbs?.length),
+          map((thumbs) => this.augmentRegion(convertPanomax(thumbs[0]))),
+        ),
+      ),
     );
   }
 
