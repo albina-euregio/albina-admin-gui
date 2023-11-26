@@ -41,7 +41,7 @@ export const routes: Routes = [
     path: "modelling",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./modelling/modelling.module").then(m => m.ModellingModule)
+    loadChildren: () => import("./modelling/routes")
   },
   {
     path: "settings",

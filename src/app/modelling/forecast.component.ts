@@ -34,6 +34,7 @@ export interface MultiselectDropdownData {
     KeyValuePipe,
     TranslateModule,
   ],
+  providers: [ModellingService, RegionsService],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa.component.scss", "./qfa.table.scss", "./qfa.params.scss"]
 })
