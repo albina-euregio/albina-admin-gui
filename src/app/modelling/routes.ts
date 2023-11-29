@@ -1,5 +1,4 @@
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { Routes } from "@angular/router";
 
 import { SnowpackComponent } from "./snowpack.component";
 import { SnowpackMeteoComponent } from "./snowpack.meteo.component";
@@ -7,31 +6,25 @@ import { ForecastComponent } from "./forecast.component";
 
 import { AuthGuard } from "../guards/auth.guard";
 
-const routes: Routes = [
+export default [
   {
     path: "",
     component: ForecastComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: "forecast",
     component: ForecastComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: "snowpack",
     component: SnowpackComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: "snowpackMeteo",
     component: SnowpackMeteoComponent,
-    canActivate: [AuthGuard]
-  }
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class ModellingRoutingModule { }
+    canActivate: [AuthGuard],
+  },
+] satisfies Routes;

@@ -42,12 +42,18 @@ export function convertWikisnow(wikisnow: WikisnowECT): GenericObservation<Wikis
     stability: getECTestStability(+wikisnow.hits, wikisnow.propagation),
     aspect: toAspect(+wikisnow.exposition / 45),
     authorName: wikisnow.UserName,
-    content: [wikisnow.ECT_result, wikisnow.propagation, wikisnow.surface, wikisnow.weak_layer, wikisnow.description].join(" // "),
+    content: [
+      wikisnow.ECT_result,
+      wikisnow.propagation,
+      wikisnow.surface,
+      wikisnow.weak_layer,
+      wikisnow.description,
+    ].join(" // "),
     elevation: +wikisnow.Sealevel,
     eventDate: new Date(wikisnow.createDate),
     latitude: +wikisnow?.latlong?.split(/,\s*/)?.[0],
     locationName: wikisnow.location,
     longitude: +wikisnow?.latlong?.split(/,\s*/)?.[1],
-    region: ""
+    region: "",
   };
 }

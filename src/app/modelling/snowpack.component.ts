@@ -2,10 +2,17 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 import { ModellingService, SnowpackPlots } from "./modelling.service";
+import { RegionsService } from "app/providers/regions-service/regions.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { TranslateModule } from "@ngx-translate/core";
+import { NgFor } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
-  templateUrl: "./snowpack.component.html"
+  standalone: true,
+  imports: [FormsModule, NgFor, TranslateModule],
+  providers: [ModellingService, RegionsService],
+  templateUrl: "./snowpack.component.html",
 })
 export class SnowpackComponent implements OnInit {
   snowpackPlots: SnowpackPlots;
@@ -18,7 +25,7 @@ export class SnowpackComponent implements OnInit {
   constructor(
     private constantsService: ConstantsService,
     private modellingService: ModellingService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
@@ -32,7 +39,7 @@ export class SnowpackComponent implements OnInit {
   updatePlotUrl() {
     const url = [
       this.constantsService.snowpackModelsUrl,
-      `${this.plotType}_plot_${this.aspect}_${this.station}.html`
+      `${this.plotType}_plot_${this.aspect}_${this.station}.html`,
     ].join("");
     this.plotUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }

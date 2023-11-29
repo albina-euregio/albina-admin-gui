@@ -8,12 +8,9 @@ import {
   HostListener,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ObservationsService } from "./observations.service";
-import {
-  RegionsService,
-  RegionProperties,
-} from "../providers/regions-service/regions.service";
+import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import {
   GenericObservation,
@@ -31,7 +28,7 @@ import {
   Stability,
 } from "./models/generic-observation.model";
 
-import { MenuItem } from "primeng/api";
+import { MenuItem, SharedModule } from "primeng/api";
 
 import { saveAs } from "file-saver";
 
@@ -39,9 +36,20 @@ import { LatLng, Marker } from "leaflet";
 
 import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationFilterService } from "./observation-filter.service";
-import { formatDate } from "@angular/common";
+import { formatDate, CommonModule } from "@angular/common";
 import type { Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
+import { PipeModule } from "../pipes/pipes.module";
+import { DialogModule } from "primeng/dialog";
+import { BarChartComponent } from "./charts/bar-chart/bar-chart.component";
+import { RoseChartComponent } from "./charts/rose-chart/rose-chart.component";
+import { MenubarModule } from "primeng/menubar";
+import { InputTextModule } from "primeng/inputtext";
+import { CalendarModule } from "primeng/calendar";
+import { MultiSelectModule } from "primeng/multiselect";
+import { FormsModule } from "@angular/forms";
+import { ToggleButtonModule } from "primeng/togglebutton";
+import { ButtonModule } from "primeng/button";
 
 //import { BarChart } from "./charts/bar-chart/bar-chart.component";
 declare var L: any;
@@ -52,12 +60,36 @@ export interface MultiselectDropdownData {
 }
 
 @Component({
+  standalone: true,
+  imports: [
+    BarChartComponent,
+    ButtonModule,
+    CalendarModule,
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    InputTextModule,
+    MenubarModule,
+    MultiSelectModule,
+    ObservationTableComponent,
+    PipeModule,
+    RoseChartComponent,
+    SharedModule,
+    ToggleButtonModule,
+    TranslateModule,
+  ],
+  providers: [
+    BaseMapService,
+    ElevationService,
+    ObservationFilterService,
+    ObservationsService,
+    RegionsService,
+    TranslateService,
+  ],
   templateUrl: "observations.component.html",
   styleUrls: ["./observations.component.scss"],
 })
-export class ObservationsComponent
-  implements AfterContentInit, AfterViewInit, OnDestroy
-{
+export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
   public layout: "map" | "table" | "chart" = "map";
   public layoutFilters = true;
@@ -102,7 +134,7 @@ export class ObservationsComponent
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     private elevationService: ElevationService,
-    public mapService: BaseMapService
+    public mapService: BaseMapService,
   ) {
     this.allRegions = this.regionsService
       .getRegionsEuregio()
@@ -134,9 +166,7 @@ export class ObservationsComponent
   }
 
   ngAfterViewInit() {
-    this.mapService.initMaps(this.mapDiv.nativeElement, (o) =>
-      this.onObservationClick(o)
-    );
+    this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
     this.mapService.addInfo();
 
     // this.observationsService
@@ -145,9 +175,7 @@ export class ObservationsComponent
 
     this.loadObservations({ days: 7 });
     this.mapService.map.on("click", () => {
-      this.filter.regions = this.mapService
-        .getSelectedRegions()
-        .map((aRegion) => aRegion.id);
+      this.filter.regions = this.mapService.getSelectedRegions().map((aRegion) => aRegion.id);
       this.applyLocalFilter();
     });
   }
@@ -182,9 +210,7 @@ export class ObservationsComponent
         this.applyLocalFilter();
         break;
       case "sources":
-        this.filter.observationSources = this.filter.observationSources.filter(
-          (e) => e !== item.id
-        );
+        this.filter.observationSources = this.filter.observationSources.filter((e) => e !== item.id);
         this.applyLocalFilter();
         break;
       default:
@@ -203,10 +229,7 @@ export class ObservationsComponent
   }
 
   observationTableFilterGlobal(value: string) {
-    this.observationTableComponent.observationTable.filterGlobal(
-      value,
-      "contains"
-    );
+    this.observationTableComponent.observationTable.filterGlobal(value, "contains");
   }
 
   parseObservation(observation: GenericObservation): GenericObservation {
@@ -215,9 +238,7 @@ export class ObservationsComponent
     const stabilities = Object.values(Stability);
     const importantObservations = Object.values(ImportantObservation);
 
-    const matches = [...observation.content.matchAll(/#\S*(?=\s|$)/g)].map(
-      (el) => el[0].replace("#", "")
-    );
+    const matches = [...observation.content.matchAll(/#\S*(?=\s|$)/g)].map((el) => el[0].replace("#", ""));
     matches.forEach((match) => {
       if (avalancheProblems.includes(match as AvalancheProblem)) {
         if (!observation.avalancheProblems) observation.avalancheProblems = [];
@@ -225,11 +246,8 @@ export class ObservationsComponent
       } else if (dangerPatterns.includes(match as DangerPattern)) {
         if (!observation.dangerPatterns) observation.dangerPatterns = [];
         observation.dangerPatterns.push(match as DangerPattern);
-      } else if (
-        importantObservations.includes(match as ImportantObservation)
-      ) {
-        if (!observation.importantObservations)
-          observation.importantObservations = [];
+      } else if (importantObservations.includes(match as ImportantObservation)) {
+        if (!observation.importantObservations) observation.importantObservations = [];
         observation.importantObservations.push(match as ImportantObservation);
       } else if (stabilities.includes(match as Stability)) {
         observation.stability = match as Stability;
@@ -249,18 +267,14 @@ export class ObservationsComponent
     this.loading
       .forEach((observation) => {
         if (this.filter.inDateRange(observation)) {
-          if (
-            observation.$source === ObservationSource.AvalancheWarningService
-          ) {
+          if (observation.$source === ObservationSource.AvalancheWarningService) {
             observation = this.parseObservation(observation);
           }
           if (!observation.elevation) {
-            this.elevationService
-              .getElevation(observation.latitude, observation.longitude)
-              .subscribe((elevation) => {
-                observation.elevation = elevation;
-                this.addObservation(observation);
-              });
+            this.elevationService.getElevation(observation.latitude, observation.longitude).subscribe((elevation) => {
+              observation.elevation = elevation;
+              this.addObservation(observation);
+            });
           } else {
             this.addObservation(observation);
           }
@@ -289,9 +303,7 @@ export class ObservationsComponent
   private clear() {
     this.observationsWithoutCoordinates = 0;
     this.observations.length = 0;
-    Object.values(this.mapService.observationTypeLayers).forEach((layer) =>
-      layer.clearLayers()
-    );
+    Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
   }
 
   exportObservations() {
@@ -323,13 +335,10 @@ export class ObservationsComponent
   }
 
   applyLocalFilter() {
-    Object.values(this.mapService.observationTypeLayers).forEach((layer) =>
-      layer.clearLayers()
-    );
+    Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
     this.observations.forEach((observation) => {
       observation.filterType =
-        this.filter.inObservationSources(observation) &&
-        this.filter.isSelected(observation)
+        this.filter.inObservationSources(observation) && this.filter.isSelected(observation)
           ? ObservationFilterType.Local
           : ObservationFilterType.Global;
       observation.isHighlighted = this.filter.isHighlighted(observation);
@@ -342,10 +351,7 @@ export class ObservationsComponent
           ? new LatLng(observation.latitude, observation.longitude)
           : undefined;
 
-      if (
-        observation.filterType === ObservationFilterType.Local ||
-        observation.isHighlighted
-      ) {
+      if (observation.filterType === ObservationFilterType.Local || observation.isHighlighted) {
         this.localObservations.push(observation);
         if (!ll) {
           return;
@@ -357,30 +363,19 @@ export class ObservationsComponent
   }
 
   buildChartsData() {
-    this.chartsData.Elevation = this.filter.getElevationDataset(
-      this.observations
-    );
+    this.chartsData.Elevation = this.filter.getElevationDataset(this.observations);
 
     this.chartsData.Aspects = this.filter.getAspectDataset(this.observations);
 
-    this.chartsData.Stability = this.filter.getStabilityDataset(
-      this.observations
-    );
+    this.chartsData.Stability = this.filter.getStabilityDataset(this.observations);
 
-    this.chartsData.ObservationType = this.filter.getObservationTypeDataset(
-      this.observations
-    );
+    this.chartsData.ObservationType = this.filter.getObservationTypeDataset(this.observations);
 
-    this.chartsData.ImportantObservation =
-      this.filter.getImportantObservationDataset(this.observations);
+    this.chartsData.ImportantObservation = this.filter.getImportantObservationDataset(this.observations);
 
-    this.chartsData.AvalancheProblem = this.filter.getAvalancheProblemDataset(
-      this.observations
-    );
+    this.chartsData.AvalancheProblem = this.filter.getAvalancheProblemDataset(this.observations);
 
-    this.chartsData.DangerPattern = this.filter.getDangerPatternDataset(
-      this.observations
-    );
+    this.chartsData.DangerPattern = this.filter.getDangerPatternDataset(this.observations);
 
     this.chartsData.Days = this.filter.getDaysDataset(this.observations);
   }
@@ -425,13 +420,7 @@ export class ObservationsComponent
     }
 
     this.observations.push(observation);
-    this.observations.sort((o1, o2) =>
-      +o1.eventDate === +o2.eventDate
-        ? 0
-        : +o1.eventDate < +o2.eventDate
-        ? 1
-        : -1
-    );
+    this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
 
     if (!ll) {
       this.observationsWithoutCoordinates++;
@@ -443,21 +432,15 @@ export class ObservationsComponent
 
   onObservationClick(observation: GenericObservation): void {
     if (observation.$externalURL) {
-      const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(
-        observation.$externalURL
-      );
+      const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe };
     } else {
       const extraRows = Array.isArray(observation.$extraDialogRows)
         ? observation.$extraDialogRows
         : typeof observation.$extraDialogRows === "function"
-        ? observation.$extraDialogRows((key) =>
-            this.translateService.instant(key)
-          )
-        : [];
-      const rows = toObservationTable(observation, (key) =>
-        this.translateService.instant(key)
-      ); // call toObservationTable after $extraDialogRows
+          ? observation.$extraDialogRows((key) => this.translateService.instant(key))
+          : [];
+      const rows = toObservationTable(observation, (key) => this.translateService.instant(key)); // call toObservationTable after $extraDialogRows
       const table = [...rows, ...extraRows];
       this.observationPopup = { observation, table, iframe: undefined };
     }
@@ -469,9 +452,7 @@ export class ObservationsComponent
   }
 
   @HostListener("document:keydown", ["$event"])
-  handleKeyBoardEvent(
-    event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }
-  ) {
+  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }) {
     if (!this.observationPopupVisible || !this.observationPopup?.observation) {
       return;
     }
@@ -480,7 +461,7 @@ export class ObservationsComponent
     }
     let observation = this.observationPopup?.observation;
     const observations = this.observations.filter(
-      (o) => o.$source === observation.$source && o.$type === observation.$type
+      (o) => o.$source === observation.$source && o.$type === observation.$type,
     );
     const index = observations.indexOf(observation);
     if (index < 0) {

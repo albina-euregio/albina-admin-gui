@@ -9,7 +9,7 @@ import {
   ObservationType,
   DangerPattern,
   Stability,
-  ImportantObservation
+  ImportantObservation,
 } from "./models/generic-observation.model";
 import { ObservationFilterType } from "./models/generic-observation.model";
 
@@ -42,7 +42,7 @@ export class ObservationFilterService {
     ObservationType: { all: [], selected: [], highlighted: [] },
     ImportantObservation: { all: [], selected: [], highlighted: [] },
     DangerPattern: { all: [], selected: [], highlighted: [] },
-    Days: { all: [], selected: [], highlighted: [] }
+    Days: { all: [], selected: [], highlighted: [] },
   };
 
   constructor(private constantsService: ConstantsService) {
@@ -196,8 +196,8 @@ export class ObservationFilterService {
           all: 0,
           available: 0,
           selected: this.filterSelection[LocalFilterTypes.Aspect].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Aspect].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.Aspect].highlighted.includes(key) ? 1 : 0,
+        }),
     );
 
     observations.forEach((observation) => {
@@ -215,7 +215,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] * DATASET_MAX_FACTOR * DATASET_MAX_FACTOR : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
   }
@@ -231,8 +231,8 @@ export class ObservationFilterService {
           all: 0,
           available: 0,
           selected: this.filterSelection[LocalFilterTypes.Stability].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Stability].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.Stability].highlighted.includes(key) ? 1 : 0,
+        }),
     );
 
     observations.forEach((observation) => {
@@ -251,7 +251,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
   }
@@ -267,8 +267,8 @@ export class ObservationFilterService {
           all: 0,
           available: 0,
           selected: this.filterSelection[LocalFilterTypes.ObservationType].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.ObservationType].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.ObservationType].highlighted.includes(key) ? 1 : 0,
+        }),
     );
 
     observations.forEach((observation) => {
@@ -287,7 +287,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
   }
@@ -303,8 +303,8 @@ export class ObservationFilterService {
           all: 0,
           available: 0,
           selected: this.filterSelection[LocalFilterTypes.ImportantObservation].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.ImportantObservation].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.ImportantObservation].highlighted.includes(key) ? 1 : 0,
+        }),
     );
 
     observations.forEach((observation) => {
@@ -330,7 +330,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
   }
@@ -346,8 +346,8 @@ export class ObservationFilterService {
           all: 0,
           available: 0,
           selected: this.filterSelection[LocalFilterTypes.Elevation].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Elevation].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.Elevation].highlighted.includes(key) ? 1 : 0,
+        }),
     );
 
     observations.forEach((observation) => {
@@ -367,7 +367,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     dataset.unshift(["category", "max", "all", "highlighted", "available", "selected"]);
 
@@ -385,8 +385,8 @@ export class ObservationFilterService {
           available: 0,
           all: 0,
           selected: this.filterSelection[LocalFilterTypes.AvalancheProblem].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.AvalancheProblem].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.AvalancheProblem].highlighted.includes(key) ? 1 : 0,
+        }),
     );
 
     observations.forEach((observation) => {
@@ -411,7 +411,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
   }
@@ -427,8 +427,8 @@ export class ObservationFilterService {
           available: 0,
           all: 0,
           selected: this.filterSelection[LocalFilterTypes.DangerPattern].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.DangerPattern].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.DangerPattern].highlighted.includes(key) ? 1 : 0,
+        }),
     );
 
     observations.forEach((observation) => {
@@ -450,7 +450,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
   }
@@ -472,8 +472,8 @@ export class ObservationFilterService {
           all: 0,
           available: 0,
           selected: this.filterSelection[LocalFilterTypes.Days].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Days].highlighted.includes(key) ? 1 : 0
-        })
+          highlighted: this.filterSelection[LocalFilterTypes.Days].highlighted.includes(key) ? 1 : 0,
+        }),
     );
     observations.forEach((observation) => {
       if (observation.eventDate) {
@@ -493,7 +493,7 @@ export class ObservationFilterService {
         values["all"],
         values["highlighted"] === 1 ? values["all"] : 0,
         values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0
+        values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
   }
@@ -515,7 +515,9 @@ export class ObservationFilterService {
   }
 
   inObservationSources({ $source }: GenericObservation) {
-    return !this.observationSources.length || (typeof $source === "string" && this.observationSources.includes($source));
+    return (
+      !this.observationSources.length || (typeof $source === "string" && this.observationSources.includes($source))
+    );
   }
 
   isIncluded(filter: LocalFilterTypes, testData: string | string[], testHighlighted: boolean = false): boolean {
@@ -533,7 +535,9 @@ export class ObservationFilterService {
     if (!elevation) return "";
     const range = this.elevationRange[1] - this.elevationRange[0];
     return (
-      Math.floor((elevation - this.elevationRange[0]) / this.elevationSectionSize) * this.elevationSectionSize + this.elevationRange[0] + ""
+      Math.floor((elevation - this.elevationRange[0]) / this.elevationSectionSize) * this.elevationSectionSize +
+      this.elevationRange[0] +
+      ""
     );
   }
 }

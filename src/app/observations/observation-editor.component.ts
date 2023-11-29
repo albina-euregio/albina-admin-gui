@@ -1,15 +1,31 @@
 import { Component, Input } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Observation, EventType } from "./models/observation.model";
 import { Feature, Point } from "geojson";
-import { SelectItem } from "primeng/api";
+import { SelectItem, SharedModule } from "primeng/api";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { geocoders } from "leaflet-control-geocoder";
-// import { ElevationService } from "app/providers/map-service/elevation.service";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
-import { Aspect } from "app/observations/models/generic-observation.model";
+import { InputTextareaModule } from "primeng/inputtextarea";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { InputTextModule } from "primeng/inputtext";
+import { FormsModule } from "@angular/forms";
+import { DropdownModule } from "primeng/dropdown";
+import { CommonModule } from "@angular/common";
 
 @Component({
+  standalone: true,
+  imports: [
+    AutoCompleteModule,
+    CommonModule,
+    DropdownModule,
+    FormsModule,
+    InputTextareaModule,
+    InputTextModule,
+    SharedModule,
+    TranslateModule,
+  ],
+  providers: [TranslateService, GeocodingService, CoordinateDataService],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
   styleUrls: ["observation-editor.component.scss"],
@@ -18,7 +34,7 @@ export class ObservationEditorComponent {
   constructor(
     private translate: TranslateService,
     private geocodingService: GeocodingService,
-    private coordinateDataService: CoordinateDataService
+    private coordinateDataService: CoordinateDataService,
   ) {}
 
   @Input() observation: Observation;
@@ -33,20 +49,16 @@ export class ObservationEditorComponent {
       const floatLat = parseFloat(this.observation.latitude as any);
       const floatLng = parseFloat(this.observation.longitude as any);
 
-      this.coordinateDataService
-        .getCoordData(floatLat, floatLng)
-        .subscribe((data) => {
-          this.observation.elevation = data.height;
-          // this.observation.aspect = data.aspect as Aspect;
-          // console.log(data);
-        });
+      this.coordinateDataService.getCoordData(floatLat, floatLng).subscribe((data) => {
+        this.observation.elevation = data.height;
+        // this.observation.aspect = data.aspect as Aspect;
+        // console.log(data);
+      });
     }
   }
 
   copyLatLng() {
-    navigator.clipboard.writeText(
-      `${this.observation.latitude}, ${this.observation.longitude}`
-    );
+    navigator.clipboard.writeText(`${this.observation.latitude}, ${this.observation.longitude}`);
   }
 
   setLatitude(event) {
@@ -68,10 +80,7 @@ export class ObservationEditorComponent {
   selectLocation(feature: Feature<Point, GeocodingProperties>): void {
     setTimeout(() => {
       // display_name	"Zischgeles, Gemeinde Sankt Sigmund im Sellrain, Bezirk Innsbruck-Land, Tirol, Österreich" -> "Zischgeles"
-      this.observation.locationName = feature.properties.display_name.replace(
-        /,.*/,
-        ""
-      );
+      this.observation.locationName = feature.properties.display_name.replace(/,.*/, "");
       const lat = feature.geometry.coordinates[1];
       const lng = feature.geometry.coordinates[0];
 
@@ -127,11 +136,7 @@ export class ObservationEditorComponent {
 
     setTimeout(() => {
       const content = this.observation.content;
-      if (
-        !this.observation.authorName &&
-        /Einsatzcode/.test(content) &&
-        /beschickte Einsatzmittel/.test(content)
-      ) {
+      if (!this.observation.authorName && /Einsatzcode/.test(content) && /beschickte Einsatzmittel/.test(content)) {
         this.observation.authorName = "Leitstelle Tirol";
 
         const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
@@ -143,14 +148,9 @@ export class ObservationEditorComponent {
           this.observation.locationName = match[1];
         }
       }
-      if (
-        !this.observation.latitude &&
-        !this.observation.longitude &&
-        /Koordinaten: WGS84/.test(content)
-      ) {
+      if (!this.observation.latitude && !this.observation.longitude && /Koordinaten: WGS84/.test(content)) {
         const match = content.match(/Koordinaten: WGS84(.*)/);
-        const latlng =
-          match && match[1] ? geocoders.parseLatLng(match[1].trim()) : "";
+        const latlng = match && match[1] ? geocoders.parseLatLng(match[1].trim()) : "";
         if (latlng) {
           this.observation.latitude = latlng.lat;
           this.observation.longitude = latlng.lng;

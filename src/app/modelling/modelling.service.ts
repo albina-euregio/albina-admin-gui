@@ -44,7 +44,7 @@ export class ModellingService {
   constructor(
     public http: HttpClient,
     public constantsService: ConstantsService,
-    public regionsService: RegionsService
+    public regionsService: RegionsService,
   ) {}
 
   private parseCSV<T>(text: string) {
@@ -87,7 +87,7 @@ export class ModellingService {
           region: f.properties.id,
           locationName: f.properties.name,
           latitude: center.lat,
-          longitude: center.lng
+          longitude: center.lng,
         } as GenericObservation;
       });
     return of(observations);
@@ -116,19 +116,19 @@ export class ModellingService {
               $extraDialogRows: [
                 ...["HN", "HS"].map((type) => ({
                   label: `ECMWF ${type}`,
-                  url: `${this.constantsService.zamgModelsUrl}eps_ecmwf/snowgrid_ECMWF_EPS_${id}_${type}.png`
+                  url: `${this.constantsService.zamgModelsUrl}eps_ecmwf/snowgrid_ECMWF_EPS_${id}_${type}.png`,
                 })),
                 ...["HN", "HS"].map((type) => ({
                   label: `CLAEF ${type}`,
-                  url: `${this.constantsService.zamgModelsUrl}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`
-                }))
+                  url: `${this.constantsService.zamgModelsUrl}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`,
+                })),
               ],
               latitude: lat,
-              longitude: lng
+              longitude: lng,
             } as GenericObservation;
           })
-          .sort((p1, p2) => p1.region.localeCompare(p2.region))
-      )
+          .sort((p1, p2) => p1.region.localeCompare(p2.region)),
+      ),
     );
   }
 
@@ -153,7 +153,7 @@ export class ModellingService {
       "RHAN2",
       "SDAW2",
       "SSON2",
-      "TRAU2"
+      "TRAU2",
     ];
     return { plotTypes, aspects, stations };
   }
@@ -176,7 +176,7 @@ export class ModellingService {
       "AT-7_HS_table_forecast",
       "AT-7_TA_table_24h",
       "AT-7_TA_table_72h",
-      "AT-7_TA_table_season"
+      "AT-7_TA_table_season",
     ];
   }
 
@@ -192,7 +192,7 @@ export class ModellingService {
       catchError((e) => {
         console.error("Failed to read observed_profiles from " + url, e);
         return [];
-      })
+      }),
     );
 
     function toPoint(profile: AvalancheWarningServiceObservedProfiles): GenericObservation {
@@ -204,7 +204,7 @@ export class ModellingService {
         $externalURL: profile.$externalURL,
         region: regionsService.getRegionForLatLng(new LatLng(profile.latitude, profile.longitude))?.id,
         latitude: profile.latitude,
-        longitude: profile.longitude
+        longitude: profile.longitude,
       } as GenericObservation;
     }
   }
@@ -219,10 +219,13 @@ export class ModellingService {
       dateStart: dateStart.toISOString(),
       dateEnd: dateEnd.toISOString(),
       stage: "SNOWPACK",
-      parameterCode: "HS_mod"
+      parameterCode: "HS_mod",
     };
     return this.http
-      .get("https://admin.avalanche.report/dashboard.alpsolut.eu/", { observe: "response", responseType: "text" })
+      .get("https://admin.avalanche.report/dashboard.alpsolut.eu/", {
+        observe: "response",
+        responseType: "text",
+      })
       .pipe(
         last(),
         flatMap((r) => {
@@ -236,16 +239,16 @@ export class ModellingService {
                 collection.features
                   .flatMap((f) => [
                     ...f.properties.dataSets.map((d) =>
-                      toPoint(f, d, apiKey, "cbc610ef-7b29-46c8-b070-333d339c2cd4", "stratigraphies + RTA")
+                      toPoint(f, d, apiKey, "cbc610ef-7b29-46c8-b070-333d339c2cd4", "stratigraphies + RTA"),
                     ),
                     ...f.properties.dataSets
                       .filter((d) => d.aspect === "MAIN")
-                      .map((d) => toPoint(f, d, apiKey, "f3ecf8fb-3fd7-427c-99fd-582750be236d", "wind drift"))
+                      .map((d) => toPoint(f, d, apiKey, "f3ecf8fb-3fd7-427c-99fd-582750be236d", "wind drift")),
                   ])
-                  .sort((p1, p2) => p1.region.localeCompare(p2.region))
-              )
+                  .sort((p1, p2) => p1.region.localeCompare(p2.region)),
+              ),
             );
-        })
+        }),
       );
 
     function toPoint(
@@ -253,42 +256,47 @@ export class ModellingService {
       d: DataSet,
       apiKey: string,
       configurationId: string,
-      configurationLabel: string
+      configurationLabel: string,
     ): AlpsolutObservation {
       const configuration = {
         apiKey,
         configurationId,
         uiSettings: {
-          aliasSelectionMode: "none"
+          aliasSelectionMode: "none",
         },
         externalParams: {
           datesPresetKey: "forecast",
-          aliasId: d.dataSetId
+          aliasId: d.dataSetId,
         },
         datesPresets: {
           forecastBackDays: 5,
           forecastFwdDays: 5,
-          options: ["season", "1m", "1w", "forecast"]
+          options: ["season", "1m", "1w", "forecast"],
         },
-        useHeightHints: true
+        useHeightHints: true,
       };
       // URL hash params are interpreted by dashboard.alpsolut.eu
-      const params = new URLSearchParams({ ViewerAppProps: JSON.stringify(configuration) });
+      const params = new URLSearchParams({
+        ViewerAppProps: JSON.stringify(configuration),
+      });
       // URL search param is a trick to force reload iframe
-      const search = new URLSearchParams({ configurationId, aliasId: String(d.dataSetId) });
+      const search = new URLSearchParams({
+        configurationId,
+        aliasId: String(d.dataSetId),
+      });
       const url = `https://dashboard.alpsolut.eu/graphs/stable/viewer.html?${search}#${params}`;
       return {
         $source: "alpsolut_profile",
         $id: search.toString(),
         $data: {
-          configuration: `${configurationLabel}: ${d.aspect}/${d.slopeAngle}°`
+          configuration: `${configurationLabel}: ${d.aspect}/${d.slopeAngle}°`,
         },
         region: regionsService.getRegionForLatLng(new LatLng(f.geometry.coordinates[1], f.geometry.coordinates[0]))?.id,
         aspect: !d.aspect || d.aspect === "MAIN" ? undefined : Aspect[d.aspect[0]],
         locationName: f.properties.name,
         $externalURL: url,
         latitude: f.geometry.coordinates[1],
-        longitude: f.geometry.coordinates[0]
+        longitude: f.geometry.coordinates[0],
       } as AlpsolutObservation;
     }
   }
@@ -316,7 +324,7 @@ enum Aspect {
   Main = "MAIN",
   North = "NORTH",
   South = "SOUTH",
-  West = "WEST"
+  West = "WEST",
 }
 
 export type AlpsolutObservation = GenericObservation<{ configuration: string }>;

@@ -1,6 +1,10 @@
 import { Component } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
+import { RouterLink } from "@angular/router";
 
 @Component({
-  templateUrl: "./index.component.html"
+  standalone: true,
+  imports: [RouterLink, TranslateModule],
+  templateUrl: "./index.component.html",
 })
 export class IndexComponent {}
