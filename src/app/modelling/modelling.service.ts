@@ -6,6 +6,7 @@ import { catchError, flatMap, last, map } from "rxjs/operators";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
 import { geoJSON, LatLng } from "leaflet";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 interface MultimodelPointCsv {
   statnr: string;
@@ -45,6 +46,7 @@ export class ModellingService {
     public http: HttpClient,
     public constantsService: ConstantsService,
     public regionsService: RegionsService,
+    private sanitizer: DomSanitizer,
   ) {}
 
   private parseCSV<T>(text: string) {
@@ -209,20 +211,20 @@ export class ModellingService {
     }
   }
 
+  /**
+   * https://salient.alpsolut.eu/docs
+   * https://widget.alpsolut.eu/docs
+   */
   getAlpsolutDashboardPoints(): Observable<GenericObservation[]> {
     const regionsService = this.regionsService;
-    const dateStart = new Date();
-    dateStart.setHours(0, 0, 0, 0);
-    const dateEnd = new Date(dateStart);
-    dateEnd.setDate(dateStart.getDate());
+    const sanitizer = this.sanitizer;
     const params = {
-      dateStart: dateStart.toISOString(),
-      dateEnd: dateEnd.toISOString(),
+      date: new Date().toISOString().slice(0, "2023-12-01".length),
       stage: "SNOWPACK",
-      parameterCode: "HS_mod",
+      parameters: "hs_mod",
     };
     return this.http
-      .get("https://admin.avalanche.report/dashboard.alpsolut.eu/", {
+      .get("https://admin.avalanche.report/widget.alpsolut.eu/", {
         observe: "response",
         responseType: "text",
       })
@@ -231,21 +233,15 @@ export class ModellingService {
         flatMap((r) => {
           const apiKey = r.headers.get("X-API-KEY");
           const headers = { "X-API-KEY": apiKey };
-          const url = "https://rest.alpsolut.eu/v1/geo/stations";
+          const url = "https://salient.alpsolut.eu/v1/geo/stations";
           return this.http
             .get<AlpsolutFeatureCollection>(url, { headers, params })
             .pipe(
-              map((collection) =>
-                collection.features
-                  .flatMap((f) => [
-                    ...f.properties.dataSets.map((d) =>
-                      toPoint(f, d, apiKey, "cbc610ef-7b29-46c8-b070-333d339c2cd4", "stratigraphies + RTA"),
-                    ),
-                    ...f.properties.dataSets
-                      .filter((d) => d.aspect === "MAIN")
-                      .map((d) => toPoint(f, d, apiKey, "f3ecf8fb-3fd7-427c-99fd-582750be236d", "wind drift")),
-                  ])
-                  .sort((p1, p2) => p1.region.localeCompare(p2.region)),
+              map(({ features }) =>
+                features.flatMap((f) => [
+                  ...Object.values(Aspect).map((aspect) => toPoint(f, apiKey, "ALPSCH03", "Stratigraphy", aspect)),
+                  toPoint(f, apiKey, "ALPSCH06", "LWCIndexWind", Aspect.Main),
+                ]),
               ),
             );
         }),
@@ -253,70 +249,73 @@ export class ModellingService {
 
     function toPoint(
       f: AlpsolutFeatureCollection["features"][0],
-      d: DataSet,
       apiKey: string,
       configurationId: string,
       configurationLabel: string,
+      aspect: Aspect,
     ): AlpsolutObservation {
-      const configuration = {
-        apiKey,
-        configurationId,
-        uiSettings: {
-          aliasSelectionMode: "none",
-        },
-        externalParams: {
-          datesPresetKey: "forecast",
-          aliasId: d.dataSetId,
-        },
-        datesPresets: {
-          forecastBackDays: 5,
-          forecastFwdDays: 5,
-          options: ["season", "1m", "1w", "forecast"],
-        },
-        useHeightHints: true,
-      };
-      // URL hash params are interpreted by dashboard.alpsolut.eu
-      const params = new URLSearchParams({
-        ViewerAppProps: JSON.stringify(configuration),
-      });
-      // URL search param is a trick to force reload iframe
-      const search = new URLSearchParams({
-        configurationId,
-        aliasId: String(d.dataSetId),
-      });
-      const url = `https://dashboard.alpsolut.eu/graphs/stable/viewer.html?${search}#${params}`;
+      // https://widget.alpsolut.eu/docs/ALPSCH03 Stratigraphy
+      // https://widget.alpsolut.eu/docs/ALPSCH06 LWCIndexWind
+      const dateStart = new Date();
+      dateStart.setHours(dateStart.getHours(), 0, 0, 0); // current hour
+      dateStart.setDate(dateStart.getDate() - 7); // 7 days in the past
+      const dateEnd = new Date();
+      dateEnd.setHours(dateEnd.getHours(), 0, 0, 0); // current hour
+      dateEnd.setDate(dateEnd.getDate() + 3); // 3 days in the future
+      const $externalURL = `https://widget.alpsolut.eu/${configurationId}?${new URLSearchParams({
+        token: apiKey,
+        aspect,
+        station_id: String(f.properties.id),
+        date_start: dateStart.toISOString(),
+        date_end: dateEnd.toISOString(),
+      })}`;
+      const [longitude, latitude, ..._] = f.geometry.coordinates;
       return {
         $source: "alpsolut_profile",
-        $id: search.toString(),
+        $id: String(f.properties.id),
         $data: {
-          configuration: `${configurationLabel}: ${d.aspect}/${d.slopeAngle}°`,
+          configuration: `${configurationLabel}: ${aspect}/${0}°`,
         },
-        region: regionsService.getRegionForLatLng(new LatLng(f.geometry.coordinates[1], f.geometry.coordinates[0]))?.id,
-        aspect: !d.aspect || d.aspect === "MAIN" ? undefined : Aspect[d.aspect[0]],
+        region: regionsService.getRegionForLatLng(new LatLng(latitude, longitude))?.id,
+        aspect: aspect as any,
         locationName: f.properties.name,
-        $externalURL: url,
-        latitude: f.geometry.coordinates[1],
-        longitude: f.geometry.coordinates[0],
+        latitude,
+        longitude,
+        $externalURL: sanitizer.bypassSecurityTrustResourceUrl($externalURL),
       } as AlpsolutObservation;
     }
   }
+}
+
+export interface AlpsolutFeature {
+  id: number;
+  code: string;
+  name: string;
+  type: string;
+  latitude: number;
+  longitude: number;
+  altitude: number;
+  timezone: string;
+  nwm: string;
 }
 
 type AlpsolutFeatureCollection = GeoJSON.FeatureCollection<GeoJSON.Point, Properties>;
 
 interface Properties {
   id: number;
+  type: string;
   code: string;
   name: string;
-  dataSets: DataSet[];
+  timezone: string;
+  lastDataUpdate?: string;
+  data: DataSet;
 }
 
 interface DataSet {
-  dataSetId: number;
-  stage: "SNOWPACK";
-  aspect: Aspect;
-  slopeAngle: number;
-  slopeAzimuth: number;
+  forecastModel?: string;
+  forecastStartsAfter?: string;
+  timestamps: string[];
+  values: any;
 }
 
 enum Aspect {

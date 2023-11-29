@@ -5,7 +5,6 @@ import { QfaResult, QfaService } from "app/providers/qfa-service/qfa.service";
 import { ParamService } from "app/providers/qfa-service/param.service";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
@@ -104,7 +103,6 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     private modellingService: ModellingService,
     private qfaService: QfaService,
     public paramService: ParamService,
-    private sanitizer: DomSanitizer,
     private translateService: TranslateService,
   ) {}
 
@@ -255,9 +253,9 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  get observationPopupIframe(): SafeResourceUrl {
-    if (this.observationPopupVisible && /dashboard.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedModelPoint?.$externalURL);
+  get observationPopupIframe() {
+    if (this.observationPopupVisible && /widget.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
+      return this.selectedModelPoint?.$externalURL;
     }
   }
 
