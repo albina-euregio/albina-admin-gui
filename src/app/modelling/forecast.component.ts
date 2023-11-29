@@ -5,7 +5,6 @@ import { QfaResult, QfaService } from "app/providers/qfa-service/qfa.service";
 import { ParamService } from "app/providers/qfa-service/param.service";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
@@ -59,27 +58,27 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
 
   public readonly allSources: MultiselectDropdownData[] = [
     {
-      id: "multimodel",
+      id: ForecastSource.multimodel,
       fillColor: "green",
       name: this.translateService.instant("sidebar.modellingZamg"),
     },
     {
-      id: "meteogram",
+      id: ForecastSource.meteogram,
       fillColor: "MediumVioletRed",
       name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
     },
     {
-      id: "qfa",
+      id: ForecastSource.qfa,
       fillColor: "red",
       name: this.translateService.instant("sidebar.qfa"),
     },
     {
-      id: "observed_profile",
+      id: ForecastSource.observed_profile,
       fillColor: "#f8d229",
       name: this.translateService.instant("sidebar.modellingSnowpack"),
     },
     {
-      id: "alpsolut_profile",
+      id: ForecastSource.alpsolut_profile,
       fillColor: "#d95f0e",
       name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
     },
@@ -104,7 +103,6 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     private modellingService: ModellingService,
     private qfaService: QfaService,
     public paramService: ParamService,
-    private sanitizer: DomSanitizer,
     private translateService: TranslateService,
   ) {}
 
@@ -255,9 +253,9 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  get observationPopupIframe(): SafeResourceUrl {
-    if (this.observationPopupVisible && /dashboard.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedModelPoint?.$externalURL);
+  get observationPopupIframe() {
+    if (this.observationPopupVisible && /widget.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
+      return this.selectedModelPoint?.$externalURL;
     }
   }
 

@@ -15,7 +15,7 @@ import {
   toLawisProfileDetails,
   toLawisProfile,
 } from "./models/lawis.model";
-import { GenericObservation, ObservationSource, ObservationType, Aspect } from "./models/generic-observation.model";
+import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import {
   ArcGisApi,
   ArcGisLayer,
@@ -29,112 +29,16 @@ import {
   LwdKipSprengerfolg,
 } from "./models/lwdkip.model";
 import { ApiWikisnowECT, convertWikisnow, WikisnowECT } from "./models/wikisnow.model";
+import { getAwsObservers } from "./models/aws-observer.model";
 import { TranslateService } from "@ngx-translate/core";
 import { from, merge, Observable, of, onErrorResumeNext } from "rxjs";
 import { catchError, filter, last, map, mergeAll, mergeMap } from "rxjs/operators";
-import BeobachterAT from "./data/Beobachter-AT.json";
-import BeobachterIT from "./data/Beobachter-IT.json";
 import { ObservationFilterService } from "./observation-filter.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { LatLng } from "leaflet";
-
-interface FotoWebcamEU {
-  id: string;
-  name: string;
-  title: string;
-  keywords: string;
-  offline: boolean;
-  hidden: boolean;
-  imgurl: string;
-  link: string;
-  localLink: string;
-  modtime: number;
-  details: number;
-  sortscore: string;
-  country: string;
-  latitude: number;
-  longitude: number;
-  elevation: number;
-  direction: number;
-  focalLen: number;
-  radius_km: number;
-  sector: number;
-  partner: boolean;
-  captureInterval: number;
-}
-
-interface FotoWebcamEUResponse {
-  cams: FotoWebcamEU[];
-}
-
-interface PanomaxCam {
-  id: string;
-  name: string;
-  latitude: number;
-  longitude: number;
-  zeroDirection: number;
-  viewAngle: number;
-  iconUrl: string;
-  mapMarkerGravity: string;
-  nightVision: boolean;
-  types?: any[];
-  elevation?: number;
-  tourCam?: boolean;
-  country?: string;
-  countryName?: string;
-  firstPano?: string;
-  lastPano?: string;
-}
-
-interface PanomaxInstance {
-  id: number;
-  name: string;
-  frontentryUrl?: string;
-  logo?: string;
-  initialDirection: number;
-  cam: PanomaxCam;
-}
-
-interface PanomaxThumbnailResponse {
-  mode: string;
-  name: string;
-  url: string;
-  tourCam: boolean;
-  zeroDirection: number;
-  viewAngle: number;
-  initialDirection: number;
-  clipping: any;
-  logo: string;
-  images: any;
-  instance: PanomaxInstance;
-  culture: any;
-  country: string;
-  position: {
-    latitude: number;
-    longitude: number;
-  };
-}
-
-interface PanomaxCamResponse {
-  id: string;
-  slug: string;
-  type: string;
-  minLatitude: number;
-  maxLatitude: number;
-  minLongitude: number;
-  maxLongitude: number;
-  otherInstances: any[];
-  instanceLogos: any[];
-  hotSpots: any[];
-  categories: any[];
-  sources: any[];
-  clusteringZoomLevel: number;
-  refreshInterval: number;
-  instances: {
-    [key: string]: PanomaxInstance;
-  };
-}
+import { FotoWebcamEU, FotoWebcamEUResponse, convertFotoWebcamEU, addLolaCadsData } from "./models/foto-webcam.model";
+import { PanomaxCamResponse, PanomaxThumbnailResponse, convertPanomax } from "./models/panomax.model";
 
 @Injectable()
 export class ObservationsService {
@@ -290,28 +194,7 @@ export class ObservationsService {
   }
 
   getObservers(): Observable<GenericObservation> {
-    const eventDate = new Date();
-    eventDate.setHours(0, 0, 0, 0);
-    return of(BeobachterAT, BeobachterIT).pipe(
-      mergeAll(),
-      map(
-        (observer): GenericObservation => ({
-          $data: observer,
-          $externalURL: `https://wiski.tirol.gv.at/lawine/grafiken/800/beobachter/${observer["plot.id"]}.png`,
-          $source: ObservationSource.Observer,
-          $type: ObservationType.TimeSeries,
-          aspect: undefined,
-          authorName: observer.name,
-          content: "",
-          elevation: undefined,
-          eventDate,
-          latitude: +observer.latitude,
-          locationName: observer.name.replace("Beobachter", "").trim(),
-          longitude: +observer.longitude,
-          region: "",
-        }),
-      ),
-    );
+    return of(...getAwsObservers());
   }
 
   getLoLaKronos(
@@ -396,13 +279,6 @@ export class ObservationsService {
       );
   }
 
-  degreeToAspect(degree: number): Aspect {
-    const aspects = Object.values(Aspect);
-
-    const n = (Math.round((degree * 8) / 360) + 8) % 8;
-    return aspects[n];
-  }
-
   getLolaCads(cam: GenericObservation): Observable<any> {
     const lolaCadsApi = "https://api.avalanche.report/www.lola-cads.info/LWDprocessPhotoURL";
     const token =
@@ -430,114 +306,43 @@ export class ObservationsService {
   //get panomax cams and fetch lola cads data for each
   getPanomax(): Observable<GenericObservation> {
     const { observationApi: api } = this.constantsService;
-    const baseURL = "https://api.avalanche.report/api.panomax.com/1.0/instances/thumbnails/";
 
     // make request to observationApi.panomax and make a request to the thumbnail url for each result.instance.id
-    return this.http.get<PanomaxCamResponse>(api.Panomax).pipe(
-      mergeMap((res: PanomaxCamResponse) => {
-        const cams = Object.values(res.instances)
-
-          // make request to each thumbnail url
-          .filter((webcam: PanomaxInstance) => {
-            const region = this.regionsService.getRegionForLatLng(
-              new LatLng(webcam.cam.latitude, webcam.cam.longitude),
-            );
-            return region !== undefined;
-          })
-          .map((webcam: PanomaxInstance) => {
-            return this.http.get<PanomaxThumbnailResponse[]>(baseURL + webcam.id).pipe(
-              map((res: PanomaxThumbnailResponse[]) => {
-                const cam = res[0].instance.cam;
-                //set res[0].latest to the latest image from res[0].images
-                res[0]["latest"] = res[0].images[Object.keys(res[0].images).sort().pop()];
-                res[0]["latest"] = res[0]["latest"].small;
-                const latlng = new LatLng(cam.latitude, cam.longitude);
-                const response: GenericObservation = {
-                  $data: res[0],
-                  $externalURL: res[0].url,
-                  $source: ObservationSource.Panomax,
-                  $type: ObservationType.Webcam,
-                  authorName: "panomax.com",
-                  content: cam.name,
-                  elevation: cam.elevation,
-                  eventDate: new Date(Date.now()),
-                  latitude: cam.latitude,
-                  longitude: cam.longitude,
-                  locationName: res[0].instance.name,
-                  region: this.regionsService.getRegionForLatLng(latlng)?.id,
-                  aspect: cam.viewAngle !== 360 ? this.degreeToAspect(cam.zeroDirection) : undefined,
-                };
-                return response;
-              }),
-            );
-          });
-
-        const observables = from(cams);
-        return observables.pipe(mergeAll());
-      }),
+    return this.http.get<PanomaxCamResponse>(api.Panomax + "/maps/panomaxweb").pipe(
+      mergeMap(({ instances }: PanomaxCamResponse) => Object.values(instances)),
+      filter(({ cam }) => !!this.regionsService.getRegionForLatLng(new LatLng(cam.latitude, cam.longitude))?.id),
+      mergeMap((webcam) =>
+        this.http.get<PanomaxThumbnailResponse[]>(api.Panomax + "/instances/thumbnails/" + webcam.id).pipe(
+          filter((thumbs) => !!thumbs?.length),
+          map((thumbs) => this.augmentRegion(convertPanomax(thumbs[0]))),
+        ),
+      ),
     );
+  }
+
+  augmentRegion(observation: GenericObservation) {
+    if (observation.latitude && observation.longitude) {
+      const ll = new LatLng(observation.latitude, observation.longitude);
+      observation.region = this.regionsService.getRegionForLatLng(ll)?.id;
+    }
+    return observation;
   }
 
   getFotoWebcamsEU(): Observable<GenericObservation> {
     const { observationApi: api } = this.constantsService;
 
     return this.http.get<FotoWebcamEUResponse>(api.FotoWebcamsEU).pipe(
-      mergeMap((res: FotoWebcamEUResponse) => {
-        const cams = res.cams
-          .map((webcam: FotoWebcamEU) => {
-            const latlng = new LatLng(webcam.latitude, webcam.longitude);
-
-            webcam["latest"] = webcam.imgurl;
-            const cam: GenericObservation = {
-              $data: webcam,
-              $externalURL: webcam.link,
-              $source: ObservationSource.FotoWebcamsEU,
-              $type: ObservationType.Webcam,
-              authorName: "foto-webcam.eu",
-              content: webcam.title,
-              elevation: webcam.elevation,
-              eventDate: new Date(webcam.modtime * 1000),
-              latitude: webcam.latitude,
-              longitude: webcam.longitude,
-              locationName: webcam.name,
-              region: this.regionsService.getRegionForLatLng(latlng)?.id,
-              aspect: this.degreeToAspect(webcam.direction),
-            };
-            return cam;
-          })
-          .filter((observation) => observation.$data.offline === false)
-          .filter((observation) => observation.region !== undefined);
-
-        const observables = from(cams);
-        // get lola-cads data for each webcam
-        return observables;
-      }),
+      mergeMap(({ cams }: FotoWebcamEUResponse) =>
+        from(
+          cams
+            .map((webcam: FotoWebcamEU) => this.augmentRegion(convertFotoWebcamEU(webcam)))
+            .filter((observation) => observation.$data.offline === false)
+            .filter((observation) => observation.region !== undefined),
+        ),
+      ),
       mergeMap((cam: GenericObservation) => {
         if (cam.$data["latest"].includes("foto-webcam.eu")) {
-          // console.log(cam.$data["latest"]);
-          return this.getLolaCads(cam).pipe(
-            map((lolaCadsData) => {
-              // console.log(lolaCadsData);
-              if (lolaCadsData.length === 0) return cam;
-
-              const response: GenericObservation = {
-                $data: cam,
-                $externalURL: cam.$externalURL,
-                $source: ObservationSource.FotoWebcamsEU,
-                $type: ObservationType.Avalanche,
-                authorName: `foto-webcam.eu, ${lolaCadsData[0].label}, ${Math.round(lolaCadsData[0].conf * 100)}%`,
-                content: cam.content,
-                elevation: cam.elevation,
-                eventDate: new Date(Date.now()),
-                latitude: cam.latitude,
-                longitude: cam.longitude,
-                locationName: cam.locationName,
-                region: cam.region,
-                aspect: cam.aspect,
-              };
-              return response;
-            }),
-          );
+          return this.getLolaCads(cam).pipe(map((lolaCadsData) => addLolaCadsData(cam, lolaCadsData)));
         } else {
           return of(cam);
         }
