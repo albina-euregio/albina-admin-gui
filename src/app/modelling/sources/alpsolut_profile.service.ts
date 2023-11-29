@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { ConstantsService } from "../providers/constants-service/constants.service";
+import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { Observable, of } from "rxjs";
 import { catchError, flatMap, last, map } from "rxjs/operators";
 import { RegionsService } from "app/providers/regions-service/regions.service";
