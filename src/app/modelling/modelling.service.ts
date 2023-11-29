@@ -61,19 +61,7 @@ export class ModellingService {
     });
   }
 
-  get(type: "multimodel" | "meteogram" | "observed_profile" | "alpsolut_profile"): Observable<GenericObservation[]> {
-    if (type === "alpsolut_profile") {
-      return this.getAlpsolutDashboardPoints();
-    } else if (type === "observed_profile") {
-      return this.getObservedProfiles();
-    } else if (type === "multimodel") {
-      return this.getZamgMultiModelPoints();
-    } else if (type === "meteogram") {
-      return this.getZamgMeteograms();
-    }
-  }
-
-  private getZamgMeteograms(): Observable<GenericObservation[]> {
+  getZamgMeteograms(): Observable<GenericObservation[]> {
     const observations = this.regionsService
       .getRegionsEuregio()
       .features.filter((f) => /AT-07/.test(f.properties.id))
@@ -95,7 +83,7 @@ export class ModellingService {
     return of(observations);
   }
 
-  private getZamgMultiModelPoints(): Observable<GenericObservation[]> {
+  getZamgMultiModelPoints(): Observable<GenericObservation[]> {
     const url = this.constantsService.zamgModelsUrl + "snowgridmultimodel_stationlist.txt";
 
     return this.http.get(url, { responseType: "text" }).pipe(

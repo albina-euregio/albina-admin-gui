@@ -13,9 +13,11 @@ import { DialogModule } from "primeng/dialog";
 import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
 import { MultiSelectModule } from "primeng/multiselect";
+import type { Observable } from "rxjs";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;
+  loader?: () => Observable<GenericObservation[]>;
   name: string;
   fillColor: string;
 }
@@ -59,11 +61,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   public readonly allSources: MultiselectDropdownData[] = [
     {
       id: ForecastSource.multimodel,
+      loader: () => this.modellingService.getZamgMultiModelPoints(),
       fillColor: "green",
       name: this.translateService.instant("sidebar.modellingZamg"),
     },
     {
       id: ForecastSource.meteogram,
+      loader: () => this.modellingService.getZamgMeteograms(),
       fillColor: "MediumVioletRed",
       name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
     },
@@ -74,11 +78,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: ForecastSource.observed_profile,
+      loader: () => this.modellingService.getObservedProfiles(),
       fillColor: "#f8d229",
       name: this.translateService.instant("sidebar.modellingSnowpack"),
     },
     {
       id: ForecastSource.alpsolut_profile,
+      loader: () => this.modellingService.getAlpsolutDashboardPoints(),
       fillColor: "#d95f0e",
       name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
     },
@@ -186,8 +192,8 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   loadAll() {
     this.observationConfigurations.clear();
     this.allSources.forEach((source) => {
-      if (source.id === "qfa") return;
-      this.modellingService.get(source.id).subscribe((points) => {
+      if (typeof source.loader !== "function") return;
+      source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
