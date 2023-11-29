@@ -1,6 +1,5 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
-import { AlpsolutObservation, ModellingService } from "./modelling.service";
 import { QfaResult, QfaService } from "app/providers/qfa-service/qfa.service";
 import { ParamService } from "app/providers/qfa-service/param.service";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
@@ -14,7 +13,13 @@ import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
 import { MultiSelectModule } from "primeng/multiselect";
 import type { Observable } from "rxjs";
-
+import {
+  type AlpsolutObservation,
+  AlpsolutProfileService,
+  MeteogramSourceService,
+  MultimodelSourceService,
+  ObservedProfileSourceService,
+} from "./sources";
 export interface MultiselectDropdownData {
   id: ForecastSource;
   loader?: () => Observable<GenericObservation[]>;
@@ -35,7 +40,13 @@ export interface MultiselectDropdownData {
     KeyValuePipe,
     TranslateModule,
   ],
-  providers: [ModellingService, RegionsService],
+  providers: [
+    AlpsolutProfileService,
+    MeteogramSourceService,
+    MultimodelSourceService,
+    ObservedProfileSourceService,
+    RegionsService,
+  ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa.component.scss", "./qfa.table.scss", "./qfa.params.scss"],
 })
@@ -61,13 +72,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   public readonly allSources: MultiselectDropdownData[] = [
     {
       id: ForecastSource.multimodel,
-      loader: () => this.modellingService.getZamgMultiModelPoints(),
+      loader: () => this.multimodelSource.getZamgMultiModelPoints(),
       fillColor: "green",
       name: this.translateService.instant("sidebar.modellingZamg"),
     },
     {
       id: ForecastSource.meteogram,
-      loader: () => this.modellingService.getZamgMeteograms(),
+      loader: () => this.meteogramSource.getZamgMeteograms(),
       fillColor: "MediumVioletRed",
       name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
     },
@@ -78,13 +89,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: ForecastSource.observed_profile,
-      loader: () => this.modellingService.getObservedProfiles(),
+      loader: () => this.observedProfileSource.getObservedProfiles(),
       fillColor: "#f8d229",
       name: this.translateService.instant("sidebar.modellingSnowpack"),
     },
     {
       id: ForecastSource.alpsolut_profile,
-      loader: () => this.modellingService.getAlpsolutDashboardPoints(),
+      loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
       fillColor: "#d95f0e",
       name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
     },
@@ -106,7 +117,10 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   constructor(
     private regionsService: RegionsService,
     public mapService: BaseMapService,
-    private modellingService: ModellingService,
+    private multimodelSource: MultimodelSourceService,
+    private meteogramSource: MeteogramSourceService,
+    private observedProfileSource: ObservedProfileSourceService,
+    private alpsolutProfileSource: AlpsolutProfileService,
     private qfaService: QfaService,
     public paramService: ParamService,
     private translateService: TranslateService,

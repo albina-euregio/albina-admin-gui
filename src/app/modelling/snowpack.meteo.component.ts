@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
-import { ModellingService } from "./modelling.service";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { TranslateModule } from "@ngx-translate/core";
 import { NgFor } from "@angular/common";
@@ -13,20 +12,35 @@ import { FormsModule } from "@angular/forms";
   templateUrl: "./snowpack.meteo.component.html",
 })
 export class SnowpackMeteoComponent implements OnInit {
-  snowpackMeteoPlots: string[];
-  snowpackMeteoPlot: string;
+  snowpackMeteoPlots: string[] = [
+    "AT-7_new_snow_plot_3day",
+    "AT-7_new_snow_plot_7day",
+    "AT-7_new_snow_plot_1month",
+    "AT-7_new_snow_plot_season",
+    "AT-7_new_snow_plot_forecast",
+    "AT-7_wet_snow_plot_3day",
+    "AT-7_wet_snow_plot_7day",
+    "AT-7_wet_snow_plot_1month",
+    "AT-7_wet_snow_plot_season",
+    "AT-7_wet_snow_plot_forecast",
+    "AT-7_HS_table_24h",
+    "AT-7_HS_table_72h",
+    "AT-7_HS_table_season",
+    "AT-7_HS_table_forecast",
+    "AT-7_TA_table_24h",
+    "AT-7_TA_table_72h",
+    "AT-7_TA_table_season",
+  ];
+  snowpackMeteoPlot: string = this.snowpackMeteoPlots[0];
   plotUrl: SafeResourceUrl;
   @ViewChild("iframe") iframe;
 
   constructor(
     private constantsService: ConstantsService,
-    private modellingService: ModellingService,
     private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
-    this.snowpackMeteoPlots = this.modellingService.getSnowpackMeteoPlots();
-    this.snowpackMeteoPlot = this.snowpackMeteoPlots[0];
     this.updatePlotUrl();
   }
 
