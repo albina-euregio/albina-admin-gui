@@ -1,20 +1,25 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { BaseComponent } from "../base/base-chart.component";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
+import { CommonModule } from "@angular/common";
 
 const barDefaults = {
   type: "bar",
   barGap: "-100%",
   coordinateSystem: "polar",
-  barCategoryGap: "0%"
+  barCategoryGap: "0%",
   //name: legendName[0],
   //stack: 'c',
 };
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, NgxEchartsDirective, TranslateModule],
+  providers: [provideEcharts()],
   selector: "app-rose-chart",
   templateUrl: "./rose-chart.component.html",
-  styleUrls: ["./rose-chart.component.scss"]
+  styleUrls: ["./rose-chart.component.scss"],
 })
 export class RoseChartComponent extends BaseComponent {
   private pressTimer;
@@ -28,8 +33,8 @@ export class RoseChartComponent extends BaseComponent {
         top: "10px",
         left: 0,
         right: 0,
-        bottom: 0
-      }
+        bottom: 0,
+      },
     ],
     tooltip: {
       //position: ['50%', '5'],
@@ -38,7 +43,7 @@ export class RoseChartComponent extends BaseComponent {
       borderWidth: "0",
       textStyle: {
         color: "#839194",
-        fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif"
+        fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
       },
       formatter: (params) => {
         //console.log("formatter tooltip", params);
@@ -57,7 +62,7 @@ export class RoseChartComponent extends BaseComponent {
           val +
           "</span>"
         );
-      }
+      },
     },
     // dataset: {
     //     // Provide a set of data.
@@ -80,70 +85,70 @@ export class RoseChartComponent extends BaseComponent {
       scale: true,
       startAngle: 110,
       axisTick: {
-        show: false
+        show: false,
       },
       axisLine: {
-        show: false
+        show: false,
       },
       axisLabel: {
         show: true,
         formatter: (params) => {
           //console.log("formatter", params);
           return this.translationBase ? this.translateService.instant(this.translationBase + params) : params;
-        }
+        },
         //interval: 1,
       },
       splitLine: {
-        show: true
+        show: true,
       },
       splitArea: {
-        show: false
-      }
+        show: false,
+      },
     },
     radiusAxis: {
       show: false,
       axisLabel: {
-        show: false
+        show: false,
       },
       axisTick: {
-        show: false
+        show: false,
       },
       axisLine: {
-        show: false
-      }
+        show: false,
+      },
     },
     polar: {
       center: ["50%", "115px"],
       emphasis: {
-        disabled: true
-      }
+        disabled: true,
+      },
     },
     series: [
       {
         ...barDefaults,
         emphasis: {
-          disabled: true
-        }
-      },
-      {
-        ...barDefaults,
-        emphasis: {
-          disabled: true
+          disabled: true,
         },
-        z: 5
       },
       {
         ...barDefaults,
         emphasis: {
-          disabled: true
-        }
+          disabled: true,
+        },
+        z: 5,
       },
       {
         ...barDefaults,
         emphasis: {
-          disabled: true
-        }
-      }
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        emphasis: {
+          disabled: true,
+        },
+      },
       // {
       //     ...barDefaults
       // },
@@ -156,7 +161,7 @@ export class RoseChartComponent extends BaseComponent {
       // {
       //     ...barDefaults
       // }
-    ]
+    ],
   };
 
   public options = Object.assign(this.defaultOptions);

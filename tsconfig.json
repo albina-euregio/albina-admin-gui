@@ -19,11 +19,5 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "useDefineForClassFields": false
-  },
-  "files": [
-    "main.ts"
-  ],
-  "include": [
-    "src/**/*.d.ts"
-  ]
+  }
 }

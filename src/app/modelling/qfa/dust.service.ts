@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import * as types from './../../qfa/types/QFA';
+import * as types from './qfa-types';
 
 enum Cities {
   INNSBRUCK = "innsbruck",

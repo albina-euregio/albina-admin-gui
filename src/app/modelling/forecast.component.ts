@@ -1,24 +1,57 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
-import { AlpsolutObservation, ModellingService } from "./modelling.service";
-import { QfaResult, QfaService } from "app/providers/qfa-service/qfa.service";
-import { ParamService } from "app/providers/qfa-service/param.service";
+import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
-import { TranslateService } from "@ngx-translate/core";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
-import { formatDate } from "@angular/common";
-
+import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
+import { SharedModule } from "primeng/api";
+import { DialogModule } from "primeng/dialog";
+import { ButtonModule } from "primeng/button";
+import { FormsModule } from "@angular/forms";
+import { MultiSelectModule } from "primeng/multiselect";
+import type { Observable } from "rxjs";
+import {
+  type AlpsolutObservation,
+  AlpsolutProfileService,
+  MeteogramSourceService,
+  MultimodelSourceService,
+  ObservedProfileSourceService,
+} from "./sources";
 export interface MultiselectDropdownData {
   id: ForecastSource;
+  loader?: () => Observable<GenericObservation[]>;
   name: string;
   fillColor: string;
 }
 
 @Component({
+  standalone: true,
+  imports: [
+    ButtonModule,
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    KeyValuePipe,
+    MultiSelectModule,
+    SharedModule,
+    KeyValuePipe,
+    TranslateModule,
+  ],
+  providers: [
+    AlpsolutProfileService,
+    MeteogramSourceService,
+    MultimodelSourceService,
+    ObservedProfileSourceService,
+    RegionsService,
+    GetDustParamService,
+    GetFilenamesService,
+    ParamService,
+    QfaService,
+  ],
   templateUrl: "./forecast.component.html",
-  styleUrls: ["./qfa.component.scss", "./qfa.table.scss", "./qfa.params.scss"]
+  styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterViewInit, OnDestroy {
   layout = "map" as const;
@@ -34,37 +67,41 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     meteogram: [],
     qfa: [],
     observed_profile: [],
-    alpsolut_profile: []
+    alpsolut_profile: [],
   };
   observationConfigurations = new Set<string>();
   observationConfiguration: string | undefined;
 
   public readonly allSources: MultiselectDropdownData[] = [
     {
-      id: "multimodel",
+      id: ForecastSource.multimodel,
+      loader: () => this.multimodelSource.getZamgMultiModelPoints(),
       fillColor: "green",
-      name: this.translateService.instant("sidebar.modellingZamg")
+      name: this.translateService.instant("sidebar.modellingZamg"),
     },
     {
-      id: "meteogram",
+      id: ForecastSource.meteogram,
+      loader: () => this.meteogramSource.getZamgMeteograms(),
       fillColor: "MediumVioletRed",
-      name: this.translateService.instant("sidebar.modellingZamgMeteogram")
+      name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
     },
     {
-      id: "qfa",
+      id: ForecastSource.qfa,
       fillColor: "red",
-      name: this.translateService.instant("sidebar.qfa")
+      name: this.translateService.instant("sidebar.qfa"),
     },
     {
-      id: "observed_profile",
+      id: ForecastSource.observed_profile,
+      loader: () => this.observedProfileSource.getObservedProfiles(),
       fillColor: "#f8d229",
-      name: this.translateService.instant("sidebar.modellingSnowpack")
+      name: this.translateService.instant("sidebar.modellingSnowpack"),
     },
     {
-      id: "alpsolut_profile",
+      id: ForecastSource.alpsolut_profile,
+      loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
       fillColor: "#d95f0e",
-      name: this.translateService.instant("sidebar.modellingSnowpackMeteo")
-    }
+      name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
+    },
   ];
 
   public allRegions: RegionProperties[];
@@ -83,11 +120,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   constructor(
     private regionsService: RegionsService,
     public mapService: BaseMapService,
-    private modellingService: ModellingService,
+    private multimodelSource: MultimodelSourceService,
+    private meteogramSource: MeteogramSourceService,
+    private observedProfileSource: ObservedProfileSourceService,
+    private alpsolutProfileSource: AlpsolutProfileService,
     private qfaService: QfaService,
     public paramService: ParamService,
-    private sanitizer: DomSanitizer,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
   files = {};
@@ -150,14 +189,14 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       `<i class="fa fa-asterisk"></i> ${region || undefined}`,
       `<i class="fa fa-globe"></i> ${locationName || undefined}`,
       this.allSources.find((s) => s.id === $source)?.name,
-      `<div hidden>${region}</div>`
+      `<div hidden>${region}</div>`,
     ]
       .filter((s) => !/undefined/.test(s))
       .join("<br>");
 
     const marker = new CircleMarker(
       { lat: latitude, lng: longitude },
-      this.getModelPointOptions($source as ForecastSource)
+      this.getModelPointOptions($source as ForecastSource),
     )
       .on("click", callback)
       .bindTooltip(tooltip);
@@ -170,8 +209,8 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   loadAll() {
     this.observationConfigurations.clear();
     this.allSources.forEach((source) => {
-      if (source.id === "qfa") return;
-      this.modellingService.get(source.id).subscribe((points) => {
+      if (typeof source.loader !== "function") return;
+      source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
@@ -199,7 +238,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         latitude: ll.lat,
         longitude: ll.lng,
         region: this.regionsService.getRegionForLatLng(new LatLng(ll.lat, ll.lng))?.id,
-        locationName: cityName
+        locationName: cityName,
       } as GenericObservation;
       this.drawMarker(point);
       this.modelPoints.push(point);
@@ -233,13 +272,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       color: "black",
       weight: 1,
       opacity: 1,
-      fillOpacity: 1
+      fillOpacity: 1,
     };
   }
 
-  get observationPopupIframe(): SafeResourceUrl {
-    if (this.observationPopupVisible && /dashboard.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(this.selectedModelPoint?.$externalURL);
+  get observationPopupIframe() {
+    if (this.observationPopupVisible && /widget.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
+      return this.selectedModelPoint?.$externalURL;
     }
   }
 
@@ -312,11 +351,11 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       let points = this.dropDownOptions[this.selectedModelType];
       if (this.showObservationConfigurations && this.observationConfiguration) {
         points = points.filter(
-          (p) => (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration
+          (p) => (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration,
         );
       }
       const index = points.findIndex(
-        (p) => p.region === this.selectedModelPoint.region && p.locationName === this.selectedModelPoint.locationName
+        (p) => p.region === this.selectedModelPoint.region && p.locationName === this.selectedModelPoint.locationName,
       );
       if (type === "next") {
         const newIndex = index + 1 < points.length - 1 ? index + 1 : 0;
@@ -353,7 +392,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         (p) =>
           p.region === this.selectedModelPoint.region &&
           p.locationName === this.selectedModelPoint.locationName &&
-          (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration
+          (p as AlpsolutObservation).$data?.configuration === this.observationConfiguration,
       ) ?? this.selectedModelPoint;
   }
 
