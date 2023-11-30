@@ -1,4 +1,4 @@
-import * as types from  "../../qfa/types/QFA";
+import * as types from  "./qfa-types";
 
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 

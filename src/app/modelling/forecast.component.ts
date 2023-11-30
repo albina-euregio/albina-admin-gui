@@ -1,8 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
-import { AlpsolutObservation, ModellingService } from "./modelling.service";
-import { QfaResult, QfaService } from "app/providers/qfa-service/qfa.service";
-import { ParamService } from "app/providers/qfa-service/param.service";
+import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
@@ -13,9 +11,17 @@ import { DialogModule } from "primeng/dialog";
 import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
 import { MultiSelectModule } from "primeng/multiselect";
-
+import type { Observable } from "rxjs";
+import {
+  type AlpsolutObservation,
+  AlpsolutProfileService,
+  MeteogramSourceService,
+  MultimodelSourceService,
+  ObservedProfileSourceService,
+} from "./sources";
 export interface MultiselectDropdownData {
   id: ForecastSource;
+  loader?: () => Observable<GenericObservation[]>;
   name: string;
   fillColor: string;
 }
@@ -33,9 +39,19 @@ export interface MultiselectDropdownData {
     KeyValuePipe,
     TranslateModule,
   ],
-  providers: [ModellingService, RegionsService],
+  providers: [
+    AlpsolutProfileService,
+    MeteogramSourceService,
+    MultimodelSourceService,
+    ObservedProfileSourceService,
+    RegionsService,
+    GetDustParamService,
+    GetFilenamesService,
+    ParamService,
+    QfaService,
+  ],
   templateUrl: "./forecast.component.html",
-  styleUrls: ["./qfa.component.scss", "./qfa.table.scss", "./qfa.params.scss"],
+  styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterViewInit, OnDestroy {
   layout = "map" as const;
@@ -59,11 +75,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   public readonly allSources: MultiselectDropdownData[] = [
     {
       id: ForecastSource.multimodel,
+      loader: () => this.multimodelSource.getZamgMultiModelPoints(),
       fillColor: "green",
       name: this.translateService.instant("sidebar.modellingZamg"),
     },
     {
       id: ForecastSource.meteogram,
+      loader: () => this.meteogramSource.getZamgMeteograms(),
       fillColor: "MediumVioletRed",
       name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
     },
@@ -74,11 +92,13 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     },
     {
       id: ForecastSource.observed_profile,
+      loader: () => this.observedProfileSource.getObservedProfiles(),
       fillColor: "#f8d229",
       name: this.translateService.instant("sidebar.modellingSnowpack"),
     },
     {
       id: ForecastSource.alpsolut_profile,
+      loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
       fillColor: "#d95f0e",
       name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
     },
@@ -100,7 +120,10 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   constructor(
     private regionsService: RegionsService,
     public mapService: BaseMapService,
-    private modellingService: ModellingService,
+    private multimodelSource: MultimodelSourceService,
+    private meteogramSource: MeteogramSourceService,
+    private observedProfileSource: ObservedProfileSourceService,
+    private alpsolutProfileSource: AlpsolutProfileService,
     private qfaService: QfaService,
     public paramService: ParamService,
     private translateService: TranslateService,
@@ -186,8 +209,8 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   loadAll() {
     this.observationConfigurations.clear();
     this.allSources.forEach((source) => {
-      if (source.id === "qfa") return;
-      this.modellingService.get(source.id).subscribe((points) => {
+      if (typeof source.loader !== "function") return;
+      source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
