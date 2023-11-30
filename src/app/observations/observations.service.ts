@@ -175,8 +175,6 @@ export class ObservationsService {
       this.getLawisIncidents(),
       this.getLawisProfiles(),
       this.getLoLaKronos(ObservationSource.LoLaKronos),
-      this.getLoLaKronos(ObservationSource.LoLaAvalancheFeedbackAT5),
-      this.getLoLaKronos(ObservationSource.LoLaAvalancheFeedbackAT8),
       this.getLwdKipObservations(),
       this.getWikisnowECT(),
       this.getObservations(),
@@ -379,8 +377,6 @@ export class ObservationsService {
   getLoLaKronos(
     source:
       | ObservationSource.LoLaKronos
-      | ObservationSource.LoLaAvalancheFeedbackAT5
-      | ObservationSource.LoLaAvalancheFeedbackAT8
   ): Observable<GenericObservation> {
     const { observationApi: api, observationWeb: web } = this.constantsService;
     const timeframe = this.startDateString + "/" + this.endDateString;
