@@ -1370,6 +1370,21 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
+"@eaws/micro-regions@^6.1.0":
+  version "6.1.0"
+  resolved "https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions/-/@eaws/micro-regions-6.1.0.tgz#4eae2f864eb0c8bc1f2ca51334118d89d19850f7"
+  integrity sha1-Tq4vhk6wyLwfLKUTNBGNidGYUPc=
+
+"@eaws/micro-regions_elevation@^6.1.0":
+  version "6.1.0"
+  resolved "https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions_elevation/-/@eaws/micro-regions_elevation-6.1.0.tgz#850b1a4f5eebb1b5ba357a53bfcc321da9ca77d3"
+  integrity sha1-hQsaT17rsbW6NXpTv8wyHanKd9M=
+
+"@eaws/micro-regions_names@^6.1.0":
+  version "6.1.0"
+  resolved "https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions_names/-/@eaws/micro-regions_names-6.1.0.tgz#ea325911a9658866034d7d0e000c33c4697ed764"
+  integrity sha1-6jJZEalliGYDTX0OAAwzxGl+12Q=
+
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.18.20.tgz#984b4f9c8d0377443cc2dfcef266d02244593622"
@@ -4286,10 +4301,6 @@ easy-extender@^2.3.4:
   integrity sha512-8cAwm6md1YTiPpOvDULYJL4ZS6WfM5/cTeVVh4JsvyYZAoqlRVUpHL9Gr5Fy7HA6xcSZicUia3DeAgO3Us8E+Q==
   dependencies:
     lodash "^4.17.10"
-
-"eaws-regions@https://gitlab.com/eaws/eaws-regions/-/archive/ec336a7accb5036e772b28a10e4505a0905fb3b6/eaws-regions-ec336a7accb5036e772b28a10e4505a0905fb3b6.tar.gz":
-  version "1.0.0"
-  resolved "https://gitlab.com/eaws/eaws-regions/-/archive/ec336a7accb5036e772b28a10e4505a0905fb3b6/eaws-regions-ec336a7accb5036e772b28a10e4505a0905fb3b6.tar.gz#d82c590d5d6b5aeafb3b51e986df702dbe086235"
 
 eazy-logger@^4.0.1:
   version "4.0.1"
