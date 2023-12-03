@@ -103,6 +103,10 @@ export class ObservationFilterService {
     return this.dateRange[0];
   }
 
+  get startDateString(): string {
+    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.startDate);
+  }
+
   set startDate(date: Date) {
     this.dateRange[0] = date;
     this.setDateRange();
@@ -115,6 +119,10 @@ export class ObservationFilterService {
   set endDate(date: Date) {
     this.dateRange[1] = date;
     this.setDateRange();
+  }
+
+  get endDateString(): string {
+    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.endDate);
   }
 
   public isSelected(observation: GenericObservation) {

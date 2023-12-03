@@ -51,6 +51,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
+import { AlbinaObservationsService, AwsObservationsService, FotoWebcamObservationsService, LawisObservationsService, LolaKronosObservationsService, LwdKipObservationsService, PanomaxObservationsService, WikisnowObservationsService } from "./sources";
 
 //import { BarChart } from "./charts/bar-chart/bar-chart.component";
 declare var L: any;
@@ -86,6 +87,14 @@ export interface MultiselectDropdownData {
     ObservationsService,
     RegionsService,
     TranslateService,
+    AlbinaObservationsService,
+    AwsObservationsService,
+    FotoWebcamObservationsService,
+    LawisObservationsService,
+    LolaKronosObservationsService,
+    LwdKipObservationsService,
+    PanomaxObservationsService,
+    WikisnowObservationsService,
   ],
   templateUrl: "observations.component.html",
   styleUrls: ["./observations.component.scss"],
@@ -132,6 +141,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public filter: ObservationFilterService,
     private translateService: TranslateService,
     private observationsService: ObservationsService,
+    private fotoWebcam: FotoWebcamObservationsService,
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     private elevationService: ElevationService,
@@ -292,7 +302,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         this.applyLocalFilter();
       });
 
-    const webcams = this.observationsService.getFotoWebcamsEU();
+    const webcams = this.fotoWebcam.getFotoWebcamsEU();
     webcams
       .forEach((webcam) => {
         if (this.filter.inDateRange(webcam)) {

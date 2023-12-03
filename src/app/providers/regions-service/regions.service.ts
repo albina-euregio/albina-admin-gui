@@ -268,6 +268,14 @@ export class RegionsService {
     const polygon = polygons.find((p) => isMarkerInsidePolygon(ll, p));
     return polygon?.feature?.properties;
   }
+
+  augmentRegion<T extends { latitude?: number; longitude?: number; region?: string }>(observation: T): T {
+    if (observation.latitude && observation.longitude) {
+      const ll = new L.LatLng(observation.latitude, observation.longitude);
+      observation.region = this.getRegionForLatLng(ll)?.id;
+    }
+    return observation;
+  }
 }
 
 export interface RegionProperties {

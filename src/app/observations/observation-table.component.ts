@@ -2,7 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
-import { ObservationsService } from "./observations.service";
+import { AlbinaObservationsService } from "./sources";
 import { Message, SharedModule } from "primeng/api";
 import { Table, TableModule } from "primeng/table";
 import {
@@ -35,7 +35,7 @@ import { CommonModule } from "@angular/common";
     ToggleButtonModule,
     TranslateModule,
   ],
-  providers: [ObservationsService, TranslateService],
+  providers: [AlbinaObservationsService, TranslateService],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })
@@ -49,7 +49,7 @@ export class ObservationTableComponent {
   messages: Message[] = [];
 
   constructor(
-    private observationsService: ObservationsService,
+    private observationsService: AlbinaObservationsService,
     private translate: TranslateService,
   ) {}
 
