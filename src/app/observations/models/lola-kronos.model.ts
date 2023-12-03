@@ -290,23 +290,19 @@ export interface Temperature {
   position: number;
 }
 
-export function convertLoLaKronos(
-  kronos: LolaKronosApi,
-  urlPrefix: string,
-  source?: ObservationSource,
-): GenericObservation[] {
+export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): GenericObservation[] {
   return [
     ...kronos.lolaAvalancheEvent.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.Avalanche, urlPrefix + "avalancheEvent/"),
+      convertLoLaToGeneric(obs, ObservationType.Avalanche, urlPrefix + "detail/lolaAvalancheEvent/"),
     ),
     ...kronos.lolaEvaluation.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "evaluation/"),
+      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail/lolaEvaluation/"),
     ),
     ...kronos.lolaSimpleObservation.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "simpleObservation/"),
+      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail/lolaSimpleObservation/"),
     ),
     ...kronos.lolaSnowProfile.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "snowProfile/"),
+      convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail/lolaSnowProfile/"),
     ),
   ];
 }
