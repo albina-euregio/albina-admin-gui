@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { type ConstantsService } from "app/providers/constants-service/constants.service";
 import {
-  GenericObservation,
-  LocalFilterTypes,
-  FilterSelectionData,
-  AvalancheProblem,
   Aspect,
-  ObservationType,
+  AvalancheProblem,
   DangerPattern,
-  Stability,
+  type FilterSelectionData,
+  type GenericObservation,
   ImportantObservation,
+  LocalFilterTypes,
+  ObservationType,
+  Stability,
 } from "./models/generic-observation.model";
 import { ObservationFilterType } from "./models/generic-observation.model";
 

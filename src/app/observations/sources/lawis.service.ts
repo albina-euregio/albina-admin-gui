@@ -1,21 +1,21 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { ConstantsService } from "../../providers/constants-service/constants.service";
+import { type HttpClient } from "@angular/common/http";
+import { type ConstantsService } from "../../providers/constants-service/constants.service";
 import {
-  Profile,
-  Incident,
-  IncidentDetails,
-  ProfileDetails,
+  type Incident,
+  type IncidentDetails,
   LAWIS_FETCH_DETAILS,
+  type Profile,
+  type ProfileDetails,
   toLawisIncident,
   toLawisIncidentDetails,
-  toLawisProfileDetails,
   toLawisProfile,
+  toLawisProfileDetails,
 } from "../models/lawis.model";
-import { GenericObservation } from "../models/generic-observation.model";
-import { from, Observable, of } from "rxjs";
+import { type GenericObservation } from "../models/generic-observation.model";
+import { type Observable, from, of } from "rxjs";
 import { catchError, filter, map, mergeAll, mergeMap } from "rxjs/operators";
-import { ObservationFilterService } from "../observation-filter.service";
+import { type ObservationFilterService } from "../observation-filter.service";
 
 @Injectable()
 export class LawisObservationsService {

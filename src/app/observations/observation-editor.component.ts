@@ -1,9 +1,9 @@
 import { Component, Input } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { Observation, EventType } from "./models/observation.model";
-import { Feature, Point } from "geojson";
-import { SelectItem, SharedModule } from "primeng/api";
-import { GeocodingProperties, GeocodingService } from "./geocoding.service";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { EventType, type Observation } from "./models/observation.model";
+import { type Feature, type Point } from "geojson";
+import { type SelectItem, SharedModule } from "primeng/api";
+import { type GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { geocoders } from "leaflet-control-geocoder";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { InputTextareaModule } from "primeng/inputtextarea";

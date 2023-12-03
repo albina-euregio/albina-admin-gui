@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../../providers/constants-service/constants.service";
-import { convertObservationToGeneric, Observation } from "../models/observation.model";
-import { GenericObservation } from "../models/generic-observation.model";
-import { Observable } from "rxjs";
+import { type HttpClient } from "@angular/common/http";
+import { type AuthenticationService } from "../../providers/authentication-service/authentication.service";
+import { type ConstantsService } from "../../providers/constants-service/constants.service";
+import { type Observation, convertObservationToGeneric } from "../models/observation.model";
+import { type GenericObservation } from "../models/generic-observation.model";
+import { type Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
-import { ObservationFilterService } from "../observation-filter.service";
+import { type ObservationFilterService } from "../observation-filter.service";
 
 @Injectable()
 export class AlbinaObservationsService {

@@ -1,4 +1,4 @@
-import { GenericObservation, ObservationSource, ObservationType, toAspect } from "./generic-observation.model";
+import { type GenericObservation, ObservationSource, ObservationType, toAspect } from "./generic-observation.model";
 import { getECTestStability } from "./lawis.model";
 
 export interface ApiWikisnowECT {

@@ -1,5 +1,5 @@
-import { Component, OnInit, EventEmitter, Input, Output } from "@angular/core";
-import { LocalFilterTypes } from "app/observations/models/generic-observation.model";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { type LocalFilterTypes } from "app/observations/models/generic-observation.model";
 import { dataTool } from "echarts";
 
 @Component({

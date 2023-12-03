@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { BaseComponent } from "../base/base-chart.component";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, type TranslateService } from "@ngx-translate/core";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import { CommonModule } from "@angular/common";
 

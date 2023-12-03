@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { GenericObservation } from "../models/generic-observation.model";
+import { type GenericObservation } from "../models/generic-observation.model";
 import { getAwsObservers } from "../models/aws-observer.model";
-import { Observable, of } from "rxjs";
+import { type Observable, of } from "rxjs";
 
 @Injectable()
 export class AwsObservationsService {

@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { ConstantsService } from "../../providers/constants-service/constants.service";
-import { GenericObservation } from "../models/generic-observation.model";
-import { ApiWikisnowECT, convertWikisnow, WikisnowECT } from "../models/wikisnow.model";
-import { Observable } from "rxjs";
+import { type HttpClient } from "@angular/common/http";
+import { type ConstantsService } from "../../providers/constants-service/constants.service";
+import { type GenericObservation } from "../models/generic-observation.model";
+import { type ApiWikisnowECT, type WikisnowECT, convertWikisnow } from "../models/wikisnow.model";
+import { type Observable } from "rxjs";
 import { filter, map, mergeMap } from "rxjs/operators";
-import { ObservationFilterService } from "../observation-filter.service";
+import { type ObservationFilterService } from "../observation-filter.service";
 
 @Injectable()
 export class WikisnowObservationsService {

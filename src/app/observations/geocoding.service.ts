@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { TranslateService } from "@ngx-translate/core";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { Observable } from "rxjs";
-import { FeatureCollection, Point } from "geojson";
+import { type HttpClient } from "@angular/common/http";
+import { type TranslateService } from "@ngx-translate/core";
+import { type ConstantsService } from "app/providers/constants-service/constants.service";
+import { type Observable } from "rxjs";
+import { type FeatureCollection, type Point } from "geojson";
 
 @Injectable()
 export class GeocodingService {

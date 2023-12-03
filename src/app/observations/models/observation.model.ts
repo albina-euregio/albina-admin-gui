@@ -1,4 +1,4 @@
-import { GenericObservation, Aspect, ObservationSource, ObservationType, Stability } from "./generic-observation.model";
+import { type Aspect, type GenericObservation, ObservationSource, ObservationType, Stability } from "./generic-observation.model";
 
 export interface Observation {
   aspect: Aspect;
