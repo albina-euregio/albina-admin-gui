@@ -7,6 +7,7 @@ import {
   ImportantObservation,
   ObservationSource,
   ObservationType,
+  Stability,
 } from "./generic-observation.model";
 
 export interface LolaKronosApi {
@@ -163,7 +164,7 @@ export interface SnowStabilityTest {
   number: number | null;
   position: number | null;
   comment: string;
-  snowStability: string;
+  snowStability: SnowStability;
   isKBTTest: boolean;
   KBBTOverlayingLayer: null | string;
   KBBTFractureSurface: string | null;
@@ -171,6 +172,15 @@ export interface SnowStabilityTest {
   KBBTCrystalsSize: null | string;
   KBBTWeakLayerThickness: null | string;
   measureFrom: string;
+}
+
+export enum SnowStability {
+  Moderate = "moderate",
+  NA = "n/a",
+  Neutral = "neutral",
+  Stable = "stable",
+  VeryWeak = "veryWeak",
+  Weak = "weak",
 }
 
 export interface Weather {
@@ -267,7 +277,7 @@ export interface LolaSnowProfile {
   time: Date;
   totalSnowHeight: number | null;
   userId: string;
-  weakestSnowStability: string;
+  weakestSnowStability: SnowStability;
   weather: Weather;
   windSignsAge: string;
   windSignsOlderThen24h: boolean;
@@ -317,8 +327,7 @@ export function convertLoLaToGeneric(
     $externalURL: urlPrefix + obs.uuId,
     $source: ObservationSource.LoLaKronos,
     $type,
-    // TODO implement,
-    stability: undefined,
+    stability: getStability((obs as LolaSnowProfile).weakestSnowStability),
     aspect: (obs as LolaSnowProfile).aspects?.[0],
     authorName: obs.firstName + " " + obs.lastName,
     content: obs.comment + imageCountString(obs.images),
@@ -386,5 +395,21 @@ function getDangerPattern(data: DangerPattern): GenericDangerPattern {
       return GenericDangerPattern.dp9;
     case DangerPattern.Gm10:
       return GenericDangerPattern.dp10;
+  }
+}
+
+function getStability(s: SnowStability): Stability {
+  switch (s) {
+    case SnowStability.VeryWeak:
+      return Stability.very_poor;
+    case SnowStability.Weak:
+      return Stability.poor;
+    case SnowStability.Moderate:
+    case SnowStability.Neutral:
+      return Stability.fair;
+    case SnowStability.Stable:
+      return Stability.good;
+    default:
+      return undefined;
   }
 }
