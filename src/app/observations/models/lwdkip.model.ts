@@ -1,5 +1,5 @@
 import {
-  type GenericObservation,
+  GenericObservation,
   ObservationSource,
   ObservationType,
   Stability,

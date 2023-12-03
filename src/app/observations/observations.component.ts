@@ -1,35 +1,35 @@
 import {
-  type AfterContentInit,
-  type AfterViewInit,
   Component,
-  type ElementRef,
-  HostListener,
-  type OnDestroy,
+  AfterContentInit,
+  AfterViewInit,
+  OnDestroy,
   ViewChild,
+  ElementRef,
+  HostListener,
 } from "@angular/core";
-import { type DomSanitizer, type SafeResourceUrl } from "@angular/platform-browser";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ObservationsService } from "./observations.service";
-import { type RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
+import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import {
-  AvalancheProblem,
-  type ChartsData,
-  DangerPattern,
-  type GenericObservation,
-  ImportantObservation,
-  LocalFilterTypes,
+  GenericObservation,
   ObservationFilterType,
   ObservationSource,
-  type ObservationTableRow,
-  Stability,
-  genericObservationSchema,
+  ObservationTableRow,
   toGeoJSON,
   toMarkerColor,
   toObservationTable,
+  LocalFilterTypes,
+  ChartsData,
+  AvalancheProblem,
+  DangerPattern,
+  ImportantObservation,
+  Stability,
+  genericObservationSchema,
 } from "./models/generic-observation.model";
 
-import { type MenuItem, SharedModule } from "primeng/api";
+import { MenuItem, SharedModule } from "primeng/api";
 
 import { saveAs } from "file-saver";
 
@@ -37,7 +37,7 @@ import { LatLng, Marker } from "leaflet";
 
 import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationFilterService } from "./observation-filter.service";
-import { CommonModule, formatDate } from "@angular/common";
+import { formatDate, CommonModule } from "@angular/common";
 import type { Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";

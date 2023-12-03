@@ -1,23 +1,23 @@
 import { Injectable } from "@angular/core";
-import { type HttpClient } from "@angular/common/http";
-import { type AuthenticationService } from "../../providers/authentication-service/authentication.service";
-import { type ConstantsService } from "../../providers/constants-service/constants.service";
-import { type GenericObservation } from "../models/generic-observation.model";
+import { HttpClient } from "@angular/common/http";
+import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
+import { ConstantsService } from "../../providers/constants-service/constants.service";
+import { GenericObservation } from "../models/generic-observation.model";
 import {
-  type ArcGisApi,
-  type ArcGisLayer,
-  type LwdKipBeobachtung,
-  type LwdKipLawinenabgang,
-  type LwdKipSperren,
-  type LwdKipSprengerfolg,
+  ArcGisApi,
+  ArcGisLayer,
   convertLwdKipBeobachtung,
   convertLwdKipLawinenabgang,
   convertLwdKipSperren,
   convertLwdKipSprengerfolg,
+  LwdKipBeobachtung,
+  LwdKipLawinenabgang,
+  LwdKipSperren,
+  LwdKipSprengerfolg,
 } from "../models/lwdkip.model";
-import { type Observable, merge } from "rxjs";
+import { merge, Observable } from "rxjs";
 import { last, map, mergeMap } from "rxjs/operators";
-import { type ObservationFilterService } from "../observation-filter.service";
+import { ObservationFilterService } from "../observation-filter.service";
 
 @Injectable()
 export class LwdKipObservationsService {

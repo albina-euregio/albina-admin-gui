@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
-import { type GenericObservation } from "./models/generic-observation.model";
-import { type Observable, onErrorResumeNext } from "rxjs";
+import { GenericObservation } from "./models/generic-observation.model";
+import { Observable, onErrorResumeNext } from "rxjs";
 import {
-  type AlbinaObservationsService,
-  type AwsObservationsService,
+  AlbinaObservationsService,
+  AwsObservationsService,
   // FotoWebcamObservationsService,
-  type LawisObservationsService,
-  type LolaKronosObservationsService,
-  type LwdKipObservationsService,
-  type PanomaxObservationsService,
-  type WikisnowObservationsService,
+  LawisObservationsService,
+  LolaKronosObservationsService,
+  LwdKipObservationsService,
+  PanomaxObservationsService,
+  WikisnowObservationsService,
 } from "./sources";
 
 @Injectable()

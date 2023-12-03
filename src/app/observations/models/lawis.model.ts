@@ -1,14 +1,14 @@
 import {
   AvalancheProblem,
-  type GenericObservation,
+  GenericObservation,
+  imageCountString,
   ImportantObservation,
   ObservationSource,
-  type ObservationTableRow,
+  ObservationTableRow,
   ObservationType,
   Stability,
-  type TranslationFunction,
-  imageCountString,
   toAspect,
+  TranslationFunction,
 } from "./generic-observation.model";
 
 export const LAWIS_FETCH_DETAILS = true;

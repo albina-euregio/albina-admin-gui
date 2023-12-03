@@ -1,13 +1,13 @@
 import {
-  type Aspect,
+  Aspect,
   AvalancheProblem,
   DangerPattern as GenericDangerPattern,
-  type GenericObservation,
+  GenericObservation,
+  imageCountString,
   ImportantObservation,
   ObservationSource,
   ObservationType,
   Stability,
-  imageCountString,
 } from "./generic-observation.model";
 
 export interface LolaKronosApi {

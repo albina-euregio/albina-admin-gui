@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { type HttpClient } from "@angular/common/http";
-import { type ConstantsService } from "../../providers/constants-service/constants.service";
-import { type LolaKronosApi, convertLoLaKronos } from "../models/lola-kronos.model";
-import { type GenericObservation, ObservationSource } from "../models/generic-observation.model";
-import { type Observable } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { ConstantsService } from "../../providers/constants-service/constants.service";
+import { convertLoLaKronos, LolaKronosApi } from "../models/lola-kronos.model";
+import { GenericObservation, ObservationSource } from "../models/generic-observation.model";
+import { Observable } from "rxjs";
 import { mergeMap } from "rxjs/operators";
-import { type ObservationFilterService } from "../observation-filter.service";
+import { ObservationFilterService } from "../observation-filter.service";
 
 @Injectable()
 export class LolaKronosObservationsService {

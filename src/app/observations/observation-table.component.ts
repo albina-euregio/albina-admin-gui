@@ -1,13 +1,13 @@
-import { type HttpErrorResponse } from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { EventType, type Observation, isAvalancheWarningServiceObservation } from "./models/observation.model";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
 import { AlbinaObservationsService } from "./sources";
-import { type Message, SharedModule } from "primeng/api";
-import { type Table, TableModule } from "primeng/table";
+import { Message, SharedModule } from "primeng/api";
+import { Table, TableModule } from "primeng/table";
 import {
-  type GenericObservation,
-  type ImportantObservation,
+  GenericObservation,
+  ImportantObservation,
   ObservationSource,
   toMarkerColor,
 } from "./models/generic-observation.model";

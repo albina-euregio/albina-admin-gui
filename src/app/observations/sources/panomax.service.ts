@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { type HttpClient } from "@angular/common/http";
-import { type ConstantsService } from "../../providers/constants-service/constants.service";
-import { type GenericObservation } from "../models/generic-observation.model";
-import { type Observable } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { ConstantsService } from "../../providers/constants-service/constants.service";
+import { GenericObservation } from "../models/generic-observation.model";
+import { Observable } from "rxjs";
 import { filter, map, mergeMap } from "rxjs/operators";
-import { type RegionsService } from "../../providers/regions-service/regions.service";
+import { RegionsService } from "../../providers/regions-service/regions.service";
 import { LatLng } from "leaflet";
-import { type PanomaxCamResponse, type PanomaxThumbnailResponse, convertPanomax } from "../models/panomax.model";
+import { PanomaxCamResponse, PanomaxThumbnailResponse, convertPanomax } from "../models/panomax.model";
 
 @Injectable()
 export class PanomaxObservationsService {

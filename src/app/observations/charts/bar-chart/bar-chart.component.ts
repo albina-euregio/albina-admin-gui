@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { BaseComponent } from "../base/base-chart.component";
-import { TranslateModule, type TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { CommonModule, formatDate } from "@angular/common";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 const barWidth = 3;

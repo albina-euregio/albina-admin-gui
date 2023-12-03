@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { type HttpClient, HttpHeaders } from "@angular/common/http";
-import { type ConstantsService } from "../../providers/constants-service/constants.service";
-import { type GenericObservation } from "../models/generic-observation.model";
-import { type Observable, from, of } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ConstantsService } from "../../providers/constants-service/constants.service";
+import { GenericObservation } from "../models/generic-observation.model";
+import { from, Observable, of } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
-import { type RegionsService } from "../../providers/regions-service/regions.service";
-import { type FotoWebcamEU, type FotoWebcamEUResponse, addLolaCadsData, convertFotoWebcamEU } from "../models/foto-webcam.model";
+import { RegionsService } from "../../providers/regions-service/regions.service";
+import { FotoWebcamEU, FotoWebcamEUResponse, convertFotoWebcamEU, addLolaCadsData } from "../models/foto-webcam.model";
 
 @Injectable()
 export class FotoWebcamObservationsService {
