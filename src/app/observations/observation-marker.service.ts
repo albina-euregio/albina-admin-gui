@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { Canvas, Icon, DivIcon, MarkerOptions, CircleMarkerOptions, Browser } from "leaflet";
-import { GenericObservation} from "./models/generic-observation.model";
+import { GenericObservation } from "./models/generic-observation.model";
 
 @Injectable()
 export class ObservationMarkerService {
@@ -8,36 +8,37 @@ export class ObservationMarkerService {
 
   readonly markerRadius = 40;
 
-  constructor() { }
+  constructor() {}
 
   // This is very important! Use a canvas otherwise the chart is too heavy for the browser when
   // the number of points is too high
-  public myRenderer = !this.USE_CANVAS_LAYER ? undefined : new Canvas({
-    padding: 0.5
-  });
+  public myRenderer = !this.USE_CANVAS_LAYER
+    ? undefined
+    : new Canvas({
+        padding: 0.5,
+      });
 
   style(observation: GenericObservation): MarkerOptions | CircleMarkerOptions {
     return {
-        icon: this.getIcon(observation),
-        radius: this.markerRadius,
-        weight: 0,
-        opacity: 1,
-        renderer: this.myRenderer
+      icon: this.getIcon(observation),
+      radius: this.markerRadius,
+      weight: 0,
+      opacity: 1,
+      renderer: this.myRenderer,
     };
   }
 
   highlightStyle(observation: GenericObservation): MarkerOptions | CircleMarkerOptions {
     return {
-        icon: this.getIcon(observation),
-        radius: this.markerRadius,
-        weight: 1,
-        opacity: 1,
-        renderer: this.myRenderer
+      icon: this.getIcon(observation),
+      radius: this.markerRadius,
+      weight: 1,
+      opacity: 1,
+      renderer: this.myRenderer,
     };
   }
 
   private getIcon(observation: GenericObservation<any>): Icon | DivIcon {
-
     const iconSize = this.markerRadius;
 
     if (!this.USE_CANVAS_LAYER) {
@@ -46,7 +47,7 @@ export class ObservationMarkerService {
         html,
         className: `leaflet-div-icon-${iconSize}`,
         iconSize: [iconSize, iconSize],
-        iconAnchor: [iconSize / 2, iconSize / 2]
+        iconAnchor: [iconSize / 2, iconSize / 2],
       });
     }
 
@@ -59,7 +60,7 @@ export class ObservationMarkerService {
     const icon = new Icon({
       iconUrl: iconUrl,
       iconSize: [iconSize, iconSize],
-      iconAnchor: [iconSize / 2, iconSize / 2]
+      iconAnchor: [iconSize / 2, iconSize / 2],
     });
 
     return icon;
@@ -89,20 +90,20 @@ export class ObservationMarkerService {
     const aspect = observation.aspect;
 
     // Colorize aspect of observation
-    svg = svg.replace(`"$${aspect}"`, "\"20\"");
-    svg = svg.replace(/"\$[NEWS]+"/g, "\"0\"");
+    svg = svg.replace(`"$${aspect}"`, '"20"');
+    svg = svg.replace(/"\$[NEWS]+"/g, '"0"');
 
     // Remove separators if there is a gap between two aspects
     let allAspects = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-    allAspects = allAspects.filter(e => e !== aspect);
+    allAspects = allAspects.filter((e) => e !== aspect);
 
-    allAspects.forEach(value => {
+    allAspects.forEach((value) => {
       const regex = new RegExp(`(("\\$[NWSE]{1,2}_${value})")|(("\\$${value}_[NWSE]{1,2})")`, "g");
-      svg = svg.replace(regex, "\"0\"");
+      svg = svg.replace(regex, '"0"');
     });
 
     // Add separators when there are two adjacent aspects
-    svg = svg.replace(/"\$[NWSE_]+"/g, "\"3\"");
+    svg = svg.replace(/"\$[NWSE_]+"/g, '"3"');
 
     return svg;
   }

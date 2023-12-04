@@ -52,7 +52,16 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
-import { AlbinaObservationsService, AwsObservationsService, FotoWebcamObservationsService, LawisObservationsService, LolaKronosObservationsService, LwdKipObservationsService, PanomaxObservationsService, WikisnowObservationsService } from "./sources";
+import {
+  AlbinaObservationsService,
+  AwsObservationsService,
+  FotoWebcamObservationsService,
+  LawisObservationsService,
+  LolaKronosObservationsService,
+  LwdKipObservationsService,
+  PanomaxObservationsService,
+  WikisnowObservationsService,
+} from "./sources";
 
 //import { BarChart } from "./charts/bar-chart/bar-chart.component";
 declare var L: any;
