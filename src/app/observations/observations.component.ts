@@ -37,6 +37,7 @@ import { LatLng, Marker } from "leaflet";
 
 import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationFilterService } from "./observation-filter.service";
+import { ObservationMarkerService } from "./observation-marker.service";
 import { formatDate, CommonModule } from "@angular/common";
 import type { Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
@@ -84,6 +85,7 @@ export interface MultiselectDropdownData {
     BaseMapService,
     ElevationService,
     ObservationFilterService,
+    ObservationMarkerService,
     ObservationsService,
     RegionsService,
     TranslateService,
@@ -139,6 +141,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   constructor(
     public filter: ObservationFilterService,
+    private markerService: ObservationMarkerService,
     private translateService: TranslateService,
     private observationsService: ObservationsService,
     private fotoWebcam: FotoWebcamObservationsService,
@@ -398,8 +401,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private drawMarker(observation: GenericObservation, ll: LatLng) {
     const styledObservation = observation.isHighlighted
-      ? this.mapService.highlightStyle(observation)
-      : this.mapService.style(observation);
+      ? this.markerService.highlightStyle(observation)
+      : this.markerService.style(observation);
     styledObservation.bubblingMouseEvents = false;
     const marker = new Marker(ll, styledObservation);
     marker.on("click", () => this.onObservationClick(observation));

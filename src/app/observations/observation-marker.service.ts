@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Canvas, Icon, DivIcon, MarkerOptions, CircleMarkerOptions, Browser } from "leaflet";
-import { GenericObservation} from "../../observations/models/generic-observation.model";
+import { GenericObservation} from "./models/generic-observation.model";
 
 @Injectable()
-export class ObservationMapService {
+export class ObservationMarkerService {
   public USE_CANVAS_LAYER = true;
 
   readonly markerRadius = 40;

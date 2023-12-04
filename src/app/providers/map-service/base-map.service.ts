@@ -5,8 +5,6 @@ import {
   Map,
   LayerGroup,
   TileLayer,
-  MarkerOptions,
-  CircleMarkerOptions,
   Browser,
   Control,
   LatLng,
@@ -17,7 +15,6 @@ import { GenericObservation, ObservationType } from "app/observations/models/gen
 
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
-import { ObservationMapService } from "./observation-map.service";
 declare module "leaflet" {
   interface GeoJSON<P = any> {
     feature?: geojson.Feature<geojson.MultiPoint, P>;
@@ -59,7 +56,6 @@ export class BaseMapService {
     private authenticationService: AuthenticationService,
     private regionsService: RegionsService,
     private constantsService: ConstantsService,
-    private observationMapService: ObservationMapService
   ) {
     this.observationTypeLayers = {} as any;
     Object.keys(ObservationType).forEach((type) => (this.observationTypeLayers[type] = new LayerGroup()));
@@ -375,13 +371,5 @@ export class BaseMapService {
     }
 
     marker.addTo(this.layers[layerName]);
-  }
-
-  style(observation: GenericObservation): MarkerOptions | CircleMarkerOptions {
-    return this.observationMapService.style(observation);
-  }
-
-  highlightStyle(observation: GenericObservation): MarkerOptions | CircleMarkerOptions {
-    return this.observationMapService.highlightStyle(observation);
   }
 }
