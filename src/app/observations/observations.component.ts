@@ -441,9 +441,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         : undefined;
     observation.filterType = ObservationFilterType.Local;
 
-    if (ll) {
-      observation.region = this.regionsService.getRegionForLatLng(ll)?.id;
-    }
+    this.regionsService.augmentRegion(observation);
 
     this.observations.push(observation);
     this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
