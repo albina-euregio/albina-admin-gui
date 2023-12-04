@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Canvas, Icon, DivIcon, MarkerOptions, CircleMarkerOptions, Browser, Marker, LatLng } from "leaflet";
+import { Browser, Canvas, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import type { GenericObservation, Stability } from "./models/generic-observation.model";
 
 const colors: Record<Stability | "unknown", string> = {
@@ -43,15 +43,21 @@ export class ObservationMarkerService {
       return;
     }
 
-    const styledObservation = observation.isHighlighted ? this.highlightStyle(observation) : this.style(observation);
-    styledObservation.bubblingMouseEvents = false;
+    const marker = new Marker(ll, {
+      bubblingMouseEvents: false,
+      icon: this.getIcon(observation),
+      opacity: 1,
+      pane: "markerPane",
+      radius: this.markerRadius,
+      renderer: this.myRenderer,
+      weight: observation.isHighlighted ? 1 : 0,
+      zIndexOffset: this.toZIndex(observation),
+    } as MarkerOptions);
 
-    const marker = new Marker(ll, styledObservation);
     marker.bindTooltip(this.createTooltip(observation), {
       opacity: 1,
       className: "obs-tooltip",
     });
-    marker.options.pane = "markerPane";
     return marker;
   }
 
@@ -76,27 +82,6 @@ export class ObservationMarkerService {
 
   toZIndex(observation: GenericObservation) {
     return zIndex[observation.stability ?? "unknown"] ?? 0;
-  }
-
-  style(observation: GenericObservation): MarkerOptions | CircleMarkerOptions {
-    return {
-      icon: this.getIcon(observation),
-      radius: this.markerRadius,
-      weight: 0,
-      opacity: 1,
-      zIndexOffset: this.toZIndex(observation),
-      renderer: this.myRenderer,
-    };
-  }
-
-  highlightStyle(observation: GenericObservation): MarkerOptions | CircleMarkerOptions {
-    return {
-      icon: this.getIcon(observation),
-      radius: this.markerRadius,
-      weight: 1,
-      opacity: 1,
-      renderer: this.myRenderer,
-    };
   }
 
   private getIcon(observation: GenericObservation<any>): Icon | DivIcon {
