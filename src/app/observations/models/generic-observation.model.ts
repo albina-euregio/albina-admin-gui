@@ -48,17 +48,6 @@ export enum Stability {
   very_poor = "very_poor",
 }
 
-const colors: Record<Stability, string> = {
-  good: "green",
-  fair: "orange",
-  poor: "red",
-  very_poor: "black",
-};
-
-export function toMarkerColor(observation: GenericObservation) {
-  return colors[observation?.stability ?? "unknown"] ?? "gray";
-}
-
 export enum ObservationSource {
   AvalancheWarningService = "AvalancheWarningService",
   Observer = "Observer",

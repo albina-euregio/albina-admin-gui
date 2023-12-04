@@ -18,7 +18,6 @@ import {
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
-  toMarkerColor,
   toObservationTable,
   LocalFilterTypes,
   ChartsData,
@@ -128,7 +127,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public readonly allSources: MultiselectDropdownData[];
   public selectedRegionItems: string[];
   public selectedSourceItems: ObservationSource[];
-  public toMarkerColor = toMarkerColor;
   public chartsData: ChartsData = {
     Elevation: {},
     Aspects: {},
@@ -150,7 +148,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   constructor(
     public filter: ObservationFilterService,
-    private markerService: ObservationMarkerService,
+    public markerService: ObservationMarkerService,
     private translateService: TranslateService,
     private observationsService: ObservationsService,
     private fotoWebcam: FotoWebcamObservationsService,
