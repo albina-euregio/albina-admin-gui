@@ -45,9 +45,18 @@ export class ObservationMarkerService {
 
     const styledObservation = observation.isHighlighted ? this.highlightStyle(observation) : this.style(observation);
     styledObservation.bubblingMouseEvents = false;
-    const marker = new Marker(ll, styledObservation);
 
-    const tooltip = [
+    const marker = new Marker(ll, styledObservation);
+    marker.bindTooltip(this.createTooltip(observation), {
+      opacity: 1,
+      className: "obs-tooltip",
+    });
+    marker.options.pane = "markerPane";
+    return marker;
+  }
+
+  private createTooltip(observation: GenericObservation): string {
+    return [
       `<i class="fa fa-calendar"></i> ${
         observation.eventDate instanceof Date
           ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
@@ -59,12 +68,6 @@ export class ObservationMarkerService {
     ]
       .filter((s) => !/undefined/.test(s))
       .join("<br>");
-    marker.bindTooltip(tooltip, {
-      opacity: 1,
-      className: "obs-tooltip",
-    });
-    marker.options.pane = "markerPane";
-    return marker;
   }
 
   toMarkerColor(observation: GenericObservation) {
