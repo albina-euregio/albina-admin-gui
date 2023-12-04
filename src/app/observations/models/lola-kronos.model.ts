@@ -13,6 +13,7 @@ import {
 export interface LolaKronosApi {
   lolaSimpleObservation: LolaSimpleObservation[];
   lolaEvaluation: LolaEvaluation[];
+  lolaCommissionEvaluation: LolaEvaluation[];
   lolaSnowProfile: LolaSnowProfile[];
   lolaAvalancheEvent: LolaAvalancheEvent[];
 }
@@ -307,6 +308,9 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
     ),
     ...kronos.lolaEvaluation.map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail/lolaEvaluation/"),
+    ),
+    ...kronos.lolaCommissionEvaluation.map((obs) =>
+      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail/lolaCommissionEvaluation/"),
     ),
     ...kronos.lolaSimpleObservation.map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail/lolaSimpleObservation/"),
