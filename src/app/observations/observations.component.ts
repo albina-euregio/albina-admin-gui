@@ -372,17 +372,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
     this.localObservations = [];
     this.observations.forEach((observation) => {
-      const ll =
-        observation.latitude && observation.longitude
-          ? new LatLng(observation.latitude, observation.longitude)
-          : undefined;
-
       if (observation.filterType === ObservationFilterType.Local || observation.isHighlighted) {
         this.localObservations.push(observation);
-        if (!ll) {
-          return;
-        }
-        this.drawMarker(observation, ll);
+        this.createMarker(observation)?.addTo(this.mapService.observationTypeLayers[observation.$type]);
       }
     });
     this.buildChartsData();
@@ -406,7 +398,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.chartsData.Days = this.filter.getDaysDataset(this.observations);
   }
 
-  private drawMarker(observation: GenericObservation, ll: LatLng) {
+  private createMarker(observation: GenericObservation): Marker | undefined {
+    const ll =
+      observation.latitude && observation.longitude
+        ? new LatLng(observation.latitude, observation.longitude)
+        : undefined;
+    if (!ll) {
+      return;
+    }
+
     const styledObservation = observation.isHighlighted
       ? this.markerService.highlightStyle(observation)
       : this.markerService.style(observation);
@@ -431,14 +431,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       className: "obs-tooltip",
     });
     marker.options.pane = "markerPane";
-    marker.addTo(this.mapService.observationTypeLayers[observation.$type]);
+    return marker;
   }
 
   private addObservation(observation: GenericObservation): void {
-    const ll =
-      observation.latitude && observation.longitude
-        ? new LatLng(observation.latitude, observation.longitude)
-        : undefined;
     observation.filterType = ObservationFilterType.Local;
 
     this.regionsService.augmentRegion(observation);
@@ -446,12 +442,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observations.push(observation);
     this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
 
-    if (!ll) {
+    const marker = this.createMarker(observation)?.addTo(this.mapService.observationTypeLayers[observation.$type]);
+    if (!marker) {
       this.observationsWithoutCoordinates++;
-      return;
     }
-
-    this.drawMarker(observation, ll);
   }
 
   onObservationClick(observation: GenericObservation): void {
