@@ -4,11 +4,12 @@ import { Browser, Canvas, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "l
 import type { GenericObservation, Stability } from "./models/generic-observation.model";
 
 const colors: Record<Stability | "unknown", string> = {
+  // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
   unknown: "white",
-  good: "green",
-  fair: "yellow",
-  poor: "orange",
-  very_poor: "red",
+  good: "#a6d96a",
+  fair: "#ffffbf",
+  poor: "#fdae61",
+  very_poor: "#d7191c",
 };
 
 const zIndex: Record<Stability, number> = {
