@@ -374,7 +374,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observations.forEach((observation) => {
       if (observation.filterType === ObservationFilterType.Local || observation.isHighlighted) {
         this.localObservations.push(observation);
-        this.createMarker(observation)?.addTo(this.mapService.observationTypeLayers[observation.$type]);
+        this.markerService
+          .createMarker(observation)
+          ?.on("click", () => this.onObservationClick(observation))
+          ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
       }
     });
     this.buildChartsData();
@@ -398,42 +401,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.chartsData.Days = this.filter.getDaysDataset(this.observations);
   }
 
-  private createMarker(observation: GenericObservation): Marker | undefined {
-    const ll =
-      observation.latitude && observation.longitude
-        ? new LatLng(observation.latitude, observation.longitude)
-        : undefined;
-    if (!ll) {
-      return;
-    }
-
-    const styledObservation = observation.isHighlighted
-      ? this.markerService.highlightStyle(observation)
-      : this.markerService.style(observation);
-    styledObservation.bubblingMouseEvents = false;
-    const marker = new Marker(ll, styledObservation);
-    marker.on("click", () => this.onObservationClick(observation));
-
-    const tooltip = [
-      `<i class="fa fa-calendar"></i> ${
-        observation.eventDate instanceof Date
-          ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
-          : undefined
-      }`,
-      `<i class="fa fa-globe"></i> ${observation.locationName || undefined}`,
-      `<i class="fa fa-user"></i> ${observation.authorName || undefined}`,
-      `[${observation.$source}, ${observation.$type}]`,
-    ]
-      .filter((s) => !/undefined/.test(s))
-      .join("<br>");
-    marker.bindTooltip(tooltip, {
-      opacity: 1,
-      className: "obs-tooltip",
-    });
-    marker.options.pane = "markerPane";
-    return marker;
-  }
-
   private addObservation(observation: GenericObservation): void {
     observation.filterType = ObservationFilterType.Local;
 
@@ -442,7 +409,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observations.push(observation);
     this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
 
-    const marker = this.createMarker(observation)?.addTo(this.mapService.observationTypeLayers[observation.$type]);
+    const marker = this.markerService
+      .createMarker(observation)
+      ?.on("click", () => this.onObservationClick(observation))
+      ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     if (!marker) {
       this.observationsWithoutCoordinates++;
     }

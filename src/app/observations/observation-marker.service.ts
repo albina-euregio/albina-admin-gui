@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Canvas, Icon, DivIcon, MarkerOptions, CircleMarkerOptions, Browser } from "leaflet";
+import { formatDate } from "@angular/common";
+import { Canvas, Icon, DivIcon, MarkerOptions, CircleMarkerOptions, Browser, Marker, LatLng } from "leaflet";
 import type { GenericObservation, Stability } from "./models/generic-observation.model";
 
 const colors: Record<Stability | "unknown", string> = {
@@ -32,6 +33,39 @@ export class ObservationMarkerService {
     : new Canvas({
         padding: 0.5,
       });
+
+  createMarker(observation: GenericObservation): Marker | undefined {
+    const ll =
+      observation.latitude && observation.longitude
+        ? new LatLng(observation.latitude, observation.longitude)
+        : undefined;
+    if (!ll) {
+      return;
+    }
+
+    const styledObservation = observation.isHighlighted ? this.highlightStyle(observation) : this.style(observation);
+    styledObservation.bubblingMouseEvents = false;
+    const marker = new Marker(ll, styledObservation);
+
+    const tooltip = [
+      `<i class="fa fa-calendar"></i> ${
+        observation.eventDate instanceof Date
+          ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
+          : undefined
+      }`,
+      `<i class="fa fa-globe"></i> ${observation.locationName || undefined}`,
+      `<i class="fa fa-user"></i> ${observation.authorName || undefined}`,
+      `[${observation.$source}, ${observation.$type}]`,
+    ]
+      .filter((s) => !/undefined/.test(s))
+      .join("<br>");
+    marker.bindTooltip(tooltip, {
+      opacity: 1,
+      className: "obs-tooltip",
+    });
+    marker.options.pane = "markerPane";
+    return marker;
+  }
 
   toMarkerColor(observation: GenericObservation) {
     return colors[observation?.stability ?? "unknown"] ?? colors.unknown;
