@@ -132,12 +132,11 @@ export function convertLwdKipBeobachtung(
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
     $data: feature.properties,
-    $extraDialogRows: (t) =>
-      Object.keys(feature.properties)
-        .map((label) =>
-          typeof feature.properties[label] === "string" ? { label, value: feature.properties[label] } : undefined,
-        )
-        .filter((row) => row !== undefined),
+    $extraDialogRows: Object.keys(feature.properties)
+      .map((label) =>
+        typeof feature.properties[label] === "string" ? { label, value: feature.properties[label] } : undefined,
+      )
+      .filter((row) => row !== undefined),
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Evaluation,
     stability: getLwdKipBeobachtungStability(feature),
@@ -179,10 +178,10 @@ export function convertLwdKipSprengerfolg(
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
     $data: feature.properties,
-    $extraDialogRows: (t) => [
+    $extraDialogRows: [
       { label: "Sprengerfolg", value: feature.properties.SPRENGERFOLG },
       { label: "Sprenggrund", value: feature.properties.SPRENGGRUND },
-      { label: t("observations.incline"), number: feature.properties.NEIGUNG },
+      { label: "observations.incline", number: feature.properties.NEIGUNG },
     ],
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Blasting,
@@ -229,12 +228,12 @@ export function convertLwdKipLawinenabgang(
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
     $data: feature.properties,
-    $extraDialogRows: (t) => [
+    $extraDialogRows: [
       { label: "Lawinengröße", value: feature.properties.LAWINENGROESSE },
       { label: "Lawinenart", value: feature.properties.LAWINENART },
       { label: "Lawinenfeuchte", value: feature.properties.LAWINENFEUCHTE },
       { label: "Sprengung", boolean: feature.properties.SPRENGUNG > 0 },
-      { label: t("observations.incline"), number: feature.properties.NEIGUNG },
+      { label: "observations.incline", number: feature.properties.NEIGUNG },
     ],
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Avalanche,
