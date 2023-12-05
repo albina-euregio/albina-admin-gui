@@ -334,7 +334,12 @@ export function convertLoLaToGeneric(
     stability: getStability((obs as LolaSnowProfile).weakestSnowStability),
     aspect: (obs as LolaSnowProfile).aspects?.[0],
     authorName: obs.firstName + " " + obs.lastName,
-    content: obs.comment + imageCountString(obs.images),
+    content:
+      obs.comment +
+      imageCountString(obs.images) +
+      ((obs as LolaSnowProfile).snowStabilityTest ?? [])
+        .map((t) => `${t.type} ${t.number}@${t.position} ${t.comment ?? ""}`)
+        .join(" "),
     elevation: (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
