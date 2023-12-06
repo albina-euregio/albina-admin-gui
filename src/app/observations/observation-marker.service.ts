@@ -115,8 +115,6 @@ export class ObservationMarkerService {
 
   private getSvg(observation: GenericObservation<any>) {
     let iconColor = this.toMarkerColor(observation);
-    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 146 146">"><g><path d="M129.28053101569978 48.27362719336443 A62.0 62.0 0 0 1 129.28053101569978 95.72637280663557 " stroke="#19abff" fill="none" stroke-width="$E"/><path d="M129.28053101569978 95.72637280663557 A62.0 62.0 0 0 1 95.72637280663557 129.28053101569978 " stroke="#19abff" fill="none" stroke-width="$SE"/><path d="M95.72637280663557 129.28053101569978 A62.0 62.0 0 0 1 48.27362719336443 129.28053101569978 " stroke="#19abff" fill="none" stroke-width="$S"/><path d="M48.27362719336443 129.28053101569978 A62.0 62.0 0 0 1 14.71946898430022 95.72637280663557 " stroke="#19abff" fill="none" stroke-width="$SW"/><path d="M14.71946898430022 95.72637280663557 A62.0 62.0 0 0 1 14.719468984300214 48.27362719336444 " stroke="#19abff" fill="none" stroke-width="$W"/><path d="M14.719468984300214 48.27362719336444 A62.0 62.0 0 0 1 48.27362719336445 14.719468984300214 " stroke="#19abff" fill="none" stroke-width="$NW"/><path d="M48.27362719336445 14.719468984300214 A62.0 62.0 0 0 1 95.72637280663558 14.719468984300228 " stroke="#19abff" fill="none" stroke-width="$N"/><path d="M95.72637280663558 14.719468984300228 A62.0 62.0 0 0 1 129.28053101569978 48.27362719336445 " stroke="#19abff" fill="none" stroke-width="$NE"/><line x1="72.0" y1="72.0" x2="138.51932634081265" y2="44.44679286971353" stroke="black" stroke-width="$E_NE"/><line x1="72.0" y1="72.0" x2="138.51932634081265" y2="99.55320713028647" stroke="black" stroke-width="$SE_E"/><line x1="72.0" y1="72.0" x2="99.55320713028647" y2="138.51932634081265" stroke="black" stroke-width="$S_SE"/><line x1="72.0" y1="72.0" x2="44.44679286971353" y2="138.51932634081265" stroke="black" stroke-width="$SW_S"/><line x1="72.0" y1="72.0" x2="5.48067365918736" y2="99.55320713028647" stroke="black" stroke-width="$W_SW"/><line x1="72.0" y1="72.0" x2="5.48067365918736" y2="44.44679286971355" stroke="black" stroke-width="$NW_W"/><line x1="72.0" y1="72.0" x2="44.44679286971355" y2="5.480673659187346" stroke="black" stroke-width="$N_NW"/><line x1="72.0" y1="72.0" x2="99.55320713028648" y2="5.48067365918736" stroke="black" stroke-width="$NE_N"/></g><g><circle cx="72.0" cy="72.0" r="50" stroke="black" stroke-width="4.0" fill="$bg" /><text x="72.0" y="89.0" text-anchor="middle" fill="$color" font-size="50" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">$data</text></g></svg>`;
-
     let textColor = "#000";
 
     if (observation.isHighlighted) {
@@ -124,33 +122,63 @@ export class ObservationMarkerService {
       textColor = "#fff";
     }
 
-    // Style background of circle
-    svg = svg.replace("$bg", iconColor);
-    // Style text color
-    svg = svg.replace("$color", textColor);
-
     // Set text of Marker (max. 2 characters)
     const label = String(observation.$source).slice(0, 1) + String(observation.$type).slice(0, 1);
-    svg = svg.replace("$data", label);
 
-    const aspect = observation.aspect;
+    const aspects = {
+      N: `<g id="sector-n" transform="translate(11.3648, 0)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-247.5) translate(-10.8779, -12.5421)"></path></g>`,
+      NE: `<g id="sector-ne" transform="translate(19.4015, 3.3285)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(-202.5) translate(-12.5421, -10.8779)"></path></g>`,
+      E: `<g id="sector-e" transform="translate(25.0842, 11.3648)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(-157.5) translate(-12.5421, -10.8779)"></path></g>`,
+      SE: `<g id="sector-se" transform="translate(25.0842, 19.4015)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-112.5) translate(-10.8779, -12.5421)"></path></g>`,
+      S: `<g id="sector-s" transform="translate(17.0479, 25.0842)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-67.5) translate(-10.8779, -12.5421)"></path></g>`,
+      SW: `<g id="sector-sw" transform="translate(5.6827, 25.0842)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(-22.5) translate(-12.5421, -10.8779)"></path></g>`,
+      W: `<g id="sector-w" transform="translate(0, 17.0479)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(22.5) translate(-12.5421, -10.8779)"></path></g>`,
+      NW: `<g id="sector-nw" transform="translate(3.3285, 5.6827)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-292.5) translate(-10.8779, -12.5421)"></path></g>`,
+    };
 
-    // Colorize aspect of observation
-    svg = svg.replace(`"$${aspect}"`, '"20"');
-    svg = svg.replace(/"\$[NEWS]+"/g, '"0"');
+    return `
+    <svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="map-marker">
 
-    // Remove separators if there is a gap between two aspects
-    let allAspects = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-    allAspects = allAspects.filter((e) => e !== aspect);
+            <g id="map-marker-sectors" transform="translate(-4.0842, -4.0842)" fill="#19abff">
+              ${aspects[observation.aspect]}
+            </g>
 
-    allAspects.forEach((value) => {
-      const regex = new RegExp(`(("\\$[NWSE]{1,2}_${value})")|(("\\$${value}_[NWSE]{1,2})")`, "g");
-      svg = svg.replace(regex, '"0"');
-    });
+            <g id="map-marker-bg" transform="translate(10, 10)" fill="${iconColor}">
+                <circle id="Oval" cx="11" cy="11" r="11"></circle>
+            </g>
 
-    // Add separators when there are two adjacent aspects
-    svg = svg.replace(/"\$[NWSE_]+"/g, '"3"');
+            <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="#000000">
+                <text x="11" y="15" text-anchor="middle" fill="${textColor}" font-size="12" font-weight="lighter" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">${label}</text>
 
-    return svg;
+                <g id="line-bold" stroke-width="2">
+                    <circle id="Oval" cx="11" cy="11" r="11"></circle>
+                </g>
+                <g id="line-thin">
+                    <circle id="Oval" cx="11" cy="11" r="11"></circle>
+                </g>
+                <g id="dotted-bold" stroke-dasharray="0,2.99" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M11,22 C17.0751322,22 22,17.0751322 22,11 C22,4.92486775 17.0751322,0 11,0 C4.92486775,0 0,4.92486775 0,11 C0,17.0751322 4.92486775,22 11,22 Z" id="Oval"></path>
+                </g>
+                <g id="dotted-thin" stroke-dasharray="0,3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11,22 C17.0751322,22 22,17.0751322 22,11 C22,4.92486775 17.0751322,0 11,0 C4.92486775,0 0,4.92486775 0,11 C0,17.0751322 4.92486775,22 11,22 Z" id="Oval"></path>
+                </g>
+            </g>
+
+  
+            <!--<g id="map-marker-circle-outer" transform="translate(7, 7)" stroke="#000000">
+                <g id="line-thin">
+                    <circle id="Oval" cx="14" cy="14" r="14"></circle>
+                </g>
+                <g id="dotted-thin" stroke-dasharray="0,3.02" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14,28 C21.7319865,28 28,21.7319865 28,14 C28,6.2680135 21.7319865,0 14,0 C6.2680135,0 0,6.2680135 0,14 C0,21.7319865 6.2680135,28 14,28 Z" id="Oval"></path>
+                </g>
+            </g>-->
+
+        </g>
+    </g>
+</svg>
+    `;
   }
 }
