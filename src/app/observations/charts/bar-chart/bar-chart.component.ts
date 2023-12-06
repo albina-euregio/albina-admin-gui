@@ -38,8 +38,6 @@ const fDate = (aDate) => {
   styleUrls: ["./bar-chart.component.scss"],
 })
 export class BarChartComponent extends BaseComponent {
-  private pressTimer;
-
   public formatLabel = (params) => {
     //console.log("formatter", this.formatter, params.value[0], this.translateService.instant(this.translationBase + params.value[0]));
     if (this.formatter === "date") return fDate(params.value[0]);
@@ -188,55 +186,4 @@ export class BarChartComponent extends BaseComponent {
   constructor(private translateService: TranslateService) {
     super();
   }
-
-  private resetTimeout() {
-    clearTimeout(this.pressTimer);
-    this.pressTimer = null;
-  }
-
-  // onClick(event: any) {
-  //     console.log("RosehartComponent->onclick", event, this);
-
-  // }
-
-  onMouseDown(event: any) {
-    console.log("RosehartComponent->onMouseDown", event, this);
-    const self = this;
-    this.pressTimer = window.setTimeout(function () {
-      self.resetTimeout();
-      self.submitChange([self.type, { value: event.data[0], altKey: true }]);
-    }, this.longClickDur);
-    return false;
-  }
-
-  onMouseUp(event: any) {
-    console.log("RosehartComponent->onMouseUp", event, this);
-    if (this.pressTimer) {
-      this.resetTimeout();
-      this.submitChange([this.type, { value: event.data[0], altKey: event.event.event.altKey }]);
-    }
-    return false;
-  }
-
-  onClickNan(event: any) {
-    //console.log("BarChartComponent->onClickNan", event);
-    //if(event.altKey) this.nanStatus.highlighted = !this.nanStatus.highlighted;
-    //else this.nanStatus.selected = !this.nanStatus.selected;
-    this.submitChange([this.type, { value: "nan", altKey: event.altKey }]);
-    //console.log("BarChartComponent->onClickNan", event, this);
-  }
-
-  onInvert() {
-    //        console.log("BarChartComponent->onInvert", this);
-    this.submitChange([this.type, { invert: true }]);
-  }
-
-  onReset() {
-    //        console.log("BarChartComponent->onReset",  this);
-    this.submitChange([this.type, { reset: true }]);
-  }
-
-  // ngOnInit(): void {
-  //     // this.options.title.text = this.caption || 'bar chart';
-  // }
 }
