@@ -4,8 +4,11 @@ import { Canvas, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
   Aspect,
   AvalancheProblem,
+  DangerPattern,
   GenericObservation,
+  ImportantObservation,
   LocalFilterTypes,
+  ObservationType,
   Stability,
 } from "./models/generic-observation.model";
 
@@ -138,20 +141,37 @@ export class ObservationMarkerService {
 
   toMarkerColor(observation: GenericObservation) {
     switch (this.markerClassify) {
+      case LocalFilterTypes.Aspect:
+        return this.enumArrayColor(Aspect, [observation.aspect]);
+      case LocalFilterTypes.AvalancheProblem:
+        return this.enumArrayColor(AvalancheProblem, observation.avalancheProblems);
+      case LocalFilterTypes.DangerPattern:
+        return this.enumArrayColor(DangerPattern, observation.dangerPatterns);
+      case LocalFilterTypes.Days:
+        const days = (Date.now() - +observation.eventDate) / 24 / 3600e3;
+        const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
+        return daysColors[Math.min(Math.floor(days), daysColors.length)];
       case LocalFilterTypes.Elevation:
         return this.elevationColor(observation);
+      case LocalFilterTypes.ImportantObservation:
+        return this.enumArrayColor(ImportantObservation, observation.importantObservations);
+      case LocalFilterTypes.ObservationType:
+        return this.enumArrayColor(ObservationType, [observation.$type]);
       case LocalFilterTypes.Stability:
         return this.stabilityColor(observation);
-      case LocalFilterTypes.Aspect:
-        return observation.aspect ? colors[Object.keys(Aspect).indexOf(observation.aspect) % colors.length] : "white";
-      case LocalFilterTypes.AvalancheProblem:
-        return !Array.isArray(observation.avalancheProblems) || observation.avalancheProblems.length === 0
-          ? "white"
-          : observation.avalancheProblems.length > 1
-            ? "#999999"
-            : colors[Object.keys(AvalancheProblem).indexOf(observation.avalancheProblems[0]) % colors.length];
+      default:
+        return "white";
     }
-    return "white";
+  }
+
+  private enumArrayColor<TEnum, TKeys extends string>(type: { [key in TKeys]: TEnum }, values: TKeys[]): string {
+    if (!Array.isArray(values) || values.length === 0 || !values[0]) {
+      return "white";
+    } else if (values.length > 1) {
+      return "#999999";
+    } else {
+      return colors[Object.keys(type).indexOf(values[0]) % colors.length];
+    }
   }
 
   private stabilityColor(observation: GenericObservation) {
