@@ -27,15 +27,15 @@ export class ObservationsService {
 
   loadAll(): Observable<GenericObservation<any>> {
     return onErrorResumeNext(
-      this.aws.getObservers(),
-      this.lawis.getLawisIncidents(),
-      this.lawis.getLawisProfiles(),
+      // this.aws.getObservers(),
+      // this.lawis.getLawisIncidents(),
+      // this.lawis.getLawisProfiles(),
       this.lolaKronos.getLoLaKronos(),
-      this.lwdKip.getLwdKipObservations(),
-      this.wikisnow.getWikisnowECT(),
-      this.albina.getObservations(),
-      // // this.fotoWebcam.getFotoWebcamsEU(),
-      this.panomax.getPanomax(),
+      // this.lwdKip.getLwdKipObservations(),
+      // this.wikisnow.getWikisnowECT(),
+      // this.albina.getObservations(),
+      // // // this.fotoWebcam.getFotoWebcamsEU(),
+      // this.panomax.getPanomax(),
     );
   }
 }
