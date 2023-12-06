@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { LocalFilterTypes } from "app/observations/models/generic-observation.model";
+import { type GenericFilterToggleData } from "../../observation-filter.service";
 
 @Component({
   selector: "app-base-chart",
@@ -14,13 +15,9 @@ export class BaseComponent {
   @Input() formatter: string;
   @Input() type: LocalFilterTypes;
   @Input() data: { dataset: object; nan: number };
-  @Output() handleChange: EventEmitter<any> = new EventEmitter();
+  @Output() handleChange: EventEmitter<[LocalFilterTypes, GenericFilterToggleData["data"]]> = new EventEmitter();
   @Input() nanStatus: { selected: Boolean; highlighted: Boolean };
   @Input() isActive: Boolean;
-
-  submitChange(data) {
-    this.handleChange.emit(data);
-  }
 
   private resetTimeout() {
     clearTimeout(this.pressTimer);
@@ -28,10 +25,9 @@ export class BaseComponent {
   }
 
   onMouseDown(event: any) {
-    const self = this;
-    this.pressTimer = window.setTimeout(function () {
-      self.resetTimeout();
-      self.submitChange([self.type, { value: event.data[0], altKey: true }]);
+    this.pressTimer = window.setTimeout(() => {
+      this.resetTimeout();
+      this.handleChange.emit([this.type, { value: event.data[0], altKey: true }]);
     }, this.longClickDur);
     return false;
   }
@@ -39,20 +35,28 @@ export class BaseComponent {
   onMouseUp(event: any) {
     if (this.pressTimer) {
       this.resetTimeout();
-      this.submitChange([this.type, { value: event.data[0], altKey: event.event.event.altKey }]);
+      this.handleChange.emit([this.type, { value: event.data[0], altKey: event.event.event.altKey }]);
     }
     return false;
   }
 
   onClickNan(event: any) {
-    this.submitChange([this.type, { value: "nan", altKey: event.altKey }]);
+    this.handleChange.emit([this.type, { value: "nan", altKey: event.altKey }]);
+  }
+
+  onMarkerClassify() {
+    this.handleChange.emit([this.type, { markerClassify: true }]);
+  }
+
+  onMarkerLabel() {
+    this.handleChange.emit([this.type, { markerLabel: true }]);
   }
 
   onInvert() {
-    this.submitChange([this.type, { invert: true }]);
+    this.handleChange.emit([this.type, { invert: true }]);
   }
 
   onReset() {
-    this.submitChange([this.type, { reset: true }]);
+    this.handleChange.emit([this.type, { reset: true }]);
   }
 }

@@ -32,12 +32,10 @@ import { MenuItem, SharedModule } from "primeng/api";
 
 import { saveAs } from "file-saver";
 
-import { LatLng, Marker } from "leaflet";
-
 import { ObservationTableComponent } from "./observation-table.component";
-import { ObservationFilterService } from "./observation-filter.service";
+import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { formatDate, CommonModule } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import type { Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
@@ -350,8 +348,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observationPopup = undefined;
   }
 
-  toggleFilter(data: any = {}) {
-    if (data?.type) this.filter.toggleFilter(data);
+  toggleFilter(data: GenericFilterToggleData = {} as GenericFilterToggleData) {
+    if (data?.type && data.data.markerClassify) {
+      this.markerService.markerClassify = data.type;
+    } else if (data?.type && data.data.markerLabel) {
+      this.markerService.markerLabel = data.type;
+    } else if (data?.type) {
+      this.filter.toggleFilter(data);
+    }
     this.applyLocalFilter();
   }
 
