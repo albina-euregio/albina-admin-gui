@@ -341,7 +341,11 @@ export function convertLoLaToGeneric(
       obs.comment +
       imageCountString(obs.images) +
       ((obs as LolaSnowProfile).snowStabilityTest ?? [])
-        .map((t) => `${t.type} ${t.number}@${t.position} ${t.comment ?? ""}`)
+        .flatMap((t) => [
+          `☲${t.type}`,
+          isFinite(t.number) && isFinite(t.position) ? `${t.number}@${t.position}cm` : "",
+          t.comment ?? "",
+        ])
         .join(" "),
     elevation: (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
