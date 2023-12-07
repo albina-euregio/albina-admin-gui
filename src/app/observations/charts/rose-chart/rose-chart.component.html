@@ -7,17 +7,37 @@
 
     <div class="chart-controls">
       <div class="obs-switch">
-        <div class="obs-switch-item" [ngClass]="{ 'is-active': isActive }" (click)="onMarkerClassify()">
-          <span class="switch-text">🎨</span>
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
+          (click)="onMarkerClassify()"
+          title="{{ 'admin.observations.charts.classify' | translate }}"
+        >
+          <i class="fa fa-paint-brush" aria-hidden="true"></i>
         </div>
-        <div class="obs-switch-item" [ngClass]="{ 'is-active': isActive }" (click)="onMarkerLabel()">
-          <span class="switch-text">🏷</span>
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
+          (click)="onMarkerLabel()"
+          title="{{ 'admin.observations.charts.label' | translate }}"
+        >
+          <i class="fa fa-tags" aria-hidden="true"></i>
         </div>
-        <div class="obs-switch-item" [ngClass]="{ 'is-active': isActive }" (click)="onInvert()">
-          <span class="switch-text">{{ "admin.observations.charts.invert" | translate }}</span>
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
+          (click)="onInvert()"
+          title="{{ 'admin.observations.charts.invert' | translate }}"
+        >
+          <i class="fa fa-adjust" aria-hidden="true"></i>
         </div>
-        <div class="obs-switch-item" [ngClass]="{ 'is-active': isActive }" (click)="onReset()">
-          <span class="switch-text">{{ "admin.observations.charts.reset" | translate }}</span>
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
+          (click)="onReset()"
+          title="{{ 'admin.observations.charts.reset' | translate }}"
+        >
+          <i class="fa fa-power-off" aria-hidden="true"></i>
         </div>
       </div>
     </div>
@@ -42,7 +62,7 @@
   <div class="chart-content">
     <div
       echarts
-      [options]="defaultOptions"
+      [options]="options"
       [merge]="{ dataset: data.dataset }"
       (chartMouseDown)="onMouseDown($event)"
       (chartMouseUp)="onMouseUp($event)"
