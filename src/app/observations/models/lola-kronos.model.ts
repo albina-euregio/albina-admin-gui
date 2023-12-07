@@ -331,7 +331,10 @@ export function convertLoLaToGeneric(
     $externalURL: urlPrefix + obs.uuId,
     $source: ObservationSource.LoLaKronos,
     $type,
-    stability: getStability((obs as LolaSnowProfile).weakestSnowStability),
+    stability:
+      $type === ObservationType.Avalanche
+        ? Stability.very_poor
+        : getStability((obs as LolaSnowProfile).weakestSnowStability),
     aspect: (obs as LolaSnowProfile).aspects?.[0],
     authorName: obs.firstName + " " + obs.lastName,
     content:
