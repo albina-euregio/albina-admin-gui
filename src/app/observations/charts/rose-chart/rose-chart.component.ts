@@ -18,7 +18,7 @@ const barDefaults = {
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
   providers: [provideEcharts()],
   selector: "app-rose-chart",
-  templateUrl: "./rose-chart.component.html",
+  templateUrl: "../base/base-chart.component.html",
   styleUrls: ["./rose-chart.component.scss"],
 })
 export class RoseChartComponent extends BaseComponent {

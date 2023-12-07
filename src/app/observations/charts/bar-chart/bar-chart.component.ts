@@ -34,7 +34,7 @@ const fDate = (aDate) => {
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
   providers: [provideEcharts()],
   selector: "app-bar-chart",
-  templateUrl: "./bar-chart.component.html",
+  templateUrl: "../base/base-chart.component.html",
   styleUrls: ["./bar-chart.component.scss"],
 })
 export class BarChartComponent extends BaseComponent {
