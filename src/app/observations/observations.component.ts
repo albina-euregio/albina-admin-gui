@@ -350,9 +350,17 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   toggleFilter(data: GenericFilterToggleData = {} as GenericFilterToggleData) {
     if (data?.type && data.data.markerClassify) {
-      this.markerService.markerClassify = data.type;
+      if (data?.type !== this.markerService.markerClassify) {
+        this.markerService.markerClassify = data.type;
+      } else {
+        this.markerService.markerClassify = undefined;
+      }
     } else if (data?.type && data.data.markerLabel) {
-      this.markerService.markerLabel = data.type;
+      if (data?.type !== this.markerService.markerLabel) {
+        this.markerService.markerLabel = data.type;
+      } else {
+        this.markerService.markerLabel = undefined;
+      }
     } else if (data?.type) {
       this.filter.toggleFilter(data);
     }
