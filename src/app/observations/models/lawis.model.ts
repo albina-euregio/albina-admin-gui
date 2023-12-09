@@ -310,7 +310,10 @@ export function parseLawisDate(datum: string): Date {
 function getLawisProfileStability(profile: ProfileDetails): Stability {
   // Ausbildungshandbuch, 6. Auflage, Seiten 170/171
   const ect_tests = profile.stability_tests.filter((t) => t.type.text === "ECT") || [];
-  const colors = ect_tests.map((t) => getECTestStability(t.step, t.result.text));
+  const ect_colors = ect_tests.map((t) => getECTestStability(t.step, t.result.text));
+  const rb_tests = profile.stability_tests.filter((t) => t.type.text === "RB") || [];
+  const rb_colors = rb_tests.map((t) => getRBTestStability(t.step, t.result.text));
+  const colors = ect_colors.concat(rb_colors);
   if (colors.includes(Stability.very_poor)) {
     return Stability.very_poor;
   } else if (colors.includes(Stability.poor)) {
@@ -342,6 +345,27 @@ export function getECTestStability(step: number, propagation: string): Stability
   } else if (step <= 30 && propagation0) {
     return Stability.good;
   } else if (step === 31) {
+    return Stability.good;
+  }
+  return null;
+}
+
+export function getRBTestStability(step: number, propagation: string): Stability {
+  // Ausbildungshandbuch, 6. Auflage, Seiten 170/171
+  const propagation1 = /\bwhole block\b/.test(propagation);
+  const propagation0 = /\bpartial break\b/.test(propagation);
+  if ((step <= 2 && propagation1) || (step <= 1 && propagation0)) {
+    // sehr schwach
+    return Stability.very_poor;
+  } else if ((step <= 3 && propagation1) || (step == 2 && propagation0)) {
+    // schwach
+    return Stability.poor;
+  } else if ((step <= 5 && propagation1) || (step <= 3 && propagation0)) {
+    // mittel
+    return Stability.fair;
+  } else if (step <= 5 && propagation0) {
+    return Stability.good;
+  } else if (step >= 6) {
     return Stability.good;
   }
   return null;
