@@ -7,9 +7,15 @@ import { ConstantsService } from "../constants-service/constants.service";
 import * as Enums from "../../enums/enums";
 
 import * as L from "leaflet";
+import "leaflet.sync";
 import * as geojson from "geojson";
+import { RegionNameControl } from "./region-name-control";
+import { AmPmControl } from "./am-pm-control";
 
 declare module "leaflet" {
+  interface Map {
+    sync(other: L.Map): void;
+  }
   interface GeoJSON<P = any> {
     feature?: geojson.Feature<geojson.MultiPoint, P>;
     getLayers(): GeoJSON<P>[];
@@ -45,10 +51,10 @@ export class MapService {
     private regionsService: RegionsService,
     private authenticationService: AuthenticationService,
     private constantsService: ConstantsService) {
-    this.initMaps();
+    this.initLayers();
   }
 
-  initMaps() {
+  private initLayers() {
 
       this.baseMaps = {
         AlbinaBaseMap: this.getAlbinaBaseMap()
@@ -95,6 +101,78 @@ export class MapService {
       };
 
     this.resetAll();
+  }
+
+  initAmPmMap(showAfternoonMap: boolean) {
+    if (this.map) {
+      this.map.remove();
+    }
+    if (this.afternoonMap) {
+      this.afternoonMap.remove();
+    }
+    this.initLayers();
+    this.initAmMap(showAfternoonMap);
+    this.initPmMap();
+    this.map.sync(this.afternoonMap);
+    this.afternoonMap.sync(this.map);
+  }
+
+  private initAmMap(showAfternoonMap: boolean) {
+    const map = L.map("map", {
+      ...this.getMapInitOptions(),
+      layers: [
+        this.baseMaps.AlbinaBaseMap,
+        this.overlayMaps.aggregatedRegions,
+        this.overlayMaps.regions,
+      ],
+    });
+
+    L.control.zoom({ position: "topleft" }).addTo(map);
+    new RegionNameControl().addTo(map);
+
+    if (showAfternoonMap) {
+      new AmPmControl({ position: "bottomleft" }).setText("AM").addTo(map);
+    }
+
+    this.map = map;
+    return map;
+  }
+
+  private initPmMap() {
+    const afternoonMap = L.map("afternoonMap", {
+      ...this.getMapInitOptions(),
+      layers: [
+        this.afternoonBaseMaps.AlbinaBaseMap,
+        this.afternoonOverlayMaps.aggregatedRegions,
+        this.afternoonOverlayMaps.regions,
+      ],
+    });
+
+    new AmPmControl({ position: "bottomleft" }).setText("PM").addTo(afternoonMap);
+
+    this.afternoonMap = afternoonMap;
+    return afternoonMap;
+  }
+
+  getMapInitOptions() {
+    const options = {
+      zoomControl: false,
+      doubleClickZoom: false,
+      scrollWheelZoom: false,
+      touchZoom: true,
+      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
+      zoom: 8,
+      minZoom: 6,
+      maxZoom: 10,
+    };
+    if (this.authenticationService.getActiveRegionId() === this.constantsService.codeAran) {
+      Object.assign(options, {
+        zoom: 10,
+        minZoom: 8,
+        maxZoom: 12,
+      });
+    }
+    return options;
   }
 
   getAlbinaBaseMap(): TileLayer {

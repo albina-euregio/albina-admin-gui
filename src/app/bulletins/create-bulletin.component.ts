@@ -23,15 +23,10 @@ import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig 
 
 import { DatePipe } from "@angular/common";
 
-import "leaflet";
-import "leaflet.sync";
-
-
 // For iframe
 import { Renderer2 } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
-import { AmPmControl } from "../providers/map-service/am-pm-control";
 
 declare var L: any;
 
@@ -571,90 +566,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private initMaps() {
-    this.mapService.initMaps();
-
-    if (this.mapService.map) {
-      this.mapService.map.remove();
-    }
-    if (this.mapService.afternoonMap) {
-      this.mapService.afternoonMap.remove();
-    }
-
-    let zoom = 8;
-    let minZoom = 6;
-    let maxZoom = 10;
-
-    if (this.authenticationService.getActiveRegionId() === this.constantsService.codeAran) {
-      zoom = 10;
-      minZoom = 8;
-      maxZoom = 12;
-    }
-
-    const map = L.map("map", {
-      zoomControl: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      touchZoom: true,
-      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: zoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-      // maxBounds: L.latLngBounds(L.latLng(this.constantsService.mapBoundaryN, this.constantsService.mapBoundaryW), L.latLng(this.constantsService.mapBoundaryS, this.constantsService.mapBoundaryE)),
-      layers: [this.mapService.baseMaps.AlbinaBaseMap, this.mapService.overlayMaps.aggregatedRegions, this.mapService.overlayMaps.regions]
-    });
-
-    map.on("click", () => { this.onMapClick(); });
-    // map.on('dblclick', (e)=>{this.onMapDoubleClick(e)});
-
-    L.control.zoom({ position: "topleft" }).addTo(map);
-    // L.control.layers(this.mapService.baseMaps).addTo(map);
-    // L.control.scale().addTo(map);
-
-    if (this.showAfternoonMap) {
-      new AmPmControl({ position: "bottomleft" }).setText("AM").addTo(map);
-    }
-
-    const info = L.control();
-    info.onAdd = function() {
-      this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
-      this.update();
-      return this._div;
-    };
-    // method that we will use to update the control based on feature properties passed
-    info.update = function(props) {
-      this._div.innerHTML = (props ?
-        "<b>" + props.name_de + "</b>" : " ");
-    };
-    info.addTo(map);
-
-    this.mapService.map = map;
-
-    const afternoonMap = L.map("afternoonMap", {
-      zoomControl: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      touchZoom: true,
-      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: zoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-      // maxBounds: L.latLngBounds(L.latLng(this.constantsService.mapBoundaryN, this.constantsService.mapBoundaryW), L.latLng(this.constantsService.mapBoundaryS, this.constantsService.mapBoundaryE)),
-      layers: [this.mapService.afternoonBaseMaps.AlbinaBaseMap, this.mapService.afternoonOverlayMaps.aggregatedRegions, this.mapService.afternoonOverlayMaps.regions]
-    });
-
-    // L.control.zoom({ position: "topleft" }).addTo(afternoonMap);
-    // L.control.layers(this.mapService.baseMaps).addTo(afternoonMap);
-    // L.control.scale().addTo(afternoonMap);
-
-    new AmPmControl({ position: "bottomleft" }).setText("PM").addTo(afternoonMap);
-
-    afternoonMap.on("click", () => { this.onMapClick(); });
-    // afternoonMap.on('dblclick', (e)=>{this.onMapDoubleClick(e)});
-
-    this.mapService.afternoonMap = afternoonMap;
-
-    map.sync(afternoonMap);
-    afternoonMap.sync(map);
+    this.mapService.initAmPmMap(this.showAfternoonMap);
+    this.mapService.map.on("click", () => this.onMapClick());
+    this.mapService.afternoonMap.on("click", () => this.onMapClick());
   }
 
   private onMapClick() {
