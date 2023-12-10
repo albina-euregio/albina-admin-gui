@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { ErrorHandler, Injectable, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatLegacyDialogModule as MatDialogModule } from "@angular/material/legacy-dialog";
@@ -89,13 +89,6 @@ import i18nOc from "../assets/i18n/oc.json";
 import { CreateUserComponent } from "./admin/create-user.component";
 import { UpdateUserComponent } from "./admin/update-user.component";
 
-@Injectable()
-export class SentryErrorHandler implements ErrorHandler {
-  handleError(error) {
-    // console.error(error);s
-  }
-}
-
 export class DirectTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<Object> {
     switch (lang) {
@@ -174,10 +167,6 @@ registerLocaleData(localeOc, "oc");
     UpdateUserComponent
   ],
   providers: [
-    {
-       provide: ErrorHandler,
-       useClass: SentryErrorHandler
-    },
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
