@@ -529,14 +529,14 @@ export class MapService {
       click(e) {
         if (feature.properties.selected && feature.properties.selected === true) {
           if (e.originalEvent.ctrlKey) {
-            const regions = regionsService.getLevel1Regions(feature.properties.id);
+            const regions = this.regionsService.getLevel1Regions(feature.properties.id);
             for (const entry of overlayMaps.editSelection.getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = false;
               }
             }
           } else if (e.originalEvent.altKey) {
-            const regions = regionsService.getLevel2Regions(feature.properties.id);
+            const regions = this.regionsService.getLevel2Regions(feature.properties.id);
             for (const entry of overlayMaps.editSelection.getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = false;
@@ -547,14 +547,14 @@ export class MapService {
           }
         } else {
           if (e.originalEvent.ctrlKey) {
-            const regions = regionsService.getLevel1Regions(feature.properties.id);
+            const regions = this.regionsService.getLevel1Regions(feature.properties.id);
             for (const entry of overlayMaps.editSelection.getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = true;
               }
             }
           } else if (e.originalEvent.altKey) {
-            const regions = regionsService.getLevel2Regions(feature.properties.id);
+            const regions = this.regionsService.getLevel2Regions(feature.properties.id);
             for (const entry of overlayMaps.editSelection.getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = true;
@@ -564,11 +564,11 @@ export class MapService {
             feature.properties.selected = true;
           }
         }
-        mapService.updateEditSelection();
+        this.updateEditSelection();
       },
       mouseover(e) {
         // TODO get current language
-        e.originalEvent.currentTarget.children[1].childNodes[1].children[0].innerHTML = e.target.feature.properties.name;
+        ((e.originalEvent.currentTarget as HTMLElement).children[1].childNodes[1] as HTMLElement).children[0].innerHTML = e.target.feature.properties.name;
         const l = e.target;
         l.setStyle({
           weight: 3
@@ -578,7 +578,7 @@ export class MapService {
         }
       },
       mouseout(e) {
-        e.originalEvent.currentTarget.children[1].childNodes[1].children[0].innerHTML = " ";
+        ((e.originalEvent.currentTarget as HTMLElement).children[1].childNodes[1] as HTMLElement).children[0].innerHTML = " ";
         const l = e.target;
         l.setStyle({
           weight: 1
