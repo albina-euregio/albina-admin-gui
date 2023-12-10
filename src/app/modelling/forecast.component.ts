@@ -49,6 +49,7 @@ export interface MultiselectDropdownData {
     GetFilenamesService,
     ParamService,
     QfaService,
+    BaseMapService,
   ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],

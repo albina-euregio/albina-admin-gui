@@ -103,6 +103,7 @@ export interface MultiselectDropdownData {
     LwdKipObservationsService,
     PanomaxObservationsService,
     WikisnowObservationsService,
+    BaseMapService,
   ],
   templateUrl: "observations.component.html",
   styleUrls: ["./observations.component.scss"],

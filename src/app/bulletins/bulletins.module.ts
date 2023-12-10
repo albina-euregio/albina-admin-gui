@@ -31,6 +31,7 @@ import { DatePipe } from "@angular/common";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { DialogModule } from "primeng/dialog";
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { MapService } from "../providers/map-service/map.service";
 
 
 @NgModule({
@@ -65,6 +66,6 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
         TabsComponent,
         TabComponent
     ],
-    providers: [DatePipe]
+    providers: [DatePipe, MapService]
 })
 export class BulletinsModule { }

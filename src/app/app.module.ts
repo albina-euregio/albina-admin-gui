@@ -35,7 +35,6 @@ import { ConstantsService } from "./providers/constants-service/constants.servic
 import { SettingsService } from "./providers/settings-service/settings.service";
 import { ObservationsService } from "./observations/observations.service";
 import { ObservationFilterService } from "./observations/observation-filter.service";
-import { MapService } from "./providers/map-service/map.service";
 import { WsBulletinService } from "./providers/ws-bulletin-service/ws-bulletin.service";
 import { WsUpdateService } from "./providers/ws-update-service/ws-update.service";
 import { WsRegionService } from "./providers/ws-region-service/ws-region.service";
@@ -47,7 +46,6 @@ import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
 import { ConfirmationService } from "primeng/api";
-import { BaseMapService } from './providers/map-service/base-map.service';
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -181,7 +179,6 @@ registerLocaleData(localeOc, "oc");
     BulletinsService,
     StatisticsService,
     RegionsService,
-    MapService,
     WsRegionService,
     WsUpdateService,
     WsBulletinService,
@@ -193,7 +190,6 @@ registerLocaleData(localeOc, "oc");
     CopyService,
     BlogService,
     MediaFileService,
-    BaseMapService,
   ],
   bootstrap: [AppComponent],
   exports: [
