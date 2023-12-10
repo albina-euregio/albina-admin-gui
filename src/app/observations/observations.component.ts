@@ -186,26 +186,21 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   ngAfterViewInit() {
-    this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
-    this.mapService.addInfo();
+    this.initMap();
+  }
 
-    // this.observationsService
-    //   .getWebcams()
-    //   .subscribe((cams) => console.log(cams));
-
+  private async initMap() {
+    const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
     this.loadObservations({ days: 7 });
-    this.mapService.map.on("click", () => {
-      this.filter.regions = this.mapService.getSelectedRegions().map((aRegion) => aRegion.id);
+    map.on("click", () => {
+      this.filter.regions = this.mapService.getSelectedRegions();
       this.applyLocalFilter();
     });
   }
 
   ngOnDestroy() {
     this.mapService.resetAll();
-    if (this.mapService.map) {
-      this.mapService.map.remove();
-      this.mapService.map = undefined;
-    }
+    this.mapService.removeMaps();
   }
 
   onDropdownSelect(target: string, event: any) {
@@ -448,7 +443,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   toggleFilters() {
     this.layoutFilters = !this.layoutFilters;
-    this.mapService.map.invalidateSize();
+    this.mapService.invalidateSize();
   }
 
   @HostListener("document:keydown", ["$event"])

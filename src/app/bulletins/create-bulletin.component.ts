@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, AfterViewInit, OnInit } from "@angular/core";
+import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { BulletinModel } from "../models/bulletin.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -33,7 +33,7 @@ declare var L: any;
 @Component({
   templateUrl: "create-bulletin.component.html"
 })
-export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   public bulletinStatus = Enums.BulletinStatus;
   public dangerPattern = Enums.DangerPattern;
@@ -322,11 +322,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // for reload iframe on change language
     this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
       () => this.pmUrl = this.getTextcatUrl()
     );
+
+    await this.initMaps();
 
     if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
 
@@ -395,10 +397,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     } else {
       this.goBack();
     }
-  }
-
-  ngAfterViewInit() {
-    this.initMaps();
   }
 
   ngOnDestroy() {
@@ -565,10 +563,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  private initMaps() {
-    this.mapService.initAmPmMap(this.showAfternoonMap);
-    this.mapService.map.on("click", () => this.onMapClick());
-    this.mapService.afternoonMap.on("click", () => this.onMapClick());
+  private async initMaps() {
+    const [map, afternoonMap] = await this.mapService.initAmPmMap(this.showAfternoonMap);
+    map.on("click", () => this.onMapClick());
+    afternoonMap.on("click", () => this.onMapClick());
   }
 
   private onMapClick() {
@@ -615,8 +613,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       afternoonMap.classList.add("col-md-0");
       afternoonMap.style.border = "";
     }
-    this.initMaps();
-    this.updateInternalBulletins();
+    this.initMaps().then(() => this.updateInternalBulletins());
 
     if (bulletin) {
       this.selectBulletin(bulletin);
