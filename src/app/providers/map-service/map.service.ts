@@ -51,7 +51,6 @@ export class MapService {
     private regionsService: RegionsService,
     private authenticationService: AuthenticationService,
     private constantsService: ConstantsService) {
-    this.initLayers();
   }
 
   private initLayers() {
@@ -193,37 +192,37 @@ export class MapService {
   }
 
   resetAggregatedRegions() {
-    for (const entry of this.overlayMaps.aggregatedRegions.getLayers()) {
+    for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
       entry.setStyle(this.getUserDependentBaseStyle(entry.feature.properties.id));
     }
-    for (const entry of this.afternoonOverlayMaps.aggregatedRegions.getLayers()) {
+    for (const entry of this.afternoonOverlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
       entry.setStyle(this.getUserDependentBaseStyle(entry.feature.properties.id));
     }
   }
 
   resetRegions() {
-    for (const entry of this.overlayMaps.regions.getLayers()) {
+    for (const entry of this.overlayMaps?.regions?.getLayers?.() ?? []) {
       entry.setStyle(this.getUserDependentRegionStyle(entry.feature.properties.id));
     }
-    for (const entry of this.afternoonOverlayMaps.regions.getLayers()) {
+    for (const entry of this.afternoonOverlayMaps?.regions?.getLayers?.() ?? []) {
       entry.setStyle(this.getUserDependentRegionStyle(entry.feature.properties.id));
     }
   }
 
   resetActiveSelection() {
-    for (const entry of this.overlayMaps.activeSelection.getLayers()) {
+    for (const entry of this.overlayMaps?.activeSelection?.getLayers?.() ?? []) {
       entry.setStyle(this.getActiveSelectionBaseStyle());
     }
-    for (const entry of this.afternoonOverlayMaps.activeSelection.getLayers()) {
+    for (const entry of this.afternoonOverlayMaps?.activeSelection?.getLayers?.() ?? []) {
       entry.setStyle(this.getActiveSelectionBaseStyle());
     }
   }
 
   resetEditSelection() {
-    for (const entry of this.overlayMaps.editSelection.getLayers()) {
+    for (const entry of this.overlayMaps?.editSelection?.getLayers?.() ?? []) {
       entry.setStyle(this.getEditSelectionBaseStyle());
     }
-    for (const entry of this.afternoonOverlayMaps.editSelection.getLayers()) {
+    for (const entry of this.afternoonOverlayMaps?.editSelection?.getLayers?.() ?? []) {
       entry.setStyle(this.getEditSelectionBaseStyle());
     }
   }
