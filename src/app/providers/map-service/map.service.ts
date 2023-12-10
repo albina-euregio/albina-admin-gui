@@ -74,7 +74,7 @@ export class MapService {
 
         // overlay to select regions (when editing an aggregated region)
         editSelection: new GeoJSON(this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()), {
-          onEachFeature: this.onEachFeatureClosure(this, this.regionsService, this.overlayMaps)
+          onEachFeature: this.onEachFeature.bind(this, this.overlayMaps)
         }),
 
         // overlay to show aggregated regions
@@ -92,7 +92,7 @@ export class MapService {
 
         // overlay to select regions (when editing an aggregated region)
         editSelection: new GeoJSON(this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()), {
-          onEachFeature: this.onEachFeatureClosure(this, this.regionsService, this.overlayMaps)
+          onEachFeature: this.onEachFeature.bind(this, this.afternoonOverlayMaps)
         }),
 
         // overlay to show aggregated regions
@@ -523,73 +523,71 @@ export class MapService {
     }
   }
 
-  private onEachFeatureClosure(mapService, regionsService, overlayMaps) {
-    return function onEachFeature(feature, layer) {
-      console.log("onEachFeature", overlayMaps);
-      layer.on({
-        click: function(e) {
-          if (feature.properties.selected && feature.properties.selected === true) {
-            if (e.originalEvent.ctrlKey) {
-              const regions = regionsService.getLevel1Regions(feature.properties.id);
-              for (const entry of overlayMaps.editSelection.getLayers()) {
-                if (regions.includes(entry.feature.properties.id)) {
-                  entry.feature.properties.selected = false;
-                }
+  private onEachFeature(overlayMaps: typeof this.overlayMaps, feature: GeoJSON.Feature, layer: L.Layer) {
+    console.log("onEachFeature", overlayMaps);
+    layer.on({
+      click(e) {
+        if (feature.properties.selected && feature.properties.selected === true) {
+          if (e.originalEvent.ctrlKey) {
+            const regions = regionsService.getLevel1Regions(feature.properties.id);
+            for (const entry of overlayMaps.editSelection.getLayers()) {
+              if (regions.includes(entry.feature.properties.id)) {
+                entry.feature.properties.selected = false;
               }
-            } else if (e.originalEvent.altKey) {
-              const regions = regionsService.getLevel2Regions(feature.properties.id);
-              for (const entry of overlayMaps.editSelection.getLayers()) {
-                if (regions.includes(entry.feature.properties.id)) {
-                  entry.feature.properties.selected = false;
-                }
+            }
+          } else if (e.originalEvent.altKey) {
+            const regions = regionsService.getLevel2Regions(feature.properties.id);
+            for (const entry of overlayMaps.editSelection.getLayers()) {
+              if (regions.includes(entry.feature.properties.id)) {
+                entry.feature.properties.selected = false;
               }
-            } else {
-              feature.properties.selected = false;
             }
           } else {
-            if (e.originalEvent.ctrlKey) {
-              const regions = regionsService.getLevel1Regions(feature.properties.id);
-              for (const entry of overlayMaps.editSelection.getLayers()) {
-                if (regions.includes(entry.feature.properties.id)) {
-                  entry.feature.properties.selected = true;
-                }
+            feature.properties.selected = false;
+          }
+        } else {
+          if (e.originalEvent.ctrlKey) {
+            const regions = regionsService.getLevel1Regions(feature.properties.id);
+            for (const entry of overlayMaps.editSelection.getLayers()) {
+              if (regions.includes(entry.feature.properties.id)) {
+                entry.feature.properties.selected = true;
               }
-            } else if (e.originalEvent.altKey) {
-              const regions = regionsService.getLevel2Regions(feature.properties.id);
-              for (const entry of overlayMaps.editSelection.getLayers()) {
-                if (regions.includes(entry.feature.properties.id)) {
-                  entry.feature.properties.selected = true;
-                }
-              }
-            } else {
-              feature.properties.selected = true;
             }
-          }
-          mapService.updateEditSelection();
-        },
-        mouseover: function(e) {
-          // TODO get current language
-           e.originalEvent.currentTarget.children[1].childNodes[1].children[0].innerHTML = e.target.feature.properties.name;
-          const l = e.target;
-          l.setStyle({
-            weight: 3
-          });
-          if (!L.Browser.ie && !L.Browser.opera12 && !L.Browser.edge) {
-            l.bringToFront();
-          }
-        },
-        mouseout: function(e) {
-          e.originalEvent.currentTarget.children[1].childNodes[1].children[0].innerHTML = " ";
-          const l = e.target;
-          l.setStyle({
-            weight: 1
-          });
-          if (!L.Browser.ie && !L.Browser.opera12 && !L.Browser.edge) {
-            l.bringToFront();
+          } else if (e.originalEvent.altKey) {
+            const regions = regionsService.getLevel2Regions(feature.properties.id);
+            for (const entry of overlayMaps.editSelection.getLayers()) {
+              if (regions.includes(entry.feature.properties.id)) {
+                entry.feature.properties.selected = true;
+              }
+            }
+          } else {
+            feature.properties.selected = true;
           }
         }
-      });
-    }
+        mapService.updateEditSelection();
+      },
+      mouseover(e) {
+        // TODO get current language
+        e.originalEvent.currentTarget.children[1].childNodes[1].children[0].innerHTML = e.target.feature.properties.name;
+        const l = e.target;
+        l.setStyle({
+          weight: 3
+        });
+        if (!L.Browser.ie && !L.Browser.opera12 && !L.Browser.edge) {
+          l.bringToFront();
+        }
+      },
+      mouseout(e) {
+        e.originalEvent.currentTarget.children[1].childNodes[1].children[0].innerHTML = " ";
+        const l = e.target;
+        l.setStyle({
+          weight: 1
+        });
+        if (!L.Browser.ie && !L.Browser.opera12 && !L.Browser.edge) {
+          l.bringToFront();
+        }
+      }
+    });
   }
 
   private onEachAggregatedRegionsFeatureAM(feature, layer) {
