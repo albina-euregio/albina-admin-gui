@@ -50,56 +50,40 @@ export class MapService {
   constructor(
     private regionsService: RegionsService,
     private authenticationService: AuthenticationService,
-    private constantsService: ConstantsService) {
-  }
+    private constantsService: ConstantsService
+  ) {}
 
   private initLayers() {
+    this.baseMaps = {
+      AlbinaBaseMap: this.getAlbinaBaseMap()
+    };
 
-      this.baseMaps = {
-        AlbinaBaseMap: this.getAlbinaBaseMap()
-      };
+    this.afternoonBaseMaps = {
+      AlbinaBaseMap: this.getAlbinaBaseMap()
+    };
 
-      this.afternoonBaseMaps = {
-        AlbinaBaseMap: this.getAlbinaBaseMap()
-      };
-
-      this.overlayMaps = {
-        // overlay to show micro regions without elevation (only outlines)
-        regions: new GeoJSON(this.regionsService.getRegions(), {
-          onEachFeature: this.onEachAggregatedRegionsFeatureAM
-        }),
-
-        // overlay to show selected regions
-        activeSelection: new GeoJSON(this.regionsService.getRegionsWithElevation()),
-
-        // overlay to select regions (when editing an aggregated region)
-        editSelection: new GeoJSON(this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()), {
-          onEachFeature: this.onEachFeature.bind(this, this.overlayMaps)
-        }),
-
-        // overlay to show aggregated regions
-        aggregatedRegions: new GeoJSON(this.regionsService.getRegionsWithElevation())
-      };
-
-      this.afternoonOverlayMaps = {
-        // overlay to show micro regions without elevation (only outlines)
-        regions: new GeoJSON(this.regionsService.getRegions(), {
-          onEachFeature: this.onEachAggregatedRegionsFeaturePM
-        }),
-
-        // overlay to show selected regions
-        activeSelection: new GeoJSON(this.regionsService.getRegionsWithElevation()),
-
-        // overlay to select regions (when editing an aggregated region)
-        editSelection: new GeoJSON(this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()), {
-          onEachFeature: this.onEachFeature.bind(this, this.afternoonOverlayMaps)
-        }),
-
-        // overlay to show aggregated regions
-        aggregatedRegions: new GeoJSON(this.regionsService.getActiveRegionWithElevation(this.authenticationService.getActiveRegionId()))
-      };
+    this.overlayMaps = this.initOverlayMaps(this.onEachAggregatedRegionsFeatureAM);
+    this.afternoonOverlayMaps = this.initOverlayMaps(this.onEachAggregatedRegionsFeaturePM);
 
     this.resetAll();
+  }
+
+  private initOverlayMaps(onEachFeature: typeof this.onEachAggregatedRegionsFeatureAM): typeof this.overlayMaps {
+    return {
+      // overlay to show micro regions without elevation (only outlines)
+      regions: new GeoJSON(this.regionsService.getRegions(), { onEachFeature }),
+
+      // overlay to show selected regions
+      activeSelection: new GeoJSON(this.regionsService.getRegionsWithElevation()),
+
+      // overlay to select regions (when editing an aggregated region)
+      editSelection: new GeoJSON(this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()), {
+        onEachFeature: this.onEachFeature.bind(this)
+      }),
+
+      // overlay to show aggregated regions
+      aggregatedRegions: new GeoJSON(this.regionsService.getRegionsWithElevation())
+    };
   }
 
   initAmPmMap(showAfternoonMap: boolean) {
@@ -523,21 +507,20 @@ export class MapService {
     }
   }
 
-  private onEachFeature(overlayMaps: typeof this.overlayMaps, feature: GeoJSON.Feature, layer: L.Layer) {
-    console.log("onEachFeature", overlayMaps);
+  private onEachFeature(feature: GeoJSON.Feature, layer: L.Layer) {
     layer.on({
       click(e) {
         if (feature.properties.selected && feature.properties.selected === true) {
           if (e.originalEvent.ctrlKey) {
             const regions = this.regionsService.getLevel1Regions(feature.properties.id);
-            for (const entry of overlayMaps.editSelection.getLayers()) {
+            for (const entry of (layer as GeoJSON).getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = false;
               }
             }
           } else if (e.originalEvent.altKey) {
             const regions = this.regionsService.getLevel2Regions(feature.properties.id);
-            for (const entry of overlayMaps.editSelection.getLayers()) {
+            for (const entry of (layer as GeoJSON).getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = false;
               }
@@ -548,14 +531,14 @@ export class MapService {
         } else {
           if (e.originalEvent.ctrlKey) {
             const regions = this.regionsService.getLevel1Regions(feature.properties.id);
-            for (const entry of overlayMaps.editSelection.getLayers()) {
+            for (const entry of (layer as GeoJSON).getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = true;
               }
             }
           } else if (e.originalEvent.altKey) {
             const regions = this.regionsService.getLevel2Regions(feature.properties.id);
-            for (const entry of overlayMaps.editSelection.getLayers()) {
+            for (const entry of (layer as GeoJSON).getLayers()) {
               if (regions.includes(entry.feature.properties.id)) {
                 entry.feature.properties.selected = true;
               }
