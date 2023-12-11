@@ -292,9 +292,7 @@
                     'highlighted'
                   ].includes('nan')
               }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-rose-chart>
             <app-bar-chart
@@ -319,9 +317,7 @@
                   ].includes('nan')
               }"
               [formatter]="'date'"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-bar-chart>
             <app-bar-chart
@@ -348,9 +344,7 @@
                     'highlighted'
                   ].includes('nan')
               }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-bar-chart>
             <app-bar-chart
@@ -378,9 +372,7 @@
                   'highlighted'
                 ].length > 0
               "
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-bar-chart>
             <app-bar-chart
@@ -409,9 +401,7 @@
                   'highlighted'
                 ].length > 0
               "
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-bar-chart>
             <app-bar-chart
@@ -441,9 +431,7 @@
                   'highlighted'
                 ].length > 0
               "
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-bar-chart>
             <app-bar-chart
@@ -472,9 +460,7 @@
                     'highlighted'
                   ].includes('nan')
               }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-bar-chart>
             <app-bar-chart
@@ -503,9 +489,7 @@
                     'highlighted'
                   ].includes('nan')
               }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-bar-chart>
           </div>
