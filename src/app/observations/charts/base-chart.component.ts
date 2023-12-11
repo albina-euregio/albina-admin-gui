@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { LocalFilterTypes } from "app/observations/models/generic-observation.model";
-import { type GenericFilterToggleData } from "../../observation-filter.service";
+import { LocalFilterTypes } from "../models/generic-observation.model";
+import { type GenericFilterToggleData } from "../observation-filter.service";
 
 @Component({
   selector: "app-base-chart",

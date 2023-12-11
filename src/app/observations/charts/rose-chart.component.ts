@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { BaseComponent } from "../base/base-chart.component";
+import { BaseComponent } from "./base-chart.component";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import { CommonModule } from "@angular/common";
@@ -18,7 +18,7 @@ const barDefaults = {
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
   providers: [provideEcharts()],
   selector: "app-rose-chart",
-  templateUrl: "../base/base-chart.component.html",
+  templateUrl: "./base-chart.component.html",
   styleUrls: ["./rose-chart.component.scss"],
 })
 export class RoseChartComponent extends BaseComponent {
