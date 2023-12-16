@@ -3,6 +3,9 @@ import { BaseComponent } from "./base-chart.component";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { CommonModule, formatDate } from "@angular/common";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
+import type { EChartsOption } from "echarts";
+import type { CallbackDataParams } from "echarts/types/dist/shared";
+
 const barWidth = 3;
 const defaultDataBarOptions = {
   type: "bar",
@@ -15,7 +18,7 @@ const defaultDataBarOptions = {
     focus: "series",
     //blurScope: 'coordinateSystem'
   },
-};
+} as const;
 
 @Component({
   standalone: true,
@@ -26,13 +29,7 @@ const defaultDataBarOptions = {
   styleUrls: ["./bar-chart.component.scss"],
 })
 export class BarChartComponent extends BaseComponent {
-  public formatLabel = (params) => {
-    return this.translationBase
-      ? this.translateService.instant(this.translationBase + params.value[0])
-      : params.value[0];
-  };
-
-  public readonly defaultOptions = {
+  public readonly defaultOptions: EChartsOption = {
     // title: {
     //     text: 'bar chart'
     // },
@@ -49,12 +46,12 @@ export class BarChartComponent extends BaseComponent {
       // trigger: 'axis',
       confine: true,
       // position: 'right',
-      borderWidth: "0",
+      borderWidth: 0,
       textStyle: {
         color: "#839194",
         fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
       },
-      formatter: function (params) {
+      formatter: (params: CallbackDataParams) => {
         const name = params.name;
         const val = params.data[4] === 0 ? params.data[5] : params.data[4];
         return `${name}: <span style="color: #000">${val}</span> / ${params.data[2]}`;
@@ -65,7 +62,7 @@ export class BarChartComponent extends BaseComponent {
       min: 0,
       max: 10,
       boundaryGap: true,
-      scale: true,
+      // scale: true,
       type: "category",
       axisLabel: {
         show: false,
@@ -118,7 +115,13 @@ export class BarChartComponent extends BaseComponent {
           //grey
           color: "#839194",
           position: [0, -14],
-          formatter: this.formatLabel,
+          formatter: (params: CallbackDataParams) => {
+            return this.formatter === "date"
+              ? fDate(params.value[0])
+              : this.translationBase
+                ? this.translateService.instant(this.translationBase + params.value[0])
+                : params.value[0];
+          },
           show: true,
         },
         itemStyle: {
@@ -130,7 +133,7 @@ export class BarChartComponent extends BaseComponent {
       },
       {
         ...defaultDataBarOptions,
-        z: "-2",
+        z: -2,
         barWidth: barWidth,
         // barMinHeight: 6,
         itemStyle: {
