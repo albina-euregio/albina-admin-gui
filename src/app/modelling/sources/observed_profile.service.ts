@@ -31,9 +31,8 @@ export class ObservedProfileSourceService {
    */
   getObservedProfiles(): Observable<GenericObservation[]> {
     const url = this.constantsService.observationApi.AvalancheWarningService;
-    const regionsService = this.regionsService;
     return this.http.get<AvalancheWarningServiceObservedProfiles[]>(url).pipe(
-      map((profiles) => profiles.map((profile) => toPoint(profile))),
+      map((profiles) => profiles.map((profile) => this.regionsService.augmentRegion(toPoint(profile)))),
       catchError((e) => {
         console.error("Failed to read observed_profiles from " + url, e);
         return [];
@@ -47,7 +46,6 @@ export class ObservedProfileSourceService {
         eventDate: new Date(profile.eventDate),
         locationName: profile.locationName,
         $externalURL: profile.$externalURL,
-        region: regionsService.getRegionForLatLng(new LatLng(profile.latitude, profile.longitude))?.id,
         latitude: profile.latitude,
         longitude: profile.longitude,
       } as GenericObservation;

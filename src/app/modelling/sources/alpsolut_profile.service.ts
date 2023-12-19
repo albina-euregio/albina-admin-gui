@@ -2,16 +2,13 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { flatMap, last, map } from "rxjs/operators";
-import { RegionsService } from "app/providers/regions-service/regions.service";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
-import { LatLng } from "leaflet";
 import { DomSanitizer } from "@angular/platform-browser";
 
 @Injectable()
 export class AlpsolutProfileService {
   constructor(
     private http: HttpClient,
-    private regionsService: RegionsService,
     private sanitizer: DomSanitizer,
   ) {}
 
@@ -20,7 +17,6 @@ export class AlpsolutProfileService {
    * https://widget.alpsolut.eu/docs
    */
   getAlpsolutDashboardPoints(): Observable<GenericObservation[]> {
-    const regionsService = this.regionsService;
     const sanitizer = this.sanitizer;
     const params = {
       date: new Date().toISOString().slice(0, "2023-12-01".length),
@@ -80,7 +76,6 @@ export class AlpsolutProfileService {
         $data: {
           configuration: `${configurationLabel}: ${aspect}/${0}°`,
         },
-        region: regionsService.getRegionForLatLng(new LatLng(latitude, longitude))?.id,
         aspect: aspect as any,
         locationName: f.properties.name,
         latitude,

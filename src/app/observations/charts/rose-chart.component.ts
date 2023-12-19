@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { BaseComponent } from "../base/base-chart.component";
+import { BaseComponent } from "./base-chart.component";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import { CommonModule } from "@angular/common";
@@ -18,12 +18,10 @@ const barDefaults = {
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
   providers: [provideEcharts()],
   selector: "app-rose-chart",
-  templateUrl: "./rose-chart.component.html",
+  templateUrl: "./base-chart.component.html",
   styleUrls: ["./rose-chart.component.scss"],
 })
 export class RoseChartComponent extends BaseComponent {
-  private pressTimer;
-
   public readonly defaultOptions = {
     // title: {
     //     text: this.caption || 'points of the compass chart'
@@ -169,54 +167,4 @@ export class RoseChartComponent extends BaseComponent {
   constructor(private translateService: TranslateService) {
     super();
   }
-
-  private resetTimeout() {
-    clearTimeout(this.pressTimer);
-    this.pressTimer = null;
-  }
-
-  // onClick(event: any) {
-  //     console.log("RosehartComponent->onclick", event, this);
-
-  // }
-
-  onMouseDown(event: any) {
-    //console.log("RosehartComponent->onMouseDown", event, this);
-    const self = this;
-    this.pressTimer = window.setTimeout(function () {
-      self.resetTimeout();
-      self.submitChange([self.type, { value: event.data[0], altKey: true }]);
-    }, this.longClickDur);
-    return false;
-  }
-
-  onMouseUp(event: any) {
-    console.log("RosehartComponent->onMouseUp", event, this);
-    if (this.pressTimer) {
-      this.resetTimeout();
-      this.submitChange([this.type, { value: event.data[0], altKey: event.event.event.altKey }]);
-    }
-    return false;
-  }
-
-  onClickNan(event: any) {
-    //if(event.altKey) this.nanStatus.highlighted = !this.nanStatus.highlighted;
-    //else this.nanStatus.selected = !this.nanStatus.selected;
-    this.submitChange([this.type, { value: "nan", altKey: event.altKey }]);
-    //console.log("RosehartComponent->onClickNan", event, this);
-  }
-
-  onInvert() {
-    //        console.log("BarChartComponent->onInvert", this);
-    this.submitChange([this.type, { invert: true }]);
-  }
-
-  onReset() {
-    //        console.log("BarChartComponent->onReset",  this);
-    this.submitChange([this.type, { reset: true }]);
-  }
-
-  // ngOnInit(): void {
-  //     // this.options.title.text = this.caption || 'Rrose chart';
-  // }
 }

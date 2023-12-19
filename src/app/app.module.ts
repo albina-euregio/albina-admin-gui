@@ -48,7 +48,6 @@ import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
 import { ConfirmationService } from "primeng/api";
 import { BaseMapService } from './providers/map-service/base-map.service';
-import { ObservationMapService } from "./providers/map-service/observation-map.service";
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -206,7 +205,6 @@ registerLocaleData(localeOc, "oc");
     BlogService,
     MediaFileService,
     BaseMapService,
-    ObservationMapService,
   ],
   bootstrap: [AppComponent],
   exports: [

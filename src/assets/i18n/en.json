@@ -571,6 +571,8 @@
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
+        "classify": "Classify",
+        "label": "Label",
         "invert": "Invert",
         "reset": "Reset",
         "aspect": {

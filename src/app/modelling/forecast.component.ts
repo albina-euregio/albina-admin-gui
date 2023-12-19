@@ -217,7 +217,6 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
           if (configuration) {
             this.observationConfigurations.add(configuration);
           }
-          // const region = this.regionsService.getRegionForLatLng(new LatLng(point.latitude, point.lon));
           try {
             this.drawMarker(point);
             this.modelPoints.push(point);
@@ -237,9 +236,9 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         $source: "qfa",
         latitude: ll.lat,
         longitude: ll.lng,
-        region: this.regionsService.getRegionForLatLng(new LatLng(ll.lat, ll.lng))?.id,
         locationName: cityName,
       } as GenericObservation;
+      this.regionsService.augmentRegion(point);
       this.drawMarker(point);
       this.modelPoints.push(point);
     }

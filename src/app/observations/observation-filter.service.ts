@@ -15,13 +15,15 @@ import { ObservationFilterType } from "./models/generic-observation.model";
 
 const DATASET_MAX_FACTOR = 1;
 
-interface GenericFilterToggleData {
+export interface GenericFilterToggleData {
   type: LocalFilterTypes;
   data: {
-    value: string;
-    altKey: boolean;
-    invert: boolean;
-    reset: boolean;
+    value?: string;
+    altKey?: boolean;
+    markerClassify?: boolean;
+    markerLabel?: boolean;
+    invert?: boolean;
+    reset?: boolean;
   };
 }
 

@@ -8,7 +8,6 @@ import {
   ObservationType,
   Stability,
   toAspect,
-  TranslationFunction,
 } from "./generic-observation.model";
 
 export const LAWIS_FETCH_DETAILS = true;
@@ -256,7 +255,7 @@ export function toLawisIncidentDetails(
   return {
     ...incident,
     $data: lawisDetails,
-    $extraDialogRows: (t) => toLawisIncidentTable(lawisDetails, t),
+    $extraDialogRows: toLawisIncidentTable(lawisDetails),
     stability: getLawisIncidentStability(lawisDetails),
     avalancheProblems: getLawisIncidentAvalancheProblems(lawisDetails),
     authorName: lawisDetails.reported?.name,
@@ -265,34 +264,40 @@ export function toLawisIncidentDetails(
   };
 }
 
-export function toLawisIncidentTable(incident: IncidentDetails, t: TranslationFunction): ObservationTableRow[] {
+export function toLawisIncidentTable(incident: IncidentDetails): ObservationTableRow[] {
   const avalancheType = AvalancheType[AvalancheType[incident.avalanche?.type?.id]];
   const avalancheSize = AvalancheSize[AvalancheSize[incident.avalanche.size.id]];
   return [
     {
-      label: t("observations.dangerRating"),
+      label: "observations.dangerRating",
       value: incident.danger?.rating?.id,
     },
     {
-      label: t("observations.avalancheProblem"),
+      label: "observations.avalancheProblem",
       value: incident.danger?.problem?.id,
     },
     {
-      label: t("observations.incline"),
+      label: "observations.incline",
       number: incident.location?.slope_angle,
     },
-    { label: t("observations.avalancheType"), value: avalancheType },
-    { label: t("observations.avalancheSize"), value: avalancheSize },
     {
-      label: t("observations.avalancheLength"),
+      label: "observations.avalancheType",
+      value: avalancheType,
+    },
+    {
+      label: "observations.avalancheSize",
+      value: avalancheSize,
+    },
+    {
+      label: "observations.avalancheLength",
       number: incident.avalanche?.extent?.length,
     },
     {
-      label: t("observations.avalancheWidth"),
+      label: "observations.avalancheWidth",
       number: incident.avalanche?.extent?.width,
     },
     {
-      label: t("observations.fractureDepth"),
+      label: "observations.fractureDepth",
       number: incident.avalanche?.breakheight,
     },
   ];
@@ -305,7 +310,10 @@ export function parseLawisDate(datum: string): Date {
 function getLawisProfileStability(profile: ProfileDetails): Stability {
   // Ausbildungshandbuch, 6. Auflage, Seiten 170/171
   const ect_tests = profile.stability_tests.filter((t) => t.type.text === "ECT") || [];
-  const colors = ect_tests.map((t) => getECTestStability(t.step, t.result.text));
+  const ect_colors = ect_tests.map((t) => getECTestStability(t.step, t.result.text));
+  const rb_tests = profile.stability_tests.filter((t) => t.type.text === "RB") || [];
+  const rb_colors = rb_tests.map((t) => getRBTestStability(t.step, t.result.text));
+  const colors = ect_colors.concat(rb_colors);
   if (colors.includes(Stability.very_poor)) {
     return Stability.very_poor;
   } else if (colors.includes(Stability.poor)) {
@@ -337,6 +345,27 @@ export function getECTestStability(step: number, propagation: string): Stability
   } else if (step <= 30 && propagation0) {
     return Stability.good;
   } else if (step === 31) {
+    return Stability.good;
+  }
+  return null;
+}
+
+export function getRBTestStability(step: number, propagation: string): Stability {
+  // Ausbildungshandbuch, 6. Auflage, Seiten 170/171
+  const propagation1 = /\bwhole block\b/.test(propagation);
+  const propagation0 = /\bpartial break\b/.test(propagation);
+  if ((step <= 2 && propagation1) || (step <= 1 && propagation0)) {
+    // sehr schwach
+    return Stability.very_poor;
+  } else if ((step <= 3 && propagation1) || (step == 2 && propagation0)) {
+    // schwach
+    return Stability.poor;
+  } else if ((step <= 5 && propagation1) || (step <= 3 && propagation0)) {
+    // mittel
+    return Stability.fair;
+  } else if (step <= 5 && propagation0) {
+    return Stability.good;
+  } else if (step >= 6) {
     return Stability.good;
   }
   return null;

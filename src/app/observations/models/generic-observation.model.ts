@@ -1,5 +1,4 @@
 import { z } from "zod";
-export type TranslationFunction = (key: string) => string;
 
 // similar to Enum.AvalancheProblem as string enum
 export enum AvalancheProblem {
@@ -46,17 +45,6 @@ export enum Stability {
   fair = "fair",
   poor = "poor",
   very_poor = "very_poor",
-}
-
-const colors: Record<Stability, string> = {
-  good: "green",
-  fair: "orange",
-  poor: "red",
-  very_poor: "black",
-};
-
-export function toMarkerColor(observation: GenericObservation) {
-  return colors[observation?.stability ?? "unknown"] ?? "gray";
 }
 
 export enum ObservationSource {
@@ -137,18 +125,15 @@ export interface ObservationTableRow {
   value?: string;
 }
 
-export function toObservationTable(observation: GenericObservation, t: (key: string) => string): ObservationTableRow[] {
+export function toObservationTable(observation: GenericObservation): ObservationTableRow[] {
   return [
-    { label: t("observations.eventDate"), date: observation.eventDate },
-    { label: t("observations.reportDate"), date: observation.reportDate },
-    { label: t("observations.authorName"), value: observation.authorName },
-    { label: t("observations.locationName"), value: observation.locationName },
-    { label: t("observations.elevation"), number: observation.elevation },
-    {
-      label: t("observations.aspect"),
-      value: observation.aspect !== undefined ? t("aspect." + observation.aspect) : undefined,
-    },
-    { label: t("observations.comment"), value: observation.content },
+    { label: "observations.eventDate", date: observation.eventDate },
+    { label: "observations.reportDate", date: observation.reportDate },
+    { label: "observations.authorName", value: observation.authorName },
+    { label: "observations.locationName", value: observation.locationName },
+    { label: "observations.elevation", number: observation.elevation },
+    { label: "observations.aspect", value: observation.aspect },
+    { label: "observations.comment", value: observation.content },
   ];
 }
 
@@ -249,7 +234,7 @@ export type GenericObservation<Data = any> = z.infer<typeof genericObservationSc
   /**
    * Additional information to display as table rows in the observation dialog
    */
-  $extraDialogRows?: ObservationTableRow[] | ((t: TranslationFunction) => ObservationTableRow[]);
+  $extraDialogRows?: ObservationTableRow[];
   filterType?: ObservationFilterType;
   isHighlighted?: boolean;
 };

@@ -5,12 +5,7 @@ import { EventType, isAvalancheWarningServiceObservation, Observation } from "./
 import { AlbinaObservationsService } from "./sources";
 import { Message, SharedModule } from "primeng/api";
 import { Table, TableModule } from "primeng/table";
-import {
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  toMarkerColor,
-} from "./models/generic-observation.model";
+import { GenericObservation, ImportantObservation, ObservationSource } from "./models/generic-observation.model";
 import { PipeModule } from "../pipes/pipes.module";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { MessagesModule } from "primeng/messages";
@@ -19,6 +14,7 @@ import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { CommonModule } from "@angular/common";
+import { ObservationMarkerService } from "./observation-marker.service";
 
 @Component({
   standalone: true,
@@ -35,7 +31,7 @@ import { CommonModule } from "@angular/common";
     ToggleButtonModule,
     TranslateModule,
   ],
-  providers: [AlbinaObservationsService, TranslateService],
+  providers: [AlbinaObservationsService, ObservationMarkerService, TranslateService],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })
@@ -50,6 +46,7 @@ export class ObservationTableComponent {
 
   constructor(
     private observationsService: AlbinaObservationsService,
+    private markerService: ObservationMarkerService,
     private translate: TranslateService,
   ) {}
 
@@ -190,7 +187,7 @@ export class ObservationTableComponent {
 
   getTableIconStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
     return {
-      color: toMarkerColor(observation),
+      color: this.markerService.toMarkerColor(observation),
       width: "20px",
       height: "20px",
     };

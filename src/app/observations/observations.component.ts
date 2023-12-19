@@ -18,7 +18,6 @@ import {
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
-  toMarkerColor,
   toObservationTable,
   LocalFilterTypes,
   ChartsData,
@@ -33,17 +32,16 @@ import { MenuItem, SharedModule } from "primeng/api";
 
 import { saveAs } from "file-saver";
 
-import { LatLng, Marker } from "leaflet";
-
 import { ObservationTableComponent } from "./observation-table.component";
-import { ObservationFilterService } from "./observation-filter.service";
-import { formatDate, CommonModule } from "@angular/common";
+import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
+import { ObservationMarkerService } from "./observation-marker.service";
+import { CommonModule } from "@angular/common";
 import type { Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
 import { DialogModule } from "primeng/dialog";
-import { BarChartComponent } from "./charts/bar-chart/bar-chart.component";
-import { RoseChartComponent } from "./charts/rose-chart/rose-chart.component";
+import { BarChartComponent } from "./charts/bar-chart.component";
+import { RoseChartComponent } from "./charts/rose-chart.component";
 import { MenubarModule } from "primeng/menubar";
 import { InputTextModule } from "primeng/inputtext";
 import { CalendarModule } from "primeng/calendar";
@@ -51,7 +49,16 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
-import { AlbinaObservationsService, AwsObservationsService, FotoWebcamObservationsService, LawisObservationsService, LolaKronosObservationsService, LwdKipObservationsService, PanomaxObservationsService, WikisnowObservationsService } from "./sources";
+import {
+  AlbinaObservationsService,
+  AwsObservationsService,
+  FotoWebcamObservationsService,
+  LawisObservationsService,
+  LolaKronosObservationsService,
+  LwdKipObservationsService,
+  PanomaxObservationsService,
+  WikisnowObservationsService,
+} from "./sources";
 
 //import { BarChart } from "./charts/bar-chart/bar-chart.component";
 declare var L: any;
@@ -84,6 +91,7 @@ export interface MultiselectDropdownData {
     BaseMapService,
     ElevationService,
     ObservationFilterService,
+    ObservationMarkerService,
     ObservationsService,
     RegionsService,
     TranslateService,
@@ -117,7 +125,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public readonly allSources: MultiselectDropdownData[];
   public selectedRegionItems: string[];
   public selectedSourceItems: ObservationSource[];
-  public toMarkerColor = toMarkerColor;
   public chartsData: ChartsData = {
     Elevation: {},
     Aspects: {},
@@ -139,6 +146,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   constructor(
     public filter: ObservationFilterService,
+    public markerService: ObservationMarkerService,
     private translateService: TranslateService,
     private observationsService: ObservationsService,
     private fotoWebcam: FotoWebcamObservationsService,
@@ -340,8 +348,22 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observationPopup = undefined;
   }
 
-  toggleFilter(data: any = {}) {
-    if (data?.type) this.filter.toggleFilter(data);
+  toggleFilter(data: GenericFilterToggleData = {} as GenericFilterToggleData) {
+    if (data?.type && data.data.markerClassify) {
+      if (data?.type !== this.markerService.markerClassify) {
+        this.markerService.markerClassify = data.type;
+      } else {
+        this.markerService.markerClassify = undefined;
+      }
+    } else if (data?.type && data.data.markerLabel) {
+      if (data?.type !== this.markerService.markerLabel) {
+        this.markerService.markerLabel = data.type;
+      } else {
+        this.markerService.markerLabel = undefined;
+      }
+    } else if (data?.type) {
+      this.filter.toggleFilter(data);
+    }
     this.applyLocalFilter();
   }
 
@@ -362,17 +384,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
     this.localObservations = [];
     this.observations.forEach((observation) => {
-      const ll =
-        observation.latitude && observation.longitude
-          ? new LatLng(observation.latitude, observation.longitude)
-          : undefined;
-
       if (observation.filterType === ObservationFilterType.Local || observation.isHighlighted) {
         this.localObservations.push(observation);
-        if (!ll) {
-          return;
-        }
-        this.drawMarker(observation, ll);
+        this.markerService
+          .createMarker(observation)
+          ?.on("click", () => this.onObservationClick(observation))
+          ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
       }
     });
     this.buildChartsData();
@@ -396,54 +413,21 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.chartsData.Days = this.filter.getDaysDataset(this.observations);
   }
 
-  private drawMarker(observation: GenericObservation, ll: LatLng) {
-    const styledObservation = observation.isHighlighted
-      ? this.mapService.highlightStyle(observation)
-      : this.mapService.style(observation);
-    styledObservation.bubblingMouseEvents = false;
-    const marker = new Marker(ll, styledObservation);
-    marker.on("click", () => this.onObservationClick(observation));
-
-    const tooltip = [
-      `<i class="fa fa-calendar"></i> ${
-        observation.eventDate instanceof Date
-          ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
-          : undefined
-      }`,
-      `<i class="fa fa-globe"></i> ${observation.locationName || undefined}`,
-      `<i class="fa fa-user"></i> ${observation.authorName || undefined}`,
-      `[${observation.$source}, ${observation.$type}]`,
-    ]
-      .filter((s) => !/undefined/.test(s))
-      .join("<br>");
-    marker.bindTooltip(tooltip, {
-      opacity: 1,
-      className: "obs-tooltip",
-    });
-    marker.options.pane = "markerPane";
-    marker.addTo(this.mapService.observationTypeLayers[observation.$type]);
-  }
-
   private addObservation(observation: GenericObservation): void {
-    const ll =
-      observation.latitude && observation.longitude
-        ? new LatLng(observation.latitude, observation.longitude)
-        : undefined;
     observation.filterType = ObservationFilterType.Local;
 
-    if (ll) {
-      observation.region = this.regionsService.getRegionForLatLng(ll)?.id;
-    }
+    this.regionsService.augmentRegion(observation);
 
     this.observations.push(observation);
     this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
 
-    if (!ll) {
+    const marker = this.markerService
+      .createMarker(observation)
+      ?.on("click", () => this.onObservationClick(observation))
+      ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
+    if (!marker) {
       this.observationsWithoutCoordinates++;
-      return;
     }
-
-    this.drawMarker(observation, ll);
   }
 
   onObservationClick(observation: GenericObservation): void {
@@ -451,13 +435,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe };
     } else {
-      const extraRows = Array.isArray(observation.$extraDialogRows)
-        ? observation.$extraDialogRows
-        : typeof observation.$extraDialogRows === "function"
-          ? observation.$extraDialogRows((key) => this.translateService.instant(key))
-          : [];
-      const rows = toObservationTable(observation, (key) => this.translateService.instant(key)); // call toObservationTable after $extraDialogRows
-      const table = [...rows, ...extraRows];
+      const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
+      const rows = toObservationTable(observation);
+      const table = [...rows, ...extraRows].map((row) => ({
+        ...row,
+        label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
+      }));
       this.observationPopup = { observation, table, iframe: undefined };
     }
   }
