@@ -5,7 +5,7 @@ import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { environment } from "../../environments/environment";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
+import { ConfigurationService, ServerConfiguration } from "app/providers/configuration-service/configuration.service";
 
 @Component({
   templateUrl: "login.component.html"
@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
     keyboard: true,
     class: "modal-sm"
   };
+  serverInfo: ServerConfiguration & {version: string};
 
   constructor(
     private router: Router,
@@ -43,6 +44,11 @@ export class LoginComponent implements OnInit {
     // console.log("Return URL: " + this.route.snapshot.queryParams['returnUrl']);
     // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.returnUrl = "/bulletins";
+
+    this.configurationService.loadPublicLocalServerConfiguration().subscribe(info => {
+      document.title = info.name;
+      return this.serverInfo = info;
+    });
   }
 
   getStyle() {

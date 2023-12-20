@@ -4,11 +4,11 @@ import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
 import { ConstantsService } from "../constants-service/constants.service";
 import aggregatedRegions from "../../../assets/aggregated_regions.json"
 // @ts-ignore
-import RegionsEuregio_AT_07 from "eaws-regions/public/micro-regions/AT-07_micro-regions.geojson.json";
+import RegionsEuregio_AT_07 from "@eaws/micro-regions/AT-07_micro-regions.geojson.json";
 // @ts-ignore
-import RegionsEuregio_IT_32_BZ from "eaws-regions/public/micro-regions/IT-32-BZ_micro-regions.geojson.json";
+import RegionsEuregio_IT_32_BZ from "@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json";
 // @ts-ignore
-import RegionsEuregio_IT_32_TN from "eaws-regions/public/micro-regions/IT-32-TN_micro-regions.geojson.json";
+import RegionsEuregio_IT_32_TN from "@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json";
 //
 const RegionsEuregio: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
   RegionsEuregio_AT_07 as FeatureCollection<MultiPolygon, RegionProperties>,
@@ -17,11 +17,11 @@ const RegionsEuregio: FeatureCollection<MultiPolygon, RegionProperties> = mergeF
 );
 
 // @ts-ignore
-import RegionsEuregioElevation_AT_07 from "eaws-regions/public/micro-regions_elevation/AT-07_micro-regions_elevation.geojson.json";
+import RegionsEuregioElevation_AT_07 from "@eaws/micro-regions_elevation/AT-07_micro-regions_elevation.geojson.json";
 // @ts-ignore
-import RegionsEuregioElevation_IT_32_BZ from "eaws-regions/public/micro-regions_elevation/IT-32-BZ_micro-regions_elevation.geojson.json";
+import RegionsEuregioElevation_IT_32_BZ from "@eaws/micro-regions_elevation/IT-32-BZ_micro-regions_elevation.geojson.json";
 // @ts-ignore
-import RegionsEuregioElevation_IT_32_TN from "eaws-regions/public/micro-regions_elevation/IT-32-TN_micro-regions_elevation.geojson.json";
+import RegionsEuregioElevation_IT_32_TN from "@eaws/micro-regions_elevation/IT-32-TN_micro-regions_elevation.geojson.json";
 //
 const RegionsEuregioElevation: FeatureCollection<MultiPolygon, RegionWithElevationProperties> = mergeFeatureCollections(
   RegionsEuregioElevation_AT_07 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
@@ -30,17 +30,17 @@ const RegionsEuregioElevation: FeatureCollection<MultiPolygon, RegionWithElevati
 );
 
 // @ts-ignore
-import RegionsAineva_IT_21 from "eaws-regions/public/micro-regions/IT-21_micro-regions.geojson.json";
+import RegionsAineva_IT_21 from "@eaws/micro-regions/IT-21_micro-regions.geojson.json";
 // @ts-ignore
-import RegionsAineva_IT_23 from "eaws-regions/public/micro-regions/IT-23_micro-regions.geojson.json";
+import RegionsAineva_IT_23 from "@eaws/micro-regions/IT-23_micro-regions.geojson.json";
 // @ts-ignore
-import RegionsAineva_IT_25 from "eaws-regions/public/micro-regions/IT-25_micro-regions.geojson.json";
+import RegionsAineva_IT_25 from "@eaws/micro-regions/IT-25_micro-regions.geojson.json";
 // @ts-ignore
-import RegionsAineva_IT_34 from "eaws-regions/public/micro-regions/IT-34_micro-regions.geojson.json";
+import RegionsAineva_IT_34 from "@eaws/micro-regions/IT-34_micro-regions.geojson.json";
 // @ts-ignore
-import RegionsAineva_IT_36 from "eaws-regions/public/micro-regions/IT-36_micro-regions.geojson.json";
+import RegionsAineva_IT_36 from "@eaws/micro-regions/IT-36_micro-regions.geojson.json";
 // @ts-ignore
-import RegionsAineva_IT_57 from "eaws-regions/public/micro-regions/IT-57_micro-regions.geojson.json";
+import RegionsAineva_IT_57 from "@eaws/micro-regions/IT-57_micro-regions.geojson.json";
 //
 const RegionsAineva: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
   RegionsAineva_IT_21 as FeatureCollection<MultiPolygon, RegionProperties>,
@@ -52,17 +52,17 @@ const RegionsAineva: FeatureCollection<MultiPolygon, RegionProperties> = mergeFe
 );
 
 // @ts-ignore
-import RegionsAinevaElevation_IT_21 from "eaws-regions/public/micro-regions_elevation/IT-21_micro-regions_elevation.geojson.json";
+import RegionsAinevaElevation_IT_21 from "@eaws/micro-regions_elevation/IT-21_micro-regions_elevation.geojson.json";
 // @ts-ignore
-import RegionsAinevaElevation_IT_23 from "eaws-regions/public/micro-regions_elevation/IT-23_micro-regions_elevation.geojson.json";
+import RegionsAinevaElevation_IT_23 from "@eaws/micro-regions_elevation/IT-23_micro-regions_elevation.geojson.json";
 // @ts-ignore
-import RegionsAinevaElevation_IT_25 from "eaws-regions/public/micro-regions_elevation/IT-25_micro-regions_elevation.geojson.json";
+import RegionsAinevaElevation_IT_25 from "@eaws/micro-regions_elevation/IT-25_micro-regions_elevation.geojson.json";
 // @ts-ignore
-import RegionsAinevaElevation_IT_34 from "eaws-regions/public/micro-regions_elevation/IT-34_micro-regions_elevation.geojson.json";
+import RegionsAinevaElevation_IT_34 from "@eaws/micro-regions_elevation/IT-34_micro-regions_elevation.geojson.json";
 // @ts-ignore
-import RegionsAinevaElevation_IT_36 from "eaws-regions/public/micro-regions_elevation/IT-36_micro-regions_elevation.geojson.json";
+import RegionsAinevaElevation_IT_36 from "@eaws/micro-regions_elevation/IT-36_micro-regions_elevation.geojson.json";
 // @ts-ignore
-import RegionsAinevaElevation_IT_57 from "eaws-regions/public/micro-regions_elevation/IT-57_micro-regions_elevation.geojson.json";
+import RegionsAinevaElevation_IT_57 from "@eaws/micro-regions_elevation/IT-57_micro-regions_elevation.geojson.json";
 //
 const RegionsAinevaElevation: FeatureCollection<MultiPolygon, RegionWithElevationProperties> = mergeFeatureCollections(
   RegionsAinevaElevation_IT_21 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
@@ -74,40 +74,40 @@ const RegionsAinevaElevation: FeatureCollection<MultiPolygon, RegionWithElevatio
 );
 
 // @ts-ignore
-import RegionsAran_ES_CT_L from "eaws-regions/public/micro-regions/ES-CT-L_micro-regions.geojson.json";
+import RegionsAran_ES_CT_L from "@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json";
 //
 const RegionsAran: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
   RegionsAran_ES_CT_L as FeatureCollection<MultiPolygon, RegionProperties>
 );
 
 // @ts-ignore
-import RegionsAranElevation_ES_CT_L from "eaws-regions/public/micro-regions_elevation/ES-CT-L_micro-regions_elevation.geojson.json";
+import RegionsAranElevation_ES_CT_L from "@eaws/micro-regions_elevation/ES-CT-L_micro-regions_elevation.geojson.json";
 //
 const RegionsAranElevation: FeatureCollection<MultiPolygon, RegionWithElevationProperties> = mergeFeatureCollections(
   RegionsAranElevation_ES_CT_L as FeatureCollection<MultiPolygon, RegionWithElevationProperties>
 );
 
 // @ts-ignore
-import RegionsSwitzerland_CH from "eaws-regions/public/micro-regions/CH_micro-regions.geojson.json";
+import RegionsSwitzerland_CH from "@eaws/micro-regions/CH_micro-regions.geojson.json";
 
 const RegionsSwitzerland: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
   RegionsSwitzerland_CH as FeatureCollection<MultiPolygon, RegionProperties>
 );
 
 // @ts-ignore
-import RegionsSwitzerlandElevation_CH from "eaws-regions/public/micro-regions_elevation/CH_micro-regions_elevation.geojson.json";
+import RegionsSwitzerlandElevation_CH from "@eaws/micro-regions_elevation/CH_micro-regions_elevation.geojson.json";
 //
 const RegionsSwitzerlandElevation: FeatureCollection<MultiPolygon, RegionWithElevationProperties> = mergeFeatureCollections(
   RegionsSwitzerlandElevation_CH as FeatureCollection<MultiPolygon, RegionWithElevationProperties>
 );
 
-import {default as regionsNamesDe} from "eaws-regions/public/micro-regions_names/de.json";
-import {default as regionsNamesIt} from "eaws-regions/public/micro-regions_names/it.json";
-import {default as regionsNamesEn} from "eaws-regions/public/micro-regions_names/en.json";
-import {default as regionsNamesFr} from "eaws-regions/public/micro-regions_names/fr.json";
-import {default as regionsNamesEs} from "eaws-regions/public/micro-regions_names/es.json";
-import {default as regionsNamesCa} from "eaws-regions/public/micro-regions_names/ca.json";
-import {default as regionsNamesOc} from "eaws-regions/public/micro-regions_names/oc.json";
+import {default as regionsNamesDe} from "@eaws/micro-regions_names/de.json";
+import {default as regionsNamesIt} from "@eaws/micro-regions_names/it.json";
+import {default as regionsNamesEn} from "@eaws/micro-regions_names/en.json";
+import {default as regionsNamesFr} from "@eaws/micro-regions_names/fr.json";
+import {default as regionsNamesEs} from "@eaws/micro-regions_names/es.json";
+import {default as regionsNamesCa} from "@eaws/micro-regions_names/ca.json";
+import {default as regionsNamesOc} from "@eaws/micro-regions_names/oc.json";
 
 const Regions: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
   RegionsEuregio_AT_07 as FeatureCollection<MultiPolygon, RegionProperties>,
@@ -267,6 +267,14 @@ export class RegionsService {
     const polygons = (this.euregioGeoJSON.getLayers() as any) as L.Polygon[];
     const polygon = polygons.find((p) => isMarkerInsidePolygon(ll, p));
     return polygon?.feature?.properties;
+  }
+
+  augmentRegion<T extends { latitude?: number; longitude?: number; region?: string }>(observation: T): T {
+    if (observation.latitude && observation.longitude) {
+      const ll = new L.LatLng(observation.latitude, observation.longitude);
+      observation.region = this.getRegionForLatLng(ll)?.id;
+    }
+    return observation;
   }
 }
 

@@ -29,6 +29,10 @@
                 <a href="{{ constantsService.gitlab }}" rel="noopener" target="_blank">
                   <small>{{ constantsService.release }}</small>
                 </a>
+                ∥
+                <a *ngIf="serverInfo" href="{{ serverInfo.apiUrl }}" rel="noopener" target="_blank">
+                  <small>albina-server&#64;{{ serverInfo.version }}</small>
+                </a>
               </div>
             </div>
           </form>

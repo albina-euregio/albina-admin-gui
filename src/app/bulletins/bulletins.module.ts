@@ -9,6 +9,7 @@ import { DangerRatingComponent } from "./danger-rating.component";
 import { DangerRatingIconComponent } from "./danger-rating-icon.component";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.component";
+import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
 import { AvalancheProblemPreviewComponent } from "./avalanche-problem-preview.component";
 import { MatrixObsoleteComponent } from "./matrix-obsolete.component";
 import { MatrixComponent } from "./matrix.component";
@@ -32,6 +33,9 @@ import { DatePipe } from "@angular/common";
 // Bootstrap ngx
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { DialogModule } from "primeng/dialog";
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+
 
 @NgModule({
     imports: [
@@ -43,7 +47,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
         PipeModule.forRoot(),
         AccordionModule.forRoot(),
         BsDropdownModule.forRoot(),
-        NgxSliderModule
+        NgxSliderModule,
+        DialogModule
     ],
     exports: [
         AspectsComponent
@@ -56,6 +61,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
         DangerRatingIconComponent,
         AvalancheProblemComponent,
         AvalancheProblemDetailComponent,
+        AvalancheProblemDecisionTreeComponent,
         AvalancheProblemPreviewComponent,
         MatrixObsoleteComponent,
         MatrixComponent,

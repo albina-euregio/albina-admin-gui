@@ -21,26 +21,16 @@ export class ConstantsService {
     [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
     [ObservationSource.LoLaKronos]:
       "https://admin.avalanche.report/lola-kronos/dataexport/dataFromToken/",
-    [ObservationSource.LoLaAvalancheFeedbackAT5]:
-      "https://admin.avalanche.report/avalanche-feedback/AT-5/dataexport/dataFromToken/",
-    [ObservationSource.LoLaAvalancheFeedbackAT8]:
-      "https://admin.avalanche.report/avalanche-feedback/AT-8/dataexport/dataFromToken/",
-    [ObservationSource.LoLaSafety]:
-      "https://admin.avalanche.report/lola-safety/dataexport/avalancheCommissions/",
     [ObservationSource.WikisnowECT]:
       "https://admin.avalanche.report/wikisnow/ect/ect-json.json",
     [ObservationSource.FotoWebcamsEU]:
       "https://admin.avalanche.report/foto-webcam.eu/metadata.php",
     [ObservationSource.Panomax]:
-      "https://api.avalanche.report/api.panomax.com/1.0/maps/panomaxweb",
+      "https://api.avalanche.report/api.panomax.com/1.0",
   };
 
   public observationWeb = {
     [ObservationSource.LoLaKronos]: "https://www.lola-kronos.info/",
-    [ObservationSource.LoLaAvalancheFeedbackAT5]:
-      "https://avalanche-feedback.eu/",
-    [ObservationSource.LoLaAvalancheFeedbackAT8]:
-      "https://avalanche-feedback.eu/",
     [`${ObservationSource.Lawis}-incident` as const]:
       "https://lawis.at/incident/#{{id}}",
     [`${ObservationSource.Lawis}-${ObservationType.Profile}` as const]:

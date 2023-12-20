@@ -1,4 +1,10 @@
-import { GenericObservation, ObservationSource, ObservationType, Stability, toAspect } from "./generic-observation.model";
+import {
+  GenericObservation,
+  ObservationSource,
+  ObservationType,
+  Stability,
+  toAspect,
+} from "./generic-observation.model";
 
 export type ArcGisApi = { layers: ArcGisLayer[] } | { error: { message: string } };
 
@@ -119,15 +125,18 @@ export interface BeobachtungProperties {
   SHAPE?: null;
 }
 
-export function convertLwdKipBeobachtung(feature: GeoJSON.Feature<GeoJSON.Point | undefined, BeobachtungProperties>): GenericObservation {
+export function convertLwdKipBeobachtung(
+  feature: GeoJSON.Feature<GeoJSON.Point | undefined, BeobachtungProperties>,
+): GenericObservation {
   let eventDate = feature.properties.BEOBDATUM;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
     $data: feature.properties,
-    $extraDialogRows: (t) =>
-      Object.keys(feature.properties)
-        .map((label) => (typeof feature.properties[label] === "string" ? { label, value: feature.properties[label] } : undefined))
-        .filter((row) => row !== undefined),
+    $extraDialogRows: Object.keys(feature.properties)
+      .map((label) =>
+        typeof feature.properties[label] === "string" ? { label, value: feature.properties[label] } : undefined,
+      )
+      .filter((row) => row !== undefined),
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Evaluation,
     stability: getLwdKipBeobachtungStability(feature),
@@ -139,7 +148,7 @@ export function convertLwdKipBeobachtung(feature: GeoJSON.Feature<GeoJSON.Point 
     latitude: feature.geometry?.coordinates?.[1],
     locationName: feature.properties.BEZEICHNUNG,
     longitude: feature.geometry?.coordinates?.[0],
-    region: undefined
+    region: undefined,
   };
 }
 
@@ -162,15 +171,17 @@ export interface SprengerfolgProperties {
   NOTIZEN?: string;
 }
 
-export function convertLwdKipSprengerfolg(feature: GeoJSON.Feature<GeoJSON.Point, SprengerfolgProperties>): GenericObservation {
+export function convertLwdKipSprengerfolg(
+  feature: GeoJSON.Feature<GeoJSON.Point, SprengerfolgProperties>,
+): GenericObservation {
   let eventDate = feature.properties.BEOBDATUM + feature.properties.SPRENGUNGZEIT;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
     $data: feature.properties,
-    $extraDialogRows: (t) => [
+    $extraDialogRows: [
       { label: "Sprengerfolg", value: feature.properties.SPRENGERFOLG },
       { label: "Sprenggrund", value: feature.properties.SPRENGGRUND },
-      { label: t("observations.incline"), number: feature.properties.NEIGUNG }
+      { label: "observations.incline", number: feature.properties.NEIGUNG },
     ],
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Blasting,
@@ -180,7 +191,7 @@ export function convertLwdKipSprengerfolg(feature: GeoJSON.Feature<GeoJSON.Point
     content: [
       feature.properties.SPRENGERFOLG && `Sprengerfolg: ${feature.properties.SPRENGERFOLG}`,
       feature.properties.SPRENGGRUND && `Sprenggrund: ${feature.properties.SPRENGGRUND}`,
-      feature.properties.NOTIZEN
+      feature.properties.NOTIZEN,
     ]
       .filter((s) => !!s)
       .join(" – "),
@@ -189,7 +200,7 @@ export function convertLwdKipSprengerfolg(feature: GeoJSON.Feature<GeoJSON.Point
     latitude: feature.geometry.coordinates[1],
     locationName: feature.properties.BEZEICHNUNG,
     longitude: feature.geometry.coordinates[0],
-    region: undefined
+    region: undefined,
   };
 }
 
@@ -210,17 +221,19 @@ export interface LawinenabgangProperties {
   SHAPE?: any;
 }
 
-export function convertLwdKipLawinenabgang(feature: GeoJSON.Feature<GeoJSON.LineString, LawinenabgangProperties>): GenericObservation {
+export function convertLwdKipLawinenabgang(
+  feature: GeoJSON.Feature<GeoJSON.LineString, LawinenabgangProperties>,
+): GenericObservation {
   let eventDate = feature.properties.BEOBDATUM + feature.properties.ZEIT;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
     $data: feature.properties,
-    $extraDialogRows: (t) => [
+    $extraDialogRows: [
       { label: "Lawinengröße", value: feature.properties.LAWINENGROESSE },
       { label: "Lawinenart", value: feature.properties.LAWINENART },
       { label: "Lawinenfeuchte", value: feature.properties.LAWINENFEUCHTE },
       { label: "Sprengung", boolean: feature.properties.SPRENGUNG > 0 },
-      { label: t("observations.incline"), number: feature.properties.NEIGUNG }
+      { label: "observations.incline", number: feature.properties.NEIGUNG },
     ],
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Avalanche,
@@ -231,7 +244,7 @@ export function convertLwdKipLawinenabgang(feature: GeoJSON.Feature<GeoJSON.Line
       feature.properties.NOTIZEN,
       feature.properties.LAWINENGROESSE && `Lawinengröße: ${feature.properties.LAWINENGROESSE}`,
       feature.properties.LAWINENART && `Lawinenart: ${feature.properties.LAWINENART}`,
-      feature.properties.LAWINENFEUCHTE && `Lawinenfeuchte: ${feature.properties.LAWINENFEUCHTE}`
+      feature.properties.LAWINENFEUCHTE && `Lawinenfeuchte: ${feature.properties.LAWINENFEUCHTE}`,
     ]
       .filter((s) => !!s)
       .join(" – "),
@@ -240,7 +253,7 @@ export function convertLwdKipLawinenabgang(feature: GeoJSON.Feature<GeoJSON.Line
     latitude: feature.geometry?.coordinates?.[0]?.[1],
     locationName: feature.properties.BEZEICHNUNG,
     longitude: feature.geometry?.coordinates?.[0]?.[0],
-    region: undefined
+    region: undefined,
   };
 }
 
@@ -258,7 +271,9 @@ export interface SperreProperties {
 
 export type LwdKipSperren = GeoJSON.FeatureCollection<GeoJSON.LineString, SperreProperties>;
 
-export function convertLwdKipSperren(feature: GeoJSON.Feature<GeoJSON.LineString, SperreProperties>): GenericObservation {
+export function convertLwdKipSperren(
+  feature: GeoJSON.Feature<GeoJSON.LineString, SperreProperties>,
+): GenericObservation {
   return {
     $data: feature.properties,
     $source: ObservationSource.LwdKip,
@@ -272,7 +287,7 @@ export function convertLwdKipSperren(feature: GeoJSON.Feature<GeoJSON.LineString
     latitude: feature.geometry?.coordinates?.[0]?.[1],
     locationName: feature.properties.BEZEICHNUNG,
     longitude: feature.geometry?.coordinates?.[0]?.[0],
-    region: undefined
+    region: undefined,
   };
 }
 
@@ -295,7 +310,9 @@ function getLwdKipSprengerfolgStability(feature: GeoJSON.Feature<GeoJSON.Point, 
   }
 }
 
-function getLwdKipLawinenabgangStability(feature: GeoJSON.Feature<GeoJSON.LineString, LawinenabgangProperties>): Stability {
+function getLwdKipLawinenabgangStability(
+  feature: GeoJSON.Feature<GeoJSON.LineString, LawinenabgangProperties>,
+): Stability {
   return Stability.poor;
 }
 

@@ -92,7 +92,7 @@ export class AuthenticationService {
     });
   }
 
-  public newExternalServerAuthHeader(externalAuthor, mime = "application/json"): HttpHeaders {
+  public newExternalServerAuthHeader(externalAuthor: ServerModel, mime = "application/json"): HttpHeaders {
     const authHeader = "Bearer " + externalAuthor.accessToken;
     return new HttpHeaders({
       "Content-Type": mime,
@@ -368,7 +368,7 @@ export interface AuthenticationResponse {
   email: string;
   name: string;
   roles: string[];
-  regions: any[];
+  regions: RegionConfiguration[];
   access_token: string;
   refresh_token: string;
   api_url: string;

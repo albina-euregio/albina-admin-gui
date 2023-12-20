@@ -8,7 +8,6 @@ import {
   ObservationType,
   Stability,
   toAspect,
-  TranslationFunction
 } from "./generic-observation.model";
 
 export const LAWIS_FETCH_DETAILS = true;
@@ -109,7 +108,7 @@ export enum ProblemText {
   OldSnow = "old snow",
   Unknown = "unknown",
   WetSnow = "wet snow",
-  WindDriftedSnow = "wind-drifted snow"
+  WindDriftedSnow = "wind-drifted snow",
 }
 
 export interface Location {
@@ -181,7 +180,7 @@ export enum AvalancheType {
   unknown = 0,
   slab = 1,
   gliding = 2,
-  loose = 3
+  loose = 3,
 }
 
 export enum AvalancheSize {
@@ -190,7 +189,7 @@ export enum AvalancheSize {
   medium = 2,
   large = 3,
   very_large = 4,
-  extreme = 5
+  extreme = 5,
 }
 
 export interface IdText<T = string> {
@@ -213,13 +212,13 @@ export function toLawisProfile(lawis: Profile, urlPattern: string): GenericObser
     latitude: lawis.location.latitude,
     locationName: lawis.location.name,
     longitude: lawis.location.longitude,
-    region: lawis.location.region.text
+    region: lawis.location.region.text,
   };
 }
 
 export function toLawisProfileDetails(
   profile: GenericObservation<Profile>,
-  lawisDetails: ProfileDetails
+  lawisDetails: ProfileDetails,
 ): GenericObservation<ProfileDetails> {
   return {
     ...profile,
@@ -227,7 +226,7 @@ export function toLawisProfileDetails(
     stability: getLawisProfileStability(lawisDetails),
     importantObservations: lawisDetails.stability_tests.length ? [ImportantObservation.StabilityTest] : [],
     authorName: lawisDetails.reported?.name,
-    content: lawisDetails.comments
+    content: lawisDetails.comments,
   };
 }
 
@@ -245,56 +244,62 @@ export function toLawisIncident(lawis: Incident, urlPattern: string): GenericObs
     latitude: lawis.location.latitude,
     locationName: lawis.location.name,
     longitude: lawis.location.longitude,
-    region: lawis.location.region.text
+    region: lawis.location.region.text,
   };
 }
 
 export function toLawisIncidentDetails(
   incident: GenericObservation<Incident>,
-  lawisDetails: IncidentDetails
+  lawisDetails: IncidentDetails,
 ): GenericObservation<IncidentDetails> {
   return {
     ...incident,
     $data: lawisDetails,
-    $extraDialogRows: (t) => toLawisIncidentTable(lawisDetails, t),
+    $extraDialogRows: toLawisIncidentTable(lawisDetails),
     stability: getLawisIncidentStability(lawisDetails),
     avalancheProblems: getLawisIncidentAvalancheProblems(lawisDetails),
     authorName: lawisDetails.reported?.name,
     content: (lawisDetails.comments || "") + imageCountString(lawisDetails.images),
-    reportDate: parseLawisDate(lawisDetails.reported?.date)
+    reportDate: parseLawisDate(lawisDetails.reported?.date),
   };
 }
 
-export function toLawisIncidentTable(incident: IncidentDetails, t: TranslationFunction): ObservationTableRow[] {
+export function toLawisIncidentTable(incident: IncidentDetails): ObservationTableRow[] {
   const avalancheType = AvalancheType[AvalancheType[incident.avalanche?.type?.id]];
   const avalancheSize = AvalancheSize[AvalancheSize[incident.avalanche.size.id]];
   return [
     {
-      label: t("observations.dangerRating"),
-      value: incident.danger?.rating?.id
+      label: "observations.dangerRating",
+      value: incident.danger?.rating?.id,
     },
     {
-      label: t("observations.avalancheProblem"),
-      value: incident.danger?.problem?.id
+      label: "observations.avalancheProblem",
+      value: incident.danger?.problem?.id,
     },
     {
-      label: t("observations.incline"),
-      number: incident.location?.slope_angle
-    },
-    { label: t("observations.avalancheType"), value: avalancheType },
-    { label: t("observations.avalancheSize"), value: avalancheSize },
-    {
-      label: t("observations.avalancheLength"),
-      number: incident.avalanche?.extent?.length
+      label: "observations.incline",
+      number: incident.location?.slope_angle,
     },
     {
-      label: t("observations.avalancheWidth"),
-      number: incident.avalanche?.extent?.width
+      label: "observations.avalancheType",
+      value: avalancheType,
     },
     {
-      label: t("observations.fractureDepth"),
-      number: incident.avalanche?.breakheight
-    }
+      label: "observations.avalancheSize",
+      value: avalancheSize,
+    },
+    {
+      label: "observations.avalancheLength",
+      number: incident.avalanche?.extent?.length,
+    },
+    {
+      label: "observations.avalancheWidth",
+      number: incident.avalanche?.extent?.width,
+    },
+    {
+      label: "observations.fractureDepth",
+      number: incident.avalanche?.breakheight,
+    },
   ];
 }
 
@@ -305,7 +310,10 @@ export function parseLawisDate(datum: string): Date {
 function getLawisProfileStability(profile: ProfileDetails): Stability {
   // Ausbildungshandbuch, 6. Auflage, Seiten 170/171
   const ect_tests = profile.stability_tests.filter((t) => t.type.text === "ECT") || [];
-  const colors = ect_tests.map((t) => getECTestStability(t.step, t.result.text));
+  const ect_colors = ect_tests.map((t) => getECTestStability(t.step, t.result.text));
+  const rb_tests = profile.stability_tests.filter((t) => t.type.text === "RB") || [];
+  const rb_colors = rb_tests.map((t) => getRBTestStability(t.step, t.result.text));
+  const colors = ect_colors.concat(rb_colors);
   if (colors.includes(Stability.very_poor)) {
     return Stability.very_poor;
   } else if (colors.includes(Stability.poor)) {
@@ -342,8 +350,32 @@ export function getECTestStability(step: number, propagation: string): Stability
   return null;
 }
 
+export function getRBTestStability(step: number, propagation: string): Stability {
+  // Ausbildungshandbuch, 6. Auflage, Seiten 170/171
+  const propagation1 = /\bwhole block\b/.test(propagation);
+  const propagation0 = /\bpartial break\b/.test(propagation);
+  if ((step <= 2 && propagation1) || (step <= 1 && propagation0)) {
+    // sehr schwach
+    return Stability.very_poor;
+  } else if ((step <= 3 && propagation1) || (step == 2 && propagation0)) {
+    // schwach
+    return Stability.poor;
+  } else if ((step <= 5 && propagation1) || (step <= 3 && propagation0)) {
+    // mittel
+    return Stability.fair;
+  } else if (step <= 5 && propagation0) {
+    return Stability.good;
+  } else if (step >= 6) {
+    return Stability.good;
+  }
+  return null;
+}
+
 function getLawisIncidentStability(incident: IncidentDetails): Stability {
-  return incident.involved?.dead || incident.involved?.injured || incident.involved?.buried_partial || incident.involved?.buried_total
+  return incident.involved?.dead ||
+    incident.involved?.injured ||
+    incident.involved?.buried_partial ||
+    incident.involved?.buried_total
     ? Stability.poor
     : Stability.fair;
 }

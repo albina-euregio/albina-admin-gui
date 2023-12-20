@@ -47,12 +47,7 @@ import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
 import { ConfirmationService } from "primeng/api";
-import { GetFilenamesService } from './providers/qfa-service/filenames.service';
-import { GetDustParamService } from "./providers/qfa-service/dust.service";
-import { ParamService } from "./providers/qfa-service/param.service"
 import { BaseMapService } from './providers/map-service/base-map.service';
-import { ObservationMapService } from "./providers/map-service/observation-map.service";
-import { QfaService } from './providers/qfa-service/qfa.service';
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -211,12 +206,7 @@ registerLocaleData(localeOc, "oc");
     CopyService,
     BlogService,
     MediaFileService,
-    GetFilenamesService,
-    GetDustParamService,
-    ParamService,
     BaseMapService,
-    ObservationMapService,
-    QfaService,
   ],
   bootstrap: [AppComponent],
   exports: [

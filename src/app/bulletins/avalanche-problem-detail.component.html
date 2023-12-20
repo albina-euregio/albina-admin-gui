@@ -1,6 +1,8 @@
 <div class="avalanche-problem-container">
   <div class="form-group">
     <label class="form-label" for="">{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
+    <button type="button" class="btn btn-primary" (click)="showDecisionTreeDialog()">{{ "bulletins.create.decisionTree.decisionTree" | translate }}</button>
+    <a class="btn btn-link" href="{{ 'bulletins.create.decisionTree.feedbackURL' | translate }}" target="_blank">{{ "bulletins.create.decisionTree.feedback" | translate }}</a>
     <div *ngIf="!disabled" class="avalanche-problem-detail__problem-icons">
       <img
         *ngIf="isAvalancheProblem('new_snow')"
@@ -14,7 +16,6 @@
         (click)="selectAvalancheProblem(avalancheProblemEnum.new_snow)"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
-
       <img
         *ngIf="isAvalancheProblem('wind_slab')"
         src="./assets/img/Drifting_snow_c.svg"

@@ -9,6 +9,7 @@ import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
 import { WsRegionService } from "../ws-region-service/ws-region.service";
 import { RegionLockModel } from "../../models/region-lock.model";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
+import { ServerModel } from "../../models/server.model";
 import * as Enums from "../../enums/enums";
 
 @Injectable()
@@ -296,14 +297,18 @@ export class BulletinsService {
     return this.http.get<Response>(url, options);
   }
 
-  loadExternalBulletins(date: Date, server): Observable<Response> {
+  loadExternalBulletins(date: Date, server: ServerModel): Observable<Response> {
     let url = server.apiUrl + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
     if (server.regions) {
       for (const region of server.regions) {
         // region
         // load all regions except regions handled by local server instance
-        if (region !== this.constantsService.codeTyrol && region !== this.constantsService.codeSouthTyrol && region !== this.constantsService.codeTrentino)
+        if (this.authenticationService.isEuregio()) {
+          if (region !== this.constantsService.codeTyrol && region !== this.constantsService.codeSouthTyrol && region !== this.constantsService.codeTrentino)
+            url += "&regions=" + region;
+        } else {
           url += "&regions=" + region;
+        }
       }
     }
     const headers = this.authenticationService.newExternalServerAuthHeader(server);

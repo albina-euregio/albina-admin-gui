@@ -6,12 +6,14 @@ import {
   imageCountString,
   ImportantObservation,
   ObservationSource,
-  ObservationType
+  ObservationType,
+  Stability,
 } from "./generic-observation.model";
 
 export interface LolaKronosApi {
   lolaSimpleObservation: LolaSimpleObservation[];
   lolaEvaluation: LolaEvaluation[];
+  lolaCommissionEvaluation: LolaEvaluation[];
   lolaSnowProfile: LolaSnowProfile[];
   lolaAvalancheEvent: LolaAvalancheEvent[];
 }
@@ -122,7 +124,7 @@ export enum DangerPattern {
   Gm7 = "GM7",
   Gm8 = "GM8",
   Gm9 = "GM9",
-  Gm10 = "GM10"
+  Gm10 = "GM10",
 }
 
 export enum DangerSign {
@@ -130,7 +132,7 @@ export enum DangerSign {
   GlideCracks = "glideCracks",
   NoDangerSigns = "noDangerSigns",
   ShootingCracks = "shootingCracks",
-  Whumpfing = "whumpfing"
+  Whumpfing = "whumpfing",
 }
 
 export interface Problem {
@@ -163,7 +165,7 @@ export interface SnowStabilityTest {
   number: number | null;
   position: number | null;
   comment: string;
-  snowStability: string;
+  snowStability: SnowStability;
   isKBTTest: boolean;
   KBBTOverlayingLayer: null | string;
   KBBTFractureSurface: string | null;
@@ -171,6 +173,15 @@ export interface SnowStabilityTest {
   KBBTCrystalsSize: null | string;
   KBBTWeakLayerThickness: null | string;
   measureFrom: string;
+}
+
+export enum SnowStability {
+  Moderate = "moderate",
+  NA = "n/a",
+  Neutral = "neutral",
+  Stable = "stable",
+  VeryWeak = "veryWeak",
+  Weak = "weak",
 }
 
 export interface Weather {
@@ -267,7 +278,7 @@ export interface LolaSnowProfile {
   time: Date;
   totalSnowHeight: number | null;
   userId: string;
-  weakestSnowStability: string;
+  weakestSnowStability: SnowStability;
   weather: Weather;
   windSignsAge: string;
   windSignsOlderThen24h: boolean;
@@ -290,76 +301,81 @@ export interface Temperature {
   position: number;
 }
 
-export function convertLoLaKronos(
-  kronos: LolaKronosApi,
-  urlPrefix: string,
-  source?: ObservationSource
-): GenericObservation[] {
+export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): GenericObservation[] {
   return [
     ...kronos.lolaAvalancheEvent.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.Avalanche,
-        urlPrefix + "avalancheEvent/"
-      )
+      convertLoLaToGeneric(obs, ObservationType.Avalanche, urlPrefix + "detail/lolaAvalancheEvent/"),
     ),
     ...kronos.lolaEvaluation.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.Evaluation,
-        urlPrefix + "evaluation/"
-      )
+      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail/lolaEvaluation/"),
+    ),
+    ...kronos.lolaCommissionEvaluation.map((obs) =>
+      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail/lolaCommissionEvaluation/"),
     ),
     ...kronos.lolaSimpleObservation.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.SimpleObservation,
-        urlPrefix + "simpleObservation/"
-      )
+      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail/lolaSimpleObservation/"),
     ),
     ...kronos.lolaSnowProfile.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.Profile,
-        urlPrefix + "snowProfile/"
-      )
-    )
+      convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail/lolaSnowProfile/"),
+    ),
   ];
 }
 
 export function convertLoLaToGeneric(
   obs: LolaSimpleObservation | LolaAvalancheEvent | LolaSnowProfile | LolaEvaluation,
   $type: ObservationType,
-  urlPrefix: string
+  urlPrefix: string,
 ): GenericObservation {
   return {
     $data: obs,
     $externalURL: urlPrefix + obs.uuId,
     $source: ObservationSource.LoLaKronos,
     $type,
-    // TODO implement,
-    stability: undefined,
+    stability:
+      $type === ObservationType.Avalanche
+        ? Stability.very_poor
+        : getStability((obs as LolaSnowProfile).weakestSnowStability),
     aspect: (obs as LolaSnowProfile).aspects?.[0],
     authorName: obs.firstName + " " + obs.lastName,
-    content: obs.comment + imageCountString(obs.images),
+    content:
+      obs.comment +
+      imageCountString(obs.images) +
+      ((obs as LolaSnowProfile).snowStabilityTest ?? [])
+        .flatMap((t) => [
+          `☲${t.type}`,
+          isFinite(t.number) && isFinite(t.position) ? `${t.number}@${t.position}cm` : "",
+          t.comment ?? "",
+        ])
+        .join(" "),
     elevation: (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
-    latitude: ((obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position)?.lat,
+    latitude: (
+      (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position
+    )?.lat,
     locationName:
-      (obs as LolaSimpleObservation | LolaAvalancheEvent).locationDescription ?? (obs as LolaSnowProfile | LolaEvaluation).placeDescription,
-    longitude: ((obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position)?.lng,
+      (obs as LolaSimpleObservation | LolaAvalancheEvent).locationDescription ??
+      (obs as LolaSnowProfile | LolaEvaluation).placeDescription,
+    longitude: (
+      (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position
+    )?.lng,
     avalancheProblems: getAvalancheProblems(obs as LolaEvaluation),
     dangerPatterns: (obs as LolaEvaluation).dangerPatterns?.map((dp) => getDangerPattern(dp)) || [],
     region: obs.regionName,
     importantObservations: [
       (obs as LolaSimpleObservation).snowLine ? ImportantObservation.SnowLine : undefined,
-      (obs as LolaSimpleObservation).snowSurface?.includes("surfaceHoar") ? ImportantObservation.SurfaceHoar : undefined,
-      (obs as LolaSimpleObservation).snowSurface?.includes("veryLightNewSnow") ? ImportantObservation.VeryLightNewSnow : undefined,
+      (obs as LolaSimpleObservation).snowSurface?.includes("surfaceHoar")
+        ? ImportantObservation.SurfaceHoar
+        : undefined,
+      (obs as LolaSimpleObservation).snowSurface?.includes("veryLightNewSnow")
+        ? ImportantObservation.VeryLightNewSnow
+        : undefined,
       (obs as LolaSimpleObservation).snowSurface?.includes("graupel") ? ImportantObservation.Graupel : undefined,
-      (obs as LolaSimpleObservation).snowSurface?.includes("iceFormation") ? ImportantObservation.IceFormation : undefined,
-      (obs as LolaSimpleObservation).stabilityTests?.length > 0 ? ImportantObservation.StabilityTest : undefined
-    ].filter(o => !!o)
+      (obs as LolaSimpleObservation).snowSurface?.includes("iceFormation")
+        ? ImportantObservation.IceFormation
+        : undefined,
+      (obs as LolaSimpleObservation).stabilityTests?.length > 0 ? ImportantObservation.StabilityTest : undefined,
+    ].filter((o) => !!o),
   };
 }
 
@@ -395,5 +411,21 @@ function getDangerPattern(data: DangerPattern): GenericDangerPattern {
       return GenericDangerPattern.dp9;
     case DangerPattern.Gm10:
       return GenericDangerPattern.dp10;
+  }
+}
+
+function getStability(s: SnowStability): Stability {
+  switch (s) {
+    case SnowStability.VeryWeak:
+      return Stability.very_poor;
+    case SnowStability.Weak:
+      return Stability.poor;
+    case SnowStability.Moderate:
+    case SnowStability.Neutral:
+      return Stability.fair;
+    case SnowStability.Stable:
+      return Stability.good;
+    default:
+      return undefined;
   }
 }

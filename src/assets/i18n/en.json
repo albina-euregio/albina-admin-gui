@@ -81,13 +81,16 @@
       "check": "Check bulletin",
       "info": "Show publication status",
       "publishAll": "Publish all regions",
-      "mediaFile": "Upload media file"
+      "mediaFile": "Upload media file",
+      "publishUpdate": "Publish update"
     },
     "create": {
       "tooltip": {
         "edit": "Edit region",
         "copy": "Copy region",
         "delete": "Delete region",
+        "createRegion": "Create region",
+        "cancel": "Cancel",
         "acceptSuggestion": "Accept suggested regions",
         "rejectSuggestion": "Decline suggested regions",
         "saveChanges": "Save changes",
@@ -102,7 +105,8 @@
         "tendency": {
           "decreasing": "Avalanche danger decreases",
           "steady": "Avalanche danger stays the same",
-          "increasing": "Avalanche danger increases"
+          "increasing": "Avalanche danger increases",
+          "danger": "Avalanche danger"
         },
         "textcat": {
           "edit": "Edit",
@@ -113,8 +117,8 @@
         },
         "moveUpAvalancheProblem": "Move avalanche problem up",
         "moveDownAvalancheProblem": "Move avalanche problem down",
-        "dangerRatingDirectionUp": "Extend the danger rating upwards",
-        "dangerRatingDirectionDown": "Extend the danger rating downwards"
+        "dangerRatingDirectionUp": "Upwards",
+        "dangerRatingDirectionDown": "Downwards"
       },
       "save": " Save",
       "discard": " Discard",
@@ -126,6 +130,18 @@
       "ownRegions": "Own regions",
       "foreignRegions": "Foreign regions",
       "externalRegions": "External regions",
+      "mapSelectRegion": "Select regions on the map.",
+      "statusHeader": "Status of the bulletin",
+      "suggestions": "Suggestions",
+      "noBulletinsForSelectedDay": "No regions defined for this date.",
+      "autosave": "Saved automatically",
+      "regionEditable": "This region can be edited.", 
+      "regionLocked": "This region is locked.",
+      "edit": "Edit",
+      "regionLockedPublished": "This regions has been published already.",
+      "changeDangerRatingElevation": "Extend the danger level",
+      "mapTop": "Map above",
+      "mapLeft": "Map aside",
       "label": {
         "avalancheProblems": "Avalanche problem",
         "aspects": "Aspects",
@@ -139,6 +155,11 @@
         "elevationLow": "Above",
         "tendencyComment": "Description of tendency",
         "notes": "Notes"
+      },
+      "copyRegion": {
+        "label": "Paste warning region in another bulletin",
+        "select": "Paste into ...",
+        "currentBulletin": "This bulletin"
       },
       "title": {
         "avalancheProblem": "Avalanche problems",
@@ -209,6 +230,14 @@
         "glidingSnow": "Gliding snow",
         "favourableSituation": "Favourable situation",
         "cancel": "Cancel"
+      },
+      "decisionTree" : {
+        "filepath": "./assets/img/decision_tree-en.svg",
+        "feedbackURL": "https://models.avalanche.report:8061/en/",
+        "decisionTree" : "Decision tree",
+        "feedback" : "Feedback",
+        "save": "Save",
+        "discard": "Discard"
       }
     },
     "table": {
@@ -228,7 +257,11 @@
         "published": "published",
         "updated": "updated",
         "resubmitted": "resubmitted",
-        "republished": "republished"
+        "republished": "republished",
+        "submitted-info": "Will be published at 5PM",
+        "resubmitted-info": "Will be published at 8AM",
+        "published-info" : "Has been published at 5PM",
+        "republished-info" : "Has been published at 8AM"
       },
       "publishBulletinsDialog": {
         "message": "Do you want to publish the bulletin?",
@@ -563,6 +596,8 @@
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
+        "classify": "Classify",
+        "label": "Label",
         "invert": "Invert",
         "reset": "Reset",
         "aspect": {
