@@ -41,15 +41,10 @@ import RegionsAineva_IT_34 from "@eaws/micro-regions/IT-34_micro-regions.geojson
 import RegionsAineva_IT_36 from "@eaws/micro-regions/IT-36_micro-regions.geojson.json";
 // @ts-ignore
 import RegionsAineva_IT_57 from "@eaws/micro-regions/IT-57_micro-regions.geojson.json";
-//
-const RegionsAineva: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
-  RegionsAineva_IT_21 as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsAineva_IT_23 as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsAineva_IT_25 as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsAineva_IT_34 as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsAineva_IT_36 as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsAineva_IT_57 as FeatureCollection<MultiPolygon, RegionProperties>
-);
+// @ts-ignore
+import Regions_SK from "@eaws/micro-regions/SK_micro-regions.geojson.json";
+// @ts-ignore
+import Regions_PL_12 from "@eaws/micro-regions/PL-12_micro-regions.geojson.json";
 
 // @ts-ignore
 import RegionsAinevaElevation_IT_21 from "@eaws/micro-regions_elevation/IT-21_micro-regions_elevation.geojson.json";
@@ -63,15 +58,10 @@ import RegionsAinevaElevation_IT_34 from "@eaws/micro-regions_elevation/IT-34_mi
 import RegionsAinevaElevation_IT_36 from "@eaws/micro-regions_elevation/IT-36_micro-regions_elevation.geojson.json";
 // @ts-ignore
 import RegionsAinevaElevation_IT_57 from "@eaws/micro-regions_elevation/IT-57_micro-regions_elevation.geojson.json";
-//
-const RegionsAinevaElevation: FeatureCollection<MultiPolygon, RegionWithElevationProperties> = mergeFeatureCollections(
-  RegionsAinevaElevation_IT_21 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
-  RegionsAinevaElevation_IT_23 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
-  RegionsAinevaElevation_IT_25 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
-  RegionsAinevaElevation_IT_34 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
-  RegionsAinevaElevation_IT_36 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
-  RegionsAinevaElevation_IT_57 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>
-);
+// @ts-ignore
+import RegionsElevation_SK from "@eaws/micro-regions_elevation/SK_micro-regions_elevation.geojson.json";
+// @ts-ignore
+import RegionsElevation_PL_12 from "@eaws/micro-regions_elevation/PL-12_micro-regions_elevation.geojson.json";
 
 // @ts-ignore
 import RegionsAran_ES_CT_L from "@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json";
@@ -120,6 +110,8 @@ const Regions: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureC
   RegionsAineva_IT_36 as FeatureCollection<MultiPolygon, RegionProperties>,
   RegionsAineva_IT_57 as FeatureCollection<MultiPolygon, RegionProperties>,
   RegionsAran_ES_CT_L as FeatureCollection<MultiPolygon, RegionProperties>,
+  Regions_SK as FeatureCollection<MultiPolygon, RegionProperties>,
+  Regions_PL_12 as FeatureCollection<MultiPolygon, RegionProperties>,
   RegionsSwitzerland_CH as FeatureCollection<MultiPolygon, RegionProperties>
 );
 
@@ -134,6 +126,8 @@ const RegionsElevation: FeatureCollection<MultiPolygon, RegionWithElevationPrope
   RegionsAinevaElevation_IT_36 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
   RegionsAinevaElevation_IT_57 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
   RegionsAranElevation_ES_CT_L as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
+  RegionsElevation_SK as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
+  RegionsElevation_PL_12 as FeatureCollection<MultiPolygon, RegionWithElevationProperties>,
   RegionsSwitzerlandElevation_CH as FeatureCollection<MultiPolygon, RegionWithElevationProperties>
 );
 
