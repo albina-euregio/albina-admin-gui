@@ -5,11 +5,13 @@ import { flatMap, last, map } from "rxjs/operators";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ConstantsService } from "../../providers/constants-service/constants.service";
+import {AuthenticationService} from "../../providers/authentication-service/authentication.service";
 
 @Injectable()
 export class AlpsolutProfileService {
   constructor(
     private http: HttpClient,
+    private authenticationService: AuthenticationService,
     private constantsService: ConstantsService,
     private sanitizer: DomSanitizer,
   ) {}
@@ -27,13 +29,14 @@ export class AlpsolutProfileService {
     };
     return this.http
       .get(this.constantsService.observationApi[ForecastSource.alpsolut_profile], {
+        headers: this.authenticationService.newAuthHeader(),
         observe: "response",
         responseType: "text",
       })
       .pipe(
         last(),
         flatMap((r) => {
-          const apiKey = r.headers.get("X-API-KEY");
+          const apiKey = r.body.trim();
           const headers = { "X-API-KEY": apiKey };
           const url = this.constantsService.observationWeb[ForecastSource.alpsolut_profile];
           return this.http
