@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { ConstantsService } from "../../providers/constants-service/constants.service";
 import { GenericObservation } from "../models/generic-observation.model";
-import { from, Observable, of } from "rxjs";
+import { concat, from, Observable, of } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
 import { RegionsService } from "../../providers/regions-service/regions.service";
 import { addLolaCadsData, convertFotoWebcamEU, FotoWebcamEU, FotoWebcamEUResponse } from "../models/foto-webcam.model";
@@ -26,11 +26,14 @@ export class FotoWebcamObservationsService {
     return this.http.post<any>(fullUrl, {}, { headers });
   }
 
-  getFotoWebcamsEU(): Observable<GenericObservation> {
+  getFotoWebcamsEU(url: string | undefined = undefined): Observable<GenericObservation> {
     const { observationApi: api } = this.constantsService;
+    if (!url) {
+      return concat(this.getFotoWebcamsEU(api["private.foto-webcam.eu"]), this.getFotoWebcamsEU(api.FotoWebcamsEU));
+    }
     const headers = this.authenticationService.newAuthHeader();
 
-    return this.http.get<FotoWebcamEUResponse>(api.FotoWebcamsEU, { headers }).pipe(
+    return this.http.get<FotoWebcamEUResponse>(url, { headers }).pipe(
       mergeMap(({ cams }: FotoWebcamEUResponse) =>
         from(
           cams
