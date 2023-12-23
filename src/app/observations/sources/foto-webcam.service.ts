@@ -16,7 +16,7 @@ export class FotoWebcamObservationsService {
   ) {}
 
   getLolaCads(cam: GenericObservation): Observable<any> {
-    const lolaCadsApi = "https://api.avalanche.report/www.lola-cads.info/LWDprocessPhotoURL";
+    const lolaCadsApi = this.constantsService.observationApi["lola-cads.info"];
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2xhQWNjZXNzIjpmYWxzZSwibHdkQWNjZXNzIjp0cnVlLCJpYXQiOjE2Nzk1ODA3NjYsImV4cCI6MTcxMTExNjc2Nn0.IpZ4Nkkmvw0IiEi3Hvh9Pt4RvtJv7KktMLQCwdhVtBU";
 

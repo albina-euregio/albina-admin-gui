@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import {
+  ForecastSource,
   ObservationSource,
   ObservationType,
 } from "app/observations/models/generic-observation.model";
@@ -12,11 +13,14 @@ export class ConstantsService {
   public release = [pkg.name, pkg.version].join("@");
   public gitlab = pkg.bugs.url;
 
-  public zamgModelsUrl: string = "https://avalanche.report/zamg/zamg/";
   public snowpackModelsUrl: string = "https://avalanche.report/alpsolut/html/";
 
   public observationApi = {
-    [ObservationSource.AvalancheWarningService]:
+    "lola-cads.info": "https://api.avalanche.report/www.lola-cads.info/LWDprocessPhotoURL",
+    "forecast.uoa.gr": "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png",
+    [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/widget.alpsolut.eu/",
+    [ForecastSource.multimodel]: "https://avalanche.report/zamg/zamg/",
+    [ForecastSource.observed_profile]:
       "https://admin.avalanche.report/observed-profiles/observed_profiles.json",
     [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
     [ObservationSource.LoLaKronos]:
@@ -30,6 +34,7 @@ export class ConstantsService {
   };
 
   public observationWeb = {
+    [ForecastSource.alpsolut_profile]: "https://salient.alpsolut.eu/v1/geo/stations",
     [ObservationSource.LoLaKronos]: "https://www.lola-kronos.info/",
     [`${ObservationSource.Lawis}-incident` as const]:
       "https://lawis.at/incident/#{{id}}",
