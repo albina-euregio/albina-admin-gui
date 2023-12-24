@@ -11,7 +11,6 @@ import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.component";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
 import { AvalancheProblemPreviewComponent } from "./avalanche-problem-preview.component";
-import { MatrixObsoleteComponent } from "./matrix-obsolete.component";
 import { MatrixComponent } from "./matrix.component";
 import { MatrixParameterComponent } from "./matrix-parameter.component";
 import { CaamlComponent } from "./caaml.component";
@@ -59,7 +58,6 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
         AvalancheProblemDetailComponent,
         AvalancheProblemDecisionTreeComponent,
         AvalancheProblemPreviewComponent,
-        MatrixObsoleteComponent,
         MatrixComponent,
         MatrixParameterComponent,
         CaamlComponent,
