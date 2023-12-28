@@ -1,6 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { SettingsService } from "./providers/settings-service/settings.service";
+import { DOCUMENT } from '@angular/common';
+import { environment } from "../environments/environment";
 
 
 @Component({
@@ -11,6 +13,8 @@ import { SettingsService } from "./providers/settings-service/settings.service";
 export class AppComponent {
   constructor(
     settingsService: SettingsService,
-    translate: TranslateService) {
+    translate: TranslateService,
+    @Inject(DOCUMENT) _document: HTMLDocument) {
+    _document.getElementById("appFavicon").setAttribute("href", `${environment.faviconPath}`);
   }
 }
