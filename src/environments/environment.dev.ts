@@ -9,5 +9,7 @@ export const environment = {
   wsBaseUrl: "wss://socket.avalanche.report/albina_dev/",
   textcatUrl: "https://admin.avalanche.report/textcat-ng-dev/",
   headerBgColor: "#f95bdc",
+  faviconPath: "assets/img/admin-favicon-dev.ico",
+  logoPath: "assets/img/admin-logo-dev.png",
   showChat: true
 };
