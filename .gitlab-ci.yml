@@ -70,7 +70,7 @@ build:development:
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng-dev/"
     HEADER_BG_COLOR: "#f95bdc"
     FAVICON_PATH: "assets/img/admin-favicon-dev.ico"
-    LOGO_PATH: "assets/img/admin-logo-dev.png"
+    LOGO_PATH: "assets/img/admin-logo-dev.svg"
   environment:
     name: dev
 
@@ -92,7 +92,7 @@ build:beta:
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
     HEADER_BG_COLOR: "#f4ea12"
     FAVICON_PATH: "assets/img/admin-favicon-beta.ico"
-    LOGO_PATH: "assets/img/admin-logo-beta.png"
+    LOGO_PATH: "assets/img/admin-logo-beta.svg"
   environment:
     name: beta
 
@@ -114,7 +114,7 @@ build:production:
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
     HEADER_BG_COLOR: "#ffffff"
     FAVICON_PATH: "assets/img/admin-favicon.ico"
-    LOGO_PATH: "assets/img/admin-logo.png"
+    LOGO_PATH: "assets/img/admin-logo.svg"
   environment:
     name: production
 
