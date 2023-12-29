@@ -5,7 +5,7 @@ export const environment = {
   textcatUrl: "https://admin.avalanche.report/textcat-ng/",
   headerBgColor: "#f4ea12",
   faviconPath: "assets/img/admin-favicon-beta.ico",
-  logoPath: "assets/img/admin-logo-beta.png",
+  logoPath: "assets/img/admin-logo-beta.svg",
   showChat: true
 };
 
