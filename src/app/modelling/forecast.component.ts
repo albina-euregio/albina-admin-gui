@@ -49,6 +49,7 @@ export interface MultiselectDropdownData {
     GetFilenamesService,
     ParamService,
     QfaService,
+    BaseMapService,
   ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
@@ -141,13 +142,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       this.regionalMarkers[region.id] = [];
     });
 
-    this.initMaps();
-    this.mapService.map.on("click", () => {
-      this.selectedRegions = this.mapService.getSelectedRegions().map((aRegion) => aRegion.id);
-      this.applyFilter();
-    });
-    this.mapService.addMarkerLayer("forecast");
-    this.load();
+    this.initMaps().then(() => this.load());
   }
 
   async load() {
@@ -245,23 +240,18 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
     this.files = await this.qfaService.getFiles();
   }
 
-  initMaps() {
-    this.mapService.initMaps(this.observationsMap.nativeElement, () => {});
-    this.mapService.map.on("click", () => {
-      this.selectedRegions = this.mapService.getSelectedRegions().map((aRegion) => aRegion.id);
-      // this.filterRegions();
+  async initMaps() {
+    const map = await this.mapService.initMaps(this.observationsMap.nativeElement, () => {});
+    map.on("click", () => {
+      this.selectedRegions = this.mapService.getSelectedRegions();
+      this.applyFilter();
     });
-    this.mapService.addInfo();
-    this.mapService.addControls();
-
     this.mapService.removeObservationLayers();
+    this.mapService.addMarkerLayer("forecast");
   }
 
   ngOnDestroy() {
-    if (this.mapService.map) {
-      this.mapService.map.remove();
-      this.mapService.map = undefined;
-    }
+    this.mapService.removeMaps();
   }
 
   getModelPointOptions(type: ForecastSource): L.CircleMarkerOptions {

@@ -44,17 +44,11 @@ export class MultimodelSourceService {
         points
           .map((row: MultimodelPointCsv): GenericObservation => {
             const id = row.statnr;
-            const regionCode = row.code;
-            const region = this.regionsService.getRegionForId(regionCode);
-            const lat = parseFloat(row.lat);
-            const lng = parseFloat(row.lon);
-
-            return {
+            return this.regionsService.augmentRegion({
               $source: "multimodel",
               $data: row,
               $id: id,
-              region: regionCode,
-              locationName: region?.name,
+              region: row.code,
               $extraDialogRows: [
                 ...["HN", "HS"].map((type) => ({
                   label: `ECMWF ${type}`,
@@ -65,9 +59,9 @@ export class MultimodelSourceService {
                   url: `${url}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`,
                 })),
               ],
-              latitude: lat,
-              longitude: lng,
-            } as GenericObservation;
+              latitude: parseFloat(row.lat),
+              longitude: parseFloat(row.lon),
+            } as GenericObservation);
           })
           .sort((p1, p2) => p1.region.localeCompare(p2.region)),
       ),

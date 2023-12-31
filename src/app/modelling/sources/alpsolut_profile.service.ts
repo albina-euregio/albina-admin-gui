@@ -91,18 +91,6 @@ export class AlpsolutProfileService {
   }
 }
 
-export interface AlpsolutFeature {
-  id: number;
-  code: string;
-  name: string;
-  type: string;
-  latitude: number;
-  longitude: number;
-  altitude: number;
-  timezone: string;
-  nwm: string;
-}
-
 type AlpsolutFeatureCollection = GeoJSON.FeatureCollection<GeoJSON.Point, Properties>;
 
 interface Properties {
