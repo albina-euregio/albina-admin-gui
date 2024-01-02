@@ -8,6 +8,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { AuthorModel } from "../../models/author.model";
 import { ServerModel } from "../../models/server.model";
 import { RegionConfiguration } from "../configuration-service/configuration.service";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AuthenticationService {
@@ -17,6 +18,8 @@ export class AuthenticationService {
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration;
 
+  private env = environment.production ? "prod_" : "dev_";
+
   constructor(
     public http: HttpClient,
     public constantsService: ConstantsService,
@@ -24,9 +27,9 @@ export class AuthenticationService {
   ) {
     this.externalServers = [];
     try {
-      this.setCurrentAuthor(JSON.parse(localStorage.getItem("currentAuthor")));
+      this.setCurrentAuthor(JSON.parse(localStorage.getItem(this.env + "currentAuthor")));
     } catch (e) {
-      localStorage.removeItem("currentAuthor");
+      localStorage.removeItem(this.env + "currentAuthor");
     }
     try {
       this.setActiveRegion(JSON.parse(localStorage.getItem("activeRegion")));
@@ -50,7 +53,7 @@ export class AuthenticationService {
   }
 
   public logout() {
-    localStorage.removeItem("currentAuthor");
+    localStorage.removeItem(this.env + "currentAuthor");
     console.debug("[" + this.currentAuthor.name + "] Logged out!");
     this.currentAuthor = null;
     this.activeRegion = undefined;
@@ -315,7 +318,7 @@ export class AuthenticationService {
       return;
     }
     this.currentAuthor = AuthorModel.createFromJson(json);
-    localStorage.setItem("currentAuthor", JSON.stringify(this.currentAuthor));
+    localStorage.setItem(this.env + "currentAuthor", JSON.stringify(this.currentAuthor));
   }
 
   public getCurrentAuthorRegions() {
