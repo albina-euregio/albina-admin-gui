@@ -18,7 +18,7 @@ export class AuthenticationService {
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration;
 
-  private env = environment.production ? "prod_" : "dev_";
+  private env = environment.apiBaseUrl + "_";
 
   constructor(
     public http: HttpClient,
