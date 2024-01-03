@@ -341,7 +341,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="authenticationService.getActiveRegion().showMatrix" class="form-group">
+  <div class="form-group">
     <app-matrix-parameter
       [(bulletin)]="bulletin"
       [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
@@ -350,6 +350,8 @@
       [count]="count"
       [afternoon]="afternoon"
     ></app-matrix-parameter>
+  </div>
+  <div *ngIf="authenticationService.getActiveRegion().showMatrix" class="form-group">
     <app-matrix
       [(bulletin)]="bulletin"
       [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
@@ -359,15 +361,5 @@
       [avalancheSize]="avalancheProblemModel.matrixInformation.avalancheSize"
       [disabled]="true"
     ></app-matrix>
-  </div>
-  <div *ngIf="!authenticationService.getActiveRegion().showMatrix" class="form-group">
-    <app-matrix-parameter
-      [(bulletin)]="bulletin"
-      [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
-      [(matrixInformation)]="avalancheProblemModel.matrixInformation"
-      [disabled]="disabled"
-      [count]="count"
-      [afternoon]="afternoon"
-    ></app-matrix-parameter>
   </div>
 </div>
