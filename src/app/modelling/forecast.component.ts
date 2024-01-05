@@ -208,6 +208,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
+          this.regionsService.augmentRegion(point);
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
           if (configuration) {
             this.observationConfigurations.add(configuration);
