@@ -30,7 +30,7 @@ export class ObservedProfileSourceService {
    * https://gitlab.com/avalanche-warning
    */
   getObservedProfiles(): Observable<GenericObservation[]> {
-    const url = this.constantsService.observationApi.AvalancheWarningService;
+    const url = this.constantsService.observationApi["observed_profile"];
     return this.http.get<AvalancheWarningServiceObservedProfiles[]>(url).pipe(
       map((profiles) => profiles.map((profile) => this.regionsService.augmentRegion(toPoint(profile)))),
       catchError((e) => {

@@ -3,9 +3,9 @@ export const environment = {
   apiBaseUrl: "https://admin.avalanche.report/albina/api/",
   wsBaseUrl: "wss://socket.avalanche.report/albina/",
   textcatUrl: "https://admin.avalanche.report/textcat-ng/",
-  headerBgColor: "#ffffff",
-  faviconPath: "assets/img/admin-favicon.ico",
-  logoPath: "assets/img/admin-logo.svg",
+  headerBgColor: "#f4ea12",
+  faviconPath: "assets/img/admin-favicon-beta.ico",
+  logoPath: "assets/img/admin-logo-beta.svg",
   showChat: true
 };
 

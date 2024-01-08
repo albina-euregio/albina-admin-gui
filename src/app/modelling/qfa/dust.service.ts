@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as types from './qfa-types';
+import {ConstantsService} from "../../providers/constants-service/constants.service";
 
 enum Cities {
   INNSBRUCK = "innsbruck",
@@ -13,7 +14,6 @@ type DustParams = {
 
 @Injectable()
 export class GetDustParamService {
-  private url = "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png"
   private pxOfCity = {
     "bozen": {
       x: 278,
@@ -51,11 +51,11 @@ export class GetDustParamService {
     "rgb(202,102,80)": "#CA6650"
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,    private constantsService: ConstantsService) {}
 
   private loadForecast = (time: number): Promise<Blob> => {
     const paddedNumber = time.toString().padStart(3, "0");
-    const url = this.url.replace("%d", paddedNumber);
+    const url = this.constantsService.observationApi['forecast.uoa.gr'].replace("%d", paddedNumber);
     const headers = new HttpHeaders({
       "Accept": "image/avif,image/webp,*/*"
     })

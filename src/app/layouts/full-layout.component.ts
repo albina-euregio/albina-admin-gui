@@ -28,6 +28,8 @@ export class FullLayoutComponent {
 
   public tmpRegion: string;
 
+  public environment: any;
+
   public changeRegionModalRef: BsModalRef;
   @ViewChild("changeRegionTemplate") changeRegionTemplate: TemplateRef<any>;
 
@@ -53,6 +55,7 @@ export class FullLayoutComponent {
     if (this.showChat && this.authenticationService.isUserLoggedIn()) {
       this.chatService.connect();
     }
+    this.environment = environment;
   }
 
   public toggleChat() {

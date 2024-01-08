@@ -1,10 +1,8 @@
 import { Injectable } from "@angular/core";
-import {
-  ObservationSource,
-  ObservationType,
-} from "app/observations/models/generic-observation.model";
+import { ForecastSource, ObservationSource, ObservationType } from "app/observations/models/generic-observation.model";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
+
 const pkg = require("../../../../package.json");
 
 @Injectable()
@@ -12,27 +10,29 @@ export class ConstantsService {
   public release = [pkg.name, pkg.version].join("@");
   public gitlab = pkg.bugs.url;
 
-  public zamgModelsUrl: string = "https://avalanche.report/zamg/zamg/";
   public snowpackModelsUrl: string = "https://avalanche.report/alpsolut/html/";
 
   public observationApi = {
-    [ObservationSource.AvalancheWarningService]:
-      "https://admin.avalanche.report/observed-profiles/observed_profiles.json",
+    "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",
+    "forecast.uoa.gr": "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png",
+    [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/observations/widget.alpsolut.eu/",
+    [ForecastSource.multimodel]: "https://static.avalanche.report/zamg/zamg/",
+    [ForecastSource.observed_profile]:
+      "https://models.avalanche.report/profiles/observed-profiles/observed_profiles.json",
     [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
     [ObservationSource.LoLaKronos]:
-      "https://admin.avalanche.report/lola-kronos/dataexport/dataFromToken/",
-    [ObservationSource.WikisnowECT]:
-      "https://admin.avalanche.report/wikisnow/ect/ect-json.json",
+      "https://admin.avalanche.report/observations/lola-kronos.info/api/dataexport/dataFromToken/",
+    [ObservationSource.WikisnowECT]: "https://admin.avalanche.report/observations/wikisnow/ect/ect-json.json",
     [ObservationSource.FotoWebcamsEU]:
-      "https://admin.avalanche.report/foto-webcam.eu/metadata.php",
-    [ObservationSource.Panomax]:
-      "https://api.avalanche.report/api.panomax.com/1.0",
+      "https://admin.avalanche.report/observations/foto-webcam.eu/webcam/include/metadata.php",
+    "private.foto-webcam.eu": "https://admin.avalanche.report/observations/private.foto-webcam.eu/",
+    [ObservationSource.Panomax]: "https://admin.avalanche.report/observations/api.panomax.com/1.0",
   };
 
   public observationWeb = {
+    [ForecastSource.alpsolut_profile]: "https://salient.alpsolut.eu/v1/geo/stations",
     [ObservationSource.LoLaKronos]: "https://www.lola-kronos.info/",
-    [`${ObservationSource.Lawis}-incident` as const]:
-      "https://lawis.at/incident/#{{id}}",
+    [`${ObservationSource.Lawis}-incident` as const]: "https://lawis.at/incident/#{{id}}",
     [`${ObservationSource.Lawis}-${ObservationType.Profile}` as const]:
       "https://lawis.at/lawis_api/v2_2/files/profiles/snowprofile_{{id}}.pdf",
   };

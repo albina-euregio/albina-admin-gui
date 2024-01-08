@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, AfterViewInit, OnInit } from "@angular/core";
+import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { BulletinModel } from "../models/bulletin.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -24,10 +24,6 @@ import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig 
 
 import { DatePipe } from "@angular/common";
 
-import "leaflet";
-import "leaflet.sync";
-
-
 // For iframe
 import { Renderer2 } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
@@ -39,7 +35,7 @@ declare var L: any;
 @Component({
   templateUrl: "create-bulletin.component.html"
 })
-export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   public bulletinStatus = Enums.BulletinStatus;
   public dangerPattern = Enums.DangerPattern;
@@ -377,11 +373,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.initializeComponent();
   }
 
-  initializeComponent() {
+  async initializeComponent() {
     // for reload iframe on change language
     this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
       () => this.pmUrl = this.getTextcatUrl()
     );
+
+    await this.initMaps();
 
     if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
 
@@ -450,10 +448,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     } else {
       this.goBack();
     }
-  }
-
-  ngAfterViewInit() {
-    this.initMaps();
   }
 
   ngOnDestroy() {
@@ -705,129 +699,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  private initMaps() {
-    this.mapService.initMaps();
-
-    if (this.mapService.map) {
-      this.mapService.map.remove();
-    }
-    if (this.mapService.afternoonMap) {
-      this.mapService.afternoonMap.remove();
-    }
-
-    let zoom = 8;
-    let minZoom = 6;
-    let maxZoom = 10;
-
-    if (this.authenticationService.getActiveRegionId() === this.constantsService.codeAran) {
-      zoom = 10;
-      minZoom = 8;
-      maxZoom = 12;
-    }
-
-    const map = L.map("map", {
-      zoomControl: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      touchZoom: true,
-      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: zoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-      // maxBounds: L.latLngBounds(L.latLng(this.constantsService.mapBoundaryN, this.constantsService.mapBoundaryW), L.latLng(this.constantsService.mapBoundaryS, this.constantsService.mapBoundaryE)),
-      layers: [this.mapService.baseMaps.AlbinaBaseMap, this.mapService.overlayMaps.aggregatedRegions, this.mapService.overlayMaps.regions]
-    });
-
-    map.on("click", () => { this.onMapClick(); });
-    // map.on('dblclick', (e)=>{this.onMapDoubleClick(e)});
-
-    L.control.zoom({ position: "topleft" }).addTo(map);
-    // L.control.layers(this.mapService.baseMaps).addTo(map);
-    // L.control.scale().addTo(map);
-
-    if (this.showAfternoonMap) {
-      L.Control.AM = L.Control.extend({
-        onAdd: function() {
-          const container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
-          container.style.backgroundColor = "white";
-          container.style.width = "52px";
-          container.style.height = "35px";
-          container.innerHTML = "<p style=\"font-size: 1.75em; color: #989898; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)\"><b>AM</b></p>";
-          return container;
-        },
-
-        onRemove: function() {
-          // Nothing to do here
-        }
-      });
-
-      L.control.am = function(opts) {
-        return new L.Control.AM(opts);
-      };
-
-      L.control.am({ position: "bottomleft" }).addTo(map);
-    }
-
-    const info = L.control();
-    info.onAdd = function() {
-      this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
-      this.update();
-      return this._div;
-    };
-    // method that we will use to update the control based on feature properties passed
-    info.update = function(props) {
-      this._div.innerHTML = (props ?
-        "<b>" + props.name_de + "</b>" : " ");
-    };
-    info.addTo(map);
-
-    this.mapService.map = map;
-
-    const afternoonMap = L.map("afternoonMap", {
-      zoomControl: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      touchZoom: true,
-      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: zoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-      // maxBounds: L.latLngBounds(L.latLng(this.constantsService.mapBoundaryN, this.constantsService.mapBoundaryW), L.latLng(this.constantsService.mapBoundaryS, this.constantsService.mapBoundaryE)),
-      layers: [this.mapService.afternoonBaseMaps.AlbinaBaseMap, this.mapService.afternoonOverlayMaps.aggregatedRegions, this.mapService.afternoonOverlayMaps.regions]
-    });
-
-    // L.control.zoom({ position: "topleft" }).addTo(afternoonMap);
-    // L.control.layers(this.mapService.baseMaps).addTo(afternoonMap);
-    // L.control.scale().addTo(afternoonMap);
-
-    L.Control.PM = L.Control.extend({
-      onAdd: function() {
-        const container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
-        container.style.backgroundColor = "white";
-        container.style.width = "52px";
-        container.style.height = "35px";
-        container.innerHTML = "<p style=\"font-size: 1.75em; color: #989898; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)\"><b>PM</b></p>";
-        return container;
-      },
-
-      onRemove: function() {
-        // Nothing to do here
-      }
-    });
-
-    L.control.pm = function(opts) {
-      return new L.Control.PM(opts);
-    };
-
-    L.control.pm({ position: "bottomleft" }).addTo(afternoonMap);
-
-    afternoonMap.on("click", () => { this.onMapClick(); });
-    // afternoonMap.on('dblclick', (e)=>{this.onMapDoubleClick(e)});
-
-    this.mapService.afternoonMap = afternoonMap;
-
-    map.sync(afternoonMap);
-    afternoonMap.sync(map);
+  private async initMaps() {
+    const [map, afternoonMap] = await this.mapService.initAmPmMap(this.showAfternoonMap);
+    map.on("click", () => this.onMapClick());
+    afternoonMap.on("click", () => this.onMapClick());
   }
 
   private onMapClick() {
@@ -875,8 +750,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       map.classList.remove("create-bulletin__map--am");
       afternoonMap.classList.remove("create-bulletin__map--am");
     }
-    this.initMaps();
-    this.updateInternalBulletins();
+    this.initMaps().then(() => this.updateInternalBulletins());
 
     if (bulletin) {
       this.selectBulletin(bulletin);
@@ -1295,13 +1169,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       if (this.activeBulletin.forenoon) {
         if (this.activeBulletin.forenoon.avalancheProblem1) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem1.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
+            !this.activeBulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
+            !this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() ||
+            this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
+            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1309,13 +1183,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.forenoon.avalancheProblem2) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem2.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
+            !this.activeBulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
+            !this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() ||
+            this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
+            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1323,13 +1197,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.forenoon.avalancheProblem3) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem3.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
+            !this.activeBulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
+            !this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() ||
+            this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
+            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1337,13 +1211,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.forenoon.avalancheProblem4) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem4.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
+            !this.activeBulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
+            !this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() ||
+            this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
+            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1351,13 +1225,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.forenoon.avalancheProblem5) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem5.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
+            !this.activeBulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
+            !this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() ||
+            this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
+            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1367,13 +1241,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       if (this.activeBulletin.afternoon) {
         if (this.activeBulletin.afternoon.avalancheProblem1) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem1.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
+            !this.activeBulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
+            !this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() ||
+            this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
+            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1381,13 +1255,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.afternoon.avalancheProblem2) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem2.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
+            !this.activeBulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
+            !this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() ||
+            this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
+            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1395,13 +1269,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.afternoon.avalancheProblem3) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem3.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
+            !this.activeBulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
+            !this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() ||
+            this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
+            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1409,13 +1283,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.afternoon.avalancheProblem4) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem4.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
+            !this.activeBulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
+            !this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() ||
+            this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
+            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1423,13 +1297,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (this.activeBulletin.afternoon.avalancheProblem5) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem5.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() || 
+            this.activeBulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
+            !this.activeBulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
+            !this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() ||
+            this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
+            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
             !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
           {
             error = true;
@@ -1690,7 +1564,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private updateAggregatedRegions() {
-    
+
     this.mapService.resetAggregatedRegions();
 
     for (const bulletin of this.internBulletinsList) {
@@ -2415,7 +2289,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         }
 
         this.updateInternalBulletins();
-        
+
         this.mapService.deselectAggregatedRegion();
         this.loading = false;
         this.startAutoSave();

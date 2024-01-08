@@ -58,6 +58,14 @@
               ],
               "outputHashing": "all"
             },
+            "beta": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.beta.ts"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "vendorChunk": true,
@@ -82,6 +90,9 @@
           "configurations": {
             "development": {
               "buildTarget": "albina-admin-gui:build:development"
+            },
+            "beta": {
+              "buildTarget": "albina-admin-gui:build:beta"
             },
             "production": {
               "buildTarget": "albina-admin-gui:build:production"

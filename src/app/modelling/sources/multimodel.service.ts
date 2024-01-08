@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { RegionsService } from "app/providers/regions-service/regions.service";
-import { GenericObservation } from "app/observations/models/generic-observation.model";
+import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 
 interface MultimodelPointCsv {
   statnr: string;
@@ -36,38 +36,32 @@ export class MultimodelSourceService {
   }
 
   getZamgMultiModelPoints(): Observable<GenericObservation[]> {
-    const url = this.constantsService.zamgModelsUrl + "snowgridmultimodel_stationlist.txt";
+    const url = this.constantsService.observationApi[ForecastSource.multimodel];
 
-    return this.http.get(url, { responseType: "text" }).pipe(
+    return this.http.get(url + "snowgridmultimodel_stationlist.txt", { responseType: "text" }).pipe(
       map((response) => this.parseCSV<MultimodelPointCsv>(response.toString().replace(/^#\s*/, ""))),
       map((points) =>
         points
           .map((row: MultimodelPointCsv): GenericObservation => {
             const id = row.statnr;
-            const regionCode = row.code;
-            const region = this.regionsService.getRegionForId(regionCode);
-            const lat = parseFloat(row.lat);
-            const lng = parseFloat(row.lon);
-
-            return {
+            return this.regionsService.augmentRegion({
               $source: "multimodel",
               $data: row,
               $id: id,
-              region: regionCode,
-              locationName: region?.name,
+              region: row.code,
               $extraDialogRows: [
                 ...["HN", "HS"].map((type) => ({
                   label: `ECMWF ${type}`,
-                  url: `${this.constantsService.zamgModelsUrl}eps_ecmwf/snowgrid_ECMWF_EPS_${id}_${type}.png`,
+                  url: `${url}eps_ecmwf/snowgrid_ECMWF_EPS_${id}_${type}.png`,
                 })),
                 ...["HN", "HS"].map((type) => ({
                   label: `CLAEF ${type}`,
-                  url: `${this.constantsService.zamgModelsUrl}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`,
+                  url: `${url}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`,
                 })),
               ],
-              latitude: lat,
-              longitude: lng,
-            } as GenericObservation;
+              latitude: parseFloat(row.lat),
+              longitude: parseFloat(row.lon),
+            } as GenericObservation);
           })
           .sort((p1, p2) => p1.region.localeCompare(p2.region)),
       ),
