@@ -35,7 +35,7 @@
     </div>
 
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown" dropdown (onToggle)="toggled()" style="padding-right: 10px">
+      <li class="nav-item dropdown" dropdown (onToggle)="toggled()">
         <a
           class="nav-link dropdown-toggle navbar__lang-toggle"
           data-toggle="dropdown"
@@ -87,17 +87,17 @@
           </li>
         </ul>
       </li>
-      <li class="nav-item dropdown" dropdown (onToggle)="toggled()" style="padding-right: 10px">
+      <li class="nav-item dropdown" dropdown (onToggle)="toggled()">
         <a
-          class="nav-link dropdown-toggle"
+          class="nav-link dropdown-toggle user-avatar"
           data-toggle="dropdown"
           role="button"
           aria-haspopup="true"
           aria-expanded="false"
           dropdownToggle
         >
-          <img src="{{ authenticationService.getUserImageSanitized() }}" class="img-avatar" />
-          <span class="hidden-md-down">{{ authenticationService.getUsername() }}</span>
+          <img src="{{ authenticationService.getUserImageSanitized() }}" class="user-avatar__img" />
+          {{ authenticationService.getUsername() }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
           <li>
@@ -172,7 +172,7 @@
   <aside
     class="aside-menu chat"
     style="overflow: auto"
-    [ngStyle]="{'display': isChatVisible ? 'block' : 'none'}"
+    [ngStyle]="{ display: isChatVisible ? 'block' : 'none' }"
     *ngIf="
       authenticationService.getActiveRegionId() &&
       authenticationService.getActiveRegionId() !== undefined &&
