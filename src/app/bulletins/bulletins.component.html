@@ -136,18 +136,6 @@
             <i class="fa fa-file-text"></i>
           </button>
 
-          <!-- info -->
-          <button
-            *ngIf="showInfoButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="showPublicationInfo($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.info' | translate }}"
-          >
-            <i class="fa fa-info"></i>
-          </button>
-
           <!-- media file -->
           <button
             *ngIf="showMediaFileButton(date)"
@@ -219,6 +207,19 @@
           >
             <i class="fa fa-check"></i>
           </button>
+
+          <!-- info -->
+          <button
+            *ngIf="showInfoButton(date)"
+            type="button"
+            class="btn btn-secondary btn-sm"
+            (click)="showPublicationInfo($event, date)"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.tooltip.info' | translate }}"
+          >
+            <i class="fa fa-info"></i>
+          </button>
+
         </td>
       </tr>
     </tbody>
