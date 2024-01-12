@@ -13,6 +13,15 @@ import {
 } from "./models/generic-observation.model";
 import { ObservationFilterType } from "./models/generic-observation.model";
 
+interface Dataset {
+  source: Array<Array<string | number>>; 
+}
+
+interface OutputDataset {
+  dataset: Dataset;
+  nan: any; 
+}
+
 const DATASET_MAX_FACTOR = 1;
 
 export interface GenericFilterToggleData {
@@ -463,6 +472,52 @@ export class ObservationFilterService {
         values["selected"] === 1 ? values["available"] : 0,
       ]);
     return { dataset: { source: dataset }, nan };
+  }
+
+  public normalizeData(dataset: OutputDataset): OutputDataset {
+
+    let nan = 0;
+    const data = dataset?.dataset.source.slice(1);
+    const header = dataset?.dataset.source[0];
+    if(!dataset || !data || !header) return dataset;
+
+    let availableMax = Number.MIN_VALUE;
+    let allMax = Number.MIN_VALUE;
+    let maxMax = Number.MIN_VALUE;
+
+    // Iterate through the data to find the max and min values for selected and highlighted
+    data.forEach((row) => {
+      const availableValue = row[header.indexOf("available")];
+      const allValue = row[header.indexOf("all")];
+      const maxValue = row[header.indexOf("max")];
+      //console.log("normalizeData #1", row[header.indexOf("category")], {available: row[header.indexOf("available")], all: row[header.indexOf("all")]});
+      if (+availableValue > +availableMax) {
+        availableMax = +availableValue;
+      }
+
+      if (+allValue > +allMax) {
+        allMax = +allValue;
+      }
+
+      if (+maxValue > +maxMax) {
+        maxMax = +maxValue;
+      }
+
+    });
+
+    const newData = data.map((row) => {
+      const tempRow = row.slice();
+      const availableValue = row[header.indexOf("available")];
+      tempRow[header.indexOf("all")] = +availableValue * 1.2;
+      if(tempRow[header.indexOf("highlighted")]) tempRow[header.indexOf("highlighted")] = +availableValue * 1.2;
+      if(tempRow[header.indexOf("max")]) tempRow[header.indexOf("max")] = +availableValue * 1.2;
+      return tempRow;
+    });
+
+    newData.unshift(header);
+    console.log("normalizeData #2", data[0][header.indexOf("category")], {newData, data});
+    return { dataset: { source: newData }, nan };
+    
   }
 
   _normedDateString(date: Date): string {
