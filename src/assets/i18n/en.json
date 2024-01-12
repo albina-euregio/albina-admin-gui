@@ -41,15 +41,6 @@
     "region": "Region",
     "education": "Education"
   },
-  "chat": {
-    "placeholder": "Write here ...",
-    "send": "Send",
-    "activeUsers": "Who is online?",
-    "all": "All ",
-    "AT-07": "Tirol ",
-    "IT-32-BZ": "South Tyrol ",
-    "IT-32-TN": "Trentino "
-  },
   "matrix": {
     "label": {
       "snowpackStability": "Snowpack Stability",

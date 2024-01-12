@@ -195,47 +195,6 @@ export class AuthenticationService {
     return this.currentAuthor?.getRoles?.()?.includes(role);
   }
 
-  // region
-  public getChatId(region: string) {
-    switch (region) {
-      case this.constantsService.codeTyrol:
-        switch (this.getActiveRegionId()) {
-          case this.constantsService.codeTyrol:
-            return 0;
-          case this.constantsService.codeSouthTyrol:
-            return 1;
-          case this.constantsService.codeTrentino:
-            return 2;
-          default:
-            return 0;
-        }
-      case this.constantsService.codeSouthTyrol:
-        switch (this.getActiveRegionId()) {
-          case this.constantsService.codeTyrol:
-            return 1;
-          case this.constantsService.codeSouthTyrol:
-            return 0;
-          case this.constantsService.codeTrentino:
-            return 3;
-          default:
-            return 0;
-        }
-      case this.constantsService.codeTrentino:
-        switch (this.getActiveRegionId()) {
-          case this.constantsService.codeTyrol:
-            return 2;
-          case this.constantsService.codeSouthTyrol:
-            return 3;
-          case this.constantsService.codeTrentino:
-            return 0;
-          default:
-            return 0;
-        }
-      default:
-        return 0;
-    }
-  }
-
   public login(username: string, password: string): Observable<boolean> {
     const url = this.constantsService.getServerUrl() + "authentication";
     const body = JSON.stringify({username, password});

@@ -5,7 +5,6 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { ChatService } from "../providers/chat-service/chat.service";
 import { Router } from "@angular/router";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -20,9 +19,7 @@ export class FullLayoutComponent {
 
   public disabled: boolean = false;
   public status: { isopen: boolean } = { isopen: false };
-  public showChat: boolean;
   public isNavCollapsed = true;
-  public isChatVisible = false;
 
   public message: string;
 
@@ -42,7 +39,6 @@ export class FullLayoutComponent {
     public translateService: TranslateService,
     public authenticationService: AuthenticationService,
     public bulletinsService: BulletinsService,
-    public chatService: ChatService,
     public settingsService: SettingsService,
     public regionsService: RegionsService,
     public constantsService: ConstantsService,
@@ -51,24 +47,12 @@ export class FullLayoutComponent {
     private sanitizer: DomSanitizer) {
     this.message = "";
     this.tmpRegion = undefined;
-    this.showChat = environment.showChat;
-    if (this.showChat && this.authenticationService.isUserLoggedIn()) {
-      this.chatService.connect();
-    }
     this.environment = environment;
-  }
-
-  public toggleChat() {
-    this.isChatVisible = !this.isChatVisible;
   }
 
   getStyle() {
     const style = `background-color: ${environment.headerBgColor}`;
     return this.sanitizer.bypassSecurityTrustStyle(style);
-  }
-
-  public showBadge(region?: string): boolean {
-    return this.chatService.getNewMessageCount(region) > 0 && !this.status.isopen;
   }
 
   public toggled(): void {
@@ -80,24 +64,11 @@ export class FullLayoutComponent {
     this.status.isopen = !this.status.isopen;
   }
 
-  public focusChat(region?: string) {
-    this.chatService.resetNewMessageCount(region);
-  }
-
   public logout() {
     if (this.bulletinsService.getActiveDate()) {
       this.bulletinsService.unlockRegion(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId());
     }
     this.authenticationService.logout();
-    this.chatService.disconnect();
-  }
-
-  sendChatMessage(region?: string) {
-    this.chatService.resetNewMessageCount(region);
-    if (this.message && this.message !== undefined && this.message !== "") {
-      this.chatService.sendMessage(this.message, region);
-    }
-    this.message = "";
   }
 
   changeRegion(region) {

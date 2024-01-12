@@ -38,7 +38,6 @@ import { ObservationFilterService } from "./observations/observation-filter.serv
 import { WsBulletinService } from "./providers/ws-bulletin-service/ws-bulletin.service";
 import { WsUpdateService } from "./providers/ws-update-service/ws-update.service";
 import { WsRegionService } from "./providers/ws-region-service/ws-region.service";
-import { ChatService } from "./providers/chat-service/chat.service";
 import { LocalStorageService } from "./providers/local-storage-service/local-storage.service";
 import { ConfigurationService } from "./providers/configuration-service/configuration.service";
 import { SocialmediaService } from "./providers/socialmedia-service/socialmedia.service";
@@ -184,7 +183,6 @@ registerLocaleData(localeOc, "oc");
     WsRegionService,
     WsUpdateService,
     WsBulletinService,
-    ChatService,
     LocalStorageService,
     ConfigurationService,
     ConfirmationService,

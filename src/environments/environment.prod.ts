@@ -5,8 +5,7 @@ export const environment = {
   textcatUrl: "https://admin.avalanche.report/textcat-ng/",
   headerBgColor: "#ffffff",
   faviconPath: "assets/img/admin-favicon.ico",
-  logoPath: "assets/img/admin-logo.svg",
-  showChat: true
+  logoPath: "assets/img/admin-logo.svg"
 };
 
 Object.assign(environment, (window as any).ENV);

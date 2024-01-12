@@ -7,8 +7,7 @@ export const environment = {
   apiBaseUrl: window["ENV"].API_BASE_URL,
   wsBaseUrl: window["ENV"].WS_BASE_URL,
   textcatUrl: window["ENV"].TEXTCAT_URL,
-  headerBgColor: window["ENV"].HEADER_BG_COLOR,
-  showChat: window["ENV"].SHOW_CHAT,
+  headerBgColor: window["ENV"].HEADER_BG_COLOR
 };
 
 Object.assign(environment, (window as any).ENV);

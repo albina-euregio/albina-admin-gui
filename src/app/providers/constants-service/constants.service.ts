@@ -358,10 +358,6 @@ export class ConstantsService {
     return environment.wsBaseUrl + "region/";
   }
 
-  getWsChatUrl() {
-    return environment.wsBaseUrl + "chat/";
-  }
-
   getWsBulletinUrl() {
     return environment.wsBaseUrl + "bulletin/";
   }
