@@ -56,6 +56,18 @@ export class ObservationFilterService {
     Days: { all: [], selected: [], highlighted: [] },
   };
 
+  public isFilterActive(): boolean {
+    for (const key in this.filterSelection) {
+      if (this.filterSelection.hasOwnProperty(key)) {
+        const filter = this.filterSelection[key];
+        if (filter.selected.length > 0 || filter.highlighted.length > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   constructor(private constantsService: ConstantsService) {
     this.seedFilterSelectionsAll();
   }
@@ -135,6 +147,9 @@ export class ObservationFilterService {
   get endDateString(): string {
     return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.endDate);
   }
+
+  
+
 
   public isSelected(observation: GenericObservation) {
     return (
@@ -479,43 +494,46 @@ export class ObservationFilterService {
     let nan = 0;
     const data = dataset?.dataset.source.slice(1);
     const header = dataset?.dataset.source[0];
-    if(!dataset || !data || !header) return dataset;
+    //if(!this.isFilterActive()) console.log("normalizeData #0 ", {filterActive: this.isFilterActive(), filter: this.filterSelection, data});
+    if(!this.isFilterActive() || !dataset || !data || !header) return dataset;
 
-    let availableMax = Number.MIN_VALUE;
-    let allMax = Number.MIN_VALUE;
-    let maxMax = Number.MIN_VALUE;
+    // get max values in order to normalize data
+    // let availableMax = Number.MIN_VALUE;
+    // let allMax = Number.MIN_VALUE;
+    // let maxMax = Number.MIN_VALUE;
 
-    // Iterate through the data to find the max and min values for selected and highlighted
-    data.forEach((row) => {
-      const availableValue = row[header.indexOf("available")];
-      const allValue = row[header.indexOf("all")];
-      const maxValue = row[header.indexOf("max")];
-      //console.log("normalizeData #1", row[header.indexOf("category")], {available: row[header.indexOf("available")], all: row[header.indexOf("all")]});
-      if (+availableValue > +availableMax) {
-        availableMax = +availableValue;
-      }
+    // data.forEach((row) => {
+    //   const availableValue = row[header.indexOf("available")];
+    //   const allValue = row[header.indexOf("all")];
+    //   const maxValue = row[header.indexOf("max")];
+    //   //console.log("normalizeData #1", row[header.indexOf("category")], {available: row[header.indexOf("available")], all: row[header.indexOf("all")]});
+    //   if (+availableValue > +availableMax) {
+    //     availableMax = +availableValue;
+    //   }
 
-      if (+allValue > +allMax) {
-        allMax = +allValue;
-      }
+    //   if (+allValue > +allMax) {
+    //     allMax = +allValue;
+    //   }
 
-      if (+maxValue > +maxMax) {
-        maxMax = +maxValue;
-      }
+    //   if (+maxValue > +maxMax) {
+    //     maxMax = +maxValue;
+    //   }
 
-    });
+    // });
 
     const newData = data.map((row) => {
       const tempRow = row.slice();
       const availableValue = row[header.indexOf("available")];
-      tempRow[header.indexOf("all")] = +availableValue * 1.2;
-      if(tempRow[header.indexOf("highlighted")]) tempRow[header.indexOf("highlighted")] = +availableValue * 1.2;
-      if(tempRow[header.indexOf("max")]) tempRow[header.indexOf("max")] = +availableValue * 1.2;
+      const selectedValue = row[header.indexOf("selected")];
+      const overwriteValue = +availableValue > 0 ? +availableValue : +selectedValue;
+      tempRow[header.indexOf("all")] = overwriteValue;
+      if(tempRow[header.indexOf("highlighted")]) tempRow[header.indexOf("highlighted")] = overwriteValue;
+      if(tempRow[header.indexOf("max")]) tempRow[header.indexOf("max")] = overwriteValue;
       return tempRow;
     });
 
     newData.unshift(header);
-    console.log("normalizeData #2", data[0][header.indexOf("category")], {newData, data});
+    //console.log("normalizeData #2", data[0][header.indexOf("category")], {newData, data});
     return { dataset: { source: newData }, nan };
     
   }
