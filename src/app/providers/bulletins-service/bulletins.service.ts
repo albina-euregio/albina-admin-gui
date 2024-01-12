@@ -176,6 +176,17 @@ export class BulletinsService {
     this.activeDate = date;
   }
 
+  hasBeenPublished(date: Date) {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    today = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+
+    if (today.getTime() > date.getTime()) {
+      return true;
+    }
+    return false;
+  }
+
   /**
    * Returns a date that's offset from the activeDate by a given amount.
    * 

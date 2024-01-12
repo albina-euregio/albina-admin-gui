@@ -13,7 +13,7 @@
       <tr
         *ngFor="let date of bulletinsService.dates"
         [ngClass]="{
-          'bulletins-table__day--past': isPast(date) && !isToday(date)
+          'bulletins-table__day--past': bulletinsService.hasBeenPublished(date)
         }" 
       >
         <td [attr.data-label]="'bulletins.table.title.date' | translate ">
@@ -22,7 +22,7 @@
               {{ date | localizedDate : "fullDate" }}
             </time>
             <button class="btn btn-primary btn-icon" type="button" (click)="editBulletin(date, false)">
-              <i class="ph ph-newspaper"></i>
+              <i class="ph ph-arrow-right"></i>
             </button>
           </div>
         </td>

@@ -109,34 +109,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.wsUpdateService.disconnect();
   }
 
-  isPast(date: Date) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (today.getTime() > date.getTime()) {
-      return true;
-    }
-    return false;
-  }
-
-  isToday(date: Date) {
-    if (date !== undefined) {
-      const today = new Date();
-      const hours = today.getHours();
-      today.setHours(0, 0, 0, 0);
-      if (today.getTime() === date.getTime()) {
-        return true;
-      }
-      if (hours >= 17) {
-        today.setDate(today.getDate() + 1);
-        if (today.getTime() === date.getTime()) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   getActiveRegionStatus(date) {
     const regionStatusMap = this.bulletinsService.statusMap.get(this.authenticationService.getActiveRegionId());
     if (regionStatusMap)
@@ -155,7 +127,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   showCreateButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.isPast(date)) &&
+      (!this.bulletinsService.hasBeenPublished(date)) &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing
@@ -196,15 +168,12 @@ export class BulletinsComponent implements OnInit, OnDestroy {
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.resubmitted &&
       this.copying &&
       this.bulletinsService.getCopyDate() !== date &&
-      !this.isPast(date) &&
-      !this.isToday(date)) {
+      !this.bulletinsService.hasBeenPublished(date)) {
       return true;
     } else {
       return false;
     }
   }
-
-  
 
   showPublishAllButton(date) {
     if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
@@ -212,11 +181,8 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
   showCheckButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      /*!this.isPast(date) && */
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
@@ -256,7 +222,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   showPreviewButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      /*!this.isPast(date) && */
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
@@ -281,7 +246,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   showInfoButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      /*(!this.isPast(date) ) && */
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.published ||
@@ -328,71 +292,8 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   }
 
   editBulletin(date: Date, isUpdate: boolean) {
-    if (this.authenticationService.getActiveRegionId() && this.authenticationService.getActiveRegionId() !== undefined && (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) || this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))) {
-      if (!this.copying) {
-        if (isUpdate) {
-          this.bulletinsService.setIsUpdate(true);
-        } else {
-          this.bulletinsService.setIsUpdate(false);
-        }
-
-        this.bulletinsService.setActiveDate(date);
-
-        if (!this.isEditable(date) && !isUpdate) {
-          this.bulletinsService.setIsEditable(false);
-          this.router.navigate(["/bulletins/new"]);
-        } else {
-          if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
-            this.bulletinsService.lockRegion(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate());
-            this.bulletinsService.setIsEditable(true);
-            this.router.navigate(["/bulletins/new"]);
-          }
-        }
-      }
-    } else {
-      this.bulletinsService.setActiveDate(date);
-      this.bulletinsService.setIsUpdate(false);
-      this.bulletinsService.setIsEditable(false);
-      this.router.navigate(["/bulletins/new"]);
-    }
-  }
-
-  showBulletin(date: Date) {
-    if (!this.copying) {
-      this.bulletinsService.setIsUpdate(false);
-      this.bulletinsService.setActiveDate(date);
-      this.bulletinsService.setIsEditable(false);
-      this.router.navigate(["/bulletins/new"]);
-    }
-  }
-
-  isEditable(date) {
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) {
-      return true;
-    }
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) {
-      return true;
-    }
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-      return true;
-    }
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-      return true;
-    }
-    if (this.bulletinsService.getIsUpdate()) {
-      return true;
-    }
-
-    if (
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published && !this.bulletinsService.getIsUpdate()) ||
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished && !this.bulletinsService.getIsUpdate()) ||
-      this.bulletinsService.isLocked(date, this.authenticationService.getActiveRegionId()) ||
-      this.isPast(date) ||
-      this.isToday(date)) {
-      return false;
-    } else {
-      return true;
-    }
+    this.bulletinsService.setActiveDate(date);
+    this.router.navigate(["/bulletins/new"]);
   }
 
   showCaaml(event, date: Date) {
