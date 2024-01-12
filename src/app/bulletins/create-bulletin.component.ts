@@ -463,7 +463,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.bulletinsService.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
-    this.bulletinsService.setIsSmallChange(false);
     this.bulletinsService.setIsUpdate(false);
 
     this.loading = false;
@@ -1667,35 +1666,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         }
       }
 
-      if (this.bulletinsService.getIsSmallChange()) {
-        this.bulletinsService.changeBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-          () => {
-            this.localStorageService.clear();
-            this.loading = false;
-            //this.goBack();
-            console.log("Bulletins changed on server.");
-          },
-          () => {
-            this.loading = false;
-            console.error("Bulletins could not be changed on server!");
-            this.openChangeErrorModal(this.changeErrorTemplate);
-          }
-        );
-      } else {
-        this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-          () => {
-            this.localStorageService.clear();
-            this.loading = false;
-            //this.goBack();
-            console.log("Bulletins saved on server.");
-          },
-          () => {
-            this.loading = false;
-            console.error("Bulletins could not be saved on server!");
-            this.openSaveErrorModal(this.saveErrorTemplate);
-          }
-        );
-      }
+      this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
+        () => {
+          this.localStorageService.clear();
+          this.loading = false;
+          //this.goBack();
+          console.log("Bulletins saved on server.");
+        },
+        () => {
+          this.loading = false;
+          console.error("Bulletins could not be saved on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        }
+      );
     }
   }
 
@@ -2239,28 +2222,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
           // only add bulletins with published or saved regions
           if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
-
-            // move published regions to saved regions
-            if (this.bulletinsService.getIsUpdate() || this.bulletinsService.getIsSmallChange()) {
-              const saved = new Array<String>();
-              const published = new Array<String>();
-              for (const region of bulletin.getSavedRegions()) {
-                saved.push(region);
-              }
-              for (const region of bulletin.getPublishedRegions()) {
-                if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-                  saved.push(region);
-                } else {
-                  published.push(region);
-                }
-              }
-
-              if (saved.length > 0) {
-                bulletin.setSavedRegions(saved);
-                bulletin.setPublishedRegions(published);
-              }
-            }
-
             this.addInternalBulletin(bulletin);
           }
         }
@@ -2282,10 +2243,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           if (hit) {
             break;
           }
-        }
-
-        if (!hit && this.getOwnBulletins().length === 0 && this.bulletinsService.getIsEditable() && !this.bulletinsService.getIsUpdate() && !this.bulletinsService.getIsSmallChange()) {
-          //this.createInitialAggregatedRegion();
         }
 
         this.updateInternalBulletins();
@@ -3182,7 +3139,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.setIsEditable(true);
   }
 
-  showPublishButton(date) {
+  showPublishUpdateButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (this.isToday(date) || this.isPast(date)) &&
@@ -3190,6 +3147,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted
       ) &&
+      !this.copying &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  showPublishChangeButton(date) {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
+      (this.isToday(date) || this.isPast(date)) &&
+      (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated) &&
       !this.copying &&
       this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
       return true;
@@ -3209,7 +3179,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  publish(event, date: Date) {
+  publish(event, date: Date, change: boolean) {
     event.stopPropagation();
     this.publishing = date;
 
@@ -3247,7 +3217,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date);
+        this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
       },
       error => {
         console.error("Bulletins could not be checked!");
@@ -3256,10 +3226,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: Date) {
+  openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: Date, change: boolean) {
     const initialState = {
       text: message,
       date: date,
+      change: change,
       component: this
     };
     this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
@@ -3269,11 +3240,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
   }
 
-  publishBulletinsModalConfirm(date: Date): void {
+  publishBulletinsModalConfirm(date: Date, change: boolean): void {
     this.publishBulletinsModalRef.hide();
-    this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+    this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId(), change).subscribe(
       data => {
-        console.log("Bulletins published.");
+        if (change) {
+          console.log("Bulletins published (no messages).");
+        } else {
+          console.log("Bulletins published.");
+        }
         if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
         } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
@@ -3282,7 +3257,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.publishing = undefined;
       },
       error => {
-        console.error("Bulletins could not be published!");
+        if (change) {
+          console.error("Bulletins could not be published (no messages)!");
+        } else {
+          console.error("Bulletins could not be published!");
+        }
         this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
       }
     );

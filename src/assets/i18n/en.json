@@ -58,22 +58,22 @@
     "title": "Avalanche.report",
     "loadingPreview": "Creating PDF preview ...",
     "tooltip": {
-      "publish": "Publish updated bulletin immediately",
-      "submit": "Submit bulletin",
       "copy": "Copy bulletin",
-      "cancel": "Cancel copy",
       "paste": "Paste bulletin",
-      "update": "Create update of bulletin",
+      "cancel": "Cancel copy",
+      "update": "Update bulletin",
+      "submit": "Submit bulletin",
+      "submitUpdate": "Submit updated bulletin",
+      "publishChange": "Publish updated bulletin (no messages)",
+      "publishUpdate": "Publish updated bulletin",
       "caaml": "Show CAAML",
       "json": "Show JSON",
-      "edit": "Edit bulletin (will not be published again)",
       "create": "Create bulletin",
       "preview": "Preview bulletin (PDF)",
       "check": "Check bulletin",
       "info": "Show publication status",
       "publishAll": "Publish all regions",
-      "mediaFile": "Upload media file",
-      "publishUpdate": "Publish update"
+      "mediaFile": "Upload media file"
     },
     "create": {
       "tooltip": {

@@ -19,7 +19,6 @@ export class BulletinsService {
   private copyDate: Date;
   private isEditable: boolean;
   private isUpdate: boolean;
-  private isSmallChange: boolean;
 
   public lockedRegions: Map<string, Date[]>;
   public regionLocks: Subject<RegionLockModel>;
@@ -46,7 +45,6 @@ export class BulletinsService {
     this.copyDate = undefined;
     this.isEditable = false;
     this.isUpdate = false;
-    this.isSmallChange = false;
 
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
 
@@ -230,14 +228,6 @@ export class BulletinsService {
     this.isUpdate = isUpdate;
   }
 
-  getIsSmallChange() {
-    return this.isSmallChange;
-  }
-
-  setIsSmallChange(isSmallChange: boolean) {
-    this.isSmallChange = isSmallChange;
-  }
-
   getUserRegionStatus(date: Date): Enums.BulletinStatus {
     const region = this.authenticationService.getActiveRegionId();
     const regionStatusMap = this.statusMap.get(region);
@@ -345,19 +335,6 @@ export class BulletinsService {
     return this.http.post<Response>(url, body, options);
   }
 
-  changeBulletins(bulletins, date): Observable<Response> {
-    const url = this.constantsService.getServerUrl() + "bulletins/change?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
-    const headers = this.authenticationService.newAuthHeader();
-    const jsonBulletins = [];
-    for (let i = bulletins.length - 1; i >= 0; i--) {
-      jsonBulletins.push(bulletins[i].toJson());
-    }
-    const body = JSON.stringify(jsonBulletins);
-    const options = { headers: headers };
-
-    return this.http.post<Response>(url, body, options);
-  }
-
   submitBulletins(date: Date, region: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "bulletins/submit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region;
     const headers = this.authenticationService.newAuthHeader();
@@ -367,8 +344,8 @@ export class BulletinsService {
     return this.http.post<Response>(url, body, options);
   }
 
-  publishBulletins(date: Date, region: string): Observable<Response> {
-    const url = this.constantsService.getServerUrl() + "bulletins/publish?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region;
+  publishBulletins(date: Date, region: string, change: boolean): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "bulletins/publish?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region + "&change=" + change;
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     const options = { headers: headers };
