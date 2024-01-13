@@ -454,6 +454,7 @@
 
               <div class="btn-group accordion-header__buttons">
                 <div
+                  [disabled]="!bulletinsService.getIsEditable() || editRegions || loading || !isCreator(activeBulletin)"
                   class="form-check"
                   title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
                   (click)="
@@ -461,9 +462,11 @@
                   "
                 >
                   <input
+                    [disabled]="!bulletinsService.getIsEditable() || editRegions || loading || !isCreator(activeBulletin)"
                     class="form-check-input"
                     type="checkbox"
-                    [(ngModel)]="activeBulletin.hasDaytimeDependency"
+                    (click)="daytimeDependencyChanged($event, !activeBulletin.hasDaytimeDependency); $event.stopPropagation()"
+                    [ngModel]="activeBulletin.hasDaytimeDependency"
                     id="daytimeDependency"
                   />
                   <label class="form-label" for="daytimeDependency"> AM/PM </label>

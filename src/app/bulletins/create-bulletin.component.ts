@@ -1054,58 +1054,60 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
-    this.activeBulletin.setHasDaytimeDependency(value);
+    if (this.bulletinsService.getIsEditable()) {
+      this.activeBulletin.setHasDaytimeDependency(value);
 
-    if (this.activeBulletin.hasDaytimeDependency) {
-      if (this.showAfternoonMap === false) {
-        this.showAfternoonMap = true;
-        this.onShowAfternoonMapChange(true);
-      }
-      this.activeBulletin.afternoon.setDangerRatingAbove(this.activeBulletin.forenoon.getDangerRatingAbove());
-      if (this.activeBulletin.forenoon.getAvalancheProblem1() && this.activeBulletin.forenoon.getAvalancheProblem1() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem1()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem2() && this.activeBulletin.forenoon.getAvalancheProblem2() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem2()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem3() && this.activeBulletin.forenoon.getAvalancheProblem3() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem3()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem4() && this.activeBulletin.forenoon.getAvalancheProblem4() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem4()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem5() && this.activeBulletin.forenoon.getAvalancheProblem5() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem5()));
-      }
-      if (this.activeBulletin.forenoon.hasElevationDependency) {
-        this.activeBulletin.afternoon.setHasElevationDependency(true);
-        this.activeBulletin.afternoon.setDangerRatingBelow(this.activeBulletin.forenoon.getDangerRatingBelow());
-      }
-    } else {
-      this.activeBulletin.afternoon.setDangerRatingAbove(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
-      this.activeBulletin.afternoon.setAvalancheProblem1(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem2(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem3(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem4(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem5(undefined);
-      this.activeBulletin.afternoon.setHasElevationDependency(false);
-      this.activeBulletin.afternoon.setDangerRatingBelow(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
-      let daytimeDependency = false;
-      for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
-        if (bulletin.hasDaytimeDependency) {
-          daytimeDependency = true;
-          break;
+      if (this.activeBulletin.hasDaytimeDependency) {
+        if (this.showAfternoonMap === false) {
+          this.showAfternoonMap = true;
+          this.onShowAfternoonMapChange(true);
+        }
+        this.activeBulletin.afternoon.setDangerRatingAbove(this.activeBulletin.forenoon.getDangerRatingAbove());
+        if (this.activeBulletin.forenoon.getAvalancheProblem1() && this.activeBulletin.forenoon.getAvalancheProblem1() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem1()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem2() && this.activeBulletin.forenoon.getAvalancheProblem2() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem2()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem3() && this.activeBulletin.forenoon.getAvalancheProblem3() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem3()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem4() && this.activeBulletin.forenoon.getAvalancheProblem4() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem4()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem5() && this.activeBulletin.forenoon.getAvalancheProblem5() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem5()));
+        }
+        if (this.activeBulletin.forenoon.hasElevationDependency) {
+          this.activeBulletin.afternoon.setHasElevationDependency(true);
+          this.activeBulletin.afternoon.setDangerRatingBelow(this.activeBulletin.forenoon.getDangerRatingBelow());
+        }
+      } else {
+        this.activeBulletin.afternoon.setDangerRatingAbove(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
+        this.activeBulletin.afternoon.setAvalancheProblem1(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem2(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem3(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem4(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem5(undefined);
+        this.activeBulletin.afternoon.setHasElevationDependency(false);
+        this.activeBulletin.afternoon.setDangerRatingBelow(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
+        let daytimeDependency = false;
+        for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
+          if (bulletin.hasDaytimeDependency) {
+            daytimeDependency = true;
+            break;
+          }
+        }
+        if (!daytimeDependency && this.showAfternoonMap) {
+          this.showAfternoonMap = false;
+          this.onShowAfternoonMapChange(false);
         }
       }
-      if (!daytimeDependency && this.showAfternoonMap) {
-        this.showAfternoonMap = false;
-        this.onShowAfternoonMapChange(false);
-      }
+      this.activeBulletin.getForenoon().updateDangerRating();
+      this.activeBulletin.getAfternoon().updateDangerRating();
+      this.mapService.updateAggregatedRegion(this.activeBulletin);
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
-    this.activeBulletin.getForenoon().updateDangerRating();
-    this.activeBulletin.getAfternoon().updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.activeBulletin);
-    this.mapService.selectAggregatedRegion(this.activeBulletin);
   }
 
   private checkAvalancheProblems(): boolean {
