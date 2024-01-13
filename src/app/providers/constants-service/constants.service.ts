@@ -67,7 +67,7 @@ export class ConstantsService {
   public mapBoundaryS: number = 45.0;
   public mapBoundaryW: number = 9.0;
 
-  public autoSaveIntervall: number = 1000;
+  public autoSaveIntervall: number = 10000;
 
   public colorBrand = "#19ABFF";
 

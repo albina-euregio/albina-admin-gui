@@ -2898,6 +2898,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated
       ) &&
       !this.copying &&
+      this.internBulletinsList.length > 0 &&
       this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
       return true;
     } else {
@@ -2993,6 +2994,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   submitBulletinsModalConfirm(date: Date): void {
     this.submitBulletinsModalRef.hide();
+    this.save();
     this.bulletinsService.submitBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
       data => {
         console.log("Bulletins submitted.");
@@ -3028,7 +3030,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showUpdateButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (this.bulletinsService.hasBeenPublished(date)) &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted ||
@@ -3036,7 +3037,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.republished ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
-        this.bulletinsService.getUserRegionStatus(date) === undefined
+        (this.bulletinsService.getUserRegionStatus(date) === undefined && (this.bulletinsService.hasBeenPublished(date)))
       ) &&
       !this.copying &&
       (
