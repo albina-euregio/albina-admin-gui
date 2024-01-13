@@ -1334,6 +1334,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate);
   }
 
+  compareBulletin(event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    // TODO implement
+  }
+
   // region
   private delBulletin(bulletin: BulletinModel) {
 
@@ -2209,7 +2214,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
 
-  openCopyRegionModal(template: TemplateRef<any>, bulletin: BulletinModel) {
+  openCopyRegionModal(event, template: TemplateRef<any>, bulletin: BulletinModel) {
+    event.stopPropagation();
     this.bulletinCopy = bulletin;
     this.copyRegionModalRef = this.modalService.show(template, this.config);
   }

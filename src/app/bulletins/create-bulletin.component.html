@@ -2171,7 +2171,7 @@
         [disabled]="loading"
         type="button"
         class="btn btn-sm btn-bare btn-sm btn-icon"
-        (click)="openCopyRegionModal(copyRegionTemplate, bulletin)"
+        (click)="openCopyRegionModal($event, copyRegionTemplate, bulletin)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.copy' | translate }}"
       >
@@ -2189,7 +2189,15 @@
       >
         <i class="ph ph-trash"></i>
       </button>
-      <button type="button" class="btn btn-bare btn-sm btn-icon"><i class="ph ph-square-half"></i></button>
+
+      <button
+        *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
+        type="button"
+        class="btn btn-bare btn-sm btn-icon"
+        (click)="compareBulletin($event, bulletin)"
+      >
+        <i class="ph ph-square-half"></i>
+      </button>
     </div>
   </div>
 </ng-template>
