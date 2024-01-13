@@ -18,7 +18,6 @@ export class BulletinsService {
   private activeDate: Date;
   private copyDate: Date;
   private isEditable: boolean;
-  private isUpdate: boolean;
 
   public lockedRegions: Map<string, Date[]>;
   public regionLocks: Subject<RegionLockModel>;
@@ -44,7 +43,6 @@ export class BulletinsService {
     this.activeDate = undefined;
     this.copyDate = undefined;
     this.isEditable = false;
-    this.isUpdate = false;
 
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
 
@@ -178,10 +176,15 @@ export class BulletinsService {
 
   hasBeenPublished(date: Date) {
     let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    today = new Date(today.getTime() + (1000 * 60 * 60 * 24));
 
-    if (today.getTime() > date.getTime()) {
+    if (today.getHours() >= 17) {
+      today.setHours(0, 0, 0, 0);
+      today = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+    } else {
+      today.setHours(0, 0, 0, 0);
+    }
+
+    if (today.getTime() >= date.getTime()) {
       return true;
     }
     return false;
@@ -229,14 +232,6 @@ export class BulletinsService {
 
   setIsEditable(isEditable: boolean) {
     this.isEditable = isEditable;
-  }
-
-  getIsUpdate() {
-    return this.isUpdate;
-  }
-
-  setIsUpdate(isUpdate: boolean) {
-    this.isUpdate = isUpdate;
   }
 
   getUserRegionStatus(date: Date): Enums.BulletinStatus {

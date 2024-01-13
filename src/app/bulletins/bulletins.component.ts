@@ -291,7 +291,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     }
   }
 
-  editBulletin(date: Date, isUpdate: boolean) {
+  editBulletin(date: Date) {
     this.bulletinsService.setActiveDate(date);
     this.router.navigate(["/bulletins/new"]);
   }
@@ -334,7 +334,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   paste(event, date: Date) {
     event.stopPropagation();
     this.copying = false;
-    this.editBulletin(date, false);
+    this.editBulletin(date);
   }
 
   publishAll(event, date: Date) {

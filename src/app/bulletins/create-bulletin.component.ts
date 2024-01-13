@@ -427,11 +427,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
         // load current bulletins (do not copy them, also if it is an update)
       } else {
-        if (this.bulletinsService.getIsEditable() && !this.bulletinsService.getIsUpdate() && this.bulletinsService.getActiveDate().getTime() === this.localStorageService.getDate().getTime() && this.authenticationService.getActiveRegionId() === this.localStorageService.getRegion() && this.authenticationService.getCurrentAuthor().getEmail() === this.localStorageService.getAuthor()) {
+        if (this.bulletinsService.getIsEditable() && this.bulletinsService.getActiveDate().getTime() === this.localStorageService.getDate().getTime() && this.authenticationService.getActiveRegionId() === this.localStorageService.getRegion() && this.authenticationService.getCurrentAuthor().getEmail() === this.localStorageService.getAuthor()) {
           setTimeout(() => this.openLoadAutoSaveModal(this.loadAutoSaveTemplate));
         } else {
           this.loadBulletinsFromServer();
         }
+      }
+
+      if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
+        this.bulletinsService.setIsEditable(true);
+      } else {
+        this.bulletinsService.setIsEditable(false);
       }
 
       this.authenticationService.getExternalServers().map((server) =>
@@ -463,7 +469,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.bulletinsService.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
-    this.bulletinsService.setIsUpdate(false);
 
     this.loading = false;
     this.editRegions = false;
@@ -476,10 +481,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   isDateEditable(date) {
     if (
+      (((this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.missing) || (this.bulletinsService.getUserRegionStatus(date) === undefined)) && (!this.bulletinsService.hasBeenPublished(this.bulletinsService.getActiveDate()))) ||
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) ||
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) ||
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) ||
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted)
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft)
     ) {
       return true;
     }
@@ -488,9 +492,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   loadBulletin(date) {
     this.deselectBulletin();
 
+    this.bulletinsService.setActiveDate(date);
     if (this.authenticationService.getActiveRegionId() && this.authenticationService.getActiveRegionId() !== undefined && (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) || this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))) {
-      this.bulletinsService.setIsUpdate(false);
-      this.bulletinsService.setActiveDate(date);
 
       if (!this.isDateEditable(date)) {
         this.bulletinsService.setIsEditable(false);
@@ -504,7 +507,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     } else {
       this.bulletinsService.setActiveDate(date);
-      this.bulletinsService.setIsUpdate(false);
       this.bulletinsService.setIsEditable(false);
       this.initializeComponent();
     }
@@ -743,9 +745,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     for (const jsonBulletin of response) {
       const originalBulletin = BulletinModel.createFromJson(jsonBulletin);
 
-      if (this.bulletinsService.getIsUpdate()) {
-        this.originalBulletins.set(originalBulletin.getId(), originalBulletin);
-      }
+      this.originalBulletins.set(originalBulletin.getId(), originalBulletin);
 
       const bulletin = new BulletinModel(originalBulletin);
 
@@ -3039,6 +3039,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.submitted);
         }
+        this.bulletinsService.setIsEditable(false);
         this.publishing = undefined;
       },
       error => {
@@ -3087,7 +3088,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   createUpdate(event) {
     event.stopPropagation();
-    this.bulletinsService.setIsUpdate(true);
+    this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
     this.bulletinsService.setIsEditable(true);
     this.save();
   }
