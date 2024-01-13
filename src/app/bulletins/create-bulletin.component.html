@@ -373,8 +373,7 @@
           </h2>
 
           <div class="user-avatar region-form__author">
-            {{ activeBulletin.getAuthor().getImage() }}
-            <img *ngIf="activeBulletin.getAuthor().getImage()" src="{{ activeBulletin.getAuthor().getImage() }}" class="user-avatar__img" />
+            <img *ngIf="activeBulletin.getAuthor().getImage()" src="data:image/jpg;base64,{{ activeBulletin.getAuthor().getImage() }}" class="user-avatar__img" />
             <span class="user-avatar__name">{{ activeBulletin.getAuthor().getName() }}</span>
           </div>
         </div>
