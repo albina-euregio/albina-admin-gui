@@ -6,7 +6,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
-import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
@@ -165,9 +164,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public avalancheProblemErrorModalRef: BsModalRef;
   @ViewChild("avalancheProblemErrorTemplate") avalancheProblemErrorTemplate: TemplateRef<any>;
 
-  public loadAutoSaveModalRef: BsModalRef;
-  @ViewChild("loadAutoSaveTemplate") loadAutoSaveTemplate: TemplateRef<any>;
-
   public loadAvActivityCommentExampleTextModalRef: BsModalRef;
   @ViewChild("loadAvActivityCommentExampleTextTemplate") loadAvActivityCommentExampleTextTemplate: TemplateRef<any>;
 
@@ -213,7 +209,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     private router: Router,
     public bulletinsService: BulletinsService,
     private dialog: MatDialog,
-    private localStorageService: LocalStorageService,
     public authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private settingsService: SettingsService,
@@ -427,17 +422,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
         // load current bulletins (do not copy them, also if it is an update)
       } else {
-        if (this.bulletinsService.getIsEditable() && this.bulletinsService.getActiveDate().getTime() === this.localStorageService.getDate().getTime() && this.authenticationService.getActiveRegionId() === this.localStorageService.getRegion() && this.authenticationService.getCurrentAuthor().getEmail() === this.localStorageService.getAuthor()) {
-          setTimeout(() => this.openLoadAutoSaveModal(this.loadAutoSaveTemplate));
-        } else {
-          this.loadBulletinsFromServer();
-        }
+        this.loadBulletinsFromServer();
       }
 
       if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
         this.bulletinsService.setIsEditable(true);
+        this.startAutoSave();
       } else {
         this.bulletinsService.setIsEditable(false);
+        this.stopAutoSave();
       }
 
       this.authenticationService.getExternalServers().map((server) =>
@@ -469,11 +462,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.bulletinsService.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
+    this.stopAutoSave();
 
     this.loading = false;
     this.editRegions = false;
     this.copying = false;
+  }
 
+  private startAutoSave() {
+    this.autoSave = interval(this.constantsService.autoSaveIntervall).subscribe(() => this.save());
+  }
+
+  private stopAutoSave() {
     if (this.autoSave && this.autoSave !== undefined) {
       this.autoSave.unsubscribe();
     }
@@ -497,17 +497,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       if (!this.isDateEditable(date)) {
         this.bulletinsService.setIsEditable(false);
+        this.stopAutoSave();
         this.initializeComponent();
       } else {
         if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
           this.bulletinsService.lockRegion(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate());
           this.bulletinsService.setIsEditable(true);
+          this.startAutoSave();
           this.initializeComponent();
         }
       }
     } else {
       this.bulletinsService.setActiveDate(date);
       this.bulletinsService.setIsEditable(false);
+      this.stopAutoSave();
       this.initializeComponent();
     }
   }
@@ -1596,42 +1599,34 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (this.checkAvalancheProblems()) {
-      this.loading = true;
+    this.setTexts();
 
-      this.setTexts();
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
 
-      this.deselectBulletin();
+    const result = new Array<BulletinModel>();
 
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+    for (const bulletin of this.internBulletinsList) {
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
 
-      const result = new Array<BulletinModel>();
-
-      for (const bulletin of this.internBulletinsList) {
-        bulletin.setValidFrom(validFrom);
-        bulletin.setValidUntil(validUntil);
-
-        if (bulletin.getSavedRegions().length > 0 || bulletin.getPublishedRegions().length > 0 || bulletin.getSuggestedRegions().length > 0) {
-          result.push(bulletin);
-        }
+      if (bulletin.getSavedRegions().length > 0 || bulletin.getPublishedRegions().length > 0 || bulletin.getSuggestedRegions().length > 0) {
+        result.push(bulletin);
       }
-
-      this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-        () => {
-          this.localStorageService.clear();
-          this.loading = false;
-          //this.goBack();
-          console.log("Bulletins saved on server.");
-        },
-        () => {
-          this.loading = false;
-          console.error("Bulletins could not be saved on server!");
-          this.openSaveErrorModal(this.saveErrorTemplate);
-        }
-      );
     }
+
+    this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
+      () => {
+        this.loading = false;
+        console.log("Bulletins saved on server.");
+      },
+      () => {
+        this.loading = false;
+        console.error("Bulletins could not be saved on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      }
+    );
   }
 
   goBack() {
@@ -2128,36 +2123,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadModalRef.hide();
   }
 
-  openLoadAutoSaveModal(template: TemplateRef<any>) {
-    this.loadAutoSaveModalRef = this.modalService.show(template, this.config);
-  }
-
-  loadAutoSaveModalConfirm(event): void {
-    event.currentTarget.setAttribute("disabled", true);
-    this.loadAutoSaveModalRef.hide();
-    this.loadBulletinsFromLocalStorage();
-  }
-
-  loadAutoSaveModalDecline(event): void {
-    event.currentTarget.setAttribute("disabled", true);
-    this.loadAutoSaveModalRef.hide();
-    this.loadBulletinsFromServer();
-  }
-
-  private startAutoSave() {
-    this.autoSave = interval(this.constantsService.autoSaveIntervall).subscribe(() => this.localStorageService.save(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId(), this.authenticationService.getCurrentAuthor().getEmail(), this.internBulletinsList));
-  }
-
-  private loadBulletinsFromLocalStorage() {
-    for (const bulletin of this.localStorageService.getBulletins()) {
-      this.addInternalBulletin(bulletin);
-    }
-    this.updateInternalBulletins();
-    this.mapService.deselectAggregatedRegion();
-    this.loading = false;
-    this.startAutoSave();
-  }
-
   private loadBulletinsFromServer() {
     const regions = new Array<String>();
     if (this.authenticationService.isEuregio()) {
@@ -2201,7 +2166,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
         this.mapService.deselectAggregatedRegion();
         this.loading = false;
-        this.startAutoSave();
       },
       () => {
         console.error("Bulletins could not be loaded!");
@@ -2241,7 +2205,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   discardModalConfirm(): void {
     this.discardModalRef.hide();
-    this.localStorageService.clear();
     this.goBack();
   }
 
@@ -3040,6 +3003,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.submitted);
         }
         this.bulletinsService.setIsEditable(false);
+        this.stopAutoSave();
         this.publishing = undefined;
       },
       error => {
@@ -3091,6 +3055,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
     this.bulletinsService.setIsEditable(true);
     this.save();
+    this.startAutoSave();
   }
 
   showPublishButton(date) {

@@ -2069,42 +2069,9 @@
       </main>
       <!-- Save and cancel buttons (will be gone) -->
       <div *ngIf="bulletinsService.getIsEditable()" class="region-form__footer">
-        <!--
         <div class="region-form__saving-status">
           <i class="ph ph-circle-notch"></i>
           <span>{{ "bulletins.create.autosave" | translate }}</span>
-        </div>
-        -->
-        <div class="btn-toolbar">
-          <button
-            [disabled]="editRegions || loading"
-            type="reset"
-            class="btn btn-bare"
-            (click)="openDiscardModal(discardTemplate)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.discardBulletin' | translate }}"
-          >
-            {{ "bulletins.create.discard" | translate }}
-          </button>
-          <button
-            *ngIf="!loading"
-            [disabled]="editRegions"
-            type="submit"
-            class="btn btn-primary"
-            (click)="save()"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.saveBulletin' | translate }}"
-          >
-            <i class="ph ph-check"></i><span>{{ "bulletins.create.save" | translate }}</span>
-          </button>
-          <button *ngIf="loading" disabled class="btn btn btn-primary">
-            <i class="ph ph-circle-notch"></i>
-          </button>
-        </div>
-        <div *ngIf="!bulletinsService.getIsEditable()" class="card-footer">
-          <button type="reset" class="btn btn-sm btn-primary px-3" (click)="goBack()">
-            <i class="fa fa-arrow-left"></i>{{ "bulletins.create.back" | translate }}
-          </button>
         </div>
       </div>
       <!-- End Save and cancel buttons -->
