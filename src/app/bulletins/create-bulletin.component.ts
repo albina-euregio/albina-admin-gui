@@ -1599,34 +1599,38 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.setTexts();
+    if (this.internBulletinsList.length > 0) {
+      this.setTexts();
 
-    const validFrom = new Date(this.bulletinsService.getActiveDate());
-    const validUntil = new Date(this.bulletinsService.getActiveDate());
-    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+      const validFrom = new Date(this.bulletinsService.getActiveDate());
+      const validUntil = new Date(this.bulletinsService.getActiveDate());
+      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
 
-    const result = new Array<BulletinModel>();
+      const result = new Array<BulletinModel>();
 
-    for (const bulletin of this.internBulletinsList) {
-      bulletin.setValidFrom(validFrom);
-      bulletin.setValidUntil(validUntil);
+      for (const bulletin of this.internBulletinsList) {
+        bulletin.setValidFrom(validFrom);
+        bulletin.setValidUntil(validUntil);
 
-      if (bulletin.getSavedRegions().length > 0 || bulletin.getPublishedRegions().length > 0 || bulletin.getSuggestedRegions().length > 0) {
-        result.push(bulletin);
+        if (bulletin.getSavedRegions().length > 0 || bulletin.getPublishedRegions().length > 0 || bulletin.getSuggestedRegions().length > 0) {
+          result.push(bulletin);
+        }
+      }
+
+      if (result.length > 0) {
+        this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
+          () => {
+            this.loading = false;
+            console.log("Bulletins saved on server.");
+          },
+          () => {
+            this.loading = false;
+            console.error("Bulletins could not be saved on server!");
+            this.openSaveErrorModal(this.saveErrorTemplate);
+          }
+        );
       }
     }
-
-    this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-      () => {
-        this.loading = false;
-        console.log("Bulletins saved on server.");
-      },
-      () => {
-        this.loading = false;
-        console.error("Bulletins could not be saved on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
-      }
-    );
   }
 
   goBack() {
