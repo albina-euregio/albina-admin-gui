@@ -516,61 +516,59 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   downloadJsonBulletin() {
-    if (this.checkAvalancheProblems()) {
-      this.loading = true;
+    this.loading = true;
 
-      this.setTexts();
+    this.setTexts();
 
-      this.deselectBulletin();
+    this.deselectBulletin();
 
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
 
-      const result = new Array<BulletinModel>();
+    const result = new Array<BulletinModel>();
 
-      for (const bulletin of this.internBulletinsList) {
-        bulletin.setValidFrom(validFrom);
-        bulletin.setValidUntil(validUntil);
+    for (const bulletin of this.internBulletinsList) {
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
 
 
-        // only own regions
-        const saved = new Array<String>();
-        for (const region of bulletin.getSavedRegions()) {
-          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-            saved.push(region);
-          }
+      // only own regions
+      const saved = new Array<String>();
+      for (const region of bulletin.getSavedRegions()) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          saved.push(region);
         }
-        for (const region of bulletin.getPublishedRegions()) {
-          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-            saved.push(region);
-          }
+      }
+      for (const region of bulletin.getPublishedRegions()) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          saved.push(region);
         }
-
-        if (saved.length > 0) {
-          bulletin.setSavedRegions(saved);
-
-          bulletin.setSuggestedRegions(new Array<String>());
-          bulletin.setPublishedRegions(new Array<String>());
-        }
-
-        result.push(bulletin);
       }
 
-      const jsonBulletins = [];
-      for (let i = result.length - 1; i >= 0; i--) {
-        jsonBulletins.push(result[i].toJson());
+      if (saved.length > 0) {
+        bulletin.setSavedRegions(saved);
+
+        bulletin.setSuggestedRegions(new Array<String>());
+        bulletin.setPublishedRegions(new Array<String>());
       }
-      const sJson = JSON.stringify(jsonBulletins);
-      const element = document.createElement("a");
-      element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-      element.setAttribute("download", this.datePipe.transform(validFrom, "yyyy-MM-dd") + "_report.json");
-      element.style.display = "none";
-      document.body.appendChild(element);
-      element.click(); // simulate click
-      document.body.removeChild(element);
-      this.loading = false;
+
+      result.push(bulletin);
     }
+
+    const jsonBulletins = [];
+    for (let i = result.length - 1; i >= 0; i--) {
+      jsonBulletins.push(result[i].toJson());
+    }
+    const sJson = JSON.stringify(jsonBulletins);
+    const element = document.createElement("a");
+    element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+    element.setAttribute("download", this.datePipe.transform(validFrom, "yyyy-MM-dd") + "_report.json");
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click(); // simulate click
+    document.body.removeChild(element);
+    this.loading = false;
   }
 
   uploadJsonBulletin(event) {
@@ -930,20 +928,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   copyBulletin() {
     this.setTexts();
-    if (this.checkAvalancheProblems()) {
-      if (this.activeBulletin) {
-        const bulletin = new BulletinModel(this.activeBulletin);
-        bulletin.setAdditionalAuthors(new Array<String>());
-        bulletin.setSavedRegions(new Array<String>());
-        bulletin.setPublishedRegions(new Array<String>());
-        bulletin.setSuggestedRegions(new Array<String>());
+    if (this.activeBulletin) {
+      const bulletin = new BulletinModel(this.activeBulletin);
+      bulletin.setAdditionalAuthors(new Array<String>());
+      bulletin.setSavedRegions(new Array<String>());
+      bulletin.setPublishedRegions(new Array<String>());
+      bulletin.setSuggestedRegions(new Array<String>());
 
-        bulletin.setAuthor(this.authenticationService.getAuthor());
-        bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-        bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-        this.copyService.setCopyBulletin(true);
-        this.copyService.setBulletin(bulletin);
-      }
+      bulletin.setAuthor(this.authenticationService.getAuthor());
+      bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+      bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+      this.copyService.setCopyBulletin(true);
+      this.copyService.setBulletin(bulletin);
     }
   }
 
@@ -957,102 +953,98 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   
   selectBulletin(bulletin: BulletinModel) {
     if (!this.editRegions) {
-      if (this.checkAvalancheProblems()) {
-        this.deselectBulletin();
+      this.deselectBulletin();
 
-        this.activeBulletin = bulletin;
+      this.activeBulletin = bulletin;
 
-        this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
-        this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
-        this.activeHighlightsIt = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.it);
-        this.activeHighlightsEn = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.en);
-        this.activeHighlightsFr = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.fr);
-        this.activeHighlightsEs = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.es);
-        this.activeHighlightsCa = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.ca);
-        this.activeHighlightsOc = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.oc);
+      this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
+      this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
+      this.activeHighlightsIt = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.it);
+      this.activeHighlightsEn = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.en);
+      this.activeHighlightsFr = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.fr);
+      this.activeHighlightsEs = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.es);
+      this.activeHighlightsCa = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.ca);
+      this.activeHighlightsOc = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.oc);
 
-        this.activeAvActivityHighlightsTextcat = this.activeBulletin.getAvActivityHighlightsTextcat();
-        this.activeAvActivityHighlightsDe = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.de);
-        this.activeAvActivityHighlightsIt = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.it);
-        this.activeAvActivityHighlightsEn = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.en);
-        this.activeAvActivityHighlightsFr = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.fr);
-        this.activeAvActivityHighlightsEs = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.es);
-        this.activeAvActivityHighlightsCa = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.ca);
-        this.activeAvActivityHighlightsOc = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.oc);
-        this.activeAvActivityHighlightsNotes = this.activeBulletin.getAvActivityHighlightsNotes();
+      this.activeAvActivityHighlightsTextcat = this.activeBulletin.getAvActivityHighlightsTextcat();
+      this.activeAvActivityHighlightsDe = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.de);
+      this.activeAvActivityHighlightsIt = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.it);
+      this.activeAvActivityHighlightsEn = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.en);
+      this.activeAvActivityHighlightsFr = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.fr);
+      this.activeAvActivityHighlightsEs = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.es);
+      this.activeAvActivityHighlightsCa = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.ca);
+      this.activeAvActivityHighlightsOc = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.oc);
+      this.activeAvActivityHighlightsNotes = this.activeBulletin.getAvActivityHighlightsNotes();
 
-        this.activeAvActivityCommentTextcat = this.activeBulletin.getAvActivityCommentTextcat();
-        this.activeAvActivityCommentDe = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.de);
-        this.activeAvActivityCommentIt = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.it);
-        this.activeAvActivityCommentEn = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.en);
-        this.activeAvActivityCommentFr = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.fr);
-        this.activeAvActivityCommentEs = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.es);
-        this.activeAvActivityCommentCa = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.ca);
-        this.activeAvActivityCommentOc = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.oc);
-        this.activeAvActivityCommentNotes = this.activeBulletin.getAvActivityCommentNotes();
+      this.activeAvActivityCommentTextcat = this.activeBulletin.getAvActivityCommentTextcat();
+      this.activeAvActivityCommentDe = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.de);
+      this.activeAvActivityCommentIt = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.it);
+      this.activeAvActivityCommentEn = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.en);
+      this.activeAvActivityCommentFr = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.fr);
+      this.activeAvActivityCommentEs = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.es);
+      this.activeAvActivityCommentCa = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.ca);
+      this.activeAvActivityCommentOc = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.oc);
+      this.activeAvActivityCommentNotes = this.activeBulletin.getAvActivityCommentNotes();
 
-        this.activeSnowpackStructureHighlightsTextcat = this.activeBulletin.getSnowpackStructureHighlightsTextcat();
-        this.activeSnowpackStructureHighlightsDe = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.de);
-        this.activeSnowpackStructureHighlightsIt = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.it);
-        this.activeSnowpackStructureHighlightsEn = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.en);
-        this.activeSnowpackStructureHighlightsFr = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.fr);
-        this.activeSnowpackStructureHighlightsEs = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.es);
-        this.activeSnowpackStructureHighlightsCa = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.ca);
-        this.activeSnowpackStructureHighlightsOc = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.oc);
-        this.activeSnowpackStructureHighlightsNotes = this.activeBulletin.getSnowpackStructureHighlightsNotes();
+      this.activeSnowpackStructureHighlightsTextcat = this.activeBulletin.getSnowpackStructureHighlightsTextcat();
+      this.activeSnowpackStructureHighlightsDe = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.de);
+      this.activeSnowpackStructureHighlightsIt = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.it);
+      this.activeSnowpackStructureHighlightsEn = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.en);
+      this.activeSnowpackStructureHighlightsFr = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.fr);
+      this.activeSnowpackStructureHighlightsEs = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.es);
+      this.activeSnowpackStructureHighlightsCa = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.ca);
+      this.activeSnowpackStructureHighlightsOc = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.oc);
+      this.activeSnowpackStructureHighlightsNotes = this.activeBulletin.getSnowpackStructureHighlightsNotes();
 
-        this.activeSnowpackStructureCommentTextcat = this.activeBulletin.getSnowpackStructureCommentTextcat();
-        this.activeSnowpackStructureCommentDe = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.de);
-        this.activeSnowpackStructureCommentIt = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.it);
-        this.activeSnowpackStructureCommentEn = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.en);
-        this.activeSnowpackStructureCommentFr = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.fr);
-        this.activeSnowpackStructureCommentEs = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.es);
-        this.activeSnowpackStructureCommentCa = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.ca);
-        this.activeSnowpackStructureCommentOc = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.oc);
-        this.activeSnowpackStructureCommentNotes = this.activeBulletin.getSnowpackStructureCommentNotes();
+      this.activeSnowpackStructureCommentTextcat = this.activeBulletin.getSnowpackStructureCommentTextcat();
+      this.activeSnowpackStructureCommentDe = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.de);
+      this.activeSnowpackStructureCommentIt = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.it);
+      this.activeSnowpackStructureCommentEn = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.en);
+      this.activeSnowpackStructureCommentFr = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.fr);
+      this.activeSnowpackStructureCommentEs = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.es);
+      this.activeSnowpackStructureCommentCa = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.ca);
+      this.activeSnowpackStructureCommentOc = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.oc);
+      this.activeSnowpackStructureCommentNotes = this.activeBulletin.getSnowpackStructureCommentNotes();
 
-        this.activeTendencyCommentTextcat = this.activeBulletin.getTendencyCommentTextcat();
-        this.activeTendencyCommentDe = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.de);
-        this.activeTendencyCommentIt = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.it);
-        this.activeTendencyCommentEn = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.en);
-        this.activeTendencyCommentFr = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.fr);
-        this.activeTendencyCommentEs = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.es);
-        this.activeTendencyCommentCa = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.ca);
-        this.activeTendencyCommentOc = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.oc);
-        this.activeTendencyCommentNotes = this.activeBulletin.getTendencyCommentNotes();
+      this.activeTendencyCommentTextcat = this.activeBulletin.getTendencyCommentTextcat();
+      this.activeTendencyCommentDe = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.de);
+      this.activeTendencyCommentIt = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.it);
+      this.activeTendencyCommentEn = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.en);
+      this.activeTendencyCommentFr = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.fr);
+      this.activeTendencyCommentEs = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.es);
+      this.activeTendencyCommentCa = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.ca);
+      this.activeTendencyCommentOc = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.oc);
+      this.activeTendencyCommentNotes = this.activeBulletin.getTendencyCommentNotes();
 
-        this.mapService.selectAggregatedRegion(this.activeBulletin);
-      }
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
   }
 
   deselectBulletin(del?: boolean) {
-    if (del || this.checkAvalancheProblems()) {
-      if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
+    if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
 
-        this.setTexts();
+      this.setTexts();
 
-        if (this.activeAvActivityHighlightsTextcat) {
-          this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
-        }
-
-        if (this.activeAvActivityCommentTextcat) {
-          this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
-        }
-
-        if (this.activeSnowpackStructureCommentTextcat) {
-          this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
-        }
-
-        if (this.activeTendencyCommentTextcat) {
-          this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
-        }
-
-        this.mapService.deselectAggregatedRegion();
-        this.activeBulletin = undefined;
-
-        this.applicationRef.tick();
+      if (this.activeAvActivityHighlightsTextcat) {
+        this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
       }
+
+      if (this.activeAvActivityCommentTextcat) {
+        this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
+      }
+
+      if (this.activeSnowpackStructureCommentTextcat) {
+        this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
+      }
+
+      if (this.activeTendencyCommentTextcat) {
+        this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
+      }
+
+      this.mapService.deselectAggregatedRegion();
+      this.activeBulletin = undefined;
+
+      this.applicationRef.tick();
     }
 
     setTimeout(() => {
@@ -1119,146 +1111,146 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private checkAvalancheProblems(): boolean {
     let error = false;
 
-    if (this.activeBulletin) {
-      if (this.activeBulletin.forenoon) {
-        if (this.activeBulletin.forenoon.avalancheProblem1) {
+    for (const bulletin of this.internBulletinsList) {
+      if (bulletin.forenoon) {
+        if (bulletin.forenoon.avalancheProblem1) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem1.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem2) {
+        if (bulletin.forenoon.avalancheProblem2) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem2.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem3) {
+        if (bulletin.forenoon.avalancheProblem3) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem3.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem4) {
+        if (bulletin.forenoon.avalancheProblem4) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem4.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem5) {
+        if (bulletin.forenoon.avalancheProblem5) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem5.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
       }
-      if (this.activeBulletin.afternoon) {
-        if (this.activeBulletin.afternoon.avalancheProblem1) {
+      if (bulletin.afternoon) {
+        if (bulletin.afternoon.avalancheProblem1) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem1.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem2) {
+        if (bulletin.afternoon.avalancheProblem2) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem2.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem3) {
+        if (bulletin.afternoon.avalancheProblem3) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem3.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem4) {
+        if (bulletin.afternoon.avalancheProblem4) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem4.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem5) {
+        if (bulletin.afternoon.avalancheProblem5) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem5.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
@@ -2267,6 +2259,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   avalancheProblemErrorModalConfirm(): void {
     this.avalancheProblemErrorModalRef.hide();
+    this.publishing = undefined;
   }
 
   openLoadAvActivityCommentExampleTextModal(template: TemplateRef<any>) {
@@ -2916,53 +2909,55 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.publishing = date;
 
-    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-      data => {
-        let duplicateRegion = false;
+    if (this.checkAvalancheProblems()) {
+      this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        data => {
+          let duplicateRegion = false;
 
-        let message = "<b>" + this.translateService.instant("bulletins.table.submitBulletinsDialog.message") + "</b><br><br>";
+          let message = "<b>" + this.translateService.instant("bulletins.table.submitBulletinsDialog.message") + "</b><br><br>";
 
-        for (const entry of (data as any)) {
-          if (entry === "duplicateRegion") {
-            duplicateRegion = true;
+          for (const entry of (data as any)) {
+            if (entry === "duplicateRegion") {
+              duplicateRegion = true;
+            }
+            if (entry === "missingDangerRating") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityHighlights") + "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityComment") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureHighlights") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureComment") + "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+            }
           }
-          if (entry === "missingDangerRating") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingDangerRating") + "<br>";
+
+          if (duplicateRegion) {
+            this.openSubmitBulletinsDuplicateRegionModal(this.submitBulletinsDuplicateRegionTemplate);
+          } else {
+            this.openSubmitBulletinsModal(this.submitBulletinsTemplate, message, date);
           }
-          if (entry === "missingRegion") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingRegion") + "<br>";
-          }
-          if (entry === "missingAvActivityHighlights") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityHighlights") + "<br>";
-          }
-          if (entry === "missingAvActivityComment") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityComment") + "<br>";
-          }
-          if (entry === "missingSnowpackStructureHighlights") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureHighlights") + "<br>";
-          }
-          if (entry === "missingSnowpackStructureComment") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureComment") + "<br>";
-          }
-          if (entry === "pendingSuggestions") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.pendingSuggestions") + "<br>";
-          }
-          if (entry === "incompleteTranslation") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
-          }
+        },
+        error => {
+          console.error("Bulletins could not be checked!");
+          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
         }
-
-        if (duplicateRegion) {
-          this.openSubmitBulletinsDuplicateRegionModal(this.submitBulletinsDuplicateRegionTemplate);
-        } else {
-          this.openSubmitBulletinsModal(this.submitBulletinsTemplate, message, date);
-        }
-      },
-      error => {
-        console.error("Bulletins could not be checked!");
-        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
-      }
-    );
+      );
+    }
   }
 
   openSubmitBulletinsDuplicateRegionModal(template: TemplateRef<any>) {
