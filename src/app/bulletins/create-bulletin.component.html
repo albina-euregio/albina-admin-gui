@@ -186,28 +186,26 @@
 
       <!-- update -->
       <button *ngIf="showUpdateButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="createUpdate($event)">
-        <i class="ph ph-paper-plane-tilt"></i>
+        <i class="ph ph-pencil"></i>
         <span>{{ 'bulletins.tooltip.update' | translate }}</span>
       </button>
 
-      <div class="d-flex">
-        <!-- publish update (not 5PM nor 8AM) -->
-        <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
-            <i class="ph ph-paper-plane-tilt"></i>
-            <span>{{ 'bulletins.tooltip.publishUpdate' | translate }}</span>
-        </button>
-    
-        <!-- publish change (not 5PM nor 8AM, no messages) -->
-        <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
+      <!-- publish update (not 5PM nor 8AM) -->
+      <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
           <i class="ph ph-paper-plane-tilt"></i>
-          <span>{{ 'bulletins.tooltip.publishChange' | translate }}</span>
-        </button>
+          <span>{{ 'bulletins.tooltip.publishUpdate' | translate }}</span>
+      </button>
+  
+      <!-- publish change (not 5PM nor 8AM, no messages) -->
+      <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
+        <i class="ph ph-paper-plane-tilt"></i>
+        <span>{{ 'bulletins.tooltip.publishChange' | translate }}</span>
+      </button>
 
-        <!-- spinning icon -->
-        <button *ngIf="showSpinningIconButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons--small ml-2">
-            <i class="ph ph-bell-slash"></i>
-        </button>
-      </div>
+      <!-- spinning icon -->
+      <button *ngIf="showSpinningIconButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons--small ml-2">
+          <i class="ph ph-bell-slash"></i>
+      </button>
     
 
     </header>

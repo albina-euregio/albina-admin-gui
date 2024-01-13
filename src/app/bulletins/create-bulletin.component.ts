@@ -3067,6 +3067,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       (this.bulletinsService.hasBeenPublished(date)) &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.republished ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
@@ -3087,6 +3089,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.bulletinsService.setIsUpdate(true);
     this.bulletinsService.setIsEditable(true);
+    this.save();
   }
 
   showPublishButton(date) {
