@@ -258,7 +258,7 @@
         <h5 class="font-s-medium">
           {{ "bulletins.create.ownRegions" | translate }}
         </h5>
-        <div *ngIf="bulletinsService.getIsEditable()" class="btn-group region-divider__actions">
+        <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown>
               <button
                   class="btn btn-sm btn-icon btn-bare--grey"
@@ -271,7 +271,7 @@
               <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
                 <li>
                   <button
-                    *ngIf="!bulletinsService.getIsUpdate()"
+                    *ngIf="bulletinsService.getIsEditable()"
                     [disabled]="editRegions || loading"
                     type="reset"
                     class="dropdown-item"
@@ -289,7 +289,7 @@
   
                 <li>
                   <button
-                    *ngIf="!bulletinsService.getIsUpdate()"
+                    *ngIf="bulletinsService.getIsEditable()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
@@ -305,7 +305,6 @@
   
                 <li>
                   <button
-                    *ngIf="!bulletinsService.getIsUpdate()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
