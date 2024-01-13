@@ -367,7 +367,10 @@
         </div>
         <div class="region-form__title">
           <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(activeBulletin.getOwnerRegion()) }}</h6>
-          <h2 class="font-l">{{ getRegionNames(activeBulletin) }}</h2>
+          <h2 class="font-l">
+            {{ regionsService.getRegionName(activeBulletin.savedRegions[0]) }}
+            <span *ngIf="activeBulletin.savedRegions.length > 1"> + {{ activeBulletin.savedRegions.length - 1 }} </span>
+          </h2>
 
           <div class="user-avatar region-form__author">
             {{ activeBulletin.getAuthor().getImage() }}
