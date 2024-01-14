@@ -54,6 +54,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public dangerPattern = Enums.DangerPattern;
   public tendency = Enums.Tendency;
   public autoSave;
+  public autoSaving: boolean;
   public loadingPreview: boolean;
 
   public originalBulletins: Map<string, BulletinModel>;
@@ -1892,6 +1893,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   save() {
     if (this.internBulletinsList.length > 0) {
+      this.autoSaving = true;
       this.setTexts();
 
       const validFrom = new Date(this.bulletinsService.getActiveDate());
@@ -1912,11 +1914,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       if (result.length > 0) {
         this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
           () => {
-            this.loading = false;
             console.log("Bulletins saved on server.");
+            this.autoSaving = false;
           },
           () => {
-            this.loading = false;
+            this.autoSaving = false;
             console.error("Bulletins could not be saved on server!");
             this.openSaveErrorModal(this.saveErrorTemplate);
           }
@@ -3449,29 +3451,39 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   publishBulletinsModalConfirm(date: Date, change: boolean): void {
     this.publishBulletinsModalRef.hide();
-    this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId(), change).subscribe(
-      data => {
-        if (change) {
+    if (change) {
+      this.bulletinsService.changeBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        data => {
           console.log("Bulletins published (no messages).");
-        } else {
-          console.log("Bulletins published.");
-        }
-        if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
-        } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
-        }
-        this.publishing = undefined;
-      },
-      error => {
-        if (change) {
+          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+          }
+          this.publishing = undefined;
+        },
+        error => {
           console.error("Bulletins could not be published (no messages)!");
-        } else {
-          console.error("Bulletins could not be published!");
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
         }
-        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
-      }
-    );
+      );
+    } else {
+      this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        data => {
+          console.log("Bulletins published.");
+          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+          }
+          this.publishing = undefined;
+        },
+        error => {
+          console.error("Bulletins could not be published!");
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+        }
+      );
+    }
   }
 
   publishBulletinsModalDecline(): void {

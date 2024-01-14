@@ -366,10 +366,20 @@ export class BulletinsService {
     return this.http.post<Response>(url, body, options);
   }
 
-  publishBulletins(date: Date, region: string, change: boolean): Observable<Response> {
-    const url = this.constantsService.getServerUrl() + "bulletins/publish?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region + "&change=" + change;
+  publishBulletins(date: Date, region: string): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "bulletins/publish?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region;
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
+    const options = { headers: headers };
+
+    return this.http.post<Response>(url, body, options);
+  }
+
+  changeBulletins(date: Date, region: string): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "bulletins/change?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region;
+    const headers = this.authenticationService.newAuthHeader();
+    const jsonBulletins = [];
+    const body = JSON.stringify(jsonBulletins);
     const options = { headers: headers };
 
     return this.http.post<Response>(url, body, options);

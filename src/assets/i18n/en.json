@@ -79,7 +79,8 @@
       "resubmittedInfo": "Will be published at 8AM",
       "publishedInfo" : "Has been published",
       "noPublicationInfo" : "Will NOT be published automatically",
-      "loadingPreview": "Creating PDF preview ..."
+      "loadingPreview": "Creating PDF preview ...",
+      "loading": "Loading bulletin ..."
     },
     "create": {
       "tooltip": {

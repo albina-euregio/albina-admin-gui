@@ -178,6 +178,7 @@
       <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappened(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="showNoPublicationWillHappen(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loadingPreview" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="loading"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loading" | translate }}</span>
 
       <!-- submit -->
       <button *ngIf="showSubmitButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="submit($event, bulletinsService.getActiveDate())">
@@ -198,7 +199,7 @@
       </button>
   
       <!-- publish change (not 5PM nor 8AM, no messages) -->
-      <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
+      <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate(), true)">
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ 'bulletins.tooltip.publishChange' | translate }}</span>
       </button>
