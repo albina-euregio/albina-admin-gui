@@ -175,8 +175,7 @@
 
       <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt5PM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.submittedInfo" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt8AM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.resubmittedInfo" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappenedAt5PM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappenedAt8AM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.republishedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappened(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="showNoPublicationWillHappen(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loadingPreview" | translate }}</span>
 
@@ -202,6 +201,12 @@
       <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ 'bulletins.tooltip.publishChange' | translate }}</span>
+      </button>
+
+      <!-- check -->
+      <button *ngIf="showCheckButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="check($event, bulletinsService.getActiveDate())">
+        <i class="ph ph-check"></i>
+        <span>{{ 'bulletins.tooltip.check' | translate }}</span>
       </button>
 
       <!-- spinning icon -->
@@ -230,6 +235,8 @@
               </button>
       
               <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
+
+                <!-- load bulletin from yesterday -->
                 <li>
                   <button
                     *ngIf="bulletinsService.getIsEditable()"
@@ -244,6 +251,8 @@
                     {{ "bulletins.create.tooltip.loadBulletin" | translate }}
                   </button>
                 </li>
+
+                <!-- preview -->
                 <li>
                   <button
                     *ngIf="showPreviewButton()"
@@ -258,10 +267,28 @@
                     {{ "bulletins.tooltip.preview" | translate }}
                   </button>
                 </li>
+
+                <!-- media file -->
+                <li>
+                  <button
+                    *ngIf="showMediaFileButton(date)"
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="openMediaFileDialog($event, date)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
+                  >
+                    <i class="ph-bold ph-microphone icon-md"></i>
+                    {{ "bulletins.tooltip.mediaFile" | translate }}
+                  </button>
+                </li>
+
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
   
+                <!-- upload json -->
                 <li>
                   <button
                     *ngIf="bulletinsService.getIsEditable()"
@@ -278,6 +305,7 @@
                   <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
                 </li>
   
+                <!-- download json -->
                 <li>
                   <button
                     [disabled]="editRegions || loading"
@@ -291,6 +319,44 @@
                     {{ "bulletins.create.tooltip.downloadJsonBulletin" | translate }}
                   </button>
                 </li>
+
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+  
+                <!-- info -->
+                <li>
+                  <button
+                    *ngIf="showInfoButton(date)"
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="showPublicationInfo($event, date)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.info' | translate }}"
+                  >
+                    <i class="ph-bold ph-info icon-md"></i>
+                    {{ "bulletins.tooltip.info" | translate }}
+                  </button>
+                  <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
+                </li>
+  
+                <!-- publish all -->
+                <li>
+                  <button
+                    *ngIf="showPublishAllButton(date)"
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="publishAll($event, date)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.publishAll' | translate }}"
+                  >
+                    <i class="ph-bold ph-warning icon-md"></i>
+                    {{ "bulletins.tooltip.publishAll" | translate }}
+                  </button>
+                </li>
+
               </ul>
           </div>
           <button
@@ -2524,6 +2590,50 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="submitBulletinsErrorModalConfirm()">
       {{ "bulletins.table.submitBulletinsErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #publishBulletinsErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.publishBulletinsErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="publishBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.publishBulletinsErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #previewErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.previewErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="previewErrorModalConfirm()">
+      {{ "bulletins.table.previewErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #checkBulletinsErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #publishAllTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.publishAllDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
 </ng-template>

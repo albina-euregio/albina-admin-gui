@@ -33,7 +33,6 @@ import { DatePipe } from "@angular/common";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DialogModule } from "primeng/dialog";
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { MapService } from "../providers/map-service/map.service";
 
 

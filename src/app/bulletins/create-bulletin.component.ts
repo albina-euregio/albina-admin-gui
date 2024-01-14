@@ -1,7 +1,23 @@
 import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { DatePipe, formatDate } from "@angular/common";
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
+
+
+import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
+import { interval } from "rxjs";
+import { BehaviorSubject } from "rxjs";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { saveAs } from "file-saver";
+
+import { environment } from "../../environments/environment";
+
+// models
 import { BulletinModel } from "../models/bulletin.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
+
+// services
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -10,26 +26,22 @@ import { SettingsService } from "../providers/settings-service/settings.service"
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
-import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import { interval } from "rxjs";
-import * as Enums from "../enums/enums";
-import { BehaviorSubject } from "rxjs";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal";
-import { environment } from "../../environments/environment";
+
+// modals
 import { ModalSubmitComponent } from "./modal-submit.component";
 import { ModalPublishComponent } from "./modal-publish.component";
-import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
-import { saveAs } from "file-saver";
-import { formatDate } from "@angular/common";
-
-import { DatePipe } from "@angular/common";
+import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
+import { ModalPublishAllComponent } from "./modal-publish-all.component";
+import { ModalMediaFileComponent } from "./modal-media-file.component";
+import { ModalCheckComponent } from "./modal-check.component";
 
 // For iframe
 import { Renderer2 } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
 import { Console } from "console";
+
+import * as Enums from "../enums/enums";
 
 declare var L: any;
 
@@ -182,9 +194,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public submitBulletinsDuplicateRegionModalRef: BsModalRef;
   @ViewChild("submitBulletinsDuplicateRegionTemplate") submitBulletinsDuplicateRegionTemplate: TemplateRef<any>;
 
-  public checkBulletinsErrorModalRef: BsModalRef;
-  @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
-
   public submitBulletinsErrorModalRef: BsModalRef;
   @ViewChild("submitBulletinsErrorTemplate") submitBulletinsErrorTemplate: TemplateRef<any>;
 
@@ -196,6 +205,21 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   public previewErrorModalRef: BsModalRef;
   @ViewChild("previewErrorTemplate") previewErrorTemplate: TemplateRef<any>;
+
+  public publicationStatusModalRef: BsModalRef;
+  @ViewChild("publicationStatusTemplate") publicationStatusTemplate: TemplateRef<any>;
+
+  public mediaFileModalRef: BsModalRef;
+  @ViewChild("mediaFileTemplate") mediaFileTemplate: TemplateRef<any>;
+
+  public publishAllModalRef: BsModalRef;
+  @ViewChild("publishAllTemplate") publishAllTemplate: TemplateRef<any>;
+
+  public checkBulletinsModalRef: BsModalRef;
+  @ViewChild("checkBulletinsTemplate") checkBulletinsTemplate: TemplateRef<any>;
+
+  public checkBulletinsErrorModalRef: BsModalRef;
+  @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
 
   public pmUrl: SafeUrl;
 
@@ -513,17 +537,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     ) ? true : false;
   }
 
-  showPublicationHappenedAt5PM(date) {
+  showPublicationHappened(date) {
     return (
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published) && 
-      (this.bulletinsService.hasBeenPublished5PM(date))
-    ) ? true : false;
-  }
-
-  showPublicationHappenedAt8AM(date) {
-    return (
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished) &&
-      (this.bulletinsService.hasBeenPublished8AM(date))
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published) ||
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished)
     ) ? true : false;
   }
 
@@ -563,11 +580,203 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
+  publishAll(event, date: Date) {
+    event.stopPropagation();
+    this.publishing = date;
+    this.openPublishAllModal(this.publishAllTemplate, date);
+  }
+
+  check(event, date: Date) {
+    event.stopPropagation();
+
+    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+      data => {
+        let message = "<b>" + this.translateService.instant("bulletins.table.checkBulletinsDialog.message") + "</b><br><br>";
+
+        if ((data as any).length === 0) {
+          message += this.translateService.instant("bulletins.table.checkBulletinsDialog.ok");
+        } else {
+          for (const entry of (data as any)) {
+            if (entry === "missingDangerRating") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityHighlights") + "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityComment") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingSnowpackStructureHighlights") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingSnowpackStructureComment") + "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.incompleteTranslation");
+            }
+          }
+        }
+
+        this.openCheckBulletinsModal(this.checkBulletinsTemplate, message, date);
+      },
+      error => {
+        console.error("Bulletins could not be checked!");
+        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+      }
+    );
+  }
+
+  showPublishAllButton(date) {
+    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
+      return true;
+    }
+  }
+
+  showCheckButton(date) {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated
+      ) &&
+      !this.copying &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  showMediaFileButton() {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+        this.authenticationService.getActiveRegion().enableMediaFile &&
+      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.updated ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished
+      ) &&
+      !this.copying &&
+      (
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  showInfoButton() {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished
+      ) &&
+      !this.copying &&
+      (
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  showPublicationInfo(event, date: Date) {
+    event.stopPropagation();
+    this.bulletinsService.getPublicationStatus(this.authenticationService.getActiveRegionId(), date).subscribe(
+      data => {
+        this.openPublicationStatusModal(this.publicationStatusTemplate, (data as any), date);
+      },
+      error => {
+        console.error("Publication status could not be loaded!");
+      }
+    );
+  }
+
+  openMediaFileDialog(event, date: Date) {
+    event.stopPropagation();
+    this.openMediaFileModal(this.mediaFileTemplate, date);
+  }
+
+  openPublicationStatusModal(template: TemplateRef<any>, json, date: Date) {
+    const initialState = {
+      json: json,
+      date: date,
+      component: this
+    };
+    this.publicationStatusModalRef = this.modalService.show(ModalPublicationStatusComponent, { initialState });
+  }
+  
+  openMediaFileModal(template: TemplateRef<any>, date: Date) {
+    const initialState = {
+      date: date,
+      component: this
+    };
+    this.mediaFileModalRef = this.modalService.show(ModalMediaFileComponent, { initialState });
+  }
+
+  mediaFileModalConfirm(date: Date): void {
+    this.mediaFileModalRef.hide();
+  }
+
+  publicationStatusModalConfirm(date: Date): void {
+    this.publicationStatusModalRef.hide();
+  }  
+
+  openPublishAllModal(template: TemplateRef<any>, date: Date) {
+    const initialState = {
+      date: date,
+      component: this
+    };
+    this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.publishing = undefined;
+    });
+  }
+
+  publishAllModalConfirm(date: Date): void {
+    this.publishAllModalRef.hide();
+    this.bulletinsService.publishAllBulletins(date).subscribe(
+      data => {
+        console.log("All bulletins published.");
+        if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+        } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+        }
+        this.publishing = undefined;
+      },
+      error => {
+        console.error("All bulletins could not be published!");
+        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+      }
+    );
+  }
+
+  publishAllModalDecline(): void {
+    this.publishAllModalRef.hide();
+    this.publishing = undefined;
+  }
+
   downloadJsonBulletin() {
     this.loading = true;
-
     this.setTexts();
-
     this.deselectBulletin();
 
     const validFrom = new Date(this.bulletinsService.getActiveDate());
@@ -3286,5 +3495,22 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   previewErrorModalConfirm(): void {
     this.previewErrorModalRef.hide();
     this.loadingPreview = false;
+  }
+
+  openCheckBulletinsModal(template: TemplateRef<any>, message: string, date: Date) {
+    const initialState = {
+      text: message,
+      date: date,
+      component: this
+    };
+    this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.publishing = undefined;
+    });
+  }
+
+  checkBulletinsModalConfirm(): void {
+    this.checkBulletinsModalRef.hide();
   }
 }
