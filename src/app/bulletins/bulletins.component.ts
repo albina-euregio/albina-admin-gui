@@ -120,7 +120,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   showCreateButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.bulletinsService.hasBeenPublished(date)) &&
+      (!this.bulletinsService.hasBeenPublished5PM(date)) &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing
@@ -161,7 +161,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.resubmitted &&
       this.copying &&
       this.bulletinsService.getCopyDate() !== date &&
-      !this.bulletinsService.hasBeenPublished(date)) {
+      !this.bulletinsService.hasBeenPublished5PM(date)) {
       return true;
     } else {
       return false;

@@ -488,12 +488,53 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   isDateEditable(date) {
     if (
-      (((this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.missing) || (this.bulletinsService.getUserRegionStatus(date) === undefined)) && (!this.bulletinsService.hasBeenPublished(this.bulletinsService.getActiveDate()))) ||
+      (((this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.missing) || (this.bulletinsService.getUserRegionStatus(date) === undefined)) && (!this.bulletinsService.hasBeenPublished5PM(this.bulletinsService.getActiveDate()))) ||
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) ||
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft)
     ) {
       return true;
     }
+  }
+
+  showPublicationHappensAt5PM(date) {
+    return (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) && 
+      (!this.bulletinsService.hasBeenPublished5PM(date))
+    ) ? true : false;
+  }
+
+  showPublicationHappensAt8AM(date) {
+    return (
+      (
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) ||
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted)
+      ) &&
+      (!this.bulletinsService.hasBeenPublished8AM(date))
+    ) ? true : false;
+  }
+
+  showPublicationHappenedAt5PM(date) {
+    return (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published) && 
+      (this.bulletinsService.hasBeenPublished5PM(date))
+    ) ? true : false;
+  }
+
+  showPublicationHappenedAt8AM(date) {
+    return (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished) &&
+      (this.bulletinsService.hasBeenPublished8AM(date))
+    ) ? true : false;
+  }
+
+  showNoPublicationWillHappen(date) {
+    return (
+      (
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) ||
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted)
+      ) &&
+      (this.bulletinsService.hasBeenPublished8AM(date))
+    ) ? true : false;
   }
 
   loadBulletin(date) {
@@ -3088,7 +3129,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.republished ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
-        (this.bulletinsService.getUserRegionStatus(date) === undefined && (this.bulletinsService.hasBeenPublished(date)))
+        (this.bulletinsService.getUserRegionStatus(date) === undefined && (this.bulletinsService.hasBeenPublished5PM(date)))
       ) &&
       !this.copying &&
       (
@@ -3112,7 +3153,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   showPublishButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
-      (this.bulletinsService.hasBeenPublished(date)) &&
+      (this.bulletinsService.hasBeenPublished5PM(date)) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted

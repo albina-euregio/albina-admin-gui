@@ -13,7 +13,7 @@
       <tr
         *ngFor="let date of bulletinsService.dates"
         [ngClass]="{
-          'bulletins-table__day--past': bulletinsService.hasBeenPublished(date)
+          'bulletins-table__day--past': bulletinsService.hasBeenPublished5PM(date)
         }" 
       >
         <td [attr.data-label]="'bulletins.table.title.date' | translate ">

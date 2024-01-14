@@ -56,7 +56,6 @@
   },
   "bulletins": {
     "title": "Avalanche.report",
-    "loadingPreview": "Creating PDF preview ...",
     "tooltip": {
       "copy": "Copy bulletin",
       "paste": "Paste bulletin",
@@ -74,6 +73,13 @@
       "info": "Show publication status",
       "publishAll": "Publish all regions",
       "mediaFile": "Upload media file"
+    },
+    "status": {
+      "submittedInfo": "Will be published at 5PM",
+      "resubmittedInfo": "Will be published at 8AM",
+      "publishedInfo" : "Has been published",
+      "noPublicationInfo" : "Will NOT be published automatically",
+      "loadingPreview": "Creating PDF preview ..."
     },
     "create": {
       "tooltip": {
@@ -251,11 +257,7 @@
         "published": "published",
         "updated": "updated",
         "resubmitted": "resubmitted",
-        "republished": "republished",
-        "submitted-info": "Will be published at 5PM",
-        "resubmitted-info": "Will be published at 8AM",
-        "published-info" : "Has been published at 5PM",
-        "republished-info" : "Has been published at 8AM"
+        "republished": "republished"
       },
       "publishBulletinsDialog": {
         "message": "Do you want to publish the bulletin?",

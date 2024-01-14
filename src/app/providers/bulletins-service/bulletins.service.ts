@@ -174,13 +174,29 @@ export class BulletinsService {
     this.activeDate = date;
   }
 
-  hasBeenPublished(date: Date) {
+  hasBeenPublished5PM(date: Date) {
     let today = new Date();
 
     if (today.getHours() >= 17) {
       today.setHours(0, 0, 0, 0);
       today = new Date(today.getTime() + (1000 * 60 * 60 * 24));
     } else {
+      today.setHours(0, 0, 0, 0);
+    }
+
+    if (today.getTime() >= date.getTime()) {
+      return true;
+    }
+    return false;
+  }
+
+  hasBeenPublished8AM(date: Date) {
+    let today = new Date();
+
+    if (today.getHours() >= 8) {
+      today.setHours(0, 0, 0, 0);
+    } else {
+      today = new Date(today.getTime() - (1000 * 60 * 60 * 24));
       today.setHours(0, 0, 0, 0);
     }
 

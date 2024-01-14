@@ -173,11 +173,12 @@
       </ul>
       <!-- End status of all regions-->
 
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted"><i class="ph ph-info"></i> {{ "bulletins.table.status.submitted-info" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"><i class="ph ph-info"></i> {{ "bulletins.table.status.resubmitted-info" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"><i class="ph ph-info"></i> {{ "bulletins.table.status.published-info" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"><i class="ph ph-info"></i> {{ "bulletins.table.status.republished-info" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"><i class="ph ph-circle-notch"></i> {{ "bulletins.loadingPreview" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt5PM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.submittedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt8AM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.resubmittedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappenedAt5PM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappenedAt8AM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.republishedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showNoPublicationWillHappen(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loadingPreview" | translate }}</span>
 
       <!-- submit -->
       <button *ngIf="showSubmitButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="submit($event, bulletinsService.getActiveDate())">
