@@ -1,15 +1,17 @@
-import mysql from "mysql2/promise";
+import mysql, { Connection, QueryError } from "mysql2/promise";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
 
-export async function insertObservation(o: GenericObservation) {
-  console.log("Inserting observation", o.$id, o.$source);
-  const connection = await mysql.createConnection({
+export async function createConnection() {
+  return await mysql.createConnection({
     host: "127.0.0.1",
     port: 3306,
     user: "ais",
     password: "MD>5:X*n%)1V",
     database: "albina_dev",
   });
+}
+export async function insertObservation(connection: Connection, o: GenericObservation) {
+  console.log("Inserting observation", o.$id, o.$source);
   const data = {
     ID: o.$id,
     SOURCE: o.$source,
@@ -40,5 +42,13 @@ export async function insertObservation(o: GenericObservation) {
     .map(() => "?")
     .join(", ")})
   ;`;
-  await connection.execute(sql, Object.values(data));
+  try {
+    await connection.execute(sql, Object.values(data));
+  } catch (err) {
+    if ((err as QueryError).code === "ER_DUP_ENTRY") {
+      console.debug("Skipping existing observation", o.$id, o.$source);
+      return;
+    }
+    throw err;
+  }
 }
