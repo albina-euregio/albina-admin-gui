@@ -131,6 +131,7 @@ export function convertLwdKipBeobachtung(
   let eventDate = feature.properties.BEOBDATUM;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
+    $id: `Beobachtung-${feature.id}`,
     $data: feature.properties,
     $extraDialogRows: Object.keys(feature.properties)
       .map((label) =>
@@ -177,6 +178,7 @@ export function convertLwdKipSprengerfolg(
   let eventDate = feature.properties.BEOBDATUM + feature.properties.SPRENGUNGZEIT;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
+    $id: `Sprengung-${feature.id}`,
     $data: feature.properties,
     $extraDialogRows: [
       { label: "Sprengerfolg", value: feature.properties.SPRENGERFOLG },
@@ -227,6 +229,7 @@ export function convertLwdKipLawinenabgang(
   let eventDate = feature.properties.BEOBDATUM + feature.properties.ZEIT;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
+    $id: `Lawine-${feature.id}`,
     $data: feature.properties,
     $extraDialogRows: [
       { label: "Lawinengröße", value: feature.properties.LAWINENGROESSE },
@@ -275,6 +278,7 @@ export function convertLwdKipSperren(
   feature: GeoJSON.Feature<GeoJSON.LineString, SperreProperties>,
 ): GenericObservation {
   return {
+    $id: `Sperre-${feature.id}`,
     $data: feature.properties,
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Closure,
