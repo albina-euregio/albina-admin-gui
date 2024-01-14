@@ -65,9 +65,6 @@ export class FullLayoutComponent {
   }
 
   public logout() {
-    if (this.bulletinsService.getActiveDate()) {
-      this.bulletinsService.unlockRegion(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId());
-    }
     this.authenticationService.logout();
   }
 
@@ -97,9 +94,6 @@ export class FullLayoutComponent {
   }
 
   private change(region) {
-    if (this.bulletinsService.getActiveDate()) {
-      this.bulletinsService.unlockRegion(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId());
-    }
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.init();
     this.router.navigate(["/bulletins"]);

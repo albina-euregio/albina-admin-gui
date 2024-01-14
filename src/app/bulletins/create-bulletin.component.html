@@ -460,7 +460,7 @@
           </div>
         </div>
       </header>
-      <div class="region-form__banner banner banner-info">
+      <div *ngIf="!bulletinsService.isLocked(activeBulletin.getId())" class="region-form__banner banner banner-info">
         <p class="banner__text">
           <i class="ph ph-pencil-line"></i>
           {{ "bulletins.create.regionEditable" | translate }}
@@ -474,8 +474,7 @@
         </div>
       </div>
 
-      <!-- To be implemented
-      <div class="region-form__banner banner banner-warning">
+      <div *ngIf="bulletinsService.isLocked(activeBulletin.getId())" class="region-form__banner banner banner-warning">
         <p class="banner__text">
           <i class="ph ph-pencil-slash"></i>
           {{ "bulletins.create.regionLocked" | translate }}
@@ -484,7 +483,6 @@
           <button type="button" class="btn btn-sm btn-dark"><i class="ph ph-pencil-line"></i> <span>{{ "bulletins.create.edit" | translate }}</span></button>
         </div>
       </div>
-      -->
 
       <div
         *ngIf="bulletinsService.getIsEditable() && hasSuggestions(activeBulletin) && !editRegions"
@@ -536,7 +534,7 @@
 
               <div class="btn-group accordion-header__buttons">
                 <div
-                  [disabled]="!bulletinsService.getIsEditable() || editRegions || loading || !isCreator(activeBulletin)"
+                  [disabled]="isDisabled()"
                   class="form-check"
                   title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
                   (click)="
@@ -544,7 +542,7 @@
                   "
                 >
                   <input
-                    [disabled]="!bulletinsService.getIsEditable() || editRegions || loading || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     class="form-check-input"
                     type="checkbox"
                     (click)="daytimeDependencyChanged($event, !activeBulletin.hasDaytimeDependency); $event.stopPropagation()"
@@ -556,7 +554,7 @@
 
                 <button
                   [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)"
-                  *ngIf="bulletinsService.getIsEditable()"
+                  *ngIf="isDisabled()"
                   (click)="createAvalancheProblem(false); $event.stopPropagation()"
                   class="btn btn-primary btn-icon btn-sm ml-2"
                   title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -570,7 +568,7 @@
               [bulletinModel]="activeBulletin"
               [bulletinDaytimeDescription]="activeBulletin.forenoon"
               [afternoon]="false"
-              [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+              [disabled]="isDisabled()"
             ></app-avalanche-problem>
             <!-- End Avalanche problems panel content -->
           </accordion-group>
@@ -592,7 +590,7 @@
               <div class="btn-group accordion-header__buttons">
                 <button
                   [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)"
-                  *ngIf="bulletinsService.getIsEditable()"
+                  *ngIf="isDisabled()"
                   (click)="createAvalancheProblem(true); $event.stopPropagation()"
                   class="btn btn-primary btn-icon btn-sm"
                   title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -605,7 +603,7 @@
               [bulletinModel]="activeBulletin"
               [bulletinDaytimeDescription]="activeBulletin.afternoon"
               [afternoon]="true"
-              [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+              [disabled]="isDisabled()"
             ></app-avalanche-problem>
           </accordion-group>
           <!-- End avalanche problems -->
@@ -639,7 +637,7 @@
                   <div class="btn-group--border form-field-toolbar">
                     <button
                       [disabled]="
-                        loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        isDisabled()
                       "
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
@@ -658,7 +656,7 @@
                     </button>
                     <button
                       *ngIf="!copyService.isCopyTextcat()"
-                      [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                      [disabled]="isDisabled()"
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
                       data-toggle="tooltip"
@@ -670,7 +668,7 @@
                     <button
                       *ngIf="copyService.isCopyTextcat()"
                       [disabled]="
-                        loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        isDisabled()
                       "
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
@@ -682,7 +680,7 @@
                     </button>
                     <button
                       [disabled]="
-                        loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        isDisabled()
                       "
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
@@ -894,7 +892,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -913,7 +911,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -924,9 +922,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
@@ -936,9 +932,7 @@
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
@@ -1157,9 +1151,7 @@
                       <div class="btn-group--border form-field-toolbar">
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
@@ -1176,9 +1168,7 @@
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
@@ -1189,7 +1179,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -1200,9 +1190,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
@@ -1212,9 +1200,7 @@
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
@@ -1457,7 +1443,7 @@
                 <label class="form-label" for="">{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
                 <select
                   [(ngModel)]="activeBulletin.dangerPattern1"
-                  [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                  [disabled]="isDisabled()"
                   class="form-select"
                 >
                   <option selected></option>
@@ -1475,7 +1461,7 @@
 
                 <select
                   [(ngModel)]="activeBulletin.dangerPattern2"
-                  [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                  [disabled]="isDisabled()"
                   class="form-select"
                 >
                   <option selected></option>
@@ -1505,7 +1491,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1524,7 +1510,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1540,7 +1526,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -1552,7 +1538,7 @@
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1564,7 +1550,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1808,7 +1794,7 @@
                 <div class="btn-group">
                   <button
                     *ngIf="activeBulletin.tendency === 'decreasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-dark"
                     (click)="setTendency($event, undefined)"
@@ -1820,7 +1806,7 @@
 
                   <button
                     *ngIf="activeBulletin.tendency !== 'decreasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-outline-secondary"
                     (click)="setTendency($event, 'decreasing')"
@@ -1832,7 +1818,7 @@
 
                   <button
                     *ngIf="activeBulletin.tendency === 'steady'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-dark"
                     (click)="setTendency($event, undefined)"
@@ -1844,7 +1830,7 @@
 
                   <button
                     *ngIf="activeBulletin.tendency !== 'steady'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-outline-secondary"
                     (click)="setTendency($event, 'steady')"
@@ -1855,7 +1841,7 @@
                   </button>
                   <button
                     *ngIf="activeBulletin.tendency === 'increasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-dark"
                     (click)="setTendency($event, undefined)"
@@ -1866,7 +1852,7 @@
                   </button>
                   <button
                     *ngIf="activeBulletin.tendency !== 'increasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-outline-secondary"
                     (click)="setTendency($event, 'increasing')"
@@ -1892,7 +1878,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1911,7 +1897,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -1923,7 +1909,7 @@
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1935,7 +1921,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -2264,7 +2250,7 @@
       </button>
 
       <button
-        *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(bulletin) && isCreator(bulletin)"
+        *ngIf="bulletinsService.isLocked(bulletin?.getId()) || bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(bulletin) && isCreator(bulletin)"
         [disabled]="loading"
         type="button"
         class="btn btn-sm btn-icon btn-bare"

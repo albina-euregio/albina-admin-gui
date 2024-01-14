@@ -354,10 +354,6 @@ export class ConstantsService {
     return environment.apiBaseUrl;
   }
 
-  getWsRegionUrl() {
-    return environment.wsBaseUrl + "region/";
-  }
-
   getWsBulletinUrl() {
     return environment.wsBaseUrl + "bulletin/";
   }

@@ -42,6 +42,7 @@ import { Subscription } from "rxjs";
 import { Console } from "console";
 
 import * as Enums from "../enums/enums";
+import { BulletinLockModel } from "app/models/bulletin-lock.model";
 
 declare var L: any;
 
@@ -412,6 +413,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.reset();
 
+      // TODO implement bulletin locking
+      //this.bulletinsService.loadLockedBulletins();
+
       // setting pm language for iframe
       this.pmUrl = this.getTextcatUrl();
 
@@ -486,10 +490,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.eventSubscriber.unsubscribe();
     }
 
-    if (this.bulletinsService.getActiveDate() && this.bulletinsService.getIsEditable()) {
-      this.bulletinsService.unlockRegion(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId());
-    }
-
     this.mapService.resetAll();
 
     this.bulletinsService.setActiveDate(undefined);
@@ -509,6 +509,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (this.autoSave && this.autoSave !== undefined) {
       this.autoSave.unsubscribe();
     }
+  }
+
+  isDisabled() {
+    return (this.loading || !this.bulletinsService.getIsEditable() || this.bulletinsService.isLocked(this.activeBulletin.getId()) || this.editRegions || !this.isCreator(this.activeBulletin)) ? true : false;
   }
 
   isDateEditable(date) {
@@ -567,7 +571,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.initializeComponent();
       } else {
         if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
-          this.bulletinsService.lockRegion(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate());
           this.bulletinsService.setIsEditable(true);
           this.startAutoSave();
           this.initializeComponent();
@@ -1214,6 +1217,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.deselectBulletin();
 
       this.activeBulletin = bulletin;
+      // TODO implement bulletin locks
+      //if (!this.bulletinsService.isLocked(this.activeBulletin.getId())) {
+      //  this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+      //}
 
       this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
       this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
@@ -1300,6 +1307,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       this.mapService.deselectAggregatedRegion();
+      // TODO implement bulletin locking
+      //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
       this.activeBulletin = undefined;
 
       this.applicationRef.tick();
@@ -1324,7 +1333,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
-    if (this.bulletinsService.getIsEditable() && this.isCreator(this.activeBulletin)) {
+    if (this.bulletinsService.getIsEditable() && this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.isCreator(this.activeBulletin)) {
       this.activeBulletin.setHasDaytimeDependency(value);
 
       if (this.activeBulletin.hasDaytimeDependency) {
