@@ -11,14 +11,15 @@ export async function createConnection() {
   });
 }
 export async function insertObservation(connection: Connection, o: GenericObservation) {
+  if (!o) return;
   console.log("Inserting observation", o.$id, o.$source);
   const data = {
     ID: o.$id,
     SOURCE: o.$source,
-    OBS_TYPE: o.$type,
+    OBS_TYPE: o.$type ?? null,
     EXTERNAL_URL: o.$externalURL ?? null,
     STABILITY: o.stability ?? null,
-    ASPECTS: o.aspect ?? null,
+    ASPECTS: Array.isArray(o.aspect) ? o.aspect.join(",") : o.aspect ?? null,
     AUTHOR_NAME: o.authorName ?? null,
     OBS_CONTENT: o.content ?? null,
     OBS_DATA: o.$data ?? null,
@@ -31,9 +32,9 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     LONGITUDE: o.longitude ?? null,
     REGION_ID: o.region ?? null,
     REPORT_DATE: o.reportDate ?? null,
-    AVALANCHE_PROBLEMS: o.avalancheProblems ?? null,
-    DANGER_PATTERNS: o.dangerPatterns ?? null,
-    IMPORTANT_OBSERVATION: o.importantObservations ?? null,
+    AVALANCHE_PROBLEMS: o.avalancheProblems?.join(",") ?? null,
+    DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
+    IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
   };
   const sql = `
   INSERT INTO generic_observations

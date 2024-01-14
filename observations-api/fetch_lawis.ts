@@ -8,8 +8,8 @@ const WEB = "https://lawis.at/lawis_api/v2_2/files/profiles/snowprofile_{{id}}.p
 
 export async function fetchLawisProfiles() {
   const url = `${API.replace("v2_2", "public")}?${new URLSearchParams({
-    startDate: dayjs().subtract(1, "week").toISOString(),
-    endDate: dayjs().toISOString(),
+    startDate: dayjs().millisecond(0).subtract(1, "week").toISOString(),
+    endDate: dayjs().millisecond(0).toISOString(),
   })}`;
   console.log("Fetching", url);
   const json: Profile[] = await (await fetch(url)).json();
