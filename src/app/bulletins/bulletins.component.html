@@ -160,18 +160,6 @@
             <i class="fa fa-copy"></i>
           </button>
 
-          <!-- preview -->
-          <button
-            *ngIf="showPreviewButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="preview($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.preview' | translate }}"
-          >
-            <i class="fa fa-eye"></i>
-          </button>
-
           <!-- paste -->
           <button
             *ngIf="showPasteButton(date)"
@@ -248,10 +236,6 @@
   </div>
 </ng-template>
 
-
-
-
-
 <ng-template #checkBulletinsErrorTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
@@ -273,11 +257,3 @@
     </button>
   </div>
 </ng-template>
-
-<div id="overlay">
-  <span id="nav" *ngIf="loadingPreview">
-    <div class="submit-message" style="display: block; color: #ffffff; position: fixed; left: 49.7%; top: 54.5%">
-      <p>{{ "bulletins.loadingPreview" | translate }}</p>
-    </div>
-  </span>
-</div>

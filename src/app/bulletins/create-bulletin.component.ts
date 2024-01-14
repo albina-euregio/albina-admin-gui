@@ -20,6 +20,8 @@ import { environment } from "../../environments/environment";
 import { ModalSubmitComponent } from "./modal-submit.component";
 import { ModalPublishComponent } from "./modal-publish.component";
 import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
+import { saveAs } from "file-saver";
+import { formatDate } from "@angular/common";
 
 import { DatePipe } from "@angular/common";
 
@@ -40,6 +42,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public dangerPattern = Enums.DangerPattern;
   public tendency = Enums.Tendency;
   public autoSave;
+  public loadingPreview: boolean;
 
   public originalBulletins: Map<string, BulletinModel>;
 
@@ -191,6 +194,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public publishBulletinsErrorModalRef: BsModalRef;
   @ViewChild("publishBulletinsErrorTemplate") publishBulletinsErrorTemplate: TemplateRef<any>;
 
+  public previewErrorModalRef: BsModalRef;
+  @ViewChild("previewErrorTemplate") previewErrorTemplate: TemplateRef<any>;
+
   public pmUrl: SafeUrl;
 
   @ViewChild("receiver") receiver: ElementRef<HTMLIFrameElement>;
@@ -236,6 +242,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.isCompactMapLayout = window.innerWidth < 768;
     this.publishing = undefined;
     this.copying = false;
+    this.loadingPreview = false;
   }
 
   @HostListener('window:resize', ['$event'])
@@ -1052,6 +1059,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }, 10);
   }
 
+  preview() {
+    this.loadingPreview = true;
+    this.bulletinsService.getPreviewPdf(this.bulletinsService.getActiveDate()).subscribe(blob => {
+      this.loadingPreview = false;
+      const format = "yyyy-MM-dd";
+      const locale = "en-US";
+      const formattedDate = formatDate(this.bulletinsService.getActiveDate(), format, locale);
+      saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");
+      console.log("Preview loaded.");
+    })
+  }
+
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
     if (this.bulletinsService.getIsEditable() && this.isCreator(this.activeBulletin)) {
@@ -1577,6 +1596,30 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  showPreviewButton() {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.updated ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished 
+      ) &&
+      !this.copying &&
+      (
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)
+      )
+     ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   discardBulletin(event, bulletin?: BulletinModel) {
@@ -3195,4 +3238,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishing = undefined;
   }
 
+  openPreviewErrorModal(template: TemplateRef<any>) {
+    this.previewErrorModalRef = this.modalService.show(template, this.config);
+  }
+
+  previewErrorModalConfirm(): void {
+    this.previewErrorModalRef.hide();
+    this.loadingPreview = false;
+  }
 }

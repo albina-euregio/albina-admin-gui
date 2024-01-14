@@ -1,5 +1,4 @@
 import { Component, HostListener, ViewChild, TemplateRef, OnInit, OnDestroy } from "@angular/core";
-import { formatDate } from "@angular/common";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinUpdateModel } from "../models/bulletin-update.model";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -18,7 +17,6 @@ import { ModalCheckComponent } from "./modal-check.component";
 import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
 import { ModalPublishAllComponent } from "./modal-publish-all.component";
 import { ModalMediaFileComponent } from "./modal-media-file.component";
-import { saveAs } from "file-saver";
 
 @Component({
   templateUrl: "bulletins.component.html"
@@ -29,7 +27,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   public updates: Subject<BulletinUpdateModel>;
 
-  public loadingPreview: boolean;
   public publishing: Date;
   public copying: boolean;
 
@@ -44,9 +41,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   public checkBulletinsErrorModalRef: BsModalRef;
   @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
-
-  public previewErrorModalRef: BsModalRef;
-  @ViewChild("previewErrorTemplate") previewErrorTemplate: TemplateRef<any>;
 
   public publishAllModalRef: BsModalRef;
   @ViewChild("publishAllTemplate") publishAllTemplate: TemplateRef<any>;
@@ -74,7 +68,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     public confirmationService: ConfirmationService,
     public modalService: BsModalService,
     public wsUpdateService: WsUpdateService) {
-    this.loadingPreview = false;
     this.copying = false;
     this.publishing = undefined;
 
@@ -220,30 +213,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     }
   }
 
-  showPreviewButton(date) {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
-      (
-        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
-        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated ||
-        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
-        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.published ||
-        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.republished 
-      ) &&
-      !this.copying &&
-      (
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)
-      )
-     ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   showInfoButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
@@ -341,21 +310,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.publishing = date;
     this.openPublishAllModal(this.publishAllTemplate, date);
-  }
-
-  preview(event, date: Date) {
-    event.stopPropagation();
-    this.loadingPreview = true;
-    document.getElementById("overlay").style.display = "block";
-    this.bulletinsService.getPreviewPdf(date).subscribe(blob => {
-      this.loadingPreview = false;
-      document.getElementById("overlay").style.display = "none";
-      const format = "yyyy-MM-dd";
-      const locale = "en-US";
-      const formattedDate = formatDate(date, format, locale);
-      saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");
-      console.log("Preview loaded.");
-    })
   }
 
   check(event, date: Date) {
@@ -471,15 +425,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   checkBulletinsErrorModalConfirm(): void {
     this.checkBulletinsErrorModalRef.hide();
     this.publishing = undefined;
-  }
-
-  openPreviewErrorModal(template: TemplateRef<any>) {
-    this.previewErrorModalRef = this.modalService.show(template, this.config);
-  }
-
-  previewErrorModalConfirm(): void {
-    this.previewErrorModalRef.hide();
-    this.loadingPreview = false;
   }
 
   openPublishAllModal(template: TemplateRef<any>, date: Date) {

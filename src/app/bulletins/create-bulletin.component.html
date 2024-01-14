@@ -177,6 +177,7 @@
       <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"><i class="ph ph-info"></i> {{ "bulletins.table.status.resubmitted-info" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"><i class="ph ph-info"></i> {{ "bulletins.table.status.published-info" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"><i class="ph ph-info"></i> {{ "bulletins.table.status.republished-info" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"><i class="ph ph-circle-notch"></i> {{ "bulletins.loadingPreview" | translate }}</span>
 
       <!-- submit -->
       <button *ngIf="showSubmitButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="submit($event, bulletinsService.getActiveDate())">
@@ -240,6 +241,20 @@
                   >
                     <i class="ph-bold ph-copy icon-md"></i>
                     {{ "bulletins.create.tooltip.loadBulletin" | translate }}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    *ngIf="showPreviewButton()"
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="preview()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.preview' | translate }}"
+                  >
+                    <i class="ph-bold ph-eye icon-md"></i>
+                    {{ "bulletins.tooltip.preview" | translate }}
                   </button>
                 </li>
                 <li>
