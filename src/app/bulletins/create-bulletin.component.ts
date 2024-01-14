@@ -1896,8 +1896,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (this.activeBulletin && this.activeBulletin !== undefined) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
-
-    // TODO websocket: unlock whole day
   }
 
   save() {
@@ -1912,11 +1910,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const result = new Array<BulletinModel>();
 
       for (const bulletin of this.internBulletinsList) {
-        bulletin.setValidFrom(validFrom);
-        bulletin.setValidUntil(validUntil);
-
-        if (bulletin.getSavedRegions().length > 0 || bulletin.getPublishedRegions().length > 0 || bulletin.getSuggestedRegions().length > 0) {
-          result.push(bulletin);
+        const regions = bulletin.getPublishedRegions().concat(bulletin.getSavedRegions());
+        for (const region of regions) {
+          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+            bulletin.setValidFrom(validFrom);
+            bulletin.setValidUntil(validUntil);
+            result.push(bulletin);
+            break;
+          }
         }
       }
 
