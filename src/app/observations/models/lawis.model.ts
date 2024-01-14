@@ -199,7 +199,7 @@ export interface IdText<T = string> {
 
 export function toLawisProfile(lawis: Profile, urlPattern: string): GenericObservation<Profile> {
   return {
-    $id: String(lawis.id),
+    $id: `Profile-${lawis.id}`,
     $data: lawis,
     $externalURL: urlPattern.replace("{{id}}", String(lawis.id)),
     $source: ObservationSource.Lawis,
@@ -233,7 +233,7 @@ export function toLawisProfileDetails(
 
 export function toLawisIncident(lawis: Incident, urlPattern: string): GenericObservation<Incident> {
   return {
-    $id: String(lawis.id),
+    $id: `Incident-${lawis.id}`,
     $data: lawis,
     $externalURL: urlPattern.replace("{{id}}", String(lawis.id)),
     $source: ObservationSource.Lawis,
@@ -268,7 +268,7 @@ export function toLawisIncidentDetails(
 
 export function toLawisIncidentTable(incident: IncidentDetails): ObservationTableRow[] {
   const avalancheType = AvalancheType[AvalancheType[incident.avalanche?.type?.id]];
-  const avalancheSize = AvalancheSize[AvalancheSize[incident.avalanche.size.id]];
+  const avalancheSize = AvalancheSize[AvalancheSize[incident.avalanche?.size?.id]];
   return [
     {
       label: "observations.dangerRating",
@@ -306,6 +306,7 @@ export function toLawisIncidentTable(incident: IncidentDetails): ObservationTabl
 }
 
 export function parseLawisDate(datum: string): Date {
+  if (typeof datum !== "string") return undefined;
   return new Date(datum.replace(/ /, "T"));
 }
 

@@ -1,6 +1,6 @@
 CREATE TABLE `generic_observations` (
-  `ID` varchar(191) NOT NULL COMMENT 'External ID of this observation',
   `SOURCE` varchar(191) NOT NULL COMMENT 'Source of this observation',
+  `ID` varchar(191) NOT NULL COMMENT 'External ID of this observation',
   `OBS_TYPE` enum('SimpleObservation','Evaluation','Avalanche','Blasting','Closure','Profile','TimeSeries','Webcam') NOT NULL COMMENT 'Type of this observation',
   `EXTERNAL_URL` longtext COMMENT 'External URL/image to display as iframe',
   `STABILITY` enum('good','fair','poor','very_poor') DEFAULT NULL COMMENT 'Snowpack stability that can be inferred from this observation',
@@ -20,6 +20,6 @@ CREATE TABLE `generic_observations` (
   `AVALANCHE_PROBLEMS` set('new_snow','wind_slab','persistent_weak_layers','wet_snow','gliding_snow','favourable_situation','cornices','no_distinct_problem') DEFAULT NULL COMMENT 'Avalanche problems corresponding with this observation',
   `DANGER_PATTERNS` set('dp1','dp2','dp3','dp4','dp5','dp6','dp7','dp8','dp9','dp10') DEFAULT NULL COMMENT 'Danger patterns corresponding with this observation',
   `IMPORTANT_OBSERVATION` set('SnowLine','SurfaceHoar','Graupel','StabilityTest','IceFormation','VeryLightNewSnow') DEFAULT NULL COMMENT 'Important observations',
-  PRIMARY KEY (`ID`,`SOURCE`),
+  PRIMARY KEY (`SOURCE`,`ID`),
   KEY `generic_observations_EVENT_DATE_IDX` (`EVENT_DATE`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
