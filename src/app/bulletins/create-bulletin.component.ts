@@ -1054,7 +1054,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
-    if (this.bulletinsService.getIsEditable()) {
+    if (this.bulletinsService.getIsEditable() && this.isCreator(this.activeBulletin)) {
       this.activeBulletin.setHasDaytimeDependency(value);
 
       if (this.activeBulletin.hasDaytimeDependency) {
