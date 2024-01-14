@@ -199,6 +199,7 @@ export interface IdText<T = string> {
 
 export function toLawisProfile(lawis: Profile, urlPattern: string): GenericObservation<Profile> {
   return {
+    $id: String(lawis.id),
     $data: lawis,
     $externalURL: urlPattern.replace("{{id}}", String(lawis.id)),
     $source: ObservationSource.Lawis,
@@ -224,7 +225,7 @@ export function toLawisProfileDetails(
     ...profile,
     $data: lawisDetails,
     stability: getLawisProfileStability(lawisDetails),
-    importantObservations: lawisDetails.stability_tests.length ? [ImportantObservation.StabilityTest] : [],
+    importantObservations: lawisDetails.stability_tests?.length ? [ImportantObservation.StabilityTest] : [],
     authorName: lawisDetails.reported?.name,
     content: lawisDetails.comments,
   };
@@ -232,6 +233,7 @@ export function toLawisProfileDetails(
 
 export function toLawisIncident(lawis: Incident, urlPattern: string): GenericObservation<Incident> {
   return {
+    $id: String(lawis.id),
     $data: lawis,
     $externalURL: urlPattern.replace("{{id}}", String(lawis.id)),
     $source: ObservationSource.Lawis,
@@ -308,6 +310,9 @@ export function parseLawisDate(datum: string): Date {
 }
 
 function getLawisProfileStability(profile: ProfileDetails): Stability {
+  if (!Array.isArray(profile.stability_tests)) {
+    return null;
+  }
   // Ausbildungshandbuch, 6. Auflage, Seiten 170/171
   const ect_tests = profile.stability_tests.filter((t) => t.type.text === "ECT") || [];
   const ect_colors = ect_tests.map((t) => getECTestStability(t.step, t.result.text));
