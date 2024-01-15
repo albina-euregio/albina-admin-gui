@@ -177,6 +177,7 @@ export class AuthenticationService {
 
   public isEuregio(): boolean {
     return (
+      environment.isEuregio ||
       this.getActiveRegionId() === this.constantsService.codeTyrol ||
       this.getActiveRegionId() === this.constantsService.codeSouthTyrol ||
       this.getActiveRegionId() === this.constantsService.codeTrentino

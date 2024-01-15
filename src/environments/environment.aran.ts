@@ -4,5 +4,6 @@ export const environment = {
   wsBaseUrl: "wss://socket.avalanche.report/albina/",
   textcatUrl: "https://admin.lauegi.report/textcat-ng/",
   headerBgColor: "#ffffff",
+  isEuregio: false,
   showChat: false,
 };
