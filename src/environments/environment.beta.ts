@@ -1,4 +1,6 @@
-export const environment = {
+import type { Environment } from "./environment-type";
+
+export const environment: Environment = {
   production: true,
   apiBaseUrl: "https://admin.avalanche.report/albina/api/",
   wsBaseUrl: "wss://socket.avalanche.report/albina/",
@@ -6,6 +8,7 @@ export const environment = {
   headerBgColor: "#f4ea12",
   faviconPath: "assets/img/admin-favicon-beta.ico",
   logoPath: "assets/img/admin-logo-beta.svg",
+  isEuregio: true,
   showChat: true
 };
 

@@ -8,6 +8,7 @@ export const environment = {
   wsBaseUrl: window["ENV"].WS_BASE_URL,
   textcatUrl: window["ENV"].TEXTCAT_URL,
   headerBgColor: window["ENV"].HEADER_BG_COLOR,
+  isEuregio: window["ENV"].IS_EUREGIO,
   showChat: window["ENV"].SHOW_CHAT,
 };
 
