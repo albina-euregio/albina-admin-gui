@@ -54,14 +54,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;
   public dangerPattern = Enums.DangerPattern;
   public tendency = Enums.Tendency;
-  public autoSave;
+
   public autoSaving: boolean;
   public loadingPreview: boolean;
+  public editRegions: boolean;
+  public loading: boolean;
 
   public originalBulletins: Map<string, BulletinModel>;
 
-  public editRegions: boolean;
-  public loading: boolean;
   public showAfternoonMap: boolean;
   public showExternalRegions: boolean;
 
@@ -463,10 +463,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
         this.bulletinsService.setIsEditable(true);
-        this.startAutoSave();
       } else {
         this.bulletinsService.setIsEditable(false);
-        this.stopAutoSave();
       }
 
       this.authenticationService.getExternalServers().map((server) =>
@@ -494,21 +492,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.bulletinsService.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
-    this.stopAutoSave();
 
     this.loading = false;
     this.editRegions = false;
     this.copying = false;
-  }
-
-  private startAutoSave() {
-    this.autoSave = interval(this.constantsService.autoSaveIntervall).subscribe(() => this.save());
-  }
-
-  private stopAutoSave() {
-    if (this.autoSave && this.autoSave !== undefined) {
-      this.autoSave.unsubscribe();
-    }
   }
 
   isDisabled() {
@@ -567,19 +554,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       if (!this.isDateEditable(date)) {
         this.bulletinsService.setIsEditable(false);
-        this.stopAutoSave();
         this.initializeComponent();
       } else {
         if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
           this.bulletinsService.setIsEditable(true);
-          this.startAutoSave();
           this.initializeComponent();
         }
       }
     } else {
       this.bulletinsService.setActiveDate(date);
       this.bulletinsService.setIsEditable(false);
-      this.stopAutoSave();
       this.initializeComponent();
     }
   }
@@ -793,7 +777,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.setValidFrom(validFrom);
       bulletin.setValidUntil(validUntil);
 
-
       // only own regions
       const saved = new Array<String>();
       for (const region of bulletin.getSavedRegions()) {
@@ -809,7 +792,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       if (saved.length > 0) {
         bulletin.setSavedRegions(saved);
-
         bulletin.setSuggestedRegions(new Array<String>());
         bulletin.setPublishedRegions(new Array<String>());
       }
@@ -1134,6 +1116,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
 
+    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate());
+
     this.updateAggregatedRegions();
   }
 
@@ -1146,6 +1130,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     }
     bulletin.setSuggestedRegions(suggested);
+
+    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate());
 
     this.updateAggregatedRegions();
   }
@@ -1163,10 +1149,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
 
   createBulletin(copy) {
-
-    // TODO websocket: unlock bulletin
-    // TODO websocket: lock bulletin
-
     let bulletin: BulletinModel;
     if (copy && this.copyService.getBulletin()) {
       bulletin = this.copyService.getBulletin();
@@ -1185,6 +1167,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.editBulletinRegions();
     // Always create 1 problem
     this.createAvalancheProblem(false);
+
+    // create bulletin
+    this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate());
   }
 
   copyBulletin() {
@@ -1217,10 +1202,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.deselectBulletin();
 
       this.activeBulletin = bulletin;
-      // TODO implement bulletin locks
-      //if (!this.bulletinsService.isLocked(this.activeBulletin.getId())) {
-      //  this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
-      //}
+
+      // lock bulletin
+      if (!this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+        this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+      }
 
       this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
       this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
@@ -1307,8 +1293,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       this.mapService.deselectAggregatedRegion();
-      // TODO implement bulletin locking
-      //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+      
+      // update bulletin
+      this.bulletinsService.updateBulletin(this.activeBulletin, this.bulletinsService.getActiveDate());
+      // lock bulletin
+      this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+      
       this.activeBulletin = undefined;
 
       this.applicationRef.tick();
@@ -1683,10 +1673,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       // change ownership
       bulletin.setOwnerRegion(newOwnerRegion);
 
+      // update bulletin
+      this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate());
     } else {
       const index = this.internBulletinsList.indexOf(bulletin);
       if (index > -1) {
         this.internBulletinsList.splice(index, 1);
+        // delete bulletin
+        this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate());
       }
     }
 
@@ -1694,9 +1688,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.updateInternalBulletins();
     this.updateExternalBulletins();
     this.deselectBulletin(true);
-
-    // Auto save after delete
-    this.save();
   }
 
   editBulletin(event) {
@@ -1706,9 +1697,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private editBulletinRegions() {
-
-    // TODO websocket: lock whole day in region, check if any aggregated region is locked
-
     this.editRegions = true;
     this.mapService.editAggregatedRegion(this.activeBulletin);
   }
@@ -1788,7 +1776,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.updateAggregatedRegions();
 
-      // TODO websocket: unlock whole day
+      // update bulletin
+      this.bulletinsService.updateBulletin(this.activeBulletin, this.bulletinsService.getActiveDate());
 
     } else {
       this.openNoRegionModal(this.noRegionTemplate);
@@ -3317,7 +3306,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.submitted);
         }
         this.bulletinsService.setIsEditable(false);
-        this.stopAutoSave();
         this.publishing = undefined;
       },
       error => {
@@ -3368,7 +3356,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
     this.bulletinsService.setIsEditable(true);
     this.save();
-    this.startAutoSave();
   }
 
   showPublishButton(date) {

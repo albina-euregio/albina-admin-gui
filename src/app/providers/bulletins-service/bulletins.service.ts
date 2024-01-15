@@ -10,6 +10,7 @@ import { WsRegionService } from "../ws-region-service/ws-region.service";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
 import * as Enums from "../../enums/enums";
+import { BulletinModel } from "app/models/bulletin.model";
 
 @Injectable()
 export class BulletinsService {
@@ -301,6 +302,35 @@ export class BulletinsService {
     const options = { headers: headers };
 
     return this.http.post<Response>(url, body, options);
+  }
+
+  createBulletin(bulletin: BulletinModel, date): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "bulletins?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
+    const headers = this.authenticationService.newAuthHeader();
+    const body = JSON.stringify(bulletin.toJson());
+    const options = { headers: headers };
+
+    return this.http.put<Response>(url, body, options);
+  }
+
+  updateBulletin(bulletin: BulletinModel, date): Observable<Response> {
+    debugger
+    // check if bulletin has ID
+    const url = this.constantsService.getServerUrl() + "bulletins/" + bulletin.getId() + "?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
+    const headers = this.authenticationService.newAuthHeader();
+    const body = JSON.stringify(bulletin.toJson());
+    const options = { headers: headers };
+
+    return this.http.post<Response>(url, body, options);
+  }
+
+  deleteBulletin(bulletin: BulletinModel, date): Observable<Response> {
+    // check if bulletin has ID
+    const url = this.constantsService.getServerUrl() + "bulletins/" + bulletin.getId() + "?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers: headers };
+
+    return this.http.delete<Response>(url, options);
   }
 
   submitBulletins(date: Date, region: string): Observable<Response> {
