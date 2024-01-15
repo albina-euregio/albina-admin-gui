@@ -4,7 +4,7 @@ import { ConstantsService } from "../../providers/constants-service/constants.se
 import { GenericObservation } from "../models/generic-observation.model";
 import { concat, from, Observable, of } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
-import { RegionsService } from "../../providers/regions-service/regions.service";
+import { augmentRegion } from "../../providers/regions-service/augmentRegion";
 import { addLolaCadsData, convertFotoWebcamEU, FotoWebcamEU, FotoWebcamEUResponse } from "../models/foto-webcam.model";
 import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
 
@@ -14,7 +14,6 @@ export class FotoWebcamObservationsService {
     private http: HttpClient,
     private authenticationService: AuthenticationService,
     private constantsService: ConstantsService,
-    private regionsService: RegionsService,
   ) {}
 
   getLolaCads(cam: GenericObservation): Observable<any> {
@@ -37,7 +36,7 @@ export class FotoWebcamObservationsService {
       mergeMap(({ cams }: FotoWebcamEUResponse) =>
         from(
           cams
-            .map((webcam: FotoWebcamEU) => this.regionsService.augmentRegion(convertFotoWebcamEU(webcam)))
+            .map((webcam: FotoWebcamEU) => augmentRegion(convertFotoWebcamEU(webcam)))
             .filter((observation) => observation.$data.offline === false)
             .filter((observation) => observation.region !== undefined),
         ),

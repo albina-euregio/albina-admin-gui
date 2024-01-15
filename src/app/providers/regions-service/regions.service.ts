@@ -46,13 +46,8 @@ import {
   loadRegionsWithElevation,
 } from "./regions-loader.mjs";
 
-import * as L from "leaflet";
-import { isMarkerInsidePolygon } from "./isMarkerInsidePolygon";
-
 @Injectable()
 export class RegionsService {
-  euregioGeoJSON: L.GeoJSON;
-
   initialAggregatedRegion: Record<string, string[]> = {
     "AT-07": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("AT-07")),
     "IT-32-BZ": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("IT-32-BZ")),
@@ -69,10 +64,7 @@ export class RegionsService {
   constructor(
     private translateService: TranslateService,
     private constantsService: ConstantsService,
-  ) {
-    // FIXME this.translateService.onLangChange.subscribe(() => this.translateAllNames());
-    this.euregioGeoJSON = L.geoJSON(this.getRegionsEuregio());
-  }
+  ) {}
 
   getLevel1Regions(id: string): string[] {
     for (let i = 0; i < this.level1.length; i++) {
@@ -147,20 +139,6 @@ export class RegionsService {
 
   getRegionName(id) {
     return this.getRegionNames()[id];
-  }
-
-  getRegionForLatLng(ll: L.LatLng): RegionProperties {
-    const polygons = (this.euregioGeoJSON.getLayers() as any) as L.Polygon[];
-    const polygon = polygons.find((p) => isMarkerInsidePolygon(ll, p));
-    return polygon?.feature?.properties;
-  }
-
-  augmentRegion<T extends { latitude?: number; longitude?: number; region?: string }>(observation: T): T {
-    if (observation.latitude && observation.longitude) {
-      const ll = new L.LatLng(observation.latitude, observation.longitude);
-      observation.region = this.getRegionForLatLng(ll)?.id;
-    }
-    return observation;
   }
 }
 

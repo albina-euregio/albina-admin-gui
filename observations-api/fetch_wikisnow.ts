@@ -1,5 +1,5 @@
 import { createConnection, insertObservation } from "./database";
-import { augmentRegion } from "./regions";
+import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import { ApiWikisnowECT, convertWikisnow } from "../src/app/observations/models/wikisnow.model";
 
 const API = "https://admin.avalanche.report/wikisnow/ect/ect-json.json";

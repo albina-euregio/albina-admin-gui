@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { createConnection, insertObservation } from "./database";
-import { augmentRegion } from "./regions";
+import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import { LolaKronosApi, convertLoLaKronos } from "../src/app/observations/models/lola-kronos.model";
 
 const API = "https://admin.avalanche.report/lola-kronos/dataexport/dataFromToken/";
