@@ -40,7 +40,7 @@ export const routes: Routes = [
   {
     path: "modelling",
     component: FullLayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [], // no authentication (partially)
     loadChildren: () => import("./modelling/routes")
   },
   {

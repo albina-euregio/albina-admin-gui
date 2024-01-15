@@ -27,7 +27,7 @@ export default [
       modelling: "snowpack",
     } satisfies ModellingRouteData,
     component: ForecastComponent,
-    canActivate: [AuthGuard],
+    canActivate: [], // no authentication
   },
   {
     path: "awesome",
@@ -36,6 +36,6 @@ export default [
       modelling: "awesome",
     } satisfies ModellingRouteData,
     component: AwesomeComponent,
-    canActivate: [AuthGuard],
+    canActivate: [], // no authentication
   },
 ] satisfies Routes;
