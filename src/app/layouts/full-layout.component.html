@@ -17,7 +17,13 @@
       <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']">{{ "sidebar.observations" | translate }}</a>
     </li>
     <li *ngIf="authenticationService.isEuregio()" class="nav-item px-1">
-      <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling']">{{ "sidebar.modelling" | translate }}</a>
+      <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">GeoSphere</a>
+    </li>
+    <li *ngIf="authenticationService.isEuregio()" class="nav-item px-1">
+      <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">SNOWPACK</a>
+    </li>
+    <li *ngIf="authenticationService.isEuregio()" class="nav-item px-1">
+      <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awesome']">AWESOME</a>
     </li>
   </ul>
 
@@ -91,7 +97,13 @@
           <a class="nav-link mobile-sidebar-toggler" routerLinkActive="active" [routerLink]="['/observations']"><i class="fa fa-eye"></i> {{ "sidebar.observations" | translate }}</a>
         </li>
         <li *ngIf="authenticationService.isEuregio()" class="nav-item nav-dropdown" routerLinkActive="open">
-          <a class="nav-link mobile-sidebar-toggler" routerLinkActive="active" [routerLink]="['/modelling']"><i class="fa fa-area-chart"></i> {{ "sidebar.modelling" | translate }}</a>
+          <a class="nav-link mobile-sidebar-toggler" routerLinkActive="active" [routerLink]="['/modelling/geosphere']"><i class="fa fa-area-chart"></i> GeoSphere</a>
+        </li>
+        <li *ngIf="authenticationService.isEuregio()" class="nav-item nav-dropdown" routerLinkActive="open">
+          <a class="nav-link mobile-sidebar-toggler" routerLinkActive="active" [routerLink]="['/modelling/snowpack']"><i class="fa fa-area-chart"></i> SNOWPACK</a>
+        </li>
+        <li *ngIf="authenticationService.isEuregio()" class="nav-item nav-dropdown" routerLinkActive="open">
+          <a class="nav-link mobile-sidebar-toggler" routerLinkActive="active" [routerLink]="['/modelling/awesome']"><i class="fa fa-area-chart"></i> AWESOME</a>
         </li>
       </ul>
     </nav>
