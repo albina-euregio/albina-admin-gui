@@ -16,7 +16,7 @@ export class AuthenticationService {
   private currentAuthor: AuthorModel;
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
-  private activeRegion: RegionConfiguration;
+  private activeRegion: RegionConfiguration | undefined;
 
   private env = environment.apiBaseUrl + "_";
 
@@ -120,12 +120,12 @@ export class AuthenticationService {
     }
   }
 
-  public getActiveRegion(): RegionConfiguration {
+  public getActiveRegion(): RegionConfiguration | undefined {
     return this.activeRegion;
   }
 
-  public getActiveRegionId(): string {
-    return this.activeRegion.id;
+  public getActiveRegionId(): string | undefined {
+    return this.activeRegion?.id;
   }
 
   public setActiveRegion(region: RegionConfiguration) {
@@ -140,7 +140,7 @@ export class AuthenticationService {
   // region
   // lang (code used for textcat)
   public getActiveRegionCode(): number {
-    switch (this.activeRegion.id) {
+    switch (this.getActiveRegionId()) {
       case this.constantsService.codeTyrol:
         return 2;
       case this.constantsService.codeSouthTyrol:
@@ -156,7 +156,7 @@ export class AuthenticationService {
   // region
   // lang (code used for textcat-ng)
   public getTextcatRegionCode(): string {
-    switch (this.activeRegion.id) {
+    switch (this.getActiveRegionId()) {
       case this.constantsService.codeSwitzerland:
         return "Switzerland";
       case this.constantsService.codeTyrol:
@@ -177,6 +177,7 @@ export class AuthenticationService {
 
   public isEuregio(): boolean {
     return (
+      environment.isEuregio ||
       this.getActiveRegionId() === this.constantsService.codeTyrol ||
       this.getActiveRegionId() === this.constantsService.codeSouthTyrol ||
       this.getActiveRegionId() === this.constantsService.codeTrentino
@@ -184,11 +185,11 @@ export class AuthenticationService {
   }
 
   public getUserLat() {
-    return this.activeRegion.mapCenterLat ?? 47.1;
+    return this.activeRegion?.mapCenterLat ?? 47.1;
   }
 
   public getUserLng() {
-    return this.activeRegion.mapCenterLng ?? 11.44;
+    return this.activeRegion?.mapCenterLng ?? 11.44;
   }
 
   public isCurrentUserInRole(role: string): boolean {

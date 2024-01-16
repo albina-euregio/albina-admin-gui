@@ -1940,7 +1940,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  openTextcat($event, field, l, textDef) {
+  openTextcat($event: Event, field: TextcatTextfield, l, textDef: string) {
     this.copyService.resetCopyTextcat();
     $event.preventDefault();
 
@@ -1950,7 +1950,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       textDef: textDef || "",
       currentLang: this.translateService.currentLang,
       region: this.authenticationService.getTextcatRegionCode()
-    });
+    } satisfies TextcatLegacyIn);
 
     this.showDialog(pmData);
   }
@@ -2300,7 +2300,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   getText(e) {
     e.preventDefault();
     if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk") {
-      const pmData = JSON.parse(e.data);
+      const pmData: TextcatLegacyOut = JSON.parse(e.data);
 
       if (pmData.textDef === undefined || pmData.textDef === "") {
         this[pmData.textField + "Textcat"] = "";
@@ -2316,7 +2316,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       } else {
         this[pmData.textField + "Textcat"] = pmData.textDef;
         this[pmData.textField + "It"] = pmData.textIt;
-        this[pmData.textField + "De"] = this.textPostprocessingDe(pmData.textDe);
+        this[pmData.textField + "De"] = pmData.textDe_AT;
         this[pmData.textField + "En"] = pmData.textEn;
         this[pmData.textField + "Fr"] = pmData.textFr;
         this[pmData.textField + "Es"] = pmData.textEs;
@@ -2327,37 +2327,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     }
   };
-
-  textPostprocessingDe(bulletinTextDe) {
-    const dictionaryDeMap = {
-      ausser: "außer",
-      Ausser: "Außer",
-      reissen: "reißen",
-      Reissen: "Reißen",
-      mitreiss: "mitreiß",
-      Mitreiss: "Mitreiß",
-      gross: "groß",
-      Gross: "Groß",
-      grösse: "größe",
-      Grösse: "Größe",
-      mässig: "mäßig",
-      Mässig: "Mäßig",
-      massnahmen: "maßnahmen",
-      Massnahmen: "Maßnahmen",
-      strassen: "straßen",
-      Strassen: "Straßen",
-      stossen: "stoßen",
-      Stossen: "Stoßen",
-      fuss: "fuß",
-      Fuss: "Fuß",
-      füsse: "füße",
-      Füsse: "Füße"
-    };
-    const re = new RegExp(Object.keys(dictionaryDeMap).join("|"), "gi");
-    return bulletinTextDe.replace(re, function(matched) {
-        return dictionaryDeMap[matched];
-    });
-  }
 
   openLoadingErrorModal(template: TemplateRef<any>) {
     this.loadingErrorModalRef = this.modalService.show(template, this.config);
@@ -3522,4 +3491,36 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   checkBulletinsModalConfirm(): void {
     this.checkBulletinsModalRef.hide();
   }
+}
+
+type TextcatTextfield = 
+|"activeHighlights"
+|"activeAvActivityHighlights"
+|"activeAvActivityComment"
+|"activeSnowpackStructureHighlights"
+|"activeSnowpackStructureComment"
+|"activeTendencyComment"
+|"text"
+
+// alias pmData, alias inputDef
+interface TextcatLegacyIn {
+  textDef: string;
+  textField: TextcatTextfield;
+  currentLang: string;
+  region: string;
+}
+
+// alias pmData, alias outputText
+interface TextcatLegacyOut {
+  textDef: string;
+  textField: TextcatTextfield;
+  textDe: string;
+  textDe_AT: string;
+  textDe_CH: string;
+  textIt: string;
+  textEn: string;
+  textEs: string;
+  textFr: string;
+  textCa: string;
+  textOc: string;
 }

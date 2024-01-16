@@ -73,7 +73,7 @@ export class BulletinsService {
         console.error("Status {} could not be loaded!", this.authenticationService.getActiveRegionId());
       }
     );
-    this.authenticationService.getActiveRegion().neighborRegions.forEach(neighborRegion => {
+    this.authenticationService.getActiveRegion()?.neighborRegions.forEach(neighborRegion => {
       this.getStatus(neighborRegion, startDate, endDate).subscribe(
         data => {
           let map = new Map<number, Enums.BulletinStatus>();

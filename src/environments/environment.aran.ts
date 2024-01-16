@@ -3,5 +3,6 @@ export const environment = {
   apiBaseUrl: "https://api.lauegi.report/api/",
   wsBaseUrl: "wss://socket.avalanche.report/albina/",
   textcatUrl: "https://admin.lauegi.report/textcat-ng/",
-  headerBgColor: "#ffffff"
+  headerBgColor: "#ffffff",
+  isEuregio: false
 };

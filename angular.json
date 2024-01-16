@@ -131,7 +131,7 @@
               "node_modules/primeng/resources/themes/nova/theme.css",
               "node_modules/primeicons/primeicons.css",
               "src/scss/style.scss",
-              "src/assets/css/font-awesome.min.css",
+              "src/assets/css/font-awesome.min.css"
             ],
             "assets": [
               "src/assets"

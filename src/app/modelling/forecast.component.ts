@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
@@ -19,6 +20,8 @@ import {
   MultimodelSourceService,
   ObservedProfileSourceService,
 } from "./sources";
+import type { ModellingRouteData } from "./routes";
+
 export interface MultiselectDropdownData {
   id: ForecastSource;
   loader?: () => Observable<GenericObservation[]>;
@@ -73,37 +76,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   observationConfigurations = new Set<string>();
   observationConfiguration: string | undefined;
 
-  public readonly allSources: MultiselectDropdownData[] = [
-    {
-      id: ForecastSource.multimodel,
-      loader: () => this.multimodelSource.getZamgMultiModelPoints(),
-      fillColor: "green",
-      name: this.translateService.instant("sidebar.modellingZamg"),
-    },
-    {
-      id: ForecastSource.meteogram,
-      loader: () => this.meteogramSource.getZamgMeteograms(),
-      fillColor: "MediumVioletRed",
-      name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
-    },
-    {
-      id: ForecastSource.qfa,
-      fillColor: "red",
-      name: this.translateService.instant("sidebar.qfa"),
-    },
-    {
-      id: ForecastSource.observed_profile,
-      loader: () => this.observedProfileSource.getObservedProfiles(),
-      fillColor: "#f8d229",
-      name: this.translateService.instant("sidebar.modellingSnowpack"),
-    },
-    {
-      id: ForecastSource.alpsolut_profile,
-      loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
-      fillColor: "#d95f0e",
-      name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
-    },
-  ];
+  public allSources: MultiselectDropdownData[] = [];
 
   public allRegions: RegionProperties[];
   private regionalMarkers = {};
@@ -119,6 +92,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   @ViewChild("qfaSelect") qfaSelect: ElementRef<HTMLSelectElement>;
 
   constructor(
+    private route: ActivatedRoute,
     private regionsService: RegionsService,
     public mapService: BaseMapService,
     private multimodelSource: MultimodelSourceService,
@@ -146,10 +120,51 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   }
 
   async load() {
+    const { modelling } = this.route.snapshot.data as ModellingRouteData;
+    this.allSources =
+      modelling === "geosphere"
+        ? [
+            {
+              id: ForecastSource.multimodel,
+              loader: () => this.multimodelSource.getZamgMultiModelPoints(),
+              fillColor: "green",
+              name: this.translateService.instant("sidebar.modellingZamg"),
+            },
+            {
+              id: ForecastSource.meteogram,
+              loader: () => this.meteogramSource.getZamgMeteograms(),
+              fillColor: "MediumVioletRed",
+              name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
+            },
+            {
+              id: ForecastSource.qfa,
+              fillColor: "red",
+              name: this.translateService.instant("sidebar.qfa"),
+            },
+          ]
+        : modelling === "snowpack"
+          ? [
+              {
+                id: ForecastSource.observed_profile,
+                loader: () => this.observedProfileSource.getObservedProfiles(),
+                fillColor: "#f8d229",
+                name: this.translateService.instant("sidebar.modellingSnowpack"),
+              },
+              {
+                id: ForecastSource.alpsolut_profile,
+                loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
+                fillColor: "#d95f0e",
+                name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
+              },
+            ]
+          : [];
+
     this.modelPoints = [];
     this.loading = true;
     this.loadAll();
-    await this.loadQfa();
+    if (modelling === "geosphere") {
+      await this.loadQfa();
+    }
     this.loading = false;
   }
 
