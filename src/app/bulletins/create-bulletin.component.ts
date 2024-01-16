@@ -63,6 +63,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public originalBulletins: Map<string, BulletinModel>;
 
   public showAfternoonMap: boolean;
+
+  public showForeignRegions: boolean;
   public showExternalRegions: boolean;
 
   public activeBulletin: BulletinModel;
@@ -256,6 +258,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   ) {
     this.loading = true;
     this.showAfternoonMap = false;
+    this.showForeignRegions = true;
     this.showExternalRegions = false;
     this.stopListening = renderer.listen("window", "message", this.getText.bind(this));
     this.mapService.resetAll();
@@ -373,6 +376,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.showTranslationsAvActivityComment = false;
     this.showTranslationsSnowpackStructureComment = false;
     this.showTranslationsTendencyComment = false;
+  }
+
+  toggleShowForeignRegions() {
+    if (this.showForeignRegions)
+      this.showForeignRegions = false;
+    else
+      this.showForeignRegions = true;
   }
 
   toggleShowExternalRegions() {
@@ -1046,6 +1056,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addExternalBulletins(response) {
+    debugger
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
       this.addExternalBulletin(bulletin);
