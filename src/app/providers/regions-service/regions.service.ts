@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
+import { mergeFeatureCollections } from "./mergeFeatureCollections";
 import { ConstantsService } from "../constants-service/constants.service";
 import aggregatedRegions from "../../../assets/aggregated_regions.json"
 // @ts-ignore
@@ -155,27 +156,4 @@ export interface RegionProperties {
 
 export interface RegionWithElevationProperties extends RegionProperties {
   elevation: "high" | "low" | "low_high";
-}
-
-function mergeFeatureCollections<G extends Geometry, P>(
-  ...collections: FeatureCollection<G, P>[]
-): FeatureCollection<G, P> {
-  const today = "2022-12-01";
-  return {
-    type: "FeatureCollection",
-    features: []
-      .concat(...collections.map((collection) => collection.features))
-      .filter((feature) => filterFeature(feature, today)),
-  };
-}
-
-function filterFeature(
-  feature: GeoJSON.Feature,
-  today = new Date().toISOString().slice(0, "2006-01-02".length)
-): boolean {
-  const properties = feature.properties;
-  return (
-    (!properties.start_date || properties.start_date <= today) &&
-    (!properties.end_date || properties.end_date > today)
-  );
 }
