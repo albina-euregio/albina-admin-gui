@@ -69,7 +69,12 @@
       </td>
       <td style="padding: 1rem 0">{{ observation.authorName }}</td>
       <td style="padding: 1rem 0">
-        {{ observation.locationName }}
+        <abbr *ngIf="observation.regionLabel" [title]="observation.regionLabel">
+          {{ observation.locationName }}
+        </abbr>
+        <span *ngIf="!observation.regionLabel">
+          {{ observation.locationName }}
+        </span>
         <i
           *ngIf="observation.latitude && observation.longitude"
           class="fa fa-map-marker"

@@ -1,4 +1,4 @@
-const today = new Date().toISOString().slice(0, "2006-01-02".length);
+import { mergeFeatureCollections } from "./mergeFeatureCollections";
 
 let $regions = undefined;
 
@@ -23,29 +23,35 @@ export function loadRegions() {
   ));
 }
 
+let $regionsAran = undefined;
+
 /**
  * @returns {Promise<import("geojson").FeatureCollection[]>}
  */
 export function loadRegionsAran() {
-  return loadAndMerge(import("@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json"));
+  return ($regionsAran ??= loadAndMerge(import("@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json")));
 }
+
+let $regionsEuregio = undefined;
 
 /**
  * @returns {Promise<import("geojson").FeatureCollection[]>}
  */
 export function loadRegionsEuregio() {
-  return loadAndMerge(
+  return ($regionsEuregio ??= loadAndMerge(
     import("@eaws/micro-regions/AT-07_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json"),
-  );
+  ));
 }
+
+let $regionsSwitzerland = undefined;
 
 /**
  * @returns {Promise<import("geojson").FeatureCollection[]>}
  */
 export function loadRegionsSwitzerland() {
-  return loadAndMerge(import("@eaws/micro-regions/CH_micro-regions.geojson.json"));
+  return ($regionsSwitzerland ??= loadAndMerge(import("@eaws/micro-regions/CH_micro-regions.geojson.json")));
 }
 
 let $regionsWithElevation = undefined;
@@ -75,23 +81,7 @@ export function loadRegionsWithElevation() {
  * @param {Promise<import("geojson").FeatureCollection>} imports
  * @returns {Promise<import("geojson").FeatureCollection>}
  */
-function loadAndMerge(...imports) {
-  return Promise.all(imports).then((collections) => mergeFeatureCollections(collections));
-}
-
-/**
- * @param {import("geojson").FeatureCollection[]} collections
- * @returns {import("geojson").FeatureCollection}
- */
-function mergeFeatureCollections(collections) {
-  return {
-    type: "FeatureCollection",
-    features: [].concat(...collections.map((collection) => collection.features)).filter((feature) => {
-      const properties = feature.properties;
-      return (
-        (!properties.start_date || properties.start_date <= today) &&
-        (!properties.end_date || properties.end_date > today)
-      );
-    }),
-  };
+async function loadAndMerge(...imports) {
+  const collections = await Promise.all(imports);
+  return mergeFeatureCollections(...collections);
 }

@@ -59,14 +59,14 @@
                   'admin.observations.selectSources.placeholder' | translate
                 }}"
                 [options]="allSources"
-                [(ngModel)]="selectedSourceItems"
+                [(ngModel)]="filter.observationSources"
                 optionLabel="name"
                 optionValue="id"
                 [maxSelectedLabels]="0"
                 selectedItemsLabel="{{
                   'admin.observations.selectSources.selectionLabel' | translate
                 }}"
-                (onChange)="onDropdownSelect('sources', $event)"
+                (onChange)="onSourcesDropdownSelect($event)"
                 scrollHeight="400px"
               ></p-multiSelect>
             </div>
@@ -84,7 +84,7 @@
                 selectedItemsLabel="{{
                   'admin.observations.selectRegion.selectionLabel' | translate
                 }}"
-                (onChange)="onDropdownSelect('regions', $event)"
+                (onChange)="onRegionsDropdownSelect($event)"
                 scrollHeight="400px"
               ></p-multiSelect>
             </div>

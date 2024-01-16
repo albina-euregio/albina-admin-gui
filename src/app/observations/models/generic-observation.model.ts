@@ -239,4 +239,5 @@ export type GenericObservation<Data = any> = z.infer<typeof genericObservationSc
   $extraDialogRows?: ObservationTableRow[];
   filterType?: ObservationFilterType;
   isHighlighted?: boolean;
+  regionLabel?: string;
 };

@@ -1,4 +1,12 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
+import {
+  Component,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  HostListener,
+  AfterContentInit,
+} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
@@ -58,7 +66,7 @@ export interface MultiselectDropdownData {
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
-export class ForecastComponent implements AfterViewInit, OnDestroy {
+export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   layout = "map" as const;
   observationPopupVisible = false;
   selectedModelPoint: GenericObservation;
@@ -107,16 +115,16 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
 
   files = {};
 
-  ngAfterViewInit() {
-    this.allRegions = this.regionsService
-      .getRegionsEuregio()
-      .features.map((f) => f.properties)
+  async ngAfterContentInit() {
+    this.allRegions = (await this.regionsService.getRegionsEuregio()).features
+      .map((f) => f.properties)
       .sort((r1, r2) => r1.id.localeCompare(r2.id));
-
     this.allRegions.forEach((region) => {
       this.regionalMarkers[region.id] = [];
     });
+  }
 
+  async ngAfterViewInit() {
     this.initMaps().then(() => this.load());
   }
 

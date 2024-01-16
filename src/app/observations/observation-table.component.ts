@@ -5,7 +5,12 @@ import { EventType, isAvalancheWarningServiceObservation, Observation } from "./
 import { AlbinaObservationsService } from "./sources";
 import { Message, SharedModule } from "primeng/api";
 import { Table, TableModule } from "primeng/table";
-import { GenericObservation, ImportantObservation, ObservationSource } from "./models/generic-observation.model";
+import {
+  ForecastSource,
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+} from "./models/generic-observation.model";
 import { PipeModule } from "../pipes/pipes.module";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { MessagesModule } from "primeng/messages";
@@ -50,8 +55,14 @@ export class ObservationTableComponent {
     private translate: TranslateService,
   ) {}
 
+  hiddenObservations = new Set<ObservationSource | ForecastSource>([
+    ObservationSource.FotoWebcamsEU,
+    ObservationSource.Observer,
+    ObservationSource.Panomax,
+  ]);
+
   get shownObservations(): GenericObservation[] {
-    const observations = (this.observations || []).filter((o) => o.$source !== ObservationSource.Observer);
+    const observations = (this.observations || []).filter((o) => !this.hiddenObservations.has(o.$source));
     return this.showObservationsWithoutCoordinates ? observations.filter(this.hasNoCoordinates) : observations;
   }
 
