@@ -1,36 +1,8 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
-import { mergeFeatureCollections } from "./mergeFeatureCollections";
 import { ConstantsService } from "../constants-service/constants.service";
 import aggregatedRegions from "../../../assets/aggregated_regions.json"
-// @ts-ignore
-import RegionsEuregio_AT_07 from "@eaws/micro-regions/AT-07_micro-regions.geojson.json";
-// @ts-ignore
-import RegionsEuregio_IT_32_BZ from "@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json";
-// @ts-ignore
-import RegionsEuregio_IT_32_TN from "@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json";
-//
-const RegionsEuregio: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
-  RegionsEuregio_AT_07 as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsEuregio_IT_32_BZ as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsEuregio_IT_32_TN as FeatureCollection<MultiPolygon, RegionProperties>,
-);
-
-// @ts-ignore
-import RegionsAran_ES_CT_L from "@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json";
-//
-const RegionsAran: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
-  RegionsAran_ES_CT_L as FeatureCollection<MultiPolygon, RegionProperties>
-);
-
-// @ts-ignore
-import RegionsSwitzerland_CH from "@eaws/micro-regions/CH_micro-regions.geojson.json";
-
-const RegionsSwitzerland: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
-  RegionsSwitzerland_CH as FeatureCollection<MultiPolygon, RegionProperties>
-);
-
 import {default as regionsNamesDe} from "@eaws/micro-regions_names/de.json";
 import {default as regionsNamesIt} from "@eaws/micro-regions_names/it.json";
 import {default as regionsNamesEn} from "@eaws/micro-regions_names/en.json";
@@ -38,7 +10,6 @@ import {default as regionsNamesFr} from "@eaws/micro-regions_names/fr.json";
 import {default as regionsNamesEs} from "@eaws/micro-regions_names/es.json";
 import {default as regionsNamesCa} from "@eaws/micro-regions_names/ca.json";
 import {default as regionsNamesOc} from "@eaws/micro-regions_names/oc.json";
-
 import {
   loadRegions,
   loadRegionsAran,
