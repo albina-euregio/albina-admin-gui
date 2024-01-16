@@ -50,11 +50,11 @@ import {
 @Injectable()
 export class RegionsService {
   initialAggregatedRegion: Record<string, string[]> = {
-    "AT-07": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("AT-07")),
-    "IT-32-BZ": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("IT-32-BZ")),
-    "IT-32-TN": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("IT-32-TN")),
-    "ES-CT-L": RegionsAran.features.map(f => f.properties.id).filter(id => id.startsWith("ES-CT-L")),
-    "CH": RegionsSwitzerland.features.map(f => f.properties.id).filter(id => id.startsWith("CH")),
+    "AT-07": aggregatedRegions.level1.flat().filter((id) => id.startsWith("AT-07")),
+    "IT-32-BZ": aggregatedRegions.level1.flat().filter((id) => id.startsWith("IT-32-BZ")),
+    "IT-32-TN": aggregatedRegions.level1.flat().filter((id) => id.startsWith("IT-32-TN")),
+    "ES-CT-L": aggregatedRegions.level1.flat().filter((id) => id.startsWith("ES-CT-L")),
+    "CH": aggregatedRegions.level1.flat().filter((id) => id.startsWith("CH")),
   };
 
   constructor(
@@ -73,7 +73,7 @@ export class RegionsService {
   }
 
   getRegionsAsync(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
-    return loadRegions().then((r) => this.translateNames(r))
+    return loadRegions().then((r) => this.translateNames(r));
   }
 
   getRegionsWithElevationAsync(): Promise<FeatureCollection<MultiPolygon, RegionWithElevationProperties>> {
@@ -101,19 +101,19 @@ export class RegionsService {
 
   getRegionNames(): typeof regionsNamesDe {
     switch (this.translateService.currentLang) {
-      case 'de':
+      case "de":
         return regionsNamesDe;
-      case 'it':
+      case "it":
         return regionsNamesIt;
-      case 'en':
+      case "en":
         return regionsNamesEn;
-      case 'fr':
+      case "fr":
         return regionsNamesFr;
-      case 'es':
+      case "es":
         return regionsNamesEs;
-      case 'ca':
+      case "ca":
         return regionsNamesCa;
-      case 'oc':
+      case "oc":
         return regionsNamesOc;
       default:
         return regionsNamesEn;
