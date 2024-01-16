@@ -46,7 +46,7 @@ import { RoseChartComponent } from "./charts/rose-chart.component";
 import { MenubarModule } from "primeng/menubar";
 import { InputTextModule } from "primeng/inputtext";
 import { CalendarModule } from "primeng/calendar";
-import { MultiSelectModule } from "primeng/multiselect";
+import { MultiSelectChangeEvent, MultiSelectModule } from "primeng/multiselect";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
@@ -202,33 +202,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.mapService.removeMaps();
   }
 
-  onDropdownSelect(target: string, event: any) {
-    switch (target) {
-      case "regions":
-        this.filter.regions = event.value;
-        this.mapService.clickRegion(event.value);
-        this.applyLocalFilter();
-        break;
-      case "sources":
-        this.filter.observationSources = event.value;
-        this.applyLocalFilter();
-        break;
-      default:
-    }
+  onRegionsDropdownSelect(event: MultiSelectChangeEvent) {
+    this.filter.regions = event.value;
+    this.mapService.clickRegion(event.value);
+    this.applyLocalFilter();
   }
 
-  onDropdownDeSelect(target: string, item: any) {
-    switch (target) {
-      case "regions":
-        this.filter.regions = this.filter.regions.filter((e) => e !== item.id);
-        this.applyLocalFilter();
-        break;
-      case "sources":
-        this.filter.observationSources = this.filter.observationSources.filter((e) => e !== item.id);
-        this.applyLocalFilter();
-        break;
-      default:
-    }
+  onSourcesDropdownSelect(event: MultiSelectChangeEvent) {
+    this.filter.observationSources = event.value;
+    this.applyLocalFilter();
   }
 
   onSidebarChange(e: Event) {
