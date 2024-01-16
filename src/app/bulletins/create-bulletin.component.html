@@ -680,7 +680,7 @@
                     </button>
                     <button
                       *ngIf="!copyService.isCopyTextcat()"
-                      [disabled]="isDisabled()"
+                      [disabled]="loading || editRegions"
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
                       data-toggle="tooltip"
@@ -915,9 +915,7 @@
                       <div class="btn-group--border form-field-toolbar">
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            isDisabled()
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
@@ -935,7 +933,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="isDisabled()"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -1036,7 +1034,7 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeAvActivityHighlightsNotes"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
@@ -1306,7 +1304,7 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeAvActivityCommentNotes"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
@@ -1656,7 +1654,7 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeSnowpackStructureCommentNotes"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
@@ -2028,7 +2026,7 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeTendencyCommentNotes"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
