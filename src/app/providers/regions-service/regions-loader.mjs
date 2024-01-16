@@ -1,4 +1,4 @@
-const today = new Date().toISOString().slice(0, "2006-01-02".length);
+import { mergeFeatureCollections } from "./mergeFeatureCollections";
 
 let $regions = undefined;
 
@@ -77,22 +77,5 @@ export function loadRegionsWithElevation() {
  */
 async function loadAndMerge(...imports) {
   const collections = await Promise.all(imports);
-  return mergeFeatureCollections(collections);
-}
-
-/**
- * @param {import("geojson").FeatureCollection[]} collections
- * @returns {import("geojson").FeatureCollection}
- */
-function mergeFeatureCollections(collections) {
-  return {
-    type: "FeatureCollection",
-    features: [].concat(...collections.map((collection) => collection.features)).filter((feature) => {
-      const properties = feature.properties;
-      return (
-        (!properties.start_date || properties.start_date <= today) &&
-        (!properties.end_date || properties.end_date > today)
-      );
-    }),
-  };
+  return mergeFeatureCollections(...collections);
 }
