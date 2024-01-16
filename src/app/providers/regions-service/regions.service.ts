@@ -146,12 +146,6 @@ export class RegionsService {
 export interface RegionProperties {
   id: string;
   name?: string;
-  name_ar?: string;
-  name_cat?: string;
-  name_de?: string;
-  name_en?: string;
-  name_it?: string;
-  name_sp?: string;
 }
 
 export interface RegionWithElevationProperties extends RegionProperties {
