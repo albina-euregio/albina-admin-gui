@@ -78,6 +78,13 @@
                   "with": "src/environments/environment.dev.ts"
                 }
               ]
+            },
+            "local": {
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -88,6 +95,9 @@
             "buildTarget": "albina-admin-gui:build"
           },
           "configurations": {
+            "local": {
+              "buildTarget": "albina-admin-gui:build:local"
+            },
             "development": {
               "buildTarget": "albina-admin-gui:build:development"
             },
