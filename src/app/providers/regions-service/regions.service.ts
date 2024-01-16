@@ -95,8 +95,8 @@ export class RegionsService {
     }
   }
 
-  getRegionsEuregio(): FeatureCollection<MultiPolygon, RegionProperties> {
-    return RegionsEuregio;
+  async getRegionsEuregio(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
+    return loadRegionsEuregio();
   }
 
   getRegionNames(): typeof regionsNamesDe {

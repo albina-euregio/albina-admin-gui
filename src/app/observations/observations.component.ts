@@ -123,8 +123,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     iframe: SafeResourceUrl;
   };
 
-  public readonly allRegions: RegionProperties[];
-  public readonly allSources: MultiselectDropdownData[];
+  public allRegions: RegionProperties[];
+  public allSources: MultiselectDropdownData[];
   public selectedRegionItems: string[];
   public selectedSourceItems: ObservationSource[];
   public chartsData: ChartsData = {
@@ -156,12 +156,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     private regionsService: RegionsService,
     private elevationService: ElevationService,
     public mapService: BaseMapService,
-  ) {
-    this.allRegions = this.regionsService
-      .getRegionsEuregio()
-      .features.map((f) => f.properties)
-      .sort((r1, r2) => r1.id.localeCompare(r2.id));
+  ) {}
 
+  async ngAfterContentInit() {
+    this.allRegions = (await this.regionsService.getRegionsEuregio()).features
+      .map((f) => f.properties)
+      .sort((r1, r2) => r1.id.localeCompare(r2.id));
     this.allSources = Object.keys(ObservationSource).map((key) => {
       return { id: key, name: key };
     });
@@ -180,9 +180,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ],
       },
     ];
-  }
 
-  ngAfterContentInit() {
     this.filter.days = 1;
   }
 
@@ -399,11 +397,17 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
     this.chartsData.Stability = this.filter.normalizeData(this.filter.getStabilityDataset(this.observations));
 
-    this.chartsData.ObservationType = this.filter.normalizeData(this.filter.getObservationTypeDataset(this.observations));
+    this.chartsData.ObservationType = this.filter.normalizeData(
+      this.filter.getObservationTypeDataset(this.observations),
+    );
 
-    this.chartsData.ImportantObservation = this.filter.normalizeData(this.filter.getImportantObservationDataset(this.observations));
+    this.chartsData.ImportantObservation = this.filter.normalizeData(
+      this.filter.getImportantObservationDataset(this.observations),
+    );
 
-    this.chartsData.AvalancheProblem = this.filter.normalizeData(this.filter.getAvalancheProblemDataset(this.observations));
+    this.chartsData.AvalancheProblem = this.filter.normalizeData(
+      this.filter.getAvalancheProblemDataset(this.observations),
+    );
 
     this.chartsData.DangerPattern = this.filter.normalizeData(this.filter.getDangerPatternDataset(this.observations));
 
