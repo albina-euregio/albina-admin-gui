@@ -93,7 +93,7 @@ export class RegionsService {
     return loadRegionsWithElevation().then((r) => this.translateNames(r));
   }
 
-  async getActiveRegion(activeRegionCode: String): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
+  async getActiveRegion(activeRegionCode: string): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
     switch (activeRegionCode) {
       case this.constantsService.codeAran:
         return loadRegionsAran();
@@ -112,7 +112,7 @@ export class RegionsService {
     return RegionsEuregio;
   }
 
-  getRegionNames(): any {
+  getRegionNames(): typeof regionsNamesDe {
     switch (this.translateService.currentLang) {
       case 'de':
         return regionsNamesDe;
@@ -133,12 +133,12 @@ export class RegionsService {
     }
   }
 
-  private translateNames(data: FeatureCollection<any, RegionProperties>) {
-    data.features.forEach((feature) => (feature.properties.name = this.getRegionNames()[feature.properties.id]));
+  private translateNames(data: FeatureCollection<Geometry, RegionProperties>) {
+    data.features.forEach((feature) => (feature.properties.name = this.getRegionName(feature.properties.id)));
     return data;
   }
 
-  getRegionName(id) {
+  getRegionName(id: string) {
     return this.getRegionNames()[id];
   }
 }
