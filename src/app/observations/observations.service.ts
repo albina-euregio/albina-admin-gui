@@ -27,13 +27,16 @@ export class ObservationsService {
 
   loadAll(): Observable<GenericObservation<any>> {
     return onErrorResumeNext(
+      // fast
+      this.albina.getObservations(),
       this.aws.getObservers(),
+      this.lolaKronos.getLoLaKronos(),
+      this.wikisnow.getWikisnowECT(),
+      // medium
+      this.lwdKip.getLwdKipObservations(),
+      // slow
       this.lawis.getLawisIncidents(),
       this.lawis.getLawisProfiles(),
-      this.lolaKronos.getLoLaKronos(),
-      this.lwdKip.getLwdKipObservations(),
-      this.wikisnow.getWikisnowECT(),
-      this.albina.getObservations(),
       this.fotoWebcam.getFotoWebcamsEU(),
       this.panomax.getPanomax(),
     );
