@@ -577,8 +577,8 @@
                 </div>
 
                 <button
-                  [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)"
-                  *ngIf="isDisabled()"
+                  [disabled]="editRegions || loading || hasFiveAvalancheProblems(false)"
+                  *ngIf="!isDisabled()"
                   (click)="createAvalancheProblem(false); $event.stopPropagation()"
                   class="btn btn-primary btn-icon btn-sm ml-2"
                   title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
