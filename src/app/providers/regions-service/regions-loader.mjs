@@ -23,29 +23,35 @@ export function loadRegions() {
   ));
 }
 
+let $regionsAran = undefined;
+
 /**
  * @returns {Promise<import("geojson").FeatureCollection[]>}
  */
 export function loadRegionsAran() {
-  return loadAndMerge(import("@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json"));
+  return ($regionsAran ??= loadAndMerge(import("@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json")));
 }
+
+let $regionsEuregio = undefined;
 
 /**
  * @returns {Promise<import("geojson").FeatureCollection[]>}
  */
 export function loadRegionsEuregio() {
-  return loadAndMerge(
+  return ($regionsEuregio ??= loadAndMerge(
     import("@eaws/micro-regions/AT-07_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json"),
-  );
+  ));
 }
+
+let $regionsSwitzerland = undefined;
 
 /**
  * @returns {Promise<import("geojson").FeatureCollection[]>}
  */
 export function loadRegionsSwitzerland() {
-  return loadAndMerge(import("@eaws/micro-regions/CH_micro-regions.geojson.json"));
+  return ($regionsSwitzerland ??= loadAndMerge(import("@eaws/micro-regions/CH_micro-regions.geojson.json")));
 }
 
 let $regionsWithElevation = undefined;
