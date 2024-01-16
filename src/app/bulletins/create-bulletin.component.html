@@ -484,7 +484,7 @@
           </div>
         </div>
       </header>
-      <div *ngIf="!bulletinsService.isLocked(activeBulletin.getId())" class="region-form__banner banner banner-info">
+      <div *ngIf="!showPublicationHappened(bulletinsService.getActiveDate()) && !bulletinsService.isLocked(activeBulletin.getId()) && !this.authenticationService.isExternalRegion(activeBulletin.getOwnerRegion().toString())" class="region-form__banner banner banner-info">
         <p class="banner__text">
           <i class="ph ph-pencil-line"></i>
           {{ "bulletins.create.regionEditable" | translate }}
@@ -498,7 +498,7 @@
         </div>
       </div>
 
-      <div *ngIf="bulletinsService.isLocked(activeBulletin.getId())" class="region-form__banner banner banner-warning">
+      <div *ngIf="!showPublicationHappened(bulletinsService.getActiveDate()) && bulletinsService.isLocked(activeBulletin.getId())" class="region-form__banner banner banner-warning">
         <p class="banner__text">
           <i class="ph ph-pencil-slash"></i>
           {{ "bulletins.create.regionLocked" | translate }}
@@ -509,7 +509,7 @@
       </div>
 
       <div
-        *ngIf="bulletinsService.getIsEditable() && hasSuggestions(activeBulletin) && !editRegions"
+        *ngIf="!showPublicationHappened(bulletinsService.getActiveDate()) && bulletinsService.getIsEditable() && hasSuggestions(activeBulletin) && !editRegions"
         class="region-form__banner banner banner-warning-strong"
       >
         <p class="banner__text">
@@ -525,19 +525,17 @@
           </button>
         </div>
       </div>
-      <!-- To be implemented
-      <div class="region-form__banner banner banner-warning">
+
+      <div
+        *ngIf="showPublicationHappened(bulletinsService.getActiveDate())"
+        class="region-form__banner banner banner-warning"
+      >
         <p class="banner__text">
           <i class="ph ph-warning"></i> 
           {{ "bulletins.create.regionLockedPublished" | translate }}
         </p>
-        <div class="btn-group banner__actions">
-          <button type="button" class="btn btn-sm btn-dark">
-            <i class="ph ph-pencil"></i> <span>{{ "bulletins.create.edit" | translate }} </span>
-          </button>
-        </div>
       </div>
-      -->
+
       <main class="region-form__content">
         <accordion class="accordion">
           <!-- Avalanche problems -->
