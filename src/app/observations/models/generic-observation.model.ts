@@ -57,6 +57,7 @@ export enum ObservationSource {
   FotoWebcamsEU = "FotoWebcamsEU",
   Panomax = "Panomax",
   RasBzIt = "RasBzIt",
+  PanoCloud = "PanoCloud",
 }
 
 export enum ForecastSource {

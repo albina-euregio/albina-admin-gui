@@ -57,9 +57,10 @@ import {
   LawisObservationsService,
   LolaKronosObservationsService,
   LwdKipObservationsService,
+  PanoCloudWebcamObservationsService,
   PanomaxObservationsService,
-  WikisnowObservationsService,
   RasWebcamObservationsService,
+  WikisnowObservationsService,
 } from "./sources";
 
 //import { BarChart } from "./charts/bar-chart/bar-chart.component";
@@ -106,6 +107,7 @@ export interface MultiselectDropdownData {
     PanomaxObservationsService,
     WikisnowObservationsService,
     RasWebcamObservationsService,
+    PanoCloudWebcamObservationsService,
     BaseMapService,
   ],
   templateUrl: "observations.component.html",

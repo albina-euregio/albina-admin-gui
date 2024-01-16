@@ -8,6 +8,7 @@ import {
   LawisObservationsService,
   LolaKronosObservationsService,
   LwdKipObservationsService,
+  PanoCloudWebcamObservationsService,
   PanomaxObservationsService,
   RasWebcamObservationsService,
   WikisnowObservationsService,
@@ -22,6 +23,7 @@ export class ObservationsService {
     private lawis: LawisObservationsService,
     private lolaKronos: LolaKronosObservationsService,
     private lwdKip: LwdKipObservationsService,
+    private panocloud: PanoCloudWebcamObservationsService,
     private panomax: PanomaxObservationsService,
     private rasWebcam: RasWebcamObservationsService,
     private wikisnow: WikisnowObservationsService,
@@ -34,6 +36,7 @@ export class ObservationsService {
       this.aws.getObservers(),
       this.lolaKronos.getLoLaKronos(),
       this.wikisnow.getWikisnowECT(),
+      this.panocloud.getPanoCloudWebcams(),
       this.rasWebcam.getRasWebcams(),
       // medium
       this.lwdKip.getLwdKipObservations(),
