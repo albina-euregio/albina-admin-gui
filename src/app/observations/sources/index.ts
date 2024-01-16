@@ -5,6 +5,7 @@ export * from "./lawis.service";
 export * from "./lola-kronos.service";
 export * from "./lwdkip.service";
 export * from "./observation.service";
+export * from "./panocloud-webcam.service";
 export * from "./panomax.service";
 export * from "./ras-webcam.service";
 export * from "./wikisnow.service";
