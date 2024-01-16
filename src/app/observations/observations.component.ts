@@ -149,7 +149,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public markerService: ObservationMarkerService,
     private translateService: TranslateService,
     private observationsService: ObservationsService,
-    private fotoWebcam: FotoWebcamObservationsService,
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     private elevationService: ElevationService,
@@ -267,7 +266,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           if (observation.$source === ObservationSource.AvalancheWarningService) {
             observation = this.parseObservation(observation);
           }
-          if (!observation.elevation) {
+          if (!observation.elevation && observation.$source !== ObservationSource.FotoWebcamsEU) {
             this.elevationService.getElevation(observation.latitude, observation.longitude).subscribe((elevation) => {
               observation.elevation = elevation;
               this.addObservation(observation);
@@ -275,19 +274,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           } else {
             this.addObservation(observation);
           }
-        }
-      })
-      .catch((e) => console.error(e))
-      .finally(() => {
-        this.loading = undefined;
-        this.applyLocalFilter();
-      });
-
-    const webcams = this.fotoWebcam.getFotoWebcamsEU();
-    webcams
-      .forEach((webcam) => {
-        if (this.filter.inDateRange(webcam)) {
-          this.addObservation(webcam);
         }
       })
       .catch((e) => console.error(e))

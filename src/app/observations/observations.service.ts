@@ -4,7 +4,7 @@ import { Observable, onErrorResumeNext } from "rxjs";
 import {
   AlbinaObservationsService,
   AwsObservationsService,
-  // FotoWebcamObservationsService,
+  FotoWebcamObservationsService,
   LawisObservationsService,
   LolaKronosObservationsService,
   LwdKipObservationsService,
@@ -16,7 +16,7 @@ import {
 export class ObservationsService {
   constructor(
     private aws: AwsObservationsService,
-    // // private fotoWebcam: FotoWebcamObservationsService,
+    private fotoWebcam: FotoWebcamObservationsService,
     private lawis: LawisObservationsService,
     private lolaKronos: LolaKronosObservationsService,
     private lwdKip: LwdKipObservationsService,
@@ -34,7 +34,7 @@ export class ObservationsService {
       this.lwdKip.getLwdKipObservations(),
       this.wikisnow.getWikisnowECT(),
       this.albina.getObservations(),
-      // this.fotoWebcam.getFotoWebcamsEU(),
+      this.fotoWebcam.getFotoWebcamsEU(),
       this.panomax.getPanomax(),
     );
   }
