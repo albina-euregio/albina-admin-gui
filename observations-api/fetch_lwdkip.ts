@@ -1,6 +1,4 @@
 import dayjs from "dayjs";
-import { createConnection, insertObservation } from "./database";
-import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import {
   ArcGisLayer,
   LwdKipBeobachtung,
@@ -15,21 +13,19 @@ import {
 
 const API = "https://gis.tirol.gv.at/arcgis";
 
-export async function fetchLwdKip() {
-  const connection = await createConnection();
+export async function* fetchLwdKip() {
   for (const f of (await fetchLwdKipLayer<LwdKipBeobachtung>("Beobachtungen")).features) {
-    insertObservation(connection, augmentRegion(convertLwdKipBeobachtung(f)));
+    yield convertLwdKipBeobachtung(f);
   }
   for (const f of (await fetchLwdKipLayer<LwdKipSprengerfolg>("Sprengerfolg")).features) {
-    insertObservation(connection, augmentRegion(convertLwdKipSprengerfolg(f)));
+    yield convertLwdKipSprengerfolg(f);
   }
   for (const f of (await fetchLwdKipLayer<LwdKipLawinenabgang>("Lawinenabgänge")).features) {
-    insertObservation(connection, augmentRegion(convertLwdKipLawinenabgang(f)));
+    yield convertLwdKipLawinenabgang(f);
   }
   // for (const f of fetchLwdKipLayer<LwdKipSperren>("aktive_Sperren").features) {
-  //   insertObservation(connection, augmentRegion(convertLwdKipSperren(f)));
+  //   yield convertLwdKipSperren(f);
   // }
-  connection.destroy();
 }
 
 async function fetchLwdKipLayer<T>(layerName = ""): Promise<T> {
