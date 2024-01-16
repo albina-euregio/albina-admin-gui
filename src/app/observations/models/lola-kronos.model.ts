@@ -327,6 +327,7 @@ export function convertLoLaToGeneric(
   urlPrefix: string,
 ): GenericObservation {
   return {
+    $id: obs.uuId,
     $data: obs,
     $externalURL: urlPrefix + obs.uuId,
     $source: ObservationSource.LoLaKronos,

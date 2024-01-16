@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
+import { mergeFeatureCollections } from "./mergeFeatureCollections";
 import { ConstantsService } from "../constants-service/constants.service";
 import aggregatedRegions from "../../../assets/aggregated_regions.json"
 // @ts-ignore
@@ -46,13 +47,8 @@ import {
   loadRegionsWithElevation,
 } from "./regions-loader.mjs";
 
-import * as L from "leaflet";
-import { isMarkerInsidePolygon } from "./isMarkerInsidePolygon";
-
 @Injectable()
 export class RegionsService {
-  euregioGeoJSON: L.GeoJSON;
-
   initialAggregatedRegion: Record<string, string[]> = {
     "AT-07": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("AT-07")),
     "IT-32-BZ": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("IT-32-BZ")),
@@ -69,10 +65,7 @@ export class RegionsService {
   constructor(
     private translateService: TranslateService,
     private constantsService: ConstantsService,
-  ) {
-    // FIXME this.translateService.onLangChange.subscribe(() => this.translateAllNames());
-    this.euregioGeoJSON = L.geoJSON(this.getRegionsEuregio());
-  }
+  ) {}
 
   getLevel1Regions(id: string): string[] {
     for (let i = 0; i < this.level1.length; i++) {
@@ -148,20 +141,6 @@ export class RegionsService {
   getRegionName(id) {
     return this.getRegionNames()[id];
   }
-
-  getRegionForLatLng(ll: L.LatLng): RegionProperties {
-    const polygons = (this.euregioGeoJSON.getLayers() as any) as L.Polygon[];
-    const polygon = polygons.find((p) => isMarkerInsidePolygon(ll, p));
-    return polygon?.feature?.properties;
-  }
-
-  augmentRegion<T extends { latitude?: number; longitude?: number; region?: string }>(observation: T): T {
-    if (observation.latitude && observation.longitude) {
-      const ll = new L.LatLng(observation.latitude, observation.longitude);
-      observation.region = this.getRegionForLatLng(ll)?.id;
-    }
-    return observation;
-  }
 }
 
 export interface RegionProperties {
@@ -177,27 +156,4 @@ export interface RegionProperties {
 
 export interface RegionWithElevationProperties extends RegionProperties {
   elevation: "high" | "low" | "low_high";
-}
-
-function mergeFeatureCollections<G extends Geometry, P>(
-  ...collections: FeatureCollection<G, P>[]
-): FeatureCollection<G, P> {
-  const today = "2022-12-01";
-  return {
-    type: "FeatureCollection",
-    features: []
-      .concat(...collections.map((collection) => collection.features))
-      .filter((feature) => filterFeature(feature, today)),
-  };
-}
-
-function filterFeature(
-  feature: GeoJSON.Feature,
-  today = new Date().toISOString().slice(0, "2006-01-02".length)
-): boolean {
-  const properties = feature.properties;
-  return (
-    (!properties.start_date || properties.start_date <= today) &&
-    (!properties.end_date || properties.end_date > today)
-  );
 }

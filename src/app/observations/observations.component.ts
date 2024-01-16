@@ -11,6 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ObservationsService } from "./observations.service";
 import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
+import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import {
   GenericObservation,
@@ -412,7 +413,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private addObservation(observation: GenericObservation): void {
     observation.filterType = ObservationFilterType.Local;
 
-    this.regionsService.augmentRegion(observation);
+    augmentRegion(observation);
 
     this.observations.push(observation);
     this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));

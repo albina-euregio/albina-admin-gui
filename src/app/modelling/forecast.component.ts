@@ -5,6 +5,7 @@ import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaS
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
+import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
 import { SharedModule } from "primeng/api";
@@ -223,7 +224,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
-          this.regionsService.augmentRegion(point);
+          augmentRegion(point);
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
           if (configuration) {
             this.observationConfigurations.add(configuration);
@@ -249,7 +250,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         longitude: ll.lng,
         locationName: cityName,
       } as GenericObservation;
-      this.regionsService.augmentRegion(point);
+      augmentRegion(point);
       this.drawMarker(point);
       this.modelPoints.push(point);
     }

@@ -36,6 +36,7 @@ export interface WikisnowECT {
 
 export function convertWikisnow(wikisnow: WikisnowECT): GenericObservation<WikisnowECT> {
   return {
+    $id: wikisnow.id,
     $data: wikisnow,
     $source: ObservationSource.WikisnowECT,
     $type: ObservationType.Profile,
