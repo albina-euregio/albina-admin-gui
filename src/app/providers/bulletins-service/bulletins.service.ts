@@ -314,7 +314,6 @@ export class BulletinsService {
   }
 
   updateBulletin(bulletin: BulletinModel, date): Observable<Response> {
-    debugger
     // check if bulletin has ID
     const url = this.constantsService.getServerUrl() + "bulletins/" + bulletin.getId() + "?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
     const headers = this.authenticationService.newAuthHeader();

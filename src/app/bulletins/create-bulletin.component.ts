@@ -1056,7 +1056,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addExternalBulletins(response) {
-    debugger
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
       this.addExternalBulletin(bulletin);
