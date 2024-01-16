@@ -9,19 +9,21 @@ import {
   LolaKronosObservationsService,
   LwdKipObservationsService,
   PanomaxObservationsService,
+  RasWebcamObservationsService,
   WikisnowObservationsService,
 } from "./sources";
 
 @Injectable()
 export class ObservationsService {
   constructor(
+    private albina: AlbinaObservationsService,
     private aws: AwsObservationsService,
     private fotoWebcam: FotoWebcamObservationsService,
     private lawis: LawisObservationsService,
     private lolaKronos: LolaKronosObservationsService,
     private lwdKip: LwdKipObservationsService,
-    private albina: AlbinaObservationsService,
     private panomax: PanomaxObservationsService,
+    private rasWebcam: RasWebcamObservationsService,
     private wikisnow: WikisnowObservationsService,
   ) {}
 
@@ -32,6 +34,7 @@ export class ObservationsService {
       this.aws.getObservers(),
       this.lolaKronos.getLoLaKronos(),
       this.wikisnow.getWikisnowECT(),
+      this.rasWebcam.getRasWebcams(),
       // medium
       this.lwdKip.getLwdKipObservations(),
       // slow

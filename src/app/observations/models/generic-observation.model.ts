@@ -56,6 +56,7 @@ export enum ObservationSource {
   WikisnowECT = "WikisnowECT",
   FotoWebcamsEU = "FotoWebcamsEU",
   Panomax = "Panomax",
+  RasBzIt = "RasBzIt",
 }
 
 export enum ForecastSource {
