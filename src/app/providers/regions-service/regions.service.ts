@@ -57,32 +57,19 @@ export class RegionsService {
     "CH": RegionsSwitzerland.features.map(f => f.properties.id).filter(id => id.startsWith("CH")),
   };
 
-  // Level 1 regions: parts of provinces
-  level1: string[][] = aggregatedRegions.level1
-  // Level 2 regions: provinces
-  level2: string[][] = aggregatedRegions.level2
-
   constructor(
     private translateService: TranslateService,
     private constantsService: ConstantsService,
   ) {}
 
+  // Level 1 regions: parts of provinces
   getLevel1Regions(id: string): string[] {
-    for (let i = 0; i < this.level1.length; i++) {
-      if (this.level1[i].includes(id)) {
-        return this.level1[i];
-      }
-    }
-    return [];
+    return aggregatedRegions.level1.find((ids) => ids.includes(id)) ?? [];
   }
 
+  // Level 2 regions: provinces
   getLevel2Regions(id: string): string[] {
-    for (let i = 0; i < this.level2.length; i++) {
-      if (this.level2[i].includes(id)) {
-        return this.level2[i];
-      }
-    }
-    return [];
+    return aggregatedRegions.level2.find((ids) => ids.includes(id)) ?? [];
   }
 
   getRegionsAsync(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
