@@ -125,8 +125,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
-  public selectedRegionItems: string[];
-  public selectedSourceItems: ObservationSource[];
   public chartsData: ChartsData = {
     Elevation: {},
     Aspects: {},
@@ -203,13 +201,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   onRegionsDropdownSelect(event: MultiSelectChangeEvent) {
-    this.filter.regions = event.value;
     this.mapService.clickRegion(event.value);
     this.applyLocalFilter();
   }
 
   onSourcesDropdownSelect(event: MultiSelectChangeEvent) {
-    this.filter.observationSources = event.value;
     this.applyLocalFilter();
   }
 
