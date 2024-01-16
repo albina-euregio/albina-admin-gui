@@ -75,8 +75,9 @@ export function loadRegionsWithElevation() {
  * @param {Promise<import("geojson").FeatureCollection>} imports
  * @returns {Promise<import("geojson").FeatureCollection>}
  */
-function loadAndMerge(...imports) {
-  return Promise.all(imports).then((collections) => mergeFeatureCollections(collections));
+async function loadAndMerge(...imports) {
+  const collections = await Promise.all(imports);
+  return mergeFeatureCollections(collections);
 }
 
 /**
