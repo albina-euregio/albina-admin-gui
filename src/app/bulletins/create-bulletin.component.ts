@@ -438,6 +438,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
               this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), foreignRegions).subscribe(
                 data2 => {
                   this.addForeignBulletins(data2);
+                  this.save();
                 },
                 () => {
                   console.error("Foreign bulletins could not be loaded!");
