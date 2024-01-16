@@ -525,7 +525,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) ||
         (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted)
       ) &&
-      (!this.bulletinsService.hasBeenPublished8AM(date))
+      (!this.bulletinsService.hasBeenPublished8AM(date)) &&
+      (!this.showPublicationHappensAt5PM(date))
     ) ? true : false;
   }
 
