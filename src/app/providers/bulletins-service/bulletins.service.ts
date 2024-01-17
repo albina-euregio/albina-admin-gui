@@ -562,7 +562,7 @@ export class BulletinsService {
 
   addLockedBulletin(bulletinLock: BulletinLockModel) {
     if (this.lockedBulletins.has(bulletinLock.getBulletin())) {
-      console.warn("Bulletin already locked by " + bulletinLock.getBulletin());
+      console.warn("Bulletin already locked by " + bulletinLock.getUserName());
     } else {
       this.lockedBulletins.set(bulletinLock.getBulletin(), bulletinLock);
     }
