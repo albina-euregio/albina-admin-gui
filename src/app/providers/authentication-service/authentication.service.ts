@@ -222,7 +222,7 @@ export class AuthenticationService {
     this.loadExternalServerInstances().subscribe(
       data => {
         for (const entry of (data as any)) {
-          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password).subscribe(
+          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
             data => {
               if (data === true) {
                 console.debug("[" + entry.name + "] Logged in!");
@@ -249,7 +249,7 @@ export class AuthenticationService {
     return this.http.get<Response>(url, options);
   }
 
-  public externalServerLogin(apiUrl: string, username: string, password: string): Observable<boolean> {
+  public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
     const url = apiUrl + "authentication";
     const body = JSON.stringify({username, password});
     const headers = new HttpHeaders({
@@ -260,7 +260,7 @@ export class AuthenticationService {
     return this.http.post<AuthenticationResponse>(url, body, options)
       .pipe(map(data => {
         if ((data ).access_token) {
-          this.addExternalServer(data, apiUrl);
+          this.addExternalServer(data, apiUrl, name);
           localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
           return true;
         } else {
@@ -293,12 +293,13 @@ export class AuthenticationService {
     return this.externalServers;
   }
 
-  private addExternalServer(json: Partial<AuthenticationResponse>, apiUrl: string) {
+  private addExternalServer(json: Partial<AuthenticationResponse>, apiUrl: string, serverName: string) {
     if (!json) {
       return;
     }
     var server = ServerModel.createFromJson(json);
     server.setApiUrl(apiUrl);
+    server.setName(serverName);
     this.externalServers.push(server);
   }
 
