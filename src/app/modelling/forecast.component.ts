@@ -1,10 +1,19 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
+import {
+  Component,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  HostListener,
+  AfterContentInit,
+} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
+import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
 import { SharedModule } from "primeng/api";
@@ -57,7 +66,7 @@ export interface MultiselectDropdownData {
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
-export class ForecastComponent implements AfterViewInit, OnDestroy {
+export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   layout = "map" as const;
   observationPopupVisible = false;
   selectedModelPoint: GenericObservation;
@@ -106,16 +115,16 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
 
   files = {};
 
-  ngAfterViewInit() {
-    this.allRegions = this.regionsService
-      .getRegionsEuregio()
-      .features.map((f) => f.properties)
+  async ngAfterContentInit() {
+    this.allRegions = (await this.regionsService.getRegionsEuregio()).features
+      .map((f) => f.properties)
       .sort((r1, r2) => r1.id.localeCompare(r2.id));
-
     this.allRegions.forEach((region) => {
       this.regionalMarkers[region.id] = [];
     });
+  }
 
+  async ngAfterViewInit() {
     this.initMaps().then(() => this.load());
   }
 
@@ -223,7 +232,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
-          this.regionsService.augmentRegion(point);
+          augmentRegion(point);
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
           if (configuration) {
             this.observationConfigurations.add(configuration);
@@ -249,7 +258,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         longitude: ll.lng,
         locationName: cityName,
       } as GenericObservation;
-      this.regionsService.augmentRegion(point);
+      augmentRegion(point);
       this.drawMarker(point);
       this.modelPoints.push(point);
     }

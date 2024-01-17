@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { RegionsService } from "app/providers/regions-service/regions.service";
+import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 
 interface MultimodelPointCsv {
@@ -20,7 +20,6 @@ export class MultimodelSourceService {
   constructor(
     private http: HttpClient,
     private constantsService: ConstantsService,
-    private regionsService: RegionsService,
   ) {}
 
   private parseCSV<T>(text: string) {
@@ -44,7 +43,7 @@ export class MultimodelSourceService {
         points
           .map((row: MultimodelPointCsv): GenericObservation => {
             const id = row.statnr;
-            return this.regionsService.augmentRegion({
+            return augmentRegion({
               $source: "multimodel",
               $data: row,
               $id: id,

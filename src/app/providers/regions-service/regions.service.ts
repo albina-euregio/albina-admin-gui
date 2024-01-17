@@ -3,33 +3,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
 import { ConstantsService } from "../constants-service/constants.service";
 import aggregatedRegions from "../../../assets/aggregated_regions.json"
-// @ts-ignore
-import RegionsEuregio_AT_07 from "@eaws/micro-regions/AT-07_micro-regions.geojson.json";
-// @ts-ignore
-import RegionsEuregio_IT_32_BZ from "@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json";
-// @ts-ignore
-import RegionsEuregio_IT_32_TN from "@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json";
-//
-const RegionsEuregio: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
-  RegionsEuregio_AT_07 as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsEuregio_IT_32_BZ as FeatureCollection<MultiPolygon, RegionProperties>,
-  RegionsEuregio_IT_32_TN as FeatureCollection<MultiPolygon, RegionProperties>,
-);
-
-// @ts-ignore
-import RegionsAran_ES_CT_L from "@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json";
-//
-const RegionsAran: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
-  RegionsAran_ES_CT_L as FeatureCollection<MultiPolygon, RegionProperties>
-);
-
-// @ts-ignore
-import RegionsSwitzerland_CH from "@eaws/micro-regions/CH_micro-regions.geojson.json";
-
-const RegionsSwitzerland: FeatureCollection<MultiPolygon, RegionProperties> = mergeFeatureCollections(
-  RegionsSwitzerland_CH as FeatureCollection<MultiPolygon, RegionProperties>
-);
-
 import {default as regionsNamesDe} from "@eaws/micro-regions_names/de.json";
 import {default as regionsNamesIt} from "@eaws/micro-regions_names/it.json";
 import {default as regionsNamesEn} from "@eaws/micro-regions_names/en.json";
@@ -37,7 +10,6 @@ import {default as regionsNamesFr} from "@eaws/micro-regions_names/fr.json";
 import {default as regionsNamesEs} from "@eaws/micro-regions_names/es.json";
 import {default as regionsNamesCa} from "@eaws/micro-regions_names/ca.json";
 import {default as regionsNamesOc} from "@eaws/micro-regions_names/oc.json";
-
 import {
   loadRegions,
   loadRegionsAran,
@@ -46,61 +18,40 @@ import {
   loadRegionsWithElevation,
 } from "./regions-loader.mjs";
 
-import * as L from "leaflet";
-import { isMarkerInsidePolygon } from "./isMarkerInsidePolygon";
-
 @Injectable()
 export class RegionsService {
-  euregioGeoJSON: L.GeoJSON;
-
   initialAggregatedRegion: Record<string, string[]> = {
-    "AT-07": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("AT-07")),
-    "IT-32-BZ": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("IT-32-BZ")),
-    "IT-32-TN": RegionsEuregio.features.map(f => f.properties.id).filter(id => id.startsWith("IT-32-TN")),
-    "ES-CT-L": RegionsAran.features.map(f => f.properties.id).filter(id => id.startsWith("ES-CT-L")),
-    "CH": RegionsSwitzerland.features.map(f => f.properties.id).filter(id => id.startsWith("CH")),
+    "AT-07": aggregatedRegions.level1.flat().filter((id) => id.startsWith("AT-07")),
+    "IT-32-BZ": aggregatedRegions.level1.flat().filter((id) => id.startsWith("IT-32-BZ")),
+    "IT-32-TN": aggregatedRegions.level1.flat().filter((id) => id.startsWith("IT-32-TN")),
+    "ES-CT-L": aggregatedRegions.level1.flat().filter((id) => id.startsWith("ES-CT-L")),
+    "CH": aggregatedRegions.level1.flat().filter((id) => id.startsWith("CH")),
   };
-
-  // Level 1 regions: parts of provinces
-  level1: string[][] = aggregatedRegions.level1
-  // Level 2 regions: provinces
-  level2: string[][] = aggregatedRegions.level2
 
   constructor(
     private translateService: TranslateService,
     private constantsService: ConstantsService,
-  ) {
-    // FIXME this.translateService.onLangChange.subscribe(() => this.translateAllNames());
-    this.euregioGeoJSON = L.geoJSON(this.getRegionsEuregio());
-  }
+  ) {}
 
+  // Level 1 regions: parts of provinces
   getLevel1Regions(id: string): string[] {
-    for (let i = 0; i < this.level1.length; i++) {
-      if (this.level1[i].includes(id)) {
-        return this.level1[i];
-      }
-    }
-    return [];
+    return aggregatedRegions.level1.find((ids) => ids.includes(id)) ?? [];
   }
 
+  // Level 2 regions: provinces
   getLevel2Regions(id: string): string[] {
-    for (let i = 0; i < this.level2.length; i++) {
-      if (this.level2[i].includes(id)) {
-        return this.level2[i];
-      }
-    }
-    return [];
+    return aggregatedRegions.level2.find((ids) => ids.includes(id)) ?? [];
   }
 
   getRegionsAsync(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
-    return loadRegions().then((r) => this.translateNames(r))
+    return loadRegions().then((r) => this.translateNames(r));
   }
 
   getRegionsWithElevationAsync(): Promise<FeatureCollection<MultiPolygon, RegionWithElevationProperties>> {
     return loadRegionsWithElevation().then((r) => this.translateNames(r));
   }
 
-  async getActiveRegion(activeRegionCode: String): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
+  async getActiveRegion(activeRegionCode: string): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
     switch (activeRegionCode) {
       case this.constantsService.codeAran:
         return loadRegionsAran();
@@ -115,89 +66,46 @@ export class RegionsService {
     }
   }
 
-  getRegionsEuregio(): FeatureCollection<MultiPolygon, RegionProperties> {
-    return RegionsEuregio;
+  async getRegionsEuregio(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
+    return loadRegionsEuregio();
   }
 
-  getRegionNames(): any {
+  getRegionNames(): typeof regionsNamesDe {
     switch (this.translateService.currentLang) {
-      case 'de':
+      case "de":
         return regionsNamesDe;
-      case 'it':
+      case "it":
         return regionsNamesIt;
-      case 'en':
+      case "en":
         return regionsNamesEn;
-      case 'fr':
+      case "fr":
         return regionsNamesFr;
-      case 'es':
+      case "es":
         return regionsNamesEs;
-      case 'ca':
+      case "ca":
         return regionsNamesCa;
-      case 'oc':
+      case "oc":
         return regionsNamesOc;
       default:
         return regionsNamesEn;
     }
   }
 
-  private translateNames(data: FeatureCollection<any, RegionProperties>) {
-    data.features.forEach((feature) => (feature.properties.name = this.getRegionNames()[feature.properties.id]));
+  private translateNames(data: FeatureCollection<Geometry, RegionProperties>) {
+    data.features.forEach((feature) => (feature.properties.name = this.getRegionName(feature.properties.id)));
     return data;
   }
 
-  getRegionName(id) {
+  getRegionName(id: string) {
     return this.getRegionNames()[id];
-  }
-
-  getRegionForLatLng(ll: L.LatLng): RegionProperties {
-    const polygons = (this.euregioGeoJSON.getLayers() as any) as L.Polygon[];
-    const polygon = polygons.find((p) => isMarkerInsidePolygon(ll, p));
-    return polygon?.feature?.properties;
-  }
-
-  augmentRegion<T extends { latitude?: number; longitude?: number; region?: string }>(observation: T): T {
-    if (observation.latitude && observation.longitude) {
-      const ll = new L.LatLng(observation.latitude, observation.longitude);
-      observation.region = this.getRegionForLatLng(ll)?.id;
-    }
-    return observation;
   }
 }
 
 export interface RegionProperties {
   id: string;
   name?: string;
-  name_ar?: string;
-  name_cat?: string;
-  name_de?: string;
-  name_en?: string;
-  name_it?: string;
-  name_sp?: string;
 }
 
 export interface RegionWithElevationProperties extends RegionProperties {
   elevation: "high" | "low" | "low_high";
-}
-
-function mergeFeatureCollections<G extends Geometry, P>(
-  ...collections: FeatureCollection<G, P>[]
-): FeatureCollection<G, P> {
-  const today = "2022-12-01";
-  return {
-    type: "FeatureCollection",
-    features: []
-      .concat(...collections.map((collection) => collection.features))
-      .filter((feature) => filterFeature(feature, today)),
-  };
-}
-
-function filterFeature(
-  feature: GeoJSON.Feature,
-  today = new Date().toISOString().slice(0, "2006-01-02".length)
-): boolean {
-  const properties = feature.properties;
-  return (
-    (!properties.start_date || properties.start_date <= today) &&
-    (!properties.end_date || properties.end_date > today)
-  );
 }
