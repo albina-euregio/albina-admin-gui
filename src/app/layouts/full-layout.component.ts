@@ -70,7 +70,7 @@ export class FullLayoutComponent {
 
   changeRegion(region) {
     if (!this.authenticationService.getActiveRegionId().startsWith(region)) {
-      if (this.router.url === "/bulletins/new" && this.bulletinsService.getIsEditable()) {
+      if (this.router.url.startsWith("/bulletins/") && this.bulletinsService.getIsEditable()) {
         this.tmpRegion = region;
         this.openChangeRegionModal(this.changeRegionTemplate);
       } else {

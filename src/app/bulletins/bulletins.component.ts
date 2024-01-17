@@ -10,6 +10,7 @@ import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { Router, ActivatedRoute } from "@angular/router";
 import * as Enums from "../enums/enums";
+import { formatDate } from "@angular/common";
 
 @Component({
   templateUrl: "bulletins.component.html"
@@ -119,8 +120,10 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   }
 
   editBulletin(date: Date) {
-    this.bulletinsService.setActiveDate(date);
-    this.router.navigate(["/bulletins/new"]);
+    const format = "yyyy-MM-dd";
+    const locale = "en-US";
+    const formattedDate = formatDate(date, format, locale);
+    this.router.navigate(["/bulletins/" + formattedDate]);
   }
 
   copy(event, date: Date) {

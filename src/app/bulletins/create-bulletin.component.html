@@ -12,7 +12,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="loadBulletin(bulletinsService.getNextDate())"
+            (click)="changeDate(bulletinsService.getNextDate())"
             *ngIf="bulletinsService.getNextDate()"
           >
             <i class="ph-bold ph-caret-left"></i>
@@ -20,7 +20,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="loadBulletin(bulletinsService.getPreviousDate())"
+            (click)="changeDate(bulletinsService.getPreviousDate())"
             *ngIf="bulletinsService.getPreviousDate()"
           >
             <i class="ph-bold ph-caret-right"></i>

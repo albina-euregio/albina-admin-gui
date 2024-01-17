@@ -795,7 +795,7 @@
     "complex": " Complex"
   },
   "changeRegionDialog": {
-    "message": "Do you want to discard the changes and change the region?",
+    "message": "Do you want to change the region?",
     "accept": "Yes",
     "reject": "No"
   },

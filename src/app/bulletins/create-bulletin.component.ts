@@ -1,5 +1,5 @@
 import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe, formatDate } from "@angular/common";
 import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
 
@@ -241,6 +241,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private activeRoute: ActivatedRoute,
     public bulletinsService: BulletinsService,
     private dialog: MatDialog,
     public authenticationService: AuthenticationService,
@@ -408,7 +409,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.initializeComponent();
+    this.activeRoute.params.subscribe(routeParams => {
+      const date = new Date(routeParams.date);
+      date.setHours(0, 0, 0, 0);
+      this.bulletinsService.setActiveDate(date);
+      this.initializeComponent();
+    });
   }
 
   async initializeComponent() {
@@ -556,6 +562,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       ) &&
       (this.bulletinsService.hasBeenPublished8AM(date))
     ) ? true : false;
+  }
+
+  changeDate(date) {
+    const format = "yyyy-MM-dd";
+    const locale = "en-US";
+    const formattedDate = formatDate(date, format, locale);
+    this.router.navigate(["/bulletins/" + formattedDate]);
   }
 
   loadBulletin(date) {
