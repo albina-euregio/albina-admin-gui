@@ -254,14 +254,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     private mapService: MapService,
     private applicationRef: ApplicationRef,
     private sanitizer: DomSanitizer,
-    renderer: Renderer2,
+    private renderer: Renderer2,
     private modalService: BsModalService,
     private datePipe: DatePipe
   ) {
     this.loading = true;
     this.showAfternoonMap = false;
     this.showForeignRegions = true;
-    this.stopListening = renderer.listen("window", "message", this.getText.bind(this));
     this.mapService.resetAll();
     this.internBulletinsList = new Array<BulletinModel>();
     this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
@@ -415,6 +414,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.stopListening = this.renderer.listen("window", "message", this.getText.bind(this));
     this.activeRoute.params.subscribe(routeParams => {
       const date = new Date(routeParams.date);
       date.setHours(0, 0, 0, 0);
@@ -507,6 +507,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.stopListening();
+    
     if (this.bulletinsService.getIsEditable()) {
       this.eventSubscriber.unsubscribe();
     }
