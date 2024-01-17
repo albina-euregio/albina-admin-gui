@@ -258,7 +258,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private datePipe: DatePipe
   ) {
-    this.loading = true;
+    this.loading = false;
     this.showAfternoonMap = false;
     this.showForeignRegions = true;
     this.mapService.resetAll();
@@ -424,6 +424,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   async initializeComponent() {
+    this.loading = true;
+
     // for reload iframe on change language
     this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
       () => this.pmUrl = this.getTextcatUrl()
@@ -461,6 +463,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
                 data2 => {
                   this.addForeignBulletins(data2);
                   this.save();
+                  this.loading = false;
                 },
                 () => {
                   console.error("Foreign bulletins could not be loaded!");
@@ -481,7 +484,55 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
         // load current bulletins (do not copy them, also if it is an update)
       } else {
-        this.loadBulletinsFromServer();
+        const regions = new Array<String>();
+        if (this.authenticationService.isEuregio()) {
+          regions.push(this.constantsService.codeTyrol);
+          regions.push(this.constantsService.codeSouthTyrol);
+          regions.push(this.constantsService.codeTrentino);
+        } else {
+          regions.push(this.authenticationService.getActiveRegionId());
+        }
+        this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
+          data => {
+            for (const jsonBulletin of (data as any)) {
+              const bulletin = BulletinModel.createFromJson(jsonBulletin);
+    
+              // only add bulletins with published or saved regions
+              if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
+                this.addInternalBulletin(bulletin);
+              }
+            }
+    
+            let hit = false;
+            for (const bulletin of this.internBulletinsList) {
+              for (const region of bulletin.getSavedRegions()) {
+                if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+                  hit = true;
+                  break;
+                }
+              }
+              for (const region of bulletin.getPublishedRegions()) {
+                if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+                  hit = true;
+                  break;
+                }
+              }
+              if (hit) {
+                break;
+              }
+            }
+    
+            this.updateInternalBulletins();
+    
+            this.mapService.deselectAggregatedRegion();
+            this.loading = false;
+          },
+          () => {
+            console.error("Bulletins could not be loaded!");
+            this.loading = false;
+            this.openLoadingErrorModal(this.loadingErrorTemplate);
+          }
+        );
       }
 
       if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
@@ -796,7 +847,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   downloadJsonBulletin() {
-    this.loading = true;
     this.setTexts();
     this.deselectBulletin();
 
@@ -844,7 +894,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     document.body.appendChild(element);
     element.click(); // simulate click
     document.body.removeChild(element);
-    this.loading = false;
   }
 
   uploadJsonBulletin(event) {
@@ -1072,7 +1121,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.updateInternalBulletins();
 
-    this.loading = false;
     this.mapService.deselectAggregatedRegion();
   }
 
@@ -2410,58 +2458,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   loadModalDecline(event): void {
     event.currentTarget.setAttribute("disabled", true);
     this.loadModalRef.hide();
-  }
-
-  private loadBulletinsFromServer() {
-    const regions = new Array<String>();
-    if (this.authenticationService.isEuregio()) {
-      regions.push(this.constantsService.codeTyrol);
-      regions.push(this.constantsService.codeSouthTyrol);
-      regions.push(this.constantsService.codeTrentino);
-    } else {
-      regions.push(this.authenticationService.getActiveRegionId());
-    }
-    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
-      data => {
-        for (const jsonBulletin of (data as any)) {
-          const bulletin = BulletinModel.createFromJson(jsonBulletin);
-
-          // only add bulletins with published or saved regions
-          if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
-            this.addInternalBulletin(bulletin);
-          }
-        }
-
-        let hit = false;
-        for (const bulletin of this.internBulletinsList) {
-          for (const region of bulletin.getSavedRegions()) {
-            if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-              hit = true;
-              break;
-            }
-          }
-          for (const region of bulletin.getPublishedRegions()) {
-            if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-              hit = true;
-              break;
-            }
-          }
-          if (hit) {
-            break;
-          }
-        }
-
-        this.updateInternalBulletins();
-
-        this.mapService.deselectAggregatedRegion();
-        this.loading = false;
-      },
-      () => {
-        console.error("Bulletins could not be loaded!");
-        this.loading = false;
-        this.openLoadingErrorModal(this.loadingErrorTemplate);
-      }
-    );
   }
 
   openDeleteAggregatedRegionModal(template: TemplateRef<any>) {
