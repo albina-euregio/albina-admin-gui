@@ -1223,6 +1223,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   createBulletin(copy) {
     let bulletin: BulletinModel;
     if (copy && this.copyService.getBulletin()) {
+      this.showNewBulletinModal = true;
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
@@ -2512,7 +2513,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.copyBulletin(); 
 
     if (this.copyService.isCopyBulletin()) {
-      console.log('passte region');
+      console.log('paste region');
       this.createBulletin(true);
     }
 
