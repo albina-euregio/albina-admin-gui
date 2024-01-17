@@ -2322,7 +2322,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   getText(e) {
     e.preventDefault();
-    if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk") {
+    if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk" && e.data.source !== "react-devtools-content-script") {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
 
       if (pmData.textDef === undefined || pmData.textDef === "") {
