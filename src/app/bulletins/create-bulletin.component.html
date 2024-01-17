@@ -495,7 +495,7 @@
           <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin)" (click)="editBulletin($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
             <i class="ph ph-map-trifold"></i>
           </button>
-          <button *ngIf="!hasSuggestions(activeBulletin) && !copyService.isCopyBulletin()" (click)="openCopyRegionModal(copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
+          <button *ngIf="!hasSuggestions(activeBulletin) && !copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
           <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin) && isCreator(activeBulletin)" (click)="deleteBulletin($event, activeBulletin)"  data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.delete' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-trash"></i></button>
         </div>
       </div>
