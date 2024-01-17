@@ -1017,9 +1017,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.showAfternoonMap = checked;
     this.setTexts();
 
-    const bulletin = this.activeBulletin;
-
-    this.deselectBulletin();
     const map = document.getElementById("map");
     const afternoonMap = document.getElementById("afternoonMap");
     if (this.showAfternoonMap) {
@@ -1028,11 +1025,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     } else {
       map.classList.remove("create-bulletin__map--am");
       afternoonMap.classList.remove("create-bulletin__map--am");
-    }
-    this.initMaps().then(() => this.updateInternalBulletins());
-
-    if (bulletin) {
-      this.selectBulletin(bulletin);
     }
   }
 
@@ -1397,7 +1389,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
-    if (this.bulletinsService.getIsEditable() && this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.isCreator(this.activeBulletin)) {
+    if (this.bulletinsService.getIsEditable() && this.isCreator(this.activeBulletin)) {
       this.activeBulletin.setHasDaytimeDependency(value);
 
       if (this.activeBulletin.hasDaytimeDependency) {
