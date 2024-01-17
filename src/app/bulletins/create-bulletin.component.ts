@@ -928,7 +928,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private onMapClick() {
-    if (this.showNewBulletinModal && !this.editRegions) {
+    if (!this.showNewBulletinModal && !this.editRegions) {
       const test = this.mapService.getClickedRegion();
       for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
         if (bulletin.getSavedRegions().indexOf(test) > -1 || bulletin.getPublishedRegions().indexOf(test) > -1 ) {
