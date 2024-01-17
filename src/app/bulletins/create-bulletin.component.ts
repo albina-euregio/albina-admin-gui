@@ -1368,7 +1368,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       
       // update bulletin
       this.bulletinsService.updateBulletin(this.activeBulletin, this.bulletinsService.getActiveDate());
-      // lock bulletin
+      
+      // unlock bulletin
       this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
       
       this.activeBulletin = undefined;
