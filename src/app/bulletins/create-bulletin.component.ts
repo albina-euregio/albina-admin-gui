@@ -43,6 +43,7 @@ import { Console } from "console";
 
 import * as Enums from "../enums/enums";
 import { BulletinLockModel } from "app/models/bulletin-lock.model";
+import { ServerModel } from "app/models/server.model";
 
 declare var L: any;
 
@@ -65,11 +66,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public showAfternoonMap: boolean;
 
   public showForeignRegions: boolean;
-  public showExternalRegions: boolean;
-
+  
   public activeBulletin: BulletinModel;
   public internBulletinsList: BulletinModel[];
-  public externBulletinsList: BulletinModel[];
+  public externRegionsMap: Map<ServerModel, BulletinModel[]>;
+  public showExternRegionsMap: Map<string, boolean>;
 
   public activeHighlightsTextcat: string;
   public activeHighlightsDe: string;
@@ -260,11 +261,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.showAfternoonMap = false;
     this.showForeignRegions = true;
-    this.showExternalRegions = false;
     this.stopListening = renderer.listen("window", "message", this.getText.bind(this));
     this.mapService.resetAll();
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externBulletinsList = new Array<BulletinModel>();
+    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.showExternRegionsMap = new Map<string, boolean>();
     // this.preventClick = false;
     // this.timer = 0;
 
@@ -302,7 +303,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.originalBulletins = new Map<string, BulletinModel>();
     this.activeBulletin = undefined;
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externBulletinsList = new Array<BulletinModel>();
+    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.showExternRegionsMap = new Map<string, boolean>();
 
     this.activeHighlightsTextcat = undefined;
     this.activeHighlightsDe = undefined;
@@ -386,15 +388,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.showForeignRegions = true;
   }
 
-  toggleShowExternalRegions() {
-    if (this.showExternalRegions)
-      this.showExternalRegions = false;
+  showExternalRegions(key: string) {
+    return this.showExternRegionsMap.get(key);
+  }
+
+  toggleShowExternalRegions(apiUrl: string) {
+    if (this.showExternRegionsMap.get(apiUrl))
+      this.showExternRegionsMap.set(apiUrl, false);
     else
-      this.showExternalRegions = true;
+      this.showExternRegionsMap.set(apiUrl, true);
   }
 
   hasExternalRegions() {
-    if (this.externBulletinsList.length > 0)
+    if (this.externRegionsMap.size > 0)
       return true;
     else
       return false;
@@ -487,10 +493,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.authenticationService.getExternalServers().map((server) =>
         this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
           data2 => {
-            this.addExternalBulletins(data2);
+            this.addExternalBulletins(server, data2);
           },
           () => {
-            console.error("External bulletins could not be loaded!");
+            console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
           }
         )
       );
@@ -930,7 +936,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private onMapClick() {
     if (!this.showNewBulletinModal && !this.editRegions) {
       const test = this.mapService.getClickedRegion();
-      for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
+      for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
         if (bulletin.getSavedRegions().indexOf(test) > -1 || bulletin.getPublishedRegions().indexOf(test) > -1 ) {
           if (this.activeBulletin === bulletin) {
             this.deselectBulletin();
@@ -999,8 +1005,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  getExternalBulletins() {
-    return this.externBulletinsList;
+  getExternalRegionsMap() {
+    return this.externRegionsMap;
   }
 
   loadBulletinsFromYesterday() {
@@ -1068,27 +1074,28 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.deselectAggregatedRegion();
   }
 
-  private addExternalBulletins(response) {
+  private addExternalBulletins(server: ServerModel, response) {
+    const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
-      this.addExternalBulletin(bulletin);
+      bulletinsList.push(bulletin);
+      this.mapService.addAggregatedRegion(bulletin);
     }
 
-    this.updateExternalBulletins();
+    bulletinsList.sort((a, b): number => {
+      if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
+      if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
+      return 0;
+    });
 
-    this.loading = false;
+    this.externRegionsMap.set(server, bulletinsList);
+    this.showExternRegionsMap.set(server.getApiUrl(), false);
     this.mapService.deselectAggregatedRegion();
   }
 
   private updateInternalBulletins() {
     for (const bulletin of this.internBulletinsList) {
       this.mapService.updateAggregatedRegion(bulletin);
-    }
-  }
-
-  private updateExternalBulletins() {
-    for (const bulletin of this.externBulletinsList) {
-      this.mapService.addAggregatedRegion(bulletin);
     }
   }
 
@@ -1104,15 +1111,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.showAfternoonMap = true;
       this.onShowAfternoonMapChange(true);
     }
-  }
-
-  private addExternalBulletin(bulletin: BulletinModel) {
-    this.externBulletinsList.push(bulletin);
-    this.externBulletinsList.sort((a, b): number => {
-      if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
-      if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
-      return 0;
-    });
   }
 
   acceptSuggestions(event, bulletin: BulletinModel) {
@@ -1138,7 +1136,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     }
     bulletin.setSuggestedRegions(suggested);
-
     bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
 
     this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate());
@@ -1386,7 +1383,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.activeBulletin.afternoon.setHasElevationDependency(false);
         this.activeBulletin.afternoon.setDangerRatingBelow(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
         let daytimeDependency = false;
-        for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
+        for (const bulletin of this.internBulletinsList) {
           if (bulletin.hasDaytimeDependency) {
             daytimeDependency = true;
             break;
@@ -1711,7 +1708,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.mapService.resetAggregatedRegions();
     this.updateInternalBulletins();
-    this.updateExternalBulletins();
     this.deselectBulletin(true);
   }
 
@@ -1848,7 +1844,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.mapService.addAggregatedRegion(bulletin);
     }
 
-    for (const bulletin of this.externBulletinsList) {
+    for (const bulletin of [...this.externRegionsMap.values()].flat()) {
       this.mapService.addAggregatedRegion(bulletin);
     }
 
