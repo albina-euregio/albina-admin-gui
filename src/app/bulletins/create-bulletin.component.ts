@@ -1000,11 +1000,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   setMapLayout(bulletin, isCompact: boolean): void {
-    // Show the map on top of form (compact) or right next to the form?
+    // Show the map on top of form (compact) or right next to the form
     this.isCompactMapLayout = isCompact;
-    
+    this.invalidateMapSize();    
+  }
+
+  invalidateMapSize() {
     setTimeout(() => {
       this.mapService.map.invalidateSize();
+      this.mapService.afternoonMap.invalidateSize();
     }, 10);
   }
 
@@ -1022,10 +1026,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (this.showAfternoonMap) {
       map.classList.add("create-bulletin__map--am");
       afternoonMap.classList.add("create-bulletin__map--am");
+      
     } else {
       map.classList.remove("create-bulletin__map--am");
       afternoonMap.classList.remove("create-bulletin__map--am");
     }
+
+    this.invalidateMapSize();
   }
 
   getOwnBulletins() {
@@ -1150,7 +1157,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
 
     if (bulletin.hasDaytimeDependency && this.showAfternoonMap === false) {
-      this.showAfternoonMap = true;
       this.onShowAfternoonMapChange(true);
     }
   }
@@ -1370,9 +1376,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.applicationRef.tick();
     }
 
-    setTimeout(() => {
-      this.mapService.map.invalidateSize();
-    }, 10);
+    this.invalidateMapSize();
   }
 
   preview() {
@@ -1394,7 +1398,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       if (this.activeBulletin.hasDaytimeDependency) {
         if (this.showAfternoonMap === false) {
-          this.showAfternoonMap = true;
           this.onShowAfternoonMapChange(true);
         }
         this.activeBulletin.afternoon.setDangerRatingAbove(this.activeBulletin.forenoon.getDangerRatingAbove());
@@ -1434,7 +1437,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
         }
         if (!daytimeDependency && this.showAfternoonMap) {
-          this.showAfternoonMap = false;
           this.onShowAfternoonMapChange(false);
         }
       }
