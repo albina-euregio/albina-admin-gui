@@ -1042,10 +1042,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (this.showAfternoonMap) {
       map.classList.add("create-bulletin__map--am");
       afternoonMap.classList.add("create-bulletin__map--am");
-      
+      this.mapService.addAMControl();
     } else {
       map.classList.remove("create-bulletin__map--am");
       afternoonMap.classList.remove("create-bulletin__map--am");
+      this.mapService.removeAMControl();
     }
 
     this.invalidateMapSize();

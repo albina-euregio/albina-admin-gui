@@ -31,6 +31,9 @@ interface SelectableRegionProperties extends RegionWithElevationProperties {
 export class MapService {
   public map: Map;
   public afternoonMap: Map;
+  private amControl: L.Control;
+  private pmControl: L.Control;
+
   protected baseMaps: Record<string, TileLayer>;
   protected afternoonBaseMaps: Record<string, TileLayer>;
   protected overlayMaps: {
@@ -52,7 +55,10 @@ export class MapService {
     protected regionsService: RegionsService,
     protected authenticationService: AuthenticationService,
     protected constantsService: ConstantsService
-  ) {}
+  ) {
+    this.amControl =new AmPmControl({ position: "bottomleft" }).setText("AM");
+    this.pmControl =new AmPmControl({ position: "bottomleft" }).setText("PM");
+  }
 
   protected async initOverlayMaps(isPM = false): Promise<typeof this.overlayMaps> {
     const [regions, regionsWithElevation, activeRegion] = await Promise.all([
@@ -128,10 +134,6 @@ export class MapService {
     L.control.zoom({ position: "topleft" }).addTo(map);
     new RegionNameControl().addTo(map);
 
-    if (showAfternoonMap) {
-      new AmPmControl({ position: "bottomleft" }).setText("AM").addTo(map);
-    }
-
     this.map = map;
     return map;
   }
@@ -146,10 +148,18 @@ export class MapService {
       ],
     });
 
-    new AmPmControl({ position: "bottomleft" }).setText("PM").addTo(afternoonMap);
+    this.pmControl.addTo(afternoonMap);
 
     this.afternoonMap = afternoonMap;
     return afternoonMap;
+  }
+
+  addAMControl() {
+    this.amControl.addTo(this.map);
+  }
+
+  removeAMControl() {
+    this.amControl.remove();
   }
 
   getMapInitOptions() {
