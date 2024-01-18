@@ -1863,12 +1863,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.updateAggregatedRegions();
 
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
-      this.activeBulletin.setValidFrom(validFrom);
-      this.activeBulletin.setValidUntil(validUntil);
-
       if (isUpdate) {
         // update bulletin
         this.updateBulletinOnServer(this.activeBulletin);
@@ -1883,6 +1877,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private createBulletinOnServer(bulletin: BulletinModel) {
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+    bulletin.setValidFrom(validFrom);
+    bulletin.setValidUntil(validUntil);
+
     this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         console.log("Bulletin created on server.");
@@ -1896,6 +1896,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private updateBulletinOnServer(bulletin: BulletinModel) {
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+    bulletin.setValidFrom(validFrom);
+    bulletin.setValidUntil(validUntil);
+
     this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         console.log("Bulletin updated on server.");
