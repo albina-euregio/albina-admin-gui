@@ -1886,7 +1886,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         console.log("Bulletin created on server.");
       },
       (error) => {
-        debugger
         console.error("Bulletin could not be created on server!");
         this.openSaveErrorModal(this.saveErrorTemplate);
       }
@@ -1905,7 +1904,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         console.log("Bulletin updated on server.");
       },
       (error) => {
-        debugger
         console.error("Bulletin could not be updated on server!");
         this.openSaveErrorModal(this.saveErrorTemplate);
       }
@@ -1918,7 +1916,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         console.log("Bulletin deleted on server.");
       },
       (error) => {
-        debugger
         console.error("Bulletin could not be deleted on server!");
         this.openSaveErrorModal(this.saveErrorTemplate);
       }
