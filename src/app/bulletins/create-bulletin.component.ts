@@ -1200,7 +1200,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.setSuggestedRegions(suggested);
     bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
 
-    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate());
+    // update bulletin
+    this.updateBulletinOnServer(bulletin);
 
     this.updateAggregatedRegions();
   }
@@ -1215,7 +1216,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
     bulletin.setSuggestedRegions(suggested);
 
-    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate());
+    // update bulletin
+    this.updateBulletinOnServer(bulletin);
 
     this.updateAggregatedRegions();
   }
@@ -1250,11 +1252,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.selectBulletin(bulletin);
     this.mapService.selectAggregatedRegion(bulletin);
     this.editBulletinRegions();
-    // Always create 1 problem
-    this.createAvalancheProblem(false);
-
-    // create bulletin
-    this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate());
   }
 
   copyBulletin() {
@@ -1289,9 +1286,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.activeBulletin = bulletin;
 
       // lock bulletin
-      if (!this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
-        this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
-      }
+      //if (!this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+      //  this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+      //}
 
       this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
       this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
@@ -1358,7 +1355,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   deselectBulletin(del?: boolean) {
     if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
-
       this.setTexts();
 
       if (this.activeAvActivityHighlightsTextcat) {
@@ -1379,11 +1375,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.mapService.deselectAggregatedRegion();
       
-      // update bulletin
-      this.bulletinsService.updateBulletin(this.activeBulletin, this.bulletinsService.getActiveDate());
-      
+      if (!del) {
+        // update bulletin
+        this.updateBulletinOnServer(this.activeBulletin);
+      }
+
       // unlock bulletin
-      this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+      //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
       
       this.activeBulletin = undefined;
 
@@ -1756,13 +1754,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.setOwnerRegion(newOwnerRegion);
 
       // update bulletin
-      this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate());
+      this.updateBulletinOnServer(bulletin);
     } else {
       const index = this.internBulletinsList.indexOf(bulletin);
       if (index > -1) {
         this.internBulletinsList.splice(index, 1);
+
         // delete bulletin
-        this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate());
+        this.deleteBulletinOnServer(bulletin);
       }
     }
 
@@ -1784,6 +1783,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   saveBulletin(event) {
     event.stopPropagation();
+
+    let isUpdate: boolean;
+    if (this.activeBulletin.getSavedRegions().length === 0) {
+      isUpdate = false;
+    } else {
+      isUpdate = true;
+    }
 
     this.showNewBulletinModal = false;
 
@@ -1857,12 +1863,62 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.updateAggregatedRegions();
 
-      // update bulletin
-      this.bulletinsService.updateBulletin(this.activeBulletin, this.bulletinsService.getActiveDate());
+      const validFrom = new Date(this.bulletinsService.getActiveDate());
+      const validUntil = new Date(this.bulletinsService.getActiveDate());
+      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+      this.activeBulletin.setValidFrom(validFrom);
+      this.activeBulletin.setValidUntil(validUntil);
+
+      if (isUpdate) {
+        // update bulletin
+        this.updateBulletinOnServer(this.activeBulletin);
+      } else {
+        // create bulletin
+        this.createBulletinOnServer(this.activeBulletin);
+      }
 
     } else {
       this.openNoRegionModal(this.noRegionTemplate);
     }
+  }
+
+  private createBulletinOnServer(bulletin: BulletinModel) {
+    this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        console.log("Bulletin created on server.");
+      },
+      (error) => {
+        debugger
+        console.error("Bulletin could not be created on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      }
+    );
+  }
+
+  private updateBulletinOnServer(bulletin: BulletinModel) {
+    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        console.log("Bulletin updated on server.");
+      },
+      (error) => {
+        debugger
+        console.error("Bulletin could not be updated on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      }
+    );
+  }
+
+  private deleteBulletinOnServer(bulletin: BulletinModel) {
+    this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        console.log("Bulletin deleted on server.");
+      },
+      (error) => {
+        debugger
+        console.error("Bulletin could not be deleted on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      }
+    );
   }
 
   private updateAggregatedRegions() {
