@@ -1121,6 +1121,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.updateInternalBulletins();
 
     this.mapService.deselectAggregatedRegion();
+
+    this.save();
   }
 
   private addForeignBulletins(response) {
@@ -1224,18 +1226,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.updateAggregatedRegions();
   }
 
-  private createInitialAggregatedRegion() {
-    const bulletin = new BulletinModel();
-    bulletin.setAuthor(this.authenticationService.getAuthor());
-    bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-    bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-    const regions = Object.assign([], this.regionsService.initialAggregatedRegion[this.authenticationService.getActiveRegionId()]);
-    bulletin.setSavedRegions(regions);
-
-    this.addInternalBulletin(bulletin);
-  }
-
-
   createBulletin(copy) {
     let bulletin: BulletinModel;
     if (copy && this.copyService.getBulletin()) {
@@ -1258,18 +1248,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   copyBulletin() {
     this.setTexts();
-    if (this.activeBulletin) {
-      const bulletin = new BulletinModel(this.activeBulletin);
-      bulletin.setAdditionalAuthors(new Array<String>());
-      bulletin.setSavedRegions(new Array<String>());
-      bulletin.setPublishedRegions(new Array<String>());
-      bulletin.setSuggestedRegions(new Array<String>());
+    if (this.checkAvalancheProblems()) {
+      if (this.activeBulletin) {
+        const bulletin = new BulletinModel(this.activeBulletin);
+        bulletin.setAdditionalAuthors(new Array<String>());
+        bulletin.setSavedRegions(new Array<String>());
+        bulletin.setPublishedRegions(new Array<String>());
+        bulletin.setSuggestedRegions(new Array<String>());
 
-      bulletin.setAuthor(this.authenticationService.getAuthor());
-      bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-      bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-      this.copyService.setCopyBulletin(true);
-      this.copyService.setBulletin(bulletin);
+        bulletin.setAuthor(this.authenticationService.getAuthor());
+        bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+        bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+        this.copyService.setCopyBulletin(true);
+        this.copyService.setBulletin(bulletin);
+      }
     }
   }
 
@@ -1283,114 +1275,118 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   
   selectBulletin(bulletin: BulletinModel) {
     if (!this.editRegions) {
-      this.deselectBulletin();
+      if (this.checkAvalancheProblems()) {
+        this.deselectBulletin();
 
-      this.activeBulletin = bulletin;
+        this.activeBulletin = bulletin;
 
-      // lock bulletin
-      //if (!this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
-      //  this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
-      //}
+        // lock bulletin
+        //if (!this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+        //  this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+        //}
 
-      this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
-      this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
-      this.activeHighlightsIt = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.it);
-      this.activeHighlightsEn = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.en);
-      this.activeHighlightsFr = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.fr);
-      this.activeHighlightsEs = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.es);
-      this.activeHighlightsCa = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.ca);
-      this.activeHighlightsOc = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.oc);
+        this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
+        this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
+        this.activeHighlightsIt = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.it);
+        this.activeHighlightsEn = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.en);
+        this.activeHighlightsFr = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.fr);
+        this.activeHighlightsEs = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.es);
+        this.activeHighlightsCa = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.ca);
+        this.activeHighlightsOc = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.oc);
 
-      this.activeAvActivityHighlightsTextcat = this.activeBulletin.getAvActivityHighlightsTextcat();
-      this.activeAvActivityHighlightsDe = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.de);
-      this.activeAvActivityHighlightsIt = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.it);
-      this.activeAvActivityHighlightsEn = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.en);
-      this.activeAvActivityHighlightsFr = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.fr);
-      this.activeAvActivityHighlightsEs = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.es);
-      this.activeAvActivityHighlightsCa = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.ca);
-      this.activeAvActivityHighlightsOc = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.oc);
-      this.activeAvActivityHighlightsNotes = this.activeBulletin.getAvActivityHighlightsNotes();
+        this.activeAvActivityHighlightsTextcat = this.activeBulletin.getAvActivityHighlightsTextcat();
+        this.activeAvActivityHighlightsDe = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.de);
+        this.activeAvActivityHighlightsIt = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.it);
+        this.activeAvActivityHighlightsEn = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.en);
+        this.activeAvActivityHighlightsFr = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.fr);
+        this.activeAvActivityHighlightsEs = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.es);
+        this.activeAvActivityHighlightsCa = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.ca);
+        this.activeAvActivityHighlightsOc = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.oc);
+        this.activeAvActivityHighlightsNotes = this.activeBulletin.getAvActivityHighlightsNotes();
 
-      this.activeAvActivityCommentTextcat = this.activeBulletin.getAvActivityCommentTextcat();
-      this.activeAvActivityCommentDe = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.de);
-      this.activeAvActivityCommentIt = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.it);
-      this.activeAvActivityCommentEn = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.en);
-      this.activeAvActivityCommentFr = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.fr);
-      this.activeAvActivityCommentEs = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.es);
-      this.activeAvActivityCommentCa = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.ca);
-      this.activeAvActivityCommentOc = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.oc);
-      this.activeAvActivityCommentNotes = this.activeBulletin.getAvActivityCommentNotes();
+        this.activeAvActivityCommentTextcat = this.activeBulletin.getAvActivityCommentTextcat();
+        this.activeAvActivityCommentDe = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.de);
+        this.activeAvActivityCommentIt = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.it);
+        this.activeAvActivityCommentEn = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.en);
+        this.activeAvActivityCommentFr = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.fr);
+        this.activeAvActivityCommentEs = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.es);
+        this.activeAvActivityCommentCa = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.ca);
+        this.activeAvActivityCommentOc = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.oc);
+        this.activeAvActivityCommentNotes = this.activeBulletin.getAvActivityCommentNotes();
 
-      this.activeSnowpackStructureHighlightsTextcat = this.activeBulletin.getSnowpackStructureHighlightsTextcat();
-      this.activeSnowpackStructureHighlightsDe = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.de);
-      this.activeSnowpackStructureHighlightsIt = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.it);
-      this.activeSnowpackStructureHighlightsEn = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.en);
-      this.activeSnowpackStructureHighlightsFr = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.fr);
-      this.activeSnowpackStructureHighlightsEs = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.es);
-      this.activeSnowpackStructureHighlightsCa = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.ca);
-      this.activeSnowpackStructureHighlightsOc = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.oc);
-      this.activeSnowpackStructureHighlightsNotes = this.activeBulletin.getSnowpackStructureHighlightsNotes();
+        this.activeSnowpackStructureHighlightsTextcat = this.activeBulletin.getSnowpackStructureHighlightsTextcat();
+        this.activeSnowpackStructureHighlightsDe = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.de);
+        this.activeSnowpackStructureHighlightsIt = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.it);
+        this.activeSnowpackStructureHighlightsEn = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.en);
+        this.activeSnowpackStructureHighlightsFr = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.fr);
+        this.activeSnowpackStructureHighlightsEs = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.es);
+        this.activeSnowpackStructureHighlightsCa = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.ca);
+        this.activeSnowpackStructureHighlightsOc = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.oc);
+        this.activeSnowpackStructureHighlightsNotes = this.activeBulletin.getSnowpackStructureHighlightsNotes();
 
-      this.activeSnowpackStructureCommentTextcat = this.activeBulletin.getSnowpackStructureCommentTextcat();
-      this.activeSnowpackStructureCommentDe = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.de);
-      this.activeSnowpackStructureCommentIt = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.it);
-      this.activeSnowpackStructureCommentEn = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.en);
-      this.activeSnowpackStructureCommentFr = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.fr);
-      this.activeSnowpackStructureCommentEs = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.es);
-      this.activeSnowpackStructureCommentCa = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.ca);
-      this.activeSnowpackStructureCommentOc = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.oc);
-      this.activeSnowpackStructureCommentNotes = this.activeBulletin.getSnowpackStructureCommentNotes();
+        this.activeSnowpackStructureCommentTextcat = this.activeBulletin.getSnowpackStructureCommentTextcat();
+        this.activeSnowpackStructureCommentDe = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.de);
+        this.activeSnowpackStructureCommentIt = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.it);
+        this.activeSnowpackStructureCommentEn = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.en);
+        this.activeSnowpackStructureCommentFr = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.fr);
+        this.activeSnowpackStructureCommentEs = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.es);
+        this.activeSnowpackStructureCommentCa = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.ca);
+        this.activeSnowpackStructureCommentOc = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.oc);
+        this.activeSnowpackStructureCommentNotes = this.activeBulletin.getSnowpackStructureCommentNotes();
 
-      this.activeTendencyCommentTextcat = this.activeBulletin.getTendencyCommentTextcat();
-      this.activeTendencyCommentDe = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.de);
-      this.activeTendencyCommentIt = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.it);
-      this.activeTendencyCommentEn = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.en);
-      this.activeTendencyCommentFr = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.fr);
-      this.activeTendencyCommentEs = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.es);
-      this.activeTendencyCommentCa = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.ca);
-      this.activeTendencyCommentOc = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.oc);
-      this.activeTendencyCommentNotes = this.activeBulletin.getTendencyCommentNotes();
+        this.activeTendencyCommentTextcat = this.activeBulletin.getTendencyCommentTextcat();
+        this.activeTendencyCommentDe = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.de);
+        this.activeTendencyCommentIt = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.it);
+        this.activeTendencyCommentEn = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.en);
+        this.activeTendencyCommentFr = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.fr);
+        this.activeTendencyCommentEs = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.es);
+        this.activeTendencyCommentCa = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.ca);
+        this.activeTendencyCommentOc = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.oc);
+        this.activeTendencyCommentNotes = this.activeBulletin.getTendencyCommentNotes();
 
-      this.mapService.selectAggregatedRegion(this.activeBulletin);
+        this.mapService.selectAggregatedRegion(this.activeBulletin);
+      }
     }
   }
 
   deselectBulletin(del?: boolean) {
-    if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
-      this.setTexts();
+    if (del || this.checkAvalancheProblems()) {
+      if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
+        this.setTexts();
 
-      if (this.activeAvActivityHighlightsTextcat) {
-        this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
+        if (this.activeAvActivityHighlightsTextcat) {
+          this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
+        }
+
+        if (this.activeAvActivityCommentTextcat) {
+          this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
+        }
+
+        if (this.activeSnowpackStructureCommentTextcat) {
+          this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
+        }
+
+        if (this.activeTendencyCommentTextcat) {
+          this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
+        }
+
+        this.mapService.deselectAggregatedRegion();
+        
+        if (!del && !this.authenticationService.isExternalRegion(this.activeBulletin.getOwnerRegion().toString())) {
+          // update bulletin
+          this.updateBulletinOnServer(this.activeBulletin);
+        }
+
+        // unlock bulletin
+        //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+        
+        this.activeBulletin = undefined;
+
+        this.applicationRef.tick();
       }
 
-      if (this.activeAvActivityCommentTextcat) {
-        this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
-      }
-
-      if (this.activeSnowpackStructureCommentTextcat) {
-        this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
-      }
-
-      if (this.activeTendencyCommentTextcat) {
-        this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
-      }
-
-      this.mapService.deselectAggregatedRegion();
-      
-      if (!del && !this.authenticationService.isExternalRegion(this.activeBulletin.getOwnerRegion().toString())) {
-        // update bulletin
-        this.updateBulletinOnServer(this.activeBulletin);
-      }
-
-      // unlock bulletin
-      //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
-      
-      this.activeBulletin = undefined;
-
-      this.applicationRef.tick();
+      this.invalidateMapSize();
     }
-
-    this.invalidateMapSize();
   }
 
   preview() {
@@ -1692,9 +1688,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     // TODO implement
   }
 
-  // region
   private delBulletin(bulletin: BulletinModel) {
-
     // check if there are other published or saved regions
     let hit = false;
     let newOwnerRegion = "";
@@ -2075,6 +2069,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
+    this.deselectBulletin();
     this.router.navigate(["/bulletins"]);
   }
 
@@ -2472,6 +2467,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this[pmData.textField + "Oc"] = pmData.textOc;
         this.setTexts();
         this.hideDialog();
+      }
+      if (this.activeBulletin !== null && this.activeBulletin !== undefined) {
+        // update bulletin
+        this.updateBulletinOnServer(this.activeBulletin);
       }
     }
   };
