@@ -559,6 +559,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopListening();
+    this.deselectBulletin();
     
     if (this.bulletinsService.getIsEditable()) {
       this.eventSubscriber.unsubscribe();
@@ -624,6 +625,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   changeDate(date) {
+    this.deselectBulletin();
     const format = "yyyy-MM-dd";
     const locale = "en-US";
     const formattedDate = formatDate(date, format, locale);
@@ -3273,6 +3275,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   submit(event, date: Date) {
     event.stopPropagation();
+
+    this.deselectBulletin();
+
     this.publishing = date;
 
     if (this.checkAvalancheProblems()) {
