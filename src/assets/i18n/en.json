@@ -158,7 +158,7 @@
         "notes": "Notes"
       },
       "copyRegion": {
-        "label": "Paste warning region in another bulletin",
+        "label": "Copy warning region to another bulletin",
         "select": "Paste into ...",
         "currentBulletin": "This bulletin"
       },

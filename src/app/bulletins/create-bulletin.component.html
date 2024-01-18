@@ -2541,20 +2541,70 @@
     <h4 class="modal-title pull-left">{{ "bulletins.create.copyRegion.label" | translate }} {{ bulletin }}</h4>
   </div>
   <div class="modal-body">
-    {{ "bulletins.create.copyRegion.select" | translate }}
-
-    <select [(ngModel)]="selectedCopyRegionDate">
-      <option *ngFor="let date of bulletinsService.dates" [value]="date">{{ date | localizedDate : "EEEE, d. MMMM y"  }}</option>
-    </select>
-
+    <table class="table table-bordered responsive-table">
+      <tbody class="bulletins-table__body">
+        <tr
+          *ngFor="let date of bulletinsService.dates"
+          [ngClass]="{
+            'bulletins-table__active--day': isActiveDate(date)
+          }" 
+        >
+          <td [attr.data-label]="'bulletins.table.title.date' | translate ">
+            <div class="bulletins-table__day--small">
+              <time>
+                {{ date | localizedDate : "fullDate" }}
+              </time>
+            </div>
+          </td>
+          <td class="bulletins-table__region-status" [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate">
+            <span
+              *ngIf="getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined"
+              class="badge bg-danger"
+            >
+              <i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.draft" class="badge bg-warning">
+              <i class="ph-bold ph-file-dashed"></i>
+              {{ "bulletins.table.status.draft" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.submitted" class="badge bg-primary">
+              <i class="ph-bold ph-clock-countdown"></i>
+              {{ "bulletins.table.status.submitted" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.published" class="badge bg-success">
+              <i class="ph-bold ph-newspaper"></i>
+              {{ "bulletins.table.status.published" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.updated" class="badge bg-orange">
+              <i class="ph-bold ph-file-dashed"></i>
+              {{ "bulletins.table.status.updated" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.resubmitted" class="badge bg-primary">
+              <i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.resubmitted" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.republished" class="badge bg-success">
+              <i class="ph-bold ph-newspaper"></i>
+              {{ "bulletins.table.status.republished" | translate }}
+            </span>
+            <span
+              *ngIf="bulletinsService.isLocked(date, authenticationService.getActiveRegionId())"
+              class="badge text-bg-light"
+            >
+              <i class="ph-bold ph-lock"></i>
+            </span>
+          </td>
+          <td class="bulletins-table__region-status">
+            <button *ngIf="getActiveRegionStatus(date) === bulletinStatus.draft || getActiveRegionStatus(date) === bulletinStatus.updated || getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined" class="btn btn-primary btn-icon" type="button" (click)="copyRegionModalConfirm(date)">
+              <i class="ph ph-arrow-right"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-bare" (click)="copyRegionModalDecline()">
       <span>{{ "bulletins.create.cancelCopyBulletin" | translate }}</span>
-    </button>
-
-    <button type="button" class="btn btn-primary" (click)="copyRegionModalConfirm()">
-      <i class="ph ph-copy-simple"></i><span>{{ "bulletins.create.pasteAggregatedRegion" | translate }}</span>
     </button>
   </div>
 </ng-template>

@@ -23,6 +23,7 @@
     opacity: 1;
   }
 }
+
 .bulletins-table__body .bulletins-table__day--past {
   td {
     background: $gray-100;
@@ -35,8 +36,25 @@
   }
 }
 
+.bulletins-table__body .bulletins-table__active--day {
+  td {
+    background: $primary-subtle;
+  }
+}
+
 .bulletins-table__day {
   @include font-m-bold;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    opacity: 0;
+  }
+}
+
+.bulletins-table__day--small {
+  @include font-s;
   display: flex;
   flex-flow: row;
   justify-content: space-between;

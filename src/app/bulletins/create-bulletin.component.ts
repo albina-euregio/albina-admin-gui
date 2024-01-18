@@ -148,8 +148,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public showNewBulletinModal: boolean = false;
 
   public isCompactMapLayout: boolean = false;
-  private selectedCopyRegionDate: string;
-  private bulletinCopy: BulletinModel;
   private bulletinMarkedDelete: BulletinModel;
 
   // Publishing
@@ -237,7 +235,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-md"
   };
 
   constructor(
@@ -552,6 +550,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         )
       );
 
+      if (this.copyService.isCopyBulletin()) {
+        this.createBulletin(true);
+      }
+      
     } else {
       this.goBack();
     }
@@ -1247,22 +1249,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.editBulletinRegions();
   }
 
-  copyBulletin() {
+  copyBulletin(bulletin: BulletinModel) {
     this.setTexts();
     if (this.checkAvalancheProblems()) {
-      if (this.activeBulletin) {
-        const bulletin = new BulletinModel(this.activeBulletin);
-        bulletin.setAdditionalAuthors(new Array<String>());
-        bulletin.setSavedRegions(new Array<String>());
-        bulletin.setPublishedRegions(new Array<String>());
-        bulletin.setSuggestedRegions(new Array<String>());
+      const newBulletin = new BulletinModel(bulletin);
+      newBulletin.setAdditionalAuthors(new Array<String>());
+      newBulletin.setSavedRegions(new Array<String>());
+      newBulletin.setPublishedRegions(new Array<String>());
+      newBulletin.setSuggestedRegions(new Array<String>());
 
-        bulletin.setAuthor(this.authenticationService.getAuthor());
-        bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-        bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-        this.copyService.setCopyBulletin(true);
-        this.copyService.setBulletin(bulletin);
-      }
+      newBulletin.setAuthor(this.authenticationService.getAuthor());
+      newBulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+      newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+      this.copyService.setCopyBulletin(true);
+      this.copyService.setBulletin(newBulletin);
     }
   }
 
@@ -2541,9 +2541,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   deleteAggregatedRegionModalConfirm(): void {
     this.deleteAggregatedRegionModalRef.hide();
     this.delBulletin(this.bulletinMarkedDelete);
-
-    // TODO websocket: unlock region
-
   }
 
   deleteAggregatedRegionModalDecline(): void {
@@ -2571,25 +2568,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.discardModalRef.hide();
   }
 
-
   openCopyRegionModal(event, template: TemplateRef<any>, bulletin: BulletinModel) {
     event.stopPropagation();
-    this.bulletinCopy = bulletin;
+    this.copyBulletin(bulletin);
     this.copyRegionModalRef = this.modalService.show(template, this.config);
   }
 
-  copyRegionModalConfirm(): void {
-    console.log('copy region');
-    console.log(this.bulletinCopy);
-    this.selectBulletin(this.bulletinCopy);
-    this.copyBulletin(); 
-
-    if (this.copyService.isCopyBulletin()) {
-      console.log('paste region');
-      this.createBulletin(true);
-    }
-
+  copyRegionModalConfirm(date: Date): void {
     this.copyRegionModalRef.hide();
+    this.changeDate(date);
   }
 
   copyRegionModalDecline(): void {
@@ -2598,7 +2585,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }    
     this.copyRegionModalRef.hide();
   }
-
+  
+  isActiveDate(date) {
+    return this.bulletinsService.getActiveDate().getTime() === date.getTime();
+  }
 
   openSaveErrorModal(template: TemplateRef<any>) {
     this.saveErrorModalRef = this.modalService.show(template, this.config);
