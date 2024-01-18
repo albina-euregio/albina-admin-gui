@@ -1876,51 +1876,75 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private createBulletinOnServer(bulletin: BulletinModel) {
-    const validFrom = new Date(this.bulletinsService.getActiveDate());
-    const validUntil = new Date(this.bulletinsService.getActiveDate());
-    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
-    bulletin.setValidFrom(validFrom);
-    bulletin.setValidUntil(validUntil);
+    if (
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.published &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.republished &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.submitted &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.resubmitted
+      )
+    {
+      const validFrom = new Date(this.bulletinsService.getActiveDate());
+      const validUntil = new Date(this.bulletinsService.getActiveDate());
+      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
 
-    this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
-      (data) => {
-        console.log("Bulletin created on server.");
-      },
-      (error) => {
-        console.error("Bulletin could not be created on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
-      }
-    );
+      this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+        (data) => {
+          console.log("Bulletin created on server.");
+        },
+        (error) => {
+          console.error("Bulletin could not be created on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        }
+      );
+    }
   }
 
   private updateBulletinOnServer(bulletin: BulletinModel) {
-    const validFrom = new Date(this.bulletinsService.getActiveDate());
-    const validUntil = new Date(this.bulletinsService.getActiveDate());
-    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
-    bulletin.setValidFrom(validFrom);
-    bulletin.setValidUntil(validUntil);
+    if (
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.published &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.republished &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.submitted &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.resubmitted
+      )
+    {
+      const validFrom = new Date(this.bulletinsService.getActiveDate());
+      const validUntil = new Date(this.bulletinsService.getActiveDate());
+      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
 
-    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
-      (data) => {
-        console.log("Bulletin updated on server.");
-      },
-      (error) => {
-        console.error("Bulletin could not be updated on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
-      }
-    );
+      this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+        (data) => {
+          console.log("Bulletin updated on server.");
+        },
+        (error) => {
+          console.error("Bulletin could not be updated on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        }
+      );
+    }
   }
 
   private deleteBulletinOnServer(bulletin: BulletinModel) {
-    this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
-      (data) => {
-        console.log("Bulletin deleted on server.");
-      },
-      (error) => {
-        console.error("Bulletin could not be deleted on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
-      }
-    );
+    if (
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.published &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.republished &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.submitted &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.resubmitted
+      )
+    {
+      this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+        (data) => {
+          console.log("Bulletin deleted on server.");
+        },
+        (error) => {
+          console.error("Bulletin could not be deleted on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        }
+      );
+    }
   }
 
   private updateAggregatedRegions() {
@@ -3351,7 +3375,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   submitBulletinsModalConfirm(date: Date): void {
     this.submitBulletinsModalRef.hide();
-    this.save();
     this.bulletinsService.submitBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
       data => {
         console.log("Bulletins submitted.");
