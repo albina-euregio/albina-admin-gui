@@ -2163,7 +2163,7 @@
     <!-- End Form -->
 
     <!-- Map -->
-    <div class="create-bulletin__map-container" [ngClass]="{ 'create-bulletin__map-container--am-pm': (activeBulletin !== undefined && activeBulletin.hasDaytimeDependency) }">
+    <div class="create-bulletin__map-container" [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }">
       <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
         <div class="floating-action__text">
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
