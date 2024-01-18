@@ -1375,7 +1375,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.mapService.deselectAggregatedRegion();
       
-      if (!del) {
+      if (!del && !this.authenticationService.isExternalRegion(this.activeBulletin.getOwnerRegion().toString())) {
         // update bulletin
         this.updateBulletinOnServer(this.activeBulletin);
       }
