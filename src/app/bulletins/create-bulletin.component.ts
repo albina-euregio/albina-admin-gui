@@ -553,7 +553,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       if (this.copyService.isCopyBulletin()) {
         this.createBulletin(true);
       }
-      
+
     } else {
       this.goBack();
     }
@@ -1246,7 +1246,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.addInternalBulletin(bulletin);
     this.selectBulletin(bulletin);
     this.mapService.selectAggregatedRegion(bulletin);
-    this.editBulletinRegions();
+    this.editBulletinMicroRegions();
   }
 
   copyBulletin(bulletin: BulletinModel) {
@@ -1767,13 +1767,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.deselectBulletin(true);
   }
 
-  editBulletin(event) {
+  editMicroRegions(event) {
     event.stopPropagation();
     this.showNewBulletinModal = true;
-    this.editBulletinRegions();
+    this.editBulletinMicroRegions();
   }
 
-  private editBulletinRegions() {
+  private editBulletinMicroRegions() {
     this.invalidateMapSize();
     this.editRegions = true;
     this.mapService.editAggregatedRegion(this.activeBulletin);

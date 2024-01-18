@@ -492,7 +492,7 @@
           {{ "bulletins.create.regionEditable" | translate }}
         </p>
         <div class="btn-group banner__actions">
-          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin)" (click)="editBulletin($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin)" (click)="editMicroRegions($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
             <i class="ph ph-map-trifold"></i>
           </button>
           <button *ngIf="!hasSuggestions(activeBulletin) && !copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
