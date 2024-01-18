@@ -1016,7 +1016,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   setMapLayout(bulletin, isCompact: boolean): void {
     // Show the map on top of form (compact) or right next to the form
     this.isCompactMapLayout = isCompact;
-    this.invalidateMapSize();    
+    this.invalidateMapSize();
   }
 
   invalidateMapSize() {
@@ -1777,6 +1777,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private editBulletinRegions() {
+    this.invalidateMapSize();
     this.editRegions = true;
     this.mapService.editAggregatedRegion(this.activeBulletin);
   }
@@ -1862,6 +1863,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       this.updateAggregatedRegions();
+      this.invalidateMapSize();
 
       if (isUpdate) {
         // update bulletin
@@ -2023,6 +2025,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.delBulletin(bulletin);
     }
 
+    this.invalidateMapSize();
     this.mapService.discardAggregatedRegion();
 
     if (this.activeBulletin && this.activeBulletin !== undefined) {
