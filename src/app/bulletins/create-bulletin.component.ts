@@ -403,6 +403,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return false;
   }
 
+  hasForeignRegions() {
+    return this.authenticationService.isEuregio();
+  }
+
   private getTextcatUrl(): SafeUrl {
     // lang
     const l = this.settingsService.getLangString() === "it" ? "it" : "de"; // only de+it are supported
@@ -2019,6 +2023,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  getForeignRegionNames() {
+    if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTyrol)) {
+      return this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol) + ", " + this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino);
+    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeSouthTyrol)) {
+      return this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) + ", " + this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino);
+    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTrentino)) {
+      return this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) + ", " + this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol);
+    } else {
+      return this.translateService.instant("bulletins.create.foreignRegions");
+    }
   }
 
   showPreviewButton() {
