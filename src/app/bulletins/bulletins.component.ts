@@ -52,7 +52,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
         const data = JSON.parse(response.data);
         const bulletinUpdate = BulletinUpdateModel.createFromJson(data);
         console.debug("Bulletin update received: " + bulletinUpdate.getDate().toLocaleDateString() + " - " + bulletinUpdate.getRegion() + " [" + bulletinUpdate.getStatus() + "]");
-        this.bulletinsService.statusMap.get(bulletinUpdate.region).set(new Date(bulletinUpdate.getDate()).getTime(), bulletinUpdate.getStatus());
+        this.bulletinsService.statusMap.get(bulletinUpdate.region)?.set(new Date(bulletinUpdate.getDate()).getTime(), bulletinUpdate.getStatus());
         return bulletinUpdate;
       }));
 
