@@ -387,7 +387,7 @@
 
     <div class="create-bulletin__regions">
       <!-- Foreign regions -->
-      <header class="create-bulletin__region-divider">
+      <header class="create-bulletin__region-divider" (click)="toggleShowForeignRegions()">
         <h5 class="font-s-medium">
           {{ "bulletins.create.foreignRegions" | translate }}
         </h5>
@@ -396,7 +396,6 @@
               <button
                   class="btn btn-sm btn-icon btn-bare--grey"
                   type="button"
-                  (click)="toggleShowForeignRegions()"
               >
                   <i *ngIf="!showForeignRegions" class="ph-bold ph-caret-right"></i>
                   <i *ngIf="showForeignRegions" class="ph-bold ph-caret-down"></i>
@@ -415,7 +414,7 @@
     <!-- External regions -->
     <div *ngIf="hasExternalRegions" class="create-bulletin__regions">
       <ng-container *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue">
-        <header class="create-bulletin__region-divider">
+        <header class="create-bulletin__region-divider" (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)">
           <h5 class="font-s-medium">
             {{ externalRegion.key.name }}
           </h5>
@@ -423,8 +422,7 @@
             <div class="region-divider__actions-dropdown mr-1">
                 <button
                     class="btn btn-sm btn-icon btn-bare--grey"
-                    type="button"
-                    (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)"
+                    type="button"                    
                 >
                     <i *ngIf="!showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-right"></i>
                     <i *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-down"></i>
