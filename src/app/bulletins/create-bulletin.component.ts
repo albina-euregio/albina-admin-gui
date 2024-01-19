@@ -565,7 +565,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopListening();
-    this.deselectBulletin();
     
     if (this.bulletinsService.getIsEditable()) {
       this.eventSubscriber.unsubscribe();
@@ -1798,12 +1797,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     // save selected regions to active bulletin
     const regions = this.mapService.getSelectedRegions();
 
-    for (const region of this.activeBulletin.getSavedRegions()) {
-      if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-        break;
-      }
-    }
-
     let newRegionsHit = false;
     for (const region of regions) {
       if (region.startsWith(this.authenticationService.getActiveRegionId())) {
@@ -1812,7 +1805,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (newRegionsHit || !this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+    if (newRegionsHit || !this.isCreator(this.activeBulletin)) {
       this.editRegions = false;
 
       // delete old saved regions in own area
@@ -1857,7 +1850,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.activeBulletin.getSavedRegions().push(region);
           }
         } else {
-          if ((this.activeBulletin.getSavedRegions().indexOf(region) === -1) && (this.activeBulletin.getSuggestedRegions().indexOf(region) === -1) && (this.activeBulletin.getPublishedRegions().indexOf(region) === -1)) {
+          if ((!region.startsWith(this.activeBulletin.getOwnerRegion())) && (this.activeBulletin.getSavedRegions().indexOf(region) === -1) && (this.activeBulletin.getSuggestedRegions().indexOf(region) === -1) && (this.activeBulletin.getPublishedRegions().indexOf(region) === -1)) {
             this.activeBulletin.getSuggestedRegions().push(region);
           }
         }
