@@ -294,7 +294,7 @@
         <!-- Extend sea level danger up/down -->
         <div
           class="avalanche-problem__elevation-change-danger-rating"
-          *ngIf="avalancheProblemModel.hasElevationHigh() && avalancheProblemModel.hasElevationLow()"
+          *ngIf="count == 1 && avalancheProblemModel.hasElevationHigh() && avalancheProblemModel.hasElevationLow()"
         >
           <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
 
