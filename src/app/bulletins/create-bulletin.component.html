@@ -489,7 +489,7 @@
 
       <div
         *ngIf="bulletinsService.isLocked(activeBulletin.getId())"
-        class="region-form__banner banner banner-info"
+        class="region-form__banner banner banner-warning-strong"
       >
         <p class="banner__text">
           <i class="ph ph-lock"></i>
@@ -545,6 +545,9 @@
           {{ "bulletins.create.regionNotEditable" | translate }}
         </p>
         <div class="btn-group banner__actions">
+          <button *ngIf="!editRegions && isForeign(activeBulletin)" (click)="editMicroRegions($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-map-trifold"></i>
+          </button>
           <button *ngIf="!copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
             <i class="ph ph-copy"></i>
           </button>

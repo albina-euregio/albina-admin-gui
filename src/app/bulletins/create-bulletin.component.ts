@@ -2010,6 +2010,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  isForeign(bulletin: BulletinModel): boolean {
+    if (
+      (bulletin.getOwnerRegion() !== undefined) &&
+      (bulletin.getOwnerRegion().startsWith(this.constantsService.codeTyrol) || bulletin.getOwnerRegion().startsWith(this.constantsService.codeSouthTyrol) || bulletin.getOwnerRegion().startsWith(this.constantsService.codeTrentino)) &&
+      (!this.isCreator(bulletin)))
+    {
+      return true;
+    }
+    return false;
+  }
+
   showPreviewButton() {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
       (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&

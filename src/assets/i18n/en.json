@@ -84,7 +84,7 @@
     },
     "create": {
       "tooltip": {
-        "edit": "Edit region",
+        "edit": "Edit micro regions",
         "copy": "Copy region",
         "delete": "Delete region",
         "createRegion": "Create region",
