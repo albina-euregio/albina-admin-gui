@@ -486,32 +486,40 @@
           </div>
         </div>
       </header>
-      <div *ngIf="!showPublicationHappened(bulletinsService.getActiveDate()) && !bulletinsService.isLocked(activeBulletin.getId()) && !this.authenticationService.isExternalRegion(activeBulletin.getOwnerRegion().toString())" class="region-form__banner banner banner-info">
+
+      <div
+        *ngIf="bulletinsService.isLocked(activeBulletin.getId())"
+        class="region-form__banner banner banner-info"
+      >
+        <p class="banner__text">
+          <i class="ph ph-lock"></i>
+          {{ "bulletins.create.regionLocked" | translate }}
+        </p>
+      </div>
+
+      <div
+        *ngIf="!bulletinsService.isLocked(activeBulletin.getId()) && bulletinsService.getIsEditable() && isCreator(activeBulletin)"
+        class="region-form__banner banner banner-info"
+      >
         <p class="banner__text">
           <i class="ph ph-pencil-line"></i>
           {{ "bulletins.create.regionEditable" | translate }}
         </p>
         <div class="btn-group banner__actions">
-          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin)" (click)="editMicroRegions($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+          <button *ngIf="!editRegions" (click)="editMicroRegions($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
             <i class="ph ph-map-trifold"></i>
           </button>
-          <button *ngIf="!hasSuggestions(activeBulletin) && !copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
-          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin) && isCreator(activeBulletin)" (click)="deleteBulletin($event, activeBulletin)"  data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.delete' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-trash"></i></button>
-        </div>
-      </div>
-
-      <div *ngIf="!showPublicationHappened(bulletinsService.getActiveDate()) && bulletinsService.isLocked(activeBulletin.getId())" class="region-form__banner banner banner-warning">
-        <p class="banner__text">
-          <i class="ph ph-pencil-slash"></i>
-          {{ "bulletins.create.regionLocked" | translate }}
-        </p>
-        <div class="btn-group banner__actions">
-          <button type="button" class="btn btn-sm btn-dark"><i class="ph ph-pencil-line"></i> <span>{{ "bulletins.create.edit" | translate }}</span></button>
+          <button *ngIf="!editRegions && !copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-copy"></i>
+          </button>
+          <button *ngIf="!editRegions" (click)="deleteBulletin($event, activeBulletin)"  data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.delete' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-trash"></i>
+          </button>
         </div>
       </div>
 
       <div
-        *ngIf="!showPublicationHappened(bulletinsService.getActiveDate()) && bulletinsService.getIsEditable() && hasSuggestions(activeBulletin) && !editRegions"
+        *ngIf="!bulletinsService.isLocked(activeBulletin.getId()) && bulletinsService.getIsEditable() && !isCreator(activeBulletin) && hasSuggestions(activeBulletin)"
         class="region-form__banner banner banner-warning-strong"
       >
         <p class="banner__text">
@@ -529,13 +537,18 @@
       </div>
 
       <div
-        *ngIf="showPublicationHappened(bulletinsService.getActiveDate())"
+        *ngIf="!bulletinsService.isLocked(activeBulletin.getId()) && (!bulletinsService.getIsEditable() || (bulletinsService.getIsEditable() && !isCreator(activeBulletin) && !hasSuggestions(activeBulletin)))"
         class="region-form__banner banner banner-warning"
       >
         <p class="banner__text">
-          <i class="ph ph-warning"></i> 
-          {{ "bulletins.create.regionLockedPublished" | translate }}
+          <i class="ph ph-pencil-slash"></i>
+          {{ "bulletins.create.regionNotEditable" | translate }}
         </p>
+        <div class="btn-group banner__actions">
+          <button *ngIf="!copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-copy"></i>
+          </button>
+        </div>
       </div>
 
       <main class="region-form__content">
