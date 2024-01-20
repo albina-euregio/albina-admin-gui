@@ -261,7 +261,6 @@ export class AuthenticationService {
       .pipe(map(data => {
         if ((data ).access_token) {
           this.addExternalServer(data, apiUrl, name);
-          localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
           return true;
         } else {
           return false;
@@ -301,6 +300,7 @@ export class AuthenticationService {
     server.setApiUrl(apiUrl);
     server.setName(serverName);
     this.externalServers.push(server);
+    localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
   }
 
   private setExternalServers(json: Partial<ServerModel>[]) {
