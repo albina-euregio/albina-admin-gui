@@ -5,7 +5,7 @@ import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig 
 
 
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import { interval } from "rxjs";
+import { interval, map, switchMap, timer } from "rxjs";
 import { BehaviorSubject } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -233,6 +233,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   // tra le proprietà del componente
   eventSubscriber: Subscription;
 
+  externalBulletinsSubscription !: Subscription;
+
   public config = {
     keyboard: true,
     class: "modal-md"
@@ -417,11 +419,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.stopListening = this.renderer.listen("window", "message", this.getText.bind(this));
+
     this.activeRoute.params.subscribe(routeParams => {
       const date = new Date(routeParams.date);
       date.setHours(0, 0, 0, 0);
       this.bulletinsService.setActiveDate(date);
       this.initializeComponent();
+
+      this.externalBulletinsSubscription = timer(10, 30000).pipe( 
+        map(() => { 
+          this.loadExternalBulletinsFromServer();
+        }) 
+      ).subscribe(); 
     });
   }
 
@@ -486,36 +495,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
         // load current bulletins (do not copy them, also if it is an update)
       } else {
-        const regions = new Array<String>();
-        if (this.authenticationService.isEuregio()) {
-          regions.push(this.constantsService.codeTyrol);
-          regions.push(this.constantsService.codeSouthTyrol);
-          regions.push(this.constantsService.codeTrentino);
-        } else {
-          regions.push(this.authenticationService.getActiveRegionId());
-        }
-        this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
-          data => {
-            for (const jsonBulletin of (data as any)) {
-              const bulletin = BulletinModel.createFromJson(jsonBulletin);
-    
-              // only add bulletins with published or saved regions
-              if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
-                this.addInternalBulletin(bulletin);
-              }
-            }
-    
-            this.updateInternalBulletins();
-    
-            this.mapService.deselectAggregatedRegion();
-            this.loading = false;
-          },
-          () => {
-            console.error("Bulletins could not be loaded!");
-            this.loading = false;
-            this.openLoadingErrorModal(this.loadingErrorTemplate);
-          }
-        );
+        this.loadBulletinsFromServer();
+        this.mapService.deselectAggregatedRegion();
       }
 
       if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
@@ -523,17 +504,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       } else {
         this.bulletinsService.setIsEditable(false);
       }
-
-      this.authenticationService.getExternalServers().map((server) =>
-        this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
-          data2 => {
-            this.addExternalBulletins(server, data2);
-          },
-          () => {
-            console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
-          }
-        )
-      );
 
       if (this.copyService.isCopyBulletin()) {
         this.createBulletin(true);
@@ -544,8 +514,58 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
+  private loadBulletinsFromServer() {
+    console.log("Load internal bulletins");
+    const regions = new Array<String>();
+    if (this.authenticationService.isEuregio()) {
+      regions.push(this.constantsService.codeTyrol);
+      regions.push(this.constantsService.codeSouthTyrol);
+      regions.push(this.constantsService.codeTrentino);
+    } else {
+      regions.push(this.authenticationService.getActiveRegionId());
+    }
+    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
+      data => {
+        this.internBulletinsList = new Array<BulletinModel>();
+        for (const jsonBulletin of (data as any)) {
+          const bulletin = BulletinModel.createFromJson(jsonBulletin);
+
+          // only add bulletins with published or saved regions
+          if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
+            this.addInternalBulletin(bulletin);
+          }
+        }
+
+        this.updateInternalBulletins();
+
+        this.loading = false;
+      },
+      () => {
+        console.error("Bulletins could not be loaded!");
+        this.loading = false;
+        this.openLoadingErrorModal(this.loadingErrorTemplate);
+      }
+    );
+  }
+
+  private loadExternalBulletinsFromServer() {
+    console.log("Load external bulletins");
+    this.authenticationService.getExternalServers().map((server) =>
+      this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
+        data => {
+          this.addExternalBulletins(server, data);
+        },
+        () => {
+          console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
+        }
+      )
+    );
+  }
+
   ngOnDestroy() {
     this.stopListening();
+
+    this.externalBulletinsSubscription.unsubscribe(); 
     
     if (this.bulletinsService.getIsEditable()) {
       this.eventSubscriber.unsubscribe();
@@ -1129,10 +1149,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addExternalBulletins(server: ServerModel, response) {
-    const bulletinsList = new Array<BulletinModel>();
+    let bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
       bulletinsList.push(bulletin);
+      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId())
+        this.activeBulletin = bulletin;
       this.mapService.addAggregatedRegion(bulletin);
     }
 
@@ -1143,8 +1165,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
 
     this.externRegionsMap.set(server, bulletinsList);
-    this.showExternRegionsMap.set(server.getApiUrl(), false);
-    this.mapService.deselectAggregatedRegion();
+    if (!this.showExternRegionsMap.has(server.getApiUrl())) {
+      this.showExternRegionsMap.set(server.getApiUrl(), false);
+    }
   }
 
   private updateInternalBulletins() {
@@ -1964,9 +1987,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.mapService.addAggregatedRegion(bulletin);
     }
 
+/*
     for (const bulletin of [...this.externRegionsMap.values()].flat()) {
       this.mapService.addAggregatedRegion(bulletin);
     }
+*/
 
     this.mapService.discardAggregatedRegion();
     this.mapService.selectAggregatedRegion(this.activeBulletin);

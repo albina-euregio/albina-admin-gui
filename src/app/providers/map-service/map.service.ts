@@ -311,10 +311,6 @@ export class MapService {
 
   addAggregatedRegion(bulletin: BulletinModel) {
     this.updateAggregatedRegion(bulletin);
-    if (this.map) {
-      this.selectAggregatedRegion(bulletin);
-    }
-    this.updateAggregatedRegion(bulletin);
   }
 
   selectAggregatedRegion(bulletin: BulletinModel) {
@@ -399,8 +395,6 @@ export class MapService {
   deselectAggregatedRegion() {
     this.map?.removeLayer?.(this.overlayMaps.activeSelection);
     this.afternoonMap?.removeLayer?.(this.afternoonOverlayMaps.activeSelection);
-    // this.map.addLayer(this.overlayMaps.aggregatedRegions);
-    // this.afternoonMap.addLayer(this.afternoonOverlayMaps.aggregatedRegions);
   }
 
   editAggregatedRegion(bulletin: BulletinModel) {
