@@ -505,25 +505,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
               }
             }
     
-            let hit = false;
-            for (const bulletin of this.internBulletinsList) {
-              for (const region of bulletin.getSavedRegions()) {
-                if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-                  hit = true;
-                  break;
-                }
-              }
-              for (const region of bulletin.getPublishedRegions()) {
-                if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-                  hit = true;
-                  break;
-                }
-              }
-              if (hit) {
-                break;
-              }
-            }
-    
             this.updateInternalBulletins();
     
             this.mapService.deselectAggregatedRegion();
