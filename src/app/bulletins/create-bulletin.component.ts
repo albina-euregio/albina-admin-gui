@@ -638,6 +638,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.router.navigate(["/bulletins/" + formattedDate]);
   }
 
+  onDangerPattern1Change(event) {
+    this.activeBulletin.setDangerPattern1(event);
+    this.updateBulletinOnServer(this.activeBulletin);
+  }
+  
+  onDangerPattern2Change(event) {
+    this.activeBulletin.setDangerPattern2(event);
+    this.updateBulletinOnServer(this.activeBulletin);
+  }
+
+  onNotesFocusOut(event) {
+    this.setTexts();
+  }
+
   loadBulletin(date) {
     this.deselectBulletin();
 
@@ -1214,7 +1228,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.setSuggestedRegions(suggested);
     bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
 
-    // update bulletin
     this.updateBulletinOnServer(bulletin);
 
     this.updateAggregatedRegions();
@@ -1230,7 +1243,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
     bulletin.setSuggestedRegions(suggested);
 
-    // update bulletin
     this.updateBulletinOnServer(bulletin);
 
     this.updateAggregatedRegions();
@@ -1361,38 +1373,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (del || this.checkAvalancheProblems()) {
       if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
         this.setTexts();
-
-        if (this.activeAvActivityHighlightsTextcat) {
-          this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
-        }
-
-        if (this.activeAvActivityCommentTextcat) {
-          this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
-        }
-
-        if (this.activeSnowpackStructureCommentTextcat) {
-          this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
-        }
-
-        if (this.activeTendencyCommentTextcat) {
-          this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
-        }
-
         this.mapService.deselectAggregatedRegion();
         
-        if (!del && !this.authenticationService.isExternalRegion(this.activeBulletin.getOwnerRegion().toString())) {
-          // update bulletin
-          this.updateBulletinOnServer(this.activeBulletin);
-        }
-
         // unlock bulletin
         //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
         
         this.activeBulletin = undefined;
-
         this.applicationRef.tick();
       }
-
       this.invalidateMapSize();
     }
   }
@@ -1623,7 +1611,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private setTexts() {
-    if (this.activeBulletin) {
+    if (this.activeBulletin && !this.isDisabled()) {
       this.activeBulletin.setHighlightsTextcat(this.activeHighlightsTextcat);
       this.activeBulletin.setHighlightsIn(this.activeHighlightsDe, Enums.LanguageCode.de);
       this.activeBulletin.setHighlightsIn(this.activeHighlightsIt, Enums.LanguageCode.it);
@@ -1682,6 +1670,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentCa, Enums.LanguageCode.ca);
       this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentOc, Enums.LanguageCode.oc);
       this.activeBulletin.setTendencyCommentNotes(this.activeTendencyCommentNotes);
+
+      this.updateBulletinOnServer(this.activeBulletin);
     }
   }
 
@@ -1757,7 +1747,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       // change ownership
       bulletin.setOwnerRegion(newOwnerRegion);
 
-      // update bulletin
       this.updateBulletinOnServer(bulletin);
     } else {
       const index = this.internBulletinsList.indexOf(bulletin);
@@ -1864,10 +1853,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.invalidateMapSize();
 
       if (isUpdate) {
-        // update bulletin
         this.updateBulletinOnServer(this.activeBulletin);
       } else {
-        // create bulletin
         this.createBulletinOnServer(this.activeBulletin);
       }
 
@@ -2517,7 +2504,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.hideDialog();
       }
       if (this.activeBulletin !== null && this.activeBulletin !== undefined) {
-        // update bulletin
         this.updateBulletinOnServer(this.activeBulletin);
       }
     }
@@ -2646,7 +2632,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   saveErrorModalConfirm(): void {
     this.saveErrorModalRef.hide();
-    this.goBack();
   }
 
   openChangeErrorModal(template: TemplateRef<any>) {

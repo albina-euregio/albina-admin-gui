@@ -1050,6 +1050,7 @@
                       class="form-control"
                       [disabled]="isDisabled()"
                       [(ngModel)]="activeAvActivityHighlightsNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
@@ -1320,6 +1321,7 @@
                       class="form-control"
                       [disabled]="isDisabled()"
                       [(ngModel)]="activeAvActivityCommentNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
@@ -1478,7 +1480,8 @@
               <div class="form-group region-form__danger-patterns">
                 <label class="form-label" for="">{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
                 <select
-                  [(ngModel)]="activeBulletin.dangerPattern1"
+                  [ngModel]="activeBulletin.dangerPattern1"
+                  (ngModelChange)="onDangerPattern1Change($event)"
                   [disabled]="isDisabled()"
                   class="form-select"
                 >
@@ -1496,7 +1499,8 @@
                 </select>
 
                 <select
-                  [(ngModel)]="activeBulletin.dangerPattern2"
+                  [ngModel]="activeBulletin.dangerPattern2"
+                  (ngModelChange)="onDangerPattern2Change($event)"
                   [disabled]="isDisabled()"
                   class="form-select"
                 >
@@ -1670,6 +1674,7 @@
                       class="form-control"
                       [disabled]="isDisabled()"
                       [(ngModel)]="activeSnowpackStructureCommentNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
@@ -2039,6 +2044,7 @@
                       class="form-control"
                       [disabled]="isDisabled()"
                       [(ngModel)]="activeTendencyCommentNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
