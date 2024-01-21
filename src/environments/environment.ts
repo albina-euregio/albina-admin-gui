@@ -10,8 +10,8 @@ export const environment: Environment = {
   wsBaseUrl: "ws://localhost:8080/albina/",
   textcatUrl: "https://admin.avalanche.report/textcat-ng-dev/",
   headerBgColor: "#f95bdc",
-  faviconPath: "assets/img/admin-favicon-dev.ico",
-  logoPath: "assets/img/admin-logo-dev.svg",
+  faviconPath: "assets/img/admin-favicon-local.ico",
+  logoPath: "assets/img/admin-logo-local.svg",
   isEuregio: true
 };
 
