@@ -5,7 +5,7 @@ import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig 
 
 
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import { interval, map, switchMap, timer } from "rxjs";
+import { map, timer } from "rxjs";
 import { BehaviorSubject } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
