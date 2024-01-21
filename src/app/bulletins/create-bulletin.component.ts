@@ -426,7 +426,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.bulletinsService.setActiveDate(date);
       this.initializeComponent();
 
-      this.externalBulletinsSubscription = timer(10, 30000).pipe( 
+      this.externalBulletinsSubscription = timer(2000, 30000).pipe( 
         map(() => { 
           this.loadExternalBulletinsFromServer();
         }) 
