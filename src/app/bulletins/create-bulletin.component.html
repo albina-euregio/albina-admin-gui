@@ -607,6 +607,7 @@
               [bulletinDaytimeDescription]="activeBulletin.forenoon"
               [afternoon]="false"
               [disabled]="isDisabled()"
+              (changeAvalancheProblemEvent)="updateBulletinOnServer(activeBulletin)"
             ></app-avalanche-problem>
             <!-- End Avalanche problems panel content -->
           </accordion-group>
@@ -642,6 +643,7 @@
               [bulletinDaytimeDescription]="activeBulletin.afternoon"
               [afternoon]="true"
               [disabled]="isDisabled()"
+              (changeAvalancheProblemEvent)="updateBulletinOnServer(activeBulletin)"
             ></app-avalanche-problem>
           </accordion-group>
           <!-- End avalanche problems -->

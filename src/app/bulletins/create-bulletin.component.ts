@@ -3239,6 +3239,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+    this.updateBulletinOnServer(this.activeBulletin);
   }
 
   hasFiveAvalancheProblems(isAfternoon: boolean) {

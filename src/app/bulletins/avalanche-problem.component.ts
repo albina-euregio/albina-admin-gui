@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { BulletinModel } from "../models/bulletin.model";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
@@ -14,12 +14,21 @@ export class AvalancheProblemComponent {
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() afternoon: boolean;
   @Input() disabled: boolean;
-
+  @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
+  
   showAspects: boolean;
   avalancheProblemEnum = Enums.AvalancheProblem;
 
   constructor(
     public settingsService: SettingsService) {
+  }
+
+  changeAvalancheProblemDetail(event) {
+    this.changeAvalancheProblemEvent.emit();
+  }
+
+  changeAvalancheProblemPreview(event) {
+    this.changeAvalancheProblemEvent.emit();
   }
 
   hasAvalancheProblem(count: number) {

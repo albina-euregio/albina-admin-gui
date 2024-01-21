@@ -1,4 +1,4 @@
-import { OnChanges, Component, Input } from "@angular/core";
+import { OnChanges, Component, Input, EventEmitter, Output } from "@angular/core";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { SettingsService } from "../providers/settings-service/settings.service";
@@ -22,6 +22,7 @@ export class MatrixParameterComponent implements OnChanges {
   @Input() disabled: boolean;
   @Input() count: number;
   @Input() afternoon: boolean;
+  @Output() changeMatrixEvent = new EventEmitter<string>();
 
   dangerRatingEnabled: boolean;
   languageCode = Enums.LanguageCode;
@@ -223,6 +224,7 @@ export class MatrixParameterComponent implements OnChanges {
         this.setSnowpackStability('very_poor');
         break;
     }
+    this.changeMatrixEvent.emit();
   }
 
   onFrequencyValueChange(changeContext: ChangeContext): void {
@@ -240,6 +242,7 @@ export class MatrixParameterComponent implements OnChanges {
         this.setFrequency('many');
         break;
     }
+    this.changeMatrixEvent.emit();
   }
 
   onAvalancheSizeValueChange(changeContext: ChangeContext): void {
@@ -260,6 +263,7 @@ export class MatrixParameterComponent implements OnChanges {
         this.setAvalancheSize('extreme');
         break;
     }
+    this.changeMatrixEvent.emit();
   }
 
   isSnowpackStability(snowpackStability) {
@@ -339,6 +343,7 @@ export class MatrixParameterComponent implements OnChanges {
     if (!this.disabled && this.dangerRatingEnabled) {
       this.setDangerRating(event, dangerRating);
     }
+    this.changeMatrixEvent.emit();
   }
 
   setDangerRatingEnabled(event) {
@@ -350,6 +355,7 @@ export class MatrixParameterComponent implements OnChanges {
       this.updateDangerRating();
       this.matrixInformation.dangerRatingModificator = undefined;
     }
+    this.changeMatrixEvent.emit();
   }
 
   private updateDangerRating() {
@@ -617,5 +623,6 @@ export class MatrixParameterComponent implements OnChanges {
   setDangerRatingModificator(event, modificator) {
     event.stopPropagation();
     this.matrixInformation.setDangerRatingModificator(modificator);
+    this.changeMatrixEvent.emit();
   }
 }

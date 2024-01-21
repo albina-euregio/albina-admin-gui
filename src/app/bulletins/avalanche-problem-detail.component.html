@@ -191,7 +191,12 @@
     <div class="col-md-5">
       <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
       <div>
-        <app-aspects [(aspects)]="avalancheProblemModel.aspects" [disabled]="disabled" [size]="150"></app-aspects>
+        <app-aspects
+          [(aspects)]="avalancheProblemModel.aspects"
+          [disabled]="disabled"
+          [size]="150"
+          (aspectsChange)="changeAspects($event)"
+        ></app-aspects>
       </div>
     </div>
     <div class="col-md-7">
@@ -349,6 +354,7 @@
       [disabled]="disabled"
       [count]="count"
       [afternoon]="afternoon"
+      (changeMatrixEvent)="changeMatrix($event)"
     ></app-matrix-parameter>
     <app-matrix
       [(bulletin)]="bulletin"
@@ -368,6 +374,7 @@
       [disabled]="disabled"
       [count]="count"
       [afternoon]="afternoon"
+      (changeMatrixEvent)="changeMatrix($event)"
     ></app-matrix-parameter>
   </div>
 </div>
