@@ -327,6 +327,7 @@ export function convertLoLaToGeneric(
   urlPrefix: string,
 ): GenericObservation {
   return {
+    $id: obs.uuId,
     $data: obs,
     $externalURL: urlPrefix + obs.uuId,
     $source: ObservationSource.LoLaKronos,
@@ -359,7 +360,7 @@ export function convertLoLaToGeneric(
     longitude: (
       (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position
     )?.lng,
-    avalancheProblems: getAvalancheProblems(obs as LolaEvaluation),
+    avalancheProblems: getAvalancheProblems(obs as LolaEvaluation | LolaAvalancheEvent),
     dangerPatterns: (obs as LolaEvaluation).dangerPatterns?.map((dp) => getDangerPattern(dp)) || [],
     region: obs.regionName,
     importantObservations: [
@@ -379,13 +380,21 @@ export function convertLoLaToGeneric(
   };
 }
 
-function getAvalancheProblems(data: LolaEvaluation): AvalancheProblem[] {
+function getAvalancheProblems(data: LolaEvaluation | LolaAvalancheEvent): AvalancheProblem[] {
+  const lola = {
+    freshSnowProblem: AvalancheProblem.new_snow,
+    glidingSnowProblem: AvalancheProblem.gliding_snow,
+    persistentWeakLayersProblem: AvalancheProblem.persistent_weak_layers,
+    wetSnowProblem: AvalancheProblem.wet_snow,
+    windDriftetSnowProblem: AvalancheProblem.wind_slab,
+  } as const;
   const problems: AvalancheProblem[] = [];
-  if (data.freshSnowProblem?.result > 0) problems.push(AvalancheProblem.new_snow);
-  if (data.glidingSnowProblem?.result > 0) problems.push(AvalancheProblem.gliding_snow);
-  if (data.persistentWeakLayersProblem?.result > 0) problems.push(AvalancheProblem.persistent_weak_layers);
-  if (data.wetSnowProblem?.result > 0) problems.push(AvalancheProblem.wet_snow);
-  if (data.windDriftetSnowProblem?.result > 0) problems.push(AvalancheProblem.wind_slab);
+  for (const [k, problem] of Object.entries(lola)) {
+    const key = k as keyof typeof lola;
+    if ((data as LolaEvaluation)[key]?.result > 0 || (data as LolaAvalancheEvent).avalancheProblem?.includes(key)) {
+      problems.push(problem);
+    }
+  }
   return problems;
 }
 

@@ -18,7 +18,7 @@ const routes: Routes = [
     }
   },
   {
-    path: "new",
+    path: ":date",
     component: CreateBulletinComponent,
     canActivate: [AuthGuard],
     data: {

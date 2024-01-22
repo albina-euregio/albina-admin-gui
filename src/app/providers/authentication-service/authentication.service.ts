@@ -8,6 +8,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { AuthorModel } from "../../models/author.model";
 import { ServerModel } from "../../models/server.model";
 import { RegionConfiguration } from "../configuration-service/configuration.service";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AuthenticationService {
@@ -15,7 +16,9 @@ export class AuthenticationService {
   private currentAuthor: AuthorModel;
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
-  private activeRegion: RegionConfiguration;
+  private activeRegion: RegionConfiguration | undefined;
+
+  private env = environment.apiBaseUrl + "_";
 
   constructor(
     public http: HttpClient,
@@ -24,9 +27,9 @@ export class AuthenticationService {
   ) {
     this.externalServers = [];
     try {
-      this.setCurrentAuthor(JSON.parse(localStorage.getItem("currentAuthor")));
+      this.setCurrentAuthor(JSON.parse(localStorage.getItem(this.env + "currentAuthor")));
     } catch (e) {
-      localStorage.removeItem("currentAuthor");
+      localStorage.removeItem(this.env + "currentAuthor");
     }
     try {
       this.setActiveRegion(JSON.parse(localStorage.getItem("activeRegion")));
@@ -50,7 +53,7 @@ export class AuthenticationService {
   }
 
   public logout() {
-    localStorage.removeItem("currentAuthor");
+    localStorage.removeItem(this.env + "currentAuthor");
     console.debug("[" + this.currentAuthor.name + "] Logged out!");
     this.currentAuthor = null;
     this.activeRegion = undefined;
@@ -117,12 +120,12 @@ export class AuthenticationService {
     }
   }
 
-  public getActiveRegion(): RegionConfiguration {
+  public getActiveRegion(): RegionConfiguration | undefined {
     return this.activeRegion;
   }
 
-  public getActiveRegionId(): string {
-    return this.activeRegion.id;
+  public getActiveRegionId(): string | undefined {
+    return this.activeRegion?.id;
   }
 
   public setActiveRegion(region: RegionConfiguration) {
@@ -137,7 +140,7 @@ export class AuthenticationService {
   // region
   // lang (code used for textcat)
   public getActiveRegionCode(): number {
-    switch (this.activeRegion.id) {
+    switch (this.getActiveRegionId()) {
       case this.constantsService.codeTyrol:
         return 2;
       case this.constantsService.codeSouthTyrol:
@@ -153,7 +156,7 @@ export class AuthenticationService {
   // region
   // lang (code used for textcat-ng)
   public getTextcatRegionCode(): string {
-    switch (this.activeRegion.id) {
+    switch (this.getActiveRegionId()) {
       case this.constantsService.codeSwitzerland:
         return "Switzerland";
       case this.constantsService.codeTyrol:
@@ -174,6 +177,7 @@ export class AuthenticationService {
 
   public isEuregio(): boolean {
     return (
+      environment.isEuregio ||
       this.getActiveRegionId() === this.constantsService.codeTyrol ||
       this.getActiveRegionId() === this.constantsService.codeSouthTyrol ||
       this.getActiveRegionId() === this.constantsService.codeTrentino
@@ -181,56 +185,15 @@ export class AuthenticationService {
   }
 
   public getUserLat() {
-    return this.activeRegion.mapCenterLat ?? 47.1;
+    return this.activeRegion?.mapCenterLat ?? 47.1;
   }
 
   public getUserLng() {
-    return this.activeRegion.mapCenterLng ?? 11.44;
+    return this.activeRegion?.mapCenterLng ?? 11.44;
   }
 
   public isCurrentUserInRole(role: string): boolean {
     return this.currentAuthor?.getRoles?.()?.includes(role);
-  }
-
-  // region
-  public getChatId(region: string) {
-    switch (region) {
-      case this.constantsService.codeTyrol:
-        switch (this.getActiveRegionId()) {
-          case this.constantsService.codeTyrol:
-            return 0;
-          case this.constantsService.codeSouthTyrol:
-            return 1;
-          case this.constantsService.codeTrentino:
-            return 2;
-          default:
-            return 0;
-        }
-      case this.constantsService.codeSouthTyrol:
-        switch (this.getActiveRegionId()) {
-          case this.constantsService.codeTyrol:
-            return 1;
-          case this.constantsService.codeSouthTyrol:
-            return 0;
-          case this.constantsService.codeTrentino:
-            return 3;
-          default:
-            return 0;
-        }
-      case this.constantsService.codeTrentino:
-        switch (this.getActiveRegionId()) {
-          case this.constantsService.codeTyrol:
-            return 2;
-          case this.constantsService.codeSouthTyrol:
-            return 3;
-          case this.constantsService.codeTrentino:
-            return 0;
-          default:
-            return 0;
-        }
-      default:
-        return 0;
-    }
   }
 
   public login(username: string, password: string): Observable<boolean> {
@@ -259,7 +222,7 @@ export class AuthenticationService {
     this.loadExternalServerInstances().subscribe(
       data => {
         for (const entry of (data as any)) {
-          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password).subscribe(
+          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
             data => {
               if (data === true) {
                 console.debug("[" + entry.name + "] Logged in!");
@@ -286,7 +249,7 @@ export class AuthenticationService {
     return this.http.get<Response>(url, options);
   }
 
-  public externalServerLogin(apiUrl: string, username: string, password: string): Observable<boolean> {
+  public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
     const url = apiUrl + "authentication";
     const body = JSON.stringify({username, password});
     const headers = new HttpHeaders({
@@ -297,8 +260,7 @@ export class AuthenticationService {
     return this.http.post<AuthenticationResponse>(url, body, options)
       .pipe(map(data => {
         if ((data ).access_token) {
-          this.addExternalServer(data, apiUrl);
-          localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
+          this.addExternalServer(data, apiUrl, name);
           return true;
         } else {
           return false;
@@ -315,7 +277,7 @@ export class AuthenticationService {
       return;
     }
     this.currentAuthor = AuthorModel.createFromJson(json);
-    localStorage.setItem("currentAuthor", JSON.stringify(this.currentAuthor));
+    localStorage.setItem(this.env + "currentAuthor", JSON.stringify(this.currentAuthor));
   }
 
   public getCurrentAuthorRegions() {
@@ -330,13 +292,15 @@ export class AuthenticationService {
     return this.externalServers;
   }
 
-  private addExternalServer(json: Partial<AuthenticationResponse>, apiUrl: string) {
+  private addExternalServer(json: Partial<AuthenticationResponse>, apiUrl: string, serverName: string) {
     if (!json) {
       return;
     }
     var server = ServerModel.createFromJson(json);
     server.setApiUrl(apiUrl);
+    server.setName(serverName);
     this.externalServers.push(server);
+    localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
   }
 
   private setExternalServers(json: Partial<ServerModel>[]) {

@@ -13,7 +13,7 @@
       <tr
         *ngFor="let date of bulletinsService.dates"
         [ngClass]="{
-          'bulletins-table__day--past': isPast(date) && !isToday(date)
+          'bulletins-table__day--past': bulletinsService.hasBeenPublished5PM(date)
         }" 
       >
         <td [attr.data-label]="'bulletins.table.title.date' | translate ">
@@ -22,7 +22,7 @@
               {{ date | localizedDate : "fullDate" }}
             </time>
             <button class="btn btn-primary btn-icon" type="button" (click)="editBulletin(date, false)">
-              <i class="ph ph-newspaper"></i>
+              <i class="ph ph-arrow-right"></i>
             </button>
           </div>
         </td>
@@ -99,63 +99,7 @@
           </span>
         </td>
         <td class="bulletins-table__region-publishing-tools">
-          <!-- create -->
-          <!-- <button *ngIf="showCreateButton(date)" type="button" class="btn btn-primary btn-sm float-right" (click)="editBulletin(date, false)" data-toggle="tooltip" title="{{ 'bulletins.tooltip.create' | translate }}"><i class="fa fa-plus"></i></button> -->
-          <!-- publish all -->
-          <button
-            *ngIf="showPublishAllButton(date)"
-            type="button"
-            class="btn btn-danger btn-sm"
-            (click)="publishAll($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.publishAll' | translate }}"
-          >
-            <i class="fa fa-warning"></i>
-          </button>
-          <!-- caaml -->
-          <button
-            *ngIf="showCaamlButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="showCaaml($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.caaml' | translate }}"
-          >
-            <i class="fa fa-file-text"></i>
-          </button>
-          <!-- json -->
-          <button
-            *ngIf="showJsonButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="showJson($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.json' | translate }}"
-          >
-            <i class="fa fa-file-text"></i>
-          </button>
-          <!-- info -->
-          <button
-            *ngIf="showInfoButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="showPublicationInfo($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.info' | translate }}"
-          >
-            <i class="fa fa-info"></i>
-          </button>
-          <!-- media file -->
-          <button
-            *ngIf="showMediaFileButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="openMediaFileDialog($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
-          >
-            <i class="fa fa-microphone"></i>
-          </button>
+
           <!-- copy -->
           <button
             *ngIf="showCopyButton(date)"
@@ -167,17 +111,7 @@
           >
             <i class="fa fa-copy"></i>
           </button>
-          <!-- preview -->
-          <button
-            *ngIf="showPreviewButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="preview($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.preview' | translate }}"
-          >
-            <i class="fa fa-eye"></i>
-          </button>
+
           <!-- paste -->
           <button
             *ngIf="showPasteButton(date)"
@@ -189,6 +123,7 @@
           >
             <i class="fa fa-paste"></i>
           </button>
+
           <!-- cancel -->
           <button
             *ngIf="showPasteButton(date)"
@@ -201,89 +136,8 @@
             <i class="fa fa-close"></i>
           </button>
           
-          
-          
-          <!-- edit -->
-          <button
-            *ngIf="showEditButton(date)"
-            type="button"
-            class="btn btn-secondary btn-sm"
-            (click)="edit($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.edit' | translate }}"
-          >
-            <i class="fa fa-pencil"></i>
-          </button>
-          
-          <!-- check -->
-          <button
-            *ngIf="showCheckButton(date)"
-            type="button"
-            class="btn btn-primary btn-sm float-right"
-            (click)="check($event, date)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.tooltip.check' | translate }}"
-          >
-            <i class="fa fa-check"></i>
-          </button>
         </td>
       </tr>
     </tbody>
   </table>
-</div>
-
-<ng-template #publishBulletinsErrorTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.publishBulletinsErrorDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="publishBulletinsErrorModalConfirm()">
-      {{ "bulletins.table.publishBulletinsErrorDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #previewErrorTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.previewErrorDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="previewErrorModalConfirm()">
-      {{ "bulletins.table.previewErrorDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
-
-
-
-
-
-<ng-template #checkBulletinsErrorTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
-      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #publishAllTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.publishAllDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
-      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
-
-<div id="overlay">
-  <span id="nav" *ngIf="loadingPreview">
-    <div class="submit-message" style="display: block; color: #ffffff; position: fixed; left: 49.7%; top: 54.5%">
-      <p>{{ "bulletins.loadingPreview" | translate }}</p>
-    </div>
-  </span>
 </div>

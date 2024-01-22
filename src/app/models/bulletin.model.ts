@@ -8,7 +8,7 @@ export class BulletinModel {
 
   public author: AuthorModel;
   public additionalAuthors: String[];
-  public ownerRegion: String;
+  public ownerRegion: string;
 
   public publicationDate: Date;
 
@@ -344,7 +344,7 @@ export class BulletinModel {
     return this.ownerRegion;
   }
 
-  setOwnerRegion(ownerRegion: String) {
+  setOwnerRegion(ownerRegion: string) {
     this.ownerRegion = ownerRegion;
   }
 

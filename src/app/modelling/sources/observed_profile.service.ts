@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { RegionsService } from "app/providers/regions-service/regions.service";
+import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
 import { LatLng } from "leaflet";
 
@@ -22,7 +22,6 @@ export class ObservedProfileSourceService {
   constructor(
     private http: HttpClient,
     private constantsService: ConstantsService,
-    private regionsService: RegionsService,
   ) {}
 
   /**
@@ -30,9 +29,9 @@ export class ObservedProfileSourceService {
    * https://gitlab.com/avalanche-warning
    */
   getObservedProfiles(): Observable<GenericObservation[]> {
-    const url = this.constantsService.observationApi.AvalancheWarningService;
+    const url = this.constantsService.observationApi["observed_profile"];
     return this.http.get<AvalancheWarningServiceObservedProfiles[]>(url).pipe(
-      map((profiles) => profiles.map((profile) => this.regionsService.augmentRegion(toPoint(profile)))),
+      map((profiles) => profiles.map((profile) => augmentRegion(toPoint(profile)))),
       catchError((e) => {
         console.error("Failed to read observed_profiles from " + url, e);
         return [];

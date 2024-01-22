@@ -41,15 +41,6 @@
     "region": "Region",
     "education": "Education"
   },
-  "chat": {
-    "placeholder": "Write here ...",
-    "send": "Send",
-    "activeUsers": "Who is online?",
-    "all": "All ",
-    "AT-07": "Tirol ",
-    "IT-32-BZ": "South Tyrol ",
-    "IT-32-TN": "Trentino "
-  },
   "matrix": {
     "label": {
       "snowpackStability": "Snowpack Stability",
@@ -65,28 +56,35 @@
   },
   "bulletins": {
     "title": "Avalanche.report",
-    "loadingPreview": "Creating PDF preview ...",
     "tooltip": {
-      "publish": "Publish updated bulletin immediately",
-      "submit": "Submit bulletin",
       "copy": "Copy bulletin",
-      "cancel": "Cancel copy",
       "paste": "Paste bulletin",
-      "update": "Create update of bulletin",
+      "cancel": "Cancel copy",
+      "update": "Edit",
+      "submit": "Submit",
+      "submitUpdate": "Submit update",
+      "publishChange": "Publish now (no messages)",
+      "publishUpdate": "Publish now",
       "caaml": "Show CAAML",
       "json": "Show JSON",
-      "edit": "Edit bulletin (will not be published again)",
       "create": "Create bulletin",
       "preview": "Preview bulletin (PDF)",
       "check": "Check bulletin",
       "info": "Show publication status",
       "publishAll": "Publish all regions",
-      "mediaFile": "Upload media file",
-      "publishUpdate": "Publish update"
+      "mediaFile": "Upload media file"
+    },
+    "status": {
+      "submittedInfo": "Will be published at 5PM",
+      "resubmittedInfo": "Will be published at 8AM",
+      "publishedInfo" : "Has been published",
+      "noPublicationInfo" : "Will NOT be published automatically",
+      "loadingPreview": "Creating PDF preview ...",
+      "loading": "Loading bulletin ..."
     },
     "create": {
       "tooltip": {
-        "edit": "Edit region",
+        "edit": "Edit micro regions",
         "copy": "Copy region",
         "delete": "Delete region",
         "createRegion": "Create region",
@@ -125,6 +123,9 @@
       "back": " Back",
       "createAggregatedRegion": " New region",
       "pasteAggregatedRegion": " Paste region",
+      "pendingSuggestions": "Suggestions",
+      "rejectSuggestion": "Reject",
+      "acceptSuggestion": "Accept",
       "cancelCopyBulletin": " Cancel",
       "createAvalancheProblem": " New problem",
       "ownRegions": "Own regions",
@@ -136,9 +137,8 @@
       "noBulletinsForSelectedDay": "No regions defined for this date.",
       "autosave": "Saved automatically",
       "regionEditable": "This region can be edited.", 
+      "regionNotEditable": "This region can not be edited.",
       "regionLocked": "This region is locked.",
-      "edit": "Edit",
-      "regionLockedPublished": "This regions has been published already.",
       "changeDangerRatingElevation": "Extend the danger level",
       "mapTop": "Map above",
       "mapLeft": "Map aside",
@@ -157,7 +157,7 @@
         "notes": "Notes"
       },
       "copyRegion": {
-        "label": "Paste warning region in another bulletin",
+        "label": "Copy warning region to another bulletin",
         "select": "Paste into ...",
         "currentBulletin": "This bulletin"
       },
@@ -257,11 +257,7 @@
         "published": "published",
         "updated": "updated",
         "resubmitted": "resubmitted",
-        "republished": "republished",
-        "submitted-info": "Will be published at 5PM",
-        "resubmitted-info": "Will be published at 8AM",
-        "published-info" : "Has been published at 5PM",
-        "republished-info" : "Has been published at 8AM"
+        "republished": "republished"
       },
       "publishBulletinsDialog": {
         "message": "Do you want to publish the bulletin?",
@@ -798,7 +794,7 @@
     "complex": " Complex"
   },
   "changeRegionDialog": {
-    "message": "Do you want to discard the changes and change the region?",
+    "message": "Do you want to change the region?",
     "accept": "Yes",
     "reject": "No"
   },

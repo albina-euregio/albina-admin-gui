@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { ErrorHandler, Injectable, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatLegacyDialogModule as MatDialogModule } from "@angular/material/legacy-dialog";
@@ -33,13 +33,9 @@ import { StatisticsService } from "./providers/statistics-service/statistics.ser
 import { RegionsService } from "./providers/regions-service/regions.service";
 import { ConstantsService } from "./providers/constants-service/constants.service";
 import { SettingsService } from "./providers/settings-service/settings.service";
-import { ObservationsService } from "./observations/observations.service";
-import { ObservationFilterService } from "./observations/observation-filter.service";
-import { MapService } from "./providers/map-service/map.service";
 import { WsBulletinService } from "./providers/ws-bulletin-service/ws-bulletin.service";
 import { WsUpdateService } from "./providers/ws-update-service/ws-update.service";
 import { WsRegionService } from "./providers/ws-region-service/ws-region.service";
-import { ChatService } from "./providers/chat-service/chat.service";
 import { LocalStorageService } from "./providers/local-storage-service/local-storage.service";
 import { ConfigurationService } from "./providers/configuration-service/configuration.service";
 import { SocialmediaService } from "./providers/socialmedia-service/socialmedia.service";
@@ -47,7 +43,6 @@ import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
 import { ConfirmationService } from "primeng/api";
-import { BaseMapService } from './providers/map-service/base-map.service';
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -89,13 +84,6 @@ import i18nCa from "../assets/i18n/ca.json";
 import i18nOc from "../assets/i18n/oc.json";
 import { CreateUserComponent } from "./admin/create-user.component";
 import { UpdateUserComponent } from "./admin/update-user.component";
-
-@Injectable()
-export class SentryErrorHandler implements ErrorHandler {
-  handleError(error) {
-    // console.error(error);s
-  }
-}
 
 export class DirectTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<Object> {
@@ -177,10 +165,6 @@ registerLocaleData(localeOc, "oc");
   ],
   providers: [
     {
-       provide: ErrorHandler,
-       useClass: SentryErrorHandler
-    },
-    {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     },
@@ -189,16 +173,12 @@ registerLocaleData(localeOc, "oc");
     AuthGuard,
     ConstantsService,
     SettingsService,
-    ObservationsService,
-    ObservationFilterService,
     BulletinsService,
     StatisticsService,
     RegionsService,
-    MapService,
     WsRegionService,
     WsUpdateService,
     WsBulletinService,
-    ChatService,
     LocalStorageService,
     ConfigurationService,
     ConfirmationService,
@@ -206,7 +186,6 @@ registerLocaleData(localeOc, "oc");
     CopyService,
     BlogService,
     MediaFileService,
-    BaseMapService,
   ],
   bootstrap: [AppComponent],
   exports: [

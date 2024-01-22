@@ -44,7 +44,7 @@ export function convertFotoWebcamEU(webcam: FotoWebcamEU): GenericObservation<Fo
     authorName: "foto-webcam.eu",
     content: webcam.title,
     elevation: webcam.elevation,
-    eventDate: new Date(webcam.modtime * 1000),
+    eventDate: webcam.modtime === 0 ? new Date() : new Date(webcam.modtime * 1000),
     latitude: webcam.latitude,
     longitude: webcam.longitude,
     locationName: webcam.name,

@@ -1,9 +1,19 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, HostListener } from "@angular/core";
+import {
+  Component,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  HostListener,
+  AfterContentInit,
+} from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
+import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
 import { SharedModule } from "primeng/api";
@@ -19,6 +29,8 @@ import {
   MultimodelSourceService,
   ObservedProfileSourceService,
 } from "./sources";
+import type { ModellingRouteData } from "./routes";
+
 export interface MultiselectDropdownData {
   id: ForecastSource;
   loader?: () => Observable<GenericObservation[]>;
@@ -49,11 +61,12 @@ export interface MultiselectDropdownData {
     GetFilenamesService,
     ParamService,
     QfaService,
+    BaseMapService,
   ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
-export class ForecastComponent implements AfterViewInit, OnDestroy {
+export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   layout = "map" as const;
   observationPopupVisible = false;
   selectedModelPoint: GenericObservation;
@@ -72,37 +85,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   observationConfigurations = new Set<string>();
   observationConfiguration: string | undefined;
 
-  public readonly allSources: MultiselectDropdownData[] = [
-    {
-      id: ForecastSource.multimodel,
-      loader: () => this.multimodelSource.getZamgMultiModelPoints(),
-      fillColor: "green",
-      name: this.translateService.instant("sidebar.modellingZamg"),
-    },
-    {
-      id: ForecastSource.meteogram,
-      loader: () => this.meteogramSource.getZamgMeteograms(),
-      fillColor: "MediumVioletRed",
-      name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
-    },
-    {
-      id: ForecastSource.qfa,
-      fillColor: "red",
-      name: this.translateService.instant("sidebar.qfa"),
-    },
-    {
-      id: ForecastSource.observed_profile,
-      loader: () => this.observedProfileSource.getObservedProfiles(),
-      fillColor: "#f8d229",
-      name: this.translateService.instant("sidebar.modellingSnowpack"),
-    },
-    {
-      id: ForecastSource.alpsolut_profile,
-      loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
-      fillColor: "#d95f0e",
-      name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
-    },
-  ];
+  public allSources: MultiselectDropdownData[] = [];
 
   public allRegions: RegionProperties[];
   private regionalMarkers = {};
@@ -118,6 +101,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
   @ViewChild("qfaSelect") qfaSelect: ElementRef<HTMLSelectElement>;
 
   constructor(
+    private route: ActivatedRoute,
     private regionsService: RegionsService,
     public mapService: BaseMapService,
     private multimodelSource: MultimodelSourceService,
@@ -131,30 +115,65 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
 
   files = {};
 
-  ngAfterViewInit() {
-    this.allRegions = this.regionsService
-      .getRegionsEuregio()
-      .features.map((f) => f.properties)
+  async ngAfterContentInit() {
+    this.allRegions = (await this.regionsService.getRegionsEuregio()).features
+      .map((f) => f.properties)
       .sort((r1, r2) => r1.id.localeCompare(r2.id));
-
     this.allRegions.forEach((region) => {
       this.regionalMarkers[region.id] = [];
     });
+  }
 
-    this.initMaps();
-    this.mapService.map.on("click", () => {
-      this.selectedRegions = this.mapService.getSelectedRegions().map((aRegion) => aRegion.id);
-      this.applyFilter();
-    });
-    this.mapService.addMarkerLayer("forecast");
-    this.load();
+  async ngAfterViewInit() {
+    this.initMaps().then(() => this.load());
   }
 
   async load() {
+    const { modelling } = this.route.snapshot.data as ModellingRouteData;
+    this.allSources =
+      modelling === "geosphere"
+        ? [
+            {
+              id: ForecastSource.multimodel,
+              loader: () => this.multimodelSource.getZamgMultiModelPoints(),
+              fillColor: "green",
+              name: this.translateService.instant("sidebar.modellingZamg"),
+            },
+            {
+              id: ForecastSource.meteogram,
+              loader: () => this.meteogramSource.getZamgMeteograms(),
+              fillColor: "MediumVioletRed",
+              name: this.translateService.instant("sidebar.modellingZamgMeteogram"),
+            },
+            {
+              id: ForecastSource.qfa,
+              fillColor: "red",
+              name: this.translateService.instant("sidebar.qfa"),
+            },
+          ]
+        : modelling === "snowpack"
+          ? [
+              {
+                id: ForecastSource.observed_profile,
+                loader: () => this.observedProfileSource.getObservedProfiles(),
+                fillColor: "#f8d229",
+                name: this.translateService.instant("sidebar.modellingSnowpack"),
+              },
+              {
+                id: ForecastSource.alpsolut_profile,
+                loader: () => this.alpsolutProfileSource.getAlpsolutDashboardPoints(),
+                fillColor: "#d95f0e",
+                name: this.translateService.instant("sidebar.modellingSnowpackMeteo"),
+              },
+            ]
+          : [];
+
     this.modelPoints = [];
     this.loading = true;
     this.loadAll();
-    await this.loadQfa();
+    if (modelling === "geosphere") {
+      await this.loadQfa();
+    }
     this.loading = false;
   }
 
@@ -213,6 +232,7 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
       source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
         points.forEach((point) => {
+          augmentRegion(point);
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
           if (configuration) {
             this.observationConfigurations.add(configuration);
@@ -238,30 +258,25 @@ export class ForecastComponent implements AfterViewInit, OnDestroy {
         longitude: ll.lng,
         locationName: cityName,
       } as GenericObservation;
-      this.regionsService.augmentRegion(point);
+      augmentRegion(point);
       this.drawMarker(point);
       this.modelPoints.push(point);
     }
     this.files = await this.qfaService.getFiles();
   }
 
-  initMaps() {
-    this.mapService.initMaps(this.observationsMap.nativeElement, () => {});
-    this.mapService.map.on("click", () => {
-      this.selectedRegions = this.mapService.getSelectedRegions().map((aRegion) => aRegion.id);
-      // this.filterRegions();
+  async initMaps() {
+    const map = await this.mapService.initMaps(this.observationsMap.nativeElement, () => {});
+    map.on("click", () => {
+      this.selectedRegions = this.mapService.getSelectedRegions();
+      this.applyFilter();
     });
-    this.mapService.addInfo();
-    this.mapService.addControls();
-
     this.mapService.removeObservationLayers();
+    this.mapService.addMarkerLayer("forecast");
   }
 
   ngOnDestroy() {
-    if (this.mapService.map) {
-      this.mapService.map.remove();
-      this.mapService.map = undefined;
-    }
+    this.mapService.removeMaps();
   }
 
   getModelPointOptions(type: ForecastSource): L.CircleMarkerOptions {

@@ -1,5 +1,5 @@
 <accordion class="avalanche-problems__accordion">
-  <accordion-group *ngIf="hasAvalancheProblem(1)" #accordionAvalancheProblem1 [isOpen]="true">
+  <accordion-group *ngIf="hasAvalancheProblem(1)" #accordionAvalancheProblem1>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-right"></i>
@@ -10,6 +10,7 @@
         [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem1"
         [count]="1"
         [disabled]="disabled"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
       ></app-avalanche-problem-preview>
     </div>
     <div>
@@ -20,6 +21,7 @@
         [count]="1"
         [afternoon]="afternoon"
         [disabled]="disabled"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
@@ -35,6 +37,7 @@
         [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem2"
         [count]="2"
         [disabled]="disabled"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
       ></app-avalanche-problem-preview>
     </div>
     <div>
@@ -45,6 +48,7 @@
         [count]="2"
         [afternoon]="afternoon"
         [disabled]="disabled"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
@@ -60,6 +64,7 @@
         [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem3"
         [count]="3"
         [disabled]="disabled"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
       ></app-avalanche-problem-preview>
     </div>
     <div>
@@ -70,6 +75,7 @@
         [count]="3"
         [afternoon]="afternoon"
         [disabled]="disabled"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
@@ -85,6 +91,7 @@
         [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem4"
         [count]="4"
         [disabled]="disabled"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
       ></app-avalanche-problem-preview>
     </div>
     <div>
@@ -95,6 +102,7 @@
         [count]="4"
         [afternoon]="afternoon"
         [disabled]="disabled"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
@@ -110,6 +118,7 @@
         [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem5"
         [count]="5"
         [disabled]="disabled"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
       ></app-avalanche-problem-preview>
     </div>
     <div>
@@ -120,6 +129,7 @@
         [count]="5"
         [afternoon]="afternoon"
         [disabled]="disabled"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>

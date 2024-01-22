@@ -1,0 +1,14 @@
+{
+  "name": "observations-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "dayjs": "^1.11.10",
+    "mysql2": "^3.7.0",
+    "which-polygon": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/which-polygon": "^2.2.3"
+  }
+}

@@ -26,6 +26,11 @@
   font-weight: 600;
 }
 
+@mixin font-s-bold {
+  font-size: 12px;
+  font-weight: bold;
+}
+
 @mixin font-xs {
   font-size: 10px;
   text-transform: uppercase;
@@ -54,6 +59,10 @@
 
 .font-s-medium {
   @include font-s-medium;
+}
+
+.font-s-bold {
+  @include font-s-bold;
 }
 
 .font-xs {

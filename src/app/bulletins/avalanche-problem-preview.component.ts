@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { MapService } from "../providers/map-service/map.service";
@@ -18,6 +18,7 @@ export class AvalancheProblemPreviewComponent {
   @Input() avalancheProblem: AvalancheProblemModel;
   @Input() count: number;
   @Input() disabled: boolean;
+  @Output() changeAvalancheProblemPreviewEvent = new EventEmitter<string>();
 
   avalancheProblemEnum = Enums.AvalancheProblem;
 
@@ -119,6 +120,7 @@ export class AvalancheProblemPreviewComponent {
         break;
     }
     this.reorderAvalancheProblems(this.count);
+    this.changeAvalancheProblemPreviewEvent.emit();
   }
 
   reorderAvalancheProblems(count) {
@@ -196,6 +198,7 @@ export class AvalancheProblemPreviewComponent {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemPreviewEvent.emit();
   }
 
   moveDownAvalancheProblem(event) {
@@ -233,20 +236,6 @@ export class AvalancheProblemPreviewComponent {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
-  }
-
-  isDangerRatingDirection(dir) {
-    if (this.avalancheProblem && this.avalancheProblem.getDangerRatingDirection() === dir) {
-      return true;
-    }
-    return false;
-  }
-
-  setDangerRatingDirection(event, dir: string) {
-    event.stopPropagation();
-    this.avalancheProblem.setDangerRatingDirection(Enums.Direction[dir]);
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemPreviewEvent.emit();
   }
 }

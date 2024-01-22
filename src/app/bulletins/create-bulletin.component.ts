@@ -1,32 +1,39 @@
-import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, AfterViewInit, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { DatePipe, formatDate } from "@angular/common";
+import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
+
+
+import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
+import { map, timer } from "rxjs";
+import { BehaviorSubject } from "rxjs";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { saveAs } from "file-saver";
+
+import { environment } from "../../environments/environment";
+
+// models
 import { BulletinModel } from "../models/bulletin.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
+
+// services
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
-import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
-import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import { interval } from "rxjs";
-import * as Enums from "../enums/enums";
-import { BehaviorSubject } from "rxjs";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal";
-import { environment } from "../../environments/environment";
+
+// modals
 import { ModalSubmitComponent } from "./modal-submit.component";
 import { ModalPublishComponent } from "./modal-publish.component";
-import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
-
-import { DatePipe } from "@angular/common";
-
-import "leaflet";
-import "leaflet.sync";
-
+import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
+import { ModalPublishAllComponent } from "./modal-publish-all.component";
+import { ModalMediaFileComponent } from "./modal-media-file.component";
+import { ModalCheckComponent } from "./modal-check.component";
 
 // For iframe
 import { Renderer2 } from "@angular/core";
@@ -34,28 +41,36 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
 import { Console } from "console";
 
+import * as Enums from "../enums/enums";
+import { BulletinLockModel } from "app/models/bulletin-lock.model";
+import { ServerModel } from "app/models/server.model";
+
 declare var L: any;
 
 @Component({
   templateUrl: "create-bulletin.component.html"
 })
-export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   public bulletinStatus = Enums.BulletinStatus;
   public dangerPattern = Enums.DangerPattern;
   public tendency = Enums.Tendency;
-  public autoSave;
+
+  public autoSaving: boolean;
+  public loadingPreview: boolean;
+  public editRegions: boolean;
+  public loading: boolean;
 
   public originalBulletins: Map<string, BulletinModel>;
 
-  public editRegions: boolean;
-  public loading: boolean;
   public showAfternoonMap: boolean;
-  public showExternalRegions: boolean;
 
+  public showForeignRegions: boolean;
+  
   public activeBulletin: BulletinModel;
   public internBulletinsList: BulletinModel[];
-  public externBulletinsList: BulletinModel[];
+  public externRegionsMap: Map<ServerModel, BulletinModel[]>;
+  public showExternRegionsMap: Map<string, boolean>;
 
   public activeHighlightsTextcat: string;
   public activeHighlightsDe: string;
@@ -133,8 +148,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   public showNewBulletinModal: boolean = false;
 
   public isCompactMapLayout: boolean = false;
-  private selectedCopyRegionDate: string;
-  private bulletinCopy: BulletinModel;
   private bulletinMarkedDelete: BulletinModel;
 
   // Publishing
@@ -169,9 +182,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   public avalancheProblemErrorModalRef: BsModalRef;
   @ViewChild("avalancheProblemErrorTemplate") avalancheProblemErrorTemplate: TemplateRef<any>;
 
-  public loadAutoSaveModalRef: BsModalRef;
-  @ViewChild("loadAutoSaveTemplate") loadAutoSaveTemplate: TemplateRef<any>;
-
   public loadAvActivityCommentExampleTextModalRef: BsModalRef;
   @ViewChild("loadAvActivityCommentExampleTextTemplate") loadAvActivityCommentExampleTextTemplate: TemplateRef<any>;
 
@@ -187,9 +197,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   public submitBulletinsDuplicateRegionModalRef: BsModalRef;
   @ViewChild("submitBulletinsDuplicateRegionTemplate") submitBulletinsDuplicateRegionTemplate: TemplateRef<any>;
 
-  public checkBulletinsErrorModalRef: BsModalRef;
-  @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
-
   public submitBulletinsErrorModalRef: BsModalRef;
   @ViewChild("submitBulletinsErrorTemplate") submitBulletinsErrorTemplate: TemplateRef<any>;
 
@@ -198,6 +205,24 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   public publishBulletinsErrorModalRef: BsModalRef;
   @ViewChild("publishBulletinsErrorTemplate") publishBulletinsErrorTemplate: TemplateRef<any>;
+
+  public previewErrorModalRef: BsModalRef;
+  @ViewChild("previewErrorTemplate") previewErrorTemplate: TemplateRef<any>;
+
+  public publicationStatusModalRef: BsModalRef;
+  @ViewChild("publicationStatusTemplate") publicationStatusTemplate: TemplateRef<any>;
+
+  public mediaFileModalRef: BsModalRef;
+  @ViewChild("mediaFileTemplate") mediaFileTemplate: TemplateRef<any>;
+
+  public publishAllModalRef: BsModalRef;
+  @ViewChild("publishAllTemplate") publishAllTemplate: TemplateRef<any>;
+
+  public checkBulletinsModalRef: BsModalRef;
+  @ViewChild("checkBulletinsTemplate") checkBulletinsTemplate: TemplateRef<any>;
+
+  public checkBulletinsErrorModalRef: BsModalRef;
+  @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
 
   public pmUrl: SafeUrl;
 
@@ -208,16 +233,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   // tra le proprietà del componente
   eventSubscriber: Subscription;
 
+  externalBulletinsSubscription !: Subscription;
+
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-md"
   };
 
   constructor(
     private router: Router,
+    private activeRoute: ActivatedRoute,
     public bulletinsService: BulletinsService,
     private dialog: MatDialog,
-    private localStorageService: LocalStorageService,
     public authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private settingsService: SettingsService,
@@ -227,17 +254,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     private mapService: MapService,
     private applicationRef: ApplicationRef,
     private sanitizer: DomSanitizer,
-    renderer: Renderer2,
+    private renderer: Renderer2,
     private modalService: BsModalService,
     private datePipe: DatePipe
   ) {
-    this.loading = true;
+    this.loading = false;
     this.showAfternoonMap = false;
-    this.showExternalRegions = false;
-    this.stopListening = renderer.listen("window", "message", this.getText.bind(this));
+    this.showForeignRegions = true;
     this.mapService.resetAll();
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externBulletinsList = new Array<BulletinModel>();
+    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.showExternRegionsMap = new Map<string, boolean>();
     // this.preventClick = false;
     // this.timer = 0;
 
@@ -245,6 +272,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.isCompactMapLayout = window.innerWidth < 768;
     this.publishing = undefined;
     this.copying = false;
+    this.loadingPreview = false;
   }
 
   @HostListener('window:resize', ['$event'])
@@ -274,7 +302,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.originalBulletins = new Map<string, BulletinModel>();
     this.activeBulletin = undefined;
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externBulletinsList = new Array<BulletinModel>();
+    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.showExternRegionsMap = new Map<string, boolean>();
 
     this.activeHighlightsTextcat = undefined;
     this.activeHighlightsDe = undefined;
@@ -351,18 +380,33 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.showTranslationsTendencyComment = false;
   }
 
-  toggleShowExternalRegions() {
-    if (this.showExternalRegions)
-      this.showExternalRegions = false;
+  toggleShowForeignRegions() {
+    if (this.showForeignRegions)
+      this.showForeignRegions = false;
     else
-      this.showExternalRegions = true;
+      this.showForeignRegions = true;
+  }
+
+  showExternalRegions(key: string) {
+    return this.showExternRegionsMap.get(key);
+  }
+
+  toggleShowExternalRegions(apiUrl: string) {
+    if (this.showExternRegionsMap.get(apiUrl))
+      this.showExternRegionsMap.set(apiUrl, false);
+    else
+      this.showExternRegionsMap.set(apiUrl, true);
   }
 
   hasExternalRegions() {
-    if (this.externBulletinsList.length > 0)
+    if (this.externRegionsMap.size > 0)
       return true;
     else
       return false;
+  }
+
+  hasForeignRegions() {
+    return this.authenticationService.isEuregio();
   }
 
   private getTextcatUrl(): SafeUrl {
@@ -374,18 +418,38 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit() {
-    this.initializeComponent();
+    this.stopListening = this.renderer.listen("window", "message", this.getText.bind(this));
+
+    this.activeRoute.params.subscribe(routeParams => {
+      const date = new Date(routeParams.date);
+      date.setHours(0, 0, 0, 0);
+      this.bulletinsService.setActiveDate(date);
+      this.initializeComponent();
+
+      this.externalBulletinsSubscription = timer(2000, 30000).pipe( 
+        map(() => { 
+          this.loadExternalBulletinsFromServer();
+        }) 
+      ).subscribe(); 
+    });
   }
 
-  initializeComponent() {
+  async initializeComponent() {
+    this.loading = true;
+
     // for reload iframe on change language
     this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
       () => this.pmUrl = this.getTextcatUrl()
     );
 
+    await this.initMaps();
+
     if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
 
       this.reset();
+
+      // TODO implement bulletin locking
+      //this.bulletinsService.loadLockedBulletins();
 
       // setting pm language for iframe
       this.pmUrl = this.getTextcatUrl();
@@ -409,6 +473,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
               this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), foreignRegions).subscribe(
                 data2 => {
                   this.addForeignBulletins(data2);
+                  this.save();
+                  this.loading = false;
                 },
                 () => {
                   console.error("Foreign bulletins could not be loaded!");
@@ -429,198 +495,427 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
         // load current bulletins (do not copy them, also if it is an update)
       } else {
-        if (this.bulletinsService.getIsEditable() && !this.bulletinsService.getIsUpdate() && this.bulletinsService.getActiveDate().getTime() === this.localStorageService.getDate().getTime() && this.authenticationService.getActiveRegionId() === this.localStorageService.getRegion() && this.authenticationService.getCurrentAuthor().getEmail() === this.localStorageService.getAuthor()) {
-          setTimeout(() => this.openLoadAutoSaveModal(this.loadAutoSaveTemplate));
-        } else {
-          this.loadBulletinsFromServer();
-        }
+        this.loadBulletinsFromServer();
+        this.mapService.deselectAggregatedRegion();
       }
 
-      this.authenticationService.getExternalServers().map((server) =>
-        this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
-          data2 => {
-            this.addExternalBulletins(data2);
-          },
-          () => {
-            console.error("External bulletins could not be loaded!");
-          }
-        )
-      );
+      if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
+        this.bulletinsService.setIsEditable(true);
+      } else {
+        this.bulletinsService.setIsEditable(false);
+      }
+
+      if (this.copyService.isCopyBulletin()) {
+        this.createBulletin(true);
+      }
 
     } else {
       this.goBack();
     }
   }
 
-  ngAfterViewInit() {
-    this.initMaps();
+  private loadBulletinsFromServer() {
+    console.log("Load internal bulletins");
+    const regions = new Array<String>();
+    if (this.authenticationService.isEuregio()) {
+      regions.push(this.constantsService.codeTyrol);
+      regions.push(this.constantsService.codeSouthTyrol);
+      regions.push(this.constantsService.codeTrentino);
+    } else {
+      regions.push(this.authenticationService.getActiveRegionId());
+    }
+    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
+      data => {
+        this.internBulletinsList = new Array<BulletinModel>();
+        for (const jsonBulletin of (data as any)) {
+          const bulletin = BulletinModel.createFromJson(jsonBulletin);
+
+          // only add bulletins with published or saved regions
+          if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
+            this.addInternalBulletin(bulletin);
+          }
+        }
+
+        this.updateInternalBulletins();
+
+        this.loading = false;
+      },
+      () => {
+        console.error("Bulletins could not be loaded!");
+        this.loading = false;
+        this.openLoadingErrorModal(this.loadingErrorTemplate);
+      }
+    );
+  }
+
+  private loadExternalBulletinsFromServer() {
+    console.log("Load external bulletins");
+    this.authenticationService.getExternalServers().map((server) =>
+      this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
+        data => {
+          this.addExternalBulletins(server, data);
+        },
+        () => {
+          console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
+        }
+      )
+    );
   }
 
   ngOnDestroy() {
+    this.stopListening();
+
+    this.externalBulletinsSubscription.unsubscribe(); 
+    
     if (this.bulletinsService.getIsEditable()) {
       this.eventSubscriber.unsubscribe();
-    }
-
-    if (this.bulletinsService.getActiveDate() && this.bulletinsService.getIsEditable()) {
-      this.bulletinsService.unlockRegion(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId());
     }
 
     this.mapService.resetAll();
 
     this.bulletinsService.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
-    this.bulletinsService.setIsSmallChange(false);
-    this.bulletinsService.setIsUpdate(false);
 
     this.loading = false;
     this.editRegions = false;
     this.copying = false;
-
-    if (this.autoSave && this.autoSave !== undefined) {
-      this.autoSave.unsubscribe();
-    }
   }
 
-  // TODO: move to service to share with bulletins.component
-  isPast(date: Date) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (today.getTime() > date.getTime()) {
-      return true;
-    }
-    return false;
+  isDisabled() {
+    return (this.loading || !this.bulletinsService.getIsEditable() || this.bulletinsService.isLocked(this.activeBulletin.getId()) || this.editRegions || !this.isCreator(this.activeBulletin)) ? true : false;
   }
 
-  isToday(date: Date) {
-    if (date !== undefined) {
-      const today = new Date();
-      const hours = today.getHours();
-      today.setHours(0, 0, 0, 0);
-      if (today.getTime() === date.getTime()) {
-        return true;
-      }
-      if (hours >= 17) {
-        today.setDate(today.getDate() + 1);
-        if (today.getTime() === date.getTime()) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  isEditable(date) {
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) {
-      return true;
-    }
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) {
-      return true;
-    }
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-      return true;
-    }
-    if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-      return true;
-    }
-    if (this.bulletinsService.getIsUpdate()) {
-      return true;
-    }
-
+  isDateEditable(date) {
     if (
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published && !this.bulletinsService.getIsUpdate()) ||
-      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished && !this.bulletinsService.getIsUpdate()) ||
-      this.bulletinsService.isLocked(date, this.authenticationService.getActiveRegionId()) ||
-      this.isPast(date) ||
-      this.isToday(date)) {
-      return false;
-    } else {
+      (((this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.missing) || (this.bulletinsService.getUserRegionStatus(date) === undefined)) && (!this.bulletinsService.hasBeenPublished5PM(this.bulletinsService.getActiveDate()))) ||
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) ||
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft)
+    ) {
       return true;
     }
   }
-  // TODO: move to service to share with bulletins.component
+
+  showPublicationHappensAt5PM(date) {
+    return (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) && 
+      (!this.bulletinsService.hasBeenPublished5PM(date))
+    ) ? true : false;
+  }
+
+  showPublicationHappensAt8AM(date) {
+    return (
+      (
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) ||
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted)
+      ) &&
+      (!this.bulletinsService.hasBeenPublished8AM(date)) &&
+      (!this.showPublicationHappensAt5PM(date))
+    ) ? true : false;
+  }
+
+  showPublicationHappened(date) {
+    return (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published) ||
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished)
+    ) ? true : false;
+  }
+
+  showNoPublicationWillHappen(date) {
+    return (
+      (
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) ||
+        (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted)
+      ) &&
+      (this.bulletinsService.hasBeenPublished8AM(date))
+    ) ? true : false;
+  }
+
+  changeDate(date) {
+    this.deselectBulletin();
+    const format = "yyyy-MM-dd";
+    const locale = "en-US";
+    const formattedDate = formatDate(date, format, locale);
+    this.router.navigate(["/bulletins/" + formattedDate]);
+  }
+
+  onDangerPattern1Change(event) {
+    this.activeBulletin.setDangerPattern1(event);
+    this.updateBulletinOnServer(this.activeBulletin);
+  }
+  
+  onDangerPattern2Change(event) {
+    this.activeBulletin.setDangerPattern2(event);
+    this.updateBulletinOnServer(this.activeBulletin);
+  }
+
+  onNotesFocusOut(event) {
+    this.setTexts();
+  }
 
   loadBulletin(date) {
     this.deselectBulletin();
 
+    this.bulletinsService.setActiveDate(date);
     if (this.authenticationService.getActiveRegionId() && this.authenticationService.getActiveRegionId() !== undefined && (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) || this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))) {
-      this.bulletinsService.setIsUpdate(false);
-      this.bulletinsService.setActiveDate(date);
 
-      if (!this.isEditable(date)) {
+      if (!this.isDateEditable(date)) {
         this.bulletinsService.setIsEditable(false);
         this.initializeComponent();
       } else {
         if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
-          this.bulletinsService.lockRegion(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate());
           this.bulletinsService.setIsEditable(true);
           this.initializeComponent();
         }
       }
     } else {
       this.bulletinsService.setActiveDate(date);
-      this.bulletinsService.setIsUpdate(false);
       this.bulletinsService.setIsEditable(false);
       this.initializeComponent();
     }
   }
 
-  downloadJsonBulletin() {
-    if (this.checkAvalancheProblems()) {
-      this.loading = true;
+  publishAll(event, date: Date) {
+    event.stopPropagation();
+    this.publishing = date;
+    this.openPublishAllModal(this.publishAllTemplate, date);
+  }
 
-      this.setTexts();
+  check(event, date: Date) {
+    event.stopPropagation();
 
-      this.deselectBulletin();
+    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+      data => {
+        let message = "<b>" + this.translateService.instant("bulletins.table.checkBulletinsDialog.message") + "</b><br><br>";
 
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
-
-      const result = new Array<BulletinModel>();
-
-      for (const bulletin of this.internBulletinsList) {
-        bulletin.setValidFrom(validFrom);
-        bulletin.setValidUntil(validUntil);
-
-
-        // only own regions
-        const saved = new Array<String>();
-        for (const region of bulletin.getSavedRegions()) {
-          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-            saved.push(region);
+        if ((data as any).length === 0) {
+          message += this.translateService.instant("bulletins.table.checkBulletinsDialog.ok");
+        } else {
+          for (const entry of (data as any)) {
+            if (entry === "missingDangerRating") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityHighlights") + "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityComment") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingSnowpackStructureHighlights") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingSnowpackStructureComment") + "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.incompleteTranslation");
+            }
           }
         }
-        for (const region of bulletin.getPublishedRegions()) {
-          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-            saved.push(region);
-          }
-        }
 
-        if (saved.length > 0) {
-          bulletin.setSavedRegions(saved);
-
-          bulletin.setSuggestedRegions(new Array<String>());
-          bulletin.setPublishedRegions(new Array<String>());
-        }
-
-        result.push(bulletin);
+        this.openCheckBulletinsModal(this.checkBulletinsTemplate, message, date);
+      },
+      error => {
+        console.error("Bulletins could not be checked!");
+        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
       }
+    );
+  }
 
-      const jsonBulletins = [];
-      for (let i = result.length - 1; i >= 0; i--) {
-        jsonBulletins.push(result[i].toJson());
-      }
-      const sJson = JSON.stringify(jsonBulletins);
-      const element = document.createElement("a");
-      element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-      element.setAttribute("download", this.datePipe.transform(validFrom, "yyyy-MM-dd") + "_report.json");
-      element.style.display = "none";
-      document.body.appendChild(element);
-      element.click(); // simulate click
-      document.body.removeChild(element);
-      this.loading = false;
+  showPublishAllButton(date) {
+    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
+      return true;
     }
+  }
+
+  showCheckButton(date) {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated
+      ) &&
+      !this.copying &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  showMediaFileButton() {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+        this.authenticationService.getActiveRegion().enableMediaFile &&
+      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.updated ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished
+      ) &&
+      !this.copying &&
+      (
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  showInfoButton() {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished
+      ) &&
+      !this.copying &&
+      (
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
+      )
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  showPublicationInfo(event, date: Date) {
+    event.stopPropagation();
+    this.bulletinsService.getPublicationStatus(this.authenticationService.getActiveRegionId(), date).subscribe(
+      data => {
+        this.openPublicationStatusModal(this.publicationStatusTemplate, (data as any), date);
+      },
+      error => {
+        console.error("Publication status could not be loaded!");
+      }
+    );
+  }
+
+  openMediaFileDialog(event, date: Date) {
+    event.stopPropagation();
+    this.openMediaFileModal(this.mediaFileTemplate, date);
+  }
+
+  openPublicationStatusModal(template: TemplateRef<any>, json, date: Date) {
+    const initialState = {
+      json: json,
+      date: date,
+      component: this
+    };
+    this.publicationStatusModalRef = this.modalService.show(ModalPublicationStatusComponent, { initialState });
+  }
+  
+  openMediaFileModal(template: TemplateRef<any>, date: Date) {
+    const initialState = {
+      date: date,
+      component: this
+    };
+    this.mediaFileModalRef = this.modalService.show(ModalMediaFileComponent, { initialState });
+  }
+
+  mediaFileModalConfirm(date: Date): void {
+    this.mediaFileModalRef.hide();
+  }
+
+  publicationStatusModalConfirm(date: Date): void {
+    this.publicationStatusModalRef.hide();
+  }  
+
+  openPublishAllModal(template: TemplateRef<any>, date: Date) {
+    const initialState = {
+      date: date,
+      component: this
+    };
+    this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.publishing = undefined;
+    });
+  }
+
+  publishAllModalConfirm(date: Date): void {
+    this.publishAllModalRef.hide();
+    this.bulletinsService.publishAllBulletins(date).subscribe(
+      data => {
+        console.log("All bulletins published.");
+        if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+        } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+        }
+        this.publishing = undefined;
+      },
+      error => {
+        console.error("All bulletins could not be published!");
+        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+      }
+    );
+  }
+
+  publishAllModalDecline(): void {
+    this.publishAllModalRef.hide();
+    this.publishing = undefined;
+  }
+
+  downloadJsonBulletin() {
+    this.setTexts();
+    this.deselectBulletin();
+
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+
+    const result = new Array<BulletinModel>();
+
+    for (const bulletin of this.internBulletinsList) {
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
+
+      // only own regions
+      const saved = new Array<String>();
+      for (const region of bulletin.getSavedRegions()) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          saved.push(region);
+        }
+      }
+      for (const region of bulletin.getPublishedRegions()) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          saved.push(region);
+        }
+      }
+
+      if (saved.length > 0) {
+        bulletin.setSavedRegions(saved);
+        bulletin.setSuggestedRegions(new Array<String>());
+        bulletin.setPublishedRegions(new Array<String>());
+      }
+
+      result.push(bulletin);
+    }
+
+    const jsonBulletins = [];
+    for (let i = result.length - 1; i >= 0; i--) {
+      jsonBulletins.push(result[i].toJson());
+    }
+    const sJson = JSON.stringify(jsonBulletins);
+    const element = document.createElement("a");
+    element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+    element.setAttribute("download", this.datePipe.transform(validFrom, "yyyy-MM-dd") + "_report.json");
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click(); // simulate click
+    document.body.removeChild(element);
   }
 
   uploadJsonBulletin(event) {
@@ -705,140 +1000,35 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  private initMaps() {
-    this.mapService.initMaps();
-
-    if (this.mapService.map) {
-      this.mapService.map.remove();
-    }
-    if (this.mapService.afternoonMap) {
-      this.mapService.afternoonMap.remove();
-    }
-
-    let zoom = 8;
-    let minZoom = 6;
-    let maxZoom = 10;
-
-    if (this.authenticationService.getActiveRegionId() === this.constantsService.codeAran) {
-      zoom = 10;
-      minZoom = 8;
-      maxZoom = 12;
-    }
-
-    const map = L.map("map", {
-      zoomControl: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      touchZoom: true,
-      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: zoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-      // maxBounds: L.latLngBounds(L.latLng(this.constantsService.mapBoundaryN, this.constantsService.mapBoundaryW), L.latLng(this.constantsService.mapBoundaryS, this.constantsService.mapBoundaryE)),
-      layers: [this.mapService.baseMaps.AlbinaBaseMap, this.mapService.overlayMaps.aggregatedRegions, this.mapService.overlayMaps.regions]
-    });
-
-    map.on("click", () => { this.onMapClick(); });
-    // map.on('dblclick', (e)=>{this.onMapDoubleClick(e)});
-
-    L.control.zoom({ position: "topleft" }).addTo(map);
-    // L.control.layers(this.mapService.baseMaps).addTo(map);
-    // L.control.scale().addTo(map);
-
-    if (this.showAfternoonMap) {
-      L.Control.AM = L.Control.extend({
-        onAdd: function() {
-          const container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
-          container.style.backgroundColor = "white";
-          container.style.width = "52px";
-          container.style.height = "35px";
-          container.innerHTML = "<p style=\"font-size: 1.75em; color: #989898; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)\"><b>AM</b></p>";
-          return container;
-        },
-
-        onRemove: function() {
-          // Nothing to do here
-        }
-      });
-
-      L.control.am = function(opts) {
-        return new L.Control.AM(opts);
-      };
-
-      L.control.am({ position: "bottomleft" }).addTo(map);
-    }
-
-    const info = L.control();
-    info.onAdd = function() {
-      this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
-      this.update();
-      return this._div;
-    };
-    // method that we will use to update the control based on feature properties passed
-    info.update = function(props) {
-      this._div.innerHTML = (props ?
-        "<b>" + props.name_de + "</b>" : " ");
-    };
-    info.addTo(map);
-
-    this.mapService.map = map;
-
-    const afternoonMap = L.map("afternoonMap", {
-      zoomControl: false,
-      doubleClickZoom: false,
-      scrollWheelZoom: false,
-      touchZoom: true,
-      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: zoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-      // maxBounds: L.latLngBounds(L.latLng(this.constantsService.mapBoundaryN, this.constantsService.mapBoundaryW), L.latLng(this.constantsService.mapBoundaryS, this.constantsService.mapBoundaryE)),
-      layers: [this.mapService.afternoonBaseMaps.AlbinaBaseMap, this.mapService.afternoonOverlayMaps.aggregatedRegions, this.mapService.afternoonOverlayMaps.regions]
-    });
-
-    // L.control.zoom({ position: "topleft" }).addTo(afternoonMap);
-    // L.control.layers(this.mapService.baseMaps).addTo(afternoonMap);
-    // L.control.scale().addTo(afternoonMap);
-
-    L.Control.PM = L.Control.extend({
-      onAdd: function() {
-        const container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
-        container.style.backgroundColor = "white";
-        container.style.width = "52px";
-        container.style.height = "35px";
-        container.innerHTML = "<p style=\"font-size: 1.75em; color: #989898; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)\"><b>PM</b></p>";
-        return container;
-      },
-
-      onRemove: function() {
-        // Nothing to do here
-      }
-    });
-
-    L.control.pm = function(opts) {
-      return new L.Control.PM(opts);
-    };
-
-    L.control.pm({ position: "bottomleft" }).addTo(afternoonMap);
-
-    afternoonMap.on("click", () => { this.onMapClick(); });
-    // afternoonMap.on('dblclick', (e)=>{this.onMapDoubleClick(e)});
-
-    this.mapService.afternoonMap = afternoonMap;
-
-    map.sync(afternoonMap);
-    afternoonMap.sync(map);
+  private async initMaps() {
+    const [map, afternoonMap] = await this.mapService.initAmPmMap(this.showAfternoonMap);
+    map.on("click", () => this.onMapClick());
+    afternoonMap.on("click", () => this.onMapClick());
   }
 
   private onMapClick() {
-    if (this.showNewBulletinModal && !this.editRegions) {
+    if (!this.showNewBulletinModal && !this.editRegions) {
+      let hit = false;
       const test = this.mapService.getClickedRegion();
-      for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
+      for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
         if (bulletin.getSavedRegions().indexOf(test) > -1 || bulletin.getPublishedRegions().indexOf(test) > -1 ) {
           if (this.activeBulletin === bulletin) {
             this.deselectBulletin();
+            hit = true;
           } else {
             this.selectBulletin(bulletin);
+            hit = true;
+          }
+        }
+      }
+      if (!hit) {
+        for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
+          if (bulletin.getSuggestedRegions().indexOf(test) > -1) {
+            if (this.activeBulletin === bulletin) {
+              this.deselectBulletin();
+            } else {
+              this.selectBulletin(bulletin);
+            }
           }
         }
       }
@@ -846,11 +1036,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   setMapLayout(bulletin, isCompact: boolean): void {
-    // Show the map on top of form (compact) or right next to the form?
+    // Show the map on top of form (compact) or right next to the form
     this.isCompactMapLayout = isCompact;
-    
+    this.invalidateMapSize();
+  }
+
+  invalidateMapSize() {
     setTimeout(() => {
       this.mapService.map.invalidateSize();
+      this.mapService.afternoonMap.invalidateSize();
     }, 10);
   }
 
@@ -863,24 +1057,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.showAfternoonMap = checked;
     this.setTexts();
 
-    const bulletin = this.activeBulletin;
-
-    this.deselectBulletin();
     const map = document.getElementById("map");
     const afternoonMap = document.getElementById("afternoonMap");
     if (this.showAfternoonMap) {
       map.classList.add("create-bulletin__map--am");
       afternoonMap.classList.add("create-bulletin__map--am");
+      this.mapService.addAMControl();
     } else {
       map.classList.remove("create-bulletin__map--am");
       afternoonMap.classList.remove("create-bulletin__map--am");
+      this.mapService.removeAMControl();
     }
-    this.initMaps();
-    this.updateInternalBulletins();
 
-    if (bulletin) {
-      this.selectBulletin(bulletin);
-    }
+    this.invalidateMapSize();
   }
 
   getOwnBulletins() {
@@ -903,8 +1092,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     return result;
   }
 
-  getExternalBulletins() {
-    return this.externBulletinsList;
+  getExternalRegionsMap() {
+    return this.externRegionsMap;
   }
 
   loadBulletinsFromYesterday() {
@@ -918,9 +1107,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     for (const jsonBulletin of response) {
       const originalBulletin = BulletinModel.createFromJson(jsonBulletin);
 
-      if (this.bulletinsService.getIsUpdate()) {
-        this.originalBulletins.set(originalBulletin.getId(), originalBulletin);
-      }
+      this.originalBulletins.set(originalBulletin.getId(), originalBulletin);
 
       const bulletin = new BulletinModel(originalBulletin);
 
@@ -955,6 +1142,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.updateInternalBulletins();
 
     this.mapService.deselectAggregatedRegion();
+
+    this.save();
   }
 
   private addForeignBulletins(response) {
@@ -970,31 +1159,34 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
     this.updateInternalBulletins();
 
-    this.loading = false;
     this.mapService.deselectAggregatedRegion();
   }
 
-  private addExternalBulletins(response) {
+  private addExternalBulletins(server: ServerModel, response) {
+    let bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
-      this.addExternalBulletin(bulletin);
+      bulletinsList.push(bulletin);
+      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId())
+        this.activeBulletin = bulletin;
+      this.mapService.addAggregatedRegion(bulletin);
     }
 
-    this.updateExternalBulletins();
+    bulletinsList.sort((a, b): number => {
+      if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
+      if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
+      return 0;
+    });
 
-    this.loading = false;
-    this.mapService.deselectAggregatedRegion();
+    this.externRegionsMap.set(server, bulletinsList);
+    if (!this.showExternRegionsMap.has(server.getApiUrl())) {
+      this.showExternRegionsMap.set(server.getApiUrl(), false);
+    }
   }
 
   private updateInternalBulletins() {
     for (const bulletin of this.internBulletinsList) {
       this.mapService.updateAggregatedRegion(bulletin);
-    }
-  }
-
-  private updateExternalBulletins() {
-    for (const bulletin of this.externBulletinsList) {
-      this.mapService.addAggregatedRegion(bulletin);
     }
   }
 
@@ -1007,18 +1199,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     });
 
     if (bulletin.hasDaytimeDependency && this.showAfternoonMap === false) {
-      this.showAfternoonMap = true;
       this.onShowAfternoonMapChange(true);
     }
-  }
-
-  private addExternalBulletin(bulletin: BulletinModel) {
-    this.externBulletinsList.push(bulletin);
-    this.externBulletinsList.sort((a, b): number => {
-      if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
-      if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
-      return 0;
-    });
   }
 
   acceptSuggestions(event, bulletin: BulletinModel) {
@@ -1044,8 +1226,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       }
     }
     bulletin.setSuggestedRegions(suggested);
-
     bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+
+    this.updateBulletinOnServer(bulletin);
 
     this.updateAggregatedRegions();
   }
@@ -1060,28 +1243,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
     bulletin.setSuggestedRegions(suggested);
 
+    this.updateBulletinOnServer(bulletin);
+
     this.updateAggregatedRegions();
   }
 
-  private createInitialAggregatedRegion() {
-    const bulletin = new BulletinModel();
-    bulletin.setAuthor(this.authenticationService.getAuthor());
-    bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-    bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-    const regions = Object.assign([], this.regionsService.initialAggregatedRegion[this.authenticationService.getActiveRegionId()]);
-    bulletin.setSavedRegions(regions);
-
-    this.addInternalBulletin(bulletin);
-  }
-
-
   createBulletin(copy) {
-
-    // TODO websocket: unlock bulletin
-    // TODO websocket: lock bulletin
-
     let bulletin: BulletinModel;
     if (copy && this.copyService.getBulletin()) {
+      this.showNewBulletinModal = true;
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
@@ -1095,27 +1265,23 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.addInternalBulletin(bulletin);
     this.selectBulletin(bulletin);
     this.mapService.selectAggregatedRegion(bulletin);
-    this.editBulletinRegions();
-    // Always create 1 problem
-    this.createAvalancheProblem(false);
+    this.editBulletinMicroRegions();
   }
 
-  copyBulletin() {
+  copyBulletin(bulletin: BulletinModel) {
     this.setTexts();
     if (this.checkAvalancheProblems()) {
-      if (this.activeBulletin) {
-        const bulletin = new BulletinModel(this.activeBulletin);
-        bulletin.setAdditionalAuthors(new Array<String>());
-        bulletin.setSavedRegions(new Array<String>());
-        bulletin.setPublishedRegions(new Array<String>());
-        bulletin.setSuggestedRegions(new Array<String>());
+      const newBulletin = new BulletinModel(bulletin);
+      newBulletin.setAdditionalAuthors(new Array<String>());
+      newBulletin.setSavedRegions(new Array<String>());
+      newBulletin.setPublishedRegions(new Array<String>());
+      newBulletin.setSuggestedRegions(new Array<String>());
 
-        bulletin.setAuthor(this.authenticationService.getAuthor());
-        bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-        bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-        this.copyService.setCopyBulletin(true);
-        this.copyService.setBulletin(bulletin);
-      }
+      newBulletin.setAuthor(this.authenticationService.getAuthor());
+      newBulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+      newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+      this.copyService.setCopyBulletin(true);
+      this.copyService.setBulletin(newBulletin);
     }
   }
 
@@ -1133,6 +1299,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         this.deselectBulletin();
 
         this.activeBulletin = bulletin;
+
+        // lock bulletin
+        //if (!this.bulletinsService.isLocked(this.activeBulletin.getId()) && this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+        //  this.bulletinsService.lockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+        //}
 
         this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
         this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
@@ -1201,236 +1372,230 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   deselectBulletin(del?: boolean) {
     if (del || this.checkAvalancheProblems()) {
       if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
-
         this.setTexts();
-
-        if (this.activeAvActivityHighlightsTextcat) {
-          this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
-        }
-
-        if (this.activeAvActivityCommentTextcat) {
-          this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
-        }
-
-        if (this.activeSnowpackStructureCommentTextcat) {
-          this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
-        }
-
-        if (this.activeTendencyCommentTextcat) {
-          this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
-        }
-
         this.mapService.deselectAggregatedRegion();
+        
+        // unlock bulletin
+        //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
+        
         this.activeBulletin = undefined;
-
         this.applicationRef.tick();
       }
+      this.invalidateMapSize();
     }
+  }
 
-    setTimeout(() => {
-      this.mapService.map.invalidateSize();
-    }, 10);
+  preview() {
+    this.loadingPreview = true;
+    this.bulletinsService.getPreviewPdf(this.bulletinsService.getActiveDate()).subscribe(blob => {
+      this.loadingPreview = false;
+      const format = "yyyy-MM-dd";
+      const locale = "en-US";
+      const formattedDate = formatDate(this.bulletinsService.getActiveDate(), format, locale);
+      saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");
+      console.log("Preview loaded.");
+    })
   }
 
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
-    this.activeBulletin.setHasDaytimeDependency(value);
+    if (this.bulletinsService.getIsEditable() && this.isCreator(this.activeBulletin)) {
+      this.activeBulletin.setHasDaytimeDependency(value);
 
-    if (this.activeBulletin.hasDaytimeDependency) {
-      if (this.showAfternoonMap === false) {
-        this.showAfternoonMap = true;
-        this.onShowAfternoonMapChange(true);
-      }
-      this.activeBulletin.afternoon.setDangerRatingAbove(this.activeBulletin.forenoon.getDangerRatingAbove());
-      if (this.activeBulletin.forenoon.getAvalancheProblem1() && this.activeBulletin.forenoon.getAvalancheProblem1() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem1()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem2() && this.activeBulletin.forenoon.getAvalancheProblem2() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem2()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem3() && this.activeBulletin.forenoon.getAvalancheProblem3() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem3()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem4() && this.activeBulletin.forenoon.getAvalancheProblem4() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem4()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem5() && this.activeBulletin.forenoon.getAvalancheProblem5() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem5()));
-      }
-      if (this.activeBulletin.forenoon.hasElevationDependency) {
-        this.activeBulletin.afternoon.setHasElevationDependency(true);
-        this.activeBulletin.afternoon.setDangerRatingBelow(this.activeBulletin.forenoon.getDangerRatingBelow());
-      }
-    } else {
-      this.activeBulletin.afternoon.setDangerRatingAbove(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
-      this.activeBulletin.afternoon.setAvalancheProblem1(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem2(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem3(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem4(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem5(undefined);
-      this.activeBulletin.afternoon.setHasElevationDependency(false);
-      this.activeBulletin.afternoon.setDangerRatingBelow(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
-      let daytimeDependency = false;
-      for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
-        if (bulletin.hasDaytimeDependency) {
-          daytimeDependency = true;
-          break;
+      if (this.activeBulletin.hasDaytimeDependency) {
+        if (this.showAfternoonMap === false) {
+          this.onShowAfternoonMapChange(true);
+        }
+        this.activeBulletin.afternoon.setDangerRatingAbove(this.activeBulletin.forenoon.getDangerRatingAbove());
+        if (this.activeBulletin.forenoon.getAvalancheProblem1() && this.activeBulletin.forenoon.getAvalancheProblem1() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem1()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem2() && this.activeBulletin.forenoon.getAvalancheProblem2() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem2()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem3() && this.activeBulletin.forenoon.getAvalancheProblem3() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem3()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem4() && this.activeBulletin.forenoon.getAvalancheProblem4() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem4()));
+        }
+        if (this.activeBulletin.forenoon.getAvalancheProblem5() && this.activeBulletin.forenoon.getAvalancheProblem5() !== undefined) {
+          this.activeBulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem5()));
+        }
+        if (this.activeBulletin.forenoon.hasElevationDependency) {
+          this.activeBulletin.afternoon.setHasElevationDependency(true);
+          this.activeBulletin.afternoon.setDangerRatingBelow(this.activeBulletin.forenoon.getDangerRatingBelow());
+        }
+      } else {
+        this.activeBulletin.afternoon.setDangerRatingAbove(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
+        this.activeBulletin.afternoon.setAvalancheProblem1(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem2(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem3(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem4(undefined);
+        this.activeBulletin.afternoon.setAvalancheProblem5(undefined);
+        this.activeBulletin.afternoon.setHasElevationDependency(false);
+        this.activeBulletin.afternoon.setDangerRatingBelow(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
+        let daytimeDependency = false;
+        for (const bulletin of this.internBulletinsList) {
+          if (bulletin.hasDaytimeDependency) {
+            daytimeDependency = true;
+            break;
+          }
+        }
+        if (!daytimeDependency && this.showAfternoonMap) {
+          this.onShowAfternoonMapChange(false);
         }
       }
-      if (!daytimeDependency && this.showAfternoonMap) {
-        this.showAfternoonMap = false;
-        this.onShowAfternoonMapChange(false);
-      }
+      this.activeBulletin.getForenoon().updateDangerRating();
+      this.activeBulletin.getAfternoon().updateDangerRating();
+      this.mapService.updateAggregatedRegion(this.activeBulletin);
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
-    this.activeBulletin.getForenoon().updateDangerRating();
-    this.activeBulletin.getAfternoon().updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.activeBulletin);
-    this.mapService.selectAggregatedRegion(this.activeBulletin);
   }
 
   private checkAvalancheProblems(): boolean {
     let error = false;
 
-    if (this.activeBulletin) {
-      if (this.activeBulletin.forenoon) {
-        if (this.activeBulletin.forenoon.avalancheProblem1) {
+    for (const bulletin of this.internBulletinsList) {
+      if (bulletin.forenoon) {
+        if (bulletin.forenoon.avalancheProblem1) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem1.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem1.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem2) {
+        if (bulletin.forenoon.avalancheProblem2) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem2.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem2.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem3) {
+        if (bulletin.forenoon.avalancheProblem3) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem3.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem3.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem4) {
+        if (bulletin.forenoon.avalancheProblem4) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem4.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem4.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem5) {
+        if (bulletin.forenoon.avalancheProblem5) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem5.getAspects().length <= 0 || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getAvalancheProblem() || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() || 
-            this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation() || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
+            bulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem5.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
       }
-      if (this.activeBulletin.afternoon) {
-        if (this.activeBulletin.afternoon.avalancheProblem1) {
+      if (bulletin.afternoon) {
+        if (bulletin.afternoon.avalancheProblem1) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem1.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem1.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem2) {
+        if (bulletin.afternoon.avalancheProblem2) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem2.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem2.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem3) {
+        if (bulletin.afternoon.avalancheProblem3) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem3.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem3.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem4) {
+        if (bulletin.afternoon.avalancheProblem4) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem4.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem4.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem5) {
+        if (bulletin.afternoon.avalancheProblem5) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem5.getAspects().length <= 0 || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getAvalancheProblem() || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() || 
-            this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation() || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() || 
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
+            bulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem5.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
           {
             error = true;
           }
@@ -1446,7 +1611,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private setTexts() {
-    if (this.activeBulletin) {
+    if (this.activeBulletin && !this.isDisabled()) {
       this.activeBulletin.setHighlightsTextcat(this.activeHighlightsTextcat);
       this.activeBulletin.setHighlightsIn(this.activeHighlightsDe, Enums.LanguageCode.de);
       this.activeBulletin.setHighlightsIn(this.activeHighlightsIt, Enums.LanguageCode.it);
@@ -1505,6 +1670,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentCa, Enums.LanguageCode.ca);
       this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentOc, Enums.LanguageCode.oc);
       this.activeBulletin.setTendencyCommentNotes(this.activeTendencyCommentNotes);
+
+      this.updateBulletinOnServer(this.activeBulletin);
     }
   }
 
@@ -1514,9 +1681,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate);
   }
 
-  // region
-  private delBulletin(bulletin: BulletinModel) {
+  compareBulletin(event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    // TODO implement
+  }
 
+  private delBulletin(bulletin: BulletinModel) {
     // check if there are other published or saved regions
     let hit = false;
     let newOwnerRegion = "";
@@ -1577,32 +1747,30 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       // change ownership
       bulletin.setOwnerRegion(newOwnerRegion);
 
+      this.updateBulletinOnServer(bulletin);
     } else {
       const index = this.internBulletinsList.indexOf(bulletin);
       if (index > -1) {
         this.internBulletinsList.splice(index, 1);
+
+        // delete bulletin
+        this.deleteBulletinOnServer(bulletin);
       }
     }
 
     this.mapService.resetAggregatedRegions();
     this.updateInternalBulletins();
-    this.updateExternalBulletins();
     this.deselectBulletin(true);
-
-    // Auto save after delete
-    this.save();
   }
 
-  editBulletin(event) {
+  editMicroRegions(event) {
     event.stopPropagation();
     this.showNewBulletinModal = true;
-    this.editBulletinRegions();
+    this.editBulletinMicroRegions();
   }
 
-  private editBulletinRegions() {
-
-    // TODO websocket: lock whole day in region, check if any aggregated region is locked
-
+  private editBulletinMicroRegions() {
+    this.invalidateMapSize();
     this.editRegions = true;
     this.mapService.editAggregatedRegion(this.activeBulletin);
   }
@@ -1610,16 +1778,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   saveBulletin(event) {
     event.stopPropagation();
 
+    let isUpdate: boolean;
+    if (this.activeBulletin.getSavedRegions().length === 0) {
+      isUpdate = false;
+    } else {
+      isUpdate = true;
+    }
+
     this.showNewBulletinModal = false;
 
     // save selected regions to active bulletin
     const regions = this.mapService.getSelectedRegions();
-
-    for (const region of this.activeBulletin.getSavedRegions()) {
-      if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-        break;
-      }
-    }
 
     let newRegionsHit = false;
     for (const region of regions) {
@@ -1629,7 +1798,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       }
     }
 
-    if (newRegionsHit || !this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+    if (newRegionsHit || !this.isCreator(this.activeBulletin)) {
       this.editRegions = false;
 
       // delete old saved regions in own area
@@ -1674,23 +1843,100 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
             this.activeBulletin.getSavedRegions().push(region);
           }
         } else {
-          if ((this.activeBulletin.getSavedRegions().indexOf(region) === -1) && (this.activeBulletin.getSuggestedRegions().indexOf(region) === -1) && (this.activeBulletin.getPublishedRegions().indexOf(region) === -1)) {
+          if ((!region.startsWith(this.activeBulletin.getOwnerRegion())) && (this.activeBulletin.getSavedRegions().indexOf(region) === -1) && (this.activeBulletin.getSuggestedRegions().indexOf(region) === -1) && (this.activeBulletin.getPublishedRegions().indexOf(region) === -1)) {
             this.activeBulletin.getSuggestedRegions().push(region);
           }
         }
       }
 
       this.updateAggregatedRegions();
+      this.invalidateMapSize();
 
-      // TODO websocket: unlock whole day
+      if (isUpdate) {
+        this.updateBulletinOnServer(this.activeBulletin);
+      } else {
+        this.createBulletinOnServer(this.activeBulletin);
+      }
 
     } else {
       this.openNoRegionModal(this.noRegionTemplate);
     }
   }
 
+  private createBulletinOnServer(bulletin: BulletinModel) {
+    if (
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.published &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.republished &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.submitted &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.resubmitted
+      )
+    {
+      const validFrom = new Date(this.bulletinsService.getActiveDate());
+      const validUntil = new Date(this.bulletinsService.getActiveDate());
+      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
+
+      this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+        (data) => {
+          console.log("Bulletin created on server.");
+        },
+        (error) => {
+          console.error("Bulletin could not be created on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        }
+      );
+    }
+  }
+
+  private updateBulletinOnServer(bulletin: BulletinModel) {
+    if (
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.published &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.republished &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.submitted &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.resubmitted
+      )
+    {
+      const validFrom = new Date(this.bulletinsService.getActiveDate());
+      const validUntil = new Date(this.bulletinsService.getActiveDate());
+      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
+
+      this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+        (data) => {
+          console.log("Bulletin updated on server.");
+        },
+        (error) => {
+          console.error("Bulletin could not be updated on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        }
+      );
+    }
+  }
+
+  private deleteBulletinOnServer(bulletin: BulletinModel) {
+    if (
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.published &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.republished &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.submitted &&
+      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !== Enums.BulletinStatus.resubmitted
+      )
+    {
+      this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+        (data) => {
+          console.log("Bulletin deleted on server.");
+        },
+        (error) => {
+          console.error("Bulletin could not be deleted on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        }
+      );
+    }
+  }
+
   private updateAggregatedRegions() {
-    
+
     this.mapService.resetAggregatedRegions();
 
     for (const bulletin of this.internBulletinsList) {
@@ -1728,9 +1974,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       this.mapService.addAggregatedRegion(bulletin);
     }
 
-    for (const bulletin of this.externBulletinsList) {
+/*
+    for (const bulletin of [...this.externRegionsMap.values()].flat()) {
       this.mapService.addAggregatedRegion(bulletin);
     }
+*/
 
     this.mapService.discardAggregatedRegion();
     this.mapService.selectAggregatedRegion(this.activeBulletin);
@@ -1752,6 +2000,53 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     return false;
   }
 
+  isForeign(bulletin: BulletinModel): boolean {
+    if (
+      (bulletin.getOwnerRegion() !== undefined) &&
+      (bulletin.getOwnerRegion().startsWith(this.constantsService.codeTyrol) || bulletin.getOwnerRegion().startsWith(this.constantsService.codeSouthTyrol) || bulletin.getOwnerRegion().startsWith(this.constantsService.codeTrentino)) &&
+      (!this.isCreator(bulletin)))
+    {
+      return true;
+    }
+    return false;
+  }
+
+  getForeignRegionNames() {
+    if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTyrol)) {
+      return this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol) + ", " + this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino);
+    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeSouthTyrol)) {
+      return this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) + ", " + this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino);
+    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTrentino)) {
+      return this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) + ", " + this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol);
+    } else {
+      return this.translateService.instant("bulletins.create.foreignRegions");
+    }
+  }
+
+  showPreviewButton() {
+    if (this.authenticationService.getActiveRegionId() !== undefined &&
+      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+      (
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.updated ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished 
+      ) &&
+      !this.copying &&
+      (
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)
+      )
+     ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   discardBulletin(event, bulletin?: BulletinModel) {
     event.stopPropagation();
     this.showNewBulletinModal = false;
@@ -1761,22 +2056,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       this.delBulletin(bulletin);
     }
 
+    this.invalidateMapSize();
     this.mapService.discardAggregatedRegion();
 
     if (this.activeBulletin && this.activeBulletin !== undefined) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
-
-    // TODO websocket: unlock whole day
   }
 
   save() {
-    if (this.checkAvalancheProblems()) {
-      this.loading = true;
-
+    if (this.internBulletinsList.length > 0) {
+      this.autoSaving = true;
       this.setTexts();
-
-      this.deselectBulletin();
 
       const validFrom = new Date(this.bulletinsService.getActiveDate());
       const validUntil = new Date(this.bulletinsService.getActiveDate());
@@ -1785,38 +2076,25 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       const result = new Array<BulletinModel>();
 
       for (const bulletin of this.internBulletinsList) {
-        bulletin.setValidFrom(validFrom);
-        bulletin.setValidUntil(validUntil);
-
-        if (bulletin.getSavedRegions().length > 0 || bulletin.getPublishedRegions().length > 0 || bulletin.getSuggestedRegions().length > 0) {
-          result.push(bulletin);
+        const regions = bulletin.getPublishedRegions().concat(bulletin.getSavedRegions());
+        for (const region of regions) {
+          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+            bulletin.setValidFrom(validFrom);
+            bulletin.setValidUntil(validUntil);
+            result.push(bulletin);
+            break;
+          }
         }
       }
 
-      if (this.bulletinsService.getIsSmallChange()) {
-        this.bulletinsService.changeBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-          () => {
-            this.localStorageService.clear();
-            this.loading = false;
-            //this.goBack();
-            console.log("Bulletins changed on server.");
-          },
-          () => {
-            this.loading = false;
-            console.error("Bulletins could not be changed on server!");
-            this.openChangeErrorModal(this.changeErrorTemplate);
-          }
-        );
-      } else {
+      if (result.length > 0) {
         this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
           () => {
-            this.localStorageService.clear();
-            this.loading = false;
-            //this.goBack();
             console.log("Bulletins saved on server.");
+            this.autoSaving = false;
           },
           () => {
-            this.loading = false;
+            this.autoSaving = false;
             console.error("Bulletins could not be saved on server!");
             this.openSaveErrorModal(this.saveErrorTemplate);
           }
@@ -1826,6 +2104,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   goBack() {
+    this.deselectBulletin();
     this.router.navigate(["/bulletins"]);
   }
 
@@ -1839,7 +2118,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  openTextcat($event, field, l, textDef) {
+  openTextcat($event: Event, field: TextcatTextfield, l, textDef: string) {
     this.copyService.resetCopyTextcat();
     $event.preventDefault();
 
@@ -1849,7 +2128,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       textDef: textDef || "",
       currentLang: this.translateService.currentLang,
       region: this.authenticationService.getTextcatRegionCode()
-    });
+    } satisfies TextcatLegacyIn);
 
     this.showDialog(pmData);
   }
@@ -2198,8 +2477,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   getText(e) {
     e.preventDefault();
-    if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk") {
-      const pmData = JSON.parse(e.data);
+    if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk" && e.data.source !== "react-devtools-content-script") {
+      const pmData: TextcatLegacyOut = JSON.parse(e.data);
 
       if (pmData.textDef === undefined || pmData.textDef === "") {
         this[pmData.textField + "Textcat"] = "";
@@ -2215,7 +2494,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       } else {
         this[pmData.textField + "Textcat"] = pmData.textDef;
         this[pmData.textField + "It"] = pmData.textIt;
-        this[pmData.textField + "De"] = this.textPostprocessingDe(pmData.textDe);
+        this[pmData.textField + "De"] = pmData.textDe_AT;
         this[pmData.textField + "En"] = pmData.textEn;
         this[pmData.textField + "Fr"] = pmData.textFr;
         this[pmData.textField + "Es"] = pmData.textEs;
@@ -2224,39 +2503,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         this.setTexts();
         this.hideDialog();
       }
+      if (this.activeBulletin !== null && this.activeBulletin !== undefined) {
+        this.updateBulletinOnServer(this.activeBulletin);
+      }
     }
   };
-
-  textPostprocessingDe(bulletinTextDe) {
-    const dictionaryDeMap = {
-      ausser: "außer",
-      Ausser: "Außer",
-      reissen: "reißen",
-      Reissen: "Reißen",
-      mitreiss: "mitreiß",
-      Mitreiss: "Mitreiß",
-      gross: "groß",
-      Gross: "Groß",
-      grösse: "größe",
-      Grösse: "Größe",
-      mässig: "mäßig",
-      Mässig: "Mäßig",
-      massnahmen: "maßnahmen",
-      Massnahmen: "Maßnahmen",
-      strassen: "straßen",
-      Strassen: "Straßen",
-      stossen: "stoßen",
-      Stossen: "Stoßen",
-      fuss: "fuß",
-      Fuss: "Fuß",
-      füsse: "füße",
-      Füsse: "Füße"
-    };
-    const re = new RegExp(Object.keys(dictionaryDeMap).join("|"), "gi");
-    return bulletinTextDe.replace(re, function(matched) {
-        return dictionaryDeMap[matched];
-    });
-  }
 
   openLoadingErrorModal(template: TemplateRef<any>) {
     this.loadingErrorModalRef = this.modalService.show(template, this.config);
@@ -2319,115 +2570,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.loadModalRef.hide();
   }
 
-  openLoadAutoSaveModal(template: TemplateRef<any>) {
-    this.loadAutoSaveModalRef = this.modalService.show(template, this.config);
-  }
-
-  loadAutoSaveModalConfirm(event): void {
-    event.currentTarget.setAttribute("disabled", true);
-    this.loadAutoSaveModalRef.hide();
-    this.loadBulletinsFromLocalStorage();
-  }
-
-  loadAutoSaveModalDecline(event): void {
-    event.currentTarget.setAttribute("disabled", true);
-    this.loadAutoSaveModalRef.hide();
-    this.loadBulletinsFromServer();
-  }
-
-  private startAutoSave() {
-    this.autoSave = interval(this.constantsService.autoSaveIntervall).subscribe(() => this.localStorageService.save(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId(), this.authenticationService.getCurrentAuthor().getEmail(), this.internBulletinsList));
-  }
-
-  private loadBulletinsFromLocalStorage() {
-    for (const bulletin of this.localStorageService.getBulletins()) {
-      this.addInternalBulletin(bulletin);
-    }
-    this.updateInternalBulletins();
-    this.mapService.deselectAggregatedRegion();
-    this.loading = false;
-    this.startAutoSave();
-  }
-
-  private loadBulletinsFromServer() {
-    const regions = new Array<String>();
-    if (this.authenticationService.isEuregio()) {
-      regions.push(this.constantsService.codeTyrol);
-      regions.push(this.constantsService.codeSouthTyrol);
-      regions.push(this.constantsService.codeTrentino);
-    } else {
-      regions.push(this.authenticationService.getActiveRegionId());
-    }
-    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
-      data => {
-        for (const jsonBulletin of (data as any)) {
-          const bulletin = BulletinModel.createFromJson(jsonBulletin);
-
-          // only add bulletins with published or saved regions
-          if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
-
-            // move published regions to saved regions
-            if (this.bulletinsService.getIsUpdate() || this.bulletinsService.getIsSmallChange()) {
-              const saved = new Array<String>();
-              const published = new Array<String>();
-              for (const region of bulletin.getSavedRegions()) {
-                saved.push(region);
-              }
-              for (const region of bulletin.getPublishedRegions()) {
-                if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-                  saved.push(region);
-                } else {
-                  published.push(region);
-                }
-              }
-
-              if (saved.length > 0) {
-                bulletin.setSavedRegions(saved);
-                bulletin.setPublishedRegions(published);
-              }
-            }
-
-            this.addInternalBulletin(bulletin);
-          }
-        }
-
-        let hit = false;
-        for (const bulletin of this.internBulletinsList) {
-          for (const region of bulletin.getSavedRegions()) {
-            if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-              hit = true;
-              break;
-            }
-          }
-          for (const region of bulletin.getPublishedRegions()) {
-            if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-              hit = true;
-              break;
-            }
-          }
-          if (hit) {
-            break;
-          }
-        }
-
-        if (!hit && this.getOwnBulletins().length === 0 && this.bulletinsService.getIsEditable() && !this.bulletinsService.getIsUpdate() && !this.bulletinsService.getIsSmallChange()) {
-          //this.createInitialAggregatedRegion();
-        }
-
-        this.updateInternalBulletins();
-        
-        this.mapService.deselectAggregatedRegion();
-        this.loading = false;
-        this.startAutoSave();
-      },
-      () => {
-        console.error("Bulletins could not be loaded!");
-        this.loading = false;
-        this.openLoadingErrorModal(this.loadingErrorTemplate);
-      }
-    );
-  }
-
   openDeleteAggregatedRegionModal(template: TemplateRef<any>) {
     this.deleteAggregatedRegionModalRef = this.modalService.show(template, this.config);
   }
@@ -2435,9 +2577,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   deleteAggregatedRegionModalConfirm(): void {
     this.deleteAggregatedRegionModalRef.hide();
     this.delBulletin(this.bulletinMarkedDelete);
-
-    // TODO websocket: unlock region
-
   }
 
   deleteAggregatedRegionModalDecline(): void {
@@ -2458,7 +2597,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   discardModalConfirm(): void {
     this.discardModalRef.hide();
-    this.localStorageService.clear();
     this.goBack();
   }
 
@@ -2466,24 +2604,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.discardModalRef.hide();
   }
 
-
-  openCopyRegionModal(template: TemplateRef<any>, bulletin: BulletinModel) {
-    this.bulletinCopy = bulletin;
+  openCopyRegionModal(event, template: TemplateRef<any>, bulletin: BulletinModel) {
+    event.stopPropagation();
+    this.copyBulletin(bulletin);
     this.copyRegionModalRef = this.modalService.show(template, this.config);
   }
 
-  copyRegionModalConfirm(): void {
-    console.log('copy region');
-    console.log(this.bulletinCopy);
-    this.selectBulletin(this.bulletinCopy);
-    this.copyBulletin(); 
-
-    if (this.copyService.isCopyBulletin()) {
-      console.log('passte region');
-      this.createBulletin(true);
-    }
-
+  copyRegionModalConfirm(date: Date): void {
     this.copyRegionModalRef.hide();
+    this.changeDate(date);
   }
 
   copyRegionModalDecline(): void {
@@ -2492,7 +2621,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }    
     this.copyRegionModalRef.hide();
   }
-
+  
+  isActiveDate(date) {
+    return this.bulletinsService.getActiveDate().getTime() === date.getTime();
+  }
 
   openSaveErrorModal(template: TemplateRef<any>) {
     this.saveErrorModalRef = this.modalService.show(template, this.config);
@@ -2500,7 +2632,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   saveErrorModalConfirm(): void {
     this.saveErrorModalRef.hide();
-    this.goBack();
   }
 
   openChangeErrorModal(template: TemplateRef<any>) {
@@ -2517,6 +2648,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   avalancheProblemErrorModalConfirm(): void {
     this.avalancheProblemErrorModalRef.hide();
+    this.publishing = undefined;
   }
 
   openLoadAvActivityCommentExampleTextModal(template: TemplateRef<any>) {
@@ -3107,6 +3239,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
       default:
         break;
     }
+    this.updateBulletinOnServer(this.activeBulletin);
   }
 
   hasFiveAvalancheProblems(isAfternoon: boolean) {
@@ -3149,13 +3282,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
   /* Publishing */
   showSubmitButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      /*!this.isPast(date) && */
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated
       ) &&
       !this.copying &&
+      this.internBulletinsList.length > 0 &&
       this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
       return true;
     } else {
@@ -3165,55 +3298,60 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   submit(event, date: Date) {
     event.stopPropagation();
+
+    this.deselectBulletin();
+
     this.publishing = date;
 
-    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-      data => {
-        let duplicateRegion = false;
+    if (this.checkAvalancheProblems()) {
+      this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        data => {
+          let duplicateRegion = false;
 
-        let message = "<b>" + this.translateService.instant("bulletins.table.submitBulletinsDialog.message") + "</b><br><br>";
+          let message = "<b>" + this.translateService.instant("bulletins.table.submitBulletinsDialog.message") + "</b><br><br>";
 
-        for (const entry of (data as any)) {
-          if (entry === "duplicateRegion") {
-            duplicateRegion = true;
+          for (const entry of (data as any)) {
+            if (entry === "duplicateRegion") {
+              duplicateRegion = true;
+            }
+            if (entry === "missingDangerRating") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityHighlights") + "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityComment") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureHighlights") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureComment") + "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+            }
           }
-          if (entry === "missingDangerRating") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingDangerRating") + "<br>";
+
+          if (duplicateRegion) {
+            this.openSubmitBulletinsDuplicateRegionModal(this.submitBulletinsDuplicateRegionTemplate);
+          } else {
+            this.openSubmitBulletinsModal(this.submitBulletinsTemplate, message, date);
           }
-          if (entry === "missingRegion") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingRegion") + "<br>";
-          }
-          if (entry === "missingAvActivityHighlights") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityHighlights") + "<br>";
-          }
-          if (entry === "missingAvActivityComment") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityComment") + "<br>";
-          }
-          if (entry === "missingSnowpackStructureHighlights") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureHighlights") + "<br>";
-          }
-          if (entry === "missingSnowpackStructureComment") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureComment") + "<br>";
-          }
-          if (entry === "pendingSuggestions") {
-            message += this.translateService.instant("bulletins.table.submitBulletinsDialog.pendingSuggestions") + "<br>";
-          }
-          if (entry === "incompleteTranslation") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
-          }
+        },
+        error => {
+          console.error("Bulletins could not be checked!");
+          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
         }
-
-        if (duplicateRegion) {
-          this.openSubmitBulletinsDuplicateRegionModal(this.submitBulletinsDuplicateRegionTemplate);
-        } else {
-          this.openSubmitBulletinsModal(this.submitBulletinsTemplate, message, date);
-        }
-      },
-      error => {
-        console.error("Bulletins could not be checked!");
-        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
-      }
-    );
+      );
+    }
   }
 
   openSubmitBulletinsDuplicateRegionModal(template: TemplateRef<any>) {
@@ -3257,6 +3395,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
         } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.submitted);
         }
+        this.bulletinsService.setIsEditable(false);
         this.publishing = undefined;
       },
       error => {
@@ -3282,14 +3421,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   showUpdateButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
-      /*(!this.isPast(date)) &&*/
-      (this.isToday(date) || this.isPast(date)) &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
       (
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.republished ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
-        this.bulletinsService.getUserRegionStatus(date) === undefined
+        (this.bulletinsService.getUserRegionStatus(date) === undefined && (this.bulletinsService.hasBeenPublished5PM(date)))
       ) &&
       !this.copying &&
       (
@@ -3304,14 +3443,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
 
   createUpdate(event) {
     event.stopPropagation();
-    this.bulletinsService.setIsUpdate(true);
+    this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
     this.bulletinsService.setIsEditable(true);
+    this.save();
   }
 
   showPublishButton(date) {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
       (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
-      (this.isToday(date) || this.isPast(date)) &&
+      (this.bulletinsService.hasBeenPublished5PM(date)) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted
@@ -3335,7 +3475,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  publish(event, date: Date) {
+  publish(event, date: Date, change: boolean) {
     event.stopPropagation();
     this.publishing = date;
 
@@ -3373,7 +3513,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
           }
         }
 
-        this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date);
+        this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
       },
       error => {
         console.error("Bulletins could not be checked!");
@@ -3382,10 +3522,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     );
   }
 
-  openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: Date) {
+  openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: Date, change: boolean) {
     const initialState = {
       text: message,
       date: date,
+      change: change,
       component: this
     };
     this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
@@ -3395,23 +3536,41 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  publishBulletinsModalConfirm(date: Date): void {
+  publishBulletinsModalConfirm(date: Date, change: boolean): void {
     this.publishBulletinsModalRef.hide();
-    this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-      data => {
-        console.log("Bulletins published.");
-        if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
-        } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+    if (change) {
+      this.bulletinsService.changeBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        data => {
+          console.log("Bulletins published (no messages).");
+          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+          }
+          this.publishing = undefined;
+        },
+        error => {
+          console.error("Bulletins could not be published (no messages)!");
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
         }
-        this.publishing = undefined;
-      },
-      error => {
-        console.error("Bulletins could not be published!");
-        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
-      }
-    );
+      );
+    } else {
+      this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        data => {
+          console.log("Bulletins published.");
+          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+          }
+          this.publishing = undefined;
+        },
+        error => {
+          console.error("Bulletins could not be published!");
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+        }
+      );
+    }
   }
 
   publishBulletinsModalDecline(): void {
@@ -3428,4 +3587,61 @@ export class CreateBulletinComponent implements OnInit, OnDestroy, AfterViewInit
     this.publishing = undefined;
   }
 
+  openPreviewErrorModal(template: TemplateRef<any>) {
+    this.previewErrorModalRef = this.modalService.show(template, this.config);
+  }
+
+  previewErrorModalConfirm(): void {
+    this.previewErrorModalRef.hide();
+    this.loadingPreview = false;
+  }
+
+  openCheckBulletinsModal(template: TemplateRef<any>, message: string, date: Date) {
+    const initialState = {
+      text: message,
+      date: date,
+      component: this
+    };
+    this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.publishing = undefined;
+    });
+  }
+
+  checkBulletinsModalConfirm(): void {
+    this.checkBulletinsModalRef.hide();
+  }
+}
+
+type TextcatTextfield = 
+|"activeHighlights"
+|"activeAvActivityHighlights"
+|"activeAvActivityComment"
+|"activeSnowpackStructureHighlights"
+|"activeSnowpackStructureComment"
+|"activeTendencyComment"
+|"text"
+
+// alias pmData, alias inputDef
+interface TextcatLegacyIn {
+  textDef: string;
+  textField: TextcatTextfield;
+  currentLang: string;
+  region: string;
+}
+
+// alias pmData, alias outputText
+interface TextcatLegacyOut {
+  textDef: string;
+  textField: TextcatTextfield;
+  textDe: string;
+  textDe_AT: string;
+  textDe_CH: string;
+  textIt: string;
+  textEn: string;
+  textEs: string;
+  textFr: string;
+  textCa: string;
+  textOc: string;
 }

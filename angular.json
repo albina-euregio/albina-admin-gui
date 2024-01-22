@@ -58,6 +58,14 @@
               ],
               "outputHashing": "all"
             },
+            "beta": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.beta.ts"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "vendorChunk": true,
@@ -70,6 +78,13 @@
                   "with": "src/environments/environment.dev.ts"
                 }
               ]
+            },
+            "local": {
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -80,8 +95,14 @@
             "buildTarget": "albina-admin-gui:build"
           },
           "configurations": {
+            "local": {
+              "buildTarget": "albina-admin-gui:build:local"
+            },
             "development": {
               "buildTarget": "albina-admin-gui:build:development"
+            },
+            "beta": {
+              "buildTarget": "albina-admin-gui:build:beta"
             },
             "production": {
               "buildTarget": "albina-admin-gui:build:production"
@@ -110,7 +131,7 @@
               "node_modules/primeng/resources/themes/nova/theme.css",
               "node_modules/primeicons/primeicons.css",
               "src/scss/style.scss",
-              "src/assets/css/font-awesome.min.css",
+              "src/assets/css/font-awesome.min.css"
             ],
             "assets": [
               "src/assets"

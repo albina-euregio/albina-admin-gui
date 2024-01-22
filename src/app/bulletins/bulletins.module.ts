@@ -11,7 +11,6 @@ import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.component";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
 import { AvalancheProblemPreviewComponent } from "./avalanche-problem-preview.component";
-import { MatrixObsoleteComponent } from "./matrix-obsolete.component";
 import { MatrixComponent } from "./matrix.component";
 import { MatrixParameterComponent } from "./matrix-parameter.component";
 import { CaamlComponent } from "./caaml.component";
@@ -34,7 +33,7 @@ import { DatePipe } from "@angular/common";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DialogModule } from "primeng/dialog";
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { MapService } from "../providers/map-service/map.service";
 
 
 @NgModule({
@@ -63,7 +62,6 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
         AvalancheProblemDetailComponent,
         AvalancheProblemDecisionTreeComponent,
         AvalancheProblemPreviewComponent,
-        MatrixObsoleteComponent,
         MatrixComponent,
         MatrixParameterComponent,
         CaamlComponent,
@@ -72,6 +70,6 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
         TabComponent,
         AvalancheProblemIconsComponent
     ],
-    providers: [DatePipe]
+    providers: [DatePipe, MapService]
 })
 export class BulletinsModule { }

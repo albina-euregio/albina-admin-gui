@@ -12,7 +12,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="loadBulletin(bulletinsService.getNextDate())"
+            (click)="changeDate(bulletinsService.getNextDate())"
             *ngIf="bulletinsService.getNextDate()"
           >
             <i class="ph-bold ph-caret-left"></i>
@@ -20,7 +20,7 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="loadBulletin(bulletinsService.getPreviousDate())"
+            (click)="changeDate(bulletinsService.getPreviousDate())"
             *ngIf="bulletinsService.getPreviousDate()"
           >
             <i class="ph-bold ph-caret-right"></i>
@@ -173,10 +173,12 @@
       </ul>
       <!-- End status of all regions-->
 
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted"><i class="ph ph-info"></i> {{ "bulletins.table.status.submitted-info" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"><i class="ph ph-info"></i> {{ "bulletins.table.status.resubmitted-info" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"><i class="ph ph-info"></i> {{ "bulletins.table.status.published-info" | translate }}</span>
-      <span class="create-bulletin__bulletin-info" *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"><i class="ph ph-info"></i> {{ "bulletins.table.status.republished-info" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt5PM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.submittedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt8AM(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.resubmittedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappened(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="showNoPublicationWillHappen(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loadingPreview" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="loading"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loading" | translate }}</span>
 
       <!-- submit -->
       <button *ngIf="showSubmitButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="submit($event, bulletinsService.getActiveDate())">
@@ -186,75 +188,44 @@
 
       <!-- update -->
       <button *ngIf="showUpdateButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="createUpdate($event)">
-        <i class="ph ph-paper-plane-tilt"></i>
+        <i class="ph ph-pencil"></i>
         <span>{{ 'bulletins.tooltip.update' | translate }}</span>
       </button>
 
-      <div class="d-flex">
-        <!-- publish update (not 5PM nor 8AM) -->
-        <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
-            <i class="ph ph-paper-plane-tilt"></i>
-            <span>{{ 'bulletins.tooltip.publishUpdate' | translate }}</span>
-        </button>
-    
-        <!-- spinning icon -->
-        <button *ngIf="showSpinningIconButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons--small ml-2">
-            <i class="ph ph-bell-slash"></i>
-        </button>
-      </div>
-    
+      <!-- publish update (not 5PM nor 8AM) -->
+      <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate())">
+          <i class="ph ph-paper-plane-tilt"></i>
+          <span>{{ 'bulletins.tooltip.publishUpdate' | translate }}</span>
+      </button>
+  
+      <!-- publish change (not 5PM nor 8AM, no messages) -->
+      <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate(), true)">
+        <i class="ph ph-paper-plane-tilt"></i>
+        <span>{{ 'bulletins.tooltip.publishChange' | translate }}</span>
+      </button>
+
+      <!-- check -->
+      <button *ngIf="showCheckButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="check($event, bulletinsService.getActiveDate())">
+        <i class="ph ph-check"></i>
+        <span>{{ 'bulletins.tooltip.check' | translate }}</span>
+      </button>
+
+      <!-- spinning icon -->
+      <button *ngIf="showSpinningIconButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons--small ml-2">
+          <i class="ph ph-circle-notch"></i>
+      </button>
 
     </header>
     <!-- End sidebar header -->
-
-    <!-- Report buttons (need to move into dropdown)-->
-    <!--<div *ngIf="bulletinsService.getIsEditable()">
-      <button
-        *ngIf="!bulletinsService.getIsUpdate()"
-        [disabled]="editRegions || loading"
-        type="button"
-        class="btn btn-sm btn-secondary px-3"
-        (click)="downloadJsonBulletin()"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
-      >
-        <i class="fa fa-download"></i>
-      </button>
-      <button
-        *ngIf="!bulletinsService.getIsUpdate()"
-        [disabled]="editRegions || loading"
-        type="button"
-        class="btn btn-sm btn-secondary px-3"
-        (click)="jsonBulletinUploader.click()"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
-      >
-        <i class="fa fa-upload"></i>
-      </button>
-      <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
-      <button
-        *ngIf="!bulletinsService.getIsUpdate()"
-        [disabled]="editRegions || loading"
-        type="reset"
-        class="btn btn-sm btn-primary px-3"
-        (click)="loadBulletinsFromYesterday()"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
-      >
-        <i class="fa fa-copy"></i>
-      </button>
-    </div>-->
-
-    <!-- End report buttons -->
 
     <!-- List of regions -->
     <div class="create-bulletin__regions">
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
-        <h5 class="font-s-medium">
-          {{ "bulletins.create.ownRegions" | translate }}
+        <h5 class="font-s-bold">
+          {{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}
         </h5>
-        <div *ngIf="bulletinsService.getIsEditable()" class="btn-group region-divider__actions">
+        <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown>
               <button
                   class="btn btn-sm btn-icon btn-bare--grey"
@@ -265,9 +236,11 @@
               </button>
       
               <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
+
+                <!-- load bulletin from yesterday -->
                 <li>
                   <button
-                    *ngIf="!bulletinsService.getIsUpdate()"
+                    *ngIf="bulletinsService.getIsEditable()"
                     [disabled]="editRegions || loading"
                     type="reset"
                     class="dropdown-item"
@@ -279,13 +252,47 @@
                     {{ "bulletins.create.tooltip.loadBulletin" | translate }}
                   </button>
                 </li>
+
+                <!-- preview -->
+                <li>
+                  <button
+                    *ngIf="showPreviewButton()"
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="preview()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.preview' | translate }}"
+                  >
+                    <i class="ph-bold ph-eye icon-md"></i>
+                    {{ "bulletins.tooltip.preview" | translate }}
+                  </button>
+                </li>
+
+                <!-- media file -->
+                <li>
+                  <button
+                    *ngIf="showMediaFileButton(date)"
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="openMediaFileDialog($event, date)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
+                  >
+                    <i class="ph-bold ph-microphone icon-md"></i>
+                    {{ "bulletins.tooltip.mediaFile" | translate }}
+                  </button>
+                </li>
+
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
   
+                <!-- upload json -->
                 <li>
                   <button
-                    *ngIf="!bulletinsService.getIsUpdate()"
+                    *ngIf="bulletinsService.getIsEditable()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
@@ -299,9 +306,9 @@
                   <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
                 </li>
   
+                <!-- download json -->
                 <li>
                   <button
-                    *ngIf="!bulletinsService.getIsUpdate()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
@@ -313,6 +320,44 @@
                     {{ "bulletins.create.tooltip.downloadJsonBulletin" | translate }}
                   </button>
                 </li>
+
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+  
+                <!-- info -->
+                <li>
+                  <button
+                    *ngIf="showInfoButton(date)"
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="showPublicationInfo($event, date)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.info' | translate }}"
+                  >
+                    <i class="ph-bold ph-info icon-md"></i>
+                    {{ "bulletins.tooltip.info" | translate }}
+                  </button>
+                  <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
+                </li>
+  
+                <!-- publish all -->
+                <li>
+                  <button
+                    *ngIf="showPublishAllButton(date)"
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="publishAll($event, date)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.publishAll' | translate }}"
+                  >
+                    <i class="ph-bold ph-warning icon-md"></i>
+                    {{ "bulletins.tooltip.publishAll" | translate }}
+                  </button>
+                </li>
+
               </ul>
           </div>
           <button
@@ -340,34 +385,58 @@
     
     </div>
 
-    <div class="create-bulletin__regions">
+    <div *ngIf="hasForeignRegions()" class="create-bulletin__regions">
       <!-- Foreign regions -->
-      <header class="create-bulletin__region-divider">
-        <h5 class="font-s-medium">
-          {{ "bulletins.create.foreignRegions" | translate }}
+      <header class="create-bulletin__region-divider" (click)="toggleShowForeignRegions()">
+        <h5 class="font-s-bold">
+          {{ getForeignRegionNames() }}
         </h5>
+        <div class="btn-group region-divider__actions">
+          <div class="region-divider__actions-dropdown mr-1">
+              <button
+                  class="btn btn-sm btn-icon btn-bare--grey"
+                  type="button"
+              >
+                  <i *ngIf="!showForeignRegions" class="ph-bold ph-caret-right"></i>
+                  <i *ngIf="showForeignRegions" class="ph-bold ph-caret-down"></i>
+              </button>
+          </div>
+        </div>
       </header>
       <!-- List of foreign regions -->
-      <nav class="create-bulletin__region-list">
+      <nav *ngIf="showForeignRegions" class="create-bulletin__region-list">
         <ng-container *ngFor="let bulletin of getForeignBulletins()">
           <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
         </ng-container>
       </nav>
     </div>
 
-    <div *ngIf="showExternalRegions && hasExternalRegions()" class="create-bulletin__regions">
-      <!-- External regions -->
-      <header class="create-bulletin__region-divider">
-        <h5 class="font-s-medium">
-          {{ "bulletins.create.externalRegions" | translate }}
-        </h5>
-      </header>
-      <!-- List of external regions -->
-      <nav class="create-bulletin__region-list">
-        <ng-container *ngFor="let bulletin of getExternalBulletins()">
-          <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
-        </ng-container>
-      </nav>
+    <!-- External regions -->
+    <div *ngIf="hasExternalRegions()" class="create-bulletin__regions">
+      <ng-container *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue">
+        <header class="create-bulletin__region-divider" (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)">
+          <h5 class="font-s-medium">
+            {{ externalRegion.key.name }}
+          </h5>
+          <div class="btn-group region-divider__actions">
+            <div class="region-divider__actions-dropdown mr-1">
+                <button
+                    class="btn btn-sm btn-icon btn-bare--grey"
+                    type="button"                    
+                >
+                    <i *ngIf="!showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-right"></i>
+                    <i *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-down"></i>
+                </button>
+            </div>
+          </div>
+        </header>
+        <!-- List of external regions -->
+        <nav *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="create-bulletin__region-list">
+          <ng-container *ngFor="let bulletin of externalRegion.value">
+            <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
+          </ng-container>
+        </nav>
+      </ng-container>
     </div>
     <!-- End list of regions -->
   </aside>
@@ -405,43 +474,50 @@
         </div>
         <div class="region-form__title">
           <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(activeBulletin.getOwnerRegion()) }}</h6>
-          <h2 class="font-l">{{ getRegionNames(activeBulletin) }}</h2>
+          <h2 class="font-l">
+            {{ regionsService.getRegionName(activeBulletin.savedRegions[0]) }}
+            <span *ngIf="activeBulletin.savedRegions.length > 1"> + {{ activeBulletin.savedRegions.length - 1 }} </span>
+          </h2>
 
           <div class="user-avatar region-form__author">
-            {{ activeBulletin.getAuthor().getImage() }}
-            <img *ngIf="activeBulletin.getAuthor().getImage()" src="{{ activeBulletin.getAuthor().getImage() }}" class="user-avatar__img" />
             <span class="user-avatar__name">{{ activeBulletin.getAuthor().getName() }}</span>
           </div>
         </div>
       </header>
-      <div class="region-form__banner banner banner-info">
+
+      <div
+        *ngIf="bulletinsService.isLocked(activeBulletin.getId())"
+        class="region-form__banner banner banner-warning-strong"
+      >
+        <p class="banner__text">
+          <i class="ph ph-lock"></i>
+          {{ "bulletins.create.regionLocked" | translate }}
+        </p>
+      </div>
+
+      <div
+        *ngIf="!bulletinsService.isLocked(activeBulletin.getId()) && bulletinsService.getIsEditable() && isCreator(activeBulletin)"
+        class="region-form__banner banner banner-info"
+      >
         <p class="banner__text">
           <i class="ph ph-pencil-line"></i>
           {{ "bulletins.create.regionEditable" | translate }}
         </p>
         <div class="btn-group banner__actions">
-          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin)" (click)="editBulletin($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+          <button *ngIf="!editRegions" (click)="editMicroRegions($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
             <i class="ph ph-map-trifold"></i>
           </button>
-          <button *ngIf="!hasSuggestions(activeBulletin) && !copyService.isCopyBulletin()" (click)="openCopyRegionModal(copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-copy"></i></button>
-          <button *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(activeBulletin) && isCreator(activeBulletin)" (click)="deleteBulletin($event, activeBulletin)"  data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.delete' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary"><i class="ph ph-trash"></i></button>
+          <button *ngIf="!editRegions && !copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-copy"></i>
+          </button>
+          <button *ngIf="!editRegions" (click)="deleteBulletin($event, activeBulletin)"  data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.delete' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-trash"></i>
+          </button>
         </div>
       </div>
-
-      <!-- To be implemented
-      <div class="region-form__banner banner banner-warning">
-        <p class="banner__text">
-          <i class="ph ph-pencil-slash"></i>
-          {{ "bulletins.create.regionLocked" | translate }}
-        </p>
-        <div class="btn-group banner__actions">
-          <button type="button" class="btn btn-sm btn-dark"><i class="ph ph-pencil-line"></i> <span>{{ "bulletins.create.edit" | translate }}</span></button>
-        </div>
-      </div>
-      -->
 
       <div
-        *ngIf="bulletinsService.getIsEditable() && hasSuggestions(activeBulletin) && !editRegions"
+        *ngIf="!bulletinsService.isLocked(activeBulletin.getId()) && bulletinsService.getIsEditable() && !isCreator(activeBulletin) && hasSuggestions(activeBulletin)"
         class="region-form__banner banner banner-warning-strong"
       >
         <p class="banner__text">
@@ -457,19 +533,25 @@
           </button>
         </div>
       </div>
-      <!-- To be implemented
-      <div class="region-form__banner banner banner-warning">
+
+      <div
+        *ngIf="!bulletinsService.isLocked(activeBulletin.getId()) && (!bulletinsService.getIsEditable() || (bulletinsService.getIsEditable() && !isCreator(activeBulletin) && !hasSuggestions(activeBulletin)))"
+        class="region-form__banner banner banner-warning"
+      >
         <p class="banner__text">
-          <i class="ph ph-warning"></i> 
-          {{ "bulletins.create.regionLockedPublished" | translate }}
+          <i class="ph ph-pencil-slash"></i>
+          {{ "bulletins.create.regionNotEditable" | translate }}
         </p>
         <div class="btn-group banner__actions">
-          <button type="button" class="btn btn-sm btn-dark">
-            <i class="ph ph-pencil"></i> <span>{{ "bulletins.create.edit" | translate }} </span>
+          <button *ngIf="!editRegions && isForeign(activeBulletin)" (click)="editMicroRegions($event, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-map-trifold"></i>
+          </button>
+          <button *ngIf="!copyService.isCopyBulletin()" (click)="openCopyRegionModal($event, copyRegionTemplate, activeBulletin)" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+            <i class="ph ph-copy"></i>
           </button>
         </div>
       </div>
-      -->
+
       <main class="region-form__content">
         <accordion class="accordion">
           <!-- Avalanche problems -->
@@ -490,6 +572,7 @@
 
               <div class="btn-group accordion-header__buttons">
                 <div
+                  [disabled]="isDisabled()"
                   class="form-check"
                   title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
                   (click)="
@@ -497,17 +580,19 @@
                   "
                 >
                   <input
+                    [disabled]="isDisabled()"
                     class="form-check-input"
                     type="checkbox"
-                    [(ngModel)]="activeBulletin.hasDaytimeDependency"
+                    (click)="daytimeDependencyChanged($event, !activeBulletin.hasDaytimeDependency); $event.stopPropagation()"
+                    [ngModel]="activeBulletin.hasDaytimeDependency"
                     id="daytimeDependency"
                   />
                   <label class="form-label" for="daytimeDependency"> AM/PM </label>
                 </div>
 
                 <button
-                  [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)"
-                  *ngIf="bulletinsService.getIsEditable()"
+                  [disabled]="editRegions || loading || hasFiveAvalancheProblems(false)"
+                  *ngIf="!isDisabled()"
                   (click)="createAvalancheProblem(false); $event.stopPropagation()"
                   class="btn btn-primary btn-icon btn-sm ml-2"
                   title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -521,7 +606,8 @@
               [bulletinModel]="activeBulletin"
               [bulletinDaytimeDescription]="activeBulletin.forenoon"
               [afternoon]="false"
-              [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+              [disabled]="isDisabled()"
+              (changeAvalancheProblemEvent)="updateBulletinOnServer(activeBulletin)"
             ></app-avalanche-problem>
             <!-- End Avalanche problems panel content -->
           </accordion-group>
@@ -543,7 +629,7 @@
               <div class="btn-group accordion-header__buttons">
                 <button
                   [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(activeBulletin)"
-                  *ngIf="bulletinsService.getIsEditable()"
+                  *ngIf="isDisabled()"
                   (click)="createAvalancheProblem(true); $event.stopPropagation()"
                   class="btn btn-primary btn-icon btn-sm"
                   title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -556,7 +642,8 @@
               [bulletinModel]="activeBulletin"
               [bulletinDaytimeDescription]="activeBulletin.afternoon"
               [afternoon]="true"
-              [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+              [disabled]="isDisabled()"
+              (changeAvalancheProblemEvent)="updateBulletinOnServer(activeBulletin)"
             ></app-avalanche-problem>
           </accordion-group>
           <!-- End avalanche problems -->
@@ -590,7 +677,7 @@
                   <div class="btn-group--border form-field-toolbar">
                     <button
                       [disabled]="
-                        loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        isDisabled()
                       "
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
@@ -609,7 +696,7 @@
                     </button>
                     <button
                       *ngIf="!copyService.isCopyTextcat()"
-                      [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                      [disabled]="loading || editRegions"
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
                       data-toggle="tooltip"
@@ -621,7 +708,7 @@
                     <button
                       *ngIf="copyService.isCopyTextcat()"
                       [disabled]="
-                        loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        isDisabled()
                       "
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
@@ -633,7 +720,7 @@
                     </button>
                     <button
                       [disabled]="
-                        loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                        isDisabled()
                       "
                       type="reset"
                       class="btn btn-sm btn-icon btn-bare"
@@ -844,9 +931,7 @@
                       <div class="btn-group--border form-field-toolbar">
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
@@ -864,7 +949,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -875,9 +960,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
@@ -887,9 +970,7 @@
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
@@ -969,8 +1050,9 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeAvActivityHighlightsNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
@@ -1108,9 +1190,7 @@
                       <div class="btn-group--border form-field-toolbar">
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
@@ -1127,9 +1207,7 @@
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
@@ -1140,7 +1218,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -1151,9 +1229,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
@@ -1163,9 +1239,7 @@
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
-                          [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
-                          "
+                          [disabled]="isDisabled()"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
@@ -1247,8 +1321,9 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeAvActivityCommentNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
@@ -1407,8 +1482,9 @@
               <div class="form-group region-form__danger-patterns">
                 <label class="form-label" for="">{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
                 <select
-                  [(ngModel)]="activeBulletin.dangerPattern1"
-                  [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                  [ngModel]="activeBulletin.dangerPattern1"
+                  (ngModelChange)="onDangerPattern1Change($event)"
+                  [disabled]="isDisabled()"
                   class="form-select"
                 >
                   <option selected></option>
@@ -1425,8 +1501,9 @@
                 </select>
 
                 <select
-                  [(ngModel)]="activeBulletin.dangerPattern2"
-                  [disabled]="!bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                  [ngModel]="activeBulletin.dangerPattern2"
+                  (ngModelChange)="onDangerPattern2Change($event)"
+                  [disabled]="isDisabled()"
                   class="form-select"
                 >
                   <option selected></option>
@@ -1456,7 +1533,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1475,7 +1552,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1491,7 +1568,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -1503,7 +1580,7 @@
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1515,7 +1592,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1597,8 +1674,9 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeSnowpackStructureCommentNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
@@ -1753,13 +1831,10 @@
             <div class="region-form__tendency">
               <!-- Tendency picker -->
               <div class="form-group">
-                <label class="form-label">
-                  {{ "bulletins.create.tooltip.tendency.danger" | translate }}
-                </label>
                 <div class="btn-group">
                   <button
                     *ngIf="activeBulletin.tendency === 'decreasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-dark"
                     (click)="setTendency($event, undefined)"
@@ -1771,7 +1846,7 @@
 
                   <button
                     *ngIf="activeBulletin.tendency !== 'decreasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-outline-secondary"
                     (click)="setTendency($event, 'decreasing')"
@@ -1783,7 +1858,7 @@
 
                   <button
                     *ngIf="activeBulletin.tendency === 'steady'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-dark"
                     (click)="setTendency($event, undefined)"
@@ -1795,7 +1870,7 @@
 
                   <button
                     *ngIf="activeBulletin.tendency !== 'steady'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-outline-secondary"
                     (click)="setTendency($event, 'steady')"
@@ -1806,7 +1881,7 @@
                   </button>
                   <button
                     *ngIf="activeBulletin.tendency === 'increasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-dark"
                     (click)="setTendency($event, undefined)"
@@ -1817,7 +1892,7 @@
                   </button>
                   <button
                     *ngIf="activeBulletin.tendency !== 'increasing'"
-                    [disabled]="loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)"
+                    [disabled]="isDisabled()"
                     type="reset"
                     class="btn btn-outline-secondary"
                     (click)="setTendency($event, 'increasing')"
@@ -1843,7 +1918,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1862,7 +1937,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="!copyService.isCopyTextcat()"
-                          [disabled]="loading || !bulletinsService.getIsEditable() || editRegions"
+                          [disabled]="loading || editRegions"
                           type="reset"
                           data-toggle="tooltip"
                           title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
@@ -1874,7 +1949,7 @@
                           class="btn btn-sm btn-icon btn-bare"
                           *ngIf="copyService.isCopyTextcat()"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1886,7 +1961,7 @@
                         <button
                           class="btn btn-sm btn-icon btn-bare"
                           [disabled]="
-                            loading || !bulletinsService.getIsEditable() || editRegions || !isCreator(activeBulletin)
+                            isDisabled()
                           "
                           type="reset"
                           data-toggle="tooltip"
@@ -1969,8 +2044,9 @@
                     <textarea
                       rows="9"
                       class="form-control"
-                      [disabled]="false"
+                      [disabled]="isDisabled()"
                       [(ngModel)]="activeTendencyCommentNotes"
+                      (focusout)="onNotesFocusOut($event)"
                       placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
                     ></textarea>
                   </div>
@@ -2105,52 +2181,11 @@
           <!-- End tendency -->
         </accordion>
       </main>
-      <!-- Save and cancel buttons (will be gone) -->
-      <div *ngIf="bulletinsService.getIsEditable()" class="region-form__footer">
-        <!--
-        <div class="region-form__saving-status">
-          <i class="ph ph-circle-notch"></i>
-          <span>{{ "bulletins.create.autosave" | translate }}</span>
-        </div>
-        -->
-        <div class="btn-toolbar">
-          <button
-            [disabled]="editRegions || loading"
-            type="reset"
-            class="btn btn-bare"
-            (click)="openDiscardModal(discardTemplate)"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.discardBulletin' | translate }}"
-          >
-            {{ "bulletins.create.discard" | translate }}
-          </button>
-          <button
-            *ngIf="!loading"
-            [disabled]="editRegions"
-            type="submit"
-            class="btn btn-primary"
-            (click)="save()"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.saveBulletin' | translate }}"
-          >
-            <i class="ph ph-check"></i><span>{{ "bulletins.create.save" | translate }}</span>
-          </button>
-          <button *ngIf="loading" disabled class="btn btn btn-primary">
-            <i class="ph ph-circle-notch"></i>
-          </button>
-        </div>
-        <div *ngIf="!bulletinsService.getIsEditable()" class="card-footer">
-          <button type="reset" class="btn btn-sm btn-primary px-3" (click)="goBack()">
-            <i class="fa fa-arrow-left"></i>{{ "bulletins.create.back" | translate }}
-          </button>
-        </div>
-      </div>
-      <!-- End Save and cancel buttons -->
     </div>
     <!-- End Form -->
 
     <!-- Map -->
-    <div class="create-bulletin__map-container" [ngClass]="{ 'create-bulletin__map-container--am-pm': (activeBulletin !== undefined && activeBulletin.hasDaytimeDependency) }">
+    <div class="create-bulletin__map-container" [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }">
       <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
         <div class="floating-action__text">
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
@@ -2161,7 +2196,7 @@
           </button>
           <button type="button" class="btn btn-primary" (click)="saveBulletin($event, activeBulletin)">
             <i class="ph-bold ph-check"></i>
-            <span *ngIf="activeBulletin.savedRegions.length == 0">{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
+            <span *ngIf="activeBulletin.savedRegions.length === 0">{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
             <span *ngIf="activeBulletin.savedRegions.length > 0">{{ 'bulletins.create.tooltip.saveChanges' | translate }}</span>
           </button>
         </div>
@@ -2240,7 +2275,7 @@
         [disabled]="loading"
         type="button"
         class="btn btn-sm btn-bare btn-sm btn-icon"
-        (click)="openCopyRegionModal(copyRegionTemplate, bulletin)"
+        (click)="openCopyRegionModal($event, copyRegionTemplate, bulletin)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.copy' | translate }}"
       >
@@ -2248,7 +2283,7 @@
       </button>
 
       <button
-        *ngIf="bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(bulletin) && isCreator(bulletin)"
+        *ngIf="bulletinsService.isLocked(bulletin?.getId()) || bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(bulletin) && isCreator(bulletin)"
         [disabled]="loading"
         type="button"
         class="btn btn-sm btn-icon btn-bare"
@@ -2258,7 +2293,15 @@
       >
         <i class="ph ph-trash"></i>
       </button>
-      <button type="button" class="btn btn-bare btn-sm btn-icon"><i class="ph ph-square-half"></i></button>
+
+      <button
+        *ngIf="false && activeBulletin !== undefined && activeBulletin !== bulletin"
+        type="button"
+        class="btn btn-bare btn-sm btn-icon"
+        (click)="compareBulletin($event, bulletin)"
+      >
+        <i class="ph ph-square-half"></i>
+      </button>
     </div>
   </div>
 </ng-template>
@@ -2520,20 +2563,70 @@
     <h4 class="modal-title pull-left">{{ "bulletins.create.copyRegion.label" | translate }} {{ bulletin }}</h4>
   </div>
   <div class="modal-body">
-    {{ "bulletins.create.copyRegion.select" | translate }}
-
-    <select [(ngModel)]="selectedCopyRegionDate">
-      <option *ngFor="let date of bulletinsService.dates" [value]="date">{{ date | localizedDate : "EEEE, d. MMMM y"  }}</option>
-    </select>
-
+    <table class="table table-bordered responsive-table">
+      <tbody class="bulletins-table__body">
+        <tr
+          *ngFor="let date of bulletinsService.dates"
+          [ngClass]="{
+            'bulletins-table__active--day': isActiveDate(date)
+          }" 
+        >
+          <td [attr.data-label]="'bulletins.table.title.date' | translate ">
+            <div class="bulletins-table__day--small">
+              <time>
+                {{ date | localizedDate : "fullDate" }}
+              </time>
+            </div>
+          </td>
+          <td class="bulletins-table__region-status" [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate">
+            <span
+              *ngIf="getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined"
+              class="badge bg-danger"
+            >
+              <i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.draft" class="badge bg-warning">
+              <i class="ph-bold ph-file-dashed"></i>
+              {{ "bulletins.table.status.draft" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.submitted" class="badge bg-primary">
+              <i class="ph-bold ph-clock-countdown"></i>
+              {{ "bulletins.table.status.submitted" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.published" class="badge bg-success">
+              <i class="ph-bold ph-newspaper"></i>
+              {{ "bulletins.table.status.published" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.updated" class="badge bg-orange">
+              <i class="ph-bold ph-file-dashed"></i>
+              {{ "bulletins.table.status.updated" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.resubmitted" class="badge bg-primary">
+              <i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.resubmitted" | translate }}
+            </span>
+            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.republished" class="badge bg-success">
+              <i class="ph-bold ph-newspaper"></i>
+              {{ "bulletins.table.status.republished" | translate }}
+            </span>
+            <span
+              *ngIf="bulletinsService.isLocked(date, authenticationService.getActiveRegionId())"
+              class="badge text-bg-light"
+            >
+              <i class="ph-bold ph-lock"></i>
+            </span>
+          </td>
+          <td class="bulletins-table__region-status">
+            <button *ngIf="getActiveRegionStatus(date) === bulletinStatus.draft || getActiveRegionStatus(date) === bulletinStatus.updated || getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined" class="btn btn-primary btn-icon" type="button" (click)="copyRegionModalConfirm(date)">
+              <i class="ph ph-arrow-right"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-bare" (click)="copyRegionModalDecline()">
       <span>{{ "bulletins.create.cancelCopyBulletin" | translate }}</span>
-    </button>
-
-    <button type="button" class="btn btn-primary" (click)="copyRegionModalConfirm()">
-      <i class="ph ph-copy-simple"></i><span>{{ "bulletins.create.pasteAggregatedRegion" | translate }}</span>
     </button>
   </div>
 </ng-template>
@@ -2567,6 +2660,50 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="submitBulletinsErrorModalConfirm()">
       {{ "bulletins.table.submitBulletinsErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #publishBulletinsErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.publishBulletinsErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="publishBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.publishBulletinsErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #previewErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.previewErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="previewErrorModalConfirm()">
+      {{ "bulletins.table.previewErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #checkBulletinsErrorTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #publishAllTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.table.publishAllDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
 </ng-template>

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
@@ -24,6 +24,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   @Input() disabled: boolean;
   @Input() count: number;
   @Input() afternoon: boolean;
+  @Output() changeAvalancheProblemDetailEvent = new EventEmitter<string>();
 
   avalancheProblemEnum = Enums.AvalancheProblem;
   snowpackStability = Enums.SnowpackStability;
@@ -78,6 +79,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     } else {
       this.avalancheProblemModel.setAvalancheProblem(Enums.AvalancheProblem[avalancheProblem]);
     }
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   updateElevationHigh() {
@@ -92,6 +94,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   updateElevationLow() {
@@ -106,6 +109,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   treelineHighClicked(event) {
@@ -118,6 +122,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   treelineLowClicked(event) {
@@ -130,6 +135,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   setUseElevationHigh(event) {
@@ -140,6 +146,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   setUseElevationLow(event) {
@@ -150,6 +157,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   deleteTextcat(event) {
@@ -158,6 +166,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.terrainFeatureIt = undefined;
     this.terrainFeatureEn = undefined;
     this.terrainFeatureFr = undefined;
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   isDangerRatingDirection(dir) {
@@ -173,6 +182,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
     this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   showDecisionTreeDialog() {
@@ -186,5 +196,13 @@ export class AvalancheProblemDetailComponent implements OnChanges {
         this.selectAvalancheProblem(data["problem"]);
       }
     });
+  }
+
+  changeMatrix(event) {
+    this.changeAvalancheProblemDetailEvent.emit();
+  }
+
+  changeAspects(event) {
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 }

@@ -56,6 +56,8 @@ export enum ObservationSource {
   WikisnowECT = "WikisnowECT",
   FotoWebcamsEU = "FotoWebcamsEU",
   Panomax = "Panomax",
+  RasBzIt = "RasBzIt",
+  PanoCloud = "PanoCloud",
 }
 
 export enum ForecastSource {
@@ -206,6 +208,8 @@ export const genericObservationSchema = z.object({
   authorName: z.string().optional().nullable().describe("Name of the author"),
   content: z.string().optional().nullable().describe("Free-text content"),
   elevation: z.number().optional().nullable().describe("Elevation in meters"),
+  elevationLowerBound: z.number().optional().nullable().describe("Lower bound of elevation in meters"),
+  elevationUpperBound: z.number().optional().nullable().describe("Upper bound of elevation in meters"),
   eventDate: z.date().describe("Date when the event occurred"),
   locationName: z.string().optional().nullable().describe("Location name"),
   latitude: z.number().optional().nullable().describe("Location latitude (WGS 84)"),
@@ -237,4 +241,5 @@ export type GenericObservation<Data = any> = z.infer<typeof genericObservationSc
   $extraDialogRows?: ObservationTableRow[];
   filterType?: ObservationFilterType;
   isHighlighted?: boolean;
+  regionLabel?: string;
 };

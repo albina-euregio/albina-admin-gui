@@ -8,7 +8,9 @@ export const environment = {
   wsBaseUrl: window["ENV"].WS_BASE_URL,
   textcatUrl: window["ENV"].TEXTCAT_URL,
   headerBgColor: window["ENV"].HEADER_BG_COLOR,
-  showChat: window["ENV"].SHOW_CHAT,
+  faviconPath: window["ENV"].FAVICON_PATH,
+  logoPath: window["ENV"].LOGO_PATH,
+  isEuregio: window["ENV"].IS_EUREGIO
 };
 
 Object.assign(environment, (window as any).ENV);
