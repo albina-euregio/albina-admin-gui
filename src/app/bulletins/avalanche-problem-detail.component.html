@@ -370,15 +370,4 @@
       [disabled]="true"
     ></app-matrix>
   </div>
-  <div *ngIf="!authenticationService.getActiveRegion().showMatrix" class="form-group">
-    <app-matrix-parameter
-      [(bulletin)]="bulletin"
-      [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
-      [(matrixInformation)]="avalancheProblemModel.matrixInformation"
-      [disabled]="disabled"
-      [count]="count"
-      [afternoon]="afternoon"
-      (changeMatrixEvent)="changeMatrix($event)"
-    ></app-matrix-parameter>
-  </div>
 </div>
