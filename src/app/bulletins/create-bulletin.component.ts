@@ -2612,7 +2612,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   copyRegionModalConfirm(date: Date): void {
     this.copyRegionModalRef.hide();
+    if (this.bulletinsService.getActiveDate().getTime() === date.getTime()) {
+      if (this.copyService.isCopyBulletin()) {
+        this.createBulletin(true);
+      }
+    } else {
     this.changeDate(date);
+    }
   }
 
   copyRegionModalDecline(): void {
