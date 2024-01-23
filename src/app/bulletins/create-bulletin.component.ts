@@ -1042,10 +1042,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   invalidateMapSize() {
+/*
     setTimeout(() => {
       this.mapService.map.invalidateSize();
       this.mapService.afternoonMap.invalidateSize();
     }, 10);
+*/
   }
 
   setTendency(event, tendency) {
