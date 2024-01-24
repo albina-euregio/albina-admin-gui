@@ -1085,7 +1085,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   // create a copy of every bulletin (with new id)
   private copyBulletins(response) {
-    this.mapService.resetAggregatedRegions();
+    this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
       const originalBulletin = BulletinModel.createFromJson(jsonBulletin);
@@ -1130,7 +1130,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addForeignBulletins(response) {
-    this.mapService.resetAggregatedRegions();
+    this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
@@ -1168,7 +1168,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addInternalBulletins(response) {
-    this.mapService.resetAggregatedRegions();
+    this.mapService.resetInternalAggregatedRegions();
     this.mapService.resetActiveSelection();
 
     const bulletinsList = new Array<BulletinModel>();
@@ -1877,55 +1877,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         }
       );
     }
-  }
-
-  private updateAggregatedRegions() {
-
-    this.mapService.resetAggregatedRegions();
-
-    for (const bulletin of this.internBulletinsList) {
-      if (bulletin !== this.activeBulletin) {
-        // regions saved by me (only in own area possible)
-        for (const region of this.activeBulletin.getSavedRegions()) {
-          // region was saved in other aggregated region => delete
-          let index = bulletin.getSavedRegions().indexOf(region);
-          if (index !== -1) {
-            bulletin.getSavedRegions().splice(index, 1);
-          }
-
-          // region was published in other aggregated region => delete
-          index = bulletin.getPublishedRegions().indexOf(region);
-          if (region.startsWith(this.authenticationService.getActiveRegionId()) && index !== -1) {
-            bulletin.getPublishedRegions().splice(index, 1);
-          }
-
-          // region was suggested by other user (multiple suggestions possible for same region) => delete all)
-          index = bulletin.getSuggestedRegions().indexOf(region);
-          if (index !== -1) {
-            bulletin.getSuggestedRegions().splice(index, 1);
-          }
-        }
-
-        // regions suggested by me (only in foreign area possible)
-        // region was published => delete suggestion
-        for (const region of bulletin.getPublishedRegions()) {
-          const index = this.activeBulletin.getSuggestedRegions().indexOf(region);
-          if (index !== -1) {
-            this.activeBulletin.getSuggestedRegions().splice(index, 1);
-          }
-        }
-      }
-      this.mapService.addAggregatedRegion(bulletin);
-    }
-
-/*
-    for (const bulletin of [...this.externRegionsMap.values()].flat()) {
-      this.mapService.addAggregatedRegion(bulletin);
-    }
-*/
-
-    this.mapService.discardAggregatedRegion();
-    this.mapService.selectAggregatedRegion(this.activeBulletin);
   }
 
   hasSuggestions(bulletin: BulletinModel): boolean {
