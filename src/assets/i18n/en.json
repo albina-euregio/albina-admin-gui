@@ -144,6 +144,8 @@
       "changeDangerRatingElevation": "Extend the danger level",
       "mapTop": "Map above",
       "mapLeft": "Map aside",
+      "showNotes": "Show notes",
+      "hideNotes": "Hide notes",
       "label": {
         "avalancheProblems": "Avalanche problem",
         "aspects": "Aspects",

@@ -464,6 +464,16 @@
                     <i class="ph icon-md ph-square-split-vertical"></i> {{ 'bulletins.create.mapTop' | translate }}
                 </button>
             </li>
+            <li *ngIf="showNotes">
+                <button class="dropdown-item" (click)="toggleShowNotes()">
+                    <i class="ph icon-md ph-note"></i> {{ 'bulletins.create.hideNotes' | translate }}
+                </button>
+            </li>
+            <li *ngIf="!showNotes">
+                <button class="dropdown-item" (click)="toggleShowNotes()">
+                    <i class="ph icon-md ph-note"></i> {{ 'bulletins.create.showNotes' | translate }}
+                </button>
+            </li>
           </ul>
           <button (click)="deselectBulletin()" class="btn btn-bare btn-sm btn-icon btn-bare--grey">
             <i class="ph-bold ph-x"></i>
@@ -919,7 +929,7 @@
               <!-- Danger situation headline -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-7">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.avActivityHighlights" | translate }}
                     </label>
@@ -1042,7 +1052,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div *ngIf="showNotes" class="col-5">
                     <label class="form-label" for="text-input">{{ "bulletins.create.label.notes" | translate }} </label>
                     <textarea
                       rows="9"
@@ -1179,7 +1189,7 @@
               <!-- Danger situation description -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-7">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.avActivityComment" | translate }}
                     </label>
@@ -1311,7 +1321,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div *ngIf="showNotes" class="col-5">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.notes" | translate }}
                     </label>
@@ -1521,7 +1531,7 @@
               <!-- Danger pattern description -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-md-8">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.snowpackStructureComment" | translate }}
                     </label>
@@ -1664,7 +1674,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div *ngIf="showNotes" class="col-md-5">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.notes" | translate }}
                     </label>
@@ -1905,7 +1915,7 @@
               <!-- Tendency comment -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-7">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.tendencyComment" | translate }}
                     </label>
@@ -2034,7 +2044,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div *ngIf="showNotes" class="col-5">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.notes" | translate }}
                     </label>

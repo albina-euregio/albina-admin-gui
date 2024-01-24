@@ -61,6 +61,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public editRegions: boolean;
   public loading: boolean;
 
+  public showNotes: boolean;
+
   public originalBulletins: Map<string, BulletinModel>;
 
   public showAfternoonMap: boolean;
@@ -262,6 +264,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loading = false;
     this.showAfternoonMap = false;
     this.showForeignRegions = true;
+    this.showNotes = false;
     this.mapService.resetAll();
     this.internBulletinsList = new Array<BulletinModel>();
     this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
@@ -388,6 +391,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.showForeignRegions = false;
     else
       this.showForeignRegions = true;
+  }
+
+  toggleShowNotes() {
+    if (this.showNotes)
+      this.showNotes = false;
+    else
+      this.showNotes = true;
   }
 
   showExternalRegions(key: string) {
