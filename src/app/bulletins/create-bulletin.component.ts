@@ -233,6 +233,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   // tra le proprietà del componente
   eventSubscriber: Subscription;
 
+  internalBulletinsSubscription !: Subscription;
   externalBulletinsSubscription !: Subscription;
 
   public config = {
@@ -428,6 +429,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.bulletinsService.setActiveDate(date);
       this.initializeComponent();
 
+      this.internalBulletinsSubscription = timer(5000, 5000).pipe( 
+        map(() => { 
+          if(
+            !this.loading &&
+            !this.publishing &&
+            !this.submitting &&
+            !this.copying &&
+            !this.showNewBulletinModal
+          ) {
+            this.loadBulletinsFromServer();
+          }
+        }) 
+      ).subscribe(); 
+
       this.externalBulletinsSubscription = timer(2000, 30000).pipe( 
         map(() => { 
           this.loadExternalBulletinsFromServer();
@@ -556,6 +571,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopListening();
 
+    this.internalBulletinsSubscription.unsubscribe(); 
     this.externalBulletinsSubscription.unsubscribe(); 
     
     if (this.bulletinsService.getIsEditable()) {
