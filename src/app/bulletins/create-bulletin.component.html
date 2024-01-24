@@ -272,11 +272,11 @@
                 <!-- media file -->
                 <li>
                   <button
-                    *ngIf="showMediaFileButton(date)"
+                    *ngIf="showMediaFileButton()"
                     [disabled]="editRegions || loading"
                     type="reset"
                     class="dropdown-item"
-                    (click)="openMediaFileDialog($event, date)"
+                    (click)="openMediaFileModal()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
                   >
@@ -328,11 +328,11 @@
                 <!-- info -->
                 <li>
                   <button
-                    *ngIf="showInfoButton(date)"
+                    *ngIf="showInfoButton()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="showPublicationInfo($event, date)"
+                    (click)="showPublicationInfo()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.info' | translate }}"
                   >
@@ -345,11 +345,11 @@
                 <!-- publish all -->
                 <li>
                   <button
-                    *ngIf="showPublishAllButton(date)"
+                    *ngIf="showPublishAllButton()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="publishAll($event, date)"
+                    (click)="publishAll()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.publishAll' | translate }}"
                   >

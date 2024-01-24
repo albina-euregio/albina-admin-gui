@@ -663,10 +663,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  publishAll(event, date: Date) {
-    event.stopPropagation();
-    this.publishing = date;
-    this.openPublishAllModal(this.publishAllTemplate, date);
+  publishAll() {
+    this.publishing = this.bulletinsService.getActiveDate();
+    this.openPublishAllModal();
   }
 
   check(event, date: Date) {
@@ -779,11 +778,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  showPublicationInfo(event, date: Date) {
-    event.stopPropagation();
-    this.bulletinsService.getPublicationStatus(this.authenticationService.getActiveRegionId(), date).subscribe(
+  showPublicationInfo() {
+    this.bulletinsService.getPublicationStatus(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate()).subscribe(
       data => {
-        this.openPublicationStatusModal(this.publicationStatusTemplate, (data as any), date);
+        this.openPublicationStatusModal((data as any));
       },
       error => {
         console.error("Publication status could not be loaded!");
@@ -791,39 +789,34 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  openMediaFileDialog(event, date: Date) {
-    event.stopPropagation();
-    this.openMediaFileModal(this.mediaFileTemplate, date);
-  }
-
-  openPublicationStatusModal(template: TemplateRef<any>, json, date: Date) {
+  openPublicationStatusModal(json) {
     const initialState = {
       json: json,
-      date: date,
+      date: this.bulletinsService.getActiveDate(),
       component: this
     };
     this.publicationStatusModalRef = this.modalService.show(ModalPublicationStatusComponent, { initialState });
   }
   
-  openMediaFileModal(template: TemplateRef<any>, date: Date) {
+  openMediaFileModal() {
     const initialState = {
-      date: date,
+      date: this.bulletinsService.getActiveDate(),
       component: this
     };
     this.mediaFileModalRef = this.modalService.show(ModalMediaFileComponent, { initialState });
   }
 
-  mediaFileModalConfirm(date: Date): void {
+  mediaFileModalConfirm(): void {
     this.mediaFileModalRef.hide();
   }
 
-  publicationStatusModalConfirm(date: Date): void {
+  publicationStatusModalConfirm(): void {
     this.publicationStatusModalRef.hide();
   }  
 
-  openPublishAllModal(template: TemplateRef<any>, date: Date) {
+  openPublishAllModal() {
     const initialState = {
-      date: date,
+      date: this.bulletinsService.getActiveDate(),
       component: this
     };
     this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
@@ -833,16 +826,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
   }
 
-  publishAllModalConfirm(date: Date): void {
+  publishAllModalConfirm(): void {
     this.publishAllModalRef.hide();
-    this.bulletinsService.publishAllBulletins(date).subscribe(
+    this.bulletinsService.publishAllBulletins(this.bulletinsService.getActiveDate()).subscribe(
       data => {
         console.log("All bulletins published.");
-        if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
-        } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
-          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
-        }
         this.publishing = undefined;
       },
       error => {
