@@ -199,13 +199,27 @@ export class MapService {
     }
     return null;
   }
+  
+  resetInternalAggregatedRegions() {
+    for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
+      this.authenticationService.isEuregio()
+      if (this.authenticationService.isInternalRegion(entry.feature.properties.id)) {
+        entry.setStyle(this.getUserDependentBaseStyle());
+      }
+    }
+    for (const entry of this.afternoonOverlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
+      if (this.authenticationService.isInternalRegion(entry.feature.properties.id)) {
+        entry.setStyle(this.getUserDependentBaseStyle());
+      }
+    }
+  }
 
   resetAggregatedRegions() {
     for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
-      entry.setStyle(this.getUserDependentBaseStyle(entry.feature.properties.id));
+      entry.setStyle(this.getUserDependentBaseStyle());
     }
     for (const entry of this.afternoonOverlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
-      entry.setStyle(this.getUserDependentBaseStyle(entry.feature.properties.id));
+      entry.setStyle(this.getUserDependentBaseStyle());
     }
   }
 
@@ -444,17 +458,17 @@ export class MapService {
     for (const entry of this.overlayMaps.aggregatedRegions.getLayers()) {
       for (const region of bulletin.savedRegions) {
         if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle(region));
+          entry.setStyle(this.getUserDependentBaseStyle());
         }
       }
       for (const region of bulletin.suggestedRegions) {
         if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle(region));
+          entry.setStyle(this.getUserDependentBaseStyle());
         }
       }
       for (const region of bulletin.publishedRegions) {
         if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle(region));
+          entry.setStyle(this.getUserDependentBaseStyle());
         }
       }
     }
@@ -462,17 +476,17 @@ export class MapService {
     for (const entry of this.afternoonOverlayMaps.aggregatedRegions.getLayers()) {
       for (const region of bulletin.savedRegions) {
         if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle(region));
+          entry.setStyle(this.getUserDependentBaseStyle());
         }
       }
       for (const region of bulletin.suggestedRegions) {
         if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle(region));
+          entry.setStyle(this.getUserDependentBaseStyle());
         }
       }
       for (const region of bulletin.publishedRegions) {
         if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle(region));
+          entry.setStyle(this.getUserDependentBaseStyle());
         }
       }
     }
@@ -640,7 +654,7 @@ export class MapService {
     });
   }
 
-  private getUserDependentBaseStyle(region) {
+  private getUserDependentBaseStyle() {
     return {
       fillColor: this.constantsService.getDangerRatingColor("missing"),
       weight: this.constantsService.lineWeight,
