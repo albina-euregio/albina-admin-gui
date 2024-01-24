@@ -95,7 +95,6 @@ export class FullLayoutComponent {
 
   private change(region) {
     this.authenticationService.setActiveRegion(region);
-    this.bulletinsService.init();
-    this.router.navigate(["/bulletins"]);
+    this.router.navigate([this.router.url]);
   }
 }

@@ -17,6 +17,7 @@ export const routes: Routes = [
     path: "bulletins",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
     loadChildren: () => import("./bulletins/bulletins.module").then(m => m.BulletinsModule)
   },
   {
@@ -66,7 +67,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
