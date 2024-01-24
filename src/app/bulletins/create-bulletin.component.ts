@@ -740,14 +740,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (this.authenticationService.getActiveRegionId() !== undefined &&
         this.authenticationService.getActiveRegion().enableMediaFile &&
       (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
-      (
-        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.draft ||
-        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.updated ||
-        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.submitted ||
-        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
-        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.resubmitted ||
-        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished
-      ) &&
       !this.copying &&
       (
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
