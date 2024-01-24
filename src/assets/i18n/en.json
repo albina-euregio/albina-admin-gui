@@ -80,7 +80,9 @@
       "publishedInfo" : "Has been published",
       "noPublicationInfo" : "Will NOT be published automatically",
       "loadingPreview": "Creating PDF preview ...",
-      "loading": "Loading bulletin ..."
+      "loading": "Loading bulletin ...",
+      "publishing": "Publishing bulletin ...",
+      "submitting": "Submitting bulletin ..."
     },
     "create": {
       "tooltip": {
