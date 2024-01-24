@@ -243,6 +243,8 @@ export class MapService {
     this.resetEditSelection();
   }
 
+  // colors all micro-regions of bulletin
+  // does not touch any other micro-region
   updateAggregatedRegion(bulletin: BulletinModel) {
     const dangerRatingAbove = bulletin.getForenoonDangerRatingAbove();
     const dangerRatingBelow = bulletin.getForenoonDangerRatingBelow();
