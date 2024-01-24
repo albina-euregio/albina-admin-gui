@@ -525,22 +525,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       regions.push(this.authenticationService.getActiveRegionId());
     }
     this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
-      data => {
-        this.internBulletinsList = new Array<BulletinModel>();
-        for (const jsonBulletin of (data as any)) {
-          const bulletin = BulletinModel.createFromJson(jsonBulletin);
-
-          // only add bulletins with published or saved regions
-          if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
-            this.addInternalBulletin(bulletin);
-          }
-        }
-
-        this.updateInternalBulletins();
-
+      (data) => {
+        this.addInternalBulletins(data);
         this.loading = false;
       },
-      () => {
+      (error) => {
         console.error("Bulletins could not be loaded!");
         this.loading = false;
         this.openLoadingErrorModal(this.loadingErrorTemplate);
@@ -1038,16 +1027,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   setMapLayout(bulletin, isCompact: boolean): void {
     // Show the map on top of form (compact) or right next to the form
     this.isCompactMapLayout = isCompact;
-    this.invalidateMapSize();
-  }
-
-  invalidateMapSize() {
-/*
-    setTimeout(() => {
-      this.mapService.map.invalidateSize();
-      this.mapService.afternoonMap.invalidateSize();
-    }, 10);
-*/
   }
 
   setTendency(event, tendency) {
@@ -1070,8 +1049,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       afternoonMap.classList.remove("create-bulletin__map--am");
       this.mapService.removeAMControl();
     }
-
-    this.invalidateMapSize();
   }
 
   getOwnBulletins() {
@@ -1186,14 +1163,51 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
+  private addInternalBulletins(response) {
+    this.mapService.resetAggregatedRegions();
+    this.mapService.resetActiveSelection();
+
+    const bulletinsList = new Array<BulletinModel>();
+    for (const jsonBulletin of response) {
+      const bulletin = BulletinModel.createFromJson(jsonBulletin);
+      bulletinsList.push(bulletin);
+      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
+        this.activeBulletin = bulletin;
+        this.mapService.selectAggregatedRegion(this.activeBulletin);
+      }
+      this.mapService.addAggregatedRegion(bulletin);
+    }
+    
+    bulletinsList.sort((a, b): number => {
+      if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
+      if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
+      return 0;
+    });
+    
+    this.internBulletinsList = bulletinsList;
+    this.updateInternalBulletins();
+    this.updateExternalBulletins();
+  }
+
   private updateInternalBulletins() {
     for (const bulletin of this.internBulletinsList) {
       this.mapService.updateAggregatedRegion(bulletin);
     }
   }
 
+  private updateExternalBulletins() {
+    this.externRegionsMap.forEach((value: BulletinModel[], key: ServerModel) => {
+      for (const bulletin of value) {
+        this.mapService.updateAggregatedRegion(bulletin);
+      }
+    });
+  }
+
   private addInternalBulletin(bulletin: BulletinModel) {
     this.internBulletinsList.push(bulletin);
+    if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId())
+      this.activeBulletin = bulletin;
+    
     this.internBulletinsList.sort((a, b): number => {
       if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
       if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
@@ -1231,8 +1245,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
 
     this.updateBulletinOnServer(bulletin);
-
-    this.updateAggregatedRegions();
   }
 
   rejectSuggestions(event, bulletin: BulletinModel) {
@@ -1246,8 +1258,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.setSuggestedRegions(suggested);
 
     this.updateBulletinOnServer(bulletin);
-
-    this.updateAggregatedRegions();
   }
 
   createBulletin(copy) {
@@ -1264,7 +1274,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
     }
 
-    this.addInternalBulletin(bulletin);
     this.selectBulletin(bulletin);
     this.mapService.selectAggregatedRegion(bulletin);
     this.editBulletinMicroRegions();
@@ -1381,9 +1390,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         //this.bulletinsService.unlockBulletin(this.bulletinsService.getActiveDate(), this.activeBulletin.getId());
         
         this.activeBulletin = undefined;
-        this.applicationRef.tick();
       }
-      this.invalidateMapSize();
     }
   }
 
@@ -1689,80 +1696,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private delBulletin(bulletin: BulletinModel) {
-    // check if there are other published or saved regions
-    let hit = false;
-    let newOwnerRegion = "";
-    for (const region of bulletin.getPublishedRegions()) {
-      if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
-        hit = true;
-        if (region.startsWith(this.constantsService.codeTyrol)) {
-          newOwnerRegion = this.constantsService.codeTyrol;
-        } else if (region.startsWith(this.constantsService.codeSouthTyrol)) {
-          newOwnerRegion = this.constantsService.codeSouthTyrol;
-        } else if (region.startsWith(this.constantsService.codeTrentino)) {
-          newOwnerRegion = this.constantsService.codeTrentino;
-        }
-        break;
-      }
-    }
-    if (!hit) {
-      for (const region of bulletin.getSavedRegions()) {
-        if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
-          hit = true;
-          if (region.startsWith(this.constantsService.codeTyrol)) {
-            newOwnerRegion = this.constantsService.codeTyrol;
-          } else if (region.startsWith(this.constantsService.codeSouthTyrol)) {
-            newOwnerRegion = this.constantsService.codeSouthTyrol;
-          } else if (region.startsWith(this.constantsService.codeTrentino)) {
-            newOwnerRegion = this.constantsService.codeTrentino;
-          }
-          break;
-        }
-      }
-    }
-
-    if (hit) {
-      // delete own saved regions
-      const oldSavedRegions = new Array<String>();
-      for (const region of bulletin.getSavedRegions()) {
-        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          oldSavedRegions.push(region);
-        }
-      }
-      for (const region of oldSavedRegions) {
-        const index = bulletin.getSavedRegions().indexOf(region);
-        bulletin.getSavedRegions().splice(index, 1);
-      }
-
-      // delete own published regions
-      const oldPublishedRegions = new Array<String>();
-      for (const region of bulletin.getPublishedRegions()) {
-        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          oldPublishedRegions.push(region);
-        }
-      }
-      for (const region of oldPublishedRegions) {
-        const index = bulletin.getPublishedRegions().indexOf(region);
-        bulletin.getPublishedRegions().splice(index, 1);
-      }
-
-      // change ownership
-      bulletin.setOwnerRegion(newOwnerRegion);
-
-      this.updateBulletinOnServer(bulletin);
-    } else {
-      const index = this.internBulletinsList.indexOf(bulletin);
-      if (index > -1) {
-        this.internBulletinsList.splice(index, 1);
-
-        // delete bulletin
-        this.deleteBulletinOnServer(bulletin);
-      }
-    }
-
-    this.mapService.resetAggregatedRegions();
-    this.updateInternalBulletins();
     this.deselectBulletin(true);
+    this.deleteBulletinOnServer(bulletin);
   }
 
   editMicroRegions(event) {
@@ -1772,7 +1707,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private editBulletinMicroRegions() {
-    this.invalidateMapSize();
     this.editRegions = true;
     this.mapService.editAggregatedRegion(this.activeBulletin);
   }
@@ -1851,15 +1785,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.updateAggregatedRegions();
-      this.invalidateMapSize();
+      this.mapService.discardAggregatedRegion();
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
 
       if (isUpdate) {
         this.updateBulletinOnServer(this.activeBulletin);
       } else {
         this.createBulletinOnServer(this.activeBulletin);
       }
-
     } else {
       this.openNoRegionModal(this.noRegionTemplate);
     }
@@ -1882,6 +1815,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
         (data) => {
           console.log("Bulletin created on server.");
+          this.mapService.deselectAggregatedRegion();
+          this.activeBulletin = undefined;
+          this.loadBulletinsFromServer();
         },
         (error) => {
           console.error("Bulletin could not be created on server!");
@@ -1908,6 +1844,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
         (data) => {
           console.log("Bulletin updated on server.");
+          this.loadBulletinsFromServer();
         },
         (error) => {
           console.error("Bulletin could not be updated on server!");
@@ -1928,6 +1865,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
         (data) => {
           console.log("Bulletin deleted on server.");
+          this.loadBulletinsFromServer();
         },
         (error) => {
           console.error("Bulletin could not be deleted on server!");
@@ -2058,7 +1996,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.delBulletin(bulletin);
     }
 
-    this.invalidateMapSize();
     this.mapService.discardAggregatedRegion();
 
     if (this.activeBulletin && this.activeBulletin !== undefined) {
@@ -2517,7 +2454,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   loadingErrorModalConfirm(): void {
     this.loadingErrorModalRef.hide();
-    this.goBack();
   }
 
   openLoadingJsonFileErrorModal(template: TemplateRef<any>) {
@@ -2619,7 +2555,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.createBulletin(true);
       }
     } else {
-    this.changeDate(date);
+      this.changeDate(date);
     }
   }
 
