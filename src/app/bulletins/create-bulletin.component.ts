@@ -150,8 +150,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public isCompactMapLayout: boolean = false;
   private bulletinMarkedDelete: BulletinModel;
 
-  // Publishing
-  public publishing: Date;
+  public publishing: boolean;
+  public submitting: boolean;
   public copying: boolean;
 
 
@@ -270,7 +270,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     // Set initial value based on the current window width
     this.isCompactMapLayout = window.innerWidth < 768;
-    this.publishing = undefined;
+
+    this.publishing = false;
+    this.submitting = false;
     this.copying = false;
     this.loadingPreview = false;
   }
@@ -664,7 +666,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   publishAll() {
-    this.publishing = this.bulletinsService.getActiveDate();
+    this.publishing = true;
     this.openPublishAllModal();
   }
 
@@ -706,7 +708,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.openCheckBulletinsModal(this.checkBulletinsTemplate, message, date);
+        this.openCheckBulletinsModal(message);
       },
       error => {
         console.error("Bulletins could not be checked!");
@@ -716,14 +718,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   showPublishAllButton(date) {
-    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
+    if (
+      !this.publishing &&
+      !this.submitting &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
+    ) {
       return true;
     }
   }
 
   showCheckButton(date) {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
+    if (
+      !this.publishing &&
+      !this.submitting &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated
@@ -737,10 +745,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   showMediaFileButton() {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-        this.authenticationService.getActiveRegion().enableMediaFile &&
-      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+    if (
       !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      this.authenticationService.getActiveRegion().enableMediaFile &&
       (
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
@@ -753,16 +761,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   showInfoButton() {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+    if (
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
       (
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished
       ) &&
-      !this.copying &&
-      (
-        this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
-      )
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
     ) {
       return true;
     } else {
@@ -814,7 +822,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
 
     this.modalService.onHide.subscribe((reason: string) => {
-      this.publishing = undefined;
+      this.publishing = false;
     });
   }
 
@@ -823,7 +831,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.publishAllBulletins(this.bulletinsService.getActiveDate()).subscribe(
       data => {
         console.log("All bulletins published.");
-        this.publishing = undefined;
+        this.publishing = false;
       },
       error => {
         console.error("All bulletins could not be published!");
@@ -834,7 +842,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   publishAllModalDecline(): void {
     this.publishAllModalRef.hide();
-    this.publishing = undefined;
+    this.publishing = false;
   }
 
   downloadJsonBulletin() {
@@ -1944,8 +1952,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   showPreviewButton() {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.publishing || this.publishing.getTime() !== this.bulletinsService.getActiveDate().getTime()) &&
+    if (
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
       (
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.draft ||
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.updated ||
@@ -1954,7 +1965,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.published ||
         this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.republished 
       ) &&
-      !this.copying &&
       (
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
@@ -2572,7 +2582,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   avalancheProblemErrorModalConfirm(): void {
     this.avalancheProblemErrorModalRef.hide();
-    this.publishing = undefined;
+    this.publishing = false;
+    this.submitting = false;
   }
 
   openLoadAvActivityCommentExampleTextModal(template: TemplateRef<any>) {
@@ -3203,17 +3214,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return Enums.BulletinStatus.missing;
   }
 
-  /* Publishing */
   showSubmitButton(date) {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
+    if (
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated
       ) &&
-      !this.copying &&
       this.internBulletinsList.length > 0 &&
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+    ) {
       return true;
     } else {
       return false;
@@ -3225,7 +3238,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.deselectBulletin();
 
-    this.publishing = date;
+    this.submitting = true;
 
     if (this.checkAvalancheProblems()) {
       this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
@@ -3284,7 +3297,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   submitBulletinsDuplicateRegionModalConfirm(): void {
     this.submitBulletinsDuplicateRegionModalRef.hide();
-    this.publishing = undefined;
+    this.submitting = false;
   }
 
   openSubmitBulletinsModal(template: TemplateRef<any>, message: string, date: Date) {
@@ -3296,7 +3309,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.submitBulletinsModalRef = this.modalService.show(ModalSubmitComponent, { initialState });
 
     this.modalService.onHide.subscribe((reason: string) => {
-      this.publishing = undefined;
+      this.submitting = false;
     });
   }
 
@@ -3306,7 +3319,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   checkBulletinsErrorModalConfirm(): void {
     this.checkBulletinsErrorModalRef.hide();
-    this.publishing = undefined;
+    this.publishing = false;
+    this.submitting = false;
   }
 
   submitBulletinsModalConfirm(date: Date): void {
@@ -3320,7 +3334,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.submitted);
         }
         this.bulletinsService.setIsEditable(false);
-        this.publishing = undefined;
+        this.submitting = false;
       },
       error => {
         console.error("Bulletins could not be submitted!");
@@ -3331,7 +3345,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   submitBulletinsModalDecline(): void {
     this.submitBulletinsModalRef.hide();
-    this.publishing = undefined;
+    this.submitting = false;
   }
 
   openSubmitBulletinsErrorModal(template: TemplateRef<any>) {
@@ -3340,12 +3354,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   submitBulletinsErrorModalConfirm(): void {
     this.submitBulletinsErrorModalRef.hide();
-    this.publishing = undefined;
+    this.submitting = false;
   }
 
   showUpdateButton(date) {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
+    if (
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
@@ -3354,11 +3371,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
         (this.bulletinsService.getUserRegionStatus(date) === undefined && (this.bulletinsService.hasBeenPublished5PM(date)))
       ) &&
-      !this.copying &&
       (
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)
-      )) {
+      )
+    ) {
       return true;
     } else {
       return false;
@@ -3373,26 +3390,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   showPublishButton(date) {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      (!this.publishing || this.publishing.getTime() !== date.getTime()) &&
-      (this.bulletinsService.hasBeenPublished5PM(date)) &&
+    if (
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      this.bulletinsService.hasBeenPublished5PM(date) &&
       (
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
         this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted
       ) &&
-      !this.copying &&
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  showSpinningIconButton(date) {
-    if (this.authenticationService.getActiveRegionId() !== undefined &&
-      !this.copying &&
-      this.publishing &&
-      this.publishing.getTime() === date.getTime()) {
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+    ) {
       return true;
     } else {
       return false;
@@ -3401,7 +3410,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   publish(event, date: Date, change: boolean) {
     event.stopPropagation();
-    this.publishing = date;
+    this.publishing = true;
 
     this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
       data => {
@@ -3456,7 +3465,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
 
     this.modalService.onHide.subscribe((reason: string) => {
-      this.publishing = undefined;
+      this.publishing = false;
     });
   }
 
@@ -3471,7 +3480,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
             this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
           }
-          this.publishing = undefined;
+          this.publishing = false;
         },
         error => {
           console.error("Bulletins could not be published (no messages)!");
@@ -3487,7 +3496,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
             this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
           }
-          this.publishing = undefined;
+          this.publishing = false;
         },
         error => {
           console.error("Bulletins could not be published!");
@@ -3499,7 +3508,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   publishBulletinsModalDecline(): void {
     this.publishBulletinsModalRef.hide();
-    this.publishing = undefined;
+    this.publishing = false;
   }
 
   openPublishBulletinsErrorModal(template: TemplateRef<any>) {
@@ -3508,7 +3517,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   
   publishBulletinsErrorModalConfirm(): void {
     this.publishBulletinsErrorModalRef.hide();
-    this.publishing = undefined;
+    this.publishing = false;
   }
 
   openPreviewErrorModal(template: TemplateRef<any>) {
@@ -3520,16 +3529,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadingPreview = false;
   }
 
-  openCheckBulletinsModal(template: TemplateRef<any>, message: string, date: Date) {
+  openCheckBulletinsModal(message: string) {
     const initialState = {
       text: message,
-      date: date,
+      date: this.bulletinsService.getActiveDate(),
       component: this
     };
     this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });
 
     this.modalService.onHide.subscribe((reason: string) => {
-      this.publishing = undefined;
+      this.publishing = false;
+      this.submitting = false;
     });
   }
 
