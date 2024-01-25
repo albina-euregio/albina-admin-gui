@@ -457,7 +457,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         map(() => { 
           this.loadExternalBulletinsFromServer();
         }) 
-      ).subscribe(); 
+      ).subscribe();
+      
+      const mapDiv = document.getElementById("map");
+      const resizeObserver = new ResizeObserver(() => {
+        this.mapService.map.invalidateSize();
+        this.mapService.afternoonMap.invalidateSize();
+      });
+      resizeObserver.observe(mapDiv);
     });
   }
 
