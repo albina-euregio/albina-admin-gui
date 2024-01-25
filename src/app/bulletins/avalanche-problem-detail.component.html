@@ -229,8 +229,8 @@
               type="number"
               name="elevation-input"
               [disabled]="disabled || avalancheProblemModel.treelineHigh || !useElevationHigh"
-              [(ngModel)]="avalancheProblemModel.elevationHigh"
-              (change)="updateElevationHigh()"
+              [(ngModel)]="localElevationHigh"
+              (change)="updateElevationHigh($event)"
             />
             <span class="input-group-text">m</span>
           </div>
@@ -239,8 +239,8 @@
             type="reset"
             class="btn btn-icon"
             [ngClass]="{
-              'btn-outline-secondary': !avalancheProblemModel.treelineHigh, 
-              'btn-dark': avalancheProblemModel.treelineHigh
+              'btn-outline-secondary': !localTreelineHigh, 
+              'btn-dark': localTreelineHigh
             }"
             (click)="treelineHighClicked($event)"
             data-toggle="tooltip"
@@ -276,7 +276,7 @@
               type="number"
               name="elevation-input"
               [disabled]="disabled || avalancheProblemModel.treelineLow || !useElevationLow"
-              [(ngModel)]="avalancheProblemModel.elevationLow"
+              [(ngModel)]="localElevationLow"
               (change)="updateElevationLow()"
             />
             <span class="input-group-text">m</span>
@@ -286,8 +286,8 @@
             type="reset"
             class="btn btn-icon"
             [ngClass]="{
-              'btn-outline-secondary': !avalancheProblemModel.treelineLow, 
-              'btn-dark': avalancheProblemModel.treelineLow
+              'btn-outline-secondary': !localTreelineLow, 
+              'btn-dark': localTreelineLow
             }"
             (click)="treelineLowClicked($event)"
             data-toggle="tooltip"

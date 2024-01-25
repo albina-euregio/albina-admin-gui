@@ -32,6 +32,12 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   avalancheSize = Enums.AvalancheSize;
   useElevationHigh = false;
   useElevationLow = false;
+  isElevationHighEditing = false;
+  isElevationLowEditing = false;
+  localElevationHigh = undefined;
+  localElevationLow = undefined;
+  localTreelineHigh = false;
+  localTreelineLow = false;
 
   public terrainFeatureTextcat: string;
   public terrainFeatureDe: string;
@@ -50,15 +56,23 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    if (this.avalancheProblemModel.getTreelineHigh() || this.avalancheProblemModel.getElevationHigh() !== undefined) {
-      this.useElevationHigh = true;
-    } else {
-      this.useElevationHigh = false;
+    if (!this.isElevationHighEditing) {
+      if (this.avalancheProblemModel.getTreelineHigh() || this.avalancheProblemModel.getElevationHigh() !== undefined) {
+        this.useElevationHigh = true;
+      } else {
+        this.useElevationHigh = false;
+      }
+      this.localElevationHigh = this.avalancheProblemModel.getElevationHigh();
+      this.localTreelineHigh = this.avalancheProblemModel.getTreelineHigh();
     }
-    if (this.avalancheProblemModel.getTreelineLow() || this.avalancheProblemModel.getElevationLow() !== undefined) {
-      this.useElevationLow = true;
-    } else {
-      this.useElevationLow = false;
+    if (!this.isElevationLowEditing) {
+      if (this.avalancheProblemModel.getTreelineLow() || this.avalancheProblemModel.getElevationLow() !== undefined) {
+        this.useElevationLow = true;
+      } else {
+        this.useElevationLow = false;
+      }
+      this.localElevationLow = this.avalancheProblemModel.getElevationLow();
+      this.localTreelineLow = this.avalancheProblemModel.getTreelineLow();
     }
   }
 
@@ -82,42 +96,61 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.changeAvalancheProblemDetailEvent.emit();
   }
 
-  updateElevationHigh() {
-    if (this.avalancheProblemModel) {
-      this.avalancheProblemModel.elevationHigh = Math.round(this.avalancheProblemModel.elevationHigh / 100) * 100;
-      if (this.avalancheProblemModel.elevationHigh > 9000) {
-        this.avalancheProblemModel.elevationHigh = 9000;
-      } else if (this.avalancheProblemModel.elevationHigh < 0) {
-        this.avalancheProblemModel.elevationHigh = 0;
+  updateElevationHigh(event) {
+    if (!this.localTreelineHigh) {
+      if (this.avalancheProblemModel && this.localElevationHigh !== undefined && this.localElevationHigh !== "") {
+        this.localElevationHigh = Math.round(this.localElevationHigh / 100) * 100;
+        this.avalancheProblemModel.elevationHigh = this.localElevationHigh;
+        if (this.avalancheProblemModel.elevationHigh > 9000) {
+          this.avalancheProblemModel.elevationHigh = 9000;
+        } else if (this.avalancheProblemModel.elevationHigh < 0) {
+          this.avalancheProblemModel.elevationHigh = 0;
+        }
       }
+      this.bulletinDaytimeDescription.updateDangerRating();
+      this.mapService.updateAggregatedRegion(this.bulletin);
+      this.mapService.selectAggregatedRegion(this.bulletin);
+      this.isElevationHighEditing = false;
+      console.log("isElevationHighEditing: false");
+      this.changeAvalancheProblemDetailEvent.emit();
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
-    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   updateElevationLow() {
-    if (this.avalancheProblemModel) {
-      this.avalancheProblemModel.elevationLow = Math.round(this.avalancheProblemModel.elevationLow / 100) * 100;
-      if (this.avalancheProblemModel.elevationLow > 9000) {
-        this.avalancheProblemModel.elevationLow = 9000;
-      } else if (this.avalancheProblemModel.elevationLow < 0) {
-        this.avalancheProblemModel.elevationLow = 0;
+    if (!this.localTreelineLow) {
+      if (this.avalancheProblemModel && this.localElevationLow !== undefined && this.localElevationLow !== "") {
+        this.localElevationLow = Math.round(this.localElevationLow / 100) * 100;
+        this.avalancheProblemModel.elevationLow = this.localElevationLow;
+        if (this.avalancheProblemModel.elevationLow > 9000) {
+          this.avalancheProblemModel.elevationLow = 9000;
+        } else if (this.avalancheProblemModel.elevationLow < 0) {
+          this.avalancheProblemModel.elevationLow = 0;
+        }
       }
+      this.bulletinDaytimeDescription.updateDangerRating();
+      this.mapService.updateAggregatedRegion(this.bulletin);
+      this.mapService.selectAggregatedRegion(this.bulletin);
+      this.isElevationLowEditing = false;
+      console.log("isElevationLowEditing: false");
+      this.changeAvalancheProblemDetailEvent.emit();
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
-    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   treelineHighClicked(event) {
     event.stopPropagation();
     if (this.avalancheProblemModel.treelineHigh) {
+      this.isElevationHighEditing = true;
+      console.log("isElevationHighEditing: true");
       this.avalancheProblemModel.treelineHigh = false;
+      this.localElevationHigh = "";
+      this.localTreelineHigh = false;
     } else {
       this.avalancheProblemModel.treelineHigh = true;
+      this.avalancheProblemModel.setElevationHigh(undefined);
+      this.localElevationHigh = "";
+      this.localTreelineHigh = true;
+      this.isElevationHighEditing = false;
+      console.log("isElevationHighEditing: false");
     }
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
@@ -128,9 +161,18 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   treelineLowClicked(event) {
     event.stopPropagation();
     if (this.avalancheProblemModel.treelineLow) {
+      this.isElevationLowEditing = true;
+      console.log("isElevationLowEditing: true");
+      this.localTreelineLow = false;
+      this.localElevationLow = "";
       this.avalancheProblemModel.treelineLow = false;
     } else {
       this.avalancheProblemModel.treelineLow = true;
+      this.avalancheProblemModel.setElevationLow(undefined);
+      this.localElevationLow = "";
+      this.localTreelineLow = true;
+      this.isElevationLowEditing = false;
+      console.log("isElevationLowEditing: false");
     }
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
@@ -140,27 +182,39 @@ export class AvalancheProblemDetailComponent implements OnChanges {
 
   setUseElevationHigh(event) {
     if (!event.currentTarget.checked) {
+      this.localElevationHigh = "";
+      this.localTreelineHigh = false;
       this.avalancheProblemModel.treelineHigh = false;
       this.avalancheProblemModel.elevationHigh = undefined;
+      this.isElevationHighEditing = false;
+      console.log("isElevationHighEditing: false");
       this.changeAvalancheProblemDetailEvent.emit();
       this.bulletinDaytimeDescription.updateDangerRating();
       this.mapService.updateAggregatedRegion(this.bulletin);
       this.mapService.selectAggregatedRegion(this.bulletin);
     } else {
       this.useElevationHigh = true;
+      this.isElevationHighEditing = true;
+      console.log("isElevationHighEditing: true");
     }
   }
 
   setUseElevationLow(event) {
     if (!event.currentTarget.checked) {
+      this.localElevationLow = "";
+      this.localTreelineLow = false;
       this.avalancheProblemModel.treelineLow = false;
       this.avalancheProblemModel.elevationLow = undefined;
+      this.isElevationLowEditing = false;
+      console.log("isElevationLowEditing: false");
       this.bulletinDaytimeDescription.updateDangerRating();
       this.mapService.updateAggregatedRegion(this.bulletin);
       this.mapService.selectAggregatedRegion(this.bulletin);
       this.changeAvalancheProblemDetailEvent.emit();
     } else {
       this.useElevationLow = true;
+      this.isElevationLowEditing = true;
+      console.log("isElevationLowEditing: true");
     }
   }
 
