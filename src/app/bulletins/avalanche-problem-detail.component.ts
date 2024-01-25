@@ -111,7 +111,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.mapService.updateAggregatedRegion(this.bulletin);
       this.mapService.selectAggregatedRegion(this.bulletin);
       this.isElevationHighEditing = false;
-      console.log("isElevationHighEditing: false");
       this.changeAvalancheProblemDetailEvent.emit();
     }
   }
@@ -131,7 +130,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.mapService.updateAggregatedRegion(this.bulletin);
       this.mapService.selectAggregatedRegion(this.bulletin);
       this.isElevationLowEditing = false;
-      console.log("isElevationLowEditing: false");
       this.changeAvalancheProblemDetailEvent.emit();
     }
   }
@@ -140,7 +138,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     event.stopPropagation();
     if (this.avalancheProblemModel.treelineHigh) {
       this.isElevationHighEditing = true;
-      console.log("isElevationHighEditing: true");
       this.avalancheProblemModel.treelineHigh = false;
       this.localElevationHigh = "";
       this.localTreelineHigh = false;
@@ -150,7 +147,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.localElevationHigh = "";
       this.localTreelineHigh = true;
       this.isElevationHighEditing = false;
-      console.log("isElevationHighEditing: false");
     }
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
@@ -162,7 +158,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     event.stopPropagation();
     if (this.avalancheProblemModel.treelineLow) {
       this.isElevationLowEditing = true;
-      console.log("isElevationLowEditing: true");
       this.localTreelineLow = false;
       this.localElevationLow = "";
       this.avalancheProblemModel.treelineLow = false;
@@ -172,7 +167,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.localElevationLow = "";
       this.localTreelineLow = true;
       this.isElevationLowEditing = false;
-      console.log("isElevationLowEditing: false");
     }
     this.bulletinDaytimeDescription.updateDangerRating();
     this.mapService.updateAggregatedRegion(this.bulletin);
@@ -187,7 +181,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.avalancheProblemModel.treelineHigh = false;
       this.avalancheProblemModel.elevationHigh = undefined;
       this.isElevationHighEditing = false;
-      console.log("isElevationHighEditing: false");
       this.changeAvalancheProblemDetailEvent.emit();
       this.bulletinDaytimeDescription.updateDangerRating();
       this.mapService.updateAggregatedRegion(this.bulletin);
@@ -195,7 +188,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     } else {
       this.useElevationHigh = true;
       this.isElevationHighEditing = true;
-      console.log("isElevationHighEditing: true");
     }
   }
 
@@ -206,7 +198,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.avalancheProblemModel.treelineLow = false;
       this.avalancheProblemModel.elevationLow = undefined;
       this.isElevationLowEditing = false;
-      console.log("isElevationLowEditing: false");
       this.bulletinDaytimeDescription.updateDangerRating();
       this.mapService.updateAggregatedRegion(this.bulletin);
       this.mapService.selectAggregatedRegion(this.bulletin);
@@ -214,7 +205,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     } else {
       this.useElevationLow = true;
       this.isElevationLowEditing = true;
-      console.log("isElevationLowEditing: true");
     }
   }
 
