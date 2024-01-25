@@ -142,22 +142,26 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     if (!event.currentTarget.checked) {
       this.avalancheProblemModel.treelineHigh = false;
       this.avalancheProblemModel.elevationHigh = undefined;
+      this.changeAvalancheProblemDetailEvent.emit();
+      this.bulletinDaytimeDescription.updateDangerRating();
+      this.mapService.updateAggregatedRegion(this.bulletin);
+      this.mapService.selectAggregatedRegion(this.bulletin);
+    } else {
+      this.useElevationHigh = true;
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
-    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   setUseElevationLow(event) {
     if (!event.currentTarget.checked) {
       this.avalancheProblemModel.treelineLow = false;
       this.avalancheProblemModel.elevationLow = undefined;
+      this.bulletinDaytimeDescription.updateDangerRating();
+      this.mapService.updateAggregatedRegion(this.bulletin);
+      this.mapService.selectAggregatedRegion(this.bulletin);
+      this.changeAvalancheProblemDetailEvent.emit();
+    } else {
+      this.useElevationLow = true;
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
-    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   deleteTextcat(event) {
