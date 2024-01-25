@@ -317,6 +317,10 @@ export class AuthenticationService {
     return false;
   }
 
+  public isInternalRegion(region: string) {
+    return region.startsWith(this.constantsService.codeTyrol) || region.startsWith(this.constantsService.codeSouthTyrol) || region.startsWith(this.constantsService.codeTrentino);
+  }
+
   public isExternalRegion(region: string) {
     if (this.constantsService.codeTyrol === region || this.constantsService.codeSouthTyrol === region || this.constantsService.codeTrentino === region)
       return false;

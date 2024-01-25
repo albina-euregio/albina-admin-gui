@@ -179,6 +179,8 @@
       <span class="create-bulletin__bulletin-info" *ngIf="showNoPublicationWillHappen(bulletinsService.getActiveDate())"><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loadingPreview" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="loading"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loading" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="publishing"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.publishing" | translate }}</span>
+      <span class="create-bulletin__bulletin-info" *ngIf="submitting"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.submitting" | translate }}</span>
 
       <!-- submit -->
       <button *ngIf="showSubmitButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="submit($event, bulletinsService.getActiveDate())">
@@ -208,11 +210,6 @@
       <button *ngIf="showCheckButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="check($event, bulletinsService.getActiveDate())">
         <i class="ph ph-check"></i>
         <span>{{ 'bulletins.tooltip.check' | translate }}</span>
-      </button>
-
-      <!-- spinning icon -->
-      <button *ngIf="showSpinningIconButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons--small ml-2">
-          <i class="ph ph-circle-notch"></i>
       </button>
 
     </header>
@@ -272,11 +269,11 @@
                 <!-- media file -->
                 <li>
                   <button
-                    *ngIf="showMediaFileButton(date)"
+                    *ngIf="showMediaFileButton()"
                     [disabled]="editRegions || loading"
                     type="reset"
                     class="dropdown-item"
-                    (click)="openMediaFileDialog($event, date)"
+                    (click)="openMediaFileModal()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
                   >
@@ -328,11 +325,11 @@
                 <!-- info -->
                 <li>
                   <button
-                    *ngIf="showInfoButton(date)"
+                    *ngIf="showInfoButton()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="showPublicationInfo($event, date)"
+                    (click)="showPublicationInfo()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.info' | translate }}"
                   >
@@ -345,11 +342,11 @@
                 <!-- publish all -->
                 <li>
                   <button
-                    *ngIf="showPublishAllButton(date)"
+                    *ngIf="showPublishAllButton()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"
-                    (click)="publishAll($event, date)"
+                    (click)="publishAll()"
                     data-toggle="tooltip"
                     title="{{ 'bulletins.tooltip.publishAll' | translate }}"
                   >
@@ -454,7 +451,7 @@
             type="button"
             aria-controls="dropdownMenu"
           >
-            <i class="ph-bold ph-dots-three"></i>
+            <i class="ph-bold ph-dots-three-circle"></i>
           </button>
           <ul id="dropdownMenu" *dropdownMenu class="dropdown-menu dropdown-menu-end">
             <li *ngIf="isCompactMapLayout">
@@ -465,6 +462,16 @@
             <li *ngIf="!isCompactMapLayout">
                 <button class="dropdown-item" (click)="setMapLayout(activeBulletin, true)">
                     <i class="ph icon-md ph-square-split-vertical"></i> {{ 'bulletins.create.mapTop' | translate }}
+                </button>
+            </li>
+            <li *ngIf="showNotes">
+                <button class="dropdown-item" (click)="toggleShowNotes()">
+                    <i class="ph icon-md ph-note"></i> {{ 'bulletins.create.hideNotes' | translate }}
+                </button>
+            </li>
+            <li *ngIf="!showNotes">
+                <button class="dropdown-item" (click)="toggleShowNotes()">
+                    <i class="ph icon-md ph-note"></i> {{ 'bulletins.create.showNotes' | translate }}
                 </button>
             </li>
           </ul>
@@ -676,7 +683,7 @@
                         )
                       "
                     >
-                      <i class="ph ph-book-bookmark"></i>
+                      <i class="ph ph-pencil-line"></i>
                     </button>
                     <button
                       *ngIf="!copyService.isCopyTextcat()"
@@ -906,7 +913,7 @@
               <!-- Danger situation headline -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-7">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.avActivityHighlights" | translate }}
                     </label>
@@ -928,7 +935,7 @@
                             )
                           "
                         >
-                          <i class="ph ph-book-bookmark"></i>
+                          <i class="ph ph-pencil-line"></i>
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
@@ -1029,7 +1036,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div *ngIf="showNotes" class="col-5">
                     <label class="form-label" for="text-input">{{ "bulletins.create.label.notes" | translate }} </label>
                     <textarea
                       rows="9"
@@ -1166,7 +1173,7 @@
               <!-- Danger situation description -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-7">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.avActivityComment" | translate }}
                     </label>
@@ -1187,7 +1194,7 @@
                             )
                           "
                         >
-                          <i class="ph ph-book-bookmark"></i>
+                          <i class="ph ph-pencil-line"></i>
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
@@ -1298,7 +1305,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div *ngIf="showNotes" class="col-5">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.notes" | translate }}
                     </label>
@@ -1508,7 +1515,7 @@
               <!-- Danger pattern description -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-md-8">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.snowpackStructureComment" | translate }}
                     </label>
@@ -1531,7 +1538,7 @@
                             )
                           "
                         >
-                          <i class="ph ph-book-bookmark"></i>
+                          <i class="ph ph-pencil-line"></i>
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
@@ -1651,7 +1658,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div *ngIf="showNotes" class="col-md-5">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.notes" | translate }}
                     </label>
@@ -1892,7 +1899,7 @@
               <!-- Tendency comment -->
               <div class="form-group">
                 <div class="row">
-                  <div class="col-7">
+                  <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.tendencyComment" | translate }}
                     </label>
@@ -1916,7 +1923,7 @@
                             )
                           "
                         >
-                          <i class="ph ph-book-bookmark"></i>
+                          <i class="ph ph-pencil-line"></i>
                         </button>
                         <button
                           class="btn btn-sm btn-icon btn-bare"
@@ -2021,7 +2028,7 @@
                       ></textarea>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div *ngIf="showNotes" class="col-5">
                     <label class="form-label" for="text-input">
                       {{ "bulletins.create.label.notes" | translate }}
                     </label>
