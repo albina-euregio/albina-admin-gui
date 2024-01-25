@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { BulletinModel } from "../models/bulletin.model";
+import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 
 @Component({
   selector: "app-danger-rating-icon",
@@ -8,40 +8,24 @@ import { BulletinModel } from "../models/bulletin.model";
 })
 export class DangerRatingIconComponent {
 
-  @Input() bulletin: BulletinModel;
+  @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
 
   constructor(
     private constantsService: ConstantsService) {
   }
 
-  getForenoonColorAbove() {
+  getColorAbove() {
     let dangerRating = undefined;
-    if (this.bulletin && this.bulletin !== undefined && this.bulletin.getForenoonDangerRatingAbove() && this.bulletin.getForenoonDangerRatingAbove() !== undefined) {
-      dangerRating = this.bulletin.getForenoonDangerRatingAbove().toString();
+    if (this.bulletinDaytimeDescription && this.bulletinDaytimeDescription !== undefined && this.bulletinDaytimeDescription.getDangerRatingAbove() && this.bulletinDaytimeDescription.getDangerRatingAbove() !== undefined) {
+      dangerRating = this.bulletinDaytimeDescription.getDangerRatingAbove().toString();
     }
     return this.getDangerRatingColor(dangerRating);
   }
 
-  getForenoonColorBelow() {
+  getColorBelow() {
     let dangerRating = undefined;
-    if (this.bulletin && this.bulletin !== undefined && this.bulletin.getForenoonDangerRatingBelow() && this.bulletin.getForenoonDangerRatingBelow() !== undefined) {
-      dangerRating = this.bulletin.getForenoonDangerRatingBelow().toString();
-    }
-    return this.getDangerRatingColor(dangerRating);
-  }
-
-  getAfternoonColorAbove() {
-    let dangerRating = undefined;
-    if (this.bulletin && this.bulletin !== undefined && this.bulletin.getAfternoonDangerRatingAbove() && this.bulletin.getAfternoonDangerRatingAbove() !== undefined) {
-      dangerRating = this.bulletin.getAfternoonDangerRatingAbove().toString();
-    }
-    return this.getDangerRatingColor(dangerRating);
-  }
-
-  getAfternoonColorBelow() {
-    let dangerRating = undefined;
-    if (this.bulletin && this.bulletin !== undefined && this.bulletin.getAfternoonDangerRatingBelow() && this.bulletin.getAfternoonDangerRatingBelow() !== undefined) {
-      dangerRating = this.bulletin.getAfternoonDangerRatingBelow().toString();
+    if (this.bulletinDaytimeDescription && this.bulletinDaytimeDescription !== undefined && this.bulletinDaytimeDescription.getDangerRatingBelow() && this.bulletinDaytimeDescription.getDangerRatingBelow() !== undefined) {
+      dangerRating = this.bulletinDaytimeDescription.getDangerRatingBelow().toString();
     }
     return this.getDangerRatingColor(dangerRating);
   }

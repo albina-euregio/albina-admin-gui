@@ -2225,8 +2225,7 @@
       <p class="region-thumb__author font-s text-secondary">{{ bulletin.getAuthor().getName() }}</p>
 
       <div class="region-thumb__avalanche-info">
-        <app-danger-rating-icon [bulletin]="bulletin"></app-danger-rating-icon>
-
+        <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.forenoon"></app-danger-rating-icon>
         <!-- Avalanche problems -->
         <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem1" [avalancheProblem]="bulletin.forenoon.avalancheProblem1" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
         <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem2" [avalancheProblem]="bulletin.forenoon.avalancheProblem2" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
@@ -2243,11 +2242,19 @@
               : bulletin.forenoon.elevation + " m"
           }}
         </span>
-
-        <span
-          class="badge text-bg-light"
-          *ngIf="bulletin.hasDaytimeDependency && bulletin.afternoon.hasElevationDependency"
-        >
+        <!-- Elevations -->
+      </div>
+      <div *ngIf="bulletin?.hasDaytimeDependency" class="region-thumb__avalanche-info">
+        <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.afternoon"></app-danger-rating-icon>
+        <!-- Avalanche problems -->
+        <app-avalanche-problem-icons *ngIf="bulletin?.afternoon?.avalancheProblem1" [avalancheProblem]="bulletin.afternoon.avalancheProblem1" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.afternoon?.avalancheProblem2" [avalancheProblem]="bulletin.afternoon.avalancheProblem2" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.afternoon?.avalancheProblem3" [avalancheProblem]="bulletin.afternoon.avalancheProblem3" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.afternoon?.avalancheProblem4" [avalancheProblem]="bulletin.afternoon.avalancheProblem4" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <app-avalanche-problem-icons *ngIf="bulletin?.afternoon?.avalancheProblem5" [avalancheProblem]="bulletin.afternoon.avalancheProblem5" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
+        <!-- Avalanche problems -->
+        <!-- Elevations -->
+        <span class="badge text-bg-light" *ngIf="bulletin.afternoon.hasElevationDependency">
           <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
           {{
             bulletin.afternoon.treeline
@@ -2256,8 +2263,9 @@
           }}
         </span>
         <!-- Elevations -->
-
-        <span *ngIf="hasSuggestions(bulletin)" class="badge bg-orange">
+      </div>
+      <div *ngIf="hasSuggestions(bulletin)" class="region-thumb__avalanche-info">
+        <span class="badge bg-orange">
           <i class="ph-bold ph-lightbulb"></i> {{ "bulletins.create.suggestions" | translate }}
         </span>
       </div>
