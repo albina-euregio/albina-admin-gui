@@ -1160,8 +1160,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
       bulletinsList.push(bulletin);
-      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId())
+      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
         this.activeBulletin = bulletin;
+      }
       this.mapService.addAggregatedRegion(bulletin);
     }
 
@@ -1174,6 +1175,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.externRegionsMap.set(server, bulletinsList);
     if (!this.showExternRegionsMap.has(server.getApiUrl())) {
       this.showExternRegionsMap.set(server.getApiUrl(), false);
+    }
+
+    if (this.activeBulletin && this.activeBulletin !== undefined) {
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
   }
 
@@ -1213,6 +1218,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.internBulletinsList = bulletinsList;
     this.updateInternalBulletins();
     this.updateExternalBulletins();
+
+    if (this.activeBulletin && this.activeBulletin !== undefined) {
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
+    }
   }
 
   private updateInternalBulletins() {
