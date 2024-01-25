@@ -1178,6 +1178,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addInternalBulletins(response) {
+    let hasDaytimeDependency = false;
+
     this.mapService.resetInternalAggregatedRegions();
     this.mapService.resetActiveSelection();
 
@@ -1190,6 +1192,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.mapService.selectAggregatedRegion(this.activeBulletin);
       }
       this.mapService.addAggregatedRegion(bulletin);
+
+      if (bulletin.hasDaytimeDependency) {
+        hasDaytimeDependency = true;
+      }
     }
     
     bulletinsList.sort((a, b): number => {
@@ -1198,6 +1204,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return 0;
     });
     
+    if (hasDaytimeDependency && this.showAfternoonMap === false) {
+      this.onShowAfternoonMapChange(true);
+    } else if ((!hasDaytimeDependency && this.showAfternoonMap === true)) {
+      this.onShowAfternoonMapChange(false);
+    }
+
     this.internBulletinsList = bulletinsList;
     this.updateInternalBulletins();
     this.updateExternalBulletins();
