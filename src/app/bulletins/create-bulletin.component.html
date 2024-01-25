@@ -2227,14 +2227,14 @@
       <div class="region-thumb__avalanche-info">
         <app-danger-rating-icon [bulletin]="bulletin"></app-danger-rating-icon>
 
-        <!-- Lawinenproblem(e) -->
+        <!-- Avalanche problems -->
         <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem1" [avalancheProblem]="bulletin.forenoon.avalancheProblem1" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
         <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem2" [avalancheProblem]="bulletin.forenoon.avalancheProblem2" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
         <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem3" [avalancheProblem]="bulletin.forenoon.avalancheProblem3" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
         <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem4" [avalancheProblem]="bulletin.forenoon.avalancheProblem4" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
         <app-avalanche-problem-icons *ngIf="bulletin?.forenoon?.avalancheProblem5" [avalancheProblem]="bulletin.forenoon.avalancheProblem5" [iconClass]="'region-thumb__avalanche-problem-icon'"></app-avalanche-problem-icons>
-        <!-- Lawinenproblem(e) -->
-        <!-- Seehöhe(n) -->
+        <!-- Avalanche problems -->
+        <!-- Elevations -->
         <span class="badge text-bg-light" *ngIf="bulletin.forenoon.hasElevationDependency">
           <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
           {{
@@ -2255,7 +2255,7 @@
               : bulletin.afternoon.elevation + " m"
           }}
         </span>
-        <!-- Seehöhe(n) -->
+        <!-- Elevations -->
 
         <span *ngIf="hasSuggestions(bulletin)" class="badge bg-orange">
           <i class="ph-bold ph-lightbulb"></i> {{ "bulletins.create.suggestions" | translate }}
