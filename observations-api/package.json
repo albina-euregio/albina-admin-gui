@@ -9,6 +9,7 @@
     "which-polygon": "^2.2.1"
   },
   "devDependencies": {
+    "@types/bun": "^1.0.4",
     "@types/which-polygon": "^2.2.3"
   }
 }
