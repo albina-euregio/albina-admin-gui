@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { createConnection, selectObservations } from "./database";
+import { fetchAndInsert } from "./fetch";
 
 Bun.serve({
   port: 3000,
@@ -14,7 +15,13 @@ Bun.serve({
   },
 });
 
+let lastFetch = 0;
+
 async function serveObservations(url: URL) {
+  if (Date.now() - lastFetch > 5 * 3600) {
+    await fetchAndInsert();
+    lastFetch = Date.now();
+  }
   const startDate =
     typeof url.searchParams.get("startDate") === "string"
       ? dayjs(url.searchParams.get("startDate"))
