@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
 import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import { createConnection, insertObservation } from "./database";
 import { fetchLawisIncidents } from "./fetch_lawis_incident";
@@ -19,7 +20,10 @@ async function fetchAndInsert() {
   connection.destroy();
 }
 
-async function* fetchAll(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
+async function* fetchAll(
+  startDate: dayjs.Dayjs,
+  endDate: dayjs.Dayjs,
+): AsyncGenerator<GenericObservation, void, unknown> {
   yield* fetchLawisIncidents(startDate, endDate);
   yield* fetchLawisProfiles(startDate, endDate);
   yield* fetchLolaKronos(startDate, endDate);
