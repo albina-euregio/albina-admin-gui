@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import type dayjs from "dayjs";
 import {
   Incident,
   IncidentDetails,
@@ -9,10 +9,10 @@ import {
 const API = "https://lawis.at/lawis_api/v2_2/incident";
 const WEB = "https://lawis.at/lawis_api/v2_2/files/incidents/snowprofile_{{id}}.pdf";
 
-export async function* fetchLawisIncidents() {
+export async function* fetchLawisIncidents(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
   const url = `${API.replace("v2_2", "public")}?${new URLSearchParams({
-    startDate: dayjs().millisecond(0).subtract(1, "week").toISOString(),
-    endDate: dayjs().millisecond(0).toISOString(),
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
   })}`;
   console.log("Fetching", url);
   const json: Incident[] = await (await fetch(url)).json();

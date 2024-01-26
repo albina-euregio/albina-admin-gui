@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import type dayjs from "dayjs";
 import {
   ArcGisLayer,
   LwdKipBeobachtung,
@@ -13,24 +13,22 @@ import {
 
 const API = "https://gis.tirol.gv.at/arcgis";
 
-export async function* fetchLwdKip() {
-  for (const f of (await fetchLwdKipLayer<LwdKipBeobachtung>("Beobachtungen")).features) {
+export async function* fetchLwdKip(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
+  for (const f of (await fetchLwdKipLayer<LwdKipBeobachtung>(startDate, endDate, "Beobachtungen")).features) {
     yield convertLwdKipBeobachtung(f);
   }
-  for (const f of (await fetchLwdKipLayer<LwdKipSprengerfolg>("Sprengerfolg")).features) {
+  for (const f of (await fetchLwdKipLayer<LwdKipSprengerfolg>(startDate, endDate, "Sprengerfolg")).features) {
     yield convertLwdKipSprengerfolg(f);
   }
-  for (const f of (await fetchLwdKipLayer<LwdKipLawinenabgang>("Lawinenabgänge")).features) {
+  for (const f of (await fetchLwdKipLayer<LwdKipLawinenabgang>(startDate, endDate, "Lawinenabgänge")).features) {
     yield convertLwdKipLawinenabgang(f);
   }
-  // for (const f of fetchLwdKipLayer<LwdKipSperren>("aktive_Sperren").features) {
+  // for (const f of fetchLwdKipLayer<LwdKipSperren>(startDate, endDate, "aktive_Sperren").features) {
   //   yield convertLwdKipSperren(f);
   // }
 }
 
-async function fetchLwdKipLayer<T>(layerName = ""): Promise<T> {
-  const startDate = formatDate(dayjs().millisecond(0).subtract(1, "week"));
-  const endDate = formatDate(dayjs().millisecond(0));
+async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs, layerName = ""): Promise<T> {
   const headers = { Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" };
 
   const tokenResponse = await fetch(`${API}/tokens/`, {
@@ -56,7 +54,7 @@ async function fetchLwdKipLayer<T>(layerName = ""): Promise<T> {
 
   url = `${API}/rest/services/APPS_DVT/lwdkip/mapserver/${layer.id}/query?${new URLSearchParams({
     token,
-    where: `BEOBDATUM > TIMESTAMP '${startDate}' AND BEOBDATUM < TIMESTAMP '${endDate}'`,
+    where: `BEOBDATUM > TIMESTAMP '${formatDate(startDate)}' AND BEOBDATUM < TIMESTAMP '${formatDate(endDate)}'`,
     outFields: "*",
     datumTransformation: "5891",
     f: "geojson",
