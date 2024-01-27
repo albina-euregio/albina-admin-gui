@@ -4,13 +4,15 @@ import { createConnection, selectObservations } from "./database";
 import { fetchAndInsert } from "./fetch";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
 
+const port = process.env.PORT || 3000;
+
 const app = express();
 app.get("/observations", async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const observations = await serveObservations(url);
   return res.send(observations);
 });
-app.listen(3000, () => console.log("observations-api listening on :3000"));
+app.listen(port, () => console.log(`observations-api listening on :${port}`));
 
 let lastFetch = 0;
 
