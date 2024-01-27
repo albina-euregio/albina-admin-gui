@@ -13,7 +13,7 @@ export async function fetchAndInsert() {
   const endDate = dayjs().millisecond(0);
   const connection = await createConnection();
   for await (const obs of fetchAll(startDate, endDate)) {
-    insertObservation(connection, augmentRegion(obs));
+    await insertObservation(connection, augmentRegion(obs));
   }
   connection.destroy();
 }
