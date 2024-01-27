@@ -55,16 +55,16 @@ export async function insertObservation(connection: Connection, o: GenericObserv
   }
 }
 
-export async function* selectObservations(
+export async function selectObservations(
   connection: Connection,
   startDate: dayjs.Dayjs,
   endDate: dayjs.Dayjs,
-): AsyncGenerator<GenericObservation, void, unknown> {
+): Promise<GenericObservation[]> {
   const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ?";
   const values = [startDate.toISOString(), endDate.toISOString()];
   const [rows, fields] = await connection.query(sql, values);
-  for (const row of rows) {
-    yield {
+  return rows.map(
+    (row): GenericObservation => ({
       $id: row.ID,
       $source: row.SOURCE,
       $type: row.OBS_TYPE,
@@ -86,6 +86,6 @@ export async function* selectObservations(
       avalancheProblems: row.AVALANCHE_PROBLEMS?.split(","),
       dangerPatterns: row.DANGER_PATTERNS?.split(","),
       importantObservations: row.IMPORTANT_OBSERVATION?.split(","),
-    } satisfies GenericObservation;
-  }
+    }),
+  );
 }

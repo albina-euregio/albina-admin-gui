@@ -31,7 +31,7 @@ async function serveObservations(url: URL): Promise<GenericObservation[]> {
       : dayjs().millisecond(0);
   const connection = await createConnection();
   try {
-    const observations = await Array.fromAsync(selectObservations(connection, startDate, endDate));
+    const observations = await selectObservations(connection, startDate, endDate);
     return observations;
   } finally {
     connection.destroy();
