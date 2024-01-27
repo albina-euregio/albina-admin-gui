@@ -4,7 +4,9 @@ const API = process.env.ALBINA_WIKISNOW_API;
 
 export async function* fetchWikiSnow() {
   console.log("Fetching", API);
-  const json: ApiWikisnowECT = await (await fetch(API)).json();
+  const res = await fetch(API);
+  if (!res.ok) throw new Error(res.statusText + ": " + (await res.text()));
+  const json: ApiWikisnowECT = await res.json();
 
   for (let wikisnow of json.data) {
     yield convertWikisnow(wikisnow);

@@ -41,6 +41,7 @@ async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs,
       f: "json",
     }),
   });
+  if (!tokenResponse.ok) throw new Error(tokenResponse.statusText + ": " + (await tokenResponse.text()));
   const { token } = await tokenResponse.json();
 
   let url = `${API}/rest/services/APPS_DVT/lwdkip/mapserver/layers/query?${new URLSearchParams({
@@ -49,6 +50,7 @@ async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs,
   })}`;
   console.log("Fetching", url);
   const layersResponse = await fetch(url, { headers });
+  if (!layersResponse.ok) throw new Error(layersResponse.statusText + ": " + (await layersResponse.text()));
   const { layers }: { layers: ArcGisLayer[] } = await layersResponse.json();
   const layer = layers.find((l) => l.name.trim() === layerName && l.type === "Feature Layer");
 
@@ -61,6 +63,7 @@ async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs,
   })}`;
   console.log("Fetching", url);
   const response = await fetch(url, { headers });
+  if (!response.ok) throw new Error(response.statusText + ": " + (await response.text()));
   return await response.json();
 }
 

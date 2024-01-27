@@ -15,7 +15,9 @@ export async function* fetchLawisIncidents(startDate: dayjs.Dayjs, endDate: dayj
     endDate: endDate.toISOString(),
   })}`;
   console.log("Fetching", url);
-  const json: Incident[] = await (await fetch(url)).json();
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(res.statusText + ": " + (await res.text()));
+  const json: Incident[] = await res.json();
 
   for (const incident of json) {
     const obs = toLawisIncident(incident, WEB);

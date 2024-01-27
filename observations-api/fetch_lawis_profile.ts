@@ -15,7 +15,9 @@ export async function* fetchLawisProfiles(startDate: dayjs.Dayjs, endDate: dayjs
     endDate: endDate.toISOString(),
   })}`;
   console.log("Fetching", url);
-  const json: Profile[] = await (await fetch(url)).json();
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(res.statusText + ": " + (await res.text()));
+  const json: Profile[] = await res.json();
 
   for (const profile of json) {
     const obs = toLawisProfile(profile, WEB);
