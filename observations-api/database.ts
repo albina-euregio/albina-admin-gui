@@ -70,7 +70,7 @@ export async function selectObservations(
       $type: row.OBS_TYPE ?? undefined,
       $externalURL: row.EXTERNAL_URL ?? undefined,
       stability: row.STABILITY ?? undefined,
-      aspect: row.ASPECTS?.split(",") ?? undefined,
+      aspect: row.ASPECTS?.split(",")?.[0] ?? undefined,
       authorName: row.AUTHOR_NAME ?? undefined,
       content: row.OBS_CONTENT ?? undefined,
       $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : row.OBS_DATA ?? undefined,
