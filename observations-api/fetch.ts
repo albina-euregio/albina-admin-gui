@@ -7,13 +7,16 @@ import { fetchLawisProfiles } from "./fetch_lawis_profile";
 import { fetchLolaKronos } from "./fetch_lola_kronos";
 import { fetchLwdKip } from "./fetch_lwdkip";
 import { fetchWikiSnow } from "./fetch_wikisnow";
+import { augmentElevation } from "./elevation";
 
 export async function fetchAndInsert() {
   const startDate = dayjs().millisecond(0).subtract(1, "week");
   const endDate = dayjs().millisecond(0);
   const connection = await createConnection();
   for await (const obs of fetchAll(startDate, endDate)) {
-    await insertObservation(connection, augmentRegion(obs));
+    augmentRegion(obs);
+    await augmentElevation(obs);
+    await insertObservation(connection, obs);
   }
   connection.destroy();
 }
