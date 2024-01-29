@@ -17,10 +17,6 @@ app.listen(port, () => console.log(`observations-api listening on :${port}`));
 let lastFetch = 0;
 
 async function serveObservations(url: URL): Promise<GenericObservation[]> {
-  if (Date.now() - lastFetch > 5 * 3600) {
-    await fetchAndInsert();
-    lastFetch = Date.now();
-  }
   const startDate =
     typeof url.searchParams.get("startDate") === "string"
       ? dayjs(url.searchParams.get("startDate"))
@@ -29,6 +25,12 @@ async function serveObservations(url: URL): Promise<GenericObservation[]> {
     typeof url.searchParams.get("endDate") === "string"
       ? dayjs(url.searchParams.get("endDate"))
       : dayjs().millisecond(0);
+
+  if (Date.now() - lastFetch > 5 * 3600) {
+    await fetchAndInsert(startDate, endDate);
+    lastFetch = Date.now();
+  }
+
   const connection = await createConnection();
   try {
     const observations = await selectObservations(connection, startDate, endDate);
