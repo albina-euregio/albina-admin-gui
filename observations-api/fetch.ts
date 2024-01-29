@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation, findExistingObservation } from "../src/app/observations/models/generic-observation.model";
 import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import { createConnection, insertObservation, selectObservations } from "./database";
 import { fetchLawisIncidents } from "./fetch_lawis_incident";
@@ -16,8 +16,11 @@ export async function fetchAndInsert(
   const connection = await createConnection();
   const existing = await selectObservations(connection, startDate, endDate);
   for await (const obs of fetchAll(startDate, endDate, existing)) {
-    augmentRegion(obs);
-    await augmentElevation(obs);
+    const ex = findExistingObservation(existing, obs);
+    if (ex && (obs.latitude !== ex.latitude || obs.longitude !== ex.longitude)) {
+      augmentRegion(obs);
+      await augmentElevation(obs);
+    }
     await insertObservation(connection, obs);
   }
   connection.destroy();
