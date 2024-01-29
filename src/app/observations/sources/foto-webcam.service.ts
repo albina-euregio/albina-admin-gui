@@ -8,6 +8,8 @@ import { augmentRegion } from "../../providers/regions-service/augmentRegion";
 import { addLolaCadsData, convertFotoWebcamEU, FotoWebcamEU, FotoWebcamEUResponse } from "../models/foto-webcam.model";
 import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
 
+const LOLA_CADS_ENABLED = false;
+
 @Injectable()
 export class FotoWebcamObservationsService {
   constructor(
@@ -42,7 +44,7 @@ export class FotoWebcamObservationsService {
         ),
       ),
       mergeMap((cam: GenericObservation) => {
-        if (cam.$data["latest"].includes("foto-webcam.eu")) {
+        if (LOLA_CADS_ENABLED && cam.$data["latest"].includes("foto-webcam.eu")) {
           return this.getLolaCads(cam).pipe(map((lolaCadsData) => addLolaCadsData(cam, lolaCadsData)));
         } else {
           return of(cam);
