@@ -13,6 +13,7 @@ export class ConstantsService {
   public snowpackModelsUrl: string = "https://avalanche.report/alpsolut/html/";
 
   public observationApi = {
+    $: "https://admin.avalanche.report/observations",
     "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",
     "forecast.uoa.gr": "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png",
     [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/observations/widget.alpsolut.eu/",

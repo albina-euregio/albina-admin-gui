@@ -11,7 +11,6 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ObservationsService } from "./observations.service";
 import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
-import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import {
   GenericObservation,
@@ -155,7 +154,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     private observationsService: ObservationsService,
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
-    private elevationService: ElevationService,
     public mapService: BaseMapService,
   ) {}
 
@@ -266,19 +264,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         } catch (err) {
           console.warn("Observation does not match schema", observation, err);
         }
-        if (this.filter.inDateRange(observation)) {
-          if (observation.$source === ObservationSource.AvalancheWarningService) {
-            observation = this.parseObservation(observation);
-          }
-          if (!observation.elevation && observation.$source !== ObservationSource.FotoWebcamsEU) {
-            this.elevationService.getElevation(observation.latitude, observation.longitude).subscribe((elevation) => {
-              observation.elevation = elevation;
-              this.addObservation(observation);
-            });
-          } else {
-            this.addObservation(observation);
-          }
-        }
+        this.addObservation(observation);
       })
       .catch((e) => console.error(e))
       .finally(() => {
@@ -383,9 +369,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private addObservation(observation: GenericObservation): void {
+    if (!this.filter.inDateRange(observation)) {
+      return;
+    }
+
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      observation = this.parseObservation(observation);
+    }
+
     observation.filterType = ObservationFilterType.Local;
 
-    augmentRegion(observation);
     if (observation.region) {
       observation.regionLabel = observation.region + " " + this.regionsService.getRegionName(observation.region);
     }

@@ -5,13 +5,9 @@ import {
   AlbinaObservationsService,
   AwsObservationsService,
   FotoWebcamObservationsService,
-  LawisObservationsService,
-  LolaKronosObservationsService,
-  LwdKipObservationsService,
   PanoCloudWebcamObservationsService,
   PanomaxObservationsService,
   RasWebcamObservationsService,
-  WikisnowObservationsService,
 } from "./sources";
 
 @Injectable()
@@ -20,29 +16,23 @@ export class ObservationsService {
     private albina: AlbinaObservationsService,
     private aws: AwsObservationsService,
     private fotoWebcam: FotoWebcamObservationsService,
-    private lawis: LawisObservationsService,
-    private lolaKronos: LolaKronosObservationsService,
-    private lwdKip: LwdKipObservationsService,
     private panocloud: PanoCloudWebcamObservationsService,
     private panomax: PanomaxObservationsService,
     private rasWebcam: RasWebcamObservationsService,
-    private wikisnow: WikisnowObservationsService,
   ) {}
 
   loadAll(): Observable<GenericObservation<any>> {
     return onErrorResumeNext(
-      // fast
       this.albina.getObservations(),
+      this.albina.getGenericObservations(),
       this.aws.getObservers(),
-      this.lolaKronos.getLoLaKronos(),
-      this.wikisnow.getWikisnowECT(),
+    );
+  }
+
+  loadWebcams() {
+    return onErrorResumeNext(
       this.panocloud.getPanoCloudWebcams(),
       this.rasWebcam.getRasWebcams(),
-      // medium
-      this.lwdKip.getLwdKipObservations(),
-      // slow
-      this.lawis.getLawisIncidents(),
-      this.lawis.getLawisProfiles(),
       this.fotoWebcam.getFotoWebcamsEU(),
       this.panomax.getPanomax(),
     );
