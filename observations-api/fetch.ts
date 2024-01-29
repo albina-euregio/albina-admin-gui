@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
 import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
-import { createConnection, insertObservation } from "./database";
+import { createConnection, insertObservation, selectObservations } from "./database";
 import { fetchLawisIncidents } from "./fetch_lawis_incident";
 import { fetchLawisProfiles } from "./fetch_lawis_profile";
 import { fetchLolaKronos } from "./fetch_lola_kronos";
@@ -14,7 +14,8 @@ export async function fetchAndInsert(
   endDate: dayjs.Dayjs = dayjs().millisecond(0),
 ) {
   const connection = await createConnection();
-  for await (const obs of fetchAll(startDate, endDate)) {
+  const existing = await selectObservations(connection, startDate, endDate);
+  for await (const obs of fetchAll(startDate, endDate, existing)) {
     augmentRegion(obs);
     await augmentElevation(obs);
     await insertObservation(connection, obs);
@@ -25,9 +26,10 @@ export async function fetchAndInsert(
 async function* fetchAll(
   startDate: dayjs.Dayjs,
   endDate: dayjs.Dayjs,
+  existing: GenericObservation[],
 ): AsyncGenerator<GenericObservation, void, unknown> {
-  yield* fetchLawisIncidents(startDate, endDate);
-  yield* fetchLawisProfiles(startDate, endDate);
+  yield* fetchLawisIncidents(startDate, endDate, existing);
+  yield* fetchLawisProfiles(startDate, endDate, existing);
   yield* fetchLolaKronos(startDate, endDate);
   yield* fetchLwdKip(startDate, endDate);
   yield* fetchWikiSnow();
