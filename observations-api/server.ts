@@ -3,6 +3,7 @@ import express from "express";
 import { createConnection, selectObservations } from "./database";
 import { fetchAndInsert } from "./fetch";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
+import { serveWebcams } from "./webcams";
 
 const port = process.env.PORT || 3000;
 
@@ -12,6 +13,7 @@ app.get("/observations", async (req, res) => {
   const observations = await serveObservations(url);
   return res.send(observations);
 });
+app.get("/webcams", async (req, res) => res.send(await serveWebcams()));
 app.listen(port, () => console.log(`observations-api listening on :${port}`));
 
 let lastFetch = 0;
