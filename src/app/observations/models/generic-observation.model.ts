@@ -243,3 +243,10 @@ export type GenericObservation<Data = any> = z.infer<typeof genericObservationSc
   isHighlighted?: boolean;
   regionLabel?: string;
 };
+
+export function findExistingObservation(
+  observations: GenericObservation[],
+  observation: GenericObservation,
+): GenericObservation | undefined {
+  return observations.find((o) => o.$source === observation.$source && o.$id === observation.$id);
+}

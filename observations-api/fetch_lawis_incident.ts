@@ -5,7 +5,7 @@ import {
   toLawisIncident,
   toLawisIncidentDetails,
 } from "../src/app/observations/models/lawis.model";
-import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation, findExistingObservation } from "../src/app/observations/models/generic-observation.model";
 
 const API = "https://lawis.at/lawis_api/v2_2/incident";
 const WEB = "https://lawis.at/lawis_api/v2_2/files/incidents/snowprofile_{{id}}.pdf";
@@ -26,7 +26,7 @@ export async function* fetchLawisIncidents(
 
   for (const incident of json) {
     const obs = toLawisIncident(incident, WEB);
-    if (existing.some((o) => o.$source === obs.$source && o.$id === obs.$id)) continue;
+    if (findExistingObservation(existing, obs)) continue;
     const details: IncidentDetails = await (await fetch(`${API}/${incident.id}`)).json();
     yield toLawisIncidentDetails(obs, details);
   }
