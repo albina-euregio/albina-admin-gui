@@ -38,7 +38,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
   };
   const sql = `
-  INSERT INTO generic_observations
+  REPLACE INTO generic_observations
   (${Object.keys(data).join(", ")})
   VALUES (${Object.keys(data)
     .map(() => "?")
