@@ -56,6 +56,19 @@ export class AlbinaObservationsService {
     );
   }
 
+  getGenericWebcams(): Observable<GenericObservation<Observation>> {
+    const url = this.constantsService.observationApi.Webcam;
+    const headers = this.authenticationService.newAuthHeader();
+    return this.http.get<GenericObservation[]>(url, { headers }).pipe(
+      mergeAll(),
+      map((o) => ({
+        ...o,
+        eventDate: o.eventDate ? new Date(o.eventDate) : undefined,
+        reportDate: o.reportDate ? new Date(o.reportDate) : undefined,
+      })),
+    );
+  }
+
   postObservation(observation: Observation): Observable<GenericObservation<Observation>> {
     observation = this.serializeObservation(observation);
     const url = this.constantsService.getServerUrl() + "observations";
