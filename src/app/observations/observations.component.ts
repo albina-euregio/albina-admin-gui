@@ -61,9 +61,7 @@ import {
   RasWebcamObservationsService,
   WikisnowObservationsService,
 } from "./sources";
-
-//import { BarChart } from "./charts/bar-chart/bar-chart.component";
-declare var L: any;
+import { CircleMarker, Control, LayerGroup, Map } from "leaflet";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -190,6 +188,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
     this.loadObservations({ days: 7 });
+    this.loadWebcams(map);
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
       this.applyLocalFilter();
@@ -393,6 +392,24 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     if (!marker) {
       this.observationsWithoutCoordinates++;
     }
+  }
+
+  private loadWebcams(map: Map) {
+    const webcamLayer = new LayerGroup();
+    new Control.Layers({}, { Webcams: webcamLayer }, { position: "bottomright" }).addTo(map);
+    this.observationsService.loadWebcams().forEach((observation) => {
+      if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
+      new CircleMarker(
+        { lat: observation.latitude, lng: observation.longitude },
+        { radius: 7, color: "black", fillColor: "black", weight: 1 },
+      )
+        .bindTooltip(this.markerService.createTooltip(observation), {
+          opacity: 1,
+          className: "obs-tooltip",
+        })
+        .on("click", () => this.onObservationClick(observation))
+        .addTo(webcamLayer);
+    });
   }
 
   onObservationClick(observation: GenericObservation): void {

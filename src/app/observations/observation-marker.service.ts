@@ -197,10 +197,7 @@ export class ObservationMarkerService {
         zIndexOffset: this.toZIndex(observation),
       } as MarkerOptions);
 
-      marker.bindTooltip(this.createTooltip(observation), {
-        opacity: 1,
-        className: "obs-tooltip",
-      });
+      this.bindTooltip(marker, observation);
       return marker;
     } catch (e) {
       console.error(e);
@@ -208,7 +205,14 @@ export class ObservationMarkerService {
     }
   }
 
-  private createTooltip(observation: GenericObservation): string {
+  bindTooltip(marker: Marker<any>, observation: GenericObservation): Marker<any> {
+    return marker.bindTooltip(this.createTooltip(observation), {
+      opacity: 1,
+      className: "obs-tooltip",
+    });
+  }
+
+  createTooltip(observation: GenericObservation): string {
     return [
       `<i class="fa fa-calendar"></i> ${
         observation.eventDate instanceof Date
