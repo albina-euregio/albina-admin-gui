@@ -187,8 +187,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
+    const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
-    this.loadWebcams(map);
+    layerControl.addOverlay(this.loadObservers(), "Beobachter");
+    layerControl.addOverlay(this.loadWebcams(), "Webcams");
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
       this.applyLocalFilter();
@@ -394,22 +396,33 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadWebcams(map: Map) {
-    const webcamLayer = new LayerGroup();
-    new Control.Layers({}, { Webcams: webcamLayer }, { position: "bottomright" }).addTo(map);
-    this.observationsService.loadWebcams().forEach((observation) => {
-      if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
-      new CircleMarker(
-        { lat: observation.latitude, lng: observation.longitude },
-        { radius: 7, color: "black", fillColor: "black", weight: 1 },
-      )
-        .bindTooltip(this.markerService.createTooltip(observation), {
-          opacity: 1,
-          className: "obs-tooltip",
-        })
-        .on("click", () => this.onObservationClick(observation))
-        .addTo(webcamLayer);
+  private loadObservers(): LayerGroup<any> {
+    const layer = new LayerGroup();
+    this.observationsService.loadObservers().forEach((observation) => {
+      this.newCircleMarker(observation, "#ca0020")?.addTo(layer);
     });
+    return layer;
+  }
+
+  private loadWebcams(): LayerGroup<any> {
+    const layer = new LayerGroup();
+    this.observationsService.loadWebcams().forEach((observation) => {
+      this.newCircleMarker(observation, "black")?.addTo(layer);
+    });
+    return layer;
+  }
+
+  private newCircleMarker(observation: GenericObservation<any>, color: string) {
+    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
+    return new CircleMarker(
+      { lat: observation.latitude, lng: observation.longitude },
+      { radius: 7, color, fillColor: color, weight: 1 },
+    )
+      .bindTooltip(this.markerService.createTooltip(observation), {
+        opacity: 1,
+        className: "obs-tooltip",
+      })
+      .on("click", () => this.onObservationClick(observation));
   }
 
   onObservationClick(observation: GenericObservation): void {

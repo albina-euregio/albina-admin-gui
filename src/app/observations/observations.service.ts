@@ -10,11 +10,11 @@ export class ObservationsService {
     private aws: AwsObservationsService,
   ) {}
   loadAll(): Observable<GenericObservation<any>> {
-    return onErrorResumeNext(
-      this.albina.getObservations(),
-      this.albina.getGenericObservations(),
-      this.aws.getObservers(),
-    );
+    return onErrorResumeNext(this.albina.getObservations(), this.albina.getGenericObservations());
+  }
+
+  loadObservers(): Observable<GenericObservation<any>> {
+    return this.aws.getObservers();
   }
 
   loadWebcams() {
