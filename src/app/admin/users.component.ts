@@ -8,7 +8,7 @@ import { TemplateRef } from "@angular/core";
 import { CreateUserComponent } from "./create-user.component";
 import { UpdateUserComponent } from "./update-user.component";
 
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
+import { MatDialog, MatDialogRef, MatDialogConfig } from "@angular/material/dialog";
 
 @Component({
   templateUrl: "users.component.html",
