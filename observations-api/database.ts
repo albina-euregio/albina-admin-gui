@@ -83,9 +83,9 @@ export async function selectObservations(
       longitude: row.LONGITUDE ?? undefined,
       region: row.REGION_ID ?? undefined,
       reportDate: row.REPORT_DATE ?? undefined,
-      avalancheProblems: row.AVALANCHE_PROBLEMS?.split(",") ?? undefined,
-      dangerPatterns: row.DANGER_PATTERNS?.split(",") ?? undefined,
-      importantObservations: row.IMPORTANT_OBSERVATION?.split(",") ?? undefined,
+      avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(","),
+      dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(","),
+      importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(","),
     }),
   );
 }
