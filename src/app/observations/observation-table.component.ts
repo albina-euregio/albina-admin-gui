@@ -36,7 +36,7 @@ import { ObservationMarkerService, importantObservationTexts } from "./observati
   templateUrl: "observation-table.component.html",
 })
 export class ObservationTableComponent {
-  @Input() observations: GenericObservation[];
+  @Input() observations: GenericObservation[] = [];
   @Input() showObservationsWithoutCoordinates: boolean;
   @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
   @ViewChild("observationTable") observationTable: Table;
@@ -51,11 +51,6 @@ export class ObservationTableComponent {
     private translate: TranslateService,
   ) {}
 
-  get shownObservations(): GenericObservation[] {
-    const observations = this.observations || [];
-    return this.showObservationsWithoutCoordinates ? observations.filter(this.hasNoCoordinates) : observations;
-  }
-
   newObservation() {
     const today = new Date(Date.now());
     const date = today.toISOString().split("T")[0];
@@ -64,10 +59,6 @@ export class ObservationTableComponent {
     } as Observation;
 
     console.log(this.observation);
-  }
-
-  hasNoCoordinates(element, index, array) {
-    return !element.latitude || !element.longitude;
   }
 
   onClick(observation: GenericObservation) {
