@@ -109,7 +109,12 @@
           [title]="importantObservation"
           style="display: inline-block; margin: 1rem 0"
         >
-          {{ formatImportantObservation(importantObservation) }}
+          <span *ngIf="importantObservationTexts[importantObservation]" style="font-family: snowsymbolsiacs">
+            {{ importantObservationTexts[importantObservation] }}
+          </span>
+          <span *ngIf="!importantObservationTexts[importantObservation]">
+            {{ formatImportantObservation(importantObservation) }}
+          </span>
         </abbr>
       </td>
       <td style="padding: 1rem 0">{{ observation.content }}</td>

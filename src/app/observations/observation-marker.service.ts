@@ -149,7 +149,7 @@ const grainShapes = {
   IFsc: { name: "Sun crust, Firnspiegel", color: "#00FFFF", key: "T" },
 };
 
-const importantObservationTexts = {
+export const importantObservationTexts = {
   [ImportantObservation.SnowLine]: "",
   [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
   [ImportantObservation.Graupel]: grainShapes.PPgp.key,

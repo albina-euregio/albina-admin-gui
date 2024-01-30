@@ -19,7 +19,7 @@ import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { CommonModule } from "@angular/common";
-import { ObservationMarkerService } from "./observation-marker.service";
+import { ObservationMarkerService, importantObservationTexts } from "./observation-marker.service";
 
 @Component({
   standalone: true,
@@ -48,6 +48,7 @@ export class ObservationTableComponent {
   observation: Observation;
   saving = false;
   messages: Message[] = [];
+  importantObservationTexts = importantObservationTexts;
 
   constructor(
     private observationsService: AlbinaObservationsService,
