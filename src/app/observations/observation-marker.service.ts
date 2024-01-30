@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Canvas, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
+import { Canvas, CircleMarker, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
   Aspect,
   AvalancheProblem,
@@ -205,8 +205,18 @@ export class ObservationMarkerService {
     }
   }
 
-  bindTooltip(marker: Marker<any>, observation: GenericObservation): Marker<any> {
-    return marker.bindTooltip(this.createTooltip(observation), {
+  createCircleMarker(observation: GenericObservation<any>, color: string) {
+    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
+    const marker = new CircleMarker(
+      { lat: observation.latitude, lng: observation.longitude },
+      { radius: 7, color, fillColor: color, weight: 1 },
+    );
+    this.bindTooltip(marker, observation);
+    return marker;
+  }
+
+  bindTooltip(marker: Marker | CircleMarker, observation: GenericObservation) {
+    marker.bindTooltip(this.createTooltip(observation), {
       opacity: 1,
       className: "obs-tooltip",
     });

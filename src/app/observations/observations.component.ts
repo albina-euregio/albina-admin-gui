@@ -49,7 +49,7 @@ import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
 import { AlbinaObservationsService } from "./observations.service";
-import { CircleMarker, Control, LayerGroup, Map } from "leaflet";
+import { Control, LayerGroup } from "leaflet";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -380,7 +380,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private loadObservers(): LayerGroup<any> {
     const layer = new LayerGroup();
     this.observationsService.getObservers().forEach((observation) => {
-      this.newCircleMarker(observation, "#ca0020")?.addTo(layer);
+      this.markerService
+        .createCircleMarker(observation, "#ca0020")
+        ?.on("click", () => this.onObservationClick(observation))
+        ?.addTo(layer);
     });
     return layer;
   }
@@ -388,22 +391,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private loadWebcams(): LayerGroup<any> {
     const layer = new LayerGroup();
     this.observationsService.getGenericWebcams().forEach((observation) => {
-      this.newCircleMarker(observation, "black")?.addTo(layer);
+      this.markerService
+        .createCircleMarker(observation, "black")
+        ?.on("click", () => this.onObservationClick(observation))
+        ?.addTo(layer);
     });
     return layer;
-  }
-
-  private newCircleMarker(observation: GenericObservation<any>, color: string) {
-    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
-    return new CircleMarker(
-      { lat: observation.latitude, lng: observation.longitude },
-      { radius: 7, color, fillColor: color, weight: 1 },
-    )
-      .bindTooltip(this.markerService.createTooltip(observation), {
-        opacity: 1,
-        className: "obs-tooltip",
-      })
-      .on("click", () => this.onObservationClick(observation));
   }
 
   onObservationClick(observation: GenericObservation): void {
