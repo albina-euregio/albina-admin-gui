@@ -17,7 +17,7 @@ let lastFetch = 0;
 let webcams: Promise<GenericObservation[]>;
 
 export async function serveWebcams(): Promise<GenericObservation[]> {
-  if (Date.now() - lastFetch > 60 * 3600) {
+  if (Date.now() - lastFetch > 60 * 3600e3) {
     lastFetch = Date.now();
     webcams = fetchWebcamsPromise();
   }

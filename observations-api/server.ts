@@ -28,7 +28,7 @@ async function serveObservations(url: URL): Promise<GenericObservation[]> {
       ? dayjs(url.searchParams.get("endDate"))
       : dayjs().millisecond(0);
 
-  if (Date.now() - lastFetch > 5 * 3600) {
+  if (Date.now() - lastFetch > 5 * 3600e3) {
     await fetchAndInsert(startDate, endDate);
     lastFetch = Date.now();
   }
