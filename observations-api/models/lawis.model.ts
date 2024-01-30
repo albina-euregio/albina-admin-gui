@@ -8,7 +8,7 @@ import {
   ObservationType,
   Stability,
   toAspect,
-} from "./generic-observation.model";
+} from "../../src/app/observations/models/generic-observation.model";
 
 export const LAWIS_FETCH_DETAILS = true;
 

@@ -1,5 +1,6 @@
 import mysql, { Connection, QueryError } from "mysql2/promise";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
+import type dayjs from "dayjs";
 
 export async function createConnection() {
   return await mysql.createConnection({
@@ -37,7 +38,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
   };
   const sql = `
-  INSERT INTO generic_observations
+  REPLACE INTO generic_observations
   (${Object.keys(data).join(", ")})
   VALUES (${Object.keys(data)
     .map(() => "?")
@@ -52,4 +53,39 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     }
     throw err;
   }
+}
+
+export async function selectObservations(
+  connection: Connection,
+  startDate: dayjs.Dayjs,
+  endDate: dayjs.Dayjs,
+): Promise<GenericObservation[]> {
+  const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ?";
+  const values = [startDate.toISOString(), endDate.toISOString()];
+  const [rows, fields] = await connection.query(sql, values);
+  return rows.map(
+    (row): GenericObservation => ({
+      $id: row.ID,
+      $source: row.SOURCE,
+      $type: row.OBS_TYPE ?? undefined,
+      $externalURL: row.EXTERNAL_URL ?? undefined,
+      stability: row.STABILITY ?? undefined,
+      aspect: row.ASPECTS?.split(",")?.[0] ?? undefined,
+      authorName: row.AUTHOR_NAME ?? undefined,
+      content: row.OBS_CONTENT ?? undefined,
+      $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : row.OBS_DATA ?? undefined,
+      elevation: row.ELEVATION ?? undefined,
+      elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
+      elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,
+      eventDate: row.EVENT_DATE ?? undefined,
+      latitude: row.LATITUDE ?? undefined,
+      locationName: row.LOCATION_NAME ?? undefined,
+      longitude: row.LONGITUDE ?? undefined,
+      region: row.REGION_ID ?? undefined,
+      reportDate: row.REPORT_DATE ?? undefined,
+      avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(","),
+      dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(","),
+      importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(","),
+    }),
+  );
 }

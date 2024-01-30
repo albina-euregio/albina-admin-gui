@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Canvas, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
+import { Canvas, CircleMarker, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
   Aspect,
   AvalancheProblem,
@@ -8,6 +8,7 @@ import {
   GenericObservation,
   ImportantObservation,
   LocalFilterTypes,
+  ObservationSource,
   ObservationType,
   Stability,
 } from "./models/generic-observation.model";
@@ -148,7 +149,7 @@ const grainShapes = {
   IFsc: { name: "Sun crust, Firnspiegel", color: "#00FFFF", key: "T" },
 };
 
-const importantObservationTexts = {
+export const importantObservationTexts = {
   [ImportantObservation.SnowLine]: "",
   [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
   [ImportantObservation.Graupel]: grainShapes.PPgp.key,
@@ -160,8 +161,6 @@ const importantObservationTexts = {
 @Injectable()
 export class ObservationMarkerService {
   public USE_CANVAS_LAYER = true;
-
-  readonly markerRadius = 40;
 
   public markerLabel: LocalFilterTypes | undefined = undefined;
   public markerClassify: LocalFilterTypes = LocalFilterTypes.Stability;
@@ -177,30 +176,21 @@ export class ObservationMarkerService {
       });
 
   createMarker(observation: GenericObservation): Marker | undefined {
-    const ll =
-      observation.latitude && observation.longitude
-        ? new LatLng(observation.latitude, observation.longitude)
-        : undefined;
-    if (!ll) {
-      return;
-    }
-
+    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     try {
+      const ll = new LatLng(observation.latitude, observation.longitude);
       const marker = new Marker(ll, {
         bubblingMouseEvents: false,
         icon: this.getIcon(observation),
         opacity: 1,
         pane: "markerPane",
-        radius: this.markerRadius,
+        radius: this.toMarkerRadius(observation),
         renderer: this.myRenderer,
         weight: observation.isHighlighted ? 1 : 0,
         zIndexOffset: this.toZIndex(observation),
       } as MarkerOptions);
 
-      marker.bindTooltip(this.createTooltip(observation), {
-        opacity: 1,
-        className: "obs-tooltip",
-      });
+      this.bindTooltip(marker, observation);
       return marker;
     } catch (e) {
       console.error(e);
@@ -208,7 +198,18 @@ export class ObservationMarkerService {
     }
   }
 
-  private createTooltip(observation: GenericObservation): string {
+  createCircleMarker(observation: GenericObservation<any>, color: string) {
+    return this.createMarker(observation);
+  }
+
+  bindTooltip(marker: Marker | CircleMarker, observation: GenericObservation) {
+    marker.bindTooltip(this.createTooltip(observation), {
+      opacity: 1,
+      className: "obs-tooltip",
+    });
+  }
+
+  createTooltip(observation: GenericObservation): string {
     return [
       `<i class="fa fa-calendar"></i> ${
         observation.eventDate instanceof Date
@@ -223,7 +224,21 @@ export class ObservationMarkerService {
       .join("<br>");
   }
 
+  toMarkerRadius(observation: GenericObservation): number {
+    if (observation?.$type === ObservationType.Webcam) {
+      return 20;
+    } else if (observation?.$source === ObservationSource.Observer) {
+      return 20;
+    }
+    return 40;
+  }
+
   toMarkerColor(observation: GenericObservation) {
+    if (observation?.$type === ObservationType.Webcam) {
+      return "black";
+    } else if (observation?.$source === ObservationSource.Observer) {
+      return "#ca0020";
+    }
     switch (this.markerClassify) {
       case LocalFilterTypes.Aspect:
         return this.enumArrayColor(Aspect, [observation.aspect]);
@@ -300,7 +315,7 @@ export class ObservationMarkerService {
   }
 
   private getIcon(observation: GenericObservation<any>): Icon | DivIcon {
-    const iconSize = this.markerRadius;
+    const iconSize = this.toMarkerRadius(observation);
 
     if (!this.USE_CANVAS_LAYER) {
       const html = this.getSvg(observation);

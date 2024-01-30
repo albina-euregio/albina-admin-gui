@@ -3,7 +3,7 @@ import {
   ObservationSource,
   ObservationType,
   degreeToAspect,
-} from "./generic-observation.model";
+} from "../../src/app/observations/models/generic-observation.model";
 
 export interface PanomaxCam {
   id: string;

@@ -8,7 +8,7 @@ import {
   ObservationSource,
   ObservationType,
   Stability,
-} from "./generic-observation.model";
+} from "../../src/app/observations/models/generic-observation.model";
 
 export interface LolaKronosApi {
   lolaSimpleObservation: LolaSimpleObservation[];

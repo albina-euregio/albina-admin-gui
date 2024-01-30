@@ -4,7 +4,7 @@ import {
   ObservationType,
   Stability,
   toAspect,
-} from "./generic-observation.model";
+} from "../../src/app/observations/models/generic-observation.model";
 
 export type ArcGisApi = { layers: ArcGisLayer[] } | { error: { message: string } };
 
