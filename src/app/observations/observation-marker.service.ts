@@ -209,7 +209,14 @@ export class ObservationMarkerService {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     const marker = new CircleMarker(
       { lat: observation.latitude, lng: observation.longitude },
-      { radius: 7, color, fillColor: color, weight: 1 },
+      {
+        radius: 7,
+        color,
+        fillColor: color,
+        weight: 1,
+        pane: "markerPane",
+        renderer: this.myRenderer,
+      },
     );
     this.bindTooltip(marker, observation);
     return marker;
