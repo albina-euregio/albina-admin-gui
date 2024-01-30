@@ -357,13 +357,6 @@
   resolved "https://registry.yarnpkg.com/@assemblyscript/loader/-/loader-0.10.1.tgz#70e45678f06c72fa2e350e8553ec4a4d72b92e06"
   integrity sha512-H71nDOOL8Y7kWRLqf6Sums+01Q5msqBW2KhDUTemh1tvY04eSkSXrK0uj/4mmY0Xr16/3zyZmsrxN7CKuRbNRg==
 
-"@asymmetrik/ngx-leaflet@^17.0.0":
-  version "17.0.0"
-  resolved "https://registry.yarnpkg.com/@asymmetrik/ngx-leaflet/-/ngx-leaflet-17.0.0.tgz#8b3875caab515b0c4834ac83e2f1f5befc4ee4c3"
-  integrity sha512-Tg09780yg1pPRR7k9Z0B0Fb3Mr4SMXYfi+hii8S0McHiqiUqkB+ZhhB4hJq83v4cuvcYgZjtkz+p06lCJY/z+w==
-  dependencies:
-    tslib "^2.3.0"
-
 "@auth0/angular-jwt@^5.1.2":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@auth0/angular-jwt/-/angular-jwt-5.1.2.tgz#e89ece98b0f6ef6407f35b8b64bcb77c53b0d8e5"
