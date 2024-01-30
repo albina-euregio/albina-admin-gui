@@ -1,17 +1,11 @@
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
 import { convertRasWebcam, webcams as rasWebcams } from "./models/ras-webcam.model";
 import { FotoWebcamEUResponse, convertFotoWebcamEU } from "./models/foto-webcam.model";
-import {
-  convertPanoCloudWebcam,
-  webcams as panoCloudWebcams,
-} from "./models/panocloud-webcam.mode";
-import {
-  PanomaxCamResponse,
-  PanomaxThumbnailResponse,
-  convertPanomax,
-} from "./models/panomax.model";
+import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "./models/panocloud-webcam.mode";
+import { PanomaxCamResponse, PanomaxThumbnailResponse, convertPanomax } from "./models/panomax.model";
 import { fetchJSON } from "./fetchJSON";
 import { getRegionForLatLng } from "../src/app/providers/regions-service/augmentRegion";
+import { readFile } from "node:fs/promises";
 
 let lastFetch = 0;
 let webcams: Promise<GenericObservation[]>;
@@ -54,6 +48,11 @@ function* fetchRasWebcams(): Generator<GenericObservation, void, unknown> {
 async function* fetchFotoWebcamsEU(): AsyncGenerator<GenericObservation, void, unknown> {
   const url = "https://www.foto-webcam.eu/webcam/include/metadata.php";
   const data: FotoWebcamEUResponse = await fetchJSON(url);
+  try {
+    const json = await readFile("./private.foto-webcam.eu.json", { encoding: "utf-8" });
+    const data2: FotoWebcamEUResponse = JSON.parse(json);
+    data.cams.push(...data2.cams);
+  } catch (ignore) {}
   for (const webcam of data.cams) {
     yield convertFotoWebcamEU(webcam);
   }
