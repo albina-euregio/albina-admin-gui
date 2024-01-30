@@ -49,18 +49,7 @@ import { MultiSelectChangeEvent, MultiSelectModule } from "primeng/multiselect";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
-import {
-  AlbinaObservationsService,
-  AwsObservationsService,
-  FotoWebcamObservationsService,
-  LawisObservationsService,
-  LolaKronosObservationsService,
-  LwdKipObservationsService,
-  PanoCloudWebcamObservationsService,
-  PanomaxObservationsService,
-  RasWebcamObservationsService,
-  WikisnowObservationsService,
-} from "./sources";
+import { AlbinaObservationsService, AwsObservationsService } from "./sources";
 import { CircleMarker, Control, LayerGroup, Map } from "leaflet";
 
 export interface MultiselectDropdownData {
@@ -97,14 +86,6 @@ export interface MultiselectDropdownData {
     TranslateService,
     AlbinaObservationsService,
     AwsObservationsService,
-    FotoWebcamObservationsService,
-    LawisObservationsService,
-    LolaKronosObservationsService,
-    LwdKipObservationsService,
-    PanomaxObservationsService,
-    WikisnowObservationsService,
-    RasWebcamObservationsService,
-    PanoCloudWebcamObservationsService,
     BaseMapService,
   ],
   templateUrl: "observations.component.html",

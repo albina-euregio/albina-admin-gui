@@ -4,7 +4,7 @@ import {
   ProfileDetails,
   toLawisProfile,
   toLawisProfileDetails,
-} from "../src/app/observations/models/lawis.model";
+} from "./models/lawis.model";
 import { GenericObservation, findExistingObservation } from "../src/app/observations/models/generic-observation.model";
 
 const API = "https://lawis.at/lawis_api/v2_2/profile";

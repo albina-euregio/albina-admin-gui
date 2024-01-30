@@ -1,4 +1,4 @@
-import { ApiWikisnowECT, convertWikisnow } from "../src/app/observations/models/wikisnow.model";
+import { ApiWikisnowECT, convertWikisnow } from "./models/wikisnow.model";
 
 const API = process.env.ALBINA_WIKISNOW_API;
 

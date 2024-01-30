@@ -1,5 +1,5 @@
 import type dayjs from "dayjs";
-import { LolaKronosApi, convertLoLaKronos } from "../src/app/observations/models/lola-kronos.model";
+import { LolaKronosApi, convertLoLaKronos } from "./models/lola-kronos.model";
 
 const API = "https://www.lola-kronos.info/api/dataexport/dataFromToken/";
 const WEB = "https://www.lola-kronos.info/";
