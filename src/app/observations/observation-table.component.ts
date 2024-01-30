@@ -52,13 +52,9 @@ export class ObservationTableComponent {
   ) {}
 
   newObservation() {
-    const today = new Date(Date.now());
-    const date = today.toISOString().split("T")[0];
     this.observation = {
       eventType: EventType.Normal,
     } as Observation;
-
-    console.log(this.observation);
   }
 
   onClick(observation: GenericObservation) {
