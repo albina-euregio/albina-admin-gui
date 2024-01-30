@@ -8,6 +8,7 @@ import {
   GenericObservation,
   ImportantObservation,
   LocalFilterTypes,
+  ObservationSource,
   ObservationType,
   Stability,
 } from "./models/generic-observation.model";
@@ -161,8 +162,6 @@ const importantObservationTexts = {
 export class ObservationMarkerService {
   public USE_CANVAS_LAYER = true;
 
-  readonly markerRadius = 40;
-
   public markerLabel: LocalFilterTypes | undefined = undefined;
   public markerClassify: LocalFilterTypes = LocalFilterTypes.Stability;
 
@@ -177,21 +176,15 @@ export class ObservationMarkerService {
       });
 
   createMarker(observation: GenericObservation): Marker | undefined {
-    const ll =
-      observation.latitude && observation.longitude
-        ? new LatLng(observation.latitude, observation.longitude)
-        : undefined;
-    if (!ll) {
-      return;
-    }
-
+    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     try {
+      const ll = new LatLng(observation.latitude, observation.longitude);
       const marker = new Marker(ll, {
         bubblingMouseEvents: false,
         icon: this.getIcon(observation),
         opacity: 1,
         pane: "markerPane",
-        radius: this.markerRadius,
+        radius: this.toMarkerRadius(observation),
         renderer: this.myRenderer,
         weight: observation.isHighlighted ? 1 : 0,
         zIndexOffset: this.toZIndex(observation),
@@ -206,20 +199,7 @@ export class ObservationMarkerService {
   }
 
   createCircleMarker(observation: GenericObservation<any>, color: string) {
-    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
-    const marker = new CircleMarker(
-      { lat: observation.latitude, lng: observation.longitude },
-      {
-        radius: 7,
-        color,
-        fillColor: color,
-        weight: 1,
-        pane: "markerPane",
-        renderer: this.myRenderer,
-      },
-    );
-    this.bindTooltip(marker, observation);
-    return marker;
+    return this.createMarker(observation);
   }
 
   bindTooltip(marker: Marker | CircleMarker, observation: GenericObservation) {
@@ -244,7 +224,21 @@ export class ObservationMarkerService {
       .join("<br>");
   }
 
+  toMarkerRadius(observation: GenericObservation): number {
+    if (observation?.$type === ObservationType.Webcam) {
+      return 20;
+    } else if (observation?.$source === ObservationSource.Observer) {
+      return 20;
+    }
+    return 40;
+  }
+
   toMarkerColor(observation: GenericObservation) {
+    if (observation?.$type === ObservationType.Webcam) {
+      return "black";
+    } else if (observation?.$source === ObservationSource.Observer) {
+      return "#ca0020";
+    }
     switch (this.markerClassify) {
       case LocalFilterTypes.Aspect:
         return this.enumArrayColor(Aspect, [observation.aspect]);
@@ -321,7 +315,7 @@ export class ObservationMarkerService {
   }
 
   private getIcon(observation: GenericObservation<any>): Icon | DivIcon {
-    const iconSize = this.markerRadius;
+    const iconSize = this.toMarkerRadius(observation);
 
     if (!this.USE_CANVAS_LAYER) {
       const html = this.getSvg(observation);

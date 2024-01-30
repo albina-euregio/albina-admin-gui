@@ -380,9 +380,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private loadObservers(): LayerGroup<any> {
     this.observationsService.getObservers().forEach((observation) => {
       this.mapService.addMarker(
-        this.markerService
-          .createCircleMarker(observation, "#ca0020")
-          ?.on("click", () => this.onObservationClick(observation)),
+        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
         "observers",
       );
     });
@@ -392,9 +390,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private loadWebcams(): LayerGroup<any> {
     this.observationsService.getGenericWebcams().forEach((observation) => {
       this.mapService.addMarker(
-        this.markerService
-          .createCircleMarker(observation, "black")
-          ?.on("click", () => this.onObservationClick(observation)),
+        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
         "webcams",
       );
     });
