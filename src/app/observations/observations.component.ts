@@ -9,7 +9,6 @@ import {
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { ObservationsService } from "./observations.service";
 import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import {
@@ -36,7 +35,7 @@ import { ObservationTableComponent } from "./observation-table.component";
 import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
-import type { Observable } from "rxjs";
+import { onErrorResumeNext, type Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
 import { DialogModule } from "primeng/dialog";
@@ -81,7 +80,6 @@ export interface MultiselectDropdownData {
     ElevationService,
     ObservationFilterService,
     ObservationMarkerService,
-    ObservationsService,
     RegionsService,
     TranslateService,
     AlbinaObservationsService,
@@ -129,7 +127,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public filter: ObservationFilterService,
     public markerService: ObservationMarkerService,
     private translateService: TranslateService,
-    private observationsService: ObservationsService,
+    private observationsService: AlbinaObservationsService,
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     public mapService: BaseMapService,
@@ -237,7 +235,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.days = days;
     }
     this.clear();
-    this.loading = this.observationsService.loadAll();
+    this.loading = onErrorResumeNext(
+      this.observationsService.getObservations(),
+      this.observationsService.getGenericObservations(),
+    );
     this.loading
       .forEach((observation) => {
         try {
@@ -378,7 +379,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private loadObservers(): LayerGroup<any> {
     const layer = new LayerGroup();
-    this.observationsService.loadObservers().forEach((observation) => {
+    this.observationsService.getObservers().forEach((observation) => {
       this.newCircleMarker(observation, "#ca0020")?.addTo(layer);
     });
     return layer;
@@ -386,7 +387,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private loadWebcams(): LayerGroup<any> {
     const layer = new LayerGroup();
-    this.observationsService.loadWebcams().forEach((observation) => {
+    this.observationsService.getGenericWebcams().forEach((observation) => {
       this.newCircleMarker(observation, "black")?.addTo(layer);
     });
     return layer;
