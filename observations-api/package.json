@@ -1,7 +1,7 @@
 {
   "name": "observations-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "license": "GPL-3.0-or-later",
   "scripts": {
     "build": "bun build server.ts --target=node --outfile=observations-api.mjs"
