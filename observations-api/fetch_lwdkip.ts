@@ -10,6 +10,7 @@ import {
   convertLwdKipSperren,
   convertLwdKipSprengerfolg,
 } from "./models/lwdkip.model";
+import { fetchJSON } from "./fetchJSON";
 
 const API = "https://gis.tirol.gv.at/arcgis";
 
@@ -31,7 +32,7 @@ export async function* fetchLwdKip(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs)
 async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs, layerName = ""): Promise<T> {
   const headers = { Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" };
 
-  const tokenResponse = await fetch(`${API}/tokens/`, {
+  const { token } = await fetchJSON(`${API}/tokens/`, {
     method: "POST",
     headers,
     body: new URLSearchParams({
@@ -41,30 +42,26 @@ async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs,
       f: "json",
     }),
   });
-  if (!tokenResponse.ok) throw new Error(tokenResponse.statusText + ": " + (await tokenResponse.text()));
-  const { token } = await tokenResponse.json();
 
-  let url = `${API}/rest/services/APPS_DVT/lwdkip/mapserver/layers/query?${new URLSearchParams({
-    token,
-    f: "json",
-  })}`;
-  console.log("Fetching", url);
-  const layersResponse = await fetch(url, { headers });
-  if (!layersResponse.ok) throw new Error(layersResponse.statusText + ": " + (await layersResponse.text()));
-  const { layers }: { layers: ArcGisLayer[] } = await layersResponse.json();
+  const { layers }: { layers: ArcGisLayer[] } = await fetchJSON(
+    `${API}/rest/services/APPS_DVT/lwdkip/mapserver/layers/query?${new URLSearchParams({
+      token,
+      f: "json",
+    })}`,
+    { headers },
+  );
   const layer = layers.find((l) => l.name.trim() === layerName && l.type === "Feature Layer");
 
-  url = `${API}/rest/services/APPS_DVT/lwdkip/mapserver/${layer.id}/query?${new URLSearchParams({
-    token,
-    where: `BEOBDATUM > TIMESTAMP '${formatDate(startDate)}' AND BEOBDATUM < TIMESTAMP '${formatDate(endDate)}'`,
-    outFields: "*",
-    datumTransformation: "5891",
-    f: "geojson",
-  })}`;
-  console.log("Fetching", url);
-  const response = await fetch(url, { headers });
-  if (!response.ok) throw new Error(response.statusText + ": " + (await response.text()));
-  return await response.json();
+  return await fetchJSON(
+    `${API}/rest/services/APPS_DVT/lwdkip/mapserver/${layer.id}/query?${new URLSearchParams({
+      token,
+      where: `BEOBDATUM > TIMESTAMP '${formatDate(startDate)}' AND BEOBDATUM < TIMESTAMP '${formatDate(endDate)}'`,
+      outFields: "*",
+      datumTransformation: "5891",
+      f: "geojson",
+    })}`,
+    { headers },
+  );
 }
 
 function formatDate(d: dayjs.Dayjs) {

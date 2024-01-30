@@ -1,3 +1,5 @@
+import { fetchJSON } from "./fetchJSON";
+
 const API = "https://voibos.rechenraum.com/voibos/voibos";
 
 interface VoibosRequest {
@@ -23,17 +25,13 @@ interface VoibosResponse {
 
 export async function getElevation(lat: number, lng: number): Promise<number> {
   if (!isFinite(lat) || !isFinite(lng)) return;
-  const headers = { Accept: "application/json" };
   const params = {
     Koordinate: `${lng},${lat}`,
     CRS: "4326",
     name: "hoehenservice",
   } satisfies VoibosRequest;
   const url = `${API}?${new URLSearchParams(params)}`;
-  console.log("Fetching", url);
-  const res = await fetch(url, { headers });
-  if (!res.ok) throw new Error(res.statusText + ": " + (await res.text()));
-  const json: VoibosResponse = await res.json();
+  const json: VoibosResponse = await fetchJSON(url);
   if (json.abfragestatus !== "erfolgreich") return;
   return Math.round(json.hoeheDTM);
 }
