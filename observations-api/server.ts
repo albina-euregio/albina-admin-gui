@@ -4,6 +4,7 @@ import { createConnection, selectObservations } from "./database";
 import { fetchAndInsert } from "./fetch";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
 import { serveWebcams } from "./webcams";
+import { getAwsObservers } from "./observers";
 
 const port = process.env.PORT || 3000;
 
@@ -14,6 +15,7 @@ app.get("/observations", async (req, res) => {
   return res.send(observations);
 });
 app.get("/webcams", async (req, res) => res.send(await serveWebcams()));
+app.get("/observers", async (req, res) => res.send(getAwsObservers()));
 app.listen(port, () => console.log(`observations-api listening on :${port}`));
 
 let lastFetch = 0;

@@ -38,26 +38,27 @@ export class AlbinaObservationsService {
     );
   }
 
-  getGenericObservations(): Observable<GenericObservation<Observation>> {
+  getGenericObservations(): Observable<GenericObservation> {
     const url =
       this.constantsService.observationApi.$ +
       "?startDate=" +
       this.filter.startDateString +
       "&endDate=" +
       this.filter.endDateString;
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<GenericObservation[]>(url, { headers }).pipe(
-      mergeAll(),
-      map((o) => ({
-        ...o,
-        eventDate: o.eventDate ? new Date(o.eventDate) : undefined,
-        reportDate: o.reportDate ? new Date(o.reportDate) : undefined,
-      })),
-    );
+    return this.getGenericObservations0(url);
   }
 
-  getGenericWebcams(): Observable<GenericObservation<Observation>> {
+  getObservers(): Observable<GenericObservation> {
+    const url = this.constantsService.observationApi.Observer;
+    return this.getGenericObservations0(url);
+  }
+
+  getGenericWebcams(): Observable<GenericObservation> {
     const url = this.constantsService.observationApi.Webcam;
+    return this.getGenericObservations0(url);
+  }
+
+  private getGenericObservations0(url: string): Observable<GenericObservation> {
     const headers = this.authenticationService.newAuthHeader();
     return this.http.get<GenericObservation[]>(url, { headers }).pipe(
       mergeAll(),
