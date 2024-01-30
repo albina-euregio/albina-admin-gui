@@ -378,25 +378,27 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private loadObservers(): LayerGroup<any> {
-    const layer = new LayerGroup();
     this.observationsService.getObservers().forEach((observation) => {
-      this.markerService
-        .createCircleMarker(observation, "#ca0020")
-        ?.on("click", () => this.onObservationClick(observation))
-        ?.addTo(layer);
+      this.mapService.addMarker(
+        this.markerService
+          .createCircleMarker(observation, "#ca0020")
+          ?.on("click", () => this.onObservationClick(observation)),
+        "observers",
+      );
     });
-    return layer;
+    return this.mapService.layers.observers;
   }
 
   private loadWebcams(): LayerGroup<any> {
-    const layer = new LayerGroup();
     this.observationsService.getGenericWebcams().forEach((observation) => {
-      this.markerService
-        .createCircleMarker(observation, "black")
-        ?.on("click", () => this.onObservationClick(observation))
-        ?.addTo(layer);
+      this.mapService.addMarker(
+        this.markerService
+          .createCircleMarker(observation, "black")
+          ?.on("click", () => this.onObservationClick(observation)),
+        "webcams",
+      );
     });
-    return layer;
+    return this.mapService.layers.webcams;
   }
 
   onObservationClick(observation: GenericObservation): void {
