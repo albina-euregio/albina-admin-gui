@@ -2,7 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
-import { AlbinaObservationsService } from "./sources";
+import { AlbinaObservationsService } from "./observations.service";
 import { Message, SharedModule } from "primeng/api";
 import { Table, TableModule } from "primeng/table";
 import {
