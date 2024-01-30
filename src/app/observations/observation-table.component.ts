@@ -5,12 +5,7 @@ import { EventType, isAvalancheWarningServiceObservation, Observation } from "./
 import { AlbinaObservationsService } from "./observations.service";
 import { Message, SharedModule } from "primeng/api";
 import { Table, TableModule } from "primeng/table";
-import {
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationType,
-} from "./models/generic-observation.model";
+import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
 import { PipeModule } from "../pipes/pipes.module";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { MessagesModule } from "primeng/messages";
@@ -57,9 +52,7 @@ export class ObservationTableComponent {
   ) {}
 
   get shownObservations(): GenericObservation[] {
-    const observations = (this.observations || []).filter(
-      (o) => o.$source !== ObservationSource.Observer && o.$type !== ObservationType.Webcam,
-    );
+    const observations = this.observations || [];
     return this.showObservationsWithoutCoordinates ? observations.filter(this.hasNoCoordinates) : observations;
   }
 
