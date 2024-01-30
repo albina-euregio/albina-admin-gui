@@ -50,6 +50,7 @@ import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
 import { AlbinaObservationsService } from "./observations.service";
 import { Control, LayerGroup } from "leaflet";
+import { augmentRegion } from "../providers/regions-service/augmentRegion";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -357,6 +358,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
     if (observation.$source === ObservationSource.AvalancheWarningService) {
       observation = this.parseObservation(observation);
+      augmentRegion(observation);
     }
 
     observation.filterType = ObservationFilterType.Local;
