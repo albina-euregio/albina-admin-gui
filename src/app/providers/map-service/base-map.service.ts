@@ -12,7 +12,9 @@ import { RegionNameControl } from "./region-name-control";
 export class BaseMapService extends MapService {
   public observationTypeLayers: Record<ObservationType, LayerGroup>;
   public layers = {
-    forecast: new LayerGroup()
+    forecast: new LayerGroup(),
+    observers: new LayerGroup(),
+    webcams: new LayerGroup()
   };
 
   constructor(
@@ -88,6 +90,9 @@ export class BaseMapService extends MapService {
   }
 
   addMarker(marker: CircleMarker | Marker, layerName: keyof typeof this.layers, attribution: string | undefined = undefined) {
+    if (!marker) {
+      return;
+    }
     marker.options.pane = "markerPane";
 
     if (this.layers[layerName] === undefined) {

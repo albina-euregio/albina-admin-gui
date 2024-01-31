@@ -14,12 +14,12 @@ import {
 import { ObservationFilterType } from "./models/generic-observation.model";
 
 interface Dataset {
-  source: Array<Array<string | number>>; 
+  source: Array<Array<string | number>>;
 }
 
 interface OutputDataset {
   dataset: Dataset;
-  nan: any; 
+  nan: any;
 }
 
 const DATASET_MAX_FACTOR = 1;
@@ -148,9 +148,6 @@ export class ObservationFilterService {
     return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.endDate);
   }
 
-  
-
-
   public isSelected(observation: GenericObservation) {
     return (
       this.inMapBounds(observation) &&
@@ -183,40 +180,36 @@ export class ObservationFilterService {
   }
 
   private seedFilterSelectionsAll() {
-    for (const [key] of Object.entries(Aspect)) {
+    for (const key of Object.keys(Aspect)) {
       if (isNaN(Number(key))) {
         this.filterSelection.Aspect.all.push(key);
       }
     }
 
-    for (const [key, value] of Object.entries(Stability)) {
+    for (const key of Object.keys(Stability)) {
       this.filterSelection.Stability.all.unshift(key);
     }
 
-    for (const [key, value] of Object.entries(ObservationType)) {
+    for (const key of Object.keys(ObservationType)) {
       this.filterSelection.ObservationType.all.unshift(key);
     }
 
-    for (const [key, value] of Object.entries(ImportantObservation)) {
+    for (const key of Object.keys(ImportantObservation)) {
       this.filterSelection.ImportantObservation.all.unshift(key);
     }
 
     let curElevation = this.elevationRange[0];
     while (curElevation <= this.elevationRange[1]) {
-      this.filterSelection.Elevation.all.push(curElevation + "");
+      this.filterSelection.Elevation.all.push(String(curElevation));
       curElevation += this.elevationSectionSize;
     }
 
-    for (const [key] of Object.entries(DangerPattern)) {
-      if (isNaN(Number(key))) {
-        this.filterSelection.DangerPattern.all.push(key);
-      }
+    for (const key of Object.keys(DangerPattern)) {
+      this.filterSelection.DangerPattern.all.push(key);
     }
 
-    for (const [key] of Object.entries(AvalancheProblem)) {
-      if (isNaN(Number(key))) {
-        this.filterSelection.AvalancheProblem.all.push(key);
-      }
+    for (const key of Object.keys(AvalancheProblem)) {
+      this.filterSelection.AvalancheProblem.all.push(key);
     }
   }
 

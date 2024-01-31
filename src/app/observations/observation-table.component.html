@@ -1,6 +1,6 @@
 <p-table
   #observationTable
-  [value]="shownObservations"
+  [value]="observations"
   sortField="eventDate"
   [sortOrder]="-1"
   [globalFilterFields]="['authorName', 'locationName', 'content']"
@@ -20,7 +20,7 @@
         <div class="global-bar-item global-bar-item-add" style="float: right; padding-left: 10px">
           <p>
             {{ "observations.count" | translate }}
-            {{ shownObservations.length }}
+            {{ observations.length }}
           </p>
         </div>
         <div class="global-bar-item global-bar-item-add" style="float: right">
@@ -55,12 +55,17 @@
       <th><!-- avalancheProblems --></th>
       <th>
         <i class="fa fa-comment"></i> {{ "observations.content" | translate }}
-        <span class="observation-count">({{ "observations.count" | translate }} {{ shownObservations.length }})</span>
+        <span class="observation-count">({{ "observations.count" | translate }} {{ observations.length }})</span>
       </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-observation>
-    <tr (click)="onClick(observation)" style="cursor: pointer" [ngStyle]="getTableRowStyle(observation)">
+    <tr
+      *ngIf="!showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude)"
+      (click)="onClick(observation)"
+      style="cursor: pointer"
+      [ngStyle]="getTableRowStyle(observation)"
+    >
       <td style="padding: 1rem 0;white-space: nowrap">
         {{ observation.eventDate | localizedDate : "dd.MM.yyyy HH:mm" }}
       </td>
@@ -109,7 +114,12 @@
           [title]="importantObservation"
           style="display: inline-block; margin: 1rem 0"
         >
-          {{ formatImportantObservation(importantObservation) }}
+          <span *ngIf="importantObservationTexts[importantObservation]" style="font-family: snowsymbolsiacs">
+            {{ importantObservationTexts[importantObservation] }}
+          </span>
+          <span *ngIf="!importantObservationTexts[importantObservation]">
+            {{ formatImportantObservation(importantObservation) }}
+          </span>
         </abbr>
       </td>
       <td style="padding: 1rem 0">{{ observation.content }}</td>

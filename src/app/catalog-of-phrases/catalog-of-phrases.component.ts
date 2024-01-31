@@ -1,5 +1,5 @@
 import { Component, Inject, Injectable, ViewChild, ElementRef, AfterViewInit } from "@angular/core";
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialog as MatDialog } from "@angular/material/legacy-dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 
 import { Renderer2 } from "@angular/core";
 import { DomSanitizer, SafeUrl, SafeResourceUrl } from "@angular/platform-browser";
@@ -12,6 +12,7 @@ import { DomSanitizer, SafeUrl, SafeResourceUrl } from "@angular/platform-browse
       flex-direction: column;
       height: 100%;
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
     mat-dialog-content{
       max-height: unset !important;
       flex: 1 0 0;

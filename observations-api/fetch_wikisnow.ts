@@ -1,10 +1,10 @@
-import { ApiWikisnowECT, convertWikisnow } from "../src/app/observations/models/wikisnow.model";
+import { fetchJSON } from "./fetchJSON";
+import { ApiWikisnowECT, convertWikisnow } from "./models/wikisnow.model";
 
-const API = "https://admin.avalanche.report/wikisnow/ect/ect-json.json";
+const API = process.env.ALBINA_WIKISNOW_API;
 
 export async function* fetchWikiSnow() {
-  console.log("Fetching", API);
-  const json: ApiWikisnowECT = await (await fetch(API)).json();
+  const json: ApiWikisnowECT = await fetchJSON(API);
 
   for (let wikisnow of json.data) {
     yield convertWikisnow(wikisnow);

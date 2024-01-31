@@ -2,7 +2,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatLegacyDialogModule as MatDialogModule } from "@angular/material/legacy-dialog";
+import { MatDialogModule } from "@angular/material/dialog";
 import { Observable, of } from "rxjs";
 
 import { AppComponent } from "./app.component";
@@ -14,7 +14,6 @@ import { SIDEBAR_TOGGLE_DIRECTIVES } from "./shared/sidebar.directive";
 import { AsideToggleDirective } from "./shared/aside.directive";
 import { PasswordMismatchValidatorDirective } from "./shared/password-mismatch.directive";
 import { BreadcrumbsComponent } from "./shared/breadcrumb.component";
-import { LeafletModule} from "@asymmetrik/ngx-leaflet";
 
 import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
 
@@ -133,7 +132,6 @@ registerLocaleData(localeOc, "oc");
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    LeafletModule,
     PipeModule.forRoot(),
     ModalModule.forRoot(),
     TranslateModule.forRoot({

@@ -1,15 +1,14 @@
-import dayjs from "dayjs";
-import { LolaKronosApi, convertLoLaKronos } from "../src/app/observations/models/lola-kronos.model";
+import type dayjs from "dayjs";
+import { LolaKronosApi, convertLoLaKronos } from "./models/lola-kronos.model";
+import { fetchJSON } from "./fetchJSON";
 
-const API = "https://admin.avalanche.report/lola-kronos/dataexport/dataFromToken/";
+const API = "https://www.lola-kronos.info/api/dataexport/dataFromToken/";
 const WEB = "https://www.lola-kronos.info/";
 
-export async function* fetchLolaKronos() {
-  const startDate = formatDate(dayjs().millisecond(0).subtract(1, "week"));
-  const endDate = formatDate(dayjs().millisecond(0));
-  const url = `${API}${startDate}/${endDate}`;
-  console.log("Fetching", url);
-  const json: LolaKronosApi = await (await fetch(url)).json();
+export async function* fetchLolaKronos(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
+  const url = `${API}${formatDate(startDate)}/${formatDate(endDate)}`;
+  const headers = { Authorization: process.env.ALBINA_LOLA_KRONOS_API_TOKEN };
+  const json: LolaKronosApi = await fetchJSON(url, { headers });
 
   for (let obs of convertLoLaKronos(json, WEB)) {
     yield obs;

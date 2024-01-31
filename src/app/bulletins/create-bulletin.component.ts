@@ -1,7 +1,6 @@
 import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe, formatDate } from "@angular/common";
-import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig } from "@angular/material/legacy-dialog";
 
 
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
@@ -34,6 +33,8 @@ import { ModalPublicationStatusComponent } from "./modal-publication-status.comp
 import { ModalPublishAllComponent } from "./modal-publish-all.component";
 import { ModalMediaFileComponent } from "./modal-media-file.component";
 import { ModalCheckComponent } from "./modal-check.component";
+
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 
 // For iframe
 import { Renderer2 } from "@angular/core";

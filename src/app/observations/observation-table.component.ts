@@ -2,15 +2,10 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
-import { AlbinaObservationsService } from "./sources";
+import { AlbinaObservationsService } from "./observations.service";
 import { Message, SharedModule } from "primeng/api";
 import { Table, TableModule } from "primeng/table";
-import {
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationType,
-} from "./models/generic-observation.model";
+import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
 import { PipeModule } from "../pipes/pipes.module";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { MessagesModule } from "primeng/messages";
@@ -19,7 +14,7 @@ import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { CommonModule } from "@angular/common";
-import { ObservationMarkerService } from "./observation-marker.service";
+import { ObservationMarkerService, importantObservationTexts } from "./observation-marker.service";
 
 @Component({
   standalone: true,
@@ -41,13 +36,14 @@ import { ObservationMarkerService } from "./observation-marker.service";
   templateUrl: "observation-table.component.html",
 })
 export class ObservationTableComponent {
-  @Input() observations: GenericObservation[];
+  @Input() observations: GenericObservation[] = [];
   @Input() showObservationsWithoutCoordinates: boolean;
   @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
   @ViewChild("observationTable") observationTable: Table;
   observation: Observation;
   saving = false;
   messages: Message[] = [];
+  importantObservationTexts = importantObservationTexts;
 
   constructor(
     private observationsService: AlbinaObservationsService,
@@ -55,25 +51,10 @@ export class ObservationTableComponent {
     private translate: TranslateService,
   ) {}
 
-  get shownObservations(): GenericObservation[] {
-    const observations = (this.observations || []).filter(
-      (o) => o.$source !== ObservationSource.Observer && o.$type !== ObservationType.Webcam,
-    );
-    return this.showObservationsWithoutCoordinates ? observations.filter(this.hasNoCoordinates) : observations;
-  }
-
   newObservation() {
-    const today = new Date(Date.now());
-    const date = today.toISOString().split("T")[0];
     this.observation = {
       eventType: EventType.Normal,
     } as Observation;
-
-    console.log(this.observation);
-  }
-
-  hasNoCoordinates(element, index, array) {
-    return !element.latitude || !element.longitude;
   }
 
   onClick(observation: GenericObservation) {

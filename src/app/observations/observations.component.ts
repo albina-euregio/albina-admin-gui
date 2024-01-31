@@ -9,9 +9,7 @@ import {
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { ObservationsService } from "./observations.service";
 import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
-import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import {
   GenericObservation,
@@ -37,7 +35,7 @@ import { ObservationTableComponent } from "./observation-table.component";
 import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
-import type { Observable } from "rxjs";
+import { onErrorResumeNext, type Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
 import { DialogModule } from "primeng/dialog";
@@ -50,21 +48,9 @@ import { MultiSelectChangeEvent, MultiSelectModule } from "primeng/multiselect";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
-import {
-  AlbinaObservationsService,
-  AwsObservationsService,
-  FotoWebcamObservationsService,
-  LawisObservationsService,
-  LolaKronosObservationsService,
-  LwdKipObservationsService,
-  PanoCloudWebcamObservationsService,
-  PanomaxObservationsService,
-  RasWebcamObservationsService,
-  WikisnowObservationsService,
-} from "./sources";
-
-//import { BarChart } from "./charts/bar-chart/bar-chart.component";
-declare var L: any;
+import { AlbinaObservationsService } from "./observations.service";
+import { Control, LayerGroup } from "leaflet";
+import { augmentRegion } from "../providers/regions-service/augmentRegion";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -95,19 +81,9 @@ export interface MultiselectDropdownData {
     ElevationService,
     ObservationFilterService,
     ObservationMarkerService,
-    ObservationsService,
     RegionsService,
     TranslateService,
     AlbinaObservationsService,
-    AwsObservationsService,
-    FotoWebcamObservationsService,
-    LawisObservationsService,
-    LolaKronosObservationsService,
-    LwdKipObservationsService,
-    PanomaxObservationsService,
-    WikisnowObservationsService,
-    RasWebcamObservationsService,
-    PanoCloudWebcamObservationsService,
     BaseMapService,
   ],
   templateUrl: "observations.component.html",
@@ -152,10 +128,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public filter: ObservationFilterService,
     public markerService: ObservationMarkerService,
     private translateService: TranslateService,
-    private observationsService: ObservationsService,
+    private observationsService: AlbinaObservationsService,
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
-    private elevationService: ElevationService,
     public mapService: BaseMapService,
   ) {}
 
@@ -191,7 +166,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
+    const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
+    layerControl.addOverlay(this.loadObservers(), "Beobachter");
+    layerControl.addOverlay(this.loadWebcams(), "Webcams");
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
       this.applyLocalFilter();
@@ -258,7 +236,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.days = days;
     }
     this.clear();
-    this.loading = this.observationsService.loadAll();
+    this.loading = onErrorResumeNext(
+      this.observationsService.getObservations(),
+      this.observationsService.getGenericObservations(),
+    );
     this.loading
       .forEach((observation) => {
         try {
@@ -266,19 +247,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         } catch (err) {
           console.warn("Observation does not match schema", observation, err);
         }
-        if (this.filter.inDateRange(observation)) {
-          if (observation.$source === ObservationSource.AvalancheWarningService) {
-            observation = this.parseObservation(observation);
-          }
-          if (!observation.elevation && observation.$source !== ObservationSource.FotoWebcamsEU) {
-            this.elevationService.getElevation(observation.latitude, observation.longitude).subscribe((elevation) => {
-              observation.elevation = elevation;
-              this.addObservation(observation);
-            });
-          } else {
-            this.addObservation(observation);
-          }
-        }
+        this.addObservation(observation);
       })
       .catch((e) => console.error(e))
       .finally(() => {
@@ -383,9 +352,17 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private addObservation(observation: GenericObservation): void {
+    if (!this.filter.inDateRange(observation)) {
+      return;
+    }
+
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      observation = this.parseObservation(observation);
+      augmentRegion(observation);
+    }
+
     observation.filterType = ObservationFilterType.Local;
 
-    augmentRegion(observation);
     if (observation.region) {
       observation.regionLabel = observation.region + " " + this.regionsService.getRegionName(observation.region);
     }
@@ -400,6 +377,26 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     if (!marker) {
       this.observationsWithoutCoordinates++;
     }
+  }
+
+  private loadObservers(): LayerGroup<any> {
+    this.observationsService.getObservers().forEach((observation) => {
+      this.mapService.addMarker(
+        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
+        "observers",
+      );
+    });
+    return this.mapService.layers.observers;
+  }
+
+  private loadWebcams(): LayerGroup<any> {
+    this.observationsService.getGenericWebcams().forEach((observation) => {
+      this.mapService.addMarker(
+        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
+        "webcams",
+      );
+    });
+    return this.mapService.layers.webcams;
   }
 
   onObservationClick(observation: GenericObservation): void {

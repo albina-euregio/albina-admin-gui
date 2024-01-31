@@ -1,6 +1,6 @@
-import { GenericObservation, ObservationSource, ObservationType } from "./generic-observation.model";
-import BeobachterAT from "../data/Beobachter-AT.json";
-import BeobachterIT from "../data/Beobachter-IT.json";
+import { GenericObservation, ObservationSource, ObservationType } from "../src/app/observations/models/generic-observation.model";
+import BeobachterAT from "./data/Beobachter-AT.json";
+import BeobachterIT from "./data/Beobachter-IT.json";
 
 export function getAwsObservers(): GenericObservation[] {
   const eventDate = new Date();

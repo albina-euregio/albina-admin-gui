@@ -1,50 +1,125 @@
 import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { convertObservationToGeneric, Observation } from "./models/observation.model";
 import { GenericObservation } from "./models/generic-observation.model";
-import { Observable, onErrorResumeNext } from "rxjs";
-import {
-  AlbinaObservationsService,
-  AwsObservationsService,
-  FotoWebcamObservationsService,
-  LawisObservationsService,
-  LolaKronosObservationsService,
-  LwdKipObservationsService,
-  PanoCloudWebcamObservationsService,
-  PanomaxObservationsService,
-  RasWebcamObservationsService,
-  WikisnowObservationsService,
-} from "./sources";
+import { Observable } from "rxjs";
+import { map, mergeAll } from "rxjs/operators";
+import { ObservationFilterService } from "./observation-filter.service";
 
 @Injectable()
-export class ObservationsService {
+export class AlbinaObservationsService {
   constructor(
-    private albina: AlbinaObservationsService,
-    private aws: AwsObservationsService,
-    private fotoWebcam: FotoWebcamObservationsService,
-    private lawis: LawisObservationsService,
-    private lolaKronos: LolaKronosObservationsService,
-    private lwdKip: LwdKipObservationsService,
-    private panocloud: PanoCloudWebcamObservationsService,
-    private panomax: PanomaxObservationsService,
-    private rasWebcam: RasWebcamObservationsService,
-    private wikisnow: WikisnowObservationsService,
+    private http: HttpClient,
+    private filter: ObservationFilterService,
+    private authenticationService: AuthenticationService,
+    private constantsService: ConstantsService,
   ) {}
 
-  loadAll(): Observable<GenericObservation<any>> {
-    return onErrorResumeNext(
-      // fast
-      this.albina.getObservations(),
-      this.aws.getObservers(),
-      this.lolaKronos.getLoLaKronos(),
-      this.wikisnow.getWikisnowECT(),
-      this.panocloud.getPanoCloudWebcams(),
-      this.rasWebcam.getRasWebcams(),
-      // medium
-      this.lwdKip.getLwdKipObservations(),
-      // slow
-      this.lawis.getLawisIncidents(),
-      this.lawis.getLawisProfiles(),
-      this.fotoWebcam.getFotoWebcamsEU(),
-      this.panomax.getPanomax(),
+  getObservation(id: number): Observable<GenericObservation<Observation>> {
+    const url = this.constantsService.getServerUrl() + "observations/" + id;
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers };
+    return this.http.get<Observation>(url, options).pipe(map((o) => convertObservationToGeneric(o)));
+  }
+
+  getObservations(): Observable<GenericObservation<Observation>> {
+    const url =
+      this.constantsService.getServerUrl() +
+      "observations?startDate=" +
+      this.filter.startDateString +
+      "&endDate=" +
+      this.filter.endDateString;
+    const headers = this.authenticationService.newAuthHeader();
+    return this.http.get<Observation[]>(url, { headers }).pipe(
+      mergeAll(),
+      map((o) => convertObservationToGeneric(o)),
     );
+  }
+
+  getGenericObservations(): Observable<GenericObservation> {
+    const url =
+      this.constantsService.observationApi.$ +
+      "?startDate=" +
+      this.filter.startDateString +
+      "&endDate=" +
+      this.filter.endDateString;
+    return this.getGenericObservations0(url);
+  }
+
+  getObservers(): Observable<GenericObservation> {
+    const url = this.constantsService.observationApi.Observer;
+    return this.getGenericObservations0(url);
+  }
+
+  getGenericWebcams(): Observable<GenericObservation> {
+    const url = this.constantsService.observationApi.Webcam;
+    return this.getGenericObservations0(url);
+  }
+
+  private getGenericObservations0(url: string): Observable<GenericObservation> {
+    const headers = this.authenticationService.newAuthHeader();
+    return this.http.get<GenericObservation[]>(url, { headers }).pipe(
+      mergeAll(),
+      map((o) => ({
+        ...o,
+        eventDate: o.eventDate ? new Date(o.eventDate) : undefined,
+        reportDate: o.reportDate ? new Date(o.reportDate) : undefined,
+      })),
+    );
+  }
+
+  postObservation(observation: Observation): Observable<GenericObservation<Observation>> {
+    observation = this.serializeObservation(observation);
+    const url = this.constantsService.getServerUrl() + "observations";
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers };
+    return this.http.post<Observation>(url, observation, options).pipe(map((o) => convertObservationToGeneric(o)));
+  }
+
+  putObservation(observation: Observation): Observable<GenericObservation<Observation>> {
+    observation = this.serializeObservation(observation);
+    const url = this.constantsService.getServerUrl() + "observations/" + observation.id;
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers };
+    return this.http.put<Observation>(url, observation, options).pipe(map((o) => convertObservationToGeneric(o)));
+  }
+
+  private serializeObservation(observation: Observation): Observation {
+    return {
+      ...observation,
+      eventDate:
+        typeof observation.eventDate === "object" ? getISOString(observation.eventDate) : observation.eventDate,
+      reportDate:
+        typeof observation.reportDate === "object" ? getISOString(observation.reportDate) : observation.reportDate,
+    };
+  }
+
+  async deleteObservation(observation: Observation): Promise<void> {
+    const url = this.constantsService.getServerUrl() + "observations/" + observation.id;
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers };
+    await this.http.delete(url, options).toPromise();
+  }
+}
+
+function getISOString(date: Date) {
+  // like Date.toISOString(), but not using UTC
+  return (
+    date.getFullYear() +
+    "-" +
+    pad(date.getMonth() + 1) +
+    "-" +
+    pad(date.getDate()) +
+    "T" +
+    pad(date.getHours()) +
+    ":" +
+    pad(date.getMinutes()) +
+    ":" +
+    pad(date.getSeconds())
+  );
+  function pad(number: number): string {
+    return number < 10 ? `0${number}` : `${number}`;
   }
 }
