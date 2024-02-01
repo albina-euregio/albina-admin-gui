@@ -381,17 +381,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private loadExternalBulletinsFromServer() {
-    console.log("Load external bulletins");
-    this.authenticationService.getExternalServers().map((server) =>
-      this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
-        data => {
-          this.addExternalBulletins(server, data);
-        },
-        () => {
-          console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
-        }
-      )
-    );
+    if (!this.editRegions) {
+      console.log("Load external bulletins");
+      this.authenticationService.getExternalServers().map((server) =>
+        this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
+          data => {
+            this.addExternalBulletins(server, data);
+          },
+          () => {
+            console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
+          }
+        )
+      );
+    }
   }
 
   ngOnDestroy() {
