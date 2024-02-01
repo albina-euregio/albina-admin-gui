@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 
 import { BulletinsComponent } from "./bulletins.component";
 import { CreateBulletinComponent } from "./create-bulletin.component";
+import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { AspectsComponent } from "./aspects.component";
 import { DangerRatingComponent } from "./danger-rating.component";
 import { DangerRatingIconComponent } from "./danger-rating-icon.component";
@@ -55,6 +56,7 @@ import { MapService } from "../providers/map-service/map.service";
     declarations: [
         BulletinsComponent,
         CreateBulletinComponent,
+        AvalancheBulletinComponent,
         AspectsComponent,
         DangerRatingComponent,
         DangerRatingIconComponent,
