@@ -121,6 +121,10 @@ $sidebar-border: 1px solid $gray-300;
     align-items: center;
 }
 
+.foreign {
+    cursor: pointer;
+}
+
 .region-thumb__actions {
     opacity: 0;
 }

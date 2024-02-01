@@ -384,7 +384,7 @@
 
     <div *ngIf="hasForeignRegions()" class="create-bulletin__regions">
       <!-- Foreign regions -->
-      <header class="create-bulletin__region-divider" (click)="toggleShowForeignRegions()">
+      <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()">
         <h5 class="font-s-bold">
           {{ getForeignRegionNames() }}
         </h5>
@@ -411,7 +411,7 @@
     <!-- External regions -->
     <div *ngIf="hasExternalRegions()" class="create-bulletin__regions">
       <ng-container *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue">
-        <header class="create-bulletin__region-divider" (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)">
+        <header class="create-bulletin__region-divider foreign" (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)">
           <h5 class="font-s-medium">
             {{ externalRegion.key.name }}
           </h5>
