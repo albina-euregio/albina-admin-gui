@@ -7971,6 +7971,9 @@ p-treeselect.ng-invalid.ng-dirty > .p-treeselect {
   width: 100%;
   background-color: #e6eef2;
 }
+.layout-map > .observations-map {
+  height: calc(100vh - 110px);
+}
 .layout-map .leaflet-pane {
   mix-blend-mode: normal;
 }
