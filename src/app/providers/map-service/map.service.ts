@@ -613,19 +613,12 @@ export class MapService {
   }
 
   private getEditSelectionStyle(status) {
-    let fillOpacity = this.constantsService.fillOpacityEditSuggested;
-    if (status === Enums.RegionStatus.saved) {
-      fillOpacity = this.constantsService.fillOpacityEditSelected;
-    } else if (status === Enums.RegionStatus.suggested) {
-      fillOpacity = this.constantsService.fillOpacityEditSuggested;
-    }
-
     return {
       fillColor: this.constantsService.colorActiveSelection,
       weight: this.constantsService.lineWeight,
       opacity: 1,
       color: this.constantsService.colorActiveSelection,
-      fillOpacity: fillOpacity
+      fillOpacity: this.constantsService.fillOpacityEditSelection
     };
   }
 

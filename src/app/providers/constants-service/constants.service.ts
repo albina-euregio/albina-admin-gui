@@ -113,8 +113,7 @@ export class ConstantsService {
   public fillOpacityForeignSelectedSuggested = 0.8;
   public fillOpacityForeignDeselectedSuggested = 0.3;
 
-  public fillOpacityEditSelected = 0.4;
-  public fillOpacityEditSuggested = 0.4;
+  public fillOpacityEditSelection = 0.4;
 
   // lang
   public avActivityCommentNewSnowTextcat =
