@@ -101,21 +101,20 @@ export class ConstantsService {
 
   public lineColor = "#000000";
   public lineWeight = 0.5;
-  public lineOpacityOwnRegion = 1.0;
-  public lineOpacityForeignRegion = 0.3;
+  public lineOpacity = 0.3;
 
-  public fillOpacityOwnSelected = 1.0;
+  public fillOpacityOwnSelected = 0.8;
   public fillOpacityOwnDeselected = 0.6;
-  public fillOpacityOwnSelectedSuggested = 1.0;
+  public fillOpacityOwnSelectedSuggested = 0.8;
   public fillOpacityOwnDeselectedSuggested = 0.6;
 
-  public fillOpacityForeignSelected = 1.0;
+  public fillOpacityForeignSelected = 0.8;
   public fillOpacityForeignDeselected = 0.3;
-  public fillOpacityForeignSelectedSuggested = 1.0;
+  public fillOpacityForeignSelectedSuggested = 0.8;
   public fillOpacityForeignDeselectedSuggested = 0.3;
 
-  public fillOpacityEditSelected = 0.5;
-  public fillOpacityEditSuggested = 0.5;
+  public fillOpacityEditSelected = 0.4;
+  public fillOpacityEditSuggested = 0.4;
 
   // lang
   public avActivityCommentNewSnowTextcat =

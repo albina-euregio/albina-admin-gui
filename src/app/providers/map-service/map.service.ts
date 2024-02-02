@@ -72,17 +72,24 @@ export class MapService {
       regions: new GeoJSON(regions, {
         onEachFeature: isPM
           ? this.onEachAggregatedRegionsFeaturePM.bind(this)
-          : this.onEachAggregatedRegionsFeatureAM.bind(this)
+          : this.onEachAggregatedRegionsFeatureAM.bind(this),
+        style: this.getRegionStyle()
       }),
 
       // overlay to show selected regions
-      activeSelection: new GeoJSON(regionsWithElevation),
+      activeSelection: new GeoJSON(regionsWithElevation, {
+        style: this.getActiveSelectionBaseStyle()
+      }),
 
       // overlay to select regions (when editing an aggregated region)
-      editSelection: new GeoJSON(),
+      editSelection: new GeoJSON(regions, {
+        style: this.getEditSelectionBaseStyle()
+      }),
 
       // overlay to show aggregated regions
-      aggregatedRegions: new GeoJSON(regionsWithElevation)
+      aggregatedRegions: new GeoJSON(regionsWithElevation, {
+        style: this.getAggregatedRegionBaseStyle()
+      })
     };
     overlayMaps.editSelection.options.onEachFeature = this.onEachFeature.bind(this, overlayMaps.editSelection);
     overlayMaps.editSelection.addData(activeRegion);
@@ -204,50 +211,34 @@ export class MapService {
     for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
       this.authenticationService.isEuregio()
       if (this.authenticationService.isInternalRegion(entry.feature.properties.id)) {
-        entry.setStyle(this.getUserDependentBaseStyle());
+        entry.setStyle(this.getAggregatedRegionBaseStyle());
       }
     }
     for (const entry of this.afternoonOverlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
       if (this.authenticationService.isInternalRegion(entry.feature.properties.id)) {
-        entry.setStyle(this.getUserDependentBaseStyle());
+        entry.setStyle(this.getAggregatedRegionBaseStyle());
       }
     }
   }
 
   resetAggregatedRegions() {
-    for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
-      entry.setStyle(this.getUserDependentBaseStyle());
-    }
-    for (const entry of this.afternoonOverlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
-      entry.setStyle(this.getUserDependentBaseStyle());
-    }
+    this.overlayMaps?.aggregatedRegions?.resetStyle();
+    this.afternoonOverlayMaps?.aggregatedRegions?.resetStyle();
   }
 
   resetRegions() {
-    for (const entry of this.overlayMaps?.regions?.getLayers?.() ?? []) {
-      entry.setStyle(this.getUserDependentRegionStyle(entry.feature.properties.id));
-    }
-    for (const entry of this.afternoonOverlayMaps?.regions?.getLayers?.() ?? []) {
-      entry.setStyle(this.getUserDependentRegionStyle(entry.feature.properties.id));
-    }
+    this.overlayMaps?.regions?.resetStyle();
+    this.afternoonOverlayMaps?.regions?.resetStyle();
   }
 
   resetActiveSelection() {
-    for (const entry of this.overlayMaps?.activeSelection?.getLayers?.() ?? []) {
-      entry.setStyle(this.getActiveSelectionBaseStyle());
-    }
-    for (const entry of this.afternoonOverlayMaps?.activeSelection?.getLayers?.() ?? []) {
-      entry.setStyle(this.getActiveSelectionBaseStyle());
-    }
+    this.overlayMaps?.activeSelection?.resetStyle();
+    this.afternoonOverlayMaps?.activeSelection?.resetStyle();
   }
 
   resetEditSelection() {
-    for (const entry of this.overlayMaps?.editSelection?.getLayers?.() ?? []) {
-      entry.setStyle(this.getEditSelectionBaseStyle());
-    }
-    for (const entry of this.afternoonOverlayMaps?.editSelection?.getLayers?.() ?? []) {
-      entry.setStyle(this.getEditSelectionBaseStyle());
-    }
+    this.overlayMaps?.editSelection?.resetStyle();
+    this.afternoonOverlayMaps?.editSelection?.resetStyle();
   }
 
   resetAll() {
@@ -413,6 +404,11 @@ export class MapService {
     this.afternoonMap?.removeLayer?.(this.afternoonOverlayMaps.activeSelection);
   }
 
+  deselectAggregatedRegions() {
+    this.overlayMaps.aggregatedRegions.getLayers().every((entry) => entry.feature.properties.selected = false);
+    this.afternoonOverlayMaps.aggregatedRegions.getLayers().every((entry) => entry.feature.properties.selected = false);
+  }
+
   editAggregatedRegion(bulletin: BulletinModel) {
     this.map.removeLayer(this.overlayMaps.activeSelection);
     this.map.addLayer(this.overlayMaps.editSelection);
@@ -439,7 +435,7 @@ export class MapService {
     }
   }
 
-  discardAggregatedRegion() {
+  discardEditSelection() {
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       entry.feature.properties.selected = false;
       entry.setStyle(this.getEditSelectionBaseStyle());
@@ -454,55 +450,14 @@ export class MapService {
     this.afternoonMap.removeLayer(this.afternoonOverlayMaps.editSelection);
   }
 
-  deselectRegions(bulletin: BulletinModel) {
-    for (const entry of this.overlayMaps.aggregatedRegions.getLayers()) {
-      for (const region of bulletin.savedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle());
-        }
-      }
-      for (const region of bulletin.suggestedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle());
-        }
-      }
-      for (const region of bulletin.publishedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle());
-        }
+  updateEditSelection() {
+    for (const entry of this.overlayMaps.editSelection.getLayers()) {
+      if (entry.feature.properties.selected) {
+        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.5 });
+      } else {
+        entry.setStyle({ fillColor: "#000000", fillOpacity: 0.0 });
       }
     }
-
-    for (const entry of this.afternoonOverlayMaps.aggregatedRegions.getLayers()) {
-      for (const region of bulletin.savedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle());
-        }
-      }
-      for (const region of bulletin.suggestedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle());
-        }
-      }
-      for (const region of bulletin.publishedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.setStyle(this.getUserDependentBaseStyle());
-        }
-      }
-    }
-
-    for (const entry of this.overlayMaps.activeSelection.getLayers()) {
-      entry.feature.properties.selected = false;
-      entry.setStyle(this.getActiveSelectionBaseStyle());
-    }
-
-    for (const entry of this.afternoonOverlayMaps.activeSelection.getLayers()) {
-      entry.feature.properties.selected = false;
-      entry.setStyle(this.getActiveSelectionBaseStyle());
-    }
-
-    this.map.removeLayer(this.overlayMaps.activeSelection);
-    this.afternoonMap.removeLayer(this.afternoonOverlayMaps.activeSelection);
   }
 
   getSelectedRegions(): string[] {
@@ -513,33 +468,6 @@ export class MapService {
       }
     }
     return result;
-  }
-
-  getSelectedRegion(): string {
-    for (const entry of this.overlayMaps.aggregatedRegions.getLayers()) {
-      if (entry.feature.properties.selected) {
-        return entry.feature.properties.id;
-      }
-    }
-  }
-
-  deselectAggregatedRegions() {
-    for (const entry of this.overlayMaps.aggregatedRegions.getLayers()) {
-      entry.feature.properties.selected = false;
-    }
-    for (const entry of this.afternoonOverlayMaps.aggregatedRegions.getLayers()) {
-      entry.feature.properties.selected = false;
-    }
-  }
-
-  updateEditSelection() {
-    for (const entry of this.overlayMaps.editSelection.getLayers()) {
-      if (entry.feature.properties.selected) {
-        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.5 });
-      } else {
-        entry.setStyle({ fillColor: "#000000", fillOpacity: 0.0 });
-      }
-    }
   }
 
   private onEachFeature(editSelection: L.GeoJSON, feature: GeoJSON.Feature, layer: L.Layer) {
@@ -654,26 +582,17 @@ export class MapService {
     });
   }
 
-  private getUserDependentBaseStyle() {
+  private getAggregatedRegionBaseStyle() {
     return {
-      fillColor: this.constantsService.getDangerRatingColor("missing"),
-      weight: this.constantsService.lineWeight,
       opacity: 0.0,
-      color: this.constantsService.lineColor,
       fillOpacity: 0.0
     };
   }
 
-  private getUserDependentRegionStyle(region) {
-    let opacity = this.constantsService.lineOpacityForeignRegion;
-    if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-      opacity = this.constantsService.lineOpacityOwnRegion;
-    }
-
+  private getRegionStyle() {
     return {
-      fillColor: this.constantsService.getDangerRatingColor("missing"),
       weight: this.constantsService.lineWeight,
-      opacity: opacity,
+      opacity: this.constantsService.lineOpacity,
       color: this.constantsService.lineColor,
       fillOpacity: 0.0
     };
@@ -681,20 +600,14 @@ export class MapService {
 
   private getActiveSelectionBaseStyle() {
     return {
-      fillColor: this.constantsService.getDangerRatingColor("missing"),
-      weight: this.constantsService.lineWeight,
       opacity: 0.0,
-      color: this.constantsService.lineColor,
       fillOpacity: 0.0
     };
   }
 
   private getEditSelectionBaseStyle() {
     return {
-      fillColor: this.constantsService.getDangerRatingColor("missing"),
-      weight: this.constantsService.lineWeight,
       opacity: 0.0,
-      color: this.constantsService.lineColor,
       fillOpacity: 0.0
     };
   }
@@ -718,7 +631,6 @@ export class MapService {
 
   private getActiveSelectionStyle(region, dangerRating, status) {
     let fillOpacity = this.constantsService.fillOpacityOwnSelected;
-    const opacity = 0.0;
     const fillColor = this.constantsService.getDangerRatingColor(dangerRating);
 
     // own area
@@ -743,8 +655,7 @@ export class MapService {
     }
 
     return {
-      color: this.constantsService.lineColor,
-      opacity: opacity,
+      opacity: 0.0,
       fillColor: fillColor,
       fillOpacity: fillOpacity
     };
@@ -752,7 +663,6 @@ export class MapService {
 
   private getDangerRatingStyle(region, dangerRating, status) {
     let fillOpacity = this.constantsService.fillOpacityOwnDeselected;
-    const opacity = 0.0;
 
     // own area
     if (region.startsWith(this.authenticationService.getActiveRegionId())) {
@@ -777,8 +687,7 @@ export class MapService {
 
     const color = this.constantsService.getDangerRatingColor(dangerRating);
     return {
-      color: this.constantsService.lineColor,
-      opacity: opacity,
+      opacity: 0.0,
       fillColor: color,
       fillOpacity: fillOpacity
     };

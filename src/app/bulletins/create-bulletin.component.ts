@@ -1377,7 +1377,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         }
       }
 
-      this.mapService.discardAggregatedRegion();
+      this.mapService.discardEditSelection();
       this.mapService.selectAggregatedRegion(this.activeBulletin);
 
       if (isUpdate) {
@@ -1541,7 +1541,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.delBulletin(bulletin);
     }
 
-    this.mapService.discardAggregatedRegion();
+    this.mapService.discardEditSelection();
 
     if (this.activeBulletin && this.activeBulletin !== undefined) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
