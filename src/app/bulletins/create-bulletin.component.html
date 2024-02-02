@@ -498,8 +498,8 @@
   >
     <div class="region-thumb__details">
       <h6 class="region-thumb__title font-s-medium">
-        {{ regionsService.getRegionName(bulletin.savedRegions[0]) }}
-        <span *ngIf="bulletin.savedRegions.length > 1"> + {{ bulletin.savedRegions.length - 1 }} </span>
+        <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 0">{{ regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0]) }}</span>
+        <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 1"> + {{ bulletin.getSavedAndPublishedRegions().length - 1 }} </span>
       </h6>
       <p class="region-thumb__author font-s text-secondary">{{ bulletin.getAuthor().getName() }}</p>
 
