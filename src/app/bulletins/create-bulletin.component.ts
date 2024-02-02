@@ -149,11 +149,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
 
   @ViewChild("receiver") receiver: ElementRef<HTMLIFrameElement>;
-  stopListening: Function;
   display: boolean = false;
-
-  // tra le proprietà del componente
-  eventSubscriber: Subscription;
 
   internalBulletinsSubscription !: Subscription;
   externalBulletinsSubscription !: Subscription;
@@ -397,15 +393,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.stopListening();
-
     this.internalBulletinsSubscription.unsubscribe(); 
     this.externalBulletinsSubscription.unsubscribe(); 
     
-    if (this.bulletinsService.getIsEditable()) {
-      this.eventSubscriber.unsubscribe();
-    }
-
     this.mapService.resetAll();
 
     this.bulletinsService.setActiveDate(undefined);
