@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ViewChild, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter, OnChanges } from "@angular/core";
 import { DatePipe } from "@angular/common";
 
 
@@ -37,7 +37,7 @@ declare var L: any;
   selector: "app-avalanche-bulletin",
   templateUrl: "avalanche-bulletin.component.html"
 })
-export class AvalancheBulletinComponent implements OnInit, OnDestroy {
+export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() bulletin: BulletinModel;
   @Input() disabled: boolean;
