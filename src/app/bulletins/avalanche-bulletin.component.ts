@@ -173,7 +173,11 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
     // setting pm language for iframe
     this.pmUrl = this.getTextcatUrl();
-    
+
+    this.initComponent();
+  }
+
+  initComponent() {
     this.activeHighlightsTextcat = this.bulletin.getHighlightsTextcat();
     this.activeHighlightsDe = this.bulletin.getHighlightsIn(Enums.LanguageCode.de);
     this.activeHighlightsIt = this.bulletin.getHighlightsIn(Enums.LanguageCode.it);
@@ -232,6 +236,10 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.activeTendencyCommentCa = this.bulletin.getTendencyCommentIn(Enums.LanguageCode.ca);
     this.activeTendencyCommentOc = this.bulletin.getTendencyCommentIn(Enums.LanguageCode.oc);
     this.activeTendencyCommentNotes = this.bulletin.getTendencyCommentNotes();
+  }
+
+  ngOnChanges() {
+    this.initComponent();
   }
 
   ngOnDestroy() {
