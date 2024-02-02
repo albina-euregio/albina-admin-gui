@@ -220,7 +220,7 @@
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
         <h5 class="font-s-bold">
-          {{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}
+          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }}
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown>

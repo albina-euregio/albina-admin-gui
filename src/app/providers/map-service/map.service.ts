@@ -262,7 +262,7 @@ export class MapService {
   updateAggregatedRegion(bulletin: BulletinModel) {
     const dangerRatingAbove = bulletin.getForenoonDangerRatingAbove();
     const dangerRatingBelow = bulletin.getForenoonDangerRatingBelow();
-    for (const entry of this.overlayMaps.aggregatedRegions?.getLayers()) {
+    for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers()) {
       for (let j = bulletin.savedRegions.length - 1; j >= 0; j--) {
         if (entry.feature.properties.id === bulletin.savedRegions[j]) {
           if (entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh || entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh) {
