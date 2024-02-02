@@ -107,7 +107,7 @@ export class MapService {
     }
   }
 
-  async initAmPmMap(showAfternoonMap: boolean) {
+  async initAmPmMap() {
     this.removeMaps();
 
     this.baseMaps = {
@@ -121,14 +121,14 @@ export class MapService {
     this.afternoonOverlayMaps = await this.initOverlayMaps(true);
 
     this.resetAll();
-    this.initAmMap(showAfternoonMap);
+    this.initAmMap();
     this.initPmMap();
     this.map.sync(this.afternoonMap);
     this.afternoonMap.sync(this.map);
     return [this.map, this.afternoonMap];
   }
 
-  private initAmMap(showAfternoonMap: boolean) {
+  private initAmMap() {
     const map = L.map("map", {
       ...this.getMapInitOptions(),
       layers: [

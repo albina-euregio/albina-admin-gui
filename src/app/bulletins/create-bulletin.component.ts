@@ -744,7 +744,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private async initMaps() {
-    const [map, afternoonMap] = await this.mapService.initAmPmMap(this.showAfternoonMap);
+    const [map, afternoonMap] = await this.mapService.initAmPmMap();
     map.on("click", () => this.onMapClick());
     afternoonMap.on("click", () => this.onMapClick());
   }
