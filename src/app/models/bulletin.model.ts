@@ -756,6 +756,10 @@ export class BulletinModel {
     return this.getPublishedRegions().concat(this.getSavedRegions());
   }
 
+  getAllRegions() {
+    return this.getPublishedRegions().concat(this.getSavedRegions()).concat(this.getSuggestedRegions());
+  }
+
   toJson() {
     const json = Object();
 

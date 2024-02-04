@@ -414,22 +414,10 @@ export class MapService {
     this.map.addLayer(this.overlayMaps.editSelection);
 
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
-      for (const region of bulletin.savedRegions) {
+      for (const region of bulletin.getAllRegions()) {
         if (entry.feature.properties.id === region) {
           entry.feature.properties.selected = true;
-          entry.setStyle(this.getEditSelectionStyle(Enums.RegionStatus.saved));
-        }
-      }
-      for (const region of bulletin.publishedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          entry.setStyle(this.getEditSelectionStyle(Enums.RegionStatus.saved));
-        }
-      }
-      for (const region of bulletin.suggestedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          entry.setStyle(this.getEditSelectionStyle(Enums.RegionStatus.suggested));
+          entry.setStyle(this.getEditSelectionStyle());
         }
       }
     }
@@ -612,7 +600,7 @@ export class MapService {
     };
   }
 
-  private getEditSelectionStyle(status) {
+  private getEditSelectionStyle() {
     return {
       fillColor: this.constantsService.colorActiveSelection,
       weight: this.constantsService.lineWeight,
