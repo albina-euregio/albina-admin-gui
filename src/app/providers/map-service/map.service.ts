@@ -423,19 +423,13 @@ export class MapService {
     }
   }
 
+  // editSelection overlay is only used in map (not in afternoonMap)
   discardEditSelection() {
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       entry.feature.properties.selected = false;
       entry.setStyle(this.getEditSelectionBaseStyle());
     }
-
-    for (const entry of this.afternoonOverlayMaps.editSelection.getLayers()) {
-      entry.feature.properties.selected = false;
-      entry.setStyle(this.getEditSelectionBaseStyle());
-    }
-
     this.map.removeLayer(this.overlayMaps.editSelection);
-    this.afternoonMap.removeLayer(this.afternoonOverlayMaps.editSelection);
   }
 
   updateEditSelection() {
