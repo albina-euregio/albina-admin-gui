@@ -11,6 +11,10 @@ $icon-button-size-sm: $space-6;
     font-weight: 500;
 }
 
+.btn-small {
+    font-size: 12px; 
+}
+
 .btn:not(.btn-icon) i:first-child {
     margin-right: $space-2;
 }
