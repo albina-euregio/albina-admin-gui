@@ -3,9 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe, formatDate } from "@angular/common";
 
 
-import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
 import { map, timer } from "rxjs";
-import { BehaviorSubject } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
@@ -14,7 +12,6 @@ import { environment } from "../../environments/environment";
 
 // models
 import { BulletinModel } from "../models/bulletin.model";
-import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 
 // services
 import { TranslateService } from "@ngx-translate/core";
@@ -34,16 +31,12 @@ import { ModalPublishAllComponent } from "./modal-publish-all.component";
 import { ModalMediaFileComponent } from "./modal-media-file.component";
 import { ModalCheckComponent } from "./modal-check.component";
 
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-
 // For iframe
 import { Renderer2 } from "@angular/core";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
-import { Console } from "console";
 
 import * as Enums from "../enums/enums";
-import { BulletinLockModel } from "app/models/bulletin-lock.model";
 import { ServerModel } from "app/models/server.model";
 
 declare var L: any;
