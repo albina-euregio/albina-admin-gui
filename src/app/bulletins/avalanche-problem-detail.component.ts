@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { MapService } from "../providers/map-service/map.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
@@ -50,7 +49,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   constructor(
     public settingsService: SettingsService,
     public authenticationService: AuthenticationService,
-    public mapService: MapService,
     public dialogService: DialogService,
     public translateService: TranslateService) {
   }
@@ -108,8 +106,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
         }
       }
       this.bulletinDaytimeDescription.updateDangerRating();
-      this.mapService.updateAggregatedRegion(this.bulletin);
-      this.mapService.selectAggregatedRegion(this.bulletin);
       this.isElevationHighEditing = false;
       this.changeAvalancheProblemDetailEvent.emit();
     }
@@ -127,8 +123,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
         }
       }
       this.bulletinDaytimeDescription.updateDangerRating();
-      this.mapService.updateAggregatedRegion(this.bulletin);
-      this.mapService.selectAggregatedRegion(this.bulletin);
       this.isElevationLowEditing = false;
       this.changeAvalancheProblemDetailEvent.emit();
     }
@@ -149,8 +143,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.isElevationHighEditing = false;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
     this.changeAvalancheProblemDetailEvent.emit();
   }
 
@@ -169,8 +161,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.isElevationLowEditing = false;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
     this.changeAvalancheProblemDetailEvent.emit();
   }
 
@@ -183,8 +173,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.isElevationHighEditing = false;
       this.changeAvalancheProblemDetailEvent.emit();
       this.bulletinDaytimeDescription.updateDangerRating();
-      this.mapService.updateAggregatedRegion(this.bulletin);
-      this.mapService.selectAggregatedRegion(this.bulletin);
     } else {
       this.useElevationHigh = true;
       this.isElevationHighEditing = true;
@@ -199,8 +187,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.avalancheProblemModel.elevationLow = undefined;
       this.isElevationLowEditing = false;
       this.bulletinDaytimeDescription.updateDangerRating();
-      this.mapService.updateAggregatedRegion(this.bulletin);
-      this.mapService.selectAggregatedRegion(this.bulletin);
       this.changeAvalancheProblemDetailEvent.emit();
     } else {
       this.useElevationLow = true;
@@ -228,15 +214,13 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     event.stopPropagation();
     this.avalancheProblemModel.setDangerRatingDirection(Enums.Direction[dir]);
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
     this.changeAvalancheProblemDetailEvent.emit();
   }
 
   showDecisionTreeDialog() {
     const ref = this.dialogService.open(AvalancheProblemDecisionTreeComponent, {
       header: this.translateService.instant("bulletins.create.decisionTree.decisionTree"),
-      contentStyle: {"width": "95vw", "height": "85vh", "overflow": "hidden"}
+      contentStyle: { "width": "95vw", "height": "85vh", "overflow": "hidden" }
     });
     ref.onClose.subscribe((data) => {
       if (data && "problem" in data) {

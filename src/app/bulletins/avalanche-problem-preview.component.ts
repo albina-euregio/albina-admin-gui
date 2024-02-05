@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
-import { MapService } from "../providers/map-service/map.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
@@ -24,7 +23,6 @@ export class AvalancheProblemPreviewComponent {
 
   constructor(
     public translateService: TranslateService,
-    public mapService: MapService,
     public settingsService: SettingsService) {
   }
 
@@ -159,8 +157,6 @@ export class AvalancheProblemPreviewComponent {
       }
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
   moveUpAvalancheProblem(event) {
@@ -196,8 +192,6 @@ export class AvalancheProblemPreviewComponent {
         break;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
     this.changeAvalancheProblemPreviewEvent.emit();
   }
 
@@ -234,8 +228,6 @@ export class AvalancheProblemPreviewComponent {
         break;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
     this.changeAvalancheProblemPreviewEvent.emit();
   }
 }

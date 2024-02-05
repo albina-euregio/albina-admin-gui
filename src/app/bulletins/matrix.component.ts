@@ -2,7 +2,6 @@ import { Component, Input, ViewChild, ElementRef, SimpleChange, AfterViewInit, O
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { SettingsService } from "../providers/settings-service/settings.service";
-import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
@@ -73,7 +72,6 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
 
   constructor(
     public settingsService: SettingsService,
-    public mapService: MapService,
     public constantsService: ConstantsService) {
   }
 
@@ -149,8 +147,6 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
       }
 
       this.bulletinDaytimeDescription.updateDangerRating();
-      this.mapService.updateAggregatedRegion(this.bulletin);
-      this.mapService.selectAggregatedRegion(this.bulletin);
     }
   }
 

@@ -920,6 +920,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private addInternalBulletins(response) {
     let hasDaytimeDependency = false;
 
+    // TODO handle map updates only here???
+
     this.mapService.resetInternalAggregatedRegions();
     this.mapService.resetActiveSelection();
 

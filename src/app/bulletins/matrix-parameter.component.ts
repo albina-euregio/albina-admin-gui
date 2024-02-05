@@ -3,7 +3,6 @@ import { MatrixInformationModel } from "../models/matrix-information.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { MapService } from "../providers/map-service/map.service";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
 import type { Options } from '../ngx-slider/lib/options';
@@ -197,7 +196,6 @@ export class MatrixParameterComponent implements OnChanges {
 
   constructor(
     public settingsService: SettingsService,
-    public mapService: MapService,
     public constantsService: ConstantsService,
     public translateService: TranslateService) {
       this.dangerRatingEnabled = false;
@@ -334,8 +332,6 @@ export class MatrixParameterComponent implements OnChanges {
     event.stopPropagation();
     this.matrixInformation.setDangerRating(dangerRating);
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
   overrideDangerRating(event, dangerRating) {
@@ -609,8 +605,6 @@ export class MatrixParameterComponent implements OnChanges {
         break;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
   isDangerRatingModificator(modificator) {
