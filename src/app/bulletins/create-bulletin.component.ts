@@ -926,15 +926,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
-      bulletinsList.push(bulletin);
       if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
+        // do not update active bulletin (this is currently edited)
         this.activeBulletin = bulletin;
-        this.mapService.selectAggregatedRegion(this.activeBulletin);
-      }
-      this.mapService.addAggregatedRegion(bulletin);
-
-      if (bulletin.hasDaytimeDependency) {
-        hasDaytimeDependency = true;
+        bulletinsList.push(this.activeBulletin);
+        this.mapService.addAggregatedRegion(this.activeBulletin);
+        if (this.activeBulletin.hasDaytimeDependency) {
+          hasDaytimeDependency = true;
+        }
+      } else {
+        bulletinsList.push(bulletin);
+        this.mapService.addAggregatedRegion(bulletin);
+        if (bulletin.hasDaytimeDependency) {
+          hasDaytimeDependency = true;
+        }
       }
     }
     
@@ -952,7 +957,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.internBulletinsList = bulletinsList;
     this.updateInternalBulletins();
-    this.updateExternalBulletins();
 
     if (this.activeBulletin && this.activeBulletin !== undefined) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
