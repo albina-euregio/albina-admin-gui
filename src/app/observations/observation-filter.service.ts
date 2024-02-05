@@ -195,14 +195,7 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.isIncluded(LocalFilterTypes.Elevation, this.getElevationIndex(observation.elevation)) &&
-      this.isIncluded(LocalFilterTypes.Aspect, observation.aspect) &&
-      this.isIncluded(LocalFilterTypes.AvalancheProblem, observation.avalancheProblems) &&
-      this.isIncluded(LocalFilterTypes.Stability, observation.stability) &&
-      this.isIncluded(LocalFilterTypes.ObservationType, observation.$type) &&
-      this.isIncluded(LocalFilterTypes.ImportantObservation, observation.importantObservations) &&
-      this.isIncluded(LocalFilterTypes.DangerPattern, observation.dangerPatterns) &&
-      this.isIncluded(LocalFilterTypes.Days, this._normedDateString(observation.eventDate))
+      Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, this.filterSelection[t].toValue(observation)))
     );
   }
 
@@ -210,15 +203,8 @@ export class ObservationFilterService {
     if (!this.inMapBounds(observation)) {
       return false;
     }
-    return (
-      this.isIncluded(LocalFilterTypes.Elevation, this.getElevationIndex(observation.elevation), true) ||
-      this.isIncluded(LocalFilterTypes.Aspect, observation.aspect, true) ||
-      this.isIncluded(LocalFilterTypes.AvalancheProblem, observation.avalancheProblems, true) ||
-      this.isIncluded(LocalFilterTypes.Stability, observation.stability, true) ||
-      this.isIncluded(LocalFilterTypes.ObservationType, observation.$type, true) ||
-      this.isIncluded(LocalFilterTypes.ImportantObservation, observation.importantObservations, true) ||
-      this.isIncluded(LocalFilterTypes.DangerPattern, observation.dangerPatterns, true) ||
-      this.isIncluded(LocalFilterTypes.Days, this._normedDateString(observation.eventDate), true)
+    return Object.values(LocalFilterTypes).every((t) =>
+      this.isIncluded(t, this.filterSelection[t].toValue(observation), true),
     );
   }
 
