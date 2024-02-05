@@ -16,7 +16,7 @@ interface Dataset {
   source: Array<Array<string | number>>;
 }
 
-interface OutputDataset {
+export interface OutputDataset {
   dataset: Dataset;
   nan: any;
 }
@@ -222,7 +222,7 @@ export class ObservationFilterService {
     );
   }
 
-  private toDataset(observations: GenericObservation[], type: LocalFilterTypes): OutputDataset {
+  public toDataset(observations: GenericObservation[], type: LocalFilterTypes): OutputDataset {
     const filter = this.filterSelection[type];
     let nan = 0;
     const dataRaw = Object.fromEntries(
@@ -243,9 +243,11 @@ export class ObservationFilterService {
         return;
       }
       (typeof value === "string" ? [value] : value).forEach((v) => {
-        dataRaw[v].all++;
+        const data = dataRaw[v];
+        if (!data) return;
+        data.all++;
         if (observation.filterType === ObservationFilterType.Local) {
-          dataRaw[v].available++;
+          data.available++;
         }
       });
     });
@@ -263,38 +265,6 @@ export class ObservationFilterService {
         values["selected"] === 1 ? values["available"] : 0,
       ]);
     return this.normalizeData({ dataset: { source: dataset }, nan });
-  }
-
-  public getAspectDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.Aspect);
-  }
-
-  public getStabilityDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.Stability);
-  }
-
-  public getObservationTypeDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.ObservationType);
-  }
-
-  public getImportantObservationDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.ImportantObservation);
-  }
-
-  public getElevationDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.Elevation);
-  }
-
-  public getAvalancheProblemDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.AvalancheProblem);
-  }
-
-  public getDangerPatternDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.DangerPattern);
-  }
-
-  public getDaysDataset(observations: GenericObservation[]) {
-    return this.toDataset(observations, LocalFilterTypes.Days);
   }
 
   public normalizeData(dataset: OutputDataset): OutputDataset {

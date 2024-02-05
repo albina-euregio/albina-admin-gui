@@ -101,17 +101,6 @@ export enum LocalFilterTypes {
   Days = "Days",
 }
 
-export interface ChartsData {
-  Elevation: Object;
-  Aspects: Object;
-  AvalancheProblem: Object;
-  Stability: Object;
-  ObservationType: Object;
-  ImportantObservation: Object;
-  DangerPattern: Object;
-  Days: Object;
-}
-
 export interface ObservationTableRow {
   label: string;
   date?: Date;

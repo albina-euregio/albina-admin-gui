@@ -19,7 +19,6 @@ import {
   toGeoJSON,
   toObservationTable,
   LocalFilterTypes,
-  ChartsData,
   AvalancheProblem,
   DangerPattern,
   ImportantObservation,
@@ -32,7 +31,7 @@ import { MenuItem, SharedModule } from "primeng/api";
 import { saveAs } from "file-saver";
 
 import { ObservationTableComponent } from "./observation-table.component";
-import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
+import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
@@ -105,15 +104,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
-  public chartsData: ChartsData = {
-    Elevation: {},
-    Aspects: {},
-    AvalancheProblem: {},
-    Stability: {},
-    ObservationType: {},
-    ImportantObservation: {},
-    DangerPattern: {},
-    Days: {},
+  public chartsData: Record<LocalFilterTypes, OutputDataset> = {
+    Elevation: {} as OutputDataset,
+    Aspect: {} as OutputDataset,
+    AvalancheProblem: {} as OutputDataset,
+    Stability: {} as OutputDataset,
+    ObservationType: {} as OutputDataset,
+    ImportantObservation: {} as OutputDataset,
+    DangerPattern: {} as OutputDataset,
+    Days: {} as OutputDataset,
   };
   public moreItems: MenuItem[];
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
@@ -328,14 +327,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   buildChartsData() {
-    this.chartsData.Elevation = this.filter.getElevationDataset(this.observations);
-    this.chartsData.Aspects = this.filter.getAspectDataset(this.observations);
-    this.chartsData.Stability = this.filter.getStabilityDataset(this.observations);
-    this.chartsData.ObservationType = this.filter.getObservationTypeDataset(this.observations);
-    this.chartsData.ImportantObservation = this.filter.getImportantObservationDataset(this.observations);
-    this.chartsData.AvalancheProblem = this.filter.getAvalancheProblemDataset(this.observations);
-    this.chartsData.DangerPattern = this.filter.getDangerPatternDataset(this.observations);
-    this.chartsData.Days = this.filter.getDaysDataset(this.observations);
+    for (const type of Object.values(LocalFilterTypes)) {
+      this.chartsData[type] = this.filter.toDataset(this.observations, type);
+    }
   }
 
   private addObservation(observation: GenericObservation): void {
