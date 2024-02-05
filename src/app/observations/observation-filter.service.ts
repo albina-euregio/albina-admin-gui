@@ -46,16 +46,13 @@ export interface FilterSelectionData {
 @Injectable()
 export class ObservationFilterService {
   public dateRange: Date[] = [];
-  public readonly elevationRange = [0, 4000];
-  public readonly elevationSectionSize = 500;
-  public selectedElevations: number[] = [];
   public regions: string[] = [];
   public observationSources: string[] = [];
 
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
       type: LocalFilterTypes.Elevation,
-      toValue: (o) => this.getElevationIndex(o.elevation),
+      toValue: (o) => (isFinite(o.elevation) ? String(Math.floor(o.elevation / 500) * 500) : undefined),
       all: ["0", "500", "1000", "1500", "2000", "2500", "3000", "3500", "4000"].reverse(),
       selected: [],
       highlighted: [],
@@ -139,8 +136,6 @@ export class ObservationFilterService {
       if (index !== -1) filterType[subset].splice(index, 1);
       else filterType[subset].push(filterData.data.value);
     }
-
-    this.filterSelection[filterData["type"]] = filterType;
   }
 
   set days(days: number) {
@@ -334,16 +329,6 @@ export class ObservationFilterService {
       (!testHighlighted && selectedData.length === 0) ||
       (Array.isArray(testData) && testData.some((d) => d && selectedData.includes(d))) ||
       (typeof testData === "string" && selectedData.includes(testData))
-    );
-  }
-
-  private getElevationIndex(elevation: number): string {
-    if (!elevation) return "";
-    const range = this.elevationRange[1] - this.elevationRange[0];
-    return (
-      Math.floor((elevation - this.elevationRange[0]) / this.elevationSectionSize) * this.elevationSectionSize +
-      this.elevationRange[0] +
-      ""
     );
   }
 }
