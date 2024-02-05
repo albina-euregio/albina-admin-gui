@@ -213,10 +213,7 @@
       </div>
       <!-- /layout-global -->
 
-      <div
-        [ngStyle]="{ display: layout === 'table' ? '' : 'none' }"
-        class="layout-table"
-      >
+      <div *ngIf="layout === 'table'" class="layout-table">
         <div class="card" style="height: 100%">
           <div class="card-block" style="overflow-y: auto">
             <div>
