@@ -262,7 +262,7 @@ export class ObservationFilterService {
         values["selected"] === 0 ? values["available"] : 0,
         values["selected"] === 1 ? values["available"] : 0,
       ]);
-    return { dataset: { source: dataset }, nan };
+    return this.normalizeData({ dataset: { source: dataset }, nan });
   }
 
   public getAspectDataset(observations: GenericObservation[]) {

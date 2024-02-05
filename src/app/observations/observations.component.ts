@@ -328,27 +328,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   buildChartsData() {
-    this.chartsData.Elevation = this.filter.normalizeData(this.filter.getElevationDataset(this.observations));
-
-    this.chartsData.Aspects = this.filter.normalizeData(this.filter.getAspectDataset(this.observations));
-
-    this.chartsData.Stability = this.filter.normalizeData(this.filter.getStabilityDataset(this.observations));
-
-    this.chartsData.ObservationType = this.filter.normalizeData(
-      this.filter.getObservationTypeDataset(this.observations),
-    );
-
-    this.chartsData.ImportantObservation = this.filter.normalizeData(
-      this.filter.getImportantObservationDataset(this.observations),
-    );
-
-    this.chartsData.AvalancheProblem = this.filter.normalizeData(
-      this.filter.getAvalancheProblemDataset(this.observations),
-    );
-
-    this.chartsData.DangerPattern = this.filter.normalizeData(this.filter.getDangerPatternDataset(this.observations));
-
-    this.chartsData.Days = this.filter.normalizeData(this.filter.getDaysDataset(this.observations));
+    this.chartsData.Elevation = this.filter.getElevationDataset(this.observations);
+    this.chartsData.Aspects = this.filter.getAspectDataset(this.observations);
+    this.chartsData.Stability = this.filter.getStabilityDataset(this.observations);
+    this.chartsData.ObservationType = this.filter.getObservationTypeDataset(this.observations);
+    this.chartsData.ImportantObservation = this.filter.getImportantObservationDataset(this.observations);
+    this.chartsData.AvalancheProblem = this.filter.getAvalancheProblemDataset(this.observations);
+    this.chartsData.DangerPattern = this.filter.getDangerPatternDataset(this.observations);
+    this.chartsData.Days = this.filter.getDaysDataset(this.observations);
   }
 
   private addObservation(observation: GenericObservation): void {
