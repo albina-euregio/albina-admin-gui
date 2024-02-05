@@ -73,32 +73,28 @@ export class ObservationFilterService {
   }
 
   toggleFilter(filterData: GenericFilterToggleData) {
-    let curFilterType = this.filterSelection[filterData["type"]];
-    let curFilterTypeSubset = "selected";
-    if (filterData.data.altKey) curFilterTypeSubset = "highlighted";
+    const filterType = this.filterSelection[filterData["type"]];
+    const subset = filterData.data.altKey ? "highlighted" : ("selected" as const);
 
     if (filterData.data.reset) {
-      curFilterType["selected"] = [];
-      curFilterType["highlighted"] = [];
+      filterType["selected"] = [];
+      filterType["highlighted"] = [];
     } else if (filterData.data.invert) {
-      if (curFilterType[curFilterTypeSubset].length > 0) {
-        curFilterType[curFilterTypeSubset] = curFilterType.all.filter((value) => {
-          return curFilterType[curFilterTypeSubset].indexOf(value) === -1 ? true : false;
-        });
+      if (filterType[subset].length > 0) {
+        filterType[subset] = filterType.all.filter((value) => filterType[subset].indexOf(value) === -1);
       }
     } else {
-      let index = curFilterType[curFilterTypeSubset].indexOf(filterData.data.value);
-      if (index !== -1) curFilterType[curFilterTypeSubset].splice(index, 1);
-      else curFilterType[curFilterTypeSubset].push(filterData.data.value);
+      let index = filterType[subset].indexOf(filterData.data.value);
+      if (index !== -1) filterType[subset].splice(index, 1);
+      else filterType[subset].push(filterData.data.value);
     }
 
-    this.filterSelection[filterData["type"]] = curFilterType;
+    this.filterSelection[filterData["type"]] = filterType;
   }
 
   set days(days: number) {
     if (!this.endDate) {
-      const newEndDate = new Date();
-      this.endDate = newEndDate;
+      this.endDate = new Date();
     }
     const newStartDate = new Date(this.endDate);
     newStartDate.setDate(newStartDate.getDate() - (days - 1));
@@ -114,7 +110,7 @@ export class ObservationFilterService {
 
     if (this.startDate && this.endDate) {
       let newDates = [];
-      for (var i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
+      for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
         newDates.push(i.toISOString());
       }
       this.filterSelection.Days.all = newDates;
@@ -483,12 +479,11 @@ export class ObservationFilterService {
   }
 
   public normalizeData(dataset: OutputDataset): OutputDataset {
-
     let nan = 0;
     const data = dataset?.dataset.source.slice(1);
     const header = dataset?.dataset.source[0];
     //if(!this.isFilterActive()) console.log("normalizeData #0 ", {filterActive: this.isFilterActive(), filter: this.filterSelection, data});
-    if(!this.isFilterActive() || !dataset || !data || !header) return dataset;
+    if (!this.isFilterActive() || !dataset || !data || !header) return dataset;
 
     // get max values in order to normalize data
     // let availableMax = Number.MIN_VALUE;
@@ -520,15 +515,14 @@ export class ObservationFilterService {
       const selectedValue = row[header.indexOf("selected")];
       const overwriteValue = +availableValue > 0 ? +availableValue : +selectedValue;
       tempRow[header.indexOf("all")] = overwriteValue;
-      if(tempRow[header.indexOf("highlighted")]) tempRow[header.indexOf("highlighted")] = overwriteValue;
-      if(tempRow[header.indexOf("max")]) tempRow[header.indexOf("max")] = overwriteValue;
+      if (tempRow[header.indexOf("highlighted")]) tempRow[header.indexOf("highlighted")] = overwriteValue;
+      if (tempRow[header.indexOf("max")]) tempRow[header.indexOf("max")] = overwriteValue;
       return tempRow;
     });
 
     newData.unshift(header);
     //console.log("normalizeData #2", data[0][header.indexOf("category")], {newData, data});
     return { dataset: { source: newData }, nan };
-    
   }
 
   _normedDateString(date: Date): string {
