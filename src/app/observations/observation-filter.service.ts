@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import {
-  GenericObservation,
-  LocalFilterTypes,
-  AvalancheProblem,
   Aspect,
-  ObservationType,
+  AvalancheProblem,
   DangerPattern,
-  Stability,
+  GenericObservation,
   ImportantObservation,
+  LocalFilterTypes,
+  ObservationFilterType,
+  ObservationType,
+  Stability,
 } from "./models/generic-observation.model";
-import { ObservationFilterType } from "./models/generic-observation.model";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -37,6 +37,7 @@ export interface GenericFilterToggleData {
 
 export interface FilterSelectionData {
   type: LocalFilterTypes;
+  toValue: (o: GenericObservation) => undefined | string | string[];
   all: string[];
   selected: string[];
   highlighted: string[];
@@ -54,48 +55,56 @@ export class ObservationFilterService {
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
       type: LocalFilterTypes.Elevation,
-      all: ["0", "500", "1000", "1500", "2000", "2500", "3000", "3500", "4000"],
+      toValue: (o) => this.getElevationIndex(o.elevation),
+      all: ["0", "500", "1000", "1500", "2000", "2500", "3000", "3500", "4000"].reverse(),
       selected: [],
       highlighted: [],
     },
     Aspect: {
       type: LocalFilterTypes.Aspect,
+      toValue: (o) => o.aspect,
       all: Object.keys(Aspect),
       selected: [],
       highlighted: [],
     },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
+      toValue: (o) => o.avalancheProblems,
       all: Object.keys(AvalancheProblem),
       selected: [],
       highlighted: [],
     },
     Stability: {
       type: LocalFilterTypes.Stability,
+      toValue: (o) => o.stability,
       all: Object.keys(Stability),
       selected: [],
       highlighted: [],
     },
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
+      toValue: (o) => o.$type,
       all: Object.keys(ObservationType),
       selected: [],
       highlighted: [],
     },
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
+      toValue: (o) => o.importantObservations,
       all: Object.keys(ImportantObservation),
       selected: [],
       highlighted: [],
     },
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
+      toValue: (o) => o.dangerPatterns,
       all: Object.keys(DangerPattern),
       selected: [],
       highlighted: [],
     },
     Days: {
       type: LocalFilterTypes.Days,
+      toValue: (o) => this._normedDateString(o.eventDate),
       all: [],
       selected: [],
       highlighted: [],
@@ -213,57 +222,36 @@ export class ObservationFilterService {
     );
   }
 
-  public getAspectDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
+  private toDataset(observations: GenericObservation[], type: LocalFilterTypes): OutputDataset {
+    const filter = this.filterSelection[type];
     let nan = 0;
-
-    this.filterSelection[LocalFilterTypes.Aspect]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
+    const dataRaw = Object.fromEntries(
+      filter["all"].map((key) => [
+        key,
+        {
           all: 0,
           available: 0,
-          selected: this.filterSelection[LocalFilterTypes.Aspect].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Aspect].highlighted.includes(key) ? 1 : 0,
-        }),
+          selected: filter.selected.includes(key) ? 1 : 0,
+          highlighted: filter.highlighted.includes(key) ? 1 : 0,
+        },
+      ]),
     );
-
     observations.forEach((observation) => {
-      if (observation.aspect) {
-        dataRaw[observation.aspect].all++;
-
-        if (observation.filterType === ObservationFilterType.Local) dataRaw[observation.aspect].available++;
-      } else nan++;
+      const value = filter.toValue(observation);
+      if (!value) {
+        nan++;
+        return;
+      }
+      (typeof value === "string" ? [value] : value).forEach((v) => {
+        dataRaw[v].all++;
+        if (observation.filterType === ObservationFilterType.Local) {
+          dataRaw[v].available++;
+        }
+      });
     });
-    return this.toDataset(dataRaw, nan);
-  }
-
-  public getStabilityDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
-    let nan = 0;
-
-    this.filterSelection[LocalFilterTypes.Stability]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
-          max: 0,
-          all: 0,
-          available: 0,
-          selected: this.filterSelection[LocalFilterTypes.Stability].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Stability].highlighted.includes(key) ? 1 : 0,
-        }),
-    );
-
-    observations.forEach((observation) => {
-      if (observation.stability) {
-        dataRaw[observation.stability].all++;
-
-        if (observation.filterType === ObservationFilterType.Local) dataRaw[observation.stability].available++;
-      } else nan++;
-    });
-    return this.toDataset(dataRaw, nan);
-  }
-
-  private toDataset(dataRaw: {}, nan: number) {
-    const dataset = [["category", "max", "all", "highlighted", "available", "selected"]];
+    const dataset: OutputDataset["dataset"]["source"] = [
+      ["category", "max", "all", "highlighted", "available", "selected"],
+    ];
 
     for (const [key, values] of Object.entries(dataRaw))
       dataset.push([
@@ -277,145 +265,36 @@ export class ObservationFilterService {
     return { dataset: { source: dataset }, nan };
   }
 
+  public getAspectDataset(observations: GenericObservation[]) {
+    return this.toDataset(observations, LocalFilterTypes.Aspect);
+  }
+
+  public getStabilityDataset(observations: GenericObservation[]) {
+    return this.toDataset(observations, LocalFilterTypes.Stability);
+  }
+
   public getObservationTypeDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
-    let nan = 0;
-
-    this.filterSelection[LocalFilterTypes.ObservationType]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
-          max: 0,
-          all: 0,
-          available: 0,
-          selected: this.filterSelection[LocalFilterTypes.ObservationType].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.ObservationType].highlighted.includes(key) ? 1 : 0,
-        }),
-    );
-
-    observations.forEach((observation) => {
-      if (observation.$type) {
-        dataRaw[observation.$type].all++;
-
-        if (observation.filterType === ObservationFilterType.Local) dataRaw[observation.$type].available++;
-      } else nan++;
-    });
-    return this.toDataset(dataRaw, nan);
+    return this.toDataset(observations, LocalFilterTypes.ObservationType);
   }
 
   public getImportantObservationDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
-    const nan = 0;
-
-    this.filterSelection[LocalFilterTypes.ImportantObservation]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
-          max: 0,
-          all: 0,
-          available: 0,
-          selected: this.filterSelection[LocalFilterTypes.ImportantObservation].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.ImportantObservation].highlighted.includes(key) ? 1 : 0,
-        }),
-    );
-
-    observations.forEach((observation) => {
-      if (Array.isArray(observation.importantObservations)) {
-        observation.importantObservations.forEach((importantObservation) => {
-          if (!importantObservation) return;
-          if (!dataRaw[importantObservation]) {
-            console.warn("Unsupported important observation:", importantObservation);
-            return;
-          }
-          dataRaw[importantObservation].all++;
-
-          if (observation.filterType === ObservationFilterType.Local) dataRaw[importantObservation].available++;
-        });
-      }
-    });
-    return this.toDataset(dataRaw, nan);
+    return this.toDataset(observations, LocalFilterTypes.ImportantObservation);
   }
 
   public getElevationDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
-    let nan = 0;
-
-    this.filterSelection[LocalFilterTypes.Elevation]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
-          max: 0,
-          all: 0,
-          available: 0,
-          selected: this.filterSelection[LocalFilterTypes.Elevation].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Elevation].highlighted.includes(key) ? 1 : 0,
-        }),
-    );
-
-    observations.forEach((observation) => {
-      if (observation.elevation) {
-        const elevationIndex = this.getElevationIndex(observation.elevation);
-        dataRaw[elevationIndex].all++;
-        if (observation.filterType === ObservationFilterType.Local) dataRaw[elevationIndex].available++;
-      } else nan++;
-    });
-    return this.toDataset(dataRaw, nan);
+    return this.toDataset(observations, LocalFilterTypes.Elevation);
   }
 
   public getAvalancheProblemDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
-    let nan = 0;
-
-    this.filterSelection[LocalFilterTypes.AvalancheProblem]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
-          max: 0,
-          available: 0,
-          all: 0,
-          selected: this.filterSelection[LocalFilterTypes.AvalancheProblem].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.AvalancheProblem].highlighted.includes(key) ? 1 : 0,
-        }),
-    );
-
-    observations.forEach((observation) => {
-      if (Array.isArray(observation.avalancheProblems)) {
-        observation.avalancheProblems.forEach((avalancheProblem) => {
-          if (!dataRaw[avalancheProblem]) {
-            console.warn("Unsupported avalanche problem:", avalancheProblem);
-            return;
-          }
-          dataRaw[avalancheProblem].all++;
-
-          if (observation.filterType === ObservationFilterType.Local) dataRaw[avalancheProblem].available++;
-        });
-      } else nan++;
-    });
-    return this.toDataset(dataRaw, nan);
+    return this.toDataset(observations, LocalFilterTypes.AvalancheProblem);
   }
 
   public getDangerPatternDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
-    let nan = 0;
+    return this.toDataset(observations, LocalFilterTypes.DangerPattern);
+  }
 
-    this.filterSelection[LocalFilterTypes.DangerPattern]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
-          max: 0,
-          available: 0,
-          all: 0,
-          selected: this.filterSelection[LocalFilterTypes.DangerPattern].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.DangerPattern].highlighted.includes(key) ? 1 : 0,
-        }),
-    );
-
-    observations.forEach((observation) => {
-      if (Array.isArray(observation.dangerPatterns)) {
-        observation.dangerPatterns.forEach((dangerPattern) => {
-          if (!dangerPattern) return;
-          dataRaw[dangerPattern].all++;
-
-          if (observation.filterType === ObservationFilterType.Local) dataRaw[dangerPattern].available++;
-        });
-      } else nan++;
-    });
-    return this.toDataset(dataRaw, nan);
+  public getDaysDataset(observations: GenericObservation[]) {
+    return this.toDataset(observations, LocalFilterTypes.Days);
   }
 
   public normalizeData(dataset: OutputDataset): OutputDataset {
@@ -469,32 +348,6 @@ export class ObservationFilterService {
     date = new Date(date);
     date.setHours(0, 0, 0, 0);
     return date.toISOString();
-  }
-
-  getDaysDataset(observations: GenericObservation[]) {
-    const dataRaw = {};
-    let nan = 0;
-
-    this.filterSelection[LocalFilterTypes.Days]["all"].forEach(
-      (key) =>
-        (dataRaw[key] = {
-          max: 0,
-          all: 0,
-          available: 0,
-          selected: this.filterSelection[LocalFilterTypes.Days].selected.includes(key) ? 1 : 0,
-          highlighted: this.filterSelection[LocalFilterTypes.Days].highlighted.includes(key) ? 1 : 0,
-        }),
-    );
-    observations.forEach((observation) => {
-      if (observation.eventDate) {
-        const dateId = this._normedDateString(observation.eventDate);
-        if (dataRaw[dateId]) {
-          dataRaw[dateId].all++;
-          if (observation.filterType === ObservationFilterType.Local) dataRaw[dateId].available++;
-        } else console.error("observations-filter.service->getDayDataset Date not found ##4", dateId, observation);
-      } else nan++;
-    });
-    return this.toDataset(dataRaw, nan);
   }
 
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
