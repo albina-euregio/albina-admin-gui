@@ -11,13 +11,31 @@ export class BaseComponent {
   private pressTimer;
 
   @Input() caption: string;
-  @Input() translationBase: string;
   @Input() formatter: string;
   @Input() type: LocalFilterTypes;
   @Input() data: { dataset: object; nan: number };
   @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();
   @Input() nanStatus: { selected: boolean; highlighted: boolean };
   @Input() isActive: boolean;
+
+  get translationBase(): string {
+    switch (this.type) {
+      case LocalFilterTypes.Aspect:
+        return "aspect.";
+      case LocalFilterTypes.Stability:
+        return "snowpackStability.";
+      case LocalFilterTypes.ObservationType:
+        return "observationType.";
+      case LocalFilterTypes.ImportantObservation:
+        return "importantObservation.";
+      case LocalFilterTypes.AvalancheProblem:
+        return "avalancheProblem.";
+      case LocalFilterTypes.DangerPattern:
+        return "dangerPattern.";
+      default:
+        return "";
+    }
+  }
 
   private resetTimeout() {
     clearTimeout(this.pressTimer);

@@ -104,6 +104,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
+  public barCharts: LocalFilterTypes[] = [
+    LocalFilterTypes.Days,
+    LocalFilterTypes.Elevation,
+    LocalFilterTypes.Stability,
+    LocalFilterTypes.ObservationType,
+    LocalFilterTypes.ImportantObservation,
+    LocalFilterTypes.AvalancheProblem,
+    LocalFilterTypes.DangerPattern,
+  ];
   public chartsData: Record<LocalFilterTypes, OutputDataset> = {
     Elevation: {} as OutputDataset,
     Aspect: {} as OutputDataset,
