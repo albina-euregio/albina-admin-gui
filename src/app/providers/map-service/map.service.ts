@@ -238,7 +238,6 @@ export class MapService {
 
   resetEditSelection() {
     this.overlayMaps?.editSelection?.resetStyle();
-    this.afternoonOverlayMaps?.editSelection?.resetStyle();
   }
 
   resetAll() {
@@ -314,10 +313,6 @@ export class MapService {
         }
       }
     }
-  }
-
-  addAggregatedRegion(bulletin: BulletinModel) {
-    this.updateAggregatedRegion(bulletin);
   }
 
   selectAggregatedRegion(bulletin: BulletinModel) {

@@ -898,7 +898,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
         this.activeBulletin = bulletin;
       }
-      this.mapService.addAggregatedRegion(bulletin);
+      this.mapService.updateAggregatedRegion(bulletin);
     }
 
     bulletinsList.sort((a, b): number => {
@@ -920,31 +920,27 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private addInternalBulletins(response) {
     let hasDaytimeDependency = false;
 
-    // TODO handle map updates only here???
-
-    this.mapService.resetInternalAggregatedRegions();
-    this.mapService.resetActiveSelection();
-
     const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
+
       if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
         // do not update active bulletin (this is currently edited)
-        this.activeBulletin = bulletin;
         bulletinsList.push(this.activeBulletin);
-        this.mapService.addAggregatedRegion(this.activeBulletin);
         if (this.activeBulletin.hasDaytimeDependency) {
           hasDaytimeDependency = true;
         }
       } else {
         bulletinsList.push(bulletin);
-        this.mapService.addAggregatedRegion(bulletin);
         if (bulletin.hasDaytimeDependency) {
           hasDaytimeDependency = true;
         }
       }
     }
     
+    this.mapService.resetInternalAggregatedRegions();
+    this.mapService.resetActiveSelection();
+
     bulletinsList.sort((a, b): number => {
       if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
       if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
