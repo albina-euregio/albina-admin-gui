@@ -57,15 +57,9 @@ export class ObservationFilterService {
   };
 
   public isFilterActive(): boolean {
-    for (const key in this.filterSelection) {
-      if (this.filterSelection.hasOwnProperty(key)) {
-        const filter = this.filterSelection[key];
-        if (filter.selected.length > 0 || filter.highlighted.length > 0) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return Object.values(this.filterSelection).some(
+      (filter) => filter.selected.length > 0 || filter.highlighted.length > 0,
+    );
   }
 
   constructor(private constantsService: ConstantsService) {
