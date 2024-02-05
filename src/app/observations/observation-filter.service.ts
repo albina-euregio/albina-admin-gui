@@ -197,7 +197,7 @@ export class ObservationFilterService {
     if (!this.inMapBounds(observation)) {
       return false;
     }
-    return Object.values(LocalFilterTypes).every((t) =>
+    return Object.values(LocalFilterTypes).some((t) =>
       this.isIncluded(t, this.filterSelection[t].toValue(observation), true),
     );
   }
