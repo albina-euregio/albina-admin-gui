@@ -84,7 +84,7 @@ export class ObservationFilterService {
         filterType[subset] = filterType.all.filter((value) => !filterType[subset].includes(value));
       }
     } else {
-      let index = filterType[subset].indexOf(filterData.data.value);
+      const index = filterType[subset].indexOf(filterData.data.value);
       if (index !== -1) filterType[subset].splice(index, 1);
       else filterType[subset].push(filterData.data.value);
     }
@@ -109,7 +109,7 @@ export class ObservationFilterService {
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
 
     if (this.startDate && this.endDate) {
-      let newDates = [];
+      const newDates = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
         newDates.push(i.toISOString());
       }
@@ -317,7 +317,7 @@ export class ObservationFilterService {
 
   public getImportantObservationDataset(observations: GenericObservation[]) {
     const dataRaw = {};
-    let nan = 0;
+    const nan = 0;
 
     this.filterSelection[LocalFilterTypes.ImportantObservation]["all"].forEach(
       (key) =>
@@ -479,7 +479,7 @@ export class ObservationFilterService {
   }
 
   public normalizeData(dataset: OutputDataset): OutputDataset {
-    let nan = 0;
+    const nan = 0;
     const data = dataset?.dataset.source.slice(1);
     const header = dataset?.dataset.source[0];
     //if(!this.isFilterActive()) console.log("normalizeData #0 ", {filterActive: this.isFilterActive(), filter: this.filterSelection, data});

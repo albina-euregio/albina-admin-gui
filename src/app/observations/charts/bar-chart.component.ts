@@ -70,9 +70,9 @@ export class BarChartComponent extends BaseComponent {
       },
       formatter: function (params) {
         //console.log("formatter", params);
-        let dname = new Date(params.name);
-        let name = isIsoDate(params.name) ? fDate(params.name) : params.name;
-        let val = params.data[4] === 0 ? params.data[5] : params.data[4];
+        const dname = new Date(params.name);
+        const name = isIsoDate(params.name) ? fDate(params.name) : params.name;
+        const val = params.data[4] === 0 ? params.data[5] : params.data[4];
         return `${name}: <span style="color: #000">${val}</span> / ${params.data[2]}`;
       },
     },
