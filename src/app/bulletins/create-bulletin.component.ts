@@ -925,7 +925,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
 
       if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
-        // do not update active bulletin (this is currently edited)
+        // do not update active bulletin (this is currently edited) except it is disabled
+        if (this.isDisabled()) {
+          this.activeBulletin = bulletin;
+        }
         bulletinsList.push(this.activeBulletin);
         if (this.activeBulletin.hasDaytimeDependency) {
           hasDaytimeDependency = true;
