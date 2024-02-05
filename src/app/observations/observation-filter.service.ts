@@ -74,7 +74,7 @@ export class ObservationFilterService {
     Stability: {
       type: LocalFilterTypes.Stability,
       toValue: (o) => o.stability,
-      all: Object.keys(Stability),
+      all: Object.keys(Stability).reverse(),
       selected: [],
       highlighted: [],
     },
@@ -235,7 +235,8 @@ export class ObservationFilterService {
       ["category", "max", "all", "highlighted", "available", "selected"],
     ];
 
-    for (const [key, values] of Object.entries(dataRaw))
+    for (const key of filter["all"]) {
+      const values = dataRaw[key];
       dataset.push([
         key,
         values["all"] * DATASET_MAX_FACTOR,
@@ -244,6 +245,7 @@ export class ObservationFilterService {
         values["selected"] === 0 ? values["available"] : 0,
         values["selected"] === 1 ? values["available"] : 0,
       ]);
+    }
     return this.normalizeData({ dataset: { source: dataset }, nan });
   }
 
