@@ -104,7 +104,11 @@ export class ObservationFilterService {
     },
     Days: {
       type: LocalFilterTypes.Days,
-      toValue: (o) => this._normedDateString(o.eventDate),
+      toValue: (o) => {
+        const date = new Date(o.eventDate);
+        date.setHours(0, 0, 0, 0);
+        return date.toISOString();
+      },
       all: [],
       selected: [],
       highlighted: [],
@@ -298,12 +302,6 @@ export class ObservationFilterService {
     newData.unshift(header);
     //console.log("normalizeData #2", data[0][header.indexOf("category")], {newData, data});
     return { dataset: { source: newData }, nan };
-  }
-
-  _normedDateString(date: Date): string {
-    date = new Date(date);
-    date.setHours(0, 0, 0, 0);
-    return date.toISOString();
   }
 
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
