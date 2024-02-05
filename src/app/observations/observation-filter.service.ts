@@ -234,17 +234,7 @@ export class ObservationFilterService {
         if (observation.filterType === ObservationFilterType.Local) dataRaw[observation.aspect].available++;
       } else nan++;
     });
-    const dataset = [["category", "all", "highlighted", "available", "selected"]];
-
-    for (const [key, values] of Object.entries(dataRaw))
-      dataset.push([
-        key,
-        values["all"],
-        values["highlighted"] === 1 ? values["all"] * DATASET_MAX_FACTOR * DATASET_MAX_FACTOR : 0,
-        values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0,
-      ]);
-    return { dataset: { source: dataset }, nan };
+    return this.toDataset(dataRaw, nan);
   }
 
   public getStabilityDataset(observations: GenericObservation[]) {
