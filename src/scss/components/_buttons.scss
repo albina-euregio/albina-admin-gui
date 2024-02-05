@@ -79,6 +79,7 @@ $icon-button-size-sm: $space-6;
     &:hover,
     &:focus,
     &:active,
+    &:disabled,
     &.show {
         background-color: $gray-100;
         border-color: $gray-100;
