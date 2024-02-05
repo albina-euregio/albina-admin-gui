@@ -3,7 +3,6 @@ import { ConstantsService } from "app/providers/constants-service/constants.serv
 import {
   GenericObservation,
   LocalFilterTypes,
-  FilterSelectionData,
   AvalancheProblem,
   Aspect,
   ObservationType,
@@ -36,6 +35,13 @@ export interface GenericFilterToggleData {
   };
 }
 
+export interface FilterSelectionData {
+  type: LocalFilterTypes;
+  all: string[];
+  selected: string[];
+  highlighted: string[];
+}
+
 @Injectable()
 export class ObservationFilterService {
   public dateRange: Date[] = [];
@@ -47,41 +53,49 @@ export class ObservationFilterService {
 
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
+      type: LocalFilterTypes.Elevation,
       all: ["0", "500", "1000", "1500", "2000", "2500", "3000", "3500", "4000"],
       selected: [],
       highlighted: [],
     },
     Aspect: {
+      type: LocalFilterTypes.Aspect,
       all: Object.keys(Aspect),
       selected: [],
       highlighted: [],
     },
     AvalancheProblem: {
+      type: LocalFilterTypes.AvalancheProblem,
       all: Object.keys(AvalancheProblem),
       selected: [],
       highlighted: [],
     },
     Stability: {
+      type: LocalFilterTypes.Stability,
       all: Object.keys(Stability),
       selected: [],
       highlighted: [],
     },
     ObservationType: {
+      type: LocalFilterTypes.ObservationType,
       all: Object.keys(ObservationType),
       selected: [],
       highlighted: [],
     },
     ImportantObservation: {
+      type: LocalFilterTypes.ImportantObservation,
       all: Object.keys(ImportantObservation),
       selected: [],
       highlighted: [],
     },
     DangerPattern: {
+      type: LocalFilterTypes.DangerPattern,
       all: Object.keys(DangerPattern),
       selected: [],
       highlighted: [],
     },
     Days: {
+      type: LocalFilterTypes.Days,
       all: [],
       selected: [],
       highlighted: [],

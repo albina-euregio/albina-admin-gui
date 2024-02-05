@@ -112,12 +112,6 @@ export interface ChartsData {
   Days: Object;
 }
 
-export interface FilterSelectionData {
-  all: string[];
-  selected: string[];
-  highlighted: string[];
-}
-
 export interface ObservationTableRow {
   label: string;
   date?: Date;
