@@ -17,18 +17,6 @@ const defaultDataBarOptions = {
   },
 };
 
-const isIsoDate = (str) => {
-  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
-  const d = new Date(str);
-  return d instanceof Date && d.toISOString() === str; // valid date
-};
-
-const fDate = (aDate) => {
-  const format = "yyyy-MM-dd";
-  const locale = "en-US";
-  return formatDate(aDate, format, locale);
-};
-
 @Component({
   standalone: true,
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
@@ -39,8 +27,6 @@ const fDate = (aDate) => {
 })
 export class BarChartComponent extends BaseComponent {
   public formatLabel = (params) => {
-    //console.log("formatter", this.formatter, params.value[0], this.translateService.instant(this.translationBase + params.value[0]));
-    if (this.formatter === "date") return fDate(params.value[0]);
     return this.translationBase
       ? this.translateService.instant(this.translationBase + params.value[0])
       : params.value[0];
@@ -69,9 +55,7 @@ export class BarChartComponent extends BaseComponent {
         fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
       },
       formatter: function (params) {
-        //console.log("formatter", params);
-        const dname = new Date(params.name);
-        const name = isIsoDate(params.name) ? fDate(params.name) : params.name;
+        const name = params.name;
         const val = params.data[4] === 0 ? params.data[5] : params.data[4];
         return `${name}: <span style="color: #000">${val}</span> / ${params.data[2]}`;
       },

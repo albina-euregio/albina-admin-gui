@@ -101,11 +101,7 @@ export class ObservationFilterService {
     },
     Days: {
       type: LocalFilterTypes.Days,
-      toValue: (o) => {
-        const date = new Date(o.eventDate);
-        date.setHours(0, 0, 0, 0);
-        return date.toISOString();
-      },
+      toValue: (o) => this.constantsService.getISODateString(new Date(o.eventDate)),
       all: [],
       selected: [],
       highlighted: [],
@@ -155,11 +151,10 @@ export class ObservationFilterService {
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
 
     if (this.startDate && this.endDate) {
-      const newDates = [];
+      this.filterSelection.Days.all = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        newDates.push(i.toISOString());
+        this.filterSelection.Days.all.push(this.constantsService.getISODateString(i));
       }
-      this.filterSelection.Days.all = newDates;
     }
     this.dateRange = [this.startDate, this.endDate];
   }

@@ -401,6 +401,10 @@ export class ConstantsService {
     );
   }
 
+  getISODateString(date: Date) {
+    return date.getFullYear() + "-" + this.extend(date.getMonth() + 1) + "-" + this.extend(date.getDate());
+  }
+
   extend(num: number) {
     const norm = Math.abs(Math.floor(num));
     return (norm < 10 ? "0" : "") + norm;
