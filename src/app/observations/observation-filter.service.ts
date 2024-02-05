@@ -46,14 +46,46 @@ export class ObservationFilterService {
   public observationSources: string[] = [];
 
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
-    Elevation: { all: [], selected: [], highlighted: [] },
-    Aspect: { all: [], selected: [], highlighted: [] },
-    AvalancheProblem: { all: [], selected: [], highlighted: [] },
-    Stability: { all: [], selected: [], highlighted: [] },
-    ObservationType: { all: [], selected: [], highlighted: [] },
-    ImportantObservation: { all: [], selected: [], highlighted: [] },
-    DangerPattern: { all: [], selected: [], highlighted: [] },
-    Days: { all: [], selected: [], highlighted: [] },
+    Elevation: {
+      all: ["0", "500", "1000", "1500", "2000", "2500", "3000", "3500", "4000"],
+      selected: [],
+      highlighted: [],
+    },
+    Aspect: {
+      all: Object.keys(Aspect),
+      selected: [],
+      highlighted: [],
+    },
+    AvalancheProblem: {
+      all: Object.keys(AvalancheProblem),
+      selected: [],
+      highlighted: [],
+    },
+    Stability: {
+      all: Object.keys(Stability),
+      selected: [],
+      highlighted: [],
+    },
+    ObservationType: {
+      all: Object.keys(ObservationType),
+      selected: [],
+      highlighted: [],
+    },
+    ImportantObservation: {
+      all: Object.keys(ImportantObservation),
+      selected: [],
+      highlighted: [],
+    },
+    DangerPattern: {
+      all: Object.keys(DangerPattern),
+      selected: [],
+      highlighted: [],
+    },
+    Days: {
+      all: [],
+      selected: [],
+      highlighted: [],
+    },
   };
 
   public isFilterActive(): boolean {
@@ -62,9 +94,7 @@ export class ObservationFilterService {
     );
   }
 
-  constructor(private constantsService: ConstantsService) {
-    this.seedFilterSelectionsAll();
-  }
+  constructor(private constantsService: ConstantsService) {}
 
   toggleFilter(filterData: GenericFilterToggleData) {
     const filterType = this.filterSelection[filterData["type"]];
@@ -167,40 +197,6 @@ export class ObservationFilterService {
       this.isIncluded(LocalFilterTypes.DangerPattern, observation.dangerPatterns, true) ||
       this.isIncluded(LocalFilterTypes.Days, this._normedDateString(observation.eventDate), true)
     );
-  }
-
-  private seedFilterSelectionsAll() {
-    for (const key of Object.keys(Aspect)) {
-      if (isNaN(Number(key))) {
-        this.filterSelection.Aspect.all.push(key);
-      }
-    }
-
-    for (const key of Object.keys(Stability)) {
-      this.filterSelection.Stability.all.unshift(key);
-    }
-
-    for (const key of Object.keys(ObservationType)) {
-      this.filterSelection.ObservationType.all.unshift(key);
-    }
-
-    for (const key of Object.keys(ImportantObservation)) {
-      this.filterSelection.ImportantObservation.all.unshift(key);
-    }
-
-    let curElevation = this.elevationRange[0];
-    while (curElevation <= this.elevationRange[1]) {
-      this.filterSelection.Elevation.all.push(String(curElevation));
-      curElevation += this.elevationSectionSize;
-    }
-
-    for (const key of Object.keys(DangerPattern)) {
-      this.filterSelection.DangerPattern.all.push(key);
-    }
-
-    for (const key of Object.keys(AvalancheProblem)) {
-      this.filterSelection.AvalancheProblem.all.push(key);
-    }
   }
 
   public getAspectDataset(observations: GenericObservation[]) {
