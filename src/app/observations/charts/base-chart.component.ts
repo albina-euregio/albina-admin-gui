@@ -16,8 +16,8 @@ export class BaseComponent {
   @Input() type: LocalFilterTypes;
   @Input() data: { dataset: object; nan: number };
   @Output() handleChange: EventEmitter<[LocalFilterTypes, GenericFilterToggleData["data"]]> = new EventEmitter();
-  @Input() nanStatus: { selected: Boolean; highlighted: Boolean };
-  @Input() isActive: Boolean;
+  @Input() nanStatus: { selected: boolean; highlighted: boolean };
+  @Input() isActive: boolean;
 
   private resetTimeout() {
     clearTimeout(this.pressTimer);
