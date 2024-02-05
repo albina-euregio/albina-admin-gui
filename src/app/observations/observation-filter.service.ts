@@ -81,7 +81,7 @@ export class ObservationFilterService {
       filterType["highlighted"] = [];
     } else if (filterData.data.invert) {
       if (filterType[subset].length > 0) {
-        filterType[subset] = filterType.all.filter((value) => filterType[subset].indexOf(value) === -1);
+        filterType[subset] = filterType.all.filter((value) => !filterType[subset].includes(value));
       }
     } else {
       let index = filterType[subset].indexOf(filterData.data.value);

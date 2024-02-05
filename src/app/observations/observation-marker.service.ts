@@ -220,7 +220,7 @@ export class ObservationMarkerService {
       `<i class="fa fa-user"></i> ${observation.authorName || undefined}`,
       `[${observation.$source}, ${observation.$type}]`,
     ]
-      .filter((s) => !/undefined/.test(s))
+      .filter((s) => !s.includes('undefined'))
       .join("<br>");
   }
 
