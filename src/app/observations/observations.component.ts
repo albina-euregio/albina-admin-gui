@@ -314,23 +314,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   applyLocalFilter() {
     Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
-    this.observations.forEach((observation) => {
-      observation.filterType =
-        this.filter.inObservationSources(observation) && this.filter.isSelected(observation)
-          ? ObservationFilterType.Local
-          : ObservationFilterType.Global;
-      observation.isHighlighted = this.filter.isHighlighted(observation);
-    });
-
-    this.localObservations = [];
-    this.observations.forEach((observation) => {
-      if (observation.filterType === ObservationFilterType.Local || observation.isHighlighted) {
-        this.localObservations.push(observation);
-        this.markerService
-          .createMarker(observation)
-          ?.on("click", () => this.onObservationClick(observation))
-          ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
-      }
+    this.localObservations = this.observations.filter(
+      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
+    );
+    this.localObservations.forEach((observation) => {
+      this.markerService
+        .createMarker(observation, this.filter.isHighlighted(observation))
+        ?.on("click", () => this.onObservationClick(observation))
+        ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     });
     this.buildChartsData();
   }
@@ -350,8 +341,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       observation = this.parseObservation(observation);
       augmentRegion(observation);
     }
-
-    observation.filterType = ObservationFilterType.Local;
 
     if (observation.region) {
       observation.regionLabel = observation.region + " " + this.regionsService.getRegionName(observation.region);

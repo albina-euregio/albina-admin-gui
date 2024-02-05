@@ -175,18 +175,18 @@ export class ObservationMarkerService {
         padding: 0.5,
       });
 
-  createMarker(observation: GenericObservation): Marker | undefined {
+  createMarker(observation: GenericObservation, isHighlighted: boolean = false): Marker | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     try {
       const ll = new LatLng(observation.latitude, observation.longitude);
       const marker = new Marker(ll, {
         bubblingMouseEvents: false,
-        icon: this.getIcon(observation),
+        icon: this.getIcon(observation, isHighlighted),
         opacity: 1,
         pane: "markerPane",
         radius: this.toMarkerRadius(observation),
         renderer: this.myRenderer,
-        weight: observation.isHighlighted ? 1 : 0,
+        weight: isHighlighted ? 1 : 0,
         zIndexOffset: this.toZIndex(observation),
       } as MarkerOptions);
 
@@ -196,10 +196,6 @@ export class ObservationMarkerService {
       console.error(e);
       throw e;
     }
-  }
-
-  createCircleMarker(observation: GenericObservation<any>, color: string) {
-    return this.createMarker(observation);
   }
 
   bindTooltip(marker: Marker | CircleMarker, observation: GenericObservation) {
@@ -314,11 +310,11 @@ export class ObservationMarkerService {
     return zIndex[observation.stability ?? "unknown"] ?? 0;
   }
 
-  private getIcon(observation: GenericObservation<any>): Icon | DivIcon {
+  private getIcon(observation: GenericObservation<any>, isHighlighted: boolean): Icon | DivIcon {
     const iconSize = this.toMarkerRadius(observation);
 
     if (!this.USE_CANVAS_LAYER) {
-      const html = this.getSvg(observation);
+      const html = this.getSvg(observation, isHighlighted);
       return new DivIcon({
         html,
         className: `leaflet-div-icon-${iconSize}`,
@@ -327,7 +323,7 @@ export class ObservationMarkerService {
       });
     }
 
-    const svg = this.getSvg(observation);
+    const svg = this.getSvg(observation, isHighlighted);
     const iconUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
     const icon = new Icon({
@@ -339,11 +335,11 @@ export class ObservationMarkerService {
     return icon;
   }
 
-  private getSvg(observation: GenericObservation<any>) {
+  private getSvg(observation: GenericObservation<any>, isHighlighted: boolean) {
     let iconColor = this.toMarkerColor(observation);
     let textColor = "#000";
 
-    if (observation.isHighlighted) {
+    if (isHighlighted) {
       iconColor = "#ff0000";
       textColor = "#fff";
     }

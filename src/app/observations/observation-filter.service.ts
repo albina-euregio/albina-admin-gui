@@ -187,6 +187,7 @@ export class ObservationFilterService {
 
   public isSelected(observation: GenericObservation) {
     return (
+      this.inObservationSources(observation) &&
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
       Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, this.filterSelection[t].toValue(observation)))
@@ -226,7 +227,7 @@ export class ObservationFilterService {
         const data = dataRaw[v];
         if (!data) return;
         data.all++;
-        if (observation.filterType === ObservationFilterType.Local) {
+        if (this.isSelected(observation)) {
           data.available++;
         }
       });
