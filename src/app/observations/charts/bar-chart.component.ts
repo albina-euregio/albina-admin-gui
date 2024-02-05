@@ -116,11 +116,9 @@ export class BarChartComponent extends BaseComponent {
           color: "#839194",
           position: [0, -14],
           formatter: (params: CallbackDataParams) => {
-            return this.formatter === "date"
-              ? fDate(params.value[0])
-              : this.translationBase
-                ? this.translateService.instant(this.translationBase + params.value[0])
-                : params.value[0];
+            return this.translationBase
+              ? this.translateService.instant(this.translationBase + params.value[0])
+              : params.value[0];
           },
           show: true,
         },
