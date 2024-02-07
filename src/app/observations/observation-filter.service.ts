@@ -81,7 +81,7 @@ export class ObservationFilterService {
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
       toValue: (o) => o.$type,
-      all: Object.keys(ObservationType),
+      all: Object.keys(ObservationType).filter((type) => type !== ObservationType.TimeSeries && type !== ObservationType.Webcam),
       selected: [],
       highlighted: [],
     },
