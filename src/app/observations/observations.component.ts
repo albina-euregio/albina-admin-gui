@@ -146,9 +146,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.allRegions = (await this.regionsService.getRegionsEuregio()).features
       .map((f) => f.properties)
       .sort((r1, r2) => r1.id.localeCompare(r2.id));
-    this.allSources = Object.keys(ObservationSource).map((key) => {
-      return { id: key, name: key };
-    });
+    this.allSources = Object.keys(ObservationSource)
+      .filter((key) => 
+        key !== ObservationSource.FotoWebcamsEU &&
+        key !== ObservationSource.Panomax &&
+        key !== ObservationSource.RasBzIt &&
+        key !== ObservationSource.PanoCloud &&
+        key !== ObservationSource.Observer
+      )
+      .map((key) => {
+        return { id: key, name: key };
+      }
+    );
 
     this.moreItems = [
       {
