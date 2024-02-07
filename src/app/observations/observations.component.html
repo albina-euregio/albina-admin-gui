@@ -10,6 +10,7 @@
         <div class="global-bar-scroll">
           <!-- !global-bar-left -->
           <div class="global-bar global-bar-left">
+            <!--
             <div *ngIf="layout !== 'map'">
               <button
                 type="button"
@@ -29,7 +30,7 @@
                 [label]="translateService.instant('admin.observations.table')"
               ></button>
             </div>
-
+            -->
             <div *ngIf="layout === 'table'">
               <p-toggleButton
                 onLabel=""
@@ -156,13 +157,13 @@
               <p-menubar [model]="moreItems"></p-menubar>
             </div>
 
-            <div>
+            <div class="global-bar-item global-bar-item-load">
               <button
                 type="button"
                 pButton
+                class="p-button-text"
                 (click)="toggleFilters()"
-                [icon]="'pi pi-filter'"
-                label="{{ 'observations.sidebar.filter.title' | translate }}"
+                [icon]="layoutFilters ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
               ></button>
             </div>
 
