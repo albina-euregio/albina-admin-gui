@@ -233,19 +233,31 @@ export class ObservationFilterService {
       });
     });
     const dataset: OutputDataset["dataset"]["source"] = [
-      ["category", "max", "all", "highlighted", "available", "selected"],
+      type === LocalFilterTypes.Aspect
+        ? ["category", "all", "highlighted", "available", "selected"]
+        : ["category", "max", "all", "highlighted", "available", "selected"],
     ];
 
     for (const key of filter["all"]) {
       const values = dataRaw[key];
-      dataset.push([
-        key,
-        values["all"] * DATASET_MAX_FACTOR,
-        values["all"],
-        values["highlighted"] === 1 ? values["all"] : 0,
-        values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0,
-      ]);
+      dataset.push(
+        type === LocalFilterTypes.Aspect
+          ? [
+              key,
+              values["all"],
+              values["highlighted"] === 1 ? values["all"] * DATASET_MAX_FACTOR * DATASET_MAX_FACTOR : 0,
+              values["selected"] === 0 ? values["available"] : 0,
+              values["selected"] === 1 ? values["available"] : 0,
+            ]
+          : [
+              key,
+              values["all"] * DATASET_MAX_FACTOR,
+              values["all"],
+              values["highlighted"] === 1 ? values["all"] : 0,
+              values["selected"] === 0 ? values["available"] : 0,
+              values["selected"] === 1 ? values["available"] : 0,
+            ],
+      );
     }
     return this.normalizeData({ dataset: { source: dataset }, nan });
   }
