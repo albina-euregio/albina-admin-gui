@@ -11,13 +11,31 @@ export class BaseComponent {
   private pressTimer;
 
   @Input() caption: string;
-  @Input() translationBase: string;
   @Input() formatter: string;
   @Input() type: LocalFilterTypes;
   @Input() data: { dataset: object; nan: number };
-  @Output() handleChange: EventEmitter<[LocalFilterTypes, GenericFilterToggleData["data"]]> = new EventEmitter();
-  @Input() nanStatus: { selected: Boolean; highlighted: Boolean };
-  @Input() isActive: Boolean;
+  @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();
+  @Input() nanStatus: { selected: boolean; highlighted: boolean };
+  @Input() isActive: boolean;
+
+  get translationBase(): string {
+    switch (this.type) {
+      case LocalFilterTypes.Aspect:
+        return "aspect.";
+      case LocalFilterTypes.Stability:
+        return "snowpackStability.";
+      case LocalFilterTypes.ObservationType:
+        return "observationType.";
+      case LocalFilterTypes.ImportantObservation:
+        return "importantObservation.";
+      case LocalFilterTypes.AvalancheProblem:
+        return "avalancheProblem.";
+      case LocalFilterTypes.DangerPattern:
+        return "dangerPattern.";
+      default:
+        return "";
+    }
+  }
 
   private resetTimeout() {
     clearTimeout(this.pressTimer);
@@ -27,7 +45,7 @@ export class BaseComponent {
   onMouseDown(event: any) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
-      this.handleChange.emit([this.type, { value: event.data[0], altKey: true }]);
+      this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: true } });
     }, this.longClickDur);
     return false;
   }
@@ -35,28 +53,28 @@ export class BaseComponent {
   onMouseUp(event: any) {
     if (this.pressTimer) {
       this.resetTimeout();
-      this.handleChange.emit([this.type, { value: event.data[0], altKey: event.event.event.altKey }]);
+      this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: event.event.event.altKey } });
     }
     return false;
   }
 
   onClickNan(event: any) {
-    this.handleChange.emit([this.type, { value: "nan", altKey: event.altKey }]);
+    this.handleChange.emit({ type: this.type, data: { value: "nan", altKey: event.altKey } });
   }
 
   onMarkerClassify() {
-    this.handleChange.emit([this.type, { markerClassify: true }]);
+    this.handleChange.emit({ type: this.type, data: { markerClassify: true } });
   }
 
   onMarkerLabel() {
-    this.handleChange.emit([this.type, { markerLabel: true }]);
+    this.handleChange.emit({ type: this.type, data: { markerLabel: true } });
   }
 
   onInvert() {
-    this.handleChange.emit([this.type, { invert: true }]);
+    this.handleChange.emit({ type: this.type, data: { invert: true } });
   }
 
   onReset() {
-    this.handleChange.emit([this.type, { reset: true }]);
+    this.handleChange.emit({ type: this.type, data: { reset: true } });
   }
 }
