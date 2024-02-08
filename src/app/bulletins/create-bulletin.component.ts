@@ -1315,11 +1315,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       isUpdate = true;
     }
 
-    this.showNewBulletinModal = false;
-
+    
     // save selected regions to active bulletin
     const regions = this.mapService.getSelectedRegions();
-
+    
     let newRegionsHit = false;
     for (const region of regions) {
       if (region.startsWith(this.authenticationService.getActiveRegionId())) {
@@ -1327,8 +1326,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         break;
       }
     }
-
+    
     if (newRegionsHit || !this.isCreator(this.activeBulletin)) {
+      this.showNewBulletinModal = false;
       this.editRegions = false;
 
       // delete old saved regions in own area
