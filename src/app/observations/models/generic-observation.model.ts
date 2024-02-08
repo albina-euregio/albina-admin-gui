@@ -101,23 +101,6 @@ export enum LocalFilterTypes {
   Days = "Days",
 }
 
-export interface ChartsData {
-  Elevation: Object;
-  Aspects: Object;
-  AvalancheProblem: Object;
-  Stability: Object;
-  ObservationType: Object;
-  ImportantObservation: Object;
-  DangerPattern: Object;
-  Days: Object;
-}
-
-export interface FilterSelectionData {
-  all: string[];
-  selected: string[];
-  highlighted: string[];
-}
-
 export interface ObservationTableRow {
   label: string;
   date?: Date;
@@ -239,8 +222,6 @@ export type GenericObservation<Data = any> = z.infer<typeof genericObservationSc
    * Additional information to display as table rows in the observation dialog
    */
   $extraDialogRows?: ObservationTableRow[];
-  filterType?: ObservationFilterType;
-  isHighlighted?: boolean;
   regionLabel?: string;
 };
 

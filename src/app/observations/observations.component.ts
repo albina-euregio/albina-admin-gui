@@ -19,7 +19,6 @@ import {
   toGeoJSON,
   toObservationTable,
   LocalFilterTypes,
-  ChartsData,
   AvalancheProblem,
   DangerPattern,
   ImportantObservation,
@@ -32,7 +31,7 @@ import { MenuItem, SharedModule } from "primeng/api";
 import { saveAs } from "file-saver";
 
 import { ObservationTableComponent } from "./observation-table.component";
-import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
+import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
@@ -105,15 +104,24 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
-  public chartsData: ChartsData = {
-    Elevation: {},
-    Aspects: {},
-    AvalancheProblem: {},
-    Stability: {},
-    ObservationType: {},
-    ImportantObservation: {},
-    DangerPattern: {},
-    Days: {},
+  public barCharts: LocalFilterTypes[] = [
+    LocalFilterTypes.Days,
+    LocalFilterTypes.Elevation,
+    LocalFilterTypes.Stability,
+    LocalFilterTypes.ObservationType,
+    LocalFilterTypes.ImportantObservation,
+    LocalFilterTypes.AvalancheProblem,
+    LocalFilterTypes.DangerPattern,
+  ];
+  public chartsData: Record<LocalFilterTypes, OutputDataset> = {
+    Elevation: {} as OutputDataset,
+    Aspect: {} as OutputDataset,
+    AvalancheProblem: {} as OutputDataset,
+    Stability: {} as OutputDataset,
+    ObservationType: {} as OutputDataset,
+    ImportantObservation: {} as OutputDataset,
+    DangerPattern: {} as OutputDataset,
+    Days: {} as OutputDataset,
   };
   public moreItems: MenuItem[];
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
@@ -138,9 +146,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.allRegions = (await this.regionsService.getRegionsEuregio()).features
       .map((f) => f.properties)
       .sort((r1, r2) => r1.id.localeCompare(r2.id));
-    this.allSources = Object.keys(ObservationSource).map((key) => {
-      return { id: key, name: key };
-    });
+    this.allSources = Object.keys(ObservationSource)
+      .filter((key) => 
+        key !== ObservationSource.FotoWebcamsEU &&
+        key !== ObservationSource.Panomax &&
+        key !== ObservationSource.RasBzIt &&
+        key !== ObservationSource.PanoCloud &&
+        key !== ObservationSource.Observer
+      )
+      .map((key) => {
+        return { id: key, name: key };
+      }
+    );
 
     this.moreItems = [
       {
@@ -306,49 +323,22 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   applyLocalFilter() {
     Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
-    this.observations.forEach((observation) => {
-      observation.filterType =
-        this.filter.inObservationSources(observation) && this.filter.isSelected(observation)
-          ? ObservationFilterType.Local
-          : ObservationFilterType.Global;
-      observation.isHighlighted = this.filter.isHighlighted(observation);
-    });
-
-    this.localObservations = [];
-    this.observations.forEach((observation) => {
-      if (observation.filterType === ObservationFilterType.Local || observation.isHighlighted) {
-        this.localObservations.push(observation);
-        this.markerService
-          .createMarker(observation)
-          ?.on("click", () => this.onObservationClick(observation))
-          ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
-      }
+    this.localObservations = this.observations.filter(
+      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
+    );
+    this.localObservations.forEach((observation) => {
+      this.markerService
+        .createMarker(observation, this.filter.isHighlighted(observation))
+        ?.on("click", () => this.onObservationClick(observation))
+        ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     });
     this.buildChartsData();
   }
 
   buildChartsData() {
-    this.chartsData.Elevation = this.filter.normalizeData(this.filter.getElevationDataset(this.observations));
-
-    this.chartsData.Aspects = this.filter.normalizeData(this.filter.getAspectDataset(this.observations));
-
-    this.chartsData.Stability = this.filter.normalizeData(this.filter.getStabilityDataset(this.observations));
-
-    this.chartsData.ObservationType = this.filter.normalizeData(
-      this.filter.getObservationTypeDataset(this.observations),
-    );
-
-    this.chartsData.ImportantObservation = this.filter.normalizeData(
-      this.filter.getImportantObservationDataset(this.observations),
-    );
-
-    this.chartsData.AvalancheProblem = this.filter.normalizeData(
-      this.filter.getAvalancheProblemDataset(this.observations),
-    );
-
-    this.chartsData.DangerPattern = this.filter.normalizeData(this.filter.getDangerPatternDataset(this.observations));
-
-    this.chartsData.Days = this.filter.normalizeData(this.filter.getDaysDataset(this.observations));
+    for (const type of Object.values(LocalFilterTypes)) {
+      this.chartsData[type] = this.filter.toDataset(this.observations, type);
+    }
   }
 
   private addObservation(observation: GenericObservation): void {
@@ -360,8 +350,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       observation = this.parseObservation(observation);
       augmentRegion(observation);
     }
-
-    observation.filterType = ObservationFilterType.Local;
 
     if (observation.region) {
       observation.regionLabel = observation.region + " " + this.regionsService.getRegionName(observation.region);

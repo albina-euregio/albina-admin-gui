@@ -3,6 +3,8 @@ import { BaseComponent } from "./base-chart.component";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import { CommonModule } from "@angular/common";
+import type { EChartsOption } from "echarts";
+import type { CallbackDataParams } from "echarts/types/dist/shared";
 
 const barDefaults = {
   type: "bar",
@@ -11,7 +13,7 @@ const barDefaults = {
   barCategoryGap: "0%",
   //name: legendName[0],
   //stack: 'c',
-};
+} as const;
 
 @Component({
   standalone: true,
@@ -22,7 +24,7 @@ const barDefaults = {
   styleUrls: ["./rose-chart.component.scss"],
 })
 export class RoseChartComponent extends BaseComponent {
-  public readonly defaultOptions = {
+  public readonly defaultOptions: EChartsOption = {
     // title: {
     //     text: this.caption || 'points of the compass chart'
     // },
@@ -38,14 +40,12 @@ export class RoseChartComponent extends BaseComponent {
       //position: ['50%', '5'],
       confine: true,
       trigger: "item",
-      borderWidth: "0",
+      borderWidth: 0,
       textStyle: {
         color: "#839194",
         fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
       },
-      formatter: (params) => {
-        //console.log("formatter tooltip", params);
-
+      formatter: (params: CallbackDataParams) => {
         const valKey = params.dimensionNames.indexOf(params.seriesName);
         let val = params.value[valKey];
         if (params.seriesName === "highlighted") {
@@ -80,7 +80,7 @@ export class RoseChartComponent extends BaseComponent {
     angleAxis: {
       type: "category",
       z: 10,
-      scale: true,
+      // scale: true,
       startAngle: 110,
       axisTick: {
         show: false,
@@ -90,8 +90,7 @@ export class RoseChartComponent extends BaseComponent {
       },
       axisLabel: {
         show: true,
-        formatter: (params) => {
-          //console.log("formatter", params);
+        formatter: (params: string) => {
           return this.translationBase ? this.translateService.instant(this.translationBase + params) : params;
         },
         //interval: 1,
@@ -117,9 +116,9 @@ export class RoseChartComponent extends BaseComponent {
     },
     polar: {
       center: ["50%", "115px"],
-      emphasis: {
-        disabled: true,
-      },
+      // emphasis: {
+      //   disabled: true,
+      // },
     },
     series: [
       {

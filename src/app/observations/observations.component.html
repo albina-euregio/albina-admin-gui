@@ -10,6 +10,7 @@
         <div class="global-bar-scroll">
           <!-- !global-bar-left -->
           <div class="global-bar global-bar-left">
+            <!--
             <div *ngIf="layout !== 'map'">
               <button
                 type="button"
@@ -29,7 +30,7 @@
                 [label]="translateService.instant('admin.observations.table')"
               ></button>
             </div>
-
+            -->
             <div *ngIf="layout === 'table'">
               <p-toggleButton
                 onLabel=""
@@ -156,13 +157,13 @@
               <p-menubar [model]="moreItems"></p-menubar>
             </div>
 
-            <div>
+            <div class="global-bar-item global-bar-item-load">
               <button
                 type="button"
                 pButton
+                class="p-button-text"
                 (click)="toggleFilters()"
-                [icon]="'pi pi-filter'"
-                label="{{ 'observations.sidebar.filter.title' | translate }}"
+                [icon]="layoutFilters ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
               ></button>
             </div>
 
@@ -213,10 +214,7 @@
       </div>
       <!-- /layout-global -->
 
-      <div
-        [ngStyle]="{ display: layout === 'table' ? '' : 'none' }"
-        class="layout-table"
-      >
+      <div *ngIf="layout === 'table'" class="layout-table">
         <div class="card" style="height: 100%">
           <div class="card-block" style="overflow-y: auto">
             <div>
@@ -275,7 +273,7 @@
               [caption]="'admin.observations.charts.aspect.caption' | translate"
               [translationBase]="'aspect.'"
               [type]="LocalFilterTypes.Aspect"
-              [data]="chartsData.Aspects"
+              [data]="chartsData.Aspect"
               [isActive]="
                 filter.filterSelection[LocalFilterTypes.Aspect]['selected']
                   .length > 0 ||
@@ -292,222 +290,26 @@
                     'highlighted'
                   ].includes('nan')
               }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
+              (handleChange)="toggleFilter($event)"
             >
             </app-rose-chart>
             <app-bar-chart
+              *ngFor="let type of barCharts"
               class="chart-container"
-              [caption]="'admin.observations.charts.days.caption' | translate"
-              [type]="LocalFilterTypes.Days"
-              [data]="chartsData.Days"
+              [caption]="'admin.observations.charts.' + type[0].toLowerCase() + type.slice(1) + '.caption' | translate"
+              [type]="type"
+              [data]="chartsData[type]"
               [isActive]="
-                filter.filterSelection[LocalFilterTypes.Days]['selected']
-                  .length > 0 ||
-                filter.filterSelection[LocalFilterTypes.Days]['highlighted']
-                  .length > 0
+                filter.filterSelection[type]['selected'].length > 0 ||
+                filter.filterSelection[type]['highlighted'].length > 0
               "
               [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.Days][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.Days][
-                    'highlighted'
-                  ].includes('nan')
+                selected: filter.filterSelection[type]['selected'].includes('nan'),
+                highlighted: filter.filterSelection[type]['highlighted'].includes('nan')
               }"
               [formatter]="'date'"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
-            >
-            </app-bar-chart>
-            <app-bar-chart
-              class="chart-container"
-              [caption]="
-                'admin.observations.charts.elevation.caption' | translate
-              "
-              [type]="LocalFilterTypes.Elevation"
-              [data]="chartsData.Elevation"
-              [isActive]="
-                filter.filterSelection[LocalFilterTypes.Elevation]['selected']
-                  .length > 0 ||
-                filter.filterSelection[LocalFilterTypes.Elevation][
-                  'highlighted'
-                ].length > 0
-              "
-              [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.Elevation][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.Elevation][
-                    'highlighted'
-                  ].includes('nan')
-              }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
-            >
-            </app-bar-chart>
-            <app-bar-chart
-              class="chart-container"
-              [caption]="
-                'admin.observations.charts.stability.caption' | translate
-              "
-              [translationBase]="'snowpackStability.'"
-              [type]="LocalFilterTypes.Stability"
-              [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.Stability][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.Stability][
-                    'highlighted'
-                  ].includes('nan')
-              }"
-              [data]="chartsData.Stability"
-              [isActive]="
-                filter.filterSelection[LocalFilterTypes.Stability]['selected']
-                  .length > 0 ||
-                filter.filterSelection[LocalFilterTypes.Stability][
-                  'highlighted'
-                ].length > 0
-              "
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
-            >
-            </app-bar-chart>
-            <app-bar-chart
-              class="chart-container"
-              [caption]="
-                'admin.observations.charts.observationType.caption' | translate
-              "
-              [translationBase]="'observationType.'"
-              [type]="LocalFilterTypes.ObservationType"
-              [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.ObservationType][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.ObservationType][
-                    'highlighted'
-                  ].includes('nan')
-              }"
-              [data]="chartsData.ObservationType"
-              [isActive]="
-                filter.filterSelection[LocalFilterTypes.ObservationType][
-                  'selected'
-                ].length > 0 ||
-                filter.filterSelection[LocalFilterTypes.ObservationType][
-                  'highlighted'
-                ].length > 0
-              "
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
-            >
-            </app-bar-chart>
-            <app-bar-chart
-              class="chart-container"
-              [caption]="
-                'admin.observations.charts.importantObservation.caption'
-                  | translate
-              "
-              [translationBase]="'importantObservation.'"
-              [type]="LocalFilterTypes.ImportantObservation"
-              [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.ImportantObservation][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.ImportantObservation][
-                    'highlighted'
-                  ].includes('nan')
-              }"
-              [data]="chartsData.ImportantObservation"
-              [isActive]="
-                filter.filterSelection[LocalFilterTypes.ImportantObservation][
-                  'selected'
-                ].length > 0 ||
-                filter.filterSelection[LocalFilterTypes.ImportantObservation][
-                  'highlighted'
-                ].length > 0
-              "
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
-            >
-            </app-bar-chart>
-            <app-bar-chart
-              class="chart-container"
-              [caption]="
-                'admin.observations.charts.avalancheProblem.caption' | translate
-              "
-              [translationBase]="'avalancheProblem.'"
-              [type]="LocalFilterTypes.AvalancheProblem"
-              [data]="chartsData.AvalancheProblem"
-              [isActive]="
-                filter.filterSelection[LocalFilterTypes.AvalancheProblem][
-                  'selected'
-                ].length > 0 ||
-                filter.filterSelection[LocalFilterTypes.AvalancheProblem][
-                  'highlighted'
-                ].length > 0
-              "
-              [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.AvalancheProblem][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.AvalancheProblem][
-                    'highlighted'
-                  ].includes('nan')
-              }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
-            >
-            </app-bar-chart>
-            <app-bar-chart
-              class="chart-container"
-              [caption]="
-                'admin.observations.charts.dangerPattern.caption' | translate
-              "
-              [translationBase]="'dangerPattern.'"
-              [type]="LocalFilterTypes.DangerPattern"
-              [data]="chartsData.DangerPattern"
-              [isActive]="
-                filter.filterSelection[LocalFilterTypes.DangerPattern][
-                  'selected'
-                ].length > 0 ||
-                filter.filterSelection[LocalFilterTypes.DangerPattern][
-                  'highlighted'
-                ].length > 0
-              "
-              [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.DangerPattern][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.DangerPattern][
-                    'highlighted'
-                  ].includes('nan')
-              }"
-              (handleChange)="
-                toggleFilter({ type: $event[0], data: $event[1] })
-              "
-            >
-            </app-bar-chart>
+              (handleChange)="toggleFilter($event)"
+            />
           </div>
           <!-- /toolset-charts -->
 
