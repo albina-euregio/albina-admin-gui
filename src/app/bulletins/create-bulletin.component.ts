@@ -468,28 +468,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.updateBulletinOnServer(this.activeBulletin);
   }
 
-  loadBulletin(date) {
-    this.deselectBulletin();
-
-    this.bulletinsService.setActiveDate(date);
-    if (this.authenticationService.getActiveRegionId() && this.authenticationService.getActiveRegionId() !== undefined && (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) || this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))) {
-
-      if (!this.isDateEditable(date)) {
-        this.bulletinsService.setIsEditable(false);
-        this.initializeComponent();
-      } else {
-        if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
-          this.bulletinsService.setIsEditable(true);
-          this.initializeComponent();
-        }
-      }
-    } else {
-      this.bulletinsService.setActiveDate(date);
-      this.bulletinsService.setIsEditable(false);
-      this.initializeComponent();
-    }
-  }
-
   publishAll() {
     this.publishing = true;
     this.openPublishAllModal();
