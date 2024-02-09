@@ -54,6 +54,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public loadingPreview: boolean;
   public editRegions: boolean;
   public loading: boolean;
+  public saveError: boolean;
+  public loadInternalBulletinsError: boolean;
+  public loadExternalBulletinsError: boolean;
 
   public originalBulletins: Map<string, BulletinModel>;
 
@@ -186,6 +189,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.submitting = false;
     this.copying = false;
     this.loadingPreview = false;
+    this.saveError = false;
+    this.loadInternalBulletinsError = false;
+    this.loadExternalBulletinsError = false;
   }
 
   @HostListener('window:resize', ['$event'])
@@ -360,13 +366,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
     this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
       (data) => {
+        this.loadInternalBulletinsError = false;
         this.addInternalBulletins(data);
         this.loading = false;
       },
       (error) => {
         console.error("Bulletins could not be loaded!");
         this.loading = false;
-        this.openLoadingErrorModal(this.loadingErrorTemplate);
+        this.loadInternalBulletinsError = true;
       }
     );
   }
@@ -378,10 +385,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.authenticationService.getExternalServers().map((server) =>
         this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
           data => {
+            this.loadExternalBulletinsError = false;
             this.addExternalBulletins(server, data);
           },
           () => {
             console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
+            this.loadExternalBulletinsError = true;
           }
         )
       );
@@ -1416,12 +1425,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
         (data) => {
+          this.saveError = false;
           console.log("Bulletin updated on server.");
           this.loadBulletinsFromServer();
         },
         (error) => {
           console.error("Bulletin could not be updated on server!");
-          this.openSaveErrorModal(this.saveErrorTemplate);
+          this.saveError = true;
         }
       );
     }

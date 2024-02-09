@@ -82,7 +82,9 @@
       "loadingPreview": "Creating PDF preview ...",
       "loading": "Loading bulletin ...",
       "publishing": "Publishing bulletin ...",
-      "submitting": "Submitting bulletin ..."
+      "submitting": "Submitting bulletin ...",
+      "saveError": "Bulletin could not be saved!",
+      "loadBulletinsError": "Bulletins could not be loaded!"
     },
     "create": {
       "tooltip": {

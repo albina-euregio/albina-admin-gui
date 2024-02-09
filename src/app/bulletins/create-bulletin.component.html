@@ -181,6 +181,8 @@
       <span class="create-bulletin__bulletin-info" *ngIf="loading"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loading" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="publishing"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.publishing" | translate }}</span>
       <span class="create-bulletin__bulletin-info" *ngIf="submitting"><i class="ph ph-circle-notch"></i> {{ "bulletins.status.submitting" | translate }}</span>
+      <span class="create-bulletin__bulletin-alert" *ngIf="saveError" (click)="updateBulletinOnServer(activeBulletin)"><i class="ph ph-warning icon-left"></i> {{ "bulletins.status.saveError" | translate }} <i class="ph ph-repeat icon-right"></i></span>
+      <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalBulletinsError"><i class="ph ph-info"></i> {{ "bulletins.status.loadBulletinsError" | translate }}</span>
 
       <!-- submit -->
       <button *ngIf="showSubmitButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons" (click)="submit($event, bulletinsService.getActiveDate())">
