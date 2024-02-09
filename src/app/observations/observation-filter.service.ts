@@ -261,6 +261,7 @@ export class ObservationFilterService {
             ],
       );
     }
+
     return this.normalizeData({ dataset: { source: dataset }, nan });
   }
 
@@ -269,7 +270,7 @@ export class ObservationFilterService {
     const data = dataset?.dataset.source.slice(1);
     const header = dataset?.dataset.source[0];
     //if(!this.isFilterActive()) console.log("normalizeData #0 ", {filterActive: this.isFilterActive(), filter: this.filterSelection, data});
-    if (!this.isFilterActive() || !dataset || !data || !header) return dataset;
+    //if (!this.isFilterActive() || !dataset || !data || !header) return dataset;
 
     // get max values in order to normalize data
     // let availableMax = Number.MIN_VALUE;

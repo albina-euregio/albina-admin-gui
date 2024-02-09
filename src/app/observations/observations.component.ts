@@ -191,6 +191,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.regions = this.mapService.getSelectedRegions();
       this.applyLocalFilter();
     });
+
+    const resizeObserver = new ResizeObserver(() => {
+      this.mapService.map?.invalidateSize();
+    });
+    resizeObserver.observe(this.mapDiv.nativeElement);
   }
 
   ngOnDestroy() {
@@ -404,7 +409,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   toggleFilters() {
     this.layoutFilters = !this.layoutFilters;
-    this.mapService.invalidateSize();
   }
 
   @HostListener("document:keydown", ["$event"])

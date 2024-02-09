@@ -9,7 +9,7 @@
       <div class="obs-switch">
         <div
           class="obs-switch-item"
-          [ngClass]="{ 'is-active': isActive }"
+          [ngClass]="{ 'is-active': type === classifyType }"
           (click)="onMarkerClassify()"
           title="{{ 'admin.observations.charts.classify' | translate }}"
         >
@@ -17,7 +17,7 @@
         </div>
         <div
           class="obs-switch-item"
-          [ngClass]="{ 'is-active': isActive }"
+          [ngClass]="{ 'is-active': type === labelType }"
           (click)="onMarkerLabel()"
           title="{{ 'admin.observations.charts.label' | translate }}"
         >
@@ -52,7 +52,6 @@
         selected: nanStatus.selected
       }"
       (click)="onClickNan($event)"
-      *ngIf="data.nan > 0"
       >{{ "admin.observations.charts.nan" | translate }}: {{ data.nan }}</span
     >
   </div>

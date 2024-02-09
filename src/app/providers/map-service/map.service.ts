@@ -29,7 +29,7 @@ interface SelectableRegionProperties extends RegionWithElevationProperties {
 
 @Injectable()
 export class MapService {
-  protected map: Map;
+  public map: Map;
   protected afternoonMap: Map;
   protected baseMaps: Record<string, TileLayer>;
   protected afternoonBaseMaps: Record<string, TileLayer>;
