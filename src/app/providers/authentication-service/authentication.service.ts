@@ -44,7 +44,29 @@ export class AuthenticationService {
     this.jwtHelper = new JwtHelperService();
   }
 
-  isUserLoggedIn(): boolean {
+  public login(username: string, password: string): Observable<boolean> {
+    const url = this.constantsService.getServerUrl() + "authentication";
+    const body = JSON.stringify({username, password});
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    const options = { headers: headers };
+
+    return this.http.post<AuthenticationResponse>(url, body, options)
+    .pipe(map(data => {
+      if ((data ).access_token) {
+          this.setCurrentAuthor(data);
+          if (this.getCurrentAuthorRegions().length > 0) {
+            this.setActiveRegion(this.getCurrentAuthorRegions()[0]);
+          }
+          return true;
+        } else {
+          return false;
+        }
+      }));
+  }
+
+  public isUserLoggedIn(): boolean {
     if (this.currentAuthor && this.currentAuthor.accessToken) {
       return !this.jwtHelper.isTokenExpired(this.currentAuthor.accessToken);
     } else {
@@ -62,6 +84,86 @@ export class AuthenticationService {
     localStorage.removeItem("activeRegion");
     localStorage.removeItem("externalServers");
     this.externalServers = [];
+  }
+
+  public externalServerLogins() {
+    this.loadExternalServerInstances().subscribe(
+      data => {
+        for (const entry of (data as any)) {
+          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
+            data => {
+              if (data === true) {
+                console.debug("[" + entry.name + "] Logged in!");
+              } else {
+                console.error("[" + entry.name + "] Login failed!");
+              }
+            },
+            error => {
+              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body));
+            }
+          );
+        }
+      },
+      error => {
+        console.error("External server instances could not be loaded: " + JSON.stringify(error._body));
+      }
+    )
+  }
+
+  public loadExternalServerInstances(): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "server/external";
+    const options = { headers: this.newAuthHeader() };
+
+    return this.http.get<Response>(url, options);
+  }
+
+  public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
+    const url = apiUrl + "authentication";
+    const body = JSON.stringify({username, password});
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    const options = { headers: headers };
+
+    return this.http.post<AuthenticationResponse>(url, body, options)
+      .pipe(map(data => {
+        if ((data ).access_token) {
+          this.addExternalServer(data, apiUrl, name, username, password);
+          return true;
+        } else {
+          return false;
+        }
+      }));
+  }
+
+  private addExternalServer(json: Partial<AuthenticationResponse>, apiUrl: string, serverName: string, username: string, password: string) {
+    if (!json) {
+      return;
+    }
+    var server = ServerModel.createFromJson(json);
+    server.setApiUrl(apiUrl);
+    server.setName(serverName);
+    this.externalServers.push(server);
+    localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
+  }
+
+  private setExternalServers(json: Partial<ServerModel>[]) {
+    if (!json) {
+      return;
+    }
+    for (const server of json)
+      this.externalServers.push(ServerModel.createFromJson(server));
+  }
+  
+  public checkExternalServerLogin() {
+    for (let server of this.externalServers) {
+      if (this.jwtHelper.isTokenExpired(server.accessToken)) {
+        this.externalServers = [];
+        localStorage.removeItem("externalServers");
+        this.externalServerLogins();
+        break;
+      }
+    };
   }
 
   public getAuthor() {
@@ -198,78 +300,6 @@ export class AuthenticationService {
     return this.currentAuthor?.getRoles?.()?.includes(role);
   }
 
-  public login(username: string, password: string): Observable<boolean> {
-    const url = this.constantsService.getServerUrl() + "authentication";
-    const body = JSON.stringify({username, password});
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json"
-    });
-    const options = { headers: headers };
-
-    return this.http.post<AuthenticationResponse>(url, body, options)
-    .pipe(map(data => {
-      if ((data ).access_token) {
-          this.setCurrentAuthor(data);
-          if (this.getCurrentAuthorRegions().length > 0) {
-            this.setActiveRegion(this.getCurrentAuthorRegions()[0]);
-          }
-          return true;
-        } else {
-          return false;
-        }
-      }));
-  }
-
-  public externalServerLogins() {
-    this.loadExternalServerInstances().subscribe(
-      data => {
-        for (const entry of (data as any)) {
-          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
-            data => {
-              if (data === true) {
-                console.debug("[" + entry.name + "] Logged in!");
-              } else {
-                console.error("[" + entry.name + "] Login failed!");
-              }
-            },
-            error => {
-              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body));
-            }
-          );
-        }
-      },
-      error => {
-        console.error("External server instances could not be loaded: " + JSON.stringify(error._body));
-      }
-    )
-  }
-
-  public loadExternalServerInstances(): Observable<Response> {
-    const url = this.constantsService.getServerUrl() + "server/external";
-    const options = { headers: this.newAuthHeader() };
-
-    return this.http.get<Response>(url, options);
-  }
-
-  public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
-    const url = apiUrl + "authentication";
-    const body = JSON.stringify({username, password});
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json"
-    });
-    const options = { headers: headers };
-
-    return this.http.post<AuthenticationResponse>(url, body, options)
-      .pipe(map(data => {
-        if ((data ).access_token) {
-          this.addExternalServer(data, apiUrl, name);
-          return true;
-        } else {
-          return false;
-        }
-      }));
-  }
-
   public getCurrentAuthor() {
     return this.currentAuthor;
   }
@@ -292,25 +322,6 @@ export class AuthenticationService {
 
   public getExternalServers(): ServerModel[] {
     return this.externalServers;
-  }
-
-  private addExternalServer(json: Partial<AuthenticationResponse>, apiUrl: string, serverName: string) {
-    if (!json) {
-      return;
-    }
-    var server = ServerModel.createFromJson(json);
-    server.setApiUrl(apiUrl);
-    server.setName(serverName);
-    this.externalServers.push(server);
-    localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
-  }
-
-  private setExternalServers(json: Partial<ServerModel>[]) {
-    if (!json) {
-      return;
-    }
-    for (const server of json)
-      this.externalServers.push(ServerModel.createFromJson(server));
   }
 
   public isInSuperRegion(region: string) {

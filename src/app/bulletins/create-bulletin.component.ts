@@ -374,6 +374,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private loadExternalBulletinsFromServer() {
     if (!this.editRegions) {
       console.log("Load external bulletins");
+      this.authenticationService.checkExternalServerLogin();
       this.authenticationService.getExternalServers().map((server) =>
         this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
           data => {
