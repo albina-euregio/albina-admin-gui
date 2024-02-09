@@ -25,6 +25,7 @@
         </div>
         <div
           class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
           (click)="onInvert()"
           title="{{ 'admin.observations.charts.invert' | translate }}"
         >
@@ -32,6 +33,7 @@
         </div>
         <div
           class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
           (click)="onReset()"
           title="{{ 'admin.observations.charts.reset' | translate }}"
         >
