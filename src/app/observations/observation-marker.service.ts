@@ -247,13 +247,13 @@ export class ObservationMarkerService {
         const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
         return daysColors[Math.min(Math.floor(days), daysColors.length)];
       case LocalFilterTypes.Elevation:
-        return this.elevationColor(observation);
+        return this.elevationColor(observation?.elevation);
       case LocalFilterTypes.ImportantObservation:
         return this.enumArrayColor(ImportantObservation, observation?.importantObservations);
       case LocalFilterTypes.ObservationType:
         return this.enumArrayColor(ObservationType, [observation?.$type]);
       case LocalFilterTypes.Stability:
-        return this.stabilityColor(observation);
+        return this.stabilityColor(observation?.stability);
       default:
         return "white";
     }
@@ -269,13 +269,38 @@ export class ObservationMarkerService {
     }
   }
 
-  private stabilityColor(observation: GenericObservation) {
-    return stabilityColors[observation?.stability] ?? "white";
+  getColor(type: LocalFilterTypes, name: any) {
+    switch (type) {
+      case LocalFilterTypes.Aspect:
+        return this.enumArrayColor(Aspect, [name]);
+      case LocalFilterTypes.AvalancheProblem:
+        return this.enumArrayColor(AvalancheProblem, [name]);
+      case LocalFilterTypes.DangerPattern:
+        return this.enumArrayColor(DangerPattern, [name]);
+      case LocalFilterTypes.Days:
+        const days = (Date.now() - (new Date(name)).getTime()) / 24 / 3600e3;
+        const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
+        return daysColors[Math.min(Math.floor(days), daysColors.length)];
+      case LocalFilterTypes.Elevation:
+        return this.elevationColor(name);
+      case LocalFilterTypes.ImportantObservation:
+        return this.enumArrayColor(ImportantObservation, [name]);
+      case LocalFilterTypes.ObservationType:
+        return this.enumArrayColor(ObservationType, [name]);
+      case LocalFilterTypes.Stability:
+        return this.stabilityColor(name);
+      default:
+        return "#000000";
+    }
   }
 
-  private elevationColor(observation: GenericObservation) {
-    if (observation?.elevation) {
-      const index = isFinite(observation.elevation) ? elevationThresholds.findIndex((e) => e >= observation.elevation) : -1;
+  private stabilityColor(stability: Stability) {
+    return stabilityColors[stability] ?? "white";
+  }
+
+  private elevationColor(elevation: number) {
+    if (elevation) {
+      const index = isFinite(elevation) ? elevationThresholds.findIndex((e) => e >= elevation) : -1;
       return index >= 0 ? elevationColors[index] : "white";
     } else {
       return "white";

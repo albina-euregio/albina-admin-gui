@@ -261,6 +261,7 @@ export class ObservationFilterService {
             ],
       );
     }
+
     return this.normalizeData({ dataset: { source: dataset }, nan });
   }
 

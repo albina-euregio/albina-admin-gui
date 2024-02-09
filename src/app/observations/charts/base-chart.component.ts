@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { LocalFilterTypes } from "../models/generic-observation.model";
 import { type GenericFilterToggleData } from "../observation-filter.service";
+import { ObservationMarkerService } from "../observation-marker.service";
 
 @Component({
   selector: "app-base-chart",
@@ -37,6 +38,9 @@ export class BaseComponent {
       default:
         return "";
     }
+  }
+
+  constructor(protected observationMarkerService: ObservationMarkerService) {
   }
 
   private resetTimeout() {
@@ -78,5 +82,18 @@ export class BaseComponent {
 
   onReset() {
     this.handleChange.emit({ type: this.type, data: { reset: true } });
+  }
+
+  getItemColor(entry) {
+    if (this.classifyType === this.type) {
+      const color = this.observationMarkerService.getColor(this.classifyType, entry.name);
+      if (color === "white") {
+        return "#000000";
+      } else {
+        return color;
+      }
+    } else {
+      return "#000000";
+    }
   }
 }
