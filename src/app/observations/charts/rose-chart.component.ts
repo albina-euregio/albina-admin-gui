@@ -5,6 +5,7 @@ import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import { CommonModule } from "@angular/common";
 import type { EChartsOption } from "echarts";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
+import { ObservationMarkerService } from "../observation-marker.service";
 
 const barDefaults = {
   type: "bar",
@@ -136,12 +137,18 @@ export class RoseChartComponent extends BaseComponent {
       },
       {
         ...barDefaults,
+        itemStyle: {
+          color: (entry) => this.getItemColor(entry),
+        },
         emphasis: {
           disabled: true,
         },
       },
       {
         ...barDefaults,
+        itemStyle: {
+          color: (entry) => this.getItemColor(entry),
+        },
         emphasis: {
           disabled: true,
         },
@@ -163,7 +170,10 @@ export class RoseChartComponent extends BaseComponent {
 
   public options = Object.assign(this.defaultOptions);
 
-  constructor(private translateService: TranslateService) {
-    super();
+  constructor(
+    private translateService: TranslateService,
+    protected observationMarkerService: ObservationMarkerService
+  ) {
+    super(observationMarkerService);
   }
 }

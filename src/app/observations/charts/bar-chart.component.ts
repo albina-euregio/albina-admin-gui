@@ -5,6 +5,7 @@ import { CommonModule, formatDate } from "@angular/common";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import type { EChartsOption } from "echarts";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
+import { ObservationMarkerService } from "../observation-marker.service";
 
 const barWidth = 3;
 const defaultDataBarOptions = {
@@ -12,6 +13,7 @@ const defaultDataBarOptions = {
   barWidth: barWidth,
   itemStyle: {
     //borderRadius: [0, 2, 2, 0],
+    color: "#f86c6b"
   },
   barGap: "-100%",
   emphasis: {
@@ -148,7 +150,7 @@ export class BarChartComponent extends BaseComponent {
       {
         ...defaultDataBarOptions,
         itemStyle: {
-          color: "#000000",
+          color: (entry) => this.getItemColor(entry),
         },
         emphasis: {
           disabled: true,
@@ -157,8 +159,7 @@ export class BarChartComponent extends BaseComponent {
       {
         ...defaultDataBarOptions,
         itemStyle: {
-          //blue
-          color: "#19ABFF",
+          color: (entry) => this.getItemColor(entry),
         },
         emphasis: {
           disabled: true,
@@ -168,7 +169,10 @@ export class BarChartComponent extends BaseComponent {
   };
   public options = Object.assign(this.defaultOptions);
 
-  constructor(private translateService: TranslateService) {
-    super();
+  constructor(
+    private translateService: TranslateService,
+    protected observationMarkerService: ObservationMarkerService
+  ) {
+    super(observationMarkerService);
   }
 }
