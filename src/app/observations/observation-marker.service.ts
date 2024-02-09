@@ -237,21 +237,21 @@ export class ObservationMarkerService {
     }
     switch (this.markerClassify) {
       case LocalFilterTypes.Aspect:
-        return this.enumArrayColor(Aspect, [observation.aspect]);
+        return this.enumArrayColor(Aspect, [observation?.aspect]);
       case LocalFilterTypes.AvalancheProblem:
-        return this.enumArrayColor(AvalancheProblem, observation.avalancheProblems);
+        return this.enumArrayColor(AvalancheProblem, observation?.avalancheProblems);
       case LocalFilterTypes.DangerPattern:
-        return this.enumArrayColor(DangerPattern, observation.dangerPatterns);
+        return this.enumArrayColor(DangerPattern, observation?.dangerPatterns);
       case LocalFilterTypes.Days:
-        const days = (Date.now() - +observation.eventDate) / 24 / 3600e3;
+        const days = (Date.now() - +observation?.eventDate) / 24 / 3600e3;
         const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
         return daysColors[Math.min(Math.floor(days), daysColors.length)];
       case LocalFilterTypes.Elevation:
         return this.elevationColor(observation);
       case LocalFilterTypes.ImportantObservation:
-        return this.enumArrayColor(ImportantObservation, observation.importantObservations);
+        return this.enumArrayColor(ImportantObservation, observation?.importantObservations);
       case LocalFilterTypes.ObservationType:
-        return this.enumArrayColor(ObservationType, [observation.$type]);
+        return this.enumArrayColor(ObservationType, [observation?.$type]);
       case LocalFilterTypes.Stability:
         return this.stabilityColor(observation);
       default:
@@ -273,9 +273,13 @@ export class ObservationMarkerService {
     return stabilityColors[observation?.stability] ?? "white";
   }
 
-  private elevationColor({ elevation }: GenericObservation) {
-    const index = isFinite(elevation) ? elevationThresholds.findIndex((e) => e >= elevation) : -1;
-    return index >= 0 ? elevationColors[index] : "white";
+  private elevationColor(observation: GenericObservation) {
+    if (observation?.elevation) {
+      const index = isFinite(observation.elevation) ? elevationThresholds.findIndex((e) => e >= observation.elevation) : -1;
+      return index >= 0 ? elevationColors[index] : "white";
+    } else {
+      return "white";
+    }
   }
 
   private getLabel(observation: GenericObservation<any>) {

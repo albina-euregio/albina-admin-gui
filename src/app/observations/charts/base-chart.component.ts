@@ -17,6 +17,8 @@ export class BaseComponent {
   @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();
   @Input() nanStatus: { selected: boolean; highlighted: boolean };
   @Input() isActive: boolean;
+  @Input() labelType: LocalFilterTypes;
+  @Input() classifyType: LocalFilterTypes;
 
   get translationBase(): string {
     switch (this.type) {

@@ -290,6 +290,8 @@
                     'highlighted'
                   ].includes('nan')
               }"
+              [labelType]="markerService.markerLabel"
+              [classifyType]="markerService.markerClassify"
               (handleChange)="toggleFilter($event)"
             >
             </app-rose-chart>
@@ -308,6 +310,8 @@
                 highlighted: filter.filterSelection[type]['highlighted'].includes('nan')
               }"
               [formatter]="'date'"
+              [labelType]="markerService.markerLabel"
+              [classifyType]="markerService.markerClassify"
               (handleChange)="toggleFilter($event)"
             />
           </div>
