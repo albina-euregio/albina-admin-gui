@@ -82,6 +82,14 @@ export class BarChartComponent extends BaseComponent {
     xAxis: {
       axisLabel: {
         show: false,
+        formatter: (params: string) => {
+          return this.getItemLabel(params)
+        },
+        rich: {
+          bold: {
+            fontWeight: 600
+          }
+        },
       },
       axisLine: {
         show: false,
@@ -118,9 +126,7 @@ export class BarChartComponent extends BaseComponent {
           color: "#839194",
           position: [0, -14],
           formatter: (params: CallbackDataParams) => {
-            return this.translationBase
-              ? this.translateService.instant(this.translationBase + params.value[0])
-              : params.value[0];
+            return this.getItemLabel(params)
           },
           show: true,
         },
@@ -170,9 +176,9 @@ export class BarChartComponent extends BaseComponent {
   public options = Object.assign(this.defaultOptions);
 
   constructor(
-    private translateService: TranslateService,
+    protected translateService: TranslateService,
     protected observationMarkerService: ObservationMarkerService
   ) {
-    super(observationMarkerService);
+    super(observationMarkerService, translateService);
   }
 }

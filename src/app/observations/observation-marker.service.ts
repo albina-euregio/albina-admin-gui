@@ -307,6 +307,31 @@ export class ObservationMarkerService {
     }
   }
 
+  getLegendLabel(type: LocalFilterTypes, label: string) : string {
+    switch (type) {
+      case LocalFilterTypes.Aspect:
+        return "{bold|" + label + "}";
+      case LocalFilterTypes.DangerPattern:
+        return "{bold|" + label + "}";
+      case LocalFilterTypes.AvalancheProblem:
+        // TODO define label
+        return label;
+      case LocalFilterTypes.Days:
+      case LocalFilterTypes.Elevation:
+        return "{bold|" + label.substring(0, 2) + "}" + label.substring(2);
+      case LocalFilterTypes.ImportantObservation:
+        // TODO load icons
+        return label;
+      case LocalFilterTypes.ObservationType:
+        return String(label).slice(0, 1) + " " + label;
+      case LocalFilterTypes.Stability:
+        // TODO load color icon
+        return label;
+      default:
+        return label;
+    }
+  }
+
   private getLabel(observation: GenericObservation<any>) {
     if (!this.markerLabel) {
       return "";
