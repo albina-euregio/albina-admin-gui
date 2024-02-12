@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BulletinModel } from "app/models/bulletin.model";
 import { ConstantsService } from "../constants-service/constants.service";
+import { LangTexts } from "../../models/text.model";
 
 @Injectable()
 export class CopyService {
@@ -130,5 +131,27 @@ export class CopyService {
   resetCopyBulletin() {
     this.copyBulletin = false;
     this.bulletin = undefined;
+  }
+
+  setFromLangTexts(l: LangTexts) {
+    this.setTextDe(l.de);
+    this.setTextIt(l.it);
+    this.setTextEn(l.en);
+    this.setTextFr(l.fr);
+    this.setTextEs(l.es);
+    this.setTextCa(l.ca);
+    this.setTextOc(l.oc);
+  }
+
+  get toLangTexts(): LangTexts {
+    return {
+      de: this.textDe,
+      it: this.textIt,
+      en: this.textEn,
+      fr: this.textFr,
+      es: this.textEs,
+      ca: this.textCa,
+      oc: this.textOc,
+    };
   }
 }
