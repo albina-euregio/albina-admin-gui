@@ -1,5 +1,5 @@
 import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
-import { TextModel } from "./text.model";
+import { LangTexts, TextModel, convertLangTextsToJSON } from "./text.model";
 import { AuthorModel } from "./author.model";
 import * as Enums from "../enums/enums";
 
@@ -39,7 +39,7 @@ export class BulletinModel {
 
   public highlights: TextModel[];
   public avActivityHighlights: TextModel[];
-  public avActivityComment: TextModel[];
+  public avActivityComment$: LangTexts;
   public snowpackStructureHighlights: TextModel[];
   public snowpackStructureComment: TextModel[];
   public tendencyComment: TextModel[];
@@ -86,9 +86,9 @@ export class BulletinModel {
     const jsonSavedRegions = json.savedRegions;
     const savedRegions = new Array<String>();
     for (const i in jsonSavedRegions) {
-     if (jsonSavedRegions[i] !== null) {
-       savedRegions.push(jsonSavedRegions[i]);
-     }
+      if (jsonSavedRegions[i] !== null) {
+        savedRegions.push(jsonSavedRegions[i]);
+      }
     }
     bulletin.setSavedRegions(savedRegions);
 
@@ -147,7 +147,7 @@ export class BulletinModel {
         avActivityComment.push(TextModel.createFromJson(jsonAvActivityComment[i]));
       }
     }
-    bulletin.setAvActivityComment(avActivityComment);
+    bulletin.avActivityComment$ = TextModel.toLangTexts(avActivityComment);
     if (json.avActivityCommentNotes) {
       bulletin.setAvActivityCommentNotes(json.avActivityCommentNotes);
     }
@@ -248,11 +248,7 @@ export class BulletinModel {
       }
       this.avActivityHighlights = array;
 
-      array = new Array<TextModel>();
-      for (const entry of bulletin.avActivityComment) {
-        array.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.avActivityComment = array;
+      this.avActivityComment$ = {...bulletin.avActivityComment$};
 
       array = new Array<TextModel>();
       for (const entry of bulletin.snowpackStructureHighlights) {
@@ -299,7 +295,7 @@ export class BulletinModel {
       this.tendencyCommentNotes = undefined;
       this.highlights = new Array<TextModel>();
       this.avActivityHighlights = new Array<TextModel>();
-      this.avActivityComment = new Array<TextModel>();
+      this.avActivityComment$ = {} as LangTexts;
       this.snowpackStructureHighlights = new Array<TextModel>();
       this.snowpackStructureComment = new Array<TextModel>();
       this.tendencyComment = new Array<TextModel>();
@@ -572,35 +568,6 @@ export class BulletinModel {
     model.setLanguageCode(language);
     model.setText(text);
     this.avActivityHighlights.push(model);
-  }
-
-  getAvActivityComment(): TextModel[] {
-    return this.avActivityComment;
-  }
-
-  getAvActivityCommentIn(language: Enums.LanguageCode): string {
-    for (let i = this.avActivityComment.length - 1; i >= 0; i--) {
-      if (this.avActivityComment[i].getLanguageCode() === language) {
-        return this.avActivityComment[i].getText();
-      }
-    }
-  }
-
-  setAvActivityComment(avActivityComment: TextModel[]) {
-    this.avActivityComment = avActivityComment;
-  }
-
-  setAvActivityCommentIn(text: string, language: Enums.LanguageCode) {
-    for (let i = this.avActivityComment.length - 1; i >= 0; i--) {
-      if (this.avActivityComment[i].getLanguageCode() === language) {
-        this.avActivityComment[i].setText(text);
-        return;
-      }
-    }
-    const model = new TextModel();
-    model.setLanguageCode(language);
-    model.setText(text);
-    this.avActivityComment.push(model);
   }
 
   getTendency() {
@@ -891,15 +858,15 @@ export class BulletinModel {
       }
       json["avActivityHighlights"] = highlight;
     }
-    if (this.avActivityComment && this.avActivityComment !== undefined && this.avActivityComment.length > 0) {
-      const comment = [];
-      for (let i = 0; i <= this.avActivityComment.length - 1; i++) {
-        comment.push(this.avActivityComment[i].toJson());
-      }
-      json["avActivityComment"] = comment;
+    if (this.avActivityComment$) {
+      json["avActivityComment"] = convertLangTextsToJSON(this.avActivityComment$);
     }
 
-    if (this.snowpackStructureHighlights && this.snowpackStructureHighlights !== undefined && this.snowpackStructureHighlights.length > 0) {
+    if (
+      this.snowpackStructureHighlights &&
+      this.snowpackStructureHighlights !== undefined &&
+      this.snowpackStructureHighlights.length > 0
+    ) {
       const highlight = [];
       for (let i = 0; i <= this.snowpackStructureHighlights.length - 1; i++) {
         highlight.push(this.snowpackStructureHighlights[i].toJson());

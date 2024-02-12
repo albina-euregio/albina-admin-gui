@@ -30,6 +30,7 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
 
 import * as Enums from "../enums/enums";
+import { LangTexts, concatenateLangTexts } from "../models/text.model";
 
 declare var L: any;
 
@@ -77,13 +78,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
   public activeAvActivityHighlightsNotes: string;
 
   public activeAvActivityCommentTextcat: string;
-  public activeAvActivityCommentDe: string;
-  public activeAvActivityCommentIt: string;
-  public activeAvActivityCommentEn: string;
-  public activeAvActivityCommentFr: string;
-  public activeAvActivityCommentEs: string;
-  public activeAvActivityCommentCa: string;
-  public activeAvActivityCommentOc: string;
   public activeAvActivityCommentNotes: string;
 
   public activeSnowpackStructureHighlightsTextcat: string;
@@ -198,13 +192,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
     this.activeAvActivityHighlightsNotes = this.bulletin.getAvActivityHighlightsNotes();
 
     this.activeAvActivityCommentTextcat = this.bulletin.getAvActivityCommentTextcat();
-    this.activeAvActivityCommentDe = this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.de);
-    this.activeAvActivityCommentIt = this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.it);
-    this.activeAvActivityCommentEn = this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.en);
-    this.activeAvActivityCommentFr = this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.fr);
-    this.activeAvActivityCommentEs = this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.es);
-    this.activeAvActivityCommentCa = this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.ca);
-    this.activeAvActivityCommentOc = this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.oc);
     this.activeAvActivityCommentNotes = this.bulletin.getAvActivityCommentNotes();
 
     this.activeSnowpackStructureHighlightsTextcat = this.bulletin.getSnowpackStructureHighlightsTextcat();
@@ -503,13 +490,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
       this.bulletin.setAvActivityHighlightsNotes(this.activeAvActivityHighlightsNotes);
 
       this.bulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
-      this.bulletin.setAvActivityCommentIn(this.activeAvActivityCommentDe, Enums.LanguageCode.de);
-      this.bulletin.setAvActivityCommentIn(this.activeAvActivityCommentIt, Enums.LanguageCode.it);
-      this.bulletin.setAvActivityCommentIn(this.activeAvActivityCommentEn, Enums.LanguageCode.en);
-      this.bulletin.setAvActivityCommentIn(this.activeAvActivityCommentFr, Enums.LanguageCode.fr);
-      this.bulletin.setAvActivityCommentIn(this.activeAvActivityCommentEs, Enums.LanguageCode.es);
-      this.bulletin.setAvActivityCommentIn(this.activeAvActivityCommentCa, Enums.LanguageCode.ca);
-      this.bulletin.setAvActivityCommentIn(this.activeAvActivityCommentOc, Enums.LanguageCode.oc);
       this.bulletin.setAvActivityCommentNotes(this.activeAvActivityCommentNotes);
 
       this.bulletin.setSnowpackStructureHighlightsTextcat(this.activeSnowpackStructureHighlightsTextcat);
@@ -555,9 +535,9 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
     return false;
   }
 
-  openTextcat($event: Event, field: TextcatTextfield, l, textDef: string) {
+  openTextcat($event: Event | undefined, field: TextcatTextfield, l, textDef: string) {
     this.copyService.resetCopyTextcat();
-    $event.preventDefault();
+    $event?.preventDefault();
 
     // make Json to send to pm
     const pmData = JSON.stringify({
@@ -598,13 +578,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
       case "avActivityComment":
         this.copyService.setCopyTextcat(true);
         this.copyService.setTextTextcat(this.bulletin.getAvActivityCommentTextcat());
-        this.copyService.setTextDe(this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.de));
-        this.copyService.setTextIt(this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.it));
-        this.copyService.setTextEn(this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.en));
-        this.copyService.setTextFr(this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.fr));
-        this.copyService.setTextEs(this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.es));
-        this.copyService.setTextCa(this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.ca));
-        this.copyService.setTextOc(this.bulletin.getAvActivityCommentIn(Enums.LanguageCode.oc));
+        this.copyService.setFromLangTexts(this.bulletin.avActivityComment$);
         break;
       case "snowpackStructureComment":
         this.copyService.setCopyTextcat(true);
@@ -729,41 +703,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         } else {
           this.activeAvActivityCommentTextcat = this.copyService.getTextTextcat();
         }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.copyService.getTextDe();
-        } else {
-          this.activeAvActivityCommentDe = this.copyService.getTextDe();
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.copyService.getTextIt();
-        } else {
-          this.activeAvActivityCommentIt = this.copyService.getTextIt();
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.copyService.getTextEn();
-        } else {
-          this.activeAvActivityCommentEn = this.copyService.getTextEn();
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.copyService.getTextFr();
-        } else {
-          this.activeAvActivityCommentFr = this.copyService.getTextFr();
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.copyService.getTextEs();
-        } else {
-          this.activeAvActivityCommentEs = this.copyService.getTextEs();
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.copyService.getTextCa();
-        } else {
-          this.activeAvActivityCommentCa = this.copyService.getTextCa();
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.copyService.getTextOc();
-        } else {
-          this.activeAvActivityCommentOc = this.copyService.getTextOc();
-        }
+        this.bulletin.avActivityComment$ = concatenateLangTexts(this.bulletin.avActivityComment$, this.copyService.toLangTexts);
         break;
       case "snowpackStructureComment":
         if (this.activeSnowpackStructureCommentTextcat !== undefined) {
@@ -880,13 +820,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         break;
       case "avActivityComment":
         this.activeAvActivityCommentTextcat = undefined;
-        this.activeAvActivityCommentDe = undefined;
-        this.activeAvActivityCommentIt = undefined;
-        this.activeAvActivityCommentEn = undefined;
-        this.activeAvActivityCommentFr = undefined;
-        this.activeAvActivityCommentEs = undefined;
-        this.activeAvActivityCommentCa = undefined;
-        this.activeAvActivityCommentOc = undefined;
+        this.bulletin.avActivityComment$ = {} as LangTexts;
         break;
       case "snowpackStructureComment":
         this.activeSnowpackStructureCommentTextcat = undefined;
@@ -918,7 +852,15 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
     e.preventDefault();
     if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk" && e.data.source !== "react-devtools-content-script") {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
-
+      if (pmData.textField === "activeAvActivityComment") {
+        if (pmData.textDef === undefined || pmData.textDef === "") {
+          this[pmData.textField + "Textcat"] = "";
+          this.bulletin.avActivityComment$ = {} as LangTexts;
+        } else {
+          this[pmData.textField + "Textcat"] = pmData.textDef;
+          this.bulletin.avActivityComment$ = convertTextcatToLangTexts(pmData);
+        }
+      } else {
       if (pmData.textDef === undefined || pmData.textDef === "") {
         this[pmData.textField + "Textcat"] = "";
         this[pmData.textField + "It"] = undefined;
@@ -929,7 +871,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         this[pmData.textField + "Ca"] = undefined;
         this[pmData.textField + "Oc"] = undefined;
         this.setTexts();
-        this.hideDialog();
       } else {
         this[pmData.textField + "Textcat"] = pmData.textDef;
         this[pmData.textField + "It"] = pmData.textIt;
@@ -940,13 +881,14 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         this[pmData.textField + "Ca"] = pmData.textCa;
         this[pmData.textField + "Oc"] = pmData.textOc;
         this.setTexts();
-        this.hideDialog();
       }
+      }
+      this.hideDialog();
       if (this.bulletin !== null && this.bulletin !== undefined) {
         this.updateBulletinOnServer();
       }
     }
-  };
+  }
 
   openLoadAvActivityCommentExampleTextModal(template: TemplateRef<any>) {
     this.loadAvActivityCommentExampleTextModalRef = this.modalService.show(template, this.config);
@@ -960,82 +902,12 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         } else {
           this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentNewSnowTextcat;
         }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentNewSnowDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentNewSnowDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentNewSnowIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentNewSnowIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentNewSnowEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentNewSnowEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentNewSnowFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentNewSnowFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentNewSnowEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentNewSnowEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentNewSnowCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentNewSnowCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentNewSnowOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentNewSnowOc;
-        }
         break;
       case "windSlab":
         if (this.activeAvActivityCommentTextcat !== undefined) {
           this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentWindSlabTextcat;
         } else {
           this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentWindSlabTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentWindSlabDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentWindSlabDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentWindSlabIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentWindSlabIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentWindSlabEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentWindSlabEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentWindSlabFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentWindSlabFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentWindSlabEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentWindSlabEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentWindSlabCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentWindSlabCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentWindSlabOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentWindSlabOc;
         }
         break;
       case "persistentWeakLayers":
@@ -1044,82 +916,12 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         } else {
           this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentPersistentWeakLayersTextcat;
         }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentPersistentWeakLayersDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentPersistentWeakLayersDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentPersistentWeakLayersIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentPersistentWeakLayersIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentPersistentWeakLayersEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentPersistentWeakLayersEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentPersistentWeakLayersFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentPersistentWeakLayersFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentPersistentWeakLayersEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentPersistentWeakLayersEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentPersistentWeakLayersCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentPersistentWeakLayersCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentPersistentWeakLayersOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentPersistentWeakLayersOc;
-        }
         break;
       case "wetSnow":
         if (this.activeAvActivityCommentTextcat !== undefined) {
           this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentWetSnowTextcat;
         } else {
           this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentWetSnowTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentWetSnowDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentWetSnowDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentWetSnowIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentWetSnowIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentWetSnowEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentWetSnowEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentWetSnowFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentWetSnowFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentWetSnowEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentWetSnowEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentWetSnowCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentWetSnowCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentWetSnowOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentWetSnowOc;
         }
         break;
       case "glidingSnow":
@@ -1128,41 +930,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         } else {
           this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentGlidingSnowTextcat;
         }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentGlidingSnowDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentGlidingSnowDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentGlidingSnowIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentGlidingSnowIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentGlidingSnowEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentGlidingSnowEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentGlidingSnowFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentGlidingSnowFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentGlidingSnowEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentGlidingSnowEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentGlidingSnowCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentGlidingSnowCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentGlidingSnowOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentGlidingSnowOc;
-        }
         break;
       case "favourableSituation":
         if (this.activeAvActivityCommentTextcat !== undefined) {
@@ -1170,46 +937,11 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy, OnChanges 
         } else {
           this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentFavourableSituationTextcat;
         }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentFavourableSituationDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentFavourableSituationDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentFavourableSituationIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentFavourableSituationIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentFavourableSituationEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentFavourableSituationEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentFavourableSituationFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentFavourableSituationFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentFavourableSituationEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentFavourableSituationEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentFavourableSituationCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentFavourableSituationCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentFavourableSituationOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentFavourableSituationOc;
-        }
         break;
       default:
         break;
     }
-    this.setTexts();
+    this.openTextcat(undefined, "activeAvActivityComment", this.settingsService.getLangString(), this.activeAvActivityCommentTextcat);
     this.loadAvActivityCommentExampleTextModalRef.hide();
   }
 
@@ -1591,4 +1323,16 @@ interface TextcatLegacyOut {
   textFr: string;
   textCa: string;
   textOc: string;
+}
+
+function convertTextcatToLangTexts(pmData: TextcatLegacyOut): LangTexts {
+  return {
+    it: pmData.textIt,
+    de: pmData.textDe_AT,
+    en: pmData.textEn,
+    fr: pmData.textFr,
+    es: pmData.textEs,
+    ca: pmData.textCa,
+    oc: pmData.textOc,
+  };
 }
