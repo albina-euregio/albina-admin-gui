@@ -599,7 +599,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="disabled"
-                [(ngModel)]="activeAvActivityHighlightsNotes"
+                [(ngModel)]="bulletin.avActivityHighlightsNotes"
                 (focusout)="onNotesFocusOut($event)"
                 placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
               ></textarea>
@@ -869,7 +869,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="disabled"
-                [(ngModel)]="activeAvActivityCommentNotes"
+                [(ngModel)]="bulletin.avActivityCommentNotes"
                 (focusout)="onNotesFocusOut($event)"
                 placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
               ></textarea>
@@ -1221,7 +1221,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="disabled"
-                [(ngModel)]="activeSnowpackStructureCommentNotes"
+                [(ngModel)]="bulletin.snowpackStructureCommentNotes"
                 (focusout)="onNotesFocusOut($event)"
                 placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
               ></textarea>
@@ -1583,7 +1583,7 @@
                 rows="5"
                 class="form-control"
                 [disabled]="disabled"
-                [(ngModel)]="activeTendencyCommentNotes"
+                [(ngModel)]="bulletin.tendencyCommentNotes"
                 (focusout)="onNotesFocusOut($event)"
                 placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
               ></textarea>
