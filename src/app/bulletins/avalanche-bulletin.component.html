@@ -236,9 +236,8 @@
                 (click)="
                   openTextcat(
                     $event,
-                    'activeHighlights',
-                    this.settingsService.getLangString(),
-                    this.activeHighlightsTextcat
+                    'highlights',
+                    bulletin.highlightsTextcat
                   )
                 "
               >
@@ -288,7 +287,7 @@
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeHighlightsDe | html"
+              [ngModel]="bulletin.highlights$.de | html"
             ></textarea>
             <textarea
               *ngIf="this.settingsService.getLangString() === 'it'"
@@ -297,7 +296,7 @@
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeHighlightsIt | html"
+              [ngModel]="bulletin.highlights$.it | html"
             ></textarea>
             <textarea
               *ngIf="this.settingsService.getLangString() === 'en'"
@@ -306,7 +305,7 @@
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeHighlightsEn | html"
+              [ngModel]="bulletin.highlights$.en | html"
             ></textarea>
             <textarea
               *ngIf="this.settingsService.getLangString() === 'fr'"
@@ -315,7 +314,7 @@
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeHighlightsFr | html"
+              [ngModel]="bulletin.highlights$.fr | html"
             ></textarea>
             <textarea
               *ngIf="this.settingsService.getLangString() === 'es'"
@@ -324,7 +323,7 @@
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeHighlightsEs | html"
+              [ngModel]="bulletin.highlights$.es | html"
             ></textarea>
             <textarea
               *ngIf="this.settingsService.getLangString() === 'ca'"
@@ -333,7 +332,7 @@
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeHighlightsCa | html"
+              [ngModel]="bulletin.highlights$.ca | html"
             ></textarea>
             <textarea
               *ngIf="this.settingsService.getLangString() === 'oc'"
@@ -342,7 +341,7 @@
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeHighlightsOc | html"
+              [ngModel]="bulletin.highlights$.oc | html"
             ></textarea>
           </div>
 
@@ -378,7 +377,7 @@
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeHighlightsDe | html"
+                [ngModel]="bulletin.highlights$.de | html"
               ></textarea>
             </div>
             <div
@@ -392,7 +391,7 @@
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeHighlightsIt | html"
+                [ngModel]="bulletin.highlights$.it | html"
               ></textarea>
             </div>
             <div
@@ -406,7 +405,7 @@
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeHighlightsEn | html"
+                [ngModel]="bulletin.highlights$.en | html"
               ></textarea>
             </div>
             <div
@@ -420,7 +419,7 @@
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeHighlightsFr | html"
+                [ngModel]="bulletin.highlights$.fr | html"
               ></textarea>
             </div>
             <div
@@ -434,7 +433,7 @@
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeHighlightsEs | html"
+                [ngModel]="bulletin.highlights$.es | html"
               ></textarea>
             </div>
             <div
@@ -448,7 +447,7 @@
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeHighlightsCa | html"
+                [ngModel]="bulletin.highlights$.ca | html"
               ></textarea>
             </div>
             <div
@@ -462,7 +461,7 @@
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeHighlightsOc | html"
+                [ngModel]="bulletin.highlights$.oc | html"
               ></textarea>
             </div>
           </div>
@@ -488,9 +487,8 @@
                     (click)="
                       openTextcat(
                         $event,
-                        'activeAvActivityHighlights',
-                        this.settingsService.getLangString(),
-                        this.activeAvActivityHighlightsTextcat
+                        'avActivityHighlights',
+                        bulletin.avActivityHighlightsTextcat
                       )
                     "
                   >
@@ -537,7 +535,7 @@
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeAvActivityHighlightsDe | html"
+                  [ngModel]="bulletin.avActivityHighlights$.de | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'it'"
@@ -546,7 +544,7 @@
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeAvActivityHighlightsIt | html"
+                  [ngModel]="bulletin.avActivityHighlights$.it | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'en'"
@@ -555,7 +553,7 @@
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeAvActivityHighlightsEn | html"
+                  [ngModel]="bulletin.avActivityHighlights$.en | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'fr'"
@@ -564,7 +562,7 @@
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeAvActivityHighlightsFr | html"
+                  [ngModel]="bulletin.avActivityHighlights$.fr | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'es'"
@@ -573,7 +571,7 @@
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeAvActivityHighlightsEs | html"
+                  [ngModel]="bulletin.avActivityHighlights$.es | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'ca'"
@@ -582,7 +580,7 @@
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeAvActivityHighlightsCa | html"
+                  [ngModel]="bulletin.avActivityHighlights$.ca | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'oc'"
@@ -591,7 +589,7 @@
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeAvActivityHighlightsOc | html"
+                  [ngModel]="bulletin.avActivityHighlights$.oc | html"
                 ></textarea>
               </div>
             </div>
@@ -639,7 +637,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeAvActivityHighlightsDe | html"
+                [ngModel]="bulletin.avActivityHighlights$.de | html"
               ></textarea>
             </div>
             <div
@@ -653,7 +651,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeAvActivityHighlightsIt | html"
+                [ngModel]="bulletin.avActivityHighlights$.it | html"
               ></textarea>
             </div>
             <div
@@ -667,7 +665,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeAvActivityHighlightsEn | html"
+                [ngModel]="bulletin.avActivityHighlights$.en | html"
               ></textarea>
             </div>
             <div
@@ -681,7 +679,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeAvActivityHighlightsFr | html"
+                [ngModel]="bulletin.avActivityHighlights$.fr | html"
               ></textarea>
             </div>
             <div
@@ -695,7 +693,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeAvActivityHighlightsEs | html"
+                [ngModel]="bulletin.avActivityHighlights$.es | html"
               ></textarea>
             </div>
             <div
@@ -709,7 +707,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeAvActivityHighlightsCa | html"
+                [ngModel]="bulletin.avActivityHighlights$.ca | html"
               ></textarea>
             </div>
             <div
@@ -723,7 +721,7 @@
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeAvActivityHighlightsOc | html"
+                [ngModel]="bulletin.avActivityHighlights$.oc | html"
               ></textarea>
             </div>
           </div>
@@ -747,9 +745,8 @@
                     (click)="
                       openTextcat(
                         $event,
-                        'activeAvActivityComment',
-                        this.settingsService.getLangString(),
-                        activeAvActivityCommentTextcat
+                        'avActivityComment',
+                        bulletin.avActivityCommentTextcat
                       )
                     "
                   >
@@ -1091,9 +1088,8 @@
                     (click)="
                       openTextcat(
                         $event,
-                        'activeSnowpackStructureComment',
-                        this.settingsService.getLangString(),
-                        this.activeSnowpackStructureCommentTextcat
+                        'snowpackStructureComment',
+                        bulletin.snowpackStructureCommentTextcat
                       )
                     "
                   >
@@ -1159,7 +1155,7 @@
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeSnowpackStructureCommentDe | html"
+                  [ngModel]="bulletin.snowpackStructureComment$.de | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'it'"
@@ -1168,7 +1164,7 @@
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeSnowpackStructureCommentIt | html"
+                  [ngModel]="bulletin.snowpackStructureComment$.it | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'en'"
@@ -1177,7 +1173,7 @@
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeSnowpackStructureCommentEn | html"
+                  [ngModel]="bulletin.snowpackStructureComment$.en | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'fr'"
@@ -1186,7 +1182,7 @@
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeSnowpackStructureCommentFr | html"
+                  [ngModel]="bulletin.snowpackStructureComment$.fr | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'es'"
@@ -1195,7 +1191,7 @@
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeSnowpackStructureCommentEs | html"
+                  [ngModel]="bulletin.snowpackStructureComment$.es | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'ca'"
@@ -1204,7 +1200,7 @@
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeSnowpackStructureCommentCa | html"
+                  [ngModel]="bulletin.snowpackStructureComment$.ca | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'oc'"
@@ -1213,7 +1209,7 @@
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeSnowpackStructureCommentOc | html"
+                  [ngModel]="bulletin.snowpackStructureComment$.oc | html"
                 ></textarea>
               </div>
             </div>
@@ -1262,7 +1258,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeSnowpackStructureCommentDe | html"
+                [ngModel]="bulletin.snowpackStructureComment$.de | html"
               ></textarea>
             </div>
             <div
@@ -1276,7 +1272,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeSnowpackStructureCommentIt | html"
+                [ngModel]="bulletin.snowpackStructureComment$.it | html"
               ></textarea>
             </div>
             <div
@@ -1290,7 +1286,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeSnowpackStructureCommentEn | html"
+                [ngModel]="bulletin.snowpackStructureComment$.en | html"
               ></textarea>
             </div>
             <div
@@ -1304,7 +1300,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeSnowpackStructureCommentFr | html"
+                [ngModel]="bulletin.snowpackStructureComment$.fr | html"
               ></textarea>
             </div>
             <div
@@ -1318,7 +1314,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeSnowpackStructureCommentEs | html"
+                [ngModel]="bulletin.snowpackStructureComment$.es | html"
               ></textarea>
             </div>
             <div
@@ -1332,7 +1328,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeSnowpackStructureCommentCa | html"
+                [ngModel]="bulletin.snowpackStructureComment$.ca | html"
               ></textarea>
             </div>
             <div
@@ -1346,7 +1342,7 @@
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="activeSnowpackStructureCommentOc | html"
+                [ngModel]="bulletin.snowpackStructureComment$.oc | html"
               ></textarea>
             </div>
           </div>
@@ -1469,9 +1465,8 @@
                     (click)="
                       openTextcat(
                         $event,
-                        'activeTendencyComment',
-                        this.settingsService.getLangString(),
-                        this.activeTendencyCommentTextcat
+                        'tendencyComment',
+                        bulletin.tendencyCommentTextcat
                       )
                     "
                   >
@@ -1522,7 +1517,7 @@
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeTendencyCommentDe | html"
+                  [ngModel]="bulletin.tendencyComment$.de | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'it'"
@@ -1531,7 +1526,7 @@
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeTendencyCommentIt | html"
+                  [ngModel]="bulletin.tendencyComment$.it | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'en'"
@@ -1540,7 +1535,7 @@
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeTendencyCommentEn | html"
+                  [ngModel]="bulletin.tendencyComment$.en | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'fr'"
@@ -1549,7 +1544,7 @@
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeTendencyCommentFr | html"
+                  [ngModel]="bulletin.tendencyComment$.fr | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'es'"
@@ -1558,7 +1553,7 @@
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeTendencyCommentEs | html"
+                  [ngModel]="bulletin.tendencyComment$.es | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'ca'"
@@ -1567,7 +1562,7 @@
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeTendencyCommentCa | html"
+                  [ngModel]="bulletin.tendencyComment$.ca | html"
                 ></textarea>
                 <textarea
                   *ngIf="this.settingsService.getLangString() === 'oc'"
@@ -1576,7 +1571,7 @@
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="activeTendencyCommentOc | html"
+                  [ngModel]="bulletin.tendencyComment$.oc | html"
                 ></textarea>
               </div>
             </div>
@@ -1629,7 +1624,7 @@
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeTendencyCommentDe | html"
+              [ngModel]="bulletin.tendencyComment$.de | html"
             ></textarea>
           </div>
           <div
@@ -1643,7 +1638,7 @@
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeTendencyCommentIt | html"
+              [ngModel]="bulletin.tendencyComment$.it | html"
             ></textarea>
           </div>
           <div
@@ -1657,7 +1652,7 @@
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeTendencyCommentEn | html"
+              [ngModel]="bulletin.tendencyComment$.en | html"
             ></textarea>
           </div>
           <div
@@ -1671,7 +1666,7 @@
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeTendencyCommentFr | html"
+              [ngModel]="bulletin.tendencyComment$.fr | html"
             ></textarea>
           </div>
           <div
@@ -1685,7 +1680,7 @@
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeTendencyCommentEs | html"
+              [ngModel]="bulletin.tendencyComment$.es | html"
             ></textarea>
           </div>
           <div
@@ -1699,7 +1694,7 @@
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeTendencyCommentCa | html"
+              [ngModel]="bulletin.tendencyComment$.ca | html"
             ></textarea>
           </div>
           <div
@@ -1713,7 +1708,7 @@
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="activeTendencyCommentOc | html"
+              [ngModel]="bulletin.tendencyComment$.oc | html"
             ></textarea>
           </div>
         </div>
@@ -1725,3 +1720,131 @@
   </accordion>
 </main>
 </div>
+
+<ng-template #loadAvActivityCommentExampleTextTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.loadAvActivityCommentExampleTextDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadAvActivityCommentExampleText('newSnow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.newSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadAvActivityCommentExampleText('windSlab')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.windSlab" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadAvActivityCommentExampleText('persistentWeakLayers')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.persistentWeakLayers" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadAvActivityCommentExampleText('wetSnow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.wetSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadAvActivityCommentExampleText('glidingSnow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.glidingSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadAvActivityCommentExampleText('favourableSituation')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.favourableSituation" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-default"
+      (click)="loadAvActivityCommentExampleTextCancel()"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.cancel" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #loadSnowpackStructureCommentExampleTextTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.loadAvActivityCommentExampleTextDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSnowpackStructureCommentExampleText('newSnow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.newSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSnowpackStructureCommentExampleText('windSlab')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.windSlab" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSnowpackStructureCommentExampleText('persistentWeakLayers')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.persistentWeakLayers" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSnowpackStructureCommentExampleText('wetSnow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.wetSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSnowpackStructureCommentExampleText('glidingSnow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.glidingSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadSnowpackStructureCommentExampleText('favourableSituation')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.favourableSituation" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-default"
+      (click)="loadSnowpackStructureCommentExampleTextCancel()"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.cancel" | translate }}
+    </button>
+  </div>
+</ng-template>

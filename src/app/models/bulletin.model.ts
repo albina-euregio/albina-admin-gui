@@ -37,12 +37,12 @@ export class BulletinModel {
   public snowpackStructureCommentNotes: string;
   public tendencyCommentNotes: string;
 
-  public highlights: TextModel[];
-  public avActivityHighlights: TextModel[];
+  public highlights$: LangTexts;
+  public avActivityHighlights$: LangTexts;
   public avActivityComment$: LangTexts;
-  public snowpackStructureHighlights: TextModel[];
-  public snowpackStructureComment: TextModel[];
-  public tendencyComment: TextModel[];
+  public snowpackStructureHighlights$: LangTexts;
+  public snowpackStructureComment$: LangTexts;
+  public tendencyComment$: LangTexts;
 
   public tendency: Enums.Tendency;
 
@@ -120,7 +120,7 @@ export class BulletinModel {
         highlights.push(TextModel.createFromJson(jsonHighlights[i]));
       }
     }
-    bulletin.setHighlights(highlights);
+    bulletin.highlights$ = TextModel.toLangTexts(highlights);
 
     if (json.avActivityHighlightsTextcat) {
       bulletin.setAvActivityHighlightsTextcat(json.avActivityHighlightsTextcat);
@@ -132,7 +132,7 @@ export class BulletinModel {
         avActivityHighlights.push(TextModel.createFromJson(jsonAvActivityHighlights[i]));
       }
     }
-    bulletin.setAvActivityHighlights(avActivityHighlights);
+    bulletin.avActivityHighlights$ = TextModel.toLangTexts(avActivityHighlights);
     if (json.avActivityHighlightsNotes) {
       bulletin.setAvActivityHighlightsNotes(json.avActivityHighlightsNotes);
     }
@@ -162,7 +162,7 @@ export class BulletinModel {
         snowpackStructureHighlights.push(TextModel.createFromJson(jsonSnowpackStructureHighlight[i]));
       }
     }
-    bulletin.setSnowpackStructureHighlight(snowpackStructureHighlights);
+    bulletin.snowpackStructureHighlights$ = TextModel.toLangTexts(snowpackStructureHighlights);
     if (json.snowpackStructureHighlightsNotes) {
       bulletin.setSnowpackStructureHighlightsNotes(json.SnowpackStructureHighlightsNotes);
     }
@@ -177,7 +177,7 @@ export class BulletinModel {
         snowpackStructureComment.push(TextModel.createFromJson(jsonSnowpackStructureComment[i]));
       }
     }
-    bulletin.setSnowpackStructureComment(snowpackStructureComment);
+    bulletin.snowpackStructureComment$ = TextModel.toLangTexts(snowpackStructureComment);
     if (json.snowpackStructureCommentNotes) {
       bulletin.setSnowpackStructureCommentNotes(json.snowpackStructureCommentNotes);
     }
@@ -192,7 +192,7 @@ export class BulletinModel {
         tendencyComment.push(TextModel.createFromJson(jsonTendencyComment[i]));
       }
     }
-    bulletin.setTendencyComment(tendencyComment);
+    bulletin.tendencyComment$ = TextModel.toLangTexts(tendencyComment);
     if (json.tendencyCommentNotes) {
       bulletin.setTendencyCommentNotes(json.tendencyCommentNotes);
     }
@@ -236,37 +236,12 @@ export class BulletinModel {
       this.snowpackStructureCommentNotes = bulletin.snowpackStructureCommentNotes;
       this.tendencyCommentNotes = bulletin.tendencyCommentNotes;
 
-      let array = new Array<TextModel>();
-      for (const entry of bulletin.highlights) {
-        array.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.highlights = array;
-
-      array = new Array<TextModel>();
-      for (const entry of bulletin.avActivityHighlights) {
-        array.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.avActivityHighlights = array;
-
+      this.highlights$ = {...bulletin.highlights$};
+      this.avActivityHighlights$ = {...bulletin.avActivityHighlights$};
       this.avActivityComment$ = {...bulletin.avActivityComment$};
-
-      array = new Array<TextModel>();
-      for (const entry of bulletin.snowpackStructureHighlights) {
-        array.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.snowpackStructureHighlights = array;
-
-      array = new Array<TextModel>();
-      for (const entry of bulletin.snowpackStructureComment) {
-        array.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.snowpackStructureComment = array;
-
-      array = new Array<TextModel>();
-      for (const entry of bulletin.tendencyComment) {
-        array.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.tendencyComment = array;
+      this.snowpackStructureHighlights$ = {...bulletin.snowpackStructureHighlights$};
+      this.snowpackStructureComment$ = {...bulletin.snowpackStructureComment$};
+      this.tendencyComment$ = {...bulletin.tendencyComment$};
 
       this.tendency = bulletin.tendency;
       this.dangerPattern1 = bulletin.dangerPattern1;
@@ -293,12 +268,11 @@ export class BulletinModel {
       this.snowpackStructureHighlightsNotes = undefined;
       this.snowpackStructureCommentNotes = undefined;
       this.tendencyCommentNotes = undefined;
-      this.highlights = new Array<TextModel>();
-      this.avActivityHighlights = new Array<TextModel>();
+      this.avActivityHighlights$ = {} as LangTexts;
       this.avActivityComment$ = {} as LangTexts;
-      this.snowpackStructureHighlights = new Array<TextModel>();
-      this.snowpackStructureComment = new Array<TextModel>();
-      this.tendencyComment = new Array<TextModel>();
+      this.snowpackStructureHighlights$ = {} as LangTexts;
+      this.snowpackStructureComment$ = {} as LangTexts;
+      this.tendencyComment$ = {} as LangTexts;
       this.tendency = undefined;
       this.dangerPattern1 = undefined;
       this.dangerPattern2 = undefined;
@@ -504,72 +478,6 @@ export class BulletinModel {
     this.highlightsTextcat = highlightsTextcat;
   }
 
-  getHighlights(): TextModel[] {
-    return this.highlights;
-  }
-
-  getHighlightsIn(language: Enums.LanguageCode): string {
-    for (let i = this.highlights.length - 1; i >= 0; i--) {
-      if (this.highlights[i].getLanguageCode() === language) {
-        return this.highlights[i].getText();
-      }
-    }
-  }
-
-  getHighlightsInString(language: string): string {
-    return this.getHighlightsIn(Enums.LanguageCode[language]);
-  }
-
-  setHighlights(highlights: TextModel[]) {
-    this.highlights = highlights;
-  }
-
-  setHighlightsIn(text: string, language: Enums.LanguageCode) {
-    for (let i = this.highlights.length - 1; i >= 0; i--) {
-      if (this.highlights[i].getLanguageCode() === language) {
-        this.highlights[i].setText(text);
-        return;
-      }
-    }
-    const model = new TextModel();
-    model.setLanguageCode(language);
-    model.setText(text);
-    this.highlights.push(model);
-  }
-
-  getAvActivityHighlights(): TextModel[] {
-    return this.avActivityHighlights;
-  }
-
-  getAvActivityHighlightsIn(language: Enums.LanguageCode): string {
-    for (let i = this.avActivityHighlights.length - 1; i >= 0; i--) {
-      if (this.avActivityHighlights[i].getLanguageCode() === language) {
-        return this.avActivityHighlights[i].getText();
-      }
-    }
-  }
-
-  getAvActivityHighlightsInString(language: string): string {
-    return this.getAvActivityHighlightsIn(Enums.LanguageCode[language]);
-  }
-
-  setAvActivityHighlights(avActivityHighlights: TextModel[]) {
-    this.avActivityHighlights = avActivityHighlights;
-  }
-
-  setAvActivityHighlightsIn(text: string, language: Enums.LanguageCode) {
-    for (let i = this.avActivityHighlights.length - 1; i >= 0; i--) {
-      if (this.avActivityHighlights[i].getLanguageCode() === language) {
-        this.avActivityHighlights[i].setText(text);
-        return;
-      }
-    }
-    const model = new TextModel();
-    model.setLanguageCode(language);
-    model.setText(text);
-    this.avActivityHighlights.push(model);
-  }
-
   getTendency() {
     return this.tendency;
   }
@@ -592,93 +500,6 @@ export class BulletinModel {
 
   setDangerPattern2(dangerPattern: Enums.DangerPattern) {
     this.dangerPattern2 = dangerPattern;
-  }
-
-  getSnowpackStructureHighlightIn(language: Enums.LanguageCode): string {
-    for (let i = this.snowpackStructureHighlights.length - 1; i >= 0; i--) {
-      if (this.snowpackStructureHighlights[i].getLanguageCode() === language) {
-        return this.snowpackStructureHighlights[i].getText();
-      }
-    }
-  }
-
-  getSnowpackStructureHighlightInString(language: string): string {
-    return this.getSnowpackStructureHighlightIn(Enums.LanguageCode[language]);
-  }
-
-  setSnowpackStructureHighlight(snowpackStructureHighlights: TextModel[]) {
-    this.snowpackStructureHighlights = snowpackStructureHighlights;
-  }
-
-  setSnowpackStructureHighlightsIn(text: string, language: Enums.LanguageCode) {
-    for (let i = this.snowpackStructureHighlights.length - 1; i >= 0; i--) {
-      if (this.snowpackStructureHighlights[i].getLanguageCode() === language) {
-        this.snowpackStructureHighlights[i].setText(text);
-        return;
-      }
-    }
-    const model = new TextModel();
-    model.setLanguageCode(language);
-    model.setText(text);
-    this.snowpackStructureHighlights.push(model);
-  }
-
-  getSnowpackStructureComment(): TextModel[] {
-    return this.snowpackStructureComment;
-  }
-
-  getSnowpackStructureCommentIn(language: Enums.LanguageCode): string {
-    for (let i = this.snowpackStructureComment.length - 1; i >= 0; i--) {
-      if (this.snowpackStructureComment[i].getLanguageCode() === language) {
-        return this.snowpackStructureComment[i].getText();
-      }
-    }
-  }
-
-  setSnowpackStructureComment(snowpackStructureComment: TextModel[]) {
-    this.snowpackStructureComment = snowpackStructureComment;
-  }
-
-  setSnowpackStructureCommentIn(text: string, language: Enums.LanguageCode) {
-    for (let i = this.snowpackStructureComment.length - 1; i >= 0; i--) {
-      if (this.snowpackStructureComment[i].getLanguageCode() === language) {
-        this.snowpackStructureComment[i].setText(text);
-        return;
-      }
-    }
-    const model = new TextModel();
-    model.setLanguageCode(language);
-    model.setText(text);
-    this.snowpackStructureComment.push(model);
-  }
-
-  getTendencyComment(): TextModel[] {
-    return this.tendencyComment;
-  }
-
-  getTendencyCommentIn(language: Enums.LanguageCode): string {
-    for (let i = this.tendencyComment.length - 1; i >= 0; i--) {
-      if (this.tendencyComment[i].getLanguageCode() === language) {
-        return this.tendencyComment[i].getText();
-      }
-    }
-  }
-
-  setTendencyComment(tendencyComment: TextModel[]) {
-    this.tendencyComment = tendencyComment;
-  }
-
-  setTendencyCommentIn(text: string, language: Enums.LanguageCode) {
-    for (let i = this.tendencyComment.length - 1; i >= 0; i--) {
-      if (this.tendencyComment[i].getLanguageCode() === language) {
-        this.tendencyComment[i].setText(text);
-        return;
-      }
-    }
-    const model = new TextModel();
-    model.setLanguageCode(language);
-    model.setText(text);
-    this.tendencyComment.push(model);
   }
 
   getForenoonDangerRatingAbove(): Enums.DangerRating {
@@ -843,50 +664,28 @@ export class BulletinModel {
       json["tendencyCommentNotes"] = this.tendencyCommentNotes;
     }
 
-    if (this.highlights && this.highlights !== undefined && this.highlights.length > 0) {
-      const highlight = [];
-      for (let i = 0; i <= this.highlights.length - 1; i++) {
-        highlight.push(this.highlights[i].toJson());
-      }
-      json["highlights"] = highlight;
+    if (this.highlights$) {
+      json["highlights"] = convertLangTextsToJSON(this.highlights$);
     }
 
-    if (this.avActivityHighlights && this.avActivityHighlights !== undefined && this.avActivityHighlights.length > 0) {
-      const highlight = [];
-      for (let i = 0; i <= this.avActivityHighlights.length - 1; i++) {
-        highlight.push(this.avActivityHighlights[i].toJson());
-      }
-      json["avActivityHighlights"] = highlight;
+    if (this.avActivityHighlights$) {
+      json["avActivityHighlights"] = convertLangTextsToJSON(this.avActivityHighlights$);
     }
+
     if (this.avActivityComment$) {
       json["avActivityComment"] = convertLangTextsToJSON(this.avActivityComment$);
     }
 
-    if (
-      this.snowpackStructureHighlights &&
-      this.snowpackStructureHighlights !== undefined &&
-      this.snowpackStructureHighlights.length > 0
-    ) {
-      const highlight = [];
-      for (let i = 0; i <= this.snowpackStructureHighlights.length - 1; i++) {
-        highlight.push(this.snowpackStructureHighlights[i].toJson());
-      }
-      json["snowpackStructureHighlights"] = highlight;
-    }
-    if (this.snowpackStructureComment && this.snowpackStructureComment !== undefined && this.snowpackStructureComment.length > 0) {
-      const comment = [];
-      for (let i = 0; i <= this.snowpackStructureComment.length - 1; i++) {
-        comment.push(this.snowpackStructureComment[i].toJson());
-      }
-      json["snowpackStructureComment"] = comment;
+    if (this.snowpackStructureHighlights$) {
+      json["snowpackStructureHighlights"] = convertLangTextsToJSON(this.snowpackStructureHighlights$);
     }
 
-    if (this.tendencyComment && this.tendencyComment !== undefined && this.tendencyComment.length > 0) {
-      const comment = [];
-      for (let i = 0; i <= this.tendencyComment.length - 1; i++) {
-        comment.push(this.tendencyComment[i].toJson());
-      }
-      json["tendencyComment"] = comment;
+    if (this.snowpackStructureComment$) {
+      json["snowpackStructureComment"] = convertLangTextsToJSON(this.snowpackStructureComment$);
+    }
+
+    if (this.tendencyComment$) {
+      json["tendencyComment"] = convertLangTextsToJSON(this.tendencyComment$);
     }
 
     if (this.tendency && this.tendency !== undefined) {

@@ -2100,35 +2100,3 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.checkBulletinsModalRef.hide();
   }
 }
-
-type TextcatTextfield = 
-|"activeHighlights"
-|"activeAvActivityHighlights"
-|"activeAvActivityComment"
-|"activeSnowpackStructureHighlights"
-|"activeSnowpackStructureComment"
-|"activeTendencyComment"
-|"text"
-
-// alias pmData, alias inputDef
-interface TextcatLegacyIn {
-  textDef: string;
-  textField: TextcatTextfield;
-  currentLang: string;
-  region: string;
-}
-
-// alias pmData, alias outputText
-interface TextcatLegacyOut {
-  textDef: string;
-  textField: TextcatTextfield;
-  textDe: string;
-  textDe_AT: string;
-  textDe_CH: string;
-  textIt: string;
-  textEn: string;
-  textEs: string;
-  textFr: string;
-  textCa: string;
-  textOc: string;
-}

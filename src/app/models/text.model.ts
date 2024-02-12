@@ -62,7 +62,7 @@ export class TextModel {
 }
 
 export function concatenateLangTexts(t1: LangTexts, t2: LangTexts): LangTexts {
-  return Object.fromEntries(LANGUAGES.map((l) => [l, `${t1[l] || ""} ${t2[l]}||''`.trim()])) as LangTexts;
+  return Object.fromEntries(LANGUAGES.map((l) => [l, `${t1[l] || ""} ${t2[l] || '' }`.trim()])) as LangTexts;
 }
 
 export function convertLangTextsToJSON(t: LangTexts): { languageCode: string; text: string }[] {
