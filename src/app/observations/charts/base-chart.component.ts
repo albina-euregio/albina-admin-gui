@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { LocalFilterTypes } from "../models/generic-observation.model";
 import { type GenericFilterToggleData } from "../observation-filter.service";
 import { ObservationMarkerService } from "../observation-marker.service";
@@ -40,7 +41,10 @@ export class BaseComponent {
     }
   }
 
-  constructor(protected observationMarkerService: ObservationMarkerService) {
+  constructor(
+    protected observationMarkerService: ObservationMarkerService,
+    protected translateService: TranslateService)
+  {
   }
 
   private resetTimeout() {
@@ -94,6 +98,26 @@ export class BaseComponent {
       }
     } else {
       return "#000000";
+    }
+  }
+
+  getItemLabel(entry) : string {
+    let value: string;
+    if (this.type === LocalFilterTypes.Aspect) {
+      value = entry;
+    } else {
+      value = entry.value[0];
+    }
+
+    let result = this.translationBase
+      ? this.translateService.instant(this.translationBase + value)
+      : value;
+
+    if (this.labelType === this.type) {
+      const label = this.observationMarkerService.getLegendLabel(this.labelType, result, value);
+      return label;
+    } else {
+      return result;
     }
   }
 }
