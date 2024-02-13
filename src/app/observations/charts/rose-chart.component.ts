@@ -1,11 +1,11 @@
 import { Component } from "@angular/core";
 import { BaseComponent } from "./base-chart.component";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import { CommonModule } from "@angular/common";
 import type { EChartsOption } from "echarts";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { ObservationMarkerService } from "../observation-marker.service";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 
 const barDefaults = {
   type: "bar",
@@ -92,9 +92,15 @@ export class RoseChartComponent extends BaseComponent {
       axisLabel: {
         show: true,
         formatter: (params: string) => {
-          return this.translationBase ? this.translateService.instant(this.translationBase + params) : params;
+          return this.getItemLabel(params)
         },
         //interval: 1,
+        rich: {
+          label: {
+            fontWeight: 600,
+            color: '#19ABFF',
+          }
+        },
       },
       splitLine: {
         show: true,
@@ -171,9 +177,9 @@ export class RoseChartComponent extends BaseComponent {
   public options = Object.assign(this.defaultOptions);
 
   constructor(
-    private translateService: TranslateService,
-    protected observationMarkerService: ObservationMarkerService
+    protected observationMarkerService: ObservationMarkerService,
+    protected translateService: TranslateService
   ) {
-    super(observationMarkerService);
+    super(observationMarkerService, translateService);
   }
 }

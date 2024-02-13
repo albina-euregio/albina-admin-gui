@@ -118,11 +118,23 @@ export class BarChartComponent extends BaseComponent {
           color: "#839194",
           position: [0, -14],
           formatter: (params: CallbackDataParams) => {
-            return this.translationBase
-              ? this.translateService.instant(this.translationBase + params.value[0])
-              : params.value[0];
+            return this.getItemLabel(params)
           },
           show: true,
+          rich: {
+            label: {
+              fontWeight: 600,
+              color: '#19ABFF',
+            },
+            symbol: {
+              color: '#19ABFF',
+            },
+            grainShape: {
+              //fontWeight: 600,
+              color: '#19ABFF',
+              fontFamily: "snowsymbolsiacs",
+            }
+          },
         },
         itemStyle: {
           color: "#B1C1C7",
@@ -170,9 +182,9 @@ export class BarChartComponent extends BaseComponent {
   public options = Object.assign(this.defaultOptions);
 
   constructor(
-    private translateService: TranslateService,
+    protected translateService: TranslateService,
     protected observationMarkerService: ObservationMarkerService
   ) {
-    super(observationMarkerService);
+    super(observationMarkerService, translateService);
   }
 }
