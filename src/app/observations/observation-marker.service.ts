@@ -134,12 +134,12 @@ const grainShapes = {
 };
 
 export const importantObservationTexts = {
-  [ImportantObservation.SnowLine]: grainShapes.IF.key,
+  [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
   [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
   [ImportantObservation.Graupel]: grainShapes.PPgp.key,
-  [ImportantObservation.StabilityTest]: grainShapes.PPpl.key,
+  [ImportantObservation.StabilityTest]: grainShapes.PPnd.key,
   [ImportantObservation.IceFormation]: grainShapes.IF.key,
-  [ImportantObservation.VeryLightNewSnow]: grainShapes.PPir.key,
+  [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
 };
 
 @Injectable()
