@@ -46,6 +46,32 @@ const elevationColors = {
   "8": "#CC0CE8",
 };
 
+// FATMAP
+const aspectColors = {
+  [Aspect.N]: "#2f74f9",
+  [Aspect.NE]: "#96c0fc",
+  [Aspect.E]: "#b3b3b3",
+  [Aspect.SE]: "#f6ba91",
+  [Aspect.S]: "#ef6d25",
+  [Aspect.SW]: "#6c300b",
+  [Aspect.W]: "#000000",
+  [Aspect.NW]: "#113570",
+}
+
+// avalanche problems in snowpack simulations (perfler)
+const avalancheProblemColors = {
+  [AvalancheProblem.new_snow]: "#6cfa3d",
+  [AvalancheProblem.wind_slab]: "#41882e",
+  [AvalancheProblem.persistent_weak_layers]: "#0000f8",
+  [AvalancheProblem.wet_snow]: "#ed3c1e",
+  [AvalancheProblem.gliding_snow]: "#",
+  [AvalancheProblem.cornices]: "#ffffff",
+  [AvalancheProblem.no_distinct_problem]: "#ffffff",
+  [AvalancheProblem.favourable_situation]: "#ffffff",
+}
+
+const dayColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
+
 const observationTypeTexts = {
   [ObservationType.Avalanche]: "⛰",
   [ObservationType.Blasting]: "⁜",
@@ -219,11 +245,12 @@ export class ObservationMarkerService {
     } else if (observation?.$source === ObservationSource.Observer) {
       return "#ca0020";
     }
+    
     switch (this.markerClassify) {
       case LocalFilterTypes.Aspect:
-        return this.enumArrayColor(Aspect, [observation?.aspect]);
+        return observation?.aspect ? aspectColors[observation?.aspect] : "white";
       case LocalFilterTypes.AvalancheProblem:
-        return this.enumArrayColor(AvalancheProblem, observation?.avalancheProblems);
+        return this.enumArrayColor(AvalancheProblem, observation?.avalancheProblems, LocalFilterTypes.AvalancheProblem);
       case LocalFilterTypes.DangerPattern:
         return this.enumArrayColor(DangerPattern, observation?.dangerPatterns);
       case LocalFilterTypes.Days:
@@ -243,28 +270,32 @@ export class ObservationMarkerService {
     }
   }
 
-  private enumArrayColor<TEnum, TKeys extends string>(type: { [key in TKeys]: TEnum }, values: TKeys[]): string {
+  private enumArrayColor<TEnum, TKeys extends string>(entry: { [key in TKeys]: TEnum }, values: TKeys[], type?): string {
     if (!Array.isArray(values) || values.length === 0 || !values[0]) {
       return "white";
-    } else if (values.length > 1) {
-      return "#999999";
     } else {
-      return colors[Object.keys(type).indexOf(values[0]) % colors.length];
+      switch (type) {
+        case LocalFilterTypes.Aspect:
+          return aspectColors[Object.keys(entry).indexOf(values[0])];
+        case LocalFilterTypes.AvalancheProblem:
+          return avalancheProblemColors[values[0].toString()];
+        default:
+          return colors[Object.keys(entry).indexOf(values[0]) % colors.length];
+      }
     }
   }
 
   getColor(type: LocalFilterTypes, name: any) {
     switch (type) {
       case LocalFilterTypes.Aspect:
-        return this.enumArrayColor(Aspect, [name]);
+        return name ? aspectColors[name] : "white";
       case LocalFilterTypes.AvalancheProblem:
-        return this.enumArrayColor(AvalancheProblem, [name]);
+        return this.enumArrayColor(AvalancheProblem, [name], LocalFilterTypes.AvalancheProblem);
       case LocalFilterTypes.DangerPattern:
         return this.enumArrayColor(DangerPattern, [name]);
       case LocalFilterTypes.Days:
         const days = (Date.now() - (new Date(name)).getTime()) / 24 / 3600e3;
-        const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-        return daysColors[Math.min(Math.floor(days), daysColors.length)];
+        return dayColors[Math.min(Math.floor(days), dayColors.length)];
       case LocalFilterTypes.Elevation:
         return this.elevationColor(name);
       case LocalFilterTypes.ImportantObservation:
