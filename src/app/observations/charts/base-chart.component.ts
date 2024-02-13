@@ -114,7 +114,8 @@ export class BaseComponent {
       : value;
 
     if (this.labelType === this.type) {
-      return this.observationMarkerService.getLegendLabel(this.labelType, result);
+      const label = this.observationMarkerService.getLegendLabel(this.labelType, result, value);
+      return label;
     } else {
       return result;
     }

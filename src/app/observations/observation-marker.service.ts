@@ -73,6 +73,17 @@ const elevationColors = {
   "35": "#cc005c",
 };
 
+const observationTypeTexts = {
+  [ObservationType.Avalanche]: "⛰",
+  [ObservationType.Blasting]: "⁜",
+  [ObservationType.Closure]: "𐄂",
+  [ObservationType.Evaluation]: "✓",
+  [ObservationType.Profile]: "⌇",
+  [ObservationType.SimpleObservation]: "👁",
+  [ObservationType.TimeSeries]: "🗠",
+  [ObservationType.Webcam]: "🖻",
+}
+
 const avalancheProblemTexts = {
   [AvalancheProblem.new_snow]: "🌨",
   [AvalancheProblem.wind_slab]: "🚩",
@@ -150,12 +161,12 @@ const grainShapes = {
 };
 
 export const importantObservationTexts = {
-  [ImportantObservation.SnowLine]: "",
+  [ImportantObservation.SnowLine]: grainShapes.IF.key,
   [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
   [ImportantObservation.Graupel]: grainShapes.PPgp.key,
   [ImportantObservation.StabilityTest]: "",
   [ImportantObservation.IceFormation]: grainShapes.IF.key,
-  [ImportantObservation.VeryLightNewSnow]: "",
+  [ImportantObservation.VeryLightNewSnow]: grainShapes.PP.key,
 };
 
 @Injectable()
@@ -307,26 +318,24 @@ export class ObservationMarkerService {
     }
   }
 
-  getLegendLabel(type: LocalFilterTypes, label: string) : string {
+  getLegendLabel(type: LocalFilterTypes, label: string, value: string) : string {
     switch (type) {
       case LocalFilterTypes.Aspect:
-        return "{bold|" + label + "}";
+        return '{label|' + label + '}';
       case LocalFilterTypes.DangerPattern:
-        return "{bold|" + label + "}";
+        return '{label|' + value.slice(2) + '} ' + label;
       case LocalFilterTypes.AvalancheProblem:
-        // TODO define label
-        return label;
+        return '{symbol|' + avalancheProblemTexts[value] + "} " + label;
       case LocalFilterTypes.Days:
+        return '{label|' + label.substring(label.length - 2) + '} ' + label;
       case LocalFilterTypes.Elevation:
-        return "{bold|" + label.substring(0, 2) + "}" + label.substring(2);
+        return "{label|" + (isFinite(+label) ? Math.round(+label / 100) : "") + "} " + label;
       case LocalFilterTypes.ImportantObservation:
-        // TODO load icons
-        return label;
+        return "{grainShape|" + importantObservationTexts[value] + "}   " + label;
       case LocalFilterTypes.ObservationType:
-        return String(label).slice(0, 1) + " " + label;
+        return '{symbol|' + observationTypeTexts[value] + "} " + label;
       case LocalFilterTypes.Stability:
-        // TODO load color icon
-        return label;
+        return '{symbol|' + stabilityTexts[value] + "} " + label;
       default:
         return label;
     }
@@ -352,7 +361,7 @@ export class ObservationMarkerService {
           .map((o) => (o ? importantObservationTexts[o] ?? "" : ""))
           .join("");
       case LocalFilterTypes.ObservationType:
-        return String(observation.$type).slice(0, 1);
+        return observationTypeTexts[observation.$type];
       case LocalFilterTypes.Stability:
         return stabilityTexts[observation.stability] ?? "";
       default:

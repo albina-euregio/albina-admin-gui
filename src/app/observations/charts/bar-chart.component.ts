@@ -82,14 +82,6 @@ export class BarChartComponent extends BaseComponent {
     xAxis: {
       axisLabel: {
         show: false,
-        formatter: (params: string) => {
-          return this.getItemLabel(params)
-        },
-        rich: {
-          bold: {
-            fontWeight: 600
-          }
-        },
       },
       axisLine: {
         show: false,
@@ -129,6 +121,20 @@ export class BarChartComponent extends BaseComponent {
             return this.getItemLabel(params)
           },
           show: true,
+          rich: {
+            label: {
+              fontWeight: 600,
+              color: '#19ABFF',
+            },
+            symbol: {
+              color: '#19ABFF',
+            },
+            grainShape: {
+              //fontWeight: 600,
+              color: '#19ABFF',
+              fontFamily: "snowsymbolsiacs",
+            }
+          },
         },
         itemStyle: {
           color: "#B1C1C7",

@@ -96,8 +96,9 @@ export class RoseChartComponent extends BaseComponent {
         },
         //interval: 1,
         rich: {
-          bold: {
-            fontWeight: 600
+          label: {
+            fontWeight: 600,
+            color: '#19ABFF',
           }
         },
       },
