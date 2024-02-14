@@ -1,6 +1,5 @@
 import mysql, { Connection, QueryError } from "mysql2/promise";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
-import type dayjs from "dayjs";
 
 export async function createConnection() {
   return await mysql.createConnection({
@@ -57,8 +56,8 @@ export async function insertObservation(connection: Connection, o: GenericObserv
 
 export async function selectObservations(
   connection: Connection,
-  startDate: dayjs.Dayjs,
-  endDate: dayjs.Dayjs,
+  startDate: Date,
+  endDate: Date,
 ): Promise<GenericObservation[]> {
   const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ?";
   const values = [startDate.toISOString(), endDate.toISOString()];

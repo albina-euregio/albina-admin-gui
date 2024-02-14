@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { GenericObservation, findExistingObservation } from "../src/app/observations/models/generic-observation.model";
 import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import { createConnection, insertObservation, selectObservations } from "./database";
@@ -9,10 +8,7 @@ import { fetchLwdKip } from "./fetch_lwdkip";
 import { fetchWikiSnow } from "./fetch_wikisnow";
 import { augmentElevation } from "./elevation";
 
-export async function fetchAndInsert(
-  startDate: dayjs.Dayjs = dayjs().millisecond(0).subtract(1, "week"),
-  endDate: dayjs.Dayjs = dayjs().millisecond(0),
-) {
+export async function fetchAndInsert(startDate: Date, endDate: Date) {
   const connection = await createConnection();
   const existing = await selectObservations(connection, startDate, endDate);
   for await (const obs of fetchAll(startDate, endDate, existing)) {
@@ -27,8 +23,8 @@ export async function fetchAndInsert(
 }
 
 async function* fetchAll(
-  startDate: dayjs.Dayjs,
-  endDate: dayjs.Dayjs,
+  startDate: Date,
+  endDate: Date,
   existing: GenericObservation[],
 ): AsyncGenerator<GenericObservation, void, unknown> {
   yield* fetchLawisIncidents(startDate, endDate, existing);
