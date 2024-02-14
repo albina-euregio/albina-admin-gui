@@ -35,6 +35,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     AVALANCHE_PROBLEMS: o.avalancheProblems?.join(",") ?? null,
     DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
+    EXTRA_DIALOG_ROWS: o.$extraDialogRows ?? null,
   };
   const sql = `
   REPLACE INTO generic_observations
@@ -73,6 +74,9 @@ export async function selectObservations(
       authorName: row.AUTHOR_NAME ?? undefined,
       content: row.OBS_CONTENT ?? undefined,
       $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : row.OBS_DATA ?? undefined,
+      $extraDialogRows: /^\[.*\]$/.test(row.EXTRA_DIALOG_ROWS)
+        ? JSON.parse(row.EXTRA_DIALOG_ROWS)
+        : row.EXTRA_DIALOG_ROWS ?? undefined,
       elevation: row.ELEVATION ?? undefined,
       elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
       elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,
