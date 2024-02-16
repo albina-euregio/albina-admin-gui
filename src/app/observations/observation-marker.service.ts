@@ -58,13 +58,14 @@ const aspectColors = {
   [Aspect.NW]: "#113570",
 }
 
-// avalanche problems in snowpack simulations (perfler)
+// The international classification for seasonal snow on the ground
+// (except for gliding snow - no definition there)
 const avalancheProblemColors = {
-  [AvalancheProblem.new_snow]: "#6cfa3d",
-  [AvalancheProblem.wind_slab]: "#41882e",
-  [AvalancheProblem.persistent_weak_layers]: "#0000f8",
-  [AvalancheProblem.wet_snow]: "#ed3c1e",
-  [AvalancheProblem.gliding_snow]: "#",
+  [AvalancheProblem.new_snow]: "#00ff00",
+  [AvalancheProblem.wind_slab]: "#229b22",
+  [AvalancheProblem.persistent_weak_layers]: "#0000ff",
+  [AvalancheProblem.wet_snow]: "#ff0000",
+  [AvalancheProblem.gliding_snow]: "#aa0000",
   [AvalancheProblem.cornices]: "#ffffff",
   [AvalancheProblem.no_distinct_problem]: "#ffffff",
   [AvalancheProblem.favourable_situation]: "#ffffff",
