@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import express from "express";
 import { createConnection, selectObservations } from "./database";
 import { fetchAndInsert } from "./fetch";
@@ -23,12 +22,12 @@ let lastFetch = 0;
 async function serveObservations(url: URL): Promise<GenericObservation[]> {
   const startDate =
     typeof url.searchParams.get("startDate") === "string"
-      ? dayjs(url.searchParams.get("startDate"))
-      : dayjs().millisecond(0).subtract(1, "week");
+      ? new Date(url.searchParams.get("startDate"))
+      : newDate({ days: -7 });
   const endDate =
     typeof url.searchParams.get("endDate") === "string"
-      ? dayjs(url.searchParams.get("endDate"))
-      : dayjs().millisecond(0);
+      ? new Date(url.searchParams.get("endDate"))
+      : newDate({ days: 0 });
 
   if (Date.now() - lastFetch > 5 * 3600e3) {
     await fetchAndInsert(startDate, endDate);
@@ -42,4 +41,11 @@ async function serveObservations(url: URL): Promise<GenericObservation[]> {
   } finally {
     connection.destroy();
   }
+}
+
+function newDate(delta: { days: number }): Date {
+  const date = new Date();
+  date.setSeconds(0, 0);
+  date.setDate(date.getDate() + delta.days);
+  return date;
 }

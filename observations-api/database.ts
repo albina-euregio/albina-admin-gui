@@ -1,6 +1,5 @@
 import mysql, { Connection, QueryError } from "mysql2/promise";
 import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
-import type dayjs from "dayjs";
 
 export async function createConnection() {
   return await mysql.createConnection({
@@ -36,6 +35,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     AVALANCHE_PROBLEMS: o.avalancheProblems?.join(",") ?? null,
     DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
+    EXTRA_DIALOG_ROWS: o.$extraDialogRows ?? null,
   };
   const sql = `
   REPLACE INTO generic_observations
@@ -57,8 +57,8 @@ export async function insertObservation(connection: Connection, o: GenericObserv
 
 export async function selectObservations(
   connection: Connection,
-  startDate: dayjs.Dayjs,
-  endDate: dayjs.Dayjs,
+  startDate: Date,
+  endDate: Date,
 ): Promise<GenericObservation[]> {
   const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ?";
   const values = [startDate.toISOString(), endDate.toISOString()];
@@ -74,6 +74,9 @@ export async function selectObservations(
       authorName: row.AUTHOR_NAME ?? undefined,
       content: row.OBS_CONTENT ?? undefined,
       $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : row.OBS_DATA ?? undefined,
+      $extraDialogRows: /^\[.*\]$/.test(row.EXTRA_DIALOG_ROWS)
+        ? JSON.parse(row.EXTRA_DIALOG_ROWS)
+        : row.EXTRA_DIALOG_ROWS ?? undefined,
       elevation: row.ELEVATION ?? undefined,
       elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
       elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,

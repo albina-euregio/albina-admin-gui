@@ -1,4 +1,3 @@
-import type dayjs from "dayjs";
 import {
   ArcGisLayer,
   LwdKipBeobachtung,
@@ -14,7 +13,7 @@ import { fetchJSON } from "./fetchJSON";
 
 const API = "https://gis.tirol.gv.at/arcgis";
 
-export async function* fetchLwdKip(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) {
+export async function* fetchLwdKip(startDate: Date, endDate: Date) {
   for (const f of (await fetchLwdKipLayer<LwdKipBeobachtung>(startDate, endDate, "Beobachtungen")).features) {
     yield convertLwdKipBeobachtung(f);
   }
@@ -29,7 +28,7 @@ export async function* fetchLwdKip(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs)
   // }
 }
 
-async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs, layerName = ""): Promise<T> {
+async function fetchLwdKipLayer<T>(startDate: Date, endDate: Date, layerName = ""): Promise<T> {
   const headers = { Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" };
 
   const { token } = await fetchJSON(`${API}/tokens/`, {
@@ -64,6 +63,6 @@ async function fetchLwdKipLayer<T>(startDate: dayjs.Dayjs, endDate: dayjs.Dayjs,
   );
 }
 
-function formatDate(d: dayjs.Dayjs) {
+function formatDate(d: Date) {
   return d.toISOString().slice(0, "2006-01-02T15:04:05".length).replace("T", " ");
 }
