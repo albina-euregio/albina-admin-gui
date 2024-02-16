@@ -1067,11 +1067,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   
   selectBulletin(bulletin: BulletinModel) {
     if (!this.editRegions) {
-      if (this.checkAvalancheProblems()) {
         this.deselectBulletin();
         this.activeBulletin = bulletin;
         this.mapService.selectAggregatedRegion(this.activeBulletin);
-      }
     }
   }
 
@@ -1080,11 +1078,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   deselectBulletin(del?: boolean) {
-    if (del || this.checkAvalancheProblems()) {
-      if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
-        this.mapService.deselectAggregatedRegion();
-        this.activeBulletin = undefined;
-      }
+    if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
+      this.mapService.deselectAggregatedRegion();
+      this.activeBulletin = undefined;
     }
   }
 
