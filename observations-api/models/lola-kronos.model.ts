@@ -20,6 +20,7 @@ export interface LolaKronosApi {
 
 export interface LolaAvalancheEvent {
   uuId: string;
+  lolaApplication: string,
   avalancheEventTime: string;
   avalancheProblem: string[];
   avalancheSize: string;
@@ -63,6 +64,7 @@ export interface Image {
 
 export interface LolaEvaluation {
   uuId: string;
+  lolaApplication: string,
   avalanchePotential: number;
   comment: string;
   createdAt: Date;
@@ -207,6 +209,7 @@ export interface Weather {
 
 export interface LolaSimpleObservation {
   uuId: string;
+  lolaApplication: string,
   comment: string;
   deleted: boolean;
   deletedTime: Date;
@@ -236,6 +239,7 @@ export interface LolaSimpleObservation {
 
 export interface LolaSnowProfile {
   uuId: string;
+  lolaApplication: string,
   altitude: number | null;
   aspects: Aspect[];
   comment: string;
@@ -326,11 +330,13 @@ export function convertLoLaToGeneric(
   $type: ObservationType,
   urlPrefix: string,
 ): GenericObservation {
+  debugger
   return {
     $id: obs.uuId,
     $data: obs,
     $externalURL: urlPrefix + obs.uuId,
-    $source: ObservationSource.LoLaKronos,
+    $source:
+      obs.lolaApplication === "SNOBS" ? ObservationSource.Snobs : ObservationSource.LoLaKronos,
     $type,
     stability:
       $type === ObservationType.Avalanche

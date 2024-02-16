@@ -53,6 +53,7 @@ export enum ObservationSource {
   LwdKip = "LwdKip",
   Lawis = "Lawis",
   LoLaKronos = "LoLaKronos",
+  Snobs = "Snobs",
   WikisnowECT = "WikisnowECT",
   FotoWebcamsEU = "FotoWebcamsEU",
   Panomax = "Panomax",
