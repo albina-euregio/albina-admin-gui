@@ -443,12 +443,13 @@
 
 
   <div class="create-bulletin__default-layout" [ngClass]="{ 'create-bulletin__compact-layout': (activeBulletin !== undefined && !editRegions && isCompactMapLayout) }">
-    <!-- Form -->
-    <div *ngIf="activeBulletin && !showNewBulletinModal" class="create-bulletin__region-form">
+    <!-- Active bulletin -->
+    <div *ngIf="activeBulletin && !showNewBulletinModal" class="create-bulletin__region-form" (scroll)="updateBulletinScroll('scrollActiveBulletin', $event)" #scrollActiveBulletin>
       <app-avalanche-bulletin
         [bulletin]="activeBulletin"
         [disabled]="isDisabled()"
         [isCompactMapLayout]="isCompactMapLayout"
+        [isComparedBulletin]="false"
         (updateBulletinOnServerEvent)="updateBulletinOnServer($event)"
         (deleteBulletinEvent)="eventDeleteBulletin($event)"
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
@@ -457,7 +458,18 @@
         (setMapLayoutEvent)="setMapLayout($event)"
       ></app-avalanche-bulletin>
     </div>
-    <!-- End Form -->
+    <!-- End Active bulletin -->
+    <!-- Compared bulletin -->
+    <div *ngIf="false && comparedBulletin && !showNewBulletinModal" class="create-bulletin__region-form" (scroll)="updateBulletinScroll('scrollComparedBulletin', $event)" #scrollComparedBulletin>
+      <app-avalanche-bulletin
+        [bulletin]="comparedBulletin"
+        [disabled]="true"
+        [isCompactMapLayout]="isCompactMapLayout"
+        [isComparedBulletin]="true"
+        (deselectBulletinEvent)="eventDeselectComparedBulletin($event)"
+      ></app-avalanche-bulletin>
+    </div>
+    <!-- End Compared bulletin -->
 
     <!-- Map -->
     <div class="create-bulletin__map-container" [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }">
@@ -578,7 +590,7 @@
       </button>
 
       <button
-        *ngIf="false && activeBulletin !== undefined && activeBulletin !== bulletin"
+        *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
         type="button"
         class="btn btn-bare btn-sm btn-icon"
         (click)="compareBulletin($event, bulletin)"

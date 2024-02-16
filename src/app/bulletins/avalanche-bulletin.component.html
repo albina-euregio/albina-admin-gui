@@ -2,6 +2,7 @@
 <header class="region-form__header"> 
   <div class="region-form__header-actions btn-group" dropdown>
     <button
+      *ngIf="!isComparedBulletin"
       dropdownToggle
       class="btn btn-bare btn-sm btn-icon btn-bare--grey"
       type="button"
@@ -112,10 +113,10 @@
     {{ "bulletins.create.regionNotEditable" | translate }}
   </p>
   <div class="btn-group banner__actions">
-    <button *ngIf="!editRegions && isForeign(bulletin)" (click)="editMicroRegions()" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+    <button *ngIf="!isComparedBulletin && !editRegions && isForeign(bulletin)" (click)="editMicroRegions()" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.edit' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
       <i class="ph ph-map-trifold"></i>
     </button>
-    <button *ngIf="!copyService.isCopyBulletin()" (click)="copyBulletin()" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
+    <button *ngIf="!isComparedBulletin && !copyService.isCopyBulletin()" (click)="copyBulletin()" data-toggle="tooltip" title="{{ 'bulletins.create.tooltip.copy' | translate }}" type="button" class="btn btn-sm btn-icon btn-outline-primary">
       <i class="ph ph-copy"></i>
     </button>
   </div>

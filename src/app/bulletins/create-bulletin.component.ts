@@ -65,6 +65,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public showForeignRegions: boolean;
   
   public activeBulletin: BulletinModel;
+  public comparedBulletin: BulletinModel;
   public internBulletinsList: BulletinModel[];
   public externRegionsMap: Map<ServerModel, BulletinModel[]>;
   public showExternRegionsMap: Map<string, boolean>;
@@ -80,6 +81,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public submitting: boolean;
   public copying: boolean;
 
+  @ViewChild('scrollActiveBulletin') scrollActiveBulletin: ElementRef;
+  @ViewChild('scrollComparedBulletin') scrollComparedBulletin: ElementRef;
 
   public loadingErrorModalRef: BsModalRef;
   @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
@@ -202,6 +205,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   reset() {
     this.originalBulletins = new Map<string, BulletinModel>();
     this.activeBulletin = undefined;
+    this.comparedBulletin = undefined;
     this.internBulletinsList = new Array<BulletinModel>();
     this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
     this.showExternRegionsMap = new Map<string, boolean>();
@@ -350,6 +354,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     } else {
       this.goBack();
+    }
+  }
+
+  updateBulletinScroll(scrollId: string, event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (scrollId === 'scrollComparedBulletin') {
+      this.scrollActiveBulletin.nativeElement.scrollTop = this.scrollComparedBulletin.nativeElement.scrollTop;
+    } else if (scrollId === 'scrollActiveBulletin') {
+      this.scrollComparedBulletin.nativeElement.scrollTop = this.scrollActiveBulletin.nativeElement.scrollTop;
     }
   }
 
@@ -1081,7 +1095,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
       this.mapService.deselectAggregatedRegion();
       this.activeBulletin = undefined;
+      this.comparedBulletin = undefined;
     }
+  }
+
+  eventDeselectComparedBulletin(bulletin: BulletinModel) {
+    this.comparedBulletin = undefined;
   }
 
   preview() {
@@ -1265,7 +1284,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   compareBulletin(event, bulletin: BulletinModel) {
     event.stopPropagation();
-    // TODO implement
+    this.comparedBulletin = bulletin;
   }
 
   private delBulletin(bulletin: BulletinModel) {

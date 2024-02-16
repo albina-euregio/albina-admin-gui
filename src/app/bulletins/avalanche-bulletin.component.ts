@@ -43,6 +43,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Input() bulletin: BulletinModel;
   @Input() disabled: boolean;
   @Input() isCompactMapLayout: boolean;
+  @Input() isComparedBulletin: boolean;
   
   @Output() updateBulletinOnServerEvent = new EventEmitter<BulletinModel>();
   @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
@@ -106,19 +107,23 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.stopListening = this.renderer.listen("window", "message", this.getText.bind(this));
+    if (!this.isComparedBulletin) {
+      this.stopListening = this.renderer.listen("window", "message", this.getText.bind(this));
 
-    // for reload iframe on change language
-    this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
-      () => this.pmUrl = this.getTextcatUrl()
-    );
+      // for reload iframe on change language
+      this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
+        () => this.pmUrl = this.getTextcatUrl()
+      );
 
-    // setting pm language for iframe
-    this.pmUrl = this.getTextcatUrl();
+      // setting pm language for iframe
+      this.pmUrl = this.getTextcatUrl();
+    }
   }
 
   ngOnDestroy() {
-    this.stopListening();
+    if (!this.isComparedBulletin) {
+      this.stopListening();
+    }
   }
 
   updateBulletinOnServer() {
