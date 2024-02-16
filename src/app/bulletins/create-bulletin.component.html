@@ -460,7 +460,7 @@
     </div>
     <!-- End Active bulletin -->
     <!-- Compared bulletin -->
-    <div *ngIf="false && comparedBulletin && !showNewBulletinModal" class="create-bulletin__region-form" (scroll)="updateBulletinScroll('scrollComparedBulletin', $event)" #scrollComparedBulletin>
+    <div *ngIf="comparedBulletin && !showNewBulletinModal" class="create-bulletin__region-form" (scroll)="updateBulletinScroll('scrollComparedBulletin', $event)" #scrollComparedBulletin>
       <app-avalanche-bulletin
         [bulletin]="comparedBulletin"
         [disabled]="true"
@@ -590,7 +590,7 @@
       </button>
 
       <button
-        *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
+        *ngIf="false && activeBulletin !== undefined && activeBulletin !== bulletin"
         type="button"
         class="btn btn-bare btn-sm btn-icon"
         (click)="compareBulletin($event, bulletin)"
