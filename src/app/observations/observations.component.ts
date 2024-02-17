@@ -93,6 +93,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public layout: "map" | "table" | "chart" = "map";
   public layoutFilters = true;
   public observations: GenericObservation[] = [];
+  public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public showObservationsWithoutCoordinates: boolean = false;
   public observationsWithoutCoordinates: number = 0;
@@ -183,6 +184,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
     const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
+    this.observationsAsOverlay = [];
     layerControl.addOverlay(this.loadObservers(), "Beobachter");
     layerControl.addOverlay(this.loadWeatherStations(), "Wetterstationen");
     layerControl.addOverlay(this.loadWebcams(), "Webcams");
@@ -388,6 +390,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     layer: keyof typeof this.mapService.layers,
   ): LayerGroup<any> {
     observations.forEach((observation) => {
+      this.observationsAsOverlay.push(observation);
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
         layer,
@@ -424,7 +427,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     let observation = this.observationPopup?.observation;
-    const observations = this.observations.filter(
+    const observations = [...this.observations, ...this.observationsAsOverlay].filter(
       (o) => o.$source === observation.$source && o.$type === observation.$type,
     );
     const index = observations.indexOf(observation);
