@@ -68,7 +68,10 @@ export class ObservationFilterService {
       type: LocalFilterTypes.AvalancheProblem,
       toValue: (o) => o.avalancheProblems,
       all: Object.keys(AvalancheProblem).filter(
-        (type) => type !== AvalancheProblem.no_distinct_problem && type !== AvalancheProblem.cornices && type !== AvalancheProblem.favourable_situation,
+        (type) =>
+          type !== AvalancheProblem.no_distinct_problem &&
+          type !== AvalancheProblem.cornices &&
+          type !== AvalancheProblem.favourable_situation,
       ),
       selected: [],
       highlighted: [],

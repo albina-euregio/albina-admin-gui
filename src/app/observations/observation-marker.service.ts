@@ -82,7 +82,7 @@ const observationTypeTexts = {
   [ObservationType.SimpleObservation]: "👁",
   [ObservationType.TimeSeries]: "🗠",
   [ObservationType.Webcam]: "🖻",
-}
+};
 
 const avalancheProblemTexts = {
   [AvalancheProblem.new_snow]: "🌨",
@@ -227,7 +227,7 @@ export class ObservationMarkerService {
       `<i class="fa fa-user"></i> ${observation.authorName || undefined}`,
       `[${observation.$source}, ${observation.$type}]`,
     ]
-      .filter((s) => !s.includes('undefined'))
+      .filter((s) => !s.includes("undefined"))
       .join("<br>");
   }
 
@@ -297,7 +297,7 @@ export class ObservationMarkerService {
       case LocalFilterTypes.DangerPattern:
         return this.enumArrayColor(DangerPattern, [name]);
       case LocalFilterTypes.Days:
-        const days = (Date.now() - (new Date(name)).getTime()) / 24 / 3600e3;
+        const days = (Date.now() - new Date(name).getTime()) / 24 / 3600e3;
         const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
         return daysColors[Math.min(Math.floor(days), daysColors.length)];
       case LocalFilterTypes.Elevation:
@@ -326,24 +326,24 @@ export class ObservationMarkerService {
     }
   }
 
-  getLegendLabel(type: LocalFilterTypes, label: string, value: string) : string {
+  getLegendLabel(type: LocalFilterTypes, label: string, value: string): string {
     switch (type) {
       case LocalFilterTypes.Aspect:
-        return '{label|' + label + '}';
+        return "{label|" + label + "}";
       case LocalFilterTypes.DangerPattern:
-        return '{label|' + value.slice(2) + '} ' + label;
+        return "{label|" + value.slice(2) + "} " + label;
       case LocalFilterTypes.AvalancheProblem:
-        return '{symbol|' + avalancheProblemTexts[value] + "} " + label;
+        return "{symbol|" + avalancheProblemTexts[value] + "} " + label;
       case LocalFilterTypes.Days:
-        return '{label|' + label.substring(label.length - 2) + '} ' + label;
+        return "{label|" + label.substring(label.length - 2) + "} " + label;
       case LocalFilterTypes.Elevation:
         return "{label|" + (isFinite(+label) ? Math.round(+label / 100) : "") + "} " + label;
       case LocalFilterTypes.ImportantObservation:
         return "{grainShape|" + importantObservationTexts[value] + "}   " + label;
       case LocalFilterTypes.ObservationType:
-        return '{symbol|' + observationTypeTexts[value] + "} " + label;
+        return "{symbol|" + observationTypeTexts[value] + "} " + label;
       case LocalFilterTypes.Stability:
-        return '{symbol|' + stabilityTexts[value] + "} " + label;
+        return "{symbol|" + stabilityTexts[value] + "} " + label;
       default:
         return label;
     }
