@@ -371,14 +371,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadObservers(): LayerGroup<any> {
+  private loadObservers(layer: keyof typeof this.mapService.layers = "observers"): LayerGroup<any> {
     this.observationsService.getObservers().forEach((observation) => {
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        "observers",
+        layer,
       );
     });
-    return this.mapService.layers.observers;
+    return this.mapService.layers[layer];
   }
 
   private loadWeatherStations(layer: keyof typeof this.mapService.layers = "weather-stations"): LayerGroup<any> {
@@ -391,14 +391,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     return this.mapService.layers[layer];
   }
 
-  private loadWebcams(): LayerGroup<any> {
+  private loadWebcams(layer: keyof typeof this.mapService.layers = "webcams"): LayerGroup<any> {
     this.observationsService.getGenericWebcams().forEach((observation) => {
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        "webcams",
+        layer,
       );
     });
-    return this.mapService.layers.webcams;
+    return this.mapService.layers[layer];
   }
 
   onObservationClick(observation: GenericObservation): void {
