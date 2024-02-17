@@ -354,7 +354,10 @@ export function convertLoLaToGeneric(
           t.comment ?? "",
         ])
         .join(" "),
-    elevation: (obs as LolaSnowProfile).altitude,
+    elevation:
+      $type === ObservationType.SimpleObservation
+        ? (obs as LolaSimpleObservation).snowLine
+        : (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
     latitude: (
