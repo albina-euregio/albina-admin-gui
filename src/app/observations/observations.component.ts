@@ -372,27 +372,22 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private loadObservers(layer: keyof typeof this.mapService.layers = "observers"): LayerGroup<any> {
-    this.observationsService.getObservers().forEach((observation) => {
-      this.mapService.addMarker(
-        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        layer,
-      );
-    });
-    return this.mapService.layers[layer];
+    return this.loadGenericObservations0(this.observationsService.getObservers(), "observers");
   }
 
-  private loadWeatherStations(layer: keyof typeof this.mapService.layers = "weather-stations"): LayerGroup<any> {
-    this.observationsService.getWeatherStations().forEach((observation) => {
-      this.mapService.addMarker(
-        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        layer,
-      );
-    });
-    return this.mapService.layers[layer];
+  private loadWeatherStations(): LayerGroup<any> {
+    return this.loadGenericObservations0(this.observationsService.getWeatherStations(), "weather-stations");
   }
 
-  private loadWebcams(layer: keyof typeof this.mapService.layers = "webcams"): LayerGroup<any> {
-    this.observationsService.getGenericWebcams().forEach((observation) => {
+  private loadWebcams(): LayerGroup<any> {
+    return this.loadGenericObservations0(this.observationsService.getGenericWebcams(), "webcams");
+  }
+
+  private loadGenericObservations0(
+    observations: Observable<GenericObservation>,
+    layer: keyof typeof this.mapService.layers,
+  ): LayerGroup<any> {
+    observations.forEach((observation) => {
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
         layer,
