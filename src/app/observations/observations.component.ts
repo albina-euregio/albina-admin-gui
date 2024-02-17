@@ -93,6 +93,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public layout: "map" | "table" | "chart" = "map";
   public layoutFilters = true;
   public observations: GenericObservation[] = [];
+  public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public showObservationsWithoutCoordinates: boolean = false;
   public observationsWithoutCoordinates: number = 0;
@@ -147,17 +148,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       .map((f) => f.properties)
       .sort((r1, r2) => r1.id.localeCompare(r2.id));
     this.allSources = Object.keys(ObservationSource)
-      .filter((key) => 
-        key !== ObservationSource.FotoWebcamsEU &&
-        key !== ObservationSource.Panomax &&
-        key !== ObservationSource.RasBzIt &&
-        key !== ObservationSource.PanoCloud &&
-        key !== ObservationSource.Observer
+      .filter(
+        (key) =>
+          key !== ObservationSource.FotoWebcamsEU &&
+          key !== ObservationSource.Panomax &&
+          key !== ObservationSource.RasBzIt &&
+          key !== ObservationSource.PanoCloud &&
+          key !== ObservationSource.Observer,
       )
-      .map((key) => {
-        return { id: key, name: key };
-      }
-    );
+      .map((key) => ({ id: key, name: key }));
 
     this.moreItems = [
       {
@@ -185,7 +184,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
     const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
+    this.observationsAsOverlay = [];
     layerControl.addOverlay(this.loadObservers(), "Beobachter");
+    layerControl.addOverlay(this.loadWeatherStations(), "Wetterstationen");
     layerControl.addOverlay(this.loadWebcams(), "Webcams");
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
@@ -372,24 +373,30 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadObservers(): LayerGroup<any> {
-    this.observationsService.getObservers().forEach((observation) => {
-      this.mapService.addMarker(
-        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        "observers",
-      );
-    });
-    return this.mapService.layers.observers;
+  private loadObservers(layer: keyof typeof this.mapService.layers = "observers"): LayerGroup<any> {
+    return this.loadGenericObservations0(this.observationsService.getObservers(), "observers");
+  }
+
+  private loadWeatherStations(): LayerGroup<any> {
+    return this.loadGenericObservations0(this.observationsService.getWeatherStations(), "weather-stations");
   }
 
   private loadWebcams(): LayerGroup<any> {
-    this.observationsService.getGenericWebcams().forEach((observation) => {
+    return this.loadGenericObservations0(this.observationsService.getGenericWebcams(), "webcams");
+  }
+
+  private loadGenericObservations0(
+    observations: Observable<GenericObservation>,
+    layer: keyof typeof this.mapService.layers,
+  ): LayerGroup<any> {
+    observations.forEach((observation) => {
+      this.observationsAsOverlay.push(observation);
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        "webcams",
+        layer,
       );
     });
-    return this.mapService.layers.webcams;
+    return this.mapService.layers[layer];
   }
 
   onObservationClick(observation: GenericObservation): void {
@@ -420,7 +427,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     let observation = this.observationPopup?.observation;
-    const observations = this.observations.filter(
+    const observations = [...this.observations, ...this.observationsAsOverlay].filter(
       (o) => o.$source === observation.$source && o.$type === observation.$type,
     );
     const index = observations.indexOf(observation);

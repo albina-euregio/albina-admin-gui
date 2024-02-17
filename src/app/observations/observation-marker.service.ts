@@ -31,9 +31,7 @@ const zIndex: Record<Stability, number> = {
   [Stability.very_poor]: 20,
 };
 
-const elevationThresholds = [
-  0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000,
-];
+const elevationThresholds = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000];
 const elevationColors = {
   "0": "#FFFFFE",
   "1": "#FFFFB3",
@@ -56,7 +54,7 @@ const aspectColors = {
   [Aspect.SW]: "#6c300b",
   [Aspect.W]: "#000000",
   [Aspect.NW]: "#113570",
-}
+};
 
 // The international classification for seasonal snow on the ground
 // (except for gliding snow - no definition there)
@@ -69,7 +67,7 @@ const avalancheProblemColors = {
   [AvalancheProblem.cornices]: "#ffffff",
   [AvalancheProblem.no_distinct_problem]: "#ffffff",
   [AvalancheProblem.favourable_situation]: "#ffffff",
-}
+};
 
 const dayColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
 
@@ -82,7 +80,7 @@ const observationTypeTexts = {
   [ObservationType.SimpleObservation]: "👁",
   [ObservationType.TimeSeries]: "🗠",
   [ObservationType.Webcam]: "🖻",
-}
+};
 
 const avalancheProblemTexts = {
   [AvalancheProblem.new_snow]: "🌨",
@@ -227,14 +225,14 @@ export class ObservationMarkerService {
       `<i class="fa fa-user"></i> ${observation.authorName || undefined}`,
       `[${observation.$source}, ${observation.$type}]`,
     ]
-      .filter((s) => !s.includes('undefined'))
+      .filter((s) => !s.includes("undefined"))
       .join("<br>");
   }
 
   toMarkerRadius(observation: GenericObservation): number {
     if (observation?.$type === ObservationType.Webcam) {
       return 20;
-    } else if (observation?.$source === ObservationSource.Observer) {
+    } else if (observation?.$type === ObservationType.TimeSeries) {
       return 20;
     }
     return 40;
@@ -243,10 +241,18 @@ export class ObservationMarkerService {
   toMarkerColor(observation: GenericObservation) {
     if (observation?.$type === ObservationType.Webcam) {
       return "black";
-    } else if (observation?.$source === ObservationSource.Observer) {
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return "#19abff";
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.Observer
+    ) {
       return "#ca0020";
     }
-    
+
     switch (this.markerClassify) {
       case LocalFilterTypes.Aspect:
         return observation?.aspect ? aspectColors[observation?.aspect] : "white";
@@ -271,7 +277,11 @@ export class ObservationMarkerService {
     }
   }
 
-  private enumArrayColor<TEnum, TKeys extends string>(entry: { [key in TKeys]: TEnum }, values: TKeys[], type?): string {
+  private enumArrayColor<TEnum, TKeys extends string>(
+    entry: { [key in TKeys]: TEnum },
+    values: TKeys[],
+    type?,
+  ): string {
     if (!Array.isArray(values) || values.length === 0 || !values[0]) {
       return "white";
     } else {
@@ -295,7 +305,7 @@ export class ObservationMarkerService {
       case LocalFilterTypes.DangerPattern:
         return this.enumArrayColor(DangerPattern, [name]);
       case LocalFilterTypes.Days:
-        const days = (Date.now() - (new Date(name)).getTime()) / 24 / 3600e3;
+        const days = (Date.now() - new Date(name).getTime()) / 24 / 3600e3;
         return dayColors[Math.min(Math.floor(days), dayColors.length)];
       case LocalFilterTypes.Elevation:
         return this.elevationColor(name);
@@ -323,24 +333,24 @@ export class ObservationMarkerService {
     }
   }
 
-  getLegendLabel(type: LocalFilterTypes, label: string, value: string) : string {
+  getLegendLabel(type: LocalFilterTypes, label: string, value: string): string {
     switch (type) {
       case LocalFilterTypes.Aspect:
-        return '{label|' + label + '}';
+        return "{label|" + label + "}";
       case LocalFilterTypes.DangerPattern:
-        return '{label|' + value.slice(2) + '} ' + label;
+        return "{label|" + value.slice(2) + "} " + label;
       case LocalFilterTypes.AvalancheProblem:
-        return '{symbol|' + avalancheProblemTexts[value] + "} " + label;
+        return "{symbol|" + avalancheProblemTexts[value] + "} " + label;
       case LocalFilterTypes.Days:
-        return '{label|' + label.substring(label.length - 2) + '} ' + label;
+        return "{label|" + label.substring(label.length - 2) + "} " + label;
       case LocalFilterTypes.Elevation:
         return "{label|" + (isFinite(+label) ? Math.round(+label / 100) : "") + "} " + label;
       case LocalFilterTypes.ImportantObservation:
         return "{grainShape|" + importantObservationTexts[value] + "}   " + label;
       case LocalFilterTypes.ObservationType:
-        return '{symbol|' + observationTypeTexts[value] + "} " + label;
+        return "{symbol|" + observationTypeTexts[value] + "} " + label;
       case LocalFilterTypes.Stability:
-        return '{symbol|' + stabilityTexts[value] + "} " + label;
+        return "{symbol|" + stabilityTexts[value] + "} " + label;
       default:
         return label;
     }

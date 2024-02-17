@@ -93,14 +93,14 @@ export class RoseChartComponent extends BaseComponent {
       axisLabel: {
         show: true,
         formatter: (params: string) => {
-          return this.getItemLabel(params)
+          return this.getItemLabel(params);
         },
         //interval: 1,
         rich: {
           label: {
             fontWeight: 600,
-            color: '#19ABFF',
-          }
+            color: "#19ABFF",
+          },
         },
       },
       splitLine: {
@@ -179,7 +179,7 @@ export class RoseChartComponent extends BaseComponent {
 
   constructor(
     protected observationMarkerService: ObservationMarkerService,
-    protected translateService: TranslateService
+    protected translateService: TranslateService,
   ) {
     super(observationMarkerService, translateService);
   }

@@ -13,7 +13,7 @@ const defaultDataBarOptions = {
   barWidth: barWidth,
   itemStyle: {
     //borderRadius: [0, 2, 2, 0],
-    color: "#f86c6b"
+    color: "#f86c6b",
   },
   barGap: "-100%",
   emphasis: {
@@ -118,22 +118,22 @@ export class BarChartComponent extends BaseComponent {
           color: "#839194",
           position: [0, -14],
           formatter: (params: CallbackDataParams) => {
-            return this.getItemLabel(params)
+            return this.getItemLabel(params);
           },
           show: true,
           rich: {
             label: {
               fontWeight: 600,
-              color: '#19ABFF',
+              color: "#19ABFF",
             },
             symbol: {
-              color: '#19ABFF',
+              color: "#19ABFF",
             },
             grainShape: {
               //fontWeight: 600,
-              color: '#19ABFF',
+              color: "#19ABFF",
               fontFamily: "snowsymbolsiacs",
-            }
+            },
           },
         },
         itemStyle: {
@@ -183,7 +183,7 @@ export class BarChartComponent extends BaseComponent {
 
   constructor(
     protected translateService: TranslateService,
-    protected observationMarkerService: ObservationMarkerService
+    protected observationMarkerService: ObservationMarkerService,
   ) {
     super(observationMarkerService, translateService);
   }

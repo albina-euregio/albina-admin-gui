@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/geojson": "^7946.0.14",
     "@types/which-polygon": "^2.2.3"
   }
 }

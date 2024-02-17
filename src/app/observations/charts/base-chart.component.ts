@@ -43,9 +43,8 @@ export class BaseComponent {
 
   constructor(
     protected observationMarkerService: ObservationMarkerService,
-    protected translateService: TranslateService)
-  {
-  }
+    protected translateService: TranslateService,
+  ) {}
 
   private resetTimeout() {
     clearTimeout(this.pressTimer);
@@ -105,7 +104,7 @@ export class BaseComponent {
     }
   }
 
-  getItemLabel(entry) : string {
+  getItemLabel(entry): string {
     let value: string;
     if (this.type === LocalFilterTypes.Aspect) {
       value = entry;
@@ -113,9 +112,7 @@ export class BaseComponent {
       value = entry.value[0];
     }
 
-    let result = this.translationBase
-      ? this.translateService.instant(this.translationBase + value)
-      : value;
+    let result = this.translationBase ? this.translateService.instant(this.translationBase + value) : value;
 
     if (this.labelType === this.type) {
       const label = this.observationMarkerService.getLegendLabel(this.labelType, result, value);

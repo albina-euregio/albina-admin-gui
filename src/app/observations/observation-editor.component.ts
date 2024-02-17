@@ -136,19 +136,23 @@ export class ObservationEditorComponent {
 
     setTimeout(() => {
       const content = this.observation.content;
-      if (!this.observation.authorName && content.includes('Einsatzcode') && content.includes('beschickte Einsatzmittel')) {
+      if (
+        !this.observation.authorName &&
+        content.includes("Einsatzcode") &&
+        content.includes("beschickte Einsatzmittel")
+      ) {
         this.observation.authorName = "Leitstelle Tirol";
 
         const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
         if (codes[code]) this.observation.eventType = codes[code];
       }
-      if (!this.observation.locationName && content.includes('Einsatzort')) {
+      if (!this.observation.locationName && content.includes("Einsatzort")) {
         const match = content.match(/Einsatzort:.*\n\s+.*\s+(.*)/);
         if (match) {
           this.observation.locationName = match[1];
         }
       }
-      if (!this.observation.latitude && !this.observation.longitude && content.includes('Koordinaten: WGS84')) {
+      if (!this.observation.latitude && !this.observation.longitude && content.includes("Koordinaten: WGS84")) {
         const match = content.match(/Koordinaten: WGS84(.*)/);
         const latlng = match && match[1] ? geocoders.parseLatLng(match[1].trim()) : "";
         if (latlng) {
