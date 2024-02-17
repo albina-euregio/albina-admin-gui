@@ -14,6 +14,7 @@ export class BaseMapService extends MapService {
   public layers = {
     forecast: new LayerGroup(),
     observers: new LayerGroup(),
+    "weather-stations": new LayerGroup(),
     webcams: new LayerGroup()
   };
 

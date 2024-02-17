@@ -186,6 +186,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
     layerControl.addOverlay(this.loadObservers(), "Beobachter");
+    layerControl.addOverlay(this.loadWeatherStations(), "Wetterstationen");
     layerControl.addOverlay(this.loadWebcams(), "Webcams");
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
@@ -380,6 +381,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       );
     });
     return this.mapService.layers.observers;
+  }
+
+  private loadWeatherStations(layer: keyof typeof this.mapService.layers = "weather-stations"): LayerGroup<any> {
+    this.observationsService.getWeatherStations().forEach((observation) => {
+      this.mapService.addMarker(
+        this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
+        layer,
+      );
+    });
+    return this.mapService.layers[layer];
   }
 
   private loadWebcams(): LayerGroup<any> {

@@ -15,6 +15,7 @@ export class ConstantsService {
   public observationApi = {
     $: "https://admin.avalanche.report/observations",
     [ObservationType.Webcam]: "https://admin.avalanche.report/webcams",
+    [ObservationSource.AvalancheWarningService]: "https://admin.avalanche.report/weather-stations",
     [ObservationSource.Observer]: "https://admin.avalanche.report/observers",
 
     "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",

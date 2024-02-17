@@ -53,6 +53,11 @@ export class AlbinaObservationsService {
     return this.getGenericObservations0(url);
   }
 
+  getWeatherStations(): Observable<GenericObservation> {
+    const url = this.constantsService.observationApi.AvalancheWarningService;
+    return this.getGenericObservations0(url);
+  }
+
   getGenericWebcams(): Observable<GenericObservation> {
     const url = this.constantsService.observationApi.Webcam;
     return this.getGenericObservations0(url);

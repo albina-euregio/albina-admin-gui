@@ -234,7 +234,7 @@ export class ObservationMarkerService {
   toMarkerRadius(observation: GenericObservation): number {
     if (observation?.$type === ObservationType.Webcam) {
       return 20;
-    } else if (observation?.$source === ObservationSource.Observer) {
+    } else if (observation?.$type === ObservationType.TimeSeries) {
       return 20;
     }
     return 40;
@@ -243,7 +243,15 @@ export class ObservationMarkerService {
   toMarkerColor(observation: GenericObservation) {
     if (observation?.$type === ObservationType.Webcam) {
       return "black";
-    } else if (observation?.$source === ObservationSource.Observer) {
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return "#19abff";
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.Observer
+    ) {
       return "#ca0020";
     }
     switch (this.markerClassify) {
