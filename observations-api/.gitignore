@@ -1,0 +1,4 @@
+.env
+node_modules/
+observations-api.mjs
+private.foto-webcam.eu.json

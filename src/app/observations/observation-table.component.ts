@@ -1,45 +1,60 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
-import { ObservationsService } from "./observations.service";
-import { Message } from "primeng/api";
-import { Table } from "primeng/table";
-import { GenericObservation, ObservationSource, toMarkerColor } from "./models/generic-observation.model";
-import { ImportantObservation } from "app/enums/enums";
+import { AlbinaObservationsService } from "./observations.service";
+import { Message, SharedModule } from "primeng/api";
+import { Table, TableModule } from "primeng/table";
+import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
+import { PipeModule } from "../pipes/pipes.module";
+import { ObservationEditorComponent } from "./observation-editor.component";
+import { MessagesModule } from "primeng/messages";
+import { DialogModule } from "primeng/dialog";
+import { ButtonModule } from "primeng/button";
+import { FormsModule } from "@angular/forms";
+import { ToggleButtonModule } from "primeng/togglebutton";
+import { CommonModule } from "@angular/common";
+import { ObservationMarkerService, importantObservationTexts } from "./observation-marker.service";
 
 @Component({
+  standalone: true,
+  imports: [
+    ButtonModule,
+    CommonModule,
+    DialogModule,
+    FormsModule,
+    MessagesModule,
+    ObservationEditorComponent,
+    PipeModule,
+    SharedModule,
+    TableModule,
+    ToggleButtonModule,
+    TranslateModule,
+  ],
+  providers: [AlbinaObservationsService, ObservationMarkerService, TranslateService],
   selector: "app-observation-table",
-  templateUrl: "observation-table.component.html"
+  templateUrl: "observation-table.component.html",
 })
 export class ObservationTableComponent {
-  @Input() observations: GenericObservation[];
+  @Input() observations: GenericObservation[] = [];
   @Input() showObservationsWithoutCoordinates: boolean;
   @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
   @ViewChild("observationTable") observationTable: Table;
   observation: Observation;
   saving = false;
   messages: Message[] = [];
+  importantObservationTexts = importantObservationTexts;
 
-  constructor(private observationsService: ObservationsService, private translate: TranslateService) {}
-
-  get shownObservations(): GenericObservation[] {
-    const observations = (this.observations || []).filter((o) => o.$source !== ObservationSource.Observer);
-    return this.showObservationsWithoutCoordinates ? observations.filter(this.hasNoCoordinates) : observations;
-  }
+  constructor(
+    private observationsService: AlbinaObservationsService,
+    private markerService: ObservationMarkerService,
+    private translate: TranslateService,
+  ) {}
 
   newObservation() {
-    const today = new Date(Date.now());
-    const date = today.toISOString().split("T")[0];
     this.observation = {
-      eventType: EventType.Normal
+      eventType: EventType.Normal,
     } as Observation;
-
-    console.log(this.observation);
-  }
-
-  hasNoCoordinates(element, index, array) {
-    return !element.latitude || !element.longitude;
   }
 
   onClick(observation: GenericObservation) {
@@ -86,7 +101,7 @@ export class ObservationTableComponent {
         const newObservation = await this.observationsService.putObservation(observation).toPromise();
         Object.assign(
           this.observations.find((o) => isAvalancheWarningServiceObservation(o) && o.$data.id === observation.id),
-          newObservation
+          newObservation,
         );
       } else {
         const newObservation = await this.observationsService.postObservation(observation).toPromise();
@@ -108,7 +123,9 @@ export class ObservationTableComponent {
     try {
       this.saving = true;
       await this.observationsService.deleteObservation(observation);
-      const index = this.observations.findIndex((o) => isAvalancheWarningServiceObservation(o) && o.$data.id === observation.id);
+      const index = this.observations.findIndex(
+        (o) => isAvalancheWarningServiceObservation(o) && o.$data.id === observation.id,
+      );
       this.observations.splice(index, 1);
       this.showDialog = false;
     } catch (error) {
@@ -126,7 +143,7 @@ export class ObservationTableComponent {
     this.messages.push({
       severity: "error",
       summary: error.statusText,
-      detail: error.message
+      detail: error.message,
     });
   }
 
@@ -141,7 +158,7 @@ export class ObservationTableComponent {
         return { background: "linear-gradient(90deg, cyan 0%, white 50%)" };
       case EventType.PersonUninjured:
         return {
-          background: "linear-gradient(90deg, limegreen 0%, white 50%)"
+          background: "linear-gradient(90deg, limegreen 0%, white 50%)",
         };
       case EventType.PersonInjured:
         return { background: "linear-gradient(90deg, yellow 0%, white 50%)" };
@@ -151,16 +168,16 @@ export class ObservationTableComponent {
         return { background: "linear-gradient(90deg, gray 0%, white 50%)" };
       case EventType.NeighborRegion:
         return {
-          background: "linear-gradient(90deg, darkviolet 0%, white 50%)"
+          background: "linear-gradient(90deg, darkviolet 0%, white 50%)",
         };
     }
   }
 
   getTableIconStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
     return {
-      color: toMarkerColor(observation),
+      color: this.markerService.toMarkerColor(observation),
       width: "20px",
-      height: "20px"
+      height: "20px",
     };
   }
 

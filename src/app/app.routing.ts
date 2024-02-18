@@ -23,7 +23,7 @@ export const routes: Routes = [
     path: "observations",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./observations/observations.module").then(m => m.ObservationsModule)
+    loadChildren: () => import("./observations/routes")
   },
   {
     path: "admin",
@@ -40,8 +40,8 @@ export const routes: Routes = [
   {
     path: "modelling",
     component: FullLayoutComponent,
-    canActivate: [AuthGuard],
-    loadChildren: () => import("./modelling/modelling.module").then(m => m.ModellingModule)
+    canActivate: [], // no authentication (partially)
+    loadChildren: () => import("./modelling/routes")
   },
   {
     path: "settings",

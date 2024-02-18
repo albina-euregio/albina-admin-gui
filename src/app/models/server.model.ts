@@ -1,3 +1,5 @@
+import type { AuthenticationResponse } from "../providers/authentication-service/authentication.service";
+
 export class ServerModel {
   public accessToken: string;
   public refreshToken: string;
@@ -7,32 +9,15 @@ export class ServerModel {
   public regions: string[];
   public apiUrl: string;
 
-  static createFromJson(json: Partial<ServerModel> & {access_token?: string; refresh_token?: string; api_url?: string}) {
+  static createFromJson(json: Partial<AuthenticationResponse | ServerModel>) {
     const author = new ServerModel();
-
     author.setName(json.name);
     author.setEmail(json.email);
-    const jsonRoles = json.roles;
-    const roles = new Array<string>();
-    for (const i in jsonRoles) {
-     if (jsonRoles[i] !== null) {
-       roles.push(jsonRoles[i]);
-     }
-    }
-    author.setRoles(roles);
-    const jsonRegions = json.regions;
-    const regions = new Array<string>();
-    for (const i in jsonRegions) {
-      if (jsonRegions[i] !== null) {
-        regions.push(jsonRegions[i]);
-      }
-    }
-    author.setRegions(regions);
-
-    author.setAccessToken(json.accessToken ?? json.access_token);
-    author.setRefreshToken(json.refreshToken ?? json.refresh_token);
-    author.setApiUrl(json.apiUrl ?? json.api_url);
-
+    author.setRoles(json.roles);
+    author.setRegions(json.regions.map((r) => (typeof r === "string" ? r : r.id)));
+    author.setAccessToken((json as ServerModel).accessToken ?? (json as AuthenticationResponse).access_token);
+    author.setRefreshToken((json as ServerModel).refreshToken ?? (json as AuthenticationResponse).refresh_token);
+    author.setApiUrl((json as ServerModel).apiUrl ?? (json as AuthenticationResponse).api_url);
     return author;
   }
 

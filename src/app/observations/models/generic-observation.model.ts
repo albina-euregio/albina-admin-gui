@@ -1,81 +1,4 @@
-import * as Enums from "app/enums/enums";
-export type TranslationFunction = (key: string) => string;
-
-export interface GenericObservation<Data = any> {
-  /**
-   * Additional data (e.g. original data stored when fetching from external API)
-   */
-  $data: Data;
-  /**
-   * External URL/image to display as iframe
-   */
-  $externalURL?: string;
-  /**
-   * Additional information to display as table rows in the observation dialog
-   */
-  $extraDialogRows?: ObservationTableRow[] | ((t: TranslationFunction) => ObservationTableRow[]);
-  /**
-   * Snowpack stability that can be inferred from this observation
-   */
-  stability?: Stability;
-  $source: ObservationSource;
-  $type: ObservationType;
-  /**
-   * Aspect corresponding with this observation
-   */
-  aspect?: Aspect;
-  /**
-   * Name of the author
-   */
-  authorName: string;
-  /**
-   * Free-text content
-   */
-  content: string;
-  /**
-   * Elevation in meters
-   */
-  elevation: number;
-  /**
-   * Date when the event occurred
-   */
-  eventDate: Date;
-  /**
-   * Location latitude (WGS 84)
-   */
-  latitude: number;
-  /**
-   * Location name
-   */
-  locationName: string;
-  /**
-   * Location longitude (WGS 84)
-   */
-  longitude: number;
-  /**
-   * Micro-region code (computed from latitude/longitude)
-   */
-  region: string;
-  /**
-   * Date when the observation has been reported
-   */
-  reportDate?: Date;
-  /**
-   * Avalanche problem corresponding with this observation
-   */
-  avalancheProblems?: AvalancheProblem[];
-  /**
-   * Danger pattern corresponding with this observation
-   */
-  dangerPatterns?: DangerPattern[];
-  /**
-   * Important observations
-   */
-  importantObservations?: Enums.ImportantObservation[];
-
-  filterType?: ObservationFilterType;
-  isHighlighted?: boolean;
-}
+import { z } from "zod";
 
 // similar to Enum.AvalancheProblem as string enum
 export enum AvalancheProblem {
@@ -86,7 +9,7 @@ export enum AvalancheProblem {
   gliding_snow = "gliding_snow",
   favourable_situation = "favourable_situation",
   cornices = "cornices",
-  no_distinct_problem = "no_distinct_problem"
+  no_distinct_problem = "no_distinct_problem",
 }
 
 // similar to Enum.DangerPattern as string enum
@@ -100,25 +23,28 @@ export enum DangerPattern {
   dp7 = "dp7",
   dp8 = "dp8",
   dp9 = "dp9",
-  dp10 = "dp10"
+  dp10 = "dp10",
 }
 
 export enum ObservationFilterType {
   Global = "Global",
-  Local = "Local"
+  Local = "Local",
 }
 
-export type Stability = Enums.Stability.good | Enums.Stability.fair | Enums.Stability.poor | Enums.Stability.very_poor;
+export enum ImportantObservation {
+  SnowLine = "SnowLine",
+  SurfaceHoar = "SurfaceHoar",
+  Graupel = "Graupel",
+  StabilityTest = "StabilityTest",
+  IceFormation = "IceFormation",
+  VeryLightNewSnow = "VeryLightNewSnow",
+}
 
-const colors: Record<Stability, string> = {
-  good: "green",
-  fair: "orange",
-  poor: "red",
-  very_poor: "black"
-};
-
-export function toMarkerColor(observation: GenericObservation) {
-  return colors[observation?.stability ?? "unknown"] ?? "gray";
+export enum Stability {
+  good = "good",
+  fair = "fair",
+  poor = "poor",
+  very_poor = "very_poor",
 }
 
 export enum ObservationSource {
@@ -126,11 +52,21 @@ export enum ObservationSource {
   Observer = "Observer",
   LwdKip = "LwdKip",
   Lawis = "Lawis",
-  LoLaSafety = "LoLaSafety",
-  AvaObs = "AvaObs",
-  KipLive = "KipLive",
-  Natlefs = "Natlefs",
-  WikisnowECT = "WikisnowECT"
+  LoLaKronos = "LoLaKronos",
+  Snobs = "Snobs",
+  WikisnowECT = "WikisnowECT",
+  FotoWebcamsEU = "FotoWebcamsEU",
+  Panomax = "Panomax",
+  RasBzIt = "RasBzIt",
+  PanoCloud = "PanoCloud",
+}
+
+export enum ForecastSource {
+  alpsolut_profile = "alpsolut_profile",
+  meteogram = "meteogram",
+  multimodel = "multimodel",
+  observed_profile = "observed_profile",
+  qfa = "qfa",
 }
 
 export enum ObservationType {
@@ -140,23 +76,9 @@ export enum ObservationType {
   Blasting = "Blasting",
   Closure = "Closure",
   Profile = "Profile",
-  Incident = "Incident",
-  TimeSeries = "TimeSeries"
+  TimeSeries = "TimeSeries",
+  Webcam = "Webcam",
 }
-
-export const ObservationSourceColors: Record<ObservationSource, string> =
-  // FIXME
-  Object.freeze({
-    [ObservationSource.AvalancheWarningService]: "#ca0020",
-    [ObservationSource.Observer]: "#83e4f0",
-    [ObservationSource.LwdKip]: "#f781bf",
-    [ObservationSource.Lawis]: "#44a9db",
-    [ObservationSource.LoLaSafety]: "#a6d96a",
-    [ObservationSource.AvaObs]: "#6a3d9a",
-    [ObservationSource.KipLive]: "#6a3d9a",
-    [ObservationSource.Natlefs]: "#6a3d9a",
-    [ObservationSource.WikisnowECT]: "#c6e667"
-  });
 
 export enum Aspect {
   N = "N",
@@ -166,7 +88,7 @@ export enum Aspect {
   S = "S",
   SW = "SW",
   W = "W",
-  NW = "NW"
+  NW = "NW",
 }
 
 export enum LocalFilterTypes {
@@ -177,24 +99,7 @@ export enum LocalFilterTypes {
   ObservationType = "ObservationType",
   ImportantObservation = "ImportantObservation",
   DangerPattern = "DangerPattern",
-  Days = "Days"
-}
-
-export interface ChartsData {
-  Elevation: Object;
-  Aspects: Object;
-  AvalancheProblem: Object;
-  Stability: Object;
-  ObservationType: Object;
-  ImportantObservation: Object;
-  DangerPattern: Object;
-  Days: Object;
-}
-
-export interface FilterSelectionData {
-  all: string[];
-  selected: string[];
-  highlighted: string[];
+  Days = "Days",
 }
 
 export interface ObservationTableRow {
@@ -206,24 +111,31 @@ export interface ObservationTableRow {
   value?: string;
 }
 
-export function toObservationTable(observation: GenericObservation, t: (key: string) => string): ObservationTableRow[] {
+export function toObservationTable(observation: GenericObservation): ObservationTableRow[] {
   return [
-    { label: t("observations.eventDate"), date: observation.eventDate },
-    { label: t("observations.reportDate"), date: observation.reportDate },
-    { label: t("observations.authorName"), value: observation.authorName },
-    { label: t("observations.locationName"), value: observation.locationName },
-    { label: t("observations.elevation"), number: observation.elevation },
-    {
-      label: t("observations.aspect"),
-      value: observation.aspect !== undefined ? t("aspect." + observation.aspect) : undefined
-    },
-    { label: t("observations.comment"), value: observation.content }
+    { label: "observations.eventDate", date: observation.eventDate },
+    { label: "observations.reportDate", date: observation.reportDate },
+    { label: "observations.authorName", value: observation.authorName },
+    { label: "observations.locationName", value: observation.locationName },
+    { label: "observations.elevation", number: observation.elevation },
+    { label: "observations.aspect", value: observation.aspect },
+    { label: "observations.comment", value: observation.content },
   ];
 }
 
-export function toAspect(aspect: Enums.Aspect | string | undefined): Aspect | undefined {
+export function toAspect(aspect: number | string | undefined): Aspect | undefined {
+  enum NumericAspect {
+    N = 1,
+    NE = 2,
+    E = 3,
+    SE = 4,
+    S = 5,
+    SW = 6,
+    W = 7,
+    NW = 8,
+  }
   if (typeof aspect === "number") {
-    const string = Enums.Aspect[aspect];
+    const string = NumericAspect[aspect];
     return Aspect[string];
   } else if (typeof aspect === "string") {
     return Aspect[aspect];
@@ -240,18 +152,83 @@ export function toGeoJSON(observations: GenericObservation[]) {
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates: [o.longitude ?? 0.0, o.latitude ?? 0.0, o.elevation ?? 0.0]
+        coordinates: [o.longitude ?? 0.0, o.latitude ?? 0.0, o.elevation ?? 0.0],
       },
       properties: {
         ...o,
         ...(o.$data || {}),
-        $data: undefined
-      }
-    })
+        $data: undefined,
+      },
+    }),
   );
   const collection: GeoJSON.FeatureCollection = {
     type: "FeatureCollection",
-    features
+    features,
   };
   return collection;
+}
+
+export function degreeToAspect(degree: number): Aspect {
+  const aspects = Object.values(Aspect);
+  const n = (Math.round((degree * 8) / 360) + 8) % 8;
+  return aspects[n];
+}
+
+// https://transform.tools/typescript-to-zod
+export const genericObservationSchema = z.object({
+  $data: z.any().describe("Additional data (e.g. original data stored when fetching from external API)"),
+  $id: z.string().optional().nullable().describe("External ID of this observations"),
+  $externalURL: z.string().optional().nullable().describe("External URL/image to display as iframe"),
+  stability: z
+    .nativeEnum(Stability)
+    .optional()
+    .nullable()
+    .describe("Snowpack stability that can be inferred from this observation"),
+  $source: z
+    .union([z.nativeEnum(ObservationSource), z.nativeEnum(ForecastSource)])
+    .describe("Source of this observation"),
+  $type: z.nativeEnum(ObservationType).describe("Type of this observation"),
+  aspect: z.nativeEnum(Aspect).optional().nullable().describe("Aspect corresponding with this observation"),
+  authorName: z.string().optional().nullable().describe("Name of the author"),
+  content: z.string().optional().nullable().describe("Free-text content"),
+  elevation: z.number().optional().nullable().describe("Elevation in meters"),
+  elevationLowerBound: z.number().optional().nullable().describe("Lower bound of elevation in meters"),
+  elevationUpperBound: z.number().optional().nullable().describe("Upper bound of elevation in meters"),
+  eventDate: z.date().describe("Date when the event occurred"),
+  locationName: z.string().optional().nullable().describe("Location name"),
+  latitude: z.number().optional().nullable().describe("Location latitude (WGS 84)"),
+  longitude: z.number().optional().nullable().describe("Location longitude (WGS 84)"),
+  region: z.string().optional().nullable().describe("Micro-region code (computed from latitude/longitude)"),
+  reportDate: z.date().optional().nullable().describe("Date when the observation has been reported"),
+  avalancheProblems: z
+    .array(z.nativeEnum(AvalancheProblem))
+    .optional()
+    .nullable()
+    .describe("Avalanche problem corresponding with this observation"),
+  dangerPatterns: z
+    .array(z.nativeEnum(DangerPattern))
+    .optional()
+    .nullable()
+    .describe("Danger pattern corresponding with this observation"),
+  importantObservations: z
+    .array(z.nativeEnum(ImportantObservation))
+    .optional()
+    .nullable()
+    .describe("Important observations"),
+});
+
+export type GenericObservation<Data = any> = z.infer<typeof genericObservationSchema> & {
+  $data: Data;
+  /**
+   * Additional information to display as table rows in the observation dialog
+   */
+  $extraDialogRows?: ObservationTableRow[];
+  regionLabel?: string;
+};
+
+export function findExistingObservation(
+  observations: GenericObservation[],
+  observation: GenericObservation,
+): GenericObservation | undefined {
+  return observations.find((o) => o.$source === observation.$source && o.$id === observation.$id);
 }

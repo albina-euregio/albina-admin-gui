@@ -209,9 +209,9 @@ export class StabilityTestClassificationUtil {
     switch (classification) {
       case StabilityTestClassification.weak:
         return "stabilityTestClassification.weak";
-      case StabilityTestClassification.weak:
+      case StabilityTestClassification.moderate:
         return "stabilityTestClassification.moderate";
-      case StabilityTestClassification.weak:
+      case StabilityTestClassification.stable:
         return "stabilityTestClassification.stable";
       default:
         return "undefined";
@@ -353,38 +353,8 @@ export class SimpleGrainShapeUtil {
   }
 }
 
-export enum ObservationFilterType {
-  Global = "Global",
-  Local = "Local"
-}
-
-// FIXME duplicate of enum in GenericObservation model
-export enum ObservationType {
-  SimpleObservation = "SimpleObservation",
-  Evaluation = "Evaluation",
-  Avalanche = "Avalanche",
-  Blasting = "Blasting",
-  Closure = "Closure",
-  Profile = "Profile",
-  Incident = "Incident",
-  TimeSeries = "TimeSeries",
-}
-
-export enum ImportantObservation {
-  SnowLine = "SnowLine",
-  SurfaceHoar = "SurfaceHoar",
-  Graupel = "Graupel",
-  StabilityTest = "StabilityTest",
-  IceFormation = "IceFormation",
-  VeryLightNewSnow = "VeryLightNewSnow"
-}
-
 export enum Aspect {
   N = 1, NE = 2, E = 3, SE = 4, S = 5, SW = 6, W = 7, NW = 8
-}
-
-export enum Stability {
-  "good" = "good", "fair" = "fair", "poor" = "poor", "very_poor" = "very_poor"
 }
 
 export class AspectUtil {
@@ -858,12 +828,10 @@ export class TerrainFeatureUtil {
     switch (feature) {
       case TerrainFeature.moderatelySteepSlopes:
         return "terrainFeature.moderatelySteepSlopes";
-      case TerrainFeature.moderatelySteepSlopes:
-        return "terrainFeature.steepSlopes";
       case TerrainFeature.steepSlopes:
-        return "terrainFeature.verySteepSlopes";
-      case TerrainFeature.verySteepSlopes:
         return "terrainFeature.steepSlopes";
+      case TerrainFeature.verySteepSlopes:
+        return "terrainFeature.verySteepSlopes";
       case TerrainFeature.convexSlopes:
         return "terrainFeature.convexSlopes";
       case TerrainFeature.denseTrees:
@@ -1256,24 +1224,6 @@ export class TendencyUtil {
         return "tendency.steady";
       case Tendency.increasing:
         return "tendency.increasing";
-      default:
-        return "undefined";
-    }
-  }
-}
-
-export enum Complexity {
-  easy, challenging, complex
-}
-export class ComplexityUtil {
-  public static getString(complexity: Complexity) {
-    switch (complexity) {
-      case Complexity.easy:
-        return "tendency.easy";
-      case Complexity.challenging:
-        return "tendency.challenging";
-      case Complexity.complex:
-        return "complexity.complex";
       default:
         return "undefined";
     }

@@ -80,6 +80,11 @@ export class ConfigurationService {
     private authenticationService: AuthenticationService) {
   }
 
+  public loadPublicLocalServerConfiguration(): Observable<ServerConfiguration & {version: string}> {
+    const url = this.constantsService.getServerUrl() + "server/info";
+    return this.http.get<ServerConfiguration & {version: string}>(url);
+  }
+
   public loadLocalServerConfiguration(): Observable<ServerConfiguration> {
     const url = this.constantsService.getServerUrl() + "server";
     const options = { headers: this.authenticationService.newAuthHeader() };

@@ -1,0 +1,72 @@
+<div class="chart">
+  <!-- !chart-header -->
+  <div class="chart-header">
+    <div class="chart-name">
+      {{ caption }}
+    </div>
+
+    <div class="chart-controls">
+      <div class="obs-switch">
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': type === classifyType }"
+          (click)="onMarkerClassify()"
+          title="{{ 'admin.observations.charts.classify' | translate }}"
+        >
+          <i class="fa fa-paint-brush" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': type === labelType }"
+          (click)="onMarkerLabel()"
+          title="{{ 'admin.observations.charts.label' | translate }}"
+        >
+          <i class="fa fa-tags" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
+          (click)="onInvert()"
+          title="{{ 'admin.observations.charts.invert' | translate }}"
+        >
+          <i class="fa fa-adjust" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-switch-item"
+          [ngClass]="{ 'is-active': isActive }"
+          (click)="onReset()"
+          title="{{ 'admin.observations.charts.reset' | translate }}"
+        >
+          <i class="fa fa-power-off" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /chart-header -->
+
+  <!-- !chart-unspecified -->
+  <div class="chart-unspecified">
+    <span
+      [ngClass]="{
+        highlighted: nanStatus.highlighted,
+        selected: nanStatus.selected
+      }"
+      (click)="onClickNan($event)"
+      >{{ "admin.observations.charts.nan" | translate }}: {{ data.nan }}</span
+    >
+  </div>
+  <!-- /chart-unspecified -->
+
+  <!-- !chart-content -->
+  <div class="chart-content">
+    <div
+      echarts
+      [options]="options"
+      [merge]="{ dataset: data.dataset }"
+      (chartMouseDown)="onMouseDown($event)"
+      (chartMouseUp)="onMouseUp($event)"
+      class="chart"
+    ></div>
+  </div>
+  <!-- /chart-content -->
+</div>

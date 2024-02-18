@@ -5,13 +5,12 @@ import { CommonModule } from "@angular/common";
 import { BulletinsComponent } from "./bulletins.component";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { AspectsComponent } from "./aspects.component";
-import { ComplexityComponent } from "./complexity.component";
 import { DangerRatingComponent } from "./danger-rating.component";
 import { DangerRatingIconComponent } from "./danger-rating-icon.component";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.component";
+import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
 import { AvalancheProblemPreviewComponent } from "./avalanche-problem-preview.component";
-import { MatrixObsoleteComponent } from "./matrix-obsolete.component";
 import { MatrixComponent } from "./matrix.component";
 import { MatrixParameterComponent } from "./matrix-parameter.component";
 import { CaamlComponent } from "./caaml.component";
@@ -23,13 +22,16 @@ import { TabComponent } from "./tab.component";
 import { BulletinsRoutingModule } from "./bulletins-routing.module";
 import { TranslateModule } from "@ngx-translate/core";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { NgxSliderModule } from '../ngx-slider/lib/slider.module';
 
 // Pipes
 import { PipeModule } from "../pipes/pipes.module";
 import { DatePipe } from "@angular/common";
 
 import { AccordionModule } from "ngx-bootstrap/accordion";
+import { DialogModule } from "primeng/dialog";
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { MapService } from "../providers/map-service/map.service";
 
 
 @NgModule({
@@ -41,7 +43,8 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
         ConfirmDialogModule,
         PipeModule.forRoot(),
         AccordionModule.forRoot(),
-        NgxSliderModule
+        NgxSliderModule,
+        DialogModule
     ],
     exports: [
         AspectsComponent
@@ -50,13 +53,12 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
         BulletinsComponent,
         CreateBulletinComponent,
         AspectsComponent,
-        ComplexityComponent,
         DangerRatingComponent,
         DangerRatingIconComponent,
         AvalancheProblemComponent,
         AvalancheProblemDetailComponent,
+        AvalancheProblemDecisionTreeComponent,
         AvalancheProblemPreviewComponent,
-        MatrixObsoleteComponent,
         MatrixComponent,
         MatrixParameterComponent,
         CaamlComponent,
@@ -64,6 +66,6 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
         TabsComponent,
         TabComponent
     ],
-    providers: [DatePipe]
+    providers: [DatePipe, MapService]
 })
 export class BulletinsModule { }

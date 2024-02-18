@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { ErrorHandler, Injectable, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -14,7 +14,6 @@ import { SIDEBAR_TOGGLE_DIRECTIVES } from "./shared/sidebar.directive";
 import { AsideToggleDirective } from "./shared/aside.directive";
 import { PasswordMismatchValidatorDirective } from "./shared/password-mismatch.directive";
 import { BreadcrumbsComponent } from "./shared/breadcrumb.component";
-import { LeafletModule} from "@asymmetrik/ngx-leaflet";
 
 import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
 
@@ -33,9 +32,6 @@ import { StatisticsService } from "./providers/statistics-service/statistics.ser
 import { RegionsService } from "./providers/regions-service/regions.service";
 import { ConstantsService } from "./providers/constants-service/constants.service";
 import { SettingsService } from "./providers/settings-service/settings.service";
-import { ObservationsService } from "./observations/observations.service";
-import { ObservationFilterService } from "./observations/observation-filter.service";
-import { MapService } from "./providers/map-service/map.service";
 import { WsBulletinService } from "./providers/ws-bulletin-service/ws-bulletin.service";
 import { WsUpdateService } from "./providers/ws-update-service/ws-update.service";
 import { WsRegionService } from "./providers/ws-region-service/ws-region.service";
@@ -47,12 +43,6 @@ import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
 import { ConfirmationService } from "primeng/api";
-import { GetFilenamesService } from './providers/qfa-service/filenames.service';
-import { GetDustParamService } from "./providers/qfa-service/dust.service";
-import { ParamService } from "./providers/qfa-service/param.service"
-import { BaseMapService } from './providers/map-service/base-map.service';
-import { ObservationMapService } from "./providers/map-service/observation-map.service";
-import { QfaService } from './providers/qfa-service/qfa.service';
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -67,7 +57,7 @@ import { AlertModule } from "ngx-bootstrap/alert";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { NgxSliderModule } from './ngx-slider/lib/slider.module';
 
 import { ModalSubmitComponent } from "./bulletins/modal-submit.component";
 import { ModalPublishComponent } from "./bulletins/modal-publish.component";
@@ -93,13 +83,6 @@ import i18nCa from "../assets/i18n/ca.json";
 import i18nOc from "../assets/i18n/oc.json";
 import { CreateUserComponent } from "./admin/create-user.component";
 import { UpdateUserComponent } from "./admin/update-user.component";
-
-@Injectable()
-export class SentryErrorHandler implements ErrorHandler {
-  handleError(error) {
-    // console.error(error);s
-  }
-}
 
 export class DirectTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<Object> {
@@ -148,7 +131,6 @@ registerLocaleData(localeOc, "oc");
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    LeafletModule,
     PipeModule.forRoot(),
     ModalModule.forRoot(),
     TranslateModule.forRoot({
@@ -180,10 +162,6 @@ registerLocaleData(localeOc, "oc");
   ],
   providers: [
     {
-       provide: ErrorHandler,
-       useClass: SentryErrorHandler
-    },
-    {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     },
@@ -192,12 +170,9 @@ registerLocaleData(localeOc, "oc");
     AuthGuard,
     ConstantsService,
     SettingsService,
-    ObservationsService,
-    ObservationFilterService,
     BulletinsService,
     StatisticsService,
     RegionsService,
-    MapService,
     WsRegionService,
     WsUpdateService,
     WsBulletinService,
@@ -209,12 +184,6 @@ registerLocaleData(localeOc, "oc");
     CopyService,
     BlogService,
     MediaFileService,
-    GetFilenamesService,
-    GetDustParamService,
-    ParamService,
-    BaseMapService,
-    ObservationMapService,
-    QfaService,
   ],
   bootstrap: [AppComponent],
   exports: [

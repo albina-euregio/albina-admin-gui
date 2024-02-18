@@ -1,5 +1,4 @@
 import { GenericObservation, Aspect, ObservationSource, ObservationType, Stability } from "./generic-observation.model";
-import * as Enums from "app/enums/enums";
 
 export interface Observation {
   aspect: Aspect;
@@ -25,7 +24,7 @@ export enum EventType {
   PersonNo = "PERSON_NO",
   PersonUninjured = "PERSON_UNINJURED",
   PersonUnknown = "PERSON_UNKNOWN",
-  Traffic = "TRAFFIC"
+  Traffic = "TRAFFIC",
 }
 
 export function convertObservationToGeneric(observation: Observation): GenericObservation<Observation> {
@@ -37,26 +36,31 @@ export function convertObservationToGeneric(observation: Observation): GenericOb
     $type: getObservationType(observation),
     stability: getObservationStability(observation),
     eventDate: observation.eventDate ? new Date(observation.eventDate) : undefined,
-    reportDate: observation.reportDate ? new Date(observation.reportDate) : undefined
+    reportDate: observation.reportDate ? new Date(observation.reportDate) : undefined,
   };
 }
 
-export function isAvalancheWarningServiceObservation(observation: GenericObservation): observation is GenericObservation<Observation> {
-  return observation.$source === ObservationSource.AvalancheWarningService && !/models.avalanche.report/.test(observation.$externalURL);
+export function isAvalancheWarningServiceObservation(
+  observation: GenericObservation,
+): observation is GenericObservation<Observation> {
+  return (
+    observation.$source === ObservationSource.AvalancheWarningService &&
+    !/models.avalanche.report/.test(observation.$externalURL)
+  );
 }
 
 function getObservationStability(observation: Observation): Stability {
   switch (observation.eventType ?? EventType.Normal) {
     case EventType.PersonDead:
-      return Enums.Stability.poor;
+      return Stability.poor;
     case EventType.PersonInjured:
-      return Enums.Stability.poor;
+      return Stability.poor;
     case EventType.PersonUninjured:
-      return Enums.Stability.poor;
+      return Stability.poor;
     case EventType.PersonNo:
-      return Enums.Stability.poor;
+      return Stability.poor;
     case EventType.Important:
-      return Enums.Stability.fair;
+      return Stability.fair;
     default:
       return null;
   }

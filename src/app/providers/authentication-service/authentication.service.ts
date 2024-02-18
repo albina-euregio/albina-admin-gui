@@ -8,6 +8,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { AuthorModel } from "../../models/author.model";
 import { ServerModel } from "../../models/server.model";
 import { RegionConfiguration } from "../configuration-service/configuration.service";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AuthenticationService {
@@ -15,7 +16,9 @@ export class AuthenticationService {
   private currentAuthor: AuthorModel;
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
-  private activeRegion: RegionConfiguration;
+  private activeRegion: RegionConfiguration | undefined;
+
+  private env = environment.apiBaseUrl + "_";
 
   constructor(
     public http: HttpClient,
@@ -24,9 +27,9 @@ export class AuthenticationService {
   ) {
     this.externalServers = [];
     try {
-      this.setCurrentAuthor(JSON.parse(localStorage.getItem("currentAuthor")));
+      this.setCurrentAuthor(JSON.parse(localStorage.getItem(this.env + "currentAuthor")));
     } catch (e) {
-      localStorage.removeItem("currentAuthor");
+      localStorage.removeItem(this.env + "currentAuthor");
     }
     try {
       this.setActiveRegion(JSON.parse(localStorage.getItem("activeRegion")));
@@ -50,7 +53,7 @@ export class AuthenticationService {
   }
 
   public logout() {
-    localStorage.removeItem("currentAuthor");
+    localStorage.removeItem(this.env + "currentAuthor");
     console.debug("[" + this.currentAuthor.name + "] Logged out!");
     this.currentAuthor = null;
     this.activeRegion = undefined;
@@ -92,7 +95,7 @@ export class AuthenticationService {
     });
   }
 
-  public newExternalServerAuthHeader(externalAuthor, mime = "application/json"): HttpHeaders {
+  public newExternalServerAuthHeader(externalAuthor: ServerModel, mime = "application/json"): HttpHeaders {
     const authHeader = "Bearer " + externalAuthor.accessToken;
     return new HttpHeaders({
       "Content-Type": mime,
@@ -117,12 +120,12 @@ export class AuthenticationService {
     }
   }
 
-  public getActiveRegion(): RegionConfiguration {
+  public getActiveRegion(): RegionConfiguration | undefined {
     return this.activeRegion;
   }
 
-  public getActiveRegionId(): string {
-    return this.activeRegion.id;
+  public getActiveRegionId(): string | undefined {
+    return this.activeRegion?.id;
   }
 
   public setActiveRegion(region: RegionConfiguration) {
@@ -137,7 +140,7 @@ export class AuthenticationService {
   // region
   // lang (code used for textcat)
   public getActiveRegionCode(): number {
-    switch (this.activeRegion.id) {
+    switch (this.getActiveRegionId()) {
       case this.constantsService.codeTyrol:
         return 2;
       case this.constantsService.codeSouthTyrol:
@@ -153,7 +156,7 @@ export class AuthenticationService {
   // region
   // lang (code used for textcat-ng)
   public getTextcatRegionCode(): string {
-    switch (this.activeRegion.id) {
+    switch (this.getActiveRegionId()) {
       case this.constantsService.codeSwitzerland:
         return "Switzerland";
       case this.constantsService.codeTyrol:
@@ -174,6 +177,7 @@ export class AuthenticationService {
 
   public isEuregio(): boolean {
     return (
+      environment.isEuregio ||
       this.getActiveRegionId() === this.constantsService.codeTyrol ||
       this.getActiveRegionId() === this.constantsService.codeSouthTyrol ||
       this.getActiveRegionId() === this.constantsService.codeTrentino
@@ -181,11 +185,11 @@ export class AuthenticationService {
   }
 
   public getUserLat() {
-    return this.activeRegion.mapCenterLat ?? 47.1;
+    return this.activeRegion?.mapCenterLat ?? 47.1;
   }
-  
+
   public getUserLng() {
-    return this.activeRegion.mapCenterLng ?? 11.44;
+    return this.activeRegion?.mapCenterLng ?? 11.44;
   }
 
   public isCurrentUserInRole(role: string): boolean {
@@ -315,7 +319,7 @@ export class AuthenticationService {
       return;
     }
     this.currentAuthor = AuthorModel.createFromJson(json);
-    localStorage.setItem("currentAuthor", JSON.stringify(this.currentAuthor));
+    localStorage.setItem(this.env + "currentAuthor", JSON.stringify(this.currentAuthor));
   }
 
   public getCurrentAuthorRegions() {
@@ -368,7 +372,7 @@ export interface AuthenticationResponse {
   email: string;
   name: string;
   roles: string[];
-  regions: any[];
+  regions: RegionConfiguration[];
   access_token: string;
   refresh_token: string;
   api_url: string;

@@ -12,6 +12,7 @@ import { DomSanitizer, SafeUrl, SafeResourceUrl } from "@angular/platform-browse
       flex-direction: column;
       height: 100%;
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
     mat-dialog-content{
       max-height: unset !important;
       flex: 1 0 0;
