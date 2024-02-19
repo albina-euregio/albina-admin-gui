@@ -34,7 +34,7 @@
       style="cursor: pointer"
       [ngStyle]="getTableRowStyle(observation)"
     >
-      <td style="padding: 1rem 0;white-space: nowrap">
+      <td style="padding: 1rem 0;white-space: nowrap;max-width: 200px;">
         <span class="text-truncate d-block">
           <i class="fa fa-calendar"></i>
           {{ observation.eventDate | localizedDate : "dd.MM.yyyy HH:mm" }}
