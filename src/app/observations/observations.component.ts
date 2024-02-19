@@ -95,7 +95,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public observations: GenericObservation[] = [];
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
-  public showObservationsWithoutCoordinates: boolean = false;
   public observationsWithoutCoordinates: number = 0;
   public observationPopup: {
     observation: GenericObservation;

@@ -204,17 +204,12 @@
 
       <div *ngIf="layout === 'table'" class="layout-table">
         <div class="card" style="height: 100%">
-          <div class="card-block" style="overflow-y: auto">
-            <div>
-              <app-observation-table
-                #observationTable
-                [observations]="localObservations"
-                [showObservationsWithoutCoordinates]="
-                  showObservationsWithoutCoordinates
-                "
-                (observationClick)="onObservationClick($event)"
-              ></app-observation-table>
-            </div>
+          <div class="card-block" style="overflow-y: auto; overflow-x: auto;">
+            <app-observation-table
+              #observationTable
+              [observations]="localObservations"
+              (observationClick)="onObservationClick($event)"
+            ></app-observation-table>
           </div>
         </div>
       </div>
