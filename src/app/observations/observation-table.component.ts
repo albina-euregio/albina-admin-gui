@@ -37,9 +37,9 @@ import { ObservationMarkerService, importantObservationTexts } from "./observati
 })
 export class ObservationTableComponent {
   @Input() observations: GenericObservation[] = [];
-  @Input() showObservationsWithoutCoordinates: boolean;
   @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
   @ViewChild("observationTable") observationTable: Table;
+  showObservationsWithoutCoordinates: boolean = false;
   observation: Observation;
   saving = false;
   messages: Message[] = [];
@@ -148,6 +148,7 @@ export class ObservationTableComponent {
   }
 
   getTableRowStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
+    // TODO this.markerService.toMarkerColor(observation);
     if (!isAvalancheWarningServiceObservation(observation)) {
       return;
     }
