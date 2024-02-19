@@ -1410,11 +1410,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
         (data) => {
-          console.log("Bulletin created on server.");
           this.mapService.deselectAggregatedRegion();
           this.activeBulletin = undefined;
-          this.loadBulletinsFromServer();
-        },
+          this.addInternalBulletins(data);
+          this.loadInternalBulletinsError = false;
+          this.loading = false;
+          console.log("Bulletin created on server.");
+          },
         (error) => {
           console.error("Bulletin could not be created on server!");
           this.openSaveErrorModal(this.saveErrorTemplate);
@@ -1439,9 +1441,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
         (data) => {
+          this.addInternalBulletins(data);
           this.saveError = false;
+          this.loadInternalBulletinsError = false;
+          this.loading = false;
           console.log("Bulletin updated on server.");
-          this.loadBulletinsFromServer();
         },
         (error) => {
           console.error("Bulletin could not be updated on server!");
@@ -1461,8 +1465,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     {
       this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
         (data) => {
+          this.addInternalBulletins(data);
+          this.loadInternalBulletinsError = false;
+          this.loading = false;
           console.log("Bulletin deleted on server.");
-          this.loadBulletinsFromServer();
         },
         (error) => {
           console.error("Bulletin could not be deleted on server!");
