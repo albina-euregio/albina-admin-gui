@@ -319,6 +319,9 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
     ...kronos.lolaSimpleObservation.map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail/lolaSimpleObservation/"),
     ),
+    ...kronos.lolaSimpleObservation.filter((obs) => obs.snowLine).map((obs) =>
+      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail/lolaSimpleObservation/", true),
+    ),
     ...kronos.lolaSnowProfile.map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail/lolaSnowProfile/"),
     ),
@@ -329,8 +332,8 @@ export function convertLoLaToGeneric(
   obs: LolaSimpleObservation | LolaAvalancheEvent | LolaSnowProfile | LolaEvaluation,
   $type: ObservationType,
   urlPrefix: string,
+  snowLine?: boolean,
 ): GenericObservation {
-  debugger
   return {
     $id: obs.uuId,
     $data: obs,
@@ -355,7 +358,7 @@ export function convertLoLaToGeneric(
         ])
         .join(" "),
     elevation:
-      $type === ObservationType.SimpleObservation
+      snowLine
         ? (obs as LolaSimpleObservation).snowLine
         : (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),

@@ -31,18 +31,6 @@
               ></button>
             </div>
             -->
-            <div *ngIf="layout === 'table'">
-              <p-toggleButton
-                onLabel=""
-                offLabel=""
-                onIcon="fa fa-map-marker"
-                offIcon="fa fa-map-marker"
-                [title]="
-                  translateService.instant('observations.withoutCoordinates')
-                "
-                [(ngModel)]="showObservationsWithoutCoordinates"
-              ></p-toggleButton>
-            </div>
 
             <div class="global-bar-item global-bar-item-load">
               <button
@@ -128,13 +116,14 @@
               </div>
             </div>
 
-            <span *ngIf="layout === 'table'" class="p-input-icon-left ml-auto">
+            <span class="p-input-icon-left ml-auto" style="max-width: 100px;">
               <i class="pi pi-search"></i>
               <input
                 pInputText
                 type="text"
                 (input)="observationTableFilterGlobal($event.target.value)"
                 placeholder="Filter"
+                style="max-width: 100px;"
               />
             </span>
           </div>
@@ -148,7 +137,6 @@
                 pButton
                 icon="pi pi-plus-circle"
                 (click)="newObservation()"
-                label="{{ 'observations.button.add' | translate }}"
                 class="p-button-text"
               ></button>
             </div>
@@ -216,17 +204,12 @@
 
       <div *ngIf="layout === 'table'" class="layout-table">
         <div class="card" style="height: 100%">
-          <div class="card-block" style="overflow-y: auto">
-            <div>
-              <app-observation-table
-                #observationTable
-                [observations]="localObservations"
-                [showObservationsWithoutCoordinates]="
-                  showObservationsWithoutCoordinates
-                "
-                (observationClick)="onObservationClick($event)"
-              ></app-observation-table>
-            </div>
+          <div class="card-block" style="overflow-y: auto; overflow-x: auto;">
+            <app-observation-table
+              #observationTable
+              [observations]="localObservations"
+              (observationClick)="onObservationClick($event)"
+            ></app-observation-table>
           </div>
         </div>
       </div>

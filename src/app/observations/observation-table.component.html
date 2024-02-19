@@ -7,8 +7,8 @@
   class="table table-hover observation-table"
 >
   <ng-template pTemplate="header">
-    <tr *ngIf="false">
-      <td colspan="99" style="text-align: left">
+    <tr>
+      <th colspan="99" style="text-align: left">
         <p-toggleButton
           onLabel=""
           offLabel=""
@@ -23,42 +23,10 @@
             {{ observations.length }}
           </p>
         </div>
-        <div class="global-bar-item global-bar-item-add" style="float: right">
-          <button
-            type="button"
-            pButton
-            icon="pi pi-plus-circle"
-            (click)="newObservation()"
-            label="{{ 'observations.button.add' | translate }}"
-            class="p-button-text"
-          ></button>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th pSortableColumn="eventDate">
-        <i class="fa fa-calendar"></i>
-        {{ "observations.eventDate" | translate }}
-      </th>
-      <th pSortableColumn="reportDate">
-        <i class="fa fa-calendar"></i>
-        {{ "observations.reportDate" | translate }}
-      </th>
-      <th pSortableColumn="authorName">
-        <i class="fa fa-user"></i>
-        {{ "observations.authorName" | translate }}
-      </th>
-      <th pSortableColumn="locationName">
-        <i class="fa fa-globe"></i>
-        {{ "observations.locationName" | translate }}
-      </th>
-      <th><!-- avalancheProblems --></th>
-      <th>
-        <i class="fa fa-comment"></i> {{ "observations.content" | translate }}
-        <span class="observation-count">({{ "observations.count" | translate }} {{ observations.length }})</span>
       </th>
     </tr>
   </ng-template>
+
   <ng-template pTemplate="body" let-observation>
     <tr
       *ngIf="!showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude)"
@@ -66,25 +34,24 @@
       style="cursor: pointer"
       [ngStyle]="getTableRowStyle(observation)"
     >
-      <td style="padding: 1rem 0;white-space: nowrap">
-        {{ observation.eventDate | localizedDate : "dd.MM.yyyy HH:mm" }}
-      </td>
-      <td style="padding: 1rem 0;white-space: nowrap">
-        {{ observation.reportDate | localizedDate : "dd.MM.yyyy HH:mm" }}
-      </td>
-      <td style="padding: 1rem 0">{{ observation.authorName }}</td>
-      <td style="padding: 1rem 0">
-        <abbr *ngIf="observation.regionLabel" [title]="observation.regionLabel">
-          {{ observation.locationName }}
-        </abbr>
-        <span *ngIf="!observation.regionLabel">
-          {{ observation.locationName }}
+      <td style="padding: 1rem 0;white-space: nowrap;max-width: 200px;">
+        <span class="text-truncate d-block">
+          <i class="fa fa-calendar"></i>
+          {{ observation.eventDate | localizedDate : "dd.MM.yyyy HH:mm" }}
         </span>
-        <i
-          *ngIf="observation.latitude && observation.longitude"
-          class="fa fa-map-marker"
-          title="{{ 'observations.hasCoordinates' | translate }}"
-        ></i>
+        <span class="text-truncate d-block">
+          <i class="fa fa-user"></i>
+          {{ observation.authorName }}
+        </span>
+        <span class="text-truncate d-block">
+          <i class="fa fa-globe"></i>
+          {{ observation.locationName }}
+          <i
+            *ngIf="observation.latitude && observation.longitude"
+            class="fa fa-map-marker"
+            title="{{ 'observations.hasCoordinates' | translate }}"
+          ></i>
+        </span>
       </td>
       <td style="padding: 0">
         <span *ngFor="let problem of observation.avalancheProblems">

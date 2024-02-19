@@ -6,6 +6,7 @@ import { fetchLawisProfiles } from "./fetch_lawis_profile";
 import { fetchLolaKronos } from "./fetch_lola_kronos";
 import { fetchLwdKip } from "./fetch_lwdkip";
 import { fetchWikiSnow } from "./fetch_wikisnow";
+import { augmentElevation } from "./elevation";
 
 export async function fetchAndInsert(startDate: Date, endDate: Date) {
   const connection = await createConnection();
@@ -14,6 +15,7 @@ export async function fetchAndInsert(startDate: Date, endDate: Date) {
     const ex = findExistingObservation(existing, obs);
     if (ex && (obs.latitude !== ex.latitude || obs.longitude !== ex.longitude)) {
       augmentRegion(obs);
+      await augmentElevation(obs);
     }
     await insertObservation(connection, obs);
   }
