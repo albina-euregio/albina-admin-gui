@@ -308,22 +308,22 @@ export interface Temperature {
 export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): GenericObservation[] {
   return [
     ...kronos.lolaAvalancheEvent.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.Avalanche, urlPrefix + "detail/lolaAvalancheEvent/"),
+      convertLoLaToGeneric(obs, ObservationType.Avalanche, urlPrefix + "detail-by-token/lolaAvalancheEvent/"),
     ),
     ...kronos.lolaEvaluation.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail/lolaEvaluation/"),
+      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/lolaEvaluation/"),
     ),
     ...kronos.lolaCommissionEvaluation.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail/lolaCommissionEvaluation/"),
+      convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/lolaCommissionEvaluation/"),
     ),
     ...kronos.lolaSimpleObservation.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail/lolaSimpleObservation/"),
+      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail-by-token/lolaSimpleObservation/"),
     ),
     ...kronos.lolaSimpleObservation.filter((obs) => obs.snowLine).map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail/lolaSimpleObservation/", true),
+      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail-by-token/lolaSimpleObservation/", true),
     ),
     ...kronos.lolaSnowProfile.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail/lolaSnowProfile/"),
+      convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail-by-token/lolaSnowProfile/"),
     ),
   ];
 }
@@ -337,7 +337,7 @@ export function convertLoLaToGeneric(
   return {
     $id: obs.uuId,
     $data: obs,
-    $externalURL: urlPrefix + obs.uuId,
+    $externalURL: urlPrefix + obs.uuId + "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN,
     $source:
       obs.lolaApplication === "SNOBS" ? ObservationSource.Snobs : ObservationSource.LoLaKronos,
     $type,
