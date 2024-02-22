@@ -239,7 +239,7 @@
                 <!-- load bulletin from yesterday -->
                 <li>
                   <button
-                    *ngIf="bulletinsService.getIsEditable()"
+                    *ngIf="bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()"
                     [disabled]="editRegions || loading"
                     type="reset"
                     class="dropdown-item"
@@ -291,7 +291,7 @@
                 <!-- upload json -->
                 <li>
                   <button
-                    *ngIf="bulletinsService.getIsEditable()"
+                    *ngIf="bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()"
                     [disabled]="editRegions || loading"
                     type="button"
                     class="dropdown-item"

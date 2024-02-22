@@ -545,6 +545,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showPublishAllButton(date) {
     if (
+      !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
       this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
@@ -1789,6 +1790,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showSubmitButton(date) {
     if (
+      !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
       !this.copying &&
@@ -1932,6 +1934,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showUpdateButton(date) {
     if (
+      !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
       !this.copying &&
@@ -1964,6 +1967,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showPublishButton(date) {
     if (
+      !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
       !this.submitting &&
       !this.copying &&

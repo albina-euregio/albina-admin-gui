@@ -18,6 +18,7 @@ export class BulletinsService {
   private activeDate: Date;
   private copyDate: Date;
   private isEditable: boolean;
+  private isReadOnly: boolean;
 
   public lockedBulletins: Map<string, BulletinLockModel>;
   public bulletinLocks: Subject<BulletinLockModel>;
@@ -40,6 +41,7 @@ export class BulletinsService {
     this.activeDate = undefined;
     this.copyDate = undefined;
     this.isEditable = false;
+    this.isReadOnly = false;
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     this.lockedBulletins = new Map<string, BulletinLockModel>();
 
@@ -190,11 +192,19 @@ export class BulletinsService {
   }
 
   getIsEditable(): boolean {
-    return this.isEditable;
+    return this.isEditable && !this.isReadOnly;
   }
 
   setIsEditable(isEditable: boolean) {
     this.isEditable = isEditable;
+  }
+
+  getIsReadOnly(): boolean {
+    return this.isReadOnly;
+  }
+
+  setIsReadOnly(isReadOnly: boolean) {
+    this.isReadOnly = isReadOnly;
   }
 
   getUserRegionStatus(date: Date): Enums.BulletinStatus {

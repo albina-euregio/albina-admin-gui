@@ -21,9 +21,24 @@
             <time>
               {{ date | localizedDate : "fullDate" }}
             </time>
-            <button class="btn btn-secondary btn-icon" type="button" (click)="editBulletin(date, false)">
-              <i class="ph ph-arrow-right"></i>
-            </button>
+            <div>
+              <button
+                class="btn btn-secondary btn-icon"
+                type="button"
+                (click)="editBulletin(date, true)"
+                title="{{ 'bulletins.tooltip.read' | translate }}"
+              >
+                <i class="ph ph-eye"></i>
+              </button>
+              <button
+                class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+                type="button"
+                (click)="editBulletin(date, false)"
+                title="{{ 'bulletins.tooltip.edit' | translate }}"
+              >
+                <i class="ph ph-pencil-line"></i>
+              </button>
+            </div>
           </div>
         </td>
         <td class="bulletins-table__region-status" [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate">

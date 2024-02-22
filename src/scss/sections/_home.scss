@@ -24,6 +24,10 @@
   }
 }
 
+.bulletins-table__day-buttons {
+  margin-left: $space-2;
+}
+
 .bulletins-table__body .bulletins-table__day--past {
   td {
     background: $gray-100;
