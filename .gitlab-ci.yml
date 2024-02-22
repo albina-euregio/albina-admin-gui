@@ -60,7 +60,7 @@ build:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - rsync -avz -e 'ssh -p2201' --delete dist/ $SFTP_SERVER
+    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose dist/ $SFTP_SERVER
 
 build:development:
   extends: .envsubst
@@ -168,6 +168,17 @@ build:observations-api:
     - cd ../
     - mkdir dist/
     - mv observations-api/*.mjs dist/
+  environment:
+    name: observations-api
   artifacts:
     paths:
       - dist/
+
+deploy:observations-api:
+  extends: .deploy
+  needs:
+    - build:observations-api
+  environment:
+    name: observations-api
+  rules:
+    - when: manual
