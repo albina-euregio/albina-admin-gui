@@ -51,18 +51,6 @@ export interface MultiselectDropdownData {
     KeyValuePipe,
     TranslateModule,
   ],
-  providers: [
-    AlpsolutProfileService,
-    MeteogramSourceService,
-    MultimodelSourceService,
-    ObservedProfileSourceService,
-    RegionsService,
-    GetDustParamService,
-    GetFilenamesService,
-    ParamService,
-    QfaService,
-    BaseMapService,
-  ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })

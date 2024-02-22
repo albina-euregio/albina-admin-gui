@@ -20,7 +20,6 @@ export class PipeModule {
   static forRoot(): ModuleWithProviders<PipeModule> {
     return {
         ngModule: PipeModule,
-        providers: [],
     };
 }
 }

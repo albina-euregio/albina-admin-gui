@@ -75,16 +75,6 @@ export interface MultiselectDropdownData {
     ToggleButtonModule,
     TranslateModule,
   ],
-  providers: [
-    BaseMapService,
-    ElevationService,
-    ObservationFilterService,
-    ObservationMarkerService,
-    RegionsService,
-    TranslateService,
-    AlbinaObservationsService,
-    BaseMapService,
-  ],
   templateUrl: "observations.component.html",
   styleUrls: ["./observations.component.scss"],
 })

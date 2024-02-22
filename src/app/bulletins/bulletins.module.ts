@@ -66,6 +66,5 @@ import { MapService } from "../providers/map-service/map.service";
         TabsComponent,
         TabComponent
     ],
-    providers: [DatePipe, MapService]
 })
 export class BulletinsModule { }

@@ -25,7 +25,6 @@ import { CommonModule } from "@angular/common";
     SharedModule,
     TranslateModule,
   ],
-  providers: [TranslateService, GeocodingService, CoordinateDataService],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
   styleUrls: ["observation-editor.component.scss"],

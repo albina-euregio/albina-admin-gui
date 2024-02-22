@@ -1,6 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { LocationStrategy, HashLocationStrategy, registerLocaleData } from "@angular/common";
+import { LocationStrategy, HashLocationStrategy, registerLocaleData, DatePipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
 import { Observable, of } from "rxjs";
@@ -49,7 +49,7 @@ import { PipeModule } from "./pipes/pipes.module";
 
 import { AuthGuard } from "./guards/auth.guard";
 
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 
 import { HttpClientModule } from "@angular/common/http";
 
@@ -83,6 +83,18 @@ import i18nCa from "../assets/i18n/ca.json";
 import i18nOc from "../assets/i18n/oc.json";
 import { CreateUserComponent } from "./admin/create-user.component";
 import { UpdateUserComponent } from "./admin/update-user.component";
+import { BaseMapService } from "./providers/map-service/base-map.service";
+import { DialogService } from "primeng/dynamicdialog";
+import { MapService } from "./providers/map-service/map.service";
+import { AlpsolutProfileService, MeteogramSourceService, MultimodelSourceService, ObservedProfileSourceService } from "./modelling/sources";
+import { GetDustParamService, GetFilenamesService, ParamService, QfaService } from "./modelling/qfa";
+import { GeocodingService } from "./observations/geocoding.service";
+import { CoordinateDataService } from "./providers/map-service/coordinate-data.service";
+import { AlbinaObservationsService } from "./observations/observations.service";
+import { ObservationMarkerService } from "./observations/observation-marker.service";
+import { ElevationService } from "./providers/map-service/elevation.service";
+import { ObservationFilterService } from "./observations/observation-filter.service";
+import { provideEcharts } from "ngx-echarts";
 
 export class DirectTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<Object> {
@@ -165,25 +177,45 @@ registerLocaleData(localeOc, "oc");
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     },
+    AlbinaObservationsService,
+    AlpsolutProfileService,
     AuthenticationService,
-    UserService,
     AuthGuard,
-    ConstantsService,
-    SettingsService,
+    BaseMapService,
+    BlogService,
     BulletinsService,
-    StatisticsService,
-    RegionsService,
-    WsRegionService,
-    WsUpdateService,
-    WsBulletinService,
     ChatService,
-    LocalStorageService,
     ConfigurationService,
     ConfirmationService,
-    SocialmediaService,
+    ConstantsService,
+    CoordinateDataService,
     CopyService,
-    BlogService,
+    DatePipe, MapService,
+    DialogService,
+    ElevationService,
+    GeocodingService, 
+    GetDustParamService,
+    GetFilenamesService,
+    LocalStorageService,
     MediaFileService,
+    MeteogramSourceService,
+    MultimodelSourceService,
+    ObservationFilterService,
+    ObservationMarkerService,
+    ObservedProfileSourceService,
+    ParamService,
+    provideEcharts(),
+    QfaService,
+    RegionsService,
+    SettingsService,
+    SocialmediaService,
+    StatisticsService,
+    TranslateService,
+    TranslateService, 
+    UserService,
+    WsBulletinService,
+    WsRegionService,
+    WsUpdateService,
   ],
   bootstrap: [AppComponent],
   exports: [

@@ -14,7 +14,6 @@ import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decis
   selector: "app-avalanche-problem-detail",
   templateUrl: "avalanche-problem-detail.component.html",
   styleUrls: ["avalanche-problem-detail.component.scss"],
-  providers: [DialogService]
 })
 export class AvalancheProblemDetailComponent implements OnChanges {
 
