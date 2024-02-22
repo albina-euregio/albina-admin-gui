@@ -155,3 +155,19 @@ docker-build:
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
     - when: manual
+
+build:observations-api:
+  stage: build
+  image:
+    name: oven/bun:latest
+  script:
+    - bun install --no-save --ignore-scripts
+    - cd observations-api/
+    - bun install --no-save --ignore-scripts
+    - bun run build
+    - cd ../
+    - mkdir dist/
+    - mv observations-api/*.mjs dist/
+  artifacts:
+    paths:
+      - dist/
