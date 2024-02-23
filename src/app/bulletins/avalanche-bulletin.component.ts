@@ -175,12 +175,12 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   onDangerPattern1Change(event) {
-    this.bulletin.setDangerPattern1(event);
+    this.bulletin.dangerPattern1 = event;
     this.updateBulletinOnServer();
   }
 
   onDangerPattern2Change(event) {
-    this.bulletin.setDangerPattern2(event);
+    this.bulletin.dangerPattern2 = event;
     this.updateBulletinOnServer();
   }
 
@@ -355,27 +355,27 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     switch (field) {
       case "highlights":
         this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.getHighlightsTextcat());
+        this.copyService.setTextTextcat(this.bulletin.highlightsTextcat);
         this.copyService.setFromLangTexts(this.bulletin.highlights$);
         break;
       case "avActivityHighlights":
         this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.getAvActivityHighlightsTextcat());
+        this.copyService.setTextTextcat(this.bulletin.avActivityHighlightsTextcat);
         this.copyService.setFromLangTexts(this.bulletin.avActivityHighlights$);
         break;
       case "avActivityComment":
         this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.getAvActivityCommentTextcat());
+        this.copyService.setTextTextcat(this.bulletin.avActivityCommentTextcat);
         this.copyService.setFromLangTexts(this.bulletin.avActivityComment$);
         break;
       case "snowpackStructureComment":
         this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.getSnowpackStructureCommentTextcat());
+        this.copyService.setTextTextcat(this.bulletin.snowpackStructureCommentTextcat);
         this.copyService.setFromLangTexts(this.bulletin.snowpackStructureComment$);
         break;
       case "tendencyComment":
         this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.getTendencyCommentTextcat());
+        this.copyService.setTextTextcat(this.bulletin.tendencyCommentTextcat);
         this.copyService.setFromLangTexts(this.bulletin.tendencyComment$);
         break;
       default:

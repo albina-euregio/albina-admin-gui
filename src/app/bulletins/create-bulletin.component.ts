@@ -482,12 +482,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   onDangerPattern1Change(event) {
-    this.activeBulletin.setDangerPattern1(event);
+    this.activeBulletin.dangerPattern1 = event;
     this.updateBulletinOnServer(this.activeBulletin);
   }
 
   onDangerPattern2Change(event) {
-    this.activeBulletin.setDangerPattern2(event);
+    this.activeBulletin.dangerPattern2 = event;
     this.updateBulletinOnServer(this.activeBulletin);
   }
 

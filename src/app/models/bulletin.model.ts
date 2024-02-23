@@ -111,7 +111,7 @@ export class BulletinModel {
     }
 
     if (json.highlightsTextcat) {
-      bulletin.setHighlightsTextcat(json.highlightsTextcat);
+      bulletin.highlightsTextcat = json.highlightsTextcat;
     }
     const jsonHighlights = json.highlights;
     const highlights = new Array<TextModel>();
@@ -123,7 +123,7 @@ export class BulletinModel {
     bulletin.highlights$ = TextModel.toLangTexts(highlights);
 
     if (json.avActivityHighlightsTextcat) {
-      bulletin.setAvActivityHighlightsTextcat(json.avActivityHighlightsTextcat);
+      bulletin.avActivityHighlightsTextcat = json.avActivityHighlightsTextcat;
     }
     const jsonAvActivityHighlights = json.avActivityHighlights;
     const avActivityHighlights = new Array<TextModel>();
@@ -134,11 +134,11 @@ export class BulletinModel {
     }
     bulletin.avActivityHighlights$ = TextModel.toLangTexts(avActivityHighlights);
     if (json.avActivityHighlightsNotes) {
-      bulletin.setAvActivityHighlightsNotes(json.avActivityHighlightsNotes);
+      bulletin.avActivityHighlightsNotes = json.avActivityHighlightsNotes;
     }
 
     if (json.avActivityCommentTextcat) {
-      bulletin.setAvActivityCommentTextcat(json.avActivityCommentTextcat);
+      bulletin.avActivityCommentTextcat = json.avActivityCommentTextcat;
     }
     const jsonAvActivityComment = json.avActivityComment;
     const avActivityComment = new Array<TextModel>();
@@ -149,11 +149,11 @@ export class BulletinModel {
     }
     bulletin.avActivityComment$ = TextModel.toLangTexts(avActivityComment);
     if (json.avActivityCommentNotes) {
-      bulletin.setAvActivityCommentNotes(json.avActivityCommentNotes);
+      bulletin.avActivityCommentNotes = json.avActivityCommentNotes;
     }
 
     if (json.snowpackStructureHighlightsTextcat) {
-      bulletin.setSnowpackStructureHighlightsTextcat(json.snowpackStructureHighlightsTextcat);
+      bulletin.snowpackStructureHighlightsTextcat = json.snowpackStructureHighlightsTextcat;
     }
     const jsonSnowpackStructureHighlight = json.snowpackStructureHighlights;
     const snowpackStructureHighlights = new Array<TextModel>();
@@ -164,11 +164,11 @@ export class BulletinModel {
     }
     bulletin.snowpackStructureHighlights$ = TextModel.toLangTexts(snowpackStructureHighlights);
     if (json.snowpackStructureHighlightsNotes) {
-      bulletin.setSnowpackStructureHighlightsNotes(json.SnowpackStructureHighlightsNotes);
+      bulletin.snowpackStructureHighlightsNotes = json.SnowpackStructureHighlightsNotes;
     }
 
     if (json.snowpackStructureCommentTextcat) {
-      bulletin.setSnowpackStructureCommentTextcat(json.snowpackStructureCommentTextcat);
+      bulletin.snowpackStructureCommentTextcat = json.snowpackStructureCommentTextcat;
     }
     const jsonSnowpackStructureComment = json.snowpackStructureComment;
     const snowpackStructureComment = new Array<TextModel>();
@@ -179,11 +179,11 @@ export class BulletinModel {
     }
     bulletin.snowpackStructureComment$ = TextModel.toLangTexts(snowpackStructureComment);
     if (json.snowpackStructureCommentNotes) {
-      bulletin.setSnowpackStructureCommentNotes(json.snowpackStructureCommentNotes);
+      bulletin.snowpackStructureCommentNotes = json.snowpackStructureCommentNotes;
     }
 
     if (json.tendencyCommentTextcat) {
-      bulletin.setTendencyCommentTextcat(json.tendencyCommentTextcat);
+      bulletin.tendencyCommentTextcat = json.tendencyCommentTextcat;
     }
     const jsonTendencyComment = json.tendencyComment;
     const tendencyComment = new Array<TextModel>();
@@ -194,18 +194,18 @@ export class BulletinModel {
     }
     bulletin.tendencyComment$ = TextModel.toLangTexts(tendencyComment);
     if (json.tendencyCommentNotes) {
-      bulletin.setTendencyCommentNotes(json.tendencyCommentNotes);
+      bulletin.tendencyCommentNotes = json.tendencyCommentNotes;
     }
 
     if (json.tendency) {
-      bulletin.setTendency(json.tendency);
+      bulletin.tendency = json.tendency;
     }
 
     if (json.dangerPattern1) {
-      bulletin.setDangerPattern1(json.dangerPattern1);
+      bulletin.dangerPattern1 = json.dangerPattern1;
     }
     if (json.dangerPattern2) {
-      bulletin.setDangerPattern2(json.dangerPattern2);
+      bulletin.dangerPattern2 = json.dangerPattern2;
     }
 
     return bulletin;
@@ -388,118 +388,6 @@ export class BulletinModel {
 
   setAfternoon(afternoon: BulletinDaytimeDescriptionModel) {
     this.afternoon = afternoon;
-  }
-
-  getAvActivityCommentTextcat(): string {
-    return this.avActivityCommentTextcat;
-  }
-
-  setAvActivityCommentTextcat(avActivityCommentTextcat: string) {
-    this.avActivityCommentTextcat = avActivityCommentTextcat;
-  }
-
-  getSnowpackStructureHighlightsTextcat(): string {
-    return this.snowpackStructureHighlightsTextcat;
-  }
-
-  setSnowpackStructureHighlightsTextcat(snowpackStructureHighlightsTextcat: string) {
-    this.snowpackStructureHighlightsTextcat = snowpackStructureHighlightsTextcat;
-  }
-
-  getSnowpackStructureCommentTextcat(): string {
-    return this.snowpackStructureCommentTextcat;
-  }
-
-  setSnowpackStructureCommentTextcat(snowpackStructureCommentTextcat: string) {
-    this.snowpackStructureCommentTextcat = snowpackStructureCommentTextcat;
-  }
-
-  getTendencyCommentTextcat(): string {
-    return this.tendencyCommentTextcat;
-  }
-
-  setTendencyCommentTextcat(tendencyCommentTextcat: string) {
-    this.tendencyCommentTextcat = tendencyCommentTextcat;
-  }
-
-  getAvActivityHighlightsTextcat(): string {
-    return this.avActivityHighlightsTextcat;
-  }
-
-  setAvActivityHighlightsTextcat(avActivityHighlightsTextcat: string) {
-    this.avActivityHighlightsTextcat = avActivityHighlightsTextcat;
-  }
-
-  getAvActivityHighlightsNotes(): string {
-    return this.avActivityHighlightsNotes;
-  }
-
-  setAvActivityHighlightsNotes(avActivityHighlightsNotes: string) {
-    this.avActivityHighlightsNotes = avActivityHighlightsNotes;
-  }
-
-  getAvActivityCommentNotes(): string {
-    return this.avActivityCommentNotes;
-  }
-
-  setAvActivityCommentNotes(avActivityCommentNotes: string) {
-    this.avActivityCommentNotes = avActivityCommentNotes;
-  }
-
-  getSnowpackStructureHighlightsNotes(): string {
-    return this.snowpackStructureHighlightsNotes;
-  }
-
-  setSnowpackStructureHighlightsNotes(snowpackStructureHighlightsNotes: string) {
-    this.snowpackStructureHighlightsNotes = snowpackStructureHighlightsNotes;
-  }
-
-  getSnowpackStructureCommentNotes(): string {
-    return this.snowpackStructureCommentNotes;
-  }
-
-  setSnowpackStructureCommentNotes(snowpackStructureCommentNotes: string) {
-    this.snowpackStructureCommentNotes = snowpackStructureCommentNotes;
-  }
-
-  getTendencyCommentNotes(): string {
-    return this.tendencyCommentNotes;
-  }
-
-  setTendencyCommentNotes(tendencyCommentNotes: string) {
-    this.tendencyCommentNotes = tendencyCommentNotes;
-  }
-
-  getHighlightsTextcat(): string {
-    return this.highlightsTextcat;
-  }
-
-  setHighlightsTextcat(highlightsTextcat: string) {
-    this.highlightsTextcat = highlightsTextcat;
-  }
-
-  getTendency() {
-    return this.tendency;
-  }
-
-  setTendency(tendency: Enums.Tendency) {
-    this.tendency = tendency;
-  }
-
-  getDangerPattern1() {
-    return this.dangerPattern1;
-  }
-
-  setDangerPattern1(dangerPattern: Enums.DangerPattern) {
-    this.dangerPattern1 = dangerPattern;
-  }
-
-  getDangerPattern2() {
-    return this.dangerPattern2;
-  }
-
-  setDangerPattern2(dangerPattern: Enums.DangerPattern) {
-    this.dangerPattern2 = dangerPattern;
   }
 
   getForenoonDangerRatingAbove(): Enums.DangerRating {
