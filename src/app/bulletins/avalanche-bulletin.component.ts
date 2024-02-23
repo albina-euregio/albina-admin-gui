@@ -178,10 +178,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.updateBulletinOnServer();
   }
 
-  onNotesFocusOut(event) {
-    this.updateBulletinOnServer();
-  }
-
   accordionChanged(event: boolean, groupName: string) {
     switch (groupName) {
       case "dangerRating":
@@ -299,54 +295,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  openTextcat($event: Event | undefined, field: TextcatTextfield, textDef: string) {
-    this.copyService.resetCopyTextcat();
-    $event?.preventDefault();
-    const regions = {
-      [this.constantsService.codeSwitzerland]: "Switzerland",
-      [this.constantsService.codeTyrol]: "Tyrol",
-      [this.constantsService.codeSouthTyrol]: "South Tyrol",
-      [this.constantsService.codeTrentino]: "Trentino",
-      [this.constantsService.codeAran]: "Aran",
-      [this.constantsService.codeAndorra]: "Andorra",
-    };
-    const activeRegion = this.authenticationService.getActiveRegionId();
-    this.showDialog({
-      textField: field,
-      textDef: textDef || "",
-      currentLang: this.translateService.currentLang,
-      region: regions[activeRegion] || "",
-    });
-  }
-
-  copyTextcat(event, field: TextcatTextfield) {
-    this.copyService.setCopyTextcat(true);
-    this.copyService.setTextTextcat(this.bulletin[`${field}Textcat`]);
-    this.copyService.setFromLangTexts(this.bulletin[`${field}$`]);
-  }
-
-  concatTextcat(text1: string | undefined, text2: string | undefined) {
-    if (!text1) return text2;
-    if (!text2) return text1;
-    return text1.slice(0, -1).concat(",", text2.substring(1));
-  }
-
-  pasteTextcat(event, field: TextcatTextfield) {
-    this.bulletin[`${field}Textcat`] = this.concatTextcat(
-      this.bulletin[`${field}Textcat`],
-      this.copyService.getTextTextcat(),
-    );
-    this.bulletin[`${field}$`] = concatenateLangTexts(this.bulletin[`${field}$`], this.copyService.toLangTexts);
-    this.copyService.resetCopyTextcat();
-    this.updateBulletinOnServer();
-  }
-
-  deleteTextcat(event, field: TextcatTextfield) {
-    this.bulletin[`${field}Textcat`] = undefined;
-    this.bulletin[`${field}$`] = {} as LangTexts;
-    this.updateBulletinOnServer();
-  }
-
   getText(e: MessageEvent) {
     e.preventDefault();
     if (
@@ -374,9 +322,9 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   loadAvActivityCommentExampleText(avalancheProblem: AvalancheProblemStr) {
     const textcat = this.constantsService.avActivityCommentTextcat[avalancheProblem];
     if (!textcat) return;
-    this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, textcat);
-    this.openTextcat(undefined, "avActivityComment", this.bulletin.avActivityCommentTextcat);
-    this.loadAvActivityCommentExampleTextModalRef.hide();
+    // this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, textcat);
+    // this.openTextcat(undefined, "avActivityComment", this.bulletin.avActivityCommentTextcat);
+    // this.loadAvActivityCommentExampleTextModalRef.hide();
   }
 
   loadAvActivityCommentExampleTextCancel() {
@@ -390,12 +338,12 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   loadSnowpackStructureCommentExampleText(avalancheProblem: AvalancheProblemStr) {
     const textcat = this.constantsService.snowpackStructureCommentTextcat[avalancheProblem];
     if (!textcat) return;
-    this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-      this.bulletin.snowpackStructureCommentTextcat,
-      textcat,
-    );
-    this.openTextcat(undefined, "snowpackStructureComment", this.bulletin.snowpackStructureCommentTextcat);
-    this.loadSnowpackStructureCommentExampleTextModalRef.hide();
+    // this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+    //   this.bulletin.snowpackStructureCommentTextcat,
+    //   textcat,
+    // );
+    // this.openTextcat(undefined, "snowpackStructureComment", this.bulletin.snowpackStructureCommentTextcat);
+    // this.loadSnowpackStructureCommentExampleTextModalRef.hide();
   }
 
   loadSnowpackStructureCommentExampleTextCancel() {
@@ -476,7 +424,7 @@ export type TextcatTextfield =
   | "text";
 
 // alias pmData, alias inputDef
-interface TextcatLegacyIn {
+export interface TextcatLegacyIn {
   textDef: string;
   textField: TextcatTextfield;
   currentLang: string;
