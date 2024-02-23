@@ -7,7 +7,7 @@ export class BulletinModel {
   public id: string;
 
   public author: AuthorModel;
-  public additionalAuthors: String[];
+  public additionalAuthors: string[];
   public ownerRegion: string;
 
   public publicationDate: Date;
@@ -15,9 +15,9 @@ export class BulletinModel {
   public validFrom: Date;
   public validUntil: Date;
 
-  public suggestedRegions: String[];
-  public savedRegions: String[];
-  public publishedRegions: String[];
+  public suggestedRegions: string[];
+  public savedRegions: string[];
+  public publishedRegions: string[];
 
   public hasDaytimeDependency: boolean;
 
@@ -55,7 +55,7 @@ export class BulletinModel {
     bulletin.setId(json.id);
     bulletin.setAuthor(AuthorModel.createFromJson(json.author));
     const jsonAdditionalAuthors = json.additionalAuthors;
-    const additionalAuthors = new Array<String>();
+    const additionalAuthors = new Array<string>();
     for (const i in jsonAdditionalAuthors) {
       if (jsonAdditionalAuthors[i] !== null) {
         additionalAuthors.push(jsonAdditionalAuthors[i]);
@@ -75,7 +75,7 @@ export class BulletinModel {
     bulletin.setValidUntil(new Date(json.validity.until));
 
     const jsonSuggestedRegions = json.suggestedRegions;
-    const suggestedRegions = new Array<String>();
+    const suggestedRegions = new Array<string>();
     for (const i in jsonSuggestedRegions) {
       if (jsonSuggestedRegions[i] !== null) {
         suggestedRegions.push(jsonSuggestedRegions[i]);
@@ -84,7 +84,7 @@ export class BulletinModel {
     bulletin.setSuggestedRegions(suggestedRegions);
 
     const jsonSavedRegions = json.savedRegions;
-    const savedRegions = new Array<String>();
+    const savedRegions = new Array<string>();
     for (const i in jsonSavedRegions) {
       if (jsonSavedRegions[i] !== null) {
         savedRegions.push(jsonSavedRegions[i]);
@@ -93,7 +93,7 @@ export class BulletinModel {
     bulletin.setSavedRegions(savedRegions);
 
     const jsonPublishedRegions = json.publishedRegions;
-    const publishedRegions = new Array<String>();
+    const publishedRegions = new Array<string>();
     for (const i in jsonPublishedRegions) {
       if (jsonPublishedRegions[i] !== null) {
         publishedRegions.push(jsonPublishedRegions[i]);
@@ -248,13 +248,13 @@ export class BulletinModel {
       this.dangerPattern2 = bulletin.dangerPattern2;
       this.hasDaytimeDependency = bulletin.hasDaytimeDependency;
     } else {
-      this.additionalAuthors = new Array<String>();
+      this.additionalAuthors = new Array<string>();
       this.ownerRegion = undefined;
       this.validFrom = undefined;
       this.validUntil = undefined;
-      this.suggestedRegions = new Array<String>();
-      this.savedRegions = new Array<String>();
-      this.publishedRegions = new Array<String>();
+      this.suggestedRegions = new Array<string>();
+      this.savedRegions = new Array<string>();
+      this.publishedRegions = new Array<string>();
       this.forenoon = new BulletinDaytimeDescriptionModel();
       this.afternoon = new BulletinDaytimeDescriptionModel();
       this.highlightsTextcat = undefined;
@@ -296,11 +296,11 @@ export class BulletinModel {
     this.author = author;
   }
 
-  getAdditionalAuthors(): String[] {
+  getAdditionalAuthors(): string[] {
     return this.additionalAuthors;
   }
 
-  setAdditionalAuthors(additionalAuthors: String[]) {
+  setAdditionalAuthors(additionalAuthors: string[]) {
     this.additionalAuthors = additionalAuthors;
   }
 
@@ -342,27 +342,27 @@ export class BulletinModel {
     this.validUntil = validUntil;
   }
 
-  getSuggestedRegions(): String[] {
+  getSuggestedRegions(): string[] {
     return this.suggestedRegions;
   }
 
-  setSuggestedRegions(suggestedRegions: String[]) {
+  setSuggestedRegions(suggestedRegions: string[]) {
     this.suggestedRegions = suggestedRegions;
   }
 
-  getSavedRegions(): String[] {
+  getSavedRegions(): string[] {
     return this.savedRegions;
   }
 
-  setSavedRegions(savedRegions: String[]) {
+  setSavedRegions(savedRegions: string[]) {
     this.savedRegions = savedRegions;
   }
 
-  getPublishedRegions(): String[] {
+  getPublishedRegions(): string[] {
     return this.publishedRegions;
   }
 
-  setPublishedRegions(publishedRegions: String[]) {
+  setPublishedRegions(publishedRegions: string[]) {
     this.publishedRegions = publishedRegions;
   }
 

@@ -1,8 +1,8 @@
 export class BulletinLockModel {
   public bulletin: string;
   public date: Date;
-  public userEmail: String;
-  public userName: String;
+  public userEmail: string;
+  public userName: string;
   public lock: boolean;
 
   static createFromJson(json) {

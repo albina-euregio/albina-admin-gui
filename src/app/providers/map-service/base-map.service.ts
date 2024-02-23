@@ -74,7 +74,7 @@ export class BaseMapService extends MapService {
     return this.map;
   }
 
-  clickRegion(regionIds: Array<String>) {
+  clickRegion(regionIds: Array<string>) {
     //console.log("clickRegion", this.overlayMaps.regions);
     for (const entry of this.overlayMaps.regions.getLayers()) {
       entry.feature.properties.selected = regionIds.includes(entry.feature.properties.id);

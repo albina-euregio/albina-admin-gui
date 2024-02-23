@@ -234,7 +234,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   acceptSuggestions(event) {
     event.stopPropagation();
-    const suggested = new Array<String>();
+    const suggested = new Array<string>();
     for (const region of this.bulletin.getSuggestedRegions()) {
       if (region.startsWith(this.authenticationService.getActiveRegionId())) {
         this.bulletin.getSavedRegions().push(region);
@@ -250,7 +250,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   rejectSuggestions(event) {
     event.stopPropagation();
-    const suggested = new Array<String>();
+    const suggested = new Array<string>();
     for (const region of this.bulletin.getSuggestedRegions()) {
       if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
         suggested.push(region);

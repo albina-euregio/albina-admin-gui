@@ -197,7 +197,7 @@ export class MapService {
     });
   }
 
-  getClickedRegion(): String {
+  getClickedRegion(): string {
     for (const entry of this.overlayMaps.regions.getLayers()) {
       if (entry.feature.properties.selected) {
         entry.feature.properties.selected = false;

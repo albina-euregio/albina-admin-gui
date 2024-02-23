@@ -297,7 +297,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       // copy bulletins from other date
       if (this.bulletinsService.getCopyDate()) {
-        const regions = new Array<String>();
+        const regions = new Array<string>();
         regions.push(this.authenticationService.getActiveRegionId());
 
         // load own bulletins from the date they are copied from
@@ -307,7 +307,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.bulletinsService.setCopyDate(undefined);
             // load foreign bulletins from the current date
             if (this.authenticationService.isEuregio()) {
-              const foreignRegions = new Array<String>();
+              const foreignRegions = new Array<string>();
               foreignRegions.push(this.constantsService.codeTyrol);
               foreignRegions.push(this.constantsService.codeSouthTyrol);
               foreignRegions.push(this.constantsService.codeTrentino);
@@ -366,7 +366,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private loadBulletinsFromServer() {
     console.log("Load internal bulletins");
-    const regions = new Array<String>();
+    const regions = new Array<string>();
     if (this.authenticationService.isEuregio()) {
       regions.push(this.constantsService.codeTyrol);
       regions.push(this.constantsService.codeSouthTyrol);
@@ -697,7 +697,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.setValidUntil(validUntil);
 
       // only own regions
-      const saved = new Array<String>();
+      const saved = new Array<string>();
       for (const region of bulletin.getSavedRegions()) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           saved.push(region);
@@ -711,8 +711,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       if (saved.length > 0) {
         bulletin.setSavedRegions(saved);
-        bulletin.setSuggestedRegions(new Array<String>());
-        bulletin.setPublishedRegions(new Array<String>());
+        bulletin.setSuggestedRegions(new Array<string>());
+        bulletin.setPublishedRegions(new Array<string>());
       }
 
       result.push(bulletin);
@@ -859,12 +859,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const bulletin = new BulletinModel(originalBulletin);
 
       bulletin.setAuthor(this.authenticationService.getAuthor());
-      bulletin.setAdditionalAuthors(new Array<String>());
+      bulletin.setAdditionalAuthors(new Array<string>());
       bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
       bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
 
       // reset regions
-      const saved = new Array<String>();
+      const saved = new Array<string>();
       for (const region of bulletin.getSavedRegions()) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           saved.push(region);
@@ -879,8 +879,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       if (saved.length > 0) {
         bulletin.setSavedRegions(saved);
 
-        bulletin.setSuggestedRegions(new Array<String>());
-        bulletin.setPublishedRegions(new Array<String>());
+        bulletin.setSuggestedRegions(new Array<string>());
+        bulletin.setPublishedRegions(new Array<string>());
 
         this.addInternalBulletin(bulletin);
       }
@@ -1026,12 +1026,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   acceptSuggestions(event, bulletin: BulletinModel) {
     event.stopPropagation();
-    const suggested = new Array<String>();
+    const suggested = new Array<string>();
     for (const region of bulletin.getSuggestedRegions()) {
       if (region.startsWith(this.authenticationService.getActiveRegionId())) {
         // delete region from other bulletinInputModels
         for (const b of this.internBulletinsList) {
-          const savedRegions = new Array<String>();
+          const savedRegions = new Array<string>();
           for (const entry of b.getSavedRegions()) {
             if (entry !== region) {
               savedRegions.push(entry);
@@ -1053,7 +1053,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   rejectSuggestions(event, bulletin: BulletinModel) {
     event.stopPropagation();
-    const suggested = new Array<String>();
+    const suggested = new Array<string>();
     for (const region of bulletin.getSuggestedRegions()) {
       if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
         suggested.push(region);
@@ -1086,10 +1086,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   copyBulletin(bulletin: BulletinModel) {
     if (this.checkAvalancheProblems()) {
       const newBulletin = new BulletinModel(bulletin);
-      newBulletin.setAdditionalAuthors(new Array<String>());
-      newBulletin.setSavedRegions(new Array<String>());
-      newBulletin.setPublishedRegions(new Array<String>());
-      newBulletin.setSuggestedRegions(new Array<String>());
+      newBulletin.setAdditionalAuthors(new Array<string>());
+      newBulletin.setSavedRegions(new Array<string>());
+      newBulletin.setPublishedRegions(new Array<string>());
+      newBulletin.setSuggestedRegions(new Array<string>());
 
       newBulletin.setAuthor(this.authenticationService.getAuthor());
       newBulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
@@ -1361,7 +1361,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.editRegions = false;
 
       // delete old saved regions in own area
-      const oldSavedRegions = new Array<String>();
+      const oldSavedRegions = new Array<string>();
       for (const region of this.activeBulletin.getSavedRegions()) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           oldSavedRegions.push(region);
@@ -1373,7 +1373,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       // delete old published regions in own area
-      const oldPublishedRegions = new Array<String>();
+      const oldPublishedRegions = new Array<string>();
       for (const region of this.activeBulletin.getPublishedRegions()) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           oldPublishedRegions.push(region);
@@ -1385,7 +1385,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       // delete old suggested regions outside own area
-      const oldSuggestedRegions = new Array<String>();
+      const oldSuggestedRegions = new Array<string>();
       for (const region of this.activeBulletin.getSuggestedRegions()) {
         if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
           oldSuggestedRegions.push(region);
@@ -1698,7 +1698,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const date = new Date(this.bulletinsService.getActiveDate());
     date.setDate(date.getDate() - 1);
 
-    const regions = new Array<String>();
+    const regions = new Array<string>();
     regions.push(this.authenticationService.getActiveRegionId());
 
     this.bulletinsService.loadBulletins(date, regions).subscribe(
