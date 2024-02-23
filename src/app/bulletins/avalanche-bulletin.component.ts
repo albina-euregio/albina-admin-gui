@@ -273,45 +273,25 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
       if (this.bulletin.hasDaytimeDependency) {
         this.bulletin.afternoon.setDangerRatingAbove(this.bulletin.forenoon.getDangerRatingAbove());
-        if (
-          this.bulletin.forenoon.getAvalancheProblem1() &&
-          this.bulletin.forenoon.getAvalancheProblem1() !== undefined
-        ) {
-          this.bulletin.afternoon.setAvalancheProblem1(
-            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem1()),
-          );
+        const avalancheProblem1 = this.bulletin.forenoon.getAvalancheProblem1();
+        if (avalancheProblem1) {
+          this.bulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(avalancheProblem1));
         }
-        if (
-          this.bulletin.forenoon.getAvalancheProblem2() &&
-          this.bulletin.forenoon.getAvalancheProblem2() !== undefined
-        ) {
-          this.bulletin.afternoon.setAvalancheProblem2(
-            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem2()),
-          );
+        const avalancheProblem2 = this.bulletin.forenoon.getAvalancheProblem2();
+        if (avalancheProblem2) {
+          this.bulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(avalancheProblem2));
         }
-        if (
-          this.bulletin.forenoon.getAvalancheProblem3() &&
-          this.bulletin.forenoon.getAvalancheProblem3() !== undefined
-        ) {
-          this.bulletin.afternoon.setAvalancheProblem3(
-            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem3()),
-          );
+        const avalancheProblem3 = this.bulletin.forenoon.getAvalancheProblem3();
+        if (avalancheProblem3) {
+          this.bulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(avalancheProblem3));
         }
-        if (
-          this.bulletin.forenoon.getAvalancheProblem4() &&
-          this.bulletin.forenoon.getAvalancheProblem4() !== undefined
-        ) {
-          this.bulletin.afternoon.setAvalancheProblem4(
-            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem4()),
-          );
+        const avalancheProblem4 = this.bulletin.forenoon.getAvalancheProblem4();
+        if (avalancheProblem4) {
+          this.bulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(avalancheProblem4));
         }
-        if (
-          this.bulletin.forenoon.getAvalancheProblem5() &&
-          this.bulletin.forenoon.getAvalancheProblem5() !== undefined
-        ) {
-          this.bulletin.afternoon.setAvalancheProblem5(
-            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem5()),
-          );
+        const avalancheProblem5 = this.bulletin.forenoon.getAvalancheProblem5();
+        if (avalancheProblem5) {
+          this.bulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(avalancheProblem5));
         }
         if (this.bulletin.forenoon.hasElevationDependency) {
           this.bulletin.afternoon.setHasElevationDependency(true);
