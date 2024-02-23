@@ -60,7 +60,7 @@ build:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - rsync -avz -e 'ssh -p2201' --delete dist/ $SFTP_SERVER
+    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose dist/ $SFTP_SERVER
 
 build:development:
   extends: .envsubst
@@ -154,4 +154,31 @@ docker-build:
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA --insecure-registry=$CI_REGISTRY --insecure
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+    - when: manual
+
+build:observations-api:
+  stage: build
+  image:
+    name: oven/bun:latest
+  script:
+    - bun install --no-save --ignore-scripts
+    - cd observations-api/
+    - bun install --no-save --ignore-scripts
+    - bun run build
+    - cd ../
+    - mkdir dist/
+    - mv observations-api/*.mjs dist/
+  environment:
+    name: observations-api
+  artifacts:
+    paths:
+      - dist/
+
+deploy:observations-api:
+  extends: .deploy
+  needs:
+    - build:observations-api
+  environment:
+    name: observations-api
+  rules:
     - when: manual

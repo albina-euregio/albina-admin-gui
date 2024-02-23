@@ -50,6 +50,5 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     ObservationsComponent,
     BlogComponent
   ],
-  providers: []
 })
 export class AdminModule { }

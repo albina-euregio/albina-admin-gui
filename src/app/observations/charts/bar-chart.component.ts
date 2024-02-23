@@ -25,7 +25,6 @@ const defaultDataBarOptions = {
 @Component({
   standalone: true,
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
-  providers: [provideEcharts()],
   selector: "app-bar-chart",
   templateUrl: "./base-chart.component.html",
   styleUrls: ["./bar-chart.component.scss"],

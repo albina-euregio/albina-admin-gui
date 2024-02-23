@@ -72,6 +72,5 @@ import { MapService } from "../providers/map-service/map.service";
         TabComponent,
         AvalancheProblemIconsComponent
     ],
-    providers: [DatePipe, MapService]
 })
 export class BulletinsModule { }

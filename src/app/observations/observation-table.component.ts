@@ -31,7 +31,6 @@ import { ObservationMarkerService, importantObservationTexts } from "./observati
     ToggleButtonModule,
     TranslateModule,
   ],
-  providers: [AlbinaObservationsService, ObservationMarkerService, TranslateService],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })
@@ -148,30 +147,7 @@ export class ObservationTableComponent {
   }
 
   getTableRowStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
-    // TODO this.markerService.toMarkerColor(observation);
-    if (!isAvalancheWarningServiceObservation(observation)) {
-      return;
-    }
-    switch (observation.$data.eventType) {
-      case EventType.Important:
-        return { color: "red" };
-      case EventType.PersonNo:
-        return { background: "linear-gradient(90deg, cyan 0%, white 50%)" };
-      case EventType.PersonUninjured:
-        return {
-          background: "linear-gradient(90deg, limegreen 0%, white 50%)",
-        };
-      case EventType.PersonInjured:
-        return { background: "linear-gradient(90deg, yellow 0%, white 50%)" };
-      case EventType.PersonDead:
-        return { background: "linear-gradient(90deg, red 0%, white 50%)" };
-      case EventType.PersonUnknown:
-        return { background: "linear-gradient(90deg, gray 0%, white 50%)" };
-      case EventType.NeighborRegion:
-        return {
-          background: "linear-gradient(90deg, darkviolet 0%, white 50%)",
-        };
-    }
+    return { background: "linear-gradient(90deg, " + this.markerService.toMarkerColor(observation) + " 0%, white 50%)" };
   }
 
   getTableIconStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
