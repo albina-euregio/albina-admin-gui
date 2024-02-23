@@ -72,9 +72,7 @@ export class AuthenticationService {
 
   public logout() {
     localStorage.removeItem(this.env + "currentAuthor");
-    if (this.currentAuthor && this.currentAuthor !== undefined) {
-      console.debug("[" + this.currentAuthor.name + "] Logged out!");
-    }
+    console.debug("[" + this.currentAuthor?.name + "] Logged out!");
     this.currentAuthor = null;
     this.activeRegion = undefined;
     localStorage.removeItem("activeRegion");
