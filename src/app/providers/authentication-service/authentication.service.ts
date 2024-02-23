@@ -260,12 +260,12 @@ export class AuthenticationService {
     localStorage.setItem(this.env + "currentAuthor", JSON.stringify(this.currentAuthor));
   }
 
-  public getCurrentAuthorRegions() {
-    if (this.currentAuthor) {
-      return this.currentAuthor.getRegions();
-    } else {
-      return [];
-    }
+  public getCurrentAuthorRegions(): RegionConfiguration[] {
+    return this.currentAuthor?.getRegions() || [];
+  }
+
+  public getCurrentAuthorRegionIds(): string[] {
+    return this.getCurrentAuthorRegions().map((r) => r.id);
   }
 
   public getExternalServers(): ServerModel[] {
