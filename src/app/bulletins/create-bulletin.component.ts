@@ -1529,19 +1529,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  isForeign(bulletin: BulletinModel): boolean {
-    if (
-      bulletin.getOwnerRegion() !== undefined &&
-      (bulletin.getOwnerRegion().startsWith(this.constantsService.codeTyrol) ||
-        bulletin.getOwnerRegion().startsWith(this.constantsService.codeSouthTyrol) ||
-        bulletin.getOwnerRegion().startsWith(this.constantsService.codeTrentino)) &&
-      !this.isCreator(bulletin)
-    ) {
-      return true;
-    }
-    return false;
-  }
-
   getForeignRegionNames() {
     if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTyrol)) {
       return (
