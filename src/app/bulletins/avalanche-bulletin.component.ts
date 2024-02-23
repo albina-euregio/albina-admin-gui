@@ -363,7 +363,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
       });
   }
 
-  copyTextcat(event, field) {
+  copyTextcat(event, field: TextcatTextfield) {
     switch (field) {
       case "highlights":
         this.copyService.setCopyTextcat(true);
@@ -395,11 +395,11 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  concatTextcat(text1, text2) {
+  concatTextcat(text1: string, text2: string) {
     return text1.slice(0, -1).concat(",", text2.substring(1));
   }
 
-  pasteTextcat(event, field) {
+  pasteTextcat(event, field: TextcatTextfield) {
     switch (field) {
       case "highlights":
         if (this.bulletin.highlightsTextcat !== undefined) {
@@ -446,7 +446,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.updateBulletinOnServer();
   }
 
-  deleteTextcat(event, field) {
+  deleteTextcat(event, field: TextcatTextfield) {
     switch (field) {
       case "highlights":
         this.bulletin.highlightsTextcat = undefined;
@@ -474,7 +474,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.updateBulletinOnServer();
   }
 
-  getText(e) {
+  getText(e: MessageEvent) {
     e.preventDefault();
     if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk" && e.data.source !== "react-devtools-content-script") {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
