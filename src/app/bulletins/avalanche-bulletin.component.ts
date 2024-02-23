@@ -77,8 +77,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   public loadSnowpackStructureCommentExampleTextModalRef: BsModalRef;
   @ViewChild("loadSnowpackStructureCommentExampleTextTemplate") loadSnowpackStructureCommentExampleTextTemplate: TemplateRef<any>;
 
-  public pmUrl: SafeUrl;
-
   stopListening: Function;
 
   // tra le proprietà del componente
@@ -109,14 +107,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (!this.isComparedBulletin) {
       this.stopListening = this.renderer.listen("window", "message", this.getText.bind(this));
-
-      // for reload iframe on change language
-      this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
-        () => this.pmUrl = this.getTextcatUrl()
-      );
-
-      // setting pm language for iframe
-      this.pmUrl = this.getTextcatUrl();
     }
   }
 
@@ -171,15 +161,15 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  showDialog(pmData) {
+  showDialog(pmData: TextcatLegacyIn) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = "calc(100% - 10px)";
     dialogConfig.height = "calc(100% - 10px)";
     dialogConfig.maxHeight = "100%";
     dialogConfig.maxWidth = "100%";
     dialogConfig.data = {
-      pmUrl: this.pmUrl,
-      pmData: pmData
+      pmUrl: this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl),
+      pmData: JSON.stringify(pmData)
     };
 
     this.dialog.open(CatalogOfPhrasesComponent, dialogConfig);
@@ -194,14 +184,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
       this.showNotes = false;
     else
       this.showNotes = true;
-  }
-
-  private getTextcatUrl(): SafeUrl {
-    // lang
-    const l = this.settingsService.getLangString() === "it" ? "it" : "de"; // only de+it are supported
-    const r = this.authenticationService.getActiveRegionCode();
-    const url = environment.textcatUrl + "?l=" +  l + "&r=" + r;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   onDangerPattern1Change(event) {
@@ -373,16 +355,12 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   openTextcat($event: Event | undefined, field: TextcatTextfield, textDef: string) {
     this.copyService.resetCopyTextcat();
     $event?.preventDefault();
-
-    // make Json to send to pm
-    const pmData = JSON.stringify({
-      textField: field,
-      textDef: textDef || "",
-      currentLang: this.translateService.currentLang,
-      region: this.authenticationService.getTextcatRegionCode()
-    } satisfies TextcatLegacyIn);
-
-    this.showDialog(pmData);
+    this.showDialog({
+        textField: field,
+        textDef: textDef || "",
+        currentLang: this.translateService.currentLang,
+        region: this.authenticationService.getTextcatRegionCode()
+      });
   }
 
   copyTextcat(event, field) {
