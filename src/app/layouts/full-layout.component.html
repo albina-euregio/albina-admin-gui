@@ -106,7 +106,7 @@
           aria-expanded="false"
           dropdownToggle
         >
-          <img src="{{ authenticationService.getUserImageSanitized() }}" class="user-avatar__img" />
+          <img *ngIf="authenticationService.getUserImageSanitized()" [src]="authenticationService.getUserImageSanitized()" class="user-avatar__img" />
           {{ authenticationService.getUsername() }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
