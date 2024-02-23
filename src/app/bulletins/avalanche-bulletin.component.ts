@@ -59,12 +59,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   public isAccordionSnowpackStructureOpen: boolean;
   public isAccordionTendencyOpen: boolean;
 
-  public showTranslationsHighlights: boolean;
-  public showTranslationsAvActivityHighlights: boolean;
-  public showTranslationsAvActivityComment: boolean;
-  public showTranslationsSnowpackStructureComment: boolean;
-  public showTranslationsTendencyComment: boolean;
-
   public loadAvActivityCommentExampleTextModalRef: BsModalRef;
   @ViewChild("loadAvActivityCommentExampleTextTemplate") loadAvActivityCommentExampleTextTemplate: TemplateRef<any>;
 
@@ -186,32 +180,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   onNotesFocusOut(event) {
     this.updateBulletinOnServer();
-  }
-
-  setShowTranslations(name: string) {
-    switch (name) {
-      case "highlights":
-        this.showTranslationsHighlights = !this.showTranslationsHighlights;
-        break;
-      case "avActivityHighlights":
-        this.showTranslationsAvActivityHighlights = !this.showTranslationsAvActivityHighlights;
-        break;
-      case "avActivityComment":
-        this.showTranslationsAvActivityComment = !this.showTranslationsAvActivityComment;
-        break;
-      case "snowpackStructureComment":
-        this.showTranslationsSnowpackStructureComment = !this.showTranslationsSnowpackStructureComment;
-        break;
-      case "tendencyComment":
-        this.showTranslationsTendencyComment = !this.showTranslationsTendencyComment;
-        break;
-      default:
-        break;
-    }
-  }
-
-  get translationLanguages() {
-    return LANGUAGES.filter((l) => l !== this.settingsService.getLangString());
   }
 
   accordionChanged(event: boolean, groupName: string) {
@@ -498,7 +466,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 }
 
-type TextcatTextfield =
+export type TextcatTextfield =
   | "highlights"
   | "avActivityHighlights"
   | "avActivityComment"

@@ -35,6 +35,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { DialogModule } from "primeng/dialog";
 import { MapService } from "../providers/map-service/map.service";
+import {BulletinTextComponent} from "./bulletin-text.component";
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import { MapService } from "../providers/map-service/map.service";
     BulletinsComponent,
     CreateBulletinComponent,
     AvalancheBulletinComponent,
+    BulletinTextComponent,
     AspectsComponent,
     DangerRatingComponent,
     DangerRatingIconComponent,

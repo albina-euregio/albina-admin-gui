@@ -220,358 +220,47 @@
         data-bs-parent="#region-form-accordion"
       >
         <!-- Special alert -->
-        <div class="from-group">
-          <label class="form-label" for="text-input">
-            {{ "bulletins.create.label.highlights" | translate }}
-          </label>
-          <div class="form-field-with-toolbar">
-            <div class="btn-group--border form-field-toolbar">
-              <button
-                [disabled]="
-                  disabled
-                "
-                type="reset"
-                class="btn btn-sm btn-icon btn-bare"
-                data-toggle="tooltip"
-                title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
-                (click)="
-                  openTextcat(
-                    $event,
-                    'highlights',
-                    bulletin.highlightsTextcat
-                  )
-                "
-              >
-                <i class="ph ph-pencil-line"></i>
-              </button>
-              <button
-                *ngIf="!copyService.isCopyTextcat()"
-                [disabled]="loading || editRegions"
-                type="reset"
-                class="btn btn-sm btn-icon btn-bare"
-                data-toggle="tooltip"
-                title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
-                (click)="copyTextcat($event, 'highlights')"
-              >
-                <i class="ph ph-copy"></i>
-              </button>
-              <button
-                *ngIf="copyService.isCopyTextcat()"
-                [disabled]="
-                  disabled
-                "
-                type="reset"
-                class="btn btn-sm btn-icon btn-bare"
-                data-toggle="tooltip"
-                title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
-                (click)="pasteTextcat($event, 'highlights')"
-              >
-                <i class="ph ph-clipboard-text"></i>
-              </button>
-              <button
-                [disabled]="
-                  disabled
-                "
-                type="reset"
-                class="btn btn-sm btn-icon btn-bare"
-                data-toggle="tooltip"
-                title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
-                (click)="deleteTextcat($event, 'highlights')"
-              >
-                <i class="ph ph-trash"></i>
-              </button>
-            </div>
-            <textarea
-              rows="1"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.highlights$[this.settingsService.getLangString()] | html"
-            ></textarea>
-          </div>
-
-          <!-- Translations -->
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            *ngIf="showTranslationsHighlights"
-            type="button"
-            (click)="setShowTranslations('highlights')"
-          >
-            <i class="ph ph-caret-down"></i>
-            <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
-          </button>
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            type="button"
-            *ngIf="!showTranslationsHighlights"
-            (click)="setShowTranslations('highlights')"
-          >
-            <i class="ph ph-caret-right"></i>
-            <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
-          </button>
-
-          <div *ngIf="showTranslationsHighlights" class="region-form__translation-block">
-            <div
-              *ngFor="let lang of translationLanguages"
-              class="input-group region-form__translation-item"
-            >
-              <span class="input-group-text">{{lang | uppercase}}</span>
-              <textarea
-                rows="2"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.highlights$[lang] | html"
-              ></textarea>
-            </div>
-          </div>
-        </div>
+        <app-bulletin-text
+          textField="highlights"
+          rows="1"
+          [bulletin]="bulletin"
+          [disabled]="disabled"
+          [showNotes]="showNotes"
+          (copyTextcat)="copyTextcat(undefined, $event)"
+          (deleteTextcat)="deleteTextcat(undefined, $event)"
+          (notesFocusOut)="onNotesFocusOut(undefined)"
+          (openTextcat)="openTextcat(undefined, $event, bulletin[$event + 'Textcat'])"
+          (pasteTextcat)="pasteTextcat(undefined, $event)"
+        />
         <!-- End Translations-->
 
         <!-- Danger situation headline -->
-        <div class="form-group">
-          <div class="row">
-            <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
-              <label class="form-label" for="text-input">
-                {{ "bulletins.create.label.avActivityHighlights" | translate }}
-              </label>
-              <div class="form-field-with-toolbar">
-                <!-- Toolbar -->
-                <div class="btn-group--border form-field-toolbar">
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="disabled"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
-                    (click)="
-                      openTextcat(
-                        $event,
-                        'avActivityHighlights',
-                        bulletin.avActivityHighlightsTextcat
-                      )
-                    "
-                  >
-                    <i class="ph ph-pencil-line"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="!copyService.isCopyTextcat()"
-                    [disabled]="loading || editRegions"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
-                    (click)="copyTextcat($event, 'avActivityHighlights')"
-                  >
-                    <i class="ph ph-copy"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="copyService.isCopyTextcat()"
-                    [disabled]="disabled"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
-                    (click)="pasteTextcat($event, 'avActivityHighlights')"
-                  >
-                    <i class="ph ph-clipboard-text"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="disabled"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
-                    (click)="deleteTextcat($event, 'avActivityHighlights')"
-                  >
-                    <i class="ph ph-trash"></i>
-                  </button>
-                </div>
-                <!-- End of toolbar -->
-                <textarea
-                  rows="3"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$[this.settingsService.getLangString()] | html"
-                ></textarea>
-              </div>
-            </div>
-            <div *ngIf="showNotes" class="col-5">
-              <label class="form-label" for="text-input">{{ "bulletins.create.label.notes" | translate }} </label>
-              <textarea
-                rows="3"
-                class="form-control"
-                [disabled]="disabled"
-                [(ngModel)]="bulletin.avActivityHighlightsNotes"
-                (focusout)="onNotesFocusOut($event)"
-                placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
-              ></textarea>
-            </div>
-          </div>
-
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            type="button"
-            *ngIf="showTranslationsAvActivityHighlights"
-            (click)="setShowTranslations('avActivityHighlights')"
-          >
-            <i class="ph ph-caret-down"></i>
-            <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
-          </button>
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            type="button"
-            *ngIf="!showTranslationsAvActivityHighlights"
-            (click)="setShowTranslations('avActivityHighlights')"
-          >
-            <i class="ph ph-caret-right"></i>
-            <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
-          </button>
-
-          <div *ngIf="showTranslationsAvActivityHighlights" class="region-form__translation-block">
-            <div
-              *ngFor="let lang of translationLanguages"
-              class="input-group region-form__translation-item"
-            >
-              <span class="input-group-text">{{lang | uppercase}}</span>
-              <textarea
-                rows="3"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$[lang] | html"
-              ></textarea>
-            </div>
-          </div>
-        </div>
+        <app-bulletin-text
+          textField="avActivityHighlights"
+          rows="3"
+          [bulletin]="bulletin"
+          [disabled]="disabled"
+          [showNotes]="showNotes"
+          (copyTextcat)="copyTextcat(undefined, $event)"
+          (deleteTextcat)="deleteTextcat(undefined, $event)"
+          (notesFocusOut)="onNotesFocusOut(undefined)"
+          (openTextcat)="openTextcat(undefined, $event, bulletin[$event + 'Textcat'])"
+          (pasteTextcat)="pasteTextcat(undefined, $event)"
+        />
 
         <!-- Danger situation description -->
-        <div class="form-group">
-          <div class="row">
-            <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
-              <label class="form-label" for="text-input">
-                {{ "bulletins.create.label.avActivityComment" | translate }}
-              </label>
-              <div class="form-field-with-toolbar">
-                <div class="btn-group--border form-field-toolbar">
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="disabled"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
-                    (click)="
-                      openTextcat(
-                        $event,
-                        'avActivityComment',
-                        bulletin.avActivityCommentTextcat
-                      )
-                    "
-                  >
-                    <i class="ph ph-pencil-line"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="disabled"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
-                    (click)="openLoadAvActivityCommentExampleTextModal(loadAvActivityCommentExampleTextTemplate)"
-                  >
-                    <i class="ph ph-article"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="!copyService.isCopyTextcat()"
-                    [disabled]="loading || editRegions"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
-                    (click)="copyTextcat($event, 'avActivityComment')"
-                  >
-                    <i class="ph ph-copy"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="copyService.isCopyTextcat()"
-                    [disabled]="disabled"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
-                    (click)="pasteTextcat($event, 'avActivityComment')"
-                  >
-                    <i class="ph ph-clipboard-text"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="disabled"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
-                    (click)="deleteTextcat($event, 'avActivityComment')"
-                  >
-                    <i class="ph ph-trash"></i>
-                  </button>
-                </div>
-
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'oc'"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$[this.settingsService.getLangString()] | html"
-                ></textarea>
-              </div>
-            </div>
-            <div *ngIf="showNotes" class="col-5">
-              <label class="form-label" for="text-input">
-                {{ "bulletins.create.label.notes" | translate }}
-              </label>
-              <textarea
-                rows="9"
-                class="form-control"
-                [disabled]="disabled"
-                [(ngModel)]="bulletin.avActivityCommentNotes"
-                (focusout)="onNotesFocusOut($event)"
-                placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
-              ></textarea>
-            </div>
-          </div>
-          <!-- row -->
-
-          <!-- Translations -->
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            type="button"
-            *ngIf="showTranslationsAvActivityComment"
-            (click)="setShowTranslations('avActivityComment')"
-          >
-            <i class="ph ph-caret-down"></i>
-            <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
-          </button>
-
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            *ngIf="!showTranslationsAvActivityComment"
-            (click)="setShowTranslations('avActivityComment')"
-          >
-            <i class="ph ph-caret-right"></i>
-            <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
-          </button>
-
-          <div *ngIf="showTranslationsAvActivityComment" class="region-form__translation-block">
-            <div
-              *ngFor="let lang of translationLanguages"
-              class="input-group region-form__translation-item"
-            >
-              <span class="input-group-text">{{lang | uppercase}}</span>
-              <textarea
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$[lang] | html"
-              ></textarea>
-            </div>
-          </div>
-          <!-- End of translations-->
-        </div>
+        <app-bulletin-text
+          textField="avActivityComment"
+          rows="9"
+          [bulletin]="bulletin"
+          [disabled]="disabled"
+          [showNotes]="showNotes"
+          (copyTextcat)="copyTextcat(undefined, $event)"
+          (deleteTextcat)="deleteTextcat(undefined, $event)"
+          (notesFocusOut)="onNotesFocusOut(undefined)"
+          (openTextcat)="openTextcat(undefined, $event, bulletin[$event + 'Textcat'])"
+          (pasteTextcat)="pasteTextcat(undefined, $event)"
+        />
         <!-- End of danger situation description -->
       </div>
       <!-- End of danger description panel content -->
@@ -642,141 +331,18 @@
         <!-- End of danger patterns -->
 
         <!-- Danger pattern description -->
-        <div class="form-group">
-          <div class="row">
-            <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
-              <label class="form-label" for="text-input">
-                {{ "bulletins.create.label.snowpackStructureComment" | translate }}
-              </label>
-              <div class="form-field-with-toolbar">
-                <div class="btn-group--border form-field-toolbar">
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="
-                      disabled
-                    "
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
-                    (click)="
-                      openTextcat(
-                        $event,
-                        'snowpackStructureComment',
-                        bulletin.snowpackStructureCommentTextcat
-                      )
-                    "
-                  >
-                    <i class="ph ph-pencil-line"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="
-                      disabled
-                    "
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
-                    (click)="
-                      openLoadSnowpackStructureCommentExampleTextModal(
-                        loadSnowpackStructureCommentExampleTextTemplate
-                      )
-                    "
-                  >
-                    <i class="ph ph-article"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="!copyService.isCopyTextcat()"
-                    [disabled]="loading || editRegions"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
-                    (click)="copyTextcat($event, 'snowpackStructureComment')"
-                  >
-                    <i class="ph ph-copy"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="copyService.isCopyTextcat()"
-                    [disabled]="
-                      disabled
-                    "
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
-                    (click)="pasteTextcat($event, 'snowpackStructureComment')"
-                  >
-                    <i class="ph ph-clipboard-text"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="
-                      disabled
-                    "
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
-                    (click)="deleteTextcat($event, 'snowpackStructureComment')"
-                  >
-                    <i class="ph ph-trash"></i>
-                  </button>
-                </div>
-                <textarea
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$[this.settingsService.getLangString()] | html"
-                ></textarea>
-              </div>
-            </div>
-            <div *ngIf="showNotes" class="col-md-5">
-              <label class="form-label" for="text-input">
-                {{ "bulletins.create.label.notes" | translate }}
-              </label>
-              <textarea
-                rows="9"
-                class="form-control"
-                [disabled]="disabled"
-                [(ngModel)]="bulletin.snowpackStructureCommentNotes"
-                (focusout)="onNotesFocusOut($event)"
-                placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
-              ></textarea>
-            </div>
-          </div>
-          <!-- Translations -->
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            type="button"
-            *ngIf="showTranslationsSnowpackStructureComment"
-            (click)="setShowTranslations('snowpackStructureComment')"
-          >
-            <i class="ph ph-caret-down"></i>
-            <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
-          </button>
-          <button
-            class="btn btn-sm btn-bare region-form__translation-toggle"
-            type="button"
-            *ngIf="!showTranslationsSnowpackStructureComment"
-            (click)="setShowTranslations('snowpackStructureComment')"
-          >
-            <i class="ph ph-caret-right"></i>
-            <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
-          </button>
-          <div *ngIf="showTranslationsSnowpackStructureComment" class="region-form__translation-block">
-            <div
-              *ngFor="let lang of translationLanguages"
-              class="input-group region-form__translation-item"
-            >
-              <span class="input-group-text">{{lang | uppercase}}</span>
-              <textarea
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$[lang] | html"
-              ></textarea>
-            </div>
-          </div>
-        </div>
+        <app-bulletin-text
+          textField="snowpackStructureComment"
+          rows="9"
+          [bulletin]="bulletin"
+          [disabled]="disabled"
+          [showNotes]="showNotes"
+          (copyTextcat)="copyTextcat(undefined, $event)"
+          (deleteTextcat)="deleteTextcat(undefined, $event)"
+          (notesFocusOut)="onNotesFocusOut(undefined)"
+          (openTextcat)="openTextcat(undefined, $event, bulletin[$event + 'Textcat'])"
+          (pasteTextcat)="pasteTextcat(undefined, $event)"
+        />
         <!-- End of danger pattern description -->
       </div>
       <!-- End of snowpack structure panel content-->
@@ -823,131 +389,19 @@
         <!-- End of tendency picker -->
 
         <!-- Tendency comment -->
-        <div class="form-group">
-          <div class="row">
-            <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
-              <label class="form-label" for="text-input">
-                {{ "bulletins.create.label.tendencyComment" | translate }}
-              </label>
-              <div class="form-field-with-toolbar">
-                <!-- Toolbar -->
-                <div class="btn-group--border form-field-toolbar">
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="
-                      disabled
-                    "
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
-                    (click)="
-                      openTextcat(
-                        $event,
-                        'tendencyComment',
-                        bulletin.tendencyCommentTextcat
-                      )
-                    "
-                  >
-                    <i class="ph ph-pencil-line"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="!copyService.isCopyTextcat()"
-                    [disabled]="loading || editRegions"
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
-                    (click)="copyTextcat($event, 'tendencyComment')"
-                  >
-                    <i class="ph ph-copy"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    *ngIf="copyService.isCopyTextcat()"
-                    [disabled]="
-                      disabled
-                    "
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
-                    (click)="pasteTextcat($event, 'tendencyComment')"
-                  >
-                    <i class="ph ph-clipboard-text"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-bare"
-                    [disabled]="
-                      disabled
-                    "
-                    type="reset"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
-                    (click)="deleteTextcat($event, 'tendencyComment')"
-                  >
-                    <i class="ph ph-trash"></i>
-                  </button>
-                </div>
-                <!-- End of toolbar -->
-                <textarea
-                  rows="5"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$[this.settingsService.getLangString()] | html"
-                ></textarea>
-              </div>
-            </div>
-            <div *ngIf="showNotes" class="col-5">
-              <label class="form-label" for="text-input">
-                {{ "bulletins.create.label.notes" | translate }}
-              </label>
-              <textarea
-                rows="5"
-                class="form-control"
-                [disabled]="disabled"
-                [(ngModel)]="bulletin.tendencyCommentNotes"
-                (focusout)="onNotesFocusOut($event)"
-                placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
-              ></textarea>
-            </div>
-          </div>
-        </div>
+        <app-bulletin-text
+          textField="tendencyComment"
+          rows="5"
+          [bulletin]="bulletin"
+          [disabled]="disabled"
+          [showNotes]="showNotes"
+          (copyTextcat)="copyTextcat(undefined, $event)"
+          (deleteTextcat)="deleteTextcat(undefined, $event)"
+          (notesFocusOut)="onNotesFocusOut(undefined)"
+          (openTextcat)="openTextcat(undefined, $event, bulletin[$event + 'Textcat'])"
+          (pasteTextcat)="pasteTextcat(undefined, $event)"
+        />
         <!-- End of tendency comment -->
-
-        <!-- Translations -->
-        <button
-          class="btn btn-sm btn-bare region-form__translation-toggle"
-          type="button"
-          *ngIf="showTranslationsTendencyComment"
-          (click)="setShowTranslations('tendencyComment')"
-        >
-          <i class="ph ph-caret-down"></i>
-          <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
-        </button>
-        <button
-          class="btn btn-sm btn-bare region-form__translation-toggle"
-          type="button"
-          *ngIf="!showTranslationsTendencyComment"
-          (click)="setShowTranslations('tendencyComment')"
-        >
-          <i class="ph ph-caret-right"></i>
-          <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
-        </button>
-
-        <div *ngIf="showTranslationsTendencyComment" class="region-form__translation-block">
-          <div
-            *ngFor="let lang of translationLanguages"
-            class="input-group region-form__translation-item"
-          >
-            <span class="input-group-text">{{lang | uppercase}}</span>
-            <textarea
-              rows="5"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$[lang] | html"
-            ></textarea>
-          </div>
-        </div>
-        <!-- End of translations-->
       </div>
       <!-- End tendency-->
     </accordion-group>

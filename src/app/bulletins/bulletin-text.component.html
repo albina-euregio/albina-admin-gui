@@ -1,0 +1,105 @@
+<div class="form-group">
+  <div class="row">
+    <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
+      <label class="form-label">
+        {{ "bulletins.create.label." + textField | translate }}
+      </label>
+      <div class="form-field-with-toolbar">
+        <!-- Toolbar -->
+        <div class="btn-group--border form-field-toolbar">
+          <button
+            class="btn btn-sm btn-icon btn-bare"
+            [disabled]="disabled"
+            type="reset"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
+            (click)="openTextcat.emit(textField)"
+          >
+            <i class="ph ph-pencil-line"></i>
+          </button>
+          <button
+            class="btn btn-sm btn-icon btn-bare"
+            *ngIf="!copyService.isCopyTextcat()"
+            [disabled]="disabled"
+            type="reset"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
+            (click)="copyTextcat.emit(textField)"
+          >
+            <i class="ph ph-copy"></i>
+          </button>
+          <button
+            class="btn btn-sm btn-icon btn-bare"
+            *ngIf="copyService.isCopyTextcat()"
+            [disabled]="disabled"
+            type="reset"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
+            (click)="pasteTextcat.emit(textField)"
+          >
+            <i class="ph ph-clipboard-text"></i>
+          </button>
+          <button
+            class="btn btn-sm btn-icon btn-bare"
+            [disabled]="disabled"
+            type="reset"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
+            (click)="deleteTextcat.emit(textField)"
+          >
+            <i class="ph ph-trash"></i>
+          </button>
+        </div>
+        <!-- End of toolbar -->
+        <textarea
+          class="form-control"
+          [rows]="rows"
+          [disabled]="true"
+          [ngModel]="bulletin[textField + '$'][translateService.currentLang] | html"
+        ></textarea>
+      </div>
+    </div>
+    <div *ngIf="showNotes" class="col-5">
+      <label class="form-label">{{ "bulletins.create.label.notes" | translate }} </label>
+      <textarea
+        class="form-control"
+        [rows]="rows"
+        [disabled]="disabled"
+        [(ngModel)]="bulletin[textField + 'Notes']"
+        (focusout)="notesFocusOut.emit(textField)"
+        placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
+      ></textarea>
+    </div>
+  </div>
+
+  <button
+    class="btn btn-sm btn-bare region-form__translation-toggle"
+    type="button"
+    *ngIf="showTranslations"
+    (click)="showTranslations = !showTranslations"
+  >
+    <i class="ph ph-caret-down"></i>
+    <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
+  </button>
+  <button
+    class="btn btn-sm btn-bare region-form__translation-toggle"
+    type="button"
+    *ngIf="!showTranslations"
+    (click)="showTranslations = !showTranslations"
+  >
+    <i class="ph ph-caret-right"></i>
+    <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
+  </button>
+
+  <div *ngIf="showTranslations" class="region-form__translation-block">
+    <div *ngFor="let lang of translationLanguages" class="input-group region-form__translation-item">
+      <span class="input-group-text">{{ lang | uppercase }}</span>
+      <textarea
+        class="form-control"
+        [rows]="rows"
+        [disabled]="true"
+        [ngModel]="bulletin[textField + '$'][lang] | html"
+      ></textarea>
+    </div>
+  </div>
+</div>
