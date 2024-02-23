@@ -6,22 +6,19 @@ import * as Enums from "../enums/enums";
 
 @Component({
   selector: "app-avalanche-problem",
-  templateUrl: "avalanche-problem.component.html"
+  templateUrl: "avalanche-problem.component.html",
 })
 export class AvalancheProblemComponent {
-
   @Input() bulletinModel: BulletinModel;
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() afternoon: boolean;
   @Input() disabled: boolean;
   @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
-  
+
   showAspects: boolean;
   avalancheProblemEnum = Enums.AvalancheProblem;
 
-  constructor(
-    public settingsService: SettingsService) {
-  }
+  constructor(public settingsService: SettingsService) {}
 
   changeAvalancheProblemDetail(event) {
     this.changeAvalancheProblemEvent.emit();

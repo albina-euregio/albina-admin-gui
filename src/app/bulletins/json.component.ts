@@ -5,10 +5,9 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
-  templateUrl: "json.component.html"
+  templateUrl: "json.component.html",
 })
 export class JsonComponent implements OnInit {
-
   public bulletins: string;
   public loading: boolean;
 
@@ -20,13 +19,14 @@ export class JsonComponent implements OnInit {
 
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-sm",
   };
 
   constructor(
     public bulletinsService: BulletinsService,
     private router: Router,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+  ) {
     this.bulletins = undefined;
     this.loading = false;
   }
@@ -34,7 +34,7 @@ export class JsonComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.bulletinsService.loadJsonBulletins(this.bulletinsService.getActiveDate()).subscribe(
-      data => {
+      (data) => {
         this.loading = false;
         if ((data as any).status === 204) {
           this.openNoJsonModal(this.noJsonTemplate);
@@ -46,7 +46,7 @@ export class JsonComponent implements OnInit {
       () => {
         this.loading = false;
         this.openJsonNotLoadedModal(this.jsonNotLoadedTemplate);
-      }
+      },
     );
   }
 

@@ -9,16 +9,15 @@ import { MediaFileService } from "app/providers/media-file-service/media-file.se
 
 @Component({
   selector: "app-modal-media-file",
-  templateUrl: "modal-media-file.component.html"
+  templateUrl: "modal-media-file.component.html",
 })
-
 export class ModalMediaFileComponent {
   date;
   component;
   file;
   text;
   important;
-  
+
   public alerts: any[] = [];
 
   constructor(
@@ -27,11 +26,11 @@ export class ModalMediaFileComponent {
     public bulletinsService: BulletinsService,
     public constantsService: ConstantsService,
     public mediaFileService: MediaFileService,
-    public translateService: TranslateService) {
-  }
+    public translateService: TranslateService,
+  ) {}
 
   mediaFileModalConfirm(): void {
-    this.uploadFile()
+    this.uploadFile();
   }
 
   mediaFileModalDecline(): void {
@@ -43,12 +42,12 @@ export class ModalMediaFileComponent {
   }
 
   toggleImportant() {
-    this.important ? this.important = false : this.important = true;
+    this.important ? (this.important = false) : (this.important = true);
   }
 
   uploadFile() {
     if (this.text == null || this.text == "") {
-      this.text = "---"
+      this.text = "---";
     }
     if (this.file == null) {
       console.log("No file selected!");
@@ -56,30 +55,29 @@ export class ModalMediaFileComponent {
       this.alerts.push({
         type: "danger",
         msg: this.translateService.instant("bulletins.table.mediaFileDialog.missingFile"),
-        timeout: 5000
+        timeout: 5000,
       });
       return;
     }
 
-    this.mediaFileService.uploadFile(this.date, this.file, this.text, this.important)
-      .subscribe(
-        data => {
-          console.log("Upload complete!");
-          this.component.mediaFileModalConfirm();
-        },
-        error => {
-          console.log("Upload Error:", error);
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "danger",
-            msg: this.translateService.instant("bulletins.table.mediaFileDialog.uploadError"),
-            timeout: 5000
-          });
-        }
-      )
+    this.mediaFileService.uploadFile(this.date, this.file, this.text, this.important).subscribe(
+      (data) => {
+        console.log("Upload complete!");
+        this.component.mediaFileModalConfirm();
+      },
+      (error) => {
+        console.log("Upload Error:", error);
+        window.scrollTo(0, 0);
+        this.alerts.push({
+          type: "danger",
+          msg: this.translateService.instant("bulletins.table.mediaFileDialog.uploadError"),
+          timeout: 5000,
+        });
+      },
+    );
   }
 
   onClosed(dismissedAlert: AlertComponent): void {
-    this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
+    this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 }

@@ -14,37 +14,37 @@ const routes: Routes = [
     component: BulletinsComponent,
     canActivate: [AuthGuard],
     data: {
-      title: "Bulletins"
-    }
+      title: "Bulletins",
+    },
   },
   {
     path: ":date",
     component: CreateBulletinComponent,
     canActivate: [AuthGuard],
     data: {
-      title: "New Bulletin"
-    }
+      title: "New Bulletin",
+    },
   },
   {
     path: "caaml",
     component: CaamlComponent,
     canActivate: [AuthGuard],
     data: {
-      title: "CAAML"
-    }
+      title: "CAAML",
+    },
   },
   {
     path: "json",
     component: JsonComponent,
     canActivate: [AuthGuard],
     data: {
-      title: "JSON"
-    }
-  }
+      title: "JSON",
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class BulletinsRoutingModule { }
+export class BulletinsRoutingModule {}

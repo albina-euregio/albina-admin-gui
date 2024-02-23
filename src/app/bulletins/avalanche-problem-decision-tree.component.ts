@@ -6,7 +6,7 @@ import * as Enums from "../enums/enums";
 @Component({
   selector: "app-avalanche-problem-decision-tree",
   templateUrl: "avalanche-problem-decision-tree.component.html",
-  styleUrls: ["avalanche-problem-decision-tree.component.scss"]
+  styleUrls: ["avalanche-problem-decision-tree.component.scss"],
 })
 export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
   private resultIcons: HTMLCollection;
@@ -24,7 +24,7 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
     Enums.AvalancheProblem.wind_slab,
     Enums.AvalancheProblem.persistent_weak_layers,
     Enums.AvalancheProblem.gliding_snow,
-    Enums.AvalancheProblem.cornices
+    Enums.AvalancheProblem.cornices,
   ];
 
   private problem: Enums.AvalancheProblem;
@@ -32,11 +32,13 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
   public constructor(
     private config: DynamicDialogConfig,
     private dialogRef: DynamicDialogRef,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
   public ngAfterContentInit() {
-    document.getElementById("picker-result")["data"] = this.translateService.instant("bulletins.create.decisionTree.filepath");
+    document.getElementById("picker-result")["data"] = this.translateService.instant(
+      "bulletins.create.decisionTree.filepath",
+    );
     setTimeout(() => {
       this.resultsInit();
     }, 250);
@@ -59,7 +61,7 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
     };
     document.addEventListener("keydown", keyEvent);
     (picker as HTMLObjectElement).contentDocument.getElementsByTagName("svg")[0].addEventListener("keydown", keyEvent);
-    
+
     let resultsTransparent = () => {
       let opacity = 0.2;
       for (let i = 0; i < this.resultIcons.length; i++) {
@@ -96,6 +98,6 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
   }
 
   save() {
-    this.dialogRef.close({"problem": this.problem});
+    this.dialogRef.close({ problem: this.problem });
   }
 }

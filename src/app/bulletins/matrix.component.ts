@@ -8,10 +8,9 @@ import { BulletinModel } from "app/models/bulletin.model";
 
 @Component({
   selector: "app-matrix",
-  templateUrl: "matrix.component.html"
+  templateUrl: "matrix.component.html",
 })
 export class MatrixComponent implements AfterViewInit, OnChanges {
-
   @Input() bulletin: BulletinModel;
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() matrixInformation: MatrixInformationModel;
@@ -72,8 +71,8 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
 
   constructor(
     public settingsService: SettingsService,
-    public constantsService: ConstantsService) {
-  }
+    public constantsService: ConstantsService,
+  ) {}
 
   ngAfterViewInit() {
     this.resetMatrix();
@@ -93,8 +92,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
 
   initMatrix() {
     const index = this.getCell(this.matrixInformation);
-    if (index != "0")
-    this.setCellStyleActive(index);
+    if (index != "0") this.setCellStyleActive(index);
   }
 
   private selectCell(cell) {
@@ -428,7 +426,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         frequencyFactor = 1;
         break;
       case Enums.Frequency.few:
-        frequencyFactor = 2
+        frequencyFactor = 2;
         break;
       case Enums.Frequency.none:
         return "0";

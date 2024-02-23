@@ -1,7 +1,6 @@
 import { Component, ViewChild, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { DatePipe } from "@angular/common";
 
-
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
 import { BehaviorSubject } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -36,15 +35,14 @@ declare var L: any;
 
 @Component({
   selector: "app-avalanche-bulletin",
-  templateUrl: "avalanche-bulletin.component.html"
+  templateUrl: "avalanche-bulletin.component.html",
 })
 export class AvalancheBulletinComponent implements OnInit, OnDestroy {
-
   @Input() bulletin: BulletinModel;
   @Input() disabled: boolean;
   @Input() isCompactMapLayout: boolean;
   @Input() isComparedBulletin: boolean;
-  
+
   @Output() updateBulletinOnServerEvent = new EventEmitter<BulletinModel>();
   @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
   @Output() deleteBulletinEvent = new EventEmitter<BulletinModel>();
@@ -52,10 +50,10 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Output() copyBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() setMapLayoutEvent = new EventEmitter<boolean>();
-  
+
   public dangerPattern = Enums.DangerPattern;
   public tendency = Enums.Tendency;
-  
+
   public showNotes: boolean;
   public editRegions: boolean;
 
@@ -75,7 +73,8 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @ViewChild("loadAvActivityCommentExampleTextTemplate") loadAvActivityCommentExampleTextTemplate: TemplateRef<any>;
 
   public loadSnowpackStructureCommentExampleTextModalRef: BsModalRef;
-  @ViewChild("loadSnowpackStructureCommentExampleTextTemplate") loadSnowpackStructureCommentExampleTextTemplate: TemplateRef<any>;
+  @ViewChild("loadSnowpackStructureCommentExampleTextTemplate")
+  loadSnowpackStructureCommentExampleTextTemplate: TemplateRef<any>;
 
   stopListening: Function;
 
@@ -84,7 +83,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   public config = {
     keyboard: true,
-    class: "modal-md"
+    class: "modal-md",
   };
 
   constructor(
@@ -99,7 +98,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     public regionsService: RegionsService,
     public copyService: CopyService,
     private modalService: BsModalService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {
     this.showNotes = false;
   }
@@ -119,7 +118,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   updateBulletinOnServer() {
     this.updateBulletinOnServerEvent.emit(this.bulletin);
   }
-  
+
   copyBulletin(event) {
     this.copyBulletinEvent.emit(this.bulletin);
   }
@@ -131,7 +130,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   deleteBulletin() {
     this.deleteBulletinEvent.emit(this.bulletin);
   }
-  
+
   editMicroRegions() {
     this.editMicroRegionsEvent.emit(this.bulletin);
   }
@@ -152,10 +151,12 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   isForeign(): boolean {
     if (
-      (this.bulletin.getOwnerRegion() !== undefined) &&
-      (this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeTyrol) || this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeSouthTyrol) || this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeTrentino)) &&
-      (!this.isCreator(this.bulletin)))
-    {
+      this.bulletin.getOwnerRegion() !== undefined &&
+      (this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeTyrol) ||
+        this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeSouthTyrol) ||
+        this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeTrentino)) &&
+      !this.isCreator(this.bulletin)
+    ) {
       return true;
     }
     return false;
@@ -169,7 +170,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     dialogConfig.maxWidth = "100%";
     dialogConfig.data = {
       pmUrl: this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl),
-      pmData: JSON.stringify(pmData)
+      pmData: JSON.stringify(pmData),
     };
 
     this.dialog.open(CatalogOfPhrasesComponent, dialogConfig);
@@ -180,17 +181,15 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   toggleShowNotes() {
-    if (this.showNotes)
-      this.showNotes = false;
-    else
-      this.showNotes = true;
+    if (this.showNotes) this.showNotes = false;
+    else this.showNotes = true;
   }
 
   onDangerPattern1Change(event) {
     this.bulletin.setDangerPattern1(event);
     this.updateBulletinOnServer();
   }
-  
+
   onDangerPattern2Change(event) {
     this.bulletin.setDangerPattern2(event);
     this.updateBulletinOnServer();
@@ -294,7 +293,10 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   isCreator(bulletin: BulletinModel): boolean {
-    if (bulletin.getOwnerRegion() !== undefined && bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+    if (
+      bulletin.getOwnerRegion() !== undefined &&
+      bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())
+    ) {
       return true;
     }
     return false;
@@ -307,34 +309,63 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
       if (this.bulletin.hasDaytimeDependency) {
         this.bulletin.afternoon.setDangerRatingAbove(this.bulletin.forenoon.getDangerRatingAbove());
-        if (this.bulletin.forenoon.getAvalancheProblem1() && this.bulletin.forenoon.getAvalancheProblem1() !== undefined) {
-          this.bulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem1()));
+        if (
+          this.bulletin.forenoon.getAvalancheProblem1() &&
+          this.bulletin.forenoon.getAvalancheProblem1() !== undefined
+        ) {
+          this.bulletin.afternoon.setAvalancheProblem1(
+            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem1()),
+          );
         }
-        if (this.bulletin.forenoon.getAvalancheProblem2() && this.bulletin.forenoon.getAvalancheProblem2() !== undefined) {
-          this.bulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem2()));
+        if (
+          this.bulletin.forenoon.getAvalancheProblem2() &&
+          this.bulletin.forenoon.getAvalancheProblem2() !== undefined
+        ) {
+          this.bulletin.afternoon.setAvalancheProblem2(
+            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem2()),
+          );
         }
-        if (this.bulletin.forenoon.getAvalancheProblem3() && this.bulletin.forenoon.getAvalancheProblem3() !== undefined) {
-          this.bulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem3()));
+        if (
+          this.bulletin.forenoon.getAvalancheProblem3() &&
+          this.bulletin.forenoon.getAvalancheProblem3() !== undefined
+        ) {
+          this.bulletin.afternoon.setAvalancheProblem3(
+            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem3()),
+          );
         }
-        if (this.bulletin.forenoon.getAvalancheProblem4() && this.bulletin.forenoon.getAvalancheProblem4() !== undefined) {
-          this.bulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem4()));
+        if (
+          this.bulletin.forenoon.getAvalancheProblem4() &&
+          this.bulletin.forenoon.getAvalancheProblem4() !== undefined
+        ) {
+          this.bulletin.afternoon.setAvalancheProblem4(
+            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem4()),
+          );
         }
-        if (this.bulletin.forenoon.getAvalancheProblem5() && this.bulletin.forenoon.getAvalancheProblem5() !== undefined) {
-          this.bulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem5()));
+        if (
+          this.bulletin.forenoon.getAvalancheProblem5() &&
+          this.bulletin.forenoon.getAvalancheProblem5() !== undefined
+        ) {
+          this.bulletin.afternoon.setAvalancheProblem5(
+            new AvalancheProblemModel(this.bulletin.forenoon.getAvalancheProblem5()),
+          );
         }
         if (this.bulletin.forenoon.hasElevationDependency) {
           this.bulletin.afternoon.setHasElevationDependency(true);
           this.bulletin.afternoon.setDangerRatingBelow(this.bulletin.forenoon.getDangerRatingBelow());
         }
       } else {
-        this.bulletin.afternoon.setDangerRatingAbove(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
+        this.bulletin.afternoon.setDangerRatingAbove(
+          new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing),
+        );
         this.bulletin.afternoon.setAvalancheProblem1(undefined);
         this.bulletin.afternoon.setAvalancheProblem2(undefined);
         this.bulletin.afternoon.setAvalancheProblem3(undefined);
         this.bulletin.afternoon.setAvalancheProblem4(undefined);
         this.bulletin.afternoon.setAvalancheProblem5(undefined);
         this.bulletin.afternoon.setHasElevationDependency(false);
-        this.bulletin.afternoon.setDangerRatingBelow(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
+        this.bulletin.afternoon.setDangerRatingBelow(
+          new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing),
+        );
       }
       this.bulletin.getForenoon().updateDangerRating();
       this.bulletin.getAfternoon().updateDangerRating();
@@ -356,11 +387,11 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.copyService.resetCopyTextcat();
     $event?.preventDefault();
     this.showDialog({
-        textField: field,
-        textDef: textDef || "",
-        currentLang: this.translateService.currentLang,
-        region: this.authenticationService.getTextcatRegionCode()
-      });
+      textField: field,
+      textDef: textDef || "",
+      currentLang: this.translateService.currentLang,
+      region: this.authenticationService.getTextcatRegionCode(),
+    });
   }
 
   copyTextcat(event, field: TextcatTextfield) {
@@ -403,41 +434,70 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     switch (field) {
       case "highlights":
         if (this.bulletin.highlightsTextcat !== undefined) {
-          this.bulletin.highlightsTextcat = this.concatTextcat(this.bulletin.highlightsTextcat, this.copyService.getTextTextcat());
+          this.bulletin.highlightsTextcat = this.concatTextcat(
+            this.bulletin.highlightsTextcat,
+            this.copyService.getTextTextcat(),
+          );
         } else {
           this.bulletin.highlightsTextcat = this.copyService.getTextTextcat();
         }
-        this.bulletin.highlights$ = concatenateLangTexts(this.bulletin.highlights$, this.copyService.toLangTexts);        break;
+        this.bulletin.highlights$ = concatenateLangTexts(this.bulletin.highlights$, this.copyService.toLangTexts);
+        break;
       case "avActivityHighlights":
         if (this.bulletin.avActivityHighlightsTextcat !== undefined) {
-          this.bulletin.avActivityHighlightsTextcat = this.concatTextcat(this.bulletin.avActivityHighlightsTextcat, this.copyService.getTextTextcat());
+          this.bulletin.avActivityHighlightsTextcat = this.concatTextcat(
+            this.bulletin.avActivityHighlightsTextcat,
+            this.copyService.getTextTextcat(),
+          );
         } else {
           this.bulletin.avActivityHighlightsTextcat = this.copyService.getTextTextcat();
         }
-        this.bulletin.avActivityHighlights$ = concatenateLangTexts(this.bulletin.avActivityHighlights$, this.copyService.toLangTexts);        break;
+        this.bulletin.avActivityHighlights$ = concatenateLangTexts(
+          this.bulletin.avActivityHighlights$,
+          this.copyService.toLangTexts,
+        );
+        break;
       case "avActivityComment":
         if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, this.copyService.getTextTextcat());
+          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+            this.bulletin.avActivityCommentTextcat,
+            this.copyService.getTextTextcat(),
+          );
         } else {
           this.bulletin.avActivityCommentTextcat = this.copyService.getTextTextcat();
         }
-        this.bulletin.avActivityComment$ = concatenateLangTexts(this.bulletin.avActivityComment$, this.copyService.toLangTexts);
+        this.bulletin.avActivityComment$ = concatenateLangTexts(
+          this.bulletin.avActivityComment$,
+          this.copyService.toLangTexts,
+        );
         break;
       case "snowpackStructureComment":
         if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(this.bulletin.snowpackStructureCommentTextcat, this.copyService.getTextTextcat());
+          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+            this.bulletin.snowpackStructureCommentTextcat,
+            this.copyService.getTextTextcat(),
+          );
         } else {
           this.bulletin.snowpackStructureCommentTextcat = this.copyService.getTextTextcat();
         }
-        this.bulletin.snowpackStructureComment$ = concatenateLangTexts(this.bulletin.snowpackStructureComment$, this.copyService.toLangTexts);
+        this.bulletin.snowpackStructureComment$ = concatenateLangTexts(
+          this.bulletin.snowpackStructureComment$,
+          this.copyService.toLangTexts,
+        );
         break;
       case "tendencyComment":
         if (this.bulletin.tendencyCommentTextcat !== undefined) {
-          this.bulletin.tendencyCommentTextcat = this.concatTextcat(this.bulletin.tendencyCommentTextcat, this.copyService.getTextTextcat());
+          this.bulletin.tendencyCommentTextcat = this.concatTextcat(
+            this.bulletin.tendencyCommentTextcat,
+            this.copyService.getTextTextcat(),
+          );
         } else {
           this.bulletin.tendencyCommentTextcat = this.copyService.getTextTextcat();
         }
-        this.bulletin.tendencyComment$ = concatenateLangTexts(this.bulletin.tendencyComment$, this.copyService.toLangTexts);
+        this.bulletin.tendencyComment$ = concatenateLangTexts(
+          this.bulletin.tendencyComment$,
+          this.copyService.toLangTexts,
+        );
         break;
       default:
         break;
@@ -452,19 +512,19 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
         this.bulletin.highlightsTextcat = undefined;
         this.bulletin.highlights$ = {} as LangTexts;
         break;
-        case "avActivityHighlights":
+      case "avActivityHighlights":
         this.bulletin.avActivityHighlightsTextcat = undefined;
         this.bulletin.avActivityHighlights$ = {} as LangTexts;
         break;
-        case "avActivityComment":
+      case "avActivityComment":
         this.bulletin.avActivityCommentTextcat = undefined;
         this.bulletin.avActivityComment$ = {} as LangTexts;
         break;
-        case "snowpackStructureComment":
+      case "snowpackStructureComment":
         this.bulletin.snowpackStructureCommentTextcat = undefined;
         this.bulletin.snowpackStructureComment$ = {} as LangTexts;
         break;
-        case "tendencyComment":
+      case "tendencyComment":
         this.bulletin.tendencyCommentTextcat = undefined;
         this.bulletin.tendencyComment$ = {} as LangTexts;
         break;
@@ -476,7 +536,11 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   getText(e: MessageEvent) {
     e.preventDefault();
-    if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk" && e.data.source !== "react-devtools-content-script") {
+    if (
+      e.data.type !== "webpackInvalid" &&
+      e.data.type !== "webpackOk" &&
+      e.data.source !== "react-devtools-content-script"
+    ) {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
       if (pmData.textDef === undefined || pmData.textDef === "") {
         this.bulletin[pmData.textField + "Textcat"] = "";
@@ -498,42 +562,60 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     switch (avalancheProblem) {
       case "newSnow":
         if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, this.constantsService.avActivityCommentNewSnowTextcat);
+          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+            this.bulletin.avActivityCommentTextcat,
+            this.constantsService.avActivityCommentNewSnowTextcat,
+          );
         } else {
           this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentNewSnowTextcat;
         }
         break;
       case "windSlab":
         if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, this.constantsService.avActivityCommentWindSlabTextcat);
+          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+            this.bulletin.avActivityCommentTextcat,
+            this.constantsService.avActivityCommentWindSlabTextcat,
+          );
         } else {
           this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentWindSlabTextcat;
         }
         break;
       case "persistentWeakLayers":
         if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, this.constantsService.avActivityCommentPersistentWeakLayersTextcat);
+          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+            this.bulletin.avActivityCommentTextcat,
+            this.constantsService.avActivityCommentPersistentWeakLayersTextcat,
+          );
         } else {
           this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentPersistentWeakLayersTextcat;
         }
         break;
       case "wetSnow":
         if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, this.constantsService.avActivityCommentWetSnowTextcat);
+          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+            this.bulletin.avActivityCommentTextcat,
+            this.constantsService.avActivityCommentWetSnowTextcat,
+          );
         } else {
           this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentWetSnowTextcat;
         }
         break;
       case "glidingSnow":
         if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, this.constantsService.avActivityCommentGlidingSnowTextcat);
+          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+            this.bulletin.avActivityCommentTextcat,
+            this.constantsService.avActivityCommentGlidingSnowTextcat,
+          );
         } else {
           this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentGlidingSnowTextcat;
         }
         break;
       case "favourableSituation":
         if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, this.constantsService.avActivityCommentFavourableSituationTextcat);
+          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+            this.bulletin.avActivityCommentTextcat,
+            this.constantsService.avActivityCommentFavourableSituationTextcat,
+          );
         } else {
           this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentFavourableSituationTextcat;
         }
@@ -557,44 +639,65 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     switch (avalancheProblem) {
       case "newSnow":
         if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(this.bulletin.snowpackStructureCommentTextcat, this.constantsService.snowpackStructureCommentNewSnowTextcat);
+          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+            this.bulletin.snowpackStructureCommentTextcat,
+            this.constantsService.snowpackStructureCommentNewSnowTextcat,
+          );
         } else {
           this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentNewSnowTextcat;
         }
         break;
       case "windSlab":
         if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(this.bulletin.snowpackStructureCommentTextcat, this.constantsService.snowpackStructureCommentWindSlabTextcat);
+          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+            this.bulletin.snowpackStructureCommentTextcat,
+            this.constantsService.snowpackStructureCommentWindSlabTextcat,
+          );
         } else {
           this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentWindSlabTextcat;
         }
         break;
       case "persistentWeakLayers":
         if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(this.bulletin.snowpackStructureCommentTextcat, this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat);
+          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+            this.bulletin.snowpackStructureCommentTextcat,
+            this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat,
+          );
         } else {
-          this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat;
+          this.bulletin.snowpackStructureCommentTextcat =
+            this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat;
         }
         break;
       case "wetSnow":
         if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(this.bulletin.snowpackStructureCommentTextcat, this.constantsService.snowpackStructureCommentWetSnowTextcat);
+          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+            this.bulletin.snowpackStructureCommentTextcat,
+            this.constantsService.snowpackStructureCommentWetSnowTextcat,
+          );
         } else {
           this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentWetSnowTextcat;
         }
         break;
       case "glidingSnow":
         if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(this.bulletin.snowpackStructureCommentTextcat, this.constantsService.snowpackStructureCommentGlidingSnowTextcat);
+          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+            this.bulletin.snowpackStructureCommentTextcat,
+            this.constantsService.snowpackStructureCommentGlidingSnowTextcat,
+          );
         } else {
-          this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentGlidingSnowTextcat;
+          this.bulletin.snowpackStructureCommentTextcat =
+            this.constantsService.snowpackStructureCommentGlidingSnowTextcat;
         }
         break;
       case "favourableSituation":
         if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(this.bulletin.snowpackStructureCommentTextcat, this.constantsService.snowpackStructureCommentFavourableSituationTextcat);
+          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+            this.bulletin.snowpackStructureCommentTextcat,
+            this.constantsService.snowpackStructureCommentFavourableSituationTextcat,
+          );
         } else {
-          this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentFavourableSituationTextcat;
+          this.bulletin.snowpackStructureCommentTextcat =
+            this.constantsService.snowpackStructureCommentFavourableSituationTextcat;
         }
         break;
       default:
@@ -676,21 +779,19 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   getRegionNames(bulletin): string {
-    const regionNames = bulletin.savedRegions.map(
-      regionCode => this.regionsService.getRegionName(regionCode)
-    );
-    return regionNames.join(', ');
+    const regionNames = bulletin.savedRegions.map((regionCode) => this.regionsService.getRegionName(regionCode));
+    return regionNames.join(", ");
   }
 }
 
-type TextcatTextfield = 
-|"highlights"
-|"avActivityHighlights"
-|"avActivityComment"
-|"snowpackStructureHighlights"
-|"snowpackStructureComment"
-|"tendencyComment"
-|"text"
+type TextcatTextfield =
+  | "highlights"
+  | "avActivityHighlights"
+  | "avActivityComment"
+  | "snowpackStructureHighlights"
+  | "snowpackStructureComment"
+  | "tendencyComment"
+  | "text";
 
 // alias pmData, alias inputDef
 interface TextcatLegacyIn {

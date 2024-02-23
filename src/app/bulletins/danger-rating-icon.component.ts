@@ -4,19 +4,21 @@ import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-des
 
 @Component({
   selector: "app-danger-rating-icon",
-  templateUrl: "danger-rating-icon.component.html"
+  templateUrl: "danger-rating-icon.component.html",
 })
 export class DangerRatingIconComponent {
-
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
 
-  constructor(
-    private constantsService: ConstantsService) {
-  }
+  constructor(private constantsService: ConstantsService) {}
 
   getColorAbove() {
     let dangerRating = undefined;
-    if (this.bulletinDaytimeDescription && this.bulletinDaytimeDescription !== undefined && this.bulletinDaytimeDescription.getDangerRatingAbove() && this.bulletinDaytimeDescription.getDangerRatingAbove() !== undefined) {
+    if (
+      this.bulletinDaytimeDescription &&
+      this.bulletinDaytimeDescription !== undefined &&
+      this.bulletinDaytimeDescription.getDangerRatingAbove() &&
+      this.bulletinDaytimeDescription.getDangerRatingAbove() !== undefined
+    ) {
       dangerRating = this.bulletinDaytimeDescription.getDangerRatingAbove().toString();
     }
     return this.getDangerRatingColor(dangerRating);
@@ -24,7 +26,12 @@ export class DangerRatingIconComponent {
 
   getColorBelow() {
     let dangerRating = undefined;
-    if (this.bulletinDaytimeDescription && this.bulletinDaytimeDescription !== undefined && this.bulletinDaytimeDescription.getDangerRatingBelow() && this.bulletinDaytimeDescription.getDangerRatingBelow() !== undefined) {
+    if (
+      this.bulletinDaytimeDescription &&
+      this.bulletinDaytimeDescription !== undefined &&
+      this.bulletinDaytimeDescription.getDangerRatingBelow() &&
+      this.bulletinDaytimeDescription.getDangerRatingBelow() !== undefined
+    ) {
       dangerRating = this.bulletinDaytimeDescription.getDangerRatingBelow().toString();
     }
     return this.getDangerRatingColor(dangerRating);

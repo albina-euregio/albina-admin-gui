@@ -15,7 +15,6 @@ import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decis
   styleUrls: ["avalanche-problem-detail.component.scss"],
 })
 export class AvalancheProblemDetailComponent implements OnChanges {
-
   @Input() bulletin: BulletinModel;
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() avalancheProblemModel: AvalancheProblemModel;
@@ -49,8 +48,8 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     public settingsService: SettingsService,
     public authenticationService: AuthenticationService,
     public dialogService: DialogService,
-    public translateService: TranslateService) {
-  }
+    public translateService: TranslateService,
+  ) {}
 
   ngOnChanges() {
     if (!this.isElevationHighEditing) {
@@ -74,7 +73,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   public forLabelId(key: string): string {
-    return this.count + (this.afternoon ? '_pm_' : '_am_') + key;
+    return this.count + (this.afternoon ? "_pm_" : "_am_") + key;
   }
 
   isAvalancheProblem(avalancheProblem) {
@@ -219,7 +218,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   showDecisionTreeDialog() {
     const ref = this.dialogService.open(AvalancheProblemDecisionTreeComponent, {
       header: this.translateService.instant("bulletins.create.decisionTree.decisionTree"),
-      contentStyle: { "width": "95vw", "height": "85vh", "overflow": "hidden" }
+      contentStyle: { width: "95vw", height: "85vh", overflow: "hidden" },
     });
     ref.onClose.subscribe((data) => {
       if (data && "problem" in data) {

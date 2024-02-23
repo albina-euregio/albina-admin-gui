@@ -3,10 +3,9 @@ import * as Enums from "../enums/enums";
 
 @Component({
   selector: "app-aspects",
-  templateUrl: "aspects.component.html"
+  templateUrl: "aspects.component.html",
 })
 export class AspectsComponent {
-
   @Input() aspects: string[];
   @Output() aspectsChange = new EventEmitter<string[]>();
   @Input() disabled: boolean;
@@ -14,8 +13,7 @@ export class AspectsComponent {
 
   aspect = Enums.Aspect;
 
-  constructor() {
-  }
+  constructor() {}
 
   getSize() {
     return this.size + "px";
@@ -33,7 +31,7 @@ export class AspectsComponent {
       if (this.aspects?.length === 1) {
         let a: number = Enums.Aspect[this.aspects[0]];
         if (a === aspect) {
-          this.aspects = []
+          this.aspects = [];
         } else {
           let end = (aspect + 1) % 9;
           if (end === 0) {
