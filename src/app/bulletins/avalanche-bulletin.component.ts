@@ -211,7 +211,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   get translationLanguages() {
-    return LANGUAGES.filter(l => l !== this.settingsService.getLangString());
+    return LANGUAGES.filter((l) => l !== this.settingsService.getLangString());
   }
 
   accordionChanged(event: boolean, groupName: string) {
@@ -482,11 +482,11 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     ) {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
       if (pmData.textDef === undefined || pmData.textDef === "") {
-        this.bulletin[pmData.textField + "Textcat"] = "";
-        this.bulletin[pmData.textField + "$"] = {} as LangTexts;
+        this.bulletin[`${pmData.textField}Textcat`] = "";
+        this.bulletin[`${pmData.textField}$`] = {} as LangTexts;
       } else {
-        this.bulletin[pmData.textField + "Textcat"] = pmData.textDef;
-        this.bulletin[pmData.textField + "$"] = convertTextcatToLangTexts(pmData);
+        this.bulletin[`${pmData.textField}Textcat`] = pmData.textDef;
+        this.bulletin[`${pmData.textField}$`] = convertTextcatToLangTexts(pmData);
       }
       this.hideDialog();
       this.updateBulletinOnServer();
