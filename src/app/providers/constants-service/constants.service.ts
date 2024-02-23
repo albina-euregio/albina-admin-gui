@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import { ForecastSource, ObservationSource, ObservationType } from "app/observations/models/generic-observation.model";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
-
-const pkg = require("../../../../package.json");
+import * as pkg from "../../../../package.json";
 
 @Injectable()
 export class ConstantsService {
