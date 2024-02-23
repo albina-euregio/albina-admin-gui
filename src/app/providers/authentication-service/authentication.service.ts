@@ -272,12 +272,6 @@ export class AuthenticationService {
     return this.externalServers;
   }
 
-  public isInSuperRegion(region: string) {
-    if(region.startsWith(this.getActiveRegionId())) return true;
-    if(this.activeRegion.neighborRegions.some(aNeighbor => region.startsWith(aNeighbor))) return true;
-    return false;
-  }
-
   public isInternalRegion(region: string) {
     return region.startsWith(this.constantsService.codeTyrol) || region.startsWith(this.constantsService.codeSouthTyrol) || region.startsWith(this.constantsService.codeTrentino);
   }
