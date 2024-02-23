@@ -174,12 +174,8 @@ export class AuthenticationService {
     return this.currentAuthor?.email;
   }
 
-  public getAccessToken() {
-    return this.currentAuthor?.accessToken;
-  }
-
   public newAuthHeader(mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + this.getAccessToken();
+    const authHeader = "Bearer " + this.currentAuthor?.accessToken;
     return new HttpHeaders({
       "Content-Type": mime,
       "Accept": mime,
@@ -188,7 +184,7 @@ export class AuthenticationService {
   }
 
   public newFileAuthHeader(mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + this.getAccessToken();
+    const authHeader = "Bearer " + this.currentAuthor?.accessToken;
     return new HttpHeaders({
       "Accept": mime,
       "Authorization": authHeader
@@ -202,10 +198,6 @@ export class AuthenticationService {
       "Accept": mime,
       "Authorization": authHeader
     });
-  }
-
-  public getRefreshToken() {
-    return this.currentAuthor?.refreshToken;
   }
 
   public getUserImage() {
