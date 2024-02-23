@@ -1,5 +1,4 @@
 import { Component, ViewChild, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { DatePipe } from "@angular/common";
 
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
 import { BehaviorSubject } from "rxjs";
@@ -25,13 +24,10 @@ import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 
 // For iframe
 import { Renderer2 } from "@angular/core";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { Subscription } from "rxjs";
+import { DomSanitizer } from "@angular/platform-browser";
 
 import * as Enums from "../enums/enums";
 import { LangTexts, concatenateLangTexts } from "../models/text.model";
-
-declare var L: any;
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -78,9 +74,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   stopListening: Function;
 
-  // tra le proprietà del componente
-  eventSubscriber: Subscription;
-
   public config = {
     keyboard: true,
     class: "modal-md",
@@ -98,7 +91,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     public regionsService: RegionsService,
     public copyService: CopyService,
     private modalService: BsModalService,
-    private datePipe: DatePipe,
   ) {
     this.showNotes = false;
   }
