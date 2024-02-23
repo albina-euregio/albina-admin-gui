@@ -352,35 +352,9 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   copyTextcat(event, field: TextcatTextfield) {
-    switch (field) {
-      case "highlights":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.highlightsTextcat);
-        this.copyService.setFromLangTexts(this.bulletin.highlights$);
-        break;
-      case "avActivityHighlights":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.avActivityHighlightsTextcat);
-        this.copyService.setFromLangTexts(this.bulletin.avActivityHighlights$);
-        break;
-      case "avActivityComment":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.avActivityCommentTextcat);
-        this.copyService.setFromLangTexts(this.bulletin.avActivityComment$);
-        break;
-      case "snowpackStructureComment":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.snowpackStructureCommentTextcat);
-        this.copyService.setFromLangTexts(this.bulletin.snowpackStructureComment$);
-        break;
-      case "tendencyComment":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.bulletin.tendencyCommentTextcat);
-        this.copyService.setFromLangTexts(this.bulletin.tendencyComment$);
-        break;
-      default:
-        break;
-    }
+    this.copyService.setCopyTextcat(true);
+    this.copyService.setTextTextcat(this.bulletin[`${field}Textcat`]);
+    this.copyService.setFromLangTexts(this.bulletin[`${field}$`]);
   }
 
   concatTextcat(text1: string | undefined, text2: string | undefined) {
@@ -390,86 +364,18 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   pasteTextcat(event, field: TextcatTextfield) {
-    switch (field) {
-      case "highlights":
-        this.bulletin.highlightsTextcat = this.concatTextcat(
-          this.bulletin.highlightsTextcat,
-          this.copyService.getTextTextcat(),
-        );
-        this.bulletin.highlights$ = concatenateLangTexts(this.bulletin.highlights$, this.copyService.toLangTexts);
-        break;
-      case "avActivityHighlights":
-        this.bulletin.avActivityHighlightsTextcat = this.concatTextcat(
-          this.bulletin.avActivityHighlightsTextcat,
-          this.copyService.getTextTextcat(),
-        );
-        this.bulletin.avActivityHighlights$ = concatenateLangTexts(
-          this.bulletin.avActivityHighlights$,
-          this.copyService.toLangTexts,
-        );
-        break;
-      case "avActivityComment":
-        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-          this.bulletin.avActivityCommentTextcat,
-          this.copyService.getTextTextcat(),
-        );
-        this.bulletin.avActivityComment$ = concatenateLangTexts(
-          this.bulletin.avActivityComment$,
-          this.copyService.toLangTexts,
-        );
-        break;
-      case "snowpackStructureComment":
-        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-          this.bulletin.snowpackStructureCommentTextcat,
-          this.copyService.getTextTextcat(),
-        );
-        this.bulletin.snowpackStructureComment$ = concatenateLangTexts(
-          this.bulletin.snowpackStructureComment$,
-          this.copyService.toLangTexts,
-        );
-        break;
-      case "tendencyComment":
-        this.bulletin.tendencyCommentTextcat = this.concatTextcat(
-          this.bulletin.tendencyCommentTextcat,
-          this.copyService.getTextTextcat(),
-        );
-        this.bulletin.tendencyComment$ = concatenateLangTexts(
-          this.bulletin.tendencyComment$,
-          this.copyService.toLangTexts,
-        );
-        break;
-      default:
-        break;
-    }
+    this.bulletin[`${field}Textcat`] = this.concatTextcat(
+      this.bulletin[`${field}Textcat`],
+      this.copyService.getTextTextcat(),
+    );
+    this.bulletin[`${field}$`] = concatenateLangTexts(this.bulletin[`${field}$`], this.copyService.toLangTexts);
     this.copyService.resetCopyTextcat();
     this.updateBulletinOnServer();
   }
 
   deleteTextcat(event, field: TextcatTextfield) {
-    switch (field) {
-      case "highlights":
-        this.bulletin.highlightsTextcat = undefined;
-        this.bulletin.highlights$ = {} as LangTexts;
-        break;
-      case "avActivityHighlights":
-        this.bulletin.avActivityHighlightsTextcat = undefined;
-        this.bulletin.avActivityHighlights$ = {} as LangTexts;
-        break;
-      case "avActivityComment":
-        this.bulletin.avActivityCommentTextcat = undefined;
-        this.bulletin.avActivityComment$ = {} as LangTexts;
-        break;
-      case "snowpackStructureComment":
-        this.bulletin.snowpackStructureCommentTextcat = undefined;
-        this.bulletin.snowpackStructureComment$ = {} as LangTexts;
-        break;
-      case "tendencyComment":
-        this.bulletin.tendencyCommentTextcat = undefined;
-        this.bulletin.tendencyComment$ = {} as LangTexts;
-        break;
-      default:
-        break;
-    }
+    this.bulletin[`${field}Textcat`] = undefined;
+    this.bulletin[`${field}$`] = {} as LangTexts;
     this.updateBulletinOnServer();
   }
 
