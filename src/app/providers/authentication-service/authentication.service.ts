@@ -154,7 +154,7 @@ export class AuthenticationService {
     for (const server of json)
       this.externalServers.push(ServerModel.createFromJson(server));
   }
-  
+
   public checkExternalServerLogin() {
     for (let server of this.externalServers) {
       if (this.jwtHelper.isTokenExpired(server.accessToken)) {
@@ -254,28 +254,6 @@ export class AuthenticationService {
 
       default:
         return 1;
-    }
-  }
-
-  // region
-  // lang (code used for textcat-ng)
-  public getTextcatRegionCode(): string {
-    switch (this.getActiveRegionId()) {
-      case this.constantsService.codeSwitzerland:
-        return "Switzerland";
-      case this.constantsService.codeTyrol:
-        return "Tyrol";
-      case this.constantsService.codeSouthTyrol:
-        return "South Tyrol";
-      case this.constantsService.codeTrentino:
-        return "Trentino";
-      case this.constantsService.codeAran:
-        return "Aran";
-      case this.constantsService.codeAndorra:
-        return "Andorra";
-
-      default:
-        return "Switzerland";
     }
   }
 

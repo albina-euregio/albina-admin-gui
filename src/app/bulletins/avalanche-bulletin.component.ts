@@ -330,11 +330,20 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   openTextcat($event: Event | undefined, field: TextcatTextfield, textDef: string) {
     this.copyService.resetCopyTextcat();
     $event?.preventDefault();
+    const regions = {
+      [this.constantsService.codeSwitzerland]: "Switzerland",
+      [this.constantsService.codeTyrol]: "Tyrol",
+      [this.constantsService.codeSouthTyrol]: "South Tyrol",
+      [this.constantsService.codeTrentino]: "Trentino",
+      [this.constantsService.codeAran]: "Aran",
+      [this.constantsService.codeAndorra]: "Andorra",
+    };
+    const activeRegion = this.authenticationService.getActiveRegionId();
     this.showDialog({
       textField: field,
       textDef: textDef || "",
       currentLang: this.translateService.currentLang,
-      region: this.authenticationService.getTextcatRegionCode(),
+      region: regions[activeRegion] || "",
     });
   }
 
