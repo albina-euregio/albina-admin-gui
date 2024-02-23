@@ -282,67 +282,10 @@
               </button>
             </div>
             <textarea
-              *ngIf="this.settingsService.getLangString() === 'de'"
-              id="textarea-input"
-              name="textarea-input"
               rows="1"
               class="form-control"
               [disabled]="true"
-              [ngModel]="bulletin.highlights$.de | html"
-            ></textarea>
-            <textarea
-              *ngIf="this.settingsService.getLangString() === 'it'"
-              id="textarea-input"
-              name="textarea-input"
-              rows="1"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.highlights$.it | html"
-            ></textarea>
-            <textarea
-              *ngIf="this.settingsService.getLangString() === 'en'"
-              id="textarea-input"
-              name="textarea-input"
-              rows="1"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.highlights$.en | html"
-            ></textarea>
-            <textarea
-              *ngIf="this.settingsService.getLangString() === 'fr'"
-              id="textarea-input"
-              name="textarea-input"
-              rows="1"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.highlights$.fr | html"
-            ></textarea>
-            <textarea
-              *ngIf="this.settingsService.getLangString() === 'es'"
-              id="textarea-input"
-              name="textarea-input"
-              rows="1"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.highlights$.es | html"
-            ></textarea>
-            <textarea
-              *ngIf="this.settingsService.getLangString() === 'ca'"
-              id="textarea-input"
-              name="textarea-input"
-              rows="1"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.highlights$.ca | html"
-            ></textarea>
-            <textarea
-              *ngIf="this.settingsService.getLangString() === 'oc'"
-              id="textarea-input"
-              name="textarea-input"
-              rows="1"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.highlights$.oc | html"
+              [ngModel]="bulletin.highlights$[this.settingsService.getLangString()] | html"
             ></textarea>
           </div>
 
@@ -368,101 +311,15 @@
 
           <div *ngIf="showTranslationsHighlights" class="region-form__translation-block">
             <div
+              *ngFor="let lang of translationLanguages"
               class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'de'"
             >
-              <span class="input-group-text">DE</span>
+              <span class="input-group-text">{{lang | uppercase}}</span>
               <textarea
-                id="textarea-input"
-                name="textarea-input"
                 rows="2"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="bulletin.highlights$.de | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'it'"
-            >
-              <span class="input-group-text">IT</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="2"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.highlights$.it | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'en'"
-            >
-              <span class="input-group-text">EN</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="2"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.highlights$.en | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'fr'"
-            >
-              <span class="input-group-text">FR</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="2"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.highlights$.fr | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'es'"
-            >
-              <span class="input-group-text">ES</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="2"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.highlights$.es | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'ca'"
-            >
-              <span class="input-group-text">CA</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="2"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.highlights$.ca | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'oc'"
-            >
-              <span class="input-group-text">OC</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="2"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.highlights$.oc | html"
+                [ngModel]="bulletin.highlights$[lang] | html"
               ></textarea>
             </div>
           </div>
@@ -530,67 +387,10 @@
                 </div>
                 <!-- End of toolbar -->
                 <textarea
-                  *ngIf="this.settingsService.getLangString() === 'de'"
-                  id="textarea-input"
-                  name="textarea-input"
                   rows="3"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$.de | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'it'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="3"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$.it | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'en'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="3"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$.en | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'fr'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="3"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$.fr | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'es'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="3"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$.es | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'ca'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="3"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$.ca | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'oc'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="3"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityHighlights$.oc | html"
+                  [ngModel]="bulletin.avActivityHighlights$[this.settingsService.getLangString()] | html"
                 ></textarea>
               </div>
             </div>
@@ -628,101 +428,15 @@
 
           <div *ngIf="showTranslationsAvActivityHighlights" class="region-form__translation-block">
             <div
+              *ngFor="let lang of translationLanguages"
               class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'de'"
             >
-              <span class="input-group-text">DE</span>
+              <span class="input-group-text">{{lang | uppercase}}</span>
               <textarea
-                id="textarea-input"
-                name="textarea-input"
                 rows="3"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$.de | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'it'"
-            >
-              <span class="input-group-text">IT</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="3"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$.it | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'en'"
-            >
-              <span class="input-group-text">EN</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="3"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$.en | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'fr'"
-            >
-              <span class="input-group-text">FR</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="3"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$.fr | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'es'"
-            >
-              <span class="input-group-text">ES</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="3"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$.es | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'ca'"
-            >
-              <span class="input-group-text">CA</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="3"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$.ca | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'oc'"
-            >
-              <span class="input-group-text">OC</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="3"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityHighlights$.oc | html"
+                [ngModel]="bulletin.avActivityHighlights$[lang] | html"
               ></textarea>
             </div>
           </div>
@@ -798,67 +512,11 @@
                 </div>
 
                 <textarea
-                  *ngIf="this.settingsService.getLangString() === 'de'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$.de | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'it'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$.it | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'en'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$.en | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'fr'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$.fr | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'es'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$.es | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'ca'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$.ca | html"
-                ></textarea>
-                <textarea
                   *ngIf="this.settingsService.getLangString() === 'oc'"
-                  id="textarea-input"
-                  name="textarea-input"
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="bulletin.avActivityComment$.oc | html"
+                  [ngModel]="bulletin.avActivityComment$[this.settingsService.getLangString()] | html"
                 ></textarea>
               </div>
             </div>
@@ -900,101 +558,15 @@
 
           <div *ngIf="showTranslationsAvActivityComment" class="region-form__translation-block">
             <div
+              *ngFor="let lang of translationLanguages"
               class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'de'"
             >
-              <span class="input-group-text">DE</span>
+              <span class="input-group-text">{{lang | uppercase}}</span>
               <textarea
-                id="textarea-input"
-                name="textarea-input"
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$.de | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'it'"
-            >
-              <span class="input-group-text">IT</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$.it | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'en'"
-            >
-              <span class="input-group-text">EN</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$.en | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'fr'"
-            >
-              <span class="input-group-text">FR</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$.fr | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'es'"
-            >
-              <span class="input-group-text">ES</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$.es | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'ca'"
-            >
-              <span class="input-group-text">CA</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$.ca | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'oc'"
-            >
-              <span class="input-group-text">OC</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.avActivityComment$.oc | html"
+                [ngModel]="bulletin.avActivityComment$[lang] | html"
               ></textarea>
             </div>
           </div>
@@ -1150,67 +722,10 @@
                   </button>
                 </div>
                 <textarea
-                  *ngIf="this.settingsService.getLangString() === 'de'"
-                  id="textarea-input"
-                  name="textarea-input"
                   rows="9"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$.de | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'it'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$.it | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'en'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$.en | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'fr'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$.fr | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'es'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$.es | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'ca'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$.ca | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'oc'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="9"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.snowpackStructureComment$.oc | html"
+                  [ngModel]="bulletin.snowpackStructureComment$[this.settingsService.getLangString()] | html"
                 ></textarea>
               </div>
             </div>
@@ -1249,101 +764,15 @@
           </button>
           <div *ngIf="showTranslationsSnowpackStructureComment" class="region-form__translation-block">
             <div
+              *ngFor="let lang of translationLanguages"
               class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'de'"
             >
-              <span class="input-group-text">DE</span>
+              <span class="input-group-text">{{lang | uppercase}}</span>
               <textarea
-                id="textarea-input"
-                name="textarea-input"
                 rows="9"
                 class="form-control"
                 [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$.de | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'it'"
-            >
-              <span class="input-group-text">IT</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$.it | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'en'"
-            >
-              <span class="input-group-text">FR</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$.en | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'fr'"
-            >
-              <span class="input-group-text">FR</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$.fr | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'es'"
-            >
-              <span class="input-group-text">ES</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$.es | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'ca'"
-            >
-              <span class="input-group-text">CA</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$.ca | html"
-              ></textarea>
-            </div>
-            <div
-              class="input-group region-form__translation-item"
-              *ngIf="this.settingsService.getLangString() !== 'oc'"
-            >
-              <span class="input-group-text">OC</span>
-              <textarea
-                id="textarea-input"
-                name="textarea-input"
-                rows="9"
-                class="form-control"
-                [disabled]="true"
-                [ngModel]="bulletin.snowpackStructureComment$.oc | html"
+                [ngModel]="bulletin.snowpackStructureComment$[lang] | html"
               ></textarea>
             </div>
           </div>
@@ -1460,67 +889,10 @@
                 </div>
                 <!-- End of toolbar -->
                 <textarea
-                  *ngIf="this.settingsService.getLangString() === 'de'"
-                  id="textarea-input"
-                  name="textarea-input"
                   rows="5"
                   class="form-control"
                   [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$.de | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'it'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="5"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$.it | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'en'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="5"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$.en | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'fr'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="5"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$.fr | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'es'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="5"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$.es | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'ca'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="5"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$.ca | html"
-                ></textarea>
-                <textarea
-                  *ngIf="this.settingsService.getLangString() === 'oc'"
-                  id="textarea-input"
-                  name="textarea-input"
-                  rows="5"
-                  class="form-control"
-                  [disabled]="true"
-                  [ngModel]="bulletin.tendencyComment$.oc | html"
+                  [ngModel]="bulletin.tendencyComment$[this.settingsService.getLangString()] | html"
                 ></textarea>
               </div>
             </div>
@@ -1563,101 +935,15 @@
 
         <div *ngIf="showTranslationsTendencyComment" class="region-form__translation-block">
           <div
+            *ngFor="let lang of translationLanguages"
             class="input-group region-form__translation-item"
-            *ngIf="this.settingsService.getLangString() !== 'de'"
           >
-            <span class="input-group-text">DE</span>
+            <span class="input-group-text">{{lang | uppercase}}</span>
             <textarea
-              id="textarea-input"
-              name="textarea-input"
               rows="5"
               class="form-control"
               [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$.de | html"
-            ></textarea>
-          </div>
-          <div
-            class="input-group region-form__translation-item"
-            *ngIf="this.settingsService.getLangString() !== 'it'"
-          >
-            <span class="input-group-text">IT</span>
-            <textarea
-              id="textarea-input"
-              name="textarea-input"
-              rows="5"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$.it | html"
-            ></textarea>
-          </div>
-          <div
-            class="input-group region-form__translation-item"
-            *ngIf="this.settingsService.getLangString() !== 'en'"
-          >
-            <span class="input-group-text">EN</span>
-            <textarea
-              id="textarea-input"
-              name="textarea-input"
-              rows="5"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$.en | html"
-            ></textarea>
-          </div>
-          <div
-            class="input-group region-form__translation-item"
-            *ngIf="this.settingsService.getLangString() !== 'fr'"
-          >
-            <span class="input-group-text">FR</span>
-            <textarea
-              id="textarea-input"
-              name="textarea-input"
-              rows="5"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$.fr | html"
-            ></textarea>
-          </div>
-          <div
-            class="input-group region-form__translation-item"
-            *ngIf="this.settingsService.getLangString() !== 'es'"
-          >
-            <span class="input-group-text">ES</span>
-            <textarea
-              id="textarea-input"
-              name="textarea-input"
-              rows="5"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$.es | html"
-            ></textarea>
-          </div>
-          <div
-            class="input-group region-form__translation-item"
-            *ngIf="this.settingsService.getLangString() !== 'ca'"
-          >
-            <span class="input-group-text">CA</span>
-            <textarea
-              id="textarea-input"
-              name="textarea-input"
-              rows="5"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$.ca | html"
-            ></textarea>
-          </div>
-          <div
-            class="input-group region-form__translation-item"
-            *ngIf="this.settingsService.getLangString() !== 'oc'"
-          >
-            <span class="input-group-text">OC</span>
-            <textarea
-              id="textarea-input"
-              name="textarea-input"
-              rows="5"
-              class="form-control"
-              [disabled]="true"
-              [ngModel]="bulletin.tendencyComment$.oc | html"
+              [ngModel]="bulletin.tendencyComment$[lang] | html"
             ></textarea>
           </div>
         </div>

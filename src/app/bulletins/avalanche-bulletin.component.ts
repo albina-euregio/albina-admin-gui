@@ -27,7 +27,7 @@ import { Renderer2 } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 
 import * as Enums from "../enums/enums";
-import { LangTexts, concatenateLangTexts } from "../models/text.model";
+import {LangTexts, concatenateLangTexts, LANGUAGES} from "../models/text.model";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -207,6 +207,10 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  get translationLanguages() {
+    return LANGUAGES.filter(l => l !== this.settingsService.getLangString());
   }
 
   accordionChanged(event: boolean, groupName: string) {
