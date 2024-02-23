@@ -243,14 +243,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return this.authenticationService.isEuregio();
   }
 
-  private getTextcatUrl(): SafeUrl {
-    // lang
-    const l = this.settingsService.getLangString() === "it" ? "it" : "de"; // only de+it are supported
-    const r = this.authenticationService.getActiveRegionCode();
-    const url = environment.textcatUrl + "?l=" + l + "&r=" + r;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
-
   ngOnInit() {
     this.activeRoute.params.subscribe((routeParams) => {
       const date = new Date(routeParams.date);

@@ -229,22 +229,6 @@ export class AuthenticationService {
     }
   }
 
-  // region
-  // lang (code used for textcat)
-  public getActiveRegionCode(): number {
-    switch (this.getActiveRegionId()) {
-      case this.constantsService.codeTyrol:
-        return 2;
-      case this.constantsService.codeSouthTyrol:
-        return 3;
-      case this.constantsService.codeTrentino:
-        return 3;
-
-      default:
-        return 1;
-    }
-  }
-
   public isEuregio(): boolean {
     return (
       environment.isEuregio ||
