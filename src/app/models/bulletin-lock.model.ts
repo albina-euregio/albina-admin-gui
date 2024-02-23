@@ -68,16 +68,16 @@ export class BulletinLockModel {
   toJson() {
     const json = Object();
 
-    if (this.bulletin && this.bulletin !== undefined && this.bulletin !== "") {
+    if (this.bulletin) {
       json["bulletin"] = this.bulletin;
     }
-    if (this.date && this.date !== undefined) {
+    if (this.date) {
       json["date"] = this.getISOStringWithTimezoneOffset(this.date);
     }
-    if (this.userName && this.userName !== undefined) {
+    if (this.userName) {
       json["userName"] = this.userName;
     }
-    if (this.userEmail && this.userEmail !== undefined) {
+    if (this.userEmail) {
       json["userEmail"] = this.userEmail;
     }
     json["lock"] = this.lock;

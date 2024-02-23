@@ -195,37 +195,21 @@ export class AvalancheProblemModel {
   }
 
   hasElevationHigh() {
-    if (this.getTreelineHigh()) {
-      return true;
-    } else {
-      if (this.getElevationHigh() && this.getElevationHigh() !== undefined) {
-        return true
-      } else {
-        return false;
-      }
-    }
+    return this.getTreelineHigh() || (this.getElevationHigh() && this.getElevationHigh() !== undefined);
   }
 
   hasElevationLow() {
-    if (this.getTreelineLow()) {
-      return true;
-    } else {
-      if (this.getElevationLow() && this.getElevationLow() !== undefined) {
-        return true
-      } else {
-        return false;
-      }
-    }
+    return this.getTreelineLow() || (this.getElevationLow() && this.getElevationLow() !== undefined);
   }
 
   isDangerRating(dangerRating) {
-    return this.getDangerRating() === dangerRating ? true : false;
+    return this.getDangerRating() === dangerRating;
   }
 
   toJson() {
     const json = Object();
 
-    if (this.avalancheProblem && this.avalancheProblem !== undefined) {
+    if (this.avalancheProblem) {
       json["avalancheProblem"] = this.avalancheProblem;
     }
     if (this.aspects && this.aspects.length > 0) {
@@ -237,28 +221,24 @@ export class AvalancheProblemModel {
     }
     if (this.treelineHigh) {
       json["treelineHigh"] = this.treelineHigh;
-    } else {
-      if (this.elevationHigh && this.elevationHigh !== undefined) {
-        json["elevationHigh"] = this.elevationHigh;
-      }
+    } else if (this.elevationHigh) {
+      json["elevationHigh"] = this.elevationHigh;
     }
     if (this.treelineLow) {
       json["treelineLow"] = this.treelineLow;
-    } else {
-      if (this.elevationLow && this.elevationLow !== undefined) {
-        json["elevationLow"] = this.elevationLow;
-      }
+    } else if (this.elevationLow) {
+      json["elevationLow"] = this.elevationLow;
     }
     if (this.dangerRatingDirection) {
       json["dangerRatingDirection"] = this.dangerRatingDirection;
     }
-    if (this.matrixInformation && this.matrixInformation !== undefined) {
+    if (this.matrixInformation) {
       json["eawsMatrixInformation"] = this.matrixInformation.toJson();
     }
-    if (this.terrainFeatureTextcat && this.terrainFeatureTextcat !== undefined) {
+    if (this.terrainFeatureTextcat) {
       json["terrainFeatureTextcat"] = this.terrainFeatureTextcat;
     }
-    if (this.terrainFeature && this.terrainFeature !== undefined && this.terrainFeature.length > 0) {
+    if (this.terrainFeature && this.terrainFeature.length > 0) {
       const terrainFeature = [];
       for (let i = 0; i <= this.terrainFeature.length - 1; i++) {
         terrainFeature.push(this.terrainFeature[i].toJson());
@@ -272,8 +252,8 @@ export class AvalancheProblemModel {
   toAinevaJson() {
     const json = Object();
 
-    if (this.avalancheProblem && this.avalancheProblem !== undefined) {
-      if (this.avalancheProblem === Enums.AvalancheProblem[Enums.AvalancheProblem.wind_slab] as any) {
+    if (this.avalancheProblem) {
+      if (this.avalancheProblem === (Enums.AvalancheProblem[Enums.AvalancheProblem.wind_slab] as any)) {
         json["avalancheSituation"] = "wind_drifted_snow";
       } else {
         json["avalancheSituation"] = this.avalancheProblem;
@@ -288,25 +268,21 @@ export class AvalancheProblemModel {
     }
     if (this.treelineHigh) {
       json["treelineHigh"] = this.treelineHigh;
-    } else {
-      if (this.elevationHigh && this.elevationHigh !== undefined) {
-        json["elevationHigh"] = this.elevationHigh;
-      }
+    } else if (this.elevationHigh) {
+      json["elevationHigh"] = this.elevationHigh;
     }
     if (this.treelineLow) {
       json["treelineLow"] = this.treelineLow;
-    } else {
-      if (this.elevationLow && this.elevationLow !== undefined) {
-        json["elevationLow"] = this.elevationLow;
-      }
+    } else if (this.elevationLow) {
+      json["elevationLow"] = this.elevationLow;
     }
     if (this.dangerRatingDirection) {
       json["dangerRatingDirection"] = this.dangerRatingDirection;
     }
-    if (this.terrainFeatureTextcat && this.terrainFeatureTextcat !== undefined) {
+    if (this.terrainFeatureTextcat) {
       json["terrainFeatureTextcat"] = this.terrainFeatureTextcat;
     }
-    if (this.terrainFeature && this.terrainFeature !== undefined && this.terrainFeature.length > 0) {
+    if (this.terrainFeature && this.terrainFeature.length > 0) {
       const terrainFeature = [];
       for (let i = 0; i <= this.terrainFeature.length - 1; i++) {
         terrainFeature.push(this.terrainFeature[i].toJson());

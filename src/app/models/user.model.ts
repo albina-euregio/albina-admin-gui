@@ -82,16 +82,16 @@ export class UserModel {
   toJson() {
     const json = Object();
 
-    if (this.name && this.name !== undefined && this.name !== "") {
+    if (this.name) {
       json["name"] = this.name;
     }
-    if (this.email && this.email !== undefined && this.email !== "") {
+    if (this.email) {
       json["email"] = this.email;
     }
-    if (this.password && this.password !== undefined && this.password !== "") {
+    if (this.password) {
       json["password"] = this.password;
     }
-    if (this.organization && this.organization !== undefined && this.organization !== "") {
+    if (this.organization) {
       json["organization"] = this.organization;
     }
     if (this.regions && this.regions.length > 0) {

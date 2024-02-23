@@ -72,11 +72,7 @@ export class ServerModel {
   }
 
   hasRole(role: string) {
-    if (this.roles.indexOf(role) > -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.roles.indexOf(role) > -1;
   }
 
   getRegions(): string[] {
@@ -98,10 +94,10 @@ export class ServerModel {
   toJson() {
     const json = Object();
 
-    if (this.name && this.name !== undefined && this.name !== "") {
+    if (this.name) {
       json["name"] = this.name;
     }
-    if (this.email && this.email !== undefined && this.email !== "") {
+    if (this.email) {
       json["email"] = this.email;
     }
 

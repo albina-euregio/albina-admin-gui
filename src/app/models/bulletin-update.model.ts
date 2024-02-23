@@ -48,10 +48,10 @@ export class BulletinUpdateModel {
   toJson() {
     const json = Object();
 
-    if (this.region && this.region !== undefined) {
+    if (this.region) {
       json["region"] = this.region;
     }
-    if (this.date && this.date !== undefined) {
+    if (this.date) {
       json["date"] = this.getISOStringWithTimezoneOffset(this.date);
     }
     if (this.status !== null && this.status !== undefined) {

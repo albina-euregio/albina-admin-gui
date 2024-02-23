@@ -41,10 +41,10 @@ export class TextModel {
   toJson() {
     const json = Object();
 
-    if (this.languageCode && this.languageCode !== undefined) {
+    if (this.languageCode) {
       json["languageCode"] = Enums.LanguageCode[this.languageCode];
     }
-    if (this.text && this.text !== undefined && this.text !== "") {
+    if (this.text) {
       json["text"] = this.text;
     }
 

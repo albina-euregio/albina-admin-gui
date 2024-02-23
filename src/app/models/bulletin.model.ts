@@ -551,10 +551,10 @@ export class BulletinModel {
   toJson() {
     const json = Object();
 
-    if (this.id && this.id !== undefined) {
+    if (this.id) {
       json["id"] = this.id;
     }
-    if (this.author && this.author !== undefined) {
+    if (this.author) {
       json["author"] = this.author.toJson();
     }
     if (this.additionalAuthors && this.additionalAuthors.length > 0) {
@@ -565,19 +565,19 @@ export class BulletinModel {
       json["additionalAuthors"] = additionalAuthors;
     }
 
-    if (this.ownerRegion && this.ownerRegion !== undefined) {
+    if (this.ownerRegion) {
       json["ownerRegion"] = this.ownerRegion;
     }
 
-    if (this.publicationDate && this.publicationDate !== undefined) {
+    if (this.publicationDate) {
       json["publicationDate"] = this.getISOStringWithTimezoneOffsetUrlEncoded(this.publicationDate);
     }
 
     const validity = Object();
-    if (this.validFrom && this.validFrom !== undefined) {
+    if (this.validFrom) {
       validity["from"] = this.getISOStringWithTimezoneOffsetUrlEncoded(this.validFrom);
     }
-    if (this.validUntil && this.validUntil !== undefined) {
+    if (this.validUntil) {
       validity["until"] = this.getISOStringWithTimezoneOffsetUrlEncoded(this.validUntil);
     }
     json["validity"] = validity;
@@ -606,61 +606,57 @@ export class BulletinModel {
       json["publishedRegions"] = publishedRegions;
     }
 
-    if (this.hasDaytimeDependency) {
-      json["hasDaytimeDependency"] = true;
-    } else {
-      json["hasDaytimeDependency"] = false;
-    }
+    json["hasDaytimeDependency"] = this.hasDaytimeDependency;
 
-    if (this.forenoon && this.forenoon !== undefined) {
+    if (this.forenoon) {
       json["forenoon"] = this.forenoon.toJson();
     }
 
-    if (this.hasDaytimeDependency && this.afternoon && this.afternoon !== undefined) {
+    if (this.hasDaytimeDependency && this.afternoon) {
       json["afternoon"] = this.afternoon.toJson();
     }
 
-    if (this.highlightsTextcat && this.highlightsTextcat !== undefined) {
+    if (this.highlightsTextcat) {
       json["highlightsTextcat"] = this.highlightsTextcat;
     }
 
-    if (this.avActivityHighlightsTextcat && this.avActivityHighlightsTextcat !== undefined) {
+    if (this.avActivityHighlightsTextcat) {
       json["avActivityHighlightsTextcat"] = this.avActivityHighlightsTextcat;
     }
 
-    if (this.avActivityCommentTextcat && this.avActivityCommentTextcat !== undefined) {
+    if (this.avActivityCommentTextcat) {
       json["avActivityCommentTextcat"] = this.avActivityCommentTextcat;
     }
 
-    if (this.snowpackStructureHighlightsTextcat && this.snowpackStructureHighlightsTextcat !== undefined) {
+    if (this.snowpackStructureHighlightsTextcat) {
       json["snowpackStructureHighlightsTextcat"] = this.snowpackStructureHighlightsTextcat;
     }
 
-    if (this.snowpackStructureCommentTextcat && this.snowpackStructureCommentTextcat !== undefined) {
+    if (this.snowpackStructureCommentTextcat) {
       json["snowpackStructureCommentTextcat"] = this.snowpackStructureCommentTextcat;
     }
 
-    if (this.tendencyCommentTextcat && this.tendencyCommentTextcat !== undefined) {
+    if (this.tendencyCommentTextcat) {
       json["tendencyCommentTextcat"] = this.tendencyCommentTextcat;
     }
 
-    if (this.avActivityHighlightsNotes && this.avActivityHighlightsNotes !== undefined) {
+    if (this.avActivityHighlightsNotes) {
       json["avActivityHighlightsNotes"] = this.avActivityHighlightsNotes;
     }
 
-    if (this.avActivityCommentNotes && this.avActivityCommentNotes !== undefined) {
+    if (this.avActivityCommentNotes) {
       json["avActivityCommentNotes"] = this.avActivityCommentNotes;
     }
 
-    if (this.snowpackStructureHighlightsNotes && this.snowpackStructureHighlightsNotes !== undefined) {
+    if (this.snowpackStructureHighlightsNotes) {
       json["snowpackStructureHighlightsNotes"] = this.snowpackStructureHighlightsNotes;
     }
 
-    if (this.snowpackStructureCommentNotes && this.snowpackStructureCommentNotes !== undefined) {
+    if (this.snowpackStructureCommentNotes) {
       json["snowpackStructureCommentNotes"] = this.snowpackStructureCommentNotes;
     }
 
-    if (this.tendencyCommentNotes && this.tendencyCommentNotes !== undefined) {
+    if (this.tendencyCommentNotes) {
       json["tendencyCommentNotes"] = this.tendencyCommentNotes;
     }
 
@@ -688,15 +684,15 @@ export class BulletinModel {
       json["tendencyComment"] = convertLangTextsToJSON(this.tendencyComment$);
     }
 
-    if (this.tendency && this.tendency !== undefined) {
+    if (this.tendency) {
       json["tendency"] = this.tendency;
     }
 
-    if (this.dangerPattern1 && this.dangerPattern1 !== undefined) {
+    if (this.dangerPattern1) {
       json["dangerPattern1"] = this.dangerPattern1;
     }
 
-    if (this.dangerPattern2 && this.dangerPattern2 !== undefined) {
+    if (this.dangerPattern2) {
       json["dangerPattern2"] = this.dangerPattern2;
     }
 

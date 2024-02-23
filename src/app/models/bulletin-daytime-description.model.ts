@@ -315,7 +315,7 @@ export class BulletinDaytimeDescriptionModel {
     let boundaryAvalancheProblem;
     let boundaryBulletin;
 
-    if (avalancheProblem && avalancheProblem !== undefined) {
+    if (avalancheProblem) {
       if (up) {
         if (avalancheProblem.treelineLow) {
           boundaryAvalancheProblem = 2000;
@@ -432,26 +432,26 @@ export class BulletinDaytimeDescriptionModel {
   toJson() {
     const json = Object();
 
-    if (this.dangerRatingAbove && this.dangerRatingAbove !== undefined) {
+    if (this.dangerRatingAbove) {
       json["dangerRatingAbove"] = this.dangerRatingAbove;
     }
-    if (this.terrainFeatureAboveTextcat && this.terrainFeatureAboveTextcat !== undefined) {
+    if (this.terrainFeatureAboveTextcat) {
       json["terrainFeatureAboveTextcat"] = this.terrainFeatureAboveTextcat;
     }
-    if (this.terrainFeatureAbove && this.terrainFeatureAbove !== undefined && this.terrainFeatureAbove.length > 0) {
+    if (this.terrainFeatureAbove && this.terrainFeatureAbove.length > 0) {
       const terrainFeature = [];
       for (let i = 0; i <= this.terrainFeatureAbove.length - 1; i++) {
         terrainFeature.push(this.terrainFeatureAbove[i].toJson());
       }
       json["terrainFeatureAbove"] = terrainFeature;
     }
-    if (this.hasElevationDependency && this.dangerRatingBelow && this.dangerRatingBelow !== undefined) {
+    if (this.hasElevationDependency && this.dangerRatingBelow) {
       json["dangerRatingBelow"] = this.dangerRatingBelow;
     }
-    if (this.hasElevationDependency && this.terrainFeatureBelowTextcat && this.terrainFeatureBelowTextcat !== undefined) {
+    if (this.hasElevationDependency && this.terrainFeatureBelowTextcat) {
       json["terrainFeatureBelowTextcat"] = this.terrainFeatureBelowTextcat;
     }
-    if (this.hasElevationDependency && this.terrainFeatureBelow && this.terrainFeatureBelow !== undefined && this.terrainFeatureBelow.length > 0) {
+    if (this.hasElevationDependency && this.terrainFeatureBelow && this.terrainFeatureBelow.length > 0) {
       const terrainFeature = [];
       for (let i = 0; i <= this.terrainFeatureBelow.length - 1; i++) {
         terrainFeature.push(this.terrainFeatureBelow[i].toJson());
@@ -459,36 +459,36 @@ export class BulletinDaytimeDescriptionModel {
       json["terrainFeatureBelow"] = terrainFeature;
     }
 
-    if (this.avalancheProblem1 && this.avalancheProblem1 !== undefined) {
+    if (this.avalancheProblem1) {
       json["avalancheProblem1"] = this.avalancheProblem1.toJson();
     }
-    if (this.avalancheProblem2 && this.avalancheProblem2 !== undefined) {
+    if (this.avalancheProblem2) {
       json["avalancheProblem2"] = this.avalancheProblem2.toJson();
     }
-    if (this.avalancheProblem3 && this.avalancheProblem3 !== undefined) {
+    if (this.avalancheProblem3) {
       json["avalancheProblem3"] = this.avalancheProblem3.toJson();
     }
-    if (this.avalancheProblem4 && this.avalancheProblem4 !== undefined) {
+    if (this.avalancheProblem4) {
       json["avalancheProblem4"] = this.avalancheProblem4.toJson();
     }
-    if (this.avalancheProblem5 && this.avalancheProblem5 !== undefined) {
+    if (this.avalancheProblem5) {
       json["avalancheProblem5"] = this.avalancheProblem5.toJson();
     }
 
     // TODO delete if AINEVA does not need it anymore
-    if (this.avalancheProblem1 && this.avalancheProblem1 !== undefined) {
+    if (this.avalancheProblem1) {
       json["avalancheSituation1"] = this.avalancheProblem1.toAinevaJson();
     }
-    if (this.avalancheProblem2 && this.avalancheProblem2 !== undefined) {
+    if (this.avalancheProblem2) {
       json["avalancheSituation2"] = this.avalancheProblem2.toAinevaJson();
     }
-    if (this.avalancheProblem3 && this.avalancheProblem3 !== undefined) {
+    if (this.avalancheProblem3) {
       json["avalancheSituation3"] = this.avalancheProblem3.toAinevaJson();
     }
-    if (this.avalancheProblem4 && this.avalancheProblem4 !== undefined) {
+    if (this.avalancheProblem4) {
       json["avalancheSituation4"] = this.avalancheProblem4.toAinevaJson();
     }
-    if (this.avalancheProblem5 && this.avalancheProblem5 !== undefined) {
+    if (this.avalancheProblem5) {
       json["avalancheSituation5"] = this.avalancheProblem5.toAinevaJson();
     }
 
@@ -496,7 +496,7 @@ export class BulletinDaytimeDescriptionModel {
       json["hasElevationDependency"] = true;
       if (this.treeline) {
         json["treeline"] = this.treeline;
-      } else if (this.elevation && this.elevation !== undefined) {
+      } else if (this.elevation) {
         json["elevation"] = this.elevation;
       }
     } else {
