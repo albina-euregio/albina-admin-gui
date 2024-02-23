@@ -138,7 +138,6 @@ export class MapService {
       ],
     });
 
-    L.control.zoom({ position: "topleft" }).addTo(map);
     new RegionNameControl().addTo(map);
 
     this.map = map;
@@ -148,6 +147,7 @@ export class MapService {
   private initPmMap() {
     const afternoonMap = L.map("afternoonMap", {
       ...this.getMapInitOptions(),
+      zoomControl: false,
       layers: [
         this.afternoonBaseMaps.AlbinaBaseMap,
         this.afternoonOverlayMaps.aggregatedRegions,
@@ -169,9 +169,8 @@ export class MapService {
     this.amControl.remove();
   }
 
-  getMapInitOptions() {
-    const options = {
-      zoomControl: false,
+  getMapInitOptions(): L.MapOptions {
+    const options: L.MapOptions = {
       doubleClickZoom: false,
       scrollWheelZoom: false,
       touchZoom: true,
@@ -559,14 +558,14 @@ export class MapService {
     });
   }
 
-  private getAggregatedRegionBaseStyle() {
+  private getAggregatedRegionBaseStyle(): L.PathOptions {
     return {
       opacity: 0.0,
       fillOpacity: 0.0
     };
   }
 
-  private getRegionStyle() {
+  private getRegionStyle(): L.PathOptions {
     return {
       weight: this.constantsService.lineWeight,
       opacity: this.constantsService.lineOpacity,
@@ -575,21 +574,21 @@ export class MapService {
     };
   }
 
-  private getActiveSelectionBaseStyle() {
+  private getActiveSelectionBaseStyle(): L.PathOptions {
     return {
       opacity: 0.0,
       fillOpacity: 0.0
     };
   }
 
-  private getEditSelectionBaseStyle() {
+  private getEditSelectionBaseStyle(): L.PathOptions {
     return {
       opacity: 0.0,
       fillOpacity: 0.0
     };
   }
 
-  private getEditSelectionStyle() {
+  private getEditSelectionStyle(): L.PathOptions {
     return {
       fillColor: this.constantsService.colorActiveSelection,
       weight: this.constantsService.lineWeight,
@@ -599,7 +598,7 @@ export class MapService {
     };
   }
 
-  private getActiveSelectionStyle(region, dangerRating, status) {
+  private getActiveSelectionStyle(region, dangerRating, status): L.PathOptions {
     let fillOpacity = this.constantsService.fillOpacityOwnSelected;
     const fillColor = this.constantsService.getDangerRatingColor(dangerRating);
 
@@ -631,7 +630,7 @@ export class MapService {
     };
   }
 
-  private getDangerRatingStyle(region, dangerRating, status) {
+  private getDangerRatingStyle(region, dangerRating, status): L.PathOptions {
     let fillOpacity = this.constantsService.fillOpacityOwnDeselected;
 
     // own area
