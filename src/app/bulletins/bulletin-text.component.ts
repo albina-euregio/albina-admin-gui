@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { TranslateService } from "@ngx-translate/core";
 import type { BulletinModel } from "../models/bulletin.model";
@@ -6,6 +6,8 @@ import type { TextcatLegacyIn, TextcatTextfield } from "./avalanche-bulletin.com
 import { concatenateLangTexts, LangTexts, LANGUAGES } from "../models/text.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { AvalancheProblemStr } from "../enums/enums";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-bulletin-text",
@@ -20,10 +22,12 @@ export class BulletinTextComponent {
   @Output() showDialog = new EventEmitter<TextcatLegacyIn>();
   @Output() updateBulletinOnServer = new EventEmitter();
   showTranslations = false;
+  modalRef: BsModalRef;
 
   constructor(
-    public authenticationService: AuthenticationService,
-    public constantsService: ConstantsService,
+    private authenticationService: AuthenticationService,
+    private constantsService: ConstantsService,
+    private modalService: BsModalService,
     public copyService: CopyService,
     public translateService: TranslateService,
   ) {}
@@ -51,11 +55,11 @@ export class BulletinTextComponent {
     });
   }
 
-  get bulletinTextKey() {
+  get bulletinTextKey(): `${TextcatTextfield}$` {
     return `${this.textField}$`;
   }
 
-  get bulletinTextcatKey() {
+  get bulletinTextcatKey(): `${TextcatTextfield}Textcat` {
     return `${this.textField}Textcat`;
   }
 
@@ -88,5 +92,24 @@ export class BulletinTextComponent {
     this.bulletin[this.bulletinTextcatKey] = undefined;
     this.bulletin[this.bulletinTextKey] = {} as LangTexts;
     this.updateBulletinOnServer.emit();
+  }
+
+  openLoadExampleTextModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {
+      keyboard: true,
+      class: "modal-md",
+    });
+  }
+
+  loadExampleText(avalancheProblem: AvalancheProblemStr) {
+    const textcat = this.constantsService[this.bulletinTextcatKey]?.[avalancheProblem];
+    if (!textcat) return;
+    this.bulletin[this.bulletinTextcatKey] = this.concatTextcat(this.bulletin[this.bulletinTextcatKey], textcat);
+    this.openTextcat();
+    this.modalRef.hide();
+  }
+
+  loadExampleTextCancel() {
+    this.modalRef.hide();
   }
 }

@@ -59,13 +59,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   public isAccordionSnowpackStructureOpen: boolean;
   public isAccordionTendencyOpen: boolean;
 
-  public loadAvActivityCommentExampleTextModalRef: BsModalRef;
-  @ViewChild("loadAvActivityCommentExampleTextTemplate") loadAvActivityCommentExampleTextTemplate: TemplateRef<any>;
-
-  public loadSnowpackStructureCommentExampleTextModalRef: BsModalRef;
-  @ViewChild("loadSnowpackStructureCommentExampleTextTemplate")
-  loadSnowpackStructureCommentExampleTextTemplate: TemplateRef<any>;
-
   stopListening: Function;
 
   public config = {
@@ -79,12 +72,9 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private sanitizer: DomSanitizer,
     public authenticationService: AuthenticationService,
-    private translateService: TranslateService,
-    public settingsService: SettingsService,
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
-    private modalService: BsModalService,
   ) {
     this.showNotes = false;
   }
@@ -313,41 +303,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
       this.hideDialog();
       this.updateBulletinOnServer();
     }
-  }
-
-  openLoadAvActivityCommentExampleTextModal(template: TemplateRef<any>) {
-    this.loadAvActivityCommentExampleTextModalRef = this.modalService.show(template, this.config);
-  }
-
-  loadAvActivityCommentExampleText(avalancheProblem: AvalancheProblemStr) {
-    const textcat = this.constantsService.avActivityCommentTextcat[avalancheProblem];
-    if (!textcat) return;
-    // this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, textcat);
-    // this.openTextcat(undefined, "avActivityComment", this.bulletin.avActivityCommentTextcat);
-    // this.loadAvActivityCommentExampleTextModalRef.hide();
-  }
-
-  loadAvActivityCommentExampleTextCancel() {
-    this.loadAvActivityCommentExampleTextModalRef.hide();
-  }
-
-  openLoadSnowpackStructureCommentExampleTextModal(template: TemplateRef<any>) {
-    this.loadSnowpackStructureCommentExampleTextModalRef = this.modalService.show(template, this.config);
-  }
-
-  loadSnowpackStructureCommentExampleText(avalancheProblem: AvalancheProblemStr) {
-    const textcat = this.constantsService.snowpackStructureCommentTextcat[avalancheProblem];
-    if (!textcat) return;
-    // this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-    //   this.bulletin.snowpackStructureCommentTextcat,
-    //   textcat,
-    // );
-    // this.openTextcat(undefined, "snowpackStructureComment", this.bulletin.snowpackStructureCommentTextcat);
-    // this.loadSnowpackStructureCommentExampleTextModalRef.hide();
-  }
-
-  loadSnowpackStructureCommentExampleTextCancel() {
-    this.loadSnowpackStructureCommentExampleTextModalRef.hide();
   }
 
   createAvalancheProblem(isAfternoon: boolean) {

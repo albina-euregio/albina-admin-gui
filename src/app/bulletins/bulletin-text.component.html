@@ -18,6 +18,28 @@
             <i class="ph ph-pencil-line"></i>
           </button>
           <button
+            *ngIf="textField === 'avActivityComment'"
+            class="btn btn-sm btn-icon btn-bare"
+            [disabled]="disabled"
+            type="reset"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
+            (click)="openLoadExampleTextModal(loadAvActivityCommentExampleTextTemplate)"
+          >
+            <i class="ph ph-article"></i>
+          </button>
+          <button
+            *ngIf="textField === 'snowpackStructureComment'"
+            class="btn btn-sm btn-icon btn-bare"
+            [disabled]="disabled"
+            type="reset"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
+            (click)="openLoadExampleTextModal(loadSnowpackStructureCommentExampleTextTemplate)"
+          >
+            <i class="ph ph-article"></i>
+          </button>
+          <button
             class="btn btn-sm btn-icon btn-bare"
             *ngIf="!copyService.isCopyTextcat()"
             [disabled]="disabled"
@@ -103,3 +125,131 @@
     </div>
   </div>
 </div>
+
+<ng-template #loadAvActivityCommentExampleTextTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.loadAvActivityCommentExampleTextDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('new_snow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.newSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('wind_slab')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.windSlab" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('persistent_weak_layers')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.persistentWeakLayers" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('wet_snow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.wetSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('gliding_snow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.glidingSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('favourable_situation')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.favourableSituation" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-default"
+      (click)="loadExampleTextCancel()"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.cancel" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #loadSnowpackStructureCommentExampleTextTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.loadAvActivityCommentExampleTextDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('new_snow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.newSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('wind_slab')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.windSlab" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('persistent_weak_layers')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.persistentWeakLayers" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('wet_snow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.wetSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('gliding_snow')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.glidingSnow" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-primary"
+      (click)="loadExampleText('favourable_situation')"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.favourableSituation" | translate }}
+    </button>
+    <button
+      style="margin-bottom: 5px"
+      type="button"
+      class="btn btn-default"
+      (click)="loadExampleTextCancel()"
+    >
+      {{ "bulletins.create.loadAvActivityCommentExampleTextDialog.cancel" | translate }}
+    </button>
+  </div>
+</ng-template>
