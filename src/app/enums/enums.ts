@@ -42,9 +42,7 @@ export enum Frequency {
   none, few, some, many
 }
 
-export enum Tendency {
-  decreasing, steady, increasing
-}
+export type Tendency = "decreasing" | "steady" | "increasing";
 
 export enum Direction {
   up, down

@@ -55,7 +55,6 @@ declare var L: any;
 export class CreateBulletinComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;
   public dangerPattern = Enums.DangerPattern;
-  public tendency = Enums.Tendency;
 
   public autoSaving: boolean;
   public loadingPreview: boolean;

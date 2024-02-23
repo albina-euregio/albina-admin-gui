@@ -48,7 +48,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Output() setMapLayoutEvent = new EventEmitter<boolean>();
 
   public dangerPattern = Enums.DangerPattern;
-  public tendency = Enums.Tendency;
 
   public showNotes: boolean;
   public editRegions: boolean;
@@ -131,13 +130,13 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.setMapLayoutEvent.emit(isCompact);
   }
 
-  setTendency(event, tendency) {
+  setTendency(event: Event, tendency: Enums.Tendency) {
     event.stopPropagation();
     this.bulletin.tendency = tendency;
     this.updateBulletinOnServer();
   }
 
-  isTendency(tendency) {
+  isTendency(tendency: Enums.Tendency) {
     return tendency === this.bulletin.tendency;
   }
 
