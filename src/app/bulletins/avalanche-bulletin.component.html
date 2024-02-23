@@ -1,5 +1,5 @@
 <div>
-<header class="region-form__header"> 
+<header class="region-form__header">
   <div class="region-form__header-actions btn-group" dropdown>
     <button
       *ngIf="!isComparedBulletin"
@@ -1373,73 +1373,21 @@
         <div class="form-group">
           <div class="btn-group">
             <button
-              *ngIf="isTendency('decreasing')"
+              *ngFor="let t of ['decreasing', 'steady', 'increasing']"
               [disabled]="disabled"
               type="reset"
-              class="btn btn-small btn-dark"
-              (click)="setTendency($event, undefined)"
+              [class]="isTendency(t) ? 'btn btn-small btn-dark' : 'btn btn-small btn-outline-secondary'"
+              (click)="setTendency($event, isTendency(t) ? undefined : t)"
               data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.tendency.decreasing' | translate }}"
+              title="{{ ('bulletins.create.tooltip.tendency.' + t) | translate }}"
             >
-              <i class="ph ph-arrow-down-right"></i>{{ "tendency.decreasing" | translate }}
-            </button>
-
-            <button
-              *ngIf="!isTendency('decreasing')"
-              [disabled]="disabled"
-              type="reset"
-              class="btn btn-small btn-outline-secondary"
-              (click)="setTendency($event, 'decreasing')"
-              data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.tendency.decreasing' | translate }}"
-            >
-              <i class="ph ph-arrow-down-right"></i>{{ "tendency.decreasing" | translate }}
-            </button>
-
-            <button
-              *ngIf="isTendency('steady')"
-              [disabled]="disabled"
-              type="reset"
-              class="btn btn-small btn-dark"
-              (click)="setTendency($event, undefined)"
-              data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.tendency.steady' | translate }}"
-            >
-              <i class="ph ph-equals"></i>{{ "tendency.steady" | translate }}
-            </button>
-
-            <button
-              *ngIf="!isTendency('steady')"
-              [disabled]="disabled"
-              type="reset"
-              class="btn btn-small btn-outline-secondary"
-              (click)="setTendency($event, 'steady')"
-              data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.tendency.steady' | translate }}"
-            >
-              <i class="ph ph-equals"></i>{{ "tendency.steady" | translate }}
-            </button>
-            <button
-              *ngIf="isTendency('increasing')"
-              [disabled]="disabled"
-              type="reset"
-              class="btn btn-small btn-dark"
-              (click)="setTendency($event, undefined)"
-              data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.tendency.increasing' | translate }}"
-            >
-              <i class="ph ph-arrow-up-right"></i>{{ "tendency.increasing" | translate }}
-            </button>
-            <button
-              *ngIf="!isTendency('increasing')"
-              [disabled]="disabled"
-              type="reset"
-              class="btn btn-small btn-outline-secondary"
-              (click)="setTendency($event, 'increasing')"
-              data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.tendency.increasing' | translate }}"
-            >
-              <i class="ph ph-arrow-up-right"></i>{{ "tendency.increasing" | translate }}
+              <i [ngClass]="{
+                'ph': true,
+                'ph-arrow-down-right': t === 'decreasing',
+                'ph-equals': t === 'steady',
+                'ph-arrow-up-right': t === 'increasing',
+              }"></i>
+              {{ ("tendency." + t) | translate }}
             </button>
           </div>
         </div>
