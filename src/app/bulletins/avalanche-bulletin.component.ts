@@ -150,16 +150,14 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   isForeign(): boolean {
-    if (
-      this.bulletin.getOwnerRegion() !== undefined &&
-      (this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeTyrol) ||
-        this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeSouthTyrol) ||
-        this.bulletin.getOwnerRegion().startsWith(this.constantsService.codeTrentino)) &&
+    const ownerRegion = this.bulletin.getOwnerRegion();
+    return (
+      ownerRegion !== undefined &&
+      (ownerRegion.startsWith(this.constantsService.codeTyrol) ||
+        ownerRegion.startsWith(this.constantsService.codeSouthTyrol) ||
+        ownerRegion.startsWith(this.constantsService.codeTrentino)) &&
       !this.isCreator(this.bulletin)
-    ) {
-      return true;
-    }
-    return false;
+    );
   }
 
   showDialog(pmData: TextcatLegacyIn) {
@@ -181,8 +179,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   toggleShowNotes() {
-    if (this.showNotes) this.showNotes = false;
-    else this.showNotes = true;
+    this.showNotes = !this.showNotes;
   }
 
   onDangerPattern1Change(event) {
@@ -202,39 +199,19 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   setShowTranslations(name: string) {
     switch (name) {
       case "highlights":
-        if (this.showTranslationsHighlights) {
-          this.showTranslationsHighlights = false;
-        } else {
-          this.showTranslationsHighlights = true;
-        }
+        this.showTranslationsHighlights = !this.showTranslationsHighlights;
         break;
       case "avActivityHighlights":
-        if (this.showTranslationsAvActivityHighlights) {
-          this.showTranslationsAvActivityHighlights = false;
-        } else {
-          this.showTranslationsAvActivityHighlights = true;
-        }
+        this.showTranslationsAvActivityHighlights = !this.showTranslationsAvActivityHighlights;
         break;
       case "avActivityComment":
-        if (this.showTranslationsAvActivityComment) {
-          this.showTranslationsAvActivityComment = false;
-        } else {
-          this.showTranslationsAvActivityComment = true;
-        }
+        this.showTranslationsAvActivityComment = !this.showTranslationsAvActivityComment;
         break;
       case "snowpackStructureComment":
-        if (this.showTranslationsSnowpackStructureComment) {
-          this.showTranslationsSnowpackStructureComment = false;
-        } else {
-          this.showTranslationsSnowpackStructureComment = true;
-        }
+        this.showTranslationsSnowpackStructureComment = !this.showTranslationsSnowpackStructureComment;
         break;
       case "tendencyComment":
-        if (this.showTranslationsTendencyComment) {
-          this.showTranslationsTendencyComment = false;
-        } else {
-          this.showTranslationsTendencyComment = true;
-        }
+        this.showTranslationsTendencyComment = !this.showTranslationsTendencyComment;
         break;
       default:
         break;
@@ -293,13 +270,8 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   isCreator(bulletin: BulletinModel): boolean {
-    if (
-      bulletin.getOwnerRegion() !== undefined &&
-      bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())
-    ) {
-      return true;
-    }
-    return false;
+    const ownerRegion = bulletin.getOwnerRegion();
+    return ownerRegion !== undefined && ownerRegion?.startsWith(this.authenticationService.getActiveRegionId());
   }
 
   daytimeDependencyChanged(event, value) {
@@ -765,17 +737,8 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   hasFiveAvalancheProblems(isAfternoon: boolean) {
-    let daytime;
-    if (isAfternoon) {
-      daytime = this.bulletin.afternoon;
-    } else {
-      daytime = this.bulletin.forenoon;
-    }
-    if (daytime.avalancheProblem5 === undefined) {
-      return false;
-    } else {
-      return true;
-    }
+    const daytime = isAfternoon ? this.bulletin.afternoon : this.bulletin.forenoon;
+    return daytime.avalancheProblem5 !== undefined;
   }
 
   getRegionNames(bulletin): string {
