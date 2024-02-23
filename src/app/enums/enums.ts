@@ -26,6 +26,8 @@ export enum AvalancheProblem {
   new_snow, wind_slab, persistent_weak_layers, wet_snow, gliding_snow, favourable_situation, cornices, no_distinct_problem
 }
 
+export type AvalancheProblemStr = keyof typeof AvalancheProblem;
+
 export enum DangerPattern {
   dp1, dp2, dp3, dp4, dp5, dp6, dp7, dp8, dp9, dp10
 }

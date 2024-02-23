@@ -27,7 +27,8 @@ import { Renderer2 } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 
 import * as Enums from "../enums/enums";
-import {LangTexts, concatenateLangTexts, LANGUAGES} from "../models/text.model";
+import { LangTexts, concatenateLangTexts, LANGUAGES } from "../models/text.model";
+import { AvalancheProblemStr } from "../enums/enums";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -496,47 +497,10 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.loadAvActivityCommentExampleTextModalRef = this.modalService.show(template, this.config);
   }
 
-  loadAvActivityCommentExampleText(avalancheProblem) {
-    switch (avalancheProblem) {
-      case "newSnow":
-        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-          this.bulletin.avActivityCommentTextcat,
-          this.constantsService.avActivityCommentNewSnowTextcat,
-        );
-        break;
-      case "windSlab":
-        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-          this.bulletin.avActivityCommentTextcat,
-          this.constantsService.avActivityCommentWindSlabTextcat,
-        );
-        break;
-      case "persistentWeakLayers":
-        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-          this.bulletin.avActivityCommentTextcat,
-          this.constantsService.avActivityCommentPersistentWeakLayersTextcat,
-        );
-        break;
-      case "wetSnow":
-        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-          this.bulletin.avActivityCommentTextcat,
-          this.constantsService.avActivityCommentWetSnowTextcat,
-        );
-        break;
-      case "glidingSnow":
-        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-          this.bulletin.avActivityCommentTextcat,
-          this.constantsService.avActivityCommentGlidingSnowTextcat,
-        );
-        break;
-      case "favourableSituation":
-        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-          this.bulletin.avActivityCommentTextcat,
-          this.constantsService.avActivityCommentFavourableSituationTextcat,
-        );
-        break;
-      default:
-        break;
-    }
+  loadAvActivityCommentExampleText(avalancheProblem: AvalancheProblemStr) {
+    const textcat = this.constantsService.avActivityCommentTextcat[avalancheProblem];
+    if (!textcat) return;
+    this.bulletin.avActivityCommentTextcat = this.concatTextcat(this.bulletin.avActivityCommentTextcat, textcat);
     this.openTextcat(undefined, "avActivityComment", this.bulletin.avActivityCommentTextcat);
     this.loadAvActivityCommentExampleTextModalRef.hide();
   }
@@ -549,47 +513,13 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.loadSnowpackStructureCommentExampleTextModalRef = this.modalService.show(template, this.config);
   }
 
-  loadSnowpackStructureCommentExampleText(avalancheProblem) {
-    switch (avalancheProblem) {
-      case "newSnow":
-        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-          this.bulletin.snowpackStructureCommentTextcat,
-          this.constantsService.snowpackStructureCommentNewSnowTextcat,
-        );
-        break;
-      case "windSlab":
-        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-          this.bulletin.snowpackStructureCommentTextcat,
-          this.constantsService.snowpackStructureCommentWindSlabTextcat,
-        );
-        break;
-      case "persistentWeakLayers":
-        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-          this.bulletin.snowpackStructureCommentTextcat,
-          this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat,
-        );
-        break;
-      case "wetSnow":
-        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-          this.bulletin.snowpackStructureCommentTextcat,
-          this.constantsService.snowpackStructureCommentWetSnowTextcat,
-        );
-        break;
-      case "glidingSnow":
-        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-          this.bulletin.snowpackStructureCommentTextcat,
-          this.constantsService.snowpackStructureCommentGlidingSnowTextcat,
-        );
-        break;
-      case "favourableSituation":
-        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-          this.bulletin.snowpackStructureCommentTextcat,
-          this.constantsService.snowpackStructureCommentFavourableSituationTextcat,
-        );
-        break;
-      default:
-        break;
-    }
+  loadSnowpackStructureCommentExampleText(avalancheProblem: AvalancheProblemStr) {
+    const textcat = this.constantsService.snowpackStructureCommentTextcat[avalancheProblem];
+    if (!textcat) return;
+    this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+      this.bulletin.snowpackStructureCommentTextcat,
+      textcat,
+    );
     this.openTextcat(undefined, "snowpackStructureComment", this.bulletin.snowpackStructureCommentTextcat);
     this.loadSnowpackStructureCommentExampleTextModalRef.hide();
   }
