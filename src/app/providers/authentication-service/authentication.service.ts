@@ -67,11 +67,7 @@ export class AuthenticationService {
   }
 
   public isUserLoggedIn(): boolean {
-    if (this.currentAuthor && this.currentAuthor.accessToken) {
-      return !this.jwtHelper.isTokenExpired(this.currentAuthor.accessToken);
-    } else {
-      return false;
-    }
+    return this.currentAuthor?.accessToken && !this.jwtHelper.isTokenExpired(this.currentAuthor.accessToken);
   }
 
   public logout() {
