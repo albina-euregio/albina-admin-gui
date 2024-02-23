@@ -390,74 +390,56 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  concatTextcat(text1: string, text2: string) {
+  concatTextcat(text1: string | undefined, text2: string | undefined) {
+    if (!text1) return text2;
+    if (!text2) return text1;
     return text1.slice(0, -1).concat(",", text2.substring(1));
   }
 
   pasteTextcat(event, field: TextcatTextfield) {
     switch (field) {
       case "highlights":
-        if (this.bulletin.highlightsTextcat !== undefined) {
-          this.bulletin.highlightsTextcat = this.concatTextcat(
-            this.bulletin.highlightsTextcat,
-            this.copyService.getTextTextcat(),
-          );
-        } else {
-          this.bulletin.highlightsTextcat = this.copyService.getTextTextcat();
-        }
+        this.bulletin.highlightsTextcat = this.concatTextcat(
+          this.bulletin.highlightsTextcat,
+          this.copyService.getTextTextcat(),
+        );
         this.bulletin.highlights$ = concatenateLangTexts(this.bulletin.highlights$, this.copyService.toLangTexts);
         break;
       case "avActivityHighlights":
-        if (this.bulletin.avActivityHighlightsTextcat !== undefined) {
-          this.bulletin.avActivityHighlightsTextcat = this.concatTextcat(
-            this.bulletin.avActivityHighlightsTextcat,
-            this.copyService.getTextTextcat(),
-          );
-        } else {
-          this.bulletin.avActivityHighlightsTextcat = this.copyService.getTextTextcat();
-        }
+        this.bulletin.avActivityHighlightsTextcat = this.concatTextcat(
+          this.bulletin.avActivityHighlightsTextcat,
+          this.copyService.getTextTextcat(),
+        );
         this.bulletin.avActivityHighlights$ = concatenateLangTexts(
           this.bulletin.avActivityHighlights$,
           this.copyService.toLangTexts,
         );
         break;
       case "avActivityComment":
-        if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-            this.bulletin.avActivityCommentTextcat,
-            this.copyService.getTextTextcat(),
-          );
-        } else {
-          this.bulletin.avActivityCommentTextcat = this.copyService.getTextTextcat();
-        }
+        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+          this.bulletin.avActivityCommentTextcat,
+          this.copyService.getTextTextcat(),
+        );
         this.bulletin.avActivityComment$ = concatenateLangTexts(
           this.bulletin.avActivityComment$,
           this.copyService.toLangTexts,
         );
         break;
       case "snowpackStructureComment":
-        if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-            this.bulletin.snowpackStructureCommentTextcat,
-            this.copyService.getTextTextcat(),
-          );
-        } else {
-          this.bulletin.snowpackStructureCommentTextcat = this.copyService.getTextTextcat();
-        }
+        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+          this.bulletin.snowpackStructureCommentTextcat,
+          this.copyService.getTextTextcat(),
+        );
         this.bulletin.snowpackStructureComment$ = concatenateLangTexts(
           this.bulletin.snowpackStructureComment$,
           this.copyService.toLangTexts,
         );
         break;
       case "tendencyComment":
-        if (this.bulletin.tendencyCommentTextcat !== undefined) {
-          this.bulletin.tendencyCommentTextcat = this.concatTextcat(
-            this.bulletin.tendencyCommentTextcat,
-            this.copyService.getTextTextcat(),
-          );
-        } else {
-          this.bulletin.tendencyCommentTextcat = this.copyService.getTextTextcat();
-        }
+        this.bulletin.tendencyCommentTextcat = this.concatTextcat(
+          this.bulletin.tendencyCommentTextcat,
+          this.copyService.getTextTextcat(),
+        );
         this.bulletin.tendencyComment$ = concatenateLangTexts(
           this.bulletin.tendencyComment$,
           this.copyService.toLangTexts,
@@ -525,64 +507,40 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   loadAvActivityCommentExampleText(avalancheProblem) {
     switch (avalancheProblem) {
       case "newSnow":
-        if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-            this.bulletin.avActivityCommentTextcat,
-            this.constantsService.avActivityCommentNewSnowTextcat,
-          );
-        } else {
-          this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentNewSnowTextcat;
-        }
+        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+          this.bulletin.avActivityCommentTextcat,
+          this.constantsService.avActivityCommentNewSnowTextcat,
+        );
         break;
       case "windSlab":
-        if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-            this.bulletin.avActivityCommentTextcat,
-            this.constantsService.avActivityCommentWindSlabTextcat,
-          );
-        } else {
-          this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentWindSlabTextcat;
-        }
+        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+          this.bulletin.avActivityCommentTextcat,
+          this.constantsService.avActivityCommentWindSlabTextcat,
+        );
         break;
       case "persistentWeakLayers":
-        if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-            this.bulletin.avActivityCommentTextcat,
-            this.constantsService.avActivityCommentPersistentWeakLayersTextcat,
-          );
-        } else {
-          this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentPersistentWeakLayersTextcat;
-        }
+        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+          this.bulletin.avActivityCommentTextcat,
+          this.constantsService.avActivityCommentPersistentWeakLayersTextcat,
+        );
         break;
       case "wetSnow":
-        if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-            this.bulletin.avActivityCommentTextcat,
-            this.constantsService.avActivityCommentWetSnowTextcat,
-          );
-        } else {
-          this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentWetSnowTextcat;
-        }
+        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+          this.bulletin.avActivityCommentTextcat,
+          this.constantsService.avActivityCommentWetSnowTextcat,
+        );
         break;
       case "glidingSnow":
-        if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-            this.bulletin.avActivityCommentTextcat,
-            this.constantsService.avActivityCommentGlidingSnowTextcat,
-          );
-        } else {
-          this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentGlidingSnowTextcat;
-        }
+        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+          this.bulletin.avActivityCommentTextcat,
+          this.constantsService.avActivityCommentGlidingSnowTextcat,
+        );
         break;
       case "favourableSituation":
-        if (this.bulletin.avActivityCommentTextcat !== undefined) {
-          this.bulletin.avActivityCommentTextcat = this.concatTextcat(
-            this.bulletin.avActivityCommentTextcat,
-            this.constantsService.avActivityCommentFavourableSituationTextcat,
-          );
-        } else {
-          this.bulletin.avActivityCommentTextcat = this.constantsService.avActivityCommentFavourableSituationTextcat;
-        }
+        this.bulletin.avActivityCommentTextcat = this.concatTextcat(
+          this.bulletin.avActivityCommentTextcat,
+          this.constantsService.avActivityCommentFavourableSituationTextcat,
+        );
         break;
       default:
         break;
@@ -602,67 +560,40 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   loadSnowpackStructureCommentExampleText(avalancheProblem) {
     switch (avalancheProblem) {
       case "newSnow":
-        if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-            this.bulletin.snowpackStructureCommentTextcat,
-            this.constantsService.snowpackStructureCommentNewSnowTextcat,
-          );
-        } else {
-          this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentNewSnowTextcat;
-        }
+        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+          this.bulletin.snowpackStructureCommentTextcat,
+          this.constantsService.snowpackStructureCommentNewSnowTextcat,
+        );
         break;
       case "windSlab":
-        if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-            this.bulletin.snowpackStructureCommentTextcat,
-            this.constantsService.snowpackStructureCommentWindSlabTextcat,
-          );
-        } else {
-          this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentWindSlabTextcat;
-        }
+        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+          this.bulletin.snowpackStructureCommentTextcat,
+          this.constantsService.snowpackStructureCommentWindSlabTextcat,
+        );
         break;
       case "persistentWeakLayers":
-        if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-            this.bulletin.snowpackStructureCommentTextcat,
-            this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat,
-          );
-        } else {
-          this.bulletin.snowpackStructureCommentTextcat =
-            this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat;
-        }
+        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+          this.bulletin.snowpackStructureCommentTextcat,
+          this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat,
+        );
         break;
       case "wetSnow":
-        if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-            this.bulletin.snowpackStructureCommentTextcat,
-            this.constantsService.snowpackStructureCommentWetSnowTextcat,
-          );
-        } else {
-          this.bulletin.snowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentWetSnowTextcat;
-        }
+        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+          this.bulletin.snowpackStructureCommentTextcat,
+          this.constantsService.snowpackStructureCommentWetSnowTextcat,
+        );
         break;
       case "glidingSnow":
-        if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-            this.bulletin.snowpackStructureCommentTextcat,
-            this.constantsService.snowpackStructureCommentGlidingSnowTextcat,
-          );
-        } else {
-          this.bulletin.snowpackStructureCommentTextcat =
-            this.constantsService.snowpackStructureCommentGlidingSnowTextcat;
-        }
+        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+          this.bulletin.snowpackStructureCommentTextcat,
+          this.constantsService.snowpackStructureCommentGlidingSnowTextcat,
+        );
         break;
       case "favourableSituation":
-        if (this.bulletin.snowpackStructureCommentTextcat !== undefined) {
-          this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
-            this.bulletin.snowpackStructureCommentTextcat,
-            this.constantsService.snowpackStructureCommentFavourableSituationTextcat,
-          );
-        } else {
-          this.bulletin.snowpackStructureCommentTextcat =
-            this.constantsService.snowpackStructureCommentFavourableSituationTextcat;
-        }
+        this.bulletin.snowpackStructureCommentTextcat = this.concatTextcat(
+          this.bulletin.snowpackStructureCommentTextcat,
+          this.constantsService.snowpackStructureCommentFavourableSituationTextcat,
+        );
         break;
       default:
         break;
