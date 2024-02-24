@@ -1355,12 +1355,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   hasSuggestions(bulletin: BulletinModel): boolean {
-    for (const region of bulletin.getSuggestedRegions()) {
-      if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-        return true;
-      }
-    }
-    return false;
+    return bulletin
+      .getSuggestedRegions()
+      .some((region) => region.startsWith(this.authenticationService.getActiveRegionId()));
   }
 
   isCreator(bulletin: BulletinModel): boolean {
