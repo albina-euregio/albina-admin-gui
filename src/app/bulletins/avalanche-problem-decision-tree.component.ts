@@ -46,12 +46,12 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
 
   resultsInit() {
     // check if layer names are still correct when modifying the decision tree's svgs, also make sure the layers are the same for each language
-    let picker = document.getElementById("picker-result");
-    let svg = (picker as HTMLObjectElement).contentDocument;
+    const picker = document.getElementById("picker-result");
+    const svg = (picker as HTMLObjectElement).contentDocument;
     this.resultIcons = svg.getElementById("layer11").children;
     this.resultLabels = svg.getElementById("layer12").children;
 
-    let keyEvent = (e: KeyboardEvent) => {
+    const keyEvent = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         this.discard();
       } else if (e.key === "Enter") {
@@ -61,8 +61,8 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
     document.addEventListener("keydown", keyEvent);
     (picker as HTMLObjectElement).contentDocument.getElementsByTagName("svg")[0].addEventListener("keydown", keyEvent);
 
-    let resultsTransparent = () => {
-      let opacity = 0.2;
+    const resultsTransparent = () => {
+      const opacity = 0.2;
       for (let i = 0; i < this.resultIcons.length; i++) {
         (this.resultIcons[i] as HTMLElement).style["opacity"] = opacity.toString();
       }
