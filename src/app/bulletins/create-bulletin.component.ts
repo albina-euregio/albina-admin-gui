@@ -1434,41 +1434,39 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (this.internBulletinsList.length > 0) {
-      this.autoSaving = true;
-
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
-
-      const result = new Array<BulletinModel>();
-
-      for (const bulletin of this.internBulletinsList) {
-        const regions = bulletin.getPublishedRegions().concat(bulletin.getSavedRegions());
-        for (const region of regions) {
-          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-            bulletin.setValidFrom(validFrom);
-            bulletin.setValidUntil(validUntil);
-            result.push(bulletin);
-            break;
-          }
+    if (!this.internBulletinsList.length) {
+      return;
+    }
+    this.autoSaving = true;
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
+    const result = new Array<BulletinModel>();
+    for (const bulletin of this.internBulletinsList) {
+      const regions = bulletin.getPublishedRegions().concat(bulletin.getSavedRegions());
+      for (const region of regions) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          bulletin.setValidFrom(validFrom);
+          bulletin.setValidUntil(validUntil);
+          result.push(bulletin);
+          break;
         }
       }
-
-      if (result.length > 0) {
-        this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-          () => {
-            console.log("Bulletins saved on server.");
-            this.autoSaving = false;
-          },
-          () => {
-            this.autoSaving = false;
-            console.error("Bulletins could not be saved on server!");
-            this.openSaveErrorModal(this.saveErrorTemplate);
-          },
-        );
-      }
     }
+    if (!result.length) {
+      return;
+    }
+    this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
+      () => {
+        console.log("Bulletins saved on server.");
+        this.autoSaving = false;
+      },
+      () => {
+        this.autoSaving = false;
+        console.error("Bulletins could not be saved on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      },
+    );
   }
 
   goBack() {
