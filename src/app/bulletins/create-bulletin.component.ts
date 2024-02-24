@@ -3,7 +3,6 @@ import {
   HostListener,
   ViewChild,
   ElementRef,
-  ApplicationRef,
   TemplateRef,
   OnDestroy,
   OnInit,
@@ -16,8 +15,6 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
 
-import { environment } from "../../environments/environment";
-
 // models
 import { BulletinModel } from "../models/bulletin.model";
 
@@ -26,7 +23,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
@@ -40,8 +36,6 @@ import { ModalMediaFileComponent } from "./modal-media-file.component";
 import { ModalCheckComponent } from "./modal-check.component";
 
 // For iframe
-import { Renderer2 } from "@angular/core";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
 
 import * as Enums from "../enums/enums";
@@ -52,7 +46,6 @@ import { ServerModel } from "app/models/server.model";
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;
-  public dangerPattern = Enums.DangerPattern;
 
   public autoSaving: boolean;
   public loadingPreview: boolean;
@@ -151,9 +144,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public checkBulletinsErrorModalRef: BsModalRef;
   @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
 
-  @ViewChild("receiver") receiver: ElementRef<HTMLIFrameElement>;
-  display: boolean = false;
-
   internalBulletinsSubscription!: Subscription;
   externalBulletinsSubscription!: Subscription;
 
@@ -168,14 +158,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     public bulletinsService: BulletinsService,
     public authenticationService: AuthenticationService,
     private translateService: TranslateService,
-    private settingsService: SettingsService,
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
     private mapService: MapService,
-    private applicationRef: ApplicationRef,
-    private sanitizer: DomSanitizer,
-    private renderer: Renderer2,
     private modalService: BsModalService,
     private datePipe: DatePipe,
   ) {
