@@ -53,20 +53,14 @@ export class AvalancheProblemDetailComponent implements OnChanges {
 
   ngOnChanges() {
     if (!this.isElevationHighEditing) {
-      if (this.avalancheProblemModel.getTreelineHigh() || this.avalancheProblemModel.getElevationHigh() !== undefined) {
-        this.useElevationHigh = true;
-      } else {
-        this.useElevationHigh = false;
-      }
+      this.useElevationHigh =
+        this.avalancheProblemModel.getTreelineHigh() || this.avalancheProblemModel.getElevationHigh() !== undefined;
       this.localElevationHigh = this.avalancheProblemModel.getElevationHigh();
       this.localTreelineHigh = this.avalancheProblemModel.getTreelineHigh();
     }
     if (!this.isElevationLowEditing) {
-      if (this.avalancheProblemModel.getTreelineLow() || this.avalancheProblemModel.getElevationLow() !== undefined) {
-        this.useElevationLow = true;
-      } else {
-        this.useElevationLow = false;
-      }
+      this.useElevationLow =
+        this.avalancheProblemModel.getTreelineLow() || this.avalancheProblemModel.getElevationLow() !== undefined;
       this.localElevationLow = this.avalancheProblemModel.getElevationLow();
       this.localTreelineLow = this.avalancheProblemModel.getTreelineLow();
     }
@@ -77,10 +71,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   isAvalancheProblem(avalancheProblem) {
-    if (this.avalancheProblemModel && this.avalancheProblemModel.avalancheProblem === avalancheProblem) {
-      return true;
-    }
-    return false;
+    return this.avalancheProblemModel && this.avalancheProblemModel.avalancheProblem === avalancheProblem;
   }
 
   selectAvalancheProblem(avalancheProblem) {
@@ -202,10 +193,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   isDangerRatingDirection(dir) {
-    if (this.avalancheProblemModel && this.avalancheProblemModel.getDangerRatingDirection() === dir) {
-      return true;
-    }
-    return false;
+    return this.avalancheProblemModel?.getDangerRatingDirection() === dir;
   }
 
   setDangerRatingDirection(event, dir: string) {
