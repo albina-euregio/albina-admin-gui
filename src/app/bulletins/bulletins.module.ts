@@ -16,8 +16,6 @@ import { MatrixComponent } from "./matrix.component";
 import { MatrixParameterComponent } from "./matrix-parameter.component";
 import { CaamlComponent } from "./caaml.component";
 import { JsonComponent } from "./json.component";
-import { TabsComponent } from "./tabs.component";
-import { TabComponent } from "./tab.component";
 import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
 
 // Bulletins Routing
@@ -67,8 +65,6 @@ import {BulletinTextComponent} from "./bulletin-text.component";
     MatrixParameterComponent,
     CaamlComponent,
     JsonComponent,
-    TabsComponent,
-    TabComponent,
     AvalancheProblemIconsComponent,
   ],
 })
