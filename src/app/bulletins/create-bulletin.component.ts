@@ -47,8 +47,6 @@ import { Subscription } from "rxjs";
 import * as Enums from "../enums/enums";
 import { ServerModel } from "app/models/server.model";
 
-declare var L: any;
-
 @Component({
   templateUrl: "create-bulletin.component.html",
 })
