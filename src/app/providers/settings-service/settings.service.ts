@@ -42,6 +42,7 @@ export class SettingsService {
       if (this.translateService.langs.indexOf(language) < 0) {
         language = "de";
       }
+      document.documentElement.setAttribute("lang", language);
       this.translateService.use(language);
       this.lang = Enums.LanguageCode[language];
 
