@@ -1,9 +1,7 @@
-import { Component, ViewChild, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import {BehaviorSubject, debounceTime, Subject} from "rxjs";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal";
+import { BehaviorSubject, debounceTime, Subject } from "rxjs";
 
 import { environment } from "../../environments/environment";
 
@@ -12,10 +10,8 @@ import { BulletinModel } from "../models/bulletin.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 
 // services
-import { TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
@@ -27,8 +23,7 @@ import { Renderer2 } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 
 import * as Enums from "../enums/enums";
-import { LangTexts, concatenateLangTexts, LANGUAGES } from "../models/text.model";
-import { AvalancheProblemStr } from "../enums/enums";
+import { LangTexts } from "../models/text.model";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -80,7 +75,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.showNotes = false;
     this.updateBulletinOnServerEventDebounce
       .pipe(debounceTime(1000))
-      .subscribe(bulletin => this.updateBulletinOnServerEvent.emit(bulletin))
+      .subscribe((bulletin) => this.updateBulletinOnServerEvent.emit(bulletin));
   }
 
   ngOnInit() {
