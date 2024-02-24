@@ -1283,97 +1283,75 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createBulletinOnServer(bulletin: BulletinModel) {
-    if (
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.published &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.republished &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.submitted &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.resubmitted
-    ) {
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
-      bulletin.setValidFrom(validFrom);
-      bulletin.setValidUntil(validUntil);
+  private isWriteDisabled(): boolean {
+    const userRegionStatus = this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate());
+    return (
+      userRegionStatus === Enums.BulletinStatus.published ||
+      userRegionStatus === Enums.BulletinStatus.republished ||
+      userRegionStatus === Enums.BulletinStatus.submitted ||
+      userRegionStatus === Enums.BulletinStatus.resubmitted
+    );
+  }
 
-      this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
-        (data) => {
-          this.mapService.deselectAggregatedRegion();
-          this.activeBulletin = undefined;
-          this.addInternalBulletins(data);
-          this.loadInternalBulletinsError = false;
-          this.loading = false;
-          console.log("Bulletin created on server.");
-        },
-        (error) => {
-          console.error("Bulletin could not be created on server!");
-          this.openSaveErrorModal(this.saveErrorTemplate);
-        },
-      );
-    }
+  private createBulletinOnServer(bulletin: BulletinModel) {
+    if (this.isWriteDisabled()) return;
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
+    bulletin.setValidFrom(validFrom);
+    bulletin.setValidUntil(validUntil);
+    this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        this.mapService.deselectAggregatedRegion();
+        this.activeBulletin = undefined;
+        this.addInternalBulletins(data);
+        this.loadInternalBulletinsError = false;
+        this.loading = false;
+        console.log("Bulletin created on server.");
+      },
+      (error) => {
+        console.error("Bulletin could not be created on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      },
+    );
   }
 
   private updateBulletinOnServer(bulletin: BulletinModel) {
-    if (
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.published &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.republished &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.submitted &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.resubmitted
-    ) {
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
-      bulletin.setValidFrom(validFrom);
-      bulletin.setValidUntil(validUntil);
-
-      this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
-        (data) => {
-          this.addInternalBulletins(data);
-          this.saveError = false;
-          this.loadInternalBulletinsError = false;
-          this.loading = false;
-          console.log("Bulletin updated on server.");
-        },
-        (error) => {
-          console.error("Bulletin could not be updated on server!");
-          this.saveError = true;
-        },
-      );
-    }
+    if (this.isWriteDisabled()) return;
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
+    bulletin.setValidFrom(validFrom);
+    bulletin.setValidUntil(validUntil);
+    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        this.addInternalBulletins(data);
+        this.saveError = false;
+        this.loadInternalBulletinsError = false;
+        this.loading = false;
+        console.log("Bulletin updated on server.");
+      },
+      (error) => {
+        console.error("Bulletin could not be updated on server!");
+        this.saveError = true;
+      },
+    );
   }
 
   private deleteBulletinOnServer(bulletin: BulletinModel) {
-    if (
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.published &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.republished &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.submitted &&
-      this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) !==
-        Enums.BulletinStatus.resubmitted
-    ) {
-      this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
-        (data) => {
-          this.addInternalBulletins(data);
-          this.loadInternalBulletinsError = false;
-          this.loading = false;
-          console.log("Bulletin deleted on server.");
-        },
-        (error) => {
-          console.error("Bulletin could not be deleted on server!");
-          this.openSaveErrorModal(this.saveErrorTemplate);
-        },
-      );
-    }
+    if (this.isWriteDisabled()) return;
+    this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        this.addInternalBulletins(data);
+        this.loadInternalBulletinsError = false;
+        this.loading = false;
+        console.log("Bulletin deleted on server.");
+      },
+      (error) => {
+        console.error("Bulletin could not be deleted on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      },
+    );
   }
 
   hasSuggestions(bulletin: BulletinModel): boolean {
