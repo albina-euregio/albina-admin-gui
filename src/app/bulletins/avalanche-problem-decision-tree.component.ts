@@ -47,16 +47,6 @@ export class AvalancheProblemDecisionTreeComponent {
     this.resultIcons = Array.from(svg.getElementById("layer11").children) as HTMLElement[];
     this.resultLabels = Array.from(svg.getElementById("layer12").children) as HTMLElement[];
 
-    const keyEvent = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        this.discard();
-      } else if (e.key === "Enter") {
-        this.save();
-      }
-    };
-    document.addEventListener("keydown", keyEvent);
-    (picker as HTMLObjectElement).contentDocument.getElementsByTagName("svg")[0].addEventListener("keydown", keyEvent);
-
     const resultsTransparent = () => {
       [...this.resultIcons, ...this.resultLabels].forEach((item) => {
         item.style.cursor = "pointer";
@@ -71,6 +61,7 @@ export class AvalancheProblemDecisionTreeComponent {
         this.resultIcons[i].style.opacity = "1";
         this.resultLabels[this.resultIconLabelMap[i]].style.opacity = "1";
         this.problem = this.resultProblemMap[i];
+        this.save();
       });
     }
     for (let i = 0; i < this.resultLabels.length; i++) {
@@ -79,8 +70,7 @@ export class AvalancheProblemDecisionTreeComponent {
         this.resultLabels[i].style.opacity = "1";
         this.resultIcons[this.resultIconLabelMap.indexOf(i.toString())].style.opacity = "1";
         this.problem = this.resultProblemMap[this.resultIconLabelMap.indexOf(i.toString())];
-        console.log(i);
-        console.log(Enums.AvalancheProblem[this.problem]);
+        this.save();
       });
     }
   }
