@@ -59,6 +59,7 @@ export class AvalancheProblemDecisionTreeComponent {
 
     const resultsTransparent = () => {
       [...this.resultIcons, ...this.resultLabels].forEach((item) => {
+        item.style.cursor = "pointer";
         item.style.opacity = "0.2";
       });
     };
