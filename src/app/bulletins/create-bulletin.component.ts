@@ -470,16 +470,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.router.navigate(["/bulletins/" + formattedDate]);
   }
 
-  onDangerPattern1Change(event) {
-    this.activeBulletin.dangerPattern1 = event;
-    this.updateBulletinOnServer(this.activeBulletin);
-  }
-
-  onDangerPattern2Change(event) {
-    this.activeBulletin.dangerPattern2 = event;
-    this.updateBulletinOnServer(this.activeBulletin);
-  }
-
   publishAll() {
     this.publishing = true;
     this.openPublishAllModal();
