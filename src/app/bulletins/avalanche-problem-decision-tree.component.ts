@@ -51,12 +51,11 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
     this.resultIcons = svg.getElementById("layer11").children;
     this.resultLabels = svg.getElementById("layer12").children;
 
-    let keyEvent = (e) => {
-      switch (e.key) {
-        case "Escape":
-          this.discard();
-        case "Enter":
-          this.save();
+    let keyEvent = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        this.discard();
+      } else if (e.key === "Enter") {
+        this.save();
       }
     };
     document.addEventListener("keydown", keyEvent);
