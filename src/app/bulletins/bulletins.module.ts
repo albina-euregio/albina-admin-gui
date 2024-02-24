@@ -18,7 +18,7 @@ import { CaamlComponent } from "./caaml.component";
 import { JsonComponent } from "./json.component";
 import { TabsComponent } from "./tabs.component";
 import { TabComponent } from "./tab.component";
-import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons/avalanche-problem-icons.component";
+import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
 
 // Bulletins Routing
 import { BulletinsRoutingModule } from "./bulletins-routing.module";
