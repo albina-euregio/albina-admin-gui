@@ -288,16 +288,7 @@
             class="form-select"
           >
             <option selected></option>
-            <option value="dp1">{{ "dangerPattern.dp1" | translate }}</option>
-            <option value="dp2">{{ "dangerPattern.dp2" | translate }}</option>
-            <option value="dp3">{{ "dangerPattern.dp3" | translate }}</option>
-            <option value="dp4">{{ "dangerPattern.dp4" | translate }}</option>
-            <option value="dp5">{{ "dangerPattern.dp5" | translate }}</option>
-            <option value="dp6">{{ "dangerPattern.dp6" | translate }}</option>
-            <option value="dp7">{{ "dangerPattern.dp7" | translate }}</option>
-            <option value="dp8">{{ "dangerPattern.dp8" | translate }}</option>
-            <option value="dp9">{{ "dangerPattern.dp9" | translate }}</option>
-            <option value="dp10">{{ "dangerPattern.dp10" | translate }}</option>
+            <option *ngFor="let dp of dangerPattern" [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
           </select>
 
           <select
@@ -307,16 +298,7 @@
             class="form-select"
           >
             <option selected></option>
-            <option value="dp1">{{ "dangerPattern.dp1" | translate }}</option>
-            <option value="dp2">{{ "dangerPattern.dp2" | translate }}</option>
-            <option value="dp3">{{ "dangerPattern.dp3" | translate }}</option>
-            <option value="dp4">{{ "dangerPattern.dp4" | translate }}</option>
-            <option value="dp5">{{ "dangerPattern.dp5" | translate }}</option>
-            <option value="dp6">{{ "dangerPattern.dp6" | translate }}</option>
-            <option value="dp7">{{ "dangerPattern.dp7" | translate }}</option>
-            <option value="dp8">{{ "dangerPattern.dp8" | translate }}</option>
-            <option value="dp9">{{ "dangerPattern.dp9" | translate }}</option>
-            <option value="dp10">{{ "dangerPattern.dp10" | translate }}</option>
+            <option *ngFor="let dp of dangerPattern" [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
           </select>
         </div>
         <!-- End of danger patterns -->

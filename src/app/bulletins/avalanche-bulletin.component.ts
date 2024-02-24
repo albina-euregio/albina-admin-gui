@@ -49,7 +49,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() setMapLayoutEvent = new EventEmitter<boolean>();
 
-  public dangerPattern = Enums.DangerPattern;
+  dangerPattern = Object.values(Enums.DangerPattern);
 
   public showNotes: boolean;
   public editRegions: boolean;
@@ -162,12 +162,12 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     this.showNotes = !this.showNotes;
   }
 
-  onDangerPattern1Change(event) {
+  onDangerPattern1Change(event: Enums.DangerPattern) {
     this.bulletin.dangerPattern1 = event;
     this.updateBulletinOnServer();
   }
 
-  onDangerPattern2Change(event) {
+  onDangerPattern2Change(event: Enums.DangerPattern) {
     this.bulletin.dangerPattern2 = event;
     this.updateBulletinOnServer();
   }
