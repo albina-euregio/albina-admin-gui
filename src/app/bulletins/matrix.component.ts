@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, SimpleChange, AfterViewInit, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { SettingsService } from "../providers/settings-service/settings.service";
@@ -86,7 +86,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
 
   resetMatrix() {
     for (let i = 0; i <= 46; i++) {
-      this.setCellStyleInactive("" + i);
+      this.setCellStyleInactive(String(i));
     }
   }
 
@@ -114,7 +114,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   private setCellStyleActive(cell) {
     if (cell !== undefined && cell !== null) {
       const element = this.getElement(cell);
-      if (element && element !== undefined) {
+      if (element) {
         element.nativeElement.style.fill = this.getColor(cell);
       }
     }
@@ -123,7 +123,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   private setCellStyleInactive(cell) {
     if (cell !== undefined && cell !== null) {
       const element = this.getElement(cell);
-      if (element !== undefined && element !== null) {
+      if (element) {
         element.nativeElement.style.fill = this.getGrayscaleColor(cell);
       }
     }
@@ -250,7 +250,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getDangerRating(id) {
+  private getDangerRating(id): Enums.DangerRating {
     switch (id) {
       case "15":
       case "30":
@@ -313,7 +313,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getAvalancheSize(id) {
+  private getAvalancheSize(id): Enums.AvalancheSize {
     if (id == 46) {
       return Enums.AvalancheSize.small;
     } else if (id % 5 == 1) {
@@ -331,7 +331,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getSnowpackStability(id) {
+  private getSnowpackStability(id): Enums.SnowpackStability {
     if (id > 0 && id <= 15) {
       return Enums.SnowpackStability.very_poor;
     } else if (id > 15 && id <= 30) {
@@ -359,7 +359,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getColor(id) {
+  private getColor(id): string {
     switch (this.getDangerRating(id)) {
       case Enums.DangerRating.low:
         return this.constantsService.colorDangerRatingLow;
@@ -376,7 +376,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getGrayscaleColor(id) {
+  private getGrayscaleColor(id): string {
     // white fields in the matrix
     if (id == 26 || id == 31 || id == 32 || id == 36 || id == 37 || id == 41 || id == 42) {
       return "#FFFFFF";
@@ -397,7 +397,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getCell(matrixInformation: MatrixInformationModel) {
+  private getCell(matrixInformation: MatrixInformationModel): string {
     var snowpackStabilityFactor = 0;
     var frequencyFactor = 0;
     var avalancheSizeFactor = 0;
@@ -454,7 +454,6 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         return "0";
     }
 
-    var result = snowpackStabilityFactor * 15 + frequencyFactor * 5 + avalancheSizeFactor;
-    return "" + result;
+    return String(snowpackStabilityFactor * 15 + frequencyFactor * 5 + avalancheSizeFactor);
   }
 }
