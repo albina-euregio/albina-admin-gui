@@ -1,14 +1,15 @@
-import { Component, AfterContentInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { DialogService, DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
+import { DynamicDialogRef } from "primeng/dynamicdialog";
 import * as Enums from "../enums/enums";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 @Component({
   selector: "app-avalanche-problem-decision-tree",
   templateUrl: "avalanche-problem-decision-tree.component.html",
   styleUrls: ["avalanche-problem-decision-tree.component.scss"],
 })
-export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
+export class AvalancheProblemDecisionTreeComponent {
   private resultIcons: HTMLCollection;
   private resultLabels: HTMLCollection;
   private resultIconLabelMap = ["9", "10", "8", "7", "6", "5", "4", "3", "2", "1", "0", "11"];
@@ -28,20 +29,15 @@ export class AvalancheProblemDecisionTreeComponent implements AfterContentInit {
   ];
 
   private problem: Enums.AvalancheProblem;
+  localizedImage: SafeResourceUrl;
 
   public constructor(
-    private config: DynamicDialogConfig,
     private dialogRef: DynamicDialogRef,
+    private sanitizer: DomSanitizer,
     private translateService: TranslateService,
-  ) {}
-
-  public ngAfterContentInit() {
-    document.getElementById("picker-result")["data"] = this.translateService.instant(
-      "bulletins.create.decisionTree.filepath",
-    );
-    setTimeout(() => {
-      this.resultsInit();
-    }, 250);
+  ) {
+    const url = this.translateService.instant("bulletins.create.decisionTree.filepath");
+    this.localizedImage = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   resultsInit() {
