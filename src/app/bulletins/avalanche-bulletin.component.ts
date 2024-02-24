@@ -1,7 +1,7 @@
 import { Component, ViewChild, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import { BehaviorSubject } from "rxjs";
+import {BehaviorSubject, debounceTime, Subject} from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
@@ -40,6 +40,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Input() isCompactMapLayout: boolean;
   @Input() isComparedBulletin: boolean;
 
+  private readonly updateBulletinOnServerEventDebounce = new Subject<BulletinModel>();
   @Output() updateBulletinOnServerEvent = new EventEmitter<BulletinModel>();
   @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
   @Output() deleteBulletinEvent = new EventEmitter<BulletinModel>();
@@ -77,6 +78,9 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     public copyService: CopyService,
   ) {
     this.showNotes = false;
+    this.updateBulletinOnServerEventDebounce
+      .pipe(debounceTime(1000))
+      .subscribe(bulletin => this.updateBulletinOnServerEvent.emit(bulletin))
   }
 
   ngOnInit() {
@@ -92,7 +96,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   updateBulletinOnServer() {
-    this.updateBulletinOnServerEvent.emit(this.bulletin);
+    this.updateBulletinOnServerEventDebounce.next(this.bulletin);
   }
 
   copyBulletin(event) {
@@ -272,7 +276,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
       this.bulletin.getForenoon().updateDangerRating();
       this.bulletin.getAfternoon().updateDangerRating();
 
-      this.updateBulletinOnServerEvent.emit(this.bulletin);
+      this.updateBulletinOnServer();
     }
   }
 
