@@ -36,12 +36,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   localTreelineHigh = false;
   localTreelineLow = false;
 
-  public terrainFeatureTextcat: string;
-  public terrainFeatureDe: string;
-  public terrainFeatureIt: string;
-  public terrainFeatureEn: string;
-  public terrainFeatureFr: string;
-
   directionEnum = Enums.Direction;
 
   constructor(
@@ -181,15 +175,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.useElevationLow = true;
       this.isElevationLowEditing = true;
     }
-  }
-
-  deleteTextcat(event) {
-    this.terrainFeatureTextcat = undefined;
-    this.terrainFeatureDe = undefined;
-    this.terrainFeatureIt = undefined;
-    this.terrainFeatureEn = undefined;
-    this.terrainFeatureFr = undefined;
-    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   isDangerRatingDirection(dir) {
