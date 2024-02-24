@@ -12,28 +12,12 @@ export class DangerRatingIconComponent {
   constructor(private constantsService: ConstantsService) {}
 
   getColorAbove() {
-    let dangerRating = undefined;
-    if (
-      this.bulletinDaytimeDescription &&
-      this.bulletinDaytimeDescription !== undefined &&
-      this.bulletinDaytimeDescription.getDangerRatingAbove() &&
-      this.bulletinDaytimeDescription.getDangerRatingAbove() !== undefined
-    ) {
-      dangerRating = this.bulletinDaytimeDescription.getDangerRatingAbove().toString();
-    }
+    const dangerRating = this.bulletinDaytimeDescription?.getDangerRatingAbove()?.toString();
     return this.getDangerRatingColor(dangerRating);
   }
 
   getColorBelow() {
-    let dangerRating = undefined;
-    if (
-      this.bulletinDaytimeDescription &&
-      this.bulletinDaytimeDescription !== undefined &&
-      this.bulletinDaytimeDescription.getDangerRatingBelow() &&
-      this.bulletinDaytimeDescription.getDangerRatingBelow() !== undefined
-    ) {
-      dangerRating = this.bulletinDaytimeDescription.getDangerRatingBelow().toString();
-    }
+    const dangerRating = this.bulletinDaytimeDescription?.getDangerRatingBelow()?.toString();
     return this.getDangerRatingColor(dangerRating);
   }
 
