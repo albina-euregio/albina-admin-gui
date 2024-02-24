@@ -1316,7 +1316,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  private updateBulletinOnServer(bulletin: BulletinModel) {
+  updateBulletinOnServer(bulletin: BulletinModel) {
     if (this.isWriteDisabled()) return;
     const validFrom = new Date(this.bulletinsService.getActiveDate());
     const validUntil = new Date(this.bulletinsService.getActiveDate());
