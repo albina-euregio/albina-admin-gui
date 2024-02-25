@@ -60,39 +60,9 @@
           <li>
             <h6 class="dropdown-header">{{ "menu.language" | translate }}</h6>
           </li>
-          <li>
-            <a class="dropdown-item" (click)="settingsService.setLangString('it')"
-              >{{ "menu.it" | translate }}<i *ngIf="settingsService.getLangString() === 'it'" class="ph ph-check"></i
-            ></a>
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="settingsService.setLangString('de')"
-              >{{ "menu.de" | translate }}<i *ngIf="settingsService.getLangString() === 'de'" class="ph ph-check"></i
-            ></a>
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="settingsService.setLangString('en')"
-              >{{ "menu.en" | translate }}<i *ngIf="settingsService.getLangString() === 'en'" class="ph ph-check"></i
-            ></a>
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="settingsService.setLangString('fr')"
-              >{{ "menu.fr" | translate }}<i *ngIf="settingsService.getLangString() === 'fr'" class="ph ph-check"></i
-            ></a>
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="settingsService.setLangString('es')"
-              >{{ "menu.es" | translate }}<i *ngIf="settingsService.getLangString() === 'es'" class="ph ph-check"></i
-            ></a>
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="settingsService.setLangString('ca')"
-              >{{ "menu.ca" | translate }}<i *ngIf="settingsService.getLangString() === 'ca'" class="ph ph-check"></i
-            ></a>
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="settingsService.setLangString('oc')"
-              >{{ "menu.oc" | translate }}<i *ngIf="settingsService.getLangString() === 'oc'" class="ph ph-check"></i
+          <li *ngFor="let lang of translateService.langs">
+            <a class="dropdown-item" (click)="settingsService.setLangString(lang)"
+              >{{ "menu." + lang | translate }}<i *ngIf="settingsService.getLangString() === lang" class="ph ph-check"></i
             ></a>
           </li>
         </ul>
