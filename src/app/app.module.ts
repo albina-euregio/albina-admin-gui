@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData, DatePipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from "@angular/material/dialog";
-import { Observable, of } from "rxjs";
 
 import { AppComponent } from "./app.component";
 
@@ -48,7 +47,7 @@ import { PipeModule } from "./pipes/pipes.module";
 
 import { AuthGuard } from "./guards/auth.guard";
 
-import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 import { HttpClientModule } from "@angular/common/http";
 
@@ -74,13 +73,6 @@ import localeEs from "@angular/common/locales/es";
 import localeCa from "@angular/common/locales/ca";
 // locale OC missing in @angular/common/locales/
 import localeOc from "@angular/common/locales/en";
-import i18nDe from "../assets/i18n/de.json";
-import i18nIt from "../assets/i18n/it.json";
-import i18nEn from "../assets/i18n/en.json";
-import i18nFr from "../assets/i18n/fr.json";
-import i18nEs from "../assets/i18n/es.json";
-import i18nCa from "../assets/i18n/ca.json";
-import i18nOc from "../assets/i18n/oc.json";
 import { CreateUserComponent } from "./admin/create-user.component";
 import { UpdateUserComponent } from "./admin/update-user.component";
 import { BaseMapService } from "./providers/map-service/base-map.service";
@@ -95,32 +87,6 @@ import { ObservationMarkerService } from "./observations/observation-marker.serv
 import { ElevationService } from "./providers/map-service/elevation.service";
 import { ObservationFilterService } from "./observations/observation-filter.service";
 import { provideEcharts } from "ngx-echarts";
-
-export class DirectTranslateLoader implements TranslateLoader {
-  getTranslation(lang: string): Observable<Object> {
-    switch (lang) {
-      case "de":
-        return of(i18nDe);
-      case "it":
-        return of(i18nIt);
-      case "en":
-        return of(i18nEn);
-      case "fr":
-        return of(i18nFr);
-      case "es":
-        return of(i18nEs);
-      case "ca":
-        return of(i18nCa);
-      case "oc":
-        return of(i18nOc);
-    }
-  }
-}
-
-// AoT requires an exported function for factories
-export function DirectLoaderFactory() {
-    return new DirectTranslateLoader();
-}
 
 registerLocaleData(localeDe, "de");
 registerLocaleData(localeIt, "it");
@@ -146,13 +112,7 @@ registerLocaleData(localeOc, "oc");
     BrowserAnimationsModule,
     PipeModule.forRoot(),
     ModalModule.forRoot(),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: DirectLoaderFactory
-      },
-      defaultLanguage: "de"
-    })
+    TranslateModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -199,7 +159,7 @@ registerLocaleData(localeOc, "oc");
     DatePipe,
     DialogService,
     ElevationService,
-    GeocodingService, 
+    GeocodingService,
     GetDustParamService,
     GetFilenamesService,
     LocalStorageService,
@@ -217,7 +177,7 @@ registerLocaleData(localeOc, "oc");
     SettingsService,
     SocialmediaService,
     StatisticsService,
-    TranslateService, 
+    TranslateService,
     UserService,
     WsBulletinService,
     WsRegionService,
