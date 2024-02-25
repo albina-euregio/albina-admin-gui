@@ -338,7 +338,7 @@
         <div class="form-group">
           <div class="btn-group">
             <button
-              *ngFor="let t of ['decreasing', 'steady', 'increasing']"
+              *ngFor="let t of tendency"
               [disabled]="disabled"
               type="reset"
               [class]="isTendency(t) ? 'btn btn-small btn-dark' : 'btn btn-small btn-outline-secondary'"

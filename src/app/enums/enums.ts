@@ -44,7 +44,9 @@ export enum Frequency {
   none, few, some, many
 }
 
-export type Tendency = "decreasing" | "steady" | "increasing";
+export enum Tendency {
+  decreasing = "decreasing", steady = "steady", increasing = "increasing"
+}
 
 export enum Direction {
   up, down

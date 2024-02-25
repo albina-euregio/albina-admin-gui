@@ -44,7 +44,8 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() setMapLayoutEvent = new EventEmitter<boolean>();
 
-  dangerPattern = Object.values(Enums.DangerPattern);
+  dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
+  tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
 
   public showNotes: boolean;
   public editRegions: boolean;
