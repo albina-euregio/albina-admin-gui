@@ -27,15 +27,30 @@ export enum DangerRatingModificator {
 }
 
 export enum BulletinStatus {
-  missing, draft, submitted, published, updated, resubmitted, republished
+  missing,
+  draft,
+  submitted,
+  published,
+  updated,
+  resubmitted,
+  republished,
 }
 
 export enum RegionStatus {
-  suggested, saved, published
+  suggested,
+  saved,
+  published,
 }
 
 export enum Aspect {
-  N = 1, NE = 2, E = 3, SE = 4, S = 5, SW = 6, W = 7, NW = 8
+  N = 1,
+  NE = 2,
+  E = 3,
+  SE = 4,
+  S = 5,
+  SW = 6,
+  W = 7,
+  NW = 8,
 }
 
 export enum AvalancheProblem {
@@ -50,7 +65,16 @@ export enum AvalancheProblem {
 }
 
 export enum DangerPattern {
-  dp1 = "dp1", dp2 = "dp2", dp3 = "dp3", dp4 = "dp4", dp5 = "dp5", dp6 = "dp6", dp7 = "dp7", dp8 = "dp8", dp9 = "dp9", dp10 = "dp10"
+  dp1 = "dp1",
+  dp2 = "dp2",
+  dp3 = "dp3",
+  dp4 = "dp4",
+  dp5 = "dp5",
+  dp6 = "dp6",
+  dp7 = "dp7",
+  dp8 = "dp8",
+  dp9 = "dp9",
+  dp10 = "dp10",
 }
 
 export enum AvalancheSize {
@@ -76,7 +100,9 @@ export enum Frequency {
 }
 
 export enum Tendency {
-  decreasing = "decreasing", steady = "steady", increasing = "increasing"
+  decreasing = "decreasing",
+  steady = "steady",
+  increasing = "increasing",
 }
 
 export enum DangerRatingDirection {
