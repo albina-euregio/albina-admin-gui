@@ -64,7 +64,10 @@ export enum AvalancheSize {
 }
 
 export enum SnowpackStability {
-  good, fair, poor, very_poor
+  good = "good",
+  fair = "fair",
+  poor = "poor",
+  very_poor = "very_poor",
 }
 
 export enum Frequency {

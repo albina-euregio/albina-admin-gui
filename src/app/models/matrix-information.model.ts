@@ -74,7 +74,7 @@ export class MatrixInformationModel {
     return this.snowpackStability;
   }
 
-  setSnowpackStability(snowpackStability) {
+  setSnowpackStability(snowpackStability: Enums.SnowpackStability) {
     this.snowpackStability = snowpackStability;
   }
 

@@ -224,16 +224,16 @@ export class MatrixParameterComponent implements OnChanges {
   onSnowpackStabilityValueChange(changeContext: ChangeContext): void {
     switch (true) {
       case changeContext.value < 25:
-        this.setSnowpackStability("good");
+        this.setSnowpackStability(Enums.SnowpackStability.good);
         break;
       case changeContext.value < 50:
-        this.setSnowpackStability("fair");
+        this.setSnowpackStability(Enums.SnowpackStability.fair);
         break;
       case changeContext.value < 75:
-        this.setSnowpackStability("poor");
+        this.setSnowpackStability(Enums.SnowpackStability.poor);
         break;
       default:
-        this.setSnowpackStability("very_poor");
+        this.setSnowpackStability(Enums.SnowpackStability.very_poor);
         break;
     }
     this.changeMatrixEvent.emit();
@@ -278,19 +278,7 @@ export class MatrixParameterComponent implements OnChanges {
     this.changeMatrixEvent.emit();
   }
 
-  isSnowpackStability(snowpackStability) {
-    if (this.matrixInformation && this.matrixInformation.snowpackStability === snowpackStability) {
-      return true;
-    }
-    return false;
-  }
-
-  setSnowpackStabilityEvent(event, snowpackStability) {
-    event.stopPropagation();
-    this.setSnowpackStability(snowpackStability);
-  }
-
-  setSnowpackStability(snowpackStability) {
+  setSnowpackStability(snowpackStability: Enums.SnowpackStability) {
     this.dangerRatingEnabled = false;
     this.matrixInformation.dangerRatingModificator = undefined;
     this.matrixInformation.setSnowpackStability(snowpackStability);
@@ -357,7 +345,7 @@ export class MatrixParameterComponent implements OnChanges {
   }
 
   private updateDangerRating() {
-    switch (+Enums.SnowpackStability[this.matrixInformation.getSnowpackStability()]) {
+    switch (this.matrixInformation.getSnowpackStability()) {
       case Enums.SnowpackStability.very_poor:
         switch (+Enums.Frequency[this.matrixInformation.getFrequency()]) {
           case Enums.Frequency.many:
