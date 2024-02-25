@@ -127,7 +127,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   isInternal(): boolean {
     const ownerRegion = this.bulletin.getOwnerRegion();
-    return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion)
+    return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion);
   }
 
   showDialog(pmData: TextcatLegacyIn) {
@@ -163,12 +163,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   showEditMicroRegionsButton(): boolean {
-    return (
-      !this.isComparedBulletin && 
-      !this.editRegions &&
-      this.isInternal() &&
-      this.bulletinsService.getIsEditable()
-    );
+    return !this.isComparedBulletin && !this.editRegions && this.isInternal() && this.bulletinsService.getIsEditable();
   }
 
   accordionChanged(event: boolean, groupName: string) {
