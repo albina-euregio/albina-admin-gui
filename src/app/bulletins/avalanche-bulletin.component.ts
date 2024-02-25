@@ -172,7 +172,8 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     return (
       !this.isComparedBulletin && 
       !this.editRegions &&
-      this.isInternal()
+      this.isInternal() &&
+      this.bulletinsService.getIsEditable()
     );
   }
 
