@@ -22,6 +22,7 @@ export class MatrixParameterComponent implements OnChanges {
   @Input() afternoon: boolean;
   @Output() changeMatrixEvent = new EventEmitter<string>();
 
+  dangerRating = Enums.DangerRating;
   dangerRatingEnabled: boolean;
   languageCode = Enums.LanguageCode;
   modificatorEnum = Enums.DangerRatingModificator;
@@ -300,20 +301,18 @@ export class MatrixParameterComponent implements OnChanges {
     this.updateDangerRating();
   }
 
-  isDangerRating(dangerRating) {
-    if (this.matrixInformation && this.matrixInformation.dangerRating === dangerRating) {
-      return true;
-    }
-    return false;
+  isDangerRating(dangerRating: Enums.DangerRating) {
+    return this.matrixInformation?.dangerRating === dangerRating;
+
   }
 
-  setDangerRating(event, dangerRating) {
+  setDangerRating(event: Event, dangerRating: Enums.DangerRating) {
     event.stopPropagation();
     this.matrixInformation.setDangerRating(dangerRating);
     this.bulletinDaytimeDescription.updateDangerRating();
   }
 
-  overrideDangerRating(event, dangerRating) {
+  overrideDangerRating(event: Event, dangerRating: Enums.DangerRating) {
     event.stopPropagation();
     if (!this.disabled && this.dangerRatingEnabled) {
       this.setDangerRating(event, dangerRating);
@@ -321,7 +320,7 @@ export class MatrixParameterComponent implements OnChanges {
     this.changeMatrixEvent.emit();
   }
 
-  setDangerRatingEnabled(event) {
+  setDangerRatingEnabled(event: Event) {
     if (!this.dangerRatingEnabled) {
       this.dangerRatingEnabled = true;
       this.matrixInformation.dangerRatingModificator = undefined;
