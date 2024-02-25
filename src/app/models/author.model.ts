@@ -12,7 +12,9 @@ export class AuthorModel {
   public regions: RegionConfiguration[];
   public apiUrl: string;
 
-  static createFromJson(json: Partial<AuthorModel> & {access_token?: string; refresh_token?: string; api_url?: string}) {
+  static createFromJson(
+    json: Partial<AuthorModel> & { access_token?: string; refresh_token?: string; api_url?: string },
+  ) {
     const author = new AuthorModel();
 
     author.setName(json.name);
@@ -22,9 +24,9 @@ export class AuthorModel {
     const jsonRoles = json.roles;
     const roles = new Array<string>();
     for (const i in jsonRoles) {
-     if (jsonRoles[i] !== null) {
-       roles.push(jsonRoles[i]);
-     }
+      if (jsonRoles[i] !== null) {
+        roles.push(jsonRoles[i]);
+      }
     }
     author.setRoles(roles);
     author.setImage(json.image);

@@ -236,12 +236,12 @@ export class BulletinModel {
       this.snowpackStructureCommentNotes = bulletin.snowpackStructureCommentNotes;
       this.tendencyCommentNotes = bulletin.tendencyCommentNotes;
 
-      this.highlights$ = {...bulletin.highlights$};
-      this.avActivityHighlights$ = {...bulletin.avActivityHighlights$};
-      this.avActivityComment$ = {...bulletin.avActivityComment$};
-      this.snowpackStructureHighlights$ = {...bulletin.snowpackStructureHighlights$};
-      this.snowpackStructureComment$ = {...bulletin.snowpackStructureComment$};
-      this.tendencyComment$ = {...bulletin.tendencyComment$};
+      this.highlights$ = { ...bulletin.highlights$ };
+      this.avActivityHighlights$ = { ...bulletin.avActivityHighlights$ };
+      this.avActivityComment$ = { ...bulletin.avActivityComment$ };
+      this.snowpackStructureHighlights$ = { ...bulletin.snowpackStructureHighlights$ };
+      this.snowpackStructureComment$ = { ...bulletin.snowpackStructureComment$ };
+      this.tendencyComment$ = { ...bulletin.tendencyComment$ };
 
       this.tendency = bulletin.tendency;
       this.dangerPattern1 = bulletin.dangerPattern1;
@@ -591,14 +591,23 @@ export class BulletinModel {
     const offset = -date.getTimezoneOffset();
     const dif = offset >= 0 ? "+" : "-";
 
-    return date.getFullYear() +
-      "-" + this.extend(date.getMonth() + 1) +
-      "-" + this.extend(date.getDate()) +
-      "T" + this.extend(date.getHours()) +
-      ":" + this.extend(date.getMinutes()) +
-      ":" + this.extend(date.getSeconds()) +
-      dif + this.extend(offset / 60) +
-      ":" + this.extend(offset % 60);
+    return (
+      date.getFullYear() +
+      "-" +
+      this.extend(date.getMonth() + 1) +
+      "-" +
+      this.extend(date.getDate()) +
+      "T" +
+      this.extend(date.getHours()) +
+      ":" +
+      this.extend(date.getMinutes()) +
+      ":" +
+      this.extend(date.getSeconds()) +
+      dif +
+      this.extend(offset / 60) +
+      ":" +
+      this.extend(offset % 60)
+    );
   }
 
   private extend(num: number) {

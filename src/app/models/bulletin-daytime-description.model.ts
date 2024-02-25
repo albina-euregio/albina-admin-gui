@@ -2,7 +2,6 @@ import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "./avalanche-problem.model";
 import { TextModel } from "./text.model";
 
-
 export class BulletinDaytimeDescriptionModel {
   public dangerRatingAbove: Enums.DangerRating;
   public terrainFeatureAboveTextcat: string;

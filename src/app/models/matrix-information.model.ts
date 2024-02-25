@@ -1,7 +1,6 @@
 import * as Enums from "../enums/enums";
 
 export class MatrixInformationModel {
-
   public dangerRating: Enums.DangerRating;
   public dangerRatingModificator: Enums.DangerRatingModificator;
   public avalancheSize: Enums.AvalancheSize;
