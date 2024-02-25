@@ -16,31 +16,17 @@ export class DangerRatingComponent {
 
   constructor(public settingsService: SettingsService) {}
 
-  isDangerRating(dangerRating) {
-    if (this.below) {
-      if (
-        this.bulletinDaytimeDescription.dangerRatingBelow &&
-        this.bulletinDaytimeDescription.dangerRatingBelow === dangerRating
-      ) {
-        return true;
-      }
-      return false;
-    } else {
-      if (
-        this.bulletinDaytimeDescription.dangerRatingAbove &&
-        this.bulletinDaytimeDescription.dangerRatingAbove === dangerRating
-      ) {
-        return true;
-      }
-      return false;
-    }
+  isDangerRating(dangerRating: Enums.DangerRating) {
+    return this.below
+      ? this.bulletinDaytimeDescription.dangerRatingBelow === dangerRating
+      : this.bulletinDaytimeDescription.dangerRatingAbove === dangerRating;
   }
 
-  selectDangerRating(dangerRating) {
+  selectDangerRating(dangerRating: Enums.DangerRating) {
     if (this.below) {
-      this.bulletinDaytimeDescription.setDangerRatingBelow(Enums.DangerRating[dangerRating]);
+      this.bulletinDaytimeDescription.setDangerRatingBelow(dangerRating);
     } else {
-      this.bulletinDaytimeDescription.setDangerRatingAbove(Enums.DangerRating[dangerRating]);
+      this.bulletinDaytimeDescription.setDangerRatingAbove(dangerRating);
     }
   }
 }

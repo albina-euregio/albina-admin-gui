@@ -148,19 +148,19 @@ export class ConstantsService {
 
   constructor() {}
 
-  getDangerRatingColor(dangerRating: keyof typeof Enums.DangerRating) {
+  getDangerRatingColor(dangerRating: Enums.DangerRating) {
     switch (dangerRating) {
-      case "very_high":
+      case Enums.DangerRating.very_high:
         return this.colorDangerRatingVeryHigh;
-      case "high":
+      case Enums.DangerRating.high:
         return this.colorDangerRatingHigh;
-      case "considerable":
+      case Enums.DangerRating.considerable:
         return this.colorDangerRatingConsiderable;
-      case "moderate":
+      case Enums.DangerRating.moderate:
         return this.colorDangerRatingModerate;
-      case "low":
+      case Enums.DangerRating.low:
         return this.colorDangerRatingLow;
-      case "no_snow":
+      case Enums.DangerRating.no_snow:
         return this.colorDangerRatingNoSnow;
 
       default:
@@ -168,19 +168,19 @@ export class ConstantsService {
     }
   }
 
-  getDangerRatingColorBw(dangerRating: keyof typeof Enums.DangerRating) {
+  getDangerRatingColorBw(dangerRating: Enums.DangerRating) {
     switch (dangerRating) {
-      case "very_high":
+      case Enums.DangerRating.very_high:
         return this.colorDangerRatingVeryHighBw;
-      case "high":
+      case Enums.DangerRating.high:
         return this.colorDangerRatingHighBw;
-      case "considerable":
+      case Enums.DangerRating.considerable:
         return this.colorDangerRatingConsiderableBw;
-      case "moderate":
+      case Enums.DangerRating.moderate:
         return this.colorDangerRatingModerateBw;
-      case "low":
+      case Enums.DangerRating.low:
         return this.colorDangerRatingLowBw;
-      case "no_snow":
+      case Enums.DangerRating.no_snow:
         return this.colorDangerRatingNoSnow;
 
       default:

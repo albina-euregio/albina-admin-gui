@@ -259,18 +259,14 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
           this.bulletin.afternoon.setDangerRatingBelow(this.bulletin.forenoon.getDangerRatingBelow());
         }
       } else {
-        this.bulletin.afternoon.setDangerRatingAbove(
-          new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing),
-        );
+        this.bulletin.afternoon.setDangerRatingAbove(Enums.DangerRating.missing);
         this.bulletin.afternoon.setAvalancheProblem1(undefined);
         this.bulletin.afternoon.setAvalancheProblem2(undefined);
         this.bulletin.afternoon.setAvalancheProblem3(undefined);
         this.bulletin.afternoon.setAvalancheProblem4(undefined);
         this.bulletin.afternoon.setAvalancheProblem5(undefined);
         this.bulletin.afternoon.setHasElevationDependency(false);
-        this.bulletin.afternoon.setDangerRatingBelow(
-          new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing),
-        );
+        this.bulletin.afternoon.setDangerRatingBelow(Enums.DangerRating.missing);
       }
       this.bulletin.getForenoon().updateDangerRating();
       this.bulletin.getAfternoon().updateDangerRating();

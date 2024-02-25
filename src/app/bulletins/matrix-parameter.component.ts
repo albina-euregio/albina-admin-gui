@@ -375,71 +375,71 @@ export class MatrixParameterComponent implements OnChanges {
           case Enums.Frequency.many:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("very_high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.very_high);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("very_high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.very_high);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           case Enums.Frequency.some:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("very_high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.very_high);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           case Enums.Frequency.few:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           default:
-            this.matrixInformation.setDangerRating("missing");
+            this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
             break;
         }
         break;
@@ -448,71 +448,71 @@ export class MatrixParameterComponent implements OnChanges {
           case Enums.Frequency.many:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("very_high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.very_high);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           case Enums.Frequency.some:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           case Enums.Frequency.few:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           default:
-            this.matrixInformation.setDangerRating("missing");
+            this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
             break;
         }
         break;
@@ -521,101 +521,101 @@ export class MatrixParameterComponent implements OnChanges {
           case Enums.Frequency.many:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("high");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           case Enums.Frequency.some:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           case Enums.Frequency.few:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("considerable");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("moderate");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.moderate);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           case Enums.Frequency.none:
             switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
               case Enums.AvalancheSize.extreme:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               case Enums.AvalancheSize.very_large:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               case Enums.AvalancheSize.large:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               case Enums.AvalancheSize.medium:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               case Enums.AvalancheSize.small:
-                this.matrixInformation.setDangerRating("low");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
               default:
-                this.matrixInformation.setDangerRating("missing");
+                this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
                 break;
             }
             break;
           default:
-            this.matrixInformation.setDangerRating("missing");
+            this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
             break;
         }
         break;
       case Enums.SnowpackStability.good:
-        this.matrixInformation.setDangerRating("low");
+        this.matrixInformation.setDangerRating(Enums.DangerRating.low);
         break;
       default:
-        this.matrixInformation.setDangerRating("missing");
+        this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
         break;
     }
     this.bulletinDaytimeDescription.updateDangerRating();

@@ -81,10 +81,10 @@ export class BulletinDaytimeDescriptionModel {
     this.dangerRatingBelow = Enums.DangerRating.low;
 
     if (!bulletinDaytimeDescription) {
-      this.setDangerRatingAbove("low");
+      this.setDangerRatingAbove(Enums.DangerRating.low);
       this.terrainFeatureAboveTextcat = undefined;
       this.terrainFeatureAbove = new Array<TextModel>();
-      this.setDangerRatingBelow("low");
+      this.setDangerRatingBelow(Enums.DangerRating.low);
       this.terrainFeatureBelowTextcat = undefined;
       this.terrainFeatureBelow = new Array<TextModel>();
       this.elevation = undefined;
@@ -126,11 +126,11 @@ export class BulletinDaytimeDescriptionModel {
     }
   }
 
-  getDangerRatingAbove() {
+  getDangerRatingAbove(): Enums.DangerRating {
     return this.dangerRatingAbove;
   }
 
-  setDangerRatingAbove(dangerRatingAbove) {
+  setDangerRatingAbove(dangerRatingAbove: Enums.DangerRating) {
     this.dangerRatingAbove = dangerRatingAbove;
   }
 
@@ -175,11 +175,11 @@ export class BulletinDaytimeDescriptionModel {
     this.terrainFeatureAbove.push(model);
   }
 
-  getDangerRatingBelow() {
+  getDangerRatingBelow(): Enums.DangerRating {
     return this.dangerRatingBelow;
   }
 
-  setDangerRatingBelow(dangerRatingBelow) {
+  setDangerRatingBelow(dangerRatingBelow: Enums.DangerRating) {
     this.dangerRatingBelow = dangerRatingBelow;
   }
 
@@ -288,30 +288,19 @@ export class BulletinDaytimeDescriptionModel {
     this.hasElevationDependency = hasElevationDependency;
   }
 
-  getSecondDangerRating(up: boolean) {
-    let dangerRating = Enums.DangerRating[1];
-
-    let tmpDangerRating = this.getDangerRating(this.avalancheProblem2, up);
-    if (Enums.DangerRating[dangerRating] < Enums.DangerRating[tmpDangerRating]) {
-      dangerRating = Enums.DangerRating[Enums.DangerRating[tmpDangerRating]];
-    }
-    tmpDangerRating = this.getDangerRating(this.avalancheProblem3, up);
-    if (Enums.DangerRating[dangerRating] < Enums.DangerRating[tmpDangerRating]) {
-      dangerRating = Enums.DangerRating[Enums.DangerRating[tmpDangerRating]];
-    }
-    tmpDangerRating = this.getDangerRating(this.avalancheProblem4, up);
-    if (Enums.DangerRating[dangerRating] < Enums.DangerRating[tmpDangerRating]) {
-      dangerRating = Enums.DangerRating[Enums.DangerRating[tmpDangerRating]];
-    }
-    tmpDangerRating = this.getDangerRating(this.avalancheProblem5, up);
-    if (Enums.DangerRating[dangerRating] < Enums.DangerRating[tmpDangerRating]) {
-      dangerRating = Enums.DangerRating[Enums.DangerRating[tmpDangerRating]];
-    }
-
-    return dangerRating;
+  getSecondDangerRating(up: boolean): Enums.DangerRating {
+    const dangerRatings: Enums.DangerRating[] = [
+      this.getDangerRating(this.avalancheProblem2, up),
+      this.getDangerRating(this.avalancheProblem3, up),
+      this.getDangerRating(this.avalancheProblem4, up),
+      this.getDangerRating(this.avalancheProblem5, up),
+    ];
+    return dangerRatings
+      .filter((r) => !!r)
+      .reduce((r1, r2) => (Enums.WarnLevel[r1] > Enums.WarnLevel[r2] ? r1 : r2), Enums.DangerRating.low);
   }
 
-  getDangerRating(avalancheProblem: AvalancheProblemModel, up: boolean) {
+  getDangerRating(avalancheProblem: AvalancheProblemModel, up: boolean): Enums.DangerRating {
     let boundaryAvalancheProblem;
     let boundaryBulletin;
 
@@ -358,7 +347,10 @@ export class BulletinDaytimeDescriptionModel {
       if (this.avalancheProblem1.elevationHigh > 0 || this.avalancheProblem1.treelineHigh) {
         if (this.avalancheProblem1.elevationLow > 0 || this.avalancheProblem1.treelineLow) {
           // band
-          if (this.avalancheProblem1.getDangerRatingDirection() && this.avalancheProblem1.getDangerRatingDirection().toString() === Enums.Direction[Enums.Direction.down]) {
+          if (
+            this.avalancheProblem1.getDangerRatingDirection() &&
+            this.avalancheProblem1.getDangerRatingDirection().toString() === Enums.Direction[Enums.Direction.down]
+          ) {
             if (this.avalancheProblem1.treelineHigh) {
               this.treeline = true;
               this.elevation = undefined;
@@ -369,7 +361,10 @@ export class BulletinDaytimeDescriptionModel {
             this.hasElevationDependency = true;
             this.setDangerRatingBelow(this.avalancheProblem1.getDangerRating());
             this.setDangerRatingAbove(this.getSecondDangerRating(false));
-          } else if (this.avalancheProblem1.getDangerRatingDirection() && this.avalancheProblem1.getDangerRatingDirection().toString() === Enums.Direction[Enums.Direction.up]) {
+          } else if (
+            this.avalancheProblem1.getDangerRatingDirection() &&
+            this.avalancheProblem1.getDangerRatingDirection().toString() === Enums.Direction[Enums.Direction.up]
+          ) {
             if (this.avalancheProblem1.treelineLow) {
               this.treeline = true;
               this.elevation = undefined;
@@ -412,7 +407,7 @@ export class BulletinDaytimeDescriptionModel {
         this.hasElevationDependency = true;
         this.setDangerRatingAbove(this.avalancheProblem1.getDangerRating());
         this.setDangerRatingBelow(this.getSecondDangerRating(true));
-     } else {
+      } else {
         // no elevation
         this.treeline = false;
         this.elevation = undefined;
@@ -424,8 +419,8 @@ export class BulletinDaytimeDescriptionModel {
       this.treeline = false;
       this.elevation = undefined;
       this.hasElevationDependency = false;
-      this.setDangerRatingAbove(Enums.DangerRating[1]);
-      this.setDangerRatingBelow(Enums.DangerRating[1]);
+      this.setDangerRatingAbove(Enums.DangerRating.low);
+      this.setDangerRatingBelow(Enums.DangerRating.low);
     }
   }
 

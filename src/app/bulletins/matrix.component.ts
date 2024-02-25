@@ -96,7 +96,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   private selectCell(cell) {
-    this.matrixInformation.setDangerRating(Enums.DangerRating[this.getDangerRating(cell)]);
+    this.matrixInformation.setDangerRating(this.getDangerRating(cell));
     this.matrixInformation.setAvalancheSize(Enums.AvalancheSize[this.getAvalancheSize(cell)]);
     this.matrixInformation.setSnowpackStability(Enums.SnowpackStability[this.getSnowpackStability(cell)]);
     this.matrixInformation.setFrequency(Enums.Frequency[this.getFrequency(cell)]);
@@ -104,7 +104,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   private deselectCell(cell) {
-    this.matrixInformation.setDangerRating(Enums.DangerRating[this.getDangerRating(Enums.DangerRating.missing)]);
+    this.matrixInformation.setDangerRating(this.getDangerRating(Enums.DangerRating.missing));
     this.matrixInformation.setAvalancheSize(undefined);
     this.matrixInformation.setSnowpackStability(undefined);
     this.matrixInformation.setFrequency(undefined);

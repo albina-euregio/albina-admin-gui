@@ -27,7 +27,7 @@ export class MatrixInformationModel {
 
   constructor(matrixInformation?: MatrixInformationModel) {
     if (!matrixInformation) {
-      this.setDangerRating("missing");
+      this.setDangerRating(Enums.DangerRating.missing);
       this.dangerRatingModificator = undefined;
       this.avalancheSize = undefined;
       this.snowpackStability = undefined;
@@ -51,7 +51,7 @@ export class MatrixInformationModel {
     return this.dangerRating;
   }
 
-  setDangerRating(dangerRating) {
+  setDangerRating(dangerRating: Enums.DangerRating) {
     this.dangerRating = dangerRating;
   }
 

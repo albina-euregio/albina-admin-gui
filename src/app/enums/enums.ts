@@ -3,8 +3,26 @@ export enum LanguageCode {
 }
 
 export enum DangerRating {
-  missing = -2, no_snow = -1, no_rating = 0, low = 1, moderate = 2, considerable = 3, high = 4, very_high = 5
+  missing = "missing",
+  no_snow = "no_snow",
+  no_rating = "no_rating",
+  low = "low",
+  moderate = "moderate",
+  considerable = "considerable",
+  high = "high",
+  very_high = "very_high",
 }
+
+export const WarnLevel = {
+  [DangerRating.missing]: -2,
+  [DangerRating.no_snow]: -1,
+  [DangerRating.no_rating]: 0,
+  [DangerRating.low]: 1,
+  [DangerRating.moderate]: 2,
+  [DangerRating.considerable]: 3,
+  [DangerRating.high]: 4,
+  [DangerRating.very_high]: 5,
+};
 
 export enum DangerRatingModificator {
   minus, equal, plus
