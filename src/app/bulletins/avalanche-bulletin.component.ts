@@ -124,14 +124,15 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     return tendency === this.bulletin.tendency;
   }
 
-  isForeign(): boolean {
+  isInternal(): boolean {
     const ownerRegion = this.bulletin.getOwnerRegion();
     return (
       ownerRegion !== undefined &&
-      (ownerRegion.startsWith(this.constantsService.codeTyrol) ||
+      (
+        ownerRegion.startsWith(this.constantsService.codeTyrol) ||
         ownerRegion.startsWith(this.constantsService.codeSouthTyrol) ||
-        ownerRegion.startsWith(this.constantsService.codeTrentino)) &&
-      !this.isCreator(this.bulletin)
+        ownerRegion.startsWith(this.constantsService.codeTrentino)
+      )
     );
   }
 
@@ -165,6 +166,14 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   onDangerPattern2Change(event: Enums.DangerPattern) {
     this.bulletin.dangerPattern2 = event;
     this.updateBulletinOnServer();
+  }
+
+  showEditMicroRegionsButton(): boolean {
+    return (
+      !this.isComparedBulletin && 
+      !this.editRegions &&
+      this.isInternal()
+    );
   }
 
   accordionChanged(event: boolean, groupName: string) {
