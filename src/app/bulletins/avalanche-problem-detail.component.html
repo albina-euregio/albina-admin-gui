@@ -312,10 +312,10 @@
               type="reset"
               class="btn btn-sm btn-outline-secondary"
               [ngClass]="{
-                'btn-dark': isDangerRatingDirection('up'),
-                'btn-outline-secondary': !isDangerRatingDirection('up')
+                'btn-dark': isDangerRatingDirection(directionEnum.up),
+                'btn-outline-secondary': !isDangerRatingDirection(directionEnum.up)
               }"
-              (click)="setDangerRatingDirection($event, isDangerRatingDirection('up') ? undefined : directionEnum.up)"
+              (click)="setDangerRatingDirection($event, isDangerRatingDirection(directionEnum.up) ? undefined : directionEnum.up)"
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
             >
@@ -329,11 +329,11 @@
               type="reset"
               class="btn btn-sm btn-outline-secondary"
               [ngClass]="{
-                'btn-dark': isDangerRatingDirection('down'),
-                'btn-outline-secondary': !isDangerRatingDirection('down')
+                'btn-dark': isDangerRatingDirection(directionEnum.down),
+                'btn-outline-secondary': !isDangerRatingDirection(directionEnum.down)
               }"
               (click)="
-                setDangerRatingDirection($event, isDangerRatingDirection('down') ? undefined : directionEnum.down)
+                setDangerRatingDirection($event, isDangerRatingDirection(directionEnum.down) ? undefined : directionEnum.down)
               "
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"

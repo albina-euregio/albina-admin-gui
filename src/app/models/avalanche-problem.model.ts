@@ -9,7 +9,7 @@ export class AvalancheProblemModel {
   public treelineHigh: boolean;
   public elevationLow: number;
   public treelineLow: boolean;
-  public dangerRatingDirection: Enums.Direction;
+  public dangerRatingDirection: Enums.DangerRatingDirection;
   public matrixInformation: MatrixInformationModel;
   public terrainFeatureTextcat: string;
   public terrainFeature: TextModel[];
@@ -137,7 +137,7 @@ export class AvalancheProblemModel {
     return this.dangerRatingDirection;
   }
 
-  setDangerRatingDirection(dangerRatingDirection: Enums.Direction) {
+  setDangerRatingDirection(dangerRatingDirection: Enums.DangerRatingDirection) {
     this.dangerRatingDirection = dangerRatingDirection;
   }
 

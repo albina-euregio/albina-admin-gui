@@ -81,6 +81,7 @@ export enum Tendency {
   decreasing = "decreasing", steady = "steady", increasing = "increasing"
 }
 
-export enum Direction {
-  up, down
+export enum DangerRatingDirection {
+  up = "up",
+  down = "down",
 }
