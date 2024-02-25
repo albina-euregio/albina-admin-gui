@@ -3,7 +3,6 @@ import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class SettingsService {
-
   constructor(private translateService: TranslateService) {
     // lang
     this.translateService.addLangs(["de", "it", "en", "fr", "es", "ca", "oc"]);
@@ -19,14 +18,14 @@ export class SettingsService {
     return this.translateService.currentLang;
   }
 
-  setLangString(lang: string) {
-    if (lang) {
-      let language = lang;
-      if (this.translateService.langs.indexOf(language) < 0) {
-        language = "de";
-      }
-      document.documentElement.setAttribute("lang", language);
-      this.translateService.use(language);
+  setLangString(language: string) {
+    if (!language) {
+      return;
     }
+    if (!this.translateService.langs.includes(language)) {
+      language = "de";
+    }
+    document.documentElement.setAttribute("lang", language);
+    this.translateService.use(language);
   }
 }
