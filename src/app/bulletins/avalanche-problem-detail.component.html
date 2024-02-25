@@ -7,78 +7,78 @@
     </div>
     <div *ngIf="!disabled" class="avalanche-problem-detail__problem-icons">
       <img
-        *ngIf="isAvalancheProblem('new_snow')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.new_snow)"
         src="./assets/img/New_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.new_snow)"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('new_snow')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.new_snow)"
         src="./assets/img/New_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.new_snow)"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
       <img
-        *ngIf="isAvalancheProblem('wind_slab')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.wind_slab)"
         src="./assets/img/Drifting_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wind_slab)"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('wind_slab')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.wind_slab)"
         src="./assets/img/Drifting_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wind_slab)"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('persistent_weak_layers')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
         src="./assets/img/Persistent_weak_layers_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('persistent_weak_layers')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
         src="./assets/img/Persistent_weak_layers_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('wet_snow')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.wet_snow)"
         src="./assets/img/Wet_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wet_snow)"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('wet_snow')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.wet_snow)"
         src="./assets/img/Wet_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.wet_snow)"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('gliding_snow')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.gliding_snow)"
         src="./assets/img/Gliding_snow_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.gliding_snow)"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('gliding_snow')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.gliding_snow)"
         src="./assets/img/Gliding_snow_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.gliding_snow)"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="authenticationService.getActiveRegion().enableAvalancheProblemCornices && isAvalancheProblem('cornices')"
+        *ngIf="authenticationService.getActiveRegion().enableAvalancheProblemCornices && isAvalancheProblem(avalancheProblemEnum.cornices)"
         src="./assets/img/Cornices_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.cornices)"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
         *ngIf="
-          authenticationService.getActiveRegion().enableAvalancheProblemCornices && !isAvalancheProblem('cornices')
+          authenticationService.getActiveRegion().enableAvalancheProblemCornices && !isAvalancheProblem(avalancheProblemEnum.cornices)
         "
         src="./assets/img/Cornices_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.cornices)"
@@ -88,7 +88,7 @@
       <img
         *ngIf="
           authenticationService.getActiveRegion().enableAvalancheProblemNoDistinctAvalancheProblem &&
-          isAvalancheProblem('no_distinct_problem')
+          isAvalancheProblem(avalancheProblemEnum.no_distinct_problem)
         "
         src="./assets/img/No_distinct_problem_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.no_distinct_problem)"
@@ -97,7 +97,7 @@
       <img
         *ngIf="
           authenticationService.getActiveRegion().enableAvalancheProblemNoDistinctAvalancheProblem &&
-          !isAvalancheProblem('no_distinct_problem')
+          !isAvalancheProblem(avalancheProblemEnum.no_distinct_problem)
         "
         src="./assets/img/No_distinct_problem_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.no_distinct_problem)"
@@ -106,82 +106,82 @@
     </div>
     <div *ngIf="disabled" class="avalanche-problem-detail__problem-icons">
       <img
-        *ngIf="isAvalancheProblem('new_snow')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.new_snow)"
         src="./assets/img/New_snow_c.svg"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('new_snow')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.new_snow)"
         src="./assets/img/New_snow_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('wind_slab')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.wind_slab)"
         src="./assets/img/Drifting_snow_c.svg"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('wind_slab')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.wind_slab)"
         src="./assets/img/Drifting_snow_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('persistent_weak_layers')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
         src="./assets/img/Persistent_weak_layers_c.svg"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('persistent_weak_layers')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)"
         src="./assets/img/Persistent_weak_layers_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('wet_snow')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.wet_snow)"
         src="./assets/img/Wet_snow_c.svg"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('wet_snow')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.wet_snow)"
         src="./assets/img/Wet_snow_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('gliding_snow')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.gliding_snow)"
         src="./assets/img/Gliding_snow_c.svg"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
-        *ngIf="!isAvalancheProblem('gliding_snow')"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.gliding_snow)"
         src="./assets/img/Gliding_snow_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('cornices')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.cornices)"
         src="./assets/img/Cornices_c.svg"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
         *ngIf="
-          authenticationService.getActiveRegion().enableAvalancheProblemCornices && !isAvalancheProblem('cornices')
+          authenticationService.getActiveRegion().enableAvalancheProblemCornices && !isAvalancheProblem(avalancheProblemEnum.cornices)
         "
         src="./assets/img/Cornices_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
       />
 
       <img
-        *ngIf="isAvalancheProblem('no_distinct_problem')"
+        *ngIf="isAvalancheProblem(avalancheProblemEnum.no_distinct_problem)"
         src="./assets/img/No_distinct_problem_c.svg"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
         *ngIf="
           authenticationService.getActiveRegion().enableAvalancheProblemNoDistinctAvalancheProblem &&
-          !isAvalancheProblem('no_distinct_problem')
+          !isAvalancheProblem(avalancheProblemEnum.no_distinct_problem)
         "
         src="./assets/img/No_distinct_problem_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
@@ -210,7 +210,7 @@
             id="elevationHighCheckbox"
             [id]="forLabelId('elevationHighCheckbox')"
             type="checkbox"
-            class="form-check-input" 
+            class="form-check-input"
             [disabled]="disabled"
             (change)="setUseElevationHigh($event)"
             [(ngModel)]="useElevationHigh"
@@ -239,7 +239,7 @@
             type="reset"
             class="btn btn-icon"
             [ngClass]="{
-              'btn-outline-secondary': !localTreelineHigh, 
+              'btn-outline-secondary': !localTreelineHigh,
               'btn-dark': localTreelineHigh
             }"
             (click)="treelineHighClicked($event)"
@@ -250,7 +250,7 @@
           </button>
         </div>
       </div>
-      
+
       <!-- Elevation (low) -->
       <div class="avalanche-problem-detail__elevation">
         <div class="form-check avalanche-problem-detail__elevation-label">
@@ -286,7 +286,7 @@
             type="reset"
             class="btn btn-icon"
             [ngClass]="{
-              'btn-outline-secondary': !localTreelineLow, 
+              'btn-outline-secondary': !localTreelineLow,
               'btn-dark': localTreelineLow
             }"
             (click)="treelineLowClicked($event)"

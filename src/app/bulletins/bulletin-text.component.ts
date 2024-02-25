@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, Output, TemplateRef } from "@angular/core";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { TranslateService } from "@ngx-translate/core";
 import type { BulletinModel } from "../models/bulletin.model";
@@ -6,7 +6,7 @@ import type { TextcatLegacyIn, TextcatTextfield } from "./avalanche-bulletin.com
 import { concatenateLangTexts, LangTexts, LANGUAGES } from "../models/text.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { AvalancheProblemStr } from "../enums/enums";
+import * as Enums from "../enums/enums";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
@@ -101,7 +101,7 @@ export class BulletinTextComponent {
     });
   }
 
-  loadExampleText(avalancheProblem: AvalancheProblemStr) {
+  loadExampleText(avalancheProblem: Enums.AvalancheProblem) {
     const textcat = this.constantsService[this.bulletinTextcatKey]?.[avalancheProblem];
     if (!textcat) return;
     this.bulletin[this.bulletinTextcatKey] = this.concatTextcat(this.bulletin[this.bulletinTextcatKey], textcat);

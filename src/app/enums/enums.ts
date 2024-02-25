@@ -41,10 +41,15 @@ export enum Aspect {
 }
 
 export enum AvalancheProblem {
-  new_snow, wind_slab, persistent_weak_layers, wet_snow, gliding_snow, favourable_situation, cornices, no_distinct_problem
+  new_snow = "new_snow",
+  wind_slab = "wind_slab",
+  persistent_weak_layers = "persistent_weak_layers",
+  wet_snow = "wet_snow",
+  gliding_snow = "gliding_snow",
+  favourable_situation = "favourable_situation",
+  cornices = "cornices",
+  no_distinct_problem = "no_distinct_problem",
 }
-
-export type AvalancheProblemStr = keyof typeof AvalancheProblem;
 
 export enum DangerPattern {
   dp1 = "dp1", dp2 = "dp2", dp3 = "dp3", dp4 = "dp4", dp5 = "dp5", dp6 = "dp6", dp7 = "dp7", dp8 = "dp8", dp9 = "dp9", dp10 = "dp10"

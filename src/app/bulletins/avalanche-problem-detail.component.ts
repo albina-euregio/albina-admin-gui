@@ -64,15 +64,15 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     return this.count + (this.afternoon ? "_pm_" : "_am_") + key;
   }
 
-  isAvalancheProblem(avalancheProblem) {
-    return this.avalancheProblemModel && this.avalancheProblemModel.avalancheProblem === avalancheProblem;
+  isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
+    return this.avalancheProblemModel?.avalancheProblem === avalancheProblem;
   }
 
-  selectAvalancheProblem(avalancheProblem) {
-    if (this.isAvalancheProblem(Enums.AvalancheProblem[avalancheProblem])) {
+  selectAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
+    if (this.isAvalancheProblem(avalancheProblem)) {
       this.avalancheProblemModel.setAvalancheProblem(undefined);
     } else {
-      this.avalancheProblemModel.setAvalancheProblem(Enums.AvalancheProblem[avalancheProblem]);
+      this.avalancheProblemModel.setAvalancheProblem(avalancheProblem);
     }
     this.changeAvalancheProblemDetailEvent.emit();
   }

@@ -85,11 +85,11 @@ export class AvalancheProblemModel {
     }
   }
 
-  getAvalancheProblem() {
+  getAvalancheProblem(): Enums.AvalancheProblem {
     return this.avalancheProblem;
   }
 
-  setAvalancheProblem(avalancheProblem) {
+  setAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
     this.avalancheProblem = avalancheProblem;
   }
 
@@ -253,7 +253,7 @@ export class AvalancheProblemModel {
     const json = Object();
 
     if (this.avalancheProblem) {
-      if (this.avalancheProblem === (Enums.AvalancheProblem[Enums.AvalancheProblem.wind_slab] as any)) {
+      if (this.avalancheProblem === Enums.AvalancheProblem.wind_slab) {
         json["avalancheSituation"] = "wind_drifted_snow";
       } else {
         json["avalancheSituation"] = this.avalancheProblem;

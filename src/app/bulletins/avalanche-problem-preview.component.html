@@ -1,14 +1,14 @@
 <div class="avalanche-problem__preview">
   <div class="avalanche-problem-preview__info">
-    <h2 class="accordion-header__title" 
-        *ngIf="!isAvalancheProblem('new_snow') && 
-              !isAvalancheProblem('wind_slab') && 
-              !isAvalancheProblem('persistent_weak_layers') && 
-              !isAvalancheProblem('wet_snow') && 
-              !isAvalancheProblem('gliding_snow') && 
-              !isAvalancheProblem('favourable_situation') &&
-              !isAvalancheProblem('cornices') &&
-              !isAvalancheProblem('no_distinct_problem')">
+    <h2 class="accordion-header__title"
+        *ngIf="!isAvalancheProblem(avalancheProblemEnum.new_snow) &&
+              !isAvalancheProblem(avalancheProblemEnum.wind_slab) &&
+              !isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers) &&
+              !isAvalancheProblem(avalancheProblemEnum.wet_snow) &&
+              !isAvalancheProblem(avalancheProblemEnum.gliding_snow) &&
+              !isAvalancheProblem(avalancheProblemEnum.favourable_situation) &&
+              !isAvalancheProblem(avalancheProblemEnum.cornices) &&
+              !isAvalancheProblem(avalancheProblemEnum.no_distinct_problem)">
       {{ 'bulletins.create.createAvalancheProblem' | translate }}
     </h2>
 

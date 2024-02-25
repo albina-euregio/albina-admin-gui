@@ -25,11 +25,8 @@ export class AvalancheProblemPreviewComponent {
     public settingsService: SettingsService,
   ) {}
 
-  isAvalancheProblem(avalancheProblem) {
-    if (this.avalancheProblem && this.avalancheProblem.avalancheProblem === avalancheProblem) {
-      return true;
-    }
-    return false;
+  isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
+    return this.avalancheProblem.avalancheProblem === avalancheProblem;
   }
 
   hasAspects() {
