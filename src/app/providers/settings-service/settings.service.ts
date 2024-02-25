@@ -1,9 +1,8 @@
-import { EventEmitter, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class SettingsService {
-  private eventEmitter: EventEmitter<string> = new EventEmitter();
 
   constructor(private translateService: TranslateService) {
     // lang
@@ -28,8 +27,6 @@ export class SettingsService {
       }
       document.documentElement.setAttribute("lang", language);
       this.translateService.use(language);
-      // to reload iframe
-      this.eventEmitter.emit(language);
     }
   }
 }
