@@ -99,7 +99,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     this.matrixInformation.setDangerRating(this.getDangerRating(cell));
     this.matrixInformation.setAvalancheSize(this.getAvalancheSize(cell));
     this.matrixInformation.setSnowpackStability(this.getSnowpackStability(cell));
-    this.matrixInformation.setFrequency(Enums.Frequency[this.getFrequency(cell)]);
+    this.matrixInformation.setFrequency(this.getFrequency(cell));
     this.setCellStyleActive(cell);
   }
 
@@ -345,7 +345,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getFrequency(id) {
+  private getFrequency(id): Enums.Frequency {
     if (id == 46) {
       return Enums.Frequency.none;
     } else if (id % 15 > 0 && id % 15 <= 5) {
@@ -418,7 +418,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         return "0";
     }
 
-    switch (+Enums.Frequency[matrixInformation.getFrequency()]) {
+    switch (matrixInformation.getFrequency()) {
       case Enums.Frequency.many:
         frequencyFactor = 0;
         break;

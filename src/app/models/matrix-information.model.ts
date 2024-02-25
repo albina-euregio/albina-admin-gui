@@ -82,7 +82,7 @@ export class MatrixInformationModel {
     return this.frequency;
   }
 
-  setFrequency(frequency) {
+  setFrequency(frequency: Enums.Frequency) {
     this.frequency = frequency;
   }
 

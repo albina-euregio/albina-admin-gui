@@ -71,7 +71,10 @@ export enum SnowpackStability {
 }
 
 export enum Frequency {
-  none, few, some, many
+  none = "none",
+  few = "few",
+  some = "some",
+  many = "many",
 }
 
 export enum Tendency {
