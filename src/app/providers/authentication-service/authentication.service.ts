@@ -227,15 +227,6 @@ export class AuthenticationService {
     }
   }
 
-  public isEuregio(): boolean {
-    return (
-      environment.isEuregio ||
-      this.getActiveRegionId() === this.constantsService.codeTyrol ||
-      this.getActiveRegionId() === this.constantsService.codeSouthTyrol ||
-      this.getActiveRegionId() === this.constantsService.codeTrentino
-    );
-  }
-
   public getUserLat() {
     return this.activeRegion?.mapCenterLat ?? 47.1;
   }
@@ -265,20 +256,23 @@ export class AuthenticationService {
   }
 
   public getCurrentAuthorRegionIds(): string[] {
-    return this.getCurrentAuthorRegions().map((r) => r.id);
+    return this.getCurrentAuthorRegions()
+      .flatMap((r) => [r.id, ...(r.neighborRegions ?? [])])
+      .filter((v, index, array) => array.indexOf(v) === index);
   }
 
   public getExternalServers(): ServerModel[] {
     return this.externalServers;
   }
 
-  public isInternalRegion(region: string) {
-    return region.startsWith(this.constantsService.codeTyrol) || region.startsWith(this.constantsService.codeSouthTyrol) || region.startsWith(this.constantsService.codeTrentino);
+  public isInternalRegion(region: string): boolean {
+    return this.getCurrentAuthorRegionIds().some((r) => region?.startsWith(r));
   }
 
-  public isExternalRegion(region: string) {
-    if (this.constantsService.codeTyrol === region || this.constantsService.codeSouthTyrol === region || this.constantsService.codeTrentino === region)
+  public isExternalRegion(region: string): boolean {
+    if (this.isInternalRegion(region)) {
       return false;
+    }
     for (const externalServer of this.externalServers) {
       if (externalServer.getRegions().indexOf(region) > -1)
         return true;

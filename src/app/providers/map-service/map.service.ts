@@ -205,10 +205,9 @@ export class MapService {
     }
     return null;
   }
-  
+
   resetInternalAggregatedRegions() {
     for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
-      this.authenticationService.isEuregio()
       if (this.authenticationService.isInternalRegion(entry.feature.properties.id)) {
         entry.setStyle(this.getAggregatedRegionBaseStyle());
       }

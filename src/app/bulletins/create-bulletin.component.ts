@@ -212,10 +212,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return this.externRegionsMap.size > 0;
   }
 
-  hasForeignRegions() {
-    return this.authenticationService.isEuregio();
-  }
-
   ngOnInit() {
     this.activeRoute.params.subscribe((routeParams) => {
       const date = new Date(routeParams.date);
@@ -270,26 +266,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.copyBulletins(data);
             this.bulletinsService.setCopyDate(undefined);
             // load foreign bulletins from the current date
-            if (this.authenticationService.isEuregio()) {
-              const foreignRegions = new Array<string>();
-              foreignRegions.push(this.constantsService.codeTyrol);
-              foreignRegions.push(this.constantsService.codeSouthTyrol);
-              foreignRegions.push(this.constantsService.codeTrentino);
-              this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), foreignRegions).subscribe(
-                (data2) => {
-                  this.addForeignBulletins(data2);
-                  this.save();
-                  this.loading = false;
-                },
-                () => {
-                  console.error("Foreign bulletins could not be loaded!");
-                  this.loading = false;
-                  this.openLoadingErrorModal(this.loadingErrorTemplate);
-                },
-              );
-            } else {
-              this.loading = false;
-            }
+            const foreignRegions = this.authenticationService.getCurrentAuthorRegionIds();
+            this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), foreignRegions).subscribe(
+              (data2) => {
+                this.addForeignBulletins(data2);
+                this.save();
+                this.loading = false;
+              },
+              () => {
+                console.error("Foreign bulletins could not be loaded!");
+                this.loading = false;
+                this.openLoadingErrorModal(this.loadingErrorTemplate);
+              },
+            );
           },
           () => {
             console.error("Own bulletins could not be loaded!");
@@ -330,14 +319,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private loadBulletinsFromServer() {
     console.log("Load internal bulletins");
-    const regions = new Array<string>();
-    if (this.authenticationService.isEuregio()) {
-      regions.push(this.constantsService.codeTyrol);
-      regions.push(this.constantsService.codeSouthTyrol);
-      regions.push(this.constantsService.codeTrentino);
-    } else {
-      regions.push(this.authenticationService.getActiveRegionId());
-    }
+    const regions = this.authenticationService.getCurrentAuthorRegionIds();
     this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
       (data) => {
         this.loadInternalBulletinsError = false;

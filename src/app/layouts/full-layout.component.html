@@ -21,22 +21,22 @@
             "sidebar.bulletins" | translate
           }}</a>
         </li>
-        <li *ngIf="settingsService.getShowObservations() && authenticationService.isEuregio() && authenticationService.isUserLoggedIn()" class="nav-item">
+        <li *ngIf="settingsService.getShowObservations() && environment.isEuregio && authenticationService.isUserLoggedIn()" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']">{{
             "sidebar.observations" | translate
           }}</a>
         </li>
-        <li *ngIf="authenticationService.isEuregio() && authenticationService.isUserLoggedIn()" class="nav-item">
+        <li *ngIf="environment.isEuregio && authenticationService.isUserLoggedIn()" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
             GeoSphere
           </a>
         </li>
-        <li *ngIf="authenticationService.isEuregio()" class="nav-item">
+        <li *ngIf="environment.isEuregio" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">
             SNOWPACK
           </a>
         </li>
-        <li *ngIf="authenticationService.isEuregio()" class="nav-item">
+        <li *ngIf="environment.isEuregio" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awesome']">
             AWSOME
           </a>

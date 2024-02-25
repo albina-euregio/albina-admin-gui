@@ -126,14 +126,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   isInternal(): boolean {
     const ownerRegion = this.bulletin.getOwnerRegion();
-    return (
-      ownerRegion !== undefined &&
-      (
-        ownerRegion.startsWith(this.constantsService.codeTyrol) ||
-        ownerRegion.startsWith(this.constantsService.codeSouthTyrol) ||
-        ownerRegion.startsWith(this.constantsService.codeTrentino)
-      )
-    );
+    return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion)
   }
 
   showDialog(pmData: TextcatLegacyIn) {

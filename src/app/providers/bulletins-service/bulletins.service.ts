@@ -157,7 +157,7 @@ export class BulletinsService {
 
   /**
    * Returns a date that's offset from the activeDate by a given amount.
-   * 
+   *
    * @param offset - Number of days to offset. Can be positive (future) or negative (past).
    * @returns Date offset from the activeDate or null if not found or out of bounds.
    */
@@ -270,14 +270,7 @@ export class BulletinsService {
     let url = server.apiUrl + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
     if (server.regions) {
       for (const region of server.regions) {
-        // region
-        // load all regions except regions handled by local server instance
-        if (this.authenticationService.isEuregio()) {
-          if (region !== this.constantsService.codeTyrol && region !== this.constantsService.codeSouthTyrol && region !== this.constantsService.codeTrentino)
-            url += "&regions=" + region;
-        } else {
-          url += "&regions=" + region;
-        }
+        url += "&regions=" + region;
       }
     }
     const headers = this.authenticationService.newExternalServerAuthHeader(server);
