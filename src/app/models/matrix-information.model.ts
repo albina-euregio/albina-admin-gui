@@ -66,7 +66,7 @@ export class MatrixInformationModel {
     return this.avalancheSize;
   }
 
-  setAvalancheSize(avalancheSize) {
+  setAvalancheSize(avalancheSize: Enums.AvalancheSize) {
     this.avalancheSize = avalancheSize;
   }
 

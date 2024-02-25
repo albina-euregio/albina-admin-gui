@@ -56,7 +56,11 @@ export enum DangerPattern {
 }
 
 export enum AvalancheSize {
-  small, medium, large, very_large, extreme
+  small = "small",
+  medium = "medium",
+  large = "large",
+  very_large = "very_large",
+  extreme = "extreme",
 }
 
 export enum SnowpackStability {

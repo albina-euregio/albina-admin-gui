@@ -260,19 +260,19 @@ export class MatrixParameterComponent implements OnChanges {
   onAvalancheSizeValueChange(changeContext: ChangeContext): void {
     switch (true) {
       case changeContext.value < 20:
-        this.setAvalancheSize("small");
+        this.setAvalancheSize(Enums.AvalancheSize.small);
         break;
       case changeContext.value < 40:
-        this.setAvalancheSize("medium");
+        this.setAvalancheSize(Enums.AvalancheSize.medium);
         break;
       case changeContext.value < 60:
-        this.setAvalancheSize("large");
+        this.setAvalancheSize(Enums.AvalancheSize.large);
         break;
       case changeContext.value < 80:
-        this.setAvalancheSize("very_large");
+        this.setAvalancheSize(Enums.AvalancheSize.very_large);
         break;
       default:
-        this.setAvalancheSize("extreme");
+        this.setAvalancheSize(Enums.AvalancheSize.extreme);
         break;
     }
     this.changeMatrixEvent.emit();
@@ -316,19 +316,7 @@ export class MatrixParameterComponent implements OnChanges {
     this.updateDangerRating();
   }
 
-  isAvalancheSize(avalancheSize) {
-    if (this.matrixInformation && this.matrixInformation.avalancheSize === avalancheSize) {
-      return true;
-    }
-    return false;
-  }
-
-  setAvalancheSizeEvent(event, avalancheSize) {
-    event.stopPropagation();
-    this.setAvalancheSize(avalancheSize);
-  }
-
-  setAvalancheSize(avalancheSize) {
+  setAvalancheSize(avalancheSize: Enums.AvalancheSize) {
     this.dangerRatingEnabled = false;
     this.matrixInformation.dangerRatingModificator = undefined;
     this.matrixInformation.setAvalancheSize(avalancheSize);
@@ -373,7 +361,7 @@ export class MatrixParameterComponent implements OnChanges {
       case Enums.SnowpackStability.very_poor:
         switch (+Enums.Frequency[this.matrixInformation.getFrequency()]) {
           case Enums.Frequency.many:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.very_high);
                 break;
@@ -395,7 +383,7 @@ export class MatrixParameterComponent implements OnChanges {
             }
             break;
           case Enums.Frequency.some:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.very_high);
                 break;
@@ -417,7 +405,7 @@ export class MatrixParameterComponent implements OnChanges {
             }
             break;
           case Enums.Frequency.few:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
@@ -446,7 +434,7 @@ export class MatrixParameterComponent implements OnChanges {
       case Enums.SnowpackStability.poor:
         switch (+Enums.Frequency[this.matrixInformation.getFrequency()]) {
           case Enums.Frequency.many:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.very_high);
                 break;
@@ -468,7 +456,7 @@ export class MatrixParameterComponent implements OnChanges {
             }
             break;
           case Enums.Frequency.some:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
@@ -490,7 +478,7 @@ export class MatrixParameterComponent implements OnChanges {
             }
             break;
           case Enums.Frequency.few:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
@@ -519,7 +507,7 @@ export class MatrixParameterComponent implements OnChanges {
       case Enums.SnowpackStability.fair:
         switch (+Enums.Frequency[this.matrixInformation.getFrequency()]) {
           case Enums.Frequency.many:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.high);
                 break;
@@ -541,7 +529,7 @@ export class MatrixParameterComponent implements OnChanges {
             }
             break;
           case Enums.Frequency.some:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
@@ -563,7 +551,7 @@ export class MatrixParameterComponent implements OnChanges {
             }
             break;
           case Enums.Frequency.few:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.considerable);
                 break;
@@ -585,7 +573,7 @@ export class MatrixParameterComponent implements OnChanges {
             }
             break;
           case Enums.Frequency.none:
-            switch (+Enums.AvalancheSize[this.matrixInformation.getAvalancheSize()]) {
+            switch (this.matrixInformation.getAvalancheSize()) {
               case Enums.AvalancheSize.extreme:
                 this.matrixInformation.setDangerRating(Enums.DangerRating.low);
                 break;
