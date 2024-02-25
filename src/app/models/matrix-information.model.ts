@@ -58,7 +58,7 @@ export class MatrixInformationModel {
     return this.dangerRatingModificator;
   }
 
-  setDangerRatingModificator(dangerRatingModificator) {
+  setDangerRatingModificator(dangerRatingModificator: Enums.DangerRatingModificator) {
     this.dangerRatingModificator = dangerRatingModificator;
   }
 

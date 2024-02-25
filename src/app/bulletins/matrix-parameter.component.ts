@@ -24,6 +24,7 @@ export class MatrixParameterComponent implements OnChanges {
 
   dangerRatingEnabled: boolean;
   languageCode = Enums.LanguageCode;
+  modificatorEnum = Enums.DangerRatingModificator;
 
   public forLabelId(key: string): string {
     return this.count + (this.afternoon ? "_pm_" : "_am_") + key;
@@ -585,14 +586,12 @@ export class MatrixParameterComponent implements OnChanges {
     this.bulletinDaytimeDescription.updateDangerRating();
   }
 
-  isDangerRatingModificator(modificator) {
-    if (this.matrixInformation && this.matrixInformation.dangerRatingModificator === modificator) {
-      return true;
-    }
-    return false;
+  isDangerRatingModificator(modificator: Enums.DangerRatingModificator) {
+    return this.matrixInformation?.dangerRatingModificator === modificator;
+
   }
 
-  setDangerRatingModificator(event, modificator) {
+  setDangerRatingModificator(event: Event, modificator: Enums.DangerRatingModificator) {
     event.stopPropagation();
     this.matrixInformation.setDangerRatingModificator(modificator);
     this.changeMatrixEvent.emit();

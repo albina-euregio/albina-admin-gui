@@ -16,7 +16,7 @@
     class="frequency-slider"
     [(value)]="matrixInformation.frequencyValue"
     [options]="frequencyOptions"
-    (userChange)="onFrequencyValueChange($event)" 
+    (userChange)="onFrequencyValueChange($event)"
   ></ngx-slider>
 </div>
 <!-- End of frequency slider -->
@@ -92,7 +92,7 @@
 
   <div class="btn-group">
     <button
-      *ngIf="isDangerRatingModificator('minus')"
+      *ngIf="isDangerRatingModificator(modificatorEnum.minus)"
       [disabled]="
         disabled ||
         !matrixInformation ||
@@ -107,7 +107,7 @@
       <i class="ph ph-minus"></i>
     </button>
     <button
-      *ngIf="!isDangerRatingModificator('minus')"
+      *ngIf="!isDangerRatingModificator(modificatorEnum.minus)"
       [disabled]="
         disabled ||
         !matrixInformation ||
@@ -117,13 +117,13 @@
       "
       type="reset"
       class="btn btn-sm btn-outline-secondary btn-icon"
-      (click)="setDangerRatingModificator($event, 'minus')"
+      (click)="setDangerRatingModificator($event, modificatorEnum.minus)"
     >
       <i class="ph ph-minus"></i>
     </button>
 
     <button
-      *ngIf="isDangerRatingModificator('equal')"
+      *ngIf="isDangerRatingModificator(modificatorEnum.equal)"
       [disabled]="
         disabled ||
         !matrixInformation ||
@@ -138,7 +138,7 @@
       <i class="ph ph-equals"></i>
     </button>
     <button
-      *ngIf="!isDangerRatingModificator('equal')"
+      *ngIf="!isDangerRatingModificator(modificatorEnum.equal)"
       [disabled]="
         disabled ||
         !matrixInformation ||
@@ -148,13 +148,13 @@
       "
       type="reset"
       class="btn btn-sm btn-outline-secondary btn-icon"
-      (click)="setDangerRatingModificator($event, 'equal')"
+      (click)="setDangerRatingModificator($event, modificatorEnum.equal)"
     >
       <i class="ph ph-equals"></i>
     </button>
 
     <button
-      *ngIf="isDangerRatingModificator('plus')"
+      *ngIf="isDangerRatingModificator(modificatorEnum.plus)"
       [disabled]="
         disabled ||
         !matrixInformation ||
@@ -169,7 +169,7 @@
       <i class="ph ph-plus"></i>
     </button>
     <button
-      *ngIf="!isDangerRatingModificator('plus')"
+      *ngIf="!isDangerRatingModificator(modificatorEnum.plus)"
       [disabled]="
         disabled ||
         !matrixInformation ||
@@ -179,7 +179,7 @@
       "
       type="reset"
       class="btn btn-sm btn-outline-secondary btn-icon"
-      (click)="setDangerRatingModificator($event, 'plus')"
+      (click)="setDangerRatingModificator($event, modificatorEnum.plus)"
     >
       <i class="ph ph-plus"></i>
     </button>
