@@ -566,7 +566,7 @@
 
     <div class="btn-group-vertical btn-group--border region-thumb__actions">
       <button
-        *ngIf="!hasSuggestions(bulletin) && !copyService.isCopyBulletin()"
+        *ngIf="!copyService.isCopyBulletin()"
         [disabled]="loading"
         type="button"
         class="btn btn-sm btn-bare btn-sm btn-icon"
