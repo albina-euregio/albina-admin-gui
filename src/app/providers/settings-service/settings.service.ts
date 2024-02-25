@@ -3,7 +3,6 @@ import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class SettingsService {
-  private lang: string;
   private eventEmitter: EventEmitter<string> = new EventEmitter();
 
   constructor(private translateService: TranslateService) {
@@ -18,7 +17,7 @@ export class SettingsService {
   }
 
   getLangString(): string {
-    return this.lang;
+    return this.translateService.currentLang;
   }
 
   setLangString(lang: string) {
@@ -29,10 +28,8 @@ export class SettingsService {
       }
       document.documentElement.setAttribute("lang", language);
       this.translateService.use(language);
-      this.lang = language;
-
       // to reload iframe
-      this.eventEmitter.emit(this.lang);
+      this.eventEmitter.emit(language);
     }
   }
 }
