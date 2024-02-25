@@ -161,7 +161,7 @@ export class AvalancheProblemModel {
     return this.terrainFeature;
   }
 
-  getTerrainFeatureIn(language: Enums.LanguageCode): string {
+  getTerrainFeatureIn(language: string): string {
     for (let i = this.terrainFeature.length - 1; i >= 0; i--) {
       if (this.terrainFeature[i].getLanguageCode() === language) {
         return this.terrainFeature[i].getText();
@@ -170,14 +170,14 @@ export class AvalancheProblemModel {
   }
 
   getTerrainFeatureInString(language: string): string {
-    return this.getTerrainFeatureIn(Enums.LanguageCode[language]);
+    return this.getTerrainFeatureIn(language);
   }
 
   setTerrainFeature(terrainFeature: TextModel[]) {
     this.terrainFeature = terrainFeature;
   }
 
-  setTerrainFeatureIn(text: string, language: Enums.LanguageCode) {
+  setTerrainFeatureIn(text: string, language: string) {
     for (let i = this.terrainFeature.length - 1; i >= 0; i--) {
       if (this.terrainFeature[i].getLanguageCode() === language) {
         this.terrainFeature[i].setText(text);

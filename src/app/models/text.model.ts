@@ -5,13 +5,13 @@ export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"
 export type LangTexts = Record<(typeof LANGUAGES)[number], string>;
 
 export class TextModel {
-  public languageCode: Enums.LanguageCode;
+  public languageCode: string;
   public text: string;
 
   static createFromJson(json) {
     const text = new TextModel();
 
-    text.setLanguageCode(Enums.LanguageCode[<string>json.languageCode]);
+    text.setLanguageCode(json.languageCode);
     text.setText(json.text);
 
     return text;
@@ -22,15 +22,15 @@ export class TextModel {
     this.text = undefined;
   }
 
-  getLanguageCode() {
+  getLanguageCode(): string {
     return this.languageCode;
   }
 
-  setLanguageCode(languageCode: Enums.LanguageCode) {
+  setLanguageCode(languageCode: string) {
     this.languageCode = languageCode;
   }
 
-  getText() {
+  getText(): string {
     return this.text;
   }
 
@@ -42,7 +42,7 @@ export class TextModel {
     const json = Object();
 
     if (this.languageCode) {
-      json["languageCode"] = Enums.LanguageCode[this.languageCode];
+      json["languageCode"] = this.languageCode;
     }
     if (this.text) {
       json["text"] = this.text;
@@ -52,12 +52,7 @@ export class TextModel {
   }
 
   static toLangTexts(models: TextModel[]): LangTexts {
-    return Object.fromEntries(
-      models.map((t) => [
-        typeof t.getLanguageCode() === "number" ? Enums.LanguageCode[t.getLanguageCode()] : t.getLanguageCode(),
-        t.getText(),
-      ]),
-    ) as LangTexts;
+    return Object.fromEntries(models.map((t) => [t.getLanguageCode(), t.getText()])) as LangTexts;
   }
 }
 

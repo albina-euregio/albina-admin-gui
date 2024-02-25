@@ -145,7 +145,7 @@ export class BulletinDaytimeDescriptionModel {
     return this.terrainFeatureAbove;
   }
 
-  getTerrainFeatureAboveIn(language: Enums.LanguageCode): string {
+  getTerrainFeatureAboveIn(language: string): string {
     for (let i = this.terrainFeatureAbove.length - 1; i >= 0; i--) {
       if (this.terrainFeatureAbove[i].getLanguageCode() === language) {
         return this.terrainFeatureAbove[i].getText();
@@ -154,14 +154,14 @@ export class BulletinDaytimeDescriptionModel {
   }
 
   getTerrainFeatureAboveInString(language: string): string {
-    return this.getTerrainFeatureAboveIn(Enums.LanguageCode[language]);
+    return this.getTerrainFeatureAboveIn(language);
   }
 
   setTerrainFeatureAbove(terrainFeatureAbove: TextModel[]) {
     this.terrainFeatureAbove = terrainFeatureAbove;
   }
 
-  setTerrainFeatureAboveIn(text: string, language: Enums.LanguageCode) {
+  setTerrainFeatureAboveIn(text: string, language: string) {
     for (let i = this.terrainFeatureAbove.length - 1; i >= 0; i--) {
       if (this.terrainFeatureAbove[i].getLanguageCode() === language) {
         this.terrainFeatureAbove[i].setText(text);
@@ -194,7 +194,7 @@ export class BulletinDaytimeDescriptionModel {
     return this.terrainFeatureBelow;
   }
 
-  getTerrainFeatureBelowIn(language: Enums.LanguageCode): string {
+  getTerrainFeatureBelowIn(language: string): string {
     for (let i = this.terrainFeatureBelow.length - 1; i >= 0; i--) {
       if (this.terrainFeatureBelow[i].getLanguageCode() === language) {
         return this.terrainFeatureBelow[i].getText();
@@ -203,14 +203,14 @@ export class BulletinDaytimeDescriptionModel {
   }
 
   getTerrainFeatureBelowInString(language: string): string {
-    return this.getTerrainFeatureBelowIn(Enums.LanguageCode[language]);
+    return this.getTerrainFeatureBelowIn(language);
   }
 
   setTerrainFeatureBelow(terrainFeatureBelow: TextModel[]) {
     this.terrainFeatureBelow = terrainFeatureBelow;
   }
 
-  setTerrainFeatureBelowIn(text: string, language: Enums.LanguageCode) {
+  setTerrainFeatureBelowIn(text: string, language: string) {
     for (let i = this.terrainFeatureBelow.length - 1; i >= 0; i--) {
       if (this.terrainFeatureBelow[i].getLanguageCode() === language) {
         this.terrainFeatureBelow[i].setText(text);

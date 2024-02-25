@@ -24,7 +24,6 @@ export class MatrixParameterComponent implements OnChanges {
 
   dangerRating = Enums.DangerRating;
   dangerRatingEnabled: boolean;
-  languageCode = Enums.LanguageCode;
   modificatorEnum = Enums.DangerRatingModificator;
 
   public forLabelId(key: string): string {

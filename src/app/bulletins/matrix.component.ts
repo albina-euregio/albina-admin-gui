@@ -67,8 +67,6 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   @ViewChild("45") cell45: ElementRef;
   @ViewChild("46") cell46: ElementRef;
 
-  languageCode = Enums.LanguageCode;
-
   constructor(
     public settingsService: SettingsService,
     public constantsService: ConstantsService,
