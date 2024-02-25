@@ -1,16 +1,10 @@
-import { Injectable } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import * as Enums from "../../enums/enums";
-import { EventEmitter } from "@angular/core";
 
 @Injectable()
 export class SettingsService {
   private lang: string;
-  public showObservations: boolean;
-  public showCaaml: boolean;
-  public showJson: boolean;
-
-  eventEmitter: EventEmitter<string> = new EventEmitter();
+  private eventEmitter: EventEmitter<string> = new EventEmitter();
 
   constructor(private translateService: TranslateService) {
     // lang
@@ -21,10 +15,6 @@ export class SettingsService {
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     const lang = navigator.language.split("-")[0];
     this.setLangString(lang);
-
-    this.showObservations = true;
-    this.showCaaml = false;
-    this.showJson = false;
   }
 
   getLangString(): string {
@@ -42,38 +32,7 @@ export class SettingsService {
       this.lang = language;
 
       // to reload iframe
-      this.emitChangeEvent(this.lang);
+      this.eventEmitter.emit(this.lang);
     }
-  }
-
-  emitChangeEvent(number) {
-    this.eventEmitter.emit(number);
-  }
-  getChangeEmitter() {
-    return this.eventEmitter;
-  }
-
-  getShowObservations(): boolean {
-    return this.showObservations;
-  }
-
-  setShowObservations(showObservations: boolean) {
-    this.showObservations = showObservations;
-  }
-
-  getShowCaaml(): boolean {
-    return this.showCaaml;
-  }
-
-  setShowCaaml(showCaaml: boolean) {
-    this.showCaaml = showCaaml;
-  }
-
-  getShowJson(): boolean {
-    return this.showJson;
-  }
-
-  setShowJson(showJson: boolean) {
-    this.showJson = showJson;
   }
 }

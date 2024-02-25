@@ -21,7 +21,7 @@
             "sidebar.bulletins" | translate
           }}</a>
         </li>
-        <li *ngIf="settingsService.getShowObservations() && environment.isEuregio && authenticationService.isUserLoggedIn()" class="nav-item">
+        <li *ngIf="environment.isEuregio && authenticationService.isUserLoggedIn()" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']">{{
             "sidebar.observations" | translate
           }}</a>
