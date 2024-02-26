@@ -31,7 +31,7 @@ export class AuthenticationService {
       localStorage.removeItem(this.env + "currentAuthor");
     }
     try {
-      this.setActiveRegion(JSON.parse(localStorage.getItem("activeRegion")));
+      this.setActiveRegion(this.getActiveRegionFromLocalStorage());
     } catch (e) {
       localStorage.removeItem("activeRegion");
     }
@@ -41,6 +41,15 @@ export class AuthenticationService {
       localStorage.removeItem("externalServers");
     }
     this.jwtHelper = new JwtHelperService();
+  }
+
+  private getActiveRegionFromLocalStorage(): RegionConfiguration | undefined {
+    try {
+      return JSON.parse(localStorage.getItem("activeRegion"));
+    } catch (e) {
+      localStorage.removeItem("activeRegion");
+      return undefined;
+    }
   }
 
   public login(username: string, password: string): Observable<boolean> {
@@ -55,9 +64,11 @@ export class AuthenticationService {
       map((data) => {
         if (data.access_token) {
           this.setCurrentAuthor(data);
-          if (this.getCurrentAuthorRegions().length > 0) {
-            this.setActiveRegion(this.getCurrentAuthorRegions()[0]);
-          }
+          let authorRegions = this.getCurrentAuthorRegions();
+          let activeRegionFromLocalStorage = this.getActiveRegionFromLocalStorage();
+          this.setActiveRegion(
+            authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
+          );
           return true;
         } else {
           return false;
@@ -75,7 +86,6 @@ export class AuthenticationService {
     console.debug("[" + this.currentAuthor?.name + "] Logged out!");
     this.currentAuthor = null;
     this.activeRegion = undefined;
-    localStorage.removeItem("activeRegion");
     localStorage.removeItem("externalServers");
     this.externalServers = [];
   }
@@ -225,6 +235,9 @@ export class AuthenticationService {
   }
 
   public setActiveRegion(region: RegionConfiguration) {
+    if (!this.currentAuthor) {
+      return;
+    }
     if (
       this.currentAuthor
         .getRegions()
