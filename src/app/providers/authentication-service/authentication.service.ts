@@ -13,6 +13,7 @@ import { environment } from "../../../environments/environment";
 @Injectable()
 export class AuthenticationService {
   private currentAuthor: AuthorModel;
+  private internalRegions: RegionConfiguration[];
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
@@ -34,6 +35,11 @@ export class AuthenticationService {
       this.setActiveRegion(this.getActiveRegionFromLocalStorage());
     } catch (e) {
       localStorage.removeItem("activeRegion");
+    }
+    try {
+      this.setInternalRegions(JSON.parse(localStorage.getItem("internalRegions")));
+    } catch (e) {
+      localStorage.removeItem("internalRegions");
     }
     try {
       this.setExternalServers(JSON.parse(localStorage.getItem("externalServers")));
@@ -69,6 +75,7 @@ export class AuthenticationService {
           this.setActiveRegion(
             authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
           );
+          this.loadInternalRegions();
           this.externalServerLogins();
           return true;
         } else {
@@ -87,8 +94,21 @@ export class AuthenticationService {
     console.debug("[" + this.currentAuthor?.name + "] Logged out!");
     this.currentAuthor = null;
     this.activeRegion = undefined;
+    localStorage.removeItem("internalRegions");
     localStorage.removeItem("externalServers");
     this.externalServers = [];
+  }
+
+  private loadInternalRegions(): void {
+    const url = this.constantsService.getServerUrl() + "regions";
+    const options = { headers: this.newAuthHeader() };
+
+    this.http.get<RegionConfiguration[]>(url, options).subscribe((regions) => this.setInternalRegions(regions));
+  }
+
+  private setInternalRegions(regions: RegionConfiguration[]) {
+    this.internalRegions = regions;
+    localStorage.setItem("internalRegions", JSON.stringify(this.internalRegions));
   }
 
   private externalServerLogins() {
@@ -277,10 +297,7 @@ export class AuthenticationService {
   }
 
   public getInternalRegions(): string[] {
-    // FIXME use local server instance regions
-    return this.getCurrentAuthorRegions()
-      .flatMap((r) => [r.id, ...(r.neighborRegions ?? [])])
-      .filter((v, index, array) => array.indexOf(v) === index);
+    return this.internalRegions.map((r) => r.id);
   }
 
   public getExternalServers(): ServerModel[] {
