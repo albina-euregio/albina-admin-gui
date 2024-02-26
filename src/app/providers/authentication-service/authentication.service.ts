@@ -7,7 +7,7 @@ import { ConstantsService } from "../constants-service/constants.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { AuthorModel } from "../../models/author.model";
 import { ServerModel } from "../../models/server.model";
-import { RegionConfiguration } from "../configuration-service/configuration.service";
+import { RegionConfiguration, ServerConfiguration } from "../configuration-service/configuration.service";
 import { environment } from "../../../environments/environment";
 
 @Injectable()
@@ -20,8 +20,8 @@ export class AuthenticationService {
   private env = environment.apiBaseUrl + "_";
 
   constructor(
-    public http: HttpClient,
-    public constantsService: ConstantsService,
+    private http: HttpClient,
+    private constantsService: ConstantsService,
     private sanitizer: DomSanitizer,
   ) {
     this.externalServers = [];
@@ -69,6 +69,7 @@ export class AuthenticationService {
           this.setActiveRegion(
             authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
           );
+          this.externalServerLogins();
           return true;
         } else {
           return false;
@@ -90,10 +91,13 @@ export class AuthenticationService {
     this.externalServers = [];
   }
 
-  public externalServerLogins() {
-    this.loadExternalServerInstances().subscribe(
+  private externalServerLogins() {
+    const url = this.constantsService.getServerUrl() + "server/external";
+    const options = { headers: this.newAuthHeader() };
+
+    this.http.get<ServerConfiguration[]>(url, options).subscribe(
       (data) => {
-        for (const entry of data as any) {
+        for (const entry of data) {
           this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
             (data) => {
               if (data === true) {
@@ -112,13 +116,6 @@ export class AuthenticationService {
         console.error("External server instances could not be loaded: " + JSON.stringify(error._body));
       },
     );
-  }
-
-  public loadExternalServerInstances(): Observable<Response> {
-    const url = this.constantsService.getServerUrl() + "server/external";
-    const options = { headers: this.newAuthHeader() };
-
-    return this.http.get<Response>(url, options);
   }
 
   public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
