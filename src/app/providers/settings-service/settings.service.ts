@@ -1,95 +1,45 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import * as Enums from "../../enums/enums";
-import { EventEmitter } from "@angular/core";
-
+import de from "../../../assets/i18n/de.json";
+import it from "../../../assets/i18n/it.json";
+import en from "../../../assets/i18n/en.json";
+import fr from "../../../assets/i18n/fr.json";
+import es from "../../../assets/i18n/es.json";
+import ca from "../../../assets/i18n/ca.json";
+import oc from "../../../assets/i18n/oc.json";
 
 @Injectable()
 export class SettingsService {
-
-  public translateService: TranslateService;
-  public lang: Enums.LanguageCode;
-  public showObservations: boolean;
-  public showCaaml: boolean;
-  public showJson: boolean;
-
-  eventEmitter: EventEmitter<string> = new EventEmitter();
-
-  constructor(
-    public translate: TranslateService) {
-    this.translateService = translate;
+  constructor(private translateService: TranslateService) {
     // lang
     this.translateService.addLangs(["de", "it", "en", "fr", "es", "ca", "oc"]);
+    this.translateService.setTranslation("de", de);
+    this.translateService.setTranslation("it", it);
+    this.translateService.setTranslation("en", en);
+    this.translateService.setTranslation("fr", fr);
+    this.translateService.setTranslation("es", es);
+    this.translateService.setTranslation("ca", ca);
+    this.translateService.setTranslation("oc", oc);
 
     // this language will be used as a fallback when a translation isn't found in the current language
-    translate.setDefaultLang("en");
+    this.translateService.setDefaultLang("en");
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    const lang = navigator.language.split("-")[0] as any as Enums.LanguageCode;
-    this.setLang(lang);
-
-    this.showObservations = true;
-    this.showCaaml = false;
-    this.showJson = false;
+    const lang = navigator.language.split("-")[0];
+    this.setLangString(lang);
   }
-
-  getLang(): Enums.LanguageCode {
-    return this.lang;
-  }
-
-  setLang(lang: Enums.LanguageCode) {
-    if (lang) {
-      let language = Enums.LanguageCode[lang];
-      if (this.translateService.langs.indexOf(language) < 0) {
-        language = "de";
-      }
-      this.translateService.use(language);
-      this.lang = Enums.LanguageCode[language];
-
-      // to reload iframe
-      this.emitChangeEvent(this.lang);
-    }
-  }
-
-
-  emitChangeEvent(number) {
-    this.eventEmitter.emit(number);
-  }
-  getChangeEmitter() {
-    return this.eventEmitter;
-  }
-
 
   getLangString(): string {
-    return Enums.LanguageCode[this.lang];
+    return this.translateService.currentLang;
   }
 
-  setLangString(lang: string) {
-    const language = Enums.LanguageCode[lang];
-    this.setLang(language);
-
-  }
-
-  getShowObservations(): boolean {
-    return this.showObservations;
-  }
-
-  setShowObservations(showObservations: boolean) {
-    this.showObservations = showObservations;
-  }
-
-  getShowCaaml(): boolean {
-    return this.showCaaml;
-  }
-
-  setShowCaaml(showCaaml: boolean) {
-    this.showCaaml = showCaaml;
-  }
-
-  getShowJson(): boolean {
-    return this.showJson;
-  }
-
-  setShowJson(showJson: boolean) {
-    this.showJson = showJson;
+  setLangString(language: string) {
+    if (!language) {
+      return;
+    }
+    if (!this.translateService.langs.includes(language)) {
+      language = "de";
+    }
+    document.documentElement.setAttribute("lang", language);
+    this.translateService.use(language);
   }
 }

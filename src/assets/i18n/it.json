@@ -41,15 +41,6 @@
     "region": "Regione",
     "education": "Formazione"
   },
-  "chat": {
-    "placeholder": "Scrivi qui ...",
-    "send": "Invia",
-    "activeUsers": "Chi è online?",
-    "all": "Tutti ",
-    "AT-07": "Tirolo ",
-    "IT-32-BZ": "Alto Adige ",
-    "IT-32-TN": "Trentino "
-  },
   "matrix": {
     "label": {
       "snowpackStability": "Stabilità del manto nevoso",
@@ -65,17 +56,17 @@
   },
   "bulletins": {
     "title": "Valanghe.report",
-    "loadingPreview": "Creare un'anteprima in PDF ...",
     "tooltip": {
-      "publish": "Pubblica immediatamente il bollettino valanghe aggiornato",
-      "submit": "Invia bollettino valanghe",
       "copy": "Copia bollettino valanghe",
-      "cancel": "Annulla la copia",
       "paste": "Incollare bollettino valanghe",
-      "update": "Crea aggiornamento del bollettino valanghe",
+      "cancel": "Annulla la copia",
+      "update": "Modifica",
+      "submit": "Submit",
+      "submitUpdate": "Submit update",
+      "publishChange": "Publish now (no messages)",
+      "publishUpdate": "Publish now",
       "caaml": "Mostra CAAML",
       "json": "Mostra JSON",
-      "edit": "Modifica bollettino valanghe (senza pubblicare nuovamente)",
       "create": "Crea bollettino valanghe",
       "preview": "Anteprima del bollettino valanghe (PDF)",
       "check": "Controlla bollettino valanghe",
@@ -83,11 +74,23 @@
       "publishAll": "Pubblica tutte le regioni",
       "mediaFile": "Carica file media"
     },
+    "status": {
+      "submittedInfo": "Will be published at 5PM",
+      "resubmittedInfo": "Will be published at 8AM",
+      "publishedInfo" : "Has been published",
+      "noPublicationInfo" : "Will NOT be published automatically",
+      "loadingPreview": "Creare un'anteprima in PDF ...",
+      "loading": "Loading bulletin ...",
+      "publishing": "Publishing bulletin ...",
+      "submitting": "Submitting bulletin ..."
+    },
     "create": {
       "tooltip": {
-        "edit": "Modifica regione",
+        "edit": "Edit micro regions",
         "copy": "Copia regione",
         "delete": "Elimina regione",
+        "createRegion": "Crea regione",
+        "cancel": "Cancellare",
         "acceptSuggestion": "Acceta regioni suggerite",
         "rejectSuggestion": "Scarta regioni suggerite",
         "saveChanges": "Salva modifiche",
@@ -102,7 +105,8 @@
         "tendency": {
           "decreasing": "Pericolo valanghe in diminuazione",
           "steady": "Pericolo valanghe stabile",
-          "increasing": "Pericolo valanghe in aumento"
+          "increasing": "Pericolo valanghe in aumento",
+          "danger": "Avalanche danger"
         },
         "textcat": {
           "edit": "Modifica",
@@ -113,19 +117,35 @@
         },
         "moveUpAvalancheProblem": "Spostare problema valanghivo verso l'alto",
         "moveDownAvalancheProblem": "Spostare problema valanghivo verso il basso",
-        "dangerRatingDirectionUp": "Estendere la valutazione del pericolo verso l'alto",
-        "dangerRatingDirectionDown": "Estendere la valutazione del grado del pericolo verso il basso"
+        "dangerRatingDirectionUp": "Upwards",
+        "dangerRatingDirectionDown": "Downwards"
       },
       "save": " Salva",
       "discard": " Scarta",
       "back": " Indietro",
       "createAggregatedRegion": " Nuova regione",
       "pasteAggregatedRegion": "Incolla la regione",
+      "pendingSuggestions": "Suggestions",
+      "rejectSuggestion": "Reject",
+      "acceptSuggestion": "Accept",
       "cancelCopyBulletin": "Cancella",
       "createAvalancheProblem": "Nuovo problema valanghivo",
       "ownRegions": "Proprie regioni",
       "foreignRegions": "Altre regioni",
       "externalRegions": "Regioni esterne",
+      "mapSelectRegion": "Select regions on the map.",
+      "statusHeader": "Status of the bulletin",
+      "suggestions": "Suggestions",
+      "noBulletinsForSelectedDay": "No regions defined for this date.",
+      "autosave": "Saved automatically",
+      "regionEditable": "This region can be edited.", 
+      "regionNotEditable": "This region can not be edited.",
+      "regionLocked": "This region is locked.",
+      "changeDangerRatingElevation": "Extend the danger level",
+      "mapTop": "Map above",
+      "mapLeft": "Map aside",
+      "showNotes": "Show notes",
+      "hideNotes": "Hide notes",
       "label": {
         "avalancheProblems": "Problema valanghivo",
         "aspects": "Esposizione",
@@ -139,6 +159,11 @@
         "elevationLow": "Sopra",
         "tendencyComment": "Descrizione della tendenza",
         "notes": "Commenti"
+      },
+      "copyRegion": {
+        "label": "Copy warning region to another bulletin",
+        "select": "Paste into ...",
+        "currentBulletin": "This bulletin"
       },
       "title": {
         "avalancheProblem": "Problemi valanghivi",
@@ -571,6 +596,8 @@
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
+        "classify": "Classify",
+        "label": "Label",
         "invert": "Invert",
         "reset": "Reset",
         "aspect": {
@@ -771,7 +798,7 @@
     "complex": "Complesso"
   },
   "changeRegionDialog": {
-    "message": "Vuoi scartare i cambiamenti e cambiare la regione?",
+    "message": "Do you want to change the region?",
     "accept": "Sì",
     "reject": "No"
   },

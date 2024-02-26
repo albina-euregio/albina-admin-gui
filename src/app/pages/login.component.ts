@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   public username: string;
   public password: string;
-  public returnUrl: String;
+  public returnUrl: string;
   public loading: boolean;
 
   public errorModalRef: BsModalRef;
@@ -66,7 +66,6 @@ export class LoginComponent implements OnInit {
           console.debug("Navigate to " + this.returnUrl);
           this.router.navigate([this.returnUrl]);
           this.loading = false;
-          this.authenticationService.externalServerLogins();
         } else {
           console.error("[" + this.username + "] Login failed!");
           this.openErrorModal(this.errorTemplate);

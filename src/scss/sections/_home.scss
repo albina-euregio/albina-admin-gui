@@ -1,0 +1,74 @@
+.bulletins {
+  margin-top: $space-6;
+}
+
+.bulletins-table__header {
+  tr,
+  th {
+    background: none;
+    border: none;
+    @include font-s-medium;
+    text-align: center;
+    text-transform: uppercase;
+    color: $gray-600;
+  }
+}
+
+.bulletins-table__body {
+  td {
+    background: $white;
+    padding: $space-2 $space-4;
+  }
+  tr:hover .bulletins-table__day button {
+    opacity: 1;
+  }
+}
+
+.bulletins-table__day-buttons {
+  margin-left: $space-2;
+}
+
+.bulletins-table__body .bulletins-table__day--past {
+  td {
+    background: $gray-100;
+  }
+  time {
+    color: $gray-600;
+  }
+  .badge {
+    opacity: 0.5;
+  }
+}
+
+.bulletins-table__body .bulletins-table__active--day {
+  td {
+    background: $primary-subtle;
+  }
+}
+
+.bulletins-table__day {
+  @include font-m-bold;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    opacity: 1;
+  }
+}
+
+.bulletins-table__day--small {
+  @include font-s;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    opacity: 0;
+  }
+}
+
+.bulletins-table__region-status {
+  text-align: center !important;
+  vertical-align: middle;
+}

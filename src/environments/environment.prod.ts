@@ -8,8 +8,7 @@ export const environment: Environment = {
   headerBgColor: "#ffffff",
   faviconPath: "assets/img/admin-favicon.ico",
   logoPath: "assets/img/admin-logo.svg",
-  isEuregio: true,
-  showChat: true
+  isEuregio: true
 };
 
 Object.assign(environment, (window as any).ENV);

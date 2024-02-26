@@ -25,7 +25,7 @@ export class CatalogOfPhrasesComponent implements AfterViewInit {
   @ViewChild("receiver") receiver: ElementRef<HTMLIFrameElement>;
 
   public url: SafeUrl;
-  public pmData: String;
+  public pmData: string;
 
   constructor(
     private dialogRef: MatDialogRef<CatalogOfPhrasesComponent>,

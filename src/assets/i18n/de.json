@@ -21,7 +21,7 @@
     "modellingZamg": "ZAMG Multimodel",
     "modellingZamgECMWF": "ZAMG ECMWF-EPS",
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
-    "modellingZamgMeteogram": "GeoSphere meteogram",
+    "modellingZamgMeteogram": "GeoSphere Meteogramm",
     "modellingSnowpack": "SNOWPACK Modell",
     "modellingSnowpackMeteo": "Modellierte Meteodaten SNOWPACK"
   },
@@ -41,15 +41,6 @@
     "region": "Region",
     "education": "Ausbildung"
   },
-  "chat": {
-    "placeholder": "Schreib hier ...",
-    "send": "Senden",
-    "activeUsers": "Wer ist online?",
-    "all": "Alle ",
-    "AT-07": "Tirol ",
-    "IT-32-BZ": "Südtirol ",
-    "IT-32-TN": "Trentino "
-  },
   "matrix": {
     "label": {
       "snowpackStability": "Schneedeckenstabilität",
@@ -65,17 +56,17 @@
   },
   "bulletins": {
     "title": "Lawinen.report",
-    "loadingPreview": "Erzeuge PDF Vorschau ...",
     "tooltip": {
-      "publish": "Update zur Lawinenvorhersage sofort publizieren",
-      "submit": "Lawinenvorhersage absenden",
       "copy": "Lawinenvorhersage kopieren",
-      "cancel": "Kopieren abbrechen",
       "paste": "Lawinenvorhersage einfügen",
-      "update": "Update zur Lawinenvorhersage erstellen",
+      "cancel": "Kopieren abbrechen",
+      "update": "Bearbeiten",
+      "submit": "Abschicken",
+      "submitUpdate": "Update abschicken",
+      "publishChange": "Sofort publizieren (keine Nachrichten)",
+      "publishUpdate": "Sofort publizieren",
       "caaml": "CAAML anzeigen",
       "json": "JSON anzeigen",
-      "edit": "Lawinenvorhersage editieren (keine erneute Veröffentlichung)",
       "create": "Lawinenvorhersage erstellen",
       "preview": "Vorschau anzeigen (PDF)",
       "check": "Lawinenvorhersage prüfen",
@@ -83,11 +74,23 @@
       "publishAll": "Alle Regionen publizieren",
       "mediaFile": "Mediendatei hochladen"
     },
+    "status": {
+      "submittedInfo": "Wird um 17 Uhr publiziert",
+      "resubmittedInfo": "Wird um 8 Uhr publiziert",
+      "publishedInfo" : "Wurde publiziert",
+      "noPublicationInfo" : "Wird NICHT automatisch publiziert",
+      "loadingPreview": "Erzeuge PDF Vorschau ...",
+      "loading": "Bulletin lädt ...",
+      "publishing": "Bulletin wird publiziert ...",
+      "submitting": "Bulletin wird abgeschickt ..."
+    },
     "create": {
       "tooltip": {
-        "edit": "Region editieren",
+        "edit": "Kleinstregionen editieren",
         "copy": "Region kopieren",
         "delete": "Region löschen",
+        "createRegion": "Neue Region",
+        "cancel": "Abbrechen",
         "acceptSuggestion": "Vorgeschlagene Regionen annehmen",
         "rejectSuggestion": "Vorgeschlagene Regionen ablehnen",
         "saveChanges": "Änderungen speichern",
@@ -102,7 +105,8 @@
         "tendency": {
           "decreasing": "Lawinengefahr nimmt ab",
           "steady": "Lawinengefahr bleibt unverändert",
-          "increasing": "Lawinengefahr steigt"
+          "increasing": "Lawinengefahr steigt",
+          "danger": "Lawinengefahr"
         },
         "textcat": {
           "edit": "Bearbeiten",
@@ -113,19 +117,35 @@
         },
         "moveUpAvalancheProblem": "Lawinenproblem nach oben schieben",
         "moveDownAvalancheProblem": "Lawinenproblem nach unten schieben",
-        "dangerRatingDirectionUp": "Erweitere die Gefahrenstufe nach oben",
-        "dangerRatingDirectionDown": "Erweitere die Gefahrenstufe nach unten"
+        "dangerRatingDirectionUp": "Aufwärts",
+        "dangerRatingDirectionDown": "Abwärts"
       },
       "save": " Speichern",
       "discard": " Verwerfen",
       "back": " Zurück",
       "createAggregatedRegion": " Neue Region",
       "pasteAggregatedRegion": " Region einfügen",
+      "pendingSuggestions": "Vorschläge",
+      "rejectSuggestion": "Ablehnen",
+      "acceptSuggestion": "Akzeptieren",
       "cancelCopyBulletin": " Abbrechen",
       "createAvalancheProblem": " Neues Lawinenproblem",
       "ownRegions": "Eigene Regionen",
       "foreignRegions": "Fremde Regionen",
       "externalRegions": "Externe Regionen",
+      "mapSelectRegion": "Regionen in der Karte auswählen.",
+      "statusHeader": "Status des Bulletins",
+      "suggestions": "Vorschläge",
+      "noBulletinsForSelectedDay": "Keine Regionen für dieses Datum vorhanden.",
+      "autosave": "Automatisch gespeichert",
+      "regionEditable": "Diese Region kann bearbeitet werden.", 
+      "regionNotEditable": "Diese Region kann nicht bearbeitet werden.",
+      "regionLocked": "Diese Region ist gesperrt.",
+      "changeDangerRatingElevation": "Erweitere die Gefahrenstufe",
+      "mapTop": "Karte oben",
+      "mapLeft": "Karte seitlich",
+      "showNotes": "Notizen anzeigen",
+      "hideNotes": "Notizen ausblenden",
       "label": {
         "avalancheProblems": "Lawinenproblem",
         "aspects": "Expositionen",
@@ -139,6 +159,11 @@
         "elevationLow": "Über",
         "tendencyComment": "Beschreibung der Tendenz",
         "notes": "Notizen"
+      },
+      "copyRegion": {
+        "label": "Warnregion zu anderem Bulletin kopieren",
+        "select": "Einfügen in ...",
+        "currentBulletin": "Dieses Bulletin"
       },
       "title": {
         "avalancheProblem": "Lawinenprobleme",
@@ -571,6 +596,8 @@
       "charts": {
         "charts": "Diagramme",
         "nan": "Ohne Angabe",
+        "classify": "Klassifizieren",
+        "label": "Bezeichnung",
         "invert": "Invert",
         "reset": "Reset",
         "aspect": {
@@ -771,7 +798,7 @@
     "complex": "Komplex"
   },
   "changeRegionDialog": {
-    "message": "Möchtest du die Änderungen verwerfen und die Region wechseln?",
+    "message": "Möchtest du die Region ändern?",
     "accept": "Ja",
     "reject": "Nein"
   },

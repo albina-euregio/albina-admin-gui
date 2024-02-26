@@ -26,6 +26,8 @@
 <ng-template #caamlNotLoadedTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.caaml.caamlNotLoadedDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="caamlNotLoadedModalConfirm()">{{ "bulletins.caaml.caamlNotLoadedDialog.accept" | translate }}</button>
   </div>
 </ng-template>
@@ -33,6 +35,8 @@
 <ng-template #noCaamlTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.caaml.noCaamlDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="noCaamlModalConfirm()">{{ "bulletins.caaml.noCaamlDialog.accept" | translate }}</button>
   </div>
 </ng-template>

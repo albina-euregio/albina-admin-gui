@@ -7,10 +7,10 @@ import { SettingsService } from "../settings-service/settings.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
 import { WsRegionService } from "../ws-region-service/ws-region.service";
-import { RegionLockModel } from "../../models/region-lock.model";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
 import * as Enums from "../../enums/enums";
+import { BulletinModel } from "app/models/bulletin.model";
 
 @Injectable()
 export class BulletinsService {
@@ -18,12 +18,9 @@ export class BulletinsService {
   private activeDate: Date;
   private copyDate: Date;
   private isEditable: boolean;
-  private isUpdate: boolean;
-  private isSmallChange: boolean;
+  private isReadOnly: boolean;
 
-  public lockedRegions: Map<string, Date[]>;
-  public regionLocks: Subject<RegionLockModel>;
-  public lockedBulletins: Map<string, string>;
+  public lockedBulletins: Map<string, BulletinLockModel>;
   public bulletinLocks: Subject<BulletinLockModel>;
 
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
@@ -35,8 +32,7 @@ export class BulletinsService {
     private constantsService: ConstantsService,
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
-    private wsBulletinService: WsBulletinService,
-    private wsRegionService: WsRegionService) {
+    private wsBulletinService: WsBulletinService) {
     this.init();
   }
 
@@ -45,39 +41,12 @@ export class BulletinsService {
     this.activeDate = undefined;
     this.copyDate = undefined;
     this.isEditable = false;
-    this.isUpdate = false;
-    this.isSmallChange = false;
-
+    this.isReadOnly = false;
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
-
-    this.lockedRegions = new Map<string, Date[]>();
-    this.lockedBulletins = new Map<string, string>();
+    this.lockedBulletins = new Map<string, BulletinLockModel>();
 
     // connect to websockets
-    this.wsRegionConnect();
     this.wsBulletinConnect();
-
-    this.getLockedRegions(this.authenticationService.getActiveRegionId()).subscribe(
-      data => {
-        for (const lockedDate of (data as any)) {
-          const date = new Date(lockedDate);
-          this.addLockedRegion(this.authenticationService.getActiveRegionId(), date);
-        }
-      },
-      () => {
-        console.warn("Locked regions could not be loaded!");
-      }
-    );
-
-    /*
-      this.getLockedBulletins().subscribe(
-        data => {
-        },
-        error => {
-        console.warn("Locked bulletins could not be loaded!");
-        }
-      );
-    */
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 7);
@@ -122,30 +91,6 @@ export class BulletinsService {
     });
   }
 
-  public wsRegionConnect() {
-    this.regionLocks = <Subject<RegionLockModel>>this.wsRegionService
-      .connect(this.constantsService.getWsRegionUrl() + this.authenticationService.getUsername())
-      .pipe(map((response: any): RegionLockModel => {
-        const data = JSON.parse(response.data);
-        const regionLock = RegionLockModel.createFromJson(data);
-        if (regionLock.getLock()) {
-          console.debug("Region lock received: " + regionLock.getDate().toLocaleDateString() + " - " + regionLock.getRegion() + " [" + regionLock.getUsername() + "]");
-          this.addLockedRegion(regionLock.getRegion(), regionLock.getDate());
-        } else {
-          console.debug("Region unlock received: " + regionLock.getDate().toLocaleDateString() + " - " + regionLock.getRegion() + " [" + regionLock.getUsername() + "]");
-          this.removeLockedRegion(regionLock.getRegion(), regionLock.getDate());
-        }
-        return regionLock;
-      }));
-
-    this.regionLocks.subscribe(() => {
-    });
-  }
-
-  public wsRegionDisconnect() {
-    this.wsRegionService.disconnect();
-  }
-
   public wsBulletinConnect() {
     this.bulletinLocks = <Subject<BulletinLockModel>>this.wsBulletinService
       .connect(this.constantsService.getWsBulletinUrl() + this.authenticationService.getUsername())
@@ -154,7 +99,7 @@ export class BulletinsService {
         const bulletinLock = BulletinLockModel.createFromJson(data);
         if (bulletinLock.getLock()) {
           console.debug("Bulletin lock received: " + bulletinLock.getBulletin());
-          this.addLockedBulletin(bulletinLock.getBulletin(), bulletinLock.getUsername());
+          this.addLockedBulletin(bulletinLock);
         } else {
           console.debug("Bulletin unlock received: " + bulletinLock.getBulletin());
           this.removeLockedBulletin(bulletinLock.getBulletin());
@@ -178,6 +123,66 @@ export class BulletinsService {
     this.activeDate = date;
   }
 
+  hasBeenPublished5PM(date: Date) {
+    let today = new Date();
+
+    if (today.getHours() >= 17) {
+      today.setHours(0, 0, 0, 0);
+      today = new Date(today.getTime() + (1000 * 60 * 60 * 24));
+    } else {
+      today.setHours(0, 0, 0, 0);
+    }
+
+    if (today.getTime() >= date.getTime()) {
+      return true;
+    }
+    return false;
+  }
+
+  hasBeenPublished8AM(date: Date) {
+    let today = new Date();
+
+    if (today.getHours() >= 8) {
+      today.setHours(0, 0, 0, 0);
+    } else {
+      today = new Date(today.getTime() - (1000 * 60 * 60 * 24));
+      today.setHours(0, 0, 0, 0);
+    }
+
+    if (today.getTime() >= date.getTime()) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Returns a date that's offset from the activeDate by a given amount.
+   *
+   * @param offset - Number of days to offset. Can be positive (future) or negative (past).
+   * @returns Date offset from the activeDate or null if not found or out of bounds.
+   */
+  private getDateOffset(offset: number): Date | null {
+    if (!this.activeDate) {
+        return null;
+    }
+
+    const index = this.dates.findIndex(d => d.getTime() === this.activeDate.getTime());
+
+    if (index === -1 || index + offset < 0 || index + offset >= this.dates.length) {
+        return null;
+    }
+
+    return this.dates[index + offset];
+  }
+
+  getNextDate(): Date | null {
+    return this.getDateOffset(1);
+  }
+
+  getPreviousDate(): Date | null {
+    return this.getDateOffset(-1);
+  }
+
   getCopyDate(): Date {
     return this.copyDate;
   }
@@ -187,27 +192,19 @@ export class BulletinsService {
   }
 
   getIsEditable(): boolean {
-    return this.isEditable;
+    return this.isEditable && !this.isReadOnly;
   }
 
   setIsEditable(isEditable: boolean) {
     this.isEditable = isEditable;
   }
 
-  getIsUpdate() {
-    return this.isUpdate;
+  getIsReadOnly(): boolean {
+    return this.isReadOnly;
   }
 
-  setIsUpdate(isUpdate: boolean) {
-    this.isUpdate = isUpdate;
-  }
-
-  getIsSmallChange() {
-    return this.isSmallChange;
-  }
-
-  setIsSmallChange(isSmallChange: boolean) {
-    this.isSmallChange = isSmallChange;
+  setIsReadOnly(isReadOnly: boolean) {
+    this.isReadOnly = isReadOnly;
   }
 
   getUserRegionStatus(date: Date): Enums.BulletinStatus {
@@ -256,7 +253,7 @@ export class BulletinsService {
     return this.http.get<Response>(url, options);
   }
 
-  loadBulletins(date: Date, regions: String[]): Observable<Response> {
+  loadBulletins(date: Date, regions: string[] = this.authenticationService.getInternalRegions()): Observable<Response> {
     let url = this.constantsService.getServerUrl() + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
     if (regions) {
       for (const region of regions) {
@@ -273,14 +270,10 @@ export class BulletinsService {
     let url = server.apiUrl + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
     if (server.regions) {
       for (const region of server.regions) {
-        // region
-        // load all regions except regions handled by local server instance
-        if (this.authenticationService.isEuregio()) {
-          if (region !== this.constantsService.codeTyrol && region !== this.constantsService.codeSouthTyrol && region !== this.constantsService.codeTrentino)
-            url += "&regions=" + region;
-        } else {
-          url += "&regions=" + region;
+        if (this.authenticationService.isInternalRegion(region)) {
+          continue;
         }
+        url += "&regions=" + region;
       }
     }
     const headers = this.authenticationService.newExternalServerAuthHeader(server);
@@ -317,17 +310,32 @@ export class BulletinsService {
     return this.http.post<Response>(url, body, options);
   }
 
-  changeBulletins(bulletins, date): Observable<Response> {
-    const url = this.constantsService.getServerUrl() + "bulletins/change?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
+  createBulletin(bulletin: BulletinModel, date): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "bulletins?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
     const headers = this.authenticationService.newAuthHeader();
-    const jsonBulletins = [];
-    for (let i = bulletins.length - 1; i >= 0; i--) {
-      jsonBulletins.push(bulletins[i].toJson());
-    }
-    const body = JSON.stringify(jsonBulletins);
+    const body = JSON.stringify(bulletin.toJson());
+    const options = { headers: headers };
+
+    return this.http.put<Response>(url, body, options);
+  }
+
+  updateBulletin(bulletin: BulletinModel, date): Observable<Response> {
+    // check if bulletin has ID
+    const url = this.constantsService.getServerUrl() + "bulletins/" + bulletin.getId() + "?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
+    const headers = this.authenticationService.newAuthHeader();
+    const body = JSON.stringify(bulletin.toJson());
     const options = { headers: headers };
 
     return this.http.post<Response>(url, body, options);
+  }
+
+  deleteBulletin(bulletin: BulletinModel, date): Observable<Response> {
+    // check if bulletin has ID
+    const url = this.constantsService.getServerUrl() + "bulletins/" + bulletin.getId() + "?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + this.authenticationService.getActiveRegionId();
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers: headers };
+
+    return this.http.delete<Response>(url, options);
   }
 
   submitBulletins(date: Date, region: string): Observable<Response> {
@@ -343,6 +351,16 @@ export class BulletinsService {
     const url = this.constantsService.getServerUrl() + "bulletins/publish?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region;
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
+    const options = { headers: headers };
+
+    return this.http.post<Response>(url, body, options);
+  }
+
+  changeBulletins(date: Date, region: string): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "bulletins/change?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) + "&region=" + region;
+    const headers = this.authenticationService.newAuthHeader();
+    const jsonBulletins = [];
+    const body = JSON.stringify(jsonBulletins);
     const options = { headers: headers };
 
     return this.http.post<Response>(url, body, options);
@@ -494,64 +512,40 @@ export class BulletinsService {
     return this.http.get<Response>(url, options);
   }
 
-  getLockedRegions(region: string): Observable<Response> {
-    const url = this.constantsService.getServerUrl() + "regions/locked?region=" + region;
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
+  loadLockedBulletins() {
+    this.lockedBulletins.clear();
 
-    return this.http.get<Response>(url, options);
-  }
-
-  /*
-    getLockedBulletins() : Observable<Response> {
     let url = this.constantsService.getServerUrl() + 'bulletins/locked';
-    let headers = this.newAuthHeader();
+    let headers = this.authenticationService.newAuthHeader();
     let options = { headers: headers };
 
-    return this.http.get<Response>(url, options);
-    }
-  */
-
-  isLocked(date: Date, region: string) {
-    if (this.lockedRegions.has(region)) {
-      for (const entry of this.lockedRegions.get(region)) {
-        if (entry.getTime() === date.getTime()) {
-          return true;
+    this.http.get<Response>(url, options).subscribe(
+      data => {
+        for (const response of (data as any)) {
+          const data = JSON.parse(response.data);
+          const bulletinLock = BulletinLockModel.createFromJson(data);
+          this.addLockedBulletin(bulletinLock);
         }
+      },
+      error => {
+        console.warn("Locked bulletins could not be loaded!");
       }
+    );
+  }
+
+  isLocked(bulletinId: string) {
+    if (this.lockedBulletins.has(bulletinId) && this.lockedBulletins.get(bulletinId).getUserEmail() !== this.authenticationService.getEmail()) {
+      return true;
     }
     return false;
   }
 
-  lockRegion(region: string, date: Date) {
-    const regionLock = new RegionLockModel();
-    regionLock.setUsername(this.authenticationService.getUsername());
-    regionLock.setRegion(region);
-    regionLock.setDate(date);
-    regionLock.setLock(true);
-
-    this.regionLocks.next(regionLock);
-
-    console.debug("Region lock sent: " + regionLock.getDate().toLocaleDateString() + " - " + regionLock.getRegion());
-  }
-
-  unlockRegion(date: Date, region: string) {
-    const regionLock = new RegionLockModel();
-    regionLock.setUsername(this.authenticationService.getUsername());
-    regionLock.setRegion(region);
-    regionLock.setDate(date);
-    regionLock.setLock(false);
-
-    this.regionLocks.next(regionLock);
-
-    console.debug("Region unlock sent: " + regionLock.getDate().toLocaleDateString() + " - " + regionLock.getRegion());
-  }
-
   lockBulletin(date: Date, bulletinId: string) {
     const bulletinLock = new BulletinLockModel();
-    bulletinLock.setUsername(this.authenticationService.getUsername());
     bulletinLock.setBulletin(bulletinId);
     bulletinLock.setDate(date);
+    bulletinLock.setUserName(this.authenticationService.getUsername());
+    bulletinLock.setUserEmail(this.authenticationService.getEmail());
     bulletinLock.setLock(true);
 
     this.bulletinLocks.next(bulletinLock);
@@ -561,9 +555,10 @@ export class BulletinsService {
 
   unlockBulletin(date: Date, bulletinId: string) {
     const bulletinLock = new BulletinLockModel();
-    bulletinLock.setUsername(this.authenticationService.getUsername());
     bulletinLock.setBulletin(bulletinId);
     bulletinLock.setDate(date);
+    bulletinLock.setUserName(this.authenticationService.getUsername());
+    bulletinLock.setUserEmail(this.authenticationService.getEmail());
     bulletinLock.setLock(false);
 
     this.bulletinLocks.next(bulletinLock);
@@ -571,42 +566,11 @@ export class BulletinsService {
     console.debug("Bulletin unlock sent: " + bulletinLock.getDate() + " - " + bulletinLock.getBulletin());
   }
 
-  addLockedRegion(region: string, date: Date) {
-    if (this.lockedRegions.has(region)) {
-      if (this.lockedRegions.get(region).indexOf(date) === -1) {
-        this.lockedRegions.get(region).push(date);
-      } else {
-        console.warn("[SocketIO] Region already locked!");
-      }
+  addLockedBulletin(bulletinLock: BulletinLockModel) {
+    if (this.lockedBulletins.has(bulletinLock.getBulletin())) {
+      console.warn("Bulletin already locked by " + bulletinLock.getUserName());
     } else {
-      const entry = new Array<Date>();
-      entry.push(date);
-      this.lockedRegions.set(region, entry);
-    }
-  }
-
-  removeLockedRegion(region: string, date: Date) {
-    let index = -1;
-    if (this.lockedRegions.has(region)) {
-      for (const entry of this.lockedRegions.get(region)) {
-        if (entry.getTime() === date.getTime()) {
-          index = this.lockedRegions.get(region).indexOf(entry);
-        }
-      }
-    }
-
-    if (index !== -1) {
-      this.lockedRegions.get(region).splice(index, 1);
-    } else {
-      console.warn("[SocketIO] Region was not locked!");
-    }
-  }
-
-  addLockedBulletin(bulletinId, username) {
-    if (this.lockedBulletins.has(bulletinId)) {
-      console.warn("Bulletin already locked by " + this.lockedBulletins.get(bulletinId));
-    } else {
-      this.lockedBulletins.set(bulletinId, username);
+      this.lockedBulletins.set(bulletinLock.getBulletin(), bulletinLock);
     }
   }
 

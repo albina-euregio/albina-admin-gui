@@ -42,6 +42,8 @@
 <ng-template #deleteUserTemplate>
   <div class="modal-body text-center">
     <p>{{ "admin.users.deleteUserModalDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="deleteUserModalConfirm($event)">{{ "admin.users.deleteUserModalDialog.accept" | translate }}</button>
     <button type="button" class="btn btn-default" (click)="deleteUserModalDecline($event)">{{ "admin.users.deleteUserModalDialog.reject" | translate }}</button>
   </div>

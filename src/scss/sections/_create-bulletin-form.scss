@@ -1,0 +1,187 @@
+$region-form-padding: $space-6;
+$region-form-border: 1px solid $gray-300;
+$region-form-width: 512px;
+.create-bulletin__region-form {
+  border-right: $region-form-border;
+  width: calc(50vw - ($sidebar-width/2));
+  min-width: $region-form-width;
+  display: flex;
+  flex-flow: column;
+  background: $white;
+}
+
+.region-form__header {
+  padding: $region-form-padding;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: $region-form-padding;
+}
+
+.region-form__header-actions {
+  order: 2;
+
+  .dropdown-menu.show {
+    position: absolute;
+    top: 32px !important;
+  }
+}
+
+// Region form actions banner
+.region-form__banner {
+  border-bottom: $region-form-border;
+}
+
+// Form actions footer
+.region-form__footer {
+  padding: $space-2 $region-form-padding;
+  background: $white;
+  border-top: $region-form-border;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0;
+  z-index: 1000;
+  margin-top: auto;
+}
+
+// Avalanche problems form
+.accordion-header__title {
+  .form-check {
+    margin-bottom: 0;
+  }
+}
+.avalanche-problems__accordion {
+  accordion-group {
+    border: $region-form-border !important;
+  }
+
+  app-avalanche-problem-preview {
+    width: 100%;
+  }
+  accordion-group + accordion-group {
+    margin-top: $space-2;
+  }
+  .panel-heading {
+    background: $gray-100;
+    align-items: center;
+    padding: $space-2 $space-4;
+  }
+  .panel-body {
+    border-top: $region-form-border;
+    padding: $space-4;
+  }
+}
+app-avalanche-problem-preview,
+.avalanche-problem-preview__header,
+.avalanche-problem__preview,
+.avalanche-problem-preview__info {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.avalanche-problem__preview {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.avalanche-problem-preview__info-item {
+  margin-right: $space-4;
+}
+.avalanche-problem-preview__danger-rating {
+  height: $space-8;
+}
+
+.avalanche-problem-preview__problem-icon {
+  height: $space-8;
+}
+
+.avalanche-problem-preview__info-elevation {
+  display: flex;
+  flex-flow: column;
+}
+
+// Avalanche problem detail form
+.avalanche-problem-detail__problem-icons {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: $space-2;
+}
+.avalanche-problem-detail__problem-icon {
+  border: 1px solid $input-border-color;
+  width: 20%;
+  &.is-disabled {
+    opacity: 0.3;
+  }
+}
+
+// Elevation
+.avalanche-problem-detail__elevation {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-bottom: $space-2;
+  justify-content: space-between;
+  gap: $space-2;
+
+  input[type="checkbox"] {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  label {
+    margin-bottom: 0;
+  }
+
+  .avalanche-problem-detail__elevation-inputs {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: $space-1;
+    input {
+      flex-basis: 0 0 80px;
+      width: 80px;
+    }
+  }
+}
+
+.avalanche-problem__elevation-change-danger-rating {
+  .btn-group {
+    width: 100%;
+  }
+}
+
+.avalanche-problem-detail__override {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: $space-2;
+  img {
+    height: 60px;
+  }
+}
+
+// Danger description
+
+.region-form__translation-block {
+  .region-form__translation-item + .region-form__translation-item {
+    margin-top: $space-1;
+  }
+  .input-group-text {
+    @include font-s-medium;
+    width: 26px;
+    padding: 0;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+  }
+}
+
+.region-form__translation-toggle {
+  margin: $space-1 0;
+}
+
+.region-form__danger-patterns {
+  select + select {
+    margin-top: $space-1;
+  }
+}

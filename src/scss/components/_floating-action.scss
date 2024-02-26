@@ -1,0 +1,21 @@
+.floating-action {
+  position: absolute;
+  z-index: 1000;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  background: $white;
+  padding: $space-2 $space-2 $space-2 $space-4;
+  color: $primary-dark;
+  margin-top: $space-6;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: $space-6;
+  @include font-m;
+}
+
+.floating-action__text {
+}
+.floating-action__actions {
+}

@@ -1,53 +1,61 @@
 import { Injectable } from "@angular/core";
-import { BulletinModel } from "../../models/bulletin.model";
-
+import { environment } from "../../../environments/environment";
+import type { RegionConfiguration } from "../configuration-service/configuration.service";
+import type { AuthorModel } from "../../models/author.model";
+import type { ServerModel } from "../../models/server.model";
 
 @Injectable()
 export class LocalStorageService {
+  constructor() {}
 
-  constructor() {
-  }
-
-  save(date: Date, region: string, author: string, bulletins: BulletinModel[]) {
-    localStorage.setItem("date", date.getTime().toString());
-    localStorage.setItem("region", region);
-    localStorage.setItem("author", author);
-    const jsonBulletins = [];
-    for (let i = bulletins.length - 1; i >= 0; i--) {
-      jsonBulletins.push(bulletins[i].toJson());
+  private get<T>(key: string): T {
+    try {
+      const value = localStorage.getItem(environment.apiBaseUrl + "_" + key);
+      return JSON.parse(value);
+    } catch (e) {
+      localStorage.removeItem(environment.apiBaseUrl + "_" + key);
+      return undefined;
     }
-    localStorage.setItem("bulletins", JSON.stringify(jsonBulletins));
   }
 
-  clear() {
-    localStorage.removeItem("date");
-    localStorage.removeItem("region");
-    localStorage.removeItem("author");
-    localStorage.removeItem("bulletins");
-  }
-
-  getBulletins(): BulletinModel[] {
-    const bulletinsList = new Array<BulletinModel>();
-    const stringBulletins = localStorage.getItem("bulletins");
-    if (stringBulletins !== undefined) {
-      const jsonBulletins = JSON.parse(stringBulletins);
-
-      for (const jsonBulletin of jsonBulletins) {
-        bulletinsList.push(BulletinModel.createFromJson(jsonBulletin));
-      }
+  private set<T>(key: string, value: T): void {
+    if (value === undefined) {
+      localStorage.removeItem(environment.apiBaseUrl + "_" + key);
+    } else {
+      localStorage.removeItem(key); // migration: remove keys without prefix
+      localStorage.setItem(environment.apiBaseUrl + "_" + key, JSON.stringify(value));
     }
-    return bulletinsList;
   }
 
-  getDate(): Date {
-    return new Date(+localStorage.getItem("date"));
+  getCurrentAuthor(): AuthorModel {
+    return this.get("currentAuthor");
   }
 
-  getRegion(): string {
-    return localStorage.getItem("region");
+  setCurrentAuthor(currentAuthor: AuthorModel): void {
+    return this.set("currentAuthor", currentAuthor);
   }
 
-  getAuthor(): string {
-    return localStorage.getItem("author");
+  getActiveRegion(): RegionConfiguration {
+    return this.get("activeRegion");
+  }
+
+  setActiveRegion(activeRegion: RegionConfiguration): void {
+    return this.set("activeRegion", activeRegion);
+  }
+
+  getInternalRegions(): RegionConfiguration[] {
+    return this.get("internalRegions");
+  }
+
+  setInternalRegions(internalRegions: RegionConfiguration[]): void {
+    return this.set("internalRegions", internalRegions);
+  }
+
+  getExternalServers(): ServerModel[] {
+    return this.get("externalServers");
+  }
+
+  setExternalServers(externalServers: ServerModel[]): void {
+    return this.set("externalServers", externalServers);
   }
 }

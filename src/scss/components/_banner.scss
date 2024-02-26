@@ -1,0 +1,24 @@
+.banner {
+  padding: $space-2 $space-6;
+  @include font-s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &.banner-info {
+    background: $info-subtle;
+    color: $albina-blue-dark;
+  }
+  &.banner-warning {
+    background: $warning-subtle;
+  }
+  &.banner-warning-strong {
+    background: $orange;
+  }
+}
+
+.banner__actions {
+  .btn + .btn {
+    margin-left: $space-1 !important;
+  }
+}

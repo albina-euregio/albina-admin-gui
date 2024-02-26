@@ -1,0 +1,74 @@
+@mixin font-l {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+@mixin font-m {
+  font-size: 14px;
+}
+
+@mixin font-m-medium {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@mixin font-m-bold {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+@mixin font-s {
+  font-size: 12px;
+}
+
+@mixin font-s-medium {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@mixin font-s-bold {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+@mixin font-xs {
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.font-l {
+  @include font-l;
+}
+
+.font-m {
+  @include font-m;
+}
+
+.font-m-medium {
+  @include font-m-medium;
+}
+
+.font-m-bold {
+  @include font-m-bold;
+}
+
+.font-s {
+  @include font-s;
+}
+
+.font-s-medium {
+  @include font-s-medium;
+}
+
+.font-s-bold {
+  @include font-s-bold;
+}
+
+.font-xs {
+  @include font-xs;
+}
+
+.font-tight {
+  letter-spacing: -0.5px;
+}

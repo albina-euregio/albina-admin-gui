@@ -1,13 +1,17 @@
 import * as Enums from "../enums/enums";
 
+export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"] as const);
+
+export type LangTexts = Record<(typeof LANGUAGES)[number], string>;
+
 export class TextModel {
-  public languageCode: Enums.LanguageCode;
+  public languageCode: string;
   public text: string;
 
   static createFromJson(json) {
     const text = new TextModel();
 
-    text.setLanguageCode(Enums.LanguageCode[<string>json.languageCode]);
+    text.setLanguageCode(json.languageCode);
     text.setText(json.text);
 
     return text;
@@ -18,15 +22,15 @@ export class TextModel {
     this.text = undefined;
   }
 
-  getLanguageCode() {
+  getLanguageCode(): string {
     return this.languageCode;
   }
 
-  setLanguageCode(languageCode: Enums.LanguageCode) {
+  setLanguageCode(languageCode: string) {
     this.languageCode = languageCode;
   }
 
-  getText() {
+  getText(): string {
     return this.text;
   }
 
@@ -37,13 +41,25 @@ export class TextModel {
   toJson() {
     const json = Object();
 
-    if (this.languageCode && this.languageCode !== undefined) {
-      json["languageCode"] = Enums.LanguageCode[this.languageCode];
+    if (this.languageCode) {
+      json["languageCode"] = this.languageCode;
     }
-    if (this.text && this.text !== undefined && this.text !== "") {
+    if (this.text) {
       json["text"] = this.text;
     }
 
     return json;
   }
+
+  static toLangTexts(models: TextModel[]): LangTexts {
+    return Object.fromEntries(models.map((t) => [t.getLanguageCode(), t.getText()])) as LangTexts;
+  }
+}
+
+export function concatenateLangTexts(t1: LangTexts, t2: LangTexts): LangTexts {
+  return Object.fromEntries(LANGUAGES.map((l) => [l, `${t1[l] || ""} ${t2[l] || ""}`.trim()])) as LangTexts;
+}
+
+export function convertLangTextsToJSON(t: LangTexts): { languageCode: string; text: string }[] {
+  return Object.entries(t).map(([languageCode, text]) => ({ languageCode, text }));
 }

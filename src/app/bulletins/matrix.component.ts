@@ -1,18 +1,16 @@
-import { Component, Input, ViewChild, ElementRef, SimpleChange, AfterViewInit, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { SettingsService } from "../providers/settings-service/settings.service";
-import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
 
 @Component({
   selector: "app-matrix",
-  templateUrl: "matrix.component.html"
+  templateUrl: "matrix.component.html",
 })
 export class MatrixComponent implements AfterViewInit, OnChanges {
-
   @Input() bulletin: BulletinModel;
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() matrixInformation: MatrixInformationModel;
@@ -69,13 +67,10 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   @ViewChild("45") cell45: ElementRef;
   @ViewChild("46") cell46: ElementRef;
 
-  languageCode = Enums.LanguageCode;
-
   constructor(
     public settingsService: SettingsService,
-    public mapService: MapService,
-    public constantsService: ConstantsService) {
-  }
+    public constantsService: ConstantsService,
+  ) {}
 
   ngAfterViewInit() {
     this.resetMatrix();
@@ -89,26 +84,25 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
 
   resetMatrix() {
     for (let i = 0; i <= 46; i++) {
-      this.setCellStyleInactive("" + i);
+      this.setCellStyleInactive(String(i));
     }
   }
 
   initMatrix() {
     const index = this.getCell(this.matrixInformation);
-    if (index != "0")
-    this.setCellStyleActive(index);
+    if (index != "0") this.setCellStyleActive(index);
   }
 
   private selectCell(cell) {
-    this.matrixInformation.setDangerRating(Enums.DangerRating[this.getDangerRating(cell)]);
-    this.matrixInformation.setAvalancheSize(Enums.AvalancheSize[this.getAvalancheSize(cell)]);
-    this.matrixInformation.setSnowpackStability(Enums.SnowpackStability[this.getSnowpackStability(cell)]);
-    this.matrixInformation.setFrequency(Enums.Frequency[this.getFrequency(cell)]);
+    this.matrixInformation.setDangerRating(this.getDangerRating(cell));
+    this.matrixInformation.setAvalancheSize(this.getAvalancheSize(cell));
+    this.matrixInformation.setSnowpackStability(this.getSnowpackStability(cell));
+    this.matrixInformation.setFrequency(this.getFrequency(cell));
     this.setCellStyleActive(cell);
   }
 
   private deselectCell(cell) {
-    this.matrixInformation.setDangerRating(Enums.DangerRating[this.getDangerRating(Enums.DangerRating.missing)]);
+    this.matrixInformation.setDangerRating(this.getDangerRating(Enums.DangerRating.missing));
     this.matrixInformation.setAvalancheSize(undefined);
     this.matrixInformation.setSnowpackStability(undefined);
     this.matrixInformation.setFrequency(undefined);
@@ -118,7 +112,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   private setCellStyleActive(cell) {
     if (cell !== undefined && cell !== null) {
       const element = this.getElement(cell);
-      if (element && element !== undefined) {
+      if (element) {
         element.nativeElement.style.fill = this.getColor(cell);
       }
     }
@@ -127,7 +121,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   private setCellStyleInactive(cell) {
     if (cell !== undefined && cell !== null) {
       const element = this.getElement(cell);
-      if (element !== undefined && element !== null) {
+      if (element) {
         element.nativeElement.style.fill = this.getGrayscaleColor(cell);
       }
     }
@@ -149,8 +143,6 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
       }
 
       this.bulletinDaytimeDescription.updateDangerRating();
-      this.mapService.updateAggregatedRegion(this.bulletin);
-      this.mapService.selectAggregatedRegion(this.bulletin);
     }
   }
 
@@ -256,7 +248,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getDangerRating(id) {
+  private getDangerRating(id): Enums.DangerRating {
     switch (id) {
       case "15":
       case "30":
@@ -319,7 +311,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getAvalancheSize(id) {
+  private getAvalancheSize(id): Enums.AvalancheSize {
     if (id == 46) {
       return Enums.AvalancheSize.small;
     } else if (id % 5 == 1) {
@@ -337,7 +329,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getSnowpackStability(id) {
+  private getSnowpackStability(id): Enums.SnowpackStability {
     if (id > 0 && id <= 15) {
       return Enums.SnowpackStability.very_poor;
     } else if (id > 15 && id <= 30) {
@@ -351,7 +343,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getFrequency(id) {
+  private getFrequency(id): Enums.Frequency {
     if (id == 46) {
       return Enums.Frequency.none;
     } else if (id % 15 > 0 && id % 15 <= 5) {
@@ -365,7 +357,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getColor(id) {
+  private getColor(id): string {
     switch (this.getDangerRating(id)) {
       case Enums.DangerRating.low:
         return this.constantsService.colorDangerRatingLow;
@@ -382,7 +374,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getGrayscaleColor(id) {
+  private getGrayscaleColor(id): string {
     // white fields in the matrix
     if (id == 26 || id == 31 || id == 32 || id == 36 || id == 37 || id == 41 || id == 42) {
       return "#FFFFFF";
@@ -403,12 +395,12 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  private getCell(matrixInformation: MatrixInformationModel) {
+  private getCell(matrixInformation: MatrixInformationModel): string {
     var snowpackStabilityFactor = 0;
     var frequencyFactor = 0;
     var avalancheSizeFactor = 0;
 
-    switch (+Enums.SnowpackStability[matrixInformation.getSnowpackStability()]) {
+    switch (matrixInformation.getSnowpackStability()) {
       case Enums.SnowpackStability.very_poor:
         snowpackStabilityFactor = 0;
         break;
@@ -424,7 +416,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         return "0";
     }
 
-    switch (+Enums.Frequency[matrixInformation.getFrequency()]) {
+    switch (matrixInformation.getFrequency()) {
       case Enums.Frequency.many:
         frequencyFactor = 0;
         break;
@@ -432,7 +424,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         frequencyFactor = 1;
         break;
       case Enums.Frequency.few:
-        frequencyFactor = 2
+        frequencyFactor = 2;
         break;
       case Enums.Frequency.none:
         return "0";
@@ -440,7 +432,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         return "0";
     }
 
-    switch (+Enums.AvalancheSize[matrixInformation.getAvalancheSize()]) {
+    switch (matrixInformation.getAvalancheSize()) {
       case Enums.AvalancheSize.extreme:
         avalancheSizeFactor = 1;
         break;
@@ -460,7 +452,6 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         return "0";
     }
 
-    var result = snowpackStabilityFactor * 15 + frequencyFactor * 5 + avalancheSizeFactor;
-    return "" + result;
+    return String(snowpackStabilityFactor * 15 + frequencyFactor * 5 + avalancheSizeFactor);
   }
 }

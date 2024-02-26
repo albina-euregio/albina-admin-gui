@@ -31,47 +31,45 @@ const zIndex: Record<Stability, number> = {
   [Stability.very_poor]: 20,
 };
 
-const elevationThresholds = [
-  100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100,
-  2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500,
-];
+const elevationThresholds = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000];
 const elevationColors = {
-  "1": "#c060ff",
-  "2": "#9b00e0",
-  "3": "#8000ff",
-  "4": "#6600c0",
-  "5": "#330080",
-  "6": "#0000c0",
-  "7": "#0000ff",
-  "8": "#3399ff",
-  "9": "#80ccff",
-  "10": "#80ffff",
-  "11": "#00ffc0",
-  "12": "#00ff80",
-  "13": "#00e400",
-  "14": "#00c000",
-  "15": "#009b00",
-  "16": "#008000",
-  "17": "#609b00",
-  "18": "#9b9b00",
-  "19": "#c09b00",
-  "20": "#c0c000",
-  "21": "#c0e000",
-  "22": "#c0ff00",
-  "23": "#ffff00",
-  "24": "#ffc000",
-  "25": "#ff9b00",
-  "26": "#ff8000",
-  "27": "#ff0000",
-  "28": "#e00000",
-  "29": "#c00000",
-  "30": "#b00000",
-  "31": "#800000",
-  "32": "#990066",
-  "33": "#c00066",
-  "34": "#cc0066",
-  "35": "#cc005c",
+  "0": "#FFFFFE",
+  "1": "#FFFFB3",
+  "2": "#B0FFBC",
+  "3": "#8CFFFF",
+  "4": "#03CDFF",
+  "5": "#0481FF",
+  "6": "#035BBE",
+  "7": "#784BFF",
+  "8": "#CC0CE8",
 };
+
+// FATMAP
+const aspectColors = {
+  [Aspect.N]: "#2f74f9",
+  [Aspect.NE]: "#96c0fc",
+  [Aspect.E]: "#b3b3b3",
+  [Aspect.SE]: "#f6ba91",
+  [Aspect.S]: "#ef6d25",
+  [Aspect.SW]: "#6c300b",
+  [Aspect.W]: "#000000",
+  [Aspect.NW]: "#113570",
+};
+
+// The international classification for seasonal snow on the ground
+// (except for gliding snow - no definition there)
+const avalancheProblemColors = {
+  [AvalancheProblem.new_snow]: "#00ff00",
+  [AvalancheProblem.wind_slab]: "#229b22",
+  [AvalancheProblem.persistent_weak_layers]: "#0000ff",
+  [AvalancheProblem.wet_snow]: "#ff0000",
+  [AvalancheProblem.gliding_snow]: "#aa0000",
+  [AvalancheProblem.cornices]: "#ffffff",
+  [AvalancheProblem.no_distinct_problem]: "#ffffff",
+  [AvalancheProblem.favourable_situation]: "#ffffff",
+};
+
+const dayColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
 
 const observationTypeTexts = {
   [ObservationType.Avalanche]: "⛰",
@@ -161,12 +159,12 @@ const grainShapes = {
 };
 
 export const importantObservationTexts = {
-  [ImportantObservation.SnowLine]: grainShapes.IF.key,
+  [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
   [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
   [ImportantObservation.Graupel]: grainShapes.PPgp.key,
-  [ImportantObservation.StabilityTest]: "",
+  [ImportantObservation.StabilityTest]: grainShapes.PPnd.key,
   [ImportantObservation.IceFormation]: grainShapes.IF.key,
-  [ImportantObservation.VeryLightNewSnow]: grainShapes.PP.key,
+  [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
 };
 
 @Injectable()
@@ -254,11 +252,12 @@ export class ObservationMarkerService {
     ) {
       return "#ca0020";
     }
+
     switch (this.markerClassify) {
       case LocalFilterTypes.Aspect:
-        return this.enumArrayColor(Aspect, [observation?.aspect]);
+        return observation?.aspect ? aspectColors[observation?.aspect] : "white";
       case LocalFilterTypes.AvalancheProblem:
-        return this.enumArrayColor(AvalancheProblem, observation?.avalancheProblems);
+        return this.enumArrayColor(AvalancheProblem, observation?.avalancheProblems, LocalFilterTypes.AvalancheProblem);
       case LocalFilterTypes.DangerPattern:
         return this.enumArrayColor(DangerPattern, observation?.dangerPatterns);
       case LocalFilterTypes.Days:
@@ -278,28 +277,36 @@ export class ObservationMarkerService {
     }
   }
 
-  private enumArrayColor<TEnum, TKeys extends string>(type: { [key in TKeys]: TEnum }, values: TKeys[]): string {
+  private enumArrayColor<TEnum, TKeys extends string>(
+    entry: { [key in TKeys]: TEnum },
+    values: TKeys[],
+    type?,
+  ): string {
     if (!Array.isArray(values) || values.length === 0 || !values[0]) {
       return "white";
-    } else if (values.length > 1) {
-      return "#999999";
     } else {
-      return colors[Object.keys(type).indexOf(values[0]) % colors.length];
+      switch (type) {
+        case LocalFilterTypes.Aspect:
+          return aspectColors[Object.keys(entry).indexOf(values[0])];
+        case LocalFilterTypes.AvalancheProblem:
+          return avalancheProblemColors[values[0].toString()];
+        default:
+          return colors[Object.keys(entry).indexOf(values[0]) % colors.length];
+      }
     }
   }
 
   getColor(type: LocalFilterTypes, name: any) {
     switch (type) {
       case LocalFilterTypes.Aspect:
-        return this.enumArrayColor(Aspect, [name]);
+        return name ? aspectColors[name] : "white";
       case LocalFilterTypes.AvalancheProblem:
-        return this.enumArrayColor(AvalancheProblem, [name]);
+        return this.enumArrayColor(AvalancheProblem, [name], LocalFilterTypes.AvalancheProblem);
       case LocalFilterTypes.DangerPattern:
         return this.enumArrayColor(DangerPattern, [name]);
       case LocalFilterTypes.Days:
         const days = (Date.now() - new Date(name).getTime()) / 24 / 3600e3;
-        const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-        return daysColors[Math.min(Math.floor(days), daysColors.length)];
+        return dayColors[Math.min(Math.floor(days), dayColors.length)];
       case LocalFilterTypes.Elevation:
         return this.elevationColor(name);
       case LocalFilterTypes.ImportantObservation:

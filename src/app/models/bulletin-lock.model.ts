@@ -1,33 +1,28 @@
 export class BulletinLockModel {
-  public username: string;
   public bulletin: string;
   public date: Date;
+  public userEmail: string;
+  public userName: string;
   public lock: boolean;
 
   static createFromJson(json) {
     const bulletinLock = new BulletinLockModel();
 
-    bulletinLock.setUsername(json.username);
     bulletinLock.setDate(new Date(json.date));
     bulletinLock.setBulletin(json.bulletin);
+    bulletinLock.setUserEmail(json.userEmail);
+    bulletinLock.setUserName(json.userName);
     bulletinLock.setLock(json.lock);
 
     return bulletinLock;
   }
 
   constructor() {
-    this.username = undefined;
     this.bulletin = undefined;
     this.date = undefined;
+    this.userEmail = undefined;
+    this.userName = undefined;
     this.lock = undefined;
-  }
-
-  getUsername() {
-    return this.username;
-  }
-
-  setUsername(username: string) {
-    this.username = username;
   }
 
   getBulletin() {
@@ -46,6 +41,22 @@ export class BulletinLockModel {
     this.date = date;
   }
 
+  getUserEmail() {
+    return this.userEmail;
+  }
+
+  setUserEmail(userEmail: string) {
+    this.userEmail = userEmail;
+  }
+
+  getUserName() {
+    return this.userName;
+  }
+
+  setUserName(userName: string) {
+    this.userName = userName;
+  }
+
   getLock() {
     return this.lock;
   }
@@ -57,14 +68,17 @@ export class BulletinLockModel {
   toJson() {
     const json = Object();
 
-    if (this.username && this.username !== undefined) {
-      json["username"] = this.username;
-    }
-    if (this.bulletin && this.bulletin !== undefined && this.bulletin !== "") {
+    if (this.bulletin) {
       json["bulletin"] = this.bulletin;
     }
-    if (this.date && this.date !== undefined) {
+    if (this.date) {
       json["date"] = this.getISOStringWithTimezoneOffset(this.date);
+    }
+    if (this.userName) {
+      json["userName"] = this.userName;
+    }
+    if (this.userEmail) {
+      json["userEmail"] = this.userEmail;
     }
     json["lock"] = this.lock;
 
@@ -75,14 +89,23 @@ export class BulletinLockModel {
     const offset = -date.getTimezoneOffset();
     const dif = offset >= 0 ? "+" : "-";
 
-    return date.getFullYear() +
-      "-" + this.extend(date.getMonth() + 1) +
-      "-" + this.extend(date.getDate()) +
-      "T" + this.extend(date.getHours()) +
-      ":" + this.extend(date.getMinutes()) +
-      ":" + this.extend(date.getSeconds()) +
-      dif + this.extend(offset / 60) +
-      ":" + this.extend(offset % 60);
+    return (
+      date.getFullYear() +
+      "-" +
+      this.extend(date.getMonth() + 1) +
+      "-" +
+      this.extend(date.getDate()) +
+      "T" +
+      this.extend(date.getHours()) +
+      ":" +
+      this.extend(date.getMinutes()) +
+      ":" +
+      this.extend(date.getSeconds()) +
+      dif +
+      this.extend(offset / 60) +
+      ":" +
+      this.extend(offset % 60)
+    );
   }
 
   private extend(num: number) {

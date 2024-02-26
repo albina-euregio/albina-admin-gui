@@ -1,126 +1,77 @@
-import { Component, HostListener, ViewChild, ElementRef, ApplicationRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { DatePipe, formatDate } from "@angular/common";
+
+import { map, timer } from "rxjs";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { saveAs } from "file-saver";
+
+// models
 import { BulletinModel } from "../models/bulletin.model";
-import { AvalancheProblemModel } from "../models/avalanche-problem.model";
+
+// services
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
-import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
-import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import { interval } from "rxjs";
-import * as Enums from "../enums/enums";
-import { BehaviorSubject } from "rxjs";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal";
-import { environment } from "../../environments/environment";
 
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-
-import { DatePipe } from "@angular/common";
+// modals
+import { ModalSubmitComponent } from "./modal-submit.component";
+import { ModalPublishComponent } from "./modal-publish.component";
+import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
+import { ModalPublishAllComponent } from "./modal-publish-all.component";
+import { ModalMediaFileComponent } from "./modal-media-file.component";
+import { ModalCheckComponent } from "./modal-check.component";
 
 // For iframe
-import { Renderer2 } from "@angular/core";
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { Subscription } from "rxjs";
 
-declare var L: any;
+import * as Enums from "../enums/enums";
+import { ServerModel } from "app/models/server.model";
 
 @Component({
-  templateUrl: "create-bulletin.component.html"
+  templateUrl: "create-bulletin.component.html",
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
-
   public bulletinStatus = Enums.BulletinStatus;
-  public dangerPattern = Enums.DangerPattern;
-  public tendency = Enums.Tendency;
-  public autoSave;
+
+  public autoSaving: boolean;
+  public loadingPreview: boolean;
+  public editRegions: boolean;
+  public loading: boolean;
+  public saveError: boolean;
+  public loadInternalBulletinsError: boolean;
+  public loadExternalBulletinsError: boolean;
 
   public originalBulletins: Map<string, BulletinModel>;
 
-  public editRegions: boolean;
-  public loading: boolean;
   public showAfternoonMap: boolean;
-  public showExternalRegions: boolean;
+
+  public showForeignRegions: boolean;
 
   public activeBulletin: BulletinModel;
+  public comparedBulletin: BulletinModel;
   public internBulletinsList: BulletinModel[];
-  public externBulletinsList: BulletinModel[];
+  public externRegionsMap: Map<ServerModel, BulletinModel[]>;
+  public showExternRegionsMap: Map<string, boolean>;
 
-  public activeHighlightsTextcat: string;
-  public activeHighlightsDe: string;
-  public activeHighlightsIt: string;
-  public activeHighlightsEn: string;
-  public activeHighlightsFr: string;
-  public activeHighlightsEs: string;
-  public activeHighlightsCa: string;
-  public activeHighlightsOc: string;
+  public showStatusOfAllRegions: boolean = false;
 
-  public activeAvActivityHighlightsTextcat: string;
-  public activeAvActivityHighlightsDe: string;
-  public activeAvActivityHighlightsIt: string;
-  public activeAvActivityHighlightsEn: string;
-  public activeAvActivityHighlightsFr: string;
-  public activeAvActivityHighlightsEs: string;
-  public activeAvActivityHighlightsCa: string;
-  public activeAvActivityHighlightsOc: string;
-  public activeAvActivityHighlightsNotes: string;
+  public showNewBulletinModal: boolean = false;
 
-  public activeAvActivityCommentTextcat: string;
-  public activeAvActivityCommentDe: string;
-  public activeAvActivityCommentIt: string;
-  public activeAvActivityCommentEn: string;
-  public activeAvActivityCommentFr: string;
-  public activeAvActivityCommentEs: string;
-  public activeAvActivityCommentCa: string;
-  public activeAvActivityCommentOc: string;
-  public activeAvActivityCommentNotes: string;
+  public isCompactMapLayout: boolean = false;
+  private bulletinMarkedDelete: BulletinModel;
 
-  public activeSnowpackStructureHighlightsTextcat: string;
-  public activeSnowpackStructureHighlightsDe: string;
-  public activeSnowpackStructureHighlightsIt: string;
-  public activeSnowpackStructureHighlightsEn: string;
-  public activeSnowpackStructureHighlightsFr: string;
-  public activeSnowpackStructureHighlightsEs: string;
-  public activeSnowpackStructureHighlightsCa: string;
-  public activeSnowpackStructureHighlightsOc: string;
-  public activeSnowpackStructureHighlightsNotes: string;
+  public publishing: boolean;
+  public submitting: boolean;
+  public copying: boolean;
 
-  public activeSnowpackStructureCommentTextcat: string;
-  public activeSnowpackStructureCommentDe: string;
-  public activeSnowpackStructureCommentIt: string;
-  public activeSnowpackStructureCommentEn: string;
-  public activeSnowpackStructureCommentFr: string;
-  public activeSnowpackStructureCommentEs: string;
-  public activeSnowpackStructureCommentCa: string;
-  public activeSnowpackStructureCommentOc: string;
-  public activeSnowpackStructureCommentNotes: string;
-
-  public activeTendencyCommentTextcat: string;
-  public activeTendencyCommentDe: string;
-  public activeTendencyCommentIt: string;
-  public activeTendencyCommentEn: string;
-  public activeTendencyCommentFr: string;
-  public activeTendencyCommentEs: string;
-  public activeTendencyCommentCa: string;
-  public activeTendencyCommentOc: string;
-  public activeTendencyCommentNotes: string;
-
-  public isAccordionDangerRatingOpen: boolean;
-  public isAccordionAvalancheProblemOpen: boolean;
-  public isAccordionDangerDescriptionOpen: boolean;
-  public isAccordionSnowpackStructureOpen: boolean;
-  public isAccordionTendencyOpen: boolean;
-
-  public showTranslationsHighlights: boolean;
-  public showTranslationsAvActivityHighlights: boolean;
-  public showTranslationsAvActivityComment: boolean;
-  public showTranslationsSnowpackStructureComment: boolean;
-  public showTranslationsTendencyComment: boolean;
+  @ViewChild("scrollActiveBulletin") scrollActiveBulletin: ElementRef;
+  @ViewChild("scrollComparedBulletin") scrollComparedBulletin: ElementRef;
 
   public loadingErrorModalRef: BsModalRef;
   @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
@@ -149,340 +100,529 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public avalancheProblemErrorModalRef: BsModalRef;
   @ViewChild("avalancheProblemErrorTemplate") avalancheProblemErrorTemplate: TemplateRef<any>;
 
-  public loadAutoSaveModalRef: BsModalRef;
-  @ViewChild("loadAutoSaveTemplate") loadAutoSaveTemplate: TemplateRef<any>;
+  public copyRegionModalRef: BsModalRef;
+  @ViewChild("copyRegionTemplate") copyRegionTemplate: TemplateRef<any>;
 
-  public loadAvActivityCommentExampleTextModalRef: BsModalRef;
-  @ViewChild("loadAvActivityCommentExampleTextTemplate") loadAvActivityCommentExampleTextTemplate: TemplateRef<any>;
+  public submitBulletinsModalRef: BsModalRef;
+  @ViewChild("submitBulletinsTemplate") submitBulletinsTemplate: TemplateRef<any>;
 
-  public loadSnowpackStructureCommentExampleTextModalRef: BsModalRef;
-  @ViewChild("loadSnowpackStructureCommentExampleTextTemplate") loadSnowpackStructureCommentExampleTextTemplate: TemplateRef<any>;
+  public submitBulletinsDuplicateRegionModalRef: BsModalRef;
+  @ViewChild("submitBulletinsDuplicateRegionTemplate") submitBulletinsDuplicateRegionTemplate: TemplateRef<any>;
 
-  public pmUrl: SafeUrl;
+  public submitBulletinsErrorModalRef: BsModalRef;
+  @ViewChild("submitBulletinsErrorTemplate") submitBulletinsErrorTemplate: TemplateRef<any>;
 
-  @ViewChild("receiver") receiver: ElementRef<HTMLIFrameElement>;
-  stopListening: Function;
-  display: boolean = false;
+  public publishBulletinsModalRef: BsModalRef;
+  @ViewChild("publishBulletinsTemplate") publishBulletinsTemplate: TemplateRef<any>;
 
-  // tra le proprietà del componente
-  eventSubscriber: Subscription;
+  public publishBulletinsErrorModalRef: BsModalRef;
+  @ViewChild("publishBulletinsErrorTemplate") publishBulletinsErrorTemplate: TemplateRef<any>;
+
+  public previewErrorModalRef: BsModalRef;
+  @ViewChild("previewErrorTemplate") previewErrorTemplate: TemplateRef<any>;
+
+  public publicationStatusModalRef: BsModalRef;
+  @ViewChild("publicationStatusTemplate") publicationStatusTemplate: TemplateRef<any>;
+
+  public mediaFileModalRef: BsModalRef;
+  @ViewChild("mediaFileTemplate") mediaFileTemplate: TemplateRef<any>;
+
+  public publishAllModalRef: BsModalRef;
+  @ViewChild("publishAllTemplate") publishAllTemplate: TemplateRef<any>;
+
+  public checkBulletinsModalRef: BsModalRef;
+  @ViewChild("checkBulletinsTemplate") checkBulletinsTemplate: TemplateRef<any>;
+
+  public checkBulletinsErrorModalRef: BsModalRef;
+  @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
+
+  internalBulletinsSubscription!: Subscription;
+  externalBulletinsSubscription!: Subscription;
 
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-md",
   };
 
   constructor(
     private router: Router,
+    private activeRoute: ActivatedRoute,
     public bulletinsService: BulletinsService,
-    private dialog: MatDialog,
-    private localStorageService: LocalStorageService,
-    private authenticationService: AuthenticationService,
+    public authenticationService: AuthenticationService,
     private translateService: TranslateService,
-    private settingsService: SettingsService,
     private constantsService: ConstantsService,
-    private regionsService: RegionsService,
+    public regionsService: RegionsService,
     public copyService: CopyService,
     private mapService: MapService,
-    private applicationRef: ApplicationRef,
-    private sanitizer: DomSanitizer,
-    renderer: Renderer2,
     private modalService: BsModalService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {
-    this.loading = true;
+    this.loading = false;
     this.showAfternoonMap = false;
-    this.showExternalRegions = false;
-    this.stopListening = renderer.listen("window", "message", this.getText.bind(this));
+    this.showForeignRegions = true;
     this.mapService.resetAll();
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externBulletinsList = new Array<BulletinModel>();
+    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.showExternRegionsMap = new Map<string, boolean>();
     // this.preventClick = false;
     // this.timer = 0;
+
+    // Set initial value based on the current window width
+    this.isCompactMapLayout = window.innerWidth < 768;
+
+    this.publishing = false;
+    this.submitting = false;
+    this.copying = false;
+    this.loadingPreview = false;
+    this.saveError = false;
+    this.loadInternalBulletinsError = false;
+    this.loadExternalBulletinsError = false;
   }
 
-  showDialog(pmData) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = "calc(100% - 10px)";
-    dialogConfig.height = "calc(100% - 10px)";
-    dialogConfig.maxHeight = "100%";
-    dialogConfig.maxWidth = "100%";
-    dialogConfig.data = {
-      pmUrl: this.pmUrl,
-      pmData: pmData
-    };
-
-    this.dialog.open(CatalogOfPhrasesComponent, dialogConfig);
-  }
-
-  hideDialog() {
-    this.dialog.closeAll();
+  @HostListener("window:resize", ["$event"])
+  onResize(event: Event) {
+    this.isCompactMapLayout = (event.target as Window).innerWidth < 768;
   }
 
   reset() {
     this.originalBulletins = new Map<string, BulletinModel>();
     this.activeBulletin = undefined;
+    this.comparedBulletin = undefined;
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externBulletinsList = new Array<BulletinModel>();
-
-    this.activeHighlightsTextcat = undefined;
-    this.activeHighlightsDe = undefined;
-    this.activeHighlightsIt = undefined;
-    this.activeHighlightsEn = undefined;
-    this.activeHighlightsFr = undefined;
-    this.activeHighlightsEs = undefined;
-    this.activeHighlightsCa = undefined;
-    this.activeHighlightsOc = undefined;
-
-    this.activeAvActivityHighlightsTextcat = undefined;
-    this.activeAvActivityHighlightsDe = undefined;
-    this.activeAvActivityHighlightsIt = undefined;
-    this.activeAvActivityHighlightsEn = undefined;
-    this.activeAvActivityHighlightsFr = undefined;
-    this.activeAvActivityHighlightsEs = undefined;
-    this.activeAvActivityHighlightsCa = undefined;
-    this.activeAvActivityHighlightsOc = undefined;
-    this.activeAvActivityHighlightsNotes = undefined;
-
-    this.activeAvActivityCommentTextcat = undefined;
-    this.activeAvActivityCommentDe = undefined;
-    this.activeAvActivityCommentIt = undefined;
-    this.activeAvActivityCommentEn = undefined;
-    this.activeAvActivityCommentFr = undefined;
-    this.activeAvActivityCommentEs = undefined;
-    this.activeAvActivityCommentCa = undefined;
-    this.activeAvActivityCommentOc = undefined;
-    this.activeAvActivityCommentNotes = undefined;
-
-    this.activeSnowpackStructureHighlightsTextcat = undefined;
-    this.activeSnowpackStructureHighlightsDe = undefined;
-    this.activeSnowpackStructureHighlightsIt = undefined;
-    this.activeSnowpackStructureHighlightsEn = undefined;
-    this.activeSnowpackStructureHighlightsFr = undefined;
-    this.activeSnowpackStructureHighlightsEs = undefined;
-    this.activeSnowpackStructureHighlightsCa = undefined;
-    this.activeSnowpackStructureHighlightsOc = undefined;
-    this.activeSnowpackStructureHighlightsNotes = undefined;
-
-    this.activeSnowpackStructureCommentTextcat = undefined;
-    this.activeSnowpackStructureCommentDe = undefined;
-    this.activeSnowpackStructureCommentIt = undefined;
-    this.activeSnowpackStructureCommentEn = undefined;
-    this.activeSnowpackStructureCommentFr = undefined;
-    this.activeSnowpackStructureCommentEs = undefined;
-    this.activeSnowpackStructureCommentCa = undefined;
-    this.activeSnowpackStructureCommentOc = undefined;
-    this.activeSnowpackStructureCommentNotes = undefined;
-
-    this.activeTendencyCommentTextcat = undefined;
-    this.activeTendencyCommentDe = undefined;
-    this.activeTendencyCommentIt = undefined;
-    this.activeTendencyCommentEn = undefined;
-    this.activeTendencyCommentFr = undefined;
-    this.activeTendencyCommentEs = undefined;
-    this.activeTendencyCommentCa = undefined;
-    this.activeTendencyCommentOc = undefined;
-    this.activeTendencyCommentNotes = undefined;
+    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.showExternRegionsMap = new Map<string, boolean>();
 
     this.editRegions = false;
     this.showAfternoonMap = false;
-
-    this.isAccordionDangerRatingOpen = false;
-    this.isAccordionAvalancheProblemOpen = false;
-    this.isAccordionDangerDescriptionOpen = false;
-    this.isAccordionSnowpackStructureOpen = false;
-    this.isAccordionTendencyOpen = false;
-
-    this.showTranslationsHighlights = false;
-    this.showTranslationsAvActivityHighlights = false;
-    this.showTranslationsAvActivityComment = false;
-    this.showTranslationsSnowpackStructureComment = false;
-    this.showTranslationsTendencyComment = false;
   }
 
-  toggleShowExternalRegions() {
-    if (this.showExternalRegions)
-      this.showExternalRegions = false;
-    else
-      this.showExternalRegions = true;
+  toggleShowForeignRegions() {
+    this.showForeignRegions = !this.showForeignRegions;
+  }
+
+  showExternalRegions(key: string) {
+    return this.showExternRegionsMap.get(key);
+  }
+
+  toggleShowExternalRegions(apiUrl: string) {
+    this.showExternRegionsMap.set(apiUrl, !this.showExternRegionsMap.get(apiUrl));
   }
 
   hasExternalRegions() {
-    if (this.externBulletinsList.length > 0)
-      return true;
-    else
-      return false;
+    return this.externRegionsMap.size > 0;
   }
 
-  private getTextcatUrl(): SafeUrl {
-    // lang
-    const l = this.settingsService.getLangString() === "it" ? "it" : "de"; // only de+it are supported
-    const r = this.authenticationService.getActiveRegionCode();
-    const url = environment.textcatUrl + "?l=" +  l + "&r=" + r;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  ngOnInit() {
+    this.activeRoute.params.subscribe((routeParams) => {
+      const date = new Date(routeParams.date);
+      date.setHours(0, 0, 0, 0);
+      this.bulletinsService.setActiveDate(date);
+      this.initializeComponent();
+
+      this.internalBulletinsSubscription = timer(5000, 5000)
+        .pipe(
+          map(() => {
+            if (!this.loading && !this.publishing && !this.submitting && !this.copying && !this.showNewBulletinModal) {
+              this.loadBulletinsFromServer();
+            }
+          }),
+        )
+        .subscribe();
+
+      this.externalBulletinsSubscription = timer(2000, 30000)
+        .pipe(
+          map(() => {
+            this.loadExternalBulletinsFromServer();
+          }),
+        )
+        .subscribe();
+
+      const mapDiv = document.getElementById("map");
+
+      const resizeObserver = new ResizeObserver(() => {
+        this.mapService.map?.invalidateSize();
+        this.mapService.afternoonMap?.invalidateSize();
+      });
+      resizeObserver.observe(mapDiv);
+    });
   }
 
-  async ngOnInit() {
-    // for reload iframe on change language
-    this.eventSubscriber = this.settingsService.getChangeEmitter().subscribe(
-      () => this.pmUrl = this.getTextcatUrl()
-    );
+  async initializeComponent() {
+    this.loading = true;
 
     await this.initMaps();
 
     if (this.bulletinsService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
-
       this.reset();
-
-      // setting pm language for iframe
-      this.pmUrl = this.getTextcatUrl();
 
       // copy bulletins from other date
       if (this.bulletinsService.getCopyDate()) {
-        const regions = new Array<String>();
-        regions.push(this.authenticationService.getActiveRegionId());
-
         // load own bulletins from the date they are copied from
+        let regions = [this.authenticationService.getActiveRegionId()];
         this.bulletinsService.loadBulletins(this.bulletinsService.getCopyDate(), regions).subscribe(
-          data => {
+          (data) => {
             this.copyBulletins(data);
             this.bulletinsService.setCopyDate(undefined);
-            // load foreign bulletins from the current date
-            if (this.authenticationService.isEuregio()) {
-              const foreignRegions = new Array<String>();
-              foreignRegions.push(this.constantsService.codeTyrol);
-              foreignRegions.push(this.constantsService.codeSouthTyrol);
-              foreignRegions.push(this.constantsService.codeTrentino);
-              this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), foreignRegions).subscribe(
-                data2 => {
-                  this.addForeignBulletins(data2);
-                },
-                () => {
-                  console.error("Foreign bulletins could not be loaded!");
-                  this.loading = false;
-                  this.openLoadingErrorModal(this.loadingErrorTemplate);
-                }
-              );
-            } else {
-              this.loading = false;
-            }
+            // load bulletins from the current date, add foreign bulletins
+            this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate()).subscribe(
+              (data2) => {
+                this.addForeignBulletins(data2);
+                this.save();
+                this.loading = false;
+              },
+              () => {
+                console.error("Foreign bulletins could not be loaded!");
+                this.loading = false;
+                this.openLoadingErrorModal(this.loadingErrorTemplate);
+              },
+            );
           },
           () => {
             console.error("Own bulletins could not be loaded!");
             this.loading = false;
             this.openLoadingErrorModal(this.loadingErrorTemplate);
-          }
+          },
         );
 
         // load current bulletins (do not copy them, also if it is an update)
       } else {
-        if (this.bulletinsService.getIsEditable() && !this.bulletinsService.getIsUpdate() && this.bulletinsService.getActiveDate().getTime() === this.localStorageService.getDate().getTime() && this.authenticationService.getActiveRegionId() === this.localStorageService.getRegion() && this.authenticationService.getCurrentAuthor().getEmail() === this.localStorageService.getAuthor()) {
-          setTimeout(() => this.openLoadAutoSaveModal(this.loadAutoSaveTemplate));
-        } else {
-          this.loadBulletinsFromServer();
-        }
+        this.loadBulletinsFromServer();
+        this.mapService.deselectAggregatedRegion();
       }
 
-      this.authenticationService.getExternalServers().map((server) =>
-        this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
-          data2 => {
-            this.addExternalBulletins(data2);
-          },
-          () => {
-            console.error("External bulletins could not be loaded!");
-          }
-        )
-      );
+      if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
+        this.bulletinsService.setIsEditable(true);
+      } else {
+        this.bulletinsService.setIsEditable(false);
+      }
 
+      if (this.copyService.isCopyBulletin()) {
+        this.createBulletin(true);
+      }
     } else {
       this.goBack();
     }
   }
 
-  ngOnDestroy() {
-    if (this.bulletinsService.getIsEditable()) {
-      this.eventSubscriber.unsubscribe();
+  updateBulletinScroll(scrollId: string, event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (scrollId === "scrollComparedBulletin") {
+      this.scrollActiveBulletin.nativeElement.scrollTop = this.scrollComparedBulletin.nativeElement.scrollTop;
+    } else if (scrollId === "scrollActiveBulletin") {
+      this.scrollComparedBulletin.nativeElement.scrollTop = this.scrollActiveBulletin.nativeElement.scrollTop;
     }
+  }
 
-    if (this.bulletinsService.getActiveDate() && this.bulletinsService.getIsEditable()) {
-      this.bulletinsService.unlockRegion(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId());
+  private loadBulletinsFromServer() {
+    console.log("Load internal bulletins");
+    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        this.loadInternalBulletinsError = false;
+        this.addInternalBulletins(data);
+        this.loading = false;
+      },
+      (error) => {
+        console.error("Bulletins could not be loaded!");
+        this.loading = false;
+        this.loadInternalBulletinsError = true;
+      },
+    );
+  }
+
+  private loadExternalBulletinsFromServer() {
+    if (!this.editRegions) {
+      console.log("Load external bulletins");
+      this.authenticationService.checkExternalServerLogin();
+      this.authenticationService.getExternalServers().map((server) =>
+        this.bulletinsService.loadExternalBulletins(this.bulletinsService.getActiveDate(), server).subscribe(
+          (data) => {
+            this.loadExternalBulletinsError = false;
+            this.addExternalBulletins(server, data);
+          },
+          () => {
+            console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
+            this.loadExternalBulletinsError = true;
+          },
+        ),
+      );
     }
+  }
+
+  ngOnDestroy() {
+    this.internalBulletinsSubscription.unsubscribe();
+    this.externalBulletinsSubscription.unsubscribe();
 
     this.mapService.resetAll();
 
     this.bulletinsService.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
-    this.bulletinsService.setIsSmallChange(false);
-    this.bulletinsService.setIsUpdate(false);
 
     this.loading = false;
     this.editRegions = false;
+    this.copying = false;
+  }
 
-    if (this.autoSave && this.autoSave !== undefined) {
-      this.autoSave.unsubscribe();
-    }
+  isDisabled() {
+    return (
+      this.loading ||
+      !this.bulletinsService.getIsEditable() ||
+      this.bulletinsService.isLocked(this.activeBulletin.getId()) ||
+      this.editRegions ||
+      !this.isCreator(this.activeBulletin)
+    );
+  }
+
+  isDateEditable(date: Date) {
+    return (
+      ((this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.missing ||
+        this.bulletinsService.getUserRegionStatus(date) === undefined) &&
+        !this.bulletinsService.hasBeenPublished5PM(this.bulletinsService.getActiveDate())) ||
+      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated ||
+      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft
+    );
+  }
+
+  showPublicationHappensAt5PM(date: Date) {
+    return (
+      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted &&
+      !this.bulletinsService.hasBeenPublished5PM(date)
+    );
+  }
+
+  showPublicationHappensAt8AM(date: Date) {
+    return (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
+      !this.bulletinsService.hasBeenPublished8AM(date) &&
+      !this.showPublicationHappensAt5PM(date)
+    );
+  }
+
+  showPublicationHappened(date: Date) {
+    return (
+      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.published ||
+      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.republished
+    );
+  }
+
+  showNoPublicationWillHappen(date: Date) {
+    return (
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
+      this.bulletinsService.hasBeenPublished8AM(date)
+    );
+  }
+
+  changeDate(date: Date) {
+    this.deselectBulletin();
+    const format = "yyyy-MM-dd";
+    const locale = "en-US";
+    const formattedDate = formatDate(date, format, locale);
+    this.router.navigate(["/bulletins/" + formattedDate]);
+  }
+
+  publishAll() {
+    this.publishing = true;
+    this.openPublishAllModal();
+  }
+
+  check(event: Event, date: Date) {
+    event.stopPropagation();
+
+    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+      (data) => {
+        let message =
+          "<b>" + this.translateService.instant("bulletins.table.checkBulletinsDialog.message") + "</b><br><br>";
+
+        if ((data as any).length === 0) {
+          message += this.translateService.instant("bulletins.table.checkBulletinsDialog.ok");
+        } else {
+          for (const entry of data as any) {
+            if (entry === "missingDangerRating") {
+              message +=
+                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message +=
+                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityHighlights") +
+                "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message +=
+                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingAvActivityComment") + "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message +=
+                this.translateService.instant(
+                  "bulletins.table.checkBulletinsDialog.missingSnowpackStructureHighlights",
+                ) + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message +=
+                this.translateService.instant("bulletins.table.checkBulletinsDialog.missingSnowpackStructureComment") +
+                "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message +=
+                this.translateService.instant("bulletins.table.checkBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.checkBulletinsDialog.incompleteTranslation");
+            }
+          }
+        }
+
+        this.openCheckBulletinsModal(message);
+      },
+      (error) => {
+        console.error("Bulletins could not be checked!");
+        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+      },
+    );
+  }
+
+  showPublishAllButton(date: Date) {
+    return (
+      !this.bulletinsService.getIsReadOnly() &&
+      !this.publishing &&
+      !this.submitting &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
+    );
+  }
+
+  showCheckButton(date: Date) {
+    return (
+      !this.publishing &&
+      !this.submitting &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated) &&
+      !this.copying &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)
+    );
+  }
+
+  showMediaFileButton() {
+    return (
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      this.authenticationService.getActiveRegion().enableMediaFile &&
+      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster))
+    );
+  }
+
+  showInfoButton() {
+    return (
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      (this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
+        this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
+          this.bulletinStatus.republished) &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)
+    );
+  }
+
+  showPublicationInfo() {
+    this.bulletinsService
+      .getPublicationStatus(this.authenticationService.getActiveRegionId(), this.bulletinsService.getActiveDate())
+      .subscribe(
+        (data) => {
+          this.openPublicationStatusModal(data as any);
+        },
+        (error) => {
+          console.error("Publication status could not be loaded!");
+        },
+      );
+  }
+
+  openPublicationStatusModal(json) {
+    const initialState = {
+      json: json,
+      date: this.bulletinsService.getActiveDate(),
+      component: this,
+    };
+    this.publicationStatusModalRef = this.modalService.show(ModalPublicationStatusComponent, { initialState });
+  }
+
+  openMediaFileModal() {
+    const initialState = {
+      date: this.bulletinsService.getActiveDate(),
+      component: this,
+    };
+    this.mediaFileModalRef = this.modalService.show(ModalMediaFileComponent, { initialState });
+  }
+
+  openPublishAllModal() {
+    const initialState = {
+      date: this.bulletinsService.getActiveDate(),
+      component: this,
+    };
+    this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.publishing = false;
+    });
   }
 
   downloadJsonBulletin() {
-    if (this.checkAvalancheProblems()) {
-      this.loading = true;
+    this.deselectBulletin();
 
-      this.setTexts();
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
 
-      this.deselectBulletin();
+    const result = new Array<BulletinModel>();
 
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
+    for (const bulletin of this.internBulletinsList) {
+      bulletin.setValidFrom(validFrom);
+      bulletin.setValidUntil(validUntil);
 
-      const result = new Array<BulletinModel>();
-
-      for (const bulletin of this.internBulletinsList) {
-        bulletin.setValidFrom(validFrom);
-        bulletin.setValidUntil(validUntil);
-
-
-        // only own regions
-        const saved = new Array<String>();
-        for (const region of bulletin.getSavedRegions()) {
-          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-            saved.push(region);
-          }
+      // only own regions
+      const saved = new Array<string>();
+      for (const region of bulletin.getSavedRegions()) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          saved.push(region);
         }
-        for (const region of bulletin.getPublishedRegions()) {
-          if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-            saved.push(region);
-          }
+      }
+      for (const region of bulletin.getPublishedRegions()) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          saved.push(region);
         }
-
-        if (saved.length > 0) {
-          bulletin.setSavedRegions(saved);
-
-          bulletin.setSuggestedRegions(new Array<String>());
-          bulletin.setPublishedRegions(new Array<String>());
-        }
-
-        result.push(bulletin);
       }
 
-      const jsonBulletins = [];
-      for (let i = result.length - 1; i >= 0; i--) {
-        jsonBulletins.push(result[i].toJson());
+      if (saved.length > 0) {
+        bulletin.setSavedRegions(saved);
+        bulletin.setSuggestedRegions(new Array<string>());
+        bulletin.setPublishedRegions(new Array<string>());
       }
-      const sJson = JSON.stringify(jsonBulletins);
-      const element = document.createElement("a");
-      element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-      element.setAttribute("download", this.datePipe.transform(validFrom, "yyyy-MM-dd") + "_report.json");
-      element.style.display = "none";
-      document.body.appendChild(element);
-      element.click(); // simulate click
-      document.body.removeChild(element);
-      this.loading = false;
+
+      result.push(bulletin);
     }
+
+    const jsonBulletins = [];
+    for (let i = result.length - 1; i >= 0; i--) {
+      jsonBulletins.push(result[i].toJson());
+    }
+    const sJson = JSON.stringify(jsonBulletins);
+    const element = document.createElement("a");
+    element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
+    element.setAttribute("download", this.datePipe.transform(validFrom, "yyyy-MM-dd") + "_report.json");
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click(); // simulate click
+    document.body.removeChild(element);
   }
 
-  uploadJsonBulletin(event) {
-    const selectedFile = event.target.files[0];
+  uploadJsonBulletin(event: Event) {
+    const selectedFile = (event.target as HTMLInputElement).files[0];
     const fileReader = new FileReader();
     fileReader.readAsText(selectedFile, "UTF-8");
     fileReader.onload = () => {
@@ -491,132 +631,72 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.reset();
       this.copyBulletins(json);
       console.info("Bulletins loaded from file: " + selectedFile.name);
-    }
+    };
     fileReader.onerror = (error) => {
       console.error("Bulletins could not be loaded from file: " + error);
       this.openLoadingJsonFileErrorModal(this.loadingJsonFileErrorTemplate);
-    }
-  }
-
-  setShowTranslations(name: string) {
-    switch (name) {
-      case "highlights":
-        if (this.showTranslationsHighlights) {
-          this.showTranslationsHighlights = false;
-        } else {
-          this.showTranslationsHighlights = true;
-        }
-        break;
-      case "avActivityHighlights":
-        if (this.showTranslationsAvActivityHighlights) {
-          this.showTranslationsAvActivityHighlights = false;
-        } else {
-          this.showTranslationsAvActivityHighlights = true;
-        }
-        break;
-      case "avActivityComment":
-        if (this.showTranslationsAvActivityComment) {
-          this.showTranslationsAvActivityComment = false;
-        } else {
-          this.showTranslationsAvActivityComment = true;
-        }
-        break;
-      case "snowpackStructureComment":
-        if (this.showTranslationsSnowpackStructureComment) {
-          this.showTranslationsSnowpackStructureComment = false;
-        } else {
-          this.showTranslationsSnowpackStructureComment = true;
-        }
-        break;
-      case "tendencyComment":
-        if (this.showTranslationsTendencyComment) {
-          this.showTranslationsTendencyComment = false;
-        } else {
-          this.showTranslationsTendencyComment = true;
-        }
-        break;
-      default:
-        break;
-    }
-  }
-
-
-  accordionChanged(event: boolean, groupName: string) {
-    switch (groupName) {
-      case "dangerRating":
-        this.isAccordionDangerRatingOpen = event;
-        break;
-      case "avalancheProblem":
-        this.isAccordionAvalancheProblemOpen = event;
-        break;
-      case "dangerDescription":
-        this.isAccordionDangerDescriptionOpen = event;
-        break;
-      case "snowpackStructure":
-        this.isAccordionSnowpackStructureOpen = event;
-        break;
-      case "tendency":
-        this.isAccordionTendencyOpen = event;
-        break;
-      default:
-        break;
-    }
+    };
   }
 
   private async initMaps() {
-    const [map, afternoonMap] = await this.mapService.initAmPmMap(this.showAfternoonMap);
+    const [map, afternoonMap] = await this.mapService.initAmPmMap();
     map.on("click", () => this.onMapClick());
     afternoonMap.on("click", () => this.onMapClick());
   }
 
   private onMapClick() {
-    if (!this.editRegions) {
-      const test = this.mapService.getClickedRegion();
-      for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
-        if (bulletin.getSavedRegions().indexOf(test) > -1 || bulletin.getPublishedRegions().indexOf(test) > -1 ) {
+    if (!this.showNewBulletinModal && !this.editRegions) {
+      let hit = false;
+      const clickedRegion = this.mapService.getClickedRegion();
+      for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
+        if (
+          bulletin.getSavedRegions().indexOf(clickedRegion) > -1 ||
+          bulletin.getPublishedRegions().indexOf(clickedRegion) > -1
+        ) {
           if (this.activeBulletin === bulletin) {
             this.deselectBulletin();
+            hit = true;
+            break;
           } else {
             this.selectBulletin(bulletin);
+            hit = true;
+            break;
+          }
+        }
+      }
+      if (!hit) {
+        for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
+          if (bulletin.getSuggestedRegions().indexOf(clickedRegion) > -1) {
+            if (this.activeBulletin === bulletin) {
+              this.deselectBulletin();
+              break;
+            } else {
+              this.selectBulletin(bulletin);
+              break;
+            }
           }
         }
       }
     }
   }
 
-  setTendency(event, tendency) {
-    event.stopPropagation();
-    this.activeBulletin.tendency = tendency;
+  setMapLayout(isCompact: boolean): void {
+    this.isCompactMapLayout = isCompact;
   }
 
   onShowAfternoonMapChange(checked) {
     this.showAfternoonMap = checked;
-    this.setTexts();
 
-    const bulletin = this.activeBulletin;
-
-    this.deselectBulletin();
     const map = document.getElementById("map");
     const afternoonMap = document.getElementById("afternoonMap");
     if (this.showAfternoonMap) {
-      map.classList.remove("col-md-12");
-      map.classList.add("col-md-6");
-      afternoonMap.classList.remove("col-md-0");
-      afternoonMap.classList.add("col-md-6");
-      afternoonMap.style.borderBottom = "1px solid";
-      afternoonMap.style.borderLeft = "1px solid";
-      afternoonMap.style.borderColor = "#cfd8dc";
+      map.classList.add("create-bulletin__map--am");
+      afternoonMap.classList.add("create-bulletin__map--am");
+      this.mapService.addAMControl();
     } else {
-      map.classList.remove("col-md-6");
-      map.classList.add("col-md-12");
-      afternoonMap.classList.remove("col-md-6");
-      afternoonMap.classList.add("col-md-0");
-      afternoonMap.style.border = "";
-    }
-    this.initMaps().then(() => this.updateInternalBulletins());
-
-    if (bulletin) {
-      this.selectBulletin(bulletin);
+      map.classList.remove("create-bulletin__map--am");
+      afternoonMap.classList.remove("create-bulletin__map--am");
+      this.mapService.removeAMControl();
     }
   }
 
@@ -633,15 +713,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   getForeignBulletins() {
     const result = new Array<BulletinModel>();
     for (const bulletin of this.internBulletinsList) {
-      if (!bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId()) && !this.authenticationService.isExternalRegion(bulletin.getOwnerRegion().toString())) {
+      if (
+        !bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId()) &&
+        !this.authenticationService.isExternalRegion(bulletin.getOwnerRegion().toString())
+      ) {
         result.push(bulletin);
       }
     }
     return result;
   }
 
-  getExternalBulletins() {
-    return this.externBulletinsList;
+  getExternalRegionsMap() {
+    return this.externRegionsMap;
   }
 
   loadBulletinsFromYesterday() {
@@ -650,24 +733,22 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   // create a copy of every bulletin (with new id)
   private copyBulletins(response) {
-    this.mapService.resetAggregatedRegions();
+    this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
       const originalBulletin = BulletinModel.createFromJson(jsonBulletin);
 
-      if (this.bulletinsService.getIsUpdate()) {
-        this.originalBulletins.set(originalBulletin.getId(), originalBulletin);
-      }
+      this.originalBulletins.set(originalBulletin.getId(), originalBulletin);
 
       const bulletin = new BulletinModel(originalBulletin);
 
       bulletin.setAuthor(this.authenticationService.getAuthor());
-      bulletin.setAdditionalAuthors(new Array<String>());
+      bulletin.setAdditionalAuthors(new Array<string>());
       bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
       bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
 
       // reset regions
-      const saved = new Array<String>();
+      const saved = new Array<string>();
       for (const region of bulletin.getSavedRegions()) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           saved.push(region);
@@ -682,8 +763,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       if (saved.length > 0) {
         bulletin.setSavedRegions(saved);
 
-        bulletin.setSuggestedRegions(new Array<String>());
-        bulletin.setPublishedRegions(new Array<String>());
+        bulletin.setSuggestedRegions(new Array<string>());
+        bulletin.setPublishedRegions(new Array<string>());
 
         this.addInternalBulletin(bulletin);
       }
@@ -692,10 +773,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.updateInternalBulletins();
 
     this.mapService.deselectAggregatedRegion();
+
+    this.save();
   }
 
   private addForeignBulletins(response) {
-    this.mapService.resetAggregatedRegions();
+    this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
@@ -707,20 +790,89 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.updateInternalBulletins();
 
-    this.loading = false;
     this.mapService.deselectAggregatedRegion();
   }
 
-  private addExternalBulletins(response) {
+  private addExternalBulletins(server: ServerModel, response) {
+    let bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
-      this.addExternalBulletin(bulletin);
+      bulletinsList.push(bulletin);
+      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
+        this.activeBulletin = bulletin;
+      }
+      this.mapService.updateAggregatedRegion(bulletin);
     }
 
-    this.updateExternalBulletins();
+    bulletinsList.sort((a, b): number => {
+      if (a.getOwnerRegion() < b.getOwnerRegion()) {
+        return 1;
+      }
+      if (a.getOwnerRegion() > b.getOwnerRegion()) {
+        return -1;
+      }
+      return 0;
+    });
 
-    this.loading = false;
-    this.mapService.deselectAggregatedRegion();
+    this.externRegionsMap.set(server, bulletinsList);
+    if (!this.showExternRegionsMap.has(server.getApiUrl())) {
+      this.showExternRegionsMap.set(server.getApiUrl(), false);
+    }
+
+    if (this.activeBulletin && this.activeBulletin !== undefined) {
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
+    }
+  }
+
+  private addInternalBulletins(response) {
+    let hasDaytimeDependency = false;
+
+    const bulletinsList = new Array<BulletinModel>();
+    for (const jsonBulletin of response) {
+      const bulletin = BulletinModel.createFromJson(jsonBulletin);
+
+      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
+        // do not update active bulletin (this is currently edited) except it is disabled
+        if (this.isDisabled()) {
+          this.activeBulletin = bulletin;
+        }
+        bulletinsList.push(this.activeBulletin);
+        if (this.activeBulletin.hasDaytimeDependency) {
+          hasDaytimeDependency = true;
+        }
+      } else {
+        bulletinsList.push(bulletin);
+        if (bulletin.hasDaytimeDependency) {
+          hasDaytimeDependency = true;
+        }
+      }
+    }
+
+    this.mapService.resetInternalAggregatedRegions();
+    this.mapService.resetActiveSelection();
+
+    bulletinsList.sort((a, b): number => {
+      if (a.getOwnerRegion() < b.getOwnerRegion()) {
+        return 1;
+      }
+      if (a.getOwnerRegion() > b.getOwnerRegion()) {
+        return -1;
+      }
+      return 0;
+    });
+
+    if (hasDaytimeDependency && this.showAfternoonMap === false) {
+      this.onShowAfternoonMapChange(true);
+    } else if (!hasDaytimeDependency && this.showAfternoonMap === true) {
+      this.onShowAfternoonMapChange(false);
+    }
+
+    this.internBulletinsList = bulletinsList;
+    this.updateInternalBulletins();
+
+    if (this.activeBulletin && this.activeBulletin !== undefined) {
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
+    }
   }
 
   private updateInternalBulletins() {
@@ -730,429 +882,255 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private updateExternalBulletins() {
-    for (const bulletin of this.externBulletinsList) {
-      this.mapService.addAggregatedRegion(bulletin);
-    }
+    this.externRegionsMap.forEach((value: BulletinModel[], key: ServerModel) => {
+      for (const bulletin of value) {
+        this.mapService.updateAggregatedRegion(bulletin);
+      }
+    });
   }
 
   private addInternalBulletin(bulletin: BulletinModel) {
     this.internBulletinsList.push(bulletin);
+    if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) this.activeBulletin = bulletin;
+
     this.internBulletinsList.sort((a, b): number => {
-      if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
-      if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
+      if (a.getOwnerRegion() < b.getOwnerRegion()) {
+        return 1;
+      }
+      if (a.getOwnerRegion() > b.getOwnerRegion()) {
+        return -1;
+      }
       return 0;
     });
 
     if (bulletin.hasDaytimeDependency && this.showAfternoonMap === false) {
-      this.showAfternoonMap = true;
       this.onShowAfternoonMapChange(true);
     }
   }
 
-  private addExternalBulletin(bulletin: BulletinModel) {
-    this.externBulletinsList.push(bulletin);
-    this.externBulletinsList.sort((a, b): number => {
-      if (a.getOwnerRegion() < b.getOwnerRegion()) { return 1; }
-      if (a.getOwnerRegion() > b.getOwnerRegion()) { return -1; }
-      return 0;
-    });
-  }
-
-  acceptSuggestions(event, bulletin: BulletinModel) {
-    event.stopPropagation();
-    const suggested = new Array<String>();
-    for (const region of bulletin.getSuggestedRegions()) {
-      if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-
-        // delete region from other bulletinInputModels
-        for (const b of this.internBulletinsList) {
-          const savedRegions = new Array<String>();
-          for (const entry of b.getSavedRegions()) {
-            if (entry !== region) {
-              savedRegions.push(entry);
-            }
-          }
-          b.setSavedRegions(savedRegions);
-        }
-
-        bulletin.getSavedRegions().push(region);
-      } else {
-        suggested.push(region);
-      }
-    }
-    bulletin.setSuggestedRegions(suggested);
-
-    bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-
-    this.updateAggregatedRegions();
-  }
-
-  rejectSuggestions(event, bulletin: BulletinModel) {
-    event.stopPropagation();
-    const suggested = new Array<String>();
-    for (const region of bulletin.getSuggestedRegions()) {
-      if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
-        suggested.push(region);
-      }
-    }
-    bulletin.setSuggestedRegions(suggested);
-
-    this.updateAggregatedRegions();
-  }
-
-  private createInitialAggregatedRegion() {
-    const bulletin = new BulletinModel();
-    bulletin.setAuthor(this.authenticationService.getAuthor());
-    bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-    bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-    const regions = Object.assign([], this.regionsService.initialAggregatedRegion[this.authenticationService.getActiveRegionId()]);
-    bulletin.setSavedRegions(regions);
-
-    this.addInternalBulletin(bulletin);
-  }
-
   createBulletin(copy) {
-
-    // TODO websocket: unlock bulletin
-    // TODO websocket: lock bulletin
-
     let bulletin: BulletinModel;
     if (copy && this.copyService.getBulletin()) {
+      this.showNewBulletinModal = true;
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
+      this.showNewBulletinModal = true;
       bulletin = new BulletinModel();
       bulletin.setAuthor(this.authenticationService.getAuthor());
       bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
       bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
     }
 
-    this.addInternalBulletin(bulletin);
     this.selectBulletin(bulletin);
     this.mapService.selectAggregatedRegion(bulletin);
-    this.editBulletinRegions();
+    this.editBulletinMicroRegions(bulletin);
   }
 
-  copyBulletin() {
-    this.setTexts();
+  copyBulletin(bulletin: BulletinModel) {
     if (this.checkAvalancheProblems()) {
-      if (this.activeBulletin) {
-        const bulletin = new BulletinModel(this.activeBulletin);
-        bulletin.setAdditionalAuthors(new Array<String>());
-        bulletin.setSavedRegions(new Array<String>());
-        bulletin.setPublishedRegions(new Array<String>());
-        bulletin.setSuggestedRegions(new Array<String>());
+      const newBulletin = new BulletinModel(bulletin);
+      newBulletin.setAdditionalAuthors(new Array<string>());
+      newBulletin.setSavedRegions(new Array<string>());
+      newBulletin.setPublishedRegions(new Array<string>());
+      newBulletin.setSuggestedRegions(new Array<string>());
 
-        bulletin.setAuthor(this.authenticationService.getAuthor());
-        bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
-        bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-        this.copyService.setCopyBulletin(true);
-        this.copyService.setBulletin(bulletin);
-      }
+      newBulletin.setAuthor(this.authenticationService.getAuthor());
+      newBulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+      newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+      this.copyService.setCopyBulletin(true);
+      this.copyService.setBulletin(newBulletin);
+    }
+  }
+
+  toggleBulletin(bulletin: BulletinModel) {
+    if (this.activeBulletin && bulletin === this.activeBulletin) {
+      this.deselectBulletin();
+    } else {
+      this.selectBulletin(bulletin);
     }
   }
 
   selectBulletin(bulletin: BulletinModel) {
     if (!this.editRegions) {
-      if (this.checkAvalancheProblems()) {
-        this.deselectBulletin();
-
-        this.activeBulletin = bulletin;
-
-        this.activeHighlightsTextcat = this.activeBulletin.getHighlightsTextcat();
-        this.activeHighlightsDe = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de);
-        this.activeHighlightsIt = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.it);
-        this.activeHighlightsEn = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.en);
-        this.activeHighlightsFr = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.fr);
-        this.activeHighlightsEs = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.es);
-        this.activeHighlightsCa = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.ca);
-        this.activeHighlightsOc = this.activeBulletin.getHighlightsIn(Enums.LanguageCode.oc);
-
-        this.activeAvActivityHighlightsTextcat = this.activeBulletin.getAvActivityHighlightsTextcat();
-        this.activeAvActivityHighlightsDe = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.de);
-        this.activeAvActivityHighlightsIt = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.it);
-        this.activeAvActivityHighlightsEn = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.en);
-        this.activeAvActivityHighlightsFr = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.fr);
-        this.activeAvActivityHighlightsEs = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.es);
-        this.activeAvActivityHighlightsCa = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.ca);
-        this.activeAvActivityHighlightsOc = this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.oc);
-        this.activeAvActivityHighlightsNotes = this.activeBulletin.getAvActivityHighlightsNotes();
-
-        this.activeAvActivityCommentTextcat = this.activeBulletin.getAvActivityCommentTextcat();
-        this.activeAvActivityCommentDe = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.de);
-        this.activeAvActivityCommentIt = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.it);
-        this.activeAvActivityCommentEn = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.en);
-        this.activeAvActivityCommentFr = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.fr);
-        this.activeAvActivityCommentEs = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.es);
-        this.activeAvActivityCommentCa = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.ca);
-        this.activeAvActivityCommentOc = this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.oc);
-        this.activeAvActivityCommentNotes = this.activeBulletin.getAvActivityCommentNotes();
-
-        this.activeSnowpackStructureHighlightsTextcat = this.activeBulletin.getSnowpackStructureHighlightsTextcat();
-        this.activeSnowpackStructureHighlightsDe = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.de);
-        this.activeSnowpackStructureHighlightsIt = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.it);
-        this.activeSnowpackStructureHighlightsEn = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.en);
-        this.activeSnowpackStructureHighlightsFr = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.fr);
-        this.activeSnowpackStructureHighlightsEs = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.es);
-        this.activeSnowpackStructureHighlightsCa = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.ca);
-        this.activeSnowpackStructureHighlightsOc = this.activeBulletin.getSnowpackStructureHighlightIn(Enums.LanguageCode.oc);
-        this.activeSnowpackStructureHighlightsNotes = this.activeBulletin.getSnowpackStructureHighlightsNotes();
-
-        this.activeSnowpackStructureCommentTextcat = this.activeBulletin.getSnowpackStructureCommentTextcat();
-        this.activeSnowpackStructureCommentDe = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.de);
-        this.activeSnowpackStructureCommentIt = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.it);
-        this.activeSnowpackStructureCommentEn = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.en);
-        this.activeSnowpackStructureCommentFr = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.fr);
-        this.activeSnowpackStructureCommentEs = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.es);
-        this.activeSnowpackStructureCommentCa = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.ca);
-        this.activeSnowpackStructureCommentOc = this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.oc);
-        this.activeSnowpackStructureCommentNotes = this.activeBulletin.getSnowpackStructureCommentNotes();
-
-        this.activeTendencyCommentTextcat = this.activeBulletin.getTendencyCommentTextcat();
-        this.activeTendencyCommentDe = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.de);
-        this.activeTendencyCommentIt = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.it);
-        this.activeTendencyCommentEn = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.en);
-        this.activeTendencyCommentFr = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.fr);
-        this.activeTendencyCommentEs = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.es);
-        this.activeTendencyCommentCa = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.ca);
-        this.activeTendencyCommentOc = this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.oc);
-        this.activeTendencyCommentNotes = this.activeBulletin.getTendencyCommentNotes();
-
-        this.mapService.selectAggregatedRegion(this.activeBulletin);
-      }
+      this.deselectBulletin();
+      this.activeBulletin = bulletin;
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
+  }
+
+  eventDeselectBulletin(bulletin: BulletinModel) {
+    this.deselectBulletin(false);
   }
 
   deselectBulletin(del?: boolean) {
-    if (del || this.checkAvalancheProblems()) {
-      if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
-
-        this.setTexts();
-
-        if (this.activeAvActivityHighlightsTextcat) {
-          this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
-        }
-
-        if (this.activeAvActivityCommentTextcat) {
-          this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
-        }
-
-        if (this.activeSnowpackStructureCommentTextcat) {
-          this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
-        }
-
-        if (this.activeTendencyCommentTextcat) {
-          this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
-        }
-
-        this.mapService.deselectAggregatedRegion();
-        this.activeBulletin = undefined;
-
-        this.applicationRef.tick();
-      }
+    if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
+      this.mapService.deselectAggregatedRegion();
+      this.activeBulletin = undefined;
+      this.comparedBulletin = undefined;
     }
   }
 
-  daytimeDependencyChanged(event, value) {
-    event.stopPropagation();
-    this.activeBulletin.setHasDaytimeDependency(value);
+  eventDeselectComparedBulletin(bulletin: BulletinModel) {
+    this.comparedBulletin = undefined;
+  }
 
-    if (this.activeBulletin.hasDaytimeDependency) {
-      if (this.showAfternoonMap === false) {
-        this.showAfternoonMap = true;
-        this.onShowAfternoonMapChange(true);
-      }
-      this.activeBulletin.afternoon.setDangerRatingAbove(this.activeBulletin.forenoon.getDangerRatingAbove());
-      if (this.activeBulletin.forenoon.getAvalancheProblem1() && this.activeBulletin.forenoon.getAvalancheProblem1() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem1()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem2() && this.activeBulletin.forenoon.getAvalancheProblem2() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem2()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem3() && this.activeBulletin.forenoon.getAvalancheProblem3() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem3()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem4() && this.activeBulletin.forenoon.getAvalancheProblem4() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem4()));
-      }
-      if (this.activeBulletin.forenoon.getAvalancheProblem5() && this.activeBulletin.forenoon.getAvalancheProblem5() !== undefined) {
-        this.activeBulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(this.activeBulletin.forenoon.getAvalancheProblem5()));
-      }
-      if (this.activeBulletin.forenoon.hasElevationDependency) {
-        this.activeBulletin.afternoon.setHasElevationDependency(true);
-        this.activeBulletin.afternoon.setDangerRatingBelow(this.activeBulletin.forenoon.getDangerRatingBelow());
-      }
-    } else {
-      this.activeBulletin.afternoon.setDangerRatingAbove(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
-      this.activeBulletin.afternoon.setAvalancheProblem1(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem2(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem3(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem4(undefined);
-      this.activeBulletin.afternoon.setAvalancheProblem5(undefined);
-      this.activeBulletin.afternoon.setHasElevationDependency(false);
-      this.activeBulletin.afternoon.setDangerRatingBelow(new BehaviorSubject<Enums.DangerRating>(Enums.DangerRating.missing));
-      let daytimeDependency = false;
-      for (const bulletin of this.internBulletinsList.concat(this.externBulletinsList)) {
-        if (bulletin.hasDaytimeDependency) {
-          daytimeDependency = true;
-          break;
-        }
-      }
-      if (!daytimeDependency && this.showAfternoonMap) {
-        this.showAfternoonMap = false;
-        this.onShowAfternoonMapChange(false);
-      }
-    }
-    this.activeBulletin.getForenoon().updateDangerRating();
-    this.activeBulletin.getAfternoon().updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.activeBulletin);
-    this.mapService.selectAggregatedRegion(this.activeBulletin);
+  preview() {
+    this.loadingPreview = true;
+    this.bulletinsService.getPreviewPdf(this.bulletinsService.getActiveDate()).subscribe((blob) => {
+      this.loadingPreview = false;
+      const format = "yyyy-MM-dd";
+      const locale = "en-US";
+      const formattedDate = formatDate(this.bulletinsService.getActiveDate(), format, locale);
+      saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");
+      console.log("Preview loaded.");
+    });
   }
 
   private checkAvalancheProblems(): boolean {
     let error = false;
 
-    if (this.activeBulletin) {
-      if (this.activeBulletin.forenoon) {
-        if (this.activeBulletin.forenoon.avalancheProblem1) {
+    for (const bulletin of this.internBulletinsList) {
+      if (bulletin.forenoon) {
+        if (bulletin.forenoon.avalancheProblem1) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem1.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem2) {
+        if (bulletin.forenoon.avalancheProblem2) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem2.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem3) {
+        if (bulletin.forenoon.avalancheProblem3) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem3.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem4) {
+        if (bulletin.forenoon.avalancheProblem4) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem4.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.forenoon.avalancheProblem5) {
+        if (bulletin.forenoon.avalancheProblem5) {
           if (
-            this.activeBulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() ||
-            this.activeBulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
+            !bulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
+            !bulletin.forenoon.avalancheProblem5.getDangerRating() ||
+            bulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
+            !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
       }
-      if (this.activeBulletin.afternoon) {
-        if (this.activeBulletin.afternoon.avalancheProblem1) {
+      if (bulletin.afternoon) {
+        if (bulletin.afternoon.avalancheProblem1) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem1.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem2) {
+        if (bulletin.afternoon.avalancheProblem2) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem2.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem3) {
+        if (bulletin.afternoon.avalancheProblem3) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem3.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem4) {
+        if (bulletin.afternoon.avalancheProblem4) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem4.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
-        if (this.activeBulletin.afternoon.avalancheProblem5) {
+        if (bulletin.afternoon.avalancheProblem5) {
           if (
-            this.activeBulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() ||
-            this.activeBulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
-            !this.activeBulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize())
-          {
+            bulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
+            !bulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
+            !bulletin.afternoon.avalancheProblem5.getDangerRating() ||
+            bulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
+            !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize()
+          ) {
             error = true;
           }
         }
@@ -1166,174 +1144,44 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setTexts() {
-    if (this.activeBulletin) {
-      this.activeBulletin.setHighlightsTextcat(this.activeHighlightsTextcat);
-      this.activeBulletin.setHighlightsIn(this.activeHighlightsDe, Enums.LanguageCode.de);
-      this.activeBulletin.setHighlightsIn(this.activeHighlightsIt, Enums.LanguageCode.it);
-      this.activeBulletin.setHighlightsIn(this.activeHighlightsEn, Enums.LanguageCode.en);
-      this.activeBulletin.setHighlightsIn(this.activeHighlightsFr, Enums.LanguageCode.fr);
-      this.activeBulletin.setHighlightsIn(this.activeHighlightsEs, Enums.LanguageCode.es);
-      this.activeBulletin.setHighlightsIn(this.activeHighlightsCa, Enums.LanguageCode.ca);
-      this.activeBulletin.setHighlightsIn(this.activeHighlightsOc, Enums.LanguageCode.oc);
-
-      this.activeBulletin.setAvActivityHighlightsTextcat(this.activeAvActivityHighlightsTextcat);
-      this.activeBulletin.setAvActivityHighlightsIn(this.activeAvActivityHighlightsDe, Enums.LanguageCode.de);
-      this.activeBulletin.setAvActivityHighlightsIn(this.activeAvActivityHighlightsIt, Enums.LanguageCode.it);
-      this.activeBulletin.setAvActivityHighlightsIn(this.activeAvActivityHighlightsEn, Enums.LanguageCode.en);
-      this.activeBulletin.setAvActivityHighlightsIn(this.activeAvActivityHighlightsFr, Enums.LanguageCode.fr);
-      this.activeBulletin.setAvActivityHighlightsIn(this.activeAvActivityHighlightsEs, Enums.LanguageCode.es);
-      this.activeBulletin.setAvActivityHighlightsIn(this.activeAvActivityHighlightsCa, Enums.LanguageCode.ca);
-      this.activeBulletin.setAvActivityHighlightsIn(this.activeAvActivityHighlightsOc, Enums.LanguageCode.oc);
-      this.activeBulletin.setAvActivityHighlightsNotes(this.activeAvActivityHighlightsNotes);
-
-      this.activeBulletin.setAvActivityCommentTextcat(this.activeAvActivityCommentTextcat);
-      this.activeBulletin.setAvActivityCommentIn(this.activeAvActivityCommentDe, Enums.LanguageCode.de);
-      this.activeBulletin.setAvActivityCommentIn(this.activeAvActivityCommentIt, Enums.LanguageCode.it);
-      this.activeBulletin.setAvActivityCommentIn(this.activeAvActivityCommentEn, Enums.LanguageCode.en);
-      this.activeBulletin.setAvActivityCommentIn(this.activeAvActivityCommentFr, Enums.LanguageCode.fr);
-      this.activeBulletin.setAvActivityCommentIn(this.activeAvActivityCommentEs, Enums.LanguageCode.es);
-      this.activeBulletin.setAvActivityCommentIn(this.activeAvActivityCommentCa, Enums.LanguageCode.ca);
-      this.activeBulletin.setAvActivityCommentIn(this.activeAvActivityCommentOc, Enums.LanguageCode.oc);
-      this.activeBulletin.setAvActivityCommentNotes(this.activeAvActivityCommentNotes);
-
-      this.activeBulletin.setSnowpackStructureHighlightsTextcat(this.activeSnowpackStructureHighlightsTextcat);
-      this.activeBulletin.setSnowpackStructureHighlightsIn(this.activeSnowpackStructureHighlightsDe, Enums.LanguageCode.de);
-      this.activeBulletin.setSnowpackStructureHighlightsIn(this.activeSnowpackStructureHighlightsIt, Enums.LanguageCode.it);
-      this.activeBulletin.setSnowpackStructureHighlightsIn(this.activeSnowpackStructureHighlightsEn, Enums.LanguageCode.en);
-      this.activeBulletin.setSnowpackStructureHighlightsIn(this.activeSnowpackStructureHighlightsFr, Enums.LanguageCode.fr);
-      this.activeBulletin.setSnowpackStructureHighlightsIn(this.activeSnowpackStructureHighlightsEs, Enums.LanguageCode.es);
-      this.activeBulletin.setSnowpackStructureHighlightsIn(this.activeSnowpackStructureHighlightsCa, Enums.LanguageCode.ca);
-      this.activeBulletin.setSnowpackStructureHighlightsIn(this.activeSnowpackStructureHighlightsOc, Enums.LanguageCode.oc);
-      this.activeBulletin.setSnowpackStructureHighlightsNotes(this.activeSnowpackStructureHighlightsNotes);
-
-      this.activeBulletin.setSnowpackStructureCommentTextcat(this.activeSnowpackStructureCommentTextcat);
-      this.activeBulletin.setSnowpackStructureCommentIn(this.activeSnowpackStructureCommentDe, Enums.LanguageCode.de);
-      this.activeBulletin.setSnowpackStructureCommentIn(this.activeSnowpackStructureCommentIt, Enums.LanguageCode.it);
-      this.activeBulletin.setSnowpackStructureCommentIn(this.activeSnowpackStructureCommentEn, Enums.LanguageCode.en);
-      this.activeBulletin.setSnowpackStructureCommentIn(this.activeSnowpackStructureCommentFr, Enums.LanguageCode.fr);
-      this.activeBulletin.setSnowpackStructureCommentIn(this.activeSnowpackStructureCommentEs, Enums.LanguageCode.es);
-      this.activeBulletin.setSnowpackStructureCommentIn(this.activeSnowpackStructureCommentCa, Enums.LanguageCode.ca);
-      this.activeBulletin.setSnowpackStructureCommentIn(this.activeSnowpackStructureCommentOc, Enums.LanguageCode.oc);
-      this.activeBulletin.setSnowpackStructureCommentNotes(this.activeSnowpackStructureCommentNotes);
-
-      this.activeBulletin.setTendencyCommentTextcat(this.activeTendencyCommentTextcat);
-      this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentDe, Enums.LanguageCode.de);
-      this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentIt, Enums.LanguageCode.it);
-      this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentEn, Enums.LanguageCode.en);
-      this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentFr, Enums.LanguageCode.fr);
-      this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentEs, Enums.LanguageCode.es);
-      this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentCa, Enums.LanguageCode.ca);
-      this.activeBulletin.setTendencyCommentIn(this.activeTendencyCommentOc, Enums.LanguageCode.oc);
-      this.activeBulletin.setTendencyCommentNotes(this.activeTendencyCommentNotes);
-    }
+  deleteBulletin(event: Event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    this.eventDeleteBulletin(bulletin);
   }
 
-  deleteBulletin(event) {
-    event.stopPropagation();
+  eventDeleteBulletin(bulletin: BulletinModel) {
+    this.bulletinMarkedDelete = bulletin;
     this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate);
   }
 
-  // region
+  compareBulletin(event: Event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    this.comparedBulletin = bulletin;
+  }
+
   private delBulletin(bulletin: BulletinModel) {
-
-    // check if there are other published or saved regions
-    let hit = false;
-    let newOwnerRegion = "";
-    for (const region of bulletin.getPublishedRegions()) {
-      if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
-        hit = true;
-        if (region.startsWith(this.constantsService.codeTyrol)) {
-          newOwnerRegion = this.constantsService.codeTyrol;
-        } else if (region.startsWith(this.constantsService.codeSouthTyrol)) {
-          newOwnerRegion = this.constantsService.codeSouthTyrol;
-        } else if (region.startsWith(this.constantsService.codeTrentino)) {
-          newOwnerRegion = this.constantsService.codeTrentino;
-        }
-        break;
-      }
-    }
-    if (!hit) {
-      for (const region of bulletin.getSavedRegions()) {
-        if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
-          hit = true;
-          if (region.startsWith(this.constantsService.codeTyrol)) {
-            newOwnerRegion = this.constantsService.codeTyrol;
-          } else if (region.startsWith(this.constantsService.codeSouthTyrol)) {
-            newOwnerRegion = this.constantsService.codeSouthTyrol;
-          } else if (region.startsWith(this.constantsService.codeTrentino)) {
-            newOwnerRegion = this.constantsService.codeTrentino;
-          }
-          break;
-        }
-      }
-    }
-
-    if (hit) {
-      // delete own saved regions
-      const oldSavedRegions = new Array<String>();
-      for (const region of bulletin.getSavedRegions()) {
-        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          oldSavedRegions.push(region);
-        }
-      }
-      for (const region of oldSavedRegions) {
-        const index = bulletin.getSavedRegions().indexOf(region);
-        bulletin.getSavedRegions().splice(index, 1);
-      }
-
-      // delete own published regions
-      const oldPublishedRegions = new Array<String>();
-      for (const region of bulletin.getPublishedRegions()) {
-        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          oldPublishedRegions.push(region);
-        }
-      }
-      for (const region of oldPublishedRegions) {
-        const index = bulletin.getPublishedRegions().indexOf(region);
-        bulletin.getPublishedRegions().splice(index, 1);
-      }
-
-      // change ownership
-      bulletin.setOwnerRegion(newOwnerRegion);
-
-    } else {
-      const index = this.internBulletinsList.indexOf(bulletin);
-      if (index > -1) {
-        this.internBulletinsList.splice(index, 1);
-      }
-    }
-
-    this.mapService.resetAggregatedRegions();
-    this.updateInternalBulletins();
-    this.updateExternalBulletins();
     this.deselectBulletin(true);
+    this.deleteBulletinOnServer(bulletin);
   }
 
-  editBulletin(event) {
-    event.stopPropagation();
-    this.editBulletinRegions();
+  eventEditMicroRegions(bulletin: BulletinModel) {
+    this.showNewBulletinModal = true;
+    this.editBulletinMicroRegions(bulletin);
   }
 
-  private editBulletinRegions() {
-
-    // TODO websocket: lock whole day in region, check if any aggregated region is locked
-
+  private editBulletinMicroRegions(bulletin: BulletinModel) {
     this.editRegions = true;
-    this.mapService.editAggregatedRegion(this.activeBulletin);
+    this.mapService.editAggregatedRegion(bulletin);
   }
 
-  saveBulletin(event) {
+  saveBulletin(event: Event) {
     event.stopPropagation();
+
+    let isUpdate: boolean;
+    isUpdate = this.activeBulletin.getSavedRegions().length !== 0;
 
     // save selected regions to active bulletin
     const regions = this.mapService.getSelectedRegions();
-
-    for (const region of this.activeBulletin.getSavedRegions()) {
-      if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-        break;
-      }
-    }
 
     let newRegionsHit = false;
     for (const region of regions) {
@@ -1343,11 +1191,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (newRegionsHit || !this.activeBulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+    if (newRegionsHit || !this.isCreator(this.activeBulletin)) {
+      this.showNewBulletinModal = false;
       this.editRegions = false;
 
       // delete old saved regions in own area
-      const oldSavedRegions = new Array<String>();
+      const oldSavedRegions = new Array<string>();
       for (const region of this.activeBulletin.getSavedRegions()) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           oldSavedRegions.push(region);
@@ -1359,7 +1208,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       // delete old published regions in own area
-      const oldPublishedRegions = new Array<String>();
+      const oldPublishedRegions = new Array<string>();
       for (const region of this.activeBulletin.getPublishedRegions()) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           oldPublishedRegions.push(region);
@@ -1371,7 +1220,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       // delete old suggested regions outside own area
-      const oldSuggestedRegions = new Array<String>();
+      const oldSuggestedRegions = new Array<string>();
       for (const region of this.activeBulletin.getSuggestedRegions()) {
         if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
           oldSuggestedRegions.push(region);
@@ -1388,157 +1237,215 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.activeBulletin.getSavedRegions().push(region);
           }
         } else {
-          if ((this.activeBulletin.getSavedRegions().indexOf(region) === -1) && (this.activeBulletin.getSuggestedRegions().indexOf(region) === -1) && (this.activeBulletin.getPublishedRegions().indexOf(region) === -1)) {
+          if (
+            !region.startsWith(this.activeBulletin.getOwnerRegion()) &&
+            this.activeBulletin.getSavedRegions().indexOf(region) === -1 &&
+            this.activeBulletin.getSuggestedRegions().indexOf(region) === -1 &&
+            this.activeBulletin.getPublishedRegions().indexOf(region) === -1
+          ) {
             this.activeBulletin.getSuggestedRegions().push(region);
           }
         }
       }
 
-      this.updateAggregatedRegions();
+      this.mapService.discardEditSelection();
+      this.mapService.selectAggregatedRegion(this.activeBulletin);
 
-      // TODO websocket: unlock whole day
-
+      if (isUpdate) {
+        this.updateBulletinOnServer(this.activeBulletin);
+      } else {
+        this.createBulletinOnServer(this.activeBulletin);
+      }
     } else {
       this.openNoRegionModal(this.noRegionTemplate);
     }
   }
 
-  private updateAggregatedRegions() {
+  private isWriteDisabled(): boolean {
+    const userRegionStatus = this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate());
+    return (
+      userRegionStatus === Enums.BulletinStatus.published ||
+      userRegionStatus === Enums.BulletinStatus.republished ||
+      userRegionStatus === Enums.BulletinStatus.submitted ||
+      userRegionStatus === Enums.BulletinStatus.resubmitted
+    );
+  }
 
-    this.mapService.resetAggregatedRegions();
+  private createBulletinOnServer(bulletin: BulletinModel) {
+    if (this.isWriteDisabled()) return;
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
+    bulletin.setValidFrom(validFrom);
+    bulletin.setValidUntil(validUntil);
+    this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        this.mapService.deselectAggregatedRegion();
+        this.activeBulletin = undefined;
+        this.addInternalBulletins(data);
+        this.loadInternalBulletinsError = false;
+        this.loading = false;
+        console.log("Bulletin created on server.");
+      },
+      (error) => {
+        console.error("Bulletin could not be created on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      },
+    );
+  }
 
-    for (const bulletin of this.internBulletinsList) {
-      if (bulletin !== this.activeBulletin) {
-        // regions saved by me (only in own area possible)
-        for (const region of this.activeBulletin.getSavedRegions()) {
-          // region was saved in other aggregated region => delete
-          let index = bulletin.getSavedRegions().indexOf(region);
-          if (index !== -1) {
-            bulletin.getSavedRegions().splice(index, 1);
-          }
+  updateBulletinOnServer(bulletin: BulletinModel) {
+    if (this.isWriteDisabled()) return;
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
+    bulletin.setValidFrom(validFrom);
+    bulletin.setValidUntil(validUntil);
+    this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        this.addInternalBulletins(data);
+        this.saveError = false;
+        this.loadInternalBulletinsError = false;
+        this.loading = false;
+        console.log("Bulletin updated on server.");
+      },
+      (error) => {
+        console.error("Bulletin could not be updated on server!");
+        this.saveError = true;
+      },
+    );
+  }
 
-          // region was published in other aggregated region => delete
-          index = bulletin.getPublishedRegions().indexOf(region);
-          if (region.startsWith(this.authenticationService.getActiveRegionId()) && index !== -1) {
-            bulletin.getPublishedRegions().splice(index, 1);
-          }
-
-          // region was suggested by other user (multiple suggestions possible for same region) => delete all)
-          index = bulletin.getSuggestedRegions().indexOf(region);
-          if (index !== -1) {
-            bulletin.getSuggestedRegions().splice(index, 1);
-          }
-        }
-
-        // regions suggested by me (only in foreign area possible)
-        // region was published => delete suggestion
-        for (const region of bulletin.getPublishedRegions()) {
-          const index = this.activeBulletin.getSuggestedRegions().indexOf(region);
-          if (index !== -1) {
-            this.activeBulletin.getSuggestedRegions().splice(index, 1);
-          }
-        }
-      }
-      this.mapService.addAggregatedRegion(bulletin);
-    }
-
-    for (const bulletin of this.externBulletinsList) {
-      this.mapService.addAggregatedRegion(bulletin);
-    }
-
-    this.mapService.discardAggregatedRegion();
-    this.mapService.selectAggregatedRegion(this.activeBulletin);
+  private deleteBulletinOnServer(bulletin: BulletinModel) {
+    if (this.isWriteDisabled()) return;
+    this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        this.addInternalBulletins(data);
+        this.loadInternalBulletinsError = false;
+        this.loading = false;
+        console.log("Bulletin deleted on server.");
+      },
+      (error) => {
+        console.error("Bulletin could not be deleted on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      },
+    );
   }
 
   hasSuggestions(bulletin: BulletinModel): boolean {
-    for (const region of bulletin.getSuggestedRegions()) {
-      if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-        return true;
-      }
-    }
-    return false;
+    return bulletin
+      .getSuggestedRegions()
+      .some((region) => region.startsWith(this.authenticationService.getActiveRegionId()));
   }
 
   isCreator(bulletin: BulletinModel): boolean {
-    if (bulletin.getOwnerRegion() !== undefined && bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
-      return true;
-    }
-    return false;
+    return (
+      bulletin.getOwnerRegion() !== undefined &&
+      bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())
+    );
   }
 
-  discardBulletin(event, bulletin?: BulletinModel) {
+  getForeignRegionNames() {
+    if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTyrol)) {
+      return (
+        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol) +
+        ", " +
+        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino)
+      );
+    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeSouthTyrol)) {
+      return (
+        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) +
+        ", " +
+        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino)
+      );
+    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTrentino)) {
+      return (
+        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) +
+        ", " +
+        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol)
+      );
+    } else {
+      return this.translateService.instant("bulletins.create.foreignRegions");
+    }
+  }
+
+  showPreviewButton() {
+    return (
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      (this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
+          this.bulletinStatus.updated ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
+          this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
+          this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
+          this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate()) ===
+          this.bulletinStatus.republished) &&
+      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
+    );
+  }
+
+  discardBulletin(event: Event, bulletin?: BulletinModel) {
     event.stopPropagation();
+    this.showNewBulletinModal = false;
     this.editRegions = false;
 
     if (bulletin !== undefined && bulletin.getSavedRegions().length === 0) {
       this.delBulletin(bulletin);
     }
 
-    this.mapService.discardAggregatedRegion();
+    this.mapService.discardEditSelection();
 
     if (this.activeBulletin && this.activeBulletin !== undefined) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
-
-    // TODO websocket: unlock whole day
   }
 
   save() {
-    if (this.checkAvalancheProblems()) {
-      this.loading = true;
-
-      this.setTexts();
-
-      this.deselectBulletin();
-
-      const validFrom = new Date(this.bulletinsService.getActiveDate());
-      const validUntil = new Date(this.bulletinsService.getActiveDate());
-      validUntil.setTime(validUntil.getTime() + (24 * 60 * 60 * 1000));
-
-      const result = new Array<BulletinModel>();
-
-      for (const bulletin of this.internBulletinsList) {
-        bulletin.setValidFrom(validFrom);
-        bulletin.setValidUntil(validUntil);
-
-        if (bulletin.getSavedRegions().length > 0 || bulletin.getPublishedRegions().length > 0 || bulletin.getSuggestedRegions().length > 0) {
+    if (!this.internBulletinsList.length) {
+      return;
+    }
+    this.autoSaving = true;
+    const validFrom = new Date(this.bulletinsService.getActiveDate());
+    const validUntil = new Date(this.bulletinsService.getActiveDate());
+    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
+    const result = new Array<BulletinModel>();
+    for (const bulletin of this.internBulletinsList) {
+      const regions = bulletin.getPublishedRegions().concat(bulletin.getSavedRegions());
+      for (const region of regions) {
+        if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+          bulletin.setValidFrom(validFrom);
+          bulletin.setValidUntil(validUntil);
           result.push(bulletin);
+          break;
         }
       }
-
-      if (this.bulletinsService.getIsSmallChange()) {
-        this.bulletinsService.changeBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-          () => {
-            this.localStorageService.clear();
-            this.loading = false;
-            this.goBack();
-            console.log("Bulletins changed on server.");
-          },
-          () => {
-            this.loading = false;
-            console.error("Bulletins could not be changed on server!");
-            this.openChangeErrorModal(this.changeErrorTemplate);
-          }
-        );
-      } else {
-        this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
-          () => {
-            this.localStorageService.clear();
-            this.loading = false;
-            this.goBack();
-            console.log("Bulletins saved on server.");
-          },
-          () => {
-            this.loading = false;
-            console.error("Bulletins could not be saved on server!");
-            this.openSaveErrorModal(this.saveErrorTemplate);
-          }
-        );
-      }
     }
+    if (!result.length) {
+      return;
+    }
+    this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
+      () => {
+        console.log("Bulletins saved on server.");
+        this.autoSaving = false;
+      },
+      () => {
+        this.autoSaving = false;
+        console.error("Bulletins could not be saved on server!");
+        this.openSaveErrorModal(this.saveErrorTemplate);
+      },
+    );
   }
 
   goBack() {
+    this.deselectBulletin();
     this.router.navigate(["/bulletins"]);
   }
 
@@ -1552,401 +1459,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  openTextcat($event: Event, field: TextcatTextfield, l, textDef: string) {
-    this.copyService.resetCopyTextcat();
-    $event.preventDefault();
-
-    // make Json to send to pm
-    const pmData = JSON.stringify({
-      textField: field,
-      textDef: textDef || "",
-      currentLang: this.translateService.currentLang,
-      region: this.authenticationService.getTextcatRegionCode()
-    } satisfies TextcatLegacyIn);
-
-    this.showDialog(pmData);
-  }
-
-  copyTextcat(event, field) {
-    this.setTexts();
-    switch (field) {
-      case "highlights":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.activeBulletin.getHighlightsTextcat());
-        this.copyService.setTextDe(this.activeBulletin.getHighlightsIn(Enums.LanguageCode.de));
-        this.copyService.setTextIt(this.activeBulletin.getHighlightsIn(Enums.LanguageCode.it));
-        this.copyService.setTextEn(this.activeBulletin.getHighlightsIn(Enums.LanguageCode.en));
-        this.copyService.setTextFr(this.activeBulletin.getHighlightsIn(Enums.LanguageCode.fr));
-        this.copyService.setTextEs(this.activeBulletin.getHighlightsIn(Enums.LanguageCode.es));
-        this.copyService.setTextCa(this.activeBulletin.getHighlightsIn(Enums.LanguageCode.ca));
-        this.copyService.setTextOc(this.activeBulletin.getHighlightsIn(Enums.LanguageCode.oc));
-        break;
-      case "avActivityHighlights":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.activeBulletin.getAvActivityHighlightsTextcat());
-        this.copyService.setTextDe(this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.de));
-        this.copyService.setTextIt(this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.it));
-        this.copyService.setTextEn(this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.en));
-        this.copyService.setTextFr(this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.fr));
-        this.copyService.setTextEs(this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.es));
-        this.copyService.setTextCa(this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.ca));
-        this.copyService.setTextOc(this.activeBulletin.getAvActivityHighlightsIn(Enums.LanguageCode.oc));
-        break;
-      case "avActivityComment":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.activeBulletin.getAvActivityCommentTextcat());
-        this.copyService.setTextDe(this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.de));
-        this.copyService.setTextIt(this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.it));
-        this.copyService.setTextEn(this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.en));
-        this.copyService.setTextFr(this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.fr));
-        this.copyService.setTextEs(this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.es));
-        this.copyService.setTextCa(this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.ca));
-        this.copyService.setTextOc(this.activeBulletin.getAvActivityCommentIn(Enums.LanguageCode.oc));
-        break;
-      case "snowpackStructureComment":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.activeBulletin.getSnowpackStructureCommentTextcat());
-        this.copyService.setTextDe(this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.de));
-        this.copyService.setTextIt(this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.it));
-        this.copyService.setTextEn(this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.en));
-        this.copyService.setTextFr(this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.fr));
-        this.copyService.setTextEs(this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.es));
-        this.copyService.setTextCa(this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.ca));
-        this.copyService.setTextOc(this.activeBulletin.getSnowpackStructureCommentIn(Enums.LanguageCode.oc));
-        break;
-      case "tendencyComment":
-        this.copyService.setCopyTextcat(true);
-        this.copyService.setTextTextcat(this.activeBulletin.getTendencyCommentTextcat());
-        this.copyService.setTextDe(this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.de));
-        this.copyService.setTextIt(this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.it));
-        this.copyService.setTextEn(this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.en));
-        this.copyService.setTextFr(this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.fr));
-        this.copyService.setTextEs(this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.es));
-        this.copyService.setTextCa(this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.ca));
-        this.copyService.setTextOc(this.activeBulletin.getTendencyCommentIn(Enums.LanguageCode.oc));
-        break;
-      default:
-        break;
-    }
-  }
-
-  concatTextcat(text1, text2) {
-    return text1.slice(0, -1).concat(",", text2.substring(1));
-  }
-
-  pasteTextcat(event, field) {
-    switch (field) {
-      case "highlights":
-        if (this.activeHighlightsTextcat !== undefined) {
-          this.activeHighlightsTextcat = this.concatTextcat(this.activeHighlightsTextcat, this.copyService.getTextTextcat());
-        } else {
-          this.activeHighlightsTextcat = this.copyService.getTextTextcat();
-        }
-        if (this.activeHighlightsDe !== undefined) {
-          this.activeHighlightsDe = this.activeHighlightsDe + " " + this.copyService.getTextDe();
-        } else {
-          this.activeHighlightsDe = this.copyService.getTextDe();
-        }
-        if (this.activeHighlightsIt !== undefined) {
-          this.activeHighlightsIt = this.activeHighlightsIt + " " + this.copyService.getTextIt();
-        } else {
-          this.activeHighlightsIt = this.copyService.getTextIt();
-        }
-        if (this.activeHighlightsEn !== undefined) {
-          this.activeHighlightsEn = this.activeHighlightsEn + " " + this.copyService.getTextEn();
-        } else {
-          this.activeHighlightsEn = this.copyService.getTextEn();
-        }
-        if (this.activeHighlightsFr !== undefined) {
-          this.activeHighlightsFr = this.activeHighlightsFr + " " + this.copyService.getTextFr();
-        } else {
-          this.activeHighlightsFr = this.copyService.getTextFr();
-        }
-        if (this.activeHighlightsEs !== undefined) {
-          this.activeHighlightsEs = this.activeHighlightsEs + " " + this.copyService.getTextEs();
-        } else {
-          this.activeHighlightsEs = this.copyService.getTextEs();
-        }
-        if (this.activeHighlightsCa !== undefined) {
-          this.activeHighlightsCa = this.activeHighlightsCa + " " + this.copyService.getTextCa();
-        } else {
-          this.activeHighlightsCa = this.copyService.getTextCa();
-        }
-        if (this.activeHighlightsOc !== undefined) {
-          this.activeHighlightsOc = this.activeHighlightsOc + " " + this.copyService.getTextOc();
-        } else {
-          this.activeHighlightsOc = this.copyService.getTextOc();
-        }
-        break;
-      case "avActivityHighlights":
-        if (this.activeAvActivityHighlightsTextcat !== undefined) {
-          this.activeAvActivityHighlightsTextcat = this.concatTextcat(this.activeAvActivityHighlightsTextcat, this.copyService.getTextTextcat());
-        } else {
-          this.activeAvActivityHighlightsTextcat = this.copyService.getTextTextcat();
-        }
-        if (this.activeAvActivityHighlightsDe !== undefined) {
-          this.activeAvActivityHighlightsDe = this.activeAvActivityHighlightsDe + " " + this.copyService.getTextDe();
-        } else {
-          this.activeAvActivityHighlightsDe = this.copyService.getTextDe();
-        }
-        if (this.activeAvActivityHighlightsIt !== undefined) {
-          this.activeAvActivityHighlightsIt = this.activeAvActivityHighlightsIt + " " + this.copyService.getTextIt();
-        } else {
-          this.activeAvActivityHighlightsIt = this.copyService.getTextIt();
-        }
-        if (this.activeAvActivityHighlightsEn !== undefined) {
-          this.activeAvActivityHighlightsEn = this.activeAvActivityHighlightsEn + " " + this.copyService.getTextEn();
-        } else {
-          this.activeAvActivityHighlightsEn = this.copyService.getTextEn();
-        }
-        if (this.activeAvActivityHighlightsFr !== undefined) {
-          this.activeAvActivityHighlightsFr = this.activeAvActivityHighlightsFr + " " + this.copyService.getTextFr();
-        } else {
-          this.activeAvActivityHighlightsFr = this.copyService.getTextFr();
-        }
-        if (this.activeAvActivityHighlightsEs !== undefined) {
-          this.activeAvActivityHighlightsEs = this.activeAvActivityHighlightsEs + " " + this.copyService.getTextEs();
-        } else {
-          this.activeAvActivityHighlightsEs = this.copyService.getTextEs();
-        }
-        if (this.activeAvActivityHighlightsCa !== undefined) {
-          this.activeAvActivityHighlightsCa = this.activeAvActivityHighlightsCa + " " + this.copyService.getTextCa();
-        } else {
-          this.activeAvActivityHighlightsCa = this.copyService.getTextCa();
-        }
-        if (this.activeAvActivityHighlightsOc !== undefined) {
-          this.activeAvActivityHighlightsOc = this.activeAvActivityHighlightsOc + " " + this.copyService.getTextOc();
-        } else {
-          this.activeAvActivityHighlightsOc = this.copyService.getTextOc();
-        }
-        break;
-      case "avActivityComment":
-        if (this.activeAvActivityCommentTextcat !== undefined) {
-          this.activeAvActivityCommentTextcat = this.concatTextcat(this.activeAvActivityCommentTextcat, this.copyService.getTextTextcat());
-        } else {
-          this.activeAvActivityCommentTextcat = this.copyService.getTextTextcat();
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.copyService.getTextDe();
-        } else {
-          this.activeAvActivityCommentDe = this.copyService.getTextDe();
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.copyService.getTextIt();
-        } else {
-          this.activeAvActivityCommentIt = this.copyService.getTextIt();
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.copyService.getTextEn();
-        } else {
-          this.activeAvActivityCommentEn = this.copyService.getTextEn();
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.copyService.getTextFr();
-        } else {
-          this.activeAvActivityCommentFr = this.copyService.getTextFr();
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.copyService.getTextEs();
-        } else {
-          this.activeAvActivityCommentEs = this.copyService.getTextEs();
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.copyService.getTextCa();
-        } else {
-          this.activeAvActivityCommentCa = this.copyService.getTextCa();
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.copyService.getTextOc();
-        } else {
-          this.activeAvActivityCommentOc = this.copyService.getTextOc();
-        }
-        break;
-      case "snowpackStructureComment":
-        if (this.activeSnowpackStructureCommentTextcat !== undefined) {
-          this.activeSnowpackStructureCommentTextcat = this.concatTextcat(this.activeSnowpackStructureCommentTextcat, this.copyService.getTextTextcat());
-        } else {
-          this.activeSnowpackStructureCommentTextcat = this.copyService.getTextTextcat();
-        }
-        if (this.activeSnowpackStructureCommentDe !== undefined) {
-          this.activeSnowpackStructureCommentDe = this.activeSnowpackStructureCommentDe + " " + this.copyService.getTextDe();
-        } else {
-          this.activeSnowpackStructureCommentDe = this.copyService.getTextDe();
-        }
-        if (this.activeSnowpackStructureCommentIt !== undefined) {
-          this.activeSnowpackStructureCommentIt = this.activeSnowpackStructureCommentIt + " " + this.copyService.getTextIt();
-        } else {
-          this.activeSnowpackStructureCommentIt = this.copyService.getTextIt();
-        }
-        if (this.activeSnowpackStructureCommentEn !== undefined) {
-          this.activeSnowpackStructureCommentEn = this.activeSnowpackStructureCommentEn + " " + this.copyService.getTextEn();
-        } else {
-          this.activeSnowpackStructureCommentEn = this.copyService.getTextEn();
-        }
-        if (this.activeSnowpackStructureCommentFr !== undefined) {
-          this.activeSnowpackStructureCommentFr = this.activeSnowpackStructureCommentFr + " " + this.copyService.getTextFr();
-        } else {
-          this.activeSnowpackStructureCommentFr = this.copyService.getTextFr();
-        }
-        if (this.activeSnowpackStructureCommentEs !== undefined) {
-          this.activeSnowpackStructureCommentEs = this.activeSnowpackStructureCommentEs + " " + this.copyService.getTextEs();
-        } else {
-          this.activeSnowpackStructureCommentEs = this.copyService.getTextEs();
-        }
-        if (this.activeSnowpackStructureCommentCa !== undefined) {
-          this.activeSnowpackStructureCommentCa = this.activeSnowpackStructureCommentCa + " " + this.copyService.getTextCa();
-        } else {
-          this.activeSnowpackStructureCommentCa = this.copyService.getTextCa();
-        }
-        if (this.activeSnowpackStructureCommentOc !== undefined) {
-          this.activeSnowpackStructureCommentOc = this.activeSnowpackStructureCommentOc + " " + this.copyService.getTextOc();
-        } else {
-          this.activeSnowpackStructureCommentOc = this.copyService.getTextOc();
-        }
-        break;
-      case "tendencyComment":
-        if (this.activeTendencyCommentTextcat !== undefined) {
-          this.activeTendencyCommentTextcat = this.concatTextcat(this.activeTendencyCommentTextcat, this.copyService.getTextTextcat());
-        } else {
-          this.activeTendencyCommentTextcat = this.copyService.getTextTextcat();
-        }
-        if (this.activeTendencyCommentDe !== undefined) {
-          this.activeTendencyCommentDe = this.activeTendencyCommentDe + " " + this.copyService.getTextDe();
-        } else {
-          this.activeTendencyCommentDe = this.copyService.getTextDe();
-        }
-        if (this.activeTendencyCommentIt !== undefined) {
-          this.activeTendencyCommentIt = this.activeTendencyCommentIt + " " + this.copyService.getTextIt();
-        } else {
-          this.activeTendencyCommentIt = this.copyService.getTextIt();
-        }
-        if (this.activeTendencyCommentEn !== undefined) {
-          this.activeTendencyCommentEn = this.activeTendencyCommentEn + " " + this.copyService.getTextEn();
-        } else {
-          this.activeTendencyCommentEn = this.copyService.getTextEn();
-        }
-        if (this.activeTendencyCommentFr !== undefined) {
-          this.activeTendencyCommentFr = this.activeTendencyCommentFr + " " + this.copyService.getTextFr();
-        } else {
-          this.activeTendencyCommentFr = this.copyService.getTextFr();
-        }
-        if (this.activeTendencyCommentEs !== undefined) {
-          this.activeTendencyCommentEs = this.activeTendencyCommentEs + " " + this.copyService.getTextEs();
-        } else {
-          this.activeTendencyCommentEs = this.copyService.getTextEs();
-        }
-        if (this.activeTendencyCommentCa !== undefined) {
-          this.activeTendencyCommentCa = this.activeTendencyCommentCa + " " + this.copyService.getTextCa();
-        } else {
-          this.activeTendencyCommentCa = this.copyService.getTextCa();
-        }
-        if (this.activeTendencyCommentOc !== undefined) {
-          this.activeTendencyCommentOc = this.activeTendencyCommentOc + " " + this.copyService.getTextOc();
-        } else {
-          this.activeTendencyCommentOc = this.copyService.getTextOc();
-        }
-        break;
-      default:
-        break;
-    }
-    this.copyService.resetCopyTextcat();
-  }
-
-  deleteTextcat(event, field) {
-    switch (field) {
-      case "highlights":
-        this.activeHighlightsTextcat = undefined;
-        this.activeHighlightsDe = undefined;
-        this.activeHighlightsIt = undefined;
-        this.activeHighlightsEn = undefined;
-        this.activeHighlightsFr = undefined;
-        this.activeHighlightsEs = undefined;
-        this.activeHighlightsCa = undefined;
-        this.activeHighlightsOc = undefined;
-        break;
-      case "avActivityHighlights":
-        this.activeAvActivityHighlightsTextcat = undefined;
-        this.activeAvActivityHighlightsDe = undefined;
-        this.activeAvActivityHighlightsIt = undefined;
-        this.activeAvActivityHighlightsEn = undefined;
-        this.activeAvActivityHighlightsFr = undefined;
-        this.activeAvActivityHighlightsEs = undefined;
-        this.activeAvActivityHighlightsCa = undefined;
-        this.activeAvActivityHighlightsOc = undefined;
-        break;
-      case "avActivityComment":
-        this.activeAvActivityCommentTextcat = undefined;
-        this.activeAvActivityCommentDe = undefined;
-        this.activeAvActivityCommentIt = undefined;
-        this.activeAvActivityCommentEn = undefined;
-        this.activeAvActivityCommentFr = undefined;
-        this.activeAvActivityCommentEs = undefined;
-        this.activeAvActivityCommentCa = undefined;
-        this.activeAvActivityCommentOc = undefined;
-        break;
-      case "snowpackStructureComment":
-        this.activeSnowpackStructureCommentTextcat = undefined;
-        this.activeSnowpackStructureCommentDe = undefined;
-        this.activeSnowpackStructureCommentIt = undefined;
-        this.activeSnowpackStructureCommentEn = undefined;
-        this.activeSnowpackStructureCommentFr = undefined;
-        this.activeSnowpackStructureCommentEs = undefined;
-        this.activeSnowpackStructureCommentCa = undefined;
-        this.activeSnowpackStructureCommentOc = undefined;
-        break;
-      case "tendencyComment":
-        this.activeTendencyCommentTextcat = undefined;
-        this.activeTendencyCommentDe = undefined;
-        this.activeTendencyCommentIt = undefined;
-        this.activeTendencyCommentEn = undefined;
-        this.activeTendencyCommentFr = undefined;
-        this.activeTendencyCommentEs = undefined;
-        this.activeTendencyCommentCa = undefined;
-        this.activeTendencyCommentOc = undefined;
-        break;
-      default:
-        break;
-    }
-  }
-
-  getText(e) {
-    e.preventDefault();
-    if (e.data.type !== "webpackInvalid" && e.data.type !== "webpackOk") {
-      const pmData: TextcatLegacyOut = JSON.parse(e.data);
-
-      if (pmData.textDef === undefined || pmData.textDef === "") {
-        this[pmData.textField + "Textcat"] = "";
-        this[pmData.textField + "It"] = undefined;
-        this[pmData.textField + "De"] = undefined;
-        this[pmData.textField + "En"] = undefined;
-        this[pmData.textField + "Fr"] = undefined;
-        this[pmData.textField + "Es"] = undefined;
-        this[pmData.textField + "Ca"] = undefined;
-        this[pmData.textField + "Oc"] = undefined;
-        this.setTexts();
-        this.hideDialog();
-      } else {
-        this[pmData.textField + "Textcat"] = pmData.textDef;
-        this[pmData.textField + "It"] = pmData.textIt;
-        this[pmData.textField + "De"] = pmData.textDe_AT;
-        this[pmData.textField + "En"] = pmData.textEn;
-        this[pmData.textField + "Fr"] = pmData.textFr;
-        this[pmData.textField + "Es"] = pmData.textEs;
-        this[pmData.textField + "Ca"] = pmData.textCa;
-        this[pmData.textField + "Oc"] = pmData.textOc;
-        this.setTexts();
-        this.hideDialog();
-      }
-    }
-  };
-
   openLoadingErrorModal(template: TemplateRef<any>) {
     this.loadingErrorModalRef = this.modalService.show(template, this.config);
   }
 
   loadingErrorModalConfirm(): void {
     this.loadingErrorModalRef.hide();
-    this.goBack();
   }
 
   openLoadingJsonFileErrorModal(template: TemplateRef<any>) {
@@ -1961,19 +1479,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadModalRef = this.modalService.show(template, this.config);
   }
 
-  loadModalConfirm(event): void {
-    event.currentTarget.setAttribute("disabled", true);
+  loadModalConfirm(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
     this.loadModalRef.hide();
     this.loading = true;
     const date = new Date(this.bulletinsService.getActiveDate());
     date.setDate(date.getDate() - 1);
 
-    const regions = new Array<String>();
-    regions.push(this.authenticationService.getActiveRegionId());
-
+    const regions = [this.authenticationService.getActiveRegionId()];
     this.bulletinsService.loadBulletins(date, regions).subscribe(
-      data => {
-
+      (data) => {
         // delete own regions
         const entries = new Array<BulletinModel>();
 
@@ -1992,122 +1507,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       () => {
         this.loading = false;
         this.openLoadingErrorModal(this.loadingErrorTemplate);
-      }
-    );
-  }
-
-  loadModalDecline(event): void {
-    event.currentTarget.setAttribute("disabled", true);
-    this.loadModalRef.hide();
-  }
-
-  openLoadAutoSaveModal(template: TemplateRef<any>) {
-    this.loadAutoSaveModalRef = this.modalService.show(template, this.config);
-  }
-
-  loadAutoSaveModalConfirm(event): void {
-    event.currentTarget.setAttribute("disabled", true);
-    this.loadAutoSaveModalRef.hide();
-    this.loadBulletinsFromLocalStorage();
-  }
-
-  loadAutoSaveModalDecline(event): void {
-    event.currentTarget.setAttribute("disabled", true);
-    this.loadAutoSaveModalRef.hide();
-    this.loadBulletinsFromServer();
-  }
-
-  private startAutoSave() {
-    this.autoSave = interval(this.constantsService.autoSaveIntervall).subscribe(() => this.localStorageService.save(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId(), this.authenticationService.getCurrentAuthor().getEmail(), this.internBulletinsList));
-  }
-
-  private loadBulletinsFromLocalStorage() {
-    for (const bulletin of this.localStorageService.getBulletins()) {
-      this.addInternalBulletin(bulletin);
-    }
-    this.updateInternalBulletins();
-    this.mapService.deselectAggregatedRegion();
-    this.loading = false;
-    this.startAutoSave();
-  }
-
-  private loadBulletinsFromServer() {
-    const regions = new Array<String>();
-    if (this.authenticationService.isEuregio()) {
-      regions.push(this.constantsService.codeTyrol);
-      regions.push(this.constantsService.codeSouthTyrol);
-      regions.push(this.constantsService.codeTrentino);
-    } else {
-      regions.push(this.authenticationService.getActiveRegionId());
-    }
-    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
-      data => {
-        for (const jsonBulletin of (data as any)) {
-          const bulletin = BulletinModel.createFromJson(jsonBulletin);
-
-          // only add bulletins with published or saved regions
-          if ((bulletin.getPublishedRegions() && bulletin.getPublishedRegions().length > 0) || (bulletin.getSavedRegions() && bulletin.getSavedRegions().length > 0)) {
-
-            // move published regions to saved regions
-            if (this.bulletinsService.getIsUpdate() || this.bulletinsService.getIsSmallChange()) {
-              const saved = new Array<String>();
-              const published = new Array<String>();
-              for (const region of bulletin.getSavedRegions()) {
-                saved.push(region);
-              }
-              for (const region of bulletin.getPublishedRegions()) {
-                if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-                  saved.push(region);
-                } else {
-                  published.push(region);
-                }
-              }
-
-              if (saved.length > 0) {
-                bulletin.setSavedRegions(saved);
-                bulletin.setPublishedRegions(published);
-              }
-            }
-
-            this.addInternalBulletin(bulletin);
-          }
-        }
-
-        let hit = false;
-        for (const bulletin of this.internBulletinsList) {
-          for (const region of bulletin.getSavedRegions()) {
-            if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-              hit = true;
-              break;
-            }
-          }
-          for (const region of bulletin.getPublishedRegions()) {
-            if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-              hit = true;
-              break;
-            }
-          }
-          if (hit) {
-            break;
-          }
-        }
-
-        if (!hit && this.getOwnBulletins().length === 0 && this.bulletinsService.getIsEditable() && !this.bulletinsService.getIsUpdate() && !this.bulletinsService.getIsSmallChange()) {
-          this.createInitialAggregatedRegion();
-        }
-
-        this.updateInternalBulletins();
-
-        this.mapService.deselectAggregatedRegion();
-        this.loading = false;
-        this.startAutoSave();
       },
-      () => {
-        console.error("Bulletins could not be loaded!");
-        this.loading = false;
-        this.openLoadingErrorModal(this.loadingErrorTemplate);
-      }
     );
+  }
+
+  loadModalDecline(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+    this.loadModalRef.hide();
   }
 
   openDeleteAggregatedRegionModal(template: TemplateRef<any>) {
@@ -2116,10 +1522,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   deleteAggregatedRegionModalConfirm(): void {
     this.deleteAggregatedRegionModalRef.hide();
-    this.delBulletin(this.activeBulletin);
-
-    // TODO websocket: unlock region
-
+    this.delBulletin(this.bulletinMarkedDelete);
   }
 
   deleteAggregatedRegionModalDecline(): void {
@@ -2134,18 +1537,45 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.noRegionModalRef.hide();
   }
 
-  openDiscardModal(template: TemplateRef<any>) {
-    this.discardModalRef = this.modalService.show(template, this.config);
-  }
-
   discardModalConfirm(): void {
     this.discardModalRef.hide();
-    this.localStorageService.clear();
     this.goBack();
   }
 
   discardModalDecline(): void {
     this.discardModalRef.hide();
+  }
+
+  eventCopyBulletin(bulletin: BulletinModel) {
+    this.copyBulletin(bulletin);
+    this.copyRegionModalRef = this.modalService.show(this.copyRegionTemplate, this.config);
+  }
+
+  openCopyRegionModal(event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    this.eventCopyBulletin(bulletin);
+  }
+
+  copyRegionModalConfirm(date: Date): void {
+    this.copyRegionModalRef.hide();
+    if (this.bulletinsService.getActiveDate().getTime() === date.getTime()) {
+      if (this.copyService.isCopyBulletin()) {
+        this.createBulletin(true);
+      }
+    } else {
+      this.changeDate(date);
+    }
+  }
+
+  copyRegionModalDecline(): void {
+    if (this.copyService.isCopyBulletin()) {
+      this.copyService.resetCopyBulletin();
+    }
+    this.copyRegionModalRef.hide();
+  }
+
+  isActiveDate(date: Date) {
+    return this.bulletinsService.getActiveDate().getTime() === date.getTime();
   }
 
   openSaveErrorModal(template: TemplateRef<any>) {
@@ -2154,11 +1584,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   saveErrorModalConfirm(): void {
     this.saveErrorModalRef.hide();
-    this.goBack();
-  }
-
-  openChangeErrorModal(template: TemplateRef<any>) {
-    this.changeErrorModalRef = this.modalService.show(template, this.config);
   }
 
   changeErrorModalConfirm(): void {
@@ -2171,641 +1596,280 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   avalancheProblemErrorModalConfirm(): void {
     this.avalancheProblemErrorModalRef.hide();
+    this.publishing = false;
+    this.submitting = false;
   }
 
-  openLoadAvActivityCommentExampleTextModal(template: TemplateRef<any>) {
-    this.loadAvActivityCommentExampleTextModalRef = this.modalService.show(template, this.config);
+  getActiveRegionStatus(date: Date) {
+    const regionStatusMap = this.bulletinsService.statusMap.get(this.authenticationService.getActiveRegionId());
+    if (regionStatusMap) return regionStatusMap.get(date.getTime());
+    else return Enums.BulletinStatus.missing;
   }
 
-  loadAvActivityCommentExampleText(avalancheProblem) {
-    switch (avalancheProblem) {
-      case "newSnow":
-        if (this.activeAvActivityCommentTextcat !== undefined) {
-          this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentNewSnowTextcat;
-        } else {
-          this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentNewSnowTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentNewSnowDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentNewSnowDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentNewSnowIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentNewSnowIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentNewSnowEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentNewSnowEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentNewSnowFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentNewSnowFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentNewSnowEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentNewSnowEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentNewSnowCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentNewSnowCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentNewSnowOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentNewSnowOc;
-        }
-        break;
-      case "windSlab":
-        if (this.activeAvActivityCommentTextcat !== undefined) {
-          this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentWindSlabTextcat;
-        } else {
-          this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentWindSlabTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentWindSlabDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentWindSlabDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentWindSlabIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentWindSlabIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentWindSlabEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentWindSlabEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentWindSlabFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentWindSlabFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentWindSlabEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentWindSlabEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentWindSlabCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentWindSlabCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentWindSlabOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentWindSlabOc;
-        }
-        break;
-      case "persistentWeakLayers":
-        if (this.activeAvActivityCommentTextcat !== undefined) {
-          this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentPersistentWeakLayersTextcat;
-        } else {
-          this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentPersistentWeakLayersTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentPersistentWeakLayersDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentPersistentWeakLayersDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentPersistentWeakLayersIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentPersistentWeakLayersIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentPersistentWeakLayersEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentPersistentWeakLayersEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentPersistentWeakLayersFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentPersistentWeakLayersFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentPersistentWeakLayersEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentPersistentWeakLayersEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentPersistentWeakLayersCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentPersistentWeakLayersCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentPersistentWeakLayersOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentPersistentWeakLayersOc;
-        }
-        break;
-      case "wetSnow":
-        if (this.activeAvActivityCommentTextcat !== undefined) {
-          this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentWetSnowTextcat;
-        } else {
-          this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentWetSnowTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentWetSnowDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentWetSnowDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentWetSnowIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentWetSnowIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentWetSnowEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentWetSnowEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentWetSnowFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentWetSnowFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentWetSnowEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentWetSnowEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentWetSnowCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentWetSnowCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentWetSnowOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentWetSnowOc;
-        }
-        break;
-      case "glidingSnow":
-        if (this.activeAvActivityCommentTextcat !== undefined) {
-          this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentGlidingSnowTextcat;
-        } else {
-          this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentGlidingSnowTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentGlidingSnowDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentGlidingSnowDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentGlidingSnowIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentGlidingSnowIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentGlidingSnowEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentGlidingSnowEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentGlidingSnowFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentGlidingSnowFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentGlidingSnowEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentGlidingSnowEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentGlidingSnowCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentGlidingSnowCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentGlidingSnowOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentGlidingSnowOc;
-        }
-        break;
-      case "favourableSituation":
-        if (this.activeAvActivityCommentTextcat !== undefined) {
-          this.activeAvActivityCommentTextcat = this.activeAvActivityCommentTextcat + "." + this.constantsService.avActivityCommentFavourableSituationTextcat;
-        } else {
-          this.activeAvActivityCommentTextcat = this.constantsService.avActivityCommentFavourableSituationTextcat;
-        }
-        if (this.activeAvActivityCommentDe !== undefined) {
-          this.activeAvActivityCommentDe = this.activeAvActivityCommentDe + " " + this.constantsService.avActivityCommentFavourableSituationDe;
-        } else {
-          this.activeAvActivityCommentDe = this.constantsService.avActivityCommentFavourableSituationDe;
-        }
-        if (this.activeAvActivityCommentIt !== undefined) {
-          this.activeAvActivityCommentIt = this.activeAvActivityCommentIt + " " + this.constantsService.avActivityCommentFavourableSituationIt;
-        } else {
-          this.activeAvActivityCommentIt = this.constantsService.avActivityCommentFavourableSituationIt;
-        }
-        if (this.activeAvActivityCommentEn !== undefined) {
-          this.activeAvActivityCommentEn = this.activeAvActivityCommentEn + " " + this.constantsService.avActivityCommentFavourableSituationEn;
-        } else {
-          this.activeAvActivityCommentEn = this.constantsService.avActivityCommentFavourableSituationEn;
-        }
-        if (this.activeAvActivityCommentFr !== undefined) {
-          this.activeAvActivityCommentFr = this.activeAvActivityCommentFr + " " + this.constantsService.avActivityCommentFavourableSituationFr;
-        } else {
-          this.activeAvActivityCommentFr = this.constantsService.avActivityCommentFavourableSituationFr;
-        }
-        if (this.activeAvActivityCommentEs !== undefined) {
-          this.activeAvActivityCommentEs = this.activeAvActivityCommentEs + " " + this.constantsService.avActivityCommentFavourableSituationEs;
-        } else {
-          this.activeAvActivityCommentEs = this.constantsService.avActivityCommentFavourableSituationEs;
-        }
-        if (this.activeAvActivityCommentCa !== undefined) {
-          this.activeAvActivityCommentCa = this.activeAvActivityCommentCa + " " + this.constantsService.avActivityCommentFavourableSituationCa;
-        } else {
-          this.activeAvActivityCommentCa = this.constantsService.avActivityCommentFavourableSituationCa;
-        }
-        if (this.activeAvActivityCommentOc !== undefined) {
-          this.activeAvActivityCommentOc = this.activeAvActivityCommentOc + " " + this.constantsService.avActivityCommentFavourableSituationOc;
-        } else {
-          this.activeAvActivityCommentOc = this.constantsService.avActivityCommentFavourableSituationOc;
-        }
-        break;
-      default:
-        break;
-    }
-    this.setTexts();
-    this.loadAvActivityCommentExampleTextModalRef.hide();
+  getRegionStatus(region: string, date: Date) {
+    const regionStatusMap = this.bulletinsService.statusMap.get(region);
+    if (regionStatusMap) return regionStatusMap.get(date.getTime());
+    else return Enums.BulletinStatus.missing;
   }
 
-  loadAvActivityCommentExampleTextCancel() {
-    this.loadAvActivityCommentExampleTextModalRef.hide();
+  showSubmitButton(date: Date) {
+    return (
+      !this.bulletinsService.getIsReadOnly() &&
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.draft ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.updated) &&
+      this.internBulletinsList.length > 0 &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+    );
   }
 
-  openLoadSnowpackStructureCommentExampleTextModal(template: TemplateRef<any>) {
-    this.loadSnowpackStructureCommentExampleTextModalRef = this.modalService.show(template, this.config);
-  }
+  submit(event: Event, date: Date) {
+    event.stopPropagation();
 
-  loadSnowpackStructureCommentExampleText(avalancheProblem) {
-    switch (avalancheProblem) {
-      case "newSnow":
-        if (this.activeSnowpackStructureCommentTextcat !== undefined) {
-          this.activeSnowpackStructureCommentTextcat = this.activeSnowpackStructureCommentTextcat + "." + this.constantsService.snowpackStructureCommentNewSnowTextcat;
-        } else {
-          this.activeSnowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentNewSnowTextcat;
-        }
-        if (this.activeSnowpackStructureCommentDe !== undefined) {
-          this.activeSnowpackStructureCommentDe = this.activeSnowpackStructureCommentDe + " " + this.constantsService.snowpackStructureCommentNewSnowDe;
-        } else {
-          this.activeSnowpackStructureCommentDe = this.constantsService.snowpackStructureCommentNewSnowDe;
-        }
-        if (this.activeSnowpackStructureCommentIt !== undefined) {
-          this.activeSnowpackStructureCommentIt = this.activeSnowpackStructureCommentIt + " " + this.constantsService.snowpackStructureCommentNewSnowIt;
-        } else {
-          this.activeSnowpackStructureCommentIt = this.constantsService.snowpackStructureCommentNewSnowIt;
-        }
-        if (this.activeSnowpackStructureCommentEn !== undefined) {
-          this.activeSnowpackStructureCommentEn = this.activeSnowpackStructureCommentEn + " " + this.constantsService.snowpackStructureCommentNewSnowEn;
-        } else {
-          this.activeSnowpackStructureCommentEn = this.constantsService.snowpackStructureCommentNewSnowEn;
-        }
-        if (this.activeSnowpackStructureCommentFr !== undefined) {
-          this.activeSnowpackStructureCommentFr = this.activeSnowpackStructureCommentFr + " " + this.constantsService.snowpackStructureCommentNewSnowFr;
-        } else {
-          this.activeSnowpackStructureCommentFr = this.constantsService.snowpackStructureCommentNewSnowFr;
-        }
-        if (this.activeSnowpackStructureCommentEs !== undefined) {
-          this.activeSnowpackStructureCommentEs = this.activeSnowpackStructureCommentEs + " " + this.constantsService.snowpackStructureCommentNewSnowEs;
-        } else {
-          this.activeSnowpackStructureCommentEs = this.constantsService.snowpackStructureCommentNewSnowEs;
-        }
-        if (this.activeSnowpackStructureCommentCa !== undefined) {
-          this.activeSnowpackStructureCommentCa = this.activeSnowpackStructureCommentCa + " " + this.constantsService.snowpackStructureCommentNewSnowCa;
-        } else {
-          this.activeSnowpackStructureCommentCa = this.constantsService.snowpackStructureCommentNewSnowCa;
-        }
-        if (this.activeSnowpackStructureCommentOc !== undefined) {
-          this.activeSnowpackStructureCommentOc = this.activeSnowpackStructureCommentOc + " " + this.constantsService.snowpackStructureCommentNewSnowOc;
-        } else {
-          this.activeSnowpackStructureCommentOc = this.constantsService.snowpackStructureCommentNewSnowOc;
-        }
-        break;
-      case "windSlab":
-        if (this.activeSnowpackStructureCommentTextcat !== undefined) {
-          this.activeSnowpackStructureCommentTextcat = this.activeSnowpackStructureCommentTextcat + "." + this.constantsService.snowpackStructureCommentWindSlabTextcat;
-        } else {
-          this.activeSnowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentWindSlabTextcat;
-        }
-        if (this.activeSnowpackStructureCommentDe !== undefined) {
-          this.activeSnowpackStructureCommentDe = this.activeSnowpackStructureCommentDe + " " + this.constantsService.snowpackStructureCommentWindSlabDe;
-        } else {
-          this.activeSnowpackStructureCommentDe = this.constantsService.snowpackStructureCommentWindSlabDe;
-        }
-        if (this.activeSnowpackStructureCommentIt !== undefined) {
-          this.activeSnowpackStructureCommentIt = this.activeSnowpackStructureCommentIt + " " + this.constantsService.snowpackStructureCommentWindSlabIt;
-        } else {
-          this.activeSnowpackStructureCommentIt = this.constantsService.snowpackStructureCommentWindSlabIt;
-        }
-        if (this.activeSnowpackStructureCommentEn !== undefined) {
-          this.activeSnowpackStructureCommentEn = this.activeSnowpackStructureCommentEn + " " + this.constantsService.snowpackStructureCommentWindSlabEn;
-        } else {
-          this.activeSnowpackStructureCommentEn = this.constantsService.snowpackStructureCommentWindSlabEn;
-        }
-        if (this.activeSnowpackStructureCommentFr !== undefined) {
-          this.activeSnowpackStructureCommentFr = this.activeSnowpackStructureCommentFr + " " + this.constantsService.snowpackStructureCommentWindSlabFr;
-        } else {
-          this.activeSnowpackStructureCommentFr = this.constantsService.snowpackStructureCommentWindSlabFr;
-        }
-        if (this.activeSnowpackStructureCommentEs !== undefined) {
-          this.activeSnowpackStructureCommentEs = this.activeSnowpackStructureCommentEs + " " + this.constantsService.snowpackStructureCommentWindSlabEs;
-        } else {
-          this.activeSnowpackStructureCommentEs = this.constantsService.snowpackStructureCommentWindSlabEs;
-        }
-        if (this.activeSnowpackStructureCommentCa !== undefined) {
-          this.activeSnowpackStructureCommentCa = this.activeSnowpackStructureCommentCa + " " + this.constantsService.snowpackStructureCommentWindSlabCa;
-        } else {
-          this.activeSnowpackStructureCommentCa = this.constantsService.snowpackStructureCommentWindSlabCa;
-        }
-        if (this.activeSnowpackStructureCommentOc !== undefined) {
-          this.activeSnowpackStructureCommentOc = this.activeSnowpackStructureCommentOc + " " + this.constantsService.snowpackStructureCommentWindSlabOc;
-        } else {
-          this.activeSnowpackStructureCommentOc = this.constantsService.snowpackStructureCommentWindSlabOc;
-        }
-        break;
-      case "persistentWeakLayers":
-        if (this.activeSnowpackStructureCommentTextcat !== undefined) {
-          this.activeSnowpackStructureCommentTextcat = this.activeSnowpackStructureCommentTextcat + "." + this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat;
-        } else {
-          this.activeSnowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentPersistentWeakLayersTextcat;
-        }
-        if (this.activeSnowpackStructureCommentDe !== undefined) {
-          this.activeSnowpackStructureCommentDe = this.activeSnowpackStructureCommentDe + " " + this.constantsService.snowpackStructureCommentPersistentWeakLayersDe;
-        } else {
-          this.activeSnowpackStructureCommentDe = this.constantsService.snowpackStructureCommentPersistentWeakLayersDe;
-        }
-        if (this.activeSnowpackStructureCommentIt !== undefined) {
-          this.activeSnowpackStructureCommentIt = this.activeSnowpackStructureCommentIt + " " + this.constantsService.snowpackStructureCommentPersistentWeakLayersIt;
-        } else {
-          this.activeSnowpackStructureCommentIt = this.constantsService.snowpackStructureCommentPersistentWeakLayersIt;
-        }
-        if (this.activeSnowpackStructureCommentEn !== undefined) {
-          this.activeSnowpackStructureCommentEn = this.activeSnowpackStructureCommentEn + " " + this.constantsService.snowpackStructureCommentPersistentWeakLayersEn;
-        } else {
-          this.activeSnowpackStructureCommentEn = this.constantsService.snowpackStructureCommentPersistentWeakLayersEn;
-        }
-        if (this.activeSnowpackStructureCommentFr !== undefined) {
-          this.activeSnowpackStructureCommentFr = this.activeSnowpackStructureCommentFr + " " + this.constantsService.snowpackStructureCommentPersistentWeakLayersFr;
-        } else {
-          this.activeSnowpackStructureCommentFr = this.constantsService.snowpackStructureCommentPersistentWeakLayersFr;
-        }
-        if (this.activeSnowpackStructureCommentEs !== undefined) {
-          this.activeSnowpackStructureCommentEs = this.activeSnowpackStructureCommentEs + " " + this.constantsService.snowpackStructureCommentPersistentWeakLayersEs;
-        } else {
-          this.activeSnowpackStructureCommentEs = this.constantsService.snowpackStructureCommentPersistentWeakLayersEs;
-        }
-        if (this.activeSnowpackStructureCommentCa !== undefined) {
-          this.activeSnowpackStructureCommentCa = this.activeSnowpackStructureCommentCa + " " + this.constantsService.snowpackStructureCommentPersistentWeakLayersCa;
-        } else {
-          this.activeSnowpackStructureCommentCa = this.constantsService.snowpackStructureCommentPersistentWeakLayersCa;
-        }
-        if (this.activeSnowpackStructureCommentOc !== undefined) {
-          this.activeSnowpackStructureCommentOc = this.activeSnowpackStructureCommentOc + " " + this.constantsService.snowpackStructureCommentPersistentWeakLayersOc;
-        } else {
-          this.activeSnowpackStructureCommentOc = this.constantsService.snowpackStructureCommentPersistentWeakLayersOc;
-        }
-        break;
-      case "wetSnow":
-        if (this.activeSnowpackStructureCommentTextcat !== undefined) {
-          this.activeSnowpackStructureCommentTextcat = this.activeSnowpackStructureCommentTextcat + "." + this.constantsService.snowpackStructureCommentWetSnowTextcat;
-        } else {
-          this.activeSnowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentWetSnowTextcat;
-        }
-        if (this.activeSnowpackStructureCommentDe !== undefined) {
-          this.activeSnowpackStructureCommentDe = this.activeSnowpackStructureCommentDe + " " + this.constantsService.snowpackStructureCommentWetSnowDe;
-        } else {
-          this.activeSnowpackStructureCommentDe = this.constantsService.snowpackStructureCommentWetSnowDe;
-        }
-        if (this.activeSnowpackStructureCommentIt !== undefined) {
-          this.activeSnowpackStructureCommentIt = this.activeSnowpackStructureCommentIt + " " + this.constantsService.snowpackStructureCommentWetSnowIt;
-        } else {
-          this.activeSnowpackStructureCommentIt = this.constantsService.snowpackStructureCommentWetSnowIt;
-        }
-        if (this.activeSnowpackStructureCommentEn !== undefined) {
-          this.activeSnowpackStructureCommentEn = this.activeSnowpackStructureCommentEn + " " + this.constantsService.snowpackStructureCommentWetSnowEn;
-        } else {
-          this.activeSnowpackStructureCommentEn = this.constantsService.snowpackStructureCommentWetSnowEn;
-        }
-        if (this.activeSnowpackStructureCommentFr !== undefined) {
-          this.activeSnowpackStructureCommentFr = this.activeSnowpackStructureCommentFr + " " + this.constantsService.snowpackStructureCommentWetSnowFr;
-        } else {
-          this.activeSnowpackStructureCommentFr = this.constantsService.snowpackStructureCommentWetSnowFr;
-        }
-        if (this.activeSnowpackStructureCommentEs !== undefined) {
-          this.activeSnowpackStructureCommentEs = this.activeSnowpackStructureCommentEs + " " + this.constantsService.snowpackStructureCommentWetSnowEs;
-        } else {
-          this.activeSnowpackStructureCommentEs = this.constantsService.snowpackStructureCommentWetSnowEs;
-        }
-        if (this.activeSnowpackStructureCommentCa !== undefined) {
-          this.activeSnowpackStructureCommentCa = this.activeSnowpackStructureCommentCa + " " + this.constantsService.snowpackStructureCommentWetSnowCa;
-        } else {
-          this.activeSnowpackStructureCommentCa = this.constantsService.snowpackStructureCommentWetSnowCa;
-        }
-        if (this.activeSnowpackStructureCommentOc !== undefined) {
-          this.activeSnowpackStructureCommentOc = this.activeSnowpackStructureCommentOc + " " + this.constantsService.snowpackStructureCommentWetSnowOc;
-        } else {
-          this.activeSnowpackStructureCommentOc = this.constantsService.snowpackStructureCommentWetSnowOc;
-        }
-        break;
-      case "glidingSnow":
-        if (this.activeSnowpackStructureCommentTextcat !== undefined) {
-          this.activeSnowpackStructureCommentTextcat = this.activeSnowpackStructureCommentTextcat + "." + this.constantsService.snowpackStructureCommentGlidingSnowTextcat;
-        } else {
-          this.activeSnowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentGlidingSnowTextcat;
-        }
-        if (this.activeSnowpackStructureCommentDe !== undefined) {
-          this.activeSnowpackStructureCommentDe = this.activeSnowpackStructureCommentDe + " " + this.constantsService.snowpackStructureCommentGlidingSnowDe;
-        } else {
-          this.activeSnowpackStructureCommentDe = this.constantsService.snowpackStructureCommentGlidingSnowDe;
-        }
-        if (this.activeSnowpackStructureCommentIt !== undefined) {
-          this.activeSnowpackStructureCommentIt = this.activeSnowpackStructureCommentIt + " " + this.constantsService.snowpackStructureCommentGlidingSnowIt;
-        } else {
-          this.activeSnowpackStructureCommentIt = this.constantsService.snowpackStructureCommentGlidingSnowIt;
-        }
-        if (this.activeSnowpackStructureCommentEn !== undefined) {
-          this.activeSnowpackStructureCommentEn = this.activeSnowpackStructureCommentEn + " " + this.constantsService.snowpackStructureCommentGlidingSnowEn;
-        } else {
-          this.activeSnowpackStructureCommentEn = this.constantsService.snowpackStructureCommentGlidingSnowEn;
-        }
-        if (this.activeSnowpackStructureCommentFr !== undefined) {
-          this.activeSnowpackStructureCommentFr = this.activeSnowpackStructureCommentFr + " " + this.constantsService.snowpackStructureCommentGlidingSnowFr;
-        } else {
-          this.activeSnowpackStructureCommentFr = this.constantsService.snowpackStructureCommentGlidingSnowFr;
-        }
-        if (this.activeSnowpackStructureCommentEs !== undefined) {
-          this.activeSnowpackStructureCommentEs = this.activeSnowpackStructureCommentEs + " " + this.constantsService.snowpackStructureCommentGlidingSnowEs;
-        } else {
-          this.activeSnowpackStructureCommentEs = this.constantsService.snowpackStructureCommentGlidingSnowEs;
-        }
-        if (this.activeSnowpackStructureCommentCa !== undefined) {
-          this.activeSnowpackStructureCommentCa = this.activeSnowpackStructureCommentCa + " " + this.constantsService.snowpackStructureCommentGlidingSnowCa;
-        } else {
-          this.activeSnowpackStructureCommentCa = this.constantsService.snowpackStructureCommentGlidingSnowCa;
-        }
-        if (this.activeSnowpackStructureCommentOc !== undefined) {
-          this.activeSnowpackStructureCommentOc = this.activeSnowpackStructureCommentOc + " " + this.constantsService.snowpackStructureCommentGlidingSnowOc;
-        } else {
-          this.activeSnowpackStructureCommentOc = this.constantsService.snowpackStructureCommentGlidingSnowOc;
-        }
-        break;
-      case "favourableSituation":
-        if (this.activeSnowpackStructureCommentTextcat !== undefined) {
-          this.activeSnowpackStructureCommentTextcat = this.activeSnowpackStructureCommentTextcat + "." + this.constantsService.snowpackStructureCommentFavourableSituationTextcat;
-        } else {
-          this.activeSnowpackStructureCommentTextcat = this.constantsService.snowpackStructureCommentFavourableSituationTextcat;
-        }
-        if (this.activeSnowpackStructureCommentDe !== undefined) {
-          this.activeSnowpackStructureCommentDe = this.activeSnowpackStructureCommentDe + " " + this.constantsService.snowpackStructureCommentFavourableSituationDe;
-        } else {
-          this.activeSnowpackStructureCommentDe = this.constantsService.snowpackStructureCommentFavourableSituationDe;
-        }
-        if (this.activeSnowpackStructureCommentIt !== undefined) {
-          this.activeSnowpackStructureCommentIt = this.activeSnowpackStructureCommentIt + " " + this.constantsService.snowpackStructureCommentFavourableSituationIt;
-        } else {
-          this.activeSnowpackStructureCommentIt = this.constantsService.snowpackStructureCommentFavourableSituationIt;
-        }
-        if (this.activeSnowpackStructureCommentEn !== undefined) {
-          this.activeSnowpackStructureCommentEn = this.activeSnowpackStructureCommentEn + " " + this.constantsService.snowpackStructureCommentFavourableSituationEn;
-        } else {
-          this.activeSnowpackStructureCommentEn = this.constantsService.snowpackStructureCommentFavourableSituationEn;
-        }
-        if (this.activeSnowpackStructureCommentFr !== undefined) {
-          this.activeSnowpackStructureCommentFr = this.activeSnowpackStructureCommentFr + " " + this.constantsService.snowpackStructureCommentFavourableSituationFr;
-        } else {
-          this.activeSnowpackStructureCommentFr = this.constantsService.snowpackStructureCommentFavourableSituationFr;
-        }
-        if (this.activeSnowpackStructureCommentEs !== undefined) {
-          this.activeSnowpackStructureCommentEs = this.activeSnowpackStructureCommentEs + " " + this.constantsService.snowpackStructureCommentFavourableSituationEs;
-        } else {
-          this.activeSnowpackStructureCommentEs = this.constantsService.snowpackStructureCommentFavourableSituationEs;
-        }
-        if (this.activeSnowpackStructureCommentCa !== undefined) {
-          this.activeSnowpackStructureCommentCa = this.activeSnowpackStructureCommentCa + " " + this.constantsService.snowpackStructureCommentFavourableSituationCa;
-        } else {
-          this.activeSnowpackStructureCommentCa = this.constantsService.snowpackStructureCommentFavourableSituationCa;
-        }
-        if (this.activeSnowpackStructureCommentOc !== undefined) {
-          this.activeSnowpackStructureCommentOc = this.activeSnowpackStructureCommentOc + " " + this.constantsService.snowpackStructureCommentFavourableSituationOc;
-        } else {
-          this.activeSnowpackStructureCommentOc = this.constantsService.snowpackStructureCommentFavourableSituationOc;
-        }
-        break;
-      default:
-        break;
-    }
-    this.setTexts();
-    this.loadSnowpackStructureCommentExampleTextModalRef.hide();
-  }
+    this.deselectBulletin();
 
-  loadSnowpackStructureCommentExampleTextCancel() {
-    this.loadSnowpackStructureCommentExampleTextModalRef.hide();
-  }
+    this.submitting = true;
 
-  createAvalancheProblem(isAfternoon: boolean) {
-    let daytime;
-    if (isAfternoon) {
-      daytime = this.activeBulletin.afternoon;
-    } else {
-      daytime = this.activeBulletin.forenoon;
-    }
-    let lastAvalancheProblem = daytime.avalancheProblem1;
-    let count = 1;
-    while (lastAvalancheProblem !== undefined) {
-      count += 1;
-      switch (count) {
-        case 2:
-          lastAvalancheProblem = daytime.avalancheProblem2;
-          break;
-        case 3:
-          lastAvalancheProblem = daytime.avalancheProblem3;
-          break;
-        case 4:
-          lastAvalancheProblem = daytime.avalancheProblem4;
-          break;
-        case 5:
-          lastAvalancheProblem = daytime.avalancheProblem5;
-          break;
-        default:
-          break;
-      }
-      if (count > 5) {
-        break;
-      }
-    }
-    switch (count) {
-      case 1:
-        daytime.avalancheProblem1 = new AvalancheProblemModel();
-        break;
-      case 2:
-        daytime.avalancheProblem2 = new AvalancheProblemModel();
-        break;
-      case 3:
-        daytime.avalancheProblem3 = new AvalancheProblemModel();
-        break;
-      case 4:
-        daytime.avalancheProblem4 = new AvalancheProblemModel();
-        break;
-      case 5:
-        daytime.avalancheProblem5 = new AvalancheProblemModel();
-        break;
-      default:
-        break;
+    if (this.checkAvalancheProblems()) {
+      this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        (data) => {
+          let duplicateRegion = false;
+
+          let message =
+            "<b>" + this.translateService.instant("bulletins.table.submitBulletinsDialog.message") + "</b><br><br>";
+
+          for (const entry of data as any) {
+            if (entry === "duplicateRegion") {
+              duplicateRegion = true;
+            }
+            if (entry === "missingDangerRating") {
+              message +=
+                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.submitBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message +=
+                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityHighlights") +
+                "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message +=
+                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingAvActivityComment") +
+                "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message +=
+                this.translateService.instant(
+                  "bulletins.table.submitBulletinsDialog.missingSnowpackStructureHighlights",
+                ) + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message +=
+                this.translateService.instant("bulletins.table.submitBulletinsDialog.missingSnowpackStructureComment") +
+                "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message +=
+                this.translateService.instant("bulletins.table.submitBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+            }
+          }
+
+          if (duplicateRegion) {
+            this.openSubmitBulletinsDuplicateRegionModal(this.submitBulletinsDuplicateRegionTemplate);
+          } else {
+            this.openSubmitBulletinsModal(this.submitBulletinsTemplate, message, date);
+          }
+        },
+        (error) => {
+          console.error("Bulletins could not be checked!");
+          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+        },
+      );
     }
   }
 
-  hasFiveAvalancheProblems(isAfternoon: boolean) {
-    let daytime;
-    if (isAfternoon) {
-      daytime = this.activeBulletin.afternoon;
-    } else {
-      daytime = this.activeBulletin.forenoon;
-    }
-    if (daytime.avalancheProblem5 === undefined) {
-      return false;
-    } else {
-      return true;
-    }
+  openSubmitBulletinsDuplicateRegionModal(template: TemplateRef<any>) {
+    this.submitBulletinsDuplicateRegionModalRef = this.modalService.show(template, this.config);
   }
-}
 
-type TextcatTextfield = 
-|"activeHighlights"
-|"activeAvActivityHighlights"
-|"activeAvActivityComment"
-|"activeSnowpackStructureHighlights"
-|"activeSnowpackStructureComment"
-|"activeTendencyComment"
-|"text"
+  submitBulletinsDuplicateRegionModalConfirm(): void {
+    this.submitBulletinsDuplicateRegionModalRef.hide();
+    this.submitting = false;
+  }
 
-// alias pmData, alias inputDef
-interface TextcatLegacyIn {
-  textDef: string;
-  textField: TextcatTextfield;
-  currentLang: string;
-  region: string;
-}
+  openSubmitBulletinsModal(template: TemplateRef<any>, message: string, date: Date) {
+    const initialState = {
+      text: message,
+      date: date,
+      component: this,
+    };
+    this.submitBulletinsModalRef = this.modalService.show(ModalSubmitComponent, { initialState });
 
-// alias pmData, alias outputText
-interface TextcatLegacyOut {
-  textDef: string;
-  textField: TextcatTextfield;
-  textDe: string;
-  textDe_AT: string;
-  textDe_CH: string;
-  textIt: string;
-  textEn: string;
-  textEs: string;
-  textFr: string;
-  textCa: string;
-  textOc: string;
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.submitting = false;
+    });
+  }
+
+  openCheckBulletinsErrorModal(template: TemplateRef<any>) {
+    this.checkBulletinsErrorModalRef = this.modalService.show(template, this.config);
+  }
+
+  checkBulletinsErrorModalConfirm(): void {
+    this.checkBulletinsErrorModalRef.hide();
+    this.publishing = false;
+    this.submitting = false;
+  }
+
+  submitBulletinsErrorModalConfirm(): void {
+    this.submitBulletinsErrorModalRef.hide();
+    this.submitting = false;
+  }
+
+  showUpdateButton(date: Date) {
+    return (
+      !this.bulletinsService.getIsReadOnly() &&
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.published ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.republished ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.missing ||
+        (this.bulletinsService.getUserRegionStatus(date) === undefined &&
+          this.bulletinsService.hasBeenPublished5PM(date))) &&
+      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
+    );
+  }
+
+  createUpdate(event: Event) {
+    event.stopPropagation();
+    this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
+    this.bulletinsService.setIsEditable(true);
+    this.save();
+  }
+
+  showPublishButton(date: Date) {
+    return (
+      !this.bulletinsService.getIsReadOnly() &&
+      !this.publishing &&
+      !this.submitting &&
+      !this.copying &&
+      this.authenticationService.getActiveRegionId() !== undefined &&
+      this.bulletinsService.hasBeenPublished5PM(date) &&
+      (this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.resubmitted ||
+        this.bulletinsService.getUserRegionStatus(date) === this.bulletinStatus.submitted) &&
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)
+    );
+  }
+
+  publish(event: Event, date: Date, change: boolean) {
+    event.stopPropagation();
+    this.publishing = true;
+
+    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+      (data) => {
+        let message =
+          "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
+
+        for (const entry of data as any) {
+          if (entry === "missingDangerRating") {
+            message +=
+              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingDangerRating") + "<br>";
+          }
+          if (entry === "missingRegion") {
+            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.missingRegion") + "<br>";
+          }
+          if (entry === "duplicateRegion") {
+            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.duplicateRegion") + "<br>";
+          }
+          if (entry === "missingAvActivityHighlights") {
+            message +=
+              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityHighlights") +
+              "<br>";
+          }
+          if (entry === "missingAvActivityComment") {
+            message +=
+              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityComment") + "<br>";
+          }
+          if (entry === "missingSnowpackStructureHighlights") {
+            message +=
+              this.translateService.instant(
+                "bulletins.table.publishBulletinsDialog.missingSnowpackStructureHighlights",
+              ) + "<br>";
+          }
+          if (entry === "missingSnowpackStructureComment") {
+            message +=
+              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingSnowpackStructureComment") +
+              "<br>";
+          }
+          if (entry === "pendingSuggestions") {
+            message +=
+              this.translateService.instant("bulletins.table.publishBulletinsDialog.pendingSuggestions") + "<br>";
+          }
+          if (entry === "incompleteTranslation") {
+            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+          }
+        }
+
+        this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
+      },
+      (error) => {
+        console.error("Bulletins could not be checked!");
+        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+      },
+    );
+  }
+
+  openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: Date, change: boolean) {
+    const initialState = {
+      text: message,
+      date: date,
+      change: change,
+      component: this,
+    };
+    this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.publishing = false;
+    });
+  }
+
+  publishBulletinsErrorModalConfirm(): void {
+    this.publishBulletinsErrorModalRef.hide();
+    this.publishing = false;
+  }
+
+  previewErrorModalConfirm(): void {
+    this.previewErrorModalRef.hide();
+    this.loadingPreview = false;
+  }
+
+  openCheckBulletinsModal(message: string) {
+    const initialState = {
+      text: message,
+      date: this.bulletinsService.getActiveDate(),
+      component: this,
+    };
+    this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });
+
+    this.modalService.onHide.subscribe((reason: string) => {
+      this.publishing = false;
+      this.submitting = false;
+    });
+  }
+
+  checkBulletinsModalConfirm(): void {
+    this.checkBulletinsModalRef.hide();
+  }
 }

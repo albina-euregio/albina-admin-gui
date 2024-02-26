@@ -78,6 +78,7 @@ export class RoseChartComponent extends BaseComponent {
     // },
     color: ["#B1C1C7", "rgba(255, 0, 0, 0.5)", "#000", "#19ABFF"],
     angleAxis: {
+      triggerEvent: true,
       type: "category",
       z: 10,
       // scale: true,

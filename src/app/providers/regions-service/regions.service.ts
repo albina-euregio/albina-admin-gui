@@ -20,14 +20,6 @@ import {
 
 @Injectable()
 export class RegionsService {
-  initialAggregatedRegion: Record<string, string[]> = {
-    "AT-07": aggregatedRegions.level1.flat().filter((id) => id.startsWith("AT-07")),
-    "IT-32-BZ": aggregatedRegions.level1.flat().filter((id) => id.startsWith("IT-32-BZ")),
-    "IT-32-TN": aggregatedRegions.level1.flat().filter((id) => id.startsWith("IT-32-TN")),
-    "ES-CT-L": aggregatedRegions.level1.flat().filter((id) => id.startsWith("ES-CT-L")),
-    "CH": aggregatedRegions.level1.flat().filter((id) => id.startsWith("CH")),
-  };
-
   constructor(
     private translateService: TranslateService,
     private constantsService: ConstantsService,

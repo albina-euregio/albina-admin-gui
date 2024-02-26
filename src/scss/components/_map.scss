@@ -1,0 +1,13 @@
+// Map
+.create-bulletin__map-container, .create-bulletin__map {
+    width: 100%;
+    overflow: hidden;
+}
+
+.create-bulletin__map--pm {
+    visibility: hidden;
+}
+
+.create-bulletin__map--am {
+    visibility: visible;    
+}

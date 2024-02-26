@@ -12,7 +12,7 @@ export class SocialmediaService {
     private authenticationService: AuthenticationService) {
   }
 
-  public sendRapidMail(regionId: String, language: String, mailingsPost: String) {
+  public sendRapidMail(regionId: string, language: string, mailingsPost: string) {
     const url = this.constantsService.getServerUrl() + "social-media/rapidmail/send-message/" + regionId + "/" + language;
     const options = { headers: this.authenticationService.newAuthHeader() };
     const body = mailingsPost;

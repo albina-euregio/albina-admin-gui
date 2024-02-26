@@ -1,7 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
-import { MapService } from "../providers/map-service/map.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
@@ -9,37 +8,32 @@ import { BulletinModel } from "app/models/bulletin.model";
 
 @Component({
   selector: "app-avalanche-problem-preview",
-  templateUrl: "avalanche-problem-preview.component.html"
+  templateUrl: "avalanche-problem-preview.component.html",
 })
 export class AvalancheProblemPreviewComponent {
-
   @Input() bulletin: BulletinModel;
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() avalancheProblem: AvalancheProblemModel;
   @Input() count: number;
   @Input() disabled: boolean;
+  @Output() changeAvalancheProblemPreviewEvent = new EventEmitter<string>();
 
   avalancheProblemEnum = Enums.AvalancheProblem;
-  directionEnum = Enums.Direction;
 
   constructor(
     public translateService: TranslateService,
-    public mapService: MapService,
-    public settingsService: SettingsService) {
-  }
+    public settingsService: SettingsService,
+  ) {}
 
-  isAvalancheProblem(avalancheProblem) {
-    if (this.avalancheProblem && this.avalancheProblem.avalancheProblem === avalancheProblem) {
-      return true;
-    }
-    return false;
+  isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
+    return this.avalancheProblem.avalancheProblem === avalancheProblem;
   }
 
   hasAspects() {
     if (this.avalancheProblem && this.avalancheProblem.aspects && this.avalancheProblem.aspects.length > 0) {
       return true;
     } else {
-      return false
+      return false;
     }
   }
 
@@ -84,7 +78,7 @@ export class AvalancheProblemPreviewComponent {
 
   getElevationLowString() {
     if (this.avalancheProblem && this.avalancheProblem.getTreelineLow()) {
-      return this.translateService.instant("bulletins.create.tooltip.treeline")
+      return this.translateService.instant("bulletins.create.tooltip.treeline");
     } else if (this.avalancheProblem) {
       return this.avalancheProblem.getElevationLow() + "m";
     }
@@ -92,7 +86,7 @@ export class AvalancheProblemPreviewComponent {
 
   getElevationHighString() {
     if (this.avalancheProblem && this.avalancheProblem.getTreelineHigh()) {
-      return this.translateService.instant("bulletins.create.tooltip.treeline")
+      return this.translateService.instant("bulletins.create.tooltip.treeline");
     } else if (this.avalancheProblem) {
       return this.avalancheProblem.getElevationHigh() + "m";
     }
@@ -120,6 +114,7 @@ export class AvalancheProblemPreviewComponent {
         break;
     }
     this.reorderAvalancheProblems(this.count);
+    this.changeAvalancheProblemPreviewEvent.emit();
   }
 
   reorderAvalancheProblems(count) {
@@ -127,28 +122,36 @@ export class AvalancheProblemPreviewComponent {
       switch (i) {
         case 1:
           if (this.bulletinDaytimeDescription.avalancheProblem2) {
-            this.bulletinDaytimeDescription.setAvalancheProblem1(new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem2));
+            this.bulletinDaytimeDescription.setAvalancheProblem1(
+              new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem2),
+            );
           } else {
             this.bulletinDaytimeDescription.setAvalancheProblem1(undefined);
           }
           break;
         case 2:
           if (this.bulletinDaytimeDescription.avalancheProblem3) {
-            this.bulletinDaytimeDescription.setAvalancheProblem2(new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem3));
+            this.bulletinDaytimeDescription.setAvalancheProblem2(
+              new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem3),
+            );
           } else {
             this.bulletinDaytimeDescription.setAvalancheProblem2(undefined);
           }
           break;
         case 3:
           if (this.bulletinDaytimeDescription.avalancheProblem4) {
-            this.bulletinDaytimeDescription.setAvalancheProblem3(new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem4));
+            this.bulletinDaytimeDescription.setAvalancheProblem3(
+              new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem4),
+            );
           } else {
             this.bulletinDaytimeDescription.setAvalancheProblem3(undefined);
           }
           break;
         case 4:
           if (this.bulletinDaytimeDescription.avalancheProblem5) {
-            this.bulletinDaytimeDescription.setAvalancheProblem4(new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem5));
+            this.bulletinDaytimeDescription.setAvalancheProblem4(
+              new AvalancheProblemModel(this.bulletinDaytimeDescription.avalancheProblem5),
+            );
           } else {
             this.bulletinDaytimeDescription.setAvalancheProblem4(undefined);
           }
@@ -158,8 +161,6 @@ export class AvalancheProblemPreviewComponent {
       }
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
   moveUpAvalancheProblem(event) {
@@ -195,8 +196,7 @@ export class AvalancheProblemPreviewComponent {
         break;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemPreviewEvent.emit();
   }
 
   moveDownAvalancheProblem(event) {
@@ -232,22 +232,6 @@ export class AvalancheProblemPreviewComponent {
         break;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
-  }
-
-  isDangerRatingDirection(dir) {
-    if (this.avalancheProblem && this.avalancheProblem.getDangerRatingDirection() === dir) {
-      return true;
-    }
-    return false;
-  }
-
-  setDangerRatingDirection(event, dir: string) {
-    event.stopPropagation();
-    this.avalancheProblem.setDangerRatingDirection(Enums.Direction[dir]);
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemPreviewEvent.emit();
   }
 }

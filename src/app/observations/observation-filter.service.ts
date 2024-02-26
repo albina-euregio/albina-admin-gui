@@ -270,12 +270,12 @@ export class ObservationFilterService {
     return this.normalizeData({ dataset: { source: dataset }, nan });
   }
 
-  public normalizeData(dataset: OutputDataset): OutputDataset {
-    const nan = 0;
-    const data = dataset?.dataset.source.slice(1);
-    const header = dataset?.dataset.source[0];
+  public normalizeData(originalDataset: OutputDataset): OutputDataset {
+    const nan = originalDataset.nan;
+    const data = originalDataset?.dataset.source.slice(1);
+    const header = originalDataset?.dataset.source[0];
     //if(!this.isFilterActive()) console.log("normalizeData #0 ", {filterActive: this.isFilterActive(), filter: this.filterSelection, data});
-    //if (!this.isFilterActive() || !dataset || !data || !header) return dataset;
+    //if (!this.isFilterActive() || !originalDataset || !data || !header) return originalDataset;
 
     // get max values in order to normalize data
     // let availableMax = Number.MIN_VALUE;

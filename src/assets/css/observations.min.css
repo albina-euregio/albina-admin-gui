@@ -7730,7 +7730,7 @@ p-treeselect.ng-invalid.ng-dirty > .p-treeselect {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  position: absolute;
+  /*position: absolute;*/
   top: 0;
   bottom: 0;
   left: 0;
@@ -7970,6 +7970,9 @@ p-treeselect.ng-invalid.ng-dirty > .p-treeselect {
   bottom: 0;
   width: 100%;
   background-color: #e6eef2;
+}
+.layout-map > .observations-map {
+  height: calc(100vh - 110px);
 }
 .layout-map .leaflet-pane {
   mix-blend-mode: normal;

@@ -41,15 +41,6 @@
     "region": "Région",
     "education": "Pédagogie"
   },
-  "chat": {
-    "placeholder": "Écrivez ici ...",
-    "send": "Envoyer",
-    "activeUsers": "Qui est en ligne ?",
-    "all": "Tous",
-    "AT-07": "Tyrol",
-    "IT-32-BZ": "Tyrol du Sud",
-    "IT-32-TN": "Trentin"
-  },
   "matrix": {
     "label": {
       "snowpackStability": "Snowpack Stability",
@@ -65,17 +56,17 @@
   },
   "bulletins": {
     "title": "Avalanche.report",
-    "loadingPreview": "Créer un aperçu PDF",
     "tooltip": {
-      "publish": "Publier le bulletin immédiatement ",
-      "submit": "Soumettre le bulletin",
       "copy": "Copier le bulletin",
-      "cancel": "Cancel copy",
       "paste": "Coller le bulletin",
-      "update": "Créer une mise à jour du bulletin",
+      "cancel": "Cancel copy",
+      "update": "Editer",
+      "submit": "Submit",
+      "submitUpdate": "Submit update",
+      "publishChange": "Publish now (no messages)",
+      "publishUpdate": "Publish now",
       "caaml": "Afficher CAAML",
       "json": "Afficher JSON",
-      "edit": "Éditer le bulletin (ne sera plus publié)",
       "create": "Créer le bulletin",
       "preview": "Aperçu du bulletin (PDF)",
       "check": "Vérifier le bulletin",
@@ -83,11 +74,23 @@
       "publishAll": "Publier toutes les régions",
       "mediaFile": "Upload media file"
     },
+    "status": {
+      "submittedInfo": "Will be published at 5PM",
+      "resubmittedInfo": "Will be published at 8AM",
+      "publishedInfo" : "Has been published",
+      "noPublicationInfo" : "Will NOT be published automatically",
+      "loadingPreview": "Créer un aperçu PDF",
+      "loading": "Loading bulletin ...",
+      "publishing": "Publishing bulletin ...",
+      "submitting": "Submitting bulletin ..."
+    },
     "create": {
       "tooltip": {
-        "edit": "Éditer la région",
+        "edit": "Edit micro regions",
         "copy": "Copier la région",
         "delete": "Effacer la région",
+        "createRegion": "Create region",
+        "cancel": "Annuler",
         "acceptSuggestion": "Accepter les régions proposées",
         "rejectSuggestion": "Refuser les régions proposées",
         "saveChanges": "Sauvegarder les modifications",
@@ -102,7 +105,8 @@
         "tendency": {
           "decreasing": "Le Danger d'avalanche diminue",
           "steady": "Le danger d'avalanche reste le même",
-          "increasing": "Le danger d'avalanche augmente"
+          "increasing": "Le danger d'avalanche augmente",
+          "danger": "Avalanche danger"
         },
         "textcat": {
           "edit": "Éditer",
@@ -113,19 +117,35 @@
         },
         "moveUpAvalancheProblem": "Déplacer situation avalancheuse typique en haut",
         "moveDownAvalancheProblem": "Déplacer situation avalancheuse typique en bas",
-        "dangerRatingDirectionUp": "Élargir le degré de danger vers le haut",
-        "dangerRatingDirectionDown": "Élargir le degré de danger vers le bas"
+        "dangerRatingDirectionUp": "Upwards",
+        "dangerRatingDirectionDown": "Downwards"
       },
       "save": "Sauvegarder",
       "discard": "Abandoner",
       "back": "Retour",
       "createAggregatedRegion": "Nouvelle région",
       "pasteAggregatedRegion": "Coller région",
+      "pendingSuggestions": "Suggestions",
+      "rejectSuggestion": "Reject",
+      "acceptSuggestion": "Accept",
       "cancelCopyBulletin": "Annuler",
       "createAvalancheProblem": "Situation avalancheuse typique nouvelle",
       "ownRegions": "Mes régions",
       "foreignRegions": "Régions étrangères",
       "externalRegions": "External regions",
+      "mapSelectRegion": "Select regions on the map.",
+      "statusHeader": "Status of the bulletin",
+      "suggestions": "Suggestions",
+      "noBulletinsForSelectedDay": "No regions defined for this date.",
+      "autosave": "Saved automatically",
+      "regionEditable": "This region can be edited.", 
+      "regionNotEditable": "This region can not be edited.",
+      "regionLocked": "This region is locked.",
+      "changeDangerRatingElevation": "Extend the danger level",
+      "mapTop": "Map above",
+      "mapLeft": "Map aside",
+      "showNotes": "Show notes",
+      "hideNotes": "Hide notes",
       "label": {
         "avalancheProblems": "Situation avalancheuse typique",
         "aspects": "Expositions",
@@ -139,6 +159,11 @@
         "elevationLow": "Au-dessus",
         "tendencyComment": "Déscription de la tendance",
         "notes": "Notes"
+      },
+      "copyRegion": {
+        "label": "Copy warning region to another bulletin",
+        "select": "Paste into ...",
+        "currentBulletin": "This bulletin"
       },
       "title": {
         "avalancheProblem": "Avalanche problems",
@@ -571,6 +596,8 @@
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
+        "classify": "Classify",
+        "label": "Label",
         "invert": "Invert",
         "reset": "Reset",
         "aspect": {
@@ -771,7 +798,7 @@
     "complex": "Complexe"
   },
   "changeRegionDialog": {
-    "message": "Abandoner les modifications et changer la région?",
+    "message": "Do you want to change the region?",
     "accept": "Oui",
     "reject": "Non"
   },

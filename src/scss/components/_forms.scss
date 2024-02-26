@@ -1,0 +1,16 @@
+.form-group + .form-group {
+  margin-top: $space-6;
+}
+
+.form-field-with-toolbar {
+  position: relative;
+  &:hover .form-field-toolbar {
+    opacity: 1;
+  }
+  .form-field-toolbar {
+    position: absolute;
+    right: $space-1;
+    top: $space-1;
+    opacity: 0;
+  }
+}

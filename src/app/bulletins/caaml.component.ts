@@ -5,10 +5,9 @@ import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
-  templateUrl: "caaml.component.html"
+  templateUrl: "caaml.component.html",
 })
 export class CaamlComponent implements OnInit {
-
   public bulletins: string;
   public loading: boolean;
 
@@ -20,13 +19,14 @@ export class CaamlComponent implements OnInit {
 
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-sm",
   };
 
   constructor(
     public bulletinsService: BulletinsService,
     private router: Router,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+  ) {
     this.bulletins = undefined;
     this.loading = false;
   }
@@ -34,7 +34,7 @@ export class CaamlComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.bulletinsService.loadCaamlBulletins(this.bulletinsService.getActiveDate()).subscribe(
-      data => {
+      (data) => {
         this.loading = false;
         if ((data as any).status === 204) {
           this.openNoCaamlModal(this.noCaamlTemplate);
@@ -43,10 +43,10 @@ export class CaamlComponent implements OnInit {
           this.bulletins = text;
         }
       },
-      error => {
+      (error) => {
         this.loading = false;
         this.openCaamlNotLoadedModal(this.caamlNotLoadedTemplate);
-      }
+      },
     );
   }
 

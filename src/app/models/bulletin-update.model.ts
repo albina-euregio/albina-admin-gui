@@ -48,10 +48,10 @@ export class BulletinUpdateModel {
   toJson() {
     const json = Object();
 
-    if (this.region && this.region !== undefined) {
+    if (this.region) {
       json["region"] = this.region;
     }
-    if (this.date && this.date !== undefined) {
+    if (this.date) {
       json["date"] = this.getISOStringWithTimezoneOffset(this.date);
     }
     if (this.status !== null && this.status !== undefined) {
@@ -65,14 +65,23 @@ export class BulletinUpdateModel {
     const offset = -date.getTimezoneOffset();
     const dif = offset >= 0 ? "+" : "-";
 
-    return date.getFullYear() +
-      "-" + this.extend(date.getMonth() + 1) +
-      "-" + this.extend(date.getDate()) +
-      "T" + this.extend(date.getHours()) +
-      ":" + this.extend(date.getMinutes()) +
-      ":" + this.extend(date.getSeconds()) +
-      dif + this.extend(offset / 60) +
-      ":" + this.extend(offset % 60);
+    return (
+      date.getFullYear() +
+      "-" +
+      this.extend(date.getMonth() + 1) +
+      "-" +
+      this.extend(date.getDate()) +
+      "T" +
+      this.extend(date.getHours()) +
+      ":" +
+      this.extend(date.getMinutes()) +
+      ":" +
+      this.extend(date.getSeconds()) +
+      dif +
+      this.extend(offset / 60) +
+      ":" +
+      this.extend(offset % 60)
+    );
   }
 
   private extend(num: number) {

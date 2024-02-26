@@ -9,11 +9,10 @@ export const environment: Environment = {
   apiBaseUrl: "http://localhost:8080/albina/api/",
   wsBaseUrl: "ws://localhost:8080/albina/",
   textcatUrl: "https://admin.avalanche.report/textcat-ng-dev/",
-  headerBgColor: "#f4ea12",
-  faviconPath: "assets/img/admin-favicon.ico",
-  logoPath: "assets/img/admin-logo.svg",
-  isEuregio: true,
-  showChat: true
+  headerBgColor: "#f95bdc",
+  faviconPath: "assets/img/admin-favicon-local.ico",
+  logoPath: "assets/img/admin-logo-local.svg",
+  isEuregio: true
 };
 
 Object.assign(environment, (window as any).ENV);

@@ -1,7 +1,6 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { MapService } from "../providers/map-service/map.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
@@ -16,11 +15,13 @@ import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decis
   styleUrls: ["avalanche-problem-detail.component.scss"],
 })
 export class AvalancheProblemDetailComponent implements OnChanges {
-
   @Input() bulletin: BulletinModel;
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() avalancheProblemModel: AvalancheProblemModel;
   @Input() disabled: boolean;
+  @Input() count: number;
+  @Input() afternoon: boolean;
+  @Output() changeAvalancheProblemDetailEvent = new EventEmitter<string>();
 
   avalancheProblemEnum = Enums.AvalancheProblem;
   snowpackStability = Enums.SnowpackStability;
@@ -28,133 +29,169 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   avalancheSize = Enums.AvalancheSize;
   useElevationHigh = false;
   useElevationLow = false;
+  isElevationHighEditing = false;
+  isElevationLowEditing = false;
+  localElevationHigh = undefined;
+  localElevationLow = undefined;
+  localTreelineHigh = false;
+  localTreelineLow = false;
 
-  public terrainFeatureTextcat: string;
-  public terrainFeatureDe: string;
-  public terrainFeatureIt: string;
-  public terrainFeatureEn: string;
-  public terrainFeatureFr: string;
+  directionEnum = Enums.DangerRatingDirection;
 
   constructor(
     public settingsService: SettingsService,
     public authenticationService: AuthenticationService,
-    public mapService: MapService,
     public dialogService: DialogService,
-    public translateService: TranslateService) {
-  }
+    public translateService: TranslateService,
+  ) {}
 
   ngOnChanges() {
-    if (this.avalancheProblemModel.getTreelineHigh() || this.avalancheProblemModel.getElevationHigh() !== undefined) {
-      this.useElevationHigh = true;
-    } else {
-      this.useElevationHigh = false;
+    if (!this.isElevationHighEditing) {
+      this.useElevationHigh =
+        this.avalancheProblemModel.getTreelineHigh() || this.avalancheProblemModel.getElevationHigh() !== undefined;
+      this.localElevationHigh = this.avalancheProblemModel.getElevationHigh();
+      this.localTreelineHigh = this.avalancheProblemModel.getTreelineHigh();
     }
-    if (this.avalancheProblemModel.getTreelineLow() || this.avalancheProblemModel.getElevationLow() !== undefined) {
-      this.useElevationLow = true;
-    } else {
-      this.useElevationLow = false;
+    if (!this.isElevationLowEditing) {
+      this.useElevationLow =
+        this.avalancheProblemModel.getTreelineLow() || this.avalancheProblemModel.getElevationLow() !== undefined;
+      this.localElevationLow = this.avalancheProblemModel.getElevationLow();
+      this.localTreelineLow = this.avalancheProblemModel.getTreelineLow();
     }
   }
 
-  isAvalancheProblem(avalancheProblem) {
-    if (this.avalancheProblemModel && this.avalancheProblemModel.avalancheProblem === avalancheProblem) {
-      return true;
-    }
-    return false;
+  public forLabelId(key: string): string {
+    return this.count + (this.afternoon ? "_pm_" : "_am_") + key;
   }
 
-  selectAvalancheProblem(avalancheProblem) {
-    if (this.isAvalancheProblem(Enums.AvalancheProblem[avalancheProblem])) {
+  isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
+    return this.avalancheProblemModel?.avalancheProblem === avalancheProblem;
+  }
+
+  selectAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
+    if (this.isAvalancheProblem(avalancheProblem)) {
       this.avalancheProblemModel.setAvalancheProblem(undefined);
     } else {
-      this.avalancheProblemModel.setAvalancheProblem(Enums.AvalancheProblem[avalancheProblem]);
+      this.avalancheProblemModel.setAvalancheProblem(avalancheProblem);
     }
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
-  updateElevationHigh() {
-    if (this.avalancheProblemModel) {
-      this.avalancheProblemModel.elevationHigh = Math.round(this.avalancheProblemModel.elevationHigh / 100) * 100;
-      if (this.avalancheProblemModel.elevationHigh > 9000) {
-        this.avalancheProblemModel.elevationHigh = 9000;
-      } else if (this.avalancheProblemModel.elevationHigh < 0) {
-        this.avalancheProblemModel.elevationHigh = 0;
+  updateElevationHigh(event) {
+    if (!this.localTreelineHigh) {
+      if (this.avalancheProblemModel && this.localElevationHigh !== undefined && this.localElevationHigh !== "") {
+        this.localElevationHigh = Math.round(this.localElevationHigh / 100) * 100;
+        this.avalancheProblemModel.elevationHigh = this.localElevationHigh;
+        if (this.avalancheProblemModel.elevationHigh > 9000) {
+          this.avalancheProblemModel.elevationHigh = 9000;
+        } else if (this.avalancheProblemModel.elevationHigh < 0) {
+          this.avalancheProblemModel.elevationHigh = 0;
+        }
       }
+      this.bulletinDaytimeDescription.updateDangerRating();
+      this.isElevationHighEditing = false;
+      this.changeAvalancheProblemDetailEvent.emit();
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
   updateElevationLow() {
-    if (this.avalancheProblemModel) {
-      this.avalancheProblemModel.elevationLow = Math.round(this.avalancheProblemModel.elevationLow / 100) * 100;
-      if (this.avalancheProblemModel.elevationLow > 9000) {
-        this.avalancheProblemModel.elevationLow = 9000;
-      } else if (this.avalancheProblemModel.elevationLow < 0) {
-        this.avalancheProblemModel.elevationLow = 0;
+    if (!this.localTreelineLow) {
+      if (this.avalancheProblemModel && this.localElevationLow !== undefined && this.localElevationLow !== "") {
+        this.localElevationLow = Math.round(this.localElevationLow / 100) * 100;
+        this.avalancheProblemModel.elevationLow = this.localElevationLow;
+        if (this.avalancheProblemModel.elevationLow > 9000) {
+          this.avalancheProblemModel.elevationLow = 9000;
+        } else if (this.avalancheProblemModel.elevationLow < 0) {
+          this.avalancheProblemModel.elevationLow = 0;
+        }
       }
+      this.bulletinDaytimeDescription.updateDangerRating();
+      this.isElevationLowEditing = false;
+      this.changeAvalancheProblemDetailEvent.emit();
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
   treelineHighClicked(event) {
     event.stopPropagation();
     if (this.avalancheProblemModel.treelineHigh) {
+      this.isElevationHighEditing = true;
       this.avalancheProblemModel.treelineHigh = false;
+      this.localElevationHigh = "";
+      this.localTreelineHigh = false;
     } else {
       this.avalancheProblemModel.treelineHigh = true;
+      this.avalancheProblemModel.setElevationHigh(undefined);
+      this.localElevationHigh = "";
+      this.localTreelineHigh = true;
+      this.isElevationHighEditing = false;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   treelineLowClicked(event) {
     event.stopPropagation();
     if (this.avalancheProblemModel.treelineLow) {
+      this.isElevationLowEditing = true;
+      this.localTreelineLow = false;
+      this.localElevationLow = "";
       this.avalancheProblemModel.treelineLow = false;
     } else {
       this.avalancheProblemModel.treelineLow = true;
+      this.avalancheProblemModel.setElevationLow(undefined);
+      this.localElevationLow = "";
+      this.localTreelineLow = true;
+      this.isElevationLowEditing = false;
     }
     this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   setUseElevationHigh(event) {
     if (!event.currentTarget.checked) {
+      this.localElevationHigh = "";
+      this.localTreelineHigh = false;
       this.avalancheProblemModel.treelineHigh = false;
       this.avalancheProblemModel.elevationHigh = undefined;
+      this.isElevationHighEditing = false;
+      this.changeAvalancheProblemDetailEvent.emit();
+      this.bulletinDaytimeDescription.updateDangerRating();
+    } else {
+      this.useElevationHigh = true;
+      this.isElevationHighEditing = true;
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
   setUseElevationLow(event) {
     if (!event.currentTarget.checked) {
+      this.localElevationLow = "";
+      this.localTreelineLow = false;
       this.avalancheProblemModel.treelineLow = false;
       this.avalancheProblemModel.elevationLow = undefined;
+      this.isElevationLowEditing = false;
+      this.bulletinDaytimeDescription.updateDangerRating();
+      this.changeAvalancheProblemDetailEvent.emit();
+    } else {
+      this.useElevationLow = true;
+      this.isElevationLowEditing = true;
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
-    this.mapService.updateAggregatedRegion(this.bulletin);
-    this.mapService.selectAggregatedRegion(this.bulletin);
   }
 
-  deleteTextcat(event) {
-    this.terrainFeatureTextcat = undefined;
-    this.terrainFeatureDe = undefined;
-    this.terrainFeatureIt = undefined;
-    this.terrainFeatureEn = undefined;
-    this.terrainFeatureFr = undefined;
+  isDangerRatingDirection(dir: Enums.DangerRatingDirection) {
+    return this.avalancheProblemModel?.getDangerRatingDirection() === dir;
+  }
+
+  setDangerRatingDirection(event: Event, dir: Enums.DangerRatingDirection) {
+    event.stopPropagation();
+    this.avalancheProblemModel.setDangerRatingDirection(dir);
+    this.bulletinDaytimeDescription.updateDangerRating();
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   showDecisionTreeDialog() {
     const ref = this.dialogService.open(AvalancheProblemDecisionTreeComponent, {
       header: this.translateService.instant("bulletins.create.decisionTree.decisionTree"),
-      contentStyle: {"width": "95vw", "height": "85vh", "overflow": "hidden"}
+      contentStyle: { width: "95vw", height: "85vh", overflow: "hidden" },
     });
     ref.onClose.subscribe((data) => {
       if (data && "problem" in data) {
@@ -162,5 +199,13 @@ export class AvalancheProblemDetailComponent implements OnChanges {
         this.selectAvalancheProblem(data["problem"]);
       }
     });
+  }
+
+  changeMatrix(event) {
+    this.changeAvalancheProblemDetailEvent.emit();
+  }
+
+  changeAspects(event) {
+    this.changeAvalancheProblemDetailEvent.emit();
   }
 }

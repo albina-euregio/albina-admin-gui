@@ -1,0 +1,98 @@
+$icon-button-size-md: $space-8;
+$icon-button-size-sm: $space-6;
+
+/* Buttons with icon: label should be wrapped in a span tag.
+<button>
+<i class="ph ph-icon"></i>
+<span>Button label</span>
+*/
+
+.btn span {
+    font-weight: 500;
+}
+
+.btn-small {
+    font-size: 12px; 
+}
+
+.btn:not(.btn-icon) i:first-child {
+    margin-right: $space-2;
+}
+.btn:not(.btn-icon) i:last-child {
+    margin-left: $space-2;
+}
+// Primary button
+.btn-primary {
+    color: $white;
+    &:hover,
+    &:active,
+    &:focus,
+    &:disabled {
+        color: $white !important;
+    }
+    &:disabled {
+        background-color: $secondary;
+        border-color: $secondary;
+    }
+}
+
+.btn-outline-primary {
+    &:hover,
+    &:active,
+    &:focus,
+    &:disabled {
+        color: $primary !important;
+        background: $primary-pale;
+    }
+}
+
+.btn-outline-secondary {
+    color: $black;
+    &:hover,
+    &:active,
+    &:focus {
+        background-color: white;
+    }
+    &:disabled {
+        opacity: 0.4;
+    }
+}
+
+.btn-icon {
+    width: $icon-button-size-md;
+    height: $icon-button-size-md;
+    font-size: 16px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-sm.btn-icon {
+    width: $icon-button-size-sm;
+    height: $icon-button-size-sm;
+    font-size: 16px;
+}
+
+.btn-bare {
+    border-color: transparent;
+    background: transparent;
+    &:hover,
+    &:focus,
+    &:active,
+    &:disabled,
+    &.show {
+        background-color: $gray-100;
+        border-color: $gray-100;
+    }
+}
+
+.btn-bare--grey {
+    @extend .btn-bare;
+    color: $gray-600;
+}
+
+// Toolbars
+.btn-group--border {
+    border: 1px solid $gray-300;
+    background: white;
+}

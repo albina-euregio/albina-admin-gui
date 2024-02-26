@@ -13,7 +13,7 @@ export class StatisticsService {
     private authenticationService: AuthenticationService) {
   }
 
-  getStatisticsCsv(startDate: Date, endDate: Date, lang: String, extended: boolean, duplicates: boolean): Observable<Blob> {
+  getStatisticsCsv(startDate: Date, endDate: Date, lang: string, extended: boolean, duplicates: boolean): Observable<Blob> {
     const url = this.constantsService.getServerUrl() + "statistics?startDate=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate) + "&endDate=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate) + "&region=" + this.authenticationService.getActiveRegionId() + "&lang=" + lang + "&extended=" + extended + "&duplicates=" + duplicates;
     const headers = this.authenticationService.newAuthHeader("text/csv");
 

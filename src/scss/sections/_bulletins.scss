@@ -1,0 +1,60 @@
+.bulletins {
+    .badge {
+        text-transform: uppercase;
+    }
+}
+
+
+// Responsive layout
+@include media-breakpoint-down(md) {
+    table.responsive-table {
+        width: 100%;
+    }
+
+    /* Force table to not be like tables anymore */
+    table.responsive-table thead, 
+    table.responsive-table tbody, 
+    table.responsive-table th,
+    table.responsive-table td, 
+    table.responsive-table tr {
+        display: block;
+    }
+
+    /* Hide table headers */
+    table.responsive-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    table.responsive-table tr {
+        margin: 0 0 1rem 0;
+    }
+
+    table.responsive-table td {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid $table-border-color;
+        position: relative;
+        padding-left: 40%;
+        text-align: left; 
+    }
+
+    table.responsive-table td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 14px;
+        left: 14px;
+        width: 35%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+        text-align: left;
+        content: attr(data-label);
+        font-weight: bold;
+    }
+
+    table.responsive-table .bulletins-table__region-status {
+        text-align: left !important;
+    }
+}

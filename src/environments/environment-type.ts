@@ -7,5 +7,4 @@ export type Environment = {
   faviconPath: string;
   logoPath: string;
   isEuregio: boolean;
-  showChat: boolean;
 };

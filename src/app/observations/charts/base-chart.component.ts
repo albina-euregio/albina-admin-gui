@@ -62,7 +62,11 @@ export class BaseComponent {
   onMouseUp(event: any) {
     if (this.pressTimer) {
       this.resetTimeout();
-      this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: event.event.event.altKey } });
+      if (event.componentType === "series") {
+        this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: event.event.event.altKey } });
+      } else if (event.componentType === "angleAxis") {
+        this.handleChange.emit({ type: this.type, data: { value: event.value, altKey: event.event.event.altKey } });
+      }
     }
     return false;
   }

@@ -1,7 +1,6 @@
 import * as Enums from "../enums/enums";
 
 export class MatrixInformationModel {
-
   public dangerRating: Enums.DangerRating;
   public dangerRatingModificator: Enums.DangerRatingModificator;
   public avalancheSize: Enums.AvalancheSize;
@@ -27,7 +26,7 @@ export class MatrixInformationModel {
 
   constructor(matrixInformation?: MatrixInformationModel) {
     if (!matrixInformation) {
-      this.setDangerRating("missing");
+      this.setDangerRating(Enums.DangerRating.missing);
       this.dangerRatingModificator = undefined;
       this.avalancheSize = undefined;
       this.snowpackStability = undefined;
@@ -51,7 +50,7 @@ export class MatrixInformationModel {
     return this.dangerRating;
   }
 
-  setDangerRating(dangerRating) {
+  setDangerRating(dangerRating: Enums.DangerRating) {
     this.dangerRating = dangerRating;
   }
 
@@ -59,7 +58,7 @@ export class MatrixInformationModel {
     return this.dangerRatingModificator;
   }
 
-  setDangerRatingModificator(dangerRatingModificator) {
+  setDangerRatingModificator(dangerRatingModificator: Enums.DangerRatingModificator) {
     this.dangerRatingModificator = dangerRatingModificator;
   }
 
@@ -67,7 +66,7 @@ export class MatrixInformationModel {
     return this.avalancheSize;
   }
 
-  setAvalancheSize(avalancheSize) {
+  setAvalancheSize(avalancheSize: Enums.AvalancheSize) {
     this.avalancheSize = avalancheSize;
   }
 
@@ -75,7 +74,7 @@ export class MatrixInformationModel {
     return this.snowpackStability;
   }
 
-  setSnowpackStability(snowpackStability) {
+  setSnowpackStability(snowpackStability: Enums.SnowpackStability) {
     this.snowpackStability = snowpackStability;
   }
 
@@ -83,7 +82,7 @@ export class MatrixInformationModel {
     return this.frequency;
   }
 
-  setFrequency(frequency) {
+  setFrequency(frequency: Enums.Frequency) {
     this.frequency = frequency;
   }
 
@@ -114,28 +113,28 @@ export class MatrixInformationModel {
   toJson() {
     const json = Object();
 
-    if (this.dangerRating && this.dangerRating !== undefined && this.dangerRating !== Enums.DangerRating.missing) {
+    if (this.dangerRating && this.dangerRating !== Enums.DangerRating.missing) {
       json["dangerRating"] = this.dangerRating;
     }
-    if (this.dangerRatingModificator && this.dangerRatingModificator !== undefined) {
+    if (this.dangerRatingModificator) {
       json["dangerRatingModificator"] = this.dangerRatingModificator;
     }
-    if (this.avalancheSize && this.avalancheSize !== undefined) {
+    if (this.avalancheSize) {
       json["avalancheSize"] = this.avalancheSize;
     }
-    if (this.snowpackStability && this.snowpackStability !== undefined) {
+    if (this.snowpackStability) {
       json["snowpackStability"] = this.snowpackStability;
     }
-    if (this.frequency && this.frequency !== undefined) {
+    if (this.frequency) {
       json["frequency"] = this.frequency;
     }
-    if (this.avalancheSizeValue && this.avalancheSizeValue !== undefined) {
+    if (this.avalancheSizeValue) {
       json["avalancheSizeValue"] = this.avalancheSizeValue;
     }
-    if (this.snowpackStabilityValue && this.snowpackStabilityValue !== undefined) {
+    if (this.snowpackStabilityValue) {
       json["snowpackStabilityValue"] = this.snowpackStabilityValue;
     }
-    if (this.frequencyValue && this.frequencyValue !== undefined) {
+    if (this.frequencyValue) {
       json["frequencyValue"] = this.frequencyValue;
     }
     return json;
