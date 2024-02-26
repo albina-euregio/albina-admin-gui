@@ -253,7 +253,7 @@ export class BulletinsService {
     return this.http.get<Response>(url, options);
   }
 
-  loadBulletins(date: Date, regions: string[]): Observable<Response> {
+  loadBulletins(date: Date, regions: string[] = this.authenticationService.getInternalRegions()): Observable<Response> {
     let url = this.constantsService.getServerUrl() + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
     if (regions) {
       for (const region of regions) {

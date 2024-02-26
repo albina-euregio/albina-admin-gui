@@ -257,17 +257,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       // copy bulletins from other date
       if (this.bulletinsService.getCopyDate()) {
-        const regions = new Array<string>();
-        regions.push(this.authenticationService.getActiveRegionId());
-
         // load own bulletins from the date they are copied from
+        let regions = [this.authenticationService.getActiveRegionId()];
         this.bulletinsService.loadBulletins(this.bulletinsService.getCopyDate(), regions).subscribe(
           (data) => {
             this.copyBulletins(data);
             this.bulletinsService.setCopyDate(undefined);
-            // load foreign bulletins from the current date
-            const foreignRegions = this.authenticationService.getInternalRegions();
-            this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), foreignRegions).subscribe(
+            // load bulletins from the current date, add foreign bulletins
+            this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate()).subscribe(
               (data2) => {
                 this.addForeignBulletins(data2);
                 this.save();
@@ -319,8 +316,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private loadBulletinsFromServer() {
     console.log("Load internal bulletins");
-    const regions = this.authenticationService.getInternalRegions();
-    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
+    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         this.loadInternalBulletinsError = false;
         this.addInternalBulletins(data);
@@ -1490,9 +1486,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const date = new Date(this.bulletinsService.getActiveDate());
     date.setDate(date.getDate() - 1);
 
-    const regions = new Array<string>();
-    regions.push(this.authenticationService.getActiveRegionId());
-
+    const regions = [this.authenticationService.getActiveRegionId()];
     this.bulletinsService.loadBulletins(date, regions).subscribe(
       (data) => {
         // delete own regions
