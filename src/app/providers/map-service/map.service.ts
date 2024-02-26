@@ -190,7 +190,7 @@ export class MapService {
   }
 
   getAlbinaBaseMap(options: TileLayerOptions = {}): TileLayer {
-    return new TileLayer("https://static.avalanche.report/tms/{z}/{x}/{y}.png", {
+    return new TileLayer("https://static.avalanche.report/tms/{z}/{x}/{y}.webp", {
       tms: false,
       attribution: "",
       ...options
