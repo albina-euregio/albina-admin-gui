@@ -1,5 +1,5 @@
 <accordion class="avalanche-problems__accordion">
-  <accordion-group *ngIf="hasAvalancheProblem(1)" #accordionAvalancheProblem1>
+  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem1" #accordionAvalancheProblem1>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-right"></i>
@@ -26,7 +26,7 @@
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="hasAvalancheProblem(2)" #accordionAvalancheProblem2>
+  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem2" #accordionAvalancheProblem2>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem2.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem2.isOpen" class="accordion__arrow ph ph-caret-right"></i>
@@ -53,7 +53,7 @@
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="hasAvalancheProblem(3)" #accordionAvalancheProblem3>
+  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem3" #accordionAvalancheProblem3>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem3.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem3.isOpen" class="accordion__arrow ph ph-caret-right"></i>
@@ -80,7 +80,7 @@
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="hasAvalancheProblem(4)" #accordionAvalancheProblem4>
+  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem4" #accordionAvalancheProblem4>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem4.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem4.isOpen" class="accordion__arrow ph ph-caret-right"></i>
@@ -107,7 +107,7 @@
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="hasAvalancheProblem(5)" #accordionAvalancheProblem5>
+  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem5" #accordionAvalancheProblem5>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem5.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem5.isOpen" class="accordion__arrow ph ph-caret-right"></i>
