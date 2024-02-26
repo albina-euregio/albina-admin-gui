@@ -11,7 +11,7 @@
     </button>
 
     <a class="navbar-brand" href="#">
-      <img class="navbar__logo" alt="Avalanche.report Logo" src="{{ environment.logoPath }}">
+      <img class="navbar__logo" alt="Avalanche.report Logo" src="{{ environment.logoPath }}" />
     </a>
 
     <div [collapse]="isNavCollapsed" class="navbar-collapse" id="navbarContent">
@@ -27,19 +27,13 @@
           }}</a>
         </li>
         <li *ngIf="environment.isEuregio && authenticationService.isUserLoggedIn()" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
-            GeoSphere
-          </a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']"> GeoSphere </a>
         </li>
         <li *ngIf="environment.isEuregio" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">
-            SNOWPACK
-          </a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']"> SNOWPACK </a>
         </li>
         <li *ngIf="environment.isEuregio" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awesome']">
-            AWSOME
-          </a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awesome']"> AWSOME </a>
         </li>
       </ul>
     </div>
@@ -62,7 +56,8 @@
           </li>
           <li *ngFor="let lang of translateService.langs">
             <a class="dropdown-item" (click)="settingsService.setLangString(lang)"
-              >{{ "menu." + lang | translate }}<i *ngIf="settingsService.getLangString() === lang" class="ph ph-check"></i
+              >{{ "menu." + lang | translate
+              }}<i *ngIf="settingsService.getLangString() === lang" class="ph ph-check"></i
             ></a>
           </li>
         </ul>
@@ -76,7 +71,11 @@
           aria-expanded="false"
           dropdownToggle
         >
-          <img *ngIf="authenticationService.getUserImageSanitized()" [src]="authenticationService.getUserImageSanitized()" class="user-avatar__img" />
+          <img
+            *ngIf="authenticationService.getUserImageSanitized()"
+            [src]="authenticationService.getUserImageSanitized()"
+            class="user-avatar__img"
+          />
           {{ authenticationService.getUsername() }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">

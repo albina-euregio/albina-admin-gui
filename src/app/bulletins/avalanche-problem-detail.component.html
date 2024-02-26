@@ -2,8 +2,12 @@
   <div class="form-group">
     <label class="form-label" for="">{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
     <div *ngIf="!disabled">
-      <button type="button" class="btn btn-outline-primary btn-sm" (click)="showDecisionTreeDialog()">{{ "bulletins.create.decisionTree.decisionTree" | translate }}</button>
-      <a class="btn btn-link" href="{{ 'bulletins.create.decisionTree.feedbackURL' | translate }}" target="_blank"><small>{{ "bulletins.create.decisionTree.feedback" | translate }}</small></a>
+      <button type="button" class="btn btn-outline-primary btn-sm" (click)="showDecisionTreeDialog()">
+        {{ "bulletins.create.decisionTree.decisionTree" | translate }}
+      </button>
+      <a class="btn btn-link" href="{{ 'bulletins.create.decisionTree.feedbackURL' | translate }}" target="_blank"
+        ><small>{{ "bulletins.create.decisionTree.feedback" | translate }}</small></a
+      >
     </div>
     <div *ngIf="!disabled" class="avalanche-problem-detail__problem-icons">
       <img
@@ -71,14 +75,18 @@
       />
 
       <img
-        *ngIf="authenticationService.getActiveRegion().enableAvalancheProblemCornices && isAvalancheProblem(avalancheProblemEnum.cornices)"
+        *ngIf="
+          authenticationService.getActiveRegion().enableAvalancheProblemCornices &&
+          isAvalancheProblem(avalancheProblemEnum.cornices)
+        "
         src="./assets/img/Cornices_c.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.cornices)"
         class="avalanche-problem-detail__problem-icon"
       />
       <img
         *ngIf="
-          authenticationService.getActiveRegion().enableAvalancheProblemCornices && !isAvalancheProblem(avalancheProblemEnum.cornices)
+          authenticationService.getActiveRegion().enableAvalancheProblemCornices &&
+          !isAvalancheProblem(avalancheProblemEnum.cornices)
         "
         src="./assets/img/Cornices_bw.svg"
         (click)="selectAvalancheProblem(avalancheProblemEnum.cornices)"
@@ -167,7 +175,8 @@
       />
       <img
         *ngIf="
-          authenticationService.getActiveRegion().enableAvalancheProblemCornices && !isAvalancheProblem(avalancheProblemEnum.cornices)
+          authenticationService.getActiveRegion().enableAvalancheProblemCornices &&
+          !isAvalancheProblem(avalancheProblemEnum.cornices)
         "
         src="./assets/img/Cornices_bw.svg"
         class="avalanche-problem-detail__problem-icon is-disabled"
@@ -215,7 +224,9 @@
             (change)="setUseElevationHigh($event)"
             [(ngModel)]="useElevationHigh"
           />
-          <label class="form-label" [attr.for]="forLabelId('elevationHighCheckbox')">{{ "bulletins.create.label.elevationHigh" | translate }}</label>
+          <label class="form-label" [attr.for]="forLabelId('elevationHighCheckbox')">{{
+            "bulletins.create.label.elevationHigh" | translate
+          }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
           <div class="input-group">
@@ -262,7 +273,9 @@
             (change)="setUseElevationLow($event)"
             [(ngModel)]="useElevationLow"
           />
-          <label class="form-label" [attr.for]="forLabelId('elevationLowCheckbox')">{{ "bulletins.create.label.elevationLow" | translate }}</label>
+          <label class="form-label" [attr.for]="forLabelId('elevationLowCheckbox')">{{
+            "bulletins.create.label.elevationLow" | translate
+          }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
           <div class="input-group">
@@ -315,7 +328,12 @@
                 'btn-dark': isDangerRatingDirection(directionEnum.up),
                 'btn-outline-secondary': !isDangerRatingDirection(directionEnum.up)
               }"
-              (click)="setDangerRatingDirection($event, isDangerRatingDirection(directionEnum.up) ? undefined : directionEnum.up)"
+              (click)="
+                setDangerRatingDirection(
+                  $event,
+                  isDangerRatingDirection(directionEnum.up) ? undefined : directionEnum.up
+                )
+              "
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
             >
@@ -333,7 +351,10 @@
                 'btn-outline-secondary': !isDangerRatingDirection(directionEnum.down)
               }"
               (click)="
-                setDangerRatingDirection($event, isDangerRatingDirection(directionEnum.down) ? undefined : directionEnum.down)
+                setDangerRatingDirection(
+                  $event,
+                  isDangerRatingDirection(directionEnum.down) ? undefined : directionEnum.down
+                )
               "
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"

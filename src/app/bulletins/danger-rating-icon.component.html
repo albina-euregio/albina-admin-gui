@@ -1,8 +1,30 @@
 <div class="grid-container">
-  <div class="grid-item" [style.background-color]="getColorAbove()"></div> <!-- upper left -->
-  <div class="grid-item" [style.background-color]="getColorAbove()"></div> <!-- upper right -->
-  <div *ngIf="bulletinDaytimeDescription.hasElevationDependency" class="grid-item" [style.background-color]="getColorBelow()"></div> <!-- lower left -->
-  <div *ngIf="!bulletinDaytimeDescription.hasElevationDependency" class="grid-item" [style.background-color]="getColorAbove()"></div> <!-- lower left -->
-  <div *ngIf="bulletinDaytimeDescription.hasElevationDependency" class="grid-item" [style.background-color]="getColorBelow()"></div> <!-- lower right -->
-  <div *ngIf="!bulletinDaytimeDescription.hasElevationDependency" class="grid-item" [style.background-color]="getColorAbove()"></div> <!-- lower right -->
+  <div class="grid-item" [style.background-color]="getColorAbove()"></div>
+  <!-- upper left -->
+  <div class="grid-item" [style.background-color]="getColorAbove()"></div>
+  <!-- upper right -->
+  <div
+    *ngIf="bulletinDaytimeDescription.hasElevationDependency"
+    class="grid-item"
+    [style.background-color]="getColorBelow()"
+  ></div>
+  <!-- lower left -->
+  <div
+    *ngIf="!bulletinDaytimeDescription.hasElevationDependency"
+    class="grid-item"
+    [style.background-color]="getColorAbove()"
+  ></div>
+  <!-- lower left -->
+  <div
+    *ngIf="bulletinDaytimeDescription.hasElevationDependency"
+    class="grid-item"
+    [style.background-color]="getColorBelow()"
+  ></div>
+  <!-- lower right -->
+  <div
+    *ngIf="!bulletinDaytimeDescription.hasElevationDependency"
+    class="grid-item"
+    [style.background-color]="getColorAbove()"
+  ></div>
+  <!-- lower right -->
 </div>

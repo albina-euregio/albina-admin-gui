@@ -37,7 +37,10 @@
 
   <div class="avalanche-problem-detail__override">
     <!-- danger rating -->
-    <img *ngIf="!dangerRatingEnabled && isDangerRating(dangerRating.missing)" src="./assets/img/danger_rating_missing.svg" />
+    <img
+      *ngIf="!dangerRatingEnabled && isDangerRating(dangerRating.missing)"
+      src="./assets/img/danger_rating_missing.svg"
+    />
     <img
       *ngIf="dangerRatingEnabled && !isDangerRating(dangerRating.low)"
       src="./assets/img/danger_rating_low_bw.svg"
@@ -185,7 +188,7 @@
     </button>
     <div *ngIf="!disabled" class="form-check ml-3">
       <input
-      [id]="forLabelId('overrideCheckbox')"
+        [id]="forLabelId('overrideCheckbox')"
         type="checkbox"
         class="form-check-input"
         [disabled]="
@@ -199,7 +202,9 @@
         (click)="setDangerRatingEnabled($event)"
       />
 
-      <label *ngIf="!disabled" class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{ "matrix.label.override" | translate }}</label>
+      <label *ngIf="!disabled" class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{
+        "matrix.label.override" | translate
+      }}</label>
     </div>
   </div>
 </div>

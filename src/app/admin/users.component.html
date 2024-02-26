@@ -6,7 +6,9 @@
   </div>
   <div type="button" class="form-group row" style="padding-left: 1.25rem; padding-right: 1.25rem">
     <div class="col-md-6">
-      <button (click)="createUser($event)" class="btn btn-sm btn-primary px-3"><i class="fa fa-plus"></i> {{ "admin.users.button.create" | translate }}</button>
+      <button (click)="createUser($event)" class="btn btn-sm btn-primary px-3">
+        <i class="fa fa-plus"></i> {{ "admin.users.button.create" | translate }}
+      </button>
     </div>
   </div>
   <table class="table table-hover">
@@ -29,10 +31,26 @@
         <td>{{ user.regions }}</td>
         <td>{{ user.roles }}</td>
         <td>
-          <button type="button" class="btn btn-primary btn-sm" (click)="editUser($event, user)" data-toggle="tooltip" title="{{ 'admin.users.tooltip.edit' | translate }}"><i class="fa fa-pencil"></i></button>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="editUser($event, user)"
+            data-toggle="tooltip"
+            title="{{ 'admin.users.tooltip.edit' | translate }}"
+          >
+            <i class="fa fa-pencil"></i>
+          </button>
         </td>
         <td>
-          <button type="button" class="btn btn-danger btn-sm" (click)="deleteUser($event, user)" data-toggle="tooltip" title="{{ 'admin.users.tooltip.delete' | translate }}"><i class="fa fa-trash"></i></button>
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            (click)="deleteUser($event, user)"
+            data-toggle="tooltip"
+            title="{{ 'admin.users.tooltip.delete' | translate }}"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
         </td>
       </tr>
     </tbody>
@@ -44,7 +62,11 @@
     <p>{{ "admin.users.deleteUserModalDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="deleteUserModalConfirm($event)">{{ "admin.users.deleteUserModalDialog.accept" | translate }}</button>
-    <button type="button" class="btn btn-default" (click)="deleteUserModalDecline($event)">{{ "admin.users.deleteUserModalDialog.reject" | translate }}</button>
+    <button type="button" class="btn btn-primary" (click)="deleteUserModalConfirm($event)">
+      {{ "admin.users.deleteUserModalDialog.accept" | translate }}
+    </button>
+    <button type="button" class="btn btn-default" (click)="deleteUserModalDecline($event)">
+      {{ "admin.users.deleteUserModalDialog.reject" | translate }}
+    </button>
   </div>
 </ng-template>

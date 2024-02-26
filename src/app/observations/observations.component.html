@@ -44,17 +44,13 @@
 
             <div class="global-bar-item global-bar-item-source">
               <p-multiSelect
-                placeholder="{{
-                  'admin.observations.selectSources.placeholder' | translate
-                }}"
+                placeholder="{{ 'admin.observations.selectSources.placeholder' | translate }}"
                 [options]="allSources"
                 [(ngModel)]="filter.observationSources"
                 optionLabel="name"
                 optionValue="id"
                 [maxSelectedLabels]="0"
-                selectedItemsLabel="{{
-                  'admin.observations.selectSources.selectionLabel' | translate
-                }}"
+                selectedItemsLabel="{{ 'admin.observations.selectSources.selectionLabel' | translate }}"
                 (onChange)="onSourcesDropdownSelect($event)"
                 scrollHeight="400px"
               ></p-multiSelect>
@@ -62,17 +58,13 @@
 
             <div class="global-bar-item global-bar-item-region">
               <p-multiSelect
-                placeholder="{{
-                  'admin.observations.selectRegion.placeholder' | translate
-                }}"
+                placeholder="{{ 'admin.observations.selectRegion.placeholder' | translate }}"
                 [options]="allRegions"
                 [(ngModel)]="filter.regions"
                 optionLabel="name"
                 optionValue="id"
                 [maxSelectedLabels]="0"
-                selectedItemsLabel="{{
-                  'admin.observations.selectRegion.selectionLabel' | translate
-                }}"
+                selectedItemsLabel="{{ 'admin.observations.selectRegion.selectionLabel' | translate }}"
                 (onChange)="onRegionsDropdownSelect($event)"
                 scrollHeight="400px"
               ></p-multiSelect>
@@ -89,41 +81,29 @@
               >
               </p-calendar>
               <div class="obs-switch">
-                <div
-                  class="obs-switch-item 0is-active"
-                  (click)="loadObservations({ days: 1 })"
-                >
+                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 1 })">
                   <span class="switch-text">1d</span>
                 </div>
-                <div
-                  class="obs-switch-item 0is-active"
-                  (click)="loadObservations({ days: 2 })"
-                >
+                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 2 })">
                   <span class="switch-text">2d</span>
                 </div>
-                <div
-                  class="obs-switch-item 0is-active"
-                  (click)="loadObservations({ days: 3 })"
-                >
+                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 3 })">
                   <span class="switch-text">3d</span>
                 </div>
-                <div
-                  class="obs-switch-item 0is-active"
-                  (click)="loadObservations({ days: 7 })"
-                >
+                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 7 })">
                   <span class="switch-text">7d</span>
                 </div>
               </div>
             </div>
 
-            <span class="p-input-icon-left ml-auto" style="max-width: 100px;">
+            <span class="p-input-icon-left ml-auto" style="max-width: 100px">
               <i class="pi pi-search"></i>
               <input
                 pInputText
                 type="text"
                 (input)="observationTableFilterGlobal($event.target.value)"
                 placeholder="Filter"
-                style="max-width: 100px;"
+                style="max-width: 100px"
               />
             </span>
           </div>
@@ -204,7 +184,7 @@
 
       <div *ngIf="layout === 'table'" class="layout-table">
         <div class="card" style="height: 100%">
-          <div class="card-block" style="overflow-y: auto; overflow-x: auto;">
+          <div class="card-block" style="overflow-y: auto; overflow-x: auto">
             <app-observation-table
               #observationTable
               [observations]="localObservations"
@@ -216,11 +196,7 @@
 
       <!-- !layout-map -->
       <div class="layout-map">
-        <div
-          class="section-map observations-map"
-          id="observationsMap"
-          #observationsMap
-        ></div>
+        <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
       </div>
       <!-- /layout-map -->
     </div>
@@ -237,9 +213,7 @@
           </div>
           <div class="toolset-keydata">
             <div class="keydata">
-              <span class="keydata-selected">{{
-                localObservations.length
-              }}</span>
+              <span class="keydata-selected">{{ localObservations.length }}</span>
               /
               <span class="keydata-all">{{ observations.length }}</span>
             </div>
@@ -258,20 +232,12 @@
               [type]="LocalFilterTypes.Aspect"
               [data]="chartsData.Aspect"
               [isActive]="
-                filter.filterSelection[LocalFilterTypes.Aspect]['selected']
-                  .length > 0 ||
-                filter.filterSelection[LocalFilterTypes.Aspect]['highlighted']
-                  .length > 0
+                filter.filterSelection[LocalFilterTypes.Aspect]['selected'].length > 0 ||
+                filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].length > 0
               "
               [nanStatus]="{
-                selected:
-                  filter.filterSelection[LocalFilterTypes.Aspect][
-                    'selected'
-                  ].includes('nan'),
-                highlighted:
-                  filter.filterSelection[LocalFilterTypes.Aspect][
-                    'highlighted'
-                  ].includes('nan')
+                selected: filter.filterSelection[LocalFilterTypes.Aspect]['selected'].includes('nan'),
+                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan')
               }"
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
@@ -309,31 +275,19 @@
 
     <!-- !layout-switch -->
     <div class="layout-switch">
-      <div
-        *ngIf="layout !== 'map'"
-        (click)="layout = 'map'"
-        class="layout-switch-map obs-button"
-      >
+      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
         <span class="button-icon pi pi-map"></span>
         <span class="button-text">
           {{ "admin.observations.map" | translate }}
         </span>
       </div>
-      <div
-        *ngIf="layout !== 'table'"
-        (click)="layout = 'table'"
-        class="layout-switch-table obs-button"
-      >
+      <div *ngIf="layout !== 'table'" (click)="layout = 'table'" class="layout-switch-table obs-button">
         <span class="button-icon pi pi-list"></span>
         <span class="button-text">
           {{ "admin.observations.table" | translate }}
         </span>
       </div>
-      <div
-        *ngIf="layout !== 'chart'"
-        (click)="layout = 'chart'"
-        class="layout-switch-charts obs-button"
-      >
+      <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
         <span class="button-icon pi pi-chart-bar"></span>
         <span class="button-text">
           {{ "admin.observations.charts.charts" | translate }}
@@ -374,17 +328,11 @@
     <tr *ngFor="let row of observationPopup.table">
       <th style="padding-right: 1ex">{{ row.label }}</th>
       <td>
-        <span *ngIf="row.date !== undefined">{{
-          row.date | localizedDate : "full"
-        }}</span>
+        <span *ngIf="row.date !== undefined">{{ row.date | localizedDate: "full" }}</span>
         <span *ngIf="row.number !== undefined">{{ row.number | number }}</span>
-        <span *ngIf="row.boolean !== undefined"
-          ><i [class]="row.boolean ? 'pi pi-check' : 'pi pi-times'"></i
-        ></span>
+        <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'pi pi-check' : 'pi pi-times'"></i></span>
         <span *ngIf="row.url !== undefined"
-          ><a href="{{ row.url }}" rel="noopener" target="_blank">{{
-            row.url
-          }}</a></span
+          ><a href="{{ row.url }}" rel="noopener" target="_blank">{{ row.url }}</a></span
         >
         <span *ngIf="row.value !== undefined">{{ row.value }}</span>
         <span
@@ -400,9 +348,5 @@
       </td>
     </tr>
   </table>
-  <iframe
-    *ngIf="observationPopup?.iframe"
-    [src]="observationPopup?.iframe"
-    style="width: 100%; height: 80vh"
-  ></iframe>
+  <iframe *ngIf="observationPopup?.iframe" [src]="observationPopup?.iframe" style="width: 100%; height: 80vh"></iframe>
 </p-dialog>

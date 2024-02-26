@@ -1,36 +1,48 @@
 <div class="modal-body">
-	<div class="text-center">
-		<h1>{{ "bulletins.table.mediaFileDialog.headline" | translate }}</h1>
-		<p>
-			{{ date | localizedDate:'fullDate'}}<br>
-		</p>
-	</div>
-	<div *ngFor="let alert of alerts">
-		<alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
-	</div>
-	<div class="row">
-		<div class="col-lg-12">
-			<textarea id="textarea-input" name="textarea-input" label="textarea-input" rows="10" class="form-control" [(ngModel)]="text"></textarea>
-		</div>
-	</div>
-	<div class="row" style="margin-top: 10px">
-		<div class="col-lg-12">
-			<input type="file" style="width: 100%" (change)="selectFile($event)" placeholder="Upload file" accept=".mp3">
-		</div>
-	</div>
-	<div class="row" style="margin-top: 10px; margin-bottom: 20px">
-		<div class="col-lg-12">
-			<label class="switch switch-primary" style="margin-right: 10px">
-			  <input type="checkbox" class="switch-input" [(ngModel)]="important">
-			  <span class="switch-slider"></span>
-		  </label>
-			<label class="col-form-label" (click)="toggleImportant()"><b>{{ "bulletins.table.mediaFileDialog.important" | translate }}</b></label>
-		</div>
-	</div>
-
+  <div class="text-center">
+    <h1>{{ "bulletins.table.mediaFileDialog.headline" | translate }}</h1>
+    <p>{{ date | localizedDate: "fullDate" }}<br /></p>
+  </div>
+  <div *ngFor="let alert of alerts">
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <textarea
+        id="textarea-input"
+        name="textarea-input"
+        label="textarea-input"
+        rows="10"
+        class="form-control"
+        [(ngModel)]="text"
+      ></textarea>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 10px">
+    <div class="col-lg-12">
+      <input type="file" style="width: 100%" (change)="selectFile($event)" placeholder="Upload file" accept=".mp3" />
+    </div>
+  </div>
+  <div class="row" style="margin-top: 10px; margin-bottom: 20px">
+    <div class="col-lg-12">
+      <label class="switch switch-primary" style="margin-right: 10px">
+        <input type="checkbox" class="switch-input" [(ngModel)]="important" />
+        <span class="switch-slider"></span>
+      </label>
+      <label class="col-form-label" (click)="toggleImportant()"
+        ><b>{{ "bulletins.table.mediaFileDialog.important" | translate }}</b></label
+      >
+    </div>
+  </div>
 </div>
 <div class="modal-footer">
-	<button *ngIf="!important" type="button" class="btn btn-primary" (click)="mediaFileModalConfirm()">{{ "bulletins.table.mediaFileDialog.accept" | translate }}</button>
-	<button *ngIf="important" type="button" class="btn btn-danger" (click)="mediaFileModalConfirm()">{{ "bulletins.table.mediaFileDialog.accept" | translate }}</button>
-	<button type="button" class="btn btn-default" (click)="mediaFileModalDecline()">{{ "bulletins.table.mediaFileDialog.reject" | translate }}</button>
+  <button *ngIf="!important" type="button" class="btn btn-primary" (click)="mediaFileModalConfirm()">
+    {{ "bulletins.table.mediaFileDialog.accept" | translate }}
+  </button>
+  <button *ngIf="important" type="button" class="btn btn-danger" (click)="mediaFileModalConfirm()">
+    {{ "bulletins.table.mediaFileDialog.accept" | translate }}
+  </button>
+  <button type="button" class="btn btn-default" (click)="mediaFileModalDecline()">
+    {{ "bulletins.table.mediaFileDialog.reject" | translate }}
+  </button>
 </div>

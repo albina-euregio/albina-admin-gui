@@ -10,22 +10,41 @@
                 <p class="text-body-secondary">{{ "login.text" | translate }}</p>
                 <div class="input-group mb-1">
                   <span class="input-group-text"><i class="ph-bold ph-user"></i></span>
-                  <input [disabled]="loading" type="text" autocomplete="username" class="form-control" name="username" placeholder="{{ 'login.placeholder.username' | translate }}" [(ngModel)]="username">
+                  <input
+                    [disabled]="loading"
+                    type="text"
+                    autocomplete="username"
+                    class="form-control"
+                    name="username"
+                    placeholder="{{ 'login.placeholder.username' | translate }}"
+                    [(ngModel)]="username"
+                  />
                 </div>
                 <div class="input-group mb-2">
                   <span class="input-group-text"><i class="ph-bold ph-lock"></i></span>
-                  <input [disabled]="loading" autocomplete="current-password" type="password" class="form-control" name="password" placeholder="{{ 'login.placeholder.password' | translate }}" [(ngModel)]="password">
+                  <input
+                    [disabled]="loading"
+                    autocomplete="current-password"
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    placeholder="{{ 'login.placeholder.password' | translate }}"
+                    [(ngModel)]="password"
+                  />
                 </div>
                 <div class="row">
                   <div *ngIf="!loading" class="col-6">
-                    <button type="button" class="btn btn-primary" (click)="login()">{{ "login.button" | translate }}</button>
+                    <button type="button" class="btn btn-primary" (click)="login()">
+                      {{ "login.button" | translate }}
+                    </button>
                   </div>
                   <div *ngIf="loading" class="col-6">
-                    <button type="button" disabled class="btn btn-primary px-3"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
-                    
+                    <button type="button" disabled class="btn btn-primary px-3">
+                      <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+                    </button>
                   </div>
                 </div>
-                <hr class="bg-secondary">
+                <hr class="bg-secondary" />
                 <a href="{{ constantsService.gitlab }}" rel="noopener" target="_blank">
                   <small>{{ constantsService.release }}</small>
                 </a>
@@ -47,6 +66,8 @@
     <p>{{ "login.errorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="errorModalConfirm()">{{ "login.errorDialog.accept" | translate }}</button>
+    <button type="button" class="btn btn-primary" (click)="errorModalConfirm()">
+      {{ "login.errorDialog.accept" | translate }}
+    </button>
   </div>
 </ng-template>

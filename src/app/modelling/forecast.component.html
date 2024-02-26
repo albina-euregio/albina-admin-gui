@@ -94,8 +94,16 @@
     </div>
 
     <div class="d-inline-block" *ngIf="selectedModelType === 'qfa'" id="qfa_div">
-      <select #qfaSelect class="custom-select" style="max-width: 70vw" [(ngModel)]="qfa.file.filename" (change)="setQfa($event.target.value)">
-        <option *ngFor="let file of files[selectedCity]" [value]="file.filename">{{ file.date }} {{ file.city }}</option>
+      <select
+        #qfaSelect
+        class="custom-select"
+        style="max-width: 70vw"
+        [(ngModel)]="qfa.file.filename"
+        (change)="setQfa($event.target.value)"
+      >
+        <option *ngFor="let file of files[selectedCity]" [value]="file.filename">
+          {{ file.date }} {{ file.city }}
+        </option>
       </select>
     </div>
 
@@ -111,7 +119,7 @@
     <img *ngIf="selectedModelPoint" [src]="selectedModelPoint.$externalURL" class="img-fluid" />
   </div>
   <div *ngIf="selectedModelPoint && selectedModelPoint.$extraDialogRows">
-    <img *ngFor="let row of selectedModelPoint.$extraDialogRows" [src]="row.url" class="img-fluid">
+    <img *ngFor="let row of selectedModelPoint.$extraDialogRows" [src]="row.url" class="img-fluid" />
   </div>
   <div *ngIf="selectedModelPoint && observationPopupIframe">
     <iframe [src]="observationPopupIframe" style="width: 100%; height: 1714px"></iframe>
@@ -171,7 +179,9 @@
         >
           <div *ngIf="!['W500', 'W700', 'W850'].includes(paramService.parameterClasses[param])">
             <span *ngIf="param === 'QANmax' && day.key === '0'">---</span>
-            <span *ngIf="param !== 'QANmax'" [ngClass]="paramService.getCellClass(param, day.value['00'])">{{ day.value["00"] }}</span>
+            <span *ngIf="param !== 'QANmax'" [ngClass]="paramService.getCellClass(param, day.value['00'])">{{
+              day.value["00"]
+            }}</span>
             <span [ngClass]="paramService.getCellClass(param, day.value['06'])">{{ day.value["06"] }}</span>
             <span [ngClass]="paramService.getCellClass(param, day.value['12'])">{{ day.value["12"] }}</span>
             <span [ngClass]="paramService.getCellClass(param, day.value['18'])">{{ day.value["18"] }}</span>

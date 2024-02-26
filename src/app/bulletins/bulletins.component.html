@@ -14,12 +14,12 @@
         *ngFor="let date of bulletinsService.dates"
         [ngClass]="{
           'bulletins-table__day--past': bulletinsService.hasBeenPublished5PM(date)
-        }" 
+        }"
       >
-        <td [attr.data-label]="'bulletins.table.title.date' | translate ">
+        <td [attr.data-label]="'bulletins.table.title.date' | translate">
           <div class="bulletins-table__day">
             <time>
-              {{ date | localizedDate : "fullDate" }}
+              {{ date | localizedDate: "fullDate" }}
             </time>
             <div>
               <button
@@ -41,7 +41,10 @@
             </div>
           </div>
         </td>
-        <td class="bulletins-table__region-status" [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate">
+        <td
+          class="bulletins-table__region-status"
+          [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate"
+        >
           <span
             *ngIf="getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined"
             class="badge bg-danger"
@@ -114,7 +117,6 @@
           </span>
         </td>
         <td class="bulletins-table__region-publishing-tools">
-
           <!-- copy -->
           <button
             *ngIf="showCopyButton(date)"
@@ -150,7 +152,6 @@
           >
             <i class="fa fa-close"></i>
           </button>
-          
         </td>
       </tr>
     </tbody>
