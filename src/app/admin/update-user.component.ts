@@ -71,7 +71,7 @@ export class UpdateUserComponent implements AfterContentInit {
   }
 
   onRoleSelectionChange(Role) {
-    if (this.activeRoles.indexOf(Role) > -1) {
+    if (this.activeRoles.includes(Role)) {
       this.activeRoles.splice(this.activeRoles.indexOf(Role), 1);
     } else {
       this.activeRoles.push(Role);
@@ -79,7 +79,7 @@ export class UpdateUserComponent implements AfterContentInit {
   }
 
   onRegionSelectionChange(region) {
-    if (this.activeRegions.indexOf(region) > -1) {
+    if (this.activeRegions.includes(region)) {
       this.activeRegions.splice(this.activeRegions.indexOf(region), 1);
     } else {
       this.activeRegions.push(region);

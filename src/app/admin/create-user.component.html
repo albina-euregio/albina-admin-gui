@@ -121,7 +121,7 @@
                 class="form-check-input"
                 type="checkbox"
                 id="{{ 'role' + role }}"
-                [checked]="activeRoles.indexOf(role) > -1"
+                [checked]="activeRoles.includes(role)"
                 (change)="onRoleSelectionChange(role)"
               />
               <label class="form-check-label" for="{{ 'role' + role }}">
@@ -138,7 +138,7 @@
                 class="form-check-input"
                 type="checkbox"
                 id="{{ 'region' + region }}"
-                [checked]="activeRegions.indexOf(region) > -1"
+                [checked]="activeRegions.includes(region)"
                 (change)="onRegionSelectionChange(region)"
               />
               <label class="form-check-label" for="{{ 'region' + region }}">

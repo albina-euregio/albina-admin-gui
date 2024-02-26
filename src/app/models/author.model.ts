@@ -116,11 +116,7 @@ export class AuthorModel {
   }
 
   hasRole(role: string) {
-    if (this.roles.indexOf(role) > -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.roles.includes(role);
   }
 
   getImage() {

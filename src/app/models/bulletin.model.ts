@@ -305,7 +305,7 @@ export class BulletinModel {
   }
 
   addAdditionalAuthor(author: string) {
-    if (this.additionalAuthors.indexOf(author) < 0) {
+    if (!this.additionalAuthors.includes(author)) {
       this.additionalAuthors.push(author);
     }
   }

@@ -650,8 +650,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const clickedRegion = this.mapService.getClickedRegion();
       for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
         if (
-          bulletin.getSavedRegions().indexOf(clickedRegion) > -1 ||
-          bulletin.getPublishedRegions().indexOf(clickedRegion) > -1
+          bulletin.getSavedRegions().includes(clickedRegion) ||
+          bulletin.getPublishedRegions().includes(clickedRegion)
         ) {
           if (this.activeBulletin === bulletin) {
             this.deselectBulletin();
@@ -666,7 +666,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
       if (!hit) {
         for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
-          if (bulletin.getSuggestedRegions().indexOf(clickedRegion) > -1) {
+          if (bulletin.getSuggestedRegions().includes(clickedRegion)) {
             if (this.activeBulletin === bulletin) {
               this.deselectBulletin();
               break;
@@ -1233,15 +1233,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       for (const region of regions) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          if (this.activeBulletin.getSavedRegions().indexOf(region) === -1) {
+          if (!this.activeBulletin.getSavedRegions().includes(region)) {
             this.activeBulletin.getSavedRegions().push(region);
           }
         } else {
           if (
             !region.startsWith(this.activeBulletin.getOwnerRegion()) &&
-            this.activeBulletin.getSavedRegions().indexOf(region) === -1 &&
-            this.activeBulletin.getSuggestedRegions().indexOf(region) === -1 &&
-            this.activeBulletin.getPublishedRegions().indexOf(region) === -1
+            !this.activeBulletin.getSavedRegions().includes(region) &&
+            !this.activeBulletin.getSuggestedRegions().includes(region) &&
+            !this.activeBulletin.getPublishedRegions().includes(region)
           ) {
             this.activeBulletin.getSuggestedRegions().push(region);
           }

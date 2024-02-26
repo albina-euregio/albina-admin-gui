@@ -303,7 +303,7 @@ export class AuthenticationService {
       return false;
     }
     for (const externalServer of this.externalServers) {
-      if (externalServer.getRegions().indexOf(region) > -1) return true;
+      if (externalServer.getRegions().includes(region)) return true;
     }
     return false;
   }

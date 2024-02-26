@@ -72,7 +72,7 @@ export class ServerModel {
   }
 
   hasRole(role: string) {
-    return this.roles.indexOf(role) > -1;
+    return this.roles.includes(role);
   }
 
   getRegions(): string[] {
