@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
+import { CreateBulletinComponent } from "./create-bulletin.component";
 
 @Component({
   selector: "app-modal-check",
@@ -8,7 +9,7 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 export class ModalCheckComponent {
   text: string;
   date;
-  component;
+  component: CreateBulletinComponent;
 
   constructor(public bsModalRef: BsModalRef) {}
 

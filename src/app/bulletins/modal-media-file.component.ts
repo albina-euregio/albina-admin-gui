@@ -6,6 +6,7 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { AlertComponent } from "ngx-bootstrap/alert";
 import { TranslateService } from "@ngx-translate/core";
 import { MediaFileService } from "app/providers/media-file-service/media-file.service";
+import { CreateBulletinComponent } from "./create-bulletin.component";
 
 @Component({
   selector: "app-modal-media-file",
@@ -13,7 +14,7 @@ import { MediaFileService } from "app/providers/media-file-service/media-file.se
 })
 export class ModalMediaFileComponent {
   date;
-  component;
+  component: CreateBulletinComponent;
   file;
   text;
   important;

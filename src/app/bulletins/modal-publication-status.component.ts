@@ -5,6 +5,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AlertComponent } from "ngx-bootstrap/alert";
 import { TranslateService } from "@ngx-translate/core";
+import { CreateBulletinComponent } from "./create-bulletin.component";
 
 @Component({
   selector: "app-modal-publication-status",
@@ -13,7 +14,7 @@ import { TranslateService } from "@ngx-translate/core";
 export class ModalPublicationStatusComponent {
   json;
   date;
-  component;
+  component: CreateBulletinComponent;
 
   public alerts: any[] = [];
 
@@ -26,7 +27,7 @@ export class ModalPublicationStatusComponent {
   ) {}
 
   publicationStatusModalConfirm(): void {
-    this.component.publicationStatusModalConfirm(this.date);
+    this.component.publicationStatusModalConfirm();
   }
 
   createCaaml(event) {
