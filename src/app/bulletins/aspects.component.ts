@@ -6,8 +6,8 @@ import * as Enums from "../enums/enums";
   templateUrl: "aspects.component.html",
 })
 export class AspectsComponent {
-  @Input() aspects: string[];
-  @Output() aspectsChange = new EventEmitter<string[]>();
+  @Input() aspects: Enums.Aspect[];
+  @Output() aspectsChange = new EventEmitter<Enums.Aspect[]>();
   @Input() disabled: boolean;
   @Input() size: string;
 
@@ -20,36 +20,28 @@ export class AspectsComponent {
   }
 
   getColor(aspect: Enums.Aspect) {
-    if (this.aspects.includes(Enums.Aspect[aspect])) {
-      return "#000000";
-    }
-    return "#FFFFFF";
+    return this.aspects.includes(aspect) ? "#000000" : "#FFFFFF";
   }
 
   selectAspect(aspect: Enums.Aspect) {
-    if (!this.disabled) {
-      if (this.aspects?.length === 1) {
-        let a: number = Enums.Aspect[this.aspects[0]];
-        if (a === aspect) {
-          this.aspects = [];
-        } else {
-          let end = (aspect + 1) % 9;
-          if (end === 0) {
-            end = 1;
-          }
-          do {
-            this.aspects.push(Enums.Aspect[a]);
-            a = (a + 1) % 9;
-            if (a === 0) {
-              a = a + 1;
-            }
-          } while (a !== end);
-        }
-      } else {
-        this.aspects = [];
-        this.aspects.push(Enums.Aspect[aspect]);
-      }
-      this.aspectsChange.emit(this.aspects);
+    if (this.disabled) {
+      return;
     }
+    if (this.aspects?.length !== 1) {
+      this.aspects = [aspect];
+      return this.aspectsChange.emit(this.aspects);
+    }
+    if (this.aspects[0] === aspect) {
+      this.aspects = [];
+      return this.aspectsChange.emit(this.aspects);
+    }
+    const values: Enums.Aspect[] = Object.values(Enums.Aspect);
+    const end: number = values.indexOf(aspect);
+    let a: number = values.indexOf(this.aspects[0]);
+    do {
+      a = (a + 1) % values.length;
+      this.aspects.push(values[a]);
+    } while (a !== end);
+    return this.aspectsChange.emit(this.aspects);
   }
 }
