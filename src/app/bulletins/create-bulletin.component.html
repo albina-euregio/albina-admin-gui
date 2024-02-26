@@ -201,7 +201,7 @@
           <i class="ph ph-paper-plane-tilt"></i>
           <span>{{ 'bulletins.tooltip.publishUpdate' | translate }}</span>
       </button>
-  
+
       <!-- publish change (not 5PM nor 8AM, no messages) -->
       <button *ngIf="showPublishButton(bulletinsService.getActiveDate())" type="button" class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1" (click)="publish($event, bulletinsService.getActiveDate(), true)">
         <i class="ph ph-paper-plane-tilt"></i>
@@ -231,9 +231,9 @@
                   type="button"
                   bsDropdownToggle
               >
-                  <i class="ph-bold ph-dots-three-circle"></i>
+                  <i class="ph-bold ph-dots-three-outline-vertical"></i>
               </button>
-      
+
               <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
 
                 <!-- load bulletin from yesterday -->
@@ -287,7 +287,7 @@
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-  
+
                 <!-- upload json -->
                 <li>
                   <button
@@ -304,7 +304,7 @@
                   </button>
                   <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
                 </li>
-  
+
                 <!-- download json -->
                 <li>
                   <button
@@ -323,7 +323,7 @@
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-  
+
                 <!-- info -->
                 <li>
                   <button
@@ -340,7 +340,7 @@
                   </button>
                   <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
                 </li>
-  
+
                 <!-- publish all -->
                 <li>
                   <button
@@ -381,7 +381,7 @@
             </ng-container>
         </ng-container>
       </nav>
-    
+
     </div>
 
     <div class="create-bulletin__regions">
@@ -421,7 +421,7 @@
             <div class="region-divider__actions-dropdown mr-1">
                 <button
                     class="btn btn-sm btn-icon btn-bare--grey"
-                    type="button"                    
+                    type="button"
                 >
                     <i *ngIf="!showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-right"></i>
                     <i *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-down"></i>
@@ -736,7 +736,7 @@
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
             'bulletins-table__active--day': isActiveDate(date)
-          }" 
+          }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate ">
             <div class="bulletins-table__day--small">
