@@ -270,6 +270,9 @@ export class BulletinsService {
     let url = server.apiUrl + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
     if (server.regions) {
       for (const region of server.regions) {
+        if (this.authenticationService.isInternalRegion(region)) {
+          continue;
+        }
         url += "&regions=" + region;
       }
     }
