@@ -12,7 +12,6 @@ import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AuthenticationService {
-
   private currentAuthor: AuthorModel;
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
@@ -23,7 +22,7 @@ export class AuthenticationService {
   constructor(
     public http: HttpClient,
     public constantsService: ConstantsService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {
     this.externalServers = [];
     try {
@@ -46,15 +45,15 @@ export class AuthenticationService {
 
   public login(username: string, password: string): Observable<boolean> {
     const url = this.constantsService.getServerUrl() + "authentication";
-    const body = JSON.stringify({username, password});
+    const body = JSON.stringify({ username, password });
     const headers = new HttpHeaders({
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     });
     const options = { headers: headers };
 
-    return this.http.post<AuthenticationResponse>(url, body, options)
-    .pipe(map(data => {
-      if ((data ).access_token) {
+    return this.http.post<AuthenticationResponse>(url, body, options).pipe(
+      map((data) => {
+        if (data.access_token) {
           this.setCurrentAuthor(data);
           if (this.getCurrentAuthorRegions().length > 0) {
             this.setActiveRegion(this.getCurrentAuthorRegions()[0]);
@@ -63,7 +62,8 @@ export class AuthenticationService {
         } else {
           return false;
         }
-      }));
+      }),
+    );
   }
 
   public isUserLoggedIn(): boolean {
@@ -82,26 +82,26 @@ export class AuthenticationService {
 
   public externalServerLogins() {
     this.loadExternalServerInstances().subscribe(
-      data => {
-        for (const entry of (data as any)) {
+      (data) => {
+        for (const entry of data as any) {
           this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
-            data => {
+            (data) => {
               if (data === true) {
                 console.debug("[" + entry.name + "] Logged in!");
               } else {
                 console.error("[" + entry.name + "] Login failed!");
               }
             },
-            error => {
+            (error) => {
               console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body));
-            }
+            },
           );
         }
       },
-      error => {
+      (error) => {
         console.error("External server instances could not be loaded: " + JSON.stringify(error._body));
-      }
-    )
+      },
+    );
   }
 
   public loadExternalServerInstances(): Observable<Response> {
@@ -113,24 +113,31 @@ export class AuthenticationService {
 
   public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
     const url = apiUrl + "authentication";
-    const body = JSON.stringify({username, password});
+    const body = JSON.stringify({ username, password });
     const headers = new HttpHeaders({
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     });
     const options = { headers: headers };
 
-    return this.http.post<AuthenticationResponse>(url, body, options)
-      .pipe(map(data => {
-        if ((data ).access_token) {
+    return this.http.post<AuthenticationResponse>(url, body, options).pipe(
+      map((data) => {
+        if (data.access_token) {
           this.addExternalServer(data, apiUrl, name, username, password);
           return true;
         } else {
           return false;
         }
-      }));
+      }),
+    );
   }
 
-  private addExternalServer(json: Partial<AuthenticationResponse>, apiUrl: string, serverName: string, username: string, password: string) {
+  private addExternalServer(
+    json: Partial<AuthenticationResponse>,
+    apiUrl: string,
+    serverName: string,
+    username: string,
+    password: string,
+  ) {
     if (!json) {
       return;
     }
@@ -145,8 +152,7 @@ export class AuthenticationService {
     if (!json) {
       return;
     }
-    for (const server of json)
-      this.externalServers.push(ServerModel.createFromJson(server));
+    for (const server of json) this.externalServers.push(ServerModel.createFromJson(server));
   }
 
   public checkExternalServerLogin() {
@@ -157,7 +163,7 @@ export class AuthenticationService {
         this.externalServerLogins();
         break;
       }
-    };
+    }
   }
 
   public getAuthor() {
@@ -176,16 +182,16 @@ export class AuthenticationService {
     const authHeader = "Bearer " + this.currentAuthor?.accessToken;
     return new HttpHeaders({
       "Content-Type": mime,
-      "Accept": mime,
-      "Authorization": authHeader
+      Accept: mime,
+      Authorization: authHeader,
     });
   }
 
   public newFileAuthHeader(mime = "application/json"): HttpHeaders {
     const authHeader = "Bearer " + this.currentAuthor?.accessToken;
     return new HttpHeaders({
-      "Accept": mime,
-      "Authorization": authHeader
+      Accept: mime,
+      Authorization: authHeader,
     });
   }
 
@@ -193,8 +199,8 @@ export class AuthenticationService {
     const authHeader = "Bearer " + externalAuthor.accessToken;
     return new HttpHeaders({
       "Content-Type": mime,
-      "Accept": mime,
-      "Authorization": authHeader
+      Accept: mime,
+      Authorization: authHeader,
     });
   }
 
@@ -219,7 +225,12 @@ export class AuthenticationService {
   }
 
   public setActiveRegion(region: RegionConfiguration) {
-    if (this.currentAuthor.getRegions().map(region => region.id).includes(region.id)) {
+    if (
+      this.currentAuthor
+        .getRegions()
+        .map((region) => region.id)
+        .includes(region.id)
+    ) {
       this.activeRegion = region;
       localStorage.setItem("activeRegion", JSON.stringify(this.activeRegion));
     } else {
@@ -275,8 +286,7 @@ export class AuthenticationService {
       return false;
     }
     for (const externalServer of this.externalServers) {
-      if (externalServer.getRegions().indexOf(region) > -1)
-        return true;
+      if (externalServer.getRegions().indexOf(region) > -1) return true;
     }
     return false;
   }
