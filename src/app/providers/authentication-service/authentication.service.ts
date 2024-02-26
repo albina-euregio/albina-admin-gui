@@ -8,7 +8,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { AuthorModel } from "../../models/author.model";
 import { ServerModel } from "../../models/server.model";
 import { RegionConfiguration, ServerConfiguration } from "../configuration-service/configuration.service";
-import { environment } from "../../../environments/environment";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
 
 @Injectable()
 export class AuthenticationService {
@@ -18,44 +18,34 @@ export class AuthenticationService {
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
 
-  private env = environment.apiBaseUrl + "_";
-
   constructor(
+    private localStorageService: LocalStorageService,
     private http: HttpClient,
     private constantsService: ConstantsService,
     private sanitizer: DomSanitizer,
   ) {
     this.externalServers = [];
     try {
-      this.setCurrentAuthor(JSON.parse(localStorage.getItem(this.env + "currentAuthor")));
+      this.setCurrentAuthor(this.localStorageService.getCurrentAuthor());
     } catch (e) {
-      localStorage.removeItem(this.env + "currentAuthor");
+      this.localStorageService.setCurrentAuthor(undefined);
     }
     try {
-      this.setActiveRegion(this.getActiveRegionFromLocalStorage());
+      this.setActiveRegion(this.localStorageService.getActiveRegion());
     } catch (e) {
-      localStorage.removeItem("activeRegion");
+      this.localStorageService.setActiveRegion(undefined);
     }
     try {
-      this.setInternalRegions(JSON.parse(localStorage.getItem("internalRegions")));
+      this.setInternalRegions(this.localStorageService.getInternalRegions());
     } catch (e) {
-      localStorage.removeItem("internalRegions");
+      this.localStorageService.setInternalRegions(undefined);
     }
     try {
-      this.setExternalServers(JSON.parse(localStorage.getItem("externalServers")));
+      this.setExternalServers(this.localStorageService.getExternalServers());
     } catch (e) {
-      localStorage.removeItem("externalServers");
+      this.localStorageService.setExternalServers(undefined);
     }
     this.jwtHelper = new JwtHelperService();
-  }
-
-  private getActiveRegionFromLocalStorage(): RegionConfiguration | undefined {
-    try {
-      return JSON.parse(localStorage.getItem("activeRegion"));
-    } catch (e) {
-      localStorage.removeItem("activeRegion");
-      return undefined;
-    }
   }
 
   public login(username: string, password: string): Observable<boolean> {
@@ -71,7 +61,7 @@ export class AuthenticationService {
         if (data.access_token) {
           this.setCurrentAuthor(data);
           let authorRegions = this.getCurrentAuthorRegions();
-          let activeRegionFromLocalStorage = this.getActiveRegionFromLocalStorage();
+          let activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
           this.setActiveRegion(
             authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
           );
@@ -90,12 +80,12 @@ export class AuthenticationService {
   }
 
   public logout() {
-    localStorage.removeItem(this.env + "currentAuthor");
     console.debug("[" + this.currentAuthor?.name + "] Logged out!");
     this.currentAuthor = null;
     this.activeRegion = undefined;
-    localStorage.removeItem("internalRegions");
-    localStorage.removeItem("externalServers");
+    this.localStorageService.setCurrentAuthor(undefined);
+    this.localStorageService.setInternalRegions(undefined);
+    this.localStorageService.setExternalServers(undefined);
     this.externalServers = [];
   }
 
@@ -108,7 +98,7 @@ export class AuthenticationService {
 
   private setInternalRegions(regions: RegionConfiguration[]) {
     this.internalRegions = regions;
-    localStorage.setItem("internalRegions", JSON.stringify(this.internalRegions));
+    this.localStorageService.setInternalRegions(this.internalRegions);
   }
 
   private externalServerLogins() {
@@ -172,7 +162,7 @@ export class AuthenticationService {
     server.setApiUrl(apiUrl);
     server.setName(serverName);
     this.externalServers.push(server);
-    localStorage.setItem("externalServers", JSON.stringify(this.externalServers));
+    this.localStorageService.setExternalServers(this.externalServers);
   }
 
   private setExternalServers(json: Partial<ServerModel>[]) {
@@ -186,7 +176,7 @@ export class AuthenticationService {
     for (let server of this.externalServers) {
       if (this.jwtHelper.isTokenExpired(server.accessToken)) {
         this.externalServers = [];
-        localStorage.removeItem("externalServers");
+        this.localStorageService.setExternalServers(undefined);
         this.externalServerLogins();
         break;
       }
@@ -262,7 +252,7 @@ export class AuthenticationService {
         .includes(region.id)
     ) {
       this.activeRegion = region;
-      localStorage.setItem("activeRegion", JSON.stringify(this.activeRegion));
+      this.localStorageService.setActiveRegion(this.activeRegion);
     } else {
       this.logout();
     }
@@ -289,7 +279,7 @@ export class AuthenticationService {
       return;
     }
     this.currentAuthor = AuthorModel.createFromJson(json);
-    localStorage.setItem(this.env + "currentAuthor", JSON.stringify(this.currentAuthor));
+    this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {
