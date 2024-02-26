@@ -266,7 +266,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.copyBulletins(data);
             this.bulletinsService.setCopyDate(undefined);
             // load foreign bulletins from the current date
-            const foreignRegions = this.authenticationService.getCurrentAuthorRegionIds();
+            const foreignRegions = this.authenticationService.getInternalRegions();
             this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), foreignRegions).subscribe(
               (data2) => {
                 this.addForeignBulletins(data2);
@@ -319,7 +319,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private loadBulletinsFromServer() {
     console.log("Load internal bulletins");
-    const regions = this.authenticationService.getCurrentAuthorRegionIds();
+    const regions = this.authenticationService.getInternalRegions();
     this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate(), regions).subscribe(
       (data) => {
         this.loadInternalBulletinsError = false;

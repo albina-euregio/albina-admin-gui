@@ -255,7 +255,8 @@ export class AuthenticationService {
     return this.currentAuthor?.getRegions() || [];
   }
 
-  public getCurrentAuthorRegionIds(): string[] {
+  public getInternalRegions(): string[] {
+    // FIXME use local server instance regions
     return this.getCurrentAuthorRegions()
       .flatMap((r) => [r.id, ...(r.neighborRegions ?? [])])
       .filter((v, index, array) => array.indexOf(v) === index);
@@ -266,7 +267,7 @@ export class AuthenticationService {
   }
 
   public isInternalRegion(region: string): boolean {
-    return this.getCurrentAuthorRegionIds().some((r) => region?.startsWith(r));
+    return this.getInternalRegions().some((r) => region?.startsWith(r));
   }
 
   public isExternalRegion(region: string): boolean {
