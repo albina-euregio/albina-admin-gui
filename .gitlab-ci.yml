@@ -103,6 +103,7 @@ deploy:beta:
   environment:
     name: beta
   rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
     - when: manual
 
 build:production:
