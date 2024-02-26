@@ -560,6 +560,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mediaFileModalRef = this.modalService.show(ModalMediaFileComponent, { initialState });
   }
 
+  mediaFileModalConfirm(): void {
+    this.mediaFileModalRef.hide();
+  }
+
+  publicationStatusModalConfirm(): void {
+    this.publicationStatusModalRef.hide();
+  }
+
   openPublishAllModal() {
     const initialState = {
       date: this.bulletinsService.getActiveDate(),
@@ -570,6 +578,25 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.modalService.onHide.subscribe((reason: string) => {
       this.publishing = false;
     });
+  }
+
+  publishAllModalConfirm(): void {
+    this.publishAllModalRef.hide();
+    this.bulletinsService.publishAllBulletins(this.bulletinsService.getActiveDate()).subscribe(
+      (data) => {
+        console.log("All bulletins published.");
+        this.publishing = false;
+      },
+      (error) => {
+        console.error("All bulletins could not be published!");
+        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+      },
+    );
+  }
+
+  publishAllModalDecline(): void {
+    this.publishAllModalRef.hide();
+    this.publishing = false;
   }
 
   downloadJsonBulletin() {
@@ -682,6 +709,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   setMapLayout(isCompact: boolean): void {
     this.isCompactMapLayout = isCompact;
+  }
+
+  setTendency(event, tendency) {
+    event.stopPropagation();
+    this.activeBulletin.tendency = tendency;
   }
 
   onShowAfternoonMapChange(checked) {
@@ -906,6 +938,46 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (bulletin.hasDaytimeDependency && this.showAfternoonMap === false) {
       this.onShowAfternoonMapChange(true);
     }
+  }
+
+  acceptSuggestions(event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    const suggested = new Array<string>();
+    for (const region of bulletin.getSuggestedRegions()) {
+      if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+        // delete region from other bulletinInputModels
+        for (const b of this.internBulletinsList) {
+          const savedRegions = new Array<string>();
+          for (const entry of b.getSavedRegions()) {
+            if (entry !== region) {
+              savedRegions.push(entry);
+            }
+          }
+          b.setSavedRegions(savedRegions);
+        }
+
+        bulletin.getSavedRegions().push(region);
+      } else {
+        suggested.push(region);
+      }
+    }
+    bulletin.setSuggestedRegions(suggested);
+    bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+
+    this.updateBulletinOnServer(bulletin);
+  }
+
+  rejectSuggestions(event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    const suggested = new Array<string>();
+    for (const region of bulletin.getSuggestedRegions()) {
+      if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
+        suggested.push(region);
+      }
+    }
+    bulletin.setSuggestedRegions(suggested);
+
+    this.updateBulletinOnServer(bulletin);
   }
 
   createBulletin(copy) {
@@ -1167,6 +1239,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   eventEditMicroRegions(bulletin: BulletinModel) {
     this.showNewBulletinModal = true;
     this.editBulletinMicroRegions(bulletin);
+  }
+
+  editMicroRegions(event: Event, bulletin: BulletinModel) {
+    event.stopPropagation();
+    this.eventEditMicroRegions(bulletin);
   }
 
   private editBulletinMicroRegions(bulletin: BulletinModel) {
@@ -1537,6 +1614,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.noRegionModalRef.hide();
   }
 
+  openDiscardModal(template: TemplateRef<any>) {
+    this.discardModalRef = this.modalService.show(template, this.config);
+  }
+
   discardModalConfirm(): void {
     this.discardModalRef.hide();
     this.goBack();
@@ -1586,6 +1667,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.saveErrorModalRef.hide();
   }
 
+  openChangeErrorModal(template: TemplateRef<any>) {
+    this.changeErrorModalRef = this.modalService.show(template, this.config);
+  }
+
   changeErrorModalConfirm(): void {
     this.changeErrorModalRef.hide();
   }
@@ -1598,6 +1683,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.avalancheProblemErrorModalRef.hide();
     this.publishing = false;
     this.submitting = false;
+  }
+
+  getRegionNames(bulletin: BulletinModel): string {
+    const regionNames = bulletin.savedRegions.map((regionCode) => this.regionsService.getRegionName(regionCode));
+    return regionNames.join(", ");
   }
 
   getActiveRegionStatus(date: Date) {
@@ -1728,6 +1818,35 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.submitting = false;
   }
 
+  submitBulletinsModalConfirm(date: Date): void {
+    this.submitBulletinsModalRef.hide();
+    this.bulletinsService.submitBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+      (data) => {
+        console.log("Bulletins submitted.");
+        if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) {
+          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.resubmitted);
+        } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft) {
+          this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.submitted);
+        }
+        this.bulletinsService.setIsEditable(false);
+        this.submitting = false;
+      },
+      (error) => {
+        console.error("Bulletins could not be submitted!");
+        this.openSubmitBulletinsErrorModal(this.submitBulletinsErrorTemplate);
+      },
+    );
+  }
+
+  submitBulletinsModalDecline(): void {
+    this.submitBulletinsModalRef.hide();
+    this.submitting = false;
+  }
+
+  openSubmitBulletinsErrorModal(template: TemplateRef<any>) {
+    this.submitBulletinsErrorModalRef = this.modalService.show(template, this.config);
+  }
+
   submitBulletinsErrorModalConfirm(): void {
     this.submitBulletinsErrorModalRef.hide();
     this.submitting = false;
@@ -1845,9 +1964,59 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
   }
 
+  publishBulletinsModalConfirm(date: Date, change: boolean): void {
+    this.publishBulletinsModalRef.hide();
+    if (change) {
+      this.bulletinsService.changeBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        (data) => {
+          console.log("Bulletins published (no messages).");
+          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+          }
+          this.publishing = false;
+        },
+        (error) => {
+          console.error("Bulletins could not be published (no messages)!");
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+        },
+      );
+    } else {
+      this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        (data) => {
+          console.log("Bulletins published.");
+          if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
+          } else if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted) {
+            this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.published);
+          }
+          this.publishing = false;
+        },
+        (error) => {
+          console.error("Bulletins could not be published!");
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+        },
+      );
+    }
+  }
+
+  publishBulletinsModalDecline(): void {
+    this.publishBulletinsModalRef.hide();
+    this.publishing = false;
+  }
+
+  openPublishBulletinsErrorModal(template: TemplateRef<any>) {
+    this.publishBulletinsErrorModalRef = this.modalService.show(template, this.config);
+  }
+
   publishBulletinsErrorModalConfirm(): void {
     this.publishBulletinsErrorModalRef.hide();
     this.publishing = false;
+  }
+
+  openPreviewErrorModal(template: TemplateRef<any>) {
+    this.previewErrorModalRef = this.modalService.show(template, this.config);
   }
 
   previewErrorModalConfirm(): void {
