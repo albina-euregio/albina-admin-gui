@@ -11,13 +11,13 @@ const routes: Routes = [
     component: AdminComponent,
     canActivate: [AuthGuard],
     data: {
-      title: "Admin"
-    }
-  }
+      title: "Admin",
+    },
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

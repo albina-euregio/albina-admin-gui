@@ -15,13 +15,13 @@ export class BaseMapService extends MapService {
     forecast: new LayerGroup(),
     observers: new LayerGroup(),
     "weather-stations": new LayerGroup(),
-    webcams: new LayerGroup()
+    webcams: new LayerGroup(),
   };
 
   constructor(
     authenticationService: AuthenticationService,
     regionsService: RegionsService,
-    constantsService: ConstantsService
+    constantsService: ConstantsService,
   ) {
     super(regionsService, authenticationService, constantsService);
     this.observationTypeLayers = {} as any;
@@ -36,7 +36,7 @@ export class BaseMapService extends MapService {
         minZoom: 12.5,
         maxZoom: 17,
         attribution:
-          'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+          'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
       }),
       AlbinaBaseMap: this.getAlbinaBaseMap({ minZoom: 5, maxZoom: 12 }),
     };
@@ -58,8 +58,8 @@ export class BaseMapService extends MapService {
         this.overlayMaps.regions,
         this.overlayMaps.activeSelection,
         this.overlayMaps.editSelection,
-        ...Object.values(this.observationTypeLayers)
-      ]
+        ...Object.values(this.observationTypeLayers),
+      ],
     });
 
     this.resetAll();
@@ -85,7 +85,11 @@ export class BaseMapService extends MapService {
     this.map.addLayer(this.layers[name]);
   }
 
-  addMarker(marker: CircleMarker | Marker, layerName: keyof typeof this.layers, attribution: string | undefined = undefined) {
+  addMarker(
+    marker: CircleMarker | Marker,
+    layerName: keyof typeof this.layers,
+    attribution: string | undefined = undefined,
+  ) {
     if (!marker) {
       return;
     }

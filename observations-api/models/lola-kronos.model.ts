@@ -20,7 +20,7 @@ export interface LolaKronosApi {
 
 export interface LolaAvalancheEvent {
   uuId: string;
-  lolaApplication: string,
+  lolaApplication: string;
   avalancheEventTime: string;
   avalancheProblem: string[];
   avalancheSize: string;
@@ -64,7 +64,7 @@ export interface Image {
 
 export interface LolaEvaluation {
   uuId: string;
-  lolaApplication: string,
+  lolaApplication: string;
   avalanchePotential: number;
   comment: string;
   createdAt: Date;
@@ -209,7 +209,7 @@ export interface Weather {
 
 export interface LolaSimpleObservation {
   uuId: string;
-  lolaApplication: string,
+  lolaApplication: string;
   comment: string;
   deleted: boolean;
   deletedTime: Date;
@@ -239,7 +239,7 @@ export interface LolaSimpleObservation {
 
 export interface LolaSnowProfile {
   uuId: string;
-  lolaApplication: string,
+  lolaApplication: string;
   altitude: number | null;
   aspects: Aspect[];
   comment: string;
@@ -317,11 +317,22 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
       convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/lolaCommissionEvaluation/"),
     ),
     ...kronos.lolaSimpleObservation.map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail-by-token/lolaSimpleObservation/"),
+      convertLoLaToGeneric(
+        obs,
+        ObservationType.SimpleObservation,
+        urlPrefix + "detail-by-token/lolaSimpleObservation/",
+      ),
     ),
-    ...kronos.lolaSimpleObservation.filter((obs) => obs.snowLine).map((obs) =>
-      convertLoLaToGeneric(obs, ObservationType.SimpleObservation, urlPrefix + "detail-by-token/lolaSimpleObservation/", true),
-    ),
+    ...kronos.lolaSimpleObservation
+      .filter((obs) => obs.snowLine)
+      .map((obs) =>
+        convertLoLaToGeneric(
+          obs,
+          ObservationType.SimpleObservation,
+          urlPrefix + "detail-by-token/lolaSimpleObservation/",
+          true,
+        ),
+      ),
     ...kronos.lolaSnowProfile.map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail-by-token/lolaSnowProfile/"),
     ),
@@ -338,8 +349,7 @@ export function convertLoLaToGeneric(
     $id: obs.uuId,
     $data: obs,
     $externalURL: urlPrefix + obs.uuId + "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN,
-    $source:
-      obs.lolaApplication === "SNOBS" ? ObservationSource.Snobs : ObservationSource.LoLaKronos,
+    $source: obs.lolaApplication === "SNOBS" ? ObservationSource.Snobs : ObservationSource.LoLaKronos,
     $type,
     stability:
       $type === ObservationType.Avalanche
@@ -357,10 +367,7 @@ export function convertLoLaToGeneric(
           t.comment ?? "",
         ])
         .join(" "),
-    elevation:
-      snowLine
-        ? (obs as LolaSimpleObservation).snowLine
-        : (obs as LolaSnowProfile).altitude,
+    elevation: snowLine ? (obs as LolaSimpleObservation).snowLine : (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
     latitude: (

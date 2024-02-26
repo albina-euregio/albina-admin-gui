@@ -53,10 +53,10 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { CollapseModule } from "ngx-bootstrap/collapse";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { NgxSliderModule } from './ngx-slider/lib/slider.module';
+import { NgxSliderModule } from "./ngx-slider/lib/slider.module";
 
 import { ModalSubmitComponent } from "./bulletins/modal-submit.component";
 import { ModalPublishComponent } from "./bulletins/modal-publish.component";
@@ -78,7 +78,12 @@ import { UpdateUserComponent } from "./admin/update-user.component";
 import { BaseMapService } from "./providers/map-service/base-map.service";
 import { DialogService } from "primeng/dynamicdialog";
 import { MapService } from "./providers/map-service/map.service";
-import { AlpsolutProfileService, MeteogramSourceService, MultimodelSourceService, ObservedProfileSourceService } from "./modelling/sources";
+import {
+  AlpsolutProfileService,
+  MeteogramSourceService,
+  MultimodelSourceService,
+  ObservedProfileSourceService,
+} from "./modelling/sources";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaService } from "./modelling/qfa";
 import { GeocodingService } from "./observations/geocoding.service";
 import { CoordinateDataService } from "./providers/map-service/coordinate-data.service";
@@ -112,7 +117,7 @@ registerLocaleData(localeOc, "oc");
     BrowserAnimationsModule,
     PipeModule.forRoot(),
     ModalModule.forRoot(),
-    TranslateModule.forRoot()
+    TranslateModule.forRoot(),
   ],
   declarations: [
     AppComponent,
@@ -131,12 +136,12 @@ registerLocaleData(localeOc, "oc");
     ModalMediaFileComponent,
     CatalogOfPhrasesComponent,
     CreateUserComponent,
-    UpdateUserComponent
+    UpdateUserComponent,
   ],
   providers: [
     {
       provide: LocationStrategy,
-      useClass: HashLocationStrategy
+      useClass: HashLocationStrategy,
     },
     AlbinaObservationsService,
     AlpsolutProfileService,
@@ -184,8 +189,6 @@ registerLocaleData(localeOc, "oc");
     WsUpdateService,
   ],
   bootstrap: [AppComponent],
-  exports: [
-    TranslateModule
-  ]
+  exports: [TranslateModule],
 })
 export class AppModule {}

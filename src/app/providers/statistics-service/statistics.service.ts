@@ -6,15 +6,33 @@ import { AuthenticationService } from "../authentication-service/authentication.
 
 @Injectable()
 export class StatisticsService {
-
   constructor(
     public http: HttpClient,
     private constantsService: ConstantsService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService,
+  ) {}
 
-  getStatisticsCsv(startDate: Date, endDate: Date, lang: string, extended: boolean, duplicates: boolean): Observable<Blob> {
-    const url = this.constantsService.getServerUrl() + "statistics?startDate=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate) + "&endDate=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate) + "&region=" + this.authenticationService.getActiveRegionId() + "&lang=" + lang + "&extended=" + extended + "&duplicates=" + duplicates;
+  getStatisticsCsv(
+    startDate: Date,
+    endDate: Date,
+    lang: string,
+    extended: boolean,
+    duplicates: boolean,
+  ): Observable<Blob> {
+    const url =
+      this.constantsService.getServerUrl() +
+      "statistics?startDate=" +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate) +
+      "&endDate=" +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate) +
+      "&region=" +
+      this.authenticationService.getActiveRegionId() +
+      "&lang=" +
+      lang +
+      "&extended=" +
+      extended +
+      "&duplicates=" +
+      duplicates;
     const headers = this.authenticationService.newAuthHeader("text/csv");
 
     return this.http.get(url, { headers: headers, responseType: "blob" });

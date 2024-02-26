@@ -10,11 +10,13 @@ export const password2MismatchValidator: ValidatorFn = (control: AbstractControl
 
 @Directive({
   selector: "[appPassword2Mismatch]",
-  providers: [{
-    provide: NG_VALIDATORS,
-    useExisting: Password2MismatchValidatorDirective,
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALIDATORS,
+      useExisting: Password2MismatchValidatorDirective,
+      multi: true,
+    },
+  ],
 })
 export class Password2MismatchValidatorDirective implements Validator {
   validate(control: AbstractControl): ValidationErrors {

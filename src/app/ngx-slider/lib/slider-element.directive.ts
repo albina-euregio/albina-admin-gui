@@ -1,10 +1,10 @@
-import { Directive, ElementRef, Renderer2, HostBinding, ChangeDetectorRef } from '@angular/core';
-import { EventListenerHelper } from './event-listener-helper';
-import { EventListener } from './event-listener';
-import { ValueHelper } from './value-helper';
+import { Directive, ElementRef, Renderer2, HostBinding, ChangeDetectorRef } from "@angular/core";
+import { EventListenerHelper } from "./event-listener-helper";
+import { EventListener } from "./event-listener";
+import { ValueHelper } from "./value-helper";
 
 @Directive({
-  selector: '[ngxSliderElement]'
+  selector: "[ngxSliderElement]",
 })
 export class SliderElementDirective {
   private _position: number = 0;
@@ -37,40 +37,44 @@ export class SliderElementDirective {
     return this._rotate;
   }
 
-  @HostBinding('style.opacity')
+  @HostBinding("style.opacity")
   opacity: number = 1;
 
-  @HostBinding('style.visibility')
-  visibility: string = 'visible';
+  @HostBinding("style.visibility")
+  visibility: string = "visible";
 
-  @HostBinding('style.left')
-  left: string = '';
+  @HostBinding("style.left")
+  left: string = "";
 
-  @HostBinding('style.bottom')
-  bottom: string = '';
+  @HostBinding("style.bottom")
+  bottom: string = "";
 
-  @HostBinding('style.height')
-  height: string = '';
+  @HostBinding("style.height")
+  height: string = "";
 
-  @HostBinding('style.width')
-  width: string = '';
+  @HostBinding("style.width")
+  width: string = "";
 
-  @HostBinding('style.transform')
-  transform: string = '';
+  @HostBinding("style.transform")
+  transform: string = "";
 
   private eventListenerHelper: EventListenerHelper;
   private eventListeners: EventListener[] = [];
 
-  constructor(protected elemRef: ElementRef, protected renderer: Renderer2, protected changeDetectionRef: ChangeDetectorRef) {
+  constructor(
+    protected elemRef: ElementRef,
+    protected renderer: Renderer2,
+    protected changeDetectionRef: ChangeDetectorRef,
+  ) {
     this.eventListenerHelper = new EventListenerHelper(this.renderer);
   }
 
   setAlwaysHide(hide: boolean): void {
     this._alwaysHide = hide;
     if (hide) {
-      this.visibility = 'hidden';
+      this.visibility = "hidden";
     } else {
-      this.visibility = 'visible';
+      this.visibility = "visible";
     }
   }
 
@@ -96,11 +100,11 @@ export class SliderElementDirective {
   setVertical(vertical: boolean): void {
     this._vertical = vertical;
     if (this._vertical) {
-      this.left = '';
-      this.width = '';
+      this.left = "";
+      this.width = "";
     } else {
-      this.bottom = '';
-      this.height = '';
+      this.bottom = "";
+      this.height = "";
     }
   }
 
@@ -110,14 +114,14 @@ export class SliderElementDirective {
 
   setRotate(rotate: number): void {
     this._rotate = rotate;
-    this.transform = 'rotate(' + rotate + 'deg)';
+    this.transform = "rotate(" + rotate + "deg)";
   }
 
   getRotate(): number {
     return this._rotate;
   }
 
-   // Set element left/top position depending on whether slider is horizontal or vertical
+  // Set element left/top position depending on whether slider is horizontal or vertical
   setPosition(pos: number): void {
     if (this._position !== pos && !this.isRefDestroyed()) {
       this.changeDetectionRef.markForCheck();
@@ -125,9 +129,9 @@ export class SliderElementDirective {
 
     this._position = pos;
     if (this._vertical) {
-      this.bottom = Math.round(pos) + 'px';
+      this.bottom = Math.round(pos) + "px";
     } else {
-      this.left = Math.round(pos) + 'px';
+      this.left = Math.round(pos) + "px";
     }
   }
 
@@ -149,9 +153,9 @@ export class SliderElementDirective {
 
     this._dimension = dim;
     if (this._vertical) {
-      this.height = Math.round(dim) + 'px';
+      this.height = Math.round(dim) + "px";
     } else {
-      this.width = Math.round(dim) + 'px';
+      this.width = Math.round(dim) + "px";
     }
   }
 
@@ -161,13 +165,21 @@ export class SliderElementDirective {
 
   on(eventName: string, callback: (event: any) => void, debounceInterval?: number): void {
     const listener: EventListener = this.eventListenerHelper.attachEventListener(
-      this.elemRef.nativeElement, eventName, callback, debounceInterval);
+      this.elemRef.nativeElement,
+      eventName,
+      callback,
+      debounceInterval,
+    );
     this.eventListeners.push(listener);
   }
 
   onPassive(eventName: string, callback: (event: any) => void, debounceInterval?: number): void {
     const listener: EventListener = this.eventListenerHelper.attachPassiveEventListener(
-      this.elemRef.nativeElement, eventName, callback, debounceInterval);
+      this.elemRef.nativeElement,
+      eventName,
+      callback,
+      debounceInterval,
+    );
     this.eventListeners.push(listener);
   }
 
@@ -190,6 +202,6 @@ export class SliderElementDirective {
   }
 
   private isRefDestroyed(): boolean {
-    return ValueHelper.isNullOrUndefined(this.changeDetectionRef) || this.changeDetectionRef['destroyed'];
+    return ValueHelper.isNullOrUndefined(this.changeDetectionRef) || this.changeDetectionRef["destroyed"];
   }
 }

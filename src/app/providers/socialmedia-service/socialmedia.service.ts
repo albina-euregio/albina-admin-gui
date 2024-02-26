@@ -5,15 +5,15 @@ import { AuthenticationService } from "../authentication-service/authentication.
 
 @Injectable()
 export class SocialmediaService {
-
   constructor(
     public http: HttpClient,
     private constantsService: ConstantsService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService,
+  ) {}
 
   public sendRapidMail(regionId: string, language: string, mailingsPost: string) {
-    const url = this.constantsService.getServerUrl() + "social-media/rapidmail/send-message/" + regionId + "/" + language;
+    const url =
+      this.constantsService.getServerUrl() + "social-media/rapidmail/send-message/" + regionId + "/" + language;
     const options = { headers: this.authenticationService.newAuthHeader() };
     const body = mailingsPost;
     return this.http.post(url, body, options);

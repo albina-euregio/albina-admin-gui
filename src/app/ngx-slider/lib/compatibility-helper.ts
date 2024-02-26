@@ -1,7 +1,6 @@
 // Declaration for ResizeObserver a new API available in some of newest browsers:
 // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
-declare class ResizeObserver {
-}
+declare class ResizeObserver {}
 
 /** Helper with compatibility functions to support different browsers */
 export class CompatibilityHelper {

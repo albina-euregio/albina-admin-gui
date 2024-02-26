@@ -2,7 +2,7 @@
 export class MathHelper {
   /* Round numbers to a given number of significant digits */
   static roundToPrecisionLimit(value: number, precisionLimit: number): number {
-    return +( value.toPrecision(precisionLimit) );
+    return +value.toPrecision(precisionLimit);
   }
 
   static isModuloWithinPrecisionLimit(value: number, modulo: number, precisionLimit: number): boolean {

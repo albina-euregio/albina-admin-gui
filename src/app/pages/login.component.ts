@@ -8,10 +8,9 @@ import { ConstantsService } from "app/providers/constants-service/constants.serv
 import { ConfigurationService, ServerConfiguration } from "app/providers/configuration-service/configuration.service";
 
 @Component({
-  templateUrl: "login.component.html"
+  templateUrl: "login.component.html",
 })
 export class LoginComponent implements OnInit {
-
   public username: string;
   public password: string;
   public returnUrl: string;
@@ -22,9 +21,9 @@ export class LoginComponent implements OnInit {
 
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-sm",
   };
-  serverInfo: ServerConfiguration & {version: string};
+  serverInfo: ServerConfiguration & { version: string };
 
   constructor(
     private router: Router,
@@ -32,7 +31,8 @@ export class LoginComponent implements OnInit {
     public constantsService: ConstantsService,
     public configurationService: ConfigurationService,
     private modalService: BsModalService,
-    private sanitizer: DomSanitizer) {
+    private sanitizer: DomSanitizer,
+  ) {
     this.loading = false;
   }
 
@@ -45,9 +45,9 @@ export class LoginComponent implements OnInit {
     // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     this.returnUrl = "/bulletins";
 
-    this.configurationService.loadPublicLocalServerConfiguration().subscribe(info => {
+    this.configurationService.loadPublicLocalServerConfiguration().subscribe((info) => {
       document.title = info.name;
-      return this.serverInfo = info;
+      return (this.serverInfo = info);
     });
   }
 
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
 
     this.authenticationService.login(this.username, this.password).subscribe(
-      data => {
+      (data) => {
         if (data === true) {
           console.debug("[" + this.username + "] Logged in!");
           console.debug("Navigate to " + this.returnUrl);
@@ -71,10 +71,10 @@ export class LoginComponent implements OnInit {
           this.openErrorModal(this.errorTemplate);
         }
       },
-      error => {
+      (error) => {
         console.error("[" + this.username + "] Login failed: " + JSON.stringify(error._body));
         this.openErrorModal(this.errorTemplate);
-      }
+      },
     );
   }
 

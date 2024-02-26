@@ -42,20 +42,11 @@ export class CoordinateDataService implements Plane {
   public getCoordData(lat: number, lng: number): Observable<PlaneData> {
     this.setCoordinates(lat, lng);
 
-    const p1Elevation = this.elevationService.getElevation(
-      this.p1.lat,
-      this.p1.lng
-    );
+    const p1Elevation = this.elevationService.getElevation(this.p1.lat, this.p1.lng);
 
-    const p2Elevation = this.elevationService.getElevation(
-      this.p2.lat,
-      this.p2.lng
-    );
+    const p2Elevation = this.elevationService.getElevation(this.p2.lat, this.p2.lng);
 
-    const p3Elevation = this.elevationService.getElevation(
-      this.p3.lat,
-      this.p3.lng
-    );
+    const p3Elevation = this.elevationService.getElevation(this.p3.lat, this.p3.lng);
 
     return new Observable((observer) => {
       p1Elevation.subscribe((elevation) => {
@@ -78,10 +69,7 @@ export class CoordinateDataService implements Plane {
 
   private addMetersToCoords(lat: number, lng: number, d_lat = 0, d_lng = 0) {
     const new_lat = lat + (d_lat / this.EARTH_RADIUS) * (180 / Math.PI);
-    const new_lng =
-      lng +
-      ((d_lng / this.EARTH_RADIUS) * (180 / Math.PI)) /
-        Math.cos((lat * Math.PI) / 180);
+    const new_lng = lng + ((d_lng / this.EARTH_RADIUS) * (180 / Math.PI)) / Math.cos((lat * Math.PI) / 180);
 
     return { lat: new_lat, lng: new_lng };
   }
@@ -101,30 +89,24 @@ export class CoordinateDataService implements Plane {
     // v1 - v2
     const d_lat = (((v1[0] - v2[0]) * Math.PI) / 180) * this.EARTH_RADIUS;
     const d_lng =
-      (((v1[1] - v2[1]) * Math.PI) / 180) *
-      this.EARTH_RADIUS *
-      Math.cos((((v1[0] + v2[0]) / 2) * Math.PI) / 180);
+      (((v1[1] - v2[1]) * Math.PI) / 180) * this.EARTH_RADIUS * Math.cos((((v1[0] + v2[0]) / 2) * Math.PI) / 180);
 
     return [d_lat, d_lng, v1[2] - v2[2]];
   }
 
   private crossProduct(v1: number[], v2: number[]) {
     // v1 x v2
-    return [
-      v1[1] * v2[2] - v1[2] * v2[1],
-      v1[2] * v2[0] - v1[0] * v2[2],
-      v1[0] * v2[1] - v1[1] * v2[0],
-    ];
+    return [v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2], v1[0] * v2[1] - v1[1] * v2[0]];
   }
 
   private getNormalVector() {
     const v1 = this.subtractVectors(
       [this.p1.lat, this.p1.lng, this.p1.elevation],
-      [this.p2.lat, this.p2.lng, this.p2.elevation]
+      [this.p2.lat, this.p2.lng, this.p2.elevation],
     );
     const v2 = this.subtractVectors(
       [this.p1.lat, this.p1.lng, this.p1.elevation],
-      [this.p3.lat, this.p3.lng, this.p3.elevation]
+      [this.p3.lat, this.p3.lng, this.p3.elevation],
     );
 
     const normalVector = this.crossProduct(v1, v2);
@@ -163,10 +145,7 @@ export class CoordinateDataService implements Plane {
     const normalVector = this.getNormalVector();
     const normalizedNormalVector = this.normalizeVector(normalVector);
 
-    const aspect = Math.atan2(
-      normalizedNormalVector[1],
-      normalizedNormalVector[0]
-    );
+    const aspect = Math.atan2(normalizedNormalVector[1], normalizedNormalVector[0]);
     const aspectDeg = this.radToDeg(aspect);
 
     if (aspectDeg < 0) return 360 + aspectDeg;

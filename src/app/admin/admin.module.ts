@@ -21,7 +21,7 @@ import { DropdownModule } from "primeng/dropdown";
 import { TableModule } from "primeng/table";
 
 import { AlertModule } from "ngx-bootstrap/alert";
-import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TabsModule } from "ngx-bootstrap/tabs";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 
@@ -37,7 +37,7 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     AccordionModule,
     AlertModule.forRoot(),
     TabsModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
   ],
   declarations: [
     AdminComponent,
@@ -48,7 +48,7 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     UsersComponent,
     StatisticsComponent,
     ObservationsComponent,
-    BlogComponent
+    BlogComponent,
   ],
 })
-export class AdminModule { }
+export class AdminModule {}

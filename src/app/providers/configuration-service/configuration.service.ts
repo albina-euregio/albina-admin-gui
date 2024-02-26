@@ -70,19 +70,17 @@ export interface ServerConfiguration {
   isNew: boolean;
 }
 
-
 @Injectable()
 export class ConfigurationService {
-
   constructor(
     public http: HttpClient,
     private constantsService: ConstantsService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService,
+  ) {}
 
-  public loadPublicLocalServerConfiguration(): Observable<ServerConfiguration & {version: string}> {
+  public loadPublicLocalServerConfiguration(): Observable<ServerConfiguration & { version: string }> {
     const url = this.constantsService.getServerUrl() + "server/info";
-    return this.http.get<ServerConfiguration & {version: string}>(url);
+    return this.http.get<ServerConfiguration & { version: string }>(url);
   }
 
   public loadLocalServerConfiguration(): Observable<ServerConfiguration> {

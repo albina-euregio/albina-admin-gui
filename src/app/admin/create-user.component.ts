@@ -11,10 +11,9 @@ import * as bcrypt from "bcryptjs";
 
 @Component({
   templateUrl: "create-user.component.html",
-  selector: "app-create-user"
+  selector: "app-create-user",
 })
 export class CreateUserComponent implements AfterContentInit {
-
   public createUserLoading: boolean;
 
   public alerts: any[] = [];
@@ -35,25 +34,25 @@ export class CreateUserComponent implements AfterContentInit {
     public configurationService: ConfigurationService,
     public regionsService: RegionsService,
     private dialogRef: MatDialogRef<CreateUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-  }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {}
 
   ngAfterContentInit() {
     this.userService.getRoles().subscribe(
-      data => {
+      (data) => {
         this.roles = data;
       },
-      error => {
+      (error) => {
         console.error("Roles could not be loaded!");
-      }
+      },
     );
     this.userService.getRegions().subscribe(
-      data => {
+      (data) => {
         this.regions = data;
       },
-      error => {
+      (error) => {
         console.error("Regions could not be loaded!");
-      }
+      },
     );
   }
 
@@ -88,7 +87,7 @@ export class CreateUserComponent implements AfterContentInit {
     user.setRegions(this.activeRegions);
 
     this.userService.createUser(user).subscribe(
-      data => {
+      (data) => {
         this.createUserLoading = false;
         console.debug("User created!");
         this.closeDialog({
@@ -96,15 +95,15 @@ export class CreateUserComponent implements AfterContentInit {
           msg: this.translateService.instant("admin.users.createUser.success"),
         });
       },
-      error => {
+      (error) => {
         this.createUserLoading = false;
         console.error("User could not be created!");
         window.scrollTo(0, 0);
         this.closeDialog({
           type: "danger",
-          msg: this.translateService.instant("admin.users.createUser.error")
+          msg: this.translateService.instant("admin.users.createUser.error"),
         });
-      }
+      },
     );
   }
 

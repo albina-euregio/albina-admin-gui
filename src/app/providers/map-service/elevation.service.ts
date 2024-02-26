@@ -11,9 +11,7 @@ interface Request {
 }
 
 interface Response {
-  abfragestatus:
-    | "erfolgreich"
-    | "Die Abfrage-Koordinaten befinden sich nicht in Österreich.";
+  abfragestatus: "erfolgreich" | "Die Abfrage-Koordinaten befinden sich nicht in Österreich.";
   abfragekoordinaten: {
     rechtswert: number;
     hochwert: number;
@@ -34,7 +32,7 @@ export class ElevationService {
 
   constructor(
     private http: HttpClient,
-    private constantsService: ConstantsService
+    private constantsService: ConstantsService,
   ) {
     this.url = this.constantsService.rechenraumApi;
   }
@@ -52,7 +50,7 @@ export class ElevationService {
 
         const elevation = Math.round(res.hoeheDTM);
         return elevation;
-      })
+      }),
     );
   }
 }

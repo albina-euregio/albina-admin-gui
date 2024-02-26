@@ -25,18 +25,16 @@ interface File {
 
 @Injectable()
 export class GetFilenamesService {
-  private baseUrl="https://static.avalanche.report/zamg_qfa";
+  private baseUrl = "https://static.avalanche.report/zamg_qfa";
 
   constructor(private http: HttpClient) {}
 
   private getHTMLResponse() {
     // Caddy serves directory index as JSON for Accept=application/json
     // https://github.com/caddyserver/caddy/blob/e8ad9b32c9730ddb162b6fb1443fc0b36fcef7dc/modules/caddyhttp/fileserver/browse.go#L105-L109
-    return this.http.get<CaddyListingItem[]>(
-      this.baseUrl, {
-        observe: "body"
-      }
-    )
+    return this.http.get<CaddyListingItem[]>(this.baseUrl, {
+      observe: "body",
+    });
   }
 
   public getFilenames = async (baseUrl: string, city: string) => {
@@ -44,9 +42,9 @@ export class GetFilenamesService {
     const response = await this.getHTMLResponse().toPromise();
     const files = response.reverse();
     // console.log(files);
-    const filteredFiles = files.filter(file => file.name.includes(city));
+    const filteredFiles = files.filter((file) => file.name.includes(city));
     return filteredFiles;
-  }
+  };
 
   public parseFilename = (filename: string): File => {
     const parts = filename.split("_");
@@ -58,25 +56,25 @@ export class GetFilenamesService {
       endDay: parts[4].substring(2, 4),
       city: parts[3],
       qfa: parts[2],
-      filename: filename
-    }
-  }
+      filename: filename,
+    };
+  };
 
   public stringifyFile = (file: File): string => {
     return `${file.date}_${file.hours}${file.minutes}_${file.qfa}_${file.city}_${file.startDay}${file.endDay}.txt`;
-  }
+  };
 
-  public changeDay =(file: File, startDay: string, endDay: string): File => {
+  public changeDay = (file: File, startDay: string, endDay: string): File => {
     file.startDay = startDay;
     file.endDay = endDay;
     file.filename = this.stringifyFile(file);
     return file;
-  }
+  };
 
   public getCityName = (files: File[]): string | void => {
-    if(files.length) {
+    if (files.length) {
       const name = files[0].city.charAt(0).toUpperCase() + files[0].city.slice(1);
       return name;
     }
-  }
+  };
 }

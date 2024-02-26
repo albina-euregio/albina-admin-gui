@@ -7,7 +7,7 @@ import { SocialmediaService } from "../providers/socialmedia-service/socialmedia
 
 @Component({
   templateUrl: "regions-configuration.component.html",
-  selector: "app-regions-configuration"
+  selector: "app-regions-configuration",
 })
 export class RegionsConfigurationComponent implements AfterContentInit {
   public configurationPropertiesLoaded: boolean = false;
@@ -19,20 +19,21 @@ export class RegionsConfigurationComponent implements AfterContentInit {
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
     public configurationService: ConfigurationService,
-    public socialmediaService: SocialmediaService) {
+    public socialmediaService: SocialmediaService,
+  ) {
     this.saveConfigurationLoading = false;
   }
 
   ngAfterContentInit() {
     if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
       this.configurationService.loadRegionConfigurations().subscribe(
-        data => {
+        (data) => {
           this.regionConfigurations = data;
           this.configurationPropertiesLoaded = true;
         },
-        error => {
+        (error) => {
           console.error("Region configurations could not be loaded!");
-        }
+        },
       );
     }
   }

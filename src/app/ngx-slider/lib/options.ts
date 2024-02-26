@@ -17,27 +17,16 @@ export enum LabelType {
 /** Function to translate label value into text */
 export type TranslateFunction = (value: number, label: LabelType) => string;
 /** Function to combind */
-export type CombineLabelsFunction = (
-  minLabel: string,
-  maxLabel: string
-) => string;
+export type CombineLabelsFunction = (minLabel: string, maxLabel: string) => string;
 /** Function to provide legend  */
 export type GetLegendFunction = (value: number) => string;
 export type GetStepLegendFunction = (step: CustomStepDefinition) => string;
 
 /** Function converting slider value to slider position */
-export type ValueToPositionFunction = (
-  val: number,
-  minVal: number,
-  maxVal: number
-) => number;
+export type ValueToPositionFunction = (val: number, minVal: number, maxVal: number) => number;
 
 /** Function converting slider position to slider value */
-export type PositionToValueFunction = (
-  percent: number,
-  minVal: number,
-  maxVal: number
-) => number;
+export type PositionToValueFunction = (percent: number, minVal: number, maxVal: number) => number;
 
 /**
  * Custom step definition
@@ -108,7 +97,7 @@ export class Options {
      in the stepsArray option. */
   getLegend?: GetLegendFunction = null;
 
-   /** Use to display a custom legend of a stepItem from stepsArray.
+  /** Use to display a custom legend of a stepItem from stepsArray.
     It will be the same as getLegend but for stepsArray. */
   getStepLegend?: GetStepLegendFunction = null;
 
@@ -291,14 +280,14 @@ export class Options {
   selectionBarGradient?: { from: string; to: string } = null;
 
   /** Use to add a label directly to the slider for accessibility. Adds the aria-label attribute. */
-  ariaLabel?: string = 'ngx-slider';
+  ariaLabel?: string = "ngx-slider";
 
   /** Use instead of ariaLabel to reference the id of an element which will be used to label the slider.
     Adds the aria-labelledby attribute. */
   ariaLabelledBy?: string = null;
 
   /** Use to add a label directly to the slider range for accessibility. Adds the aria-label attribute. */
-  ariaLabelHigh?: string = 'ngx-slider-max';
+  ariaLabelHigh?: string = "ngx-slider-max";
 
   /** Use instead of ariaLabelHigh to reference the id of an element which will be used to label the slider range.
     Adds the aria-labelledby attribute. */

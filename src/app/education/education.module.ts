@@ -7,16 +7,8 @@ import { EducationComponent } from "./education.component";
 import { EducationRoutingModule } from "./education-routing.module";
 import { TranslateModule } from "@ngx-translate/core";
 
-
 @NgModule({
-  imports: [
-    EducationRoutingModule,
-    FormsModule,
-    CommonModule,
-    TranslateModule
-  ],
-  declarations: [
-    EducationComponent
-  ]
+  imports: [EducationRoutingModule, FormsModule, CommonModule, TranslateModule],
+  declarations: [EducationComponent],
 })
-export class EducationModule { }
+export class EducationModule {}

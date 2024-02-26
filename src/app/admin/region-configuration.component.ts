@@ -7,10 +7,9 @@ import { AlertComponent } from "ngx-bootstrap/alert";
 
 @Component({
   templateUrl: "region-configuration.component.html",
-  selector: "app-region-configuration"
+  selector: "app-region-configuration",
 })
 export class RegionConfigurationComponent {
-
   @Input() config: RegionConfiguration;
 
   public configurationPropertiesLoaded: boolean = false;
@@ -22,7 +21,8 @@ export class RegionConfigurationComponent {
     private translateService: TranslateService,
     public configurationService: ConfigurationService,
     public authenticationService: AuthenticationService,
-    public socialmediaService: SocialmediaService) {
+    public socialmediaService: SocialmediaService,
+  ) {
     this.saveConfigurationLoading = false;
   }
 
@@ -76,54 +76,54 @@ export class RegionConfigurationComponent {
 
     if (!this.config.isNew) {
       this.configurationService.updateRegionConfiguration(json).subscribe(
-        data => {
+        (data) => {
           this.saveConfigurationLoading = false;
           console.debug("Region configuration saved!");
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "success",
             msg: this.translateService.instant("admin.region-configuration.success"),
-            timeout: 5000
+            timeout: 5000,
           });
         },
-        error => {
+        (error) => {
           this.saveConfigurationLoading = false;
           console.error("Region configuration could not be saved!");
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",
             msg: this.translateService.instant("admin.region-configuration.error"),
-            timeout: 5000
+            timeout: 5000,
           });
-        }
+        },
       );
     } else {
       this.configurationService.createRegionConfiguration(json).subscribe(
-        data => {
+        (data) => {
           this.saveConfigurationLoading = false;
           console.debug("Region configuration saved!");
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "success",
             msg: this.translateService.instant("admin.region-configuration.success"),
-            timeout: 5000
+            timeout: 5000,
           });
         },
-        error => {
+        (error) => {
           this.saveConfigurationLoading = false;
           console.error("Region configuration could not be saved!");
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",
             msg: this.translateService.instant("admin.region-configuration.error"),
-            timeout: 5000
+            timeout: 5000,
           });
-        }
+        },
       );
     }
   }
 
   onClosed(dismissedAlert: AlertComponent): void {
-    this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
+    this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 }

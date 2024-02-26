@@ -11,63 +11,62 @@ export const routes: Routes = [
   {
     path: "",
     redirectTo: "bulletins",
-    pathMatch: "full"
+    pathMatch: "full",
   },
   {
     path: "bulletins",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    runGuardsAndResolvers: 'always',
-    loadChildren: () => import("./bulletins/bulletins.module").then(m => m.BulletinsModule)
+    runGuardsAndResolvers: "always",
+    loadChildren: () => import("./bulletins/bulletins.module").then((m) => m.BulletinsModule),
   },
   {
     path: "observations",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./observations/routes")
+    loadChildren: () => import("./observations/routes"),
   },
   {
     path: "admin",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./admin/admin.module").then(m => m.AdminModule)
+    loadChildren: () => import("./admin/admin.module").then((m) => m.AdminModule),
   },
   {
     path: "education",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./education/education.module").then(m => m.EducationModule)
+    loadChildren: () => import("./education/education.module").then((m) => m.EducationModule),
   },
   {
     path: "modelling",
     component: FullLayoutComponent,
     canActivate: [], // no authentication (partially)
-    loadChildren: () => import("./modelling/routes")
+    loadChildren: () => import("./modelling/routes"),
   },
   {
     path: "settings",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./settings/settings.module").then(m => m.SettingsModule)
+    loadChildren: () => import("./settings/settings.module").then((m) => m.SettingsModule),
   },
   {
     path: "pages",
     component: SimpleLayoutComponent,
     data: {
-      title: "Pages"
+      title: "Pages",
     },
     children: [
       {
         path: "",
-        loadChildren: () => import("./pages/pages.module").then(m => m.PagesModule),
-      }
-    ]
-  }
-
+        loadChildren: () => import("./pages/pages.module").then((m) => m.PagesModule),
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: "reload" })],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -13,10 +13,9 @@ import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: "app-dashboard",
-  templateUrl: "./full-layout.component.html"
+  templateUrl: "./full-layout.component.html",
 })
 export class FullLayoutComponent {
-
   public disabled: boolean = false;
   public status: { isopen: boolean } = { isopen: false };
   public isNavCollapsed = true;
@@ -32,7 +31,7 @@ export class FullLayoutComponent {
 
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-sm",
   };
 
   constructor(
@@ -44,7 +43,8 @@ export class FullLayoutComponent {
     public constantsService: ConstantsService,
     public router: Router,
     private modalService: BsModalService,
-    private sanitizer: DomSanitizer) {
+    private sanitizer: DomSanitizer,
+  ) {
     this.message = "";
     this.tmpRegion = undefined;
     this.environment = environment;
@@ -55,8 +55,7 @@ export class FullLayoutComponent {
     return this.sanitizer.bypassSecurityTrustStyle(style);
   }
 
-  public toggled(): void {
-  }
+  public toggled(): void {}
 
   public toggleDropdown($event: MouseEvent): void {
     $event.preventDefault();

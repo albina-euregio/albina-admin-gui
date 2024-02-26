@@ -11,17 +11,7 @@ import { PagesRoutingModule } from "./pages-routing.module";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @NgModule({
-  imports: [
-    PagesRoutingModule,
-    FormsModule,
-    TranslateModule,
-    CommonModule,
-    ConfirmDialogModule
-  ],
-  declarations: [
-    P404Component,
-    P500Component,
-    LoginComponent
-  ]
+  imports: [PagesRoutingModule, FormsModule, TranslateModule, CommonModule, ConfirmDialogModule],
+  declarations: [P404Component, P500Component, LoginComponent],
 })
-export class PagesModule { }
+export class PagesModule {}

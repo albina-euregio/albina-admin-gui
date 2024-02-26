@@ -302,7 +302,6 @@ export class MatrixParameterComponent implements OnChanges {
 
   isDangerRating(dangerRating: Enums.DangerRating) {
     return this.matrixInformation?.dangerRating === dangerRating;
-
   }
 
   setDangerRating(event: Event, dangerRating: Enums.DangerRating) {
@@ -586,7 +585,6 @@ export class MatrixParameterComponent implements OnChanges {
 
   isDangerRatingModificator(modificator: Enums.DangerRatingModificator) {
     return this.matrixInformation?.dangerRatingModificator === modificator;
-
   }
 
   setDangerRatingModificator(event: Event, modificator: Enums.DangerRatingModificator) {

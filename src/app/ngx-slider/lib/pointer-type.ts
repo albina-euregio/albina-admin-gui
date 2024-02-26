@@ -3,5 +3,5 @@ export enum PointerType {
   /** Low pointer */
   Min,
   /** High pointer */
-  Max
+  Max,
 }

@@ -12,10 +12,9 @@ import { MatDialog, MatDialogRef, MatDialogConfig } from "@angular/material/dial
 
 @Component({
   templateUrl: "users.component.html",
-  selector: "app-users"
+  selector: "app-users",
 })
 export class UsersComponent implements AfterContentInit {
-
   public alerts: any[] = [];
   public users: any;
 
@@ -24,7 +23,7 @@ export class UsersComponent implements AfterContentInit {
 
   public config = {
     keyboard: true,
-    class: "modal-sm"
+    class: "modal-sm",
   };
   activeUser: any;
 
@@ -33,8 +32,8 @@ export class UsersComponent implements AfterContentInit {
     private dialog: MatDialog,
     private userService: UserService,
     private modalService: BsModalService,
-    public configurationService: ConfigurationService) {
-  }
+    public configurationService: ConfigurationService,
+  ) {}
 
   ngAfterContentInit() {
     this.updateUsers();
@@ -42,17 +41,17 @@ export class UsersComponent implements AfterContentInit {
 
   updateUsers() {
     this.userService.getUsers().subscribe(
-      data => {
+      (data) => {
         this.users = data;
       },
-      error => {
+      (error) => {
         console.error("Users could not be loaded!");
-      }
+      },
     );
   }
 
   onClosed(dismissedAlert: AlertComponent): void {
-    this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
+    this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 
   createUser(event) {
@@ -66,19 +65,17 @@ export class UsersComponent implements AfterContentInit {
     dialogConfig.maxWidth = "100%";
 
     const dialogRef = this.dialog.open(CreateUserComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      data => {
-        window.scrollTo(0, 0);
-        this.updateUsers();
-        if (data !== undefined && data !== "") {
-          this.alerts.push({
-            type: data.type,
-            msg: data.msg,
-            timeout: 5000
-          });
-        }
+    dialogRef.afterClosed().subscribe((data) => {
+      window.scrollTo(0, 0);
+      this.updateUsers();
+      if (data !== undefined && data !== "") {
+        this.alerts.push({
+          type: data.type,
+          msg: data.msg,
+          timeout: 5000,
+        });
       }
-    )
+    });
   }
 
   showUpdateDialog(user) {
@@ -87,23 +84,21 @@ export class UsersComponent implements AfterContentInit {
     dialogConfig.maxHeight = "100%";
     dialogConfig.maxWidth = "100%";
     dialogConfig.data = {
-      user: user
+      user: user,
     };
 
     const dialogRef = this.dialog.open(UpdateUserComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe(
-      data => {
-        window.scrollTo(0, 0);
-        this.updateUsers();
-        if (data !== undefined && data !== "") {
-          this.alerts.push({
-            type: data.type,
-            msg: data.msg,
-            timeout: 5000
-          });
-        }
+    dialogRef.afterClosed().subscribe((data) => {
+      window.scrollTo(0, 0);
+      this.updateUsers();
+      if (data !== undefined && data !== "") {
+        this.alerts.push({
+          type: data.type,
+          msg: data.msg,
+          timeout: 5000,
+        });
       }
-    )
+    });
   }
 
   editUser(event, user) {
@@ -124,25 +119,25 @@ export class UsersComponent implements AfterContentInit {
     this.deleteUserModalRef.hide();
     if (this.activeUser) {
       this.userService.deleteUser(this.activeUser.email).subscribe(
-        data => {
+        (data) => {
           console.debug("User deleted!");
           this.updateUsers();
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "success",
             msg: this.translateService.instant("admin.users.deleteUser.success"),
-            timeout: 5000
+            timeout: 5000,
           });
         },
-        error => {
+        (error) => {
           console.error("Users could not be deleted!");
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",
             msg: this.translateService.instant("admin.users.deleteUser.error"),
-            timeout: 5000
+            timeout: 5000,
           });
-        }
+        },
       );
     }
     this.activeUser = undefined;

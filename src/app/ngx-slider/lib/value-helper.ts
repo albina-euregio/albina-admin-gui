@@ -1,4 +1,4 @@
-import { CustomStepDefinition } from './options';
+import { CustomStepDefinition } from "./options";
 
 /**
  *  Collection of functions to handle conversions/lookups of values
@@ -47,11 +47,16 @@ export class ValueHelper {
   }
 
   static findStepIndex(modelValue: number, stepsArray: CustomStepDefinition[]): number {
-    const differences: number[] = stepsArray.map((step: CustomStepDefinition): number => Math.abs(modelValue - step.value));
+    const differences: number[] = stepsArray.map((step: CustomStepDefinition): number =>
+      Math.abs(modelValue - step.value),
+    );
 
     let minDifferenceIndex: number = 0;
     for (let index: number = 0; index < stepsArray.length; index++) {
-      if (differences[index] !== differences[minDifferenceIndex] && differences[index] < differences[minDifferenceIndex]) {
+      if (
+        differences[index] !== differences[minDifferenceIndex] &&
+        differences[index] < differences[minDifferenceIndex]
+      ) {
         minDifferenceIndex = index;
       }
     }

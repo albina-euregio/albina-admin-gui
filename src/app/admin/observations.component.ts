@@ -16,7 +16,7 @@ export class ObservationsComponent {
   constructor(
     public http: HttpClient,
     public constantsService: ConstantsService,
-    public authenticationService: AuthenticationService
+    public authenticationService: AuthenticationService,
   ) {
     this.loadingStatistics = false;
   }

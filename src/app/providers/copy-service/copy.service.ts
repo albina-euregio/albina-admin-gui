@@ -5,7 +5,6 @@ import { LangTexts } from "../../models/text.model";
 
 @Injectable()
 export class CopyService {
-
   private copyTextcat: boolean;
   private copyBulletin: boolean;
 
@@ -21,12 +20,10 @@ export class CopyService {
 
   private bulletin: BulletinModel;
 
-  constructor(
-    public constantsService: ConstantsService) {
+  constructor(public constantsService: ConstantsService) {
     this.copyTextcat = false;
     this.copyBulletin = false;
   }
-
 
   isCopyTextcat(): boolean {
     return this.copyTextcat;

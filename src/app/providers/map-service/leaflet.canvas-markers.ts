@@ -87,7 +87,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
       minY: latlng.lat,
       maxX: latlng.lng,
       maxY: latlng.lat,
-      data: marker
+      data: marker,
     };
 
     this._latlngMarkers.remove(markerData, (a, b) => a.data._leaflet_id === b.data._leaflet_id);
@@ -164,15 +164,15 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
         minY: pointPos.y - adj_y,
         maxX: pointPos.x + adj_x,
         maxY: pointPos.y + adj_y,
-        data: marker
+        data: marker,
       },
       {
         minX: latlng.lng,
         minY: latlng.lat,
         maxX: latlng.lng,
         maxY: latlng.lat,
-        data: marker
-      }
+        data: marker,
+      },
     ];
 
     this._latlngMarkers.dirty++;
@@ -227,7 +227,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
       pointPos.x - options.iconAnchor[0],
       pointPos.y - options.iconAnchor[1],
       options.iconSize[0],
-      options.iconSize[1]
+      options.iconSize[1],
     );
   },
 
@@ -268,7 +268,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
       minX: mapBounds.getWest(),
       minY: mapBounds.getSouth(),
       maxX: mapBounds.getEast(),
-      maxY: mapBounds.getNorth()
+      maxY: mapBounds.getNorth(),
     };
 
     this._latlngMarkers.search(mapBoxCoords).forEach((e) => {
@@ -284,7 +284,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
         minY: pointPos.y - adj_y,
         maxX: pointPos.x + adj_x,
         maxY: pointPos.y + adj_y,
-        data: e.data
+        data: e.data,
       };
 
       tmp.push(newCoords);
@@ -356,5 +356,5 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
     } else {
       this._map._container.style.cursor = "";
     }
-  }
+  },
 });

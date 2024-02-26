@@ -5,7 +5,5 @@ import { Component, OnInit } from "@angular/core";
   template: "<router-outlet></router-outlet>",
 })
 export class SimpleLayoutComponent {
-
-  constructor() { }
-
+  constructor() {}
 }

@@ -4,14 +4,14 @@ import { TranslateService } from "@ngx-translate/core";
 
 @Pipe({
   name: "localizedDate",
-  pure: false  // required to update the value when currentLang is changed
+  pure: false, // required to update the value when currentLang is changed
 })
 export class LocalizedDatePipe implements PipeTransform {
   private value: string | null;
   private lastDate: any;
   private lastLang: string;
 
-  constructor(private translate: TranslateService) { }
+  constructor(private translate: TranslateService) {}
 
   transform(date: any, pattern: string = "mediumDate"): any {
     const currentLang = this.translate.currentLang;

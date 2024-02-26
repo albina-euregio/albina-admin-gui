@@ -6,10 +6,9 @@ import { SocialmediaService } from "../providers/socialmedia-service/socialmedia
 
 @Component({
   templateUrl: "servers-configuration.component.html",
-  selector: "app-servers-configuration"
+  selector: "app-servers-configuration",
 })
 export class ServersConfigurationComponent implements OnInit {
-
   public saveConfigurationLoading: boolean;
   public localServerConfiguration: ServerConfiguration;
   public externalServerConfigurations: ServerConfiguration[];
@@ -18,29 +17,30 @@ export class ServersConfigurationComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private constantsService: ConstantsService,
     public configurationService: ConfigurationService,
-    public socialmediaService: SocialmediaService) {
+    public socialmediaService: SocialmediaService,
+  ) {
     this.saveConfigurationLoading = false;
   }
-  
+
   ngOnInit() {
     if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
       this.configurationService.loadLocalServerConfiguration().subscribe(
-        data => {
+        (data) => {
           // TODO implement
           this.localServerConfiguration = data;
         },
-        error => {
+        (error) => {
           console.error("Local server configuration could not be loaded!");
-        }
+        },
       );
       this.configurationService.loadExternalServerConfigurations().subscribe(
-        data => {
+        (data) => {
           // TODO implement
           this.externalServerConfigurations = data;
         },
-        error => {
+        (error) => {
           console.error("External server configurations could not be loaded!");
-        }
+        },
       );
     }
   }

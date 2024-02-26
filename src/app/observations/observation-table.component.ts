@@ -147,7 +147,9 @@ export class ObservationTableComponent {
   }
 
   getTableRowStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
-    return { background: "linear-gradient(90deg, " + this.markerService.toMarkerColor(observation) + " 0%, white 50%)" };
+    return {
+      background: "linear-gradient(90deg, " + this.markerService.toMarkerColor(observation) + " 0%, white 50%)",
+    };
   }
 
   getTableIconStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {

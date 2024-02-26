@@ -6,8 +6,7 @@ export const AmPmControl = L.Control.extend({
     container.style.backgroundColor = "white";
     container.style.width = "52px";
     container.style.height = "35px";
-    container.innerHTML =
-      `<p style="font-size: 1.75em; color: #989898; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)"><b>${this.options.text}</b></p>`;
+    container.innerHTML = `<p style="font-size: 1.75em; color: #989898; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)"><b>${this.options.text}</b></p>`;
     return container;
   },
 

@@ -6,17 +6,15 @@ import { AuthenticationService } from "../authentication-service/authentication.
 
 @Injectable()
 export class UserService {
-
   constructor(
     public http: HttpClient,
     public constantsService: ConstantsService,
-    public authenticationService: AuthenticationService
-  ) {
-  }
+    public authenticationService: AuthenticationService,
+  ) {}
 
   public changePassword(oldPassword: string, newPassword: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/change";
-    const body = JSON.stringify({oldPassword, newPassword});
+    const body = JSON.stringify({ oldPassword, newPassword });
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers: headers };
 
@@ -25,7 +23,7 @@ export class UserService {
 
   public checkPassword(password: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/check";
-    const body = JSON.stringify({password});
+    const body = JSON.stringify({ password });
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers: headers };
 

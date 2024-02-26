@@ -1,29 +1,29 @@
 import { TypeVisitor } from "@angular/compiler";
 
 export interface coordinates {
-    lat: number;
-    lng: number;
+  lat: number;
+  lng: number;
 }
 
 export interface metadata {
-    location: string;
-    coords: coordinates;
-    height: number;
-    orog: number;
-    date: Date;
-    timezone: string;
-    model: string;
-    nDays: number;
-    dates?: Date[];
+  location: string;
+  coords: coordinates;
+  height: number;
+  orog: number;
+  date: Date;
+  timezone: string;
+  model: string;
+  nDays: number;
+  dates?: Date[];
 }
 
 export interface parameters {
-    [key: string]: any[];
+  [key: string]: any[];
 }
 
 export interface data {
-    metadata: metadata;
-    parameters: parameters;
+  metadata: metadata;
+  parameters: parameters;
 }
 
 export interface QFA {
@@ -39,7 +39,7 @@ export interface QFA {
 }
 
 export interface markers {
-    [key: string]: coordinates
+  [key: string]: coordinates;
 }
 
 export interface MarkerData {

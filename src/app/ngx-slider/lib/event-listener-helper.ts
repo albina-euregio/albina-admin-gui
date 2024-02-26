@@ -1,20 +1,23 @@
-import { Renderer2 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { throttleTime, tap } from 'rxjs/operators';
-import { supportsPassiveEvents } from 'detect-passive-events';
+import { Renderer2 } from "@angular/core";
+import { Subject } from "rxjs";
+import { throttleTime, tap } from "rxjs/operators";
+import { supportsPassiveEvents } from "detect-passive-events";
 
-import { EventListener } from './event-listener';
-import { ValueHelper } from './value-helper';
+import { EventListener } from "./event-listener";
+import { ValueHelper } from "./value-helper";
 
 /**
  * Helper class to attach event listeners to DOM elements with debounce support using rxjs
  */
 export class EventListenerHelper {
-  constructor(private renderer: Renderer2) {
-  }
+  constructor(private renderer: Renderer2) {}
 
-  public attachPassiveEventListener(nativeElement: any, eventName: string, callback: (event: any) => void,
-      throttleInterval?: number): EventListener {
+  public attachPassiveEventListener(
+    nativeElement: any,
+    eventName: string,
+    callback: (event: any) => void,
+    throttleInterval?: number,
+  ): EventListener {
     // Only use passive event listeners if the browser supports it
     if (supportsPassiveEvents !== true) {
       return this.attachEventListener(nativeElement, eventName, callback, throttleInterval);
@@ -28,16 +31,17 @@ export class EventListenerHelper {
     const observerCallback: (event: Event) => void = (event: Event): void => {
       listener.events.next(event);
     };
-    nativeElement.addEventListener(eventName, observerCallback, {passive: true, capture: false});
+    nativeElement.addEventListener(eventName, observerCallback, { passive: true, capture: false });
 
     listener.teardownCallback = (): void => {
-      nativeElement.removeEventListener(eventName, observerCallback, {passive: true, capture: false});
+      nativeElement.removeEventListener(eventName, observerCallback, { passive: true, capture: false });
     };
 
     listener.eventsSubscription = listener.events
-      .pipe((!ValueHelper.isNullOrUndefined(throttleInterval))
-        ? throttleTime(throttleInterval, undefined, { leading: true, trailing: true})
-        : tap(() => {}) // no-op
+      .pipe(
+        !ValueHelper.isNullOrUndefined(throttleInterval)
+          ? throttleTime(throttleInterval, undefined, { leading: true, trailing: true })
+          : tap(() => {}), // no-op
       )
       .subscribe((event: Event) => {
         callback(event);
@@ -63,8 +67,12 @@ export class EventListenerHelper {
     }
   }
 
-  public attachEventListener(nativeElement: any, eventName: string, callback: (event: any) => void,
-      throttleInterval?: number): EventListener {
+  public attachEventListener(
+    nativeElement: any,
+    eventName: string,
+    callback: (event: any) => void,
+    throttleInterval?: number,
+  ): EventListener {
     const listener: EventListener = new EventListener();
     listener.eventName = eventName;
     listener.events = new Subject<Event>();
@@ -76,11 +84,14 @@ export class EventListenerHelper {
     listener.teardownCallback = this.renderer.listen(nativeElement, eventName, observerCallback);
 
     listener.eventsSubscription = listener.events
-      .pipe((!ValueHelper.isNullOrUndefined(throttleInterval))
-          ? throttleTime(throttleInterval, undefined, { leading: true, trailing: true})
-          : tap(() => {}) // no-op
+      .pipe(
+        !ValueHelper.isNullOrUndefined(throttleInterval)
+          ? throttleTime(throttleInterval, undefined, { leading: true, trailing: true })
+          : tap(() => {}), // no-op
       )
-      .subscribe((event: Event) => { callback(event); });
+      .subscribe((event: Event) => {
+        callback(event);
+      });
 
     return listener;
   }

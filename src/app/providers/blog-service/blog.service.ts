@@ -6,12 +6,11 @@ import { AuthenticationService } from "../authentication-service/authentication.
 
 @Injectable()
 export class BlogService {
-
   constructor(
     public http: HttpClient,
     private constantsService: ConstantsService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService,
+  ) {}
 
   sendLatestBlogPost(region: string, language: string, test: boolean): Observable<Response> {
     var url;
@@ -30,7 +29,12 @@ export class BlogService {
   sendLatestBlogPostEmail(region: string, language: string, test: boolean): Observable<Response> {
     var url;
     if (test) {
-      url = this.constantsService.getServerUrl() + "blogs/publish/latest/email/test?&region=" + region + "&lang=" + language;
+      url =
+        this.constantsService.getServerUrl() +
+        "blogs/publish/latest/email/test?&region=" +
+        region +
+        "&lang=" +
+        language;
     } else {
       url = this.constantsService.getServerUrl() + "blogs/publish/latest/email?&region=" + region + "&lang=" + language;
     }
@@ -44,9 +48,15 @@ export class BlogService {
   sendLatestBlogPostTelegram(region: string, language: string, test: boolean): Observable<Response> {
     var url;
     if (test) {
-      url = this.constantsService.getServerUrl() + "blogs/publish/latest/telegram/test?&region=" + region + "&lang=" + language;
+      url =
+        this.constantsService.getServerUrl() +
+        "blogs/publish/latest/telegram/test?&region=" +
+        region +
+        "&lang=" +
+        language;
     } else {
-      url = this.constantsService.getServerUrl() + "blogs/publish/latest/telegram?&region=" + region + "&lang=" + language;
+      url =
+        this.constantsService.getServerUrl() + "blogs/publish/latest/telegram?&region=" + region + "&lang=" + language;
     }
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
@@ -58,7 +68,8 @@ export class BlogService {
   sendLatestBlogPostPush(region: string, language: string, test: boolean): Observable<Response> {
     var url;
     if (test) {
-      url = this.constantsService.getServerUrl() + "blogs/publish/latest/push/test?&region=" + region + "&lang=" + language;
+      url =
+        this.constantsService.getServerUrl() + "blogs/publish/latest/push/test?&region=" + region + "&lang=" + language;
     } else {
       url = this.constantsService.getServerUrl() + "blogs/publish/latest/push?&region=" + region + "&lang=" + language;
     }
