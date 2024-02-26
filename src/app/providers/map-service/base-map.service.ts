@@ -38,12 +38,7 @@ export class BaseMapService extends MapService {
         attribution:
           'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
       }),
-      AlbinaBaseMap: new TileLayer("https://static.avalanche.report/tms/{z}/{x}/{y}.png", {
-        minZoom: 5,
-        maxZoom: 12,
-        tms: false,
-        attribution: ""
-      })
+      AlbinaBaseMap: this.getAlbinaBaseMap({ minZoom: 5, maxZoom: 12 }),
     };
 
     this.overlayMaps = await this.initOverlayMaps();

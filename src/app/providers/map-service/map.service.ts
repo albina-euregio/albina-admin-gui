@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import * as L from "leaflet";
-import { Browser, GeoJSON, Map, TileLayer } from "leaflet";
+import {Browser, GeoJSON, Map, TileLayer, TileLayerOptions} from "leaflet";
 import "leaflet.sync";
 import { BulletinModel } from "../../models/bulletin.model";
 import { RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
@@ -189,10 +189,11 @@ export class MapService {
     return options;
   }
 
-  getAlbinaBaseMap(): TileLayer {
+  getAlbinaBaseMap(options: TileLayerOptions = {}): TileLayer {
     return new TileLayer("https://static.avalanche.report/tms/{z}/{x}/{y}.png", {
       tms: false,
-      attribution: ""
+      attribution: "",
+      ...options
     });
   }
 
