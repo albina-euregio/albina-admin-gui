@@ -42,7 +42,6 @@ export class BulletinsService {
     this.copyDate = undefined;
     this.isEditable = false;
     this.isReadOnly = false;
-    this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     this.lockedBulletins = new Map<string, BulletinLockModel>();
 
     // connect to websockets
@@ -63,6 +62,13 @@ export class BulletinsService {
       this.dates.push(date);
     }
 
+    this.loadStatus();
+  }
+
+  public loadStatus() {
+    const startDate = this.dates[this.dates.length - 1];
+    const endDate = this.dates[0];
+    this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
         let map = new Map<number, Enums.BulletinStatus>();
