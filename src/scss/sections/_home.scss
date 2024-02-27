@@ -26,6 +26,11 @@
 
 .bulletins-table__day-buttons {
   margin-left: $space-2;
+  float: right;
+}
+
+.bulletins-table__day-buttons-div {
+  justify-content: space-between;
 }
 
 .bulletins-table__body .bulletins-table__day--past {

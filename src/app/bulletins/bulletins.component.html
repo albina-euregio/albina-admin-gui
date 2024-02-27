@@ -21,9 +21,9 @@
             <time>
               {{ date | localizedDate: "fullDate" }}
             </time>
-            <div>
+            <div class="bulletins-table__day-buttons-div">
               <button
-                class="btn btn-secondary btn-icon"
+                class="btn btn-secondary btn-icon bulletins-table__day-buttons"
                 type="button"
                 (click)="editBulletin(date, true)"
                 title="{{ 'bulletins.tooltip.read' | translate }}"
