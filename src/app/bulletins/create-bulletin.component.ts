@@ -902,7 +902,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.internBulletinsList = bulletinsList;
     this.updateInternalBulletins();
 
-    if (this.activeBulletin && this.activeBulletin !== undefined) {
+    if (this.editRegions) {
+      this.mapService.showEditSelection();
+    } else if (this.activeBulletin && this.activeBulletin !== undefined) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
   }

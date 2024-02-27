@@ -571,6 +571,10 @@ export class MapService {
     }
   }
 
+  showEditSelection() {
+    this.map.addLayer(this.overlayMaps.editSelection);
+  }
+
   // editSelection overlay is only used in map (not in afternoonMap)
   discardEditSelection() {
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
