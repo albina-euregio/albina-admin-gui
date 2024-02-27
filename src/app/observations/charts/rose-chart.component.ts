@@ -6,6 +6,7 @@ import type { EChartsOption } from "echarts";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { ObservationMarkerService } from "../observation-marker.service";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { ObservationFilterService } from "../observation-filter.service";
 
 const barDefaults = {
   type: "bar",
@@ -177,9 +178,10 @@ export class RoseChartComponent extends BaseComponent {
   public options = Object.assign(this.defaultOptions);
 
   constructor(
+    public filter: ObservationFilterService,
     protected observationMarkerService: ObservationMarkerService,
     protected translateService: TranslateService,
   ) {
-    super(observationMarkerService, translateService);
+    super(filter, observationMarkerService, translateService);
   }
 }

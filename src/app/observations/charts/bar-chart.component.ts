@@ -6,6 +6,7 @@ import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import type { EChartsOption } from "echarts";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { ObservationMarkerService } from "../observation-marker.service";
+import { ObservationFilterService } from "../observation-filter.service";
 
 const barWidth = 3;
 const defaultDataBarOptions = {
@@ -121,6 +122,9 @@ export class BarChartComponent extends BaseComponent {
           },
           show: true,
           rich: {
+            highlight: {
+              color: "#19ABFF",
+            },
             label: {
               fontWeight: 600,
               color: "#19ABFF",
@@ -181,9 +185,10 @@ export class BarChartComponent extends BaseComponent {
   public options = Object.assign(this.defaultOptions);
 
   constructor(
+    public filter: ObservationFilterService,
     protected translateService: TranslateService,
     protected observationMarkerService: ObservationMarkerService,
   ) {
-    super(observationMarkerService, translateService);
+    super(filter, observationMarkerService, translateService);
   }
 }

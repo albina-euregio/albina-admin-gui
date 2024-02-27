@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { LocalFilterTypes } from "../models/generic-observation.model";
-import { type GenericFilterToggleData } from "../observation-filter.service";
+import { ObservationFilterService, type GenericFilterToggleData } from "../observation-filter.service";
 import { ObservationMarkerService } from "../observation-marker.service";
 
 @Component({
@@ -42,6 +42,7 @@ export class BaseComponent {
   }
 
   constructor(
+    public filter: ObservationFilterService,
     protected observationMarkerService: ObservationMarkerService,
     protected translateService: TranslateService,
   ) {}
@@ -111,14 +112,15 @@ export class BaseComponent {
     } else {
       value = entry.value[0];
     }
-
-    let result = this.translationBase ? this.translateService.instant(this.translationBase + value) : value;
+    const isSelected = this.filter.isIncluded(this.type, value);
+    const result = this.translationBase ? this.translateService.instant(this.translationBase + value) : value;
+    const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
     if (this.labelType === this.type) {
-      const label = this.observationMarkerService.getLegendLabel(this.labelType, result, value);
+      const label = this.observationMarkerService.getLegendLabel(this.labelType, formattedResult, value);
       return label;
     } else {
-      return result;
+      return formattedResult;
     }
   }
 }

@@ -342,9 +342,9 @@ export class ObservationMarkerService {
       case LocalFilterTypes.AvalancheProblem:
         return "{symbol|" + avalancheProblemTexts[value] + "} " + label;
       case LocalFilterTypes.Days:
-        return "{label|" + label.substring(label.length - 2) + "} " + label;
+        return "{label|" + value.substring(value.length - 2) + "} " + label;
       case LocalFilterTypes.Elevation:
-        return "{label|" + (isFinite(+label) ? Math.round(+label / 100) : "") + "} " + label;
+        return "{label|" + (isFinite(+value) ? Math.round(+value / 100) : "") + "} " + label;
       case LocalFilterTypes.ImportantObservation:
         return "{grainShape|" + importantObservationTexts[value] + "}   " + label;
       case LocalFilterTypes.ObservationType:
