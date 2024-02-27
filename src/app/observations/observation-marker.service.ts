@@ -336,7 +336,9 @@ export class ObservationMarkerService {
   getLegendLabel(type: LocalFilterTypes, label: string, value: string): string {
     switch (type) {
       case LocalFilterTypes.Aspect:
-        return "{label|" + label + "}";
+        return label.startsWith("{highlight|")
+          ? "{labelhighlight|" + label.slice(label.indexOf("|") + 1, label.length - 1) + "}"
+          : "{label|" + label + "}";
       case LocalFilterTypes.DangerPattern:
         return "{label|" + value.slice(2) + "} " + label;
       case LocalFilterTypes.AvalancheProblem:

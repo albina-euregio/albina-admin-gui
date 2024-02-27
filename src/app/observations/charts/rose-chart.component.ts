@@ -97,9 +97,16 @@ export class RoseChartComponent extends BaseComponent {
         },
         //interval: 1,
         rich: {
-          label: {
+          labelhighlight: {
             fontWeight: 600,
             color: "#19ABFF",
+          },
+          highlight: {
+            color: "#19ABFF",
+          },
+          label: {
+            fontWeight: 600,
+            color: "#000000",
           },
         },
       },

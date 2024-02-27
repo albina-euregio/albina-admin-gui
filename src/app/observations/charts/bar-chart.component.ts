@@ -127,7 +127,7 @@ export class BarChartComponent extends BaseComponent {
             },
             label: {
               fontWeight: 600,
-              color: "#19ABFF",
+              color: "#000000",
             },
             symbol: {
               color: "#19ABFF",
