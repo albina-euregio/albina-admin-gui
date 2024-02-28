@@ -255,7 +255,7 @@ export class ObservationFilterService {
             const entry: string | string[] = this.filterSelection[classifyType].toValue(observation);
             if (entry) {
               (typeof entry === "string" ? [entry] : entry).forEach((v) => {
-                data[categories.indexOf(v)]++;
+                data[categories.indexOf(v) + 1]++;
               });
             } else {
               data[0]++;

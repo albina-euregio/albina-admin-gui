@@ -195,6 +195,16 @@ export class BarChartComponent extends BaseComponent {
         ...defaultDataBarOptions,
         stack: "total",
         itemStyle: {
+          color: (entry) => this.getClassifyColor(entry),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
           color: (entry) => this.getClassifyColor(entry, 0),
         },
         emphasis: {
@@ -286,16 +296,6 @@ export class BarChartComponent extends BaseComponent {
         stack: "total",
         itemStyle: {
           color: (entry) => this.getClassifyColor(entry, 9),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 10),
         },
         emphasis: {
           disabled: true,

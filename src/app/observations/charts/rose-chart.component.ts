@@ -177,6 +177,16 @@ export class RoseChartComponent extends BaseComponent {
         ...barDefaults,
         stack: "total",
         itemStyle: {
+          color: (entry) => this.getClassifyColor(entry),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
           color: (entry) => this.getClassifyColor(entry, 0),
         },
         emphasis: {
@@ -268,16 +278,6 @@ export class RoseChartComponent extends BaseComponent {
         stack: "total",
         itemStyle: {
           color: (entry) => this.getClassifyColor(entry, 9),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...barDefaults,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 10),
         },
         emphasis: {
           disabled: true,

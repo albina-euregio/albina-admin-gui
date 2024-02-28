@@ -105,8 +105,8 @@ export class BaseComponent {
     }
   }
 
-  getClassifyColor(entry, count: number) {
-    if (this.classifyType) {
+  getClassifyColor(entry, count?: number) {
+    if (this.classifyType && count !== undefined) {
       let name;
       if (this.classifyType === this.type) {
         name = entry.name;
