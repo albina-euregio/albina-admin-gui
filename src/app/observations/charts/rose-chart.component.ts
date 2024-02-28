@@ -77,7 +77,7 @@ export class RoseChartComponent extends BaseComponent {
     //         ['NW', 90, 80, 0],
     //     ]
     // },
-    color: ["#B1C1C7", "rgba(255, 0, 0, 0.5)", "#000", "#19ABFF"],
+    color: ["#B1C1C7", "", "rgba(255, 0, 0, 0.5)", "#000", "#19ABFF"],
     angleAxis: {
       triggerEvent: true,
       type: "category",
@@ -147,6 +147,12 @@ export class RoseChartComponent extends BaseComponent {
         emphasis: {
           disabled: true,
         },
+      },
+      {
+        ...barDefaults,
+        emphasis: {
+          disabled: true,
+        },
         z: 5,
       },
       {
@@ -167,18 +173,116 @@ export class RoseChartComponent extends BaseComponent {
           disabled: true,
         },
       },
-      // {
-      //     ...barDefaults
-      // },
-      // {
-      //     ...barDefaults
-      // },
-      // {
-      //     ...barDefaults
-      // },
-      // {
-      //     ...barDefaults
-      // }
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 0),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 1),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 2),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 3),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 4),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 5),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 6),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 7),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 8),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 9),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...barDefaults,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 10),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
     ],
   };
 

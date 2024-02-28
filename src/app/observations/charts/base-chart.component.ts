@@ -105,6 +105,25 @@ export class BaseComponent {
     }
   }
 
+  getClassifyColor(entry, count: number) {
+    if (this.classifyType) {
+      let name;
+      if (this.classifyType === this.type) {
+        name = entry.name;
+      } else {
+        name = this.filter.filterSelection[this.classifyType].all[count];
+      }
+      const color = this.observationMarkerService.getColor(this.classifyType, name);
+      if (color === "white") {
+        return "#000000";
+      } else {
+        return color;
+      }
+    } else {
+      return "#000000";
+    }
+  }
+
   getItemLabel(entry): string {
     let value: string;
     if (this.type === LocalFilterTypes.Aspect) {

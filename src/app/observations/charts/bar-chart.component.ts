@@ -54,9 +54,20 @@ export class BarChartComponent extends BaseComponent {
         fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
       },
       formatter: (params: CallbackDataParams) => {
-        const name = params.name;
-        const val = params.data[4] === 0 ? params.data[5] : params.data[4];
-        return `${name}: <span style="color: #000">${val}</span> / ${params.data[2]}`;
+        const valKey = params.dimensionNames.indexOf(params.seriesName);
+        let val = params.value[valKey];
+        if (params.seriesName === "highlighted") {
+          val = params.value[1];
+        }
+        return (
+          '<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:' +
+          params.color +
+          ';"></span><span style="font-size:14px;color:#839194;font-weight:400;margin-left:2px">' +
+          params.name +
+          '</span><span style="float:right;margin-left:20px;font-size:14px;color:#839194;font-weight:900">' +
+          val +
+          "</span>"
+        );
       },
     },
     yAxis: {
@@ -175,6 +186,116 @@ export class BarChartComponent extends BaseComponent {
         ...defaultDataBarOptions,
         itemStyle: {
           color: (entry) => this.getItemColor(entry),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 0),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 1),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 2),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 3),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 4),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 5),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 6),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 7),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 8),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 9),
+        },
+        emphasis: {
+          disabled: true,
+        },
+      },
+      {
+        ...defaultDataBarOptions,
+        stack: "total",
+        itemStyle: {
+          color: (entry) => this.getClassifyColor(entry, 10),
         },
         emphasis: {
           disabled: true,

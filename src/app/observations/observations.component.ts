@@ -179,7 +179,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     layerControl.addOverlay(this.loadWebcams(), "Webcams");
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
-      this.applyLocalFilter();
+      this.applyLocalFilter(this.markerService.markerClassify);
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -195,11 +195,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   onRegionsDropdownSelect(event: MultiSelectChangeEvent) {
     this.mapService.clickRegion(event.value);
-    this.applyLocalFilter();
+    this.applyLocalFilter(this.markerService.markerClassify);
   }
 
   onSourcesDropdownSelect(event: MultiSelectChangeEvent) {
-    this.applyLocalFilter();
+    this.applyLocalFilter(this.markerService.markerClassify);
   }
 
   onSidebarChange(e: Event) {
@@ -264,7 +264,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       .catch((e) => console.error(e))
       .finally(() => {
         this.loading = undefined;
-        this.applyLocalFilter();
+        this.applyLocalFilter(this.markerService.markerClassify);
       });
   }
 
@@ -308,7 +308,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     } else if (data?.type) {
       this.filter.toggleFilter(data);
     }
-    this.applyLocalFilter();
+    this.applyLocalFilter(this.markerService.markerClassify);
   }
 
   setDate() {
@@ -316,7 +316,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.loadObservations({});
   }
 
-  applyLocalFilter() {
+  applyLocalFilter(classifyType: LocalFilterTypes) {
     Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
     this.localObservations = this.observations.filter(
       (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
@@ -327,12 +327,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ?.on("click", () => this.onObservationClick(observation))
         ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     });
-    this.buildChartsData();
+    this.buildChartsData(classifyType);
   }
 
-  buildChartsData() {
+  buildChartsData(classifyType: LocalFilterTypes) {
     for (const type of Object.values(LocalFilterTypes)) {
-      this.chartsData[type] = this.filter.toDataset(this.observations, type);
+      this.chartsData[type] = this.filter.toDataset(this.observations, type, classifyType);
     }
   }
 

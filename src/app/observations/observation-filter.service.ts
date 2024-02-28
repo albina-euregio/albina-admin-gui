@@ -210,7 +210,11 @@ export class ObservationFilterService {
     );
   }
 
-  public toDataset(observations: GenericObservation[], type: LocalFilterTypes): OutputDataset {
+  public toDataset(
+    observations: GenericObservation[],
+    type: LocalFilterTypes,
+    classifyType: LocalFilterTypes,
+  ): OutputDataset {
     const filter = this.filterSelection[type];
     let nan = 0;
     const dataRaw = Object.fromEntries(
@@ -221,6 +225,17 @@ export class ObservationFilterService {
           available: 0,
           selected: filter.selected.includes(key) ? 1 : 0,
           highlighted: filter.highlighted.includes(key) ? 1 : 0,
+          0: 0,
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+          6: 0,
+          7: 0,
+          8: 0,
+          9: 0,
+          10: 0,
         },
       ]),
     );
@@ -235,36 +250,65 @@ export class ObservationFilterService {
         if (!data) return;
         data.all++;
         if (this.isSelected(observation)) {
-          data.available++;
+          if (classifyType && classifyType !== type) {
+            const categories = this.filterSelection[classifyType].all;
+            const entry: string | string[] = this.filterSelection[classifyType].toValue(observation);
+            if (entry) {
+              (typeof entry === "string" ? [entry] : entry).forEach((v) => {
+                data[categories.indexOf(v)]++;
+              });
+            } else {
+              data[0]++;
+            }
+          } else {
+            data.available++;
+          }
         }
       });
     });
     const dataset: OutputDataset["dataset"]["source"] = [
-      type === LocalFilterTypes.Aspect
-        ? ["category", "all", "highlighted", "available", "selected"]
-        : ["category", "max", "all", "highlighted", "available", "selected"],
+      [
+        "category",
+        "max",
+        "all",
+        "highlighted",
+        "available",
+        "selected",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+      ],
     ];
 
     for (const key of filter["all"]) {
       const values = dataRaw[key];
-      dataset.push(
-        type === LocalFilterTypes.Aspect
-          ? [
-              key,
-              values["all"],
-              values["highlighted"] === 1 ? values["all"] * DATASET_MAX_FACTOR * DATASET_MAX_FACTOR : 0,
-              values["selected"] === 0 ? values["available"] : 0,
-              values["selected"] === 1 ? values["available"] : 0,
-            ]
-          : [
-              key,
-              values["all"] * DATASET_MAX_FACTOR,
-              values["all"],
-              values["highlighted"] === 1 ? values["all"] : 0,
-              values["selected"] === 0 ? values["available"] : 0,
-              values["selected"] === 1 ? values["available"] : 0,
-            ],
-      );
+      dataset.push([
+        key,
+        values["all"],
+        values["all"],
+        values["highlighted"] === 1 ? values["all"] : 0,
+        values["selected"] === 0 ? values["available"] : 0,
+        values["selected"] === 1 ? values["available"] : 0,
+        values["0"],
+        values["1"],
+        values["2"],
+        values["3"],
+        values["4"],
+        values["5"],
+        values["6"],
+        values["7"],
+        values["8"],
+        values["9"],
+        values["10"],
+      ]);
     }
 
     return this.normalizeData({ dataset: { source: dataset }, nan });
