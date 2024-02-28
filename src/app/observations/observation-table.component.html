@@ -8,20 +8,36 @@
 >
   <ng-template pTemplate="header">
     <tr>
-      <th colspan="99" style="text-align: left">
-        <p-toggleButton
-          onLabel=""
-          offLabel=""
-          onIcon="fa fa-map-marker"
-          offIcon="fa fa-map-marker"
-          [(ngModel)]="showObservationsWithoutCoordinates"
-        ></p-toggleButton>
+      <th colspan="99" style="text-align: left; padding: 0">
+        <div class="global-bar-scroll">
+          <div class="global-bar global-bar-left">
+            <p-toggleButton
+              onLabel=""
+              offLabel=""
+              onIcon="fa fa-map-marker"
+              offIcon="fa fa-map-marker"
+              [(ngModel)]="showObservationsWithoutCoordinates"
+            ></p-toggleButton>
 
-        <div class="global-bar-item global-bar-item-add" style="float: right; padding-left: 10px">
-          <p>
-            {{ "observations.count" | translate }}
-            {{ observations.length }}
-          </p>
+            <div class="global-bar-item">
+              <i class="pi pi-search" style="padding-right: 0.2rem"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="observationTable.filterGlobal($event.target.value, 'contains')"
+                placeholder="{{ 'observations.search' | translate }}"
+              />
+            </div>
+          </div>
+
+          <div class="global-bar global-bar-right">
+            <div class="global-bar-item">
+              <p>
+                {{ "observations.count" | translate }}
+                {{ observations.length }}
+              </p>
+            </div>
+          </div>
         </div>
       </th>
     </tr>

@@ -213,10 +213,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observationTableComponent.newObservation();
   }
 
-  observationTableFilterGlobal(value: string) {
-    this.observationTableComponent.observationTable.filterGlobal(value, "contains");
-  }
-
   parseObservation(observation: GenericObservation): GenericObservation {
     const avalancheProblems = Object.values(AvalancheProblem);
     const dangerPatterns = Object.values(DangerPattern);
