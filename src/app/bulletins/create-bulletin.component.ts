@@ -217,6 +217,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const date = new Date(routeParams.date);
       date.setHours(0, 0, 0, 0);
       this.bulletinsService.setActiveDate(date);
+
+      if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)) {
+        this.bulletinsService.setIsReadOnly(true);
+      }
+
       this.initializeComponent();
 
       this.internalBulletinsSubscription = timer(5000, 5000)
