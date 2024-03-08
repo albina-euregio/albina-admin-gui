@@ -28,6 +28,7 @@ export interface GenericFilterToggleData {
   data: {
     value?: string;
     altKey?: boolean;
+    ctrlKey?: boolean;
     markerClassify?: boolean;
     markerLabel?: boolean;
     invert?: boolean;
@@ -132,12 +133,19 @@ export class ObservationFilterService {
       filterType["highlighted"] = [];
     } else if (filterData.data.invert) {
       if (filterType[subset].length > 0) {
-        filterType[subset] = filterType.all.filter((value) => !filterType[subset].includes(value));
+        const result = filterType.all.filter((value) => !filterType[subset].includes(value));
+        filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
       }
     } else {
       const index = filterType[subset].indexOf(filterData.data.value);
       if (index !== -1) filterType[subset].splice(index, 1);
       else filterType[subset].push(filterData.data.value);
+      if (filterData.data.ctrlKey) {
+        if (filterType[subset].length > 0) {
+          const result = filterType.all.filter((value) => !filterType[subset].includes(value));
+          filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
+        }
+      }
     }
   }
 
