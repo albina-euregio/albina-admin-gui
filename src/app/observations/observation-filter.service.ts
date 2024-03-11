@@ -142,9 +142,7 @@ export class ObservationFilterService {
   }
 
   set days(days: number) {
-    if (!this.endDate) {
-      this.endDate = new Date();
-    }
+    this.endDate = new Date();
     const newStartDate = new Date(this.endDate);
     newStartDate.setDate(newStartDate.getDate() - (days - 1));
     newStartDate.setHours(0, 0, 0, 0);
