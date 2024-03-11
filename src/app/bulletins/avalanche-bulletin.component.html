@@ -94,7 +94,11 @@
         <i class="ph ph-map-trifold"></i>
       </button>
       <button
-        *ngIf="!editRegions && !copyService.isCopyBulletin()"
+        *ngIf="
+          !editRegions &&
+          !copyService.isCopyBulletin() &&
+          !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
+        "
         (click)="copyBulletin()"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.copy' | translate }}"
@@ -163,7 +167,11 @@
         <i class="ph ph-map-trifold"></i>
       </button>
       <button
-        *ngIf="!isComparedBulletin && !copyService.isCopyBulletin()"
+        *ngIf="
+          !isComparedBulletin &&
+          !copyService.isCopyBulletin() &&
+          !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
+        "
         (click)="copyBulletin()"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.copy' | translate }}"

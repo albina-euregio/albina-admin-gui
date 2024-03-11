@@ -217,6 +217,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const date = new Date(routeParams.date);
       date.setHours(0, 0, 0, 0);
       this.bulletinsService.setActiveDate(date);
+
+      if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)) {
+        this.bulletinsService.setIsReadOnly(true);
+      }
+
       this.initializeComponent();
 
       this.internalBulletinsSubscription = timer(5000, 5000)
@@ -369,7 +374,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !this.bulletinsService.getIsEditable() ||
       this.bulletinsService.isLocked(this.activeBulletin.getId()) ||
       this.editRegions ||
-      !this.isCreator(this.activeBulletin)
+      !this.isCreator(this.activeBulletin) ||
+      this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)
     );
   }
 
@@ -827,13 +833,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private addExternalBulletins(server: ServerModel, response) {
     let bulletinsList = new Array<BulletinModel>();
-    for (const jsonBulletin of response) {
-      const bulletin = BulletinModel.createFromJson(jsonBulletin);
-      bulletinsList.push(bulletin);
-      if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
-        this.activeBulletin = bulletin;
+    if (response) {
+      for (const jsonBulletin of response) {
+        const bulletin = BulletinModel.createFromJson(jsonBulletin);
+        bulletinsList.push(bulletin);
+        if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
+          this.activeBulletin = bulletin;
+        }
+        this.mapService.updateAggregatedRegion(bulletin);
       }
-      this.mapService.updateAggregatedRegion(bulletin);
     }
 
     bulletinsList.sort((a, b): number => {

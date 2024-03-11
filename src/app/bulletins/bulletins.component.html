@@ -31,6 +31,10 @@
                 <i class="ph ph-eye"></i>
               </button>
               <button
+                *ngIf="
+                  authenticationService.isCurrentUserInRole(constantsService.roleForecaster) ||
+                  authenticationService.isCurrentUserInRole(constantsService.roleForeman)
+                "
                 class="btn btn-secondary btn-icon bulletins-table__day-buttons"
                 type="button"
                 (click)="editBulletin(date, false)"

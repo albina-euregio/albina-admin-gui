@@ -55,7 +55,7 @@ export class BaseComponent {
   onMouseDown(event: any) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
-      this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: true } });
+      this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: true, ctrlKey: false } });
     }, this.longClickDur);
     return false;
   }
@@ -64,16 +64,22 @@ export class BaseComponent {
     if (this.pressTimer) {
       this.resetTimeout();
       if (event.componentType === "series") {
-        this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: event.event.event.altKey } });
+        this.handleChange.emit({
+          type: this.type,
+          data: { value: event.data[0], altKey: event.event.event.altKey, ctrlKey: event.event.event.ctrlKey },
+        });
       } else if (event.componentType === "angleAxis") {
-        this.handleChange.emit({ type: this.type, data: { value: event.value, altKey: event.event.event.altKey } });
+        this.handleChange.emit({
+          type: this.type,
+          data: { value: event.value, altKey: event.event.event.altKey, ctrlKey: event.event.event.ctrlKey },
+        });
       }
     }
     return false;
   }
 
   onClickNan(event: any) {
-    this.handleChange.emit({ type: this.type, data: { value: "nan", altKey: event.altKey } });
+    this.handleChange.emit({ type: this.type, data: { value: "nan", altKey: event.altKey, ctrlKey: event.ctrlKey } });
   }
 
   onMarkerClassify() {
