@@ -197,7 +197,7 @@
       <span class="create-bulletin__bulletin-info" *ngIf="submitting"
         ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.submitting" | translate }}</span
       >
-      <span class="create-bulletin__bulletin-alert" *ngIf="saveError" (click)="updateBulletinOnServer(activeBulletin)"
+      <span class="create-bulletin__bulletin-alert" *ngIf="saveError.size" (click)="updateSaveErrors()"
         ><i class="ph ph-warning icon-left"></i> {{ "bulletins.status.saveError" | translate }}
         <i class="ph ph-repeat icon-right"></i
       ></span>
@@ -568,6 +568,7 @@
   >
     <div class="region-thumb__details">
       <h6 class="region-thumb__title font-s-medium">
+        <span *ngIf="saveError.has(bulletin.id)">* </span>
         <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 0">{{
           regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0])
         }}</span>

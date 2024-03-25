@@ -43,7 +43,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public loadingPreview: boolean;
   public editRegions: boolean;
   public loading: boolean;
-  public saveError: boolean;
+  public saveError: Map<string, BulletinModel>;
   public loadInternalBulletinsError: boolean;
   public loadExternalBulletinsError: boolean;
 
@@ -174,7 +174,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.submitting = false;
     this.copying = false;
     this.loadingPreview = false;
-    this.saveError = false;
+    this.saveError = new Map();
     this.loadInternalBulletinsError = false;
     this.loadExternalBulletinsError = false;
   }
@@ -1381,6 +1381,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
+  updateSaveErrors() {
+    for (const bulletin of this.saveError.values()) {
+      this.updateBulletinOnServer(bulletin);
+    }
+  }
+
   updateBulletinOnServer(bulletin: BulletinModel) {
     if (this.isWriteDisabled()) return;
     const validFrom = new Date(this.bulletinsService.getActiveDate());
@@ -1391,14 +1397,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         this.addInternalBulletins(data);
-        this.saveError = false;
+        this.saveError.delete(bulletin.id);
         this.loadInternalBulletinsError = false;
         this.loading = false;
         console.log("Bulletin updated on server.");
       },
       (error) => {
         console.error("Bulletin could not be updated on server!");
-        this.saveError = true;
+        this.saveError.set(bulletin.id, bulletin);
       },
     );
   }
