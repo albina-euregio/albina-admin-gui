@@ -305,6 +305,10 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   // Source: https://stackoverflow.com/a/44511007/9947071
   swipe(e: TouchEvent, when: string): void {
+    if (this.selectedModelType === "qfa") {
+      // disable swipe to allow horizontal scrolling of table
+      return;
+    }
     const coord: [number, number] = [e.changedTouches[0].clientX, e.changedTouches[0].clientY];
     const time = new Date().getTime();
 
