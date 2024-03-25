@@ -97,7 +97,7 @@ export class QfaFile implements types.QFA {
   };
 
   private parseDate = (date: string): Date => {
-    const months = ["Jan", "Feb", "Mrz", "Apr", "Mai", "Juni", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
     const day = Number(date.match(/[\d]+/));
     const month = months.filter((month) => date.includes(month))[0];
     const year = Number(date.match(/[\d]{4}/));
