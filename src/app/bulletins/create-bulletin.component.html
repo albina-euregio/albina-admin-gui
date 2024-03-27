@@ -535,10 +535,10 @@
           </button>
           <button type="button" class="btn btn-primary" (click)="saveBulletin($event, activeBulletin)">
             <i class="ph-bold ph-check"></i>
-            <span *ngIf="activeBulletin.savedRegions.length === 0">{{
+            <span *ngIf="activeBulletin.savedRegions.length === 0 && activeBulletin.publishedRegions.length === 0">{{
               "bulletins.create.tooltip.createRegion" | translate
             }}</span>
-            <span *ngIf="activeBulletin.savedRegions.length > 0">{{
+            <span *ngIf="activeBulletin.savedRegions.length > 0 || activeBulletin.publishedRegions.length > 0">{{
               "bulletins.create.tooltip.saveChanges" | translate
             }}</span>
           </button>
