@@ -6,5 +6,4 @@ export type Environment = {
   headerBgColor: string;
   faviconPath: string;
   logoPath: string;
-  isEuregio: boolean;
 };

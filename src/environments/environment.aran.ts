@@ -6,5 +6,4 @@ export const environment = {
   headerBgColor: "#ffffff",
   faviconPath: "assets/img/admin-favicon.ico",
   logoPath: "assets/img/admin-logo.svg",
-  isEuregio: false,
 };

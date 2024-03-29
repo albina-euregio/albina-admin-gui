@@ -10,7 +10,6 @@ export const environment = {
   headerBgColor: window["ENV"].HEADER_BG_COLOR,
   faviconPath: window["ENV"].FAVICON_PATH,
   logoPath: window["ENV"].LOGO_PATH,
-  isEuregio: window["ENV"].IS_EUREGIO,
 };
 
 Object.assign(environment, (window as any).ENV);

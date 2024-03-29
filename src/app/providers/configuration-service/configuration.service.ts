@@ -24,6 +24,8 @@ export interface RegionConfiguration {
   enableMediaFile: boolean;
   enableAvalancheProblemCornices: boolean;
   enableAvalancheProblemNoDistinctAvalancheProblem: boolean;
+  enableObservations: boolean;
+  enableModelling: boolean;
   showMatrix: boolean;
   serverInstance: ServerConfiguration;
   pdfColor: string;
