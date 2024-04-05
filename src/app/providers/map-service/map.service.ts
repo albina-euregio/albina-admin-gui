@@ -188,7 +188,8 @@ export class MapService {
   getAlbinaBaseMap(options: TileLayerOptions = {}): TileLayer {
     return new TileLayer("https://static.avalanche.report/tms/{z}/{x}/{y}.webp", {
       tms: false,
-      attribution: "",
+      attribution:
+        "© <a href='sonny.4lima.de'>Sonny</a>, CC BY 4.0 | © <a href='https://www.eea.europa.eu/en/datahub/datahubitem-view/d08852bc-7b5f-4835-a776-08362e2fbf4b'>EU-DEM</a>, CC BY 4.0 | © avalanche.report, CC BY 4.0",
       ...options,
     });
   }
