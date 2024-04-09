@@ -28,14 +28,6 @@ export class BlendModePolygonSymbolizer extends PolygonSymbolizer {
   }
 }
 
-const timer = (duration: number) => {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-};
-
 interface LeafletLayerOptions extends L.LayerOptions {
   bounds?: number[][];
   attribution?: string;
@@ -153,7 +145,7 @@ export class PmLeafletLayer extends L.GridLayer {
     const tileCenter = tileRange.getCenter();
     const priority = coords.distanceTo(tileCenter) * this.tileDelay;
 
-    await timer(priority);
+    await new Promise<void>((resolve) => setTimeout(() => resolve(), priority));
 
     if (element.key !== key) return;
     if (this.lastRequestedZ !== coords.z) return;
