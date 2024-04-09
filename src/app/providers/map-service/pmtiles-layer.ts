@@ -1,43 +1,69 @@
-// @ts-nocheck
+// x@ts-nocheck
 
 import * as L from "leaflet";
-import { PMTiles } from "pmtiles";
+import type { PMTiles } from "pmtiles";
+import type Point from "@mapbox/point-geometry";
 import {
+  type Feature,
   Labelers,
-  LabelRule,
+  type LabelRule,
   paint,
-  PaintRule,
-  PickedFeature,
-  PolygonSymbolizer,
-  PreparedTile,
-  SourceOptions,
+  type PaintRule,
+  type PaintSymbolizer,
+  type PickedFeature,
+  type PreparedTile,
+  type SourceOptions,
   sourcesToViews,
-  View,
+  type View,
 } from "protomaps-leaflet";
 
-export class BlendModePolygonSymbolizer extends PolygonSymbolizer {
+type KeyedHtmlCanvasElement = HTMLCanvasElement & { key: string };
+
+export class BlendModePolygonSymbolizer implements PaintSymbolizer {
   constructor(
     private blendMode: GlobalCompositeOperation,
-    ...args: ConstructorParameters<typeof PolygonSymbolizer>
-  ) {
-    super(...args);
-  }
-  before(ctx: CanvasRenderingContext2D, z: number): void {
+    private styleFunction: (f: Feature) => L.PathOptions,
+  ) {}
+
+  before(ctx: CanvasRenderingContext2D, z: number): void {}
+
+  public draw(ctx: CanvasRenderingContext2D, geom: Point[][], z: number, f: Feature) {
+    const style = this.styleFunction(f);
+    if (!style) return;
+
     ctx.globalCompositeOperation = this.blendMode;
-    super.before(ctx, z);
+    ctx.globalAlpha = style.fillOpacity;
+    ctx.fillStyle = style.fillColor;
+    const doStroke = style.stroke ?? false;
+    if (doStroke) {
+      ctx.strokeStyle = style.color;
+      ctx.lineWidth = style.weight;
+    }
+
+    ctx.beginPath();
+    for (const poly of geom) {
+      for (let p = 0; p < poly.length; p++) {
+        const pt = poly[p];
+        if (p === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      }
+    }
+    ctx.fill();
+    if (doStroke) {
+      ctx.stroke();
+    }
   }
 }
 
-interface LeafletLayerOptions extends L.LayerOptions {
-  bounds?: number[][];
+interface LeafletLayerOptions extends L.GridLayerOptions {
   attribution?: string;
   debug?: string;
   lang?: string;
   tileDelay?: number;
   language?: string[];
   noWrap?: boolean;
-  paintRules?: PaintRule[];
-  labelRules?: LabelRule[];
+  paintRules?: Record<string, PaintRule>;
+  labelRules?: Record<string, LabelRule>;
   maxDataZoom?: number;
   url?: PMTiles | string;
   sources?: Record<string, SourceOptions>;
@@ -48,11 +74,11 @@ interface LeafletLayerOptions extends L.LayerOptions {
 export class PmLeafletLayer extends L.GridLayer {
   backgroundColor: string | undefined;
   labelers: Labelers;
-  labelRules: LabelRule[];
+  labelRules: Record<string, LabelRule>;
   lang: string | undefined;
   lastRequestedZ: number | undefined;
   onTilesInvalidated: (tiles: Set<string>) => void;
-  paintRules: PaintRule[];
+  paintRules: Record<string, PaintRule>;
   scratch: CanvasRenderingContext2D;
   tileDelay: number;
   tileSize: number;
@@ -69,8 +95,8 @@ export class PmLeafletLayer extends L.GridLayer {
         '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>';
     super(options);
 
-    this.paintRules = options.paintRules || [];
-    this.labelRules = options.labelRules || [];
+    this.paintRules = options.paintRules || {};
+    this.labelRules = options.labelRules || {};
     this.backgroundColor = options.backgroundColor;
 
     this.lastRequestedZ = undefined;
@@ -83,18 +109,13 @@ export class PmLeafletLayer extends L.GridLayer {
         this.rerenderTile(t);
       }
     };
-    this.labelers = new Labelers(this.scratch, this.labelRules, 16, this.onTilesInvalidated);
+    this.labelers = new Labelers(this.scratch, Object.values(this.labelRules), 16, this.onTilesInvalidated);
     this.tileSize = 256 * window.devicePixelRatio;
     this.tileDelay = options.tileDelay || 3;
     this.lang = options.lang;
   }
 
-  public async renderTile(
-    coords: L.Coords,
-    element: HTMLCanvasElement & { key: string },
-    key: string,
-    done = () => {},
-  ) {
+  public async renderTile(coords: L.Coords, element: KeyedHtmlCanvasElement, key: string, done = () => {}) {
     this.lastRequestedZ = coords.z;
 
     const promises = [] as { key: string; promise: Promise<PreparedTile> }[];
@@ -140,8 +161,8 @@ export class PmLeafletLayer extends L.GridLayer {
     if (!this._map) return; // the layer has been removed from the map
 
     const center = this._map.getCenter().wrap();
-    const pixelBounds = this._getTiledPixelBounds(center);
-    const tileRange = this._pxBoundsToTileRange(pixelBounds);
+    const pixelBounds = (this as any)._getTiledPixelBounds(center);
+    const tileRange = (this as any)._pxBoundsToTileRange(pixelBounds);
     const tileCenter = tileRange.getCenter();
     const priority = coords.distanceTo(tileCenter) * this.tileDelay;
 
@@ -180,12 +201,12 @@ export class PmLeafletLayer extends L.GridLayer {
       ctx,
       coords.z,
       preparedTilemap,
-      this.xray ? null : labelData,
-      this.paintRules,
+      (this as any).xray ? null : labelData,
+      Object.values(this.paintRules),
       bbox,
       origin,
       false,
-      this.debug,
+      (this as any).debug,
     );
 
     done();
@@ -193,9 +214,9 @@ export class PmLeafletLayer extends L.GridLayer {
 
   public rerenderTile(key: string) {
     for (const unwrappedK in this._tiles) {
-      const wrappedCoord = this._wrapCoords(this._keyToTileCoords(unwrappedK));
+      const wrappedCoord = this._wrapCoords((this as any)._keyToTileCoords(unwrappedK));
       if (key === this._tileCoordsToKey(wrappedCoord)) {
-        this.renderTile(wrappedCoord, this._tiles[unwrappedK].el, key);
+        this.renderTile(wrappedCoord, (this as any)._tiles[unwrappedK].el, key);
       }
     }
   }
@@ -214,19 +235,19 @@ export class PmLeafletLayer extends L.GridLayer {
   }
 
   public clearLayout() {
-    this.labelers = new Labelers(this.scratch, this.labelRules, 16, this.onTilesInvalidated);
+    this.labelers = new Labelers(this.scratch, Object.values(this.labelRules), 16, this.onTilesInvalidated);
   }
 
   public rerenderTiles() {
     for (const unwrappedK in this._tiles) {
-      const wrappedCoord = this._wrapCoords(this._keyToTileCoords(unwrappedK));
+      const wrappedCoord = this._wrapCoords((this as any)._keyToTileCoords(unwrappedK));
       const key = this._tileCoordsToKey(wrappedCoord);
-      this.renderTile(wrappedCoord, this._tiles[unwrappedK].el, key);
+      this.renderTile(wrappedCoord, (this as any)._tiles[unwrappedK].el, key);
     }
   }
 
   public createTile(coords: L.Coords, showTile: L.DoneCallback) {
-    const element = L.DomUtil.create("canvas", "leaflet-tile") as HTMLCanvasElement & { key: string };
+    const element = L.DomUtil.create("canvas", "leaflet-tile") as KeyedHtmlCanvasElement;
     element.lang = this.lang;
 
     const key = this._tileCoordsToKey(coords);
@@ -244,15 +265,15 @@ export class PmLeafletLayer extends L.GridLayer {
     if (!tile) {
       return;
     }
-    tile.el.removed = true;
-    tile.el.key = undefined;
-    L.DomUtil.removeClass(tile.el, "leaflet-tile-loaded");
-    tile.el.width = tile.el.height = 0;
-    L.DomUtil.remove(tile.el);
+    (tile.el as any).removed = true;
+    (tile.el as KeyedHtmlCanvasElement).key = undefined;
+    L.DomUtil.removeClass(tile.el as KeyedHtmlCanvasElement, "leaflet-tile-loaded");
+    (tile.el as KeyedHtmlCanvasElement).width = (tile.el as KeyedHtmlCanvasElement).height = 0;
+    L.DomUtil.remove(tile.el as KeyedHtmlCanvasElement);
     delete this._tiles[key];
     this.fire("tileunload", {
       tile: tile.el,
-      coords: this._keyToTileCoords(key),
+      coords: (this as any)._keyToTileCoords(key),
     });
   }
 

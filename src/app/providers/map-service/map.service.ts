@@ -29,6 +29,8 @@ interface SelectableRegionProperties extends RegionWithElevationProperties {
   selected: boolean;
 }
 
+const dataSource = "eaws-regions";
+
 @Injectable()
 export class MapService {
   public map: Map;
@@ -69,7 +71,6 @@ export class MapService {
       this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()),
     ]);
 
-    const dataSource = "eaws-regions";
     let overlayMaps: typeof this.overlayMaps = {
       // overlay to show micro regions without elevation (only outlines)
       regions: new GeoJSON(regions, {
@@ -91,27 +92,12 @@ export class MapService {
 
       // overlay to show aggregated regions
       aggregatedRegions: new PmLeafletLayer({
-        // pane: "tilePane",
         sources: {
           [dataSource]: {
             maxDataZoom: 10,
             url: "https://static.avalanche.report/eaws-regions.pmtiles",
           },
         },
-        attribution: "",
-        labelRules: [],
-        paintRules: [
-          // ...([1, 2, 3, 4, 5] as WarnLevelNumber[]).map((warnlevel) => ()),
-          {
-            dataSource,
-            dataLayer: "micro-regions_elevation",
-            filter: (z, f) => filterFeature({ properties: f.props } as any), //&& dangerRating(f.props) === warnlevel,
-            symbolizer: new BlendModePolygonSymbolizer("source-over", {
-              fill: "#ff9900",
-              opacity: 0.8,
-            }),
-          },
-        ],
       }),
     };
     overlayMaps.editSelection.options.onEachFeature = this.onEachFeature.bind(this, overlayMaps.editSelection);
@@ -294,18 +280,36 @@ export class MapService {
       const isAbove =
         properties.elevation === this.constantsService.microRegionsElevationHigh ||
         properties.elevation === this.constantsService.microRegionsElevationLowHigh;
-      return this.getActiveSelectionStyle(
-        properties.id,
-        isAbove
-          ? map !== this.afternoonMap
-            ? bulletin.getForenoonDangerRatingAbove()
-            : bulletin.getAfternoonDangerRatingAbove()
-          : map !== this.afternoonMap
-            ? bulletin.getForenoonDangerRatingBelow()
-            : bulletin.getAfternoonDangerRatingBelow(),
-        status,
-      );
+      const dangerRating = isAbove
+        ? map !== this.afternoonMap
+          ? bulletin.getForenoonDangerRatingAbove()
+          : bulletin.getAfternoonDangerRatingAbove()
+        : map !== this.afternoonMap
+          ? bulletin.getForenoonDangerRatingBelow()
+          : bulletin.getAfternoonDangerRatingBelow();
+      if (!dangerRating) return undefined;
+      return this.getActiveSelectionStyle(properties.id, dangerRating, status);
     };
+
+    if (layer instanceof PmLeafletLayer) {
+      for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
+        for (const region of bulletin.getRegionsByStatus(status)) {
+          layer.paintRules[region] = {
+            dataSource,
+            dataLayer: "micro-regions_elevation",
+            symbolizer: new BlendModePolygonSymbolizer("source-over", (f) => {
+              const properties = f.props as unknown as SelectableRegionProperties;
+              if (!filterFeature({ properties } as unknown as GeoJSON.Feature)) return undefined;
+              if (properties.id !== region) return;
+              return getStyle(properties, status);
+            }),
+          };
+        }
+      }
+      layer.rerenderTiles();
+      return;
+    }
+
     for (const entry of layer?.getLayers()) {
       if (doSelect) {
         entry.feature.properties.selected = false;
