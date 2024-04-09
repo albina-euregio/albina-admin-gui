@@ -516,7 +516,11 @@ export class MapService {
     };
   }
 
-  private getActiveSelectionStyle(region, dangerRating, status): L.PathOptions {
+  private getActiveSelectionStyle(
+    region: string,
+    dangerRating: Enums.DangerRating,
+    status: Enums.RegionStatus,
+  ): L.PathOptions {
     let fillOpacity = this.constantsService.fillOpacityOwnSelected;
     const fillColor = this.constantsService.getDangerRatingColor(dangerRating);
 
@@ -548,7 +552,11 @@ export class MapService {
     };
   }
 
-  private getDangerRatingStyle(region, dangerRating, status): L.PathOptions {
+  private getDangerRatingStyle(
+    region: string,
+    dangerRating: Enums.DangerRating,
+    status: Enums.RegionStatus,
+  ): L.PathOptions {
     let fillOpacity = this.constantsService.fillOpacityOwnDeselected;
 
     // own area
