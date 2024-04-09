@@ -278,11 +278,11 @@ export class PmLeafletLayer extends L.GridLayer {
   }
 
   public getLayers() {
-    // fixme
     return [];
   }
 
   public resetStyle() {
-    // fixme
+    this.paintRules = {};
+    this.rerenderTiles();
   }
 }

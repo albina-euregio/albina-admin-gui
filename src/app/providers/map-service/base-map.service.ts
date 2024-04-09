@@ -49,7 +49,6 @@ export class BaseMapService extends MapService {
       layers: [
         ...Object.values(this.baseMaps),
         this.overlayMaps.regions,
-        this.overlayMaps.activeSelection,
         this.overlayMaps.editSelection,
         ...Object.values(this.observationTypeLayers),
       ],

@@ -43,14 +43,12 @@ export class MapService {
   protected overlayMaps: {
     // Micro  regions without elevation
     regions: GeoJSON<SelectableRegionProperties>;
-    activeSelection: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
     aggregatedRegions: PmLeafletLayer;
   };
   protected afternoonOverlayMaps: {
     // Micro  regions without elevation
     regions: GeoJSON<SelectableRegionProperties>;
-    activeSelection: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
     aggregatedRegions: PmLeafletLayer;
   };
@@ -80,11 +78,6 @@ export class MapService {
         style: this.getRegionStyle(),
       }),
 
-      // overlay to show selected regions
-      activeSelection: new GeoJSON(regionsWithElevation, {
-        style: this.getActiveSelectionBaseStyle(),
-      }),
-
       // overlay to select regions (when editing an aggregated region)
       editSelection: new GeoJSON(regions, {
         style: this.getEditSelectionBaseStyle(),
@@ -92,12 +85,7 @@ export class MapService {
 
       // overlay to show aggregated regions
       aggregatedRegions: new PmLeafletLayer({
-        sources: {
-          [dataSource]: {
-            maxDataZoom: 10,
-            url: "https://static.avalanche.report/eaws-regions.pmtiles",
-          },
-        },
+        sources: { [dataSource]: { maxDataZoom: 10, url: "https://static.avalanche.report/eaws-regions.pmtiles" } },
       }),
     };
     overlayMaps.editSelection.options.onEachFeature = this.onEachFeature.bind(this, overlayMaps.editSelection);
@@ -237,8 +225,7 @@ export class MapService {
   }
 
   resetActiveSelection() {
-    this.overlayMaps?.activeSelection?.resetStyle();
-    this.afternoonOverlayMaps?.activeSelection?.resetStyle();
+    this.selectAggregatedRegion(undefined);
   }
 
   resetEditSelection() {
@@ -255,87 +242,54 @@ export class MapService {
   // colors all micro-regions of bulletin
   // does not touch any other micro-region
   updateAggregatedRegion(bulletin: BulletinModel) {
-    this.selectAggregatedRegion0(bulletin, false, this.map, this.overlayMaps.aggregatedRegions);
-    this.selectAggregatedRegion0(bulletin, false, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+    this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps.aggregatedRegions);
+    this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
   }
 
+  activeBulletin: BulletinModel;
   selectAggregatedRegion(bulletin: BulletinModel) {
-    this.map.removeLayer(this.overlayMaps.regions);
-    this.map.addLayer(this.overlayMaps.activeSelection);
-    this.selectAggregatedRegion0(bulletin, true, this.map, this.overlayMaps.activeSelection);
-    this.map.addLayer(this.overlayMaps.regions);
-    this.afternoonMap.removeLayer(this.afternoonOverlayMaps.regions);
-    this.afternoonMap.addLayer(this.afternoonOverlayMaps.activeSelection);
-    this.selectAggregatedRegion0(bulletin, true, this.afternoonMap, this.afternoonOverlayMaps.activeSelection);
-    this.afternoonMap.addLayer(this.afternoonOverlayMaps.regions);
+    this.activeBulletin = bulletin;
+    this.overlayMaps?.aggregatedRegions?.rerenderTiles();
+    this.afternoonOverlayMaps?.aggregatedRegions?.rerenderTiles();
   }
 
-  private selectAggregatedRegion0(
-    bulletin: BulletinModel,
-    doSelect: boolean,
-    map: Map,
-    layer: typeof this.overlayMaps.activeSelection | typeof this.overlayMaps.aggregatedRegions,
-  ) {
-    const getStyle = (properties: SelectableRegionProperties, status: Enums.RegionStatus): L.PathOptions => {
-      const isAbove =
-        properties.elevation === this.constantsService.microRegionsElevationHigh ||
-        properties.elevation === this.constantsService.microRegionsElevationLowHigh;
-      const dangerRating = isAbove
-        ? map !== this.afternoonMap
-          ? bulletin.getForenoonDangerRatingAbove()
-          : bulletin.getAfternoonDangerRatingAbove()
-        : map !== this.afternoonMap
-          ? bulletin.getForenoonDangerRatingBelow()
-          : bulletin.getAfternoonDangerRatingBelow();
-      if (!dangerRating) return undefined;
-      return this.getActiveSelectionStyle(properties.id, dangerRating, status);
-    };
-
-    if (layer instanceof PmLeafletLayer) {
-      for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
-        for (const region of bulletin.getRegionsByStatus(status)) {
-          layer.paintRules[region] = {
-            dataSource,
-            dataLayer: "micro-regions_elevation",
-            symbolizer: new BlendModePolygonSymbolizer("source-over", (f) => {
-              const properties = f.props as unknown as SelectableRegionProperties;
-              if (!filterFeature({ properties } as unknown as GeoJSON.Feature)) return undefined;
-              if (properties.id !== region) return;
-              return getStyle(properties, status);
-            }),
-          };
-        }
-      }
-      layer.rerenderTiles();
-      return;
-    }
-
-    for (const entry of layer?.getLayers()) {
-      if (doSelect) {
-        entry.feature.properties.selected = false;
-      }
-      entry.setStyle(this.getActiveSelectionBaseStyle());
-      for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
-        for (const region of bulletin.getRegionsByStatus(status)) {
-          if (entry.feature.properties.id === region) {
-            if (doSelect) {
-              entry.feature.properties.selected = true;
-            }
-            const style = getStyle(entry.feature.properties, status);
-            entry.setStyle(style);
-          }
-        }
+  private selectAggregatedRegion0(bulletin: BulletinModel, map: Map, layer: PmLeafletLayer) {
+    for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
+      for (const region of bulletin.getRegionsByStatus(status)) {
+        layer.paintRules[region] = {
+          dataSource,
+          dataLayer: "micro-regions_elevation",
+          symbolizer: new BlendModePolygonSymbolizer("multiply", (f) => {
+            const properties = f.props as unknown as SelectableRegionProperties;
+            if (!filterFeature({ properties } as unknown as GeoJSON.Feature)) return undefined;
+            if (properties.id !== region) return undefined;
+            const isAbove =
+              properties.elevation === this.constantsService.microRegionsElevationHigh ||
+              properties.elevation === this.constantsService.microRegionsElevationLowHigh;
+            const dangerRating = isAbove
+              ? map !== this.afternoonMap
+                ? bulletin.getForenoonDangerRatingAbove()
+                : bulletin.getAfternoonDangerRatingAbove()
+              : map !== this.afternoonMap
+                ? bulletin.getForenoonDangerRatingBelow()
+                : bulletin.getAfternoonDangerRatingBelow();
+            if (!dangerRating) return undefined;
+            return bulletin === this.activeBulletin
+              ? this.getActiveSelectionStyle(properties.id, dangerRating, status)
+              : this.getDangerRatingStyle(properties.id, dangerRating, status);
+          }),
+        };
       }
     }
+    layer.rerenderTiles();
+    return;
   }
 
   deselectAggregatedRegion() {
-    this.map?.removeLayer?.(this.overlayMaps.activeSelection);
-    this.afternoonMap?.removeLayer?.(this.afternoonOverlayMaps.activeSelection);
+    this.selectAggregatedRegion(undefined);
   }
 
   editAggregatedRegion(bulletin: BulletinModel) {
-    this.map.removeLayer(this.overlayMaps.activeSelection);
     this.map.addLayer(this.overlayMaps.editSelection);
 
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
