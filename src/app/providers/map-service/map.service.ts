@@ -438,7 +438,7 @@ export class MapService {
 
   protected onEachAggregatedRegionsFeatureAM(feature: GeoJSON.Feature, layer: L.Layer) {
     layer.on({
-      click(e) {
+      click() {
         feature.properties.selected = true;
       },
       mouseover(e) {
@@ -470,7 +470,7 @@ export class MapService {
 
   private onEachAggregatedRegionsFeaturePM(feature: GeoJSON.Feature, layer: L.Layer) {
     layer.on({
-      click(e) {
+      click() {
         feature.properties.selected = true;
       },
     });
