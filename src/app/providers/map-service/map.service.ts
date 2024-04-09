@@ -290,6 +290,22 @@ export class MapService {
     map: Map,
     layer: typeof this.overlayMaps.activeSelection | typeof this.overlayMaps.aggregatedRegions,
   ) {
+    const getStyle = (properties: SelectableRegionProperties, status: Enums.RegionStatus): L.PathOptions => {
+      const isAbove =
+        properties.elevation === this.constantsService.microRegionsElevationHigh ||
+        properties.elevation === this.constantsService.microRegionsElevationLowHigh;
+      return this.getActiveSelectionStyle(
+        properties.id,
+        isAbove
+          ? map !== this.afternoonMap
+            ? bulletin.getForenoonDangerRatingAbove()
+            : bulletin.getAfternoonDangerRatingAbove()
+          : map !== this.afternoonMap
+            ? bulletin.getForenoonDangerRatingBelow()
+            : bulletin.getAfternoonDangerRatingBelow(),
+        status,
+      );
+    };
     for (const entry of layer?.getLayers()) {
       if (doSelect) {
         entry.feature.properties.selected = false;
@@ -301,30 +317,8 @@ export class MapService {
             if (doSelect) {
               entry.feature.properties.selected = true;
             }
-            if (
-              entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-              entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-            ) {
-              entry.setStyle(
-                this.getActiveSelectionStyle(
-                  entry.feature.properties.id,
-                  map !== this.afternoonMap
-                    ? bulletin.getForenoonDangerRatingAbove()
-                    : bulletin.getAfternoonDangerRatingAbove(),
-                  status,
-                ),
-              );
-            } else {
-              entry.setStyle(
-                this.getActiveSelectionStyle(
-                  entry.feature.properties.id,
-                  map !== this.afternoonMap
-                    ? bulletin.getForenoonDangerRatingBelow()
-                    : bulletin.getAfternoonDangerRatingBelow(),
-                  status,
-                ),
-              );
-            }
+            const style = getStyle(entry.feature.properties, status);
+            entry.setStyle(style);
           }
         }
       }
