@@ -91,7 +91,7 @@ export class MapService {
 
       // overlay to show aggregated regions
       aggregatedRegions: new PmLeafletLayer({
-        pane: "overlayPane",
+        // pane: "tilePane",
         sources: {
           [dataSource]: {
             maxDataZoom: 10,
@@ -106,7 +106,7 @@ export class MapService {
             dataSource,
             dataLayer: "micro-regions_elevation",
             filter: (z, f) => filterFeature({ properties: f.props } as any), //&& dangerRating(f.props) === warnlevel,
-            symbolizer: new BlendModePolygonSymbolizer("multiply", {
+            symbolizer: new BlendModePolygonSymbolizer("source-over", {
               fill: "#ff9900",
               opacity: 0.8,
             }),
@@ -574,13 +574,6 @@ export class MapService {
     this.afternoonMap?.removeLayer?.(this.afternoonOverlayMaps.activeSelection);
   }
 
-  deselectAggregatedRegions() {
-    this.overlayMaps.aggregatedRegions.getLayers().every((entry) => (entry.feature.properties.selected = false));
-    this.afternoonOverlayMaps.aggregatedRegions
-      .getLayers()
-      .every((entry) => (entry.feature.properties.selected = false));
-  }
-
   editAggregatedRegion(bulletin: BulletinModel) {
     this.map.removeLayer(this.overlayMaps.activeSelection);
     this.map.addLayer(this.overlayMaps.editSelection);
@@ -633,42 +626,23 @@ export class MapService {
     const updateEditSelection = () => this.updateEditSelection();
     layer.on({
       click(e) {
-        if (feature.properties.selected && feature.properties.selected === true) {
-          if (e.originalEvent.ctrlKey) {
-            const regions = regionsService.getLevel1Regions(feature.properties.id);
-            for (const entry of editSelection.getLayers()) {
-              if (regions.includes(entry.feature.properties.id)) {
-                entry.feature.properties.selected = false;
-              }
+        const selected = !feature.properties.selected;
+        if (e.originalEvent.ctrlKey) {
+          const regions = regionsService.getLevel1Regions(feature.properties.id);
+          for (const entry of editSelection.getLayers()) {
+            if (regions.includes(entry.feature.properties.id)) {
+              entry.feature.properties.selected = selected;
             }
-          } else if (e.originalEvent.altKey) {
-            const regions = regionsService.getLevel2Regions(feature.properties.id);
-            for (const entry of editSelection.getLayers()) {
-              if (regions.includes(entry.feature.properties.id)) {
-                entry.feature.properties.selected = false;
-              }
+          }
+        } else if (e.originalEvent.altKey) {
+          const regions = regionsService.getLevel2Regions(feature.properties.id);
+          for (const entry of editSelection.getLayers()) {
+            if (regions.includes(entry.feature.properties.id)) {
+              entry.feature.properties.selected = selected;
             }
-          } else {
-            feature.properties.selected = false;
           }
         } else {
-          if (e.originalEvent.ctrlKey) {
-            const regions = regionsService.getLevel1Regions(feature.properties.id);
-            for (const entry of editSelection.getLayers()) {
-              if (regions.includes(entry.feature.properties.id)) {
-                entry.feature.properties.selected = true;
-              }
-            }
-          } else if (e.originalEvent.altKey) {
-            const regions = regionsService.getLevel2Regions(feature.properties.id);
-            for (const entry of editSelection.getLayers()) {
-              if (regions.includes(entry.feature.properties.id)) {
-                entry.feature.properties.selected = true;
-              }
-            }
-          } else {
-            feature.properties.selected = true;
-          }
+          feature.properties.selected = selected;
         }
         updateEditSelection();
       },
