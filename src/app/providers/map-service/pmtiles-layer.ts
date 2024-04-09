@@ -176,16 +176,12 @@ export class PmLeafletLayer extends L.GridLayer {
       ctx.restore();
     }
 
-    let paintingTime = 0;
-
-    const paintRules = this.paintRules;
-
-    paintingTime = paint(
+    paint(
       ctx,
       coords.z,
       preparedTilemap,
       this.xray ? null : labelData,
-      paintRules,
+      this.paintRules,
       bbox,
       origin,
       false,
