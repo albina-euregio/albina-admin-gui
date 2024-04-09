@@ -401,172 +401,49 @@ export class MapService {
   }
 
   selectAggregatedRegion(bulletin: BulletinModel) {
-    this.map.removeLayer(this.overlayMaps.regions);
-    this.afternoonMap.removeLayer(this.afternoonOverlayMaps.regions);
-    this.map.addLayer(this.overlayMaps.activeSelection);
-    this.afternoonMap.addLayer(this.afternoonOverlayMaps.activeSelection);
+    this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps);
+    this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps);
+  }
 
-    for (const entry of this.overlayMaps.activeSelection.getLayers()) {
+  private selectAggregatedRegion0(bulletin: BulletinModel, map: Map, overlayMaps: typeof this.overlayMaps) {
+    map.removeLayer(overlayMaps.regions);
+    map.addLayer(overlayMaps.activeSelection);
+    for (const entry of overlayMaps.activeSelection.getLayers()) {
       entry.feature.properties.selected = false;
       entry.setStyle(this.getActiveSelectionBaseStyle());
-      for (const region of bulletin.savedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getForenoonDangerRatingAbove(),
-                Enums.RegionStatus.saved,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getForenoonDangerRatingBelow(),
-                Enums.RegionStatus.saved,
-              ),
-            );
-          }
-        }
-      }
-      for (const region of bulletin.suggestedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getForenoonDangerRatingAbove(),
-                Enums.RegionStatus.suggested,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getForenoonDangerRatingBelow(),
-                Enums.RegionStatus.suggested,
-              ),
-            );
-          }
-        }
-      }
-      for (const region of bulletin.publishedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getForenoonDangerRatingAbove(),
-                Enums.RegionStatus.published,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getForenoonDangerRatingBelow(),
-                Enums.RegionStatus.published,
-              ),
-            );
+      for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
+        for (const region of bulletin.getRegionsByStatus(status)) {
+          if (entry.feature.properties.id === region) {
+            entry.feature.properties.selected = true;
+            if (
+              entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
+              entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
+            ) {
+              entry.setStyle(
+                this.getActiveSelectionStyle(
+                  entry.feature.properties.id,
+                  map !== this.afternoonMap
+                    ? bulletin.getForenoonDangerRatingAbove()
+                    : bulletin.getAfternoonDangerRatingAbove(),
+                  status,
+                ),
+              );
+            } else {
+              entry.setStyle(
+                this.getActiveSelectionStyle(
+                  entry.feature.properties.id,
+                  map !== this.afternoonMap
+                    ? bulletin.getForenoonDangerRatingBelow()
+                    : bulletin.getAfternoonDangerRatingBelow(),
+                  status,
+                ),
+              );
+            }
           }
         }
       }
     }
-
-    for (const entry of this.afternoonOverlayMaps.activeSelection.getLayers()) {
-      entry.feature.properties.selected = false;
-      entry.setStyle(this.getActiveSelectionBaseStyle());
-      for (const region of bulletin.savedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getAfternoonDangerRatingAbove(),
-                Enums.RegionStatus.saved,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getAfternoonDangerRatingBelow(),
-                Enums.RegionStatus.saved,
-              ),
-            );
-          }
-        }
-      }
-      for (const region of bulletin.suggestedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getAfternoonDangerRatingAbove(),
-                Enums.RegionStatus.suggested,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getAfternoonDangerRatingBelow(),
-                Enums.RegionStatus.suggested,
-              ),
-            );
-          }
-        }
-      }
-      for (const region of bulletin.publishedRegions) {
-        if (entry.feature.properties.id === region) {
-          entry.feature.properties.selected = true;
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getAfternoonDangerRatingAbove(),
-                Enums.RegionStatus.published,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getActiveSelectionStyle(
-                entry.feature.properties.id,
-                bulletin.getAfternoonDangerRatingBelow(),
-                Enums.RegionStatus.published,
-              ),
-            );
-          }
-        }
-      }
-    }
-    this.map.addLayer(this.overlayMaps.regions);
-    this.afternoonMap.addLayer(this.afternoonOverlayMaps.regions);
+    map.addLayer(overlayMaps.regions);
   }
 
   deselectAggregatedRegion() {
