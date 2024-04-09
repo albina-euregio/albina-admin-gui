@@ -10,6 +10,8 @@ import * as Enums from "../../enums/enums";
 import * as geojson from "geojson";
 import { RegionNameControl } from "./region-name-control";
 import { AmPmControl } from "./am-pm-control";
+import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
+import { filterFeature } from "../regions-service/filterFeature";
 
 declare module "leaflet" {
   interface Map {
@@ -41,14 +43,14 @@ export class MapService {
     regions: GeoJSON<SelectableRegionProperties>;
     activeSelection: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
-    aggregatedRegions: GeoJSON<SelectableRegionProperties>;
+    aggregatedRegions: PmLeafletLayer;
   };
   protected afternoonOverlayMaps: {
     // Micro  regions without elevation
     regions: GeoJSON<SelectableRegionProperties>;
     activeSelection: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
-    aggregatedRegions: GeoJSON<SelectableRegionProperties>;
+    aggregatedRegions: PmLeafletLayer;
   };
 
   constructor(
@@ -67,6 +69,7 @@ export class MapService {
       this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()),
     ]);
 
+    const dataSource = "eaws-regions";
     let overlayMaps: typeof this.overlayMaps = {
       // overlay to show micro regions without elevation (only outlines)
       regions: new GeoJSON(regions, {
@@ -87,8 +90,28 @@ export class MapService {
       }),
 
       // overlay to show aggregated regions
-      aggregatedRegions: new GeoJSON(regionsWithElevation, {
-        style: this.getAggregatedRegionBaseStyle(),
+      aggregatedRegions: new PmLeafletLayer({
+        pane: "overlayPane",
+        sources: {
+          [dataSource]: {
+            maxDataZoom: 10,
+            url: "https://static.avalanche.report/eaws-regions.pmtiles",
+          },
+        },
+        attribution: "",
+        labelRules: [],
+        paintRules: [
+          // ...([1, 2, 3, 4, 5] as WarnLevelNumber[]).map((warnlevel) => ()),
+          {
+            dataSource,
+            dataLayer: "micro-regions_elevation",
+            filter: (z, f) => filterFeature({ properties: f.props } as any), //&& dangerRating(f.props) === warnlevel,
+            symbolizer: new BlendModePolygonSymbolizer("multiply", {
+              fill: "#ff9900",
+              opacity: 0.8,
+            }),
+          },
+        ],
       }),
     };
     overlayMaps.editSelection.options.onEachFeature = this.onEachFeature.bind(this, overlayMaps.editSelection);
