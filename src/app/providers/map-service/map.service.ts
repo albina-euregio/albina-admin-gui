@@ -269,152 +269,38 @@ export class MapService {
   // colors all micro-regions of bulletin
   // does not touch any other micro-region
   updateAggregatedRegion(bulletin: BulletinModel) {
-    const dangerRatingAbove = bulletin.getForenoonDangerRatingAbove();
-    const dangerRatingBelow = bulletin.getForenoonDangerRatingBelow();
-    for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers()) {
-      for (let j = bulletin.savedRegions.length - 1; j >= 0; j--) {
-        if (entry.feature.properties.id === bulletin.savedRegions[j]) {
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getDangerRatingStyle(entry.feature.properties.id, dangerRatingAbove, Enums.RegionStatus.saved),
-            );
-          } else {
-            entry.setStyle(
-              this.getDangerRatingStyle(entry.feature.properties.id, dangerRatingBelow, Enums.RegionStatus.saved),
-            );
-          }
-        }
-      }
-      for (let j = bulletin.suggestedRegions.length - 1; j >= 0; j--) {
-        if (entry.feature.properties.id === bulletin.suggestedRegions[j]) {
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getDangerRatingStyle(entry.feature.properties.id, dangerRatingAbove, Enums.RegionStatus.suggested),
-            );
-          } else {
-            entry.setStyle(
-              this.getDangerRatingStyle(entry.feature.properties.id, dangerRatingBelow, Enums.RegionStatus.suggested),
-            );
-          }
-        }
-      }
-      for (let j = bulletin.publishedRegions.length - 1; j >= 0; j--) {
-        if (entry.feature.properties.id === bulletin.publishedRegions[j]) {
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getDangerRatingStyle(entry.feature.properties.id, dangerRatingAbove, Enums.RegionStatus.published),
-            );
-          } else {
-            entry.setStyle(
-              this.getDangerRatingStyle(entry.feature.properties.id, dangerRatingBelow, Enums.RegionStatus.published),
-            );
-          }
-        }
-      }
-    }
-
-    const afternoonDangerRatingAbove = bulletin.getAfternoonDangerRatingAbove();
-    const afternoonDangerRatingBelow = bulletin.getAfternoonDangerRatingBelow();
-    for (const entry of this.afternoonOverlayMaps.aggregatedRegions.getLayers()) {
-      for (let j = bulletin.savedRegions.length - 1; j >= 0; j--) {
-        if (entry.feature.properties.id === bulletin.savedRegions[j]) {
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getDangerRatingStyle(
-                entry.feature.properties.id,
-                afternoonDangerRatingAbove,
-                Enums.RegionStatus.saved,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getDangerRatingStyle(
-                entry.feature.properties.id,
-                afternoonDangerRatingBelow,
-                Enums.RegionStatus.saved,
-              ),
-            );
-          }
-        }
-      }
-      for (let j = bulletin.suggestedRegions.length - 1; j >= 0; j--) {
-        if (entry.feature.properties.id === bulletin.suggestedRegions[j]) {
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getDangerRatingStyle(
-                entry.feature.properties.id,
-                afternoonDangerRatingAbove,
-                Enums.RegionStatus.suggested,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getDangerRatingStyle(
-                entry.feature.properties.id,
-                afternoonDangerRatingBelow,
-                Enums.RegionStatus.suggested,
-              ),
-            );
-          }
-        }
-      }
-      for (let j = bulletin.publishedRegions.length - 1; j >= 0; j--) {
-        if (entry.feature.properties.id === bulletin.publishedRegions[j]) {
-          if (
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
-            entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
-          ) {
-            entry.setStyle(
-              this.getDangerRatingStyle(
-                entry.feature.properties.id,
-                afternoonDangerRatingAbove,
-                Enums.RegionStatus.published,
-              ),
-            );
-          } else {
-            entry.setStyle(
-              this.getDangerRatingStyle(
-                entry.feature.properties.id,
-                afternoonDangerRatingBelow,
-                Enums.RegionStatus.published,
-              ),
-            );
-          }
-        }
-      }
-    }
+    this.selectAggregatedRegion0(bulletin, false, this.map, this.overlayMaps.aggregatedRegions);
+    this.selectAggregatedRegion0(bulletin, false, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
   }
 
   selectAggregatedRegion(bulletin: BulletinModel) {
-    this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps);
-    this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps);
+    this.map.removeLayer(this.overlayMaps.regions);
+    this.map.addLayer(this.overlayMaps.activeSelection);
+    this.selectAggregatedRegion0(bulletin, true, this.map, this.overlayMaps.activeSelection);
+    this.map.addLayer(this.overlayMaps.regions);
+    this.afternoonMap.removeLayer(this.afternoonOverlayMaps.regions);
+    this.afternoonMap.addLayer(this.afternoonOverlayMaps.activeSelection);
+    this.selectAggregatedRegion0(bulletin, true, this.afternoonMap, this.afternoonOverlayMaps.activeSelection);
+    this.afternoonMap.addLayer(this.afternoonOverlayMaps.regions);
   }
 
-  private selectAggregatedRegion0(bulletin: BulletinModel, map: Map, overlayMaps: typeof this.overlayMaps) {
-    map.removeLayer(overlayMaps.regions);
-    map.addLayer(overlayMaps.activeSelection);
-    for (const entry of overlayMaps.activeSelection.getLayers()) {
-      entry.feature.properties.selected = false;
+  private selectAggregatedRegion0(
+    bulletin: BulletinModel,
+    doSelect: boolean,
+    map: Map,
+    layer: typeof this.overlayMaps.activeSelection | typeof this.overlayMaps.aggregatedRegions,
+  ) {
+    for (const entry of layer?.getLayers()) {
+      if (doSelect) {
+        entry.feature.properties.selected = false;
+      }
       entry.setStyle(this.getActiveSelectionBaseStyle());
       for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
         for (const region of bulletin.getRegionsByStatus(status)) {
           if (entry.feature.properties.id === region) {
-            entry.feature.properties.selected = true;
+            if (doSelect) {
+              entry.feature.properties.selected = true;
+            }
             if (
               entry.feature.properties.elevation === this.constantsService.microRegionsElevationHigh ||
               entry.feature.properties.elevation === this.constantsService.microRegionsElevationLowHigh
@@ -443,7 +329,6 @@ export class MapService {
         }
       }
     }
-    map.addLayer(overlayMaps.regions);
   }
 
   deselectAggregatedRegion() {
