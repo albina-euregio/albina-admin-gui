@@ -6,6 +6,7 @@ export class UserModel {
   public password: string;
   public roles: string[];
   public regions: string[];
+  public languageCode: string;
 
   constructor() {
     this.name = undefined;
@@ -15,6 +16,7 @@ export class UserModel {
     this.image = undefined;
     this.regions = [];
     this.password = undefined;
+    this.languageCode = undefined;
   }
 
   getName() {
@@ -79,6 +81,14 @@ export class UserModel {
     this.password = password;
   }
 
+  getLanguageCode() {
+    return this.languageCode;
+  }
+
+  setLanguageCode(languageCode) {
+    this.languageCode = languageCode;
+  }
+
   toJson() {
     const json = Object();
 
@@ -107,6 +117,9 @@ export class UserModel {
         roles.push(this.roles[i]);
       }
       json["roles"] = roles;
+    }
+    if (this.languageCode) {
+      json["languageCode"] = this.languageCode;
     }
 
     return json;
