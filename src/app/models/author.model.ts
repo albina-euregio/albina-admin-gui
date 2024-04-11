@@ -11,6 +11,7 @@ export class AuthorModel {
   public image: string;
   public regions: RegionConfiguration[];
   public apiUrl: string;
+  public languageCode: string;
 
   static createFromJson(
     json: Partial<AuthorModel> & { access_token?: string; refresh_token?: string; api_url?: string },
@@ -42,6 +43,7 @@ export class AuthorModel {
     author.setAccessToken(json.accessToken ?? json.access_token);
     author.setRefreshToken(json.refreshToken ?? json.refresh_token);
     author.setApiUrl(json.apiUrl ?? json.api_url);
+    author.setLanguageCode(json.languageCode);
 
     return author;
   }
@@ -57,6 +59,7 @@ export class AuthorModel {
     this.image = undefined;
     this.regions = undefined;
     this.apiUrl = undefined;
+    this.languageCode = undefined;
   }
 
   getAccessToken() {
@@ -143,6 +146,14 @@ export class AuthorModel {
     this.apiUrl = apiUrl;
   }
 
+  getLanguageCode(): string {
+    return this.languageCode;
+  }
+
+  setLanguageCode(languageCode: string) {
+    this.languageCode = languageCode;
+  }
+
   toJson() {
     const json = Object();
 
@@ -157,6 +168,21 @@ export class AuthorModel {
     }
     if (this.organization && this.organization !== undefined && this.organization !== "") {
       json["organization"] = this.organization;
+    }
+    if (this.regions && this.regions.length > 0) {
+      const regions = [];
+      for (let i = 0; i <= this.regions.length - 1; i++) {
+        regions.push(this.regions[i].id);
+      }
+      json["regions"] = regions;
+    }
+    if (this.roles && this.roles.length > 0) {
+      const roles = [];
+      [...new Set(this.roles)].forEach((role) => roles.push(role));
+      json["roles"] = roles;
+    }
+    if (this.languageCode && this.languageCode !== undefined && this.languageCode !== "") {
+      json["languageCode"] = this.languageCode;
     }
 
     return json;

@@ -199,7 +199,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
       }
     }
     this.bulletin.setSuggestedRegions(suggested);
-    this.bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+    this.bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
 
     this.updateBulletinOnServer();
   }

@@ -780,9 +780,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       const bulletin = new BulletinModel(originalBulletin);
 
-      bulletin.setAuthor(this.authenticationService.getAuthor());
+      bulletin.setAuthor(this.authenticationService.getCurrentAuthor());
       bulletin.setAdditionalAuthors(new Array<string>());
-      bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+      bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
       bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
 
       // reset regions
@@ -972,7 +972,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     }
     bulletin.setSuggestedRegions(suggested);
-    bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+    bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
 
     this.updateBulletinOnServer(bulletin);
   }
@@ -999,8 +999,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     } else {
       this.showNewBulletinModal = true;
       bulletin = new BulletinModel();
-      bulletin.setAuthor(this.authenticationService.getAuthor());
-      bulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+      bulletin.setAuthor(this.authenticationService.getCurrentAuthor());
+      bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
       bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
     }
 
@@ -1017,8 +1017,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       newBulletin.setPublishedRegions(new Array<string>());
       newBulletin.setSuggestedRegions(new Array<string>());
 
-      newBulletin.setAuthor(this.authenticationService.getAuthor());
-      newBulletin.addAdditionalAuthor(this.authenticationService.getAuthor().getName());
+      newBulletin.setAuthor(this.authenticationService.getCurrentAuthor());
+      newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
       newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
       this.copyService.setCopyBulletin(true);
       this.copyService.setBulletin(newBulletin);

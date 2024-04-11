@@ -7,10 +7,16 @@ import fr from "../../../assets/i18n/fr.json";
 import es from "../../../assets/i18n/es.json";
 import ca from "../../../assets/i18n/ca.json";
 import oc from "../../../assets/i18n/oc.json";
+import { UserService } from "../user-service/user.service";
+import { AuthenticationService } from "../authentication-service/authentication.service";
 
 @Injectable()
 export class SettingsService {
-  constructor(private translateService: TranslateService) {
+  constructor(
+    private translateService: TranslateService,
+    private userService: UserService,
+    private authenticationService: AuthenticationService,
+  ) {
     // lang
     this.translateService.addLangs(["de", "it", "en", "fr", "es", "ca", "oc"]);
     this.translateService.setTranslation("de", de);
@@ -37,9 +43,19 @@ export class SettingsService {
       return;
     }
     if (!this.translateService.langs.includes(language)) {
-      language = "de";
+      language = "en";
     }
     document.documentElement.setAttribute("lang", language);
     this.translateService.use(language);
+    const currentAuthor = this.authenticationService.getCurrentAuthor();
+    currentAuthor.setLanguageCode(language);
+    this.userService.updateUser(currentAuthor).subscribe(
+      (data) => {
+        console.debug("User language updated!");
+      },
+      (error) => {
+        console.error("User language could not be updated!");
+      },
+    );
   }
 }

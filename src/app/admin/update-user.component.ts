@@ -28,6 +28,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public activeOrganization: string;
   public activeRoles: any[] = [];
   public activeRegions: any[] = [];
+  public activeLanguageCode: string;
 
   constructor(
     private translateService: TranslateService,
@@ -48,6 +49,7 @@ export class UpdateUserComponent implements AfterContentInit {
       if (data.user.regions) {
         this.activeRegions = data.user.regions;
       }
+      this.activeLanguageCode = data.user.languageCode;
     }
   }
 
@@ -130,6 +132,7 @@ export class UpdateUserComponent implements AfterContentInit {
     user.setOrganization(this.activeOrganization);
     user.setRoles(this.activeRoles);
     user.setRegions(this.activeRegions);
+    user.setLanguageCode(this.activeLanguageCode);
 
     this.userService.updateUser(user).subscribe(
       (data) => {

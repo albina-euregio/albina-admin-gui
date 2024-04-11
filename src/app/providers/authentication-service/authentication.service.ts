@@ -183,8 +183,16 @@ export class AuthenticationService {
     }
   }
 
-  public getAuthor() {
+  public getCurrentAuthor() {
     return this.currentAuthor;
+  }
+
+  private setCurrentAuthor(json: Partial<AuthorModel>) {
+    if (!json) {
+      return;
+    }
+    this.currentAuthor = AuthorModel.createFromJson(json);
+    this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
   public getUsername(): string {
@@ -268,18 +276,6 @@ export class AuthenticationService {
 
   public isCurrentUserInRole(role: string): boolean {
     return this.currentAuthor?.getRoles?.()?.includes(role);
-  }
-
-  public getCurrentAuthor() {
-    return this.currentAuthor;
-  }
-
-  private setCurrentAuthor(json: Partial<AuthorModel>) {
-    if (!json) {
-      return;
-    }
-    this.currentAuthor = AuthorModel.createFromJson(json);
-    this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {
