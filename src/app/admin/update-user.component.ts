@@ -1,13 +1,16 @@
-import { Component, AfterContentInit, Inject } from "@angular/core";
+import { Component, AfterContentInit, Inject, SecurityContext } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
 import { UserModel } from "../models/user.model";
 
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 import * as bcrypt from "bcryptjs";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   templateUrl: "update-user.component.html",
@@ -21,6 +24,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public roles: any;
   public regions: any;
 
+  public activeImage: string;
   public activeName: string;
   public activeEmail: string;
   public activePassword: string;
@@ -31,15 +35,19 @@ export class UpdateUserComponent implements AfterContentInit {
   public activeLanguageCode: string;
 
   constructor(
+    private sanitizer: DomSanitizer,
+    private imageCompress: NgxImageCompressService,
     private translateService: TranslateService,
     private userService: UserService,
     public configurationService: ConfigurationService,
+    public authenticationService: AuthenticationService,
     public regionsService: RegionsService,
     private dialogRef: MatDialogRef<UpdateUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.update = data.update;
     if (data.user) {
+      this.activeImage = data.user.image;
       this.activeName = data.user.name;
       this.activeEmail = data.user.email;
       this.activeOrganization = data.user.organization;
@@ -72,6 +80,33 @@ export class UpdateUserComponent implements AfterContentInit {
     );
   }
 
+  getSanitizedImage() {
+    return this.sanitizer.sanitize(SecurityContext.URL, this.activeImage);
+  }
+
+  onImageChanged(event) {
+    const files = event.target.files;
+    if (files.length === 0) return;
+
+    const mimeType = files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      console.error("Only images are supported.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(files[0]);
+    reader.onload = (_event) => {
+      this.activeImage = reader.result.toString();
+
+      this.imageCompress
+        .compressFile(reader.result.toString(), DOC_ORIENTATION.Default, 100, 100, 150, 150)
+        .then((compressedImage) => {
+          this.activeImage = compressedImage;
+        });
+    };
+  }
+
   onRoleSelectionChange(Role) {
     if (this.activeRoles.includes(Role)) {
       this.activeRoles.splice(this.activeRoles.indexOf(Role), 1);
@@ -95,6 +130,7 @@ export class UpdateUserComponent implements AfterContentInit {
     const password = bcrypt.hashSync(this.activePassword, salt);
 
     const user = new UserModel();
+    user.setImage(this.activeImage);
     user.setName(this.activeName);
     user.setEmail(this.activeEmail);
     user.setOrganization(this.activeOrganization);
@@ -127,6 +163,7 @@ export class UpdateUserComponent implements AfterContentInit {
     this.updateUserLoading = true;
 
     const user = new UserModel();
+    user.setImage(this.activeImage);
     user.setName(this.activeName);
     user.setEmail(this.activeEmail);
     user.setOrganization(this.activeOrganization);

@@ -20,6 +20,7 @@ export class CreateUserComponent implements AfterContentInit {
   public roles: any;
   public regions: any;
 
+  public activeImage: string;
   public activeName: string;
   public activeEmail: string;
   public activePassword: string;

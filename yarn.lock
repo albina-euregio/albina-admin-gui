@@ -6073,6 +6073,13 @@ ngx-echarts@^17.1.0:
   dependencies:
     tslib "^2.3.0"
 
+ngx-image-compress@^15.1.6:
+  version "15.1.6"
+  resolved "https://registry.yarnpkg.com/ngx-image-compress/-/ngx-image-compress-15.1.6.tgz#1855cf60d3bbfe985d19edb2b31433347994931f"
+  integrity sha512-kMoK06er6vLV7/3Ly3S8Eef4mADZHU2A+JeBAt56nOV7iAzz6GolT2cNq40XR5hFpthcnzHs7aIcl4Sr84xK6w==
+  dependencies:
+    tslib "^2.5.0"
+
 nice-napi@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/nice-napi/-/nice-napi-1.0.2.tgz#dc0ab5a1eac20ce548802fc5686eaa6bc654927b"
@@ -7672,7 +7679,7 @@ tslib@2.3.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
 
-tslib@2.6.2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0:
+tslib@2.6.2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.4.0, tslib@^2.5.0:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==

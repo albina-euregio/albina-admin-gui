@@ -538,6 +538,7 @@
     },
     "createUser": {
       "table": {
+        "image": "Image",
         "name": "Name",
         "email": "Email",
         "organization": "Organization",
