@@ -14,6 +14,7 @@
   <table class="table table-hover">
     <thead>
       <tr>
+        <th scope="col"></th>
         <th scope="col">{{ "admin.users.table.name" | translate }}</th>
         <th scope="col">{{ "admin.users.table.email" | translate }}</th>
         <th scope="col">{{ "admin.users.table.organization" | translate }}</th>
@@ -25,6 +26,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
+        <td>
+          <img *ngIf="user.image" src="{{ user.image }}" class="user-avatar__img" />
+        </td>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.organization }}</td>
