@@ -767,6 +767,7 @@
     "NW": "NW"
   },
   "role": {
+    "SUPERADMIN": "Super Administrator",
     "ADMIN": "Administrator",
     "FORECASTER": "Forecaster",
     "FOREMAN": "Foreman",
