@@ -1,7 +1,9 @@
 // Map
-.create-bulletin__map-container, .create-bulletin__map {
+.create-bulletin__map-container,
+.create-bulletin__map {
     width: 100%;
     overflow: hidden;
+    position: relative;
 }
 
 .create-bulletin__map--pm {
@@ -9,5 +11,5 @@
 }
 
 .create-bulletin__map--am {
-    visibility: visible;    
+    visibility: visible;
 }
