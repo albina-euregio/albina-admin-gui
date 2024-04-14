@@ -4,6 +4,14 @@
     width: 100%;
     overflow: hidden;
     position: relative;
+
+    .leaflet-top.leaflet-right .info.leaflet-control {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 2px;
+        color: $black;
+        padding: $space-1 $space-2;
+        @include font-m;
+    }
 }
 
 .create-bulletin__map--pm {
