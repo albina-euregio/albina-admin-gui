@@ -694,8 +694,7 @@
       "title": "Display",
       "table": {
         "showCaaml": "Show CAAML",
-        "showJson": "Show JSON",
-        "showObservations": "Show observations"
+        "showJson": "Show JSON"
       }
     }
   },
