@@ -1,14 +1,15 @@
-import { AfterContentInit, Component, ViewChild } from "@angular/core";
+import { AfterContentInit, Component, SecurityContext, ViewChild } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { AlertComponent } from "ngx-bootstrap/alert";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { UserService } from "../providers/user-service/user.service";
 import { TemplateRef } from "@angular/core";
-import { CreateUserComponent } from "./create-user.component";
 import { UpdateUserComponent } from "./update-user.component";
 
 import { MatDialog, MatDialogRef, MatDialogConfig } from "@angular/material/dialog";
+import { DomSanitizer } from "@angular/platform-browser";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 @Component({
   templateUrl: "users.component.html",
@@ -28,6 +29,7 @@ export class UsersComponent implements AfterContentInit {
   activeUser: any;
 
   constructor(
+    private authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private dialog: MatDialog,
     private userService: UserService,
@@ -55,37 +57,24 @@ export class UsersComponent implements AfterContentInit {
   }
 
   createUser(event) {
-    this.showCreateDialog();
+    this.showUpdateDialog(false);
   }
 
-  showCreateDialog() {
+  showUpdateDialog(update, user?) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = "calc(100% - 10px)";
     dialogConfig.maxHeight = "100%";
     dialogConfig.maxWidth = "100%";
-
-    const dialogRef = this.dialog.open(CreateUserComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((data) => {
-      window.scrollTo(0, 0);
-      this.updateUsers();
-      if (data !== undefined && data !== "") {
-        this.alerts.push({
-          type: data.type,
-          msg: data.msg,
-          timeout: 5000,
-        });
-      }
-    });
-  }
-
-  showUpdateDialog(user) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = "calc(100% - 10px)";
-    dialogConfig.maxHeight = "100%";
-    dialogConfig.maxWidth = "100%";
-    dialogConfig.data = {
-      user: user,
-    };
+    if (update) {
+      dialogConfig.data = {
+        user: user,
+        update: true,
+      };
+    } else {
+      dialogConfig.data = {
+        update: false,
+      };
+    }
 
     const dialogRef = this.dialog.open(UpdateUserComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((data) => {
@@ -102,7 +91,7 @@ export class UsersComponent implements AfterContentInit {
   }
 
   editUser(event, user) {
-    this.showUpdateDialog(user);
+    this.showUpdateDialog(true, user);
   }
 
   deleteUser(event, user) {

@@ -35,7 +35,6 @@ export class UpdateUserComponent implements AfterContentInit {
   public activeLanguageCode: string;
 
   constructor(
-    private sanitizer: DomSanitizer,
     private imageCompress: NgxImageCompressService,
     private translateService: TranslateService,
     private userService: UserService,
@@ -78,10 +77,6 @@ export class UpdateUserComponent implements AfterContentInit {
         console.error("Regions could not be loaded!");
       },
     );
-  }
-
-  getSanitizedImage() {
-    return this.sanitizer.sanitize(SecurityContext.URL, this.activeImage);
   }
 
   onImageChanged(event) {

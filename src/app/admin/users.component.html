@@ -27,7 +27,11 @@
     <tbody>
       <tr *ngFor="let user of users">
         <td>
-          <img *ngIf="user.image" src="{{ user.image }}" class="user-avatar__img" />
+          <img
+            *ngIf="user.image"
+            [src]="authenticationService.getUserImageSanitized(user.image)"
+            class="user-avatar__img"
+          />
         </td>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
@@ -38,7 +42,7 @@
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            (click)="editUser($event, user)"
+            (click)="editUser($event, user, true)"
             data-toggle="tooltip"
             title="{{ 'admin.users.tooltip.edit' | translate }}"
           >
