@@ -202,15 +202,11 @@ export class MapService {
   }
 
   resetInternalAggregatedRegions() {
-    for (const entry of this.overlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
-      if (this.authenticationService.isInternalRegion(entry.feature.properties.id)) {
-        entry.setStyle(this.getAggregatedRegionBaseStyle());
-      }
-    }
-    for (const entry of this.afternoonOverlayMaps?.aggregatedRegions?.getLayers?.() ?? []) {
-      if (this.authenticationService.isInternalRegion(entry.feature.properties.id)) {
-        entry.setStyle(this.getAggregatedRegionBaseStyle());
-      }
+    for (const layer of [this.overlayMaps.aggregatedRegions, this.afternoonOverlayMaps.aggregatedRegions]) {
+      let regions = Object.keys(layer.paintRules).filter((region) =>
+        this.authenticationService.isInternalRegion(region),
+      );
+      layer.resetStyle(regions);
     }
   }
 
