@@ -662,6 +662,7 @@
     }
   },
   "settings": {
+    "title": "Settings",
     "changePassword": {
       "title": "Change password",
       "oldPassword": {

@@ -74,6 +74,7 @@ import localeCa from "@angular/common/locales/ca";
 // locale OC missing in @angular/common/locales/
 import localeOc from "@angular/common/locales/en";
 import { UpdateUserComponent } from "./admin/update-user.component";
+import { ChangePasswordComponent } from "./admin/change-password.component";
 import { BaseMapService } from "./providers/map-service/base-map.service";
 import { DialogService } from "primeng/dynamicdialog";
 import { MapService } from "./providers/map-service/map.service";
@@ -135,6 +136,7 @@ registerLocaleData(localeOc, "oc");
     ModalMediaFileComponent,
     CatalogOfPhrasesComponent,
     UpdateUserComponent,
+    ChangePasswordComponent,
   ],
   providers: [
     {
