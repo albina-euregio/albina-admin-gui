@@ -122,11 +122,10 @@ export class MapService {
     this.initPmMap();
     this.map.sync(this.afternoonMap);
     this.afternoonMap.sync(this.map);
-    return [this.map, this.afternoonMap];
   }
 
   private initAmMap() {
-    const map = L.map("map", {
+    const map = new Map("map", {
       ...this.getMapInitOptions(),
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.aggregatedRegions, this.overlayMaps.regions],
     });
@@ -138,7 +137,7 @@ export class MapService {
   }
 
   private initPmMap() {
-    const afternoonMap = L.map("afternoonMap", {
+    const afternoonMap = new Map("afternoonMap", {
       ...this.getMapInitOptions(),
       zoomControl: false,
       layers: [
@@ -243,6 +242,7 @@ export class MapService {
   }
 
   activeBulletin: BulletinModel;
+
   selectAggregatedRegion(bulletin: BulletinModel) {
     this.activeBulletin = bulletin;
     this.overlayMaps?.aggregatedRegions?.rerenderTiles();
@@ -278,7 +278,6 @@ export class MapService {
       }
     }
     layer.rerenderTiles();
-    return;
   }
 
   deselectAggregatedRegion() {
