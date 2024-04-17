@@ -5,6 +5,13 @@
       <div class="card">
         <div class="card-header"><i class="fa fa-lock"></i>{{ "settings.title" | translate }}</div>
         <div class="card-block">
+          <div *ngFor="let alert of alerts">
+            <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{
+              alert.msg
+            }}</alert>
+          </div>
+        </div>
+        <div class="card-block">
           <div class="form-group row">
             <label for="inputName" class="col-sm-2 col-form-label">{{
               "admin.createUser.table.image" | translate

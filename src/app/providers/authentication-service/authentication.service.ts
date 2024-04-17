@@ -237,7 +237,7 @@ export class AuthenticationService {
     if (image) {
       return image.startsWith("data")
         ? this.sanitizer.sanitize(SecurityContext.URL, image)
-        : this.sanitizer.sanitize(SecurityContext.URL, "data:image/jpg;base64," + image);
+        : this.sanitizer.sanitize(SecurityContext.URL, "data:image/jpeg;base64," + image);
     } else {
       return null;
     }

@@ -509,6 +509,7 @@
       },
       "tooltip": {
         "edit": "Edit user",
+        "changePassword": "Change password",
         "delete": "Delete user"
       },
       "table": {

@@ -21,6 +21,15 @@ export class UserService {
     return this.http.put<Response>(url, body, options);
   }
 
+  public resetPassword(userId: string, newPassword: string): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "user/" + userId + "/reset";
+    const body = JSON.stringify({ newPassword });
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers: headers };
+
+    return this.http.put<Response>(url, body, options);
+  }
+
   public checkPassword(password: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/check";
     const body = JSON.stringify({ password });
@@ -40,6 +49,15 @@ export class UserService {
   }
 
   public updateUser(user): Observable<Response> {
+    const url = this.constantsService.getServerUrl() + "user/" + user.email;
+    const body = JSON.stringify(user.toJson());
+    const headers = this.authenticationService.newAuthHeader();
+    const options = { headers: headers };
+
+    return this.http.put<Response>(url, body, options);
+  }
+
+  public updateOwnUser(user): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user";
     const body = JSON.stringify(user.toJson());
     const headers = this.authenticationService.newAuthHeader();

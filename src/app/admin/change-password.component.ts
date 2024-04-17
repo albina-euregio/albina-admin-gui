@@ -1,9 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { AlertComponent } from "ngx-bootstrap/alert";
 import { UserService } from "../providers/user-service/user.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   templateUrl: "change-password.component.html",
@@ -16,68 +14,82 @@ export class ChangePasswordComponent {
   public newPassword1: string;
   public newPassword2: string;
 
-  public alerts: any[] = [];
+  public isAdmin: boolean;
+  public userId: string;
 
   constructor(
     private translateService: TranslateService,
-    private authenticationService: AuthenticationService,
     private userService: UserService,
-    private constantsService: ConstantsService,
+    private dialogRef: MatDialogRef<ChangePasswordComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.changePasswordLoading = false;
+    if (data) {
+      this.isAdmin = data.isAdmin;
+      this.userId = data.userId;
+    }
   }
 
   changePassword() {
     this.changePasswordLoading = true;
-    this.userService.checkPassword(this.oldPassword).subscribe(
-      (data) => {
-        this.userService.changePassword(this.oldPassword, this.newPassword1).subscribe(
-          (data2) => {
-            this.oldPassword = "";
-            this.newPassword1 = "";
-            this.newPassword2 = "";
-            this.changePasswordLoading = false;
-            window.scrollTo(0, 0);
-            this.alerts.push({
-              type: "success",
-              msg: this.translateService.instant("settings.changePassword.passwordChanged"),
-              timeout: 5000,
-            });
-          },
-          (error) => {
-            console.error("Password could not be changed: " + JSON.stringify(error._body));
-            this.changePasswordLoading = false;
-            window.scrollTo(0, 0);
-            this.alerts.push({
-              type: "danger",
-              msg: this.translateService.instant("settings.changePassword.passwordChangeError"),
-              timeout: 5000,
-            });
-          },
-        );
-      },
-      (error) => {
-        console.warn("Password incorrect: " + JSON.stringify(error._body));
-        this.changePasswordLoading = false;
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "danger",
-          msg: this.translateService.instant("settings.changePassword.passwordIncorrect"),
-          timeout: 5000,
-        });
-      },
-    );
-  }
-
-  onClosed(dismissedAlert: AlertComponent): void {
-    this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
-  }
-
-  isAdmin() {
-    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
-      return true;
+    if (!this.isAdmin) {
+      this.userService.checkPassword(this.oldPassword).subscribe(
+        (data) => {
+          this.userService.changePassword(this.oldPassword, this.newPassword1).subscribe(
+            (data2) => {
+              this.oldPassword = "";
+              this.newPassword1 = "";
+              this.newPassword2 = "";
+              this.changePasswordLoading = false;
+              this.closeDialog({
+                type: "success",
+                msg: this.translateService.instant("settings.changePassword.passwordChanged"),
+              });
+            },
+            (error) => {
+              console.error("Password could not be changed: " + JSON.stringify(error._body));
+              this.changePasswordLoading = false;
+              this.closeDialog({
+                type: "danger",
+                msg: this.translateService.instant("settings.changePassword.passwordChangeError"),
+              });
+            },
+          );
+        },
+        (error) => {
+          console.warn("Password incorrect: " + JSON.stringify(error._body));
+          this.changePasswordLoading = false;
+          this.closeDialog({
+            type: "danger",
+            msg: this.translateService.instant("settings.changePassword.passwordIncorrect"),
+          });
+        },
+      );
     } else {
-      return false;
+      this.userService.resetPassword(this.userId, this.newPassword1).subscribe(
+        (data2) => {
+          this.oldPassword = "";
+          this.newPassword1 = "";
+          this.newPassword2 = "";
+          this.changePasswordLoading = false;
+          this.closeDialog({
+            type: "success",
+            msg: this.translateService.instant("settings.changePassword.passwordChanged"),
+          });
+        },
+        (error) => {
+          console.error("Password could not be changed: " + JSON.stringify(error._body));
+          this.changePasswordLoading = false;
+          this.closeDialog({
+            type: "danger",
+            msg: this.translateService.instant("settings.changePassword.passwordChangeError"),
+          });
+        },
+      );
     }
+  }
+
+  closeDialog(data) {
+    this.dialogRef.close(data);
   }
 }

@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, SecurityContext, ViewChild } from "@angular/core";
+import { AfterContentInit, Component, ViewChild } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { AlertComponent } from "ngx-bootstrap/alert";
@@ -8,7 +8,7 @@ import { TemplateRef } from "@angular/core";
 import { UpdateUserComponent } from "./update-user.component";
 
 import { MatDialog, MatDialogRef, MatDialogConfig } from "@angular/material/dialog";
-import { DomSanitizer } from "@angular/platform-browser";
+import { ChangePasswordComponent } from "./change-password.component";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 @Component({
@@ -29,7 +29,7 @@ export class UsersComponent implements AfterContentInit {
   activeUser: any;
 
   constructor(
-    private authenticationService: AuthenticationService,
+    public authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private dialog: MatDialog,
     private userService: UserService,
@@ -67,20 +67,22 @@ export class UsersComponent implements AfterContentInit {
     dialogConfig.maxWidth = "100%";
     if (update) {
       dialogConfig.data = {
+        isAdmin: true,
         user: user,
         update: true,
       };
     } else {
       dialogConfig.data = {
+        isAdmin: true,
         update: false,
       };
     }
 
     const dialogRef = this.dialog.open(UpdateUserComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((data) => {
-      window.scrollTo(0, 0);
       this.updateUsers();
       if (data !== undefined && data !== "") {
+        window.scrollTo(0, 0);
         this.alerts.push({
           type: data.type,
           msg: data.msg,
@@ -92,6 +94,33 @@ export class UsersComponent implements AfterContentInit {
 
   editUser(event, user) {
     this.showUpdateDialog(true, user);
+  }
+
+  showChangePasswordDialog(user) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = "calc(100% - 10px)";
+    dialogConfig.maxHeight = "100%";
+    dialogConfig.maxWidth = "100%";
+    dialogConfig.data = {
+      isAdmin: true,
+      userId: user.email,
+    };
+
+    const dialogRef = this.dialog.open(ChangePasswordComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data !== undefined && data !== "") {
+        window.scrollTo(0, 0);
+        this.alerts.push({
+          type: data.type,
+          msg: data.msg,
+          timeout: 5000,
+        });
+      }
+    });
+  }
+
+  changePassword(event, user) {
+    this.showChangePasswordDialog(user);
   }
 
   deleteUser(event, user) {

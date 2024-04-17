@@ -1,4 +1,4 @@
-import { Component, AfterContentInit, Inject, SecurityContext } from "@angular/core";
+import { Component, AfterContentInit, Inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
@@ -7,10 +7,8 @@ import { UserModel } from "../models/user.model";
 
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
-import * as bcrypt from "bcryptjs";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
-import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   templateUrl: "update-user.component.html",
@@ -19,6 +17,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class UpdateUserComponent implements AfterContentInit {
   public updateUserLoading: boolean;
   public update: boolean;
+  public isAdmin: boolean;
 
   public alerts: any[] = [];
   public roles: any;
@@ -44,6 +43,7 @@ export class UpdateUserComponent implements AfterContentInit {
     private dialogRef: MatDialogRef<UpdateUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
+    this.isAdmin = data.isAdmin;
     this.update = data.update;
     if (data.user) {
       this.activeImage = data.user.image;
@@ -121,16 +121,13 @@ export class UpdateUserComponent implements AfterContentInit {
   public createUser() {
     this.updateUserLoading = true;
 
-    const salt = bcrypt.genSaltSync(10);
-    const password = bcrypt.hashSync(this.activePassword, salt);
-
     const user = new UserModel();
     user.setImage(this.activeImage);
     user.setName(this.activeName);
     user.setEmail(this.activeEmail);
     user.setOrganization(this.activeOrganization);
-    user.setPassword(password);
-    user.setRoles(this.activeRoles);
+    user.setPassword(this.activePassword);
+    user.setRoles([...new Set(this.activeRoles)]);
     user.setRegions(this.activeRegions);
 
     this.userService.createUser(user).subscribe(
@@ -162,28 +159,59 @@ export class UpdateUserComponent implements AfterContentInit {
     user.setName(this.activeName);
     user.setEmail(this.activeEmail);
     user.setOrganization(this.activeOrganization);
-    user.setRoles(this.activeRoles);
+    user.setRoles([...new Set(this.activeRoles)]);
     user.setRegions(this.activeRegions);
     user.setLanguageCode(this.activeLanguageCode);
 
-    this.userService.updateUser(user).subscribe(
-      (data) => {
-        this.updateUserLoading = false;
-        console.debug("User updated!");
-        this.closeDialog({
-          type: "success",
-          msg: this.translateService.instant("admin.users.updateUser.success"),
-        });
-      },
-      (error) => {
-        this.updateUserLoading = false;
-        console.error("User could not be updated!");
-        this.closeDialog({
-          type: "danger",
-          msg: this.translateService.instant("admin.users.updateUser.error"),
-        });
-      },
-    );
+    if (this.isAdmin) {
+      this.userService.updateUser(user).subscribe(
+        (data) => {
+          this.updateUserLoading = false;
+          console.debug("User updated!");
+          if (this.authenticationService.getCurrentAuthor().email === user.email) {
+            this.authenticationService.getCurrentAuthor().name = user.name;
+            this.authenticationService.getCurrentAuthor().image = user.image;
+            this.authenticationService.getCurrentAuthor().organization = user.organization;
+          }
+          this.closeDialog({
+            type: "success",
+            msg: this.translateService.instant("admin.users.updateUser.success"),
+          });
+        },
+        (error) => {
+          this.updateUserLoading = false;
+          console.error("User could not be updated!");
+          this.closeDialog({
+            type: "danger",
+            msg: this.translateService.instant("admin.users.updateUser.error"),
+          });
+        },
+      );
+    } else {
+      this.userService.updateOwnUser(user).subscribe(
+        (data) => {
+          this.updateUserLoading = false;
+          console.debug("User updated!");
+          if (this.authenticationService.getCurrentAuthor().email === user.email) {
+            this.authenticationService.getCurrentAuthor().name = user.name;
+            this.authenticationService.getCurrentAuthor().image = user.image;
+            this.authenticationService.getCurrentAuthor().organization = user.organization;
+          }
+          this.closeDialog({
+            type: "success",
+            msg: this.translateService.instant("admin.users.updateUser.success"),
+          });
+        },
+        (error) => {
+          this.updateUserLoading = false;
+          console.error("User could not be updated!");
+          this.closeDialog({
+            type: "danger",
+            msg: this.translateService.instant("admin.users.updateUser.error"),
+          });
+        },
+      );
+    }
   }
 
   closeDialog(data) {
