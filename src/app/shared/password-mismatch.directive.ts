@@ -5,7 +5,11 @@ import { AbstractControl, NG_VALIDATORS, Validator, ValidatorFn, ValidationError
 export const passwordMismatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get("password");
   const password2 = control.get("password2");
-  return password && password2 && password.value === password2.value ? null : { passwordMismatch: true };
+  if (!password && !password2) {
+    return null;
+  } else {
+    return password && password2 && password.value === password2.value ? null : { passwordMismatch: true };
+  }
 };
 
 @Directive({

@@ -92,6 +92,9 @@ export class UserModel {
   toJson() {
     const json = Object();
 
+    if (this.image) {
+      json["image"] = this.image;
+    }
     if (this.name) {
       json["name"] = this.name;
     }

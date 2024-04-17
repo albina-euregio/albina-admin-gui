@@ -14,6 +14,7 @@
   <table class="table table-hover">
     <thead>
       <tr>
+        <th scope="col"></th>
         <th scope="col">{{ "admin.users.table.name" | translate }}</th>
         <th scope="col">{{ "admin.users.table.email" | translate }}</th>
         <th scope="col">{{ "admin.users.table.organization" | translate }}</th>
@@ -25,6 +26,13 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
+        <td>
+          <img
+            *ngIf="user.image"
+            [src]="authenticationService.getUserImageSanitized(user.image)"
+            class="user-avatar__img"
+          />
+        </td>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.organization }}</td>
@@ -34,11 +42,22 @@
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            (click)="editUser($event, user)"
+            (click)="editUser($event, user, true)"
             data-toggle="tooltip"
             title="{{ 'admin.users.tooltip.edit' | translate }}"
           >
             <i class="fa fa-pencil"></i>
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="changePassword($event, user)"
+            data-toggle="tooltip"
+            title="{{ 'admin.users.tooltip.changePassword' | translate }}"
+          >
+            <i class="fa fa-lock"></i>
           </button>
         </td>
         <td>

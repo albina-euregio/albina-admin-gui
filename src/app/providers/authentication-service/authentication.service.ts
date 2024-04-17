@@ -233,9 +233,11 @@ export class AuthenticationService {
     return this.currentAuthor?.image;
   }
 
-  public getUserImageSanitized() {
-    if (this.currentAuthor && this.currentAuthor.image) {
-      return this.sanitizer.sanitize(SecurityContext.URL, "data:image/jpg;base64," + this.currentAuthor.image);
+  public getUserImageSanitized(image) {
+    if (image) {
+      return image.startsWith("data")
+        ? this.sanitizer.sanitize(SecurityContext.URL, image)
+        : this.sanitizer.sanitize(SecurityContext.URL, "data:image/jpeg;base64," + image);
     } else {
       return null;
     }
