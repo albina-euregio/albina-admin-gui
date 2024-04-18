@@ -56,7 +56,7 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { CollapseModule } from "ngx-bootstrap/collapse";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { NgxSliderModule } from "./ngx-slider/lib/slider.module";
+import { NgxSliderModule } from "@angular-slider/ngx-slider";
 
 import { ModalSubmitComponent } from "./bulletins/modal-submit.component";
 import { ModalPublishComponent } from "./bulletins/modal-publish.component";

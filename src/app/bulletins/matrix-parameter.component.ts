@@ -5,8 +5,7 @@ import { SettingsService } from "../providers/settings-service/settings.service"
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
-import type { Options } from "../ngx-slider/lib/options";
-import type { ChangeContext } from "../ngx-slider/lib/change-context";
+import type { ChangeContext, Options } from "@angular-slider/ngx-slider";
 import { TranslateService } from "@ngx-translate/core";
 
 @Component({

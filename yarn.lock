@@ -187,6 +187,15 @@
     "@angular-eslint/bundled-angular-compiler" "17.3.0"
     "@typescript-eslint/utils" "7.2.0"
 
+"@angular-slider/ngx-slider@^17.0.2":
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/@angular-slider/ngx-slider/-/ngx-slider-17.0.2.tgz#79ce191f66c030954856a6087b1513d55824d930"
+  integrity sha512-6fQ0wOH/pZvC2kbw3ZFab7eXwDaKZtj/cuA7pbhyKWHp8pwhaptoDDoEXttlAZIUEnrMG8rkg0OBcVWwwBLEJA==
+  dependencies:
+    detect-passive-events "^2.0.3"
+    rxjs "^7.8.1"
+    tslib "^2.3.0"
+
 "@angular/animations@^17.3.2":
   version "17.3.2"
   resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-17.3.2.tgz#ab2408e9ca18e10ab6dda356563e85ab1659c0ef"

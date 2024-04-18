@@ -22,7 +22,7 @@ import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.compon
 import { BulletinsRoutingModule } from "./bulletins-routing.module";
 import { TranslateModule } from "@ngx-translate/core";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
-import { NgxSliderModule } from "../ngx-slider/lib/slider.module";
+import { NgxSliderModule } from "@angular-slider/ngx-slider";
 
 // Pipes
 import { PipeModule } from "../pipes/pipes.module";
