@@ -1434,30 +1434,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  getForeignRegionNames() {
-    if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTyrol)) {
-      return (
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol) +
-        ", " +
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino)
-      );
-    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeSouthTyrol)) {
-      return (
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) +
-        ", " +
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino)
-      );
-    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTrentino)) {
-      return (
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) +
-        ", " +
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol)
-      );
-    } else {
-      return this.translateService.instant("bulletins.create.foreignRegions");
-    }
-  }
-
   showPreviewButton() {
     return (
       !this.publishing &&
