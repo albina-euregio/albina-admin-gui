@@ -61,10 +61,10 @@
       "paste": "Pegar boletín",
       "cancel": "Cancelar copia",
       "update": "Editar",
-      "submit": "Submit",
-      "submitUpdate": "Submit update",
-      "publishChange": "Publish now (no messages)",
-      "publishUpdate": "Publish now",
+      "submit": "Enviar",
+      "submitUpdate": "Enviar actualización",
+      "publishChange": "Publicar ahora (sin mensajes)",
+      "publishUpdate": "Publicar ahora",
       "caaml": "Muestra CAAML",
       "json": "Muestra JSON",
       "create": "Crear boletín",
@@ -75,18 +75,18 @@
       "mediaFile": "Subir archivo multimedia"
     },
     "status": {
-      "submittedInfo": "Will be published at 5PM",
-      "resubmittedInfo": "Will be published at 8AM",
-      "publishedInfo" : "Has been published",
-      "noPublicationInfo" : "Will NOT be published automatically",
+      "submittedInfo": "Será publicado a las 5PM",
+      "resubmittedInfo": "Será publicado a las 8AM",
+      "publishedInfo" : "Ha sido publicado",
+      "noPublicationInfo" : "NO será publicado automàticamente",
       "loadingPreview": "Creando vista previa en PDF ...",
-      "loading": "Loading bulletin ...",
-      "publishing": "Publishing bulletin ...",
-      "submitting": "Submitting bulletin ..."
+      "loading": "Cargando boletín ...",
+      "publishing": "Publicando boletín ...",
+      "submitting": "Enviando boletín ..."
     },
     "create": {
       "tooltip": {
-        "edit": "Edit micro regions",
+        "edit": "Editar micro-regiones",
         "copy": "Copiar región",
         "delete": "Borrar región",
         "createRegion": "Crear región",
@@ -106,7 +106,7 @@
           "decreasing": "El peligro de aludes desciende",
           "steady": "El peligro de aludes se mantiene igual",
           "increasing": "El peligro de aludes aumenta",
-          "danger": "Avalanche danger"
+          "danger": "Peligro de aludes"
         },
         "textcat": {
           "edit": "Editar",
@@ -117,35 +117,35 @@
         },
         "moveUpAvalancheProblem": "Mover el problema de aludes hacia arriba",
         "moveDownAvalancheProblem": "Mover el problema de aludes hacia abajo",
-        "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionUp": "Hacia arriba",
+        "dangerRatingDirectionDown": "Hacia abajo"
       },
       "save": "Guardar",
       "discard": "Descartar",
       "back": "Volver",
       "createAggregatedRegion": "Nueva región",
       "pasteAggregatedRegion": "Pegar región",
-      "pendingSuggestions": "Suggestions",
-      "rejectSuggestion": "Reject",
-      "acceptSuggestion": "Accept",
+      "pendingSuggestions": "Sugerencias",
+      "rejectSuggestion": "Rechazar",
+      "acceptSuggestion": "Aceptar",
       "cancelCopyBulletin": " Cancelar",
       "createAvalancheProblem": "Nuevo problema",
       "ownRegions": "Regiones propias",
       "foreignRegions": "Regiones extranjeras",
       "externalRegions": "Regiones externas",
-      "mapSelectRegion": "Select regions on the map.",
-      "statusHeader": "Status of the bulletin",
-      "suggestions": "Suggestions",
-      "noBulletinsForSelectedDay": "No regions defined for this date.",
-      "autosave": "Saved automatically",
-      "regionEditable": "This region can be edited.", 
-      "regionNotEditable": "This region can not be edited.",
-      "regionLocked": "This region is locked.",
-      "changeDangerRatingElevation": "Extend the danger level",
-      "mapTop": "Map above",
-      "mapLeft": "Map aside",
-      "showNotes": "Show notes",
-      "hideNotes": "Hide notes",
+      "mapSelectRegion": "Seleccionar regiones en el mapa",
+      "statusHeader": "Estado del boletín",
+      "suggestions": "Sugerencias",
+      "noBulletinsForSelectedDay": "Ninguna región definida para esta fecha",
+      "autosave": "Guardado automáticamente",
+      "regionEditable": "Esta región puede ser editada.", 
+      "regionNotEditable": "Esta región no puede editar-se.",
+      "regionLocked": "Esta región está bloqueada.",
+      "changeDangerRatingElevation": "Extender el peligro de aludes",
+      "mapTop": "Mapa arriba",
+      "mapLeft": "Mapa al lado",
+      "showNotes": "Mostrar notas",
+      "hideNotes": "Ocultar notas",
       "label": {
         "avalancheProblems": "Problema de aludes",
         "aspects": "Orientaciones",
@@ -161,9 +161,9 @@
         "notes": "Notas"
       },
       "copyRegion": {
-        "label": "Copy warning region to another bulletin",
-        "select": "Paste into ...",
-        "currentBulletin": "This bulletin"
+        "label": "Copiar región de alerta a otro boletín",
+        "select": "Pegar en ...",
+        "currentBulletin": "Este boletín"
       },
       "title": {
         "avalancheProblem": "Problemas de aludes",
@@ -238,8 +238,8 @@
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://models.avalanche.report:8061/en/",
-        "decisionTree" : "Decision tree",
-        "feedback" : "Feedback",
+        "decisionTree" : "Árbol de decisión",
+        "feedback" : "Comentarios",
         "save": "Guardar",
         "discard": "Descartar"
       }
@@ -596,8 +596,8 @@
       "charts": {
         "charts": "Mapas",
         "nan": "Sin especificación",
-        "classify": "Classify",
-        "label": "Label",
+        "classify": "Classificar",
+        "label": "Etiqueta",
         "invert": "Invertir",
         "reset": "Restablecer",
         "aspect": {
@@ -798,7 +798,7 @@
     "complex": "Complejo"
   },
   "changeRegionDialog": {
-    "message": "Do you want to change the region?",
+    "message": "¿Quieres cambiar la región?",
     "accept": "Si",
     "reject": "No"
   },
