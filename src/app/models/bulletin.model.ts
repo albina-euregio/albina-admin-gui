@@ -2,6 +2,7 @@ import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.
 import { LangTexts, TextModel, convertLangTextsToJSON } from "./text.model";
 import { AuthorModel } from "./author.model";
 import * as Enums from "../enums/enums";
+import { RegionStatus } from "../enums/enums";
 
 export class BulletinModel {
   public id: string;
@@ -613,5 +614,16 @@ export class BulletinModel {
   private extend(num: number) {
     const norm = Math.abs(Math.floor(num));
     return (norm < 10 ? "0" : "") + norm;
+  }
+
+  public getRegionsByStatus(type: RegionStatus): string[] {
+    switch (type) {
+      case RegionStatus.suggested:
+        return this.getSuggestedRegions();
+      case RegionStatus.saved:
+        return this.getSavedRegions();
+      case RegionStatus.published:
+        return this.getPublishedRegions();
+    }
   }
 }
