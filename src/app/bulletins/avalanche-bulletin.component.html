@@ -21,19 +21,6 @@
             <i class="ph icon-md ph-square-split-vertical"></i> {{ "bulletins.create.mapTop" | translate }}
           </button>
         </li>
-        <li>
-          <hr class="dropdown-divider" />
-        </li>
-        <li *ngIf="showNotes">
-          <button class="dropdown-item" (click)="toggleShowNotes()">
-            <i class="ph icon-md ph-note"></i> {{ "bulletins.create.hideNotes" | translate }}
-          </button>
-        </li>
-        <li *ngIf="!showNotes">
-          <button class="dropdown-item" (click)="toggleShowNotes()">
-            <i class="ph icon-md ph-note"></i> {{ "bulletins.create.showNotes" | translate }}
-          </button>
-        </li>
       </ul>
       <button (click)="deselectBulletin()" class="btn btn-bare btn-sm btn-icon btn-bare--grey">
         <i class="ph-bold ph-x"></i>
@@ -286,7 +273,6 @@
             rows="1"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -298,7 +284,6 @@
             rows="3"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -309,7 +294,6 @@
             rows="9"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -370,7 +354,6 @@
             rows="9"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -427,7 +410,6 @@
             rows="5"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />

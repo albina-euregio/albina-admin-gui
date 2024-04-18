@@ -47,7 +47,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
 
-  public showNotes: boolean;
   public editRegions: boolean;
 
   public isAccordionDangerRatingOpen: boolean;
@@ -73,7 +72,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     public regionsService: RegionsService,
     public copyService: CopyService,
   ) {
-    this.showNotes = false;
     this.updateBulletinOnServerEventDebounce
       .pipe(debounceTime(1000))
       .subscribe((bulletin) => this.updateBulletinOnServerEvent.emit(bulletin));
@@ -146,10 +144,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   hideDialog() {
     this.dialog.closeAll();
-  }
-
-  toggleShowNotes() {
-    this.showNotes = !this.showNotes;
   }
 
   onDangerPattern1Change(event: Enums.DangerPattern) {
