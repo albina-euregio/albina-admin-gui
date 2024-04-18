@@ -42,7 +42,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Output() editMicroRegionsEvent = new EventEmitter<BulletinModel>();
   @Output() copyBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
-  @Output() setMapLayoutEvent = new EventEmitter<boolean>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -107,10 +106,6 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   editMicroRegions() {
     this.editMicroRegionsEvent.emit(this.bulletin);
-  }
-
-  setMapLayout(isCompact: boolean): void {
-    this.setMapLayoutEvent.emit(isCompact);
   }
 
   setTendency(event: Event, tendency: Enums.Tendency) {

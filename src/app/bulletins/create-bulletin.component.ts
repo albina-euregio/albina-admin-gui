@@ -713,10 +713,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  setMapLayout(isCompact: boolean): void {
-    this.isCompactMapLayout = isCompact;
-  }
-
   setTendency(event, tendency) {
     event.stopPropagation();
     this.activeBulletin.tendency = tendency;

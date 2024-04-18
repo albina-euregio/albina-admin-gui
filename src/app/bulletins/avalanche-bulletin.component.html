@@ -1,27 +1,6 @@
 <div>
   <header class="region-form__header">
     <div class="region-form__header-actions btn-group" dropdown>
-      <button
-        *ngIf="!isComparedBulletin"
-        dropdownToggle
-        class="btn btn-bare btn-sm btn-icon btn-bare--grey"
-        type="button"
-        aria-controls="dropdownMenu"
-      >
-        <i class="ph-bold ph-dots-three-outline-vertical"></i>
-      </button>
-      <ul id="dropdownMenu" *dropdownMenu class="dropdown-menu dropdown-menu-end">
-        <li *ngIf="isCompactMapLayout">
-          <button class="dropdown-item" (click)="setMapLayout(false)">
-            <i class="ph icon-md ph-square-split-horizontal"></i> {{ "bulletins.create.mapLeft" | translate }}
-          </button>
-        </li>
-        <li *ngIf="!isCompactMapLayout">
-          <button class="dropdown-item" (click)="setMapLayout(true)">
-            <i class="ph icon-md ph-square-split-vertical"></i> {{ "bulletins.create.mapTop" | translate }}
-          </button>
-        </li>
-      </ul>
       <button (click)="deselectBulletin()" class="btn btn-bare btn-sm btn-icon btn-bare--grey">
         <i class="ph-bold ph-x"></i>
       </button>
