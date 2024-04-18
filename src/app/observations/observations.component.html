@@ -107,11 +107,19 @@
                 icon="pi pi-plus-circle"
                 (click)="newObservation()"
                 class="p-button-text"
+                title="New observation"
               ></button>
             </div>
 
-            <div class="global-bar-item global-bar-item-more">
-              <p-menubar [model]="moreItems"></p-menubar>
+            <div class="global-bar-item global-bar-item-load">
+              <button
+                type="button"
+                pButton
+                icon="pi pi-download"
+                (click)="exportObservations()"
+                class="p-button-text"
+                title="Export observation"
+              ></button>
             </div>
 
             <div class="global-bar-item global-bar-item-load">
@@ -121,6 +129,7 @@
                 class="p-button-text"
                 (click)="toggleFilters()"
                 [icon]="layoutFilters ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
+                title="Show/hide filter bar"
               ></button>
             </div>
 
