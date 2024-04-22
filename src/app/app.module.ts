@@ -8,8 +8,6 @@ import { AppComponent } from "./app.component";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { PasswordMismatchValidatorDirective } from "./shared/password-mismatch.directive";
-
 import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
 
 // Routing Module
@@ -118,7 +116,6 @@ registerLocaleData(localeOc, "oc");
     AppComponent,
     FullLayoutComponent,
     SimpleLayoutComponent,
-    PasswordMismatchValidatorDirective,
     ModalSubmitComponent,
     ModalPublishComponent,
     ModalCheckComponent,
