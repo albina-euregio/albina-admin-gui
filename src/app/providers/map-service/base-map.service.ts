@@ -7,6 +7,7 @@ import { AuthenticationService } from "../authentication-service/authentication.
 import { RegionsService } from "../regions-service/regions.service";
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -21,9 +22,10 @@ export class BaseMapService extends MapService {
   constructor(
     authenticationService: AuthenticationService,
     regionsService: RegionsService,
+    translateService: TranslateService,
     constantsService: ConstantsService,
   ) {
-    super(regionsService, authenticationService, constantsService);
+    super(regionsService, translateService, authenticationService, constantsService);
     this.observationTypeLayers = {} as any;
     Object.keys(ObservationType).forEach((type) => (this.observationTypeLayers[type] = new LayerGroup()));
   }

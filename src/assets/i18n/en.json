@@ -1,4 +1,8 @@
 {
+  "daytime": {
+    "earlier": "Earlier",
+    "later": "Later"
+  },
   "login": {
     "title": "Login",
     "text": "Sign In to your account",
@@ -241,8 +245,6 @@
       },
       "removeDaytimeDependencyDialog" : {
         "message": "Which avalanche problems do you want to keep?",
-        "earlier": "Earlier",
-        "later": "Later",
         "cancel": "Cancel"
       },
       "decisionTree" : {

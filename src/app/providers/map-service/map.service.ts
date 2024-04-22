@@ -12,6 +12,7 @@ import { RegionNameControl } from "./region-name-control";
 import { AmPmControl } from "./am-pm-control";
 import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
 import { filterFeature } from "../regions-service/filterFeature";
+import { TranslateService } from "@ngx-translate/core";
 
 declare module "leaflet" {
   interface Map {
@@ -55,11 +56,16 @@ export class MapService {
 
   constructor(
     protected regionsService: RegionsService,
+    public translateService: TranslateService,
     protected authenticationService: AuthenticationService,
     protected constantsService: ConstantsService,
   ) {
-    this.amControl = new AmPmControl({ position: "bottomleft" }).setText("AM");
-    this.pmControl = new AmPmControl({ position: "bottomleft" }).setText("PM");
+    this.amControl = new AmPmControl({ position: "bottomleft" }).setText(
+      this.translateService.instant("daytime.earlier"),
+    );
+    this.pmControl = new AmPmControl({ position: "bottomleft" }).setText(
+      this.translateService.instant("daytime.later"),
+    );
   }
 
   protected async initOverlayMaps(isPM = false): Promise<typeof this.overlayMaps> {
