@@ -400,3 +400,32 @@
     </accordion>
   </main>
 </div>
+
+<ng-template #removeDaytimeDependencyTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.removeDaytimeDependencyDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      [disabled]="loadingModal"
+      type="button"
+      class="btn btn-primary"
+      (click)="removeDaytimeDependencyModalConfirm($event, true)"
+    >
+      {{ "bulletins.create.removeDaytimeDependencyDialog.earlier" | translate }}
+    </button>
+
+    <button
+      [disabled]="loadingModal"
+      type="button"
+      class="btn btn-primary"
+      (click)="removeDaytimeDependencyModalConfirm($event, false)"
+    >
+      <span>{{ "bulletins.create.removeDaytimeDependencyDialog.later" | translate }}</span>
+    </button>
+
+    <button type="reset" class="btn btn-bare" (click)="copyRegionModalDecline()">
+      <span>{{ "bulletins.create.removeDaytimeDependencyDialog.cancel" | translate }}</span>
+    </button>
+  </div>
+</ng-template>

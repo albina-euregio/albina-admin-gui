@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef } from "@angular/core";
 
 import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
-import { BehaviorSubject, debounceTime, Subject } from "rxjs";
+import { debounceTime, Subject } from "rxjs";
 
 import { environment } from "../../environments/environment";
 
@@ -24,6 +24,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 
 import * as Enums from "../enums/enums";
 import { LangTexts } from "../models/text.model";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -54,6 +55,9 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   public isAccordionSnowpackStructureOpen: boolean;
   public isAccordionTendencyOpen: boolean;
 
+  public removeDaytimeDependencyModalRef: BsModalRef;
+  @ViewChild("removeDaytimeDependencyTemplate") removeDaytimeDependencyTemplate: TemplateRef<any>;
+
   stopListening: Function;
 
   public config = {
@@ -67,6 +71,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private sanitizer: DomSanitizer,
     public authenticationService: AuthenticationService,
+    private modalService: BsModalService,
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
@@ -214,9 +219,9 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
     if (this.bulletinsService.getIsEditable() && this.isCreator(this.bulletin)) {
-      this.bulletin.setHasDaytimeDependency(value);
+      if (value) {
+        this.bulletin.setHasDaytimeDependency(value);
 
-      if (this.bulletin.hasDaytimeDependency) {
         this.bulletin.afternoon.setDangerRatingAbove(this.bulletin.forenoon.getDangerRatingAbove());
         const avalancheProblem1 = this.bulletin.forenoon.getAvalancheProblem1();
         if (avalancheProblem1) {
@@ -242,20 +247,13 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
           this.bulletin.afternoon.setHasElevationDependency(true);
           this.bulletin.afternoon.setDangerRatingBelow(this.bulletin.forenoon.getDangerRatingBelow());
         }
-      } else {
-        this.bulletin.afternoon.setDangerRatingAbove(Enums.DangerRating.missing);
-        this.bulletin.afternoon.setAvalancheProblem1(undefined);
-        this.bulletin.afternoon.setAvalancheProblem2(undefined);
-        this.bulletin.afternoon.setAvalancheProblem3(undefined);
-        this.bulletin.afternoon.setAvalancheProblem4(undefined);
-        this.bulletin.afternoon.setAvalancheProblem5(undefined);
-        this.bulletin.afternoon.setHasElevationDependency(false);
-        this.bulletin.afternoon.setDangerRatingBelow(Enums.DangerRating.missing);
-      }
-      this.bulletin.getForenoon().updateDangerRating();
-      this.bulletin.getAfternoon().updateDangerRating();
+        this.bulletin.getForenoon().updateDangerRating();
+        this.bulletin.getAfternoon().updateDangerRating();
 
-      this.updateBulletinOnServer();
+        this.updateBulletinOnServer();
+      } else {
+        this.openRemoveDaytimeDependencyModal(this.removeDaytimeDependencyTemplate);
+      }
     }
   }
 
@@ -349,6 +347,44 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   getRegionNames(bulletin): string {
     const regionNames = bulletin.savedRegions.map((regionCode) => this.regionsService.getRegionName(regionCode));
     return regionNames.join(", ");
+  }
+
+  openRemoveDaytimeDependencyModal(template: TemplateRef<any>) {
+    this.removeDaytimeDependencyModalRef = this.modalService.show(template, this.config);
+  }
+
+  removeDaytimeDependencyModalConfirm(event, earlier: boolean): void {
+    event.stopPropagation();
+    this.removeDaytimeDependencyModalRef.hide();
+    this.bulletin.setHasDaytimeDependency(false);
+
+    if (!earlier) {
+      this.bulletin.forenoon.setDangerRatingAbove(this.bulletin.afternoon.getDangerRatingAbove());
+      this.bulletin.forenoon.setAvalancheProblem1(this.bulletin.afternoon.getAvalancheProblem1());
+      this.bulletin.forenoon.setAvalancheProblem2(this.bulletin.afternoon.getAvalancheProblem2());
+      this.bulletin.forenoon.setAvalancheProblem3(this.bulletin.afternoon.getAvalancheProblem3());
+      this.bulletin.forenoon.setAvalancheProblem4(this.bulletin.afternoon.getAvalancheProblem4());
+      this.bulletin.forenoon.setAvalancheProblem5(this.bulletin.afternoon.getAvalancheProblem5());
+      this.bulletin.forenoon.setHasElevationDependency(this.bulletin.afternoon.getHasElevationDependency());
+      this.bulletin.forenoon.setDangerRatingBelow(this.bulletin.afternoon.getDangerRatingBelow());
+    }
+    this.bulletin.afternoon.setDangerRatingAbove(Enums.DangerRating.missing);
+    this.bulletin.afternoon.setAvalancheProblem1(undefined);
+    this.bulletin.afternoon.setAvalancheProblem2(undefined);
+    this.bulletin.afternoon.setAvalancheProblem3(undefined);
+    this.bulletin.afternoon.setAvalancheProblem4(undefined);
+    this.bulletin.afternoon.setAvalancheProblem5(undefined);
+    this.bulletin.afternoon.setHasElevationDependency(false);
+    this.bulletin.afternoon.setDangerRatingBelow(Enums.DangerRating.missing);
+
+    this.bulletin.getForenoon().updateDangerRating();
+    this.bulletin.getAfternoon().updateDangerRating();
+
+    this.updateBulletinOnServer();
+  }
+
+  removeDaytimeDependencyModalDecline(): void {
+    this.removeDaytimeDependencyModalRef.hide();
   }
 }
 

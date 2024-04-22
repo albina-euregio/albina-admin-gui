@@ -791,22 +791,6 @@
   </div>
 </ng-template>
 
-<ng-template #loadAutoSaveTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.create.loadAutoSaveDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button [disabled]="loadingModal" type="button" class="btn btn-bare" (click)="loadAutoSaveModalDecline($event)">
-      {{ "bulletins.create.loadAutoSaveDialog.reject" | translate }}
-    </button>
-
-    <button [disabled]="loadingModal" type="button" class="btn btn-primary" (click)="loadAutoSaveModalConfirm($event)">
-      <i class="ph ph-check"></i>
-      <span>{{ "bulletins.create.loadAutoSaveDialog.accept" | translate }}</span>
-    </button>
-  </div>
-</ng-template>
-
 <ng-template #saveErrorTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.create.saveErrorDialog.message" | translate }}</p>
