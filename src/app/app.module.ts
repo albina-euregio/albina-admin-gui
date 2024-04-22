@@ -9,7 +9,6 @@ import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { SIDEBAR_TOGGLE_DIRECTIVES } from "./shared/sidebar.directive";
-import { AsideToggleDirective } from "./shared/aside.directive";
 import { PasswordMismatchValidatorDirective } from "./shared/password-mismatch.directive";
 
 import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
@@ -121,7 +120,6 @@ registerLocaleData(localeOc, "oc");
     FullLayoutComponent,
     SimpleLayoutComponent,
     SIDEBAR_TOGGLE_DIRECTIVES,
-    AsideToggleDirective,
     PasswordMismatchValidatorDirective,
     ModalSubmitComponent,
     ModalPublishComponent,
