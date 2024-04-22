@@ -36,7 +36,6 @@ import { WsUpdateService } from "./providers/ws-update-service/ws-update.service
 import { WsRegionService } from "./providers/ws-region-service/ws-region.service";
 import { LocalStorageService } from "./providers/local-storage-service/local-storage.service";
 import { ConfigurationService } from "./providers/configuration-service/configuration.service";
-import { SocialmediaService } from "./providers/socialmedia-service/socialmedia.service";
 import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
@@ -180,7 +179,6 @@ registerLocaleData(localeOc, "oc");
     QfaService,
     RegionsService,
     SettingsService,
-    SocialmediaService,
     StatisticsService,
     TranslateService,
     UserService,

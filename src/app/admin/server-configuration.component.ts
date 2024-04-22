@@ -1,7 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
-import { SocialmediaService } from "../providers/socialmedia-service/socialmedia.service";
 import * as Enums from "../enums/enums";
 import { AlertComponent } from "ngx-bootstrap/alert";
 
@@ -21,7 +20,6 @@ export class ServerConfigurationComponent {
   constructor(
     private translateService: TranslateService,
     public configurationService: ConfigurationService,
-    public socialmediaService: SocialmediaService,
   ) {
     this.statusMap = new Map<number, Enums.BulletinStatus>();
     this.saveConfigurationLoading = false;
