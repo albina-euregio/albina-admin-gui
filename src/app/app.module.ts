@@ -6,7 +6,6 @@ import { MatDialogModule } from "@angular/material/dialog";
 
 import { AppComponent } from "./app.component";
 
-import { NAV_DROPDOWN_DIRECTIVES } from "./shared/nav-dropdown.directive";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { SIDEBAR_TOGGLE_DIRECTIVES } from "./shared/sidebar.directive";
@@ -121,7 +120,6 @@ registerLocaleData(localeOc, "oc");
     AppComponent,
     FullLayoutComponent,
     SimpleLayoutComponent,
-    NAV_DROPDOWN_DIRECTIVES,
     SIDEBAR_TOGGLE_DIRECTIVES,
     AsideToggleDirective,
     PasswordMismatchValidatorDirective,
