@@ -278,7 +278,7 @@
             <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
               <!-- map above / map aside -->
               <li>
-                <button class="dropdown-item" (click)="isCompactMapLayout = !isCompactMapLayout">
+                <button class="dropdown-item" (click)="toggleCompactMapLayout()">
                   <i *ngIf="isCompactMapLayout" class="ph icon-md ph-square-split-horizontal"></i>
                   <i *ngIf="!isCompactMapLayout" class="ph icon-md ph-square-split-vertical"></i>
                   <span *ngIf="isCompactMapLayout">{{ "bulletins.create.mapLeft" | translate }}</span>

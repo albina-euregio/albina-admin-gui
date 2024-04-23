@@ -58,4 +58,12 @@ export class LocalStorageService {
   setExternalServers(externalServers: ServerModel[]): void {
     return this.set("externalServers", externalServers);
   }
+
+  getCompactMapLayout(): boolean {
+    return this.get("compactMapLayout");
+  }
+
+  setCompactMapLayout(compactMapLayout: boolean): void {
+    return this.set("compactmapLayout", compactMapLayout);
+  }
 }

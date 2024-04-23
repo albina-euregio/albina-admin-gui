@@ -32,6 +32,7 @@ import { Subscription } from "rxjs";
 
 import * as Enums from "../enums/enums";
 import { ServerModel } from "app/models/server.model";
+import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -151,6 +152,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     public bulletinsService: BulletinsService,
     public authenticationService: AuthenticationService,
     private translateService: TranslateService,
+    private localStorageService: LocalStorageService,
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
@@ -168,8 +170,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     // this.preventClick = false;
     // this.timer = 0;
 
-    // Set initial value based on the current window width
-    this.isCompactMapLayout = window.innerWidth < 768;
+    if (this.localStorageService.getCompactMapLayout()) {
+      this.isCompactMapLayout = this.localStorageService.getCompactMapLayout();
+    } else {
+      // Set initial value based on the current window width
+      this.isCompactMapLayout = window.innerWidth < 768;
+    }
 
     this.publishing = false;
     this.submitting = false;
@@ -187,6 +193,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   @HostListener("window:resize", ["$event"])
   onResize(event: Event) {
     this.isCompactMapLayout = (event.target as Window).innerWidth < 768;
+    this.localStorageService.setCompactMapLayout(this.isCompactMapLayout);
   }
 
   reset() {
@@ -312,6 +319,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     } else {
       this.goBack();
     }
+  }
+
+  toggleCompactMapLayout() {
+    this.isCompactMapLayout = !this.isCompactMapLayout;
+    this.localStorageService.setCompactMapLayout(this.isCompactMapLayout);
   }
 
   updateBulletinScroll(scrollId: string, event): void {
