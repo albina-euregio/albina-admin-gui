@@ -75,7 +75,7 @@
         <textarea
           class="form-control"
           [rows]="rows"
-          [disabled]="true"
+          disabled
           [ngModel]="bulletin[bulletinTextKey][translateService.currentLang] | html"
         ></textarea>
       </div>
@@ -124,7 +124,7 @@
       <textarea
         class="form-control"
         [rows]="rows"
-        [disabled]="true"
+        disabled
         [ngModel]="bulletin[bulletinTextKey][lang] | html"
       ></textarea>
     </div>
