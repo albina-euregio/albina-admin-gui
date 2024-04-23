@@ -287,6 +287,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   createAvalancheProblem(isAfternoon: boolean) {
+    this.isAccordionAvalancheProblemOpen = true;
     let daytime;
     if (isAfternoon) {
       daytime = this.bulletin.afternoon;
