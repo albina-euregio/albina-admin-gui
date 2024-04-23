@@ -6,13 +6,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 
 import { AppComponent } from "./app.component";
 
-import { NAV_DROPDOWN_DIRECTIVES } from "./shared/nav-dropdown.directive";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
-import { SIDEBAR_TOGGLE_DIRECTIVES } from "./shared/sidebar.directive";
-import { AsideToggleDirective } from "./shared/aside.directive";
-import { PasswordMismatchValidatorDirective } from "./shared/password-mismatch.directive";
-import { BreadcrumbsComponent } from "./shared/breadcrumb.component";
 
 import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
 
@@ -36,7 +30,6 @@ import { WsUpdateService } from "./providers/ws-update-service/ws-update.service
 import { WsRegionService } from "./providers/ws-region-service/ws-region.service";
 import { LocalStorageService } from "./providers/local-storage-service/local-storage.service";
 import { ConfigurationService } from "./providers/configuration-service/configuration.service";
-import { SocialmediaService } from "./providers/socialmedia-service/socialmedia.service";
 import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
@@ -123,11 +116,6 @@ registerLocaleData(localeOc, "oc");
     AppComponent,
     FullLayoutComponent,
     SimpleLayoutComponent,
-    BreadcrumbsComponent,
-    NAV_DROPDOWN_DIRECTIVES,
-    SIDEBAR_TOGGLE_DIRECTIVES,
-    AsideToggleDirective,
-    PasswordMismatchValidatorDirective,
     ModalSubmitComponent,
     ModalPublishComponent,
     ModalCheckComponent,
@@ -180,7 +168,6 @@ registerLocaleData(localeOc, "oc");
     QfaService,
     RegionsService,
     SettingsService,
-    SocialmediaService,
     StatisticsService,
     TranslateService,
     UserService,
