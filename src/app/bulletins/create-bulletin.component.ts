@@ -860,6 +860,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getNewId(response, regionId) {
+    for (const jsonBulletin of response) {
+      if (jsonBulletin.savedRegions.includes(regionId)) return jsonBulletin.id;
+    }
+    return undefined;
+  }
+
   private addInternalBulletins(response) {
     let hasDaytimeDependency = false;
 
@@ -1356,6 +1363,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private createBulletinOnServer(bulletin: BulletinModel) {
     if (this.isWriteDisabled()) return;
+    const regionId = bulletin.getSavedAndPublishedRegions()[0];
     const validFrom = new Date(this.bulletinsService.getActiveDate());
     const validUntil = new Date(this.bulletinsService.getActiveDate());
     validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
@@ -1363,8 +1371,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.setValidUntil(validUntil);
     this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
+        if (this.activeBulletin && this.activeBulletin != undefined && this.activeBulletin.getId() == undefined) {
+          this.activeBulletin.setId(this.getNewId(data, regionId));
+        }
         this.mapService.deselectAggregatedRegion();
-        this.activeBulletin = undefined;
         this.addInternalBulletins(data);
         this.loadInternalBulletinsError = false;
         this.loading = false;
