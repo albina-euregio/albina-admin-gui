@@ -258,7 +258,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       const resizeObserver = new ResizeObserver(() => {
         this.mapService.map?.invalidateSize();
-        this.mapService.afternoonMap?.invalidateSize();
+        if (this.showAfternoonMap) {
+          this.mapService.afternoonMap?.invalidateSize();
+        }
       });
       resizeObserver.observe(mapDiv);
     });
