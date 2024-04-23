@@ -1032,19 +1032,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   copyBulletin(bulletin: BulletinModel) {
-    if (this.checkAvalancheProblems()) {
-      const newBulletin = new BulletinModel(bulletin);
-      newBulletin.setAdditionalAuthors(new Array<string>());
-      newBulletin.setSavedRegions(new Array<string>());
-      newBulletin.setPublishedRegions(new Array<string>());
-      newBulletin.setSuggestedRegions(new Array<string>());
+    const newBulletin = new BulletinModel(bulletin);
+    newBulletin.setAdditionalAuthors(new Array<string>());
+    newBulletin.setSavedRegions(new Array<string>());
+    newBulletin.setPublishedRegions(new Array<string>());
+    newBulletin.setSuggestedRegions(new Array<string>());
 
-      newBulletin.setAuthor(this.authenticationService.getCurrentAuthor());
-      newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
-      newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-      this.copyService.setCopyBulletin(true);
-      this.copyService.setBulletin(newBulletin);
-    }
+    newBulletin.setAuthor(this.authenticationService.getCurrentAuthor());
+    newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+    newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+    this.copyService.setCopyBulletin(true);
+    this.copyService.setBulletin(newBulletin);
   }
 
   toggleBulletin(bulletin: BulletinModel) {
@@ -1693,6 +1691,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openAvalancheProblemErrorModal(template: TemplateRef<any>) {
+    debugger;
     this.avalancheProblemErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1913,58 +1912,63 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.publishing = true;
 
-    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-      (data) => {
-        let message =
-          "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
+    if (this.checkAvalancheProblems()) {
+      this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        (data) => {
+          let message =
+            "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
 
-        for (const entry of data as any) {
-          if (entry === "missingDangerRating") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingDangerRating") + "<br>";
+          for (const entry of data as any) {
+            if (entry === "missingDangerRating") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "duplicateRegion") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.duplicateRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityHighlights") +
+                "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityComment") +
+                "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message +=
+                this.translateService.instant(
+                  "bulletins.table.publishBulletinsDialog.missingSnowpackStructureHighlights",
+                ) + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message +=
+                this.translateService.instant(
+                  "bulletins.table.publishBulletinsDialog.missingSnowpackStructureComment",
+                ) + "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+            }
           }
-          if (entry === "missingRegion") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.missingRegion") + "<br>";
-          }
-          if (entry === "duplicateRegion") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.duplicateRegion") + "<br>";
-          }
-          if (entry === "missingAvActivityHighlights") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityHighlights") +
-              "<br>";
-          }
-          if (entry === "missingAvActivityComment") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityComment") + "<br>";
-          }
-          if (entry === "missingSnowpackStructureHighlights") {
-            message +=
-              this.translateService.instant(
-                "bulletins.table.publishBulletinsDialog.missingSnowpackStructureHighlights",
-              ) + "<br>";
-          }
-          if (entry === "missingSnowpackStructureComment") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingSnowpackStructureComment") +
-              "<br>";
-          }
-          if (entry === "pendingSuggestions") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.pendingSuggestions") + "<br>";
-          }
-          if (entry === "incompleteTranslation") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
-          }
-        }
 
-        this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
-      },
-      (error) => {
-        console.error("Bulletins could not be checked!");
-        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
-      },
-    );
+          this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
+        },
+        (error) => {
+          console.error("Bulletins could not be checked!");
+          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+        },
+      );
+    }
   }
 
   openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: Date, change: boolean) {
