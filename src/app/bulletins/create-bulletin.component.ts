@@ -146,6 +146,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private activeRoute: ActivatedRoute,
     public bulletinsService: BulletinsService,
     public authenticationService: AuthenticationService,
@@ -177,6 +178,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.saveError = new Map();
     this.loadInternalBulletinsError = false;
     this.loadExternalBulletinsError = false;
+
+    this.route.queryParams.subscribe((params) => {
+      this.bulletinsService.setIsReadOnly(params.readOnly ? params.readOnly.toLocaleLowerCase() === "true" : false);
+    });
   }
 
   @HostListener("window:resize", ["$event"])
@@ -425,7 +430,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const format = "yyyy-MM-dd";
     const locale = "en-US";
     const formattedDate = formatDate(date, format, locale);
-    this.router.navigate(["/bulletins/" + formattedDate]);
+    this.router.navigate(["/bulletins/" + formattedDate], {
+      queryParams: { readOnly: this.bulletinsService.getIsReadOnly() },
+    });
   }
 
   publishAll() {
