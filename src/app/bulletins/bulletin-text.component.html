@@ -73,6 +73,7 @@
         </div>
         <!-- End of toolbar -->
         <textarea
+          *ngIf="bulletin && bulletin[bulletinTextKey]"
           class="form-control"
           [rows]="rows"
           [disabled]="true"
