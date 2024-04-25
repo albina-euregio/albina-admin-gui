@@ -1407,11 +1407,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   updateSaveErrors() {
     for (const bulletin of this.saveError.values()) {
-      this.updateBulletinOnServer(bulletin);
+      this.updateBulletinOnServer(bulletin, false);
     }
   }
 
-  updateBulletinOnServer(bulletin: BulletinModel) {
+  updateBulletinOnServer(bulletin: BulletinModel, checkErrors: boolean = true) {
     if (this.isWriteDisabled()) return;
     const validFrom = new Date(this.bulletinsService.getActiveDate());
     const validUntil = new Date(this.bulletinsService.getActiveDate());
@@ -1424,6 +1424,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.saveError.delete(bulletin.id);
         this.loadInternalBulletinsError = false;
         this.loading = false;
+        if (checkErrors) {
+          this.updateSaveErrors();
+        }
         console.log("Bulletin updated on server.");
       },
       (error) => {
