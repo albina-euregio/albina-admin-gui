@@ -18,10 +18,10 @@ variables:
       - .yarn-cache/
   variables:
     NODE_OPTIONS: "--max-old-space-size=4096"
+    YARN_CACHE_FOLDER: .yarn-cache/
   before_script:
-    - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
-    - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
-    - yarn install --frozen-lockfile --no-progress
+    - corepack enable
+    - yarn install --immutable
     - npm --no-git-tag-version version $(git describe)
 
 lint:
