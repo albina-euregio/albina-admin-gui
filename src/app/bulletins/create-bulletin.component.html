@@ -199,8 +199,10 @@
       >
       <span class="create-bulletin__bulletin-alert" *ngIf="saveError.size" (click)="updateSaveErrors()"
         ><i class="ph ph-warning icon-left"></i> {{ "bulletins.status.saveError" | translate }}
-        <i class="ph ph-repeat icon-right"></i
-      ></span>
+        <button class="btn btn-outline btn-danger btn-small lm-2">
+          <i class="ph ph-repeat icon-right"></i>
+        </button>
+      </span>
       <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalBulletinsError"
         ><i class="ph ph-info"></i> {{ "bulletins.status.loadBulletinsError" | translate }}</span
       >
