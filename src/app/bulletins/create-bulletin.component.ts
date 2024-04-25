@@ -141,6 +141,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   externalBulletinsSubscription!: Subscription;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-md",
   };
@@ -1693,7 +1694,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   openAvalancheProblemErrorModal(template: TemplateRef<any>) {
-    debugger;
     this.avalancheProblemErrorModalRef = this.modalService.show(template, this.config);
   }
 

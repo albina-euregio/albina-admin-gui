@@ -61,6 +61,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   stopListening: Function;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-md",
   };

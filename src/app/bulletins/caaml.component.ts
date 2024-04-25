@@ -18,6 +18,7 @@ export class CaamlComponent implements OnInit {
   @ViewChild("caamlNotLoadedTemplate") caamlNotLoadedTemplate: TemplateRef<any>;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-sm",
   };

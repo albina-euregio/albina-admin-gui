@@ -23,6 +23,7 @@ export class UsersComponent implements AfterContentInit {
   @ViewChild("deleteUserTemplate") deleteUserTemplate: TemplateRef<any>;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-sm",
   };
