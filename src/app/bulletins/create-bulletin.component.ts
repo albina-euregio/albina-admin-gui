@@ -1017,12 +1017,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   createBulletin(copy) {
     let bulletin: BulletinModel;
+    this.showNewBulletinModal = true;
     if (copy && this.copyService.getBulletin()) {
-      this.showNewBulletinModal = true;
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
-      this.showNewBulletinModal = true;
       bulletin = new BulletinModel();
       bulletin.setAuthor(this.authenticationService.getCurrentAuthor());
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
@@ -1030,7 +1029,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
 
     this.selectBulletin(bulletin);
-    this.mapService.selectAggregatedRegion(bulletin);
     this.editBulletinMicroRegions(bulletin);
   }
 
@@ -1491,16 +1489,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.showNewBulletinModal = false;
     this.editRegions = false;
-
     if (bulletin !== undefined && bulletin.getSavedRegions().length === 0) {
       this.delBulletin(bulletin);
+      this.activeBulletin = undefined;
+    } else {
+      if (this.activeBulletin && this.activeBulletin !== undefined) {
+        this.mapService.selectAggregatedRegion(this.activeBulletin);
+      }
     }
-
     this.mapService.discardEditSelection();
-
-    if (this.activeBulletin && this.activeBulletin !== undefined) {
-      this.mapService.selectAggregatedRegion(this.activeBulletin);
-    }
   }
 
   save() {
@@ -1547,7 +1544,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   @HostListener("document:keydown", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.keyCode === 27 && this.editRegions) {
-      this.discardBulletin(event);
+      this.discardBulletin(event, this.activeBulletin);
     } else if (event.keyCode === 27 && (this.copyService.isCopyTextcat() || this.copyService.isCopyBulletin())) {
       this.copyService.resetCopyTextcat();
       this.copyService.resetCopyBulletin();
