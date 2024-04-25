@@ -6,8 +6,9 @@ https://admin.avalanche.report/ – A frontend to enter avalanche bulletins.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.  
 
-```
+```sh
 nvm install
+corepack enable
 yarn install
 yarn run start-dev
 ```
@@ -15,15 +16,6 @@ yarn run start-dev
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
-
-## Clone
-
-This repository includes [eaws/eaws-regions](https://gitlab.com/eaws/eaws-regions) as Git submodule. When cloning, make sure to also initialize the submodule:
-
-```sh
-git clone https://gitlab.com/albina-euregio/albina-admin-gui.git
-git submodule update --init
-```
 
 ## Build
 
