@@ -1617,6 +1617,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   deleteAggregatedRegionModalConfirm(): void {
     this.deleteAggregatedRegionModalRef.hide();
+    this.loading = true;
     this.delBulletin(this.bulletinMarkedDelete);
   }
 
@@ -1683,6 +1684,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   saveErrorModalConfirm(): void {
     this.saveErrorModalRef.hide();
+    this.loading = false;
   }
 
   openChangeErrorModal(template: TemplateRef<any>) {
