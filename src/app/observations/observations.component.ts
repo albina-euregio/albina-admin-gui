@@ -420,14 +420,22 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const observations = [...this.observations, ...this.observationsAsOverlay].filter(
       (o) => o.$source === observation.$source && o.$type === observation.$type,
     );
-    const index = observations.indexOf(observation);
+    var index = observations.indexOf(observation);
     if (index < 0) {
       return;
     }
     if (event.key === "ArrowRight") {
-      observation = observations[index + 1];
+      index += 1;
+      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+        index += 1;
+      }
+      observation = observations[index];
     } else if (event.key === "ArrowLeft") {
-      observation = observations[index - 1];
+      index -= 1;
+      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+        index -= 1;
+      }
+      observation = observations[index];
     }
     if (observation) {
       this.onObservationClick(observation);
