@@ -199,8 +199,10 @@
       >
       <span class="create-bulletin__bulletin-alert" *ngIf="saveError.size" (click)="updateSaveErrors()"
         ><i class="ph ph-warning icon-left"></i> {{ "bulletins.status.saveError" | translate }}
-        <i class="ph ph-repeat icon-right"></i
-      ></span>
+        <button class="btn btn-outline btn-danger btn-small lm-2">
+          <i class="ph ph-repeat icon-right"></i>
+        </button>
+      </span>
       <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalBulletinsError"
         ><i class="ph ph-info"></i> {{ "bulletins.status.loadBulletinsError" | translate }}</span
       >
@@ -208,6 +210,7 @@
       <!-- submit -->
       <button
         *ngIf="showSubmitButton(bulletinsService.getActiveDate())"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
         (click)="submit($event, bulletinsService.getActiveDate())"
@@ -219,6 +222,7 @@
       <!-- update -->
       <button
         *ngIf="showUpdateButton(bulletinsService.getActiveDate())"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
         (click)="createUpdate($event)"
@@ -230,6 +234,7 @@
       <!-- publish update (not 5PM nor 8AM) -->
       <button
         *ngIf="showPublishButton(bulletinsService.getActiveDate())"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
         (click)="publish($event, bulletinsService.getActiveDate())"
@@ -241,6 +246,7 @@
       <!-- publish change (not 5PM nor 8AM, no messages) -->
       <button
         *ngIf="showPublishButton(bulletinsService.getActiveDate())"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
         (click)="publish($event, bulletinsService.getActiveDate(), true)"
@@ -252,6 +258,7 @@
       <!-- check -->
       <button
         *ngIf="showCheckButton(bulletinsService.getActiveDate())"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
         (click)="check($event, bulletinsService.getActiveDate())"
@@ -276,6 +283,16 @@
             </button>
 
             <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
+              <!-- map above / map aside -->
+              <li>
+                <button class="dropdown-item" (click)="toggleCompactMapLayout()">
+                  <i *ngIf="isCompactMapLayout" class="ph icon-md ph-square-split-horizontal"></i>
+                  <i *ngIf="!isCompactMapLayout" class="ph icon-md ph-square-split-vertical"></i>
+                  <span *ngIf="isCompactMapLayout">{{ "bulletins.create.mapLeft" | translate }}</span>
+                  <span *ngIf="!isCompactMapLayout">{{ "bulletins.create.mapTop" | translate }}</span>
+                </button>
+              </li>
+
               <!-- load bulletin from yesterday -->
               <li>
                 <button
@@ -426,7 +443,7 @@
       <!-- Foreign regions -->
       <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()">
         <h5 class="font-s-bold">
-          {{ getForeignRegionNames() }}
+          {{ "bulletins.create.foreignRegions" | translate }}
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1">
@@ -499,7 +516,6 @@
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
         (copyBulletinEvent)="eventCopyBulletin($event)"
         (deselectBulletinEvent)="eventDeselectBulletin($event)"
-        (setMapLayoutEvent)="setMapLayout($event)"
       ></app-avalanche-bulletin>
     </div>
     <!-- End Active bulletin -->
@@ -670,7 +686,7 @@
         *ngIf="
           !copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
         "
-        [disabled]="loading"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-sm btn-bare btn-sm btn-icon"
         (click)="openCopyRegionModal($event, bulletin)"
@@ -683,9 +699,9 @@
       <button
         *ngIf="
           bulletinsService.isLocked(bulletin?.getId()) ||
-          (bulletinsService.getIsEditable() && !editRegions && !hasSuggestions(bulletin) && isCreator(bulletin))
+          (bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin))
         "
-        [disabled]="loading"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-sm btn-icon btn-bare"
         (click)="deleteBulletin($event, bulletin)"
@@ -697,6 +713,7 @@
 
       <button
         *ngIf="false && activeBulletin !== undefined && activeBulletin !== bulletin"
+        [disabled]="loading || editRegions"
         type="button"
         class="btn btn-bare btn-sm btn-icon"
         (click)="compareBulletin($event, bulletin)"
@@ -778,22 +795,6 @@
     </button>
     <button type="button" class="btn btn-default" (click)="discardModalDecline()">
       {{ "bulletins.create.discardDialog.reject" | translate }}
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #loadAutoSaveTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.create.loadAutoSaveDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button [disabled]="loadingModal" type="button" class="btn btn-bare" (click)="loadAutoSaveModalDecline($event)">
-      {{ "bulletins.create.loadAutoSaveDialog.reject" | translate }}
-    </button>
-
-    <button [disabled]="loadingModal" type="button" class="btn btn-primary" (click)="loadAutoSaveModalConfirm($event)">
-      <i class="ph ph-check"></i>
-      <span>{{ "bulletins.create.loadAutoSaveDialog.accept" | translate }}</span>
     </button>
   </div>
 </ng-template>

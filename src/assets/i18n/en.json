@@ -1,4 +1,8 @@
 {
+  "daytime": {
+    "earlier": "Earlier",
+    "later": "Later"
+  },
   "login": {
     "title": "Login",
     "text": "Sign In to your account",
@@ -237,6 +241,10 @@
         "wetSnow": "Wet snow",
         "glidingSnow": "Gliding snow",
         "favourableSituation": "Favourable situation",
+        "cancel": "Cancel"
+      },
+      "removeDaytimeDependencyDialog" : {
+        "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancel"
       },
       "decisionTree" : {
@@ -509,6 +517,7 @@
       },
       "tooltip": {
         "edit": "Edit user",
+        "changePassword": "Change password",
         "delete": "Delete user"
       },
       "table": {
@@ -538,6 +547,7 @@
     },
     "createUser": {
       "table": {
+        "image": "Image",
         "name": "Name",
         "email": "Email",
         "organization": "Organization",
@@ -661,6 +671,7 @@
     }
   },
   "settings": {
+    "title": "Settings",
     "changePassword": {
       "title": "Change password",
       "oldPassword": {
@@ -693,8 +704,7 @@
       "title": "Display",
       "table": {
         "showCaaml": "Show CAAML",
-        "showJson": "Show JSON",
-        "showObservations": "Show observations"
+        "showJson": "Show JSON"
       }
     }
   },
@@ -766,6 +776,7 @@
     "NW": "NW"
   },
   "role": {
+    "SUPERADMIN": "Super Administrator",
     "ADMIN": "Administrator",
     "FORECASTER": "Forecaster",
     "FOREMAN": "Foreman",

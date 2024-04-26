@@ -26,7 +26,7 @@ import {
   genericObservationSchema,
 } from "./models/generic-observation.model";
 
-import { MenuItem, SharedModule } from "primeng/api";
+import { SharedModule } from "primeng/api";
 
 import { saveAs } from "file-saver";
 
@@ -113,7 +113,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     DangerPattern: {} as OutputDataset,
     Days: {} as OutputDataset,
   };
-  public moreItems: MenuItem[];
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild("observationTable")
   observationTableComponent: ObservationTableComponent;
@@ -146,21 +145,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           key !== ObservationSource.Observer,
       )
       .map((key) => ({ id: key, name: key }));
-
-    this.moreItems = [
-      {
-        label: "Mehr",
-        items: [
-          {
-            label: "Export",
-            icon: "",
-            command: (event) => {
-              this.exportObservations();
-            },
-          },
-        ],
-      },
-    ];
 
     this.filter.days = 1;
   }

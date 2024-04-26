@@ -18,6 +18,7 @@ export class JsonComponent implements OnInit {
   @ViewChild("jsonNotLoadedTemplate") jsonNotLoadedTemplate: TemplateRef<any>;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-sm",
   };

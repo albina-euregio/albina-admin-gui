@@ -48,14 +48,16 @@ export class SettingsService {
     document.documentElement.setAttribute("lang", language);
     this.translateService.use(language);
     const currentAuthor = this.authenticationService.getCurrentAuthor();
-    currentAuthor.setLanguageCode(language);
-    this.userService.updateUser(currentAuthor).subscribe(
-      (data) => {
-        console.debug("User language updated!");
-      },
-      (error) => {
-        console.error("User language could not be updated!");
-      },
-    );
+    if (currentAuthor && currentAuthor != null) {
+      currentAuthor.setLanguageCode(language);
+      this.userService.updateUser(currentAuthor).subscribe(
+        (data) => {
+          console.debug("User language updated!");
+        },
+        (error) => {
+          console.error("User language could not be updated!");
+        },
+      );
+    }
   }
 }

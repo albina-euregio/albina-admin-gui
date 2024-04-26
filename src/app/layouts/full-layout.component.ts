@@ -30,6 +30,7 @@ export class FullLayoutComponent {
   @ViewChild("changeRegionTemplate") changeRegionTemplate: TemplateRef<any>;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-sm",
   };

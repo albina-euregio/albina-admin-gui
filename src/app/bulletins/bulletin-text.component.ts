@@ -16,12 +16,12 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 export class BulletinTextComponent {
   @Input() textField: TextcatTextfield;
   @Input() rows: number;
-  @Input() showNotes: boolean;
   @Input() disabled: boolean;
   @Input() bulletin: BulletinModel;
   @Output() showDialog = new EventEmitter<TextcatLegacyIn>();
   @Output() updateBulletinOnServer = new EventEmitter();
   showTranslations = false;
+  showNotes = false;
   modalRef: BsModalRef;
 
   constructor(

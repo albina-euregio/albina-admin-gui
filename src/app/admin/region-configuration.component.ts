@@ -2,7 +2,6 @@ import { Component, Input } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { SocialmediaService } from "../providers/socialmedia-service/socialmedia.service";
 import { AlertComponent } from "ngx-bootstrap/alert";
 
 @Component({
@@ -21,7 +20,6 @@ export class RegionConfigurationComponent {
     private translateService: TranslateService,
     public configurationService: ConfigurationService,
     public authenticationService: AuthenticationService,
-    public socialmediaService: SocialmediaService,
   ) {
     this.saveConfigurationLoading = false;
   }

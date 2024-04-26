@@ -61,10 +61,10 @@
       "paste": "Colar bulletin",
       "cancel": "Cancelar copia",
       "update": "Editar",
-      "submit": "Submit",
-      "submitUpdate": "Submit update",
-      "publishChange": "Publish now (no messages)",
-      "publishUpdate": "Publish now",
+      "submit": "Enviar",
+      "submitUpdate": "Enviar actualizacion",
+      "publishChange": "Publicar ara (sense messatges)",
+      "publishUpdate": "Publicar ara",
       "caaml": "Mostrar CAAML",
       "json": "Mostrar JSON",
       "create": "Crear bulletin",
@@ -75,18 +75,18 @@
       "mediaFile": "Cargar un fichèr multimèdia"
     },
     "status": {
-      "submittedInfo": "Will be published at 5PM",
-      "resubmittedInfo": "Will be published at 8AM",
-      "publishedInfo" : "Has been published",
-      "noPublicationInfo" : "Will NOT be published automatically",
+      "submittedInfo": "Serà publicat tàs 5PM",
+      "resubmittedInfo": "Serà publicat tàs 8AM",
+      "publishedInfo" : "A estat publicat",
+      "noPublicationInfo" : "NON serà publicat automaticaments",
       "loadingPreview": "Creant ua vista prèvia de PDF...",
-      "loading": "Loading bulletin ...",
-      "publishing": "Publishing bulletin ...",
-      "submitting": "Submitting bulletin ..."
+      "loading": "En tot cargar eth bulletin ...",
+      "publishing": "Bulletin publicant-se",
+      "submitting": "Bulletin enviant-se"
     },
     "create": {
       "tooltip": {
-        "edit": "Edit micro regions",
+        "edit": "Editar micro-regions",
         "copy": "Copiar region",
         "delete": "Esborrar region",
         "createRegion": "Crear region",
@@ -106,7 +106,7 @@
           "decreasing": "Perilh de lauegi diminuís",
           "steady": "Perilh de lauegi seguís parièr",
           "increasing": "El perill d’allaus aumente",
-          "danger": "Avalanche danger"
+          "danger": "Perilh de lauegi"
         },
         "textcat": {
           "edit": "Editar",
@@ -117,35 +117,35 @@
         },
         "moveUpAvalancheProblem": "Eth problèma de lauegi se mostrarà ath bulletin",
         "moveDownAvalancheProblem": "Botjar eth problèma de lauegi cap enjós",
-        "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionUp": "Cap ensús",
+        "dangerRatingDirectionDown": "Cap enjós"
       },
       "save": "Sauvar",
       "discard": "Escartar",
       "back": "Endarrere",
       "createAggregatedRegion": "Naua region",
       "pasteAggregatedRegion": "Enganchar era region",
-      "pendingSuggestions": "Suggestions",
-      "rejectSuggestion": "Reject",
-      "acceptSuggestion": "Accept",
+      "pendingSuggestions": "Suggeriments",
+      "rejectSuggestion": "Rebutjar",
+      "acceptSuggestion": "Acceptar",
       "cancelCopyBulletin": " Cancelar",
       "createAvalancheProblem": "Nau problèma",
       "ownRegions": "Regions pròprias",
       "foreignRegions": "Regions estrangères",
       "externalRegions": "Regions extèrnes",
-      "mapSelectRegion": "Select regions on the map.",
-      "statusHeader": "Status of the bulletin",
-      "suggestions": "Suggestions",
-      "noBulletinsForSelectedDay": "No regions defined for this date.",
-      "autosave": "Saved automatically",
-      "regionEditable": "This region can be edited.", 
-      "regionNotEditable": "This region can not be edited.",
-      "regionLocked": "This region is locked.",
-      "changeDangerRatingElevation": "Extend the danger level",
-      "mapTop": "Map above",
-      "mapLeft": "Map aside",
-      "showNotes": "Show notes",
-      "hideNotes": "Hide notes",
+      "mapSelectRegion": "Seleccionar regions ath mapa",
+      "statusHeader": "Estat deth bulletin",
+      "suggestions": "Suggeriments",
+      "noBulletinsForSelectedDay": "Non s'a pas definit cap de region per aguesta data.",
+      "autosave": "Sauvat automaticaments",
+      "regionEditable": "Aguesta region pòt editar-se.", 
+      "regionNotEditable": "Aguesta region non pòt pas editar-se.",
+      "regionLocked": "Aguesta region ei bloquejada.",
+      "changeDangerRatingElevation": "Extendre eth perilh de lauegi",
+      "mapTop": "Mapa dessús",
+      "mapLeft": "Mapa en costat",
+      "showNotes": "Mostrar nòtes",
+      "hideNotes": "Amagar nòtes",
       "label": {
         "avalancheProblems": "Problèma de lauegi",
         "aspects": "Orientacions",
@@ -161,9 +161,9 @@
         "notes": "Nòtes"
       },
       "copyRegion": {
-        "label": "Copy warning region to another bulletin",
-        "select": "Paste into ...",
-        "currentBulletin": "This bulletin"
+        "label": "Copiar era region d'alèrta a un aute bulletin",
+        "select": "Enganchar a ...",
+        "currentBulletin": "Aguest bulletin"
       },
       "title": {
         "avalancheProblem": "Problèmes de lauegi",
@@ -238,8 +238,8 @@
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://models.avalanche.report:8061/en/",
-        "decisionTree" : "Decision tree",
-        "feedback" : "Feedback",
+        "decisionTree" : "Arbre de decisions",
+        "feedback" : "Comentaris",
         "save": "Sauvar",
         "discard": "Escartar"
       }
@@ -596,8 +596,8 @@
       "charts": {
         "charts": "Grafiques",
         "nan": "Sense especificacion",
-        "classify": "Classify",
-        "label": "Label",
+        "classify": "Classificar",
+        "label": "Etiqueta",
         "invert": "Invertir",
         "reset": "Restablir",
         "aspect": {
@@ -798,7 +798,7 @@
     "complex": "Complèxe"
   },
   "changeRegionDialog": {
-    "message": "Do you want to change the region?",
+    "message": "Vòs cambiar de region?",
     "accept": "Òc",
     "reject": "Non"
   },

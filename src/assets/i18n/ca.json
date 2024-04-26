@@ -61,10 +61,10 @@
       "paste": "Enganxar el butlletí",
       "cancel": "Cancel·lar la còpia",
       "update": "Editar",
-      "submit": "Submit",
-      "submitUpdate": "Submit update",
-      "publishChange": "Publish now (no messages)",
-      "publishUpdate": "Publish now",
+      "submit": "Enviar",
+      "submitUpdate": "Enviar actualizacion",
+      "publishChange": "Publicar ara (sense missatges)",
+      "publishUpdate": "Publicar ara",
       "caaml": "Mostrar CAAML",
       "json": "Mostrar JSON",
       "create": "Crear butlletí",
@@ -75,18 +75,18 @@
       "mediaFile": "Carregar un fitxer multimèdia"
     },
     "status": {
-      "submittedInfo": "Will be published at 5PM",
-      "resubmittedInfo": "Will be published at 8AM",
-      "publishedInfo" : "Has been published",
-      "noPublicationInfo" : "Will NOT be published automatically",
+      "submittedInfo": "Serà publicat a les 5PM",
+      "resubmittedInfo": "Serà publicat a les 8AM",
+      "publishedInfo" : "Ha estat publicat",
+      "noPublicationInfo" : "NO serà publicat automàticament",
       "loadingPreview": "S'està creant la previsualització de PDF ...",
-      "loading": "Loading bulletin ...",
-      "publishing": "Publishing bulletin ...",
-      "submitting": "Submitting bulletin ..."
+      "loading": "Butlletí carregant-se ...",
+      "publishing": "Butlletí publicant-se ...",
+      "submitting": "Butlletí enviant-se ..."
     },
     "create": {
       "tooltip": {
-        "edit": "Edit micro regions",
+        "edit": "Editar micro-regions",
         "copy": "Copiar regió",
         "delete": "Esborrar regió",
         "createRegion": "Crear regió",
@@ -106,7 +106,7 @@
           "decreasing": "El perill d'allaus disminueix",
           "steady": "El perill d'allaus roman estable",
           "increasing": "El perill d'allaus augmenta",
-          "danger": "Avalanche danger"
+          "danger": "Perill d'allaus"
         },
         "textcat": {
           "edit": "Editar",
@@ -117,35 +117,35 @@
         },
         "moveUpAvalancheProblem": "Moure el problema d'allaus cap amunt",
         "moveDownAvalancheProblem": "Moure el problema d'allaus cap avall",
-        "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionUp": "Cap amunt",
+        "dangerRatingDirectionDown": "Cap avall"
       },
       "save": "Desar",
       "discard": "Descartar",
       "back": "Enrera",
       "createAggregatedRegion": "Nova regió",
       "pasteAggregatedRegion": "Enganxar la regió",
-      "pendingSuggestions": "Suggestions",
-      "rejectSuggestion": "Reject",
-      "acceptSuggestion": "Accept",
+      "pendingSuggestions": "Suggeriments",
+      "rejectSuggestion": "Rebutjar",
+      "acceptSuggestion": "Acceptar",
       "cancelCopyBulletin": "Cancel·lar",
       "createAvalancheProblem": "Nou problema",
       "ownRegions": "Regions pròpies",
       "foreignRegions": "Regions alienes",
       "externalRegions": "Regions externes",
-      "mapSelectRegion": "Select regions on the map.",
-      "statusHeader": "Status of the bulletin",
-      "suggestions": "Suggestions",
-      "noBulletinsForSelectedDay": "No regions defined for this date.",
-      "autosave": "Saved automatically",
-      "regionEditable": "This region can be edited.", 
-      "regionNotEditable": "This region can not be edited.",
-      "regionLocked": "This region is locked.",
-      "changeDangerRatingElevation": "Extend the danger level",
-      "mapTop": "Map above",
-      "mapLeft": "Map aside",
-      "showNotes": "Show notes",
-      "hideNotes": "Hide notes",
+      "mapSelectRegion": "Seleccionar regions al mapa",
+      "statusHeader": "Estat del butlletí",
+      "suggestions": "Suggeriments",
+      "noBulletinsForSelectedDay": "Cap regió definida per aquesta data.",
+      "autosave": "Gaurdat automàticament",
+      "regionEditable": "Aquesta regió pot editar-se", 
+      "regionNotEditable": "Aquesta regió no pot editar-se",
+      "regionLocked": "Aquesta regió està bloquejada",
+      "changeDangerRatingElevation": "Extendre el perill d'allaus",
+      "mapTop": "Mapa a sobre",
+      "mapLeft": "Mapa al costat",
+      "showNotes": "Mostrar notes",
+      "hideNotes": "Amagar notes",
       "label": {
         "avalancheProblems": "Problema d'allaus",
         "aspects": "Orientacions",
@@ -161,9 +161,9 @@
         "notes": "Notes"
       },
       "copyRegion": {
-        "label": "Copy warning region to another bulletin",
-        "select": "Paste into ...",
-        "currentBulletin": "This bulletin"
+        "label": "Copiar regió d'alerta a un altre butlletí",
+        "select": "Enganxar a ...",
+        "currentBulletin": "Aquest butlletí"
       },
       "title": {
         "avalancheProblem": "Problemes d'allaus",
@@ -238,8 +238,8 @@
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://models.avalanche.report:8061/en/",
-        "decisionTree" : "Decision tree",
-        "feedback" : "Feedback",
+        "decisionTree" : "Arbre de decisions",
+        "feedback" : "Comentaris",
         "save": "Desar",
         "discard": "Descarta"
       }
@@ -596,8 +596,8 @@
       "charts": {
         "charts": "Gràfics",
         "nan": "Sense especificar",
-        "classify": "Classify",
-        "label": "Label",
+        "classify": "Classificar",
+        "label": "Etiqueta",
         "invert": "Invertir",
         "reset": "Restablir",
         "aspect": {
@@ -798,7 +798,7 @@
     "complex": "Complex"
   },
   "changeRegionDialog": {
-    "message": "Do you want to change the region?",
+    "message": "Vols canviar de regió?",
     "accept": "Si",
     "reject": "No"
   },

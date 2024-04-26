@@ -1,40 +1,6 @@
 <div>
   <header class="region-form__header">
     <div class="region-form__header-actions btn-group" dropdown>
-      <button
-        *ngIf="!isComparedBulletin"
-        dropdownToggle
-        class="btn btn-bare btn-sm btn-icon btn-bare--grey"
-        type="button"
-        aria-controls="dropdownMenu"
-      >
-        <i class="ph-bold ph-dots-three-outline-vertical"></i>
-      </button>
-      <ul id="dropdownMenu" *dropdownMenu class="dropdown-menu dropdown-menu-end">
-        <li *ngIf="isCompactMapLayout">
-          <button class="dropdown-item" (click)="setMapLayout(false)">
-            <i class="ph icon-md ph-square-split-horizontal"></i> {{ "bulletins.create.mapLeft" | translate }}
-          </button>
-        </li>
-        <li *ngIf="!isCompactMapLayout">
-          <button class="dropdown-item" (click)="setMapLayout(true)">
-            <i class="ph icon-md ph-square-split-vertical"></i> {{ "bulletins.create.mapTop" | translate }}
-          </button>
-        </li>
-        <li>
-          <hr class="dropdown-divider" />
-        </li>
-        <li *ngIf="showNotes">
-          <button class="dropdown-item" (click)="toggleShowNotes()">
-            <i class="ph icon-md ph-note"></i> {{ "bulletins.create.hideNotes" | translate }}
-          </button>
-        </li>
-        <li *ngIf="!showNotes">
-          <button class="dropdown-item" (click)="toggleShowNotes()">
-            <i class="ph icon-md ph-note"></i> {{ "bulletins.create.showNotes" | translate }}
-          </button>
-        </li>
-      </ul>
       <button (click)="deselectBulletin()" class="btn btn-bare btn-sm btn-icon btn-bare--grey">
         <i class="ph-bold ph-x"></i>
       </button>
@@ -286,7 +252,6 @@
             rows="1"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -298,7 +263,6 @@
             rows="3"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -309,7 +273,6 @@
             rows="9"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -370,7 +333,6 @@
             rows="9"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -427,7 +389,6 @@
             rows="5"
             [bulletin]="bulletin"
             [disabled]="disabled"
-            [showNotes]="showNotes"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -439,3 +400,32 @@
     </accordion>
   </main>
 </div>
+
+<ng-template #removeDaytimeDependencyTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.removeDaytimeDependencyDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      [disabled]="loadingModal"
+      type="button"
+      class="btn btn-primary"
+      (click)="removeDaytimeDependencyModalConfirm($event, true)"
+    >
+      {{ "daytime.earlier" | translate }}
+    </button>
+
+    <button
+      [disabled]="loadingModal"
+      type="button"
+      class="btn btn-primary"
+      (click)="removeDaytimeDependencyModalConfirm($event, false)"
+    >
+      <span>{{ "daytime.later" | translate }}</span>
+    </button>
+
+    <button type="reset" class="btn btn-bare" (click)="removeDaytimeDependencyModalDecline()">
+      <span>{{ "bulletins.create.removeDaytimeDependencyDialog.cancel" | translate }}</span>
+    </button>
+  </div>
+</ng-template>
