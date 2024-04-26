@@ -260,6 +260,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       .catch((e) => console.error(e))
       .finally(() => {
         this.loading = undefined;
+        this.observations.sort((o1, o2) =>
+          +o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1,
+        );
         this.applyLocalFilter(this.markerService.markerClassify);
       });
   }
@@ -347,7 +350,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
 
     this.observations.push(observation);
-    this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
 
     const marker = this.markerService
       .createMarker(observation)
