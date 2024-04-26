@@ -90,6 +90,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     observation: GenericObservation;
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
+    imgUrl: SafeResourceUrl;
   };
 
   public allRegions: RegionProperties[];
@@ -228,6 +229,21 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.days = days;
     }
     this.clear();
+
+    this.observationsService.getSnowLineCalculations().subscribe(
+      (data) => {
+        data.forEach((observation) => {
+          try {
+            genericObservationSchema.parse(observation);
+          } catch (err) {
+            console.warn("Observation does not match schema", observation, err);
+          }
+          this.addObservation(observation);
+        });
+      },
+      (error) => console.error(error),
+    );
+
     this.loading = onErrorResumeNext(
       this.observationsService.getObservations(),
       this.observationsService.getGenericObservations(),
@@ -371,7 +387,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   onObservationClick(observation: GenericObservation): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe };
+      this.observationPopup = { observation, table: [], iframe, imgUrl: undefined };
+    } else if (observation.$externalImg) {
+      const imgUrl = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalImg);
+      this.observationPopup = { observation, table: [], iframe: undefined, imgUrl: imgUrl };
     } else {
       const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
       const rows = toObservationTable(observation);
@@ -379,7 +398,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
-      this.observationPopup = { observation, table, iframe: undefined };
+      this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
     }
   }
 
