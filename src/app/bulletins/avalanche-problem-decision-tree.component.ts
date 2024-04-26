@@ -61,7 +61,6 @@ export class AvalancheProblemDecisionTreeComponent {
         this.resultIcons[i].style.opacity = "1";
         this.resultLabels[this.resultIconLabelMap[i]].style.opacity = "1";
         this.problem = this.resultProblemMap[i];
-        this.save();
       });
     }
     for (let i = 0; i < this.resultLabels.length; i++) {
@@ -70,7 +69,6 @@ export class AvalancheProblemDecisionTreeComponent {
         this.resultLabels[i].style.opacity = "1";
         this.resultIcons[this.resultIconLabelMap.indexOf(i.toString())].style.opacity = "1";
         this.problem = this.resultProblemMap[this.resultIconLabelMap.indexOf(i.toString())];
-        this.save();
       });
     }
   }

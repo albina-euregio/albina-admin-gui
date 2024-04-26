@@ -28,13 +28,10 @@
               ></p-multiSelect>
             </div>
             <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                pButton
-                class="p-button-text"
-                (click)="load()"
-                [icon]="loading ? 'ph ph-circle-notch' : 'ph ph-arrows-clockwise'"
-              ></button>
+              <button type="button" class="btn btn-bare" (click)="load()">
+                <i *ngIf="!loading" class="ph ph-arrows-clockwise"></i>
+                <i *ngIf="loading" class="ph ph-circle-notch"></i>
+              </button>
             </div>
             <span *ngFor="let source of allSources" class="global-bar-item">
               &mdash;

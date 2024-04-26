@@ -10,36 +10,11 @@
         <div class="global-bar-scroll">
           <!-- !global-bar-left -->
           <div class="global-bar global-bar-left">
-            <!--
-            <div *ngIf="layout !== 'map'">
-              <button
-                type="button"
-                pButton
-                (click)="layout = 'map'"
-                [icon]="'ph ph-map-trifold'"
-                [label]="translateService.instant('admin.observations.map')"
-              ></button>
-            </div>
-
-            <div *ngIf="layout !== 'table'">
-              <button
-                type="button"
-                pButton
-                (click)="layout = 'table'"
-                [icon]="'ph ph-list'"
-                [label]="translateService.instant('admin.observations.table')"
-              ></button>
-            </div>
-            -->
-
             <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                pButton
-                class="p-button-text"
-                (click)="loadObservations()"
-                [icon]="loading ? 'ph ph-circle-notch' : 'ph ph-arrows-clockwise'"
-              ></button>
+              <button type="button" class="btn btn-bare" (click)="loadObservations()">
+                <i *ngIf="!loading" class="ph ph-arrows-clockwise"></i>
+                <i *ngIf="loading" class="ph ph-circle-notch"></i>
+              </button>
             </div>
 
             <div class="global-bar-item global-bar-item-source">
@@ -101,78 +76,23 @@
           <!-- !global-bar-right -->
           <div class="global-bar global-bar-right">
             <div class="global-bar-item global-bar-item-add">
-              <button
-                type="button"
-                pButton
-                icon="ph ph-plus-circle"
-                (click)="newObservation()"
-                class="p-button-text"
-                title="New observation"
-              ></button>
-            </div>
-
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                pButton
-                icon="ph ph-download-simple"
-                (click)="exportObservations()"
-                class="p-button-text"
-                title="Export observation"
-              ></button>
-            </div>
-
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                pButton
-                class="p-button-text"
-                (click)="toggleFilters()"
-                [icon]="layoutFilters ? 'ph ph-caret-right' : 'ph ph-caret-left'"
-                title="Show/hide filter bar"
-              ></button>
-            </div>
-
-            <!-- <div class="global-bar-item">
-              <p style="margin: 0">{{ "observations.withoutCoordinates" | translate }}
-                <b>{{ observationsWithoutCoordinates }}</b></p>
-            </div> -->
-
-            <!-- <div class="global-bar-item">
-              Mehr (Dropdown)
-              <p-toggleButton onLabel="{{ 'observations.showTable' | translate }}"
-                offLabel="{{ 'observations.showTable' | translate }}" onIcon="ph ph-list" offIcon="ph ph-list"
-                [(ngModel)]="showTable"></p-toggleButton>
-
-
-              <button type="button" pButton class="ui-button-success" (click)="exportObservations()"
-                style="margin-right: 10px">
-                Export ({{observations.length}})
+              <button type="button" (click)="newObservation()" class="btn btn-bare" title="New observation">
+                <i class="ph ph-plus-circle"></i>
               </button>
             </div>
 
-            <div class="leaflet-sidebar-pane" id="layers">
-              <h1 class="leaflet-sidebar-header" style="padding-left: 20px">
-                {{ "observations.sidebar.views.title" | translate }}
-              </h1>
-              <div id="typesDiv"></div>
+            <div class="global-bar-item global-bar-item-load">
+              <button type="button" (click)="exportObservations()" class="btn btn-bare" title="Export observation">
+                <i class="ph ph-download-simple"></i>
+              </button>
             </div>
 
-            <div class="leaflet-sidebar-pane" id="sources">
-              <h1 class="leaflet-sidebar-header" style="padding-left: 20px">
-                {{ "observations.sidebar.sources.title" | translate }}
-              </h1>
-              <div id="sourcesDiv"></div>
+            <div class="global-bar-item global-bar-item-load">
+              <button type="button" class="btn btn-bare" (click)="toggleFilters()" title="Show/hide filter bar">
+                <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
+                <i *ngIf="!layoutFilters" class="ph ph-caret-left"></i>
+              </button>
             </div>
-
-            <div class="leaflet-sidebar-pane" id="legend">
-              <h1 class="leaflet-sidebar-header" style="padding-left: 20px">
-                {{ "observations.sidebar.legend.title" | translate }}
-              </h1>
-              <p>Lorem ipsum ...</p>
-            </div>
-
-            <input type="checkbox" id="global_open" /> -->
           </div>
           <!-- /global-bar-right -->
         </div>

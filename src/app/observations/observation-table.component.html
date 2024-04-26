@@ -122,8 +122,6 @@
   <p-footer>
     <button
       type="button"
-      pButton
-      [icon]="saving ? 'ph ph-circle-notch' : 'ph ph-floppy-disk'"
       [disabled]="
         saving ||
         observation?.reportDate === undefined ||
@@ -132,24 +130,25 @@
         observation?.eventDate === ''
       "
       (click)="saveObservation()"
-      label="{{ 'observations.button.save' | translate }}"
-    ></button>
+      class="btn btn-sm btn-primary"
+    >
+      <i *ngIf="saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!saving" class="ph ph-floppy-disk"></i>
+      {{ "observations.button.save" | translate }}
+    </button>
     <button
       type="button"
-      pButton
-      [icon]="saving ? 'ph ph-circle-notch' : 'ph ph-trash'"
       [disabled]="saving || observation?.id === undefined"
       (click)="deleteObservation()"
-      label="{{ 'observations.button.delete' | translate }}"
-      class="ui-button-danger"
-    ></button>
-    <button
-      type="button"
-      pButton
-      icon="ph ph-x"
-      (click)="discardObservation()"
-      label="{{ 'observations.button.discard' | translate }}"
-      class="ui-button-secondary"
-    ></button>
+      class="btn btn-sm btn-danger"
+    >
+      <i *ngIf="saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!saving" class="ph ph-trash"></i>
+      {{ "observations.button.delete" | translate }}
+    </button>
+    <button type="button" (click)="discardObservation()" class="btn btn-sm btn-secondary">
+      <i class="ph ph-x"></i>
+      {{ "observations.button.discard" | translate }}
+    </button>
   </p-footer>
 </p-dialog>
