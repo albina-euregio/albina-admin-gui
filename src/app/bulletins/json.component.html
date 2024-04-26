@@ -21,12 +21,12 @@
               [(ngModel)]="bulletins"
               style="font: courier; font-size: 11px; white-space: pre-wrap"
             ></textarea>
-            <i *ngIf="loading" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+            <i *ngIf="loading" class="ph ph-circle-notch"></i>
           </div>
         </div>
         <div class="card-footer">
           <button type="reset" class="btn btn-sm btn-primary" (click)="goBack()">
-            <i class="fa fa-arrow-left"></i>{{ "bulletins.create.back" | translate }}
+            <i class="ph ph-arrow-left"></i>{{ "bulletins.create.back" | translate }}
           </button>
         </div>
       </div>

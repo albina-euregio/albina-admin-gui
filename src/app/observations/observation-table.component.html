@@ -14,13 +14,13 @@
             <p-toggleButton
               onLabel=""
               offLabel=""
-              onIcon="fa fa-map-marker"
-              offIcon="fa fa-map-marker"
+              onIcon="ph ph-map-pin"
+              offIcon="ph ph-map-pin"
               [(ngModel)]="showObservationsWithoutCoordinates"
             ></p-toggleButton>
 
             <div class="global-bar-item">
-              <i class="pi pi-search" style="padding-right: 0.2rem"></i>
+              <i class="ph ph-magnifying-glass" style="padding-right: 0.2rem"></i>
               <input
                 pInputText
                 type="text"
@@ -51,19 +51,19 @@
     >
       <td style="padding: 1rem 0; white-space: nowrap; max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
         <span class="text-truncate d-block">
-          <i class="fa fa-calendar"></i>
+          <i class="ph ph-calendar"></i>
           {{ observation.eventDate | localizedDate: "dd.MM.yyyy HH:mm" }}
         </span>
         <span class="text-truncate d-block">
-          <i class="fa fa-user"></i>
+          <i class="ph ph-user"></i>
           {{ observation.authorName }}
         </span>
         <span class="text-truncate d-block">
-          <i class="fa fa-globe"></i>
+          <i class="ph ph-globe"></i>
           {{ observation.locationName }}
           <i
             *ngIf="observation.latitude && observation.longitude"
-            class="fa fa-map-marker"
+            class="ph ph-map-pin"
             title="{{ 'observations.hasCoordinates' | translate }}"
           ></i>
         </span>
@@ -123,7 +123,7 @@
     <button
       type="button"
       pButton
-      [icon]="saving ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
+      [icon]="saving ? 'ph ph-circle-notch' : 'ph ph-floppy-disk'"
       [disabled]="
         saving ||
         observation?.reportDate === undefined ||
@@ -137,7 +137,7 @@
     <button
       type="button"
       pButton
-      [icon]="saving ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"
+      [icon]="saving ? 'ph ph-circle-notch' : 'ph ph-trash'"
       [disabled]="saving || observation?.id === undefined"
       (click)="deleteObservation()"
       label="{{ 'observations.button.delete' | translate }}"
@@ -146,7 +146,7 @@
     <button
       type="button"
       pButton
-      icon="pi pi-times"
+      icon="ph ph-x"
       (click)="discardObservation()"
       label="{{ 'observations.button.discard' | translate }}"
       class="ui-button-secondary"

@@ -190,11 +190,11 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     };
 
     const tooltip = [
-      `<i class="fa fa-calendar"></i> ${
+      `<i class="ph ph-calendar"></i> ${
         eventDate instanceof Date ? formatDate(eventDate, "yyyy-MM-dd HH:mm", "en-US") : undefined
       }`,
-      `<i class="fa fa-asterisk"></i> ${region || undefined}`,
-      `<i class="fa fa-globe"></i> ${locationName || undefined}`,
+      `<i class="ph ph-asterisk"></i> ${region || undefined}`,
+      `<i class="ph ph-globe"></i> ${locationName || undefined}`,
       this.allSources.find((s) => s.id === $source)?.name,
       `<div hidden>${region}</div>`,
     ]

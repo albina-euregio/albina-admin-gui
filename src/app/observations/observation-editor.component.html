@@ -1,6 +1,6 @@
 <div *ngIf="observation" class="p-fluid p-formgrid p-grid">
   <div class="p-field p-col-12 p-md-6">
-    <label for="eventType"><i class="fa fa-square"></i> {{ "observations.eventType" | translate }}</label>
+    <label for="eventType"><i class="ph ph-square"></i> {{ "observations.eventType" | translate }}</label>
     <p-dropdown
       inputId="eventType"
       [options]="eventTypes"
@@ -10,7 +10,7 @@
     ></p-dropdown>
   </div>
   <div class="p-field p-col-12 p-md-6">
-    <label for="eventDate"><i class="fa fa-calendar"></i> {{ "observations.eventDate" | translate }}</label>
+    <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" pInputText>
       <input
         type="date"
@@ -31,7 +31,7 @@
   </div>
   <div class="flex-break"></div>
   <div class="p-field p-col-12">
-    <label for="locationName"><i class="fa fa-globe"></i> {{ "observations.locationName" | translate }}</label>
+    <label for="locationName"><i class="ph ph-globe"></i> {{ "observations.locationName" | translate }}</label>
     <p-autoComplete
       id="locationName"
       required
@@ -45,7 +45,7 @@
   </div>
   <div class="flex-break"></div>
   <div class="p-field p-col-12 p-md-4">
-    <label for="latitude"><i class="fa fa-map-marker"></i> {{ "observations.latitude" | translate }}</label>
+    <label for="latitude"><i class="ph ph-map-pin"></i> {{ "observations.latitude" | translate }}</label>
     <input
       id="latitude"
       (change)="setLatitude($event)"
@@ -56,7 +56,7 @@
     />
   </div>
   <div class="p-field p-col-12 p-md-4">
-    <label for="longitude"><i class="fa fa-map-marker"></i> {{ "observations.longitude" | translate }}</label>
+    <label for="longitude"><i class="ph ph-map-pin"></i> {{ "observations.longitude" | translate }}</label>
     <input
       id="longitude"
       (change)="setLongitude($event)"
@@ -68,22 +68,22 @@
   </div>
   <div class="p-field p-col-1 p-col-sm-3 copy-icon-wrapper">
     <button class="p-element p-button p-component" type="button" (click)="copyLatLng()">
-      <span class="p-button-label">
-        <li class="fa fa-copy copy-icon"></li>
-      </span>
+      <i class="ph ph-copy"></i>
     </button>
   </div>
   <div class="p-field p-col-12 p-col-md-3">
-    <label for="elevation"><i class="fa fa-arrows-v"></i> {{ "observations.elevation" | translate }}</label>
+    <label for="elevation"
+      ><i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevation" | translate }}</label
+    >
     <input id="elevation" [(ngModel)]="observation.elevation" type="number" step="1" pInputText />
   </div>
   <div class="flex-break"></div>
   <div class="p-field p-col-12 p-md-6">
-    <label for="authorName"><i class="fa fa-user"></i> {{ "observations.authorName" | translate }}</label>
+    <label for="authorName"><i class="ph ph-user"></i> {{ "observations.authorName" | translate }}</label>
     <input id="authorName" required [(ngModel)]="observation.authorName" type="text" pInputText />
   </div>
   <div class="p-field p-col-12 p-md-6">
-    <label for="reportDate"><i class="fa fa-pencil"></i> {{ "observations.reportDate" | translate }}</label>
+    <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" pInputText>
       <input
         type="date"
@@ -103,7 +103,7 @@
   </div>
   <div class="flex-break"></div>
   <div class="p-field p-col-12">
-    <label for="content"><i class="fa fa-comment"></i> {{ "observations.content" | translate }}</label>
+    <label for="content"><i class="ph ph-chat"></i> {{ "observations.content" | translate }}</label>
     <textarea
       id="content"
       required

@@ -16,7 +16,7 @@
                 type="button"
                 pButton
                 (click)="layout = 'map'"
-                [icon]="'pi pi-map'"
+                [icon]="'ph ph-map-trifold'"
                 [label]="translateService.instant('admin.observations.map')"
               ></button>
             </div>
@@ -26,7 +26,7 @@
                 type="button"
                 pButton
                 (click)="layout = 'table'"
-                [icon]="'pi pi-list'"
+                [icon]="'ph ph-list'"
                 [label]="translateService.instant('admin.observations.table')"
               ></button>
             </div>
@@ -38,7 +38,7 @@
                 pButton
                 class="p-button-text"
                 (click)="loadObservations()"
-                [icon]="loading ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'"
+                [icon]="loading ? 'ph ph-circle-notch' : 'ph ph-arrows-clockwise'"
               ></button>
             </div>
 
@@ -104,7 +104,7 @@
               <button
                 type="button"
                 pButton
-                icon="pi pi-plus-circle"
+                icon="ph ph-plus-circle"
                 (click)="newObservation()"
                 class="p-button-text"
                 title="New observation"
@@ -115,7 +115,7 @@
               <button
                 type="button"
                 pButton
-                icon="pi pi-download"
+                icon="ph ph-download-simple"
                 (click)="exportObservations()"
                 class="p-button-text"
                 title="Export observation"
@@ -128,7 +128,7 @@
                 pButton
                 class="p-button-text"
                 (click)="toggleFilters()"
-                [icon]="layoutFilters ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
+                [icon]="layoutFilters ? 'ph ph-caret-right' : 'ph ph-caret-left'"
                 title="Show/hide filter bar"
               ></button>
             </div>
@@ -141,7 +141,7 @@
             <!-- <div class="global-bar-item">
               Mehr (Dropdown)
               <p-toggleButton onLabel="{{ 'observations.showTable' | translate }}"
-                offLabel="{{ 'observations.showTable' | translate }}" onIcon="fa fa-table" offIcon="fa fa-table"
+                offLabel="{{ 'observations.showTable' | translate }}" onIcon="ph ph-list" offIcon="ph ph-list"
                 [(ngModel)]="showTable"></p-toggleButton>
 
 
@@ -274,19 +274,19 @@
     <!-- !layout-switch -->
     <div class="layout-switch">
       <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
-        <span class="button-icon pi pi-map"></span>
+        <span class="button-icon ph ph-map"></span>
         <span class="button-text">
           {{ "admin.observations.map" | translate }}
         </span>
       </div>
       <div *ngIf="layout !== 'table'" (click)="layout = 'table'" class="layout-switch-table obs-button">
-        <span class="button-icon pi pi-list"></span>
+        <span class="button-icon ph ph-list"></span>
         <span class="button-text">
           {{ "admin.observations.table" | translate }}
         </span>
       </div>
       <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
-        <span class="button-icon pi pi-chart-bar"></span>
+        <span class="button-icon ph ph-chart-line"></span>
         <span class="button-text">
           {{ "admin.observations.charts.charts" | translate }}
         </span>
@@ -328,7 +328,7 @@
       <td>
         <span *ngIf="row.date !== undefined">{{ row.date | localizedDate: "full" }}</span>
         <span *ngIf="row.number !== undefined">{{ row.number | number }}</span>
-        <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'pi pi-check' : 'pi pi-times'"></i></span>
+        <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'ph ph-check' : 'ph ph-x'"></i></span>
         <span *ngIf="row.url !== undefined"
           ><a href="{{ row.url }}" rel="noopener" target="_blank">{{ row.url }}</a></span
         >
