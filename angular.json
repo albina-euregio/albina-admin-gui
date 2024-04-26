@@ -22,9 +22,7 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.json",
             "polyfills": "zone.js",
-            "assets": [
-              "src/assets"
-            ],
+            "assets": ["src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/primeng/resources/primeng.min.css",
@@ -33,7 +31,6 @@
               "node_modules/primeflex/primeflex.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/scss/style.scss",
-              "src/assets/css/font-awesome.min.css",
               "src/assets/css/observations.min.css",
               "node_modules/leaflet/dist/leaflet.css"
             ],
@@ -130,21 +127,15 @@
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeng/resources/themes/nova/theme.css",
               "node_modules/primeicons/primeicons.css",
-              "src/scss/style.scss",
-              "src/assets/css/font-awesome.min.css"
+              "src/scss/style.scss"
             ],
-            "assets": [
-              "src/assets"
-            ]
+            "assets": ["src/assets"]
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -167,8 +158,6 @@
   },
   "cli": {
     "analytics": false,
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   }
 }
