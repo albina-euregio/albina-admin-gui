@@ -11,7 +11,7 @@ export async function getAwsWeatherStations(): Promise<GenericObservation[]> {
   return geojson.features.map(
     (feature): GenericObservation => ({
       $data: feature.properties,
-      $externalURL: `https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/${feature.properties.plot}.png`,
+      $externalImg: `https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/${feature.properties.plot}.png`,
       $source: ObservationSource.AvalancheWarningService,
       $type: ObservationType.TimeSeries,
       aspect: undefined,
