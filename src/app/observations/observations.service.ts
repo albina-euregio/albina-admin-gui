@@ -3,16 +3,10 @@ import { HttpClient } from "@angular/common/http";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { convertObservationToGeneric, Observation } from "./models/observation.model";
-import {
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationType,
-} from "./models/generic-observation.model";
+import { GenericObservation } from "./models/generic-observation.model";
 import { Observable } from "rxjs";
-import { catchError, map, mergeAll } from "rxjs/operators";
+import { map, mergeAll } from "rxjs/operators";
 import { ObservationFilterService } from "./observation-filter.service";
-import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 
 @Injectable()
 export class AlbinaObservationsService {
@@ -52,68 +46,6 @@ export class AlbinaObservationsService {
       "&endDate=" +
       this.filter.endDateString;
     return this.getGenericObservations0(url);
-  }
-
-  /**
-   * Calculated snow fall levels from weather stations
-   * https://gitlab.com/lwd.met/lwd-internal-projects/snow-fall-level-calculator
-   */
-  getSnowLineCalculations(): Observable<GenericObservation[]> {
-    var date = new Date(this.filter.endDate);
-    while (
-      !imageExists(
-        this.constantsService.observationApi["SnowLine"].replace(
-          "{{date}}",
-          this.constantsService.getISODateString(date),
-        ),
-      )
-    ) {
-      date.setDate(date.getDate() - 1);
-      if (date < this.filter.startDate) {
-        return new Observable<GenericObservation[]>();
-      }
-    }
-    const dataUrl = this.constantsService.observationApi["SnowLine"].replace(
-      "{{date}}",
-      this.constantsService.getISODateString(date),
-    );
-    const plotUrl = this.constantsService.observationWeb["SnowLine"];
-    return this.http.get<any>(dataUrl).pipe(
-      map((snowLines) => {
-        const result: GenericObservation[] = [];
-        snowLines.features.forEach((snowLine) => {
-          result.push(toPoint(snowLine, this.constantsService.getISODateString(date), plotUrl));
-        });
-        return result;
-      }),
-      catchError((e) => {
-        console.error("Failed to read calculated snow lines from " + dataUrl, e);
-        return [];
-      }),
-    );
-
-    function toPoint(snowLine, date, url): GenericObservation {
-      return {
-        $type: ObservationType.SimpleObservation,
-        $source: ObservationSource.SnowLine,
-        $id: snowLine.properties.station_number,
-        eventDate: new Date(date),
-        reportDate: new Date(date),
-        locationName: snowLine.properties.station_name,
-        $externalImg: url.replace("{{date}}", date).replace("{{plot}}", snowLine.properties.plot_name),
-        latitude: snowLine.geometry.coordinates[1],
-        longitude: snowLine.geometry.coordinates[0],
-        elevation: snowLine.properties.snowfall_limit,
-        importantObservations: [ImportantObservation.SnowLine],
-      } as GenericObservation;
-    }
-
-    function imageExists(image_url) {
-      var http = new XMLHttpRequest();
-      http.open("HEAD", image_url, false);
-      http.send();
-      return http.status != 404;
-    }
   }
 
   getObservers(): Observable<GenericObservation> {

@@ -230,20 +230,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     this.clear();
 
-    this.observationsService.getSnowLineCalculations().subscribe(
-      (data) => {
-        data.forEach((observation) => {
-          try {
-            genericObservationSchema.parse(observation);
-          } catch (err) {
-            console.warn("Observation does not match schema", observation, err);
-          }
-          this.addObservation(observation);
-        });
-      },
-      (error) => console.error(error),
-    );
-
     this.loading = onErrorResumeNext(
       this.observationsService.getObservations(),
       this.observationsService.getGenericObservations(),
