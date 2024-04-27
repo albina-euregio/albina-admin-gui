@@ -2,7 +2,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData, DatePipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatDialogModule } from "@angular/material/dialog";
 
 import { AppComponent } from "./app.component";
 
@@ -96,7 +95,6 @@ registerLocaleData(localeOc, "oc");
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatDialogModule,
     NgxSliderModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
