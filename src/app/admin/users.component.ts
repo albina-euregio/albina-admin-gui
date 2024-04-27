@@ -7,7 +7,6 @@ import { UserService } from "../providers/user-service/user.service";
 import { TemplateRef } from "@angular/core";
 import { UpdateUserComponent } from "./update-user.component";
 
-import { MatDialog, MatDialogRef, MatDialogConfig } from "@angular/material/dialog";
 import { ChangePasswordComponent } from "./change-password.component";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { UserModel } from "../models/user.model";
@@ -33,7 +32,6 @@ export class UsersComponent implements AfterContentInit {
   constructor(
     public authenticationService: AuthenticationService,
     private translateService: TranslateService,
-    private dialog: MatDialog,
     private userService: UserService,
     private modalService: BsModalService,
     public configurationService: ConfigurationService,
@@ -62,27 +60,23 @@ export class UsersComponent implements AfterContentInit {
     this.showUpdateDialog(false);
   }
 
-  showUpdateDialog(update, user?) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = "calc(100% - 10px)";
-    dialogConfig.maxHeight = "100%";
-    dialogConfig.maxWidth = "100%";
-    if (update) {
-      dialogConfig.data = {
-        isAdmin: true,
-        user: user,
-        update: true,
-      };
-    } else {
-      dialogConfig.data = {
-        isAdmin: true,
-        update: false,
-      };
-    }
-
-    const dialogRef = this.dialog.open(UpdateUserComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((data) => {
+  showUpdateDialog(update: boolean, user?: UserModel) {
+    const dialogRef = this.modalService.show(UpdateUserComponent, {
+      class: "modal-xl",
+      initialState: update
+        ? {
+            isAdmin: true,
+            user: user,
+            update: true,
+          }
+        : {
+            isAdmin: true,
+            update: false,
+          },
+    });
+    dialogRef.onHide.subscribe(() => {
       this.updateUsers();
+      const data = dialogRef.content.result;
       if (data !== undefined && data !== "") {
         window.scrollTo(0, 0);
         this.alerts.push({
