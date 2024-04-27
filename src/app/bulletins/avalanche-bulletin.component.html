@@ -401,6 +401,16 @@
   </main>
 </div>
 
+<ng-template #catalogOfPhrasesTemplate>
+  <iframe
+    (load)="initCatalogOfPhrases($event)"
+    (message)="getText($event)"
+    [src]="pmUrl"
+    width="100%"
+    height="100%"
+  ></iframe>
+</ng-template>
+
 <ng-template #removeDaytimeDependencyTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.create.removeDaytimeDependencyDialog.message" | translate }}</p>

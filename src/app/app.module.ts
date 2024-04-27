@@ -8,8 +8,6 @@ import { AppComponent } from "./app.component";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
-
 // Routing Module
 import { AppRoutingModule } from "./app.routing";
 
@@ -122,7 +120,6 @@ registerLocaleData(localeOc, "oc");
     ModalPublicationStatusComponent,
     ModalPublishAllComponent,
     ModalMediaFileComponent,
-    CatalogOfPhrasesComponent,
     UpdateUserComponent,
     ChangePasswordComponent,
   ],
