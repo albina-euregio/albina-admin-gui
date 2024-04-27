@@ -9,6 +9,7 @@ import { UpdateUserComponent } from "app/admin/update-user.component";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
 import { UserModel } from "app/models/user.model";
+import { BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   templateUrl: "settings.component.html",
@@ -25,6 +26,7 @@ export class SettingsComponent {
     public authenticationService: AuthenticationService,
     private userService: UserService,
     private dialog: MatDialog,
+    private modalService: BsModalService,
     private settingsService: SettingsService,
     private constantsService: ConstantsService,
   ) {}
@@ -66,18 +68,15 @@ export class SettingsComponent {
   }
 
   showChangePasswordDialog() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = "calc(100% - 10px)";
-    dialogConfig.maxHeight = "100%";
-    dialogConfig.maxWidth = "100%";
-    dialogConfig.data = {
-      isAdmin: false,
-    };
-
-    const dialogRef = this.dialog.open(ChangePasswordComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((data) => {
-      window.scrollTo(0, 0);
-      if (data !== undefined && data !== "") {
+    const dialogRef = this.modalService.show(ChangePasswordComponent, {
+      initialState: {
+        isAdmin: false,
+      },
+    });
+    dialogRef.onHide.subscribe(() => {
+      const data = dialogRef.content.result;
+      if (data) {
+        window.scrollTo(0, 0);
         this.alerts.push({
           type: data.type,
           msg: data.msg,

@@ -10,6 +10,7 @@ import { UpdateUserComponent } from "./update-user.component";
 import { MatDialog, MatDialogRef, MatDialogConfig } from "@angular/material/dialog";
 import { ChangePasswordComponent } from "./change-password.component";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { UserModel } from "../models/user.model";
 
 @Component({
   templateUrl: "users.component.html",
@@ -97,19 +98,16 @@ export class UsersComponent implements AfterContentInit {
     this.showUpdateDialog(true, user);
   }
 
-  showChangePasswordDialog(user) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = "calc(100% - 10px)";
-    dialogConfig.maxHeight = "100%";
-    dialogConfig.maxWidth = "100%";
-    dialogConfig.data = {
-      isAdmin: true,
-      userId: user.email,
-    };
-
-    const dialogRef = this.dialog.open(ChangePasswordComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data !== undefined && data !== "") {
+  showChangePasswordDialog(user: UserModel) {
+    const dialogRef = this.modalService.show(ChangePasswordComponent, {
+      initialState: {
+        isAdmin: true,
+        userId: user.email,
+      },
+    });
+    dialogRef.onHide.subscribe(() => {
+      const data = dialogRef.content.result;
+      if (data) {
         window.scrollTo(0, 0);
         this.alerts.push({
           type: data.type,
