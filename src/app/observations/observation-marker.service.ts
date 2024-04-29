@@ -232,20 +232,51 @@ export class ObservationMarkerService {
   toMarkerRadius(observation: GenericObservation): number {
     if (observation?.$type === ObservationType.Webcam) {
       return 20;
-    } else if (observation?.$type === ObservationType.TimeSeries) {
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.Observer
+    ) {
       return 20;
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return 30;
     }
     return 40;
+  }
+
+  getBorderColor(observation: GenericObservation) {
+    if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return "#555555";
+    } else if (observation?.$type === ObservationType.Webcam) {
+      return "#000";
+    } else if (observation?.$source === ObservationSource.SnowLine) {
+      return "#777777";
+    } else {
+      return "#000";
+    }
+  }
+
+  getLabelFontSize(observation: GenericObservation) {
+    if (observation?.$type === ObservationType.Webcam) {
+      return "6";
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return "10";
+    } else {
+      return "12";
+    }
   }
 
   toMarkerColor(observation: GenericObservation) {
     if (observation?.$type === ObservationType.Webcam) {
       return "black";
-    } else if (
-      observation?.$type === ObservationType.TimeSeries &&
-      observation?.$source === ObservationSource.AvalancheWarningService
-    ) {
-      return "#19abff";
     } else if (
       observation?.$type === ObservationType.TimeSeries &&
       observation?.$source === ObservationSource.Observer
@@ -359,6 +390,14 @@ export class ObservationMarkerService {
   }
 
   private getLabel(observation: GenericObservation<any>) {
+    // TODO get correct label for weather stations
+    if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return observation.$data.OFT ? Math.round(observation.$data.OFT * 10) / 10 : "";
+    }
+
     if (!this.markerLabel) {
       return "";
     }
@@ -425,10 +464,12 @@ export class ObservationMarkerService {
     }
 
     const label = this.getLabel(observation);
+    const borderColor = this.getBorderColor(observation);
     const labelFont =
       this.markerLabel === LocalFilterTypes.ImportantObservation
         ? "snowsymbolsiacs"
         : `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`;
+    const labelFontSize = this.getLabelFontSize(observation);
 
     const aspectColor = "#898989";
     const aspects = {
@@ -463,8 +504,8 @@ export class ObservationMarkerService {
                 <circle id="Oval" cx="11" cy="11" r="11"></circle>
             </g>
 
-            <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="#000000">
-                <text x="11" y="15" text-anchor="middle" fill="${textColor}" font-size="12" font-weight="lighter" font-family="${labelFont}">${label}</text>
+            <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="${borderColor}">
+                <text x="11" y="15" text-anchor="middle" fill="${textColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
 
                 <g id="line-bold" stroke-width="2">
                     <circle id="Oval" cx="11" cy="11" r="11"></circle>

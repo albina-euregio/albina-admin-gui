@@ -159,9 +159,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
     this.observationsAsOverlay = [];
-    layerControl.addOverlay(this.loadObservers(), "Beobachter");
-    layerControl.addOverlay(this.loadWeatherStations(), "Wetterstationen");
-    layerControl.addOverlay(this.loadWebcams(), "Webcams");
+    layerControl.addOverlay(this.loadObservers(), this.translateService.instant("observations.layers.observers"));
+    layerControl.addOverlay(
+      this.loadWeatherStations(),
+      this.translateService.instant("observations.layers.weatherStations"),
+    );
+    layerControl.addOverlay(this.loadWebcams(), this.translateService.instant("observations.layers.webcams"));
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
       this.applyLocalFilter(this.markerService.markerClassify);
@@ -313,6 +316,23 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     });
     this.buildChartsData(classifyType);
+
+    // redraw weatherstation markers (use filter, color and label for elevation)
+    this.mapService.layers["weather-stations"].clearLayers();
+    this.observationsService.getWeatherStations().forEach((observation) => {
+      if (
+        this.filter.isIncluded(
+          LocalFilterTypes.Elevation,
+          this.filter.filterSelection[LocalFilterTypes.Elevation].toValue(observation),
+        )
+      ) {
+        this.observationsAsOverlay.push(observation);
+        this.mapService.addMarker(
+          this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
+          "weather-stations",
+        );
+      }
+    });
   }
 
   buildChartsData(classifyType: LocalFilterTypes) {
@@ -346,7 +366,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadObservers(layer: keyof typeof this.mapService.layers = "observers"): LayerGroup<any> {
+  private loadObservers(): LayerGroup<any> {
     return this.loadGenericObservations0(this.observationsService.getObservers(), "observers");
   }
 

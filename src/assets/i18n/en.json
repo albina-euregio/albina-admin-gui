@@ -865,6 +865,11 @@
     "avalancheWidth": "Avalanche width",
     "search": "Search",
     "count": "# observations:",
+    "layers": {
+      "observers": "Observers",
+      "weatherStations": "Weather stations",
+      "webcams": "Webcams"
+    },
     "button": {
       "add": "Add observation",
       "save": "Save observation",
