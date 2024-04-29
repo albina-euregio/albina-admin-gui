@@ -6,6 +6,7 @@ import {
   OnDestroy,
   HostListener,
   AfterContentInit,
+  TemplateRef,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
@@ -16,9 +17,7 @@ import { RegionsService, RegionProperties } from "app/providers/regions-service/
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
-import { SharedModule } from "primeng/api";
-import { DialogModule } from "primeng/dialog";
-import { ButtonModule } from "primeng/button";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { FormsModule } from "@angular/forms";
 import type { Observable } from "rxjs";
 import {
@@ -40,22 +39,12 @@ export interface MultiselectDropdownData {
 
 @Component({
   standalone: true,
-  imports: [
-    ButtonModule,
-    CommonModule,
-    DialogModule,
-    FormsModule,
-    KeyValuePipe,
-    SharedModule,
-    KeyValuePipe,
-    TranslateModule,
-  ],
+  imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   layout = "map" as const;
-  observationPopupVisible = false;
   selectedModelPoint: GenericObservation;
   selectedModelType: ForecastSource;
   selectedCity: string;
@@ -86,6 +75,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   @ViewChild("observationsMap") observationsMap: ElementRef<HTMLDivElement>;
   @ViewChild("qfaSelect") qfaSelect: ElementRef<HTMLSelectElement>;
+  @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -98,6 +88,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     private qfaService: QfaService,
     public paramService: ParamService,
     private translateService: TranslateService,
+    private modalService: BsModalService,
   ) {}
 
   files = {};
@@ -185,7 +176,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       this.selectedModelPoint = $source === "qfa" ? undefined : point;
       this.selectedModelType = $source as ForecastSource;
       this.observationConfiguration = (point as AlpsolutObservation).$data?.configuration;
-      this.observationPopupVisible = true;
+      this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
     };
 
     const tooltip = [
@@ -278,7 +269,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   get observationPopupIframe() {
-    if (this.observationPopupVisible && /widget.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
+    if (/widget.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
       return this.selectedModelPoint?.$externalURL;
     }
   }
@@ -374,7 +365,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   @HostListener("document:keydown", ["$event"])
   handleKeyBoardEvent(event: KeyboardEvent) {
-    if (!this.observationPopupVisible) {
+    if (!this.selectedModelPoint) {
       return;
     }
 
