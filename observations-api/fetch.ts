@@ -6,6 +6,7 @@ import { fetchLawisProfiles } from "./fetch_lawis_profile";
 import { fetchLolaKronos } from "./fetch_lola_kronos";
 import { fetchLwdKip } from "./fetch_lwdkip";
 import { fetchWikiSnow } from "./fetch_wikisnow";
+import { fetchSnowLineCalculations } from "./fetch_snow_line";
 import { augmentElevation } from "./elevation";
 
 export async function fetchAndInsert(startDate: Date, endDate: Date) {
@@ -32,4 +33,5 @@ async function* fetchAll(
   yield* fetchLolaKronos(startDate, endDate);
   yield* fetchLwdKip(startDate, endDate);
   yield* fetchWikiSnow();
+  yield* fetchSnowLineCalculations(startDate, endDate);
 }

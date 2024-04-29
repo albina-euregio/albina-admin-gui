@@ -90,6 +90,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     observation: GenericObservation;
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
+    imgUrl: SafeResourceUrl;
   };
 
   public allRegions: RegionProperties[];
@@ -228,6 +229,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.days = days;
     }
     this.clear();
+
     this.loading = onErrorResumeNext(
       this.observationsService.getObservations(),
       this.observationsService.getGenericObservations(),
@@ -244,6 +246,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       .catch((e) => console.error(e))
       .finally(() => {
         this.loading = undefined;
+        this.observations.sort((o1, o2) =>
+          +o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1,
+        );
         this.applyLocalFilter(this.markerService.markerClassify);
       });
   }
@@ -331,7 +336,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
 
     this.observations.push(observation);
-    this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
 
     const marker = this.markerService
       .createMarker(observation)
@@ -371,7 +375,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   onObservationClick(observation: GenericObservation): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe };
+      this.observationPopup = { observation, table: [], iframe, imgUrl: undefined };
+    } else if (observation.$externalImg) {
+      const imgUrl = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalImg);
+      this.observationPopup = { observation, table: [], iframe: undefined, imgUrl: imgUrl };
     } else {
       const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
       const rows = toObservationTable(observation);
@@ -379,7 +386,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
-      this.observationPopup = { observation, table, iframe: undefined };
+      this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
     }
   }
 
@@ -399,14 +406,22 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const observations = [...this.observations, ...this.observationsAsOverlay].filter(
       (o) => o.$source === observation.$source && o.$type === observation.$type,
     );
-    const index = observations.indexOf(observation);
+    var index = observations.indexOf(observation);
     if (index < 0) {
       return;
     }
     if (event.key === "ArrowRight") {
-      observation = observations[index + 1];
+      index += 1;
+      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+        index += 1;
+      }
+      observation = observations[index];
     } else if (event.key === "ArrowLeft") {
-      observation = observations[index - 1];
+      index -= 1;
+      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+        index -= 1;
+      }
+      observation = observations[index];
     }
     if (observation) {
       this.onObservationClick(observation);

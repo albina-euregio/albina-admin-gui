@@ -8,6 +8,7 @@ import {
   ImportantObservation,
   LocalFilterTypes,
   ObservationFilterType,
+  ObservationSource,
   ObservationType,
   Stability,
 } from "./models/generic-observation.model";
@@ -203,6 +204,7 @@ export class ObservationFilterService {
       this.inObservationSources(observation) &&
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
+      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
       Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, this.filterSelection[t].toValue(observation)))
     );
   }
@@ -369,6 +371,17 @@ export class ObservationFilterService {
 
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
     return this.startDate <= eventDate && eventDate <= this.endDate;
+  }
+
+  isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
+    const selectedData: string[] = this.filterSelection[LocalFilterTypes.Days]["selected"]
+      .filter((element) => element !== "nan")
+      .sort();
+    if (selectedData.length < 1) {
+      return eventDate.getDate() === this.endDate.getDate();
+    } else {
+      return selectedData.indexOf(this.constantsService.getISODateString(eventDate)) === selectedData.length - 1;
+    }
   }
 
   inMapBounds({ latitude, longitude }: GenericObservation): boolean {
