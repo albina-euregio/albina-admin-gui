@@ -42,7 +42,7 @@ import { BarChartComponent } from "./charts/bar-chart.component";
 import { RoseChartComponent } from "./charts/rose-chart.component";
 import { MenubarModule } from "primeng/menubar";
 import { InputTextModule } from "primeng/inputtext";
-import { CalendarModule } from "primeng/calendar";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
@@ -61,7 +61,7 @@ export interface MultiselectDropdownData {
   imports: [
     BarChartComponent,
     ButtonModule,
-    CalendarModule,
+    BsDatepickerModule,
     CommonModule,
     DialogModule,
     FormsModule,
@@ -145,8 +145,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           key !== ObservationSource.Observer,
       )
       .map((key) => ({ id: key, name: key }));
-
-    this.filter.days = 1;
   }
 
   ngAfterViewInit() {

@@ -74,15 +74,14 @@
             </div>
 
             <div class="global-bar-item global-bar-item-calendar">
-              <p-calendar
+              <input
+                class="form-control d-inline-block"
+                #drp="bsDaterangepicker"
+                bsDaterangepicker
                 [(ngModel)]="filter.dateRange"
-                selectionMode="range"
-                (onInput)="setDate()"
-                (onSelect)="setDate()"
-                [showIcon]="false"
-                dateFormat="dd.mm.yy"
-              >
-              </p-calendar>
+                (ngModelChange)="setDate()"
+                [bsConfig]="{ dateInputFormat: 'DD.MM.YYYY' }"
+              />
               <div class="obs-switch">
                 <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 1 })">
                   <span class="switch-text">1d</span>
