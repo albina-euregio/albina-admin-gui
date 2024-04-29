@@ -63,10 +63,10 @@ export class BaseMapService extends MapService {
     return this.map;
   }
 
-  clickRegion(regionIds: Array<string>) {
+  clickRegion(regionIds: Record<string, boolean>) {
     //console.log("clickRegion", this.overlayMaps.regions);
     for (const entry of this.overlayMaps.regions.getLayers()) {
-      entry.feature.properties.selected = regionIds.includes(entry.feature.properties.id);
+      entry.feature.properties.selected = regionIds[entry.feature.properties.id];
     }
     this.updateEditSelection();
   }

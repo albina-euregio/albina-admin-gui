@@ -43,13 +43,13 @@ import { RoseChartComponent } from "./charts/rose-chart.component";
 import { MenubarModule } from "primeng/menubar";
 import { InputTextModule } from "primeng/inputtext";
 import { CalendarModule } from "primeng/calendar";
-import { MultiSelectChangeEvent, MultiSelectModule } from "primeng/multiselect";
 import { FormsModule } from "@angular/forms";
 import { ToggleButtonModule } from "primeng/togglebutton";
 import { ButtonModule } from "primeng/button";
 import { AlbinaObservationsService } from "./observations.service";
 import { Control, LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
+import "bootstrap";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -67,7 +67,6 @@ export interface MultiselectDropdownData {
     FormsModule,
     InputTextModule,
     MenubarModule,
-    MultiSelectModule,
     ObservationTableComponent,
     PipeModule,
     RoseChartComponent,
@@ -163,7 +162,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     layerControl.addOverlay(this.loadWeatherStations(), "Wetterstationen");
     layerControl.addOverlay(this.loadWebcams(), "Webcams");
     map.on("click", () => {
-      this.filter.regions = this.mapService.getSelectedRegions();
+      this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyLocalFilter(this.markerService.markerClassify);
     });
 
@@ -178,12 +177,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.mapService.removeMaps();
   }
 
-  onRegionsDropdownSelect(event: MultiSelectChangeEvent) {
-    this.mapService.clickRegion(event.value);
+  onRegionsDropdownSelect() {
+    this.mapService.clickRegion(this.filter.regions);
     this.applyLocalFilter(this.markerService.markerClassify);
   }
 
-  onSourcesDropdownSelect(event: MultiSelectChangeEvent) {
+  onSourcesDropdownSelect() {
     this.applyLocalFilter(this.markerService.markerClassify);
   }
 
