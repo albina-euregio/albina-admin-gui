@@ -6,6 +6,7 @@ import {
   ViewChild,
   ElementRef,
   HostListener,
+  TemplateRef,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -26,8 +27,6 @@ import {
   genericObservationSchema,
 } from "./models/generic-observation.model";
 
-import { SharedModule } from "primeng/api";
-
 import { saveAs } from "file-saver";
 
 import { ObservationTableComponent } from "./observation-table.component";
@@ -37,15 +36,11 @@ import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
-import { DialogModule } from "primeng/dialog";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { BarChartComponent } from "./charts/bar-chart.component";
 import { RoseChartComponent } from "./charts/rose-chart.component";
-import { MenubarModule } from "primeng/menubar";
-import { InputTextModule } from "primeng/inputtext";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
-import { ToggleButtonModule } from "primeng/togglebutton";
-import { ButtonModule } from "primeng/button";
 import { AlbinaObservationsService } from "./observations.service";
 import { Control, LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
@@ -60,18 +55,12 @@ export interface MultiselectDropdownData {
   standalone: true,
   imports: [
     BarChartComponent,
-    ButtonModule,
     BsDatepickerModule,
     CommonModule,
-    DialogModule,
     FormsModule,
-    InputTextModule,
-    MenubarModule,
     ObservationTableComponent,
     PipeModule,
     RoseChartComponent,
-    SharedModule,
-    ToggleButtonModule,
     TranslateModule,
   ],
   templateUrl: "observations.component.html",
@@ -116,6 +105,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild("observationTable")
   observationTableComponent: ObservationTableComponent;
+  @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
 
   public get LocalFilterTypes(): typeof LocalFilterTypes {
     return LocalFilterTypes;
@@ -129,6 +119,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     public mapService: BaseMapService,
+    private modalService: BsModalService,
   ) {}
 
   async ngAfterContentInit() {
@@ -263,17 +254,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     saveAs(blob, "observations.geojson");
   }
 
-  get observationPopupVisible(): boolean {
-    return this.observationPopup !== undefined;
-  }
-
-  set observationPopupVisible(value: boolean) {
-    if (value) {
-      throw Error(String(value));
-    }
-    this.observationPopup = undefined;
-  }
-
   toggleFilter(data: GenericFilterToggleData = {} as GenericFilterToggleData) {
     if (data?.type && data.data.markerClassify) {
       if (data?.type !== this.markerService.markerClassify) {
@@ -385,6 +365,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       }));
       this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
     }
+    this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
   }
 
   toggleFilters() {
@@ -393,7 +374,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   @HostListener("document:keydown", ["$event"])
   handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }) {
-    if (!this.observationPopupVisible || !this.observationPopup?.observation) {
+    if (!this.observationPopup?.observation) {
       return;
     }
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {

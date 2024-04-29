@@ -245,17 +245,8 @@
 </div>
 <!-- /layout-outer -->
 
-<p-dialog
-  #observationDialog
-  (onShow)="observationDialog.maximize()"
-  [(visible)]="observationPopupVisible"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
-  [closeOnEscape]="true"
-  [dismissableMask]="true"
-  [maximizable]="true"
->
-  <p-header>
+<ng-template #observationPopupTemplate>
+  <div class="modal-header">
     <span
       [style]="{ color: markerService.toMarkerColor(observationPopup?.observation) }"
       [title]="observationPopup?.observation?.$source"
@@ -268,33 +259,39 @@
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowRight' })">→</kbd>
       zum Blättern
     </div>
-  </p-header>
-  <table *ngIf="observationPopup" class="table table-sm">
-    <tr *ngFor="let row of observationPopup.table">
-      <th style="padding-right: 1ex">{{ row.label }}</th>
-      <td>
-        <span *ngIf="row.date !== undefined">{{ row.date | localizedDate: "full" }}</span>
-        <span *ngIf="row.number !== undefined">{{ row.number | number }}</span>
-        <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'ph ph-check' : 'ph ph-x'"></i></span>
-        <span *ngIf="row.url !== undefined"
-          ><a href="{{ row.url }}" rel="noopener" target="_blank">{{ row.url }}</a></span
-        >
-        <span *ngIf="row.value !== undefined">{{ row.value }}</span>
-        <span
-          *ngIf="
-            row.date === undefined &&
-            row.number === undefined &&
-            row.boolean === undefined &&
-            row.url === undefined &&
-            row.value === undefined
-          "
-          >&mdash;</span
-        >
-      </td>
-    </tr>
-  </table>
-  <iframe *ngIf="observationPopup?.iframe" [src]="observationPopup?.iframe" style="width: 100%; height: 80vh"></iframe>
-  <div *ngIf="observationPopup?.imgUrl">
-    <img [src]="observationPopup?.imgUrl" style="width: -webkit-fill-available" />
   </div>
-</p-dialog>
+  <div class="modal-body">
+    <table *ngIf="observationPopup" class="table table-sm">
+      <tr *ngFor="let row of observationPopup.table">
+        <th style="padding-right: 1ex">{{ row.label }}</th>
+        <td>
+          <span *ngIf="row.date !== undefined">{{ row.date | localizedDate: "full" }}</span>
+          <span *ngIf="row.number !== undefined">{{ row.number | number }}</span>
+          <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'ph ph-check' : 'ph ph-x'"></i></span>
+          <span *ngIf="row.url !== undefined"
+            ><a href="{{ row.url }}" rel="noopener" target="_blank">{{ row.url }}</a></span
+          >
+          <span *ngIf="row.value !== undefined">{{ row.value }}</span>
+          <span
+            *ngIf="
+              row.date === undefined &&
+              row.number === undefined &&
+              row.boolean === undefined &&
+              row.url === undefined &&
+              row.value === undefined
+            "
+            >&mdash;</span
+          >
+        </td>
+      </tr>
+    </table>
+    <iframe
+      *ngIf="observationPopup?.iframe"
+      [src]="observationPopup?.iframe"
+      style="width: 100%; height: 80vh"
+    ></iframe>
+    <div *ngIf="observationPopup?.imgUrl">
+      <img [src]="observationPopup?.imgUrl" style="width: -webkit-fill-available" />
+    </div>
+  </div>
+</ng-template>
