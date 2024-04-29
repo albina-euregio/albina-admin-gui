@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { DynamicDialogRef } from "primeng/dynamicdialog";
+import { BsModalRef } from "ngx-bootstrap/modal";
 import * as Enums from "../enums/enums";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
@@ -28,11 +28,11 @@ export class AvalancheProblemDecisionTreeComponent {
     Enums.AvalancheProblem.cornices,
   ];
 
-  private problem: Enums.AvalancheProblem;
+  public problem: Enums.AvalancheProblem;
   localizedImage: SafeResourceUrl;
 
   public constructor(
-    private dialogRef: DynamicDialogRef,
+    private bsModalRef: BsModalRef,
     private sanitizer: DomSanitizer,
     private translateService: TranslateService,
   ) {
@@ -74,10 +74,11 @@ export class AvalancheProblemDecisionTreeComponent {
   }
 
   discard() {
-    this.dialogRef.close();
+    this.problem = undefined;
+    this.bsModalRef.hide();
   }
 
   save() {
-    this.dialogRef.close({ problem: this.problem });
+    this.bsModalRef.hide();
   }
 }

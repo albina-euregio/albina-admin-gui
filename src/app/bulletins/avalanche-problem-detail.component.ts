@@ -6,7 +6,7 @@ import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
 import { TranslateService } from "@ngx-translate/core";
-import { DialogService } from "primeng/dynamicdialog";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
 
 @Component({
@@ -41,7 +41,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   constructor(
     public settingsService: SettingsService,
     public authenticationService: AuthenticationService,
-    public dialogService: DialogService,
+    private modalService: BsModalService,
     public translateService: TranslateService,
   ) {}
 
@@ -189,14 +189,12 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   showDecisionTreeDialog() {
-    const ref = this.dialogService.open(AvalancheProblemDecisionTreeComponent, {
-      header: this.translateService.instant("bulletins.create.decisionTree.decisionTree"),
-      contentStyle: { width: "95vw", height: "85vh", overflow: "hidden" },
-    });
-    ref.onClose.subscribe((data) => {
-      if (data && "problem" in data) {
+    const ref = this.modalService.show(AvalancheProblemDecisionTreeComponent, { class: "modal-fullscreen" });
+    ref.onHide.subscribe(() => {
+      const problem = ref.content?.problem;
+      if (problem) {
         this.avalancheProblemModel.setAvalancheProblem(undefined);
-        this.selectAvalancheProblem(data["problem"]);
+        this.selectAvalancheProblem(problem);
       }
     });
   }
