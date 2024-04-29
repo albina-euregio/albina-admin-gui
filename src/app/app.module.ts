@@ -30,7 +30,6 @@ import { ConfigurationService } from "./providers/configuration-service/configur
 import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
-import { ConfirmationService } from "primeng/api";
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -66,7 +65,6 @@ import localeOc from "@angular/common/locales/en";
 import { UpdateUserComponent } from "./admin/update-user.component";
 import { ChangePasswordComponent } from "./admin/change-password.component";
 import { BaseMapService } from "./providers/map-service/base-map.service";
-import { DialogService } from "primeng/dynamicdialog";
 import { MapService } from "./providers/map-service/map.service";
 import {
   AlpsolutProfileService,
@@ -140,12 +138,10 @@ registerLocaleData(localeOc, "oc");
     WsBulletinService,
     LocalStorageService,
     ConfigurationService,
-    ConfirmationService,
     ConstantsService,
     CoordinateDataService,
     CopyService,
     DatePipe,
-    DialogService,
     ElevationService,
     GeocodingService,
     GetDustParamService,

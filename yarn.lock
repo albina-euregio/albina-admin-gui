@@ -3705,9 +3705,6 @@ __metadata:
     ngx-echarts: "npm:^17.1.0"
     ngx-image-compress: "npm:^15.1.6"
     prettier: "npm:^3.1.0"
-    primeflex: "npm:^3.3.0"
-    primeicons: "npm:^6.0.1"
-    primeng: "npm:^17.4.0"
     protomaps-leaflet: "npm:^3.1.1"
     rbush: "npm:^3.0.1"
     rxjs: "npm:7.8.1"
@@ -8403,35 +8400,6 @@ __metadata:
     ansi-styles: "npm:^5.0.0"
     react-is: "npm:^18.0.0"
   checksum: 10c0/edc5ff89f51916f036c62ed433506b55446ff739358de77207e63e88a28ca2894caac6e73dcb68166a606e51c8087d32d400473e6a9fdd2dbe743f46c9c0276f
-  languageName: node
-  linkType: hard
-
-"primeflex@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "primeflex@npm:3.3.0"
-  checksum: 10c0/122f8a3d1614bfe4edeab54962933fb37ed70e02fb061bcf3d1391cb249fa883a8a4dd95173ff3e80c99feb9a93f0108fecf9860032b697a91ed91470b4bb310
-  languageName: node
-  linkType: hard
-
-"primeicons@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "primeicons@npm:6.0.1"
-  checksum: 10c0/9f59473d9b7f3b5aad1a3c7050fce8c06503f21586a67d3ed1fd362a9fad42a114c89b6e0f8fd7c94d71d090962b53181a086fe07a68a5535fa348fdbf63e641
-  languageName: node
-  linkType: hard
-
-"primeng@npm:^17.4.0":
-  version: 17.4.0
-  resolution: "primeng@npm:17.4.0"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  peerDependencies:
-    "@angular/common": ^17.0.0
-    "@angular/core": ^17.0.0
-    "@angular/forms": ^17.0.0
-    rxjs: ^6.0.0 || ^7.8.1
-    zone.js: ~0.14.0
-  checksum: 10c0/097b76745ec3c11a1785d1c2faeb70fab181834aa1d34d007f87cdab8fbf144c02b5157f7ea5b41eb455121dc89356f0546fcdfcc50844a57a370193add17011
   languageName: node
   linkType: hard
 
