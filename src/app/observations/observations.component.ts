@@ -326,6 +326,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           this.filter.filterSelection[LocalFilterTypes.Elevation].toValue(observation),
         )
       ) {
+        // TODO filter desired parameter (if defined) [GS_O, HS, HSD24, HSD48, HSD72, LT, LT_MAX, LT_MIN, OFT, TD]
+        // observation.$data.*
+
         this.observationsAsOverlay.push(observation);
         this.mapService.addMarker(
           this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
