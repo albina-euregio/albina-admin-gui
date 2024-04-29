@@ -20,7 +20,6 @@ import { SharedModule } from "primeng/api";
 import { DialogModule } from "primeng/dialog";
 import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
-import { MultiSelectModule } from "primeng/multiselect";
 import type { Observable } from "rxjs";
 import {
   type AlpsolutObservation,
@@ -30,6 +29,7 @@ import {
   ObservedProfileSourceService,
 } from "./sources";
 import type { ModellingRouteData } from "./routes";
+import "bootstrap";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;
@@ -46,7 +46,6 @@ export interface MultiselectDropdownData {
     DialogModule,
     FormsModule,
     KeyValuePipe,
-    MultiSelectModule,
     SharedModule,
     KeyValuePipe,
     TranslateModule,
@@ -81,8 +80,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private swipeCoord?: [number, number];
   private swipeTime?: number;
 
-  public selectedRegions: any[];
-  private selectedSources: string[] = [];
+  public selectedRegions = {} as Record<string, boolean>;
+  public selectedSources = {} as Record<string, boolean>;
   private modelPoints: GenericObservation[] = [];
 
   @ViewChild("observationsMap") observationsMap: ElementRef<HTMLDivElement>;
@@ -169,8 +168,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     Object.values(this.mapService.layers).forEach((layer) => layer.clearLayers());
 
     const filtered = this.modelPoints.filter((el) => {
-      const correctRegion = this.selectedRegions.length === 0 || this.selectedRegions.includes(el.region);
-      const correctSource = this.selectedSources.length === 0 || this.selectedSources.includes(el.$source);
+      const correctRegion = !Object.values(this.selectedRegions).some((v) => v) || this.selectedRegions[el.region];
+      const correctSource = !Object.values(this.selectedSources).some((v) => v) || this.selectedSources[el.$source];
       return correctRegion && correctSource;
     });
 
@@ -256,7 +255,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   async initMaps() {
     const map = await this.mapService.initMaps(this.observationsMap.nativeElement, () => {});
     map.on("click", () => {
-      this.selectedRegions = this.mapService.getSelectedRegions();
+      this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyFilter();
     });
     this.mapService.removeObservationLayers();
@@ -284,12 +283,12 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     }
   }
 
-  onDropdownSelect(type, event) {
-    if (type === "source") this.selectedSources = event.value;
-    if (type === "regions") {
-      this.selectedRegions = event.value;
-      this.mapService.clickRegion(event.value);
-    }
+  onRegionsDropdownSelect() {
+    this.mapService.clickRegion(this.selectedRegions);
+    this.applyFilter();
+  }
+
+  onSourcesDropdownSelect() {
     this.applyFilter();
   }
 

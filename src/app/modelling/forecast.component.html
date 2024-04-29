@@ -5,27 +5,59 @@
         <div class="global-bar-scroll">
           <div class="global-bar global-bar-left">
             <div class="global-bar-item global-bar-item-source">
-              <p-multiSelect
-                placeholder="{{ 'admin.observations.selectSources.placeholder' | translate }}"
-                [options]="allSources"
-                optionLabel="name"
-                optionValue="id"
-                [maxSelectedLabels]="0"
-                (onChange)="onDropdownSelect('source', $event)"
-              ></p-multiSelect>
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn btn-primary dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  data-bs-auto-close="outside"
+                >
+                  {{ "admin.observations.selectSources.placeholder" | translate }}
+                </button>
+                <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: scroll">
+                  <div *ngFor="let source of allSources" class="form-check">
+                    <label class="form-check-label text-nowrap">
+                      <input
+                        [(ngModel)]="selectedSources[source.id]"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="onSourcesDropdownSelect($event)"
+                        type="checkbox"
+                        class="form-check-input"
+                      />
+                      {{ source.name }}
+                    </label>
+                  </div>
+                </form>
+              </div>
             </div>
+
             <div class="global-bar-item global-bar-item-region">
-              <p-multiSelect
-                placeholder="{{ 'admin.observations.selectRegion.placeholder' | translate }}"
-                [options]="allRegions"
-                [(ngModel)]="selectedRegions"
-                optionLabel="name"
-                optionValue="id"
-                [maxSelectedLabels]="0"
-                selectedItemsLabel="{{ 'admin.observations.selectRegion.selectionLabel' | translate }}"
-                (onChange)="onDropdownSelect('regions', $event)"
-                scrollHeight="400px"
-              ></p-multiSelect>
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn btn-primary dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  data-bs-auto-close="outside"
+                >
+                  {{ "admin.observations.selectRegion.placeholder" | translate }}
+                </button>
+                <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
+                  <div *ngFor="let region of allRegions" class="form-check">
+                    <label class="form-check-label text-nowrap">
+                      <input
+                        [(ngModel)]="selectedRegions[region.id]"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="onRegionsDropdownSelect($event)"
+                        type="checkbox"
+                        class="form-check-input"
+                      />
+                      {{ region.name }}
+                    </label>
+                  </div>
+                </form>
+              </div>
             </div>
             <div class="global-bar-item global-bar-item-load">
               <button type="button" class="btn btn-bare" (click)="load()">
