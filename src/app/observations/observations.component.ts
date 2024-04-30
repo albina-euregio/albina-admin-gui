@@ -1,19 +1,11 @@
-import {
-  Component,
-  AfterContentInit,
-  AfterViewInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  HostListener,
-} from "@angular/core";
+import { Component, AfterContentInit, AfterViewInit, ViewChild, ElementRef, HostListener } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
+
 import {
   GenericObservation,
-  ObservationFilterType,
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
@@ -35,7 +27,6 @@ import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
-import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
 import { DialogModule } from "primeng/dialog";
 import { BarChartComponent } from "./charts/bar-chart.component";
@@ -78,7 +69,7 @@ export interface MultiselectDropdownData {
   templateUrl: "observations.component.html",
   styleUrls: ["./observations.component.scss"],
 })
-export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
   public layout: "map" | "table" | "chart" = "map";
   public layoutFilters = true;
@@ -160,10 +151,32 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.loadObservations({ days: 7 });
     this.observationsAsOverlay = [];
     layerControl.addOverlay(this.loadObservers(), this.translateService.instant("observations.layers.observers"));
+    const weatherStationsLayerGroup = this.loadWeatherStations();
     layerControl.addOverlay(
-      this.loadWeatherStations(),
+      weatherStationsLayerGroup,
       this.translateService.instant("observations.layers.weatherStations"),
     );
+    map.on(
+      "layeradd",
+      function (event) {
+        if (event.layer == weatherStationsLayerGroup && this.weatherStationControls) {
+          Object.keys(this.weatherStationControls).forEach((control) =>
+            this.weatherStationControls[control].addTo(map),
+          );
+        }
+      },
+      this.mapService,
+    );
+    map.on(
+      "layerremove",
+      function (event) {
+        if (event.layer == weatherStationsLayerGroup) {
+          Object.keys(this.weatherStationControls).forEach((control) => this.weatherStationControls[control].remove());
+        }
+      },
+      this.mapService,
+    );
+
     layerControl.addOverlay(this.loadWebcams(), this.translateService.instant("observations.layers.webcams"));
     map.on("click", () => {
       this.filter.regions = this.mapService.getSelectedRegions();
@@ -328,12 +341,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       ) {
         // TODO filter desired parameter (if defined) [GS_O, HS, HSD24, HSD48, HSD72, LT, LT_MAX, LT_MIN, OFT, TD]
         // observation.$data.*
-
+        const marker = this.markerService
+          .createMarker(observation)
+          ?.on("click", () => this.onObservationClick(observation));
         this.observationsAsOverlay.push(observation);
-        this.mapService.addMarker(
-          this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-          "weather-stations",
-        );
+        this.mapService.addMarker(marker, "weather-stations");
       }
     });
   }
