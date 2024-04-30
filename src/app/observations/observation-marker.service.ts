@@ -274,6 +274,10 @@ export class ObservationMarkerService {
     }
   }
 
+  showOuterCircle(observation: GenericObservation) {
+    return false;
+  }
+
   toMarkerColor(observation: GenericObservation) {
     if (observation?.$type === ObservationType.Webcam) {
       return "black";
@@ -483,6 +487,17 @@ export class ObservationMarkerService {
       NW: `<g id="sector-nw" transform="translate(3.3285, 5.6827)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-292.5) translate(-10.8779, -12.5421)"></path></g>`,
     };
 
+    const outerCircle = this.showOuterCircle(observation)
+      ? `<g id="map-marker-circle-outer" transform="translate(7, 7)" stroke="#000000">
+          <g id="line-thin">
+              <circle id="Oval" cx="14" cy="14" r="14"></circle>
+          </g>
+          <g id="dotted-thin" stroke-dasharray="0,3.02" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14,28 C21.7319865,28 28,21.7319865 28,14 C28,6.2680135 21.7319865,0 14,0 C6.2680135,0 0,6.2680135 0,14 C0,21.7319865 6.2680135,28 14,28 Z" id="Oval"></path>
+          </g>
+      </g>`
+      : ``;
+
     // 700533 - drawImage() fails silently when drawing an SVG image without @width or @height
     // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
     return `
@@ -521,15 +536,7 @@ export class ObservationMarkerService {
                 </g>
             </g>
 
-  
-            <!--<g id="map-marker-circle-outer" transform="translate(7, 7)" stroke="#000000">
-                <g id="line-thin">
-                    <circle id="Oval" cx="14" cy="14" r="14"></circle>
-                </g>
-                <g id="dotted-thin" stroke-dasharray="0,3.02" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14,28 C21.7319865,28 28,21.7319865 28,14 C28,6.2680135 21.7319865,0 14,0 C6.2680135,0 0,6.2680135 0,14 C0,21.7319865 6.2680135,28 14,28 Z" id="Oval"></path>
-                </g>
-            </g>-->
+            ${outerCircle}
 
         </g>
     </g>
