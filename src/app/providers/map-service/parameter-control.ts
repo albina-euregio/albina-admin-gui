@@ -10,11 +10,28 @@ export const ParameterControl = L.Control.extend({
   },
 
   onAdd() {
-    const container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
+    var link = L.DomUtil.create("a", "leaflet-bar leaflet-control leaflet-control-custom");
+    var div = L.DomUtil.create("div", "leaflet-bar parameter-control", link);
+    div.title = this.options.tooltip;
+    var myButton = L.DomUtil.create("button", "", div);
+    let myImage = L.DomUtil.create("i", "my-button-class", myButton);
+    myImage.innerHTML = this.options.icon;
+    L.DomEvent.disableClickPropagation(div);
+    L.DomEvent.on(div, "click", function () {
+      console.log(this.options.key);
+    });
+
+    return div;
+
+    const container = L.DomUtil.create("a", "leaflet-bar leaflet-control leaflet-control-custom");
     container.style.backgroundColor = "white";
     container.style.width = "35px";
     container.style.height = "35px";
-    container.innerHTML = `<button style="background-color: ${this.options.backgroundColor}; width: -webkit-fill-available; height: -webkit-fill-available; border: none; border-radius: inherit;">${this.options.icon}</button>`;
+    const button = L.DomUtil.create(
+      "button",
+      `<button style="background-color: ${this.options.backgroundColor}; width: -webkit-fill-available; height: -webkit-fill-available; border: none; border-radius: inherit;">${this.options.icon}</button>`,
+    );
+    container.innerHTML;
     container.title = this.options.tooltip;
     return container;
   },
@@ -24,17 +41,6 @@ export const ParameterControl = L.Control.extend({
     this.setOptions();
     return this;
   },
-
-  /*
-  addClickHandler() {
-    L.DomEvent.disableClickPropagation(button);
-    debugger
-    L.DomEvent.on(button, 'click', function(map) {
-      this.options.active = !this.options.active;
-      this.options.backgroundColor = this.options.active ? "#222" : this.options.backgroundColor = "#FFF";
-    }, this);
-  }
-  */
 
   setOptions() {
     switch (this.options.key) {
