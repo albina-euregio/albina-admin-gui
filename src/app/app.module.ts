@@ -42,7 +42,7 @@ import { AuthGuard } from "./guards/auth.guard";
 
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
@@ -95,23 +95,6 @@ registerLocaleData(localeCa, "ca");
 registerLocaleData(localeOc, "oc");
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatDialogModule,
-    NgxSliderModule,
-    BsDropdownModule.forRoot(),
-    CollapseModule.forRoot(),
-    TabsModule.forRoot(),
-    AlertModule.forRoot(),
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    PipeModule.forRoot(),
-    ModalModule.forRoot(),
-    TranslateModule.forRoot(),
-  ],
   declarations: [
     AppComponent,
     FullLayoutComponent,
@@ -125,6 +108,24 @@ registerLocaleData(localeOc, "oc");
     CatalogOfPhrasesComponent,
     UpdateUserComponent,
     ChangePasswordComponent,
+  ],
+  bootstrap: [AppComponent],
+  exports: [TranslateModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    MatDialogModule,
+    NgxSliderModule,
+    BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
+    TabsModule.forRoot(),
+    AlertModule.forRoot(),
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    PipeModule.forRoot(),
+    ModalModule.forRoot(),
+    TranslateModule.forRoot(),
   ],
   providers: [
     {
@@ -174,8 +175,7 @@ registerLocaleData(localeOc, "oc");
     WsBulletinService,
     WsRegionService,
     WsUpdateService,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
-  exports: [TranslateModule],
 })
 export class AppModule {}
