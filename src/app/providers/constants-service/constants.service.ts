@@ -8,6 +8,11 @@ import * as pkg from "../../../../package.json";
 export class ConstantsService {
   public release = [pkg.name, pkg.version].join("@");
   public gitlab = pkg.bugs.url;
+  public dependencies = Object.entries(pkg.dependencies).map(([name, version]) => ({
+    name,
+    version: version.replace(/^\^/, ""),
+    homepage: `https://www.npmjs.com/package/${name}/v/${version.replace(/^\^/, "")}`,
+  }));
 
   public snowpackModelsUrl: string = "https://avalanche.report/alpsolut/html/";
 

@@ -52,6 +52,15 @@
                 <a *ngIf="serverInfo" href="{{ serverInfo.apiUrl }}" rel="noopener" target="_blank">
                   <small>albina-server&#64;{{ serverInfo.version }}</small>
                 </a>
+                <details>
+                  <summary>Open-source Licenses</summary>
+                  <li *ngFor="let dependency of constantsService.dependencies" class="list-inline-item">
+                    <a [href]="dependency.homepage" target="_blank" rel="external noopener noreferrer">
+                      {{ dependency.name }}
+                    </a>
+                    {{ dependency.version }}
+                  </li>
+                </details>
               </div>
             </div>
           </form>
