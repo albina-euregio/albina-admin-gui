@@ -5079,7 +5079,7 @@ __metadata:
     leaflet.sync: "npm:0.2.4"
     lint-staged: "npm:^15.2.2"
     ngx-bootstrap: "npm:^12.0.0"
-    ngx-echarts: "npm:^17.1.0"
+    ngx-echarts: "npm:^18.0.0"
     ngx-image-compress: "npm:^15.1.6"
     prettier: "npm:^3.1.0"
     primeflex: "npm:^3.3.0"
@@ -9122,14 +9122,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ngx-echarts@npm:^17.1.0":
-  version: 17.1.0
-  resolution: "ngx-echarts@npm:17.1.0"
+"ngx-echarts@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "ngx-echarts@npm:18.0.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
     echarts: ">=5.0.0"
-  checksum: 10c0/58ed155f651ece867de78706e516c969b10e7833e921e3bb2df1787c96c8f6be9ec3bd0e07ef1152631f82244a4981b34c471787cb7ba892284a3ece534d5cb6
+  checksum: 10c0/60f3d8ec857f4b9a770de73fb37c57ace94a63e9ce3667a0552d6c0ac9eb5706293d2a63cd938187029fcf58dca50eedfdbe5ca11363fed87e54aec15b6402d7
   languageName: node
   linkType: hard
 
