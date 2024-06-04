@@ -1382,11 +1382,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private createBulletinOnServer(bulletin: BulletinModel) {
     if (this.isWriteDisabled()) return;
     const regionId = bulletin.getSavedAndPublishedRegions()[0];
-    const validFrom = new Date(this.bulletinsService.getActiveDate());
-    const validUntil = new Date(this.bulletinsService.getActiveDate());
-    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
-    bulletin.setValidFrom(validFrom);
-    bulletin.setValidUntil(validUntil);
+    bulletin.setValidFrom(this.bulletinsService.getValidFrom(this.bulletinsService.getActiveDate()));
+    bulletin.setValidUntil(this.bulletinsService.getValidUntil(this.bulletinsService.getActiveDate()));
     this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         if (this.activeBulletin && this.activeBulletin != undefined && this.activeBulletin.getId() == undefined) {
@@ -1413,11 +1410,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   updateBulletinOnServer(bulletin: BulletinModel, checkErrors: boolean = true) {
     if (this.isWriteDisabled()) return;
-    const validFrom = new Date(this.bulletinsService.getActiveDate());
-    const validUntil = new Date(this.bulletinsService.getActiveDate());
-    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
-    bulletin.setValidFrom(validFrom);
-    bulletin.setValidUntil(validUntil);
+    bulletin.setValidFrom(this.bulletinsService.getValidFrom(this.bulletinsService.getActiveDate()));
+    bulletin.setValidUntil(this.bulletinsService.getValidUntil(this.bulletinsService.getActiveDate()));
     this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         this.addInternalBulletins(data);
@@ -1508,9 +1502,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return;
     }
     this.autoSaving = true;
-    const validFrom = new Date(this.bulletinsService.getActiveDate());
-    const validUntil = new Date(this.bulletinsService.getActiveDate());
-    validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
+    const validFrom = this.bulletinsService.getValidFrom(this.bulletinsService.getActiveDate());
+    const validUntil = this.bulletinsService.getValidUntil(this.bulletinsService.getActiveDate());
     const result = new Array<BulletinModel>();
     for (const bulletin of this.internBulletinsList) {
       const regions = bulletin.getPublishedRegions().concat(bulletin.getSavedRegions());

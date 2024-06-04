@@ -164,6 +164,18 @@ export class BulletinsService {
     return false;
   }
 
+  getValidFrom(date: Date) {
+    const d = new Date(date);
+    d.setTime(d.getTime() - 7 * 60 * 60 * 1000);
+    return d;
+  }
+
+  getValidUntil(date: Date) {
+    const d = new Date(date);
+    d.setTime(d.getTime() + 17 * 60 * 60 * 1000);
+    return d;
+  }
+
   /**
    * Returns a date that's offset from the activeDate by a given amount.
    *
@@ -232,7 +244,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/preview?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       this.authenticationService.getActiveRegionId() +
       "&lang=" +
@@ -247,9 +259,9 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/status/internal?startDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(startDate)) +
       "&endDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(endDate)) +
       "&region=" +
       region;
     const headers = this.authenticationService.newAuthHeader();
@@ -262,9 +274,9 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/status/publications?startDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(startDate)) +
       "&endDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(endDate)) +
       "&region=" +
       region;
     const headers = this.authenticationService.newAuthHeader();
@@ -277,7 +289,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/status/publication?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       region;
     const headers = this.authenticationService.newAuthHeader();
@@ -290,7 +302,7 @@ export class BulletinsService {
     let url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     if (regions) {
       for (const region of regions) {
         url += "&regions=" + region;
@@ -304,7 +316,9 @@ export class BulletinsService {
 
   loadExternalBulletins(date: Date, server: ServerModel): Observable<Response> {
     let url =
-      server.apiUrl + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      server.apiUrl +
+      "bulletins/edit?date=" +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     if (server.regions) {
       for (const region of server.regions) {
         if (this.authenticationService.isInternalRegion(region)) {
@@ -322,7 +336,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&lang=" +
       this.settingsService.getLangString();
     const headers = this.authenticationService.newAuthHeader("application/xml");
@@ -335,7 +349,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers };
 
@@ -346,7 +360,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       this.authenticationService.getActiveRegionId();
     const headers = this.authenticationService.newAuthHeader();
@@ -364,7 +378,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       this.authenticationService.getActiveRegionId();
     const headers = this.authenticationService.newAuthHeader();
@@ -381,7 +395,7 @@ export class BulletinsService {
       "bulletins/" +
       bulletin.getId() +
       "?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       this.authenticationService.getActiveRegionId();
     const headers = this.authenticationService.newAuthHeader();
@@ -398,7 +412,7 @@ export class BulletinsService {
       "bulletins/" +
       bulletin.getId() +
       "?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       this.authenticationService.getActiveRegionId();
     const headers = this.authenticationService.newAuthHeader();
@@ -411,7 +425,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/submit?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       region;
     const headers = this.authenticationService.newAuthHeader();
@@ -425,7 +439,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       region;
     const headers = this.authenticationService.newAuthHeader();
@@ -439,7 +453,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/change?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       region;
     const headers = this.authenticationService.newAuthHeader();
@@ -454,7 +468,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/all?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     const options = { headers: headers };
@@ -466,7 +480,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/caaml?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     const options = { headers: headers };
@@ -478,7 +492,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/pdf?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     const options = { headers: headers };
@@ -490,7 +504,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/html?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     const options = { headers: headers };
@@ -502,7 +516,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/map?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     const options = { headers: headers };
@@ -514,7 +528,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/staticwidget?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date);
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date));
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     const options = { headers: headers };
@@ -528,7 +542,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/email?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region +
         "&lang=" +
@@ -537,7 +551,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/email?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region;
     }
@@ -554,7 +568,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/email/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region +
         "&lang=" +
@@ -563,7 +577,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/email/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region;
     }
@@ -580,7 +594,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/telegram?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region +
         "&lang=" +
@@ -589,7 +603,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/telegram?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region;
     }
@@ -606,7 +620,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/telegram/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region +
         "&lang=" +
@@ -615,7 +629,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/telegram/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region;
     }
@@ -632,7 +646,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/push?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region +
         "&lang=" +
@@ -641,7 +655,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/push?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region;
     }
@@ -658,7 +672,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/push/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region +
         "&lang=" +
@@ -667,7 +681,7 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/push/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
         "&region=" +
         region;
     }
@@ -682,7 +696,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/check?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.getValidFrom(date)) +
       "&region=" +
       region;
     const headers = this.authenticationService.newAuthHeader();
