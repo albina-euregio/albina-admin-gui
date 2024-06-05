@@ -108,7 +108,6 @@ registerLocaleData(localeOc, "oc");
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatDialogModule,
     NgxSliderModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
@@ -116,7 +115,6 @@ registerLocaleData(localeOc, "oc");
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     BrowserAnimationsModule,
     PipeModule.forRoot(),
     ModalModule.forRoot(),
