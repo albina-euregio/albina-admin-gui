@@ -75,24 +75,26 @@
         </div>
         <!-- Footer -->
         <div class="card-footer">
-          <button
-            type="button"
-            class="btn btn-sm btn-primary px-3 me-1"
-            (click)="editUser($event)"
-            data-toggle="tooltip"
-            title="{{ 'admin.users.tooltip.edit' | translate }}"
-          >
-            {{ "admin.createUser.button.update" | translate }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm btn-primary px-3"
-            (click)="changePassword($event)"
-            data-toggle="tooltip"
-            title="{{ 'settings.changePassword.title' | translate }}"
-          >
-            {{ "settings.changePassword.title" | translate }}
-          </button>
+          <div class="d-grid gap-2 d-md-block">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary mx-1"
+              (click)="editUser($event)"
+              data-toggle="tooltip"
+              title="{{ 'admin.users.tooltip.edit' | translate }}"
+            >
+              {{ "admin.createUser.button.update" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary mx-1"
+              (click)="changePassword($event)"
+              data-toggle="tooltip"
+              title="{{ 'settings.changePassword.title' | translate }}"
+            >
+              {{ "settings.changePassword.title" | translate }}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -161,27 +161,29 @@
       </div>
       <!-- Footer -->
       <div class="card-footer">
-        <button
-          *ngIf="!update"
-          [disabled]="!updateUserForm.valid"
-          type="submit"
-          class="btn btn-sm btn-primary px-3 me-1"
-          (click)="createUser()"
-        >
-          {{ "admin.createUser.button.create" | translate }}
-        </button>
-        <button
-          *ngIf="update"
-          [disabled]="!updateUserForm.valid"
-          type="submit"
-          class="btn btn-sm btn-primary px-3 me-1"
-          (click)="updateUser()"
-        >
-          {{ "admin.createUser.button.update" | translate }}
-        </button>
-        <button type="button" class="btn btn-sm btn-secondary px-3" (click)="closeDialog('')">
-          {{ "admin.createUser.button.cancel" | translate }}
-        </button>
+        <div class="d-grid gap-2 d-md-block">
+          <button
+            *ngIf="!update"
+            [disabled]="!updateUserForm.valid"
+            type="submit"
+            class="btn btn-sm btn-primary px-3 mx-1"
+            (click)="createUser()"
+          >
+            {{ "admin.createUser.button.create" | translate }}
+          </button>
+          <button
+            *ngIf="update"
+            [disabled]="!updateUserForm.valid"
+            type="submit"
+            class="btn btn-sm btn-primary px-3 mx-1"
+            (click)="updateUser()"
+          >
+            {{ "admin.createUser.button.update" | translate }}
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary px-3 mx-1" (click)="closeDialog('')">
+            {{ "admin.createUser.button.cancel" | translate }}
+          </button>
+        </div>
       </div>
     </form>
   </div>
