@@ -1,11 +1,12 @@
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg" [style]="getStyle()">
   <div class="container-fluid">
     <button
       class="navbar-toggler"
       type="button"
-      (click)="isNavCollapsed = !isNavCollapsed"
-      [attr.aria-expanded]="!isNavCollapsed"
-      aria-controls="navbarContent"
+      (click)="toggleSidebar()"
+      aria-controls="sidebarMenu"
+      aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -14,7 +15,7 @@
       <img class="navbar__logo" alt="Avalanche.report Logo" src="{{ environment.logoPath }}" />
     </a>
 
-    <div [collapse]="isNavCollapsed" class="navbar-collapse" id="navbarContent">
+    <div class="navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li *ngIf="authenticationService.isUserLoggedIn()" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']">{{
@@ -44,7 +45,7 @@
       </ul>
     </div>
 
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
       <li class="nav-item dropdown" dropdown (onToggle)="toggled()">
         <a
           class="nav-link dropdown-toggle navbar__lang-toggle"
@@ -135,6 +136,41 @@
     </ul>
   </div>
 </nav>
+
+<!-- Sidebar -->
+<div class="sidebar" [class.sidebar--open]="isSidebarOpen" id="sidebarMenu">
+  <div class="sidebar-content">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li *ngIf="authenticationService.isUserLoggedIn()" class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']"
+          ><i class="ph ph-snowflake"></i> {{ "sidebar.bulletins" | translate }}</a
+        >
+      </li>
+      <li
+        *ngIf="authenticationService.getActiveRegion()?.enableObservations && authenticationService.isUserLoggedIn()"
+        class="nav-item"
+      >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']"
+          ><i class="ph ph-eye"></i> {{ "sidebar.observations" | translate }}</a
+        >
+      </li>
+      <li
+        *ngIf="authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()"
+        class="nav-item"
+      >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']"
+          ><i class="ph ph-sphere"></i> GeoSphere
+        </a>
+      </li>
+      <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']"> SNOWPACK </a>
+      </li>
+      <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awesome']"> AWSOME </a>
+      </li>
+    </ul>
+  </div>
+</div>
 
 <div class="app-body">
   <!-- Main content -->

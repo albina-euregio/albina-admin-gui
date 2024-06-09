@@ -97,6 +97,14 @@ $form-check-input-checked-bg-color: $black;
 
 // Navbar
 
+// Sidebar
+$sidebar-width: 0px;
+$sidebar-padding: 1rem;
+$sidebar-color: #fff;
+$sidebar-bg: $secondary-dark;
+$sidebar-bg-active: lighten($sidebar-bg, 5%);
+$mobile-sidebar-width: 220px;
+
 // Badges
 $badge-font-size: 10px;
 $badge-font-weight: 600;
