@@ -16,7 +16,8 @@ $compact-map-height: 300px;
     overflow-x: hidden;
 }
 
-.create-bulletin__map-container, .create-bulletin__map {
+.create-bulletin__map-container,
+.create-bulletin__map {
     height: $bulletin-height;
 }
 
@@ -85,7 +86,7 @@ $sidebar-border: 1px solid $gray-300;
     align-items: center;
 
     i {
-       margin-right: $space-2; 
+        margin-right: $space-2;
     }
 }
 
@@ -97,7 +98,7 @@ $sidebar-border: 1px solid $gray-300;
     align-items: center;
 
     i {
-       margin-right: $space-2; 
+        margin-right: $space-2;
     }
 }
 
@@ -187,12 +188,17 @@ $sidebar-border: 1px solid $gray-300;
     display: flex;
     flex-flow: row wrap;
     gap: $space-1;
-    align-items: center;
+    align-items: flex-end;
 }
 .region-thumb__avalanche-problem-icon {
     width: 20px;
     height: 20px;
     border: 1px solid $gray-400;
+}
+
+app-danger-rating-icon {
+    width: 20px;
+    height: 20px;
 }
 
 .grid-container {
@@ -219,7 +225,8 @@ $sidebar-border: 1px solid $gray-300;
         height: calc(100vh - $compact-map-height - $header-nav-height);
     }
 
-    .create-bulletin__map-container, .create-bulletin__map {
+    .create-bulletin__map-container,
+    .create-bulletin__map {
         height: $compact-map-height;
     }
 
@@ -252,7 +259,7 @@ $sidebar-border: 1px solid $gray-300;
     p {
         margin-top: $space-6;
     }
-  }
+}
 
 // Responsive layout
 @include media-breakpoint-down(md) {
@@ -264,4 +271,3 @@ $sidebar-border: 1px solid $gray-300;
         min-width: 0 !important;
     }
 }
-
