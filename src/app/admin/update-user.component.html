@@ -1,7 +1,16 @@
-<mat-dialog-content>
+<div>
   <div class="card">
-    <form #updateUserForm="ngForm">
+    <form #updateUserForm="ngForm" appPasswordMismatch>
       <div class="card-block">
+        <div class="form-group row">
+          <label for="inputName" class="col-sm-2 col-form-label">{{
+            "admin.createUser.table.image" | translate
+          }}</label>
+          <div class="col-sm-10">
+            <img src="{{ authenticationService.getUserImageSanitized(activeImage) }}" />
+            <input type="file" (change)="onImageChanged($event)" />
+          </div>
+        </div>
         <div class="form-group row">
           <label for="inputName" class="col-sm-2 col-form-label">{{ "admin.createUser.table.name" | translate }}</label>
           <div class="col-sm-10">
@@ -32,7 +41,7 @@
               email
               type="email"
               #email="ngModel"
-              disabled
+              [disabled]="update"
               class="form-control"
               id="inputEmail"
               name="email"
@@ -49,7 +58,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="!update" class="form-group row">
           <label for="inputPassword" class="col-sm-2 col-form-label">{{
             "admin.createUser.table.password" | translate
           }}</label>
@@ -58,13 +67,46 @@
               type="password"
               autocomplete="off"
               #password="ngModel"
-              disabled
+              [disabled]="update"
               class="form-control"
               id="inputPassword"
               name="password"
               [(ngModel)]="activePassword"
               placeholder="{{ 'admin.createUser.table.password' | translate }}"
             />
+            <div *ngIf="!update && password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+              <div *ngIf="password.errors.required">
+                {{ "admin.createUser.error.password.required" | translate }}
+              </div>
+              <div *ngIf="password.errors.minlength">
+                {{ "admin.createUser.error.password.length" | translate }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!update" class="form-group row">
+          <label for="inputPassword2" class="col-sm-2 col-form-label">{{
+            "admin.createUser.table.password2" | translate
+          }}</label>
+          <div class="col-sm-10">
+            <input
+              type="password"
+              autocomplete="off"
+              #password2="ngModel"
+              class="form-control"
+              id="inputPassword2"
+              name="password2"
+              [(ngModel)]="activePassword2"
+              placeholder="{{ 'admin.createUser.table.password' | translate }}"
+            />
+            <div
+              *ngIf="
+                !update && updateUserForm.errors?.passwordMismatch && (updateUserForm.touched || updateUserForm.dirty)
+              "
+              class="cross-validation-error-message alert alert-danger"
+            >
+              {{ "admin.createUser.error.password.mismatch" | translate }}
+            </div>
           </div>
         </div>
         <div class="form-group row">
@@ -82,7 +124,7 @@
             />
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="isAdmin" class="form-group row">
           <div class="col-sm-2">{{ "admin.createUser.table.roles" | translate }}</div>
           <div class="col-sm-10">
             <div *ngFor="let role of roles" class="form-check">
@@ -99,7 +141,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group row">
+        <div *ngIf="isAdmin" class="form-group row">
           <div class="col-sm-2">{{ "admin.createUser.table.regions" | translate }}</div>
           <div class="col-sm-10">
             <div *ngFor="let region of regions" class="form-check">
@@ -120,6 +162,16 @@
       <!-- Footer -->
       <div class="card-footer">
         <button
+          *ngIf="!update"
+          [disabled]="!updateUserForm.valid"
+          type="submit"
+          class="btn btn-sm btn-primary px-3"
+          (click)="createUser()"
+        >
+          {{ "admin.createUser.button.create" | translate }}
+        </button>
+        <button
+          *ngIf="update"
           [disabled]="!updateUserForm.valid"
           type="submit"
           class="btn btn-sm btn-primary px-3"
@@ -133,4 +185,4 @@
       </div>
     </form>
   </div>
-</mat-dialog-content>
+</div>

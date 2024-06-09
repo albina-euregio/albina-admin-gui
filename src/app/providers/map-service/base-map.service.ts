@@ -7,6 +7,7 @@ import { AuthenticationService } from "../authentication-service/authentication.
 import { RegionsService } from "../regions-service/regions.service";
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -21,9 +22,10 @@ export class BaseMapService extends MapService {
   constructor(
     authenticationService: AuthenticationService,
     regionsService: RegionsService,
+    translateService: TranslateService,
     constantsService: ConstantsService,
   ) {
-    super(regionsService, authenticationService, constantsService);
+    super(regionsService, translateService, authenticationService, constantsService);
     this.observationTypeLayers = {} as any;
     Object.keys(ObservationType).forEach((type) => (this.observationTypeLayers[type] = new LayerGroup()));
   }
@@ -49,7 +51,6 @@ export class BaseMapService extends MapService {
       layers: [
         ...Object.values(this.baseMaps),
         this.overlayMaps.regions,
-        this.overlayMaps.activeSelection,
         this.overlayMaps.editSelection,
         ...Object.values(this.observationTypeLayers),
       ],
@@ -62,10 +63,10 @@ export class BaseMapService extends MapService {
     return this.map;
   }
 
-  clickRegion(regionIds: Array<string>) {
+  clickRegion(regionIds: Record<string, boolean>) {
     //console.log("clickRegion", this.overlayMaps.regions);
     for (const entry of this.overlayMaps.regions.getLayers()) {
-      entry.feature.properties.selected = regionIds.includes(entry.feature.properties.id);
+      entry.feature.properties.selected = regionIds[entry.feature.properties.id];
     }
     this.updateEditSelection();
   }

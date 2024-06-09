@@ -79,8 +79,8 @@
           dropdownToggle
         >
           <img
-            *ngIf="authenticationService.getUserImageSanitized()"
-            [src]="authenticationService.getUserImageSanitized()"
+            *ngIf="authenticationService.getCurrentAuthor() && authenticationService.getCurrentAuthor().image"
+            [src]="authenticationService.getUserImageSanitized(authenticationService.getCurrentAuthor().image)"
             class="user-avatar__img"
           />
           {{ authenticationService.getUsername() }}

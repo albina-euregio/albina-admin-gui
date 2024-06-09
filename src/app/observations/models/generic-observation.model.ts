@@ -59,6 +59,7 @@ export enum ObservationSource {
   Panomax = "Panomax",
   RasBzIt = "RasBzIt",
   PanoCloud = "PanoCloud",
+  SnowLine = "SnowLine",
 }
 
 export enum ForecastSource {
@@ -178,7 +179,8 @@ export function degreeToAspect(degree: number): Aspect {
 export const genericObservationSchema = z.object({
   $data: z.any().describe("Additional data (e.g. original data stored when fetching from external API)"),
   $id: z.string().optional().nullable().describe("External ID of this observations"),
-  $externalURL: z.string().optional().nullable().describe("External URL/image to display as iframe"),
+  $externalURL: z.string().optional().nullable().describe("External URL to display as iframe"),
+  $externalImg: z.string().optional().nullable().describe("External image to display as img"),
   stability: z
     .nativeEnum(Stability)
     .optional()

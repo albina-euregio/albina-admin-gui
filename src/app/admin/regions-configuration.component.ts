@@ -3,7 +3,6 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
-import { SocialmediaService } from "../providers/socialmedia-service/socialmedia.service";
 
 @Component({
   templateUrl: "regions-configuration.component.html",
@@ -19,7 +18,6 @@ export class RegionsConfigurationComponent implements AfterContentInit {
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
     public configurationService: ConfigurationService,
-    public socialmediaService: SocialmediaService,
   ) {
     this.saveConfigurationLoading = false;
   }

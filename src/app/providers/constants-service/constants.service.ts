@@ -8,6 +8,11 @@ import * as pkg from "../../../../package.json";
 export class ConstantsService {
   public release = [pkg.name, pkg.version].join("@");
   public gitlab = pkg.bugs.url;
+  public dependencies = Object.entries(pkg.dependencies).map(([name, version]) => ({
+    name,
+    version: version.replace(/^\^/, ""),
+    homepage: `https://www.npmjs.com/package/${name}/v/${version.replace(/^\^/, "")}`,
+  }));
 
   public snowpackModelsUrl: string = "https://avalanche.report/alpsolut/html/";
 
@@ -16,6 +21,7 @@ export class ConstantsService {
     [ObservationType.Webcam]: "https://admin.avalanche.report/webcams",
     [ObservationSource.AvalancheWarningService]: "https://admin.avalanche.report/weather-stations",
     [ObservationSource.Observer]: "https://admin.avalanche.report/observers",
+    [ObservationSource.SnowLine]: "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson",
 
     "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",
     "forecast.uoa.gr": "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png",
@@ -39,6 +45,8 @@ export class ConstantsService {
     [`${ObservationSource.Lawis}-incident` as const]: "https://lawis.at/incident/#{{id}}",
     [`${ObservationSource.Lawis}-${ObservationType.Profile}` as const]:
       "https://lawis.at/lawis_api/v2_2/files/profiles/snowprofile_{{id}}.pdf",
+    [ObservationSource.SnowLine]:
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}",
   };
 
   public rechenraumApi = "https://voibos.rechenraum.com/voibos/voibos";

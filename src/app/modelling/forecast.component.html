@@ -5,36 +5,65 @@
         <div class="global-bar-scroll">
           <div class="global-bar global-bar-left">
             <div class="global-bar-item global-bar-item-source">
-              <p-multiSelect
-                placeholder="{{ 'admin.observations.selectSources.placeholder' | translate }}"
-                [options]="allSources"
-                optionLabel="name"
-                optionValue="id"
-                [maxSelectedLabels]="0"
-                (onChange)="onDropdownSelect('source', $event)"
-              ></p-multiSelect>
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn btn-primary dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  data-bs-auto-close="outside"
+                >
+                  {{ "admin.observations.selectSources.placeholder" | translate }}
+                </button>
+                <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: scroll">
+                  <div *ngFor="let source of allSources" class="form-check">
+                    <label class="form-check-label text-nowrap">
+                      <input
+                        [(ngModel)]="selectedSources[source.id]"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="onSourcesDropdownSelect($event)"
+                        type="checkbox"
+                        class="form-check-input"
+                      />
+                      {{ source.name }}
+                    </label>
+                  </div>
+                </form>
+              </div>
             </div>
+
             <div class="global-bar-item global-bar-item-region">
-              <p-multiSelect
-                placeholder="{{ 'admin.observations.selectRegion.placeholder' | translate }}"
-                [options]="allRegions"
-                [(ngModel)]="selectedRegions"
-                optionLabel="name"
-                optionValue="id"
-                [maxSelectedLabels]="0"
-                selectedItemsLabel="{{ 'admin.observations.selectRegion.selectionLabel' | translate }}"
-                (onChange)="onDropdownSelect('regions', $event)"
-                scrollHeight="400px"
-              ></p-multiSelect>
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn btn-primary dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  data-bs-auto-close="outside"
+                >
+                  {{ "admin.observations.selectRegion.placeholder" | translate }}
+                </button>
+                <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
+                  <div *ngFor="let region of allRegions" class="form-check">
+                    <label class="form-check-label text-nowrap">
+                      <input
+                        [(ngModel)]="selectedRegions[region.id]"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="onRegionsDropdownSelect($event)"
+                        type="checkbox"
+                        class="form-check-input"
+                      />
+                      {{ region.name }}
+                    </label>
+                  </div>
+                </form>
+              </div>
             </div>
             <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                pButton
-                class="p-button-text"
-                (click)="load()"
-                [icon]="loading ? 'pi pi-spin pi-spinner' : 'pi pi-refresh'"
-              ></button>
+              <button type="button" class="btn btn-bare" (click)="load()">
+                <i *ngIf="!loading" class="ph ph-arrows-clockwise"></i>
+                <i *ngIf="loading" class="ph ph-circle-notch"></i>
+              </button>
             </div>
             <span *ngFor="let source of allSources" class="global-bar-item">
               &mdash;
@@ -52,19 +81,8 @@
   </div>
 </div>
 
-<p-dialog
-  #observationDialog
-  (onShow)="observationDialog.maximize()"
-  [(visible)]="observationPopupVisible"
-  [modal]="true"
-  [style]="{ width: '80vw' }"
-  [closeOnEscape]="true"
-  [dismissableMask]="true"
-  [maximizable]="true"
-  (touchstart)="swipe($event, 'start')"
-  (touchend)="swipe($event, 'end')"
->
-  <p-header>
+<ng-template #observationPopupTemplate>
+  <div class="modal-header">
     <div class="d-inline-block" *ngIf="selectedModelPoint">
       <select [(ngModel)]="selectedModelPoint" autofocus class="custom-select" style="max-width: 70vw">
         <option
@@ -113,87 +131,88 @@
       <kbd (click)="changeRun('next')">→</kbd>
       zum Blättern
     </div>
-  </p-header>
-
-  <div *ngIf="selectedModelPoint && !observationPopupIframe">
-    <img *ngIf="selectedModelPoint" [src]="selectedModelPoint.$externalURL" class="img-fluid" />
   </div>
-  <div *ngIf="selectedModelPoint && selectedModelPoint.$extraDialogRows">
-    <img *ngFor="let row of selectedModelPoint.$extraDialogRows" [src]="row.url" class="img-fluid" />
-  </div>
-  <div *ngIf="selectedModelPoint && observationPopupIframe">
-    <iframe [src]="observationPopupIframe" style="width: 100%; height: 1714px"></iframe>
-  </div>
-
-  <div *ngIf="selectedModelType === 'qfa'" id="qfa_div">
-    <div class="day-button-wrapper">
-      <span class="day-button" [ngClass]="{ 'active-day': qfaStartDay === 0 }" (click)="setQfa(qfa.file.filename, 0)">
-        {{ "qfa.day" | translate }} 0-2
-      </span>
-      <span class="day-button" [ngClass]="{ 'active-day': qfaStartDay === 3 }" (click)="setQfa(qfa.file.filename, 3)">
-        {{ "qfa.day" | translate }} 3-5
-      </span>
-      <span class="day-button" [ngClass]="{ 'active-day': qfaStartDay === 6 }" (click)="setQfa(qfa.file.filename, 6)">
-        {{ "qfa.day" | translate }} 6-8
-      </span>
+  <div class="modal-body" (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
+    <div *ngIf="selectedModelPoint && !observationPopupIframe">
+      <img *ngIf="selectedModelPoint" [src]="selectedModelPoint.$externalURL" class="img-fluid" />
+    </div>
+    <div *ngIf="selectedModelPoint && selectedModelPoint.$extraDialogRows">
+      <img *ngFor="let row of selectedModelPoint.$extraDialogRows" [src]="row.url" class="img-fluid" />
+    </div>
+    <div *ngIf="selectedModelPoint && observationPopupIframe">
+      <iframe [src]="observationPopupIframe" style="width: 100%; height: 1714px"></iframe>
     </div>
 
-    <table *ngIf="qfa.parameters" class="table table-sm qfatable">
-      <tr>
-        <th>{{ "qfa.day" | translate }}</th>
-        <th *ngFor="let date of qfa.dates" class="text-center">
-          <span>
-            {{ date }}
-          </span>
-        </th>
-      </tr>
-      <tr>
-        <th>{{ "qfa.time" | translate }}</th>
-        <th *ngFor="let _ of qfa.dates" class="table-entry">
-          <div>
-            <span>00</span>
-            <span>06</span>
-            <span>12</span>
-            <span>18</span>
-          </div>
-        </th>
-      </tr>
-      <!-- <tr *ngIf=" dustParams[city.toLowerCase()]">
-        <td class="header DUST">DUST</td>
-        <td *ngFor="let day of dustParams[city.toLowerCase()][selectedDayIndex]" class="table-entry DUST">
-          <div>
-            <span *ngFor="let param of day" [ngStyle]="{'background-color': dustParamService.dustToColor(param)}">
-              {{param}}
+    <div *ngIf="selectedModelType === 'qfa'" id="qfa_div">
+      <div class="day-button-wrapper">
+        <span class="day-button" [ngClass]="{ 'active-day': qfaStartDay === 0 }" (click)="setQfa(qfa.file.filename, 0)">
+          {{ "qfa.day" | translate }} 0-2
+        </span>
+        <span class="day-button" [ngClass]="{ 'active-day': qfaStartDay === 3 }" (click)="setQfa(qfa.file.filename, 3)">
+          {{ "qfa.day" | translate }} 3-5
+        </span>
+        <span class="day-button" [ngClass]="{ 'active-day': qfaStartDay === 6 }" (click)="setQfa(qfa.file.filename, 6)">
+          {{ "qfa.day" | translate }} 6-8
+        </span>
+      </div>
+
+      <table *ngIf="qfa.parameters" class="table table-sm qfatable">
+        <tr>
+          <th>{{ "qfa.day" | translate }}</th>
+          <th *ngFor="let date of qfa.dates" class="text-center">
+            <span>
+              {{ date }}
             </span>
-          </div>
-        </td>
-      </tr> -->
-      <tr *ngFor="let param of qfa.parameters" [ngClass]="[paramService.parameterClasses[param]]">
-        <td class="header">
-          <abbr title="{{ paramService.getFullName(param) }}">{{ param }}</abbr>
-        </td>
-        <td
-          *ngFor="let day of qfa.data.parameters[param] | keyvalue"
-          class="table-entry"
-          [ngClass]="[paramService.parameterClasses[param]]"
-        >
-          <div *ngIf="!['W500', 'W700', 'W850'].includes(paramService.parameterClasses[param])">
-            <span *ngIf="param === 'QANmax' && day.key === '0'">---</span>
-            <span *ngIf="param !== 'QANmax'" [ngClass]="paramService.getCellClass(param, day.value['00'])">{{
-              day.value["00"]
-            }}</span>
-            <span [ngClass]="paramService.getCellClass(param, day.value['06'])">{{ day.value["06"] }}</span>
-            <span [ngClass]="paramService.getCellClass(param, day.value['12'])">{{ day.value["12"] }}</span>
-            <span [ngClass]="paramService.getCellClass(param, day.value['18'])">{{ day.value["18"] }}</span>
-          </div>
-          <div *ngIf="['W500', 'W700', 'W850'].includes(paramService.parameterClasses[param])">
-            <span>{{ paramService.getWParam(day.value["00"]) }}</span>
-            <span>{{ paramService.getWParam(day.value["06"]) }}</span>
-            <span>{{ paramService.getWParam(day.value["12"]) }}</span>
-            <span>{{ paramService.getWParam(day.value["18"]) }}</span>
-          </div>
-        </td>
-      </tr>
-    </table>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ "qfa.time" | translate }}</th>
+          <th *ngFor="let _ of qfa.dates" class="table-entry">
+            <div>
+              <span>00</span>
+              <span>06</span>
+              <span>12</span>
+              <span>18</span>
+            </div>
+          </th>
+        </tr>
+        <!-- <tr *ngIf=" dustParams[city.toLowerCase()]">
+          <td class="header DUST">DUST</td>
+          <td *ngFor="let day of dustParams[city.toLowerCase()][selectedDayIndex]" class="table-entry DUST">
+            <div>
+              <span *ngFor="let param of day" [ngStyle]="{'background-color': dustParamService.dustToColor(param)}">
+                {{param}}
+              </span>
+            </div>
+          </td>
+        </tr> -->
+        <tr *ngFor="let param of qfa.parameters" [ngClass]="[paramService.parameterClasses[param]]">
+          <td class="header">
+            <abbr title="{{ paramService.getFullName(param) }}">{{ param }}</abbr>
+          </td>
+          <td
+            *ngFor="let day of qfa.data.parameters[param] | keyvalue"
+            class="table-entry"
+            [ngClass]="[paramService.parameterClasses[param]]"
+          >
+            <div *ngIf="!['W500', 'W700', 'W850'].includes(paramService.parameterClasses[param])">
+              <span *ngIf="param === 'QANmax' && day.key === '0'">---</span>
+              <span *ngIf="param !== 'QANmax'" [ngClass]="paramService.getCellClass(param, day.value['00'])">{{
+                day.value["00"]
+              }}</span>
+              <span [ngClass]="paramService.getCellClass(param, day.value['06'])">{{ day.value["06"] }}</span>
+              <span [ngClass]="paramService.getCellClass(param, day.value['12'])">{{ day.value["12"] }}</span>
+              <span [ngClass]="paramService.getCellClass(param, day.value['18'])">{{ day.value["18"] }}</span>
+            </div>
+            <div *ngIf="['W500', 'W700', 'W850'].includes(paramService.parameterClasses[param])">
+              <span>{{ paramService.getWParam(day.value["00"]) }}</span>
+              <span>{{ paramService.getWParam(day.value["06"]) }}</span>
+              <span>{{ paramService.getWParam(day.value["12"]) }}</span>
+              <span>{{ paramService.getWParam(day.value["18"]) }}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
-</p-dialog>
+</ng-template>

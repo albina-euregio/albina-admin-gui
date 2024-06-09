@@ -8,6 +8,7 @@ import {
   ImportantObservation,
   LocalFilterTypes,
   ObservationFilterType,
+  ObservationSource,
   ObservationType,
   Stability,
 } from "./models/generic-observation.model";
@@ -47,8 +48,8 @@ export interface FilterSelectionData {
 @Injectable()
 export class ObservationFilterService {
   public dateRange: Date[] = [];
-  public regions: string[] = [];
-  public observationSources: string[] = [];
+  public regions = {} as Record<string, boolean>;
+  public observationSources = {} as Record<ObservationSource, boolean>;
 
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
@@ -203,6 +204,7 @@ export class ObservationFilterService {
       this.inObservationSources(observation) &&
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
+      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
       Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, this.filterSelection[t].toValue(observation)))
     );
   }
@@ -371,6 +373,17 @@ export class ObservationFilterService {
     return this.startDate <= eventDate && eventDate <= this.endDate;
   }
 
+  isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
+    const selectedData: string[] = this.filterSelection[LocalFilterTypes.Days]["selected"]
+      .filter((element) => element !== "nan")
+      .sort();
+    if (selectedData.length < 1) {
+      return eventDate.getDate() === this.endDate.getDate();
+    } else {
+      return selectedData.indexOf(this.constantsService.getISODateString(eventDate)) === selectedData.length - 1;
+    }
+  }
+
   inMapBounds({ latitude, longitude }: GenericObservation): boolean {
     if (!latitude || !longitude) {
       return true;
@@ -379,13 +392,14 @@ export class ObservationFilterService {
     return mapBoundaryS < latitude && latitude < mapBoundaryN && mapBoundaryW < longitude && longitude < mapBoundaryE;
   }
 
-  inRegions(region: string) {
-    return !this.regions.length || (typeof region === "string" && this.regions.includes(region));
+  inRegions(region: string): boolean {
+    return !Object.values(this.regions).some((v) => v) || (typeof region === "string" && this.regions[region]);
   }
 
-  inObservationSources({ $source }: GenericObservation) {
+  inObservationSources({ $source }: GenericObservation): boolean {
     return (
-      !this.observationSources.length || (typeof $source === "string" && this.observationSources.includes($source))
+      !Object.values(this.observationSources).some((v) => v) ||
+      (typeof $source === "string" && this.observationSources[$source])
     );
   }
 

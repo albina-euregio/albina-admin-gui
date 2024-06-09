@@ -17,8 +17,6 @@ import { TranslateModule } from "@ngx-translate/core";
 
 // Pipes
 import { PipeModule } from "../pipes/pipes.module";
-import { DropdownModule } from "primeng/dropdown";
-import { TableModule } from "primeng/table";
 
 import { AlertModule } from "ngx-bootstrap/alert";
 import { TabsModule } from "ngx-bootstrap/tabs";
@@ -32,8 +30,6 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     CommonModule,
     TranslateModule,
     PipeModule.forRoot(),
-    DropdownModule,
-    TableModule,
     AccordionModule,
     AlertModule.forRoot(),
     TabsModule,

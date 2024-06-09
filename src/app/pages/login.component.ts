@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   @ViewChild("errorTemplate") errorTemplate: TemplateRef<any>;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-sm",
   };

@@ -32,6 +32,7 @@ import { Subscription } from "rxjs";
 
 import * as Enums from "../enums/enums";
 import { ServerModel } from "app/models/server.model";
+import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -140,16 +141,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   externalBulletinsSubscription!: Subscription;
 
   public config = {
+    animated: false,
     keyboard: true,
     class: "modal-md",
   };
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private activeRoute: ActivatedRoute,
     public bulletinsService: BulletinsService,
     public authenticationService: AuthenticationService,
     private translateService: TranslateService,
+    private localStorageService: LocalStorageService,
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
@@ -167,8 +171,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     // this.preventClick = false;
     // this.timer = 0;
 
-    // Set initial value based on the current window width
-    this.isCompactMapLayout = window.innerWidth < 768;
+    if (this.localStorageService.getCompactMapLayout()) {
+      this.isCompactMapLayout = this.localStorageService.getCompactMapLayout();
+    } else {
+      // Set initial value based on the current window width
+      this.isCompactMapLayout = window.innerWidth < 768;
+    }
 
     this.publishing = false;
     this.submitting = false;
@@ -177,11 +185,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.saveError = new Map();
     this.loadInternalBulletinsError = false;
     this.loadExternalBulletinsError = false;
+
+    this.route.queryParams.subscribe((params) => {
+      this.bulletinsService.setIsReadOnly(params.readOnly ? params.readOnly.toLocaleLowerCase() === "true" : false);
+    });
   }
 
   @HostListener("window:resize", ["$event"])
   onResize(event: Event) {
     this.isCompactMapLayout = (event.target as Window).innerWidth < 768;
+    this.localStorageService.setCompactMapLayout(this.isCompactMapLayout);
   }
 
   reset() {
@@ -246,7 +259,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       const resizeObserver = new ResizeObserver(() => {
         this.mapService.map?.invalidateSize();
-        this.mapService.afternoonMap?.invalidateSize();
+        if (this.showAfternoonMap) {
+          this.mapService.afternoonMap?.invalidateSize();
+        }
       });
       resizeObserver.observe(mapDiv);
     });
@@ -307,6 +322,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     } else {
       this.goBack();
     }
+  }
+
+  toggleCompactMapLayout() {
+    this.isCompactMapLayout = !this.isCompactMapLayout;
+    this.localStorageService.setCompactMapLayout(this.isCompactMapLayout);
   }
 
   updateBulletinScroll(scrollId: string, event): void {
@@ -425,7 +445,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const format = "yyyy-MM-dd";
     const locale = "en-US";
     const formattedDate = formatDate(date, format, locale);
-    this.router.navigate(["/bulletins/" + formattedDate]);
+    this.router.navigate(["/bulletins/" + formattedDate], {
+      queryParams: { readOnly: this.bulletinsService.getIsReadOnly() },
+    });
   }
 
   publishAll() {
@@ -672,9 +694,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private async initMaps() {
-    const [map, afternoonMap] = await this.mapService.initAmPmMap();
-    map.on("click", () => this.onMapClick());
-    afternoonMap.on("click", () => this.onMapClick());
+    await this.mapService.initAmPmMap();
+    this.mapService.map.on("click", () => this.onMapClick());
+    this.mapService.afternoonMap.on("click", () => this.onMapClick());
   }
 
   private onMapClick() {
@@ -711,10 +733,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         }
       }
     }
-  }
-
-  setMapLayout(isCompact: boolean): void {
-    this.isCompactMapLayout = isCompact;
   }
 
   setTendency(event, tendency) {
@@ -864,6 +882,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getNewId(response, regionId) {
+    for (const jsonBulletin of response) {
+      if (jsonBulletin.savedRegions.includes(regionId)) return jsonBulletin.id;
+    }
+    return undefined;
+  }
+
   private addInternalBulletins(response) {
     let hasDaytimeDependency = false;
 
@@ -992,12 +1017,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   createBulletin(copy) {
     let bulletin: BulletinModel;
+    this.showNewBulletinModal = true;
     if (copy && this.copyService.getBulletin()) {
-      this.showNewBulletinModal = true;
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
-      this.showNewBulletinModal = true;
       bulletin = new BulletinModel();
       bulletin.setAuthor(this.authenticationService.getCurrentAuthor());
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
@@ -1005,24 +1029,21 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
 
     this.selectBulletin(bulletin);
-    this.mapService.selectAggregatedRegion(bulletin);
     this.editBulletinMicroRegions(bulletin);
   }
 
   copyBulletin(bulletin: BulletinModel) {
-    if (this.checkAvalancheProblems()) {
-      const newBulletin = new BulletinModel(bulletin);
-      newBulletin.setAdditionalAuthors(new Array<string>());
-      newBulletin.setSavedRegions(new Array<string>());
-      newBulletin.setPublishedRegions(new Array<string>());
-      newBulletin.setSuggestedRegions(new Array<string>());
+    const newBulletin = new BulletinModel(bulletin);
+    newBulletin.setAdditionalAuthors(new Array<string>());
+    newBulletin.setSavedRegions(new Array<string>());
+    newBulletin.setPublishedRegions(new Array<string>());
+    newBulletin.setSuggestedRegions(new Array<string>());
 
-      newBulletin.setAuthor(this.authenticationService.getCurrentAuthor());
-      newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
-      newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
-      this.copyService.setCopyBulletin(true);
-      this.copyService.setBulletin(newBulletin);
-    }
+    newBulletin.setAuthor(this.authenticationService.getCurrentAuthor());
+    newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+    newBulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+    this.copyService.setCopyBulletin(true);
+    this.copyService.setBulletin(newBulletin);
   }
 
   toggleBulletin(bulletin: BulletinModel) {
@@ -1360,6 +1381,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private createBulletinOnServer(bulletin: BulletinModel) {
     if (this.isWriteDisabled()) return;
+    const regionId = bulletin.getSavedAndPublishedRegions()[0];
     const validFrom = new Date(this.bulletinsService.getActiveDate());
     const validUntil = new Date(this.bulletinsService.getActiveDate());
     validUntil.setTime(validUntil.getTime() + 24 * 60 * 60 * 1000);
@@ -1367,8 +1389,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.setValidUntil(validUntil);
     this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
+        if (this.activeBulletin && this.activeBulletin != undefined && this.activeBulletin.getId() == undefined) {
+          this.activeBulletin.setId(this.getNewId(data, regionId));
+        }
         this.mapService.deselectAggregatedRegion();
-        this.activeBulletin = undefined;
         this.addInternalBulletins(data);
         this.loadInternalBulletinsError = false;
         this.loading = false;
@@ -1383,11 +1407,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   updateSaveErrors() {
     for (const bulletin of this.saveError.values()) {
-      this.updateBulletinOnServer(bulletin);
+      this.updateBulletinOnServer(bulletin, false);
     }
   }
 
-  updateBulletinOnServer(bulletin: BulletinModel) {
+  updateBulletinOnServer(bulletin: BulletinModel, checkErrors: boolean = true) {
     if (this.isWriteDisabled()) return;
     const validFrom = new Date(this.bulletinsService.getActiveDate());
     const validUntil = new Date(this.bulletinsService.getActiveDate());
@@ -1400,6 +1424,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.saveError.delete(bulletin.id);
         this.loadInternalBulletinsError = false;
         this.loading = false;
+        if (checkErrors) {
+          this.updateSaveErrors();
+        }
         console.log("Bulletin updated on server.");
       },
       (error) => {
@@ -1438,30 +1465,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  getForeignRegionNames() {
-    if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTyrol)) {
-      return (
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol) +
-        ", " +
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino)
-      );
-    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeSouthTyrol)) {
-      return (
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) +
-        ", " +
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTrentino)
-      );
-    } else if (this.authenticationService.getActiveRegionId().startsWith(this.constantsService.codeTrentino)) {
-      return (
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeTyrol) +
-        ", " +
-        this.translateService.instant("bulletins.table.title.status." + this.constantsService.codeSouthTyrol)
-      );
-    } else {
-      return this.translateService.instant("bulletins.create.foreignRegions");
-    }
-  }
-
   showPreviewButton() {
     return (
       !this.publishing &&
@@ -1489,16 +1492,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.showNewBulletinModal = false;
     this.editRegions = false;
-
     if (bulletin !== undefined && bulletin.getSavedRegions().length === 0) {
       this.delBulletin(bulletin);
+      this.activeBulletin = undefined;
+    } else {
+      if (this.activeBulletin && this.activeBulletin !== undefined) {
+        this.mapService.selectAggregatedRegion(this.activeBulletin);
+      }
     }
-
     this.mapService.discardEditSelection();
-
-    if (this.activeBulletin && this.activeBulletin !== undefined) {
-      this.mapService.selectAggregatedRegion(this.activeBulletin);
-    }
   }
 
   save() {
@@ -1545,7 +1547,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   @HostListener("document:keydown", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.keyCode === 27 && this.editRegions) {
-      this.discardBulletin(event);
+      this.discardBulletin(event, this.activeBulletin);
     } else if (event.keyCode === 27 && (this.copyService.isCopyTextcat() || this.copyService.isCopyBulletin())) {
       this.copyService.resetCopyTextcat();
       this.copyService.resetCopyBulletin();
@@ -1615,6 +1617,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   deleteAggregatedRegionModalConfirm(): void {
     this.deleteAggregatedRegionModalRef.hide();
+    this.loading = true;
     this.delBulletin(this.bulletinMarkedDelete);
   }
 
@@ -1681,6 +1684,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   saveErrorModalConfirm(): void {
     this.saveErrorModalRef.hide();
+    this.loading = false;
   }
 
   openChangeErrorModal(template: TemplateRef<any>) {
@@ -1912,58 +1916,63 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.publishing = true;
 
-    this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-      (data) => {
-        let message =
-          "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
+    if (this.checkAvalancheProblems()) {
+      this.bulletinsService.checkBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
+        (data) => {
+          let message =
+            "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
 
-        for (const entry of data as any) {
-          if (entry === "missingDangerRating") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingDangerRating") + "<br>";
+          for (const entry of data as any) {
+            if (entry === "missingDangerRating") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingDangerRating") + "<br>";
+            }
+            if (entry === "missingRegion") {
+              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.missingRegion") + "<br>";
+            }
+            if (entry === "duplicateRegion") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.duplicateRegion") + "<br>";
+            }
+            if (entry === "missingAvActivityHighlights") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityHighlights") +
+                "<br>";
+            }
+            if (entry === "missingAvActivityComment") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityComment") +
+                "<br>";
+            }
+            if (entry === "missingSnowpackStructureHighlights") {
+              message +=
+                this.translateService.instant(
+                  "bulletins.table.publishBulletinsDialog.missingSnowpackStructureHighlights",
+                ) + "<br>";
+            }
+            if (entry === "missingSnowpackStructureComment") {
+              message +=
+                this.translateService.instant(
+                  "bulletins.table.publishBulletinsDialog.missingSnowpackStructureComment",
+                ) + "<br>";
+            }
+            if (entry === "pendingSuggestions") {
+              message +=
+                this.translateService.instant("bulletins.table.publishBulletinsDialog.pendingSuggestions") + "<br>";
+            }
+            if (entry === "incompleteTranslation") {
+              message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
+            }
           }
-          if (entry === "missingRegion") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.missingRegion") + "<br>";
-          }
-          if (entry === "duplicateRegion") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.duplicateRegion") + "<br>";
-          }
-          if (entry === "missingAvActivityHighlights") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityHighlights") +
-              "<br>";
-          }
-          if (entry === "missingAvActivityComment") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingAvActivityComment") + "<br>";
-          }
-          if (entry === "missingSnowpackStructureHighlights") {
-            message +=
-              this.translateService.instant(
-                "bulletins.table.publishBulletinsDialog.missingSnowpackStructureHighlights",
-              ) + "<br>";
-          }
-          if (entry === "missingSnowpackStructureComment") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.missingSnowpackStructureComment") +
-              "<br>";
-          }
-          if (entry === "pendingSuggestions") {
-            message +=
-              this.translateService.instant("bulletins.table.publishBulletinsDialog.pendingSuggestions") + "<br>";
-          }
-          if (entry === "incompleteTranslation") {
-            message += this.translateService.instant("bulletins.table.publishBulletinsDialog.incompleteTranslation");
-          }
-        }
 
-        this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
-      },
-      (error) => {
-        console.error("Bulletins could not be checked!");
-        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
-      },
-    );
+          this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
+        },
+        (error) => {
+          console.error("Bulletins could not be checked!");
+          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+        },
+      );
+    }
   }
 
   openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: Date, change: boolean) {

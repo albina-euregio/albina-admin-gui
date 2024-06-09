@@ -18,10 +18,10 @@ variables:
       - .yarn-cache/
   variables:
     NODE_OPTIONS: "--max-old-space-size=4096"
+    YARN_CACHE_FOLDER: .yarn-cache/
   before_script:
-    - echo 'yarn-offline-mirror ".yarn-cache/"' >> .yarnrc
-    - echo 'yarn-offline-mirror-pruning true' >> .yarnrc
-    - yarn install --frozen-lockfile --no-progress
+    - corepack enable
+    - yarn install --immutable
     - npm --no-git-tag-version version $(git describe)
 
 lint:
@@ -45,8 +45,8 @@ build:
   before_script:
     - apk add gettext
   script:
-    - envsubst < dist/assets/env.template.js > dist/assets/env.js
-    - cat dist/assets/env.js
+    - envsubst < dist/browser/assets/env.template.js > dist/browser/assets/env.js
+    - cat dist/browser/assets/env.js
   artifacts:
     paths:
       - dist/
@@ -60,7 +60,7 @@ build:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose dist/ $SFTP_SERVER
+    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose dist/browser/ $SFTP_SERVER
 
 build:development:
   extends: .envsubst

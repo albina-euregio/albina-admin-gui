@@ -7,13 +7,14 @@
   <div type="button" class="form-group row" style="padding-left: 1.25rem; padding-right: 1.25rem">
     <div class="col-md-6">
       <button (click)="createUser($event)" class="btn btn-sm btn-primary px-3">
-        <i class="fa fa-plus"></i> {{ "admin.users.button.create" | translate }}
+        <i class="ph ph-plus"></i> {{ "admin.users.button.create" | translate }}
       </button>
     </div>
   </div>
   <table class="table table-hover">
     <thead>
       <tr>
+        <th scope="col"></th>
         <th scope="col">{{ "admin.users.table.name" | translate }}</th>
         <th scope="col">{{ "admin.users.table.email" | translate }}</th>
         <th scope="col">{{ "admin.users.table.organization" | translate }}</th>
@@ -25,6 +26,13 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
+        <td>
+          <img
+            *ngIf="user.image"
+            [src]="authenticationService.getUserImageSanitized(user.image)"
+            class="user-avatar__img"
+          />
+        </td>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.organization }}</td>
@@ -34,11 +42,22 @@
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            (click)="editUser($event, user)"
+            (click)="editUser($event, user, true)"
             data-toggle="tooltip"
             title="{{ 'admin.users.tooltip.edit' | translate }}"
           >
-            <i class="fa fa-pencil"></i>
+            <i class="ph ph-pencil"></i>
+          </button>
+        </td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="changePassword($event, user)"
+            data-toggle="tooltip"
+            title="{{ 'admin.users.tooltip.changePassword' | translate }}"
+          >
+            <i class="ph ph-key"></i>
           </button>
         </td>
         <td>
@@ -49,7 +68,7 @@
             data-toggle="tooltip"
             title="{{ 'admin.users.tooltip.delete' | translate }}"
           >
-            <i class="fa fa-trash"></i>
+            <i class="ph ph-trash"></i>
           </button>
         </td>
       </tr>

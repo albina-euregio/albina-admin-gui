@@ -6,6 +6,7 @@ import {
   ViewChild,
   ElementRef,
   HostListener,
+  TemplateRef,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -26,8 +27,6 @@ import {
   genericObservationSchema,
 } from "./models/generic-observation.model";
 
-import { MenuItem, SharedModule } from "primeng/api";
-
 import { saveAs } from "file-saver";
 
 import { ObservationTableComponent } from "./observation-table.component";
@@ -37,19 +36,15 @@ import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
 import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
-import { DialogModule } from "primeng/dialog";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { BarChartComponent } from "./charts/bar-chart.component";
 import { RoseChartComponent } from "./charts/rose-chart.component";
-import { MenubarModule } from "primeng/menubar";
-import { InputTextModule } from "primeng/inputtext";
-import { CalendarModule } from "primeng/calendar";
-import { MultiSelectChangeEvent, MultiSelectModule } from "primeng/multiselect";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
-import { ToggleButtonModule } from "primeng/togglebutton";
-import { ButtonModule } from "primeng/button";
 import { AlbinaObservationsService } from "./observations.service";
 import { Control, LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
+import "bootstrap";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -60,19 +55,12 @@ export interface MultiselectDropdownData {
   standalone: true,
   imports: [
     BarChartComponent,
-    ButtonModule,
-    CalendarModule,
+    BsDatepickerModule,
     CommonModule,
-    DialogModule,
     FormsModule,
-    InputTextModule,
-    MenubarModule,
-    MultiSelectModule,
     ObservationTableComponent,
     PipeModule,
     RoseChartComponent,
-    SharedModule,
-    ToggleButtonModule,
     TranslateModule,
   ],
   templateUrl: "observations.component.html",
@@ -90,6 +78,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     observation: GenericObservation;
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
+    imgUrl: SafeResourceUrl;
   };
 
   public allRegions: RegionProperties[];
@@ -113,10 +102,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     DangerPattern: {} as OutputDataset,
     Days: {} as OutputDataset,
   };
-  public moreItems: MenuItem[];
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild("observationTable")
   observationTableComponent: ObservationTableComponent;
+  @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
 
   public get LocalFilterTypes(): typeof LocalFilterTypes {
     return LocalFilterTypes;
@@ -130,6 +119,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     public mapService: BaseMapService,
+    private modalService: BsModalService,
   ) {}
 
   async ngAfterContentInit() {
@@ -146,23 +136,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           key !== ObservationSource.Observer,
       )
       .map((key) => ({ id: key, name: key }));
-
-    this.moreItems = [
-      {
-        label: "Mehr",
-        items: [
-          {
-            label: "Export",
-            icon: "",
-            command: (event) => {
-              this.exportObservations();
-            },
-          },
-        ],
-      },
-    ];
-
-    this.filter.days = 1;
   }
 
   ngAfterViewInit() {
@@ -178,7 +151,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     layerControl.addOverlay(this.loadWeatherStations(), "Wetterstationen");
     layerControl.addOverlay(this.loadWebcams(), "Webcams");
     map.on("click", () => {
-      this.filter.regions = this.mapService.getSelectedRegions();
+      this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyLocalFilter(this.markerService.markerClassify);
     });
 
@@ -193,12 +166,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.mapService.removeMaps();
   }
 
-  onRegionsDropdownSelect(event: MultiSelectChangeEvent) {
-    this.mapService.clickRegion(event.value);
+  onRegionsDropdownSelect() {
+    this.mapService.clickRegion(this.filter.regions);
     this.applyLocalFilter(this.markerService.markerClassify);
   }
 
-  onSourcesDropdownSelect(event: MultiSelectChangeEvent) {
+  onSourcesDropdownSelect() {
     this.applyLocalFilter(this.markerService.markerClassify);
   }
 
@@ -244,6 +217,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.days = days;
     }
     this.clear();
+
     this.loading = onErrorResumeNext(
       this.observationsService.getObservations(),
       this.observationsService.getGenericObservations(),
@@ -260,6 +234,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       .catch((e) => console.error(e))
       .finally(() => {
         this.loading = undefined;
+        this.observations.sort((o1, o2) =>
+          +o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1,
+        );
         this.applyLocalFilter(this.markerService.markerClassify);
       });
   }
@@ -275,17 +252,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const json = JSON.stringify(collection, undefined, 2);
     const blob = new Blob([json], { type: "application/geo+json" });
     saveAs(blob, "observations.geojson");
-  }
-
-  get observationPopupVisible(): boolean {
-    return this.observationPopup !== undefined;
-  }
-
-  set observationPopupVisible(value: boolean) {
-    if (value) {
-      throw Error(String(value));
-    }
-    this.observationPopup = undefined;
   }
 
   toggleFilter(data: GenericFilterToggleData = {} as GenericFilterToggleData) {
@@ -347,7 +313,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
 
     this.observations.push(observation);
-    this.observations.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
 
     const marker = this.markerService
       .createMarker(observation)
@@ -387,7 +352,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   onObservationClick(observation: GenericObservation): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe };
+      this.observationPopup = { observation, table: [], iframe, imgUrl: undefined };
+    } else if (observation.$externalImg) {
+      const imgUrl = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalImg);
+      this.observationPopup = { observation, table: [], iframe: undefined, imgUrl: imgUrl };
     } else {
       const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
       const rows = toObservationTable(observation);
@@ -395,8 +363,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
-      this.observationPopup = { observation, table, iframe: undefined };
+      this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
     }
+    this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
   }
 
   toggleFilters() {
@@ -405,7 +374,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   @HostListener("document:keydown", ["$event"])
   handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }) {
-    if (!this.observationPopupVisible || !this.observationPopup?.observation) {
+    if (!this.observationPopup?.observation) {
       return;
     }
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
@@ -415,14 +384,22 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const observations = [...this.observations, ...this.observationsAsOverlay].filter(
       (o) => o.$source === observation.$source && o.$type === observation.$type,
     );
-    const index = observations.indexOf(observation);
+    var index = observations.indexOf(observation);
     if (index < 0) {
       return;
     }
     if (event.key === "ArrowRight") {
-      observation = observations[index + 1];
+      index += 1;
+      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+        index += 1;
+      }
+      observation = observations[index];
     } else if (event.key === "ArrowLeft") {
-      observation = observations[index - 1];
+      index -= 1;
+      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+        index -= 1;
+      }
+      observation = observations[index];
     }
     if (observation) {
       this.onObservationClick(observation);

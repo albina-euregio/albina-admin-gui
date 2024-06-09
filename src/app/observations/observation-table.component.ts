@@ -1,59 +1,60 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, EventEmitter, Input, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
 import { AlbinaObservationsService } from "./observations.service";
-import { Message, SharedModule } from "primeng/api";
-import { Table, TableModule } from "primeng/table";
 import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
 import { PipeModule } from "../pipes/pipes.module";
 import { ObservationEditorComponent } from "./observation-editor.component";
-import { MessagesModule } from "primeng/messages";
-import { DialogModule } from "primeng/dialog";
-import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
-import { ToggleButtonModule } from "primeng/togglebutton";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService, importantObservationTexts } from "./observation-marker.service";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   standalone: true,
-  imports: [
-    ButtonModule,
-    CommonModule,
-    DialogModule,
-    FormsModule,
-    MessagesModule,
-    ObservationEditorComponent,
-    PipeModule,
-    SharedModule,
-    TableModule,
-    ToggleButtonModule,
-    TranslateModule,
-  ],
+  imports: [CommonModule, FormsModule, ObservationEditorComponent, PipeModule, TranslateModule],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })
 export class ObservationTableComponent {
   @Input() observations: GenericObservation[] = [];
   @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
-  @ViewChild("observationTable") observationTable: Table;
   showObservationsWithoutCoordinates: boolean = false;
   observation: Observation;
+  observationSearch: string;
   saving = false;
-  messages: Message[] = [];
+  messages: any[] = [];
   importantObservationTexts = importantObservationTexts;
+  modalRef: BsModalRef;
+  @ViewChild("observationEditorTemplate") observationEditorTemplate: TemplateRef<any>;
 
   constructor(
+    private modalService: BsModalService,
     private observationsService: AlbinaObservationsService,
     private markerService: ObservationMarkerService,
     private translate: TranslateService,
   ) {}
 
+  get sortedObservations(): GenericObservation[] {
+    return (this.observations || []).sort((o1, o2) => +o2.eventDate - +o1.eventDate);
+  }
+
   newObservation() {
     this.observation = {
       eventType: EventType.Normal,
     } as Observation;
+    this.showDialog();
+  }
+
+  isShowObservation(observation: GenericObservation): boolean {
+    return (
+      (!this.showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude)) &&
+      (!this.observationSearch ||
+        [observation.authorName, observation.locationName, observation.content].some((text) =>
+          (text || "").toLocaleLowerCase().includes(this.observationSearch.toLocaleLowerCase()),
+        ))
+    );
   }
 
   onClick(observation: GenericObservation) {
@@ -78,18 +79,18 @@ export class ObservationTableComponent {
     if (typeof this.observation?.reportDate === "string") {
       this.observation.reportDate = this.observation.reportDate.slice(0, "2006-01-02T15:04".length);
     }
+    this.showDialog();
   }
 
-  get showDialog(): boolean {
-    return this.observation !== undefined;
+  showDialog() {
+    this.modalRef = this.modalService.show(this.observationEditorTemplate, {
+      class: "modal-fullscreen",
+    });
   }
 
-  set showDialog(value: boolean) {
-    if (value) {
-      throw Error("Cannot set boolean observation");
-    } else {
-      this.observation = undefined;
-    }
+  hideDialog() {
+    this.modalRef.hide();
+    this.modalRef = undefined;
   }
 
   async saveObservation() {
@@ -106,7 +107,7 @@ export class ObservationTableComponent {
         const newObservation = await this.observationsService.postObservation(observation).toPromise();
         this.observations.splice(0, 0, newObservation);
       }
-      this.showDialog = false;
+      this.hideDialog();
     } catch (error) {
       this.reportError(error);
     } finally {
@@ -126,7 +127,7 @@ export class ObservationTableComponent {
         (o) => isAvalancheWarningServiceObservation(o) && o.$data.id === observation.id,
       );
       this.observations.splice(index, 1);
-      this.showDialog = false;
+      this.hideDialog();
     } catch (error) {
       this.reportError(error);
     } finally {
@@ -136,6 +137,7 @@ export class ObservationTableComponent {
 
   discardObservation() {
     this.observation = undefined;
+    this.hideDialog();
   }
 
   private reportError(error: HttpErrorResponse) {

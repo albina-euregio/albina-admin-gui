@@ -2,19 +2,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData, DatePipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatDialogModule } from "@angular/material/dialog";
 
 import { AppComponent } from "./app.component";
 
-import { NAV_DROPDOWN_DIRECTIVES } from "./shared/nav-dropdown.directive";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
-import { SIDEBAR_TOGGLE_DIRECTIVES } from "./shared/sidebar.directive";
-import { AsideToggleDirective } from "./shared/aside.directive";
-import { PasswordMismatchValidatorDirective } from "./shared/password-mismatch.directive";
-import { BreadcrumbsComponent } from "./shared/breadcrumb.component";
-
-import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
 
 // Routing Module
 import { AppRoutingModule } from "./app.routing";
@@ -36,11 +27,9 @@ import { WsUpdateService } from "./providers/ws-update-service/ws-update.service
 import { WsRegionService } from "./providers/ws-region-service/ws-region.service";
 import { LocalStorageService } from "./providers/local-storage-service/local-storage.service";
 import { ConfigurationService } from "./providers/configuration-service/configuration.service";
-import { SocialmediaService } from "./providers/socialmedia-service/socialmedia.service";
 import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
-import { ConfirmationService } from "primeng/api";
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -49,14 +38,14 @@ import { AuthGuard } from "./guards/auth.guard";
 
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { CollapseModule } from "ngx-bootstrap/collapse";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { NgxSliderModule } from "./ngx-slider/lib/slider.module";
+import { NgxSliderModule } from "@angular-slider/ngx-slider";
 
 import { ModalSubmitComponent } from "./bulletins/modal-submit.component";
 import { ModalPublishComponent } from "./bulletins/modal-publish.component";
@@ -73,10 +62,9 @@ import localeEs from "@angular/common/locales/es";
 import localeCa from "@angular/common/locales/ca";
 // locale OC missing in @angular/common/locales/
 import localeOc from "@angular/common/locales/en";
-import { CreateUserComponent } from "./admin/create-user.component";
 import { UpdateUserComponent } from "./admin/update-user.component";
+import { ChangePasswordComponent } from "./admin/change-password.component";
 import { BaseMapService } from "./providers/map-service/base-map.service";
-import { DialogService } from "primeng/dynamicdialog";
 import { MapService } from "./providers/map-service/map.service";
 import {
   AlpsolutProfileService,
@@ -102,10 +90,24 @@ registerLocaleData(localeCa, "ca");
 registerLocaleData(localeOc, "oc");
 
 @NgModule({
+  declarations: [
+    AppComponent,
+    FullLayoutComponent,
+    SimpleLayoutComponent,
+    ModalSubmitComponent,
+    ModalPublishComponent,
+    ModalCheckComponent,
+    ModalPublicationStatusComponent,
+    ModalPublishAllComponent,
+    ModalMediaFileComponent,
+    UpdateUserComponent,
+    ChangePasswordComponent,
+  ],
+  bootstrap: [AppComponent],
+  exports: [TranslateModule],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatDialogModule,
     NgxSliderModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
@@ -113,30 +115,10 @@ registerLocaleData(localeOc, "oc");
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     BrowserAnimationsModule,
     PipeModule.forRoot(),
     ModalModule.forRoot(),
     TranslateModule.forRoot(),
-  ],
-  declarations: [
-    AppComponent,
-    FullLayoutComponent,
-    SimpleLayoutComponent,
-    BreadcrumbsComponent,
-    NAV_DROPDOWN_DIRECTIVES,
-    SIDEBAR_TOGGLE_DIRECTIVES,
-    AsideToggleDirective,
-    PasswordMismatchValidatorDirective,
-    ModalSubmitComponent,
-    ModalPublishComponent,
-    ModalCheckComponent,
-    ModalPublicationStatusComponent,
-    ModalPublishAllComponent,
-    ModalMediaFileComponent,
-    CatalogOfPhrasesComponent,
-    CreateUserComponent,
-    UpdateUserComponent,
   ],
   providers: [
     {
@@ -157,12 +139,10 @@ registerLocaleData(localeOc, "oc");
     WsBulletinService,
     LocalStorageService,
     ConfigurationService,
-    ConfirmationService,
     ConstantsService,
     CoordinateDataService,
     CopyService,
     DatePipe,
-    DialogService,
     ElevationService,
     GeocodingService,
     GetDustParamService,
@@ -180,15 +160,13 @@ registerLocaleData(localeOc, "oc");
     QfaService,
     RegionsService,
     SettingsService,
-    SocialmediaService,
     StatisticsService,
     TranslateService,
     UserService,
     WsBulletinService,
     WsRegionService,
     WsUpdateService,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
-  exports: [TranslateModule],
 })
 export class AppModule {}

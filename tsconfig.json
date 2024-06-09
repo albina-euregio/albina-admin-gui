@@ -2,7 +2,6 @@
   "compilerOptions": {
     "baseUrl": "",
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "lib": [
       "es2020",

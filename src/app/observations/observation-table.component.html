@@ -1,32 +1,34 @@
-<p-table
-  #observationTable
-  [value]="observations"
-  sortField="eventDate"
-  [sortOrder]="-1"
-  [globalFilterFields]="['authorName', 'locationName', 'content']"
-  class="table table-hover observation-table"
->
-  <ng-template pTemplate="header">
+<table #observationTable class="table table-hover observation-table">
+  <thead>
     <tr>
       <th colspan="99" style="text-align: left; padding: 0">
         <div class="global-bar-scroll">
           <div class="global-bar global-bar-left">
-            <p-toggleButton
-              onLabel=""
-              offLabel=""
-              onIcon="fa fa-map-marker"
-              offIcon="fa fa-map-marker"
-              [(ngModel)]="showObservationsWithoutCoordinates"
-            ></p-toggleButton>
+            <div class="form-check form-switch" title="show observations without coordinates">
+              <input
+                [(ngModel)]="showObservationsWithoutCoordinates"
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="showObservationsWithoutCoordinates"
+              />
+              <label class="form-check-label" for="showObservationsWithoutCoordinates">
+                <i class="ph ph-map-pin"></i>
+              </label>
+            </div>
 
             <div class="global-bar-item">
-              <i class="pi pi-search" style="padding-right: 0.2rem"></i>
-              <input
-                pInputText
-                type="text"
-                (input)="observationTable.filterGlobal($event.target.value, 'contains')"
-                placeholder="{{ 'observations.search' | translate }}"
-              />
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="ph ph-magnifying-glass" style="padding-right: 0.2rem"></i>
+                </span>
+                <input
+                  type="text"
+                  [(ngModel)]="observationSearch"
+                  placeholder="{{ 'observations.search' | translate }}"
+                  class="form-control"
+                />
+              </div>
             </div>
           </div>
 
@@ -41,29 +43,25 @@
         </div>
       </th>
     </tr>
-  </ng-template>
+  </thead>
 
-  <ng-template pTemplate="body" let-observation>
-    <tr
-      *ngIf="!showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude)"
-      (click)="onClick(observation)"
-      style="cursor: pointer"
-    >
+  <tbody *ngFor="let observation of sortedObservations">
+    <tr *ngIf="isShowObservation(observation)" (click)="onClick(observation)" style="cursor: pointer">
       <td style="padding: 1rem 0; white-space: nowrap; max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
         <span class="text-truncate d-block">
-          <i class="fa fa-calendar"></i>
+          <i class="ph ph-calendar"></i>
           {{ observation.eventDate | localizedDate: "dd.MM.yyyy HH:mm" }}
         </span>
         <span class="text-truncate d-block">
-          <i class="fa fa-user"></i>
+          <i class="ph ph-user"></i>
           {{ observation.authorName }}
         </span>
         <span class="text-truncate d-block">
-          <i class="fa fa-globe"></i>
+          <i class="ph ph-globe"></i>
           {{ observation.locationName }}
           <i
             *ngIf="observation.latitude && observation.longitude"
-            class="fa fa-map-marker"
+            class="ph ph-map-pin"
             title="{{ 'observations.hasCoordinates' | translate }}"
           ></i>
         </span>
@@ -114,16 +112,18 @@
       </td>
       <td style="padding: 1rem 0">{{ observation.content }}</td>
     </tr>
-  </ng-template>
-</p-table>
-<p-dialog [(visible)]="showDialog" [modal]="true" [header]="observation?.locationName" [style]="{ width: '80vw' }">
-  <p-messages [(value)]="messages"></p-messages>
-  <app-observation-editor *ngIf="observation" [observation]="observation"></app-observation-editor>
-  <p-footer>
+  </tbody>
+</table>
+
+<ng-template #observationEditorTemplate>
+  <div class="modal-header">
+    {{ observation?.locationName }}
+  </div>
+  <div class="modal-body">
+    {{ messages }}
+    <app-observation-editor *ngIf="observation" [observation]="observation"></app-observation-editor>
     <button
       type="button"
-      pButton
-      [icon]="saving ? 'pi pi-spin pi-spinner' : 'pi pi-save'"
       [disabled]="
         saving ||
         observation?.reportDate === undefined ||
@@ -132,24 +132,25 @@
         observation?.eventDate === ''
       "
       (click)="saveObservation()"
-      label="{{ 'observations.button.save' | translate }}"
-    ></button>
+      class="btn btn-sm btn-primary"
+    >
+      <i *ngIf="saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!saving" class="ph ph-floppy-disk"></i>
+      {{ "observations.button.save" | translate }}
+    </button>
     <button
       type="button"
-      pButton
-      [icon]="saving ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"
       [disabled]="saving || observation?.id === undefined"
       (click)="deleteObservation()"
-      label="{{ 'observations.button.delete' | translate }}"
-      class="ui-button-danger"
-    ></button>
-    <button
-      type="button"
-      pButton
-      icon="pi pi-times"
-      (click)="discardObservation()"
-      label="{{ 'observations.button.discard' | translate }}"
-      class="ui-button-secondary"
-    ></button>
-  </p-footer>
-</p-dialog>
+      class="btn btn-sm btn-danger"
+    >
+      <i *ngIf="saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!saving" class="ph ph-trash"></i>
+      {{ "observations.button.delete" | translate }}
+    </button>
+    <button type="button" (click)="discardObservation()" class="btn btn-sm btn-secondary">
+      <i class="ph ph-x"></i>
+      {{ "observations.button.discard" | translate }}
+    </button>
+  </div>
+</ng-template>
