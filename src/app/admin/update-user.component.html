@@ -1,7 +1,7 @@
 <div>
   <div class="card">
     <form #updateUserForm="ngForm" appPasswordMismatch>
-      <div class="card-block">
+      <div class="card-body">
         <div class="form-group row">
           <label for="inputName" class="col-sm-2 col-form-label">{{
             "admin.createUser.table.image" | translate
@@ -165,7 +165,7 @@
           *ngIf="!update"
           [disabled]="!updateUserForm.valid"
           type="submit"
-          class="btn btn-sm btn-primary px-3"
+          class="btn btn-sm btn-primary px-3 me-1"
           (click)="createUser()"
         >
           {{ "admin.createUser.button.create" | translate }}
@@ -174,7 +174,7 @@
           *ngIf="update"
           [disabled]="!updateUserForm.valid"
           type="submit"
-          class="btn btn-sm btn-primary px-3"
+          class="btn btn-sm btn-primary px-3 me-1"
           (click)="updateUser()"
         >
           {{ "admin.createUser.button.update" | translate }}
