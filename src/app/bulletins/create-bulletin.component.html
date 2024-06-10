@@ -1,6 +1,7 @@
 <div class="animated fadeIn create-bulletin">
+  <i (click)="toggleSidebar()" class="ph ph-sidebar sidebar-toggle"></i>
   <!-- Sidebar -->
-  <aside class="create-bulletin__sidebar">
+  <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isSidebarVisible }">
     <!-- Date Switch -->
     <header class="create-bulletin__sidebar-header">
       <div class="create-bulletin__date">
@@ -496,7 +497,8 @@
   <div
     class="create-bulletin__default-layout"
     [ngClass]="{
-      'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout
+      'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
+      'full-width': !isSidebarVisible
     }"
   >
     <!-- Active bulletin -->

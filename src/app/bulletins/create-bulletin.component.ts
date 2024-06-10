@@ -65,6 +65,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public showNewBulletinModal: boolean = false;
 
   public isCompactMapLayout: boolean = false;
+  public isSidebarVisible = true;
   private bulletinMarkedDelete: BulletinModel;
 
   public publishing: boolean;
@@ -327,6 +328,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   toggleCompactMapLayout() {
     this.isCompactMapLayout = !this.isCompactMapLayout;
     this.localStorageService.setCompactMapLayout(this.isCompactMapLayout);
+  }
+
+  toggleSidebar() {
+    this.isSidebarVisible = !this.isSidebarVisible;
   }
 
   updateBulletinScroll(scrollId: string, event): void {
