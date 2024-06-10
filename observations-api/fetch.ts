@@ -32,6 +32,6 @@ async function* fetchAll(
   yield* fetchLawisProfiles(startDate, endDate, existing);
   yield* fetchLolaKronos(startDate, endDate);
   yield* fetchLwdKip(startDate, endDate);
-  yield* fetchWikiSnow();
+  yield* fetchWikiSnow(startDate, endDate);
   yield* fetchSnowLineCalculations(startDate, endDate);
 }
