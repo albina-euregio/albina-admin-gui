@@ -103,19 +103,34 @@
           <!-- !global-bar-right -->
           <div class="global-bar global-bar-right">
             <div class="global-bar-item global-bar-item-add">
-              <button type="button" (click)="newObservation()" class="btn btn-bare" title="New observation">
+              <button
+                type="button"
+                (click)="newObservation()"
+                class="btn btn-bare"
+                title="'admin.observations.newObservation' | translate"
+              >
                 <i class="ph ph-plus-circle"></i>
               </button>
             </div>
 
             <div class="global-bar-item global-bar-item-load">
-              <button type="button" (click)="exportObservations()" class="btn btn-bare" title="Export observation">
+              <button
+                type="button"
+                (click)="exportObservations()"
+                class="btn btn-bare"
+                title="'admin.observations.exportObservations' | translate"
+              >
                 <i class="ph ph-download-simple"></i>
               </button>
             </div>
 
             <div class="global-bar-item global-bar-item-load">
-              <button type="button" class="btn btn-bare" (click)="toggleFilters()" title="Show/hide filter bar">
+              <button
+                type="button"
+                class="btn btn-bare"
+                (click)="toggleFilters()"
+                title="'admin.observations.toggleFilterBar' | translate"
+              >
                 <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
                 <i *ngIf="!layoutFilters" class="ph ph-caret-left"></i>
               </button>

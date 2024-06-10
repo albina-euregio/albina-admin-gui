@@ -330,7 +330,9 @@ export class MapService {
     const result = new Array<string>();
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       if (entry.feature.properties.selected) {
-        result.push(entry.feature.properties.id);
+        if (result.indexOf(entry.feature.properties.id) < 0) {
+          result.push(entry.feature.properties.id);
+        }
       }
     }
     return result;
