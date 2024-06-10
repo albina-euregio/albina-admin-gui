@@ -575,9 +575,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mysql2@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "mysql2@npm:3.7.0"
+"mysql2@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "mysql2@npm:3.10.0"
   dependencies:
     denque: "npm:^2.1.0"
     generate-function: "npm:^2.3.1"
@@ -587,7 +587,7 @@ __metadata:
     named-placeholders: "npm:^1.1.3"
     seq-queue: "npm:^0.0.5"
     sqlstring: "npm:^2.3.2"
-  checksum: 10c0/4906525cb7767674dc55a313a9c68619298ffefe68fe3ee3022d9b8cd0eada4bc46502c1fe2d9308d97e8d3683f66dedfa1292e53d4afdf1e461b721fad38a37
+  checksum: 10c0/0e54fea1349ca3df82acd43a1402e5c4d2dc42f8ed797441973385af566ff0060dc7316ecc49fab5081eaeb0f433dfffe719caca62b166bf6f788e6acf8b7bec
   languageName: node
   linkType: hard
 
@@ -622,7 +622,7 @@ __metadata:
     "@types/geojson": "npm:^7946.0.14"
     "@types/which-polygon": "npm:^2.2.3"
     express: "npm:^4.19.2"
-    mysql2: "npm:^3.7.0"
+    mysql2: "npm:^3.10.0"
     which-polygon: "npm:^2.2.1"
   languageName: unknown
   linkType: soft
