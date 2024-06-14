@@ -14,6 +14,15 @@ $compact-map-height: 300px;
     height: $bulletin-height;
     overflow-y: scroll;
     overflow-x: hidden;
+
+    /* Hide scrollbar for Webkit browsers */
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
 }
 
 .create-bulletin__map-container,
@@ -256,6 +265,22 @@ app-danger-rating-icon {
     }
 
     .create-bulletin__map-container--am-pm .create-bulletin__map {
+        width: 50%;
+    }
+}
+
+.create-bulletin__compact-layout--compare {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .create-bulletin__map-container {
+        order: -1;
+        width: 100%;
+    }
+
+    .create-bulletin__region-form {
         width: 50%;
     }
 }

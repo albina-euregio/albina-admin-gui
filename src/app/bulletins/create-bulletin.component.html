@@ -504,6 +504,8 @@
     class="create-bulletin__default-layout"
     [ngClass]="{
       'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
+      'create-bulletin__compact-layout--compare':
+        activeBulletin !== undefined && !editRegions && isCompactMapLayout && comparedBulletin !== undefined,
       'full-width': !isBulletinSidebarVisible
     }"
   >
@@ -540,6 +542,7 @@
         [bulletin]="comparedBulletin"
         [disabled]="true"
         [isCompactMapLayout]="isCompactMapLayout"
+        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
         [isComparedBulletin]="true"
         (deselectBulletinEvent)="eventDeselectComparedBulletin($event)"
       ></app-avalanche-bulletin>
