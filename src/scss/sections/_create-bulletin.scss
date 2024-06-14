@@ -31,6 +31,7 @@ $sidebar-padding: $space-4;
 $sidebar-border: 1px solid $gray-300;
 
 .create-bulletin__sidebar {
+    position: relative;
     width: $sidebar-width;
     flex: 0 0 $sidebar-width;
     border-right: $sidebar-border;
@@ -49,6 +50,12 @@ $sidebar-border: 1px solid $gray-300;
     padding: $sidebar-padding;
     padding-top: $sidebar-padding * 1.5;
     background: white;
+}
+
+.create-bulletin__sidebar-close {
+    position: absolute;
+    top: calc($sidebar-padding / 2);
+    right: $sidebar-padding;
 }
 
 .create-bulletin__date {
@@ -219,14 +226,6 @@ app-danger-rating-icon {
 }
 
 .sidebar-toggle {
-    position: fixed;
-    top: 61px;
-    right: 0;
-    left: 15px;
-    z-index: 1030;
-    background-color: #fff;
-    height: 15px;
-    width: 15px;
 }
 
 .create-bulletin__default-layout {

@@ -30,6 +30,7 @@ export class AvalancheBulletinComponent {
   @Input() bulletin: BulletinModel;
   @Input() disabled: boolean;
   @Input() isCompactMapLayout: boolean;
+  @Input() isBulletinSidebarVisible: boolean;
   @Input() isComparedBulletin: boolean;
 
   private readonly updateBulletinOnServerEventDebounce = new Subject<BulletinModel>();
@@ -39,6 +40,7 @@ export class AvalancheBulletinComponent {
   @Output() editMicroRegionsEvent = new EventEmitter<BulletinModel>();
   @Output() copyBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
+  @Output() toggleBulletinSidebarEvent = new EventEmitter<void>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -376,6 +378,10 @@ export class AvalancheBulletinComponent {
 
   removeDaytimeDependencyModalDecline(): void {
     this.removeDaytimeDependencyModalRef.hide();
+  }
+
+  toggleBulletinSidebar() {
+    this.toggleBulletinSidebarEvent.emit();
   }
 }
 

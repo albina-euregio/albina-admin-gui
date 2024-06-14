@@ -10,6 +10,16 @@ $region-form-width: 512px;
   background: $white;
 }
 
+.region-form__mobile-header {
+  padding: $space-4 $space-6;
+  display: flex;
+  border-bottom: $region-form-border;
+
+  h1 {
+    margin-left: $space-2;
+  }
+}
+
 .region-form__header {
   padding: $region-form-padding;
   display: flex;

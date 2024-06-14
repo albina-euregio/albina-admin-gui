@@ -1,9 +1,15 @@
 <div class="animated fadeIn create-bulletin">
-  <i (click)="toggleSidebar()" class="ph ph-sidebar sidebar-toggle"></i>
   <!-- Sidebar -->
-  <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isSidebarVisible }">
+  <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isBulletinSidebarVisible }">
     <!-- Date Switch -->
     <header class="create-bulletin__sidebar-header">
+      <button
+        (click)="toggleBulletinSidebar()"
+        class="btn btn-bare btn-sm btn-icon btn-bare--grey d-block d-md-none create-bulletin__sidebar-close"
+      >
+        <i class="ph-bold ph-x"></i>
+      </button>
+
       <div class="create-bulletin__date">
         <h1 class="create-bulletin__current-date font-m-bold">
           {{ bulletinsService.getActiveDate() | localizedDate: "EEEE," }}<br />
@@ -498,7 +504,7 @@
     class="create-bulletin__default-layout"
     [ngClass]="{
       'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
-      'full-width': !isSidebarVisible
+      'full-width': !isBulletinSidebarVisible
     }"
   >
     <!-- Active bulletin -->
@@ -512,12 +518,14 @@
         [bulletin]="activeBulletin"
         [disabled]="isDisabled()"
         [isCompactMapLayout]="isCompactMapLayout"
+        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
         [isComparedBulletin]="false"
         (updateBulletinOnServerEvent)="updateBulletinOnServer($event)"
         (deleteBulletinEvent)="eventDeleteBulletin($event)"
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
         (copyBulletinEvent)="eventCopyBulletin($event)"
         (deselectBulletinEvent)="eventDeselectBulletin($event)"
+        (toggleBulletinSidebarEvent)="toggleBulletinSidebar($event)"
       ></app-avalanche-bulletin>
     </div>
     <!-- End Active bulletin -->
