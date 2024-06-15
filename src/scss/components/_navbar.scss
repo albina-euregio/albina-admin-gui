@@ -1,6 +1,18 @@
 .navbar {
     z-index: 1050;
 
+    .navbar__toggler {
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    @media (min-width: 992px) {
+        .navbar__toggler {
+            display: none;
+        }
+    }
+
     .navbar__logo {
         height: 32px;
         width: auto;
