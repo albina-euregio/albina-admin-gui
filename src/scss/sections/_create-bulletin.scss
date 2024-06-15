@@ -234,9 +234,6 @@ app-danger-rating-icon {
     vertical-align: top;
 }
 
-.sidebar-toggle {
-}
-
 .create-bulletin__default-layout {
     display: flex;
     align-items: stretch;
@@ -282,6 +279,25 @@ app-danger-rating-icon {
 
     .create-bulletin__region-form {
         width: 50%;
+    }
+}
+
+/* Scroll map on small screens */
+@media (max-height: ($compact-map-height * 2)) {
+    .create-bulletin__default-layout.create-bulletin__compact-layout {
+        overflow-y: auto;
+        height: 100vh;
+        .create-bulletin__region-form {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        .create-bulletin__map-container {
+            width: 100%;
+            overflow: visible;
+            position: relative;
+        }
     }
 }
 

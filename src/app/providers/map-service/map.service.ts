@@ -139,6 +139,14 @@ export class MapService {
     new RegionNameControl().addTo(map);
 
     this.map = map;
+
+    // Disable dragging on mobile devices
+    this.map.whenReady(() => {
+      if (L.Browser.mobile) {
+        this.map.dragging.disable();
+      }
+    });
+
     return map;
   }
 
@@ -156,6 +164,14 @@ export class MapService {
     this.pmControl.addTo(afternoonMap);
 
     this.afternoonMap = afternoonMap;
+
+    // Disable dragging on mobile devices
+    this.afternoonMap.whenReady(() => {
+      if (L.Browser.mobile) {
+        this.afternoonMap.dragging.disable();
+      }
+    });
+
     return afternoonMap;
   }
 
