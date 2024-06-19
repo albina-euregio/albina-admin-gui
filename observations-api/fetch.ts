@@ -14,7 +14,7 @@ export async function fetchAndInsert(startDate: Date, endDate: Date) {
   const existing = await selectObservations(connection, startDate, endDate);
   for await (const obs of fetchAll(startDate, endDate, existing)) {
     const ex = findExistingObservation(existing, obs);
-    if (ex && (obs.latitude !== ex.latitude || obs.longitude !== ex.longitude)) {
+    if (!ex || obs.latitude !== ex.latitude || obs.longitude !== ex.longitude) {
       augmentRegion(obs);
       await augmentElevation(obs);
     }
@@ -32,6 +32,6 @@ async function* fetchAll(
   yield* fetchLawisProfiles(startDate, endDate, existing);
   yield* fetchLolaKronos(startDate, endDate);
   yield* fetchLwdKip(startDate, endDate);
-  yield* fetchWikiSnow();
+  yield* fetchWikiSnow(startDate, endDate);
   yield* fetchSnowLineCalculations(startDate, endDate);
 }

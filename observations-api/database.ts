@@ -23,7 +23,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     ASPECTS: Array.isArray(o.aspect) ? o.aspect.join(",") : o.aspect ?? null,
     AUTHOR_NAME: o.authorName ?? null,
     OBS_CONTENT: o.content ?? null,
-    OBS_DATA: o.$data ?? null,
+    OBS_DATA: o.$data ? JSON.stringify(o.$data) : null,
     ELEVATION: o.elevation ?? null,
     ELEVATION_LOWER_BOUND: o.elevationLowerBound ?? null,
     ELEVATION_UPPER_BOUND: o.elevationUpperBound ?? null,
@@ -36,7 +36,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     AVALANCHE_PROBLEMS: o.avalancheProblems?.join(",") ?? null,
     DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
-    EXTRA_DIALOG_ROWS: o.$extraDialogRows ?? null,
+    EXTRA_DIALOG_ROWS: o.$extraDialogRows ? JSON.stringify(o.$extraDialogRows) : null,
   };
   const sql = `
   REPLACE INTO generic_observations
@@ -49,9 +49,10 @@ export async function insertObservation(connection: Connection, o: GenericObserv
     await connection.execute(sql, Object.values(data));
   } catch (err) {
     if ((err as QueryError).code === "ER_DUP_ENTRY") {
-      console.debug("Skipping existing observation", o.$id, o.$source);
+      console.debug("Skipping existing observation", o.$id, data);
       return;
     }
+    console.error(err, JSON.stringify(o));
     throw err;
   }
 }

@@ -33,6 +33,8 @@ build:
   extends: .build
   script:
     - yarn build
+    - mv dist/browser/* dist/
+    - rmdir dist/browser/
   artifacts:
     paths:
       - dist/
@@ -45,8 +47,8 @@ build:
   before_script:
     - apk add gettext
   script:
-    - envsubst < dist/browser/assets/env.template.js > dist/browser/assets/env.js
-    - cat dist/browser/assets/env.js
+    - envsubst < dist/assets/env.template.js > dist/assets/env.js
+    - cat dist/assets/env.js
   artifacts:
     paths:
       - dist/
@@ -60,7 +62,7 @@ build:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose dist/browser/ $SFTP_SERVER
+    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose dist/ $SFTP_SERVER
 
 build:development:
   extends: .envsubst
