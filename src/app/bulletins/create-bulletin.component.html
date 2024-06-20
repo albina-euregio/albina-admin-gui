@@ -506,7 +506,7 @@
       'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
       'create-bulletin__compact-layout--compare':
         activeBulletin !== undefined && !editRegions && isCompactMapLayout && comparedBulletin !== undefined,
-      'full-width': !isBulletinSidebarVisible
+      'full-width': !isBulletinSidebarVisible,
     }"
   >
     <!-- Active bulletin -->
@@ -725,7 +725,7 @@
       </button>
 
       <button
-        *ngIf="false && activeBulletin !== undefined && activeBulletin !== bulletin"
+        *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
         [disabled]="loading || editRegions"
         type="button"
         class="btn btn-bare btn-sm btn-icon"
@@ -855,7 +855,7 @@
         <tr
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date)
+            'bulletins-table__active--day': isActiveDate(date),
           }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
