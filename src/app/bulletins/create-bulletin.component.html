@@ -284,7 +284,7 @@
           {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }}
         </h5>
         <div class="btn-group region-divider__actions">
-          <div class="region-divider__actions-dropdown mr-1" bsDropdown>
+          <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
             <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle>
               <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
@@ -506,7 +506,7 @@
       'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
       'create-bulletin__compact-layout--compare':
         activeBulletin !== undefined && !editRegions && isCompactMapLayout && comparedBulletin !== undefined,
-      'full-width': !isBulletinSidebarVisible,
+      'full-width': !isBulletinSidebarVisible
     }"
   >
     <!-- Active bulletin -->
@@ -855,7 +855,7 @@
         <tr
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date),
+            'bulletins-table__active--day': isActiveDate(date)
           }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
