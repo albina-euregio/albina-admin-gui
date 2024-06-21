@@ -503,10 +503,11 @@
   <div
     class="create-bulletin__default-layout"
     [ngClass]="{
-      'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
+      'create-bulletin__compact-layout':
+        activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined),
       'create-bulletin__compact-layout--compare':
-        activeBulletin !== undefined && !editRegions && isCompactMapLayout && comparedBulletin !== undefined,
-      'full-width': !isBulletinSidebarVisible
+        activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined,
+      'full-width': !isBulletinSidebarVisible,
     }"
   >
     <!-- Active bulletin -->
@@ -555,11 +556,7 @@
       [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }"
     >
       <!-- Bulletin Sidebar toggle icon -->
-      <button
-        *ngIf="!activeBulletin && !isBulletinSidebarVisible"
-        (click)="toggleBulletinSidebar()"
-        class="create-bulletin__sidebar-close-on-map"
-      >
+      <button (click)="toggleBulletinSidebar()" class="create-bulletin__sidebar-close-on-map">
         <i class="ph ph-sidebar"></i>
       </button>
       <!-- End Bulletin Sidebar toggle icon -->
@@ -864,7 +861,7 @@
         <tr
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date)
+            'bulletins-table__active--day': isActiveDate(date),
           }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate">

@@ -71,7 +71,7 @@ $sidebar-border: 1px solid $gray-300;
     position: absolute;
     top: 70px;
     left: 10px;
-    z-index: 2000;
+    z-index: 1020;
 
     display: inline-flex;
     justify-content: center;
@@ -299,6 +299,7 @@ app-danger-rating-icon {
 
     .create-bulletin__region-form {
         width: 50%;
+        min-width: 0;
     }
 }
 
@@ -308,7 +309,6 @@ app-danger-rating-icon {
         overflow-y: auto;
         height: 100vh;
         .create-bulletin__region-form {
-            width: 100%;
             height: auto;
             overflow: visible;
         }
@@ -350,5 +350,12 @@ app-danger-rating-icon {
 
     .create-bulletin__region-form {
         min-width: 0 !important;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .create-bulletin__region-form,
+    .create-bulletin__compact-layout--compare .create-bulletin__region-form {
+        width: 100%;
     }
 }
