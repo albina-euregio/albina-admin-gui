@@ -58,13 +58,39 @@ $sidebar-border: 1px solid $gray-300;
 .create-bulletin__sidebar-header {
     padding: $sidebar-padding;
     padding-top: $sidebar-padding * 1.5;
-    background: white;
+    background: $white;
 }
 
 .create-bulletin__sidebar-close {
     position: absolute;
     top: calc($sidebar-padding / 2);
     right: $sidebar-padding;
+}
+
+.create-bulletin__sidebar-close-on-map {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    z-index: 2000;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 34px;
+    height: 33px;
+    font-size: 22px;
+
+    background-color: $white;
+    background-clip: padding-box;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-top: 1px solid #ccc;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+
+    &:hover {
+        background-color: #f4f4f4;
+    }
 }
 
 .create-bulletin__date {

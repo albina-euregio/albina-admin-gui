@@ -554,6 +554,15 @@
       class="create-bulletin__map-container"
       [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }"
     >
+      <!-- Bulletin Sidebar toggle icon -->
+      <button
+        *ngIf="!activeBulletin && !isBulletinSidebarVisible"
+        (click)="toggleBulletinSidebar()"
+        class="create-bulletin__sidebar-close-on-map"
+      >
+        <i class="ph ph-sidebar"></i>
+      </button>
+      <!-- End Bulletin Sidebar toggle icon -->
       <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
         <div class="floating-action__text">
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
