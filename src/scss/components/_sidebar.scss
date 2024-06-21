@@ -1,0 +1,57 @@
+.sidebar {
+    position: fixed;
+    top: 53px;
+    left: -$mobile-sidebar-width;
+    width: $mobile-sidebar-width;
+    height: 100%;
+    color: $sidebar-color;
+    background: $sidebar-bg;
+    transition: left 0.3s ease-in-out;
+    z-index: 1040;
+    overflow-y: auto;
+
+    .navbar-nav .nav-item .nav-link {
+        display: flex;
+        align-items: center;
+        padding-left: 2.5em;
+        position: relative;
+
+        &:hover,
+        &.active {
+            background: $sidebar-bg-active;
+        }
+    }
+
+    .navbar-nav .nav-item .nav-link i {
+        margin-right: 8px;
+        position: absolute;
+        left: 0.5em;
+        font-size: 14px;
+    }
+}
+
+.sidebar--open {
+    left: 0;
+}
+
+.sidebar-content {
+    padding: $sidebar-padding;
+}
+
+/* Hide sidebar on larger screens */
+@media (min-width: 992px) {
+    .sidebar {
+        display: none;
+    }
+}
+
+/* Hide navbar content on smaller screens if sidebar is open */
+@media (max-width: 991px) {
+    .navbar .navbar-collapse {
+        display: none;
+    }
+
+    .navbar-collapse.collapse.show {
+        display: block;
+    }
+}

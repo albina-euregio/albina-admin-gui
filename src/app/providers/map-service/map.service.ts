@@ -139,6 +139,14 @@ export class MapService {
     new RegionNameControl().addTo(map);
 
     this.map = map;
+
+    // Disable dragging on mobile devices
+    this.map.whenReady(() => {
+      if (L.Browser.mobile) {
+        this.map.dragging.disable();
+      }
+    });
+
     return map;
   }
 
@@ -156,6 +164,14 @@ export class MapService {
     this.pmControl.addTo(afternoonMap);
 
     this.afternoonMap = afternoonMap;
+
+    // Disable dragging on mobile devices
+    this.afternoonMap.whenReady(() => {
+      if (L.Browser.mobile) {
+        this.afternoonMap.dragging.disable();
+      }
+    });
+
     return afternoonMap;
   }
 
@@ -330,7 +346,9 @@ export class MapService {
     const result = new Array<string>();
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       if (entry.feature.properties.selected) {
-        result.push(entry.feature.properties.id);
+        if (result.indexOf(entry.feature.properties.id) < 0) {
+          result.push(entry.feature.properties.id);
+        }
       }
     }
     return result;

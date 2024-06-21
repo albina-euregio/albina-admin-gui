@@ -8,10 +8,9 @@ import { P500Component } from "./500.component";
 import { LoginComponent } from "./login.component";
 
 import { PagesRoutingModule } from "./pages-routing.module";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @NgModule({
-  imports: [PagesRoutingModule, FormsModule, TranslateModule, CommonModule, ConfirmDialogModule],
+  imports: [PagesRoutingModule, FormsModule, TranslateModule, CommonModule],
   declarations: [P404Component, P500Component, LoginComponent],
 })
 export class PagesModule {}

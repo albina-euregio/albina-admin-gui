@@ -1,7 +1,7 @@
-<mat-dialog-content>
+<div>
   <div class="card">
     <form #updateUserForm="ngForm" appPasswordMismatch>
-      <div class="card-block">
+      <div class="card-body">
         <div class="form-group row">
           <label for="inputName" class="col-sm-2 col-form-label">{{
             "admin.createUser.table.image" | translate
@@ -161,28 +161,30 @@
       </div>
       <!-- Footer -->
       <div class="card-footer">
-        <button
-          *ngIf="!update"
-          [disabled]="!updateUserForm.valid"
-          type="submit"
-          class="btn btn-sm btn-primary px-3"
-          (click)="createUser()"
-        >
-          {{ "admin.createUser.button.create" | translate }}
-        </button>
-        <button
-          *ngIf="update"
-          [disabled]="!updateUserForm.valid"
-          type="submit"
-          class="btn btn-sm btn-primary px-3"
-          (click)="updateUser()"
-        >
-          {{ "admin.createUser.button.update" | translate }}
-        </button>
-        <button type="button" class="btn btn-sm btn-secondary px-3" (click)="closeDialog('')">
-          {{ "admin.createUser.button.cancel" | translate }}
-        </button>
+        <div class="d-grid gap-2 d-md-block">
+          <button
+            *ngIf="!update"
+            [disabled]="!updateUserForm.valid"
+            type="submit"
+            class="btn btn-sm btn-primary px-3 mx-1"
+            (click)="createUser()"
+          >
+            {{ "admin.createUser.button.create" | translate }}
+          </button>
+          <button
+            *ngIf="update"
+            [disabled]="!updateUserForm.valid"
+            type="submit"
+            class="btn btn-sm btn-primary px-3 mx-1"
+            (click)="updateUser()"
+          >
+            {{ "admin.createUser.button.update" | translate }}
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary px-3 mx-1" (click)="closeDialog('')">
+            {{ "admin.createUser.button.cancel" | translate }}
+          </button>
+        </div>
       </div>
     </form>
   </div>
-</mat-dialog-content>
+</div>

@@ -1,4 +1,12 @@
 <div>
+  <div class="region-form__mobile-header" [ngClass]="{ 'd-none': isBulletinSidebarVisible }">
+    <span (click)="toggleBulletinSidebar()" class="button-icon ph ph-list"></span>
+    <h1 class="font-m-bold">
+      {{ bulletinsService.getActiveDate() | localizedDate: "EEEE," }}
+      {{ bulletinsService.getActiveDate() | localizedDate: "d. MMMM y" }}
+    </h1>
+  </div>
+
   <header class="region-form__header">
     <div class="region-form__header-actions btn-group" dropdown>
       <button (click)="deselectBulletin()" class="btn btn-bare btn-sm btn-icon btn-bare--grey">
@@ -400,6 +408,16 @@
     </accordion>
   </main>
 </div>
+
+<ng-template #catalogOfPhrasesTemplate>
+  <iframe
+    (load)="initCatalogOfPhrases($event)"
+    (message)="getText($event)"
+    [src]="pmUrl"
+    width="100%"
+    height="100%"
+  ></iframe>
+</ng-template>
 
 <ng-template #removeDaytimeDependencyTemplate>
   <div class="modal-body text-center">

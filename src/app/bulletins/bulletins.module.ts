@@ -21,18 +21,14 @@ import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.compon
 // Bulletins Routing
 import { BulletinsRoutingModule } from "./bulletins-routing.module";
 import { TranslateModule } from "@ngx-translate/core";
-import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { NgxSliderModule } from "@angular-slider/ngx-slider";
 
 // Pipes
 import { PipeModule } from "../pipes/pipes.module";
-import { DatePipe } from "@angular/common";
 
 // Bootstrap ngx
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { DialogModule } from "primeng/dialog";
-import { MapService } from "../providers/map-service/map.service";
 import { BulletinTextComponent } from "./bulletin-text.component";
 
 @NgModule({
@@ -41,12 +37,10 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     FormsModule,
     CommonModule,
     TranslateModule,
-    ConfirmDialogModule,
     PipeModule.forRoot(),
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSliderModule,
-    DialogModule,
   ],
   exports: [AspectsComponent],
   declarations: [

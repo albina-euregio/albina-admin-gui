@@ -2,13 +2,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData, DatePipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatDialogModule } from "@angular/material/dialog";
 
 import { AppComponent } from "./app.component";
 
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
-import { CatalogOfPhrasesComponent } from "./catalog-of-phrases/catalog-of-phrases.component";
 
 // Routing Module
 import { AppRoutingModule } from "./app.routing";
@@ -33,7 +30,6 @@ import { ConfigurationService } from "./providers/configuration-service/configur
 import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
-import { ConfirmationService } from "primeng/api";
 
 // Pipes
 import { PipeModule } from "./pipes/pipes.module";
@@ -69,7 +65,6 @@ import localeOc from "@angular/common/locales/en";
 import { UpdateUserComponent } from "./admin/update-user.component";
 import { ChangePasswordComponent } from "./admin/change-password.component";
 import { BaseMapService } from "./providers/map-service/base-map.service";
-import { DialogService } from "primeng/dynamicdialog";
 import { MapService } from "./providers/map-service/map.service";
 import {
   AlpsolutProfileService,
@@ -105,7 +100,6 @@ registerLocaleData(localeOc, "oc");
     ModalPublicationStatusComponent,
     ModalPublishAllComponent,
     ModalMediaFileComponent,
-    CatalogOfPhrasesComponent,
     UpdateUserComponent,
     ChangePasswordComponent,
   ],
@@ -114,7 +108,6 @@ registerLocaleData(localeOc, "oc");
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatDialogModule,
     NgxSliderModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
@@ -146,12 +139,10 @@ registerLocaleData(localeOc, "oc");
     WsBulletinService,
     LocalStorageService,
     ConfigurationService,
-    ConfirmationService,
     ConstantsService,
     CoordinateDataService,
     CopyService,
     DatePipe,
-    DialogService,
     ElevationService,
     GeocodingService,
     GetDustParamService,

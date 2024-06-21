@@ -1,14 +1,20 @@
-import { Component, AfterContentInit, Inject } from "@angular/core";
+import { Component, AfterContentInit } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
 import { UserModel } from "../models/user.model";
 
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
+import { BsModalRef } from "ngx-bootstrap/modal";
+
+type Result =
+  | "" // cancel
+  | {
+      type: "danger" | "success";
+      msg: string;
+    };
 
 @Component({
   templateUrl: "update-user.component.html",
@@ -19,6 +25,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public update: boolean;
   public isAdmin: boolean;
 
+  public user: UserModel;
   public alerts: any[] = [];
   public roles: any;
   public regions: any;
@@ -33,6 +40,8 @@ export class UpdateUserComponent implements AfterContentInit {
   public activeRegions: any[] = [];
   public activeLanguageCode: string;
 
+  public result: Result;
+
   constructor(
     private imageCompress: NgxImageCompressService,
     private translateService: TranslateService,
@@ -40,27 +49,23 @@ export class UpdateUserComponent implements AfterContentInit {
     public configurationService: ConfigurationService,
     public authenticationService: AuthenticationService,
     public regionsService: RegionsService,
-    private dialogRef: MatDialogRef<UpdateUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {
-    this.isAdmin = data.isAdmin;
-    this.update = data.update;
-    if (data.user) {
-      this.activeImage = data.user.image;
-      this.activeName = data.user.name;
-      this.activeEmail = data.user.email;
-      this.activeOrganization = data.user.organization;
-      if (data.user.roles) {
-        this.activeRoles = data.user.roles;
-      }
-      if (data.user.regions) {
-        this.activeRegions = data.user.regions;
-      }
-      this.activeLanguageCode = data.user.languageCode;
-    }
-  }
+    private bsModalRef: BsModalRef,
+  ) {}
 
   ngAfterContentInit() {
+    if (this.user) {
+      this.activeImage = this.user.image;
+      this.activeName = this.user.name;
+      this.activeEmail = this.user.email;
+      this.activeOrganization = this.user.organization;
+      if (this.user.roles) {
+        this.activeRoles = this.user.roles;
+      }
+      if (this.user.regions) {
+        this.activeRegions = this.user.regions;
+      }
+      this.activeLanguageCode = this.user.languageCode;
+    }
     this.userService.getRoles().subscribe(
       (data) => {
         this.roles = data;
@@ -214,7 +219,8 @@ export class UpdateUserComponent implements AfterContentInit {
     }
   }
 
-  closeDialog(data) {
-    this.dialogRef.close(data);
+  closeDialog(result: Result) {
+    this.result = result;
+    this.bsModalRef.hide();
   }
 }

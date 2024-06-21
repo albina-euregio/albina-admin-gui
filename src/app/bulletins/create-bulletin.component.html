@@ -1,8 +1,15 @@
 <div class="animated fadeIn create-bulletin">
   <!-- Sidebar -->
-  <aside class="create-bulletin__sidebar">
+  <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isBulletinSidebarVisible }">
     <!-- Date Switch -->
     <header class="create-bulletin__sidebar-header">
+      <button
+        (click)="toggleBulletinSidebar()"
+        class="btn btn-bare btn-sm btn-icon btn-bare--grey d-block d-md-none create-bulletin__sidebar-close"
+      >
+        <i class="ph-bold ph-x"></i>
+      </button>
+
       <div class="create-bulletin__date">
         <h1 class="create-bulletin__current-date font-m-bold">
           {{ bulletinsService.getActiveDate() | localizedDate: "EEEE," }}<br />
@@ -277,7 +284,7 @@
           {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }}
         </h5>
         <div class="btn-group region-divider__actions">
-          <div class="region-divider__actions-dropdown mr-1" bsDropdown>
+          <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
             <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle>
               <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
@@ -496,7 +503,10 @@
   <div
     class="create-bulletin__default-layout"
     [ngClass]="{
-      'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout
+      'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
+      'create-bulletin__compact-layout--compare':
+        activeBulletin !== undefined && !editRegions && isCompactMapLayout && comparedBulletin !== undefined,
+      'full-width': !isBulletinSidebarVisible
     }"
   >
     <!-- Active bulletin -->
@@ -510,12 +520,14 @@
         [bulletin]="activeBulletin"
         [disabled]="isDisabled()"
         [isCompactMapLayout]="isCompactMapLayout"
+        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
         [isComparedBulletin]="false"
         (updateBulletinOnServerEvent)="updateBulletinOnServer($event)"
         (deleteBulletinEvent)="eventDeleteBulletin($event)"
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
         (copyBulletinEvent)="eventCopyBulletin($event)"
         (deselectBulletinEvent)="eventDeselectBulletin($event)"
+        (toggleBulletinSidebarEvent)="toggleBulletinSidebar($event)"
       ></app-avalanche-bulletin>
     </div>
     <!-- End Active bulletin -->
@@ -530,6 +542,7 @@
         [bulletin]="comparedBulletin"
         [disabled]="true"
         [isCompactMapLayout]="isCompactMapLayout"
+        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
         [isComparedBulletin]="true"
         (deselectBulletinEvent)="eventDeselectComparedBulletin($event)"
       ></app-avalanche-bulletin>
@@ -541,6 +554,15 @@
       class="create-bulletin__map-container"
       [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }"
     >
+      <!-- Bulletin Sidebar toggle icon -->
+      <button
+        *ngIf="!activeBulletin && !isBulletinSidebarVisible"
+        (click)="toggleBulletinSidebar()"
+        class="create-bulletin__sidebar-close-on-map"
+      >
+        <i class="ph ph-sidebar"></i>
+      </button>
+      <!-- End Bulletin Sidebar toggle icon -->
       <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
         <div class="floating-action__text">
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
@@ -712,7 +734,7 @@
       </button>
 
       <button
-        *ngIf="false && activeBulletin !== undefined && activeBulletin !== bulletin"
+        *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
         [disabled]="loading || editRegions"
         type="button"
         class="btn btn-bare btn-sm btn-icon"

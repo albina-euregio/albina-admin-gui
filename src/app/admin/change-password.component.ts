@@ -1,7 +1,14 @@
-import { Component, Inject } from "@angular/core";
+import { Component } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { UserService } from "../providers/user-service/user.service";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { BsModalRef } from "ngx-bootstrap/modal";
+
+type Result =
+  | "" // cancel
+  | {
+      type: "danger" | "success";
+      msg: string;
+    };
 
 @Component({
   templateUrl: "change-password.component.html",
@@ -17,17 +24,14 @@ export class ChangePasswordComponent {
   public isAdmin: boolean;
   public userId: string;
 
+  public result: Result;
+
   constructor(
     private translateService: TranslateService,
     private userService: UserService,
-    private dialogRef: MatDialogRef<ChangePasswordComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private bsModalRef: BsModalRef,
   ) {
     this.changePasswordLoading = false;
-    if (data) {
-      this.isAdmin = data.isAdmin;
-      this.userId = data.userId;
-    }
   }
 
   changePassword() {
@@ -89,7 +93,8 @@ export class ChangePasswordComponent {
     }
   }
 
-  closeDialog(data) {
-    this.dialogRef.close(data);
+  closeDialog(result: Result) {
+    this.result = result;
+    this.bsModalRef.hide();
   }
 }

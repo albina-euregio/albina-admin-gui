@@ -3,15 +3,17 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
-        <div class="card-header"><i class="fa fa-lock"></i>{{ "settings.title" | translate }}</div>
-        <div class="card-block">
+        <div class="card-header d-flex align-items-center">
+          <i class="ph ph-key me-2"></i>{{ "settings.title" | translate }}
+        </div>
+        <div class="card-body">
           <div *ngFor="let alert of alerts">
             <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{
               alert.msg
             }}</alert>
           </div>
         </div>
-        <div class="card-block">
+        <div class="card-body">
           <div class="form-group row">
             <label for="inputName" class="col-sm-2 col-form-label">{{
               "admin.createUser.table.image" | translate
@@ -73,24 +75,26 @@
         </div>
         <!-- Footer -->
         <div class="card-footer">
-          <button
-            type="button"
-            class="btn btn-sm btn-primary px-3"
-            (click)="editUser($event)"
-            data-toggle="tooltip"
-            title="{{ 'admin.users.tooltip.edit' | translate }}"
-          >
-            {{ "admin.createUser.button.update" | translate }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm btn-primary px-3"
-            (click)="changePassword($event)"
-            data-toggle="tooltip"
-            title="{{ 'settings.changePassword.title' | translate }}"
-          >
-            {{ "settings.changePassword.title" | translate }}
-          </button>
+          <div class="d-grid gap-2 d-md-block">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary mx-1"
+              (click)="editUser($event)"
+              data-toggle="tooltip"
+              title="{{ 'admin.users.tooltip.edit' | translate }}"
+            >
+              {{ "admin.createUser.button.update" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary mx-1"
+              (click)="changePassword($event)"
+              data-toggle="tooltip"
+              title="{{ 'settings.changePassword.title' | translate }}"
+            >
+              {{ "settings.changePassword.title" | translate }}
+            </button>
+          </div>
         </div>
       </div>
     </div>

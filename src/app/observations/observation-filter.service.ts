@@ -48,8 +48,8 @@ export interface FilterSelectionData {
 @Injectable()
 export class ObservationFilterService {
   public dateRange: Date[] = [];
-  public regions: string[] = [];
-  public observationSources: string[] = [];
+  public regions = {} as Record<string, boolean>;
+  public observationSources = {} as Record<ObservationSource, boolean>;
 
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
@@ -392,13 +392,14 @@ export class ObservationFilterService {
     return mapBoundaryS < latitude && latitude < mapBoundaryN && mapBoundaryW < longitude && longitude < mapBoundaryE;
   }
 
-  inRegions(region: string) {
-    return !this.regions.length || (typeof region === "string" && this.regions.includes(region));
+  inRegions(region: string): boolean {
+    return !Object.values(this.regions).some((v) => v) || (typeof region === "string" && this.regions[region]);
   }
 
-  inObservationSources({ $source }: GenericObservation) {
+  inObservationSources({ $source }: GenericObservation): boolean {
     return (
-      !this.observationSources.length || (typeof $source === "string" && this.observationSources.includes($source))
+      !Object.values(this.observationSources).some((v) => v) ||
+      (typeof $source === "string" && this.observationSources[$source])
     );
   }
 

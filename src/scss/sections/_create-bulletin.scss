@@ -14,9 +14,19 @@ $compact-map-height: 300px;
     height: $bulletin-height;
     overflow-y: scroll;
     overflow-x: hidden;
+
+    /* Hide scrollbar for Webkit browsers */
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
 }
 
-.create-bulletin__map-container, .create-bulletin__map {
+.create-bulletin__map-container,
+.create-bulletin__map {
     height: $bulletin-height;
 }
 
@@ -30,14 +40,57 @@ $sidebar-padding: $space-4;
 $sidebar-border: 1px solid $gray-300;
 
 .create-bulletin__sidebar {
+    position: relative;
     width: $sidebar-width;
     flex: 0 0 $sidebar-width;
     border-right: $sidebar-border;
+    transition:
+        flex-basis 0.5s ease,
+        transform 0.5s ease;
+
+    &.hidden {
+        overflow: hidden;
+        flex-basis: 0;
+        transform: translateX(-100%);
+    }
 }
 
 .create-bulletin__sidebar-header {
     padding: $sidebar-padding;
-    background: white;
+    padding-top: $sidebar-padding * 1.5;
+    background: $white;
+}
+
+.create-bulletin__sidebar-close {
+    position: absolute;
+    top: calc($sidebar-padding / 2);
+    right: $sidebar-padding;
+}
+
+.create-bulletin__sidebar-close-on-map {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    z-index: 2000;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 34px;
+    height: 33px;
+    font-size: 22px;
+
+    background-color: $white;
+    background-clip: padding-box;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-top: 1px solid #ccc;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+
+    &:hover {
+        background-color: #f4f4f4;
+    }
 }
 
 .create-bulletin__date {
@@ -55,12 +108,12 @@ $sidebar-border: 1px solid $gray-300;
 }
 
 .create-bulletin__action-buttons {
-    margin: $space-3 0 $space-2 0;
+    margin: $space-1 0 $space-1 0;
     width: 100%;
 }
 
 .create-bulletin__action-buttons--small {
-    margin: $space-3 0 $space-2 0;
+    margin: $space-1 0 $space-1 0;
 }
 
 // Status
@@ -85,7 +138,7 @@ $sidebar-border: 1px solid $gray-300;
     align-items: center;
 
     i {
-       margin-right: $space-2; 
+        margin-right: $space-2;
     }
 }
 
@@ -97,7 +150,7 @@ $sidebar-border: 1px solid $gray-300;
     align-items: center;
 
     i {
-       margin-right: $space-2; 
+        margin-right: $space-2;
     }
 }
 
@@ -129,12 +182,6 @@ $sidebar-border: 1px solid $gray-300;
         border-bottom: $sidebar-border;
         margin-top: -1px;
     }
-}
-
-.create-bulletin__region-dropdown.dropdown-menu.show {
-    position: fixed;
-    left: 5px !important;
-    top: 218px !important;
 }
 
 // Regions list
@@ -187,12 +234,17 @@ $sidebar-border: 1px solid $gray-300;
     display: flex;
     flex-flow: row wrap;
     gap: $space-1;
-    align-items: center;
+    align-items: flex-end;
 }
 .region-thumb__avalanche-problem-icon {
     width: 20px;
     height: 20px;
     border: 1px solid $gray-400;
+}
+
+app-danger-rating-icon {
+    width: 20px;
+    height: 20px;
 }
 
 .grid-container {
@@ -219,7 +271,8 @@ $sidebar-border: 1px solid $gray-300;
         height: calc(100vh - $compact-map-height - $header-nav-height);
     }
 
-    .create-bulletin__map-container, .create-bulletin__map {
+    .create-bulletin__map-container,
+    .create-bulletin__map {
         height: $compact-map-height;
     }
 
@@ -230,6 +283,41 @@ $sidebar-border: 1px solid $gray-300;
 
     .create-bulletin__map-container--am-pm .create-bulletin__map {
         width: 50%;
+    }
+}
+
+.create-bulletin__compact-layout--compare {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .create-bulletin__map-container {
+        order: -1;
+        width: 100%;
+    }
+
+    .create-bulletin__region-form {
+        width: 50%;
+    }
+}
+
+/* Scroll map on small screens */
+@media (max-height: ($compact-map-height * 2)) {
+    .create-bulletin__default-layout.create-bulletin__compact-layout {
+        overflow-y: auto;
+        height: 100vh;
+        .create-bulletin__region-form {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        .create-bulletin__map-container {
+            width: 100%;
+            overflow: visible;
+            position: relative;
+        }
     }
 }
 
@@ -252,7 +340,7 @@ $sidebar-border: 1px solid $gray-300;
     p {
         margin-top: $space-6;
     }
-  }
+}
 
 // Responsive layout
 @include media-breakpoint-down(md) {
@@ -264,4 +352,3 @@ $sidebar-border: 1px solid $gray-300;
         min-width: 0 !important;
     }
 }
-

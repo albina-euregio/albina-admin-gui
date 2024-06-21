@@ -9,19 +9,11 @@
     ></object>
   </div>
   <div class="footer">
-    <button
-      type="button"
-      (click)="save()"
-      pButton
-      class="btn btn-primary"
-      label="{{ 'bulletins.create.decisionTree.save' | translate }}"
-    ></button>
-    <button
-      type="button"
-      (click)="discard()"
-      pButton
-      class="btn btn-primary"
-      label="{{ 'bulletins.create.decisionTree.discard' | translate }}"
-    ></button>
+    <button type="button" (click)="save()" class="btn btn-primary">
+      {{ "bulletins.create.decisionTree.save" | translate }}
+    </button>
+    <button type="button" (click)="discard()" class="btn btn-secondary">
+      {{ "bulletins.create.decisionTree.discard" | translate }}
+    </button>
   </div>
 </div>
