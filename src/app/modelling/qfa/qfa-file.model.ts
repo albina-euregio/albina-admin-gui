@@ -1,6 +1,6 @@
 import * as types from "./qfa-types";
 
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 
 export class QfaFile implements types.QFA {
   public metadata = {} as types.metadata;

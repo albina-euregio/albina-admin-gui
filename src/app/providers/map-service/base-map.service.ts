@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ConstantsService } from "../constants-service/constants.service";
-import { CircleMarker, Control, LatLng, LayerGroup, Map, Marker, TileLayer } from "leaflet";
+import { CircleMarker, Control, LatLng, LayerGroup, Map, Marker } from "leaflet";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
 
 import { AuthenticationService } from "../authentication-service/authentication.service";

@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import * as types from "./qfa-types";
 import { ConstantsService } from "../../providers/constants-service/constants.service";
 
 enum Cities {

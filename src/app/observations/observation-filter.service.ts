@@ -7,7 +7,6 @@ import {
   GenericObservation,
   ImportantObservation,
   LocalFilterTypes,
-  ObservationFilterType,
   ObservationSource,
   ObservationType,
   Stability,

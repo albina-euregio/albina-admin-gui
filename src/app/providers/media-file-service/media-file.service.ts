@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams, HttpRequest, HttpEvent, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpRequest, HttpEvent } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
 import { SettingsService } from "../settings-service/settings.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";

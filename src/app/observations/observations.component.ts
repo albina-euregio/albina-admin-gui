@@ -14,7 +14,6 @@ import { RegionsService, RegionProperties } from "../providers/regions-service/r
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import {
   GenericObservation,
-  ObservationFilterType,
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
@@ -35,7 +34,6 @@ import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
-import { ElevationService } from "../providers/map-service/elevation.service";
 import { PipeModule } from "../pipes/pipes.module";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BarChartComponent } from "./charts/bar-chart.component";
