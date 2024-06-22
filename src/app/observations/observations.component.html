@@ -151,6 +151,17 @@
         </div>
       </div>
 
+      <div *ngIf="layout === 'gallery'" class="layout-gallery">
+        <div class="card" style="height: 100%">
+          <div class="card-body" style="overflow-y: auto; overflow-x: auto">
+            <app-observation-gallery
+              [observations]="localWebcams"
+              (observationClick)="onObservationClick($event)"
+            ></app-observation-gallery>
+          </div>
+        </div>
+      </div>
+
       <!-- !layout-map -->
       <div class="layout-map">
         <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
@@ -233,7 +244,7 @@
     <!-- !layout-switch -->
     <div class="layout-switch">
       <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
-        <span class="button-icon ph ph-map"></span>
+        <span class="button-icon ph ph-map-trifold"></span>
         <span class="button-text">
           {{ "admin.observations.map" | translate }}
         </span>
@@ -248,6 +259,12 @@
         <span class="button-icon ph ph-chart-line"></span>
         <span class="button-text">
           {{ "admin.observations.charts.charts" | translate }}
+        </span>
+      </div>
+      <div *ngIf="layout !== 'gallery'" (click)="layout = 'gallery'" class="layout-switch-gallery obs-button">
+        <span class="button-icon ph ph-images"></span>
+        <span class="button-text">
+          {{ "admin.observations.gallery" | translate }}
         </span>
       </div>
     </div>

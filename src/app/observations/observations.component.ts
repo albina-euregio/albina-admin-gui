@@ -29,6 +29,7 @@ import {
 
 import { saveAs } from "file-saver";
 
+import { ObservationGalleryComponent } from "./observation-gallery.component";
 import { ObservationTableComponent } from "./observation-table.component";
 import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
@@ -58,6 +59,7 @@ export interface MultiselectDropdownData {
     BsDatepickerModule,
     CommonModule,
     FormsModule,
+    ObservationGalleryComponent,
     ObservationTableComponent,
     PipeModule,
     RoseChartComponent,
@@ -68,9 +70,11 @@ export interface MultiselectDropdownData {
 })
 export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
-  public layout: "map" | "table" | "chart" = "map";
+  public layout: "map" | "table" | "chart" | "gallery" = "gallery";
   public layoutFilters = true;
   public observations: GenericObservation[] = [];
+  public webcams: GenericObservation[] = [];
+  public localWebcams: GenericObservation[] = [];
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public observationsWithoutCoordinates: number = 0;
@@ -283,6 +287,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.localObservations = this.observations.filter(
       (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
     );
+    this.localWebcams = this.webcams.filter(
+      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
+    );
     this.localObservations.forEach((observation) => {
       this.markerService
         .createMarker(observation, this.filter.isHighlighted(observation))
@@ -332,7 +339,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private loadWebcams(): LayerGroup<any> {
-    return this.loadGenericObservations0(this.observationsService.getGenericWebcams(), "webcams");
+    const webcams = this.observationsService.getGenericWebcams();
+    this.webcams = [];
+    webcams.forEach((w) => {
+      augmentRegion(w);
+      if (!w.region) return;
+      this.webcams.push(w);
+      this.applyLocalFilter(this.markerService.markerClassify);
+    });
+    return this.loadGenericObservations0(webcams, "webcams");
   }
 
   private loadGenericObservations0(

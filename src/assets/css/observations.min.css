@@ -331,6 +331,7 @@
 .chart-content .chart {
   height: 300px;
 }
+.layout-gallery,
 .layout-table {
   z-index: 30;
   position: absolute;

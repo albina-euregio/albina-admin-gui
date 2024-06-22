@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row">
+    <input type="datetime-local" [step]="3600" class="form-control" [(ngModel)]="webcamDate" />
+  </div>
+  <div class="row row-cols-2 g-2">
+    <div *ngFor="let observation of sortedObservations">
+      <div class="card">
+        <img
+          (click)="observationClick.emit(observation)"
+          [alt]="observation.locationName"
+          [src]="observation.$externalImg"
+          class="card-img-top"
+          loading="lazy"
+          style="cursor: pointer"
+        />
+        <div class="card-body">
+          <p class="card-text">
+            {{ observation.locationName }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

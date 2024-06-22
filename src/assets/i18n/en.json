@@ -591,6 +591,7 @@
     "observations": {
       "table": "Table",
       "map": "Map",
+      "gallery": "Gallery",
       "filters": "Filters",
       "title": "Observations",
       "newObservation": "New observation",
