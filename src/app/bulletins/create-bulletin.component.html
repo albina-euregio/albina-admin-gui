@@ -1,4 +1,7 @@
-<div class="animated fadeIn create-bulletin">
+<div
+  class="animated fadeIn create-bulletin"
+  [ngClass]="{ 'create-bulletin--modal': showNewBulletinModal && activeBulletin }"
+>
   <!-- Sidebar -->
   <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isBulletinSidebarVisible }">
     <!-- Date Switch -->
@@ -281,7 +284,9 @@
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
         <h5 class="font-s-bold">
-          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }}
+          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }} ({{
+            getOwnBulletins().length
+          }})
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
@@ -450,7 +455,7 @@
       <!-- Foreign regions -->
       <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()">
         <h5 class="font-s-bold">
-          {{ "bulletins.create.foreignRegions" | translate }}
+          {{ "bulletins.create.foreignRegions" | translate }} ({{ getForeignBulletins().length }})
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1">
@@ -476,9 +481,7 @@
           class="create-bulletin__region-divider foreign"
           (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)"
         >
-          <h5 class="font-s-medium">
-            {{ externalRegion.key.name }}
-          </h5>
+          <h5 class="font-s-medium">{{ externalRegion.key.name }} ({{ externalRegion.value.length }})</h5>
           <div class="btn-group region-divider__actions">
             <div class="region-divider__actions-dropdown mr-1">
               <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
@@ -503,9 +506,10 @@
   <div
     class="create-bulletin__default-layout"
     [ngClass]="{
-      'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout,
+      'create-bulletin__compact-layout':
+        activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined),
       'create-bulletin__compact-layout--compare':
-        activeBulletin !== undefined && !editRegions && isCompactMapLayout && comparedBulletin !== undefined,
+        activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined,
       'full-width': !isBulletinSidebarVisible
     }"
   >
@@ -555,11 +559,7 @@
       [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }"
     >
       <!-- Bulletin Sidebar toggle icon -->
-      <button
-        *ngIf="!activeBulletin && !isBulletinSidebarVisible"
-        (click)="toggleBulletinSidebar()"
-        class="create-bulletin__sidebar-close-on-map"
-      >
+      <button (click)="toggleBulletinSidebar()" class="create-bulletin__sidebar-close-on-map">
         <i class="ph ph-sidebar"></i>
       </button>
       <!-- End Bulletin Sidebar toggle icon -->
