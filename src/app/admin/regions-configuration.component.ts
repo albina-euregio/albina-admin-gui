@@ -26,7 +26,9 @@ export class RegionsConfigurationComponent implements AfterContentInit {
     if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
       this.configurationService.loadRegionConfigurations().subscribe(
         (data) => {
-          this.regionConfigurations = data;
+          this.regionConfigurations = data.sort((r1, r2) =>
+            this.regionsService.getRegionName(r1.id).localeCompare(this.regionsService.getRegionName(r2.id)),
+          );
           this.configurationPropertiesLoaded = true;
         },
         (error) => {

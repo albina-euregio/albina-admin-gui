@@ -28,7 +28,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public user: UserModel;
   public alerts: any[] = [];
   public roles: any;
-  public regions: any;
+  public regions: string[];
 
   public activeImage: string;
   public activeName: string;
@@ -76,7 +76,9 @@ export class UpdateUserComponent implements AfterContentInit {
     );
     this.userService.getRegions().subscribe(
       (data) => {
-        this.regions = data;
+        this.regions = data.sort((r1, r2) =>
+          this.regionsService.getRegionName(r1).localeCompare(this.regionsService.getRegionName(r2)),
+        );
       },
       (error) => {
         console.error("Regions could not be loaded!");
