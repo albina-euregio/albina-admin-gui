@@ -39,6 +39,7 @@ export class BaseMapService extends MapService {
     this.overlayMaps = await this.initOverlayMaps();
 
     this.map = new Map(el, {
+      attributionControl: false,
       zoomAnimation: false,
       zoomControl: false,
       doubleClickZoom: true,
@@ -57,6 +58,7 @@ export class BaseMapService extends MapService {
     });
 
     this.resetAll();
+    new Control.Attribution({ prefix: false }).addTo(this.map);
     new Control.Zoom({ position: "topleft" }).addTo(this.map);
     new Control.Scale().addTo(this.map);
     new RegionNameControl().addTo(this.map);
