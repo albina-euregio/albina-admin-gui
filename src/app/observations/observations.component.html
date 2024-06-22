@@ -82,18 +82,15 @@
                 (ngModelChange)="setDate()"
                 [bsConfig]="{ dateInputFormat: 'DD.MM.YYYY' }"
               />
+            </div>
+            <div class="global-bar-item">
               <div class="obs-switch">
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 1 })">
-                  <span class="switch-text">1d</span>
-                </div>
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 2 })">
-                  <span class="switch-text">2d</span>
-                </div>
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 3 })">
-                  <span class="switch-text">3d</span>
-                </div>
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 7 })">
-                  <span class="switch-text">7d</span>
+                <div
+                  *ngFor="let days of [1, 2, 3, 7, 11]"
+                  class="obs-switch-item 0is-active"
+                  (click)="loadObservations({ days })"
+                >
+                  <span class="switch-text">{{ days }}d</span>
                 </div>
               </div>
             </div>
