@@ -70,7 +70,7 @@ export interface MultiselectDropdownData {
 })
 export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
-  public layout: "map" | "table" | "chart" | "gallery" = "gallery";
+  public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
   public observations: GenericObservation[] = [];
   public webcams: GenericObservation[] = [];
