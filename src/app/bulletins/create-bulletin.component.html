@@ -284,7 +284,9 @@
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
         <h5 class="font-s-bold">
-          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }}
+          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }} ({{
+            getOwnBulletins().length
+          }})
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
@@ -453,7 +455,7 @@
       <!-- Foreign regions -->
       <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()">
         <h5 class="font-s-bold">
-          {{ "bulletins.create.foreignRegions" | translate }}
+          {{ "bulletins.create.foreignRegions" | translate }} ({{ getForeignBulletins().length }})
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1">
@@ -479,9 +481,7 @@
           class="create-bulletin__region-divider foreign"
           (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)"
         >
-          <h5 class="font-s-medium">
-            {{ externalRegion.key.name }}
-          </h5>
+          <h5 class="font-s-medium">{{ externalRegion.key.name }} ({{ externalRegion.value.length }})</h5>
           <div class="btn-group region-divider__actions">
             <div class="region-divider__actions-dropdown mr-1">
               <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
