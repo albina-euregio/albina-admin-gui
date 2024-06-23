@@ -337,6 +337,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   updateBulletinScroll(scrollId: string, event): void {
     event.preventDefault();
     event.stopPropagation();
+    if (!this.scrollActiveBulletin?.nativeElement) return;
+    if (!this.scrollComparedBulletin?.nativeElement) return;
     if (scrollId === "scrollComparedBulletin") {
       this.scrollActiveBulletin.nativeElement.scrollTop = this.scrollComparedBulletin.nativeElement.scrollTop;
     } else if (scrollId === "scrollActiveBulletin") {
