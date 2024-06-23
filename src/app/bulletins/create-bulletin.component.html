@@ -605,7 +605,7 @@
     [ngClass]="{ 'region-thumb--active': bulletin === activeBulletin }"
   >
     <div class="region-thumb__details">
-      <h6 class="region-thumb__title font-s-medium">
+      <h6 class="region-thumb__title font-s-medium" role="button">
         <span *ngIf="saveError.has(bulletin.id)">* </span>
         <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 0">{{
           regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0])
@@ -614,7 +614,7 @@
           + {{ bulletin.getSavedAndPublishedRegions().length - 1 }}
         </span>
       </h6>
-      <p class="region-thumb__author font-s text-secondary">{{ bulletin.getAuthor().getName() }}</p>
+      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.getAuthor().getName() }}</p>
 
       <div class="region-thumb__avalanche-info">
         <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.forenoon"></app-danger-rating-icon>
