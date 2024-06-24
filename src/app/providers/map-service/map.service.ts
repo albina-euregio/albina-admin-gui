@@ -272,7 +272,7 @@ export class MapService {
   }
 
   private selectAggregatedRegion0(bulletin: BulletinModel, map: Map, layer: PmLeafletLayer) {
-    for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
+    for (const status of [Enums.RegionStatus.suggested, Enums.RegionStatus.saved, Enums.RegionStatus.published]) {
       for (const region of bulletin.getRegionsByStatus(status)) {
         layer.paintRules[region] = {
           dataSource,
