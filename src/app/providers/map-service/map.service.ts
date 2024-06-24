@@ -267,6 +267,10 @@ export class MapService {
 
   selectAggregatedRegion(bulletin: BulletinModel) {
     this.activeBulletin = bulletin;
+    if (this.activeBulletin && this.activeBulletin !== undefined) {
+      this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps.aggregatedRegions);
+      this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+    }
     this.overlayMaps?.aggregatedRegions?.rerenderTiles();
     this.afternoonOverlayMaps?.aggregatedRegions?.rerenderTiles();
   }
