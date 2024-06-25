@@ -24,6 +24,7 @@ import {
   DangerPattern,
   ImportantObservation,
   Stability,
+  WeatherStationParameter,
   genericObservationSchema,
 } from "./models/generic-observation.model";
 
@@ -76,6 +77,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   public localWebcams: GenericObservation[] = [];
   public weatherStations: GenericObservation[] = [];
   public localWeatherStations: GenericObservation[] = [];
+  public showWeatherStations: boolean = false;
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public observationsWithoutCoordinates: number = 0;
@@ -161,10 +163,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
     map.on(
       "layeradd",
       function (event) {
-        if (event.layer == weatherStationsLayerGroup && this.weatherStationControls) {
-          Object.keys(this.weatherStationControls).forEach((control) =>
-            this.weatherStationControls[control].addTo(map),
-          );
+        if (event.layer == weatherStationsLayerGroup) {
+          this.showWeatherStations = true;
         }
       },
       this.mapService,
@@ -173,7 +173,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
       "layerremove",
       function (event) {
         if (event.layer == weatherStationsLayerGroup) {
-          Object.keys(this.weatherStationControls).forEach((control) => this.weatherStationControls[control].remove());
+          this.showWeatherStations = false;
         }
       },
       this.mapService,
@@ -214,6 +214,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   newObservation() {
     this.layout = "table";
     this.observationTableComponent.newObservation();
+  }
+
+  selectParameter(parameter: WeatherStationParameter) {
+    this.markerService.weatherStationLabel === parameter
+      ? (this.markerService.weatherStationLabel = undefined)
+      : (this.markerService.weatherStationLabel = parameter);
+    this.applyLocalFilter(this.markerService.markerClassify);
   }
 
   parseObservation(observation: GenericObservation): GenericObservation {

@@ -11,6 +11,7 @@ import {
   ObservationSource,
   ObservationType,
   Stability,
+  WeatherStationParameter,
 } from "./models/generic-observation.model";
 
 // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
@@ -172,6 +173,7 @@ export class ObservationMarkerService {
   public USE_CANVAS_LAYER = true;
 
   public markerLabel: LocalFilterTypes | undefined = undefined;
+  public weatherStationLabel: WeatherStationParameter | undefined = undefined;
   public markerClassify: LocalFilterTypes = LocalFilterTypes.Stability;
 
   constructor() {}
@@ -394,12 +396,34 @@ export class ObservationMarkerService {
   }
 
   private getLabel(observation: GenericObservation<any>) {
-    // TODO get correct label for weather stations
     if (
       observation?.$type === ObservationType.TimeSeries &&
       observation?.$source === ObservationSource.AvalancheWarningService
     ) {
-      return observation.$data.OFT ? Math.round(observation.$data.OFT * 10) / 10 : "";
+      switch (this.weatherStationLabel) {
+        case WeatherStationParameter.GlobalRadiation:
+          return observation.$data.GS_O ? Math.round(observation.$data.GS_O * 10) / 10 : "";
+        case WeatherStationParameter.SnowHeight:
+          return observation.$data.HS ? Math.round(observation.$data.HS * 10) / 10 : "";
+        case WeatherStationParameter.SnowDifference24h:
+          return observation.$data.HSD24 ? Math.round(observation.$data.HSD24 * 10) / 10 : "";
+        case WeatherStationParameter.SnowDifference48h:
+          return observation.$data.HSD48 ? Math.round(observation.$data.HSD48 * 10) / 10 : "";
+        case WeatherStationParameter.SnowDifference72h:
+          return observation.$data.HSD72 ? Math.round(observation.$data.HSD72 * 10) / 10 : "";
+        case WeatherStationParameter.AirTemperature:
+          return observation.$data.LT ? Math.round(observation.$data.LT * 10) / 10 : "";
+        case WeatherStationParameter.AirTemperatureMax:
+          return observation.$data.LT_MAX ? Math.round(observation.$data.LT_MAX * 10) / 10 : "";
+        case WeatherStationParameter.AirTemperatureMin:
+          return observation.$data.LT_MIN ? Math.round(observation.$data.LT_MIN * 10) / 10 : "";
+        case WeatherStationParameter.SurfaceTemperature:
+          return observation.$data.OFT ? Math.round(observation.$data.OFT * 10) / 10 : "";
+        case WeatherStationParameter.DewPoint:
+          return observation.$data.TD ? Math.round(observation.$data.TD * 10) / 10 : "";
+        default:
+          return "";
+      }
     }
 
     if (!this.markerLabel) {

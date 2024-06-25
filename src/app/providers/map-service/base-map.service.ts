@@ -8,7 +8,6 @@ import { RegionsService } from "../regions-service/regions.service";
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
 import { TranslateService } from "@ngx-translate/core";
-import { ParameterControl } from "./parameter-control";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -19,18 +18,7 @@ export class BaseMapService extends MapService {
     "weather-stations": new LayerGroup(),
     webcams: new LayerGroup(),
   };
-  public weatherStationControls: Record<string, L.Control> = {
-    globalRadiationControl: new ParameterControl({ position: "bottomright" }).setKey("globalRadiation"),
-    snowHeightControl: new ParameterControl({ position: "bottomright" }).setKey("snowHeight"),
-    //snowDifference24hControl: new ParameterControl({ position: "bottomright" }).setKey("snowDifference24h"),
-    //snowDifference48hControl: new ParameterControl({ position: "bottomright" }).setKey("snowDifference48h"),
-    //snowDifference72hControl: new ParameterControl({ position: "bottomright" }).setKey("snowDifference72h"),
-    airTemperatureControl: new ParameterControl({ position: "bottomright" }).setKey("airTemperature"),
-    //airTemperatureMaxControl: new ParameterControl({ position: "bottomright" }).setKey("airTemperatureMax"),
-    //airTemperatureMinControl: new ParameterControl({ position: "bottomright" }).setKey("airTemperatureMin"),
-    surfaceTemperatureControl: new ParameterControl({ position: "bottomright" }).setKey("surfaceTemperature"),
-    dewPointControl: new ParameterControl({ position: "bottomright" }).setKey("dewPoint"),
-  };
+  public showWeatherStations: boolean = false;
 
   constructor(
     authenticationService: AuthenticationService,

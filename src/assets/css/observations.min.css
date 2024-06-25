@@ -193,7 +193,8 @@
   justify-content: flex-start;
   gap: 0 5px;
 }
-.obs-button:hover {
+.obs-button:hover,
+.obs-button.is-active {
   cursor: pointer;
   color: #19abff;
 }
@@ -350,4 +351,22 @@
   width: 3px;
   content: "";
   background-color: red;
+}
+.parameter-switch {
+  z-index: 50;
+  position: absolute;
+  bottom: 80px;
+  right: 10px;
+}
+.parameter-switch > .obs-button {
+  width: 34px;
+  height: 33px;
+  font-size: 16px;
+  padding: 0.25em 0.5em;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top: 1px solid #ccc;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
 }
