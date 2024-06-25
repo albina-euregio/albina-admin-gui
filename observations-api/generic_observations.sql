@@ -8,7 +8,7 @@ CREATE TABLE `generic_observations` (
   `ASPECTS` set('N','NE','E','SE','S','SW','W','NW') DEFAULT NULL COMMENT 'Aspects corresponding with this observation',
   `AUTHOR_NAME` varchar(191) DEFAULT NULL COMMENT 'Name of the author',
   `OBS_CONTENT` longtext COMMENT 'Free-text content',
-  `OBS_DATA` longtext COMMENT 'Additional data (e.g. original data stored when fetching from external API)',
+  `OBS_DATA` longtext COMMENT 'Additional data (e.g. original data stored when fetching from external API)' CHECK (json_valid(`OBS_DATA`)),
   `ELEVATION` double DEFAULT NULL COMMENT 'Elevation in meters',
   `ELEVATION_LOWER_BOUND` double DEFAULT NULL COMMENT 'Lower bound of elevation in meters',
   `ELEVATION_UPPER_BOUND` double DEFAULT NULL COMMENT 'Upper bound of elevation in meters',
@@ -21,7 +21,7 @@ CREATE TABLE `generic_observations` (
   `AVALANCHE_PROBLEMS` set('new_snow','wind_slab','persistent_weak_layers','wet_snow','gliding_snow','favourable_situation','cornices','no_distinct_problem') DEFAULT NULL COMMENT 'Avalanche problems corresponding with this observation',
   `DANGER_PATTERNS` set('dp1','dp2','dp3','dp4','dp5','dp6','dp7','dp8','dp9','dp10') DEFAULT NULL COMMENT 'Danger patterns corresponding with this observation',
   `IMPORTANT_OBSERVATION` set('SnowLine','SurfaceHoar','Graupel','StabilityTest','IceFormation','VeryLightNewSnow') DEFAULT NULL COMMENT 'Important observations',
-  `EXTRA_DIALOG_ROWS` longtext COMMENT 'Additional information to display as table rows in the observation dialog',
+  `EXTRA_DIALOG_ROWS` longtext COMMENT 'Additional information to display as table rows in the observation dialog' CHECK (json_valid(`EXTRA_DIALOG_ROWS`)),
   PRIMARY KEY (`SOURCE`,`ID`),
   KEY `generic_observations_EVENT_DATE_IDX` (`EVENT_DATE`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

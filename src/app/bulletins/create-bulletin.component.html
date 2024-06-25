@@ -1,8 +1,18 @@
-<div class="animated fadeIn create-bulletin">
+<div
+  class="animated fadeIn create-bulletin"
+  [ngClass]="{ 'create-bulletin--modal': showNewBulletinModal && activeBulletin }"
+>
   <!-- Sidebar -->
-  <aside class="create-bulletin__sidebar">
+  <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isBulletinSidebarVisible }">
     <!-- Date Switch -->
     <header class="create-bulletin__sidebar-header">
+      <button
+        (click)="toggleBulletinSidebar()"
+        class="btn btn-bare btn-sm btn-icon btn-bare--grey d-block d-md-none create-bulletin__sidebar-close"
+      >
+        <i class="ph-bold ph-x"></i>
+      </button>
+
       <div class="create-bulletin__date">
         <h1 class="create-bulletin__current-date font-m-bold">
           {{ bulletinsService.getActiveDate() | localizedDate: "EEEE," }}<br />
@@ -274,10 +284,12 @@
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
         <h5 class="font-s-bold">
-          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }}
+          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }} ({{
+            getOwnBulletins().length
+          }})
         </h5>
         <div class="btn-group region-divider__actions">
-          <div class="region-divider__actions-dropdown mr-1" bsDropdown>
+          <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
             <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle>
               <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
@@ -443,7 +455,7 @@
       <!-- Foreign regions -->
       <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()">
         <h5 class="font-s-bold">
-          {{ "bulletins.create.foreignRegions" | translate }}
+          {{ "bulletins.create.foreignRegions" | translate }} ({{ getForeignBulletins().length }})
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1">
@@ -469,9 +481,7 @@
           class="create-bulletin__region-divider foreign"
           (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)"
         >
-          <h5 class="font-s-medium">
-            {{ externalRegion.key.name }}
-          </h5>
+          <h5 class="font-s-medium">{{ externalRegion.key.name }} ({{ externalRegion.value.length }})</h5>
           <div class="btn-group region-divider__actions">
             <div class="region-divider__actions-dropdown mr-1">
               <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
@@ -496,7 +506,11 @@
   <div
     class="create-bulletin__default-layout"
     [ngClass]="{
-      'create-bulletin__compact-layout': activeBulletin !== undefined && !editRegions && isCompactMapLayout
+      'create-bulletin__compact-layout':
+        activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined),
+      'create-bulletin__compact-layout--compare':
+        activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined,
+      'full-width': !isBulletinSidebarVisible,
     }"
   >
     <!-- Active bulletin -->
@@ -510,12 +524,14 @@
         [bulletin]="activeBulletin"
         [disabled]="isDisabled()"
         [isCompactMapLayout]="isCompactMapLayout"
+        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
         [isComparedBulletin]="false"
         (updateBulletinOnServerEvent)="updateBulletinOnServer($event)"
         (deleteBulletinEvent)="eventDeleteBulletin($event)"
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
         (copyBulletinEvent)="eventCopyBulletin($event)"
         (deselectBulletinEvent)="eventDeselectBulletin($event)"
+        (toggleBulletinSidebarEvent)="toggleBulletinSidebar($event)"
       ></app-avalanche-bulletin>
     </div>
     <!-- End Active bulletin -->
@@ -530,6 +546,7 @@
         [bulletin]="comparedBulletin"
         [disabled]="true"
         [isCompactMapLayout]="isCompactMapLayout"
+        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
         [isComparedBulletin]="true"
         (deselectBulletinEvent)="eventDeselectComparedBulletin($event)"
       ></app-avalanche-bulletin>
@@ -541,6 +558,11 @@
       class="create-bulletin__map-container"
       [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }"
     >
+      <!-- Bulletin Sidebar toggle icon -->
+      <button (click)="toggleBulletinSidebar()" class="create-bulletin__sidebar-close-on-map">
+        <i class="ph ph-sidebar"></i>
+      </button>
+      <!-- End Bulletin Sidebar toggle icon -->
       <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
         <div class="floating-action__text">
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
@@ -583,7 +605,7 @@
     [ngClass]="{ 'region-thumb--active': bulletin === activeBulletin }"
   >
     <div class="region-thumb__details">
-      <h6 class="region-thumb__title font-s-medium">
+      <h6 class="region-thumb__title font-s-medium" role="button">
         <span *ngIf="saveError.has(bulletin.id)">* </span>
         <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 0">{{
           regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0])
@@ -592,7 +614,7 @@
           + {{ bulletin.getSavedAndPublishedRegions().length - 1 }}
         </span>
       </h6>
-      <p class="region-thumb__author font-s text-secondary">{{ bulletin.getAuthor().getName() }}</p>
+      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.getAuthor().getName() }}</p>
 
       <div class="region-thumb__avalanche-info">
         <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.forenoon"></app-danger-rating-icon>
@@ -712,7 +734,7 @@
       </button>
 
       <button
-        *ngIf="false && activeBulletin !== undefined && activeBulletin !== bulletin"
+        *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
         [disabled]="loading || editRegions"
         type="button"
         class="btn btn-bare btn-sm btn-icon"
@@ -842,7 +864,7 @@
         <tr
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date)
+            'bulletins-table__active--day': isActiveDate(date),
           }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate">

@@ -13,7 +13,7 @@
           (click)="onMarkerClassify()"
           title="{{ 'admin.observations.charts.classify' | translate }}"
         >
-          <i class="fa fa-paint-brush" aria-hidden="true"></i>
+          <i class="ph ph-paint-brush-household" aria-hidden="true"></i>
         </div>
         <div
           class="obs-switch-item"
@@ -21,7 +21,7 @@
           (click)="onMarkerLabel()"
           title="{{ 'admin.observations.charts.label' | translate }}"
         >
-          <i class="fa fa-tags" aria-hidden="true"></i>
+          <i class="ph ph-tag" aria-hidden="true"></i>
         </div>
         <div
           class="obs-switch-item"
@@ -29,7 +29,7 @@
           (click)="onInvert()"
           title="{{ 'admin.observations.charts.invert' | translate }}"
         >
-          <i class="fa fa-adjust" aria-hidden="true"></i>
+          <i class="ph ph-circle-half" aria-hidden="true"></i>
         </div>
         <div
           class="obs-switch-item"
@@ -37,7 +37,7 @@
           (click)="onReset()"
           title="{{ 'admin.observations.charts.reset' | translate }}"
         >
-          <i class="fa fa-power-off" aria-hidden="true"></i>
+          <i class="ph ph-power" aria-hidden="true"></i>
         </div>
       </div>
     </div>
@@ -49,7 +49,7 @@
     <span
       [ngClass]="{
         highlighted: nanStatus.highlighted,
-        selected: nanStatus.selected
+        selected: nanStatus.selected,
       }"
       (click)="onClickNan($event)"
       >{{ "admin.observations.charts.nan" | translate }}: {{ data.nan }}</span

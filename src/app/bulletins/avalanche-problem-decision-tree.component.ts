@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { DynamicDialogRef } from "primeng/dynamicdialog";
+import { BsModalRef } from "ngx-bootstrap/modal";
 import * as Enums from "../enums/enums";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
@@ -28,11 +28,11 @@ export class AvalancheProblemDecisionTreeComponent {
     Enums.AvalancheProblem.cornices,
   ];
 
-  private problem: Enums.AvalancheProblem;
+  public problem: Enums.AvalancheProblem;
   localizedImage: SafeResourceUrl;
 
   public constructor(
-    private dialogRef: DynamicDialogRef,
+    private bsModalRef: BsModalRef,
     private sanitizer: DomSanitizer,
     private translateService: TranslateService,
   ) {
@@ -61,7 +61,6 @@ export class AvalancheProblemDecisionTreeComponent {
         this.resultIcons[i].style.opacity = "1";
         this.resultLabels[this.resultIconLabelMap[i]].style.opacity = "1";
         this.problem = this.resultProblemMap[i];
-        this.save();
       });
     }
     for (let i = 0; i < this.resultLabels.length; i++) {
@@ -70,16 +69,16 @@ export class AvalancheProblemDecisionTreeComponent {
         this.resultLabels[i].style.opacity = "1";
         this.resultIcons[this.resultIconLabelMap.indexOf(i.toString())].style.opacity = "1";
         this.problem = this.resultProblemMap[this.resultIconLabelMap.indexOf(i.toString())];
-        this.save();
       });
     }
   }
 
   discard() {
-    this.dialogRef.close();
+    this.problem = undefined;
+    this.bsModalRef.hide();
   }
 
   save() {
-    this.dialogRef.close({ problem: this.problem });
+    this.bsModalRef.hide();
   }
 }

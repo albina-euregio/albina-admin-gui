@@ -296,6 +296,7 @@
         "validFor": "Valid for: ",
         "title": {
           "prod": "Serious stuff",
+          "test": "Test system",
           "task": "Task",
           "language": {
             "all": "ALL",
@@ -590,8 +591,12 @@
     "observations": {
       "table": "Table",
       "map": "Map",
+      "gallery": "Gallery",
       "filters": "Filters",
       "title": "Observations",
+      "newObservation": "New observation",
+      "exportObservations": "Export observerations",
+      "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Download"
       },
@@ -601,11 +606,11 @@
       },
       "selectRegion": {
         "placeholder": "Region",
-        "selectionLabel": "{0} regions selected"
+        "selectionLabel": "{0} region(s) selected"
       },
       "selectSources": {
         "placeholder": "Sources",
-        "selectionLabel": "{0} sources selected"
+        "selectionLabel": "{0} source(s) selected"
       },
       "charts": {
         "charts": "Charts",

@@ -2,32 +2,19 @@ import { Component, Input } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Observation, EventType } from "./models/observation.model";
 import { Feature, Point } from "geojson";
-import { SelectItem, SharedModule } from "primeng/api";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { geocoders } from "leaflet-control-geocoder";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
-import { InputTextareaModule } from "primeng/inputtextarea";
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { InputTextModule } from "primeng/inputtext";
 import { FormsModule } from "@angular/forms";
-import { DropdownModule } from "primeng/dropdown";
 import { CommonModule } from "@angular/common";
+import { Observable, Observer, map, of, switchMap } from "rxjs";
+import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
 
 @Component({
   standalone: true,
-  imports: [
-    AutoCompleteModule,
-    CommonModule,
-    DropdownModule,
-    FormsModule,
-    InputTextareaModule,
-    InputTextModule,
-    SharedModule,
-    TranslateModule,
-  ],
+  imports: [CommonModule, FormsModule, TranslateModule, TypeaheadModule],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
-  styleUrls: ["observation-editor.component.scss"],
 })
 export class ObservationEditorComponent {
   constructor(
@@ -37,11 +24,15 @@ export class ObservationEditorComponent {
   ) {}
 
   @Input() observation: Observation;
-  eventTypes: SelectItem[] = Object.values(EventType).map((value) => ({
-    label: this.translate.instant(`observations.eventTypes.${value}`),
-    value,
-  }));
-  locationResults: Feature<Point, GeocodingProperties>[] = [];
+  eventTypes: EventType[] = Object.values(EventType);
+  locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
+    observer.next(this.observation.locationName),
+  ).pipe(
+    switchMap(
+      (query: string): Observable<Feature<Point, GeocodingProperties>[]> =>
+        query ? this.geocodingService.searchLocation(query).pipe(map((collection) => collection.features)) : of([]),
+    ),
+  );
 
   newLocation() {
     if (this.observation.latitude && this.observation.longitude) {
@@ -60,23 +51,18 @@ export class ObservationEditorComponent {
     navigator.clipboard.writeText(`${this.observation.latitude}, ${this.observation.longitude}`);
   }
 
-  setLatitude(event) {
-    this.observation.latitude = event.target.value as number;
+  setLatitude(event: Event) {
+    this.observation.latitude = (event.target as HTMLInputElement).value as unknown as number;
     this.newLocation();
   }
 
-  setLongitude(event) {
-    this.observation.longitude = event.target.value as number;
+  setLongitude(event: Event) {
+    this.observation.longitude = (event.target as HTMLInputElement).value as unknown as number;
     this.newLocation();
   }
 
-  searchLocation($event: { originalEvent: Event; query: string }) {
-    this.geocodingService
-      .searchLocation($event.query)
-      .subscribe((collection) => (this.locationResults = collection.features));
-  }
-
-  selectLocation(feature: Feature<Point, GeocodingProperties>): void {
+  selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
+    const feature = match.item;
     setTimeout(() => {
       // display_name	"Zischgeles, Gemeinde Sankt Sigmund im Sellrain, Bezirk Innsbruck-Land, Tirol, Österreich" -> "Zischgeles"
       this.observation.locationName = feature.properties.display_name.replace(/,.*/, "");

@@ -10,6 +10,16 @@ $region-form-width: 512px;
   background: $white;
 }
 
+.region-form__mobile-header {
+  padding: $space-4 $space-6;
+  display: flex;
+  border-bottom: $region-form-border;
+
+  h1 {
+    margin-left: $space-2;
+  }
+}
+
 .region-form__header {
   padding: $region-form-padding;
   display: flex;
@@ -92,10 +102,12 @@ app-avalanche-problem-preview,
 }
 .avalanche-problem-preview__danger-rating {
   height: $space-8;
+  width: auto;
 }
 
 .avalanche-problem-preview__problem-icon {
   height: $space-8;
+  width: auto;
 }
 
 .avalanche-problem-preview__info-elevation {
@@ -106,12 +118,12 @@ app-avalanche-problem-preview,
 // Avalanche problem detail form
 .avalanche-problem-detail__problem-icons {
   display: flex;
-  flex-flow: row nowrap;
-  gap: $space-2;
+  justify-content: space-between;
+  flex-wrap: nowrap;
 }
 .avalanche-problem-detail__problem-icon {
   border: 1px solid $input-border-color;
-  width: 20%;
+  width: 18%;
   &.is-disabled {
     opacity: 0.3;
   }

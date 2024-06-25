@@ -1,9 +1,10 @@
 .floating-action {
   position: absolute;
-  z-index: 1000;
+  z-index: 1030;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
+  align-content: center;
   align-items: center;
   background: $white;
   padding: $space-2 $space-2 $space-2 $space-4;
@@ -13,9 +14,43 @@
   transform: translateX(-50%);
   gap: $space-6;
   @include font-m;
+  white-space: nowrap;
 }
 
 .floating-action__text {
+  display: flex;
+  align-items: center;
 }
+
+.floating-action__text i {
+  margin-right: $space-2;
+  vertical-align: middle;
+}
+
 .floating-action__actions {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+@include media-breakpoint-down(md) {
+  .floating-action {
+    border-bottom: 1px solid $gray-300;
+    position: fixed;
+    top: 36px;
+    width: 100%;
+    flex-flow: row;
+    align-items: center;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .floating-action {
+    flex-flow: column;
+    align-items: flex-start;
+    padding: $space-2 $space-4;
+  }
+
+  .floating-action__actions {
+    align-self: center;
+  }
 }

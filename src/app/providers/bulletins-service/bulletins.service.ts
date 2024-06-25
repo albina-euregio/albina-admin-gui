@@ -6,7 +6,6 @@ import { ConstantsService } from "../constants-service/constants.service";
 import { SettingsService } from "../settings-service/settings.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
-import { WsRegionService } from "../ws-region-service/ws-region.service";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
 import * as Enums from "../../enums/enums";

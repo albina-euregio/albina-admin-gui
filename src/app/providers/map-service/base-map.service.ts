@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ConstantsService } from "../constants-service/constants.service";
-import { CircleMarker, Control, LatLng, LayerGroup, Map, Marker, TileLayer } from "leaflet";
+import { CircleMarker, Control, LatLng, LayerGroup, Map, Marker } from "leaflet";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
 
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -52,6 +52,7 @@ export class BaseMapService extends MapService {
     this.overlayMaps = await this.initOverlayMaps();
 
     this.map = new Map(el, {
+      attributionControl: false,
       zoomAnimation: false,
       zoomControl: false,
       doubleClickZoom: true,
@@ -70,16 +71,16 @@ export class BaseMapService extends MapService {
     });
 
     this.resetAll();
+    new Control.Attribution({ prefix: false }).addTo(this.map);
     new Control.Zoom({ position: "topleft" }).addTo(this.map);
-    new Control.Scale().addTo(this.map);
     new RegionNameControl().addTo(this.map);
     return this.map;
   }
 
-  clickRegion(regionIds: Array<string>) {
+  clickRegion(regionIds: Record<string, boolean>) {
     //console.log("clickRegion", this.overlayMaps.regions);
     for (const entry of this.overlayMaps.regions.getLayers()) {
-      entry.feature.properties.selected = regionIds.includes(entry.feature.properties.id);
+      entry.feature.properties.selected = regionIds[entry.feature.properties.id];
     }
     this.updateEditSelection();
   }

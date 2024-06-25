@@ -139,6 +139,14 @@ export class MapService {
     new RegionNameControl().addTo(map);
 
     this.map = map;
+
+    // Disable dragging on mobile devices
+    this.map.whenReady(() => {
+      if (L.Browser.mobile) {
+        this.map.dragging.disable();
+      }
+    });
+
     return map;
   }
 
@@ -156,6 +164,14 @@ export class MapService {
     this.pmControl.addTo(afternoonMap);
 
     this.afternoonMap = afternoonMap;
+
+    // Disable dragging on mobile devices
+    this.afternoonMap.whenReady(() => {
+      if (L.Browser.mobile) {
+        this.afternoonMap.dragging.disable();
+      }
+    });
+
     return afternoonMap;
   }
 
@@ -251,12 +267,16 @@ export class MapService {
 
   selectAggregatedRegion(bulletin: BulletinModel) {
     this.activeBulletin = bulletin;
+    if (this.activeBulletin && this.activeBulletin !== undefined) {
+      this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps.aggregatedRegions);
+      this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+    }
     this.overlayMaps?.aggregatedRegions?.rerenderTiles();
     this.afternoonOverlayMaps?.aggregatedRegions?.rerenderTiles();
   }
 
   private selectAggregatedRegion0(bulletin: BulletinModel, map: Map, layer: PmLeafletLayer) {
-    for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
+    for (const status of [Enums.RegionStatus.suggested, Enums.RegionStatus.saved, Enums.RegionStatus.published]) {
       for (const region of bulletin.getRegionsByStatus(status)) {
         layer.paintRules[region] = {
           dataSource,
@@ -330,7 +350,9 @@ export class MapService {
     const result = new Array<string>();
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       if (entry.feature.properties.selected) {
-        result.push(entry.feature.properties.id);
+        if (result.indexOf(entry.feature.properties.id) < 0) {
+          result.push(entry.feature.properties.id);
+        }
       }
     }
     return result;

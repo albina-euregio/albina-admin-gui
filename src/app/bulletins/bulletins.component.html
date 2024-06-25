@@ -13,7 +13,7 @@
       <tr
         *ngFor="let date of bulletinsService.dates"
         [ngClass]="{
-          'bulletins-table__day--past': bulletinsService.hasBeenPublished5PM(date)
+          'bulletins-table__day--past': bulletinsService.hasBeenPublished5PM(date),
         }"
       >
         <td [attr.data-label]="'bulletins.table.title.date' | translate">
@@ -130,7 +130,7 @@
             data-toggle="tooltip"
             title="{{ 'bulletins.tooltip.copy' | translate }}"
           >
-            <i class="fa fa-copy"></i>
+            <i class="ph ph-copy"></i>
           </button>
 
           <!-- paste -->
@@ -142,7 +142,7 @@
             data-toggle="tooltip"
             title="{{ 'bulletins.tooltip.paste' | translate }}"
           >
-            <i class="fa fa-paste"></i>
+            <i class="ph ph-clipboard-text"></i>
           </button>
 
           <!-- cancel -->
@@ -154,7 +154,7 @@
             data-toggle="tooltip"
             title="{{ 'bulletins.tooltip.cancel' | translate }}"
           >
-            <i class="fa fa-close"></i>
+            <i class="ph ph-x"></i>
           </button>
         </td>
       </tr>

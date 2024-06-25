@@ -216,13 +216,13 @@ export class ObservationMarkerService {
 
   createTooltip(observation: GenericObservation): string {
     return [
-      `<i class="fa fa-calendar"></i> ${
+      `<i class="ph ph-calendar"></i> ${
         observation.eventDate instanceof Date
           ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
           : undefined
       }`,
-      `<i class="fa fa-globe"></i> ${observation.locationName || undefined}`,
-      `<i class="fa fa-user"></i> ${observation.authorName || undefined}`,
+      `<i class="ph ph-globe"></i> ${observation.locationName || undefined}`,
+      `<i class="ph ph-user"></i> ${observation.authorName || undefined}`,
       `[${observation.$source}, ${observation.$type}]`,
     ]
       .filter((s) => !s.includes("undefined"))

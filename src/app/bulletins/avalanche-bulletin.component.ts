@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter, ViewChild, TemplateRef } from "@angular/core";
+import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, HostListener } from "@angular/core";
 
-import { CatalogOfPhrasesComponent } from "../catalog-of-phrases/catalog-of-phrases.component";
 import { debounceTime, Subject } from "rxjs";
 
 import { environment } from "../../environments/environment";
@@ -16,11 +15,8 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
 
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-
 // For iframe
-import { Renderer2 } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 import * as Enums from "../enums/enums";
 import { LangTexts } from "../models/text.model";
@@ -30,10 +26,11 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
   selector: "app-avalanche-bulletin",
   templateUrl: "avalanche-bulletin.component.html",
 })
-export class AvalancheBulletinComponent implements OnInit, OnDestroy {
+export class AvalancheBulletinComponent {
   @Input() bulletin: BulletinModel;
   @Input() disabled: boolean;
   @Input() isCompactMapLayout: boolean;
+  @Input() isBulletinSidebarVisible: boolean;
   @Input() isComparedBulletin: boolean;
 
   private readonly updateBulletinOnServerEventDebounce = new Subject<BulletinModel>();
@@ -43,6 +40,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   @Output() editMicroRegionsEvent = new EventEmitter<BulletinModel>();
   @Output() copyBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
+  @Output() toggleBulletinSidebarEvent = new EventEmitter<void>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -54,6 +52,11 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   public isAccordionDangerDescriptionOpen: boolean;
   public isAccordionSnowpackStructureOpen: boolean;
   public isAccordionTendencyOpen: boolean;
+
+  public catalogOfPhrasesModalRef: BsModalRef;
+  public pmUrl: SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl);
+  public pmData: TextcatLegacyIn | undefined;
+  @ViewChild("catalogOfPhrasesTemplate") catalogOfPhrasesTemplate: TemplateRef<any>;
 
   public removeDaytimeDependencyModalRef: BsModalRef;
   @ViewChild("removeDaytimeDependencyTemplate") removeDaytimeDependencyTemplate: TemplateRef<any>;
@@ -68,30 +71,16 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   constructor(
     public bulletinsService: BulletinsService,
-    private dialog: MatDialog,
-    private renderer: Renderer2,
     private sanitizer: DomSanitizer,
     public authenticationService: AuthenticationService,
     private modalService: BsModalService,
-    private constantsService: ConstantsService,
+    public constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
   ) {
     this.updateBulletinOnServerEventDebounce
       .pipe(debounceTime(1000))
       .subscribe((bulletin) => this.updateBulletinOnServerEvent.emit(bulletin));
-  }
-
-  ngOnInit() {
-    if (!this.isComparedBulletin) {
-      this.stopListening = this.renderer.listen("window", "message", this.getText.bind(this));
-    }
-  }
-
-  ngOnDestroy() {
-    if (!this.isComparedBulletin) {
-      this.stopListening();
-    }
   }
 
   updateBulletinOnServer() {
@@ -130,21 +119,22 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
   }
 
   showDialog(pmData: TextcatLegacyIn) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.width = "calc(100% - 10px)";
-    dialogConfig.height = "calc(100% - 10px)";
-    dialogConfig.maxHeight = "100%";
-    dialogConfig.maxWidth = "100%";
-    dialogConfig.data = {
-      pmUrl: this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl),
-      pmData: JSON.stringify(pmData),
-    };
+    this.pmData = pmData;
+    this.catalogOfPhrasesModalRef = this.modalService.show(this.catalogOfPhrasesTemplate, {
+      animated: false,
+      keyboard: true,
+      class: "modal-fullscreen",
+    });
+  }
 
-    this.dialog.open(CatalogOfPhrasesComponent, dialogConfig);
+  initCatalogOfPhrases($event: Event) {
+    const iframe = $event.target as HTMLIFrameElement;
+    iframe.contentWindow.postMessage(JSON.stringify(this.pmData), "*");
   }
 
   hideDialog() {
-    this.dialog.closeAll();
+    this.catalogOfPhrasesModalRef.hide();
+    this.pmData = undefined;
   }
 
   onDangerPattern1Change(event: Enums.DangerPattern) {
@@ -267,6 +257,7 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  @HostListener("window:message", ["$event"])
   getText(e: MessageEvent) {
     e.preventDefault();
     if (
@@ -387,6 +378,10 @@ export class AvalancheBulletinComponent implements OnInit, OnDestroy {
 
   removeDaytimeDependencyModalDecline(): void {
     this.removeDaytimeDependencyModalRef.hide();
+  }
+
+  toggleBulletinSidebar() {
+    this.toggleBulletinSidebarEvent.emit();
   }
 }
 

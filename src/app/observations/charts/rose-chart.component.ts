@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { BaseComponent } from "./base-chart.component";
-import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
+import { NgxEchartsDirective } from "ngx-echarts";
 import { CommonModule } from "@angular/common";
 import type { EChartsOption } from "echarts";
 import type { CallbackDataParams } from "echarts/types/dist/shared";

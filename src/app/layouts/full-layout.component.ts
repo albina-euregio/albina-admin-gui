@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from "@angular/core";
+import { Component, ViewChild, TemplateRef } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -18,7 +18,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class FullLayoutComponent {
   public disabled: boolean = false;
   public status: { isopen: boolean } = { isopen: false };
-  public isNavCollapsed = true;
+  public isSidebarOpen = false;
 
   public message: string;
 
@@ -58,10 +58,8 @@ export class FullLayoutComponent {
 
   public toggled(): void {}
 
-  public toggleDropdown($event: MouseEvent): void {
-    $event.preventDefault();
-    $event.stopPropagation();
-    this.status.isopen = !this.status.isopen;
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
 
   public logout() {
@@ -96,6 +94,5 @@ export class FullLayoutComponent {
   private change(region) {
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.loadStatus();
-    this.router.navigate([this.router.url]);
   }
 }

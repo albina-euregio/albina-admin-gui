@@ -1,4 +1,13 @@
-import { Component, AfterContentInit, AfterViewInit, ViewChild, ElementRef, HostListener } from "@angular/core";
+import {
+  Component,
+  AfterContentInit,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  HostListener,
+  TemplateRef,
+} from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
@@ -18,29 +27,24 @@ import {
   genericObservationSchema,
 } from "./models/generic-observation.model";
 
-import { SharedModule } from "primeng/api";
-
 import { saveAs } from "file-saver";
 
+import { ObservationGalleryComponent } from "./observation-gallery.component";
 import { ObservationTableComponent } from "./observation-table.component";
 import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
 import { PipeModule } from "../pipes/pipes.module";
-import { DialogModule } from "primeng/dialog";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { BarChartComponent } from "./charts/bar-chart.component";
 import { RoseChartComponent } from "./charts/rose-chart.component";
-import { MenubarModule } from "primeng/menubar";
-import { InputTextModule } from "primeng/inputtext";
-import { CalendarModule } from "primeng/calendar";
-import { MultiSelectChangeEvent, MultiSelectModule } from "primeng/multiselect";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
-import { ToggleButtonModule } from "primeng/togglebutton";
-import { ButtonModule } from "primeng/button";
 import { AlbinaObservationsService } from "./observations.service";
 import { Control, LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
+import "bootstrap";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -51,19 +55,13 @@ export interface MultiselectDropdownData {
   standalone: true,
   imports: [
     BarChartComponent,
-    ButtonModule,
-    CalendarModule,
+    BsDatepickerModule,
     CommonModule,
-    DialogModule,
     FormsModule,
-    InputTextModule,
-    MenubarModule,
-    MultiSelectModule,
+    ObservationGalleryComponent,
     ObservationTableComponent,
     PipeModule,
     RoseChartComponent,
-    SharedModule,
-    ToggleButtonModule,
     TranslateModule,
   ],
   templateUrl: "observations.component.html",
@@ -71,9 +69,11 @@ export interface MultiselectDropdownData {
 })
 export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
-  public layout: "map" | "table" | "chart" = "map";
+  public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
   public observations: GenericObservation[] = [];
+  public webcams: GenericObservation[] = [];
+  public localWebcams: GenericObservation[] = [];
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public observationsWithoutCoordinates: number = 0;
@@ -108,6 +108,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild("observationTable")
   observationTableComponent: ObservationTableComponent;
+  @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
 
   public get LocalFilterTypes(): typeof LocalFilterTypes {
     return LocalFilterTypes;
@@ -121,6 +122,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     public mapService: BaseMapService,
+    private modalService: BsModalService,
   ) {}
 
   async ngAfterContentInit() {
@@ -137,8 +139,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
           key !== ObservationSource.Observer,
       )
       .map((key) => ({ id: key, name: key }));
-
-    this.filter.days = 1;
   }
 
   ngAfterViewInit() {
@@ -179,7 +179,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
 
     layerControl.addOverlay(this.loadWebcams(), this.translateService.instant("observations.layers.webcams"));
     map.on("click", () => {
-      this.filter.regions = this.mapService.getSelectedRegions();
+      this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyLocalFilter(this.markerService.markerClassify);
     });
 
@@ -194,12 +194,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
     this.mapService.removeMaps();
   }
 
-  onRegionsDropdownSelect(event: MultiSelectChangeEvent) {
-    this.mapService.clickRegion(event.value);
+  onRegionsDropdownSelect() {
+    this.mapService.clickRegion(this.filter.regions);
     this.applyLocalFilter(this.markerService.markerClassify);
   }
 
-  onSourcesDropdownSelect(event: MultiSelectChangeEvent) {
+  onSourcesDropdownSelect() {
     this.applyLocalFilter(this.markerService.markerClassify);
   }
 
@@ -282,17 +282,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
     saveAs(blob, "observations.geojson");
   }
 
-  get observationPopupVisible(): boolean {
-    return this.observationPopup !== undefined;
-  }
-
-  set observationPopupVisible(value: boolean) {
-    if (value) {
-      throw Error(String(value));
-    }
-    this.observationPopup = undefined;
-  }
-
   toggleFilter(data: GenericFilterToggleData = {} as GenericFilterToggleData) {
     if (data?.type && data.data.markerClassify) {
       if (data?.type !== this.markerService.markerClassify) {
@@ -320,6 +309,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   applyLocalFilter(classifyType: LocalFilterTypes) {
     Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
     this.localObservations = this.observations.filter(
+      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
+    );
+    this.localWebcams = this.webcams.filter(
       (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
     );
     this.localObservations.forEach((observation) => {
@@ -390,7 +382,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   }
 
   private loadWebcams(): LayerGroup<any> {
-    return this.loadGenericObservations0(this.observationsService.getGenericWebcams(), "webcams");
+    const webcams = this.observationsService.getGenericWebcams();
+    this.webcams = [];
+    webcams.forEach((w) => {
+      augmentRegion(w);
+      if (!w.region) return;
+      this.webcams.push(w);
+      this.applyLocalFilter(this.markerService.markerClassify);
+    });
+    return this.loadGenericObservations0(webcams, "webcams");
   }
 
   private loadGenericObservations0(
@@ -423,6 +423,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
       }));
       this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
     }
+    this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
   }
 
   toggleFilters() {
@@ -431,7 +432,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
 
   @HostListener("document:keydown", ["$event"])
   handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }) {
-    if (!this.observationPopupVisible || !this.observationPopup?.observation) {
+    if (!this.observationPopup?.observation) {
       return;
     }
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {

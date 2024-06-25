@@ -6,21 +6,19 @@ import {
   OnDestroy,
   HostListener,
   AfterContentInit,
+  TemplateRef,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
-import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
-import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
+import { ParamService, QfaResult, QfaService } from "./qfa";
+import { CircleMarker, LatLngLiteral } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
-import { SharedModule } from "primeng/api";
-import { DialogModule } from "primeng/dialog";
-import { ButtonModule } from "primeng/button";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { FormsModule } from "@angular/forms";
-import { MultiSelectModule } from "primeng/multiselect";
 import type { Observable } from "rxjs";
 import {
   type AlpsolutObservation,
@@ -30,6 +28,7 @@ import {
   ObservedProfileSourceService,
 } from "./sources";
 import type { ModellingRouteData } from "./routes";
+import "bootstrap";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;
@@ -40,23 +39,12 @@ export interface MultiselectDropdownData {
 
 @Component({
   standalone: true,
-  imports: [
-    ButtonModule,
-    CommonModule,
-    DialogModule,
-    FormsModule,
-    KeyValuePipe,
-    MultiSelectModule,
-    SharedModule,
-    KeyValuePipe,
-    TranslateModule,
-  ],
+  imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   layout = "map" as const;
-  observationPopupVisible = false;
   selectedModelPoint: GenericObservation;
   selectedModelType: ForecastSource;
   selectedCity: string;
@@ -81,12 +69,13 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private swipeCoord?: [number, number];
   private swipeTime?: number;
 
-  public selectedRegions: any[];
-  private selectedSources: string[] = [];
+  public selectedRegions = {} as Record<string, boolean>;
+  public selectedSources = {} as Record<string, boolean>;
   private modelPoints: GenericObservation[] = [];
 
   @ViewChild("observationsMap") observationsMap: ElementRef<HTMLDivElement>;
   @ViewChild("qfaSelect") qfaSelect: ElementRef<HTMLSelectElement>;
+  @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -99,6 +88,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     private qfaService: QfaService,
     public paramService: ParamService,
     private translateService: TranslateService,
+    private modalService: BsModalService,
   ) {}
 
   files = {};
@@ -169,8 +159,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     Object.values(this.mapService.layers).forEach((layer) => layer.clearLayers());
 
     const filtered = this.modelPoints.filter((el) => {
-      const correctRegion = this.selectedRegions.length === 0 || this.selectedRegions.includes(el.region);
-      const correctSource = this.selectedSources.length === 0 || this.selectedSources.includes(el.$source);
+      const correctRegion = !Object.values(this.selectedRegions).some((v) => v) || this.selectedRegions[el.region];
+      const correctSource = !Object.values(this.selectedSources).some((v) => v) || this.selectedSources[el.$source];
       return correctRegion && correctSource;
     });
 
@@ -186,15 +176,15 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       this.selectedModelPoint = $source === "qfa" ? undefined : point;
       this.selectedModelType = $source as ForecastSource;
       this.observationConfiguration = (point as AlpsolutObservation).$data?.configuration;
-      this.observationPopupVisible = true;
+      this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
     };
 
     const tooltip = [
-      `<i class="fa fa-calendar"></i> ${
+      `<i class="ph ph-calendar"></i> ${
         eventDate instanceof Date ? formatDate(eventDate, "yyyy-MM-dd HH:mm", "en-US") : undefined
       }`,
-      `<i class="fa fa-asterisk"></i> ${region || undefined}`,
-      `<i class="fa fa-globe"></i> ${locationName || undefined}`,
+      `<i class="ph ph-asterisk"></i> ${region || undefined}`,
+      `<i class="ph ph-globe"></i> ${locationName || undefined}`,
       this.allSources.find((s) => s.id === $source)?.name,
       `<div hidden>${region}</div>`,
     ]
@@ -256,7 +246,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   async initMaps() {
     const map = await this.mapService.initMaps(this.observationsMap.nativeElement, () => {});
     map.on("click", () => {
-      this.selectedRegions = this.mapService.getSelectedRegions();
+      this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyFilter();
     });
     this.mapService.removeObservationLayers();
@@ -279,17 +269,17 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   get observationPopupIframe() {
-    if (this.observationPopupVisible && /widget.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
+    if (/widget.alpsolut.eu/.test(this.selectedModelPoint?.$externalURL)) {
       return this.selectedModelPoint?.$externalURL;
     }
   }
 
-  onDropdownSelect(type, event) {
-    if (type === "source") this.selectedSources = event.value;
-    if (type === "regions") {
-      this.selectedRegions = event.value;
-      this.mapService.clickRegion(event.value);
-    }
+  onRegionsDropdownSelect() {
+    this.mapService.clickRegion(this.selectedRegions);
+    this.applyFilter();
+  }
+
+  onSourcesDropdownSelect() {
     this.applyFilter();
   }
 
@@ -375,7 +365,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   @HostListener("document:keydown", ["$event"])
   handleKeyBoardEvent(event: KeyboardEvent) {
-    if (!this.observationPopupVisible) {
+    if (!this.selectedModelPoint) {
       return;
     }
 
