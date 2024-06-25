@@ -80,6 +80,28 @@ const temperatureColors = {
   "12": "#fa3c96",
 };
 
+const relativeHumidityThresholds = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+const relativeHumidityColors = {
+  "0": "#fff",
+  "1": "#ced1d8",
+  "2": "#9ca4b1",
+  "3": "#648594",
+  "4": "#4499c0",
+  "5": "#1cafe2",
+  "6": "#1cc3ef",
+  "7": "#76cfc9",
+  "8": "#c4dd99",
+  "9": "#f0de70",
+  "10": "#f9c442",
+  "11": "#fbad0b",
+  "12": "#ff8b00",
+  "13": "#fc6d04",
+  "14": "#ff4802",
+  "15": "#dc3000",
+  "16": "#b31901",
+  "17": "#8a0007",
+};
+
 const windThresholds = [0, 5, 10, 20, 40, 60, 80];
 const windColors = {
   "0": "#ffff64",
@@ -360,7 +382,7 @@ export class ObservationMarkerService {
         case WeatherStationParameter.DewPoint:
           return this.temperatureColor(observation.$data.TD);
         case WeatherStationParameter.RelativeHumidity:
-          return "white";
+          return this.relativeHumidityColor(observation.$data.RH);
         case WeatherStationParameter.WindSpeed:
           return this.windColor(observation.$data.WG);
         case WeatherStationParameter.WindDirection:
@@ -474,6 +496,17 @@ export class ObservationMarkerService {
     if (temperature) {
       const index = isFinite(temperature) ? temperatureThresholds.findIndex((e) => e >= temperature) : -1;
       return index >= 0 ? temperatureColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private relativeHumidityColor(relativeHumidity: number) {
+    if (relativeHumidity) {
+      const index = isFinite(relativeHumidity)
+        ? relativeHumidityThresholds.findIndex((e) => e >= relativeHumidity)
+        : -1;
+      return index >= 0 ? relativeHumidityColors[index] : "white";
     } else {
       return "white";
     }
