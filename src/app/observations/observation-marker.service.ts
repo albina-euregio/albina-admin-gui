@@ -32,6 +32,7 @@ const zIndex: Record<Stability, number> = {
   [Stability.very_poor]: 20,
 };
 
+const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 400];
 const elevationThresholds = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000];
 const elevationColors = {
   "0": "#FFFFFE",
@@ -43,6 +44,39 @@ const elevationColors = {
   "6": "#035BBE",
   "7": "#784BFF",
   "8": "#CC0CE8",
+};
+
+const snowDifferenceThresholds = [-20, -10, -5, 1, 5, 10, 20, 30, 50, 75, 100];
+const snowDifferenceColors = {
+  "0": "#ff6464",
+  "1": "#ffa0a0",
+  "2": "#ffd2d2",
+  "3": "#fff",
+  "4": "#FFFFB3",
+  "5": "#B0FFBC",
+  "6": "#8CFFFF",
+  "7": "#03CDFF",
+  "8": "#0481FF",
+  "9": "#035BBE",
+  "10": "#784BFF",
+  "11": "#CC0CE8",
+};
+
+const temperatureThresholds = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30];
+const temperatureColors = {
+  "0": "#9f80ff",
+  "1": "#784cff",
+  "2": "#0f5abe",
+  "3": "#1380ff",
+  "4": "#19cdff",
+  "5": "#8fffff",
+  "6": "#b0ffbc",
+  "7": "#ffff73",
+  "8": "#ffbe7d",
+  "9": "#ff9b41",
+  "10": "#ff5a41",
+  "11": "#ff1e23",
+  "12": "#fa3c96",
 };
 
 // FATMAP
@@ -288,6 +322,34 @@ export class ObservationMarkerService {
       observation?.$source === ObservationSource.Observer
     ) {
       return "#ca0020";
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      switch (this.weatherStationLabel) {
+        case WeatherStationParameter.GlobalRadiation:
+          return "white";
+        case WeatherStationParameter.SnowHeight:
+          return this.snowHeightColor(observation.$data.HS);
+        case WeatherStationParameter.SnowDifference24h:
+          return this.snowDifferenceColor(observation.$data.HSD24);
+        case WeatherStationParameter.SnowDifference48h:
+          return this.snowDifferenceColor(observation.$data.HSD48);
+        case WeatherStationParameter.SnowDifference72h:
+          return this.snowDifferenceColor(observation.$data.HSD72);
+        case WeatherStationParameter.AirTemperature:
+          return this.temperatureColor(observation.$data.LT);
+        case WeatherStationParameter.AirTemperatureMax:
+          return this.temperatureColor(observation.$data.LT_MAX);
+        case WeatherStationParameter.AirTemperatureMin:
+          return this.temperatureColor(observation.$data.LT_MIN);
+        case WeatherStationParameter.SurfaceTemperature:
+          return this.temperatureColor(observation.$data.OFT);
+        case WeatherStationParameter.DewPoint:
+          return this.temperatureColor(observation.$data.DT);
+        default:
+          return "white";
+      }
     }
 
     switch (this.markerClassify) {
@@ -365,6 +427,33 @@ export class ObservationMarkerService {
     if (elevation) {
       const index = isFinite(elevation) ? elevationThresholds.findIndex((e) => e >= elevation) : -1;
       return index >= 0 ? elevationColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private snowHeightColor(snowHeight: number) {
+    if (snowHeight) {
+      const index = isFinite(snowHeight) ? snowHeightThresholds.findIndex((e) => e >= snowHeight) : -1;
+      return index >= 0 ? elevationColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private snowDifferenceColor(snowDifference: number) {
+    if (snowDifference) {
+      const index = isFinite(snowDifference) ? snowDifferenceThresholds.findIndex((e) => e >= snowDifference) : -1;
+      return index >= 0 ? snowDifferenceColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private temperatureColor(temperature: number) {
+    if (temperature) {
+      const index = isFinite(temperature) ? temperatureThresholds.findIndex((e) => e >= temperature) : -1;
+      return index >= 0 ? temperatureColors[index] : "white";
     } else {
       return "white";
     }
