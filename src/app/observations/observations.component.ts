@@ -74,6 +74,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   public observations: GenericObservation[] = [];
   public webcams: GenericObservation[] = [];
   public localWebcams: GenericObservation[] = [];
+  public weatherStations: GenericObservation[] = [];
+  public localWeatherStations: GenericObservation[] = [];
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public observationsWithoutCoordinates: number = 0;
@@ -311,35 +313,29 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
     this.localObservations = this.observations.filter(
       (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
     );
-    this.localWebcams = this.webcams.filter(
-      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
-    );
     this.localObservations.forEach((observation) => {
       this.markerService
         .createMarker(observation, this.filter.isHighlighted(observation))
         ?.on("click", () => this.onObservationClick(observation))
         ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     });
-    this.buildChartsData(classifyType);
 
-    // redraw weatherstation markers (use filter, color and label for elevation)
+    this.localWebcams = this.webcams.filter(
+      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
+    );
+
     this.mapService.layers["weather-stations"].clearLayers();
-    this.observationsService.getWeatherStations().forEach((observation) => {
-      if (
-        this.filter.isIncluded(
-          LocalFilterTypes.Elevation,
-          this.filter.filterSelection[LocalFilterTypes.Elevation].toValue(observation),
-        )
-      ) {
-        // TODO filter desired parameter (if defined) [GS_O, HS, HSD24, HSD48, HSD72, LT, LT_MAX, LT_MIN, OFT, TD]
-        // observation.$data.*
-        const marker = this.markerService
-          .createMarker(observation)
-          ?.on("click", () => this.onObservationClick(observation));
-        this.observationsAsOverlay.push(observation);
-        this.mapService.addMarker(marker, "weather-stations");
-      }
+    this.localWeatherStations = this.weatherStations.filter(
+      (weatherStation) => this.filter.isHighlighted(weatherStation) || this.filter.isSelected(weatherStation),
+    );
+    this.localWeatherStations.forEach((weatherStation) => {
+      const marker = this.markerService
+        .createMarker(weatherStation, this.filter.isHighlighted(weatherStation))
+        ?.on("click", () => this.onObservationClick(weatherStation))
+        ?.addTo(this.mapService.layers["weather-stations"]);
     });
+
+    this.buildChartsData(classifyType);
   }
 
   buildChartsData(classifyType: LocalFilterTypes) {
@@ -378,7 +374,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   }
 
   private loadWeatherStations(): LayerGroup<any> {
-    return this.loadGenericObservations0(this.observationsService.getWeatherStations(), "weather-stations");
+    const weatherStations = this.observationsService.getWeatherStations();
+    this.weatherStations = [];
+    weatherStations.forEach((w) => {
+      augmentRegion(w);
+      if (!w.region) return;
+      this.weatherStations.push(w);
+    });
+    return this.loadGenericObservations0(weatherStations, "weather-stations");
   }
 
   private loadWebcams(): LayerGroup<any> {
@@ -388,7 +391,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
       augmentRegion(w);
       if (!w.region) return;
       this.webcams.push(w);
-      this.applyLocalFilter(this.markerService.markerClassify);
     });
     return this.loadGenericObservations0(webcams, "webcams");
   }
