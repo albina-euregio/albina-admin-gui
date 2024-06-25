@@ -102,6 +102,7 @@ const relativeHumidityColors = {
   "17": "#8a0007",
 };
 
+const globalRadiationThresholds = [0, 200, 400, 600, 800, 1000, 1200];
 const windThresholds = [0, 5, 10, 20, 40, 60, 80];
 const windColors = {
   "0": "#ffff64",
@@ -362,7 +363,7 @@ export class ObservationMarkerService {
     ) {
       switch (this.weatherStationLabel) {
         case WeatherStationParameter.GlobalRadiation:
-          return "white";
+          return this.globalRadiationColor(observation.$data.GS_O);
         case WeatherStationParameter.SnowHeight:
           return this.snowHeightColor(observation.$data.HS);
         case WeatherStationParameter.SnowDifference24h:
@@ -515,6 +516,15 @@ export class ObservationMarkerService {
   private windColor(wind: number) {
     if (wind) {
       const index = isFinite(wind) ? windThresholds.findIndex((e) => e >= wind) : -1;
+      return index >= 0 ? windColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private globalRadiationColor(globalRadiation: number) {
+    if (globalRadiation) {
+      const index = isFinite(globalRadiation) ? globalRadiationThresholds.findIndex((e) => e >= globalRadiation) : -1;
       return index >= 0 ? windColors[index] : "white";
     } else {
       return "white";
