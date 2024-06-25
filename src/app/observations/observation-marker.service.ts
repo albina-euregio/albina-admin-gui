@@ -12,6 +12,7 @@ import {
   ObservationType,
   Stability,
   WeatherStationParameter,
+  degreeToAspect,
 } from "./models/generic-observation.model";
 
 // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
@@ -77,6 +78,17 @@ const temperatureColors = {
   "10": "#ff5a41",
   "11": "#ff1e23",
   "12": "#fa3c96",
+};
+
+const windThresholds = [0, 5, 10, 20, 40, 60, 80];
+const windColors = {
+  "0": "#ffff64",
+  "1": "#c8ff64",
+  "2": "#96ff96",
+  "3": "#32c8ff",
+  "4": "#6496ff",
+  "5": "#9664ff",
+  "6": "#ff3232",
 };
 
 // FATMAP
@@ -346,7 +358,15 @@ export class ObservationMarkerService {
         case WeatherStationParameter.SurfaceTemperature:
           return this.temperatureColor(observation.$data.OFT);
         case WeatherStationParameter.DewPoint:
-          return this.temperatureColor(observation.$data.DT);
+          return this.temperatureColor(observation.$data.TD);
+        case WeatherStationParameter.RelativeHumidity:
+          return "white";
+        case WeatherStationParameter.WindSpeed:
+          return this.windColor(observation.$data.WG);
+        case WeatherStationParameter.WindDirection:
+          return observation.$data.WR ? aspectColors[degreeToAspect(observation.$data.WR)] : "white";
+        case WeatherStationParameter.WindGust:
+          return this.windColor(observation.$data.WG_BOE);
         default:
           return "white";
       }
@@ -459,6 +479,15 @@ export class ObservationMarkerService {
     }
   }
 
+  private windColor(wind: number) {
+    if (wind) {
+      const index = isFinite(wind) ? windThresholds.findIndex((e) => e >= wind) : -1;
+      return index >= 0 ? windColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
   getLegendLabel(type: LocalFilterTypes, label: string, value: string): string {
     switch (type) {
       case LocalFilterTypes.Aspect:
@@ -510,6 +539,14 @@ export class ObservationMarkerService {
           return observation.$data.OFT ? Math.round(observation.$data.OFT * 10) / 10 : "";
         case WeatherStationParameter.DewPoint:
           return observation.$data.TD ? Math.round(observation.$data.TD * 10) / 10 : "";
+        case WeatherStationParameter.RelativeHumidity:
+          return observation.$data.RH ? Math.round(observation.$data.RH * 10) / 10 : "";
+        case WeatherStationParameter.WindDirection:
+          return observation.$data.WR ? degreeToAspect(observation.$data.WR) : "";
+        case WeatherStationParameter.WindSpeed:
+          return observation.$data.WG ? Math.round(observation.$data.WG * 10) / 10 : "";
+        case WeatherStationParameter.WindGust:
+          return observation.$data.WG_BOE ? Math.round(observation.$data.WG_BOE * 10) / 10 : "";
         default:
           return "";
       }

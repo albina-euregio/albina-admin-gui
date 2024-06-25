@@ -58,6 +58,10 @@ export enum WeatherStationParameter {
   AirTemperatureMin = "AirTemperatureMin",
   SurfaceTemperature = "SurfaceTemperature",
   DewPoint = "DewPoint",
+  RelativeHumidity = "RelativeHumidity",
+  WindDirection = "WindDirection",
+  WindSpeed = "WindSpeed",
+  WindGust = "WindGust",
 }
 
 export enum ObservationSource {
