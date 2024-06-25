@@ -520,33 +520,33 @@ export class ObservationMarkerService {
     ) {
       switch (this.weatherStationLabel) {
         case WeatherStationParameter.GlobalRadiation:
-          return observation.$data.GS_O ? Math.round(observation.$data.GS_O * 10) / 10 : "";
+          return observation.$data.GS_O ? Math.round(observation.$data.GS_O) : "";
         case WeatherStationParameter.SnowHeight:
-          return observation.$data.HS ? Math.round(observation.$data.HS * 10) / 10 : "";
+          return observation.$data.HS ? Math.round(observation.$data.HS) : "";
         case WeatherStationParameter.SnowDifference24h:
-          return observation.$data.HSD24 ? Math.round(observation.$data.HSD24 * 10) / 10 : "";
+          return observation.$data.HSD24 ? Math.round(observation.$data.HSD24) : "";
         case WeatherStationParameter.SnowDifference48h:
-          return observation.$data.HSD48 ? Math.round(observation.$data.HSD48 * 10) / 10 : "";
+          return observation.$data.HSD48 ? Math.round(observation.$data.HSD48) : "";
         case WeatherStationParameter.SnowDifference72h:
-          return observation.$data.HSD72 ? Math.round(observation.$data.HSD72 * 10) / 10 : "";
+          return observation.$data.HSD72 ? Math.round(observation.$data.HSD72) : "";
         case WeatherStationParameter.AirTemperature:
-          return observation.$data.LT ? Math.round(observation.$data.LT * 10) / 10 : "";
+          return observation.$data.LT ? Math.round(observation.$data.LT) : "";
         case WeatherStationParameter.AirTemperatureMax:
-          return observation.$data.LT_MAX ? Math.round(observation.$data.LT_MAX * 10) / 10 : "";
+          return observation.$data.LT_MAX ? Math.round(observation.$data.LT_MAX) : "";
         case WeatherStationParameter.AirTemperatureMin:
-          return observation.$data.LT_MIN ? Math.round(observation.$data.LT_MIN * 10) / 10 : "";
+          return observation.$data.LT_MIN ? Math.round(observation.$data.LT_MIN) : "";
         case WeatherStationParameter.SurfaceTemperature:
-          return observation.$data.OFT ? Math.round(observation.$data.OFT * 10) / 10 : "";
+          return observation.$data.OFT ? Math.round(observation.$data.OFT) : "";
         case WeatherStationParameter.DewPoint:
-          return observation.$data.TD ? Math.round(observation.$data.TD * 10) / 10 : "";
+          return observation.$data.TD ? Math.round(observation.$data.TD) : "";
         case WeatherStationParameter.RelativeHumidity:
-          return observation.$data.RH ? Math.round(observation.$data.RH * 10) / 10 : "";
+          return observation.$data.RH ? Math.round(observation.$data.RH) : "";
         case WeatherStationParameter.WindDirection:
           return observation.$data.WR ? degreeToAspect(observation.$data.WR) : "";
         case WeatherStationParameter.WindSpeed:
-          return observation.$data.WG ? Math.round(observation.$data.WG * 10) / 10 : "";
+          return observation.$data.WG ? Math.round(observation.$data.WG) : "";
         case WeatherStationParameter.WindGust:
-          return observation.$data.WG_BOE ? Math.round(observation.$data.WG_BOE * 10) / 10 : "";
+          return observation.$data.WG_BOE ? Math.round(observation.$data.WG_BOE) : "";
         default:
           return "";
       }
