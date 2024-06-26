@@ -27,8 +27,6 @@ export class ConstantsService {
     "forecast.uoa.gr": "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png",
     [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/observations/widget.alpsolut.eu/",
     [ForecastSource.multimodel]: "https://static.avalanche.report/zamg/zamg/",
-    [ForecastSource.observed_profile]:
-      "https://models.avalanche.report/profiles/observed-profiles/observed_profiles.json",
     [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
     [ObservationSource.LoLaKronos]:
       "https://admin.avalanche.report/observations/lola-kronos.info/api/dataexport/dataFromToken/",

@@ -18,21 +18,19 @@ export interface AvalancheWarningServiceObservedProfiles {
 
 @Injectable()
 export class ObservedProfileSourceService {
-  constructor(
-    private http: HttpClient,
-    private constantsService: ConstantsService,
-  ) {}
+  constructor(private http: HttpClient) {}
+
+  private readonly URL = "https://models.avalanche.report/profiles/observed-profiles/observed_profiles.json";
 
   /**
    * SNOWPACK modelled snow profiles
    * https://gitlab.com/avalanche-warning
    */
   getObservedProfiles(): Observable<GenericObservation[]> {
-    const url = this.constantsService.observationApi["observed_profile"];
-    return this.http.get<AvalancheWarningServiceObservedProfiles[]>(url).pipe(
+    return this.http.get<AvalancheWarningServiceObservedProfiles[]>(this.URL).pipe(
       map((profiles) => profiles.map((profile) => augmentRegion(toPoint(profile)))),
       catchError((e) => {
-        console.error("Failed to read observed_profiles from " + url, e);
+        console.error("Failed to read observed_profiles from " + this.URL, e);
         return [];
       }),
     );
