@@ -1,5 +1,5 @@
 import mysql, { Connection, QueryError } from "mysql2/promise";
-import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation } from "./models";
 
 export async function createConnection() {
   return await mysql.createConnection({

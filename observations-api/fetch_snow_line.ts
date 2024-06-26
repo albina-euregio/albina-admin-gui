@@ -1,9 +1,4 @@
-import {
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationType,
-} from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation, ImportantObservation, ObservationSource, ObservationType } from "./models";
 import { fetchJSON } from "./fetchJSON";
 
 const API = "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson";
@@ -57,6 +52,7 @@ export async function* fetchSnowLineCalculations(
     }
   }
 }
+
 function formatDate(d: Date) {
   return d.toISOString().slice(0, "2006-01-02".length);
 }

@@ -1,5 +1,5 @@
 import { Profile, ProfileDetails, toLawisProfile, toLawisProfileDetails } from "./models/lawis.model";
-import { GenericObservation, findExistingObservation } from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation, findExistingObservation } from "./models";
 import { fetchJSON } from "./fetchJSON";
 
 const API = "https://lawis.at/lawis_api/public/profile";

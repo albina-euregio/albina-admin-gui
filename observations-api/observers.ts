@@ -1,8 +1,4 @@
-import {
-  GenericObservation,
-  ObservationSource,
-  ObservationType,
-} from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation, ObservationSource, ObservationType } from "./models";
 import BeobachterAT from "./data/Beobachter-AT.json";
 import BeobachterIT from "./data/Beobachter-IT.json";
 

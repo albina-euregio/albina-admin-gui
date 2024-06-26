@@ -1,7 +1,7 @@
-import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation } from "./models";
 import { convertRasWebcam, webcams as rasWebcams } from "./models/ras-webcam.model";
 import { FotoWebcamEUResponse, convertFotoWebcamEU } from "./models/foto-webcam.model";
-import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "./models/panocloud-webcam.mode";
+import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "./models/panocloud-webcam.modes";
 import { PanomaxCamResponse, PanomaxThumbnailResponse, convertPanomax } from "./models/panomax.model";
 import { fetchJSON } from "./fetchJSON";
 import { getRegionForLatLng } from "../src/app/providers/regions-service/augmentRegion";

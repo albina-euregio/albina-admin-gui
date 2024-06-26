@@ -1,8 +1,4 @@
-import {
-  GenericObservation,
-  ObservationSource,
-  ObservationType,
-} from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation, ObservationSource, ObservationType } from "./models";
 import { fetchJSON } from "./fetchJSON";
 
 export async function getAwsWeatherStations(): Promise<GenericObservation[]> {

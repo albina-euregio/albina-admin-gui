@@ -1,7 +1,7 @@
 import express from "express";
 import { createConnection, selectObservations } from "./database";
 import { fetchAndInsert } from "./fetch";
-import { GenericObservation } from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation } from "./models";
 import { serveWebcams } from "./webcams";
 import { getAwsObservers } from "./observers";
 import { getAwsWeatherStations } from "./weather-stations";

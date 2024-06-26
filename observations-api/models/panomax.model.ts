@@ -1,9 +1,4 @@
-import {
-  type GenericObservation,
-  ObservationSource,
-  ObservationType,
-  degreeToAspect,
-} from "../../src/app/observations/models/generic-observation.model";
+import { type GenericObservation, ObservationSource, ObservationType, degreeToAspect } from ".";
 
 export interface PanomaxCam {
   id: string;
