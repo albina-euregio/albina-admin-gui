@@ -160,24 +160,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
       weatherStationsLayerGroup,
       this.translateService.instant("observations.layers.weatherStations"),
     );
-    map.on(
-      "layeradd",
-      function (event) {
-        if (event.layer == weatherStationsLayerGroup) {
-          this.showWeatherStations = true;
-        }
-      },
-      this.mapService,
-    );
-    map.on(
-      "layerremove",
-      function (event) {
-        if (event.layer == weatherStationsLayerGroup) {
-          this.showWeatherStations = false;
-        }
-      },
-      this.mapService,
-    );
+    map.on("layeradd", (event) => {
+      if (event.layer == weatherStationsLayerGroup) {
+        this.showWeatherStations = true;
+      }
+    });
+    map.on("layerremove", (event) => {
+      if (event.layer == weatherStationsLayerGroup) {
+        this.showWeatherStations = false;
+      }
+    });
 
     layerControl.addOverlay(this.loadWebcams(), this.translateService.instant("observations.layers.webcams"));
     map.on("click", () => {
