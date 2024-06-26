@@ -205,12 +205,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
     this.applyLocalFilter(this.markerService.markerClassify);
   }
 
-  onSidebarChange(e: Event) {
-    if (e.type === "opening") {
-      this.layout = "map";
-    }
-  }
-
   newObservation() {
     this.layout = "table";
     this.observationTableComponent.newObservation();
