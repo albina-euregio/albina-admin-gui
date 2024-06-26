@@ -39,16 +39,6 @@ export class ConstantsService {
     [ObservationSource.Panomax]: "https://admin.avalanche.report/observations/api.panomax.com/1.0",
   };
 
-  public observationWeb = {
-    [ForecastSource.alpsolut_profile]: "https://salient.alpsolut.eu/v1/geo/stations",
-    [ObservationSource.LoLaKronos]: "https://www.lola-kronos.info/",
-    [`${ObservationSource.Lawis}-incident` as const]: "https://lawis.at/incident/#{{id}}",
-    [`${ObservationSource.Lawis}-${ObservationType.Profile}` as const]:
-      "https://lawis.at/lawis_api/v2_2/files/profiles/snowprofile_{{id}}.pdf",
-    [ObservationSource.SnowLine]:
-      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}",
-  };
-
   public rechenraumApi = "https://voibos.rechenraum.com/voibos/voibos";
 
   public osmNominatimApi = "https://nominatim.openstreetmap.org/search";
