@@ -39,9 +39,6 @@ export class ConstantsService {
     [ObservationSource.Panomax]: "https://admin.avalanche.report/observations/api.panomax.com/1.0",
   };
 
-  public osmNominatimApi = "https://nominatim.openstreetmap.org/search";
-  public osmNominatimCountries = "at,it";
-
   // region (ISO-3166)
   public codeSwitzerland: string = "CH";
   public codeTyrol: string = "AT-07";
