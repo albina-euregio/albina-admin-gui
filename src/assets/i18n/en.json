@@ -870,6 +870,29 @@
     "avalancheWidth": "Avalanche width",
     "search": "Search",
     "count": "# observations:",
+    "layers": {
+      "observers": "Observers",
+      "weatherStations": "Weather stations",
+      "webcams": "Webcams"
+    },
+    "weatherStations": {
+      "tooltips": {
+        "globalRadiation": "Global radiation",
+        "snowHeight": "Snow height",
+        "snowDifference24h": "Snow difference 24h",
+        "snowDifference48h": "Snow difference 48h",
+        "snowDifference72h": "Snow difference 72h",
+        "airTemperature": "Air temperature",
+        "airTemperatureMax": "Air temperature Max",
+        "airTemperatureMin": "Air temperature Min",
+        "surfaceTemperature": "Surface temperature",
+        "dewPoint": "Dew point temperature",
+        "relativeHumidity": "Relative humidity",
+        "windDirection": "Wind direction",
+        "windSpeed": "Wind speed",
+        "windGust": "Wind gust"
+      }
+    },
     "button": {
       "add": "Add observation",
       "save": "Save observation",

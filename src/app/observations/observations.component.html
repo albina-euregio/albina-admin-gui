@@ -21,7 +21,7 @@
               <div class="dropdown">
                 <button
                   type="button"
-                  class="btn btn-primary dropdown-toggle"
+                  class="btn dropdown-toggle"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   data-bs-auto-close="outside"
@@ -49,7 +49,7 @@
               <div class="dropdown">
                 <button
                   type="button"
-                  class="btn btn-primary dropdown-toggle"
+                  class="btn dropdown-toggle"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   data-bs-auto-close="outside"
@@ -167,6 +167,129 @@
         <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
       </div>
       <!-- /layout-map -->
+
+      <!-- !parameter-switch -->
+      <div *ngIf="mapService.showWeatherStations" class="parameter-switch">
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowHeight' }"
+          (click)="selectParameter('SnowHeight')"
+          title="{{ 'observations.weatherStations.tooltips.snowHeight' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        <!--
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowDifference24h' }"
+          (click)="selectParameter('SnowDifference24h')"
+          title="{{ 'observations.weatherStations.tooltips.snowDifference24h' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowDifference48h' }"
+          (click)="selectParameter('SnowDifference48h')"
+          title="{{ 'observations.weatherStations.tooltips.snowDifference48h' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowDifference72h' }"
+          (click)="selectParameter('SnowDifference72h')"
+          title="{{ 'observations.weatherStations.tooltips.snowDifference72h' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        -->
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'AirTemperature' }"
+          (click)="selectParameter('AirTemperature')"
+          title="{{ 'observations.weatherStations.tooltips.airTemperature' | translate }}"
+        >
+          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
+        </div>
+        <!--
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'AirTemperatureMax' }"
+          (click)="selectParameter('AirTemperatureMax')"
+          title="{{ 'observations.weatherStations.tooltips.airTemperatureMax' | translate }}"
+        >
+          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'AirTemperatureMin' }"
+          (click)="selectParameter('AirTemperatureMin')"
+          title="{{ 'observations.weatherStations.tooltips.airTemperatureMin' | translate }}"
+        >
+          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
+        </div>
+        -->
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceTemperature' }"
+          (click)="selectParameter('SurfaceTemperature')"
+          title="{{ 'observations.weatherStations.tooltips.surfaceTemperature' | translate }}"
+        >
+          <i class="ph ph-thermometer-cold" aria-hidden="true"></i>
+        </div>
+        <!--
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'DewPoint' }"
+          (click)="selectParameter('DewPoint')"
+          title="{{ 'observations.weatherStations.tooltips.dewPoint' | translate }}"
+        >
+          <i class="ph ph-thermometer-hot" aria-hidden="true"></i>
+        </div>
+        -->
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindSpeed' }"
+          (click)="selectParameter('WindSpeed')"
+          title="{{ 'observations.weatherStations.tooltips.windSpeed' | translate }}"
+        >
+          <i class="ph ph-wind" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindGust' }"
+          (click)="selectParameter('WindGust')"
+          title="{{ 'observations.weatherStations.tooltips.windGust' | translate }}"
+        >
+          <i class="ph ph-tornado" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindDirection' }"
+          (click)="selectParameter('WindDirection')"
+          title="{{ 'observations.weatherStations.tooltips.windDirection' | translate }}"
+        >
+          <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'RelativeHumidity' }"
+          (click)="selectParameter('RelativeHumidity')"
+          title="{{ 'observations.weatherStations.tooltips.relativeHumidity' | translate }}"
+        >
+          <i class="ph ph-drop-simple" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'GlobalRadiation' }"
+          (click)="selectParameter('GlobalRadiation')"
+          title="{{ 'observations.weatherStations.tooltips.globalRadiation' | translate }}"
+        >
+          <i class="ph ph-sun" aria-hidden="true"></i>
+        </div>
+      </div>
+      <!-- /parameter-switch -->
     </div>
     <!-- /layout-left -->
 
@@ -205,7 +328,7 @@
               "
               [nanStatus]="{
                 selected: filter.filterSelection[LocalFilterTypes.Aspect]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan')
+                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan'),
               }"
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
@@ -224,7 +347,7 @@
               "
               [nanStatus]="{
                 selected: filter.filterSelection[type]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[type]['highlighted'].includes('nan')
+                highlighted: filter.filterSelection[type]['highlighted'].includes('nan'),
               }"
               [formatter]="'date'"
               [labelType]="markerService.markerLabel"

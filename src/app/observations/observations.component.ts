@@ -12,6 +12,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
+
 import {
   GenericObservation,
   ObservationSource,
@@ -23,6 +24,7 @@ import {
   DangerPattern,
   ImportantObservation,
   Stability,
+  WeatherStationParameter,
   genericObservationSchema,
 } from "./models/generic-observation.model";
 
@@ -66,13 +68,16 @@ export interface MultiselectDropdownData {
   templateUrl: "observations.component.html",
   styleUrls: ["./observations.component.scss"],
 })
-export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
   public observations: GenericObservation[] = [];
   public webcams: GenericObservation[] = [];
   public localWebcams: GenericObservation[] = [];
+  public weatherStations: GenericObservation[] = [];
+  public localWeatherStations: GenericObservation[] = [];
+  public showWeatherStations: boolean = false;
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public observationsWithoutCoordinates: number = 0;
@@ -149,9 +154,32 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
     this.observationsAsOverlay = [];
-    layerControl.addOverlay(this.loadObservers(), "Beobachter");
-    layerControl.addOverlay(this.loadWeatherStations(), "Wetterstationen");
-    layerControl.addOverlay(this.loadWebcams(), "Webcams");
+    layerControl.addOverlay(this.loadObservers(), this.translateService.instant("observations.layers.observers"));
+    const weatherStationsLayerGroup = this.loadWeatherStations();
+    layerControl.addOverlay(
+      weatherStationsLayerGroup,
+      this.translateService.instant("observations.layers.weatherStations"),
+    );
+    map.on(
+      "layeradd",
+      function (event) {
+        if (event.layer == weatherStationsLayerGroup) {
+          this.showWeatherStations = true;
+        }
+      },
+      this.mapService,
+    );
+    map.on(
+      "layerremove",
+      function (event) {
+        if (event.layer == weatherStationsLayerGroup) {
+          this.showWeatherStations = false;
+        }
+      },
+      this.mapService,
+    );
+
+    layerControl.addOverlay(this.loadWebcams(), this.translateService.instant("observations.layers.webcams"));
     map.on("click", () => {
       this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyLocalFilter(this.markerService.markerClassify);
@@ -186,6 +214,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   newObservation() {
     this.layout = "table";
     this.observationTableComponent.newObservation();
+  }
+
+  selectParameter(parameter: WeatherStationParameter) {
+    this.markerService.weatherStationLabel === parameter
+      ? (this.markerService.weatherStationLabel = undefined)
+      : (this.markerService.weatherStationLabel = parameter);
+    this.applyLocalFilter(this.markerService.markerClassify);
   }
 
   parseObservation(observation: GenericObservation): GenericObservation {
@@ -285,15 +320,28 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.localObservations = this.observations.filter(
       (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
     );
-    this.localWebcams = this.webcams.filter(
-      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
-    );
     this.localObservations.forEach((observation) => {
       this.markerService
         .createMarker(observation, this.filter.isHighlighted(observation))
         ?.on("click", () => this.onObservationClick(observation))
         ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     });
+
+    this.localWebcams = this.webcams.filter(
+      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
+    );
+
+    this.mapService.layers["weather-stations"].clearLayers();
+    this.localWeatherStations = this.weatherStations.filter(
+      (weatherStation) => this.filter.isHighlighted(weatherStation) || this.filter.isSelected(weatherStation),
+    );
+    this.localWeatherStations.forEach((weatherStation) => {
+      const marker = this.markerService
+        .createMarker(weatherStation, this.filter.isHighlighted(weatherStation))
+        ?.on("click", () => this.onObservationClick(weatherStation))
+        ?.addTo(this.mapService.layers["weather-stations"]);
+    });
+
     this.buildChartsData(classifyType);
   }
 
@@ -328,12 +376,19 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadObservers(layer: keyof typeof this.mapService.layers = "observers"): LayerGroup<any> {
+  private loadObservers(): LayerGroup<any> {
     return this.loadGenericObservations0(this.observationsService.getObservers(), "observers");
   }
 
   private loadWeatherStations(): LayerGroup<any> {
-    return this.loadGenericObservations0(this.observationsService.getWeatherStations(), "weather-stations");
+    const weatherStations = this.observationsService.getWeatherStations();
+    this.weatherStations = [];
+    weatherStations.forEach((w) => {
+      augmentRegion(w);
+      if (!w.region) return;
+      this.weatherStations.push(w);
+    });
+    return this.loadGenericObservations0(weatherStations, "weather-stations");
   }
 
   private loadWebcams(): LayerGroup<any> {
@@ -343,7 +398,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       augmentRegion(w);
       if (!w.region) return;
       this.webcams.push(w);
-      this.applyLocalFilter(this.markerService.markerClassify);
     });
     return this.loadGenericObservations0(webcams, "webcams");
   }

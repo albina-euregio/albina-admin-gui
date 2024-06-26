@@ -11,6 +11,8 @@ import {
   ObservationSource,
   ObservationType,
   Stability,
+  WeatherStationParameter,
+  degreeToAspect,
 } from "./models/generic-observation.model";
 
 // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
@@ -31,6 +33,7 @@ const zIndex: Record<Stability, number> = {
   [Stability.very_poor]: 20,
 };
 
+const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 400];
 const elevationThresholds = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000];
 const elevationColors = {
   "0": "#FFFFFE",
@@ -42,6 +45,73 @@ const elevationColors = {
   "6": "#035BBE",
   "7": "#784BFF",
   "8": "#CC0CE8",
+};
+
+const snowDifferenceThresholds = [-20, -10, -5, 1, 5, 10, 20, 30, 50, 75, 100];
+const snowDifferenceColors = {
+  "0": "#ff6464",
+  "1": "#ffa0a0",
+  "2": "#ffd2d2",
+  "3": "#fff",
+  "4": "#FFFFB3",
+  "5": "#B0FFBC",
+  "6": "#8CFFFF",
+  "7": "#03CDFF",
+  "8": "#0481FF",
+  "9": "#035BBE",
+  "10": "#784BFF",
+  "11": "#CC0CE8",
+};
+
+const temperatureThresholds = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30];
+const temperatureColors = {
+  "0": "#9f80ff",
+  "1": "#784cff",
+  "2": "#0f5abe",
+  "3": "#1380ff",
+  "4": "#19cdff",
+  "5": "#8fffff",
+  "6": "#b0ffbc",
+  "7": "#ffff73",
+  "8": "#ffbe7d",
+  "9": "#ff9b41",
+  "10": "#ff5a41",
+  "11": "#ff1e23",
+  "12": "#fa3c96",
+};
+
+const relativeHumidityThresholds = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+const relativeHumidityColors = {
+  "0": "#fff",
+  "1": "#ced1d8",
+  "2": "#9ca4b1",
+  "3": "#648594",
+  "4": "#4499c0",
+  "5": "#1cafe2",
+  "6": "#1cc3ef",
+  "7": "#76cfc9",
+  "8": "#c4dd99",
+  "9": "#f0de70",
+  "10": "#f9c442",
+  "11": "#fbad0b",
+  "12": "#ff8b00",
+  "13": "#fc6d04",
+  "14": "#ff4802",
+  "15": "#dc3000",
+  "16": "#b31901",
+  "17": "#8a0007",
+};
+
+const globalRadiationThresholds = [0, 200, 400, 600, 800, 1000, 1200];
+const windThresholds = [0, 5, 10, 20, 40, 60, 80];
+const windColors = {
+  "0": "#ffff64",
+  "1": "#c8ff64",
+  "2": "#96ff96",
+  "3": "#32c8ff",
+  "4": "#6496ff",
+  "5": "#9664ff",
+  "6": "#ff3232",
 };
 
 // FATMAP
@@ -172,6 +242,7 @@ export class ObservationMarkerService {
   public USE_CANVAS_LAYER = true;
 
   public markerLabel: LocalFilterTypes | undefined = undefined;
+  public weatherStationLabel: WeatherStationParameter | undefined = undefined;
   public markerClassify: LocalFilterTypes = LocalFilterTypes.Stability;
 
   constructor() {}
@@ -232,10 +303,50 @@ export class ObservationMarkerService {
   toMarkerRadius(observation: GenericObservation): number {
     if (observation?.$type === ObservationType.Webcam) {
       return 20;
-    } else if (observation?.$type === ObservationType.TimeSeries) {
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.Observer
+    ) {
       return 20;
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return 30;
     }
     return 40;
+  }
+
+  getBorderColor(observation: GenericObservation) {
+    if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return "#555555";
+    } else if (observation?.$type === ObservationType.Webcam) {
+      return "#000";
+    } else if (observation?.$source === ObservationSource.SnowLine) {
+      return "#777777";
+    } else {
+      return "#000";
+    }
+  }
+
+  getLabelFontSize(observation: GenericObservation) {
+    if (observation?.$type === ObservationType.Webcam) {
+      return "6";
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      return "10";
+    } else {
+      return "12";
+    }
+  }
+
+  showOuterCircle(observation: GenericObservation) {
+    return false;
   }
 
   toMarkerColor(observation: GenericObservation) {
@@ -243,14 +354,45 @@ export class ObservationMarkerService {
       return "black";
     } else if (
       observation?.$type === ObservationType.TimeSeries &&
-      observation?.$source === ObservationSource.AvalancheWarningService
-    ) {
-      return "#19abff";
-    } else if (
-      observation?.$type === ObservationType.TimeSeries &&
       observation?.$source === ObservationSource.Observer
     ) {
       return "#ca0020";
+    } else if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      switch (this.weatherStationLabel) {
+        case WeatherStationParameter.GlobalRadiation:
+          return this.globalRadiationColor(observation.$data.GS_O);
+        case WeatherStationParameter.SnowHeight:
+          return this.snowHeightColor(observation.$data.HS);
+        case WeatherStationParameter.SnowDifference24h:
+          return this.snowDifferenceColor(observation.$data.HSD24);
+        case WeatherStationParameter.SnowDifference48h:
+          return this.snowDifferenceColor(observation.$data.HSD48);
+        case WeatherStationParameter.SnowDifference72h:
+          return this.snowDifferenceColor(observation.$data.HSD72);
+        case WeatherStationParameter.AirTemperature:
+          return this.temperatureColor(observation.$data.LT);
+        case WeatherStationParameter.AirTemperatureMax:
+          return this.temperatureColor(observation.$data.LT_MAX);
+        case WeatherStationParameter.AirTemperatureMin:
+          return this.temperatureColor(observation.$data.LT_MIN);
+        case WeatherStationParameter.SurfaceTemperature:
+          return this.temperatureColor(observation.$data.OFT);
+        case WeatherStationParameter.DewPoint:
+          return this.temperatureColor(observation.$data.TD);
+        case WeatherStationParameter.RelativeHumidity:
+          return this.relativeHumidityColor(observation.$data.RH);
+        case WeatherStationParameter.WindSpeed:
+          return this.windColor(observation.$data.WG);
+        case WeatherStationParameter.WindDirection:
+          return observation.$data.WR ? aspectColors[degreeToAspect(observation.$data.WR)] : "white";
+        case WeatherStationParameter.WindGust:
+          return this.windColor(observation.$data.WG_BOE);
+        default:
+          return "white";
+      }
     }
 
     switch (this.markerClassify) {
@@ -333,6 +475,62 @@ export class ObservationMarkerService {
     }
   }
 
+  private snowHeightColor(snowHeight: number) {
+    if (snowHeight) {
+      const index = isFinite(snowHeight) ? snowHeightThresholds.findIndex((e) => e >= snowHeight) : -1;
+      return index >= 0 ? elevationColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private snowDifferenceColor(snowDifference: number) {
+    if (snowDifference) {
+      const index = isFinite(snowDifference) ? snowDifferenceThresholds.findIndex((e) => e >= snowDifference) : -1;
+      return index >= 0 ? snowDifferenceColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private temperatureColor(temperature: number) {
+    if (temperature) {
+      const index = isFinite(temperature) ? temperatureThresholds.findIndex((e) => e >= temperature) : -1;
+      return index >= 0 ? temperatureColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private relativeHumidityColor(relativeHumidity: number) {
+    if (relativeHumidity) {
+      const index = isFinite(relativeHumidity)
+        ? relativeHumidityThresholds.findIndex((e) => e >= relativeHumidity)
+        : -1;
+      return index >= 0 ? relativeHumidityColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private windColor(wind: number) {
+    if (wind) {
+      const index = isFinite(wind) ? windThresholds.findIndex((e) => e >= wind) : -1;
+      return index >= 0 ? windColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private globalRadiationColor(globalRadiation: number) {
+    if (globalRadiation) {
+      const index = isFinite(globalRadiation) ? globalRadiationThresholds.findIndex((e) => e >= globalRadiation) : -1;
+      return index >= 0 ? windColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
   getLegendLabel(type: LocalFilterTypes, label: string, value: string): string {
     switch (type) {
       case LocalFilterTypes.Aspect:
@@ -359,6 +557,44 @@ export class ObservationMarkerService {
   }
 
   private getLabel(observation: GenericObservation<any>) {
+    if (
+      observation?.$type === ObservationType.TimeSeries &&
+      observation?.$source === ObservationSource.AvalancheWarningService
+    ) {
+      switch (this.weatherStationLabel) {
+        case WeatherStationParameter.GlobalRadiation:
+          return observation.$data.GS_O ? Math.round(observation.$data.GS_O) : "";
+        case WeatherStationParameter.SnowHeight:
+          return observation.$data.HS ? Math.round(observation.$data.HS) : "";
+        case WeatherStationParameter.SnowDifference24h:
+          return observation.$data.HSD24 ? Math.round(observation.$data.HSD24) : "";
+        case WeatherStationParameter.SnowDifference48h:
+          return observation.$data.HSD48 ? Math.round(observation.$data.HSD48) : "";
+        case WeatherStationParameter.SnowDifference72h:
+          return observation.$data.HSD72 ? Math.round(observation.$data.HSD72) : "";
+        case WeatherStationParameter.AirTemperature:
+          return observation.$data.LT ? Math.round(observation.$data.LT) : "";
+        case WeatherStationParameter.AirTemperatureMax:
+          return observation.$data.LT_MAX ? Math.round(observation.$data.LT_MAX) : "";
+        case WeatherStationParameter.AirTemperatureMin:
+          return observation.$data.LT_MIN ? Math.round(observation.$data.LT_MIN) : "";
+        case WeatherStationParameter.SurfaceTemperature:
+          return observation.$data.OFT ? Math.round(observation.$data.OFT) : "";
+        case WeatherStationParameter.DewPoint:
+          return observation.$data.TD ? Math.round(observation.$data.TD) : "";
+        case WeatherStationParameter.RelativeHumidity:
+          return observation.$data.RH ? Math.round(observation.$data.RH) : "";
+        case WeatherStationParameter.WindDirection:
+          return observation.$data.WR ? degreeToAspect(observation.$data.WR) : "";
+        case WeatherStationParameter.WindSpeed:
+          return observation.$data.WG ? Math.round(observation.$data.WG) : "";
+        case WeatherStationParameter.WindGust:
+          return observation.$data.WG_BOE ? Math.round(observation.$data.WG_BOE) : "";
+        default:
+          return "";
+      }
+    }
+
     if (!this.markerLabel) {
       return "";
     }
@@ -425,10 +661,12 @@ export class ObservationMarkerService {
     }
 
     const label = this.getLabel(observation);
+    const borderColor = this.getBorderColor(observation);
     const labelFont =
       this.markerLabel === LocalFilterTypes.ImportantObservation
         ? "snowsymbolsiacs"
         : `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`;
+    const labelFontSize = this.getLabelFontSize(observation);
 
     const aspectColor = "#898989";
     const aspects = {
@@ -441,6 +679,17 @@ export class ObservationMarkerService {
       W: `<g id="sector-w" transform="translate(0, 17.0479)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(22.5) translate(-12.5421, -10.8779)"></path></g>`,
       NW: `<g id="sector-nw" transform="translate(3.3285, 5.6827)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-292.5) translate(-10.8779, -12.5421)"></path></g>`,
     };
+
+    const outerCircle = this.showOuterCircle(observation)
+      ? `<g id="map-marker-circle-outer" transform="translate(7, 7)" stroke="#000000">
+          <g id="line-thin">
+              <circle id="Oval" cx="14" cy="14" r="14"></circle>
+          </g>
+          <g id="dotted-thin" stroke-dasharray="0,3.02" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14,28 C21.7319865,28 28,21.7319865 28,14 C28,6.2680135 21.7319865,0 14,0 C6.2680135,0 0,6.2680135 0,14 C0,21.7319865 6.2680135,28 14,28 Z" id="Oval"></path>
+          </g>
+      </g>`
+      : ``;
 
     // 700533 - drawImage() fails silently when drawing an SVG image without @width or @height
     // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
@@ -463,8 +712,8 @@ export class ObservationMarkerService {
                 <circle id="Oval" cx="11" cy="11" r="11"></circle>
             </g>
 
-            <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="#000000">
-                <text x="11" y="15" text-anchor="middle" fill="${textColor}" font-size="12" font-weight="lighter" font-family="${labelFont}">${label}</text>
+            <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="${borderColor}">
+                <text x="11" y="15" text-anchor="middle" fill="${textColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
 
                 <g id="line-bold" stroke-width="2">
                     <circle id="Oval" cx="11" cy="11" r="11"></circle>
@@ -480,15 +729,7 @@ export class ObservationMarkerService {
                 </g>
             </g>
 
-  
-            <!--<g id="map-marker-circle-outer" transform="translate(7, 7)" stroke="#000000">
-                <g id="line-thin">
-                    <circle id="Oval" cx="14" cy="14" r="14"></circle>
-                </g>
-                <g id="dotted-thin" stroke-dasharray="0,3.02" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14,28 C21.7319865,28 28,21.7319865 28,14 C28,6.2680135 21.7319865,0 14,0 C6.2680135,0 0,6.2680135 0,14 C0,21.7319865 6.2680135,28 14,28 Z" id="Oval"></path>
-                </g>
-            </g>-->
+            ${outerCircle}
 
         </g>
     </g>

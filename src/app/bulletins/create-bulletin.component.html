@@ -510,7 +510,7 @@
         activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined),
       'create-bulletin__compact-layout--compare':
         activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined,
-      'full-width': !isBulletinSidebarVisible
+      'full-width': !isBulletinSidebarVisible,
     }"
   >
     <!-- Active bulletin -->
@@ -864,7 +864,7 @@
         <tr
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date)
+            'bulletins-table__active--day': isActiveDate(date),
           }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate">

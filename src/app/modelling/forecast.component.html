@@ -89,7 +89,7 @@
           *ngFor="let point of dropDownOptions[selectedModelType]"
           [ngValue]="point"
           [ngClass]="{
-            'd-none': showObservationConfigurations && point.$data.configuration !== observationConfiguration
+            'd-none': showObservationConfigurations && point.$data.configuration !== observationConfiguration,
           }"
         >
           {{ point.region }}:

@@ -18,6 +18,7 @@ export class BaseMapService extends MapService {
     "weather-stations": new LayerGroup(),
     webcams: new LayerGroup(),
   };
+  public showWeatherStations: boolean = false;
 
   constructor(
     authenticationService: AuthenticationService,
