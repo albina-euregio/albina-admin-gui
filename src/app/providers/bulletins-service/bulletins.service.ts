@@ -341,7 +341,7 @@ export class BulletinsService {
     return this.http.get<Response>(url, options);
   }
 
-  saveBulletins(bulletins, date): Observable<Response> {
+  saveBulletins(bulletins: BulletinModel[], date: Date): Observable<Response> {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?date=" +
@@ -359,7 +359,7 @@ export class BulletinsService {
     return this.http.post<Response>(url, body, options);
   }
 
-  createBulletin(bulletin: BulletinModel, date): Observable<Response> {
+  createBulletin(bulletin: BulletinModel, date: Date): Observable<Response> {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?date=" +
@@ -373,7 +373,7 @@ export class BulletinsService {
     return this.http.put<Response>(url, body, options);
   }
 
-  updateBulletin(bulletin: BulletinModel, date): Observable<Response> {
+  updateBulletin(bulletin: BulletinModel, date: Date): Observable<Response> {
     // check if bulletin has ID
     const url =
       this.constantsService.getServerUrl() +
@@ -390,7 +390,7 @@ export class BulletinsService {
     return this.http.post<Response>(url, body, options);
   }
 
-  deleteBulletin(bulletin: BulletinModel, date): Observable<Response> {
+  deleteBulletin(bulletin: BulletinModel, date: Date): Observable<Response> {
     // check if bulletin has ID
     const url =
       this.constantsService.getServerUrl() +
@@ -755,7 +755,7 @@ export class BulletinsService {
     }
   }
 
-  removeLockedBulletin(bulletinId) {
+  removeLockedBulletin(bulletinId: string) {
     if (this.lockedBulletins.has(bulletinId)) {
       this.lockedBulletins.delete(bulletinId);
     } else {
