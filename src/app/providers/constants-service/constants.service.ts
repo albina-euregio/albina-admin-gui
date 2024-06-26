@@ -39,8 +39,6 @@ export class ConstantsService {
     [ObservationSource.Panomax]: "https://admin.avalanche.report/observations/api.panomax.com/1.0",
   };
 
-  public rechenraumApi = "https://voibos.rechenraum.com/voibos/voibos";
-
   public osmNominatimApi = "https://nominatim.openstreetmap.org/search";
   public osmNominatimCountries = "at,it";
 
