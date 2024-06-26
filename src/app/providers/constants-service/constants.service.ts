@@ -25,7 +25,6 @@ export class ConstantsService {
 
     "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",
     [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/observations/widget.alpsolut.eu/",
-    [ForecastSource.multimodel]: "https://static.avalanche.report/zamg/zamg/",
     [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
     [ObservationSource.LoLaKronos]:
       "https://admin.avalanche.report/observations/lola-kronos.info/api/dataexport/dataFromToken/",

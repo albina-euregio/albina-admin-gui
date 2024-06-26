@@ -17,6 +17,8 @@ interface MultimodelPointCsv {
 
 @Injectable()
 export class MultimodelSourceService {
+  private readonly URL = "https://static.avalanche.report/zamg/zamg/";
+
   constructor(
     private http: HttpClient,
     private constantsService: ConstantsService,
@@ -35,9 +37,7 @@ export class MultimodelSourceService {
   }
 
   getZamgMultiModelPoints(): Observable<GenericObservation[]> {
-    const url = this.constantsService.observationApi[ForecastSource.multimodel];
-
-    return this.http.get(url + "snowgridmultimodel_stationlist.txt", { responseType: "text" }).pipe(
+    return this.http.get(this.URL + "snowgridmultimodel_stationlist.txt", { responseType: "text" }).pipe(
       map((response) => this.parseCSV<MultimodelPointCsv>(response.toString().replace(/^#\s*/, ""))),
       map((points) =>
         points
@@ -51,11 +51,11 @@ export class MultimodelSourceService {
               $extraDialogRows: [
                 ...["HN", "HS"].map((type) => ({
                   label: `ECMWF ${type}`,
-                  url: `${url}eps_ecmwf/snowgrid_ECMWF_EPS_${id}_${type}.png`,
+                  url: `${this.URL}eps_ecmwf/snowgrid_ECMWF_EPS_${id}_${type}.png`,
                 })),
                 ...["HN", "HS"].map((type) => ({
                   label: `CLAEF ${type}`,
-                  url: `${url}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`,
+                  url: `${this.URL}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`,
                 })),
               ],
               latitude: parseFloat(row.lat),
