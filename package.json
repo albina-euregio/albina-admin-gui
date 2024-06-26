@@ -48,7 +48,7 @@
     "@eaws/micro-regions_elevation": "^6.1.0",
     "@eaws/micro-regions_names": "^6.1.0",
     "@ngx-translate/core": "^15.0.0",
-    "@phosphor-icons/web": "^2.1.1",
+    "@phosphor-icons/web": "^2.0.3",
     "@popperjs/core": "^2.11.8",
     "@types/geojson": "^7946.0.10",
     "@types/leaflet": "^1.9.3",
