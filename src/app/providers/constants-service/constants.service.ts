@@ -24,7 +24,6 @@ export class ConstantsService {
     [ObservationSource.SnowLine]: "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson",
 
     "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",
-    "forecast.uoa.gr": "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png",
     [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/observations/widget.alpsolut.eu/",
     [ForecastSource.multimodel]: "https://static.avalanche.report/zamg/zamg/",
     [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
