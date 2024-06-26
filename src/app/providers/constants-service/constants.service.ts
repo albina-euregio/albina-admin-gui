@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ForecastSource, ObservationSource, ObservationType } from "app/observations/models/generic-observation.model";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import * as pkg from "../../../../package.json";
@@ -13,27 +12,6 @@ export class ConstantsService {
     version: version.replace(/^\^/, ""),
     homepage: `https://www.npmjs.com/package/${name}/v/${version.replace(/^\^/, "")}`,
   }));
-
-  public snowpackModelsUrl: string = "https://avalanche.report/alpsolut/html/";
-
-  public observationApi = {
-    $: "https://admin.avalanche.report/observations",
-    [ObservationType.Webcam]: "https://admin.avalanche.report/webcams",
-    [ObservationSource.AvalancheWarningService]: "https://admin.avalanche.report/weather-stations",
-    [ObservationSource.Observer]: "https://admin.avalanche.report/observers",
-    [ObservationSource.SnowLine]: "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson",
-
-    "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",
-    [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/observations/widget.alpsolut.eu/",
-    [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
-    [ObservationSource.LoLaKronos]:
-      "https://admin.avalanche.report/observations/lola-kronos.info/api/dataexport/dataFromToken/",
-    [ObservationSource.WikisnowECT]: "https://admin.avalanche.report/observations/wikisnow/ect/ect-json.json",
-    [ObservationSource.FotoWebcamsEU]:
-      "https://admin.avalanche.report/observations/foto-webcam.eu/webcam/include/metadata.php",
-    "private.foto-webcam.eu": "https://admin.avalanche.report/observations/private.foto-webcam.eu/",
-    [ObservationSource.Panomax]: "https://admin.avalanche.report/observations/api.panomax.com/1.0",
-  };
 
   // region (ISO-3166)
   public codeSwitzerland: string = "CH";

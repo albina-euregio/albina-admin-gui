@@ -5,17 +5,18 @@ import { flatMap, last, map } from "rxjs/operators";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
 import { DomSanitizer } from "@angular/platform-browser";
 import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AlpsolutProfileService {
+  private readonly TOKEN_URL = environment.apiBaseUrl + "../api_ext/widget.alpsolut.eu/";
+  private readonly WEB = "https://salient.alpsolut.eu/v1/geo/stations";
+
   constructor(
     private http: HttpClient,
     private authenticationService: AuthenticationService,
     private sanitizer: DomSanitizer,
   ) {}
-
-  private readonly API = "https://admin.avalanche.report/observations/widget.alpsolut.eu/";
-  private readonly WEB = "https://salient.alpsolut.eu/v1/geo/stations";
 
   /**
    * https://salient.alpsolut.eu/docs
@@ -35,7 +36,7 @@ export class AlpsolutProfileService {
       ["last three days + long forecast", -3, +15],
     ];
     return this.http
-      .get(this.API, {
+      .get(this.TOKEN_URL, {
         headers: this.authenticationService.newAuthHeader(),
         observe: "response",
         responseType: "text",
