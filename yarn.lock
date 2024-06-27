@@ -284,18 +284,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-slider/ngx-slider@npm:^17.0.2":
-  version: 17.0.2
-  resolution: "@angular-slider/ngx-slider@npm:17.0.2"
+"@angular-slider/ngx-slider@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "@angular-slider/ngx-slider@npm:18.0.0"
   dependencies:
     detect-passive-events: "npm:^2.0.3"
     rxjs: "npm:^7.8.1"
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": ^17.1.1
-    "@angular/core": ^17.1.1
-    "@angular/forms": ^17.1.1
-  checksum: 10c0/fa62c968be24843e767927945eda3b31fc0d1597d4ea11525080a3f96115fed92eb400521be0f28806b3801fae65d3810fbc72a4207ec2875b4a6d8ec62839b5
+    "@angular/common": ^18.0.0
+    "@angular/core": ^18.0.0
+    "@angular/forms": ^18.0.0
+  checksum: 10c0/6a4291c9bd7f743087aebfd61ab7a39069c543dffdb262bff54cd988ce2e5cc412694786b1eb40b39c2e9e7f6343ece37fe27926d28cc11f5b2082a2fcda2039
   languageName: node
   linkType: hard
 
@@ -4182,7 +4182,7 @@ __metadata:
     "@angular-eslint/eslint-plugin-template": "npm:^18.0.1"
     "@angular-eslint/schematics": "npm:^18.0.1"
     "@angular-eslint/template-parser": "npm:^18.0.1"
-    "@angular-slider/ngx-slider": "npm:^17.0.2"
+    "@angular-slider/ngx-slider": "npm:^18.0.0"
     "@angular/animations": "npm:^18.0.1"
     "@angular/cdk": "npm:^18.0.1"
     "@angular/cli": "npm:^18.0.2"
