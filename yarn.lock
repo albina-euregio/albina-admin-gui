@@ -3172,10 +3172,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@phosphor-icons/web@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "@phosphor-icons/web@npm:2.0.3"
-  checksum: 10c0/b600fe4016ac4e5ab94eccdc4aec382848603c25f20721c5a4057e8072012348e33e25760202c9b1b3ed76f950059ab050c5c0909a1e4126fb4ee8c5b0c3f340
+"@phosphor-icons/web@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@phosphor-icons/web@npm:2.1.1"
+  checksum: 10c0/ec89ca408fb2235f55666f17e95c7e486428c0d801adadb265db20a2b1ad1392b4c62f74a898aaf00f27f614c96ecf034bc7f42ca8aeaf457f7adf716e6fbcdf
   languageName: node
   linkType: hard
 
@@ -4200,7 +4200,7 @@ __metadata:
     "@eaws/micro-regions_elevation": "npm:^6.1.0"
     "@eaws/micro-regions_names": "npm:^6.1.0"
     "@ngx-translate/core": "npm:^15.0.0"
-    "@phosphor-icons/web": "npm:^2.0.3"
+    "@phosphor-icons/web": "npm:^2.1.1"
     "@popperjs/core": "npm:^2.11.8"
     "@types/file-saver": "npm:^2.0.5"
     "@types/geojson": "npm:^7946.0.10"
