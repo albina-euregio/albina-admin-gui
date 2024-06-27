@@ -387,8 +387,7 @@ export class ObservationFilterService {
     if (!latitude || !longitude) {
       return true;
     }
-    const { mapBoundaryS, mapBoundaryN, mapBoundaryW, mapBoundaryE } = this.constantsService;
-    return mapBoundaryS < latitude && latitude < mapBoundaryN && mapBoundaryW < longitude && longitude < mapBoundaryE;
+    return 45.0 < latitude && latitude < 48.0 && 9.0 < longitude && longitude < 13.5;
   }
 
   inRegions(region: string): boolean {

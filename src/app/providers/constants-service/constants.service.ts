@@ -33,11 +33,6 @@ export class ConstantsService {
   public roleForeman: string = "FOREMAN";
   public roleObserver: string = "OBSERVER";
 
-  public mapBoundaryN: number = 48.0;
-  public mapBoundaryE: number = 13.5;
-  public mapBoundaryS: number = 45.0;
-  public mapBoundaryW: number = 9.0;
-
   public autoSaveIntervall: number = 10000;
 
   public colorBrand = "#19ABFF";
