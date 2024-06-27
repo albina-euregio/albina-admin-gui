@@ -3,7 +3,7 @@ import { GenericObservation, findExistingObservation } from "./models";
 import { fetchJSON } from "./fetchJSON";
 
 const API = "https://lawis.at/lawis_api/public/incident";
-const WEB = "https://lawis.at/lawis_api/v2_2/files/incidents/snowprofile_{{id}}.pdf";
+const WEB = "https://lawis.at/incident/#{{id}}";
 
 export async function* fetchLawisIncidents(startDate: Date, endDate: Date, existing: GenericObservation[]) {
   const url = `${API}?${new URLSearchParams({
