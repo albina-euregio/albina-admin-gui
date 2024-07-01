@@ -104,7 +104,7 @@
                 type="button"
                 (click)="newObservation()"
                 class="btn btn-bare"
-                title="'admin.observations.newObservation' | translate"
+                title="{{ 'admin.observations.newObservation' | translate }}"
               >
                 <i class="ph ph-plus-circle"></i>
               </button>
@@ -115,7 +115,7 @@
                 type="button"
                 (click)="exportObservations()"
                 class="btn btn-bare"
-                title="'admin.observations.exportObservations' | translate"
+                title="{{ 'admin.observations.exportObservations' | translate }}"
               >
                 <i class="ph ph-download-simple"></i>
               </button>
@@ -126,7 +126,7 @@
                 type="button"
                 class="btn btn-bare"
                 (click)="toggleFilters()"
-                title="'admin.observations.toggleFilterBar' | translate"
+                title="{{ 'admin.observations.toggleFilterBar' | translate }}"
               >
                 <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
                 <i *ngIf="!layoutFilters" class="ph ph-caret-left"></i>
