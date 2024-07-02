@@ -57,6 +57,7 @@ export enum WeatherStationParameter {
   AirTemperatureMax = "AirTemperatureMax",
   AirTemperatureMin = "AirTemperatureMin",
   SurfaceTemperature = "SurfaceTemperature",
+  SurfaceHoar = "SurfaceHoar",
   DewPoint = "DewPoint",
   RelativeHumidity = "RelativeHumidity",
   WindDirection = "WindDirection",

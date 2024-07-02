@@ -266,6 +266,14 @@
         >
           <i class="ph ph-thermometer-cold" aria-hidden="true"></i>
         </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceHoar' }"
+          (click)="selectParameter('SurfaceHoar')"
+          title="{{ 'observations.weatherStations.tooltips.surfaceHoar' | translate }}"
+        >
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </div>
         <!--
         <div
           class="obs-button"
