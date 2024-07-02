@@ -208,6 +208,14 @@ export class ObservationFilterService {
     );
   }
 
+  public isWeatherStationSelected(observation: GenericObservation) {
+    return (
+      this.inMapBounds(observation) &&
+      this.inRegions(observation.region) &&
+      this.isIncluded(LocalFilterTypes.Elevation, this.filterSelection[LocalFilterTypes.Elevation].toValue(observation))
+    );
+  }
+
   public isHighlighted(observation: GenericObservation) {
     if (!this.inMapBounds(observation)) {
       return false;

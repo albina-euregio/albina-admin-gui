@@ -319,7 +319,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
 
     this.mapService.layers["weather-stations"].clearLayers();
     this.localWeatherStations = this.weatherStations.filter(
-      (weatherStation) => this.filter.isHighlighted(weatherStation) || this.filter.isSelected(weatherStation),
+      (weatherStation) =>
+        this.filter.isHighlighted(weatherStation) || this.filter.isWeatherStationSelected(weatherStation),
     );
     this.localWeatherStations.forEach((weatherStation) => {
       const marker = this.markerService
