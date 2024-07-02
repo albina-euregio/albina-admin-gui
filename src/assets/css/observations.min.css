@@ -356,17 +356,16 @@
   z-index: 50;
   position: absolute;
   bottom: 45px;
-  right: 20px;
+  right: 22px;
 }
 .parameter-switch > .obs-button {
-  width: 34px;
-  height: 33px;
-  font-size: 16px;
+  width: 30px;
+  height: 29px;
+  font-size: 14px;
   padding: 0.25em 0.5em;
   background-color: #fff;
   background-clip: padding-box;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  border-top: 1px solid #ccc;
+  border: 1px solid #e6eef2;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 }
