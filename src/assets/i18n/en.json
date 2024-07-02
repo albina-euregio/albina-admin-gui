@@ -873,16 +873,10 @@
     "layers": {
       "observers": "Observers",
       "weatherStations": "Weather stations",
-      "webcams": "Webcams"
-    },
-    "webcams": {
-      "tooltip": "Webcams"
-    },
-    "observers": {
-      "tooltip": "Observers"
+      "webcams": "Webcams",
+      "observations": "Observations"
     },
     "weatherStations": {
-      "tooltip": "Weather stations",
       "tooltips": {
         "globalRadiation": "Global radiation",
         "snowHeight": "Snow height",

@@ -26,6 +26,7 @@ import {
   Stability,
   WeatherStationParameter,
   genericObservationSchema,
+  ObservationType,
 } from "./models/generic-observation.model";
 
 import { saveAs } from "file-saver";
@@ -77,6 +78,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   public localWebcams: GenericObservation[] = [];
   public weatherStations: GenericObservation[] = [];
   public localWeatherStations: GenericObservation[] = [];
+  public showObservations: boolean = true;
   public showWeatherStations: boolean = false;
   public showWebcams: boolean = false;
   public showObservers: boolean = false;
@@ -172,6 +174,20 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
       this.mapService.map?.invalidateSize();
     });
     resizeObserver.observe(this.mapDiv.nativeElement);
+  }
+
+  toggleObservations() {
+    if (this.showObservations) {
+      this.showObservations = false;
+      Object.keys(ObservationType).forEach((type) =>
+        this.mapService.map.removeLayer(this.mapService.observationTypeLayers[type]),
+      );
+    } else {
+      this.showObservations = true;
+      Object.keys(ObservationType).forEach((type) =>
+        this.mapService.map.addLayer(this.mapService.observationTypeLayers[type]),
+      );
+    }
   }
 
   toggleWeatherStations() {

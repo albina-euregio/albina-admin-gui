@@ -83,17 +83,6 @@
                 [bsConfig]="{ dateInputFormat: 'DD.MM.YYYY' }"
               />
             </div>
-            <div class="global-bar-item">
-              <div class="obs-switch">
-                <div
-                  *ngFor="let days of [1, 2, 3, 7, 11]"
-                  class="obs-switch-item 0is-active"
-                  (click)="loadObservations({ days })"
-                >
-                  <span class="switch-text">{{ days }}d</span>
-                </div>
-              </div>
-            </div>
           </div>
           <!-- /global-bar-left -->
 
@@ -172,9 +161,17 @@
       <div *ngIf="layout == 'map'" class="layer-switch">
         <div
           class="obs-button"
+          [ngClass]="{ 'is-active': showObservations }"
+          (click)="toggleObservations()"
+          title="{{ 'observations.layers.observations' | translate }}"
+        >
+          <i class="ph ph-circle" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
           [ngClass]="{ 'is-active': showWebcams }"
           (click)="toggleWebcams()"
-          title="{{ 'observations.webcams.tooltip' | translate }}"
+          title="{{ 'observations.layers.webcams' | translate }}"
         >
           <i class="ph ph-webcam" aria-hidden="true"></i>
         </div>
@@ -182,7 +179,7 @@
           class="obs-button"
           [ngClass]="{ 'is-active': showObservers }"
           (click)="toggleObservers()"
-          title="{{ 'observations.observers.tooltip' | translate }}"
+          title="{{ 'observations.layers.observers' | translate }}"
         >
           <i class="ph ph-eye" aria-hidden="true"></i>
         </div>
@@ -190,7 +187,7 @@
           class="obs-button"
           [ngClass]="{ 'is-active': showWeatherStations }"
           (click)="toggleWeatherStations()"
-          title="{{ 'observations.weatherStations.tooltip' | translate }}"
+          title="{{ 'observations.layers.weatherStations' | translate }}"
         >
           <i class="ph ph-chart-line" aria-hidden="true"></i>
         </div>
