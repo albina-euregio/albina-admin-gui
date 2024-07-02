@@ -875,7 +875,14 @@
       "weatherStations": "Weather stations",
       "webcams": "Webcams"
     },
+    "webcams": {
+      "tooltip": "Webcams"
+    },
+    "observers": {
+      "tooltip": "Observers"
+    },
     "weatherStations": {
+      "tooltip": "Weather stations",
       "tooltips": {
         "globalRadiation": "Global radiation",
         "snowHeight": "Snow height",

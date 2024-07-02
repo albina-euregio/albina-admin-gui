@@ -168,6 +168,34 @@
       </div>
       <!-- /layout-map -->
 
+      <!-- !layer-switch -->
+      <div class="layer-switch">
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': showWebcams }"
+          (click)="toggleWebcams()"
+          title="{{ 'observations.webcams.tooltip' | translate }}"
+        >
+          <i class="ph ph-webcam" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': showObservers }"
+          (click)="toggleObservers()"
+          title="{{ 'observations.observers.tooltip' | translate }}"
+        >
+          <i class="ph ph-eye" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': showWeatherStations }"
+          (click)="toggleWeatherStations()"
+          title="{{ 'observations.weatherStations.tooltip' | translate }}"
+        >
+          <i class="ph ph-chart-line" aria-hidden="true"></i>
+        </div>
+      </div>
+
       <!-- !parameter-switch -->
       <div *ngIf="showWeatherStations" class="parameter-switch">
         <div
@@ -328,7 +356,7 @@
               "
               [nanStatus]="{
                 selected: filter.filterSelection[LocalFilterTypes.Aspect]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan')
+                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan'),
               }"
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
@@ -347,7 +375,7 @@
               "
               [nanStatus]="{
                 selected: filter.filterSelection[type]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[type]['highlighted'].includes('nan')
+                highlighted: filter.filterSelection[type]['highlighted'].includes('nan'),
               }"
               [formatter]="'date'"
               [labelType]="markerService.markerLabel"

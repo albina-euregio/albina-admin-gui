@@ -78,6 +78,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
   public weatherStations: GenericObservation[] = [];
   public localWeatherStations: GenericObservation[] = [];
   public showWeatherStations: boolean = false;
+  public showWebcams: boolean = false;
+  public showObservers: boolean = false;
+  public weatherStationsLayerGroup: LayerGroup<any>;
+  public observersLayerGroup: LayerGroup<any>;
+  public webcamsLayerGroup: LayerGroup<any>;
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
   public observationsWithoutCoordinates: number = 0;
@@ -151,27 +156,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
 
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
-    const layerControl = new Control.Layers({}, {}, { position: "bottomright" }).addTo(map);
     this.loadObservations({ days: 7 });
     this.observationsAsOverlay = [];
-    layerControl.addOverlay(this.loadObservers(), this.translateService.instant("observations.layers.observers"));
-    const weatherStationsLayerGroup = this.loadWeatherStations();
-    layerControl.addOverlay(
-      weatherStationsLayerGroup,
-      this.translateService.instant("observations.layers.weatherStations"),
-    );
-    map.on("layeradd", (event) => {
-      if (event.layer == weatherStationsLayerGroup) {
-        this.showWeatherStations = true;
-      }
-    });
-    map.on("layerremove", (event) => {
-      if (event.layer == weatherStationsLayerGroup) {
-        this.showWeatherStations = false;
-      }
-    });
 
-    layerControl.addOverlay(this.loadWebcams(), this.translateService.instant("observations.layers.webcams"));
+    this.observersLayerGroup = this.loadObservers();
+    this.weatherStationsLayerGroup = this.loadWeatherStations();
+    this.webcamsLayerGroup = this.loadWebcams();
+
     map.on("click", () => {
       this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyLocalFilter(this.markerService.markerClassify);
@@ -181,6 +172,36 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
       this.mapService.map?.invalidateSize();
     });
     resizeObserver.observe(this.mapDiv.nativeElement);
+  }
+
+  toggleWeatherStations() {
+    if (this.showWeatherStations) {
+      this.showWeatherStations = false;
+      this.mapService.map.removeLayer(this.weatherStationsLayerGroup);
+    } else {
+      this.showWeatherStations = true;
+      this.mapService.map.addLayer(this.weatherStationsLayerGroup);
+    }
+  }
+
+  toggleObservers() {
+    if (this.showObservers) {
+      this.showObservers = false;
+      this.mapService.map.removeLayer(this.observersLayerGroup);
+    } else {
+      this.showObservers = true;
+      this.mapService.map.addLayer(this.observersLayerGroup);
+    }
+  }
+
+  toggleWebcams() {
+    if (this.showWebcams) {
+      this.showWebcams = false;
+      this.mapService.map.removeLayer(this.webcamsLayerGroup);
+    } else {
+      this.showWebcams = true;
+      this.mapService.map.addLayer(this.webcamsLayerGroup);
+    }
   }
 
   ngOnDestroy() {
