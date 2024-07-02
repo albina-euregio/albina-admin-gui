@@ -268,22 +268,20 @@
         </div>
         <div
           class="obs-button"
-          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceHoar' }"
-          (click)="selectParameter('SurfaceHoar')"
-          title="{{ 'observations.weatherStations.tooltips.surfaceHoar' | translate }}"
-        >
-          <i class="ph ph-caret-down" aria-hidden="true"></i>
-        </div>
-        <!--
-        <div
-          class="obs-button"
           [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'DewPoint' }"
           (click)="selectParameter('DewPoint')"
           title="{{ 'observations.weatherStations.tooltips.dewPoint' | translate }}"
         >
           <i class="ph ph-thermometer-hot" aria-hidden="true"></i>
         </div>
-        -->
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceHoar' }"
+          (click)="selectParameter('SurfaceHoar')"
+          title="{{ 'observations.weatherStations.tooltips.surfaceHoar' | translate }}"
+        >
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </div>
         <div
           class="obs-button"
           [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindSpeed' }"

@@ -893,7 +893,7 @@
         "airTemperatureMax": "Air temperature Max",
         "airTemperatureMin": "Air temperature Min",
         "surfaceTemperature": "Surface temperature",
-        "surfaceHoar": "Surface hoar",
+        "surfaceHoar": "Potential surface hoar formation",
         "dewPoint": "Dew point temperature",
         "relativeHumidity": "Relative humidity",
         "windDirection": "Wind direction",

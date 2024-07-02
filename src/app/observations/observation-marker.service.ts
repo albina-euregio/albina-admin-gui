@@ -80,6 +80,25 @@ const temperatureColors = {
   "12": "#fa3c96",
 };
 
+const dewPointThresholds = [-25, -20, -15, -10, -5, -3, -2, -1.5, -1, -0.8, -0.6, -0.4, -0.2, 0];
+const dewPointColors = {
+  "0": "#9f80ff",
+  "1": "#784cff",
+  "2": "#0f5abe",
+  "3": "#1380ff",
+  "4": "#19cdff",
+  "5": "#8fffff",
+  "6": "#b0ffbc",
+  "7": "#ffff73",
+  "8": "#ffbe7d",
+  "9": "#fc9272",
+  "10": "#fb6a4a",
+  "11": "#ef3b2c",
+  "12": "#cb181d",
+  "13": "#a50f15",
+  "14": "#67000d",
+};
+
 const relativeHumidityThresholds = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 const relativeHumidityColors = {
   "0": "#fff",
@@ -397,7 +416,7 @@ export class ObservationMarkerService {
         case WeatherStationParameter.SurfaceHoar:
           return this.surfaceHoarColor(this.getSurfaceHoar(observation.$data));
         case WeatherStationParameter.DewPoint:
-          return this.temperatureColor(observation.$data.TD);
+          return this.dewPointColor(observation.$data.TD);
         case WeatherStationParameter.RelativeHumidity:
           return this.relativeHumidityColor(observation.$data.RH);
         case WeatherStationParameter.WindSpeed:
@@ -531,6 +550,15 @@ export class ObservationMarkerService {
     if (surfaceHoar) {
       const index = isFinite(surfaceHoar) ? surfaceHoarThresholds.findIndex((e) => e >= surfaceHoar) : -1;
       return index >= 0 ? surfaceHoarColors[index] : "white";
+    } else {
+      return "white";
+    }
+  }
+
+  private dewPointColor(dewPoint: number) {
+    if (dewPoint) {
+      const index = isFinite(dewPoint) ? dewPointThresholds.findIndex((e) => e >= dewPoint) : -1;
+      return index >= 0 ? dewPointColors[index] : "white";
     } else {
       return "white";
     }
