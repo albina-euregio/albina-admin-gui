@@ -83,7 +83,7 @@
   bottom: 10px;
   left: 10px;
   display: flex;
-  gap: 0 10px;
+  gap: 0 5px;
 }
 .layout-switch > .obs-button {
   padding: 0.25em 0.5em;
