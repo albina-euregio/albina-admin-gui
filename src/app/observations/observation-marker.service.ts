@@ -33,8 +33,8 @@ const zIndex: Record<Stability, number> = {
   [Stability.very_poor]: 20,
 };
 
-const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 400];
-const elevationThresholds = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000];
+const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
+const elevationThresholds = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 9000];
 const elevationColors = {
   "0": "#FFFFFE",
   "1": "#FFFFB3",
@@ -47,7 +47,7 @@ const elevationColors = {
   "8": "#CC0CE8",
 };
 
-const snowDifferenceThresholds = [-20, -10, -5, 1, 5, 10, 20, 30, 50, 75, 100];
+const snowDifferenceThresholds = [-20, -10, -5, 1, 5, 10, 20, 30, 50, 75, 500];
 const snowDifferenceColors = {
   "0": "#ff6464",
   "1": "#ffa0a0",
@@ -63,7 +63,7 @@ const snowDifferenceColors = {
   "11": "#CC0CE8",
 };
 
-const temperatureThresholds = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30];
+const temperatureThresholds = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 100];
 const temperatureColors = {
   "0": "#9f80ff",
   "1": "#784cff",
@@ -80,7 +80,7 @@ const temperatureColors = {
   "12": "#fa3c96",
 };
 
-const dewPointThresholds = [-25, -20, -15, -10, -5, -3, -2, -1.5, -1, -0.8, -0.6, -0.4, -0.2, 0];
+const dewPointThresholds = [-25, -20, -15, -10, -5, -3, -2, -1.5, -1, -0.8, -0.6, -0.4, -0.2, 100];
 const dewPointColors = {
   "0": "#9f80ff",
   "1": "#784cff",
@@ -99,7 +99,7 @@ const dewPointColors = {
   "14": "#67000d",
 };
 
-const relativeHumidityThresholds = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+const relativeHumidityThresholds = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 150];
 const relativeHumidityColors = {
   "0": "#fff",
   "1": "#ced1d8",
@@ -121,7 +121,7 @@ const relativeHumidityColors = {
   "17": "#8a0007",
 };
 
-const surfaceHoarThresholds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const surfaceHoarThresholds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 100];
 const surfaceHoarColors = {
   "0": "#fff",
   "1": "#f7fbff",
@@ -135,8 +135,8 @@ const surfaceHoarColors = {
   "9": "#08306b",
 };
 
-const globalRadiationThresholds = [0, 200, 400, 600, 800, 1000, 1200];
-const windThresholds = [0, 5, 10, 20, 40, 60, 80];
+const globalRadiationThresholds = [200, 400, 600, 800, 1000, 1200, 2000];
+const windThresholds = [5, 10, 20, 40, 60, 80, 300];
 const windColors = {
   "0": "#ffff64",
   "1": "#c8ff64",
