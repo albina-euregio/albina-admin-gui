@@ -415,6 +415,8 @@ export class ObservationMarkerService {
           return this.temperatureColor(observation.$data.OFT);
         case WeatherStationParameter.SurfaceHoar:
           return this.surfaceHoarColor(this.getSurfaceHoar(observation.$data));
+        case WeatherStationParameter.SurfaceHoarCalc:
+          return this.surfaceHoarColor(this.calcSurfaceHoarProbability(observation.$data));
         case WeatherStationParameter.DewPoint:
           return this.dewPointColor(observation.$data.TD);
         case WeatherStationParameter.RelativeHumidity:
@@ -461,6 +463,28 @@ export class ObservationMarkerService {
     } else {
       return undefined;
     }
+  }
+
+  // Lehning et. al. 2002
+  private calcSurfaceHoarProbability(data) {
+    const grainSize = 1; // assumption
+    //z0 0.5 to 2.4 mm for snow surfaces.
+    const z0 = (0.003 + grainSize / 5) / 1000; //Lehning 2000, for grainSize = 1 mm only 0,203
+
+    const lw = 2256 * 1000;
+    const li = 2838 * 1000;
+
+    var result = -1;
+
+    if (data.HS > 0 && data.OFT <= 0) {
+      const satp_w = 610.5 * Math.exp((lw * data.LT) / (461.9 * (data.LT + 273.16) * 273.16));
+      const satp_i = 610.5 * Math.exp((li * data.OFT) / (461.9 * (data.OFT + 273.16) * 273.16));
+      result =
+        ((((-Math.pow(0.4, 2) * data.WG) / (0.74 * Math.pow(Math.log(2 / z0), 2))) * 0.622 * li) / (287 * data.LT)) *
+        (satp_w * data.RH - satp_i);
+    }
+
+    return result;
   }
 
   private enumArrayColor<TEnum, TKeys extends string>(

@@ -281,6 +281,14 @@
         </div>
         <div
           class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceHoarCalc' }"
+          (click)="selectParameter('SurfaceHoarCalc')"
+          title="{{ 'observations.weatherStations.tooltips.surfaceHoarCalc' | translate }}"
+        >
+          <i class="ph ph-caret-line-down" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
           [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindSpeed' }"
           (click)="selectParameter('WindSpeed')"
           title="{{ 'observations.weatherStations.tooltips.windSpeed' | translate }}"
@@ -359,7 +367,7 @@
               "
               [nanStatus]="{
                 selected: filter.filterSelection[LocalFilterTypes.Aspect]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan'),
+                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan')
               }"
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
@@ -378,7 +386,7 @@
               "
               [nanStatus]="{
                 selected: filter.filterSelection[type]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[type]['highlighted'].includes('nan'),
+                highlighted: filter.filterSelection[type]['highlighted'].includes('nan')
               }"
               [formatter]="'date'"
               [labelType]="markerService.markerLabel"

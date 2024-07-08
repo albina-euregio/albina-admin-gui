@@ -888,6 +888,7 @@
         "airTemperatureMin": "Air temperature Min",
         "surfaceTemperature": "Surface temperature",
         "surfaceHoar": "Potential surface hoar formation",
+        "surfaceHoarCalc": "Potential surface hoar formation (Lehning et. al.)",
         "dewPoint": "Dew point temperature",
         "relativeHumidity": "Relative humidity",
         "windDirection": "Wind direction",
