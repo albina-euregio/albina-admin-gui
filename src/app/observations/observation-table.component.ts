@@ -30,7 +30,7 @@ export class ObservationTableComponent {
   @ViewChild("observationEditorTemplate") observationEditorTemplate: TemplateRef<any>;
 
   constructor(
-    private modalService: BsModalService,
+    public modalService: BsModalService,
     private observationsService: AlbinaObservationsService,
     private markerService: ObservationMarkerService,
     private translate: TranslateService,

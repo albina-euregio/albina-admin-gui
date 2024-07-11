@@ -133,7 +133,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     public mapService: BaseMapService,
-    private modalService: BsModalService,
+    public modalService: BsModalService,
   ) {}
 
   async ngAfterContentInit() {

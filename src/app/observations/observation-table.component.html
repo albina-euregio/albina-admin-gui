@@ -117,7 +117,10 @@
 
 <ng-template #observationEditorTemplate>
   <div class="modal-header">
-    {{ observation?.locationName }}
+    <span>{{ observation?.locationName }}</span>
+    <div class="d-inline-block font-weight-normal">
+      <button class="btn btn-sm btn-secondary" (click)="modalService.hide()">&times;</button>
+    </div>
   </div>
   <div class="modal-body">
     {{ messages }}
