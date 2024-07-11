@@ -595,7 +595,7 @@
       "filters": "Filters",
       "title": "Observations",
       "newObservation": "New observation",
-      "exportObservations": "Export observerations",
+      "exportObservations": "Export observations",
       "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Download"
