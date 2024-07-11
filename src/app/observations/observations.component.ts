@@ -67,7 +67,7 @@ export interface MultiselectDropdownData {
   templateUrl: "observations.component.html",
   styleUrls: ["./observations.component.scss"],
 })
-export class ObservationsComponent implements AfterContentInit, AfterViewInit {
+export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;

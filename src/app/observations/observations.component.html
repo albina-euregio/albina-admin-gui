@@ -158,7 +158,7 @@
       <!-- /layout-map -->
 
       <!-- !layer-switch -->
-      <div *ngIf="layout == 'map'" class="layer-switch">
+      <div *ngIf="layout === 'map'" class="layer-switch">
         <div
           class="obs-button"
           [ngClass]="{ 'is-active': showObservations }"
@@ -194,7 +194,7 @@
       </div>
 
       <!-- !parameter-switch -->
-      <div *ngIf="showWeatherStations && layout == 'map'" class="parameter-switch">
+      <div *ngIf="showWeatherStations && layout === 'map'" class="parameter-switch">
         <div
           class="obs-button"
           [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowHeight' }"
