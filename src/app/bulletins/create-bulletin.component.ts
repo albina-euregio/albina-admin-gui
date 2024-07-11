@@ -153,7 +153,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     private activeRoute: ActivatedRoute,
     public bulletinsService: BulletinsService,
     public authenticationService: AuthenticationService,
-    private translateService: TranslateService,
+    public translateService: TranslateService,
     private localStorageService: LocalStorageService,
     private constantsService: ConstantsService,
     public regionsService: RegionsService,

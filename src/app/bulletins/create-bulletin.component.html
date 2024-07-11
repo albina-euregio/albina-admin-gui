@@ -15,8 +15,8 @@
 
       <div class="create-bulletin__date">
         <h1 class="create-bulletin__current-date font-m-bold">
-          {{ bulletinsService.getActiveDate() | localizedDate: "EEEE," }}<br />
-          {{ bulletinsService.getActiveDate() | localizedDate: "d. MMMM y" }}
+          {{ bulletinsService.getActiveDate() | date: "EEEE," : undefined : translateService.currentLang }}<br />
+          {{ bulletinsService.getActiveDate() | date: "d. MMMM y" : undefined : translateService.currentLang }}
         </h1>
         <nav class="btn-group create-bulleting__days-nav">
           <button
@@ -510,7 +510,7 @@
         activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined),
       'create-bulletin__compact-layout--compare':
         activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined,
-      'full-width': !isBulletinSidebarVisible,
+      'full-width': !isBulletinSidebarVisible
     }"
   >
     <!-- Active bulletin -->
@@ -864,13 +864,13 @@
         <tr
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date),
+            'bulletins-table__active--day': isActiveDate(date)
           }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
             <div class="bulletins-table__day--small">
               <time>
-                {{ date | localizedDate: "fullDate" }}
+                {{ date | date: "fullDate" }}
               </time>
             </div>
           </td>

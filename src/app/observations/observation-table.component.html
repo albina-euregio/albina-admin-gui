@@ -50,7 +50,7 @@
       <td style="padding: 1rem 0; white-space: nowrap; max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
         <span class="text-truncate d-block">
           <i class="ph ph-calendar"></i>
-          {{ observation.eventDate | localizedDate: "dd.MM.yyyy HH:mm" }}
+          {{ observation.eventDate | date: "dd.MM.yyyy HH:mm" }}
         </span>
         <span class="text-truncate d-block">
           <i class="ph ph-user"></i>

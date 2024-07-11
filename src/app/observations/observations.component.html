@@ -456,7 +456,9 @@
       <tr *ngFor="let row of observationPopup.table">
         <th style="padding-right: 1ex">{{ row.label }}</th>
         <td>
-          <span *ngIf="row.date !== undefined">{{ row.date | localizedDate: "full" }}</span>
+          <span *ngIf="row.date !== undefined">
+            {{ row.date | date: "full" : undefined : translateService.currentLang }}
+          </span>
           <span *ngIf="row.number !== undefined">{{ row.number | number }}</span>
           <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'ph ph-check' : 'ph ph-x'"></i></span>
           <span *ngIf="row.url !== undefined"
