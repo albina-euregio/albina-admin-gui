@@ -57,6 +57,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public activeBulletin: BulletinModel;
   public comparedBulletin: BulletinModel;
   public internBulletinsList: BulletinModel[];
+  private internBulletinsListEtag: string;
   public externRegionsMap: Map<ServerModel, BulletinModel[]>;
   public showExternRegionsMap: Map<string, boolean>;
 
@@ -282,21 +283,23 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         let regions = [this.authenticationService.getActiveRegionId()];
         this.bulletinsService.loadBulletins(this.bulletinsService.getCopyDate(), regions).subscribe(
           (data) => {
-            this.copyBulletins(data);
+            this.copyBulletins(data.body);
             this.bulletinsService.setCopyDate(undefined);
             // load bulletins from the current date, add foreign bulletins
-            this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate()).subscribe(
-              (data2) => {
-                this.addForeignBulletins(data2);
-                this.save();
-                this.loading = false;
-              },
-              () => {
-                console.error("Foreign bulletins could not be loaded!");
-                this.loading = false;
-                this.openLoadingErrorModal(this.loadingErrorTemplate);
-              },
-            );
+            this.bulletinsService
+              .loadBulletins(this.bulletinsService.getActiveDate(), this.authenticationService.getInternalRegions())
+              .subscribe(
+                (data2) => {
+                  this.addForeignBulletins(data2.body);
+                  this.save();
+                  this.loading = false;
+                },
+                () => {
+                  console.error("Foreign bulletins could not be loaded!");
+                  this.loading = false;
+                  this.openLoadingErrorModal(this.loadingErrorTemplate);
+                },
+              );
           },
           () => {
             console.error("Own bulletins could not be loaded!");
@@ -348,18 +351,30 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private loadBulletinsFromServer() {
     console.log("Load internal bulletins");
-    this.bulletinsService.loadBulletins(this.bulletinsService.getActiveDate()).subscribe(
-      (data) => {
-        this.loadInternalBulletinsError = false;
-        this.addInternalBulletins(data);
-        this.loading = false;
-      },
-      (error) => {
-        console.error("Bulletins could not be loaded!");
-        this.loading = false;
-        this.loadInternalBulletinsError = true;
-      },
-    );
+    this.bulletinsService
+      .loadBulletins(
+        this.bulletinsService.getActiveDate(),
+        this.authenticationService.getInternalRegions(),
+        this.internBulletinsListEtag,
+      )
+      .subscribe(
+        (data) => {
+          const etag = data.headers?.get("ETag");
+          this.loadInternalBulletinsError = false;
+          if (!etag || etag !== this.internBulletinsListEtag) {
+            this.addInternalBulletins(data.body);
+            this.internBulletinsListEtag = etag;
+          } else {
+            console.info("Skipping internal bulletin update for", this.internBulletinsListEtag);
+          }
+          this.loading = false;
+        },
+        (error) => {
+          console.error("Bulletins could not be loaded!");
+          this.loading = false;
+          this.loadInternalBulletinsError = true;
+        },
+      );
   }
 
   private loadExternalBulletinsFromServer() {
@@ -1603,7 +1618,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.delBulletin(entry);
         }
 
-        this.copyBulletins(data);
+        this.copyBulletins(data.body);
         this.loading = false;
       },
       () => {

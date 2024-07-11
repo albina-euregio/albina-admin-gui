@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -285,7 +285,7 @@ export class BulletinsService {
     return this.http.get<Response>(url, options);
   }
 
-  loadBulletins(date: Date, regions: string[] = this.authenticationService.getInternalRegions()): Observable<Response> {
+  loadBulletins(date: Date, regions: string[], etag?: string) {
     let url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?date=" +
@@ -296,9 +296,8 @@ export class BulletinsService {
       }
     }
     const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.get<Response>(url, options);
+    if (etag) headers.set("If-None-Match", etag);
+    return this.http.get(url, { headers, observe: "response" });
   }
 
   loadExternalBulletins(date: Date, server: ServerModel): Observable<Response> {
