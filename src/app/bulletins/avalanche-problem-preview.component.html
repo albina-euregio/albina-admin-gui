@@ -18,29 +18,8 @@
 
     <!-- Danger rating -->
     <div class="avalanche-problem-preview__info-item">
-      <img
-        *ngIf="avalancheProblem.isDangerRating('low')"
-        src="./assets/img/danger_rating_low_c.svg"
-        class="avalanche-problem-preview__danger-rating"
-      />
-      <img
-        *ngIf="avalancheProblem.isDangerRating('moderate')"
-        src="./assets/img/danger_rating_moderate_c.svg"
-        class="avalanche-problem-preview__danger-rating"
-      />
-      <img
-        *ngIf="avalancheProblem.isDangerRating('considerable')"
-        src="./assets/img/danger_rating_considerable_c.svg"
-        class="avalanche-problem-preview__danger-rating"
-      />
-      <img
-        *ngIf="avalancheProblem.isDangerRating('high')"
-        src="./assets/img/danger_rating_high_c.svg"
-        class="avalanche-problem-preview__danger-rating"
-      />
-      <img
-        *ngIf="avalancheProblem.isDangerRating('very_high')"
-        src="./assets/img/danger_rating_very_high_c.svg"
+      <app-danger-rating
+        [value]="avalancheProblem.getDangerRating()"
         class="avalanche-problem-preview__danger-rating"
       />
     </div>
