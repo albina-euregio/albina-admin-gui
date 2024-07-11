@@ -381,7 +381,7 @@
                     ph: true,
                     'ph-arrow-down-right': t === 'decreasing',
                     'ph-equals': t === 'steady',
-                    'ph-arrow-up-right': t === 'increasing',
+                    'ph-arrow-up-right': t === 'increasing'
                   }"
                 ></i>
                 {{ "tendency." + t | translate }}
@@ -409,6 +409,7 @@
 </div>
 
 <ng-template #catalogOfPhrasesTemplate>
+  <button type="reset" class="btn btn-bare pull-end" (click)="hideDialog()">&times;</button>
   <iframe
     (load)="initCatalogOfPhrases($event)"
     (message)="getText($event)"
