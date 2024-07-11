@@ -27,6 +27,14 @@ export class LocalStorageService {
     }
   }
 
+  getLanguage(): string {
+    return this.get("language");
+  }
+
+  setLanguage(language: string): void {
+    return this.set("language", language);
+  }
+
   getCurrentAuthor(): AuthorModel {
     return this.get("currentAuthor");
   }
