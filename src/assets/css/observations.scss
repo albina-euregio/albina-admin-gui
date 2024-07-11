@@ -1,3 +1,6 @@
+$header-nav-height: 60px;
+$observations-height: calc(100vh - $header-nav-height);
+
 .layout-outer {
   margin: 0;
   padding: 0;
@@ -10,8 +13,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: calc(100vh - 55px);
-  max-height: calc(100vh - 55px);
+  height: $observations-height;
+  max-height: $observations-height;
 }
 .layout-inner {
   flex: 1 1 auto;
