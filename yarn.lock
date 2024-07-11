@@ -394,9 +394,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:^18.0.6":
-  version: 18.0.6
-  resolution: "@angular/cdk@npm:18.0.6"
+"@angular/cdk@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "@angular/cdk@npm:18.1.0"
   dependencies:
     parse5: "npm:^7.1.2"
     tslib: "npm:^2.3.0"
@@ -407,7 +407,7 @@ __metadata:
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: 10c0/a19d5773a8b2de86bf78a1560b4b6c4cb0244ead70cce32b9c2f296a9acde4ea14897a4f7d3859a9ab95783a38f9ee32211f84f60c347e6115fc8c1f5188dcb0
+  checksum: 10c0/43bf24fe1ce6aa15bb118b492bad5ef293d6213f45ba29a119904bffe24e2d1589f31f020152de40e4b8c4eaf89617ca984978a150a6e0d528a5abe5fa99ec2d
   languageName: node
   linkType: hard
 
@@ -3856,7 +3856,7 @@ __metadata:
     "@angular-eslint/template-parser": "npm:^18.1.0"
     "@angular-slider/ngx-slider": "npm:^18.0.0"
     "@angular/animations": "npm:^18.1.0"
-    "@angular/cdk": "npm:^18.0.6"
+    "@angular/cdk": "npm:^18.1.0"
     "@angular/cli": "npm:^18.1.0"
     "@angular/common": "npm:^18.1.0"
     "@angular/compiler": "npm:^18.1.0"
