@@ -87,6 +87,7 @@
       "noPublicationInfo" : "Will NOT be published automatically",
       "loadingPreview": "Creating PDF preview ...",
       "loading": "Loading bulletin ...",
+      "loadMoreBulletins": "Load {{count}} more bulletins",
       "publishing": "Publishing bulletin ...",
       "submitting": "Submitting bulletin ...",
       "saveError": "Bulletin could not be saved!",

@@ -35,7 +35,7 @@ export class BulletinsService {
     this.init();
   }
 
-  init() {
+  init({ days } = { days: 10 }) {
     this.dates = new Array<Date>();
     this.activeDate = undefined;
     this.copyDate = undefined;
@@ -54,7 +54,7 @@ export class BulletinsService {
     endDate.setDate(endDate.getDate() + 3);
     endDate.setHours(0, 0, 0, 0);
 
-    for (let i = 0; i <= 10; i++) {
+    for (let i = 0; i <= days; i++) {
       const date = new Date(endDate.valueOf());
       date.setDate(endDate.getDate() - i);
       date.setHours(0, 0, 0, 0);
