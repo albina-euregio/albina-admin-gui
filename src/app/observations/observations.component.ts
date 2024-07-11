@@ -37,7 +37,6 @@ import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
-import { PipeModule } from "../pipes/pipes.module";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BarChartComponent } from "./charts/bar-chart.component";
 import { RoseChartComponent } from "./charts/rose-chart.component";
@@ -62,7 +61,6 @@ export interface MultiselectDropdownData {
     FormsModule,
     ObservationGalleryComponent,
     ObservationTableComponent,
-    PipeModule,
     RoseChartComponent,
     TranslateModule,
   ],

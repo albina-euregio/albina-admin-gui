@@ -4,13 +4,12 @@ import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import type { FotoWebcamEU } from "../../../observations-api/models/foto-webcam.model";
 import type { PanomaxThumbnailResponse } from "../../../observations-api/models/panomax.model";
-import { PipeModule } from "../pipes/pipes.module";
 import { GenericObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
 import { ObservationEditorComponent } from "./observation-editor.component";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, ObservationEditorComponent, PipeModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ObservationEditorComponent, TranslateModule],
   selector: "app-observation-gallery",
   templateUrl: "observation-gallery.component.html",
 })
