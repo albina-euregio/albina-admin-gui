@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
   selector: "app-awsome",
   standalone: true,
   imports: [],
-  templateUrl: "./awsome.component.html",
+  template: `<iframe src="https://models.avalanche.report/" style="width: 100%; height: 90vh"></iframe>`,
 })
 export class AwsomeComponent {
   // https://gitlab.com/avalanche-warning
