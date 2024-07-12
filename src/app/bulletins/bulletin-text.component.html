@@ -113,11 +113,13 @@
     <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
   </button>
 
+  <!--
   <button class="btn btn-sm btn-bare region-form__translation-toggle" type="button" (click)="showNotes = !showNotes">
     <i class="ph icon-md ph-note"></i>
     <span *ngIf="showNotes">{{ "bulletins.create.hideNotes" | translate }}</span>
     <span *ngIf="!showNotes">{{ "bulletins.create.showNotes" | translate }}</span>
   </button>
+  -->
 
   <div *ngIf="showTranslations" class="region-form__translation-block">
     <div *ngFor="let lang of translationLanguages" class="input-group region-form__translation-item">

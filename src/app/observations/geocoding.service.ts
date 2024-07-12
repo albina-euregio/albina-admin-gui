@@ -7,15 +7,17 @@ import { FeatureCollection, Point } from "geojson";
 
 @Injectable()
 export class GeocodingService {
+  private readonly osmNominatimApi = "https://nominatim.openstreetmap.org/search";
+  private readonly osmNominatimCountries = "at,it";
+
   constructor(
-    public http: HttpClient,
-    public translateService: TranslateService,
-    public constantsService: ConstantsService,
+    private http: HttpClient,
+    private translateService: TranslateService,
   ) {}
 
   searchLocation(query: string, limit = 8): Observable<FeatureCollection<Point, GeocodingProperties>> {
     // https://nominatim.org/release-docs/develop/api/Search/
-    const { osmNominatimApi, osmNominatimCountries } = this.constantsService;
+    const { osmNominatimApi, osmNominatimCountries } = this;
     const params: Record<string, string> = {
       "accept-language": this.translateService.currentLang,
       countrycodes: osmNominatimCountries,

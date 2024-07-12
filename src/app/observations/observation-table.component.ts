@@ -4,7 +4,6 @@ import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
 import { AlbinaObservationsService } from "./observations.service";
 import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
-import { PipeModule } from "../pipes/pipes.module";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -13,7 +12,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, ObservationEditorComponent, PipeModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ObservationEditorComponent, TranslateModule],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })
@@ -30,7 +29,7 @@ export class ObservationTableComponent {
   @ViewChild("observationEditorTemplate") observationEditorTemplate: TemplateRef<any>;
 
   constructor(
-    private modalService: BsModalService,
+    public modalService: BsModalService,
     private observationsService: AlbinaObservationsService,
     private markerService: ObservationMarkerService,
     private translate: TranslateService,

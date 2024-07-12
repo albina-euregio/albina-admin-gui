@@ -21,6 +21,7 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import * as Enums from "../enums/enums";
 import { LangTexts } from "../models/text.model";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -77,6 +78,7 @@ export class AvalancheBulletinComponent {
     public constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
+    public translateService: TranslateService,
   ) {
     this.updateBulletinOnServerEventDebounce
       .pipe(debounceTime(1000))

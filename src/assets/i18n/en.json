@@ -87,6 +87,7 @@
       "noPublicationInfo" : "Will NOT be published automatically",
       "loadingPreview": "Creating PDF preview ...",
       "loading": "Loading bulletin ...",
+      "loadMoreBulletins": "Load {{count}} more bulletins",
       "publishing": "Publishing bulletin ...",
       "submitting": "Submitting bulletin ...",
       "saveError": "Bulletin could not be saved!",
@@ -591,10 +592,11 @@
     "observations": {
       "table": "Table",
       "map": "Map",
+      "gallery": "Gallery",
       "filters": "Filters",
       "title": "Observations",
       "newObservation": "New observation",
-      "exportObservations": "Export observerations",
+      "exportObservations": "Export observations",
       "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Download"
@@ -869,6 +871,32 @@
     "avalancheWidth": "Avalanche width",
     "search": "Search",
     "count": "# observations:",
+    "layers": {
+      "observers": "Observers",
+      "weatherStations": "Weather stations",
+      "webcams": "Webcams",
+      "observations": "Observations"
+    },
+    "weatherStations": {
+      "tooltips": {
+        "globalRadiation": "Global radiation",
+        "snowHeight": "Snow height",
+        "snowDifference24h": "Snow difference 24h",
+        "snowDifference48h": "Snow difference 48h",
+        "snowDifference72h": "Snow difference 72h",
+        "airTemperature": "Air temperature",
+        "airTemperatureMax": "Air temperature Max",
+        "airTemperatureMin": "Air temperature Min",
+        "surfaceTemperature": "Surface temperature",
+        "surfaceHoar": "Potential surface hoar formation",
+        "surfaceHoarCalc": "Potential surface hoar formation (Lehning et. al.)",
+        "dewPoint": "Dew point temperature",
+        "relativeHumidity": "Relative humidity",
+        "windDirection": "Wind direction",
+        "windSpeed": "Wind speed",
+        "windGust": "Wind gust"
+      }
+    },
     "button": {
       "add": "Add observation",
       "save": "Save observation",

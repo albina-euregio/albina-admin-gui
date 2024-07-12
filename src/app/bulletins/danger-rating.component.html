@@ -1,55 +1,7 @@
-<div>
-  <img *ngIf="isDangerRating(dangerRating.no_rating)" src="./assets/img/no_rating_c.svg" width="80" />
-  <img
-    *ngIf="!isDangerRating(dangerRating.no_rating)"
-    src="./assets/img/no_rating_bw.svg"
-    (click)="selectDangerRating(dangerRating.no_rating)"
-    width="80"
-    style="opacity: 0.3"
-  />
-  <img *ngIf="isDangerRating(dangerRating.low)" src="./assets/img/danger_rating_low_c.svg" width="80" />
-  <img
-    *ngIf="!isDangerRating(dangerRating.low)"
-    src="./assets/img/danger_rating_low_bw.svg"
-    (click)="selectDangerRating(dangerRating.low)"
-    width="80"
-    style="opacity: 0.3"
-  />
-  <img *ngIf="isDangerRating(dangerRating.moderate)" src="./assets/img/danger_rating_moderate_c.svg" width="80" />
-  <img
-    *ngIf="!isDangerRating(dangerRating.moderate)"
-    src="./assets/img/danger_rating_moderate_bw.svg"
-    (click)="selectDangerRating(dangerRating.moderate)"
-    width="80"
-    style="opacity: 0.3"
-  />
-  <img
-    *ngIf="isDangerRating(dangerRating.considerable)"
-    src="./assets/img/danger_rating_considerable_c.svg"
-    width="80"
-  />
-  <img
-    *ngIf="!isDangerRating(dangerRating.considerable)"
-    src="./assets/img/danger_rating_considerable_bw.svg"
-    (click)="selectDangerRating(dangerRating.considerable)"
-    width="80"
-    style="opacity: 0.3"
-  />
-  <img *ngIf="isDangerRating(dangerRating.high)" src="./assets/img/danger_rating_high_c.svg" width="80" />
-  <img
-    *ngIf="!isDangerRating(dangerRating.high)"
-    src="./assets/img/danger_rating_high_bw.svg"
-    (click)="selectDangerRating(dangerRating.high)"
-    width="80"
-    style="opacity: 0.3"
-  />
-  <img *ngIf="isDangerRating(dangerRating.very_high)" src="./assets/img/danger_rating_very_high_c.svg" width="80" />
-  <img
-    *ngIf="!isDangerRating(dangerRating.very_high)"
-    src="./assets/img/danger_rating_very_high_bw.svg"
-    (click)="selectDangerRating(dangerRating.very_high)"
-    width="80"
-    style="opacity: 0.3"
-  />
-  <div></div>
-</div>
+<img *ngIf="value === dangerRating.missing" src="./assets/img/danger_rating_missing.svg" />
+<img *ngIf="value === dangerRating.no_rating" src="./assets/img/no_rating_c.svg" />
+<img *ngIf="value === dangerRating.low" src="./assets/img/danger_rating_low_c.svg" />
+<img *ngIf="value === dangerRating.moderate" src="./assets/img/danger_rating_moderate_c.svg" />
+<img *ngIf="value === dangerRating.considerable" src="./assets/img/danger_rating_considerable_c.svg" />
+<img *ngIf="value === dangerRating.high" src="./assets/img/danger_rating_high_c.svg" />
+<img *ngIf="value === dangerRating.very_high" src="./assets/img/danger_rating_very_high_c.svg" />

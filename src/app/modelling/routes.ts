@@ -1,13 +1,13 @@
 import { Routes } from "@angular/router";
 
-import { AwesomeComponent } from "./awesome.component";
+import { AwsomeComponent } from "./awsome.component";
 import { ForecastComponent } from "./forecast.component";
 
 import { AuthGuard } from "../guards/auth.guard";
 
 export type ModellingRouteData = {
   title: string;
-  modelling: "geosphere" | "snowpack" | "awesome";
+  modelling: "geosphere" | "snowpack" | "awsome";
 };
 
 export default [
@@ -30,12 +30,12 @@ export default [
     canActivate: [], // no authentication
   },
   {
-    path: "awesome",
+    path: "awsome",
     data: {
-      title: "AWESOME",
-      modelling: "awesome",
+      title: "AWSOME",
+      modelling: "awsome",
     } satisfies ModellingRouteData,
-    component: AwesomeComponent,
+    component: AwsomeComponent,
     canActivate: [], // no authentication
   },
 ] satisfies Routes;

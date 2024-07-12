@@ -1,10 +1,4 @@
-import {
-  GenericObservation,
-  ObservationSource,
-  ObservationType,
-  Stability,
-  toAspect,
-} from "../../src/app/observations/models/generic-observation.model";
+import { GenericObservation, ObservationSource, ObservationType, Stability, toAspect } from ".";
 
 export type ArcGisApi = { layers: ArcGisLayer[] } | { error: { message: string } };
 

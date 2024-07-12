@@ -267,12 +267,16 @@ export class MapService {
 
   selectAggregatedRegion(bulletin: BulletinModel) {
     this.activeBulletin = bulletin;
+    if (this.activeBulletin && this.activeBulletin !== undefined) {
+      this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps.aggregatedRegions);
+      this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+    }
     this.overlayMaps?.aggregatedRegions?.rerenderTiles();
     this.afternoonOverlayMaps?.aggregatedRegions?.rerenderTiles();
   }
 
   private selectAggregatedRegion0(bulletin: BulletinModel, map: Map, layer: PmLeafletLayer) {
-    for (const status of [Enums.RegionStatus.saved, Enums.RegionStatus.suggested, Enums.RegionStatus.published]) {
+    for (const status of [Enums.RegionStatus.suggested, Enums.RegionStatus.saved, Enums.RegionStatus.published]) {
       for (const region of bulletin.getRegionsByStatus(status)) {
         layer.paintRules[region] = {
           dataSource,

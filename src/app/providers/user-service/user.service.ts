@@ -82,12 +82,12 @@ export class UserService {
     return this.http.get<Response>(url, options);
   }
 
-  public getRegions(): Observable<Response> {
+  public getRegions(): Observable<string[]> {
     const url = this.constantsService.getServerUrl() + "user/regions";
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers: headers };
 
-    return this.http.get<Response>(url, options);
+    return this.http.get<string[]>(url, options);
   }
 
   public deleteUser(userId): Observable<Response> {

@@ -15,9 +15,6 @@ import { BlogComponent } from "./blog.component";
 import { AdminRoutingModule } from "./admin-routing.module";
 import { TranslateModule } from "@ngx-translate/core";
 
-// Pipes
-import { PipeModule } from "../pipes/pipes.module";
-
 import { AlertModule } from "ngx-bootstrap/alert";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -29,7 +26,6 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     FormsModule,
     CommonModule,
     TranslateModule,
-    PipeModule.forRoot(),
     AccordionModule,
     AlertModule.forRoot(),
     TabsModule,

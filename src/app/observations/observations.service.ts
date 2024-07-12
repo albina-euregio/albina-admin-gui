@@ -7,6 +7,7 @@ import { GenericObservation } from "./models/generic-observation.model";
 import { Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
 import { ObservationFilterService } from "./observation-filter.service";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class AlbinaObservationsService {
@@ -40,8 +41,8 @@ export class AlbinaObservationsService {
 
   getGenericObservations(): Observable<GenericObservation> {
     const url =
-      this.constantsService.observationApi.$ +
-      "?startDate=" +
+      environment.apiBaseUrl +
+      "../api_ext/observations?startDate=" +
       this.filter.startDateString +
       "&endDate=" +
       this.filter.endDateString;
@@ -49,17 +50,17 @@ export class AlbinaObservationsService {
   }
 
   getObservers(): Observable<GenericObservation> {
-    const url = this.constantsService.observationApi.Observer;
+    const url = environment.apiBaseUrl + "../api_ext/observers";
     return this.getGenericObservations0(url);
   }
 
   getWeatherStations(): Observable<GenericObservation> {
-    const url = this.constantsService.observationApi.AvalancheWarningService;
+    const url = environment.apiBaseUrl + "../api_ext/weather-stations";
     return this.getGenericObservations0(url);
   }
 
   getGenericWebcams(): Observable<GenericObservation> {
-    const url = this.constantsService.observationApi.Webcam;
+    const url = environment.apiBaseUrl + "../api_ext/webcams";
     return this.getGenericObservations0(url);
   }
 
@@ -124,6 +125,7 @@ function getISOString(date: Date) {
     ":" +
     pad(date.getSeconds())
   );
+
   function pad(number: number): string {
     return number < 10 ? `0${number}` : `${number}`;
   }

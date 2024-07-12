@@ -10,8 +10,8 @@ import {
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
-import { GetDustParamService, GetFilenamesService, ParamService, QfaResult, QfaService } from "./qfa";
-import { CircleMarker, LatLngLiteral, LatLng } from "leaflet";
+import { ParamService, QfaResult, QfaService } from "./qfa";
+import { CircleMarker, LatLngLiteral } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";

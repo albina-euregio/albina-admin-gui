@@ -1,9 +1,4 @@
-import {
-  type GenericObservation,
-  ObservationSource,
-  ObservationType,
-  degreeToAspect,
-} from "../../src/app/observations/models/generic-observation.model";
+import { type GenericObservation, ObservationSource, ObservationType, degreeToAspect } from ".";
 
 export interface PanomaxCam {
   id: string;
@@ -33,6 +28,8 @@ export interface PanomaxInstance {
   cam: PanomaxCam;
 }
 
+type DateString = string;
+
 export interface PanomaxThumbnailResponse {
   mode: string;
   name: string;
@@ -43,7 +40,7 @@ export interface PanomaxThumbnailResponse {
   initialDirection: number;
   clipping: any;
   logo: string;
-  images: any;
+  images: Record<DateString, Record<"default" | "h572" | "optimized" | "reduced" | "small" | "thumb", string>>;
   instance: PanomaxInstance;
   culture: any;
   country: string;
@@ -51,6 +48,7 @@ export interface PanomaxThumbnailResponse {
     latitude: number;
     longitude: number;
   };
+  latest: string;
 }
 
 export interface PanomaxCamResponse {
@@ -77,8 +75,7 @@ export function convertPanomax(thumb: PanomaxThumbnailResponse): GenericObservat
   const cam = thumb.instance.cam;
   //set thumb.latest to the latest image from res.images
   if (thumb.images) {
-    thumb["latest"] = thumb.images[Object.keys(thumb.images).sort().pop()];
-    thumb["latest"] = thumb["latest"].small;
+    thumb.latest = thumb.images[Object.keys(thumb.images).sort().pop()].small;
   }
   return {
     $data: thumb,
