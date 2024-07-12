@@ -55,9 +55,9 @@
                 <details>
                   <summary>Open-source Licenses</summary>
                   <li *ngFor="let dependency of constantsService.dependencies" class="list-inline-item">
-                    <a [href]="dependency.homepage" target="_blank" rel="external noopener noreferrer">
-                      {{ dependency.name }}
-                    </a>
+                    <a [href]="dependency.homepage" target="_blank" rel="external noopener noreferrer">{{
+                      dependency.name
+                    }}</a>
                     {{ dependency.version }}
                   </li>
                 </details>
