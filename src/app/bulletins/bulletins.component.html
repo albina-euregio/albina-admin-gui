@@ -3,6 +3,7 @@
     <thead class="bulletins-table__header">
       <tr>
         <th></th>
+        <th><i class="ph ph-brain"></i> stress level</th>
         <th>{{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}</th>
         <th class="" *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">
           {{ "bulletins.table.title.status." + region | translate }}
@@ -48,6 +49,34 @@
               </button>
             </div>
           </div>
+        </td>
+        <td [attr.data-label]="'stress level'">
+          <input
+            class="form-range"
+            type="range"
+            [(ngModel)]="stress[date.getTime()]"
+            [style.--form-range-thumb-bg]="
+              !stress[date.getTime()]
+                ? 'gray'
+                : stress[date.getTime()] < 20
+                  ? 'green'
+                  : stress[date.getTime()] < 70
+                    ? 'orange'
+                    : 'red'
+            "
+          />
+          <i
+            class="ph"
+            [class]="
+              stress[date.getTime()] < 20
+                ? 'ph-smiley'
+                : stress[date.getTime()] < 70
+                  ? 'ph-smiley-meh'
+                  : stress[date.getTime()] <= 100
+                    ? 'ph-smiley-x-eyes'
+                    : ''
+            "
+          ></i>
         </td>
         <td
           class="bulletins-table__region-status"
