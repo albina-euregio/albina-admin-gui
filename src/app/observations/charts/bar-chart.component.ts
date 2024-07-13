@@ -200,106 +200,16 @@ export class BarChartComponent extends BaseComponent {
           disabled: true,
         },
       },
-      {
+      ...new Array(10).fill(0).map((_, i) => ({
         ...defaultDataBarOptions,
         stack: "total",
         itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 0),
+          color: (entry) => this.getClassifyColor(entry, i),
         },
         emphasis: {
           disabled: true,
         },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 1),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 2),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 3),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 4),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 5),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 6),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 7),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 8),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
-      {
-        ...defaultDataBarOptions,
-        stack: "total",
-        itemStyle: {
-          color: (entry) => this.getClassifyColor(entry, 9),
-        },
-        emphasis: {
-          disabled: true,
-        },
-      },
+      })),
     ],
   };
   public options = Object.assign(this.defaultOptions);
