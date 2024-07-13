@@ -9,10 +9,11 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService, importantObservationTexts } from "./observation-marker.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { BulletinsModule } from "../bulletins/bulletins.module";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, ObservationEditorComponent, TranslateModule],
+  imports: [CommonModule, FormsModule, ObservationEditorComponent, TranslateModule, BulletinsModule],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })

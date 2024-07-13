@@ -16,16 +16,18 @@ $observations-height: calc(100vh - $header-nav-height);
   height: $observations-height;
   max-height: $observations-height;
 }
+
 .layout-inner {
   flex: 1 1 auto;
   position: relative;
   height: 100%;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 14px;
   line-height: 1.4;
 }
+
 @media screen and (min-width: 769px) {
   .layout-inner {
     display: flex;
@@ -33,15 +35,18 @@ $observations-height: calc(100vh - $header-nav-height);
     flex-wrap: nowrap;
   }
 }
+
 .layout-left {
   flex-grow: 1;
 }
+
 @media screen and (min-width: 769px) {
   .layout-left {
     position: relative;
     border-right: 1px solid #e6eef2;
   }
 }
+
 .layout-right {
   position: absolute;
   top: 55px;
@@ -53,14 +58,17 @@ $observations-height: calc(100vh - $header-nav-height);
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .layout-right::-webkit-scrollbar {
   display: none;
 }
+
 @media screen and (max-width: 768px) {
   .layout--is-map .layout-right {
     display: none;
   }
 }
+
 @media screen and (min-width: 769px) {
   .layout-right {
     position: relative;
@@ -70,16 +78,19 @@ $observations-height: calc(100vh - $header-nav-height);
     width: calc(220px + 20px * 2);
   }
 }
+
 @media screen and (min-width: 1125px) {
   .layout-right {
     width: calc(220px * 2 + 20px * 3);
   }
 }
+
 @media screen and (min-width: 1480px) {
   .layout-right {
     width: calc(220px * 3 + 20px * 4);
   }
 }
+
 .layout-switch {
   z-index: 50;
   position: absolute;
@@ -88,26 +99,32 @@ $observations-height: calc(100vh - $header-nav-height);
   display: flex;
   gap: 0 5px;
 }
+
 .layout-switch > .obs-button {
   padding: 0.25em 0.5em;
   background-color: #fff;
   border: 1px solid #e6eef2;
   box-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.1), 0 0px 0 1px rgba(0, 0, 0, 0.02);
 }
+
 .layout--is-map .layout-switch .layout-switch-map {
   display: none;
 }
+
 .layout--is-table .layout-switch .layout-switch-table {
   display: none;
 }
+
 .layout--is-charts .layout-switch .layout-switch-charts {
   display: none;
 }
+
 @media screen and (min-width: 769px) {
   .layout-switch .layout-switch-charts {
     display: none;
   }
 }
+
 .layout-global {
   z-index: 70;
   position: absolute;
@@ -117,6 +134,7 @@ $observations-height: calc(100vh - $header-nav-height);
   background-color: #fff;
   border-bottom: 1px solid #e6eef2;
 }
+
 .global-bar-scroll {
   width: 100%;
   height: calc(55px - 1px);
@@ -129,14 +147,17 @@ $observations-height: calc(100vh - $header-nav-height);
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 @media screen and (min-width: 1480px) {
   .global-bar-scroll {
     padding: 0 20px;
   }
 }
+
 .global-bar-scroll::-webkit-scrollbar {
   display: none;
 }
+
 .global-bar-scroll:before,
 .global-bar-scroll:after {
   z-index: 15;
@@ -146,14 +167,17 @@ $observations-height: calc(100vh - $header-nav-height);
   height: calc(55px - 1px);
   width: 20px;
 }
+
 .global-bar-scroll:before {
   left: 0;
   background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0));
 }
+
 .global-bar-scroll:after {
   right: 0;
   background: linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0));
 }
+
 .global-bar {
   display: flex;
   flex-wrap: nowrap;
@@ -161,31 +185,38 @@ $observations-height: calc(100vh - $header-nav-height);
   justify-content: flex-start;
   gap: 0 10px;
 }
+
 @media screen and (min-width: 1480px) {
   .global-bar {
     gap: 0 10px;
   }
 }
+
 .global-bar-left {
   justify-content: flex-start;
 }
+
 .global-bar-right {
   justify-content: flex-end;
 }
+
 .global-bar-item button {
   height: auto;
   padding: 0;
   border-radius: 0;
 }
+
 .global-bar-item .p-inputtext {
   padding: 0;
 }
+
 @media screen and (max-width: 549px) {
   .global-bar-item-load,
   .global-bar-item-add .p-button-label {
     display: none;
   }
 }
+
 .obs-button {
   position: relative;
   color: inherit;
@@ -196,14 +227,17 @@ $observations-height: calc(100vh - $header-nav-height);
   justify-content: flex-start;
   gap: 0 5px;
 }
+
 .obs-button:hover,
 .obs-button.is-active {
   cursor: pointer;
   color: #19abff;
 }
+
 .obs-button:hover .icon {
   background-color: #19abff;
 }
+
 .obs-switch {
   display: flex;
   flex-wrap: nowrap;
@@ -211,6 +245,7 @@ $observations-height: calc(100vh - $header-nav-height);
   justify-content: flex-start;
   gap: 0;
 }
+
 .obs-switch .obs-switch-item {
   padding: 0 5px;
   color: #839194;
@@ -221,27 +256,33 @@ $observations-height: calc(100vh - $header-nav-height);
   justify-content: flex-start;
   gap: 0 5px;
 }
+
 .obs-switch .obs-switch-item:first-child {
   padding-left: 0;
 }
+
 .obs-switch .obs-switch-item:last-child {
   padding-right: 0;
   border-right: none;
 }
+
 .obs-switch .obs-switch-item .switch-icon {
   height: 1.25rem;
   width: 1.25rem;
   background-color: #839194;
 }
+
 .obs-switch .obs-switch-item:hover,
 .obs-switch .obs-switch-item.is-active {
   cursor: pointer;
   color: #19abff;
 }
+
 .obs-switch .obs-switch-item:hover .icon,
 .obs-switch .obs-switch-item.is-active .icon {
   background-color: #19abff;
 }
+
 .layout-map {
   z-index: 0;
   position: absolute;
@@ -250,33 +291,41 @@ $observations-height: calc(100vh - $header-nav-height);
   width: 100%;
   background-color: #e6eef2;
 }
+
 .layout-map > .observations-map {
   height: calc(100vh - 110px);
 }
+
 .layout-map .leaflet-pane {
   mix-blend-mode: normal;
 }
+
 @media screen and (max-width: 768px) {
   .layout--is-charts .layout-map {
     display: none;
   }
 }
+
 .obs-tooltip {
   padding: 5px !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) !important;
 }
+
 .toolset-header {
   padding: 20px;
 }
+
 .toolset-keydata {
   font-size: 12px;
   color: #839194;
 }
+
 .keydata-selected {
   color: #000;
 }
+
 .toolset-charts {
   padding: 20px;
   background-color: #fff;
@@ -285,27 +334,33 @@ $observations-height: calc(100vh - $header-nav-height);
   align-content: flex-start;
   gap: 20px 20px;
 }
+
 @media screen and (max-width: 768px) {
   .layout--is-map .toolset-charts {
     display: none;
   }
 }
+
 .chart-container {
   width: calc(50% - 20px * 0.5);
 }
+
 @media screen and (min-width: 550px) {
   .chart-container {
     width: calc(33.3333333% - 20px * 2 / 3);
   }
 }
+
 @media screen and (min-width: 769px) {
   .chart-container {
     width: 220px;
   }
 }
+
 .chart {
   width: 100%;
 }
+
 .chart-header {
   margin-bottom: 10px;
   padding-bottom: 2.5px;
@@ -316,25 +371,31 @@ $observations-height: calc(100vh - $header-nav-height);
   align-items: center;
   justify-content: space-between;
 }
+
 .chart-unspecified {
   font-size: 12px;
   text-align: right;
   color: #839194;
 }
+
 .chart-unspecified span {
   display: inline-block;
   cursor: pointer;
   border-bottom: 3px solid rgba(0, 0, 0, 0);
 }
+
 .chart-unspecified span.selected {
   color: #19abff;
 }
+
 .chart-unspecified span.highlighted {
   border-color: #fffb00;
 }
+
 .chart-content .chart {
   height: 300px;
 }
+
 .layout-gallery,
 .layout-table {
   z-index: 30;
@@ -343,9 +404,11 @@ $observations-height: calc(100vh - $header-nav-height);
   bottom: 0;
   width: 100%;
 }
+
 .layout-table tr.highlighted td:first-child {
   position: relative;
 }
+
 .layout-table tr.highlighted td:first-child:before {
   position: absolute;
   top: 0;
@@ -355,12 +418,14 @@ $observations-height: calc(100vh - $header-nav-height);
   content: "";
   background-color: red;
 }
+
 .parameter-switch {
   z-index: 50;
   position: absolute;
   bottom: 45px;
   right: 22px;
 }
+
 .parameter-switch > .obs-button {
   width: 30px;
   height: 29px;
@@ -381,6 +446,7 @@ $observations-height: calc(100vh - $header-nav-height);
   display: flex;
   gap: 0 5px;
 }
+
 .layer-switch > .obs-button {
   padding: 0.25em 0.5em;
   width: 34px;
@@ -393,4 +459,9 @@ $observations-height: calc(100vh - $header-nav-height);
   box-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.1), 0 0px 0 1px rgba(0, 0, 0, 0.02);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
+}
+
+table app-avalanche-problem-icons img {
+  width: 40px;
+  max-width: unset;
 }

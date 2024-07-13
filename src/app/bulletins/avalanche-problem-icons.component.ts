@@ -7,11 +7,11 @@ import * as Enums from "../enums/enums";
   templateUrl: "./avalanche-problem-icons.component.html",
 })
 export class AvalancheProblemIconsComponent {
-  @Input() avalancheProblem: AvalancheProblemModel;
-  @Input() iconClass: string;
+  @Input() value: AvalancheProblemModel | Enums.AvalancheProblem;
   avalancheProblemEnum = Enums.AvalancheProblem;
 
   isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
-    return this.avalancheProblem?.avalancheProblem === avalancheProblem;
+    const v = this.value;
+    return v === avalancheProblem || (typeof v === "object" && v?.avalancheProblem === avalancheProblem);
   }
 }

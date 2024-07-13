@@ -3,7 +3,7 @@ $region-form-border: 1px solid $gray-300;
 $region-form-width: 512px;
 .create-bulletin__region-form {
   border-right: $region-form-border;
-  width: calc(50vw - ($sidebar-width/2));
+  width: calc(50vw - ($sidebar-width / 2));
   min-width: $region-form-width;
   display: flex;
   flex-flow: column;
@@ -62,6 +62,7 @@ $region-form-width: 512px;
     margin-bottom: 0;
   }
 }
+
 .avalanche-problems__accordion {
   accordion-group {
     border: $region-form-border !important;
@@ -70,19 +71,23 @@ $region-form-width: 512px;
   app-avalanche-problem-preview {
     width: 100%;
   }
+
   accordion-group + accordion-group {
     margin-top: $space-2;
   }
+
   .panel-heading {
     background: $gray-100;
     align-items: center;
     padding: $space-2 $space-4;
   }
+
   .panel-body {
     border-top: $region-form-border;
     padding: $space-4;
   }
 }
+
 app-avalanche-problem-preview,
 .avalanche-problem-preview__header,
 .avalanche-problem__preview,
@@ -100,12 +105,14 @@ app-avalanche-problem-preview,
 .avalanche-problem-preview__info-item {
   margin-right: $space-4;
 }
+
 .avalanche-problem-preview__danger-rating > img {
   height: $space-8;
   width: auto;
 }
 
-.avalanche-problem-preview__problem-icon {
+.avalanche-problem-preview__problem-icon,
+.avalanche-problem-preview__problem-icon img {
   height: $space-8;
   width: auto;
 }
@@ -121,9 +128,15 @@ app-avalanche-problem-preview,
   justify-content: space-between;
   flex-wrap: nowrap;
 }
+
 .avalanche-problem-detail__problem-icon {
-  border: 1px solid $input-border-color;
+  & img {
+    border: 1px solid $input-border-color;
+    width: 100%;
+  }
+
   width: 18%;
+
   &.is-disabled {
     opacity: 0.3;
   }
@@ -142,6 +155,7 @@ app-avalanche-problem-preview,
     flex-grow: 0;
     flex-shrink: 0;
   }
+
   label {
     margin-bottom: 0;
   }
@@ -150,6 +164,7 @@ app-avalanche-problem-preview,
     display: flex;
     flex-flow: row nowrap;
     gap: $space-1;
+
     input {
       flex-basis: 0 0 80px;
       width: 80px;
@@ -167,6 +182,7 @@ app-avalanche-problem-preview,
   display: flex;
   flex-flow: row nowrap;
   margin-bottom: $space-2;
+
   img {
     height: 60px;
   }
@@ -178,6 +194,7 @@ app-avalanche-problem-preview,
   .region-form__translation-item + .region-form__translation-item {
     margin-top: $space-1;
   }
+
   .input-group-text {
     @include font-s-medium;
     width: 26px;

@@ -41,7 +41,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     BsDropdownModule.forRoot(),
     NgxSliderModule,
   ],
-  exports: [AspectsComponent],
+  exports: [AspectsComponent, AvalancheProblemIconsComponent],
   declarations: [
     BulletinsComponent,
     CreateBulletinComponent,

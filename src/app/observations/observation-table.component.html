@@ -68,34 +68,7 @@
       </td>
       <td style="padding: 0">
         <span *ngFor="let problem of observation.avalancheProblems">
-          <img *ngIf="problem === 'new_snow'" src="./assets/img/New_snow_c.svg" style="width: 40px; max-width: unset" />
-          <img
-            *ngIf="problem === 'wind_slab'"
-            src="./assets/img/Drifting_snow_c.svg"
-            style="width: 40px; max-width: unset"
-          />
-          <img
-            *ngIf="problem === 'persistent_weak_layers'"
-            src="./assets/img/Persistent_weak_layers_c.svg"
-            style="width: 40px; max-width: unset"
-          />
-          <img *ngIf="problem === 'wet_snow'" src="./assets/img/Wet_snow_c.svg" style="width: 40px; max-width: unset" />
-          <img
-            *ngIf="problem === 'gliding_snow'"
-            src="./assets/img/Gliding_snow_c.svg"
-            style="width: 40px; max-width: unset"
-          />
-          <img
-            *ngIf="problem === 'favourable_situation'"
-            src="./assets/img/Favourable_situation_c.svg"
-            style="width: 40px; max-width: unset"
-          />
-          <img *ngIf="problem === 'cornices'" src="./assets/img/Cornices_c.svg" style="width: 40px; max-width: unset" />
-          <img
-            *ngIf="problem === 'no_distinct_problem'"
-            src="./assets/img/No_distinct_problem_c.svg"
-            style="width: 40px; max-width: unset"
-          />
+          <app-avalanche-problem-icons [value]="problem" />
         </span>
         <abbr
           *ngFor="let importantObservation of observation.importantObservations"
