@@ -1,9 +1,6 @@
-<div
-  class="animated fadeIn create-bulletin"
-  [ngClass]="{ 'create-bulletin--modal': showNewBulletinModal && activeBulletin }"
->
+<div class="animated fadeIn create-bulletin" [class.create-bulletin--modal]="showNewBulletinModal && activeBulletin">
   <!-- Sidebar -->
-  <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isBulletinSidebarVisible }">
+  <aside class="create-bulletin__sidebar" [class.hidden]="!isBulletinSidebarVisible">
     <!-- Date Switch -->
     <header class="create-bulletin__sidebar-header">
       <button
@@ -505,13 +502,13 @@
 
   <div
     class="create-bulletin__default-layout"
-    [ngClass]="{
-      'create-bulletin__compact-layout':
-        activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined),
-      'create-bulletin__compact-layout--compare':
-        activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined,
-      'full-width': !isBulletinSidebarVisible
-    }"
+    [class.create-bulletin__compact-layout]="
+      activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined)
+    "
+    [class.create-bulletin__compact-layout--compare]="
+      activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined
+    "
+    [class.full-width]="!isBulletinSidebarVisible"
   >
     <!-- Active bulletin -->
     <div
@@ -554,10 +551,7 @@
     <!-- End Compared bulletin -->
 
     <!-- Map -->
-    <div
-      class="create-bulletin__map-container"
-      [ngClass]="{ 'create-bulletin__map-container--am-pm': showAfternoonMap }"
-    >
+    <div class="create-bulletin__map-container" [class.create-bulletin__map-container--am-pm]="showAfternoonMap">
       <!-- Bulletin Sidebar toggle icon -->
       <button (click)="toggleBulletinSidebar()" class="create-bulletin__sidebar-close-on-map">
         <i class="ph ph-sidebar"></i>
@@ -602,7 +596,7 @@
   <div
     (click)="toggleBulletin(bulletin)"
     class="region-thumb"
-    [ngClass]="{ 'region-thumb--active': bulletin === activeBulletin }"
+    [class.region-thumb--active]="bulletin === activeBulletin"
   >
     <div class="region-thumb__details">
       <h6 class="region-thumb__title font-s-medium" role="button">
@@ -861,12 +855,7 @@
   <div class="modal-body">
     <table class="table table-bordered responsive-table">
       <tbody class="bulletins-table__body">
-        <tr
-          *ngFor="let date of bulletinsService.dates"
-          [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date)
-          }"
-        >
+        <tr *ngFor="let date of bulletinsService.dates" [class.bulletins-table__active--day]="isActiveDate(date)">
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
             <div class="bulletins-table__day--small">
               <time>

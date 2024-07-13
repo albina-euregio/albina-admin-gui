@@ -71,10 +71,7 @@
             [disabled]="disabled || !useElevationHigh"
             type="reset"
             class="btn btn-icon"
-            [ngClass]="{
-              'btn-outline-secondary': !localTreelineHigh,
-              'btn-dark': localTreelineHigh
-            }"
+            [ngClass]="localTreelineHigh ? 'btn-dark' : 'btn-outline-secondary'"
             (click)="treelineHighClicked($event)"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
@@ -120,10 +117,7 @@
             [disabled]="disabled || !useElevationLow"
             type="reset"
             class="btn btn-icon"
-            [ngClass]="{
-              'btn-outline-secondary': !localTreelineLow,
-              'btn-dark': localTreelineLow
-            }"
+            [ngClass]="localTreelineLow ? 'btn-dark' : 'btn-outline-secondary'"
             (click)="treelineLowClicked($event)"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
@@ -146,10 +140,7 @@
               [disabled]="disabled"
               type="reset"
               class="btn btn-sm btn-outline-secondary"
-              [ngClass]="{
-                'btn-dark': isDangerRatingDirection(directionEnum.up),
-                'btn-outline-secondary': !isDangerRatingDirection(directionEnum.up)
-              }"
+              [ngClass]="isDangerRatingDirection(directionEnum.up) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="
                 setDangerRatingDirection(
                   $event,
@@ -168,10 +159,7 @@
               [disabled]="disabled"
               type="reset"
               class="btn btn-sm btn-outline-secondary"
-              [ngClass]="{
-                'btn-dark': isDangerRatingDirection(directionEnum.down),
-                'btn-outline-secondary': !isDangerRatingDirection(directionEnum.down)
-              }"
+              [ngClass]="isDangerRatingDirection(directionEnum.down) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="
                 setDangerRatingDirection(
                   $event,

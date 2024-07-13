@@ -9,7 +9,7 @@
       <div class="obs-switch">
         <div
           class="obs-switch-item"
-          [ngClass]="{ 'is-active': type === classifyType }"
+          [class.is-active]="type === classifyType"
           (click)="onMarkerClassify()"
           title="{{ 'admin.observations.charts.classify' | translate }}"
         >
@@ -17,7 +17,7 @@
         </div>
         <div
           class="obs-switch-item"
-          [ngClass]="{ 'is-active': type === labelType }"
+          [class.is-active]="type === labelType"
           (click)="onMarkerLabel()"
           title="{{ 'admin.observations.charts.label' | translate }}"
         >
@@ -25,7 +25,7 @@
         </div>
         <div
           class="obs-switch-item"
-          [ngClass]="{ 'is-active': isActive }"
+          [class.is-active]="isActive"
           (click)="onInvert()"
           title="{{ 'admin.observations.charts.invert' | translate }}"
         >
@@ -33,7 +33,7 @@
         </div>
         <div
           class="obs-switch-item"
-          [ngClass]="{ 'is-active': isActive }"
+          [class.is-active]="isActive"
           (click)="onReset()"
           title="{{ 'admin.observations.charts.reset' | translate }}"
         >
@@ -46,12 +46,7 @@
 
   <!-- !chart-unspecified -->
   <div class="chart-unspecified">
-    <span
-      [ngClass]="{
-        highlighted: nanStatus.highlighted,
-        selected: nanStatus.selected,
-      }"
-      (click)="onClickNan($event)"
+    <span [class.highlighted]="nanStatus.highlighted" [class.selected]="nanStatus.selected" (click)="onClickNan($event)"
       >{{ "admin.observations.charts.nan" | translate }}: {{ data.nan }}</span
     >
   </div>

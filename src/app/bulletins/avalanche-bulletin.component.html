@@ -1,5 +1,5 @@
 <div>
-  <div class="region-form__mobile-header" [ngClass]="{ 'd-none': isBulletinSidebarVisible }">
+  <div class="region-form__mobile-header" [class.d-none]="isBulletinSidebarVisible">
     <h1 class="font-m-bold">
       {{ bulletinsService.getActiveDate() | date: "EEEE," : undefined : translateService.currentLang }}
       {{ bulletinsService.getActiveDate() | date: "longDate" : undefined : translateService.currentLang }}
@@ -377,12 +377,10 @@
                 title="{{ 'bulletins.create.tooltip.tendency.' + t | translate }}"
               >
                 <i
-                  [ngClass]="{
-                    ph: true,
-                    'ph-arrow-down-right': t === 'decreasing',
-                    'ph-equals': t === 'steady',
-                    'ph-arrow-up-right': t === 'increasing'
-                  }"
+                  class="ph"
+                  [class.ph-arrow-down-right]="t === 'decreasing'"
+                  [class.ph-equals]="t === 'steady'"
+                  [class.ph-arrow-up-right]="t === 'increasing'"
                 ></i>
                 {{ "tendency." + t | translate }}
               </button>
