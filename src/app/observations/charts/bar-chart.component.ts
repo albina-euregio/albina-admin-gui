@@ -28,7 +28,6 @@ const defaultDataBarOptions = {
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
   selector: "app-bar-chart",
   templateUrl: "./base-chart.component.html",
-  styleUrls: ["./bar-chart.component.scss"],
 })
 export class BarChartComponent extends BaseComponent {
   public readonly defaultOptions: EChartsOption = {
