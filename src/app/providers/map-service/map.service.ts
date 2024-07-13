@@ -285,9 +285,7 @@ export class MapService {
             const properties = f.props as unknown as SelectableRegionProperties;
             if (!filterFeature({ properties } as unknown as GeoJSON.Feature)) return undefined;
             if (properties.id !== region) return undefined;
-            const isAbove =
-              properties.elevation === this.constantsService.microRegionsElevationHigh ||
-              properties.elevation === this.constantsService.microRegionsElevationLowHigh;
+            const isAbove = properties.elevation === "high" || properties.elevation === "low_high";
             const dangerRating = isAbove
               ? map !== this.afternoonMap
                 ? bulletin.getForenoonDangerRatingAbove()

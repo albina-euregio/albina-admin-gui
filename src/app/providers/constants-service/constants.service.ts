@@ -34,15 +34,6 @@ export class ConstantsService {
   public roleForeman: string = "FOREMAN";
   public roleObserver: string = "OBSERVER";
 
-  public autoSaveIntervall: number = 10000;
-
-  public colorBrand = "#19ABFF";
-
-  // micro regions elevation
-  public microRegionsElevationHigh = "high";
-  public microRegionsElevationLowHigh = "low_high";
-  public microRegionsElevationLow = "low";
-
   // danger rating (color)
   public colorDangerRatingLow = "#CCFF66";
   public colorDangerRatingModerate = "#FFFF00";
