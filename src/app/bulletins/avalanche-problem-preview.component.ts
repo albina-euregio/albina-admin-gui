@@ -30,47 +30,23 @@ export class AvalancheProblemPreviewComponent {
   }
 
   hasAspects() {
-    if (this.avalancheProblem && this.avalancheProblem.aspects && this.avalancheProblem.aspects.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.avalancheProblem && this.avalancheProblem.aspects && this.avalancheProblem.aspects.length > 0;
   }
 
   isFirst() {
-    if (this.count === 1) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.count === 1;
   }
 
   isLast() {
     switch (this.count) {
       case 1:
-        if (this.bulletinDaytimeDescription.avalancheProblem2 !== undefined) {
-          return false;
-        } else {
-          return true;
-        }
+        return this.bulletinDaytimeDescription.avalancheProblem2 === undefined;
       case 2:
-        if (this.bulletinDaytimeDescription.avalancheProblem3 !== undefined) {
-          return false;
-        } else {
-          return true;
-        }
+        return this.bulletinDaytimeDescription.avalancheProblem3 === undefined;
       case 3:
-        if (this.bulletinDaytimeDescription.avalancheProblem4 !== undefined) {
-          return false;
-        } else {
-          return true;
-        }
+        return this.bulletinDaytimeDescription.avalancheProblem4 === undefined;
       case 4:
-        if (this.bulletinDaytimeDescription.avalancheProblem5 !== undefined) {
-          return false;
-        } else {
-          return true;
-        }
+        return this.bulletinDaytimeDescription.avalancheProblem5 === undefined;
       default:
         return true;
     }
