@@ -8,6 +8,7 @@ import { Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
 import { ObservationFilterService } from "./observation-filter.service";
 import { environment } from "../../environments/environment";
+import { formatDate } from "@angular/common";
 
 @Injectable()
 export class AlbinaObservationsService {
@@ -112,21 +113,5 @@ export class AlbinaObservationsService {
 
 function getISOString(date: Date) {
   // like Date.toISOString(), but not using UTC
-  return (
-    date.getFullYear() +
-    "-" +
-    pad(date.getMonth() + 1) +
-    "-" +
-    pad(date.getDate()) +
-    "T" +
-    pad(date.getHours()) +
-    ":" +
-    pad(date.getMinutes()) +
-    ":" +
-    pad(date.getSeconds())
-  );
-
-  function pad(number: number): string {
-    return number < 10 ? `0${number}` : `${number}`;
-  }
+  return formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
 }

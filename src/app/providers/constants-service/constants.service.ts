@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import * as pkg from "../../../../package.json";
+import { formatDate } from "@angular/common";
 
 @Injectable()
 export class ConstantsService {
@@ -170,34 +171,6 @@ export class ConstantsService {
   }
 
   getISOStringWithTimezoneOffset(date: Date) {
-    const offset = -date.getTimezoneOffset();
-    const dif = offset >= 0 ? "+" : "-";
-
-    return (
-      date.getFullYear() +
-      "-" +
-      this.extend(date.getMonth() + 1) +
-      "-" +
-      this.extend(date.getDate()) +
-      "T" +
-      this.extend(date.getHours()) +
-      ":" +
-      this.extend(date.getMinutes()) +
-      ":" +
-      this.extend(date.getSeconds()) +
-      dif +
-      this.extend(offset / 60) +
-      ":" +
-      this.extend(offset % 60)
-    );
-  }
-
-  getISODateString(date: Date) {
-    return date.getFullYear() + "-" + this.extend(date.getMonth() + 1) + "-" + this.extend(date.getDate());
-  }
-
-  extend(num: number) {
-    const norm = Math.abs(Math.floor(num));
-    return (norm < 10 ? "0" : "") + norm;
+    return formatDate(date, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
   }
 }

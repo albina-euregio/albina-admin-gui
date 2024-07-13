@@ -1,4 +1,5 @@
 import * as Enums from "../enums/enums";
+import { formatDate } from "@angular/common";
 
 export class BulletinUpdateModel {
   public region: string;
@@ -52,40 +53,12 @@ export class BulletinUpdateModel {
       json["region"] = this.region;
     }
     if (this.date) {
-      json["date"] = this.getISOStringWithTimezoneOffset(this.date);
+      json["date"] = formatDate(this.date, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
     }
     if (this.status !== null && this.status !== undefined) {
       json["status"] = this.status;
     }
 
     return json;
-  }
-
-  private getISOStringWithTimezoneOffset(date: Date) {
-    const offset = -date.getTimezoneOffset();
-    const dif = offset >= 0 ? "+" : "-";
-
-    return (
-      date.getFullYear() +
-      "-" +
-      this.extend(date.getMonth() + 1) +
-      "-" +
-      this.extend(date.getDate()) +
-      "T" +
-      this.extend(date.getHours()) +
-      ":" +
-      this.extend(date.getMinutes()) +
-      ":" +
-      this.extend(date.getSeconds()) +
-      dif +
-      this.extend(offset / 60) +
-      ":" +
-      this.extend(offset % 60)
-    );
-  }
-
-  private extend(num: number) {
-    const norm = Math.abs(Math.floor(num));
-    return (norm < 10 ? "0" : "") + norm;
   }
 }

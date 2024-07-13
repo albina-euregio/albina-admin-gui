@@ -11,6 +11,7 @@ import {
   ObservationType,
   Stability,
 } from "./models/generic-observation.model";
+import { formatDate } from "@angular/common";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -109,7 +110,7 @@ export class ObservationFilterService {
     },
     Days: {
       type: LocalFilterTypes.Days,
-      toValue: (o) => this.constantsService.getISODateString(new Date(o.eventDate)),
+      toValue: (o) => this.getISODateString(new Date(o.eventDate)),
       all: [],
       selected: [],
       highlighted: [],
@@ -166,7 +167,7 @@ export class ObservationFilterService {
     if (this.startDate && this.endDate) {
       this.filterSelection.Days.all = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        this.filterSelection.Days.all.push(this.constantsService.getISODateString(i));
+        this.filterSelection.Days.all.push(this.getISODateString(i));
       }
     }
     this.dateRange = [this.startDate, this.endDate];
@@ -387,7 +388,7 @@ export class ObservationFilterService {
     if (selectedData.length < 1) {
       return eventDate.getDate() === this.endDate.getDate();
     } else {
-      return selectedData.indexOf(this.constantsService.getISODateString(eventDate)) === selectedData.length - 1;
+      return selectedData.indexOf(this.getISODateString(eventDate)) === selectedData.length - 1;
     }
   }
 
@@ -418,5 +419,9 @@ export class ObservationFilterService {
       (Array.isArray(testData) && testData.some((d) => d && selectedData.includes(d))) ||
       (typeof testData === "string" && selectedData.includes(testData))
     );
+  }
+
+  getISODateString(date: Date) {
+    return formatDate(date, "yyyy-MM-dd", "en-US");
   }
 }

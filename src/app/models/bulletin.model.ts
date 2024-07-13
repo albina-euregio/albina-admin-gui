@@ -1,8 +1,9 @@
 import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
-import { LangTexts, TextModel, convertLangTextsToJSON } from "./text.model";
+import { convertLangTextsToJSON, LangTexts, TextModel } from "./text.model";
 import { AuthorModel } from "./author.model";
 import * as Enums from "../enums/enums";
 import { RegionStatus } from "../enums/enums";
+import { formatDate } from "@angular/common";
 
 export class BulletinModel {
   public id: string;
@@ -459,15 +460,15 @@ export class BulletinModel {
     }
 
     if (this.publicationDate) {
-      json["publicationDate"] = this.getISOStringWithTimezoneOffsetUrlEncoded(this.publicationDate);
+      json["publicationDate"] = formatDate(this.publicationDate, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
     }
 
     const validity = Object();
     if (this.validFrom) {
-      validity["from"] = this.getISOStringWithTimezoneOffsetUrlEncoded(this.validFrom);
+      validity["from"] = formatDate(this.validFrom, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
     }
     if (this.validUntil) {
-      validity["until"] = this.getISOStringWithTimezoneOffsetUrlEncoded(this.validUntil);
+      validity["until"] = formatDate(this.validUntil, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
     }
     json["validity"] = validity;
 
@@ -586,34 +587,6 @@ export class BulletinModel {
     }
 
     return json;
-  }
-
-  private getISOStringWithTimezoneOffsetUrlEncoded(date: Date) {
-    const offset = -date.getTimezoneOffset();
-    const dif = offset >= 0 ? "+" : "-";
-
-    return (
-      date.getFullYear() +
-      "-" +
-      this.extend(date.getMonth() + 1) +
-      "-" +
-      this.extend(date.getDate()) +
-      "T" +
-      this.extend(date.getHours()) +
-      ":" +
-      this.extend(date.getMinutes()) +
-      ":" +
-      this.extend(date.getSeconds()) +
-      dif +
-      this.extend(offset / 60) +
-      ":" +
-      this.extend(offset % 60)
-    );
-  }
-
-  private extend(num: number) {
-    const norm = Math.abs(Math.floor(num));
-    return (norm < 10 ? "0" : "") + norm;
   }
 
   public getRegionsByStatus(type: RegionStatus): string[] {
