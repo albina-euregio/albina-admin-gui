@@ -1,6 +1,11 @@
 $header-nav-height: 60px;
 $observations-height: calc(100vh - $header-nav-height);
 
+@font-face {
+  font-family: snowsymbolsiacs;
+  src: url(app/observations/snowsymbolsiacs/snowsymbolsiacs-webfont.otf) format("opentype");
+}
+
 .layout-outer {
   margin: 0;
   padding: 0;
