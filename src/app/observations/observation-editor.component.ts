@@ -34,17 +34,15 @@ export class ObservationEditorComponent {
     ),
   );
 
-  newLocation() {
-    if (this.observation.latitude && this.observation.longitude) {
-      const floatLat = parseFloat(this.observation.latitude as any);
-      const floatLng = parseFloat(this.observation.longitude as any);
-
-      this.coordinateDataService.getCoordData(floatLat, floatLng).subscribe((data) => {
-        this.observation.elevation = data.height;
-        // this.observation.aspect = data.aspect as Aspect;
-        // console.log(data);
-      });
+  fetchElevation() {
+    if (!(this.observation.latitude && this.observation.longitude)) {
+      return;
     }
+    const floatLat = +this.observation.latitude;
+    const floatLng = +this.observation.longitude;
+    this.coordinateDataService.getCoordData(floatLat, floatLng).subscribe((data) => {
+      this.observation.elevation = data.height;
+    });
   }
 
   copyLatLng() {
@@ -53,12 +51,12 @@ export class ObservationEditorComponent {
 
   setLatitude(event: Event) {
     this.observation.latitude = (event.target as HTMLInputElement).value as unknown as number;
-    this.newLocation();
+    this.fetchElevation();
   }
 
   setLongitude(event: Event) {
     this.observation.longitude = (event.target as HTMLInputElement).value as unknown as number;
-    this.newLocation();
+    this.fetchElevation();
   }
 
   selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
@@ -72,7 +70,7 @@ export class ObservationEditorComponent {
       this.observation.latitude = lat;
       this.observation.longitude = lng;
 
-      this.newLocation();
+      this.fetchElevation();
     }, 0);
   }
 
@@ -144,7 +142,7 @@ export class ObservationEditorComponent {
           this.observation.latitude = latlng.lat;
           this.observation.longitude = latlng.lng;
 
-          this.newLocation();
+          this.fetchElevation();
         }
       }
     });
