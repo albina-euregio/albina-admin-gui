@@ -19,6 +19,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
+  public stress: Record<number, number> = {};
 
   constructor(
     public translate: TranslateService,
