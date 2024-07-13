@@ -7,18 +7,9 @@ import { LangTexts } from "../../models/text.model";
 export class CopyService {
   private copyTextcat: boolean;
   private copyBulletin: boolean;
-
   private textTextcat: string;
-  // lang
-  private textDe: string;
-  private textIt: string;
-  private textEn: string;
-  private textFr: string;
-  private textEs: string;
-  private textCa: string;
-  private textOc: string;
-
   private bulletin: BulletinModel;
+  private texts: LangTexts;
 
   constructor(public constantsService: ConstantsService) {
     this.copyTextcat = false;
@@ -41,72 +32,10 @@ export class CopyService {
     this.textTextcat = textTextcat;
   }
 
-  getTextDe(): string {
-    return this.textDe;
-  }
-
-  setTextDe(textDe: string) {
-    this.textDe = textDe;
-  }
-
-  getTextIt(): string {
-    return this.textIt;
-  }
-
-  setTextIt(textIt: string) {
-    this.textIt = textIt;
-  }
-
-  getTextEn(): string {
-    return this.textEn;
-  }
-
-  setTextEn(textEn: string) {
-    this.textEn = textEn;
-  }
-
-  getTextFr(): string {
-    return this.textFr;
-  }
-
-  setTextFr(textFr: string) {
-    this.textFr = textFr;
-  }
-
-  getTextEs(): string {
-    return this.textEs;
-  }
-
-  setTextEs(textEs: string) {
-    this.textEs = textEs;
-  }
-
-  getTextCa(): string {
-    return this.textCa;
-  }
-
-  setTextCa(textCa: string) {
-    this.textCa = textCa;
-  }
-
-  getTextOc(): string {
-    return this.textOc;
-  }
-
-  setTextOc(textOc: string) {
-    this.textOc = textOc;
-  }
-
   resetCopyTextcat() {
     this.copyTextcat = false;
     this.textTextcat = undefined;
-    this.textDe = undefined;
-    this.textIt = undefined;
-    this.textEn = undefined;
-    this.textFr = undefined;
-    this.textEs = undefined;
-    this.textCa = undefined;
-    this.textOc = undefined;
+    this.texts = undefined;
   }
 
   isCopyBulletin(): boolean {
@@ -131,24 +60,10 @@ export class CopyService {
   }
 
   setFromLangTexts(l: LangTexts) {
-    this.setTextDe(l.de);
-    this.setTextIt(l.it);
-    this.setTextEn(l.en);
-    this.setTextFr(l.fr);
-    this.setTextEs(l.es);
-    this.setTextCa(l.ca);
-    this.setTextOc(l.oc);
+    this.texts = { ...l };
   }
 
   get toLangTexts(): LangTexts {
-    return {
-      de: this.textDe,
-      it: this.textIt,
-      en: this.textEn,
-      fr: this.textFr,
-      es: this.textEs,
-      ca: this.textCa,
-      oc: this.textOc,
-    };
+    return { ...this.texts };
   }
 }
