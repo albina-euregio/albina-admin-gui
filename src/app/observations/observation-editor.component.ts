@@ -76,28 +76,28 @@ export class ObservationEditorComponent {
     }, 0);
   }
 
-  setEventDate(event) {
-    const date = (this.observation.eventDate as string) || "T00:00";
-    const time = date.split("T")[1];
-    this.observation.eventDate = `${event.target.value}T${time}`;
+  setEventDate(event: InputEvent) {
+    const date = (event.target as HTMLInputElement).value;
+    const time = this.getTime(this.observation.eventDate);
+    this.observation.eventDate = `${date}T${time}`;
   }
 
-  setReportDate(event) {
-    const date = (this.observation.reportDate as string) || "T00:00";
-    const time = date.split("T")[1];
-    this.observation.reportDate = `${event.target.value}T${time}`;
+  setReportDate(event: InputEvent) {
+    const date = (event.target as HTMLInputElement).value;
+    const time = this.getTime(this.observation.reportDate);
+    this.observation.reportDate = `${date}T${time}`;
   }
 
-  setEventTime(event) {
-    const fullDate = (this.observation.eventDate as string) || "T00:00";
-    const date = fullDate.split("T")[0];
-    this.observation.eventDate = `${date}T${event.target.value}`;
+  setEventTime(event: InputEvent) {
+    const date = this.getDate(this.observation.eventDate);
+    const time = (event.target as HTMLInputElement).value;
+    this.observation.eventDate = `${date}T${time}`;
   }
 
-  setReportTime(event) {
-    const fullDate = (this.observation.reportDate as string) || "T00:00";
-    const date = fullDate.split("T")[0];
-    this.observation.reportDate = `${date}T${event.target.value}`;
+  setReportTime(event: InputEvent) {
+    const date = this.getDate(this.observation.reportDate);
+    const time = (event.target as HTMLInputElement).value;
+    this.observation.reportDate = `${date}T${time}`;
   }
 
   getDate(obj: string | Date) {
