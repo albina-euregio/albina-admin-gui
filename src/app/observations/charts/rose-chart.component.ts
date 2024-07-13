@@ -45,22 +45,7 @@ export class RoseChartComponent extends BaseComponent {
         color: "#839194",
         fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
       },
-      formatter: (params: CallbackDataParams) => {
-        const valKey = params.dimensionNames.indexOf(params.seriesName);
-        let val = params.value[valKey];
-        if (params.seriesName === "highlighted") {
-          val = params.value[1];
-        }
-        return (
-          '<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:' +
-          params.color +
-          ';"></span><span style="font-size:14px;color:#839194;font-weight:400;margin-left:2px">' +
-          params.name +
-          '</span><span style="float:right;margin-left:20px;font-size:14px;color:#839194;font-weight:900">' +
-          val +
-          "</span>"
-        );
-      },
+      formatter: (params: CallbackDataParams) => this.formatTooltip(params),
     },
     // dataset: {
     //     // Provide a set of data.
@@ -91,9 +76,7 @@ export class RoseChartComponent extends BaseComponent {
       },
       axisLabel: {
         show: true,
-        formatter: (params: string) => {
-          return this.getItemLabel(params);
-        },
+        formatter: (params: string) => this.getItemLabel(params),
         //interval: 1,
         rich: {
           labelhighlight: {

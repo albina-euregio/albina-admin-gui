@@ -3,6 +3,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { LocalFilterTypes } from "../models/generic-observation.model";
 import { ObservationFilterService, type GenericFilterToggleData } from "../observation-filter.service";
 import { ObservationMarkerService } from "../observation-marker.service";
+import type { CallbackDataParams } from "echarts/types/dist/shared";
 
 @Component({
   selector: "app-base-chart",
@@ -147,5 +148,22 @@ export class BaseComponent {
     } else {
       return formattedResult;
     }
+  }
+
+  formatTooltip(params: CallbackDataParams) {
+    const valKey = params.dimensionNames.indexOf(params.seriesName);
+    let val = params.value[valKey];
+    if (params.seriesName === "highlighted") {
+      val = params.value[1];
+    }
+    return (
+      '<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:' +
+      params.color +
+      ';"></span><span style="font-size:14px;color:#839194;font-weight:400;margin-left:2px">' +
+      params.name +
+      '</span><span style="float:right;margin-left:20px;font-size:14px;color:#839194;font-weight:900">' +
+      val +
+      "</span>"
+    );
   }
 }
