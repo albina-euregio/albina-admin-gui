@@ -352,13 +352,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     );
 
     this.mapService.layers["weather-stations"].clearLayers();
-    this.localWeatherStations = this.weatherStations.filter(
-      (weatherStation) =>
-        this.filter.isHighlighted(weatherStation) || this.filter.isWeatherStationSelected(weatherStation),
+    this.localWeatherStations = this.weatherStations.filter((weatherStation) =>
+      this.filter.isWeatherStationSelected(weatherStation),
     );
     this.localWeatherStations.forEach((weatherStation) => {
       const marker = this.markerService
-        .createMarker(weatherStation, this.filter.isHighlighted(weatherStation))
+        .createMarker(weatherStation, false)
         ?.on("click", () => this.onObservationClick(weatherStation))
         ?.addTo(this.mapService.layers["weather-stations"]);
     });
