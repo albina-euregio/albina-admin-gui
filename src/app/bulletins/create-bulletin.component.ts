@@ -921,6 +921,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         // do not update active bulletin (this is currently edited) except it is disabled
         if (this.isDisabled()) {
           this.activeBulletin = bulletin;
+        } else {
+          if (this.activeBulletin.getSuggestedRegions() !== bulletin.getSuggestedRegions()) {
+            this.activeBulletin.setSuggestedRegions(bulletin.getSuggestedRegions());
+          }
+          if (this.activeBulletin.getSavedRegions() !== bulletin.getSavedRegions()) {
+            this.activeBulletin.setSavedRegions(bulletin.getSavedRegions());
+          }
         }
         bulletinsList.push(this.activeBulletin);
         if (this.activeBulletin.hasDaytimeDependency) {
