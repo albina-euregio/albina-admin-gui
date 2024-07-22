@@ -1,4 +1,4 @@
-import { GenericObservation, findExistingObservation } from "../src/app/observations/models/generic-observation.model";
+import { GenericObservation, findExistingObservation } from "./models";
 import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import { createConnection, insertObservation, selectObservations } from "./database";
 import { fetchLawisIncidents } from "./fetch_lawis_incident";

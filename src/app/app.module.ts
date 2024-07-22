@@ -31,9 +31,6 @@ import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
 
-// Pipes
-import { PipeModule } from "./pipes/pipes.module";
-
 import { AuthGuard } from "./guards/auth.guard";
 
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -116,7 +113,6 @@ registerLocaleData(localeOc, "oc");
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    PipeModule.forRoot(),
     ModalModule.forRoot(),
     TranslateModule.forRoot(),
   ],

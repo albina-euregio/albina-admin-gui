@@ -100,7 +100,7 @@ app-avalanche-problem-preview,
 .avalanche-problem-preview__info-item {
   margin-right: $space-4;
 }
-.avalanche-problem-preview__danger-rating {
+.avalanche-problem-preview__danger-rating > img {
   height: $space-8;
   width: auto;
 }

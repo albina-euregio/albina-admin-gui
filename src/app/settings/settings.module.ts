@@ -7,22 +7,12 @@ import { SettingsComponent } from "./settings.component";
 import { SettingsRoutingModule } from "./settings-routing.module";
 import { TranslateModule } from "@ngx-translate/core";
 
-// Pipes
-import { PipeModule } from "../pipes/pipes.module";
-
 import { AlertModule } from "ngx-bootstrap/alert";
 import { PasswordMismatchValidatorDirective } from "./password-mismatch.directive";
 import { Password2MismatchValidatorDirective } from "./password2-mismatch.directive";
 
 @NgModule({
-  imports: [
-    SettingsRoutingModule,
-    FormsModule,
-    CommonModule,
-    TranslateModule,
-    PipeModule.forRoot(),
-    AlertModule.forRoot(),
-  ],
+  imports: [SettingsRoutingModule, FormsModule, CommonModule, TranslateModule, AlertModule.forRoot()],
   declarations: [SettingsComponent, PasswordMismatchValidatorDirective, Password2MismatchValidatorDirective],
 })
 export class SettingsModule {}

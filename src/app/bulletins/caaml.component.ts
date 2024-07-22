@@ -3,6 +3,7 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { Router } from "@angular/router";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   templateUrl: "caaml.component.html",
@@ -25,6 +26,7 @@ export class CaamlComponent implements OnInit {
 
   constructor(
     public bulletinsService: BulletinsService,
+    public translateService: TranslateService,
     private router: Router,
     private modalService: BsModalService,
   ) {

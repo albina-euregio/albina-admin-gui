@@ -21,3 +21,20 @@
 .create-bulletin__map--am {
     visibility: visible;
 }
+
+.leaflet-bottom.leaflet-right {
+    .leaflet-control {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      float: none;
+    }
+    .leaflet-control-attribution {
+      position: relative;
+      font-size: 0.6rem;
+      background-color: rgba($white, 0.5) !important;
+      transform-origin: bottom left;
+      transform: translateX(100%) rotate(-90deg);
+    }
+  }
+  

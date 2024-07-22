@@ -1,6 +1,6 @@
 .floating-action {
   position: absolute;
-  z-index: 1500;
+  z-index: 1030;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
@@ -32,7 +32,18 @@
   white-space: nowrap;
 }
 
-@media screen and (max-width: 768px) {
+@include media-breakpoint-down(md) {
+  .floating-action {
+    border-bottom: 1px solid $gray-300;
+    position: fixed;
+    top: 36px;
+    width: 100%;
+    flex-flow: row;
+    align-items: center;
+  }
+}
+
+@include media-breakpoint-down(sm) {
   .floating-action {
     flex-flow: column;
     align-items: flex-start;

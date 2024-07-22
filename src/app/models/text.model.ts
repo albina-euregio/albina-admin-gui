@@ -1,5 +1,3 @@
-import * as Enums from "../enums/enums";
-
 export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"] as const);
 
 export type LangTexts = Record<(typeof LANGUAGES)[number], string>;

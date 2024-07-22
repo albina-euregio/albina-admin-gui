@@ -37,59 +37,24 @@
 
   <div class="avalanche-problem-detail__override">
     <!-- danger rating -->
-    <img
+    <app-danger-rating
+      [value]="dangerRating.missing"
       *ngIf="!dangerRatingEnabled && isDangerRating(dangerRating.missing)"
-      src="./assets/img/danger_rating_missing.svg"
     />
-    <img
-      *ngIf="dangerRatingEnabled && !isDangerRating(dangerRating.low)"
-      src="./assets/img/danger_rating_low_bw.svg"
-      (click)="overrideDangerRating($event, dangerRating.low)"
-    />
-    <img
-      *ngIf="isDangerRating(dangerRating.low)"
-      src="./assets/img/danger_rating_low_c.svg"
-      (click)="overrideDangerRating($event, dangerRating.low)"
-    />
-    <img
-      *ngIf="dangerRatingEnabled && !isDangerRating(dangerRating.moderate)"
-      src="./assets/img/danger_rating_moderate_bw.svg"
-      (click)="overrideDangerRating($event, dangerRating.moderate)"
-    />
-    <img
-      *ngIf="isDangerRating(dangerRating.moderate)"
-      src="./assets/img/danger_rating_moderate_c.svg"
-      (click)="overrideDangerRating($event, dangerRating.moderate)"
-    />
-    <img
-      *ngIf="dangerRatingEnabled && !isDangerRating(dangerRating.considerable)"
-      src="./assets/img/danger_rating_considerable_bw.svg"
-      (click)="overrideDangerRating($event, dangerRating.considerable)"
-    />
-    <img
-      *ngIf="isDangerRating(dangerRating.considerable)"
-      src="./assets/img/danger_rating_considerable_c.svg"
-      (click)="overrideDangerRating($event, dangerRating.considerable)"
-    />
-    <img
-      *ngIf="dangerRatingEnabled && !isDangerRating(dangerRating.high)"
-      src="./assets/img/danger_rating_high_bw.svg"
-      (click)="overrideDangerRating($event, dangerRating.high)"
-    />
-    <img
-      *ngIf="isDangerRating(dangerRating.high)"
-      src="./assets/img/danger_rating_high_c.svg"
-      (click)="overrideDangerRating($event, dangerRating.high)"
-    />
-    <img
-      *ngIf="dangerRatingEnabled && !isDangerRating(dangerRating.very_high)"
-      src="./assets/img/danger_rating_very_high_bw.svg"
-      (click)="overrideDangerRating($event, dangerRating.very_high)"
-    />
-    <img
-      *ngIf="isDangerRating(dangerRating.very_high)"
-      src="./assets/img/danger_rating_very_high_c.svg"
-      (click)="overrideDangerRating($event, dangerRating.very_high)"
+    <app-danger-rating
+      *ngFor="
+        let rating of [
+          dangerRating.low,
+          dangerRating.moderate,
+          dangerRating.considerable,
+          dangerRating.high,
+          dangerRating.very_high
+        ]
+      "
+      [value]="rating"
+      [style.display]="isDangerRating(rating) || dangerRatingEnabled ? '' : 'none'"
+      [style.filter]="!isDangerRating(rating) ? 'grayscale()' : undefined"
+      (click)="overrideDangerRating($event, rating)"
     />
   </div>
 
@@ -186,7 +151,7 @@
     >
       <i class="ph ph-plus"></i>
     </button>
-    <div *ngIf="!disabled" class="form-check ml-3">
+    <div *ngIf="!disabled" class="form-check ml-3" style="margin-left: 10px">
       <input
         [id]="forLabelId('overrideCheckbox')"
         type="checkbox"

@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import * as types from "./qfa-types";
 import { QfaFile } from "./qfa-file.model";
 import { GetFilenamesService } from "./filenames.service";
 import { GetDustParamService } from "./dust.service";
 import { ParamService } from "./param.service";
-import { R3BoundTarget } from "@angular/compiler";
 
 export type QfaResult = {
   data: types.data;

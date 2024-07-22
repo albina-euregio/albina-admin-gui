@@ -88,8 +88,8 @@ export class RegionsService {
     return data;
   }
 
-  getRegionName(id: string) {
-    return this.getRegionNames()[id];
+  getRegionName(id: string): string {
+    return this.getRegionNames()[id] ?? id;
   }
 }
 

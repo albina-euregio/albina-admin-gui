@@ -1,4 +1,7 @@
-<div class="animated fadeIn create-bulletin">
+<div
+  class="animated fadeIn create-bulletin"
+  [ngClass]="{ 'create-bulletin--modal': showNewBulletinModal && activeBulletin }"
+>
   <!-- Sidebar -->
   <aside class="create-bulletin__sidebar" [ngClass]="{ hidden: !isBulletinSidebarVisible }">
     <!-- Date Switch -->
@@ -12,8 +15,8 @@
 
       <div class="create-bulletin__date">
         <h1 class="create-bulletin__current-date font-m-bold">
-          {{ bulletinsService.getActiveDate() | localizedDate: "EEEE," }}<br />
-          {{ bulletinsService.getActiveDate() | localizedDate: "d. MMMM y" }}
+          {{ bulletinsService.getActiveDate() | date: "EEEE," : undefined : translateService.currentLang }}<br />
+          {{ bulletinsService.getActiveDate() | date: "longDate" : undefined : translateService.currentLang }}
         </h1>
         <nav class="btn-group create-bulleting__days-nav">
           <button
@@ -281,7 +284,9 @@
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
         <h5 class="font-s-bold">
-          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }}
+          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }} ({{
+            getOwnBulletins().length
+          }})
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
@@ -450,7 +455,7 @@
       <!-- Foreign regions -->
       <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()">
         <h5 class="font-s-bold">
-          {{ "bulletins.create.foreignRegions" | translate }}
+          {{ "bulletins.create.foreignRegions" | translate }} ({{ getForeignBulletins().length }})
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1">
@@ -476,9 +481,7 @@
           class="create-bulletin__region-divider foreign"
           (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)"
         >
-          <h5 class="font-s-medium">
-            {{ externalRegion.key.name }}
-          </h5>
+          <h5 class="font-s-medium">{{ externalRegion.key.name }} ({{ externalRegion.value.length }})</h5>
           <div class="btn-group region-divider__actions">
             <div class="region-divider__actions-dropdown mr-1">
               <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
@@ -507,7 +510,7 @@
         activeBulletin !== undefined && !editRegions && (isCompactMapLayout || comparedBulletin !== undefined),
       'create-bulletin__compact-layout--compare':
         activeBulletin !== undefined && !editRegions && comparedBulletin !== undefined,
-      'full-width': !isBulletinSidebarVisible,
+      'full-width': !isBulletinSidebarVisible
     }"
   >
     <!-- Active bulletin -->
@@ -602,7 +605,7 @@
     [ngClass]="{ 'region-thumb--active': bulletin === activeBulletin }"
   >
     <div class="region-thumb__details">
-      <h6 class="region-thumb__title font-s-medium">
+      <h6 class="region-thumb__title font-s-medium" role="button">
         <span *ngIf="saveError.has(bulletin.id)">* </span>
         <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 0">{{
           regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0])
@@ -611,7 +614,7 @@
           + {{ bulletin.getSavedAndPublishedRegions().length - 1 }}
         </span>
       </h6>
-      <p class="region-thumb__author font-s text-secondary">{{ bulletin.getAuthor().getName() }}</p>
+      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.getAuthor().getName() }}</p>
 
       <div class="region-thumb__avalanche-info">
         <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.forenoon"></app-danger-rating-icon>
@@ -861,13 +864,13 @@
         <tr
           *ngFor="let date of bulletinsService.dates"
           [ngClass]="{
-            'bulletins-table__active--day': isActiveDate(date),
+            'bulletins-table__active--day': isActiveDate(date)
           }"
         >
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
             <div class="bulletins-table__day--small">
               <time>
-                {{ date | localizedDate: "fullDate" }}
+                {{ date | date: "fullDate" }}
               </time>
             </div>
           </td>

@@ -2,17 +2,19 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { flatMap, last, map } from "rxjs/operators";
-import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
+import { GenericObservation } from "app/observations/models/generic-observation.model";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ConstantsService } from "../../providers/constants-service/constants.service";
 import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AlpsolutProfileService {
+  private readonly TOKEN_URL = environment.apiBaseUrl + "../api_ext/widget.alpsolut.eu/";
+  private readonly WEB = "https://salient.alpsolut.eu/v1/geo/stations";
+
   constructor(
     private http: HttpClient,
     private authenticationService: AuthenticationService,
-    private constantsService: ConstantsService,
     private sanitizer: DomSanitizer,
   ) {}
 
@@ -34,7 +36,7 @@ export class AlpsolutProfileService {
       ["last three days + long forecast", -3, +15],
     ];
     return this.http
-      .get(this.constantsService.observationApi[ForecastSource.alpsolut_profile], {
+      .get(this.TOKEN_URL, {
         headers: this.authenticationService.newAuthHeader(),
         observe: "response",
         responseType: "text",
@@ -44,7 +46,7 @@ export class AlpsolutProfileService {
         flatMap((r) => {
           const apiKey = r.body.trim();
           const headers = { "X-API-KEY": apiKey };
-          const url = this.constantsService.observationWeb[ForecastSource.alpsolut_profile];
+          const url = this.WEB;
           return this.http
             .get<AlpsolutFeatureCollection>(url, { headers, params })
             .pipe(

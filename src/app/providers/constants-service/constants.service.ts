@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ForecastSource, ObservationSource, ObservationType } from "app/observations/models/generic-observation.model";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
 import * as pkg from "../../../../package.json";
@@ -13,46 +12,6 @@ export class ConstantsService {
     version: version.replace(/^\^/, ""),
     homepage: `https://www.npmjs.com/package/${name}/v/${version.replace(/^\^/, "")}`,
   }));
-
-  public snowpackModelsUrl: string = "https://avalanche.report/alpsolut/html/";
-
-  public observationApi = {
-    $: "https://admin.avalanche.report/observations",
-    [ObservationType.Webcam]: "https://admin.avalanche.report/webcams",
-    [ObservationSource.AvalancheWarningService]: "https://admin.avalanche.report/weather-stations",
-    [ObservationSource.Observer]: "https://admin.avalanche.report/observers",
-    [ObservationSource.SnowLine]: "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson",
-
-    "lola-cads.info": "https://admin.avalanche.report/observations/www.lola-cads.info/api/LWDprocessPhotoURL",
-    "forecast.uoa.gr": "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png",
-    [ForecastSource.alpsolut_profile]: "https://admin.avalanche.report/observations/widget.alpsolut.eu/",
-    [ForecastSource.multimodel]: "https://static.avalanche.report/zamg/zamg/",
-    [ForecastSource.observed_profile]:
-      "https://models.avalanche.report/profiles/observed-profiles/observed_profiles.json",
-    [ObservationSource.Lawis]: "https://admin.avalanche.report/lawis/public/",
-    [ObservationSource.LoLaKronos]:
-      "https://admin.avalanche.report/observations/lola-kronos.info/api/dataexport/dataFromToken/",
-    [ObservationSource.WikisnowECT]: "https://admin.avalanche.report/observations/wikisnow/ect/ect-json.json",
-    [ObservationSource.FotoWebcamsEU]:
-      "https://admin.avalanche.report/observations/foto-webcam.eu/webcam/include/metadata.php",
-    "private.foto-webcam.eu": "https://admin.avalanche.report/observations/private.foto-webcam.eu/",
-    [ObservationSource.Panomax]: "https://admin.avalanche.report/observations/api.panomax.com/1.0",
-  };
-
-  public observationWeb = {
-    [ForecastSource.alpsolut_profile]: "https://salient.alpsolut.eu/v1/geo/stations",
-    [ObservationSource.LoLaKronos]: "https://www.lola-kronos.info/",
-    [`${ObservationSource.Lawis}-incident` as const]: "https://lawis.at/incident/#{{id}}",
-    [`${ObservationSource.Lawis}-${ObservationType.Profile}` as const]:
-      "https://lawis.at/lawis_api/v2_2/files/profiles/snowprofile_{{id}}.pdf",
-    [ObservationSource.SnowLine]:
-      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}",
-  };
-
-  public rechenraumApi = "https://voibos.rechenraum.com/voibos/voibos";
-
-  public osmNominatimApi = "https://nominatim.openstreetmap.org/search";
-  public osmNominatimCountries = "at,it";
 
   // region (ISO-3166)
   public codeSwitzerland: string = "CH";
@@ -73,11 +32,6 @@ export class ConstantsService {
   public roleForecaster: string = "FORECASTER";
   public roleForeman: string = "FOREMAN";
   public roleObserver: string = "OBSERVER";
-
-  public mapBoundaryN: number = 48.0;
-  public mapBoundaryE: number = 13.5;
-  public mapBoundaryS: number = 45.0;
-  public mapBoundaryW: number = 9.0;
 
   public autoSaveIntervall: number = 10000;
 

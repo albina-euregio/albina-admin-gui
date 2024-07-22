@@ -47,6 +47,25 @@ export enum Stability {
   very_poor = "very_poor",
 }
 
+export enum WeatherStationParameter {
+  GlobalRadiation = "GlobalRadiation",
+  SnowHeight = "SnowHeight",
+  SnowDifference24h = "SnowDifference24h",
+  SnowDifference48h = "SnowDifference48h",
+  SnowDifference72h = "SnowDifference72h",
+  AirTemperature = "AirTemperature",
+  AirTemperatureMax = "AirTemperatureMax",
+  AirTemperatureMin = "AirTemperatureMin",
+  SurfaceTemperature = "SurfaceTemperature",
+  SurfaceHoar = "SurfaceHoar",
+  SurfaceHoarCalc = "SurfaceHoarCalc",
+  DewPoint = "DewPoint",
+  RelativeHumidity = "RelativeHumidity",
+  WindDirection = "WindDirection",
+  WindSpeed = "WindSpeed",
+  WindGust = "WindGust",
+}
+
 export enum ObservationSource {
   AvalancheWarningService = "AvalancheWarningService",
   Observer = "Observer",

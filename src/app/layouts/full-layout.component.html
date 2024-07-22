@@ -40,7 +40,7 @@
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']"> SNOWPACK </a>
         </li>
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awesome']"> AWSOME </a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']"> AWSOME </a>
         </li>
       </ul>
     </div>
@@ -62,10 +62,10 @@
             <h6 class="dropdown-header">{{ "menu.language" | translate }}</h6>
           </li>
           <li *ngFor="let lang of translateService.langs">
-            <a class="dropdown-item" (click)="settingsService.setLangString(lang)"
-              >{{ "menu." + lang | translate
-              }}<i *ngIf="settingsService.getLangString() === lang" class="ph ph-check"></i
-            ></a>
+            <a class="dropdown-item" (click)="settingsService.setLangString(lang)" role="button">
+              {{ "menu." + lang | translate }}
+              <i *ngIf="settingsService.getLangString() === lang" class="ph ph-check"></i>
+            </a>
           </li>
         </ul>
       </li>
@@ -91,13 +91,15 @@
           </li>
 
           <li *ngFor="let region of authenticationService.getCurrentAuthorRegions()">
-            <a class="dropdown-item" (click)="changeRegion(region)"
-              ><i class="ph ph-globe"></i>{{ regionsService.getRegionName(region.id)
-              }}<i *ngIf="authenticationService.getActiveRegionId() === region.id" class="ph ph-check"></i
-            ></a>
+            <a class="dropdown-item" (click)="changeRegion(region)" role="button">
+              <i class="ph ph-globe"></i>{{ regionsService.getRegionName(region.id) }}
+              <i *ngIf="authenticationService.getActiveRegionId() === region.id" class="ph ph-check"></i>
+            </a>
           </li>
 
-          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
 
           <li>
             <h6 class="dropdown-header">{{ "menu.education" | translate }}</h6>
@@ -107,7 +109,9 @@
               ><i class="ph ph-graduation-cap"></i> {{ "menu.education" | translate }}</a
             >
           </li>
-          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
 
           <li>
             <h6 class="dropdown-header">{{ "menu.settings" | translate }}</h6>
@@ -166,7 +170,7 @@
         <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']"> SNOWPACK </a>
       </li>
       <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awesome']"> AWSOME </a>
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']"> AWSOME </a>
       </li>
     </ul>
   </div>

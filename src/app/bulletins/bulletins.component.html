@@ -19,7 +19,7 @@
         <td [attr.data-label]="'bulletins.table.title.date' | translate">
           <div class="bulletins-table__day">
             <time>
-              {{ date | localizedDate: "fullDate" }}
+              {{ date | date: "fullDate" : undefined : translateService.currentLang }}
             </time>
             <div class="bulletins-table__day-buttons-div">
               <button
@@ -159,5 +159,19 @@
         </td>
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="999">
+          <button
+            *ngFor="let days of [3, 7, 13]"
+            class="btn btn-icon"
+            (click)="bulletinsService.init({ days: bulletinsService.dates.length + days })"
+            title="{{ 'bulletins.status.loadMoreBulletins' | translate: { count: days } }}"
+          >
+            <i class="ph ph-dots-three-vertical"></i>
+          </button>
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </div>

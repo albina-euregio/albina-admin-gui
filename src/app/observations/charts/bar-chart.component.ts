@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { BaseComponent } from "./base-chart.component";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { CommonModule, formatDate } from "@angular/common";
-import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
+import { CommonModule } from "@angular/common";
+import { NgxEchartsDirective } from "ngx-echarts";
 import type { EChartsOption } from "echarts";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { ObservationMarkerService } from "../observation-marker.service";

@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Observation, EventType } from "./models/observation.model";
-import { Feature, FeatureCollection, Point } from "geojson";
+import { Feature, Point } from "geojson";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { geocoders } from "leaflet-control-geocoder";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";

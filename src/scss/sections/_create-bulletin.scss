@@ -1,6 +1,8 @@
-$header-nav-height: 56px;
+$header-nav-height: 60px;
 $bulletin-height: calc(100vh - $header-nav-height);
 $compact-map-height: 300px;
+$modal-height-md: 59px;
+$modal-height-sm: 104px;
 // Layout
 .create-bulletin {
     display: flex;
@@ -351,11 +353,21 @@ app-danger-rating-icon {
     .create-bulletin__region-form {
         min-width: 0 !important;
     }
+
+    .create-bulletin--modal {
+        height: calc(100vh - $header-nav-height - $modal-height-md);
+        padding-top: $modal-height-md;
+    }
 }
 
 @include media-breakpoint-down(sm) {
     .create-bulletin__region-form,
     .create-bulletin__compact-layout--compare .create-bulletin__region-form {
         width: 100%;
+    }
+
+    .create-bulletin--modal {
+        height: calc(100vh - $header-nav-height - $modal-height-sm);
+        padding-top: $modal-height-sm;
     }
 }

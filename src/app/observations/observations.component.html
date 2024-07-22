@@ -21,7 +21,7 @@
               <div class="dropdown">
                 <button
                   type="button"
-                  class="btn btn-primary dropdown-toggle"
+                  class="btn dropdown-toggle"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   data-bs-auto-close="outside"
@@ -49,7 +49,7 @@
               <div class="dropdown">
                 <button
                   type="button"
-                  class="btn btn-primary dropdown-toggle"
+                  class="btn dropdown-toggle"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   data-bs-auto-close="outside"
@@ -82,20 +82,6 @@
                 (ngModelChange)="setDate()"
                 [bsConfig]="{ dateInputFormat: 'DD.MM.YYYY' }"
               />
-              <div class="obs-switch">
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 1 })">
-                  <span class="switch-text">1d</span>
-                </div>
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 2 })">
-                  <span class="switch-text">2d</span>
-                </div>
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 3 })">
-                  <span class="switch-text">3d</span>
-                </div>
-                <div class="obs-switch-item 0is-active" (click)="loadObservations({ days: 7 })">
-                  <span class="switch-text">7d</span>
-                </div>
-              </div>
             </div>
           </div>
           <!-- /global-bar-left -->
@@ -107,7 +93,7 @@
                 type="button"
                 (click)="newObservation()"
                 class="btn btn-bare"
-                title="'admin.observations.newObservation' | translate"
+                title="{{ 'admin.observations.newObservation' | translate }}"
               >
                 <i class="ph ph-plus-circle"></i>
               </button>
@@ -118,7 +104,7 @@
                 type="button"
                 (click)="exportObservations()"
                 class="btn btn-bare"
-                title="'admin.observations.exportObservations' | translate"
+                title="{{ 'admin.observations.exportObservations' | translate }}"
               >
                 <i class="ph ph-download-simple"></i>
               </button>
@@ -129,7 +115,7 @@
                 type="button"
                 class="btn btn-bare"
                 (click)="toggleFilters()"
-                title="'admin.observations.toggleFilterBar' | translate"
+                title="{{ 'admin.observations.toggleFilterBar' | translate }}"
               >
                 <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
                 <i *ngIf="!layoutFilters" class="ph ph-caret-left"></i>
@@ -154,11 +140,195 @@
         </div>
       </div>
 
+      <div *ngIf="layout === 'gallery'" class="layout-gallery">
+        <div class="card" style="height: 100%">
+          <div class="card-body" style="overflow-y: auto; overflow-x: auto">
+            <app-observation-gallery
+              [observations]="localWebcams"
+              (observationClick)="onObservationClick($event)"
+            ></app-observation-gallery>
+          </div>
+        </div>
+      </div>
+
       <!-- !layout-map -->
       <div class="layout-map">
         <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
       </div>
       <!-- /layout-map -->
+
+      <!-- !layer-switch -->
+      <div *ngIf="layout === 'map'" class="layer-switch">
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': showObservations }"
+          (click)="toggleObservations()"
+          title="{{ 'observations.layers.observations' | translate }}"
+        >
+          <i class="ph ph-circle" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': showWebcams }"
+          (click)="toggleWebcams()"
+          title="{{ 'observations.layers.webcams' | translate }}"
+        >
+          <i class="ph ph-webcam" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': showObservers }"
+          (click)="toggleObservers()"
+          title="{{ 'observations.layers.observers' | translate }}"
+        >
+          <i class="ph ph-eye" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': showWeatherStations }"
+          (click)="toggleWeatherStations()"
+          title="{{ 'observations.layers.weatherStations' | translate }}"
+        >
+          <i class="ph ph-chart-line" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <!-- !parameter-switch -->
+      <div *ngIf="showWeatherStations && layout === 'map'" class="parameter-switch">
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowHeight' }"
+          (click)="selectParameter('SnowHeight')"
+          title="{{ 'observations.weatherStations.tooltips.snowHeight' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        <!--
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowDifference24h' }"
+          (click)="selectParameter('SnowDifference24h')"
+          title="{{ 'observations.weatherStations.tooltips.snowDifference24h' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowDifference48h' }"
+          (click)="selectParameter('SnowDifference48h')"
+          title="{{ 'observations.weatherStations.tooltips.snowDifference48h' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SnowDifference72h' }"
+          (click)="selectParameter('SnowDifference72h')"
+          title="{{ 'observations.weatherStations.tooltips.snowDifference72h' | translate }}"
+        >
+          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+        </div>
+        -->
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'AirTemperature' }"
+          (click)="selectParameter('AirTemperature')"
+          title="{{ 'observations.weatherStations.tooltips.airTemperature' | translate }}"
+        >
+          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
+        </div>
+        <!--
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'AirTemperatureMax' }"
+          (click)="selectParameter('AirTemperatureMax')"
+          title="{{ 'observations.weatherStations.tooltips.airTemperatureMax' | translate }}"
+        >
+          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'AirTemperatureMin' }"
+          (click)="selectParameter('AirTemperatureMin')"
+          title="{{ 'observations.weatherStations.tooltips.airTemperatureMin' | translate }}"
+        >
+          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
+        </div>
+        -->
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceTemperature' }"
+          (click)="selectParameter('SurfaceTemperature')"
+          title="{{ 'observations.weatherStations.tooltips.surfaceTemperature' | translate }}"
+        >
+          <i class="ph ph-thermometer-cold" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'DewPoint' }"
+          (click)="selectParameter('DewPoint')"
+          title="{{ 'observations.weatherStations.tooltips.dewPoint' | translate }}"
+        >
+          <i class="ph ph-thermometer-hot" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceHoar' }"
+          (click)="selectParameter('SurfaceHoar')"
+          title="{{ 'observations.weatherStations.tooltips.surfaceHoar' | translate }}"
+        >
+          <i class="ph ph-caret-down" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'SurfaceHoarCalc' }"
+          (click)="selectParameter('SurfaceHoarCalc')"
+          title="{{ 'observations.weatherStations.tooltips.surfaceHoarCalc' | translate }}"
+        >
+          <i class="ph ph-caret-line-down" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindSpeed' }"
+          (click)="selectParameter('WindSpeed')"
+          title="{{ 'observations.weatherStations.tooltips.windSpeed' | translate }}"
+        >
+          <i class="ph ph-wind" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindGust' }"
+          (click)="selectParameter('WindGust')"
+          title="{{ 'observations.weatherStations.tooltips.windGust' | translate }}"
+        >
+          <i class="ph ph-tornado" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'WindDirection' }"
+          (click)="selectParameter('WindDirection')"
+          title="{{ 'observations.weatherStations.tooltips.windDirection' | translate }}"
+        >
+          <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'RelativeHumidity' }"
+          (click)="selectParameter('RelativeHumidity')"
+          title="{{ 'observations.weatherStations.tooltips.relativeHumidity' | translate }}"
+        >
+          <i class="ph ph-drop" aria-hidden="true"></i>
+        </div>
+        <div
+          class="obs-button"
+          [ngClass]="{ 'is-active': markerService.weatherStationLabel === 'GlobalRadiation' }"
+          (click)="selectParameter('GlobalRadiation')"
+          title="{{ 'observations.weatherStations.tooltips.globalRadiation' | translate }}"
+        >
+          <i class="ph ph-sun" aria-hidden="true"></i>
+        </div>
+      </div>
+      <!-- /parameter-switch -->
     </div>
     <!-- /layout-left -->
 
@@ -236,7 +406,7 @@
     <!-- !layout-switch -->
     <div class="layout-switch">
       <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
-        <span class="button-icon ph ph-map"></span>
+        <span class="button-icon ph ph-map-trifold"></span>
         <span class="button-text">
           {{ "admin.observations.map" | translate }}
         </span>
@@ -251,6 +421,12 @@
         <span class="button-icon ph ph-chart-line"></span>
         <span class="button-text">
           {{ "admin.observations.charts.charts" | translate }}
+        </span>
+      </div>
+      <div *ngIf="layout !== 'gallery'" (click)="layout = 'gallery'" class="layout-switch-gallery obs-button">
+        <span class="button-icon ph ph-images"></span>
+        <span class="button-text">
+          {{ "admin.observations.gallery" | translate }}
         </span>
       </div>
     </div>
@@ -269,10 +445,10 @@
     >
     {{ observationPopup?.observation?.locationName }}
     <div class="d-inline-block font-weight-normal">
-      &mdash; Tipp:
-      <kbd (click)="handleKeyBoardEvent({ key: 'ArrowLeft' })">←</kbd>,
+      <kbd (click)="handleKeyBoardEvent({ key: 'ArrowLeft' })">←</kbd>
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowRight' })">→</kbd>
-      zum Blättern
+      &mdash;
+      <button class="btn btn-sm btn-secondary" (click)="modalService.hide()">&times;</button>
     </div>
   </div>
   <div class="modal-body">
@@ -280,7 +456,9 @@
       <tr *ngFor="let row of observationPopup.table">
         <th style="padding-right: 1ex">{{ row.label }}</th>
         <td>
-          <span *ngIf="row.date !== undefined">{{ row.date | localizedDate: "full" }}</span>
+          <span *ngIf="row.date !== undefined">
+            {{ row.date | date: "full" : undefined : translateService.currentLang }}
+          </span>
           <span *ngIf="row.number !== undefined">{{ row.number | number }}</span>
           <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'ph ph-check' : 'ph ph-x'"></i></span>
           <span *ngIf="row.url !== undefined"

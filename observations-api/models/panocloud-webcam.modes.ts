@@ -1,8 +1,4 @@
-import {
-  GenericObservation,
-  ObservationSource,
-  ObservationType,
-} from "../../src/app/observations/models/generic-observation.model";
+import { GenericObservation, ObservationSource, ObservationType } from ".";
 
 // https://www.it-wms.com/en/wms_products/panocloud-panoramacamera/
 // https://schoeneben4.it-wms.com/common/1.0/index.php?mod=loadMapData

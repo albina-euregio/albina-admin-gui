@@ -24,7 +24,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { NgxSliderModule } from "@angular-slider/ngx-slider";
 
 // Pipes
-import { PipeModule } from "../pipes/pipes.module";
+import { HtmlPipe } from "./html.pipe";
 
 // Bootstrap ngx
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -37,7 +37,6 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     FormsModule,
     CommonModule,
     TranslateModule,
-    PipeModule.forRoot(),
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSliderModule,
@@ -60,6 +59,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     CaamlComponent,
     JsonComponent,
     AvalancheProblemIconsComponent,
+    HtmlPipe,
   ],
 })
 export class BulletinsModule {}

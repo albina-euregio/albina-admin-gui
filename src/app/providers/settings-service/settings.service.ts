@@ -7,15 +7,13 @@ import fr from "../../../assets/i18n/fr.json";
 import es from "../../../assets/i18n/es.json";
 import ca from "../../../assets/i18n/ca.json";
 import oc from "../../../assets/i18n/oc.json";
-import { UserService } from "../user-service/user.service";
-import { AuthenticationService } from "../authentication-service/authentication.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
 
 @Injectable()
 export class SettingsService {
   constructor(
     private translateService: TranslateService,
-    private userService: UserService,
-    private authenticationService: AuthenticationService,
+    private localStorageService: LocalStorageService,
   ) {
     // lang
     this.translateService.addLangs(["de", "it", "en", "fr", "es", "ca", "oc"]);
@@ -30,7 +28,7 @@ export class SettingsService {
     // this language will be used as a fallback when a translation isn't found in the current language
     this.translateService.setDefaultLang("en");
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    const lang = navigator.language.split("-")[0];
+    const lang = this.localStorageService.getLanguage() || navigator.language.split("-")[0];
     this.setLangString(lang);
   }
 
@@ -47,17 +45,6 @@ export class SettingsService {
     }
     document.documentElement.setAttribute("lang", language);
     this.translateService.use(language);
-    const currentAuthor = this.authenticationService.getCurrentAuthor();
-    if (currentAuthor && currentAuthor != null) {
-      currentAuthor.setLanguageCode(language);
-      this.userService.updateUser(currentAuthor).subscribe(
-        (data) => {
-          console.debug("User language updated!");
-        },
-        (error) => {
-          console.error("User language could not be updated!");
-        },
-      );
-    }
+    this.localStorageService.setLanguage(language);
   }
 }
