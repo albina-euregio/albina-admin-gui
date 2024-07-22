@@ -54,13 +54,14 @@
           <input
             class="form-range"
             type="range"
-            [(ngModel)]="stress[date.getTime()]"
+            [(ngModel)]="stress[date[0].getTime()]"
+            (input)="postStressLevel(date[0])"
             [style.--form-range-thumb-bg]="
-              !stress[date.getTime()]
+              !stress[date[0].getTime()]
                 ? 'gray'
-                : stress[date.getTime()] < 20
+                : stress[date[0].getTime()] < 20
                   ? 'green'
-                  : stress[date.getTime()] < 70
+                  : stress[date[0].getTime()] < 70
                     ? 'orange'
                     : 'red'
             "
@@ -68,11 +69,11 @@
           <i
             class="ph"
             [class]="
-              stress[date.getTime()] < 20
+              stress[date[0].getTime()] < 20
                 ? 'ph-smiley'
-                : stress[date.getTime()] < 70
+                : stress[date[0].getTime()] < 70
                   ? 'ph-smiley-meh'
-                  : stress[date.getTime()] <= 100
+                  : stress[date[0].getTime()] <= 100
                     ? 'ph-smiley-x-eyes'
                     : ''
             "
