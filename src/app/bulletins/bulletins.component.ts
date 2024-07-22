@@ -11,6 +11,7 @@ import { map } from "rxjs/operators";
 import { Router, ActivatedRoute } from "@angular/router";
 import * as Enums from "../enums/enums";
 import { formatDate } from "@angular/common";
+import { UserService } from "../providers/user-service/user.service";
 
 @Component({
   templateUrl: "bulletins.component.html",
@@ -31,10 +32,14 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     public settingsService: SettingsService,
     public router: Router,
     public wsUpdateService: WsUpdateService,
+    public userService: UserService,
   ) {
     this.copying = false;
 
     this.bulletinsService.init();
+    this.userService
+      .getStressLevels([this.bulletinsService.dates.at(-1)[0], this.bulletinsService.dates[0][0]])
+      .subscribe(() => {});
   }
 
   ngOnInit() {
@@ -162,5 +167,15 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.copying = false;
     this.bulletinsService.setCopyDate(undefined);
+  }
+
+  postStressLevel(date: Date) {
+    console.trace();
+    this.userService
+      .postStressLevel({
+        date,
+        stressLevel: this.stress[+date],
+      })
+      .subscribe(() => {});
   }
 }
