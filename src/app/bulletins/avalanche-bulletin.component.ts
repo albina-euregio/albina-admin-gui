@@ -45,6 +45,7 @@ export class AvalancheBulletinComponent {
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
+  strategicMindset: Enums.StrategicMindset[] = Object.values(Enums.StrategicMindset);
 
   public editRegions: boolean;
 
@@ -146,6 +147,11 @@ export class AvalancheBulletinComponent {
 
   onDangerPattern2Change(event: Enums.DangerPattern) {
     this.bulletin.dangerPattern2 = event;
+    this.updateBulletinOnServer();
+  }
+
+  onStrategicMindsetChange(event: Enums.StrategicMindset) {
+    this.bulletin.strategicMindset = event;
     this.updateBulletinOnServer();
   }
 

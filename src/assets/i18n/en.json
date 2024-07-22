@@ -754,6 +754,17 @@
     "dp9": "dp.9: buried graupel",
     "dp10": "dp.10: springtime scenario"
   },
+  "strategicMindset": {
+    "assessment": "ASSESSMENT",
+    "stepping_out": "STEPPING OUT",
+    "status_quo": "STATUS QUO",
+    "stepping_back": "STEPPING BACK",
+    "entrenchment": "ENTRENCHMENT",
+    "free_ride": "FREE RIDE",
+    "maintenance": "MAINTENANCE",
+    "high_alert": "HIGH ALERT",
+    "spring_diurnal": "SPRING DIURNAL"
+  },
   "observationType": {
     "TimeSeries": "Time series",
     "Incident": "Incident",
