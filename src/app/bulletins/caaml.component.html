@@ -6,7 +6,7 @@
         <div class="card-header">
           <strong>
             {{ "bulletins.caaml.title" | translate }} -
-            {{ bulletinsService.getActiveDate() | date: undefined : translateService.currentLang }}
+            {{ bulletinsService.getActiveDate()[1] | date: undefined : translateService.currentLang }}
           </strong>
         </div>
 

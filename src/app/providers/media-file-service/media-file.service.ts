@@ -14,11 +14,11 @@ export class MediaFileService {
     private authenticationService: AuthenticationService,
   ) {}
 
-  uploadFile(date: Date, file: File, text: string, important: boolean): Observable<HttpEvent<any>> {
+  uploadFile(date: [Date, Date], file: File, text: string, important: boolean): Observable<HttpEvent<any>> {
     const url =
       this.constantsService.getServerUrl() +
       "media?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date) +
+      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[1]) +
       "&region=" +
       this.authenticationService.getActiveRegionId() +
       "&lang=" +

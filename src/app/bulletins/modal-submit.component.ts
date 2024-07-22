@@ -8,7 +8,7 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
 })
 export class ModalSubmitComponent {
   text: string;
-  date;
+  date: [Date, Date];
   component: CreateBulletinComponent;
 
   constructor(public bsModalRef: BsModalRef) {}
