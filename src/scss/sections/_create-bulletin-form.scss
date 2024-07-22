@@ -37,6 +37,18 @@ $region-form-width: 512px;
   }
 }
 
+.region-form__mindset {
+  padding: $space-2 $region-form-padding;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: $region-form-padding;
+  .form-select {
+    width: auto;
+    font-size: 0.8rem;
+  }
+}
+
 // Region form actions banner
 .region-form__banner {
   border-bottom: $region-form-border;

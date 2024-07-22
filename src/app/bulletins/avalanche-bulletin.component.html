@@ -29,7 +29,7 @@
     </div>
   </header>
 
-  <div class="form-group region-form__danger-patterns">
+  <div class="form-group region-form__mindset">
     <select
       [ngModel]="bulletin.strategicMindset"
       (ngModelChange)="onStrategicMindsetChange($event)"
@@ -42,7 +42,23 @@
       </option>
     </select>
   </div>
-
+  <!--
+  <div class="btn-group region-form__mindset" dropdown>
+    <button id="button-basic" dropdownToggle type="button" class="btn btn-sm btn-bare dropdown-toggle" aria-controls="dropdown-basic">
+      {{ "strategicMindset." + bulletin.strategicMindset | translate }}<span class="caret"></span>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+      <li role="menuitem">
+        <a class="dropdown-item" (click)="onStrategicMindsetChange('undefined')"></a>
+      </li>
+      <li role="menuitem">
+        <a class="dropdown-item" (click)="onStrategicMindsetChange(mindset)" *ngFor="let mindset of strategicMindset">
+          {{ "strategicMindset." + mindset | translate }}
+        </a>
+      </li>
+    </ul>
+  </div>
+-->
   <div *ngIf="bulletinsService.isLocked(bulletin.getId())" class="region-form__banner banner banner-warning-strong">
     <p class="banner__text">
       <i class="ph ph-lock"></i>
