@@ -104,6 +104,7 @@
         "rejectSuggestion": "Decline suggested regions",
         "saveChanges": "Save changes",
         "discardChanges": "Discard changes",
+        "incompleteAvalancheProblem": "Incomplete avalanche problem",
         "saveBulletin": "Save bulletin",
         "discardBulletin": "Discard bulletin changes",
         "loadBulletin": "Load bulletin from the day before",
@@ -155,6 +156,7 @@
       "mapLeft": "Map aside",
       "showNotes": "Show notes",
       "hideNotes": "Hide notes",
+      "incompleteAvalancheProblem": "Incomplete",
       "label": {
         "avalancheProblems": "Avalanche problem",
         "aspects": "Aspects",

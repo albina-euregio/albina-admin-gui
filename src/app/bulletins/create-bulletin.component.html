@@ -610,7 +610,19 @@
       </h6>
       <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.getAuthor().getName() }}</p>
 
-      <div class="region-thumb__avalanche-info">
+      <div
+        *ngIf="checkAvalancheProblem(bulletin)"
+        class="region-thumb__avalanche-info"
+        style="color: red"
+        title="{ 'bulletins.create.tooltip.incompleteAvalancheProblem' | translate}"
+      >
+        <i class="ph ph-warning"></i>
+        <span class="region-thumb__author font-s" role="button">{{
+          "bulletins.create.incompleteAvalancheProblem" | translate
+        }}</span>
+      </div>
+
+      <div *ngIf="!checkAvalancheProblem(bulletin)" class="region-thumb__avalanche-info">
         <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.forenoon"></app-danger-rating-icon>
         <!-- Avalanche problems -->
         <app-avalanche-problem-icons
