@@ -13,7 +13,7 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
   templateUrl: "modal-media-file.component.html",
 })
 export class ModalMediaFileComponent {
-  date;
+  date: [Date, Date];
   component: CreateBulletinComponent;
   file;
   text;

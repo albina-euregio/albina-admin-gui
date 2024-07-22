@@ -8,7 +8,7 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
 })
 export class ModalPublishComponent {
   text: string;
-  date;
+  date: [Date, Date];
   change: boolean;
   component: CreateBulletinComponent;
 

@@ -77,19 +77,19 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.wsUpdateService.disconnect();
   }
 
-  getActiveRegionStatus(date) {
+  getActiveRegionStatus(date: [Date, Date]) {
     const regionStatusMap = this.bulletinsService.statusMap.get(this.authenticationService.getActiveRegionId());
-    if (regionStatusMap) return regionStatusMap.get(date.getTime());
+    if (regionStatusMap) return regionStatusMap.get(date[0].getTime());
     else return Enums.BulletinStatus.missing;
   }
 
-  getRegionStatus(region, date) {
+  getRegionStatus(region, date: [Date, Date]) {
     const regionStatusMap = this.bulletinsService.statusMap.get(region);
-    if (regionStatusMap) return regionStatusMap.get(date.getTime());
+    if (regionStatusMap) return regionStatusMap.get(date[0].getTime());
     else return Enums.BulletinStatus.missing;
   }
 
-  showCopyButton(date) {
+  showCopyButton(date: [Date, Date]) {
     if (
       this.authenticationService.getActiveRegionId() !== undefined &&
       this.bulletinsService.getUserRegionStatus(date) &&
@@ -104,7 +104,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     }
   }
 
-  showPasteButton(date) {
+  showPasteButton(date: [Date, Date]) {
     if (
       this.authenticationService.getActiveRegionId() !== undefined &&
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.published &&
@@ -130,21 +130,21 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     }
   }
 
-  editBulletin(date: Date, isReadOnly?: boolean) {
+  editBulletin(date: [Date, Date], isReadOnly?: boolean) {
     const format = "yyyy-MM-dd";
     const locale = "en-US";
-    const formattedDate = formatDate(date, format, locale);
+    const formattedDate = formatDate(date[1], format, locale);
     this.bulletinsService.setIsReadOnly(isReadOnly);
     this.router.navigate(["/bulletins/" + formattedDate], { queryParams: { readOnly: isReadOnly } });
   }
 
-  copy(event, date: Date) {
+  copy(event, date: [Date, Date]) {
     event.stopPropagation();
     this.copying = true;
     this.bulletinsService.setCopyDate(date);
   }
 
-  paste(event, date: Date) {
+  paste(event, date: [Date, Date]) {
     event.stopPropagation();
     this.copying = false;
     this.editBulletin(date);

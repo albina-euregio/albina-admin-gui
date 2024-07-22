@@ -17,7 +17,13 @@
         <td [attr.data-label]="'bulletins.table.title.date' | translate">
           <div class="bulletins-table__day">
             <time>
-              {{ date | date: "fullDate" : undefined : translateService.currentLang }}
+              {{ date[1] | date: "fullDate" : undefined : translateService.currentLang }}
+              <br />
+              <small class="fw-normal">
+                {{ date[0] | date: "medium" : undefined : translateService.currentLang }}
+                &ndash;
+                {{ date[1] | date: "medium" : undefined : translateService.currentLang }}
+              </small>
             </time>
             <div class="bulletins-table__day-buttons-div">
               <button
