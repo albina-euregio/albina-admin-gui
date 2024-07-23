@@ -162,29 +162,6 @@ export class AvalancheBulletinComponent {
     return !this.isComparedBulletin && !this.editRegions && this.isInternal() && this.bulletinsService.getIsEditable();
   }
 
-  getStrategicMindsetBackgroundColor(mindset: Enums.StrategicMindset) {
-    switch (mindset) {
-      case "assessment":
-        return "#a6d96a70";
-      case "stepping_out":
-        return "#66bd6370";
-      case "status_quo":
-        return "#ffffbf70";
-      case "stepping_back":
-        return "#fdae6170";
-      case "entrenchment":
-        return "#f46d4370";
-      case "free_ride":
-        return "#1a985070";
-      case "high_alert":
-        return "#d7302770";
-      case "spring_diurnal":
-        return "#fee08b70";
-      default:
-        return "#FFF";
-    }
-  }
-
   accordionChanged(event: boolean, groupName: string) {
     switch (groupName) {
       case "dangerRating":

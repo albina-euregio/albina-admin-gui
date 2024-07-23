@@ -36,7 +36,6 @@
     </p>
     <select
       [ngModel]="bulletin.strategicMindset"
-      [style.background-color]="getStrategicMindsetBackgroundColor(bulletin.strategicMindset)"
       (ngModelChange)="onStrategicMindsetChange($event)"
       [disabled]="disabled"
       class="form-select"
@@ -492,10 +491,7 @@
       </colgroup>
       <thead>
         <tr>
-          <th
-            *ngFor="let mindset of strategicMindset"
-            [style.background-color]="getStrategicMindsetBackgroundColor(mindset)"
-          >
+          <th *ngFor="let mindset of strategicMindset">
             {{ "strategicMindset." + mindset | translate }}
           </th>
         </tr>
