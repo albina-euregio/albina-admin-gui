@@ -70,7 +70,7 @@ export class ObservationFilterService {
         { value: "1500", numericRange: [1500, 2000], color: "#8CFFFF", label: "15" },
         { value: "1000", numericRange: [1000, 1500], color: "#B0FFBC", label: "10" },
         { value: "500", numericRange: [500, 1000], color: "#FFFFB3", label: "5" },
-        { value: "0", numericRange: [0, 500], color: "#FFFFFE", label: "0" },
+        { value: "0", numericRange: [0, 500], color: "#FFFFFE", label: "0" }, //
       ],
       selected: [],
       highlighted: [],
@@ -295,26 +295,24 @@ export class ObservationFilterService {
   ): OutputDataset {
     const filter = this.filterSelection[type];
     let nan = 0;
-    const dataRaw = Object.fromEntries(
-      filter.values.map(({ value }) => [
-        value,
-        {
-          all: 0,
-          available: 0,
-          0: 0,
-          1: 0,
-          2: 0,
-          3: 0,
-          4: 0,
-          5: 0,
-          6: 0,
-          7: 0,
-          8: 0,
-          9: 0,
-          10: 0,
-        },
-      ]),
-    );
+    const dataRaw = filter.values.map((value) => ({
+      value,
+      data: {
+        all: 0,
+        available: 0,
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+      },
+    }));
     observations.forEach((observation) => {
       const value: number | string | string[] = observation[filter.key];
       if (value === undefined || value === null) {
@@ -322,8 +320,7 @@ export class ObservationFilterService {
         return;
       }
       castArray(value).forEach((v) => {
-        const dataKey = filter.values.find((f) => this.testFilterSelection(f, v))?.value;
-        const data = dataRaw[dataKey];
+        const data = dataRaw.find((f) => this.testFilterSelection(f.value, v))?.data;
         if (!data) {
           return;
         }
@@ -367,7 +364,9 @@ export class ObservationFilterService {
       "10",
     ];
 
-    const data: OutputDataset["dataset"]["source"] = Object.entries(dataRaw).map(([key, values]) => {
+    const data: OutputDataset["dataset"]["source"] = dataRaw.map((f) => {
+      const key = f.value.value;
+      const values = f.data;
       const highlighted = filter.highlighted.includes(key) ? values.all : 0;
       const available = !filter.selected.includes(key) ? values.available : 0;
       const selected = filter.selected.includes(key) ? values.available : 0;
