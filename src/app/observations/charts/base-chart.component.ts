@@ -101,31 +101,22 @@ export class BaseComponent {
 
   getItemColor(entry) {
     if (this.classifyType === this.type) {
-      const color = this.observationMarkerService.getColor(this.classifyType, entry.name);
-      if (color === "white") {
-        return "#000000";
-      } else {
-        return color;
-      }
+      const filterSelection = this.filter.filterSelection[this.classifyType];
+      const color = filterSelection.values.find((v) => v.value === entry.name)?.color;
+      return !color || color === "white" ? "#000000" : color;
     } else {
       return "#000000";
     }
   }
 
   getClassifyColor(entry, count?: number) {
+    if (this.classifyType === this.type) {
+      return this.getItemColor(entry);
+    }
     if (this.classifyType && count !== undefined) {
-      let name;
-      if (this.classifyType === this.type) {
-        name = entry.name;
-      } else {
-        name = this.filter.filterSelection[this.classifyType].values[count]?.value;
-      }
-      const color = this.observationMarkerService.getColor(this.classifyType, name);
-      if (color === "white") {
-        return "#000000";
-      } else {
-        return color;
-      }
+      const filterSelection = this.filter.filterSelection[this.classifyType];
+      const color = filterSelection.values[count]?.color;
+      return !color || color === "white" ? "#000000" : color;
     } else {
       return "#000000";
     }
@@ -143,8 +134,9 @@ export class BaseComponent {
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
     if (this.labelType === this.type) {
-      const label = this.observationMarkerService.getLegendLabel(this.labelType, formattedResult, value);
-      return label;
+      const filterSelection = this.filter.filterSelection[this.labelType];
+      const value = filterSelection.values.find((v) => v.value === entry.name);
+      return `{${filterSelection.chartRichLabel}|${value.label}} ${formattedResult}`;
     } else {
       return formattedResult;
     }

@@ -41,6 +41,7 @@ export interface GenericFilterToggleData {
 export interface FilterSelectionData {
   type: LocalFilterTypes;
   key: keyof GenericObservation;
+  chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   selected: string[];
   highlighted: string[];
   values: {
@@ -61,6 +62,7 @@ export class ObservationFilterService {
     Elevation: {
       type: LocalFilterTypes.Elevation,
       key: "elevation",
+      chartRichLabel: "label",
       values: [
         { value: "4000", numericRange: [4000, 9999], color: "#CC0CE8", label: "40" },
         { value: "3500", numericRange: [3500, 4000], color: "#784BFF", label: "35" },
@@ -78,6 +80,7 @@ export class ObservationFilterService {
     Aspect: {
       type: LocalFilterTypes.Aspect,
       key: "aspect",
+      chartRichLabel: "label",
       values: [
         { value: Aspect.N, color: "#2f74f9", label: Aspect.N },
         { value: Aspect.NE, color: "#96c0fc", label: Aspect.NE },
@@ -94,6 +97,7 @@ export class ObservationFilterService {
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
       key: "avalancheProblems",
+      chartRichLabel: "symbol",
       values: [
         { value: AvalancheProblem.new_snow, color: "#00ff00", label: "🌨" },
         { value: AvalancheProblem.wind_slab, color: "#229b22", label: "🚩" },
@@ -107,6 +111,7 @@ export class ObservationFilterService {
     Stability: {
       type: LocalFilterTypes.Stability,
       key: "stability",
+      chartRichLabel: "symbol",
       values: [
         { value: Stability.very_poor, color: "#d7191c", label: "🔴" },
         { value: Stability.poor, color: "#fdae61", label: "🟠" },
@@ -119,6 +124,7 @@ export class ObservationFilterService {
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
       key: "$type",
+      chartRichLabel: "symbol",
       values: [
         { value: ObservationType.SimpleObservation, color: "#e41a1c", label: "👁" },
         { value: ObservationType.Evaluation, color: "#377eb8", label: "✓" },
@@ -133,6 +139,7 @@ export class ObservationFilterService {
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
       key: "importantObservations",
+      chartRichLabel: "grainShape",
       values: [
         { value: ImportantObservation.SnowLine, color: "#e41a1c", label: "S" },
         { value: ImportantObservation.SurfaceHoar, color: "#377eb8", label: "g" },
@@ -147,6 +154,7 @@ export class ObservationFilterService {
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
       key: "dangerPatterns",
+      chartRichLabel: "label",
       values: [
         { value: DangerPattern.dp1, color: "#e41a1c", label: "1" },
         { value: DangerPattern.dp2, color: "#377eb8", label: "2" },
@@ -165,6 +173,7 @@ export class ObservationFilterService {
     Days: {
       type: LocalFilterTypes.Days,
       key: "eventDate",
+      chartRichLabel: "label",
       values: [
         // FIXME
         { value: "2024-07-17", color: "#084594", label: "17" },
@@ -396,7 +405,7 @@ export class ObservationFilterService {
     return { dataset: { source: [header, ...data] }, nan };
   }
 
-  private testFilterSelection(f: FilterSelectionData["values"][number], v: number | string): boolean {
+  testFilterSelection(f: FilterSelectionData["values"][number], v: number | string): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
       f.value === v
