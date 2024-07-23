@@ -498,83 +498,16 @@
       </thead>
       <tbody>
         <tr>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+          <td *ngFor="let mindset of strategicMindset">
+            <b>{{ "bulletins.create.strategicMindsetDialog.description.title" | translate }}</b
             ><br />
-            Great uncertainty in the risk assessment.<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            {{ "bulletins.create.strategicMindsetDialog.description." + mindset + ".text" | translate }}<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication.title" | translate }}</b
             ><br />
-            Risk assessment is subject to major uncertainties. The avalanche situation must be carefully checked
-            locally. Caution is recommended.<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            {{ "bulletins.create.strategicMindsetDialog.communication." + mindset + ".text" | translate }}<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples.title" | translate }}</b
             ><br />
-            Situation verbessert sich, etwa nach einem Niederschlagsereignis oder bei einem sich stabilisierenden
-            Altschneeproblem.
-          </td>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
-            ><br />
-            Abnehmende Lawinengefahr.<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
-            ><br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
-            ><br />
-          </td>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
-            ><br />
-            Rückmeldungen bestätigen die Gefahreneinschätzung und die Wetterentwicklung bringt keine wesentliche
-            Veränderung der Lawinensituation<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
-            ><br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
-            ><br />
-          </td>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
-            ><br />
-            Zunehemende Lawinengefahr<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
-            ><br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
-            ><br />
-          </td>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
-            ><br />
-            Annäherend gleichbleibend angespannte Gefahrensituation<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
-            ><br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
-            ><br />
-          </td>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
-            ><br />
-            Geringe Lawinengefahr. Es sind nur kleine, oberflächliche Lawinen im extremen Steilgelände möglich.<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
-            ><br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
-            ><br />
-          </td>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
-            ><br />
-            Spontane Lawinen sehr großen oder extremen Ausmaßes sind möglich.<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
-            ><br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
-            ><br />
-          </td>
-          <td>
-            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
-            ><br />
-            Die Gefährdungsbeurteilung deutet darauf hin, dass die einzige erhebliche Gefahr von Nasslawinen während der
-            nachmittäglichen Tauwetterphase des täglichen Frost-Tau-Zyklus ausgeht.<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
-            ><br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
-            ><br />
+            {{ "bulletins.create.strategicMindsetDialog.examples." + mindset + ".text" | translate }}
           </td>
         </tr>
       </tbody>

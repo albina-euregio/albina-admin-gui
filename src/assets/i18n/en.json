@@ -252,10 +252,46 @@
       },
       "strategicMindsetDialog" : {
         "title": "Strategic Mindsets",
-        "introduction": "Lorem ipsum ...",
-        "description": "Description:",
-        "communication": "Communication:",
-        "examples": "Examples:",
+        "introduction": "",
+        "description": {
+          "title": "Description:",
+          "text": {
+            "assessment": "",
+            "stepping_out": "",
+            "status_quo": "",
+            "stepping_back": "",
+            "entrenchment": "",
+            "free_ride": "",
+            "high_alert": "",
+            "spring_diurnal": ""
+          }
+        },
+        "communication": {
+          "title": "Communication:",
+          "text": {
+            "assessment": "",
+            "stepping_out": "",
+            "status_quo": "",
+            "stepping_back": "",
+            "entrenchment": "",
+            "free_ride": "",
+            "high_alert": "",
+            "spring_diurnal": ""
+          }
+        },
+        "examples": {
+          "title": "Examples:",
+          "text": {
+            "assessment": "",
+            "stepping_out": "",
+            "status_quo": "",
+            "stepping_back": "",
+            "entrenchment": "",
+            "free_ride": "",
+            "high_alert": "",
+            "spring_diurnal": ""
+          }
+        },
         "strategicMindset": {
           "assessment": "High Uncertainty",
           "stepping_out": "Improving",
