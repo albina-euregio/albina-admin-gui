@@ -126,12 +126,12 @@ export class ObservationFilterService {
   constructor(private constantsService: ConstantsService) {}
 
   toggleFilter(filterData: GenericFilterToggleData) {
-    const filterType = this.filterSelection[filterData["type"]];
+    const filterType = this.filterSelection[filterData.type];
     const subset = filterData.data.altKey ? "highlighted" : ("selected" as const);
 
     if (filterData.data.reset) {
-      filterType["selected"] = [];
-      filterType["highlighted"] = [];
+      filterType.selected = [];
+      filterType.highlighted = [];
     } else if (filterData.data.invert) {
       if (filterType[subset].length > 0) {
         const result = filterType.all.filter((value) => !filterType[subset].includes(value));
@@ -234,7 +234,7 @@ export class ObservationFilterService {
     const filter = this.filterSelection[type];
     let nan = 0;
     const dataRaw = Object.fromEntries(
-      filter["all"].map((key) => [
+      filter.all.map((key) => [
         key,
         {
           all: 0,
@@ -304,15 +304,15 @@ export class ObservationFilterService {
       ],
     ];
 
-    for (const key of filter["all"]) {
+    for (const key of filter.all) {
       const values = dataRaw[key];
       dataset.push([
         key,
-        values["all"],
-        values["all"],
-        values["highlighted"] === 1 ? values["all"] : 0,
-        values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0,
+        values.all,
+        values.all,
+        values.highlighted === 1 ? values.all : 0,
+        values.selected === 0 ? values.available : 0,
+        values.selected === 1 ? values.available : 0,
         values["0"],
         values["1"],
         values["2"],
@@ -382,7 +382,7 @@ export class ObservationFilterService {
   }
 
   isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
-    const selectedData: string[] = this.filterSelection[LocalFilterTypes.Days]["selected"]
+    const selectedData: string[] = this.filterSelection[LocalFilterTypes.Days].selected
       .filter((element) => element !== "nan")
       .sort();
     if (selectedData.length < 1) {
