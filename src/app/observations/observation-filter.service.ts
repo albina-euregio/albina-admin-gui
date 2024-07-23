@@ -306,39 +306,34 @@ export class ObservationFilterService {
       "10",
     ];
 
-    const data: OutputDataset["dataset"]["source"] = Object.entries(dataRaw).map(([key, values]) => [
-      key,
-      values.all,
-      values.all,
-      values.highlighted === 1 ? values.all : 0,
-      values.selected === 0 ? values.available : 0,
-      values.selected === 1 ? values.available : 0,
-      values["0"],
-      values["1"],
-      values["2"],
-      values["3"],
-      values["4"],
-      values["5"],
-      values["6"],
-      values["7"],
-      values["8"],
-      values["9"],
-      values["10"],
-    ]);
-
-    const newData: OutputDataset["dataset"]["source"] = data.map((row) => {
-      const tempRow = row.slice();
-      const availableValue = row[header.indexOf("available")];
-      const selectedValue = row[header.indexOf("selected")];
-      const overwriteValue = +availableValue > 0 ? +availableValue : +selectedValue;
-      tempRow[header.indexOf("all")] = overwriteValue;
-      if (tempRow[header.indexOf("highlighted")]) tempRow[header.indexOf("highlighted")] = overwriteValue;
-      if (tempRow[header.indexOf("max")]) tempRow[header.indexOf("max")] = overwriteValue;
-      return tempRow;
+    const data: OutputDataset["dataset"]["source"] = Object.entries(dataRaw).map(([key, values]) => {
+      const highlighted = values.highlighted === 1 ? values.all : 0;
+      const available = values.selected === 0 ? values.available : 0;
+      const selected = values.selected === 1 ? values.available : 0;
+      const max = values.all;
+      const all = available > 0 ? available : selected;
+      return [
+        key,
+        max ? all : max,
+        all,
+        highlighted ? all : highlighted,
+        available,
+        selected,
+        values["0"],
+        values["1"],
+        values["2"],
+        values["3"],
+        values["4"],
+        values["5"],
+        values["6"],
+        values["7"],
+        values["8"],
+        values["9"],
+        values["10"],
+      ];
     });
 
-    newData.unshift(header);
-    return { dataset: { source: newData }, nan };
+    return { dataset: { source: [header, ...data] }, nan };
   }
 
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
