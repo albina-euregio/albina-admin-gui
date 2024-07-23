@@ -1122,7 +1122,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     let error = false;
 
     for (const bulletin of this.internBulletinsList) {
-      if (this.checkAvalancheProblem(bulletin)) {
+      if (
+        bulletin
+          .getSavedAndPublishedRegions()
+          .some((region) => region.startsWith(this.authenticationService.getActiveRegionId())) &&
+        this.checkAvalancheProblem(bulletin)
+      ) {
         error = true;
       }
     }

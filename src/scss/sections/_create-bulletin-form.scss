@@ -158,6 +158,9 @@ app-avalanche-problem-preview,
 .avalanche-problem-preview__info-elevation {
   display: flex;
   flex-flow: column;
+  p {
+    margin-bottom: 0;
+  }
 }
 
 // Avalanche problem detail form
