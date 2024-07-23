@@ -63,6 +63,9 @@ export class AvalancheBulletinComponent {
   public removeDaytimeDependencyModalRef: BsModalRef;
   @ViewChild("removeDaytimeDependencyTemplate") removeDaytimeDependencyTemplate: TemplateRef<any>;
 
+  public strategicMindsetModalRef: BsModalRef;
+  @ViewChild("strategicMindsetTemplate") strategicMindsetTemplate: TemplateRef<any>;
+
   stopListening: Function;
 
   public config = {
@@ -157,6 +160,29 @@ export class AvalancheBulletinComponent {
 
   showEditMicroRegionsButton(): boolean {
     return !this.isComparedBulletin && !this.editRegions && this.isInternal() && this.bulletinsService.getIsEditable();
+  }
+
+  getStrategicMindsetBackgroundColor(mindset: Enums.StrategicMindset) {
+    switch (mindset) {
+      case "assessment":
+        return "#a6d96a70";
+      case "stepping_out":
+        return "#66bd6370";
+      case "status_quo":
+        return "#ffffbf70";
+      case "stepping_back":
+        return "#fdae6170";
+      case "entrenchment":
+        return "#f46d4370";
+      case "free_ride":
+        return "#1a985070";
+      case "high_alert":
+        return "#d7302770";
+      case "spring_diurnal":
+        return "#fee08b70";
+      default:
+        return "#FFF";
+    }
   }
 
   accordionChanged(event: boolean, groupName: string) {
@@ -386,6 +412,18 @@ export class AvalancheBulletinComponent {
 
   removeDaytimeDependencyModalDecline(): void {
     this.removeDaytimeDependencyModalRef.hide();
+  }
+
+  openStrategicMindsetInfoModal(template: TemplateRef<any>) {
+    this.strategicMindsetModalRef = this.modalService.show(template, {
+      animated: false,
+      keyboard: true,
+      class: "modal-lg",
+    });
+  }
+
+  closeStrategicMindsetInfoModal(): void {
+    this.strategicMindsetModalRef.hide();
   }
 
   toggleBulletinSidebar() {

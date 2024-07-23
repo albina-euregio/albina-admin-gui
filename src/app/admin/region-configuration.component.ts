@@ -47,6 +47,7 @@ export class RegionConfigurationComponent {
     json["sendTelegramMessages"] = this.config.sendTelegramMessages;
     json["sendPushNotifications"] = this.config.sendPushNotifications;
     json["enableMediaFile"] = this.config.enableMediaFile;
+    json["enableStrategicMindset"] = this.config.enableStrategicMindset;
     json["serverInstance"] = this.config.serverInstance;
     json["pdfColor"] = this.config.pdfColor;
     json["emailColor"] = this.config.emailColor;

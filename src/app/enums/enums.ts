@@ -84,7 +84,6 @@ export enum StrategicMindset {
   stepping_back = "stepping_back",
   entrenchment = "entrenchment",
   free_ride = "free_ride",
-  maintenance = "maintenance",
   high_alert = "high_alert",
   spring_diurnal = "spring_diurnal",
 }

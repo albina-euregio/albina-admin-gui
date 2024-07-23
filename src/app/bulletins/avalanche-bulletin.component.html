@@ -29,9 +29,14 @@
     </div>
   </header>
 
-  <div class="form-group region-form__mindset">
+  <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
+    <p class="region-form__mindset-text">
+      {{ "strategicMindset.title" | translate }}
+      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetInfoTemplate)"></i>
+    </p>
     <select
       [ngModel]="bulletin.strategicMindset"
+      [style.background-color]="getStrategicMindsetBackgroundColor(bulletin.strategicMindset)"
       (ngModelChange)="onStrategicMindsetChange($event)"
       [disabled]="disabled"
       class="form-select"
@@ -42,23 +47,7 @@
       </option>
     </select>
   </div>
-  <!--
-  <div class="btn-group region-form__mindset" dropdown>
-    <button id="button-basic" dropdownToggle type="button" class="btn btn-sm btn-bare dropdown-toggle" aria-controls="dropdown-basic">
-      {{ "strategicMindset." + bulletin.strategicMindset | translate }}<span class="caret"></span>
-    </button>
-    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-      <li role="menuitem">
-        <a class="dropdown-item" (click)="onStrategicMindsetChange('undefined')"></a>
-      </li>
-      <li role="menuitem">
-        <a class="dropdown-item" (click)="onStrategicMindsetChange(mindset)" *ngFor="let mindset of strategicMindset">
-          {{ "strategicMindset." + mindset | translate }}
-        </a>
-      </li>
-    </ul>
-  </div>
--->
+
   <div *ngIf="bulletinsService.isLocked(bulletin.getId())" class="region-form__banner banner banner-warning-strong">
     <p class="banner__text">
       <i class="ph ph-lock"></i>
@@ -473,5 +462,126 @@
     <button type="reset" class="btn btn-bare" (click)="removeDaytimeDependencyModalDecline()">
       <span>{{ "bulletins.create.removeDaytimeDependencyDialog.cancel" | translate }}</span>
     </button>
+  </div>
+</ng-template>
+
+<ng-template #strategicMindsetInfoTemplate>
+  <div class="modal-header">
+    <h3 class="modal-title pull-left">{{ "bulletins.create.strategicMindsetDialog.title" | translate }}</h3>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      (click)="closeStrategicMindsetInfoModal()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body region-form__mindset-modal">
+    <p>{{ "bulletins.create.strategicMindsetDialog.introduction" | translate }}</p>
+    <table class="strategic-mindset__table">
+      <colgroup>
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th
+            *ngFor="let mindset of strategicMindset"
+            [style.background-color]="getStrategicMindsetBackgroundColor(mindset)"
+          >
+            {{ "strategicMindset." + mindset | translate }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Great uncertainty in the risk assessment.<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br />
+            Risk assessment is subject to major uncertainties. The avalanche situation must be carefully checked
+            locally. Caution is recommended.<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+            Situation verbessert sich, etwa nach einem Niederschlagsereignis oder bei einem sich stabilisierenden
+            Altschneeproblem.
+          </td>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Abnehmende Lawinengefahr.<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+          </td>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Rückmeldungen bestätigen die Gefahreneinschätzung und die Wetterentwicklung bringt keine wesentliche
+            Veränderung der Lawinensituation<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+          </td>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Zunehemende Lawinengefahr<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+          </td>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Annäherend gleichbleibend angespannte Gefahrensituation<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+          </td>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Geringe Lawinengefahr. Es sind nur kleine, oberflächliche Lawinen im extremen Steilgelände möglich.<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+          </td>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Spontane Lawinen sehr großen oder extremen Ausmaßes sind möglich.<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+          </td>
+          <td>
+            <b>{{ "bulletins.create.strategicMindsetDialog.description" | translate }}</b
+            ><br />
+            Die Gefährdungsbeurteilung deutet darauf hin, dass die einzige erhebliche Gefahr von Nasslawinen während der
+            nachmittäglichen Tauwetterphase des täglichen Frost-Tau-Zyklus ausgeht.<br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.communication" | translate }}</b
+            ><br /><br />
+            <b>{{ "bulletins.create.strategicMindsetDialog.examples" | translate }}</b
+            ><br />
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </ng-template>

@@ -250,6 +250,23 @@
         "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancel"
       },
+      "strategicMindsetDialog" : {
+        "title": "Strategic Mindsets",
+        "introduction": "Lorem ipsum ...",
+        "description": "Description:",
+        "communication": "Communication:",
+        "examples": "Examples:",
+        "strategicMindset": {
+          "assessment": "High Uncertainty",
+          "stepping_out": "Improving",
+          "status_quo": "Status Quo",
+          "stepping_back": "Deteriorating",
+          "entrenchment": "Persistent Unstable",
+          "free_ride": "Favorable",
+          "high_alert": "High Alert",
+          "spring_diurnal": "Spring Diurnal"
+        }
+      },
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://models.avalanche.report:8061/en/",
@@ -485,6 +502,7 @@
         "sendTelegramMessages": "Send telegram messages",
         "sendPushNotifications": "Send push notifications",
         "enableMediaFile": "Enable media file",
+        "enableStrategicMindset": "Enable strategic mindset",
         "enableAvalancheProblemCornices": "Enable avalanche problem CORNICES",
         "enableAvalancheProblemNoDistinctAvalancheProblem": "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM",
         "pdfColor": "PDF color",
@@ -755,15 +773,15 @@
     "dp10": "dp.10: springtime scenario"
   },
   "strategicMindset": {
-    "assessment": "ASSESSMENT",
-    "stepping_out": "STEPPING OUT",
-    "status_quo": "STATUS QUO",
-    "stepping_back": "STEPPING BACK",
-    "entrenchment": "ENTRENCHMENT",
-    "free_ride": "FREE RIDE",
-    "maintenance": "MAINTENANCE",
-    "high_alert": "HIGH ALERT",
-    "spring_diurnal": "SPRING DIURNAL"
+    "title": "Strategic Mindset",
+    "assessment": "High Uncertainty",
+    "stepping_out": "Improving",
+    "status_quo": "Status Quo",
+    "stepping_back": "Deteriorating",
+    "entrenchment": "Persistent Unstable",
+    "free_ride": "Favorable",
+    "high_alert": "High Alert",
+    "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
     "TimeSeries": "Time series",
