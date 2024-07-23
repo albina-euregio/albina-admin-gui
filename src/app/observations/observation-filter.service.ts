@@ -12,6 +12,7 @@ import {
   Stability,
 } from "./models/generic-observation.model";
 import { formatDate } from "@angular/common";
+import { castArray } from "lodash";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -259,7 +260,7 @@ export class ObservationFilterService {
         nan++;
         return;
       }
-      (typeof value === "string" ? [value] : value).forEach((v) => {
+      castArray(value).forEach((v) => {
         const data = dataRaw[v];
         if (!data) {
           return;
@@ -278,7 +279,7 @@ export class ObservationFilterService {
           data[0]++;
           return;
         }
-        (typeof value2 === "string" ? [value2] : value2).forEach((v) => {
+        castArray(value2).forEach((v) => {
           data[filter2.all.indexOf(v) + 1]++;
         });
       });
