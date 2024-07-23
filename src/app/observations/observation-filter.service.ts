@@ -263,105 +263,70 @@ export class ObservationFilterService {
       }
       (typeof value === "string" ? [value] : value).forEach((v) => {
         const data = dataRaw[v];
-        if (!data) return;
-        data.all++;
-        if (this.isSelected(observation)) {
-          if (classifyType && classifyType !== type) {
-            const categories = this.filterSelection[classifyType].all;
-            const entry: string | string[] = this.filterSelection[classifyType].toValue(observation);
-            if (entry) {
-              (typeof entry === "string" ? [entry] : entry).forEach((v) => {
-                data[categories.indexOf(v) + 1]++;
-              });
-            } else {
-              data[0]++;
-            }
-          } else {
-            data.available++;
-          }
+        if (!data) {
+          return;
         }
+        data.all++;
+        if (!this.isSelected(observation)) {
+          return;
+        }
+        if (!classifyType || classifyType === type) {
+          data.available++;
+          return;
+        }
+        const filter2 = this.filterSelection[classifyType];
+        const value2: string | string[] = filter2.toValue(observation);
+        if (!value2) {
+          data[0]++;
+          return;
+        }
+        (typeof value2 === "string" ? [value2] : value2).forEach((v) => {
+          data[filter2.all.indexOf(v) + 1]++;
+        });
       });
     });
-    const dataset: OutputDataset["dataset"]["source"] = [
-      [
-        "category",
-        "max",
-        "all",
-        "highlighted",
-        "available",
-        "selected",
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-      ],
+
+    const header = [
+      "category",
+      "max",
+      "all",
+      "highlighted",
+      "available",
+      "selected",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
     ];
 
-    for (const key of filter.all) {
-      const values = dataRaw[key];
-      dataset.push([
-        key,
-        values.all,
-        values.all,
-        values.highlighted === 1 ? values.all : 0,
-        values.selected === 0 ? values.available : 0,
-        values.selected === 1 ? values.available : 0,
-        values["0"],
-        values["1"],
-        values["2"],
-        values["3"],
-        values["4"],
-        values["5"],
-        values["6"],
-        values["7"],
-        values["8"],
-        values["9"],
-        values["10"],
-      ]);
-    }
+    const data: OutputDataset["dataset"]["source"] = Object.entries(dataRaw).map(([key, values]) => [
+      key,
+      values.all,
+      values.all,
+      values.highlighted === 1 ? values.all : 0,
+      values.selected === 0 ? values.available : 0,
+      values.selected === 1 ? values.available : 0,
+      values["0"],
+      values["1"],
+      values["2"],
+      values["3"],
+      values["4"],
+      values["5"],
+      values["6"],
+      values["7"],
+      values["8"],
+      values["9"],
+      values["10"],
+    ]);
 
-    return this.normalizeData({ dataset: { source: dataset }, nan });
-  }
-
-  public normalizeData(originalDataset: OutputDataset): OutputDataset {
-    const nan = originalDataset.nan;
-    const data = originalDataset?.dataset.source.slice(1);
-    const header = originalDataset?.dataset.source[0];
-    //if(!this.isFilterActive()) console.log("normalizeData #0 ", {filterActive: this.isFilterActive(), filter: this.filterSelection, data});
-    //if (!this.isFilterActive() || !originalDataset || !data || !header) return originalDataset;
-
-    // get max values in order to normalize data
-    // let availableMax = Number.MIN_VALUE;
-    // let allMax = Number.MIN_VALUE;
-    // let maxMax = Number.MIN_VALUE;
-
-    // data.forEach((row) => {
-    //   const availableValue = row[header.indexOf("available")];
-    //   const allValue = row[header.indexOf("all")];
-    //   const maxValue = row[header.indexOf("max")];
-    //   //console.log("normalizeData #1", row[header.indexOf("category")], {available: row[header.indexOf("available")], all: row[header.indexOf("all")]});
-    //   if (+availableValue > +availableMax) {
-    //     availableMax = +availableValue;
-    //   }
-
-    //   if (+allValue > +allMax) {
-    //     allMax = +allValue;
-    //   }
-
-    //   if (+maxValue > +maxMax) {
-    //     maxMax = +maxValue;
-    //   }
-
-    // });
-
-    const newData = data.map((row) => {
+    const newData: OutputDataset["dataset"]["source"] = data.map((row) => {
       const tempRow = row.slice();
       const availableValue = row[header.indexOf("available")];
       const selectedValue = row[header.indexOf("selected")];
@@ -373,7 +338,6 @@ export class ObservationFilterService {
     });
 
     newData.unshift(header);
-    //console.log("normalizeData #2", data[0][header.indexOf("category")], {newData, data});
     return { dataset: { source: newData }, nan };
   }
 
