@@ -15,6 +15,7 @@ import {
   WeatherStationParameter,
 } from "./models/generic-observation.model";
 import { memoize } from "lodash";
+import { ObservationFilterService } from "./observation-filter.service";
 
 // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
 const colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999"];
@@ -277,7 +278,7 @@ export class ObservationMarkerService {
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
   public markerClassify: LocalFilterTypes = LocalFilterTypes.Stability;
 
-  constructor() {}
+  constructor(private filter: ObservationFilterService) {}
 
   // This is very important! Use a canvas otherwise the chart is too heavy for the browser when
   // the number of points is too high
@@ -424,28 +425,11 @@ export class ObservationMarkerService {
       }
     }
 
-    switch (this.markerClassify) {
-      case LocalFilterTypes.Aspect:
-        return observation?.aspect ? aspectColors[observation?.aspect] : "white";
-      case LocalFilterTypes.AvalancheProblem:
-        return this.enumArrayColor(AvalancheProblem, observation?.avalancheProblems, LocalFilterTypes.AvalancheProblem);
-      case LocalFilterTypes.DangerPattern:
-        return this.enumArrayColor(DangerPattern, observation?.dangerPatterns);
-      case LocalFilterTypes.Days:
-        const days = (Date.now() - +observation?.eventDate) / 24 / 3600e3;
-        const daysColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-        return daysColors[Math.min(Math.floor(days), daysColors.length)];
-      case LocalFilterTypes.Elevation:
-        return this.elevationColor(observation?.elevation);
-      case LocalFilterTypes.ImportantObservation:
-        return this.enumArrayColor(ImportantObservation, observation?.importantObservations);
-      case LocalFilterTypes.ObservationType:
-        return this.enumArrayColor(ObservationType, [observation?.$type]);
-      case LocalFilterTypes.Stability:
-        return this.stabilityColor(observation?.stability);
-      default:
-        return "white";
-    }
+    const filterSelection = this.filter.filterSelection[this.markerClassify];
+    const value = filterSelection.values.find((f) =>
+      this.filter.testFilterSelection(f, observation[filterSelection.key]),
+    );
+    return value?.color ?? "white";
   }
 
   private getSurfaceHoar(data) {
@@ -675,29 +659,15 @@ export class ObservationMarkerService {
 
     if (!this.markerLabel) {
       return "";
+    } else if (this.markerLabel === LocalFilterTypes.Elevation) {
+      return isFinite(observation.elevation) ? Math.round(observation.elevation / 100) : "";
     }
-    switch (this.markerLabel) {
-      case LocalFilterTypes.Aspect:
-        return observation.aspect ?? "";
-      case LocalFilterTypes.AvalancheProblem:
-        return (observation.avalancheProblems ?? []).map((p) => (p ? avalancheProblemTexts[p] ?? "" : "")).join("");
-      case LocalFilterTypes.DangerPattern:
-        return (observation.dangerPatterns ?? []).map((p) => String(p).slice(2)).join("+");
-      case LocalFilterTypes.Days:
-        return observation?.eventDate?.getDate() ?? "";
-      case LocalFilterTypes.Elevation:
-        return isFinite(observation.elevation) ? Math.round(observation.elevation / 100) : "";
-      case LocalFilterTypes.ImportantObservation:
-        return (observation.importantObservations ?? [])
-          .map((o) => (o ? importantObservationTexts[o] ?? "" : ""))
-          .join("");
-      case LocalFilterTypes.ObservationType:
-        return observationTypeTexts[observation.$type];
-      case LocalFilterTypes.Stability:
-        return stabilityTexts[observation.stability] ?? "";
-      default:
-        return "";
-    }
+
+    const filterSelection = this.filter.filterSelection[this.markerLabel];
+    const value = filterSelection.values.find((f) =>
+      this.filter.testFilterSelection(f, observation[filterSelection.key]),
+    );
+    return value?.label ?? "";
   }
 
   toZIndex(observation: GenericObservation) {
