@@ -40,10 +40,15 @@ export interface GenericFilterToggleData {
 
 export interface FilterSelectionData {
   type: LocalFilterTypes;
-  toValue: (o: GenericObservation) => undefined | string | string[];
-  all: string[];
+  key: keyof GenericObservation;
   selected: string[];
   highlighted: string[];
+  values: {
+    value: string;
+    numericRange?: [number, number];
+    color: string;
+    label: string;
+  }[];
 }
 
 @Injectable()
@@ -55,64 +60,121 @@ export class ObservationFilterService {
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
       type: LocalFilterTypes.Elevation,
-      toValue: (o) => (isFinite(o.elevation) ? String(Math.floor(o.elevation / 500) * 500) : undefined),
-      all: ["0", "500", "1000", "1500", "2000", "2500", "3000", "3500", "4000"].reverse(),
+      key: "elevation",
+      values: [
+        { value: "4000", numericRange: [4000, 9999], color: "#CC0CE8", label: "40" },
+        { value: "3500", numericRange: [3500, 4000], color: "#784BFF", label: "35" },
+        { value: "3000", numericRange: [3000, 3500], color: "#035BBE", label: "30" },
+        { value: "2500", numericRange: [2500, 3000], color: "#0481FF", label: "25" },
+        { value: "2000", numericRange: [2000, 2500], color: "#03CDFF", label: "20" },
+        { value: "1500", numericRange: [1500, 2000], color: "#8CFFFF", label: "15" },
+        { value: "1000", numericRange: [1000, 1500], color: "#B0FFBC", label: "10" },
+        { value: "500", numericRange: [500, 1000], color: "#FFFFB3", label: "5" },
+        { value: "0", numericRange: [0, 500], color: "#FFFFFE", label: "0" },
+      ],
       selected: [],
       highlighted: [],
     },
     Aspect: {
       type: LocalFilterTypes.Aspect,
-      toValue: (o) => o.aspect,
-      all: Object.keys(Aspect),
+      key: "aspect",
+      values: [
+        { value: Aspect.N, color: "#2f74f9", label: Aspect.N },
+        { value: Aspect.NE, color: "#96c0fc", label: Aspect.NE },
+        { value: Aspect.E, color: "#b3b3b3", label: Aspect.E },
+        { value: Aspect.SE, color: "#f6ba91", label: Aspect.SE },
+        { value: Aspect.S, color: "#ef6d25", label: Aspect.S },
+        { value: Aspect.SW, color: "#6c300b", label: Aspect.SW },
+        { value: Aspect.W, color: "#000000", label: Aspect.W },
+        { value: Aspect.NW, color: "#113570", label: Aspect.NW },
+      ],
       selected: [],
       highlighted: [],
     },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
-      toValue: (o) => o.avalancheProblems,
-      all: Object.keys(AvalancheProblem).filter(
-        (type) =>
-          type !== AvalancheProblem.no_distinct_problem &&
-          type !== AvalancheProblem.cornices &&
-          type !== AvalancheProblem.favourable_situation,
-      ),
+      key: "avalancheProblems",
+      values: [
+        { value: AvalancheProblem.new_snow, color: "#00ff00", label: "🌨" },
+        { value: AvalancheProblem.wind_slab, color: "#229b22", label: "🚩" },
+        { value: AvalancheProblem.persistent_weak_layers, color: "#0000ff", label: "❗" },
+        { value: AvalancheProblem.wet_snow, color: "#ff0000", label: "☀️" },
+        { value: AvalancheProblem.gliding_snow, color: "#aa0000", label: "🐟" },
+      ],
       selected: [],
       highlighted: [],
     },
     Stability: {
       type: LocalFilterTypes.Stability,
-      toValue: (o) => o.stability,
-      all: Object.keys(Stability).reverse(),
+      key: "stability",
+      values: [
+        { value: Stability.very_poor, color: "#d7191c", label: "🔴" },
+        { value: Stability.poor, color: "#fdae61", label: "🟠" },
+        { value: Stability.fair, color: "#ffffbf", label: "🟡" },
+        { value: Stability.good, color: "#a6d96a", label: "🟢" },
+      ],
       selected: [],
       highlighted: [],
     },
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
-      toValue: (o) => o.$type,
-      all: Object.keys(ObservationType).filter(
-        (type) => type !== ObservationType.TimeSeries && type !== ObservationType.Webcam,
-      ),
+      key: "$type",
+      values: [
+        { value: ObservationType.SimpleObservation, color: "#e41a1c", label: "👁" },
+        { value: ObservationType.Evaluation, color: "#377eb8", label: "✓" },
+        { value: ObservationType.Avalanche, color: "#4daf4a", label: "⛰" },
+        { value: ObservationType.Blasting, color: "#984ea3", label: "⁜" },
+        { value: ObservationType.Closure, color: "#ff7f00", label: "𐄂" },
+        { value: ObservationType.Profile, color: "#ffff33", label: "⌇" },
+      ],
       selected: [],
       highlighted: [],
     },
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
-      toValue: (o) => o.importantObservations,
-      all: Object.keys(ImportantObservation),
+      key: "importantObservations",
+      values: [
+        { value: ImportantObservation.SnowLine, color: "#e41a1c", label: "S" },
+        { value: ImportantObservation.SurfaceHoar, color: "#377eb8", label: "g" },
+        { value: ImportantObservation.Graupel, color: "#4daf4a", label: "o" },
+        { value: ImportantObservation.StabilityTest, color: "#984ea3", label: "k" },
+        { value: ImportantObservation.IceFormation, color: "#ff7f00", label: "i" },
+        { value: ImportantObservation.VeryLightNewSnow, color: "#ffff33", label: "m" },
+      ],
       selected: [],
       highlighted: [],
     },
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
-      toValue: (o) => o.dangerPatterns,
-      all: Object.keys(DangerPattern),
+      key: "dangerPatterns",
+      values: [
+        { value: DangerPattern.dp1, color: "#e41a1c", label: "1" },
+        { value: DangerPattern.dp2, color: "#377eb8", label: "2" },
+        { value: DangerPattern.dp3, color: "#4daf4a", label: "3" },
+        { value: DangerPattern.dp4, color: "#984ea3", label: "4" },
+        { value: DangerPattern.dp5, color: "#ff7f00", label: "5" },
+        { value: DangerPattern.dp6, color: "#ffff33", label: "6" },
+        { value: DangerPattern.dp7, color: "#a65628", label: "7" },
+        { value: DangerPattern.dp8, color: "#f781bf", label: "8" },
+        { value: DangerPattern.dp9, color: "#999999", label: "9" },
+        { value: DangerPattern.dp10, color: "#e41a1c", label: "10" },
+      ],
       selected: [],
       highlighted: [],
     },
     Days: {
       type: LocalFilterTypes.Days,
-      toValue: (o) => this.getISODateString(new Date(o.eventDate)),
-      all: [],
+      key: "eventDate",
+      values: [
+        // FIXME
+        { value: "2024-07-17", color: "#084594", label: "17" },
+        { value: "2024-07-18", color: "#2171b5", label: "18" },
+        { value: "2024-07-19", color: "#4292c6", label: "19" },
+        { value: "2024-07-20", color: "#6baed6", label: "20" },
+        { value: "2024-07-21", color: "#9ecae1", label: "21" },
+        { value: "2024-07-22", color: "#c6dbef", label: "22" },
+        { value: "2024-07-23", color: "#eff3ff", label: "23" },
+      ],
       selected: [],
       highlighted: [],
     },
@@ -129,7 +191,9 @@ export class ObservationFilterService {
       filterType.highlighted = [];
     } else if (filterData.data.invert) {
       if (filterType[subset].length > 0) {
-        const result = filterType.all.filter((value) => !filterType[subset].includes(value));
+        const result = filterType.values
+          .map(({ value }) => value)
+          .filter((value) => !filterType[subset].includes(value));
         filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
       }
     } else {
@@ -138,7 +202,9 @@ export class ObservationFilterService {
       else filterType[subset].push(filterData.data.value);
       if (filterData.data.ctrlKey) {
         if (filterType[subset].length > 0) {
-          const result = filterType.all.filter((value) => !filterType[subset].includes(value));
+          const result = filterType.values
+            .map(({ value }) => value)
+            .filter((value) => !filterType[subset].includes(value));
           filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
         }
       }
@@ -160,10 +226,11 @@ export class ObservationFilterService {
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
 
     if (this.startDate && this.endDate) {
-      this.filterSelection.Days.all = [];
-      for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        this.filterSelection.Days.all.push(this.getISODateString(i));
-      }
+      // FIXME
+      // this.filterSelection.Days.all = [];
+      // for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
+      //   this.filterSelection.Days.all.push(this.getISODateString(i));
+      // }
     }
     this.dateRange = [this.startDate, this.endDate];
   }
@@ -200,7 +267,7 @@ export class ObservationFilterService {
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
       (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
-      Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, this.filterSelection[t].toValue(observation)))
+      Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, observation[this.filterSelection[t].key]))
     );
   }
 
@@ -208,7 +275,7 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.isIncluded(LocalFilterTypes.Elevation, this.filterSelection[LocalFilterTypes.Elevation].toValue(observation))
+      this.isIncluded(LocalFilterTypes.Elevation, String(observation.elevation))
     );
   }
 
@@ -217,7 +284,7 @@ export class ObservationFilterService {
       return false;
     }
     return Object.values(LocalFilterTypes).some((t) =>
-      this.isIncluded(t, this.filterSelection[t].toValue(observation), true),
+      this.isIncluded(t, observation[this.filterSelection[t].key], true),
     );
   }
 
@@ -229,8 +296,8 @@ export class ObservationFilterService {
     const filter = this.filterSelection[type];
     let nan = 0;
     const dataRaw = Object.fromEntries(
-      filter.all.map((key) => [
-        key,
+      filter.values.map(({ value }) => [
+        value,
         {
           all: 0,
           available: 0,
@@ -249,13 +316,14 @@ export class ObservationFilterService {
       ]),
     );
     observations.forEach((observation) => {
-      const value = filter.toValue(observation);
-      if (!value) {
+      const value: number | string | string[] = observation[filter.key];
+      if (value === undefined || value === null) {
         nan++;
         return;
       }
       castArray(value).forEach((v) => {
-        const data = dataRaw[v];
+        const dataKey = filter.values.find((f) => this.testFilterSelection(f, v))?.value;
+        const data = dataRaw[dataKey];
         if (!data) {
           return;
         }
@@ -268,13 +336,13 @@ export class ObservationFilterService {
           return;
         }
         const filter2 = this.filterSelection[classifyType];
-        const value2: string | string[] = filter2.toValue(observation);
-        if (!value2) {
+        const value2: number | string | string[] = observation[filter2.key];
+        if (value2 === undefined || value2 === null) {
           data[0]++;
           return;
         }
         castArray(value2).forEach((v) => {
-          data[filter2.all.indexOf(v) + 1]++;
+          data[filter2.values.findIndex((f) => this.testFilterSelection(f, v)) + 1]++;
         });
       });
     });
@@ -327,6 +395,13 @@ export class ObservationFilterService {
     });
 
     return { dataset: { source: [header, ...data] }, nan };
+  }
+
+  private testFilterSelection(f: FilterSelectionData["values"][number], v: number | string): boolean {
+    return (
+      (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
+      f.value === v
+    );
   }
 
   inDateRange({ $source, eventDate }: GenericObservation): boolean {

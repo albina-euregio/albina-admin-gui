@@ -118,7 +118,7 @@ export class BaseComponent {
       if (this.classifyType === this.type) {
         name = entry.name;
       } else {
-        name = this.filter.filterSelection[this.classifyType].all[count];
+        name = this.filter.filterSelection[this.classifyType].values[count]?.value;
       }
       const color = this.observationMarkerService.getColor(this.classifyType, name);
       if (color === "white") {
