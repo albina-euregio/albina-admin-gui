@@ -239,8 +239,6 @@ export class ObservationFilterService {
         {
           all: 0,
           available: 0,
-          selected: filter.selected.includes(key) ? 1 : 0,
-          highlighted: filter.highlighted.includes(key) ? 1 : 0,
           0: 0,
           1: 0,
           2: 0,
@@ -307,9 +305,9 @@ export class ObservationFilterService {
     ];
 
     const data: OutputDataset["dataset"]["source"] = Object.entries(dataRaw).map(([key, values]) => {
-      const highlighted = values.highlighted === 1 ? values.all : 0;
-      const available = values.selected === 0 ? values.available : 0;
-      const selected = values.selected === 1 ? values.available : 0;
+      const highlighted = filter.highlighted.includes(key) ? values.all : 0;
+      const available = !filter.selected.includes(key) ? values.available : 0;
+      const selected = filter.selected.includes(key) ? values.available : 0;
       const max = values.all;
       const all = available > 0 ? available : selected;
       return [
