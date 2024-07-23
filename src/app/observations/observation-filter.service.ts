@@ -118,12 +118,6 @@ export class ObservationFilterService {
     },
   };
 
-  public isFilterActive(): boolean {
-    return Object.values(this.filterSelection).some(
-      (filter) => filter.selected.length > 0 || filter.highlighted.length > 0,
-    );
-  }
-
   constructor(private constantsService: ConstantsService) {}
 
   toggleFilter(filterData: GenericFilterToggleData) {
