@@ -539,7 +539,7 @@ export class ObservationMarkerService {
   private getIcon(observation: GenericObservation<any>, isHighlighted: boolean): Icon | DivIcon {
     const iconSize = this.toMarkerRadius(observation);
     const iconColor = isHighlighted ? "#ff0000" : this.toMarkerColor(observation);
-    const textColor = isHighlighted ? "#fff" : "#000";
+    const labelColor = isHighlighted ? "#fff" : "#000";
     const label = this.getLabel(observation);
     const borderColor = this.getBorderColor(observation);
     const labelFont =
@@ -549,7 +549,7 @@ export class ObservationMarkerService {
     const labelFontSize = this.getLabelFontSize(observation);
     const aspect = observation.aspect;
     const aspectColor = "#898989";
-    return icon(aspect, aspectColor, iconSize, iconColor, borderColor, textColor, labelFontSize, labelFont, label);
+    return icon(aspect, aspectColor, iconSize, iconColor, borderColor, labelColor, labelFontSize, labelFont, label);
   }
 }
 
@@ -581,7 +581,7 @@ function icon0(
   iconSize: number,
   iconColor: string,
   borderColor: string,
-  textColor: string,
+  labelColor: string,
   labelFontSize: string,
   labelFont: "snowsymbolsiacs" | string,
   label: number | string,
@@ -603,7 +603,7 @@ function icon0(
             </g>
 
             <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="${borderColor}">
-                <text x="11" y="15" text-anchor="middle" fill="${textColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
+                <text x="11" y="15" text-anchor="middle" fill="${labelColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
 
                 <g id="line-bold" stroke-width="2">
                     <circle id="Oval" cx="11" cy="11" r="11"></circle>
