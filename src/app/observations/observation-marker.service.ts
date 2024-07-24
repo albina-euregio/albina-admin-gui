@@ -3,8 +3,6 @@ import { formatDate } from "@angular/common";
 import { Canvas, CircleMarker, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
   Aspect,
-  AvalancheProblem,
-  DangerPattern,
   degreeToAspect,
   GenericObservation,
   ImportantObservation,
@@ -377,10 +375,7 @@ export class ObservationMarkerService {
       return "white";
     }
 
-    const filterSelection = this.filter.filterSelection[this.markerClassify];
-    const value = filterSelection.values.find((f) =>
-      this.filter.testFilterSelection(f, observation[filterSelection.key]),
-    );
+    const value = this.filter.findFilterSelection(this.markerClassify, observation);
     return value?.color ?? "white";
   }
 
@@ -533,11 +528,7 @@ export class ObservationMarkerService {
     } else if (this.markerLabel === LocalFilterTypes.Elevation) {
       return isFinite(observation.elevation) ? Math.round(observation.elevation / 100) : "";
     }
-
-    const filterSelection = this.filter.filterSelection[this.markerLabel];
-    const value = filterSelection.values.find((f) =>
-      this.filter.testFilterSelection(f, observation[filterSelection.key]),
-    );
+    const value = this.filter.findFilterSelection(this.markerLabel, observation);
     return value?.label ?? "";
   }
 

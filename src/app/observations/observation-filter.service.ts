@@ -436,6 +436,12 @@ export class ObservationFilterService {
     );
   }
 
+  findFilterSelection(filterTypes: LocalFilterTypes, observation: GenericObservation) {
+    const filterSelection = this.filterSelection[filterTypes];
+    const value = observation[filterSelection.key];
+    return filterSelection.values.find((f) => castArray(value).some((v) => this.testFilterSelection(f, v)));
+  }
+
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
     return this.startDate <= eventDate && eventDate <= this.endDate;
   }
