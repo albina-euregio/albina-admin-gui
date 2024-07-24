@@ -481,6 +481,12 @@ export class ObservationFilterService {
   }
 
   getISODateString(date: Date) {
-    return formatDate(date, "yyyy-MM-dd", "en-US");
+    // like Date.toISOString(), but not using UTC
+    // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+    function pad(number: number): string {
+      return number < 10 ? `0${number}` : `${number}`;
+    }
   }
 }
