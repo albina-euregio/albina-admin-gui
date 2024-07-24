@@ -252,44 +252,44 @@
       },
       "strategicMindsetDialog" : {
         "title": "Strategic Mindsets",
-        "introduction": "",
+        "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
         "description": {
           "title": "Description:",
           "text": {
-            "assessment": "",
-            "stepping_out": "",
-            "status_quo": "",
-            "stepping_back": "",
-            "entrenchment": "",
-            "free_ride": "",
-            "high_alert": "",
-            "spring_diurnal": ""
+            "assessment": "There is <b>great uncertainty</b> in the risk assessment due to <b>insufficient information</b> from the site.",
+            "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
+            "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
+            "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
+            "entrenchment": "<b>Almost constant, tense hazardous situation.</b> The main danger comes from (a) <b>persistent weak layer</b>(s) susceptible to interference.",
+            "free_ride": "<b>Low avalanche danger</b> with generally stable snow cover. Only small avalanches are possible in extremely steep terrain. ",
+            "high_alert": "Exceptional situation with <b>high or very high avalanche danger</b>. Spontaneous avalanches of <b>very large or extreme magnitude</b> are possible",
+            "spring_diurnal": "Wet snow avalanches during the course of the day, which are subject to a <b>clear diurnal cycle</b>, are decisive for the risk assessment."
           }
         },
         "communication": {
           "title": "Communication:",
           "text": {
-            "assessment": "",
-            "stepping_out": "",
-            "status_quo": "",
-            "stepping_back": "",
-            "entrenchment": "",
-            "free_ride": "",
-            "high_alert": "",
-            "spring_diurnal": ""
+            "assessment": "Avalanche situation must be checked locally. Restraint is recommended.",
+            "stepping_out": "Gradual decrease in danger. However, caution is still required and the improving situation should be assessed locally before entering riskier terrain.  ",
+            "status_quo": "Hazardous situation is unchanged. Feedback from observers helps to better outline the hazardous situation. More favourable terrain should be communicated with emphasis. ",
+            "stepping_back": "Clear communication of the increase in avalanche danger - even within a danger level. Information on the causes supports comprehensibility in communication. ",
+            "entrenchment": "Caution and restraint are required. Situation hardly changes. If possible, provide as precise information as possible on distribution and possibility to trigger. Increased communication of observations that reveal the situation and trigger restraint.",
+            "free_ride": "Little text. Emphasise the generally favourable overall situation and potentially isolated hazard areas",
+            "high_alert": "Communication across all channels. The focus is no longer on winter sports. Danger even in areas that are not usually at risk of avalanches.",
+            "spring_diurnal": "Favourable situation in the morning, increasing during the day. Assessment should be made locally by observing the softening of the melt-freeze crust and the increasing soaking of the snow cover."
           }
         },
         "examples": {
           "title": "Examples:",
           "text": {
-            "assessment": "",
-            "stepping_out": "",
-            "status_quo": "",
-            "stepping_back": "",
-            "entrenchment": "",
-            "free_ride": "",
-            "high_alert": "",
-            "spring_diurnal": ""
+            "assessment": "Start of the season.",
+            "stepping_out": "Cooling leads to a decrease in the risk of wet snow avalanches after a warm and humid weather phase.",
+            "status_quo": "Consistent wind-slab problem with cold temperatures, loose snow and wind.",
+            "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
+            "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
+            "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
+            "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
+            "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
           }
         },
         "strategicMindset": {

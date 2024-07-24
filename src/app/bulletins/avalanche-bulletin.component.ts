@@ -395,7 +395,7 @@ export class AvalancheBulletinComponent {
     this.strategicMindsetModalRef = this.modalService.show(template, {
       animated: false,
       keyboard: true,
-      class: "modal-lg",
+      class: "modal-xl",
     });
   }
 

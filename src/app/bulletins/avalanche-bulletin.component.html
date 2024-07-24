@@ -478,39 +478,44 @@
   </div>
   <div class="modal-body region-form__mindset-modal">
     <p>{{ "bulletins.create.strategicMindsetDialog.introduction" | translate }}</p>
-    <table class="strategic-mindset__table">
-      <colgroup>
-        <col span="1" />
-        <col span="1" />
-        <col span="1" />
-        <col span="1" />
-        <col span="1" />
-        <col span="1" />
-        <col span="1" />
-        <col span="1" />
-      </colgroup>
-      <thead>
-        <tr>
-          <th *ngFor="let mindset of strategicMindset">
-            {{ "strategicMindset." + mindset | translate }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td *ngFor="let mindset of strategicMindset">
-            <b>{{ "bulletins.create.strategicMindsetDialog.description.title" | translate }}</b
-            ><br />
-            {{ "bulletins.create.strategicMindsetDialog.description." + mindset + ".text" | translate }}<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.communication.title" | translate }}</b
-            ><br />
-            {{ "bulletins.create.strategicMindsetDialog.communication." + mindset + ".text" | translate }}<br /><br />
-            <b>{{ "bulletins.create.strategicMindsetDialog.examples.title" | translate }}</b
-            ><br />
-            {{ "bulletins.create.strategicMindsetDialog.examples." + mindset + ".text" | translate }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div style="overflow-x: scroll">
+      <table class="strategic-mindset__table">
+        <colgroup>
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th *ngFor="let mindset of strategicMindset">
+              {{ ("strategicMindset." + mindset | translate).toUpperCase() }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td *ngFor="let mindset of strategicMindset">
+              <b>{{ "bulletins.create.strategicMindsetDialog.description.title" | translate }}</b
+              ><br />
+              <div
+                [innerHtml]="'bulletins.create.strategicMindsetDialog.description.text.' + mindset | translate"
+              ></div>
+              <br />
+              <b>{{ "bulletins.create.strategicMindsetDialog.examples.title" | translate }}</b
+              ><br />
+              {{ "bulletins.create.strategicMindsetDialog.examples.text." + mindset | translate }}<br /><br />
+              <b>{{ "bulletins.create.strategicMindsetDialog.communication.title" | translate }}</b
+              ><br />
+              {{ "bulletins.create.strategicMindsetDialog.communication.text." + mindset | translate }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </ng-template>
