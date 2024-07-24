@@ -26,6 +26,7 @@ export interface RegionConfiguration {
   enableAvalancheProblemNoDistinctAvalancheProblem: boolean;
   enableObservations: boolean;
   enableModelling: boolean;
+  enableWeatherbox: boolean;
   enableStrategicMindset: boolean;
   showMatrix: boolean;
   serverInstance: ServerConfiguration;
