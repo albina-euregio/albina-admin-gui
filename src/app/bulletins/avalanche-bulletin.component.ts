@@ -45,6 +45,7 @@ export class AvalancheBulletinComponent {
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
+  strategicMindset: Enums.StrategicMindset[] = Object.values(Enums.StrategicMindset);
 
   public editRegions: boolean;
 
@@ -61,6 +62,9 @@ export class AvalancheBulletinComponent {
 
   public removeDaytimeDependencyModalRef: BsModalRef;
   @ViewChild("removeDaytimeDependencyTemplate") removeDaytimeDependencyTemplate: TemplateRef<any>;
+
+  public strategicMindsetModalRef: BsModalRef;
+  @ViewChild("strategicMindsetTemplate") strategicMindsetTemplate: TemplateRef<any>;
 
   stopListening: Function;
 
@@ -146,6 +150,11 @@ export class AvalancheBulletinComponent {
 
   onDangerPattern2Change(event: Enums.DangerPattern) {
     this.bulletin.dangerPattern2 = event;
+    this.updateBulletinOnServer();
+  }
+
+  onStrategicMindsetChange(event: Enums.StrategicMindset) {
+    this.bulletin.strategicMindset = event;
     this.updateBulletinOnServer();
   }
 
@@ -380,6 +389,18 @@ export class AvalancheBulletinComponent {
 
   removeDaytimeDependencyModalDecline(): void {
     this.removeDaytimeDependencyModalRef.hide();
+  }
+
+  openStrategicMindsetInfoModal(template: TemplateRef<any>) {
+    this.strategicMindsetModalRef = this.modalService.show(template, {
+      animated: false,
+      keyboard: true,
+      class: "modal-xl",
+    });
+  }
+
+  closeStrategicMindsetInfoModal(): void {
+    this.strategicMindsetModalRef.hide();
   }
 
   toggleBulletinSidebar() {

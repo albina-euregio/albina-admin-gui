@@ -26,6 +26,7 @@ export interface RegionConfiguration {
   enableAvalancheProblemNoDistinctAvalancheProblem: boolean;
   enableObservations: boolean;
   enableModelling: boolean;
+  enableStrategicMindset: boolean;
   showMatrix: boolean;
   serverInstance: ServerConfiguration;
   pdfColor: string;

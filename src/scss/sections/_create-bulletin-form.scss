@@ -37,9 +37,47 @@ $region-form-width: 512px;
   }
 }
 
+.region-form__mindset {
+  padding: 0 $region-form-padding $region-form-padding $region-form-padding;
+  flex-flow: row nowrap;
+  gap: $region-form-padding;
+  font-size: 0.8rem;
+  .form-select {
+    width: auto;
+  }
+  .region-form__mindset-text {
+    margin-bottom: 0rem;
+    color: $gray-600;
+  }
+}
+
+.region-form__mindset-modal {
+  overflow: auto;
+  font-size: small;
+}
+
 // Region form actions banner
 .region-form__banner {
   border-bottom: $region-form-border;
+  p {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+}
+
+.strategic-mindset__table {
+  td {
+    vertical-align: top;
+    padding: 0.5rem;
+  }
+  th {
+    vertical-align: top;
+    padding: 0.5rem;
+    font-size: medium;
+  }
+  col {
+    min-width: 250px !important;
+  }
 }
 
 // Form actions footer

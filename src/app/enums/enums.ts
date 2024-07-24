@@ -77,6 +77,17 @@ export enum DangerPattern {
   dp10 = "dp10",
 }
 
+export enum StrategicMindset {
+  assessment = "assessment",
+  stepping_out = "stepping_out",
+  status_quo = "status_quo",
+  stepping_back = "stepping_back",
+  entrenchment = "entrenchment",
+  free_ride = "free_ride",
+  high_alert = "high_alert",
+  spring_diurnal = "spring_diurnal",
+}
+
 export enum AvalancheSize {
   small = "small",
   medium = "medium",
