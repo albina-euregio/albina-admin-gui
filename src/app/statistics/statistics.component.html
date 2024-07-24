@@ -2,9 +2,7 @@
   <form #statisticsForm="ngForm">
     <div class="card-body">
       <div class="form-group row">
-        <label for="inputName" class="col-sm-2 col-form-label">{{
-          "admin.statistics.label.dateRange" | translate
-        }}</label>
+        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.dateRange" | translate }}</label>
         <div class="col-sm-10">
           <input
             type="text"
@@ -17,9 +15,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="inputName" class="col-sm-2 col-form-label">{{
-          "admin.statistics.label.extended" | translate
-        }}</label>
+        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.extended" | translate }}</label>
         <div class="col-sm-10">
           <label class="switch switch-primary">
             <input name="extended" type="checkbox" class="switch-input" [(ngModel)]="extended" />
@@ -28,9 +24,7 @@
         </div>
       </div>
       <div class="form-group row">
-        <label for="inputName" class="col-sm-2 col-form-label">{{
-          "admin.statistics.label.duplicates" | translate
-        }}</label>
+        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.duplicates" | translate }}</label>
         <div class="col-sm-10">
           <label class="switch switch-primary">
             <input name="duplicates" type="checkbox" class="switch-input" [(ngModel)]="duplicates" />
@@ -42,7 +36,7 @@
     <!-- Footer -->
     <div class="card-footer">
       <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getStatistics($event)">
-        {{ "admin.statistics.button.submit" | translate }}
+        {{ "statistics.button.submit" | translate }}
       </button>
     </div>
   </form>

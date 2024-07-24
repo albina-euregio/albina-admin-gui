@@ -45,6 +45,7 @@
     "oc": "Aranese",
     "fullscreen": "Fullscreen",
     "settings": "Settings",
+    "statistics": "Statistics",
     "admin": "Admin",
     "region": "Region",
     "education": "Education"
@@ -653,17 +654,6 @@
         "cancel": "Cancel"
       }
     },
-    "statistics": {
-      "title": "Statistics",
-      "button": {
-        "submit": "Download"
-      },
-      "label": {
-        "dateRange": "Period",
-        "extended": "Extended",
-        "duplicates": "Duplicates"
-      }
-    },
     "observations": {
       "table": "Table",
       "map": "Map",
@@ -787,6 +777,17 @@
         "showCaaml": "Show CAAML",
         "showJson": "Show JSON"
       }
+    }
+  },
+  "statistics": {
+    "title": "Statistics",
+    "button": {
+      "submit": "Download"
+    },
+    "label": {
+      "dateRange": "Period",
+      "extended": "Extended",
+      "duplicates": "Duplicates"
     }
   },
 

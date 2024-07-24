@@ -116,9 +116,6 @@
           </li>
 
           <li>
-            <h6 class="dropdown-header">{{ "menu.education" | translate }}</h6>
-          </li>
-          <li>
             <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/education']"
               ><i class="ph ph-graduation-cap"></i> {{ "menu.education" | translate }}</a
             >
@@ -128,7 +125,14 @@
           </li>
 
           <li>
-            <h6 class="dropdown-header">{{ "menu.settings" | translate }}</h6>
+            <a
+              *ngIf="authenticationService.isCurrentUserInRole(constantsService.roleForecaster)"
+              class="dropdown-item"
+              routerLinkActive="active"
+              [routerLink]="['/statistics']"
+            >
+              <i class="ph ph-chart-line"></i>{{ "menu.statistics" | translate }}
+            </a>
           </li>
           <li>
             <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/settings']"
@@ -144,6 +148,11 @@
               ><i class="ph ph-detective"></i>{{ "menu.admin" | translate }}</a
             >
           </li>
+
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+
           <li>
             <a class="dropdown-item" href="#" routerLink="/pages/login" (click)="logout()"
               ><i class="ph ph-sign-out"></i> {{ "menu.logout" | translate }}</a
