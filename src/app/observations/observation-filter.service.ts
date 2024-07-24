@@ -198,7 +198,6 @@ export class ObservationFilterService {
   };
 
   constructor(
-    private constantsService: ConstantsService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
@@ -268,10 +267,6 @@ export class ObservationFilterService {
     return this.dateRange[0];
   }
 
-  get startDateString(): string {
-    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.startDate);
-  }
-
   set startDate(date: Date) {
     this.dateRange[0] = date;
     this.setDateRange();
@@ -286,8 +281,11 @@ export class ObservationFilterService {
     this.setDateRange();
   }
 
-  get endDateString(): string {
-    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.endDate);
+  get dateRangeParams() {
+    return {
+      startDate: this.startDate.toISOString(),
+      endDate: this.endDate.toISOString(),
+    };
   }
 
   public isSelected(observation: GenericObservation) {
