@@ -182,16 +182,7 @@ export class ObservationFilterService {
       type: LocalFilterTypes.Days,
       key: "eventDate",
       chartRichLabel: "label",
-      values: [
-        // FIXME
-        { value: "2024-07-17", color: "#084594", label: "17" },
-        { value: "2024-07-18", color: "#2171b5", label: "18" },
-        { value: "2024-07-19", color: "#4292c6", label: "19" },
-        { value: "2024-07-20", color: "#6baed6", label: "20" },
-        { value: "2024-07-21", color: "#9ecae1", label: "21" },
-        { value: "2024-07-22", color: "#c6dbef", label: "22" },
-        { value: "2024-07-23", color: "#eff3ff", label: "23" },
-      ],
+      values: [],
       selected: [],
       highlighted: [],
     },
@@ -247,6 +238,15 @@ export class ObservationFilterService {
     if (this.startDate) this.startDate.setHours(0, 0, 0, 0);
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
     if (this.startDate && this.endDate) {
+      const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
+      this.filterSelection.Days.values = [];
+      for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
+        this.filterSelection.Days.values.push({
+          value: this.getISODateString(i),
+          color: colors.shift(),
+          label: formatDate(i, "dd", "en-US"),
+        });
+      }
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {
@@ -428,9 +428,10 @@ export class ObservationFilterService {
     return { dataset: { source: [header, ...data] }, nan };
   }
 
-  testFilterSelection(f: FilterSelectionData["values"][number], v: number | string): boolean {
+  testFilterSelection(f: FilterSelectionData["values"][number], v: number | string | Date): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
+      (v instanceof Date && f.value === this.getISODateString(v)) ||
       f.value === v
     );
   }
