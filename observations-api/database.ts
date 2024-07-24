@@ -1,5 +1,41 @@
 import * as mysql from "mysql2/promise";
-import type { GenericObservation } from "./models";
+import type {
+  Aspect,
+  AvalancheProblem,
+  DangerPattern,
+  ForecastSource,
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+  Stability,
+} from "./models";
+
+type GenericObservationTable = {
+  REGION_ID: string;
+  EVENT_DATE: Date;
+  ASPECTS: string;
+  OBS_TYPE: string;
+  REPORT_DATE: Date;
+  STABILITY: string;
+  EXTRA_DIALOG_ROWS: string;
+  LONGITUDE: number;
+  ELEVATION: number;
+  IMPORTANT_OBSERVATION: string;
+  AUTHOR_NAME: string;
+  EXTERNAL_URL: string;
+  ELEVATION_LOWER_BOUND: number;
+  AVALANCHE_PROBLEMS: string;
+  SOURCE: string;
+  EXTERNAL_IMG: string;
+  ELEVATION_UPPER_BOUND: number;
+  ID: string;
+  DANGER_PATTERNS: string;
+  OBS_DATA: string;
+  LATITUDE: number;
+  LOCATION_NAME: string;
+  OBS_CONTENT: string;
+};
 
 export async function createConnection() {
   return await mysql.createConnection({
@@ -13,7 +49,7 @@ export async function createConnection() {
 export async function insertObservation(connection: mysql.Connection, o: GenericObservation) {
   if (!o) return;
   console.log("Inserting observation", o.$id, o.$source);
-  const data = {
+  const data: GenericObservationTable = {
     ID: o.$id,
     SOURCE: o.$source,
     OBS_TYPE: o.$type ?? null,
@@ -64,16 +100,16 @@ export async function selectObservations(
 ): Promise<GenericObservation[]> {
   const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ?";
   const values = [startDate.toISOString(), endDate.toISOString()];
-  const [rows, fields] = await connection.query(sql, values);
-  return rows.map(
+  const [rows] = await connection.query(sql, values);
+  return (rows as unknown as GenericObservationTable[]).map(
     (row): GenericObservation => ({
       $id: row.ID,
-      $source: row.SOURCE,
-      $type: row.OBS_TYPE ?? undefined,
+      $source: row.SOURCE as ObservationSource | ForecastSource,
+      $type: (row.OBS_TYPE as ObservationType) ?? undefined,
       $externalURL: row.EXTERNAL_URL ?? undefined,
       $externalImg: row.EXTERNAL_IMG ?? undefined,
-      stability: row.STABILITY ?? undefined,
-      aspect: row.ASPECTS?.split(",")?.[0] ?? undefined,
+      stability: (row.STABILITY as Stability) ?? undefined,
+      aspect: (row.ASPECTS?.split(",")?.[0] as Aspect) ?? undefined,
       authorName: row.AUTHOR_NAME ?? undefined,
       content: row.OBS_CONTENT ?? undefined,
       $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : row.OBS_DATA ?? undefined,
@@ -89,9 +125,9 @@ export async function selectObservations(
       longitude: row.LONGITUDE ?? undefined,
       region: row.REGION_ID ?? undefined,
       reportDate: row.REPORT_DATE ?? undefined,
-      avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(","),
-      dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(","),
-      importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(","),
+      avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
+      dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
+      importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(",") as ImportantObservation[],
     }),
   );
 }
