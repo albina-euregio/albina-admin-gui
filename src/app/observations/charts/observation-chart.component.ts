@@ -12,9 +12,9 @@ import { NgxEchartsDirective } from "ngx-echarts";
   standalone: true,
   selector: "app-observation-chart",
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
-  templateUrl: "./base-chart.component.html",
+  templateUrl: "./observation-chart.component.html",
 })
-export class BaseChartComponent implements OnInit {
+export class ObservationChartComponent implements OnInit {
   longClickDur = 200;
   private pressTimer;
 
