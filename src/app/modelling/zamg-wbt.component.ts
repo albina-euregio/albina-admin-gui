@@ -8,6 +8,7 @@ import { Component } from "@angular/core";
     <a
       href="https://portal.tirol.gv.at/at.ac.zamg.wbt-p/"
       class="btn btn-success btn-lg position-absolute top-50 start-50 translate-middle"
+      target="_blank"
     >
       Wetterinformationsportal © ZAMG
     </a>
