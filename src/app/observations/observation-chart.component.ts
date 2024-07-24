@@ -217,17 +217,7 @@ export class ObservationChartComponent implements OnInit {
             disabled: true,
           },
         },
-        {
-          ...defaultDataBarOptions,
-          stack: "total",
-          itemStyle: {
-            color: (entry) => this.getClassifyColor(entry),
-          },
-          emphasis: {
-            disabled: true,
-          },
-        },
-        ...new Array(10).fill(0).map((_, i) => ({
+        ...[undefined, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
           ...defaultDataBarOptions,
           stack: "total",
           itemStyle: {
@@ -382,17 +372,7 @@ export class ObservationChartComponent implements OnInit {
             disabled: true,
           },
         },
-        {
-          ...barDefaults,
-          stack: "total",
-          itemStyle: {
-            color: (entry) => this.getClassifyColor(entry),
-          },
-          emphasis: {
-            disabled: true,
-          },
-        },
-        ...new Array(10).fill(0).map((_, i) => ({
+        ...[undefined, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
           ...barDefaults,
           stack: "total",
           itemStyle: {
@@ -494,10 +474,11 @@ export class ObservationChartComponent implements OnInit {
     if (this.labelType === this.type) {
       const filterSelection = this.filter.filterSelection[this.labelType];
       const value = filterSelection.values.find((v) => v.value === entry.name);
-      return `{${filterSelection.chartRichLabel}|${value.label}} ${formattedResult}`;
-    } else {
-      return formattedResult;
+      if (value) {
+        return `{${filterSelection.chartRichLabel}|${value.label}} ${formattedResult}`;
+      }
     }
+    return formattedResult;
   }
 
   formatTooltip(params: CallbackDataParams) {
