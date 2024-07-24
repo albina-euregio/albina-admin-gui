@@ -7,7 +7,15 @@ export async function getAwsWeatherStations(): Promise<GenericObservation[]> {
   return geojson.features.map(
     (feature): GenericObservation => ({
       $data: feature.properties,
-      $externalImg: `https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/${feature.properties.plot}.png`,
+      $externalImgs: [
+        `https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/${feature.properties.plot}.png`,
+        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-6/${feature.properties.plot}.png`,
+        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-12/${feature.properties.plot}.png`,
+        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-24/${feature.properties.plot}.png`,
+        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/24-48/${feature.properties.plot}.png`,
+        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/48-72/${feature.properties.plot}.png`,
+        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/72-168/${feature.properties.plot}.png`,
+      ],
       $source: ObservationSource.AvalancheWarningService,
       $type: ObservationType.TimeSeries,
       aspect: undefined,

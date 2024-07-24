@@ -35,7 +35,7 @@ export async function* fetchSnowLineCalculations(
         eventDate: endDate,
         reportDate: endDate,
         locationName: feature.properties.station_name,
-        $externalImg: WEB.replace("{{date}}", date).replace("{{plot}}", feature.properties.plot_name),
+        $externalImgs: [WEB.replace("{{date}}", date).replace("{{plot}}", feature.properties.plot_name)],
         latitude: feature.geometry.coordinates[1],
         longitude: feature.geometry.coordinates[0],
         elevation: feature.properties.snowfall_limit,

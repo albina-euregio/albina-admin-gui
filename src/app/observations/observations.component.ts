@@ -89,7 +89,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     observation: GenericObservation;
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
-    imgUrl: SafeResourceUrl;
+    imgUrls: SafeResourceUrl[];
   };
 
   public allRegions: RegionProperties[];
@@ -439,10 +439,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   onObservationClick(observation: GenericObservation): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe, imgUrl: undefined };
-    } else if (observation.$externalImg) {
-      const imgUrl = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalImg);
-      this.observationPopup = { observation, table: [], iframe: undefined, imgUrl: imgUrl };
+      this.observationPopup = { observation, table: [], iframe, imgUrls: undefined };
+    } else if (observation.$externalImgs) {
+      const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
+      this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls };
     } else {
       const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
       const rows = toObservationTable(observation);
@@ -450,7 +450,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
-      this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
+      this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined };
     }
     this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
   }
@@ -460,11 +460,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   @HostListener("document:keydown", ["$event"])
-  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }) {
+  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown" }) {
     if (!this.observationPopup?.observation) {
       return;
     }
-    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+    if (
+      event.key !== "ArrowRight" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown"
+    ) {
       return;
     }
     let observation = this.observationPopup?.observation;
@@ -477,16 +482,28 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     if (event.key === "ArrowRight") {
       index += 1;
-      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
         index += 1;
       }
       observation = observations[index];
     } else if (event.key === "ArrowLeft") {
       index -= 1;
-      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
         index -= 1;
       }
       observation = observations[index];
+    } else if (observation?.$externalImgs && event.key === "ArrowUp") {
+      const image = document.getElementById("observationImage") as HTMLImageElement;
+      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
+      if (index > 0) {
+        image.src = observation?.$externalImgs[index - 1];
+      }
+    } else if (observation?.$externalImgs && event.key === "ArrowDown") {
+      const image = document.getElementById("observationImage") as HTMLImageElement;
+      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
+      if (observation?.$externalImgs.length <= index - 1) {
+        image.src = observation?.$externalImgs[index + 1];
+      }
     }
     if (observation) {
       this.onObservationClick(observation);

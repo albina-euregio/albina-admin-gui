@@ -483,8 +483,8 @@
       [src]="observationPopup?.iframe"
       style="width: 100%; height: 80vh"
     ></iframe>
-    <div *ngIf="observationPopup?.imgUrl">
-      <img [src]="observationPopup?.imgUrl" style="width: -webkit-fill-available" />
+    <div *ngIf="observationPopup?.imgUrls">
+      <img id="observationImage" [src]="observationPopup?.imgUrls[0]" style="width: -webkit-fill-available" />
     </div>
   </div>
 </ng-template>
