@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { LocalFilterTypes } from "../models/generic-observation.model";
-import { ObservationFilterService, type GenericFilterToggleData } from "../observation-filter.service";
-import { ObservationMarkerService } from "../observation-marker.service";
+import { LocalFilterTypes } from "./models/generic-observation.model";
+import { ObservationFilterService, type GenericFilterToggleData } from "./observation-filter.service";
+import { ObservationMarkerService } from "./observation-marker.service";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { EChartsOption } from "echarts";
 import { CommonModule } from "@angular/common";
