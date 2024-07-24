@@ -27,27 +27,18 @@ export class AlbinaObservationsService {
   }
 
   getObservations(): Observable<GenericObservation<Observation>> {
-    const url =
-      this.constantsService.getServerUrl() +
-      "observations?startDate=" +
-      this.filter.startDateString +
-      "&endDate=" +
-      this.filter.endDateString;
+    const url = this.constantsService.getServerUrl() + "observations";
     const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<Observation[]>(url, { headers }).pipe(
+    const params = this.filter.dateRangeParams;
+    return this.http.get<Observation[]>(url, { headers, params }).pipe(
       mergeAll(),
       map((o) => convertObservationToGeneric(o)),
     );
   }
 
   getGenericObservations(): Observable<GenericObservation> {
-    const url =
-      environment.apiBaseUrl +
-      "../api_ext/observations?startDate=" +
-      this.filter.startDateString +
-      "&endDate=" +
-      this.filter.endDateString;
-    return this.getGenericObservations0(url);
+    const url = environment.apiBaseUrl + "../api_ext/observations";
+    return this.getGenericObservations0(url, this.filter.dateRangeParams);
   }
 
   getObservers(): Observable<GenericObservation> {
@@ -65,9 +56,9 @@ export class AlbinaObservationsService {
     return this.getGenericObservations0(url);
   }
 
-  private getGenericObservations0(url: string): Observable<GenericObservation> {
+  private getGenericObservations0(url: string, params = {}): Observable<GenericObservation> {
     const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<GenericObservation[]>(url, { headers }).pipe(
+    return this.http.get<GenericObservation[]>(url, { headers, params }).pipe(
       mergeAll(),
       map((o) => ({
         ...o,

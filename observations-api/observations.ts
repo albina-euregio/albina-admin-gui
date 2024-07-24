@@ -1,27 +1,10 @@
-import express from "express";
 import { createConnection, selectObservations } from "./database";
 import { fetchAndInsert } from "./fetch";
-import { GenericObservation } from "./models";
-import { serveWebcams } from "./webcams";
-import { getAwsObservers } from "./observers";
-import { getAwsWeatherStations } from "./weather-stations";
-
-const port = process.env.PORT || 3000;
-
-const app = express();
-app.get("/observations", async (req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const observations = await serveObservations(url);
-  return res.send(observations);
-});
-app.get("/webcams", async (req, res) => res.send(await serveWebcams()));
-app.get("/observers", async (req, res) => res.send(getAwsObservers()));
-app.get("/weather-stations", async (req, res) => res.send(await getAwsWeatherStations()));
-app.listen(port, () => console.log(`observations-api listening on :${port}`));
+import { type GenericObservation } from "./models";
 
 let lastFetch = 0;
 
-async function serveObservations(url: URL): Promise<GenericObservation[]> {
+export async function serveObservations(url: URL): Promise<GenericObservation[]> {
   const startDate =
     typeof url.searchParams.get("startDate") === "string"
       ? new Date(url.searchParams.get("startDate"))

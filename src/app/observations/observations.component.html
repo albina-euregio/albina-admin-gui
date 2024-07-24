@@ -355,10 +355,10 @@
         <div class="toolset-content">
           <!-- !toolset-charts -->
           <div class="toolset-charts">
-            <app-rose-chart
+            <app-observation-chart
               class="chart-container"
+              chart="rose"
               [caption]="'admin.observations.charts.aspect.caption' | translate"
-              [translationBase]="'aspect.'"
               [type]="LocalFilterTypes.Aspect"
               [data]="chartsData.Aspect"
               [isActive]="
@@ -372,11 +372,11 @@
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
               (handleChange)="toggleFilter($event)"
-            >
-            </app-rose-chart>
-            <app-bar-chart
+            />
+            <app-observation-chart
               *ngFor="let type of barCharts"
               class="chart-container"
+              chart="bar"
               [caption]="'admin.observations.charts.' + type[0].toLowerCase() + type.slice(1) + '.caption' | translate"
               [type]="type"
               [data]="chartsData[type]"

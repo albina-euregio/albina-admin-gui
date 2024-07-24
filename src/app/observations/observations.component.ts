@@ -38,8 +38,7 @@ import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { BarChartComponent } from "./charts/bar-chart.component";
-import { RoseChartComponent } from "./charts/rose-chart.component";
+import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
 import { AlbinaObservationsService } from "./observations.service";
@@ -55,13 +54,12 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [
-    BarChartComponent,
+    ObservationChartComponent,
     BsDatepickerModule,
     CommonModule,
     FormsModule,
     ObservationGalleryComponent,
     ObservationTableComponent,
-    RoseChartComponent,
     TranslateModule,
   ],
   templateUrl: "observations.component.html",
@@ -155,7 +153,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
-    this.loadObservations({ days: 7 });
+    if (this.filter.startDate && this.filter.endDate) {
+      this.loadObservations({});
+    } else {
+      this.loadObservations({ days: 7 });
+    }
     this.observationsAsOverlay = [];
 
     this.observersLayerGroup = this.loadObservers();

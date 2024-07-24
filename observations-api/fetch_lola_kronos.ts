@@ -1,5 +1,5 @@
-import { LolaKronosApi, convertLoLaKronos } from "./models/lola-kronos.model";
 import { fetchJSON } from "./fetchJSON";
+import { type LolaKronosApi, convertLoLaKronos } from "./models/lola-kronos.model";
 
 const API = "https://www.lola-kronos.info/api/dataexport/dataFromToken/";
 const WEB = "https://www.lola-kronos.info/";
