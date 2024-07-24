@@ -3,6 +3,8 @@ import { formatDate } from "@angular/common";
 import { Canvas, CircleMarker, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
   Aspect,
+  AvalancheProblem,
+  DangerPattern,
   degreeToAspect,
   GenericObservation,
   ImportantObservation,
@@ -592,7 +594,7 @@ function icon0(
   labelFontSize: string,
   labelFont: "snowsymbolsiacs" | string,
   label: number | string,
-): DivIcon {
+): L.Icon {
   // 700533 - drawImage() fails silently when drawing an SVG image without @width or @height
   // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
   const svg = `
@@ -630,9 +632,8 @@ function icon0(
     </g>
 </svg>
     `;
-  return new DivIcon({
-    className: " ",
-    html: svg,
+  return new Icon({
+    iconUrl: "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg),
     iconSize: [iconSize, iconSize],
     iconAnchor: [iconSize / 2, iconSize / 2],
   });
