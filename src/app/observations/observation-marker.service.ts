@@ -425,6 +425,10 @@ export class ObservationMarkerService {
       }
     }
 
+    if (!this.markerClassify) {
+      return "white";
+    }
+
     const filterSelection = this.filter.filterSelection[this.markerClassify];
     const value = filterSelection.values.find((f) =>
       this.filter.testFilterSelection(f, observation[filterSelection.key]),
