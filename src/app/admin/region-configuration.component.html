@@ -77,6 +77,28 @@
     </tr>
     <tr>
       <td>
+        <label class="col-form-label">{{ "admin.region-configuration.table.enableObservations" | translate }}</label>
+      </td>
+      <td>
+        <label class="switch switch-primary">
+          <input type="checkbox" class="switch-input" [(ngModel)]="config.enableObservations" />
+          <span class="switch-slider"></span>
+        </label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label class="col-form-label">{{ "admin.region-configuration.table.enableModelling" | translate }}</label>
+      </td>
+      <td>
+        <label class="switch switch-primary">
+          <input type="checkbox" class="switch-input" [(ngModel)]="config.enableModelling" />
+          <span class="switch-slider"></span>
+        </label>
+      </td>
+    </tr>
+    <tr>
+      <td>
         <label class="col-form-label">{{ "admin.region-configuration.table.publishBulletins" | translate }}</label>
       </td>
       <td>
