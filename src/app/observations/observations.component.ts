@@ -155,7 +155,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
-    this.loadObservations({ days: 7 });
+    if (this.filter.startDate && this.filter.endDate) {
+      this.loadObservations({});
+    } else {
+      this.loadObservations({ days: 7 });
+    }
     this.observationsAsOverlay = [];
 
     this.observersLayerGroup = this.loadObservers();

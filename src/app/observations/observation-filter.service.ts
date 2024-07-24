@@ -13,6 +13,7 @@ import {
 } from "./models/generic-observation.model";
 import { formatDate } from "@angular/common";
 import { castArray } from "lodash";
+import { ActivatedRoute, Router } from "@angular/router";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -189,7 +190,17 @@ export class ObservationFilterService {
     },
   };
 
-  constructor(private constantsService: ConstantsService) {}
+  constructor(
+    private constantsService: ConstantsService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+  ) {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (params.startDate && params.endDate) {
+        this.dateRange = [new Date(params.startDate), new Date(params.endDate)];
+      }
+    });
+  }
 
   toggleFilter(filterData: GenericFilterToggleData) {
     const filterType = this.filterSelection[filterData.type];
@@ -233,13 +244,15 @@ export class ObservationFilterService {
   setDateRange() {
     if (this.startDate) this.startDate.setHours(0, 0, 0, 0);
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
-
     if (this.startDate && this.endDate) {
-      // FIXME
-      // this.filterSelection.Days.all = [];
-      // for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-      //   this.filterSelection.Days.all.push(this.getISODateString(i));
-      // }
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          startDate: this.getISODateString(this.startDate),
+          endDate: this.getISODateString(this.endDate),
+        },
+        queryParamsHandling: "merge",
+      });
     }
     this.dateRange = [this.startDate, this.endDate];
   }
