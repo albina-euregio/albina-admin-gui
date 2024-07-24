@@ -42,7 +42,10 @@
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']"> AWSOME </a>
         </li>
-        <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
+        <li
+          *ngIf="authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()"
+          class="nav-item"
+        >
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']"> Wetterbox </a>
         </li>
       </ul>
