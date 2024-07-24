@@ -13,7 +13,7 @@ import {
 } from "./models/generic-observation.model";
 import { formatDate } from "@angular/common";
 import { castArray } from "lodash";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -201,11 +201,7 @@ export class ObservationFilterService {
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      if (params.startDate && params.endDate) {
-        this.dateRange = [new Date(params.startDate), new Date(params.endDate)];
-      }
-    });
+    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
   toggleFilter(filterData: GenericFilterToggleData) {
@@ -261,6 +257,15 @@ export class ObservationFilterService {
       });
     }
     this.dateRange = [this.startDate, this.endDate];
+  }
+
+  private parseQueryParams(params: Params) {
+    if (!(params.startDate && params.endDate)) {
+      return;
+    }
+    this.startDate = new Date(params.startDate);
+    this.endDate = new Date(params.endDate);
+    this.setDateRange();
   }
 
   get startDate(): Date {
