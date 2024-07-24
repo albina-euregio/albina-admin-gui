@@ -28,10 +28,34 @@ async function* fetchAll(
   endDate: Date,
   existing: GenericObservation[],
 ): AsyncGenerator<GenericObservation, void, unknown> {
-  yield* fetchLawisIncidents(startDate, endDate, existing);
-  yield* fetchLawisProfiles(startDate, endDate, existing);
-  yield* fetchLolaKronos(startDate, endDate);
-  yield* fetchLwdKip(startDate, endDate);
-  yield* fetchWikiSnow(startDate, endDate);
-  yield* fetchSnowLineCalculations(startDate, endDate);
+  try {
+    yield* fetchLawisIncidents(startDate, endDate, existing);
+  } catch (e) {
+    console.warn("Failed to fetch lawis incidents", e);
+  }
+  try {
+    yield* fetchLawisProfiles(startDate, endDate, existing);
+  } catch (e) {
+    console.warn("Failed to fetch lawis profiles", e);
+  }
+  try {
+    yield* fetchLolaKronos(startDate, endDate);
+  } catch (e) {
+    console.warn("Failed to fetch lola-kronos", e);
+  }
+  try {
+    yield* fetchLwdKip(startDate, endDate);
+  } catch (e) {
+    console.warn("Failed to fetch lwdkip", e);
+  }
+  try {
+    yield* fetchWikiSnow(startDate, endDate);
+  } catch (e) {
+    console.warn("Failed to fetch wikisnow", e);
+  }
+  try {
+    yield* fetchSnowLineCalculations(startDate, endDate);
+  } catch (e) {
+    console.warn("Failed to fetch snowline calculations", e);
+  }
 }
