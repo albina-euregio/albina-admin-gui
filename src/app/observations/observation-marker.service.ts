@@ -17,17 +17,6 @@ import {
 import { memoize } from "lodash";
 import { ObservationFilterService } from "./observation-filter.service";
 
-// https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
-const colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999"];
-
-const stabilityColors: Record<Stability, string> = {
-  // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
-  [Stability.good]: "#a6d96a",
-  [Stability.fair]: "#ffffbf",
-  [Stability.poor]: "#fdae61",
-  [Stability.very_poor]: "#d7191c",
-};
-
 const zIndex: Record<Stability, number> = {
   [Stability.good]: 1,
   [Stability.fair]: 5,
@@ -36,7 +25,6 @@ const zIndex: Record<Stability, number> = {
 };
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
-const elevationThresholds = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 9000];
 const elevationColors = {
   "0": "#FFFFFE",
   "1": "#FFFFB3",
@@ -159,47 +147,6 @@ const aspectColors = {
   [Aspect.SW]: "#6c300b",
   [Aspect.W]: "#000000",
   [Aspect.NW]: "#113570",
-};
-
-// The international classification for seasonal snow on the ground
-// (except for gliding snow - no definition there)
-const avalancheProblemColors = {
-  [AvalancheProblem.new_snow]: "#00ff00",
-  [AvalancheProblem.wind_slab]: "#229b22",
-  [AvalancheProblem.persistent_weak_layers]: "#0000ff",
-  [AvalancheProblem.wet_snow]: "#ff0000",
-  [AvalancheProblem.gliding_snow]: "#aa0000",
-  [AvalancheProblem.cornices]: "#ffffff",
-  [AvalancheProblem.no_distinct_problem]: "#ffffff",
-  [AvalancheProblem.favourable_situation]: "#ffffff",
-};
-
-const dayColors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-
-const observationTypeTexts = {
-  [ObservationType.Avalanche]: "⛰",
-  [ObservationType.Blasting]: "⁜",
-  [ObservationType.Closure]: "𐄂",
-  [ObservationType.Evaluation]: "✓",
-  [ObservationType.Profile]: "⌇",
-  [ObservationType.SimpleObservation]: "👁",
-  [ObservationType.TimeSeries]: "🗠",
-  [ObservationType.Webcam]: "🖻",
-};
-
-const avalancheProblemTexts = {
-  [AvalancheProblem.new_snow]: "🌨",
-  [AvalancheProblem.wind_slab]: "🚩",
-  [AvalancheProblem.wet_snow]: "☀️",
-  [AvalancheProblem.persistent_weak_layers]: "❗",
-  [AvalancheProblem.gliding_snow]: "🐟",
-};
-
-const stabilityTexts = {
-  [Stability.good]: "🟢",
-  [Stability.fair]: "🟡",
-  [Stability.poor]: "🟠",
-  [Stability.very_poor]: "🔴", // 🟣
 };
 
 const grainShapes = {
@@ -375,6 +322,7 @@ export class ObservationMarkerService {
       return "12";
     }
   }
+
   toMarkerColor(observation: GenericObservation): string {
     if (observation?.$type === ObservationType.Webcam) {
       return "black";
@@ -467,62 +415,6 @@ export class ObservationMarkerService {
     return result;
   }
 
-  private enumArrayColor<TEnum, TKeys extends string>(
-    entry: { [key in TKeys]: TEnum },
-    values: TKeys[],
-    type?,
-  ): string {
-    if (!Array.isArray(values) || values.length === 0 || !values[0]) {
-      return "white";
-    } else {
-      switch (type) {
-        case LocalFilterTypes.Aspect:
-          return aspectColors[Object.keys(entry).indexOf(values[0])];
-        case LocalFilterTypes.AvalancheProblem:
-          return avalancheProblemColors[values[0].toString()];
-        default:
-          return colors[Object.keys(entry).indexOf(values[0]) % colors.length];
-      }
-    }
-  }
-
-  getColor(type: LocalFilterTypes, name: any) {
-    switch (type) {
-      case LocalFilterTypes.Aspect:
-        return name ? aspectColors[name] : "white";
-      case LocalFilterTypes.AvalancheProblem:
-        return this.enumArrayColor(AvalancheProblem, [name], LocalFilterTypes.AvalancheProblem);
-      case LocalFilterTypes.DangerPattern:
-        return this.enumArrayColor(DangerPattern, [name]);
-      case LocalFilterTypes.Days:
-        const days = (Date.now() - new Date(name).getTime()) / 24 / 3600e3;
-        return dayColors[Math.min(Math.floor(days), dayColors.length)];
-      case LocalFilterTypes.Elevation:
-        return this.elevationColor(name);
-      case LocalFilterTypes.ImportantObservation:
-        return this.enumArrayColor(ImportantObservation, [name]);
-      case LocalFilterTypes.ObservationType:
-        return this.enumArrayColor(ObservationType, [name]);
-      case LocalFilterTypes.Stability:
-        return this.stabilityColor(name);
-      default:
-        return "#000000";
-    }
-  }
-
-  private stabilityColor(stability: Stability) {
-    return stabilityColors[stability] ?? "white";
-  }
-
-  private elevationColor(elevation: number) {
-    if (elevation) {
-      const index = isFinite(elevation) ? elevationThresholds.findIndex((e) => e >= elevation) : -1;
-      return index >= 0 ? elevationColors[index] : "white";
-    } else {
-      return "white";
-    }
-  }
-
   private snowHeightColor(snowHeight: number) {
     if (snowHeight) {
       const index = isFinite(snowHeight) ? snowHeightThresholds.findIndex((e) => e >= snowHeight) : -1;
@@ -594,31 +486,6 @@ export class ObservationMarkerService {
       return index >= 0 ? windColors[index] : "white";
     } else {
       return "white";
-    }
-  }
-
-  getLegendLabel(type: LocalFilterTypes, label: string, value: string): string {
-    switch (type) {
-      case LocalFilterTypes.Aspect:
-        return label.startsWith("{highlight|")
-          ? "{labelhighlight|" + label.slice(label.indexOf("|") + 1, label.length - 1) + "}"
-          : "{label|" + label + "}";
-      case LocalFilterTypes.DangerPattern:
-        return "{label|" + value.slice(2) + "} " + label;
-      case LocalFilterTypes.AvalancheProblem:
-        return "{symbol|" + avalancheProblemTexts[value] + "} " + label;
-      case LocalFilterTypes.Days:
-        return "{label|" + value.substring(value.length - 2) + "} " + label;
-      case LocalFilterTypes.Elevation:
-        return "{label|" + (isFinite(+value) ? Math.round(+value / 100) : "") + "} " + label;
-      case LocalFilterTypes.ImportantObservation:
-        return "{grainShape|" + importantObservationTexts[value] + "}   " + label;
-      case LocalFilterTypes.ObservationType:
-        return "{symbol|" + observationTypeTexts[value] + "} " + label;
-      case LocalFilterTypes.Stability:
-        return "{symbol|" + stabilityTexts[value] + "} " + label;
-      default:
-        return label;
     }
   }
 

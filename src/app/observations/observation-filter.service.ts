@@ -83,6 +83,7 @@ export class ObservationFilterService {
       key: "aspect",
       chartRichLabel: "label",
       values: [
+        // FATMAP
         { value: Aspect.N, color: "#2f74f9", label: Aspect.N },
         { value: Aspect.NE, color: "#96c0fc", label: Aspect.NE },
         { value: Aspect.E, color: "#b3b3b3", label: Aspect.E },
@@ -100,6 +101,8 @@ export class ObservationFilterService {
       key: "avalancheProblems",
       chartRichLabel: "symbol",
       values: [
+        // The international classification for seasonal snow on the ground
+        // (except for gliding snow - no definition there)
         { value: AvalancheProblem.new_snow, color: "#00ff00", label: "🌨" },
         { value: AvalancheProblem.wind_slab, color: "#229b22", label: "🚩" },
         { value: AvalancheProblem.persistent_weak_layers, color: "#0000ff", label: "❗" },
@@ -114,6 +117,7 @@ export class ObservationFilterService {
       key: "stability",
       chartRichLabel: "symbol",
       values: [
+        // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
         { value: Stability.very_poor, color: "#d7191c", label: "🔴" },
         { value: Stability.poor, color: "#fdae61", label: "🟠" },
         { value: Stability.fair, color: "#ffffbf", label: "🟡" },
@@ -127,6 +131,7 @@ export class ObservationFilterService {
       key: "$type",
       chartRichLabel: "symbol",
       values: [
+        // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
         { value: ObservationType.SimpleObservation, color: "#e41a1c", label: "👁" },
         { value: ObservationType.Evaluation, color: "#377eb8", label: "✓" },
         { value: ObservationType.Avalanche, color: "#4daf4a", label: "⛰" },
@@ -142,6 +147,7 @@ export class ObservationFilterService {
       key: "importantObservations",
       chartRichLabel: "grainShape",
       values: [
+        // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
         { value: ImportantObservation.SnowLine, color: "#e41a1c", label: "S" },
         { value: ImportantObservation.SurfaceHoar, color: "#377eb8", label: "g" },
         { value: ImportantObservation.Graupel, color: "#4daf4a", label: "o" },
@@ -157,6 +163,7 @@ export class ObservationFilterService {
       key: "dangerPatterns",
       chartRichLabel: "label",
       values: [
+        // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
         { value: DangerPattern.dp1, color: "#e41a1c", label: "1" },
         { value: DangerPattern.dp2, color: "#377eb8", label: "2" },
         { value: DangerPattern.dp3, color: "#4daf4a", label: "3" },
