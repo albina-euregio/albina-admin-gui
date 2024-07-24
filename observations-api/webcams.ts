@@ -1,11 +1,11 @@
-import { GenericObservation } from "./models";
-import { convertRasWebcam, webcams as rasWebcams } from "./models/ras-webcam.model";
-import { FotoWebcamEUResponse, convertFotoWebcamEU } from "./models/foto-webcam.model";
-import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "./models/panocloud-webcam.modes";
-import { PanomaxCamResponse, PanomaxThumbnailResponse, convertPanomax } from "./models/panomax.model";
-import { fetchJSON } from "./fetchJSON";
-import { getRegionForLatLng } from "../src/app/providers/regions-service/augmentRegion";
 import { readFile } from "node:fs/promises";
+import { getRegionForLatLng } from "../src/app/providers/regions-service/augmentRegion";
+import { fetchJSON } from "./fetchJSON";
+import type { GenericObservation } from "./models";
+import { type FotoWebcamEUResponse, convertFotoWebcamEU } from "./models/foto-webcam.model";
+import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "./models/panocloud-webcam.modes";
+import { type PanomaxCamResponse, type PanomaxThumbnailResponse, convertPanomax } from "./models/panomax.model";
+import { convertRasWebcam, webcams as rasWebcams } from "./models/ras-webcam.model";
 
 let lastFetch = 0;
 let webcams: Promise<GenericObservation[]>;

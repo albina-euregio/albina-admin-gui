@@ -156,7 +156,7 @@ build:observations-api:
     - bun run build
     - cd ../
     - mkdir dist/
-    - mv observations-api/*.mjs dist/
+    - mv observations-api/dist/server/* dist/
   environment:
     name: observations-api
   artifacts:
