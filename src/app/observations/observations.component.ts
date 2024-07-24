@@ -38,8 +38,7 @@ import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { BarChartComponent } from "./charts/bar-chart.component";
-import { RoseChartComponent } from "./charts/rose-chart.component";
+import { BaseChartComponent } from "./charts/base-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
 import { AlbinaObservationsService } from "./observations.service";
@@ -55,13 +54,12 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [
-    BarChartComponent,
+    BaseChartComponent,
     BsDatepickerModule,
     CommonModule,
     FormsModule,
     ObservationGalleryComponent,
     ObservationTableComponent,
-    RoseChartComponent,
     TranslateModule,
   ],
   templateUrl: "observations.component.html",
