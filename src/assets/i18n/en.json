@@ -526,6 +526,8 @@
         "superRegions": "Super regions",
         "neighborRegions": "Neighbouring regions",
         "showMatrix": "Show matrix",
+        "enableObservations": "Enable observations",
+        "enableModelling": "Enable modelling",
         "publishBulletins": "Publish avalanche forecast",
         "publishBlogs": "Publish blog posts",
         "createCaamlV5": "Create CAAML v5",
