@@ -27,7 +27,11 @@
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
     "modellingZamgMeteogram": "GeoSphere meteogram",
     "modellingSnowpack": "SNOWPACK model",
-    "modellingSnowpackMeteo": "SNOWPACK modelled meteo"
+    "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
+    "weatherbox": "Weatherbox",
+    "awsome": "AWSOME",
+    "snowpack": "SNOWPACK",
+    "geosphere": "GeoSphere"
   },
   "menu": {
     "logout": "Logout",
@@ -528,6 +532,7 @@
         "showMatrix": "Show matrix",
         "enableObservations": "Enable observations",
         "enableModelling": "Enable modelling",
+        "enableWeatherbox": "Enable weather box",
         "publishBulletins": "Publish avalanche forecast",
         "publishBlogs": "Publish blog posts",
         "createCaamlV5": "Create CAAML v5",
