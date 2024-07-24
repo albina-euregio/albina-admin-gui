@@ -1,5 +1,5 @@
-import mysql, { Connection, QueryError } from "mysql2/promise";
-import { GenericObservation } from "./models";
+import * as mysql from "mysql2/promise";
+import type { GenericObservation } from "./models";
 
 export async function createConnection() {
   return await mysql.createConnection({
@@ -10,7 +10,7 @@ export async function createConnection() {
     database: "albina_dev",
   });
 }
-export async function insertObservation(connection: Connection, o: GenericObservation) {
+export async function insertObservation(connection: mysql.Connection, o: GenericObservation) {
   if (!o) return;
   console.log("Inserting observation", o.$id, o.$source);
   const data = {
@@ -48,7 +48,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
   try {
     await connection.execute(sql, Object.values(data));
   } catch (err) {
-    if ((err as QueryError).code === "ER_DUP_ENTRY") {
+    if ((err as mysql.QueryError).code === "ER_DUP_ENTRY") {
       console.debug("Skipping existing observation", o.$id, data);
       return;
     }
@@ -58,7 +58,7 @@ export async function insertObservation(connection: Connection, o: GenericObserv
 }
 
 export async function selectObservations(
-  connection: Connection,
+  connection: mysql.Connection,
   startDate: Date,
   endDate: Date,
 ): Promise<GenericObservation[]> {

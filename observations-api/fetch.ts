@@ -1,13 +1,13 @@
-import { GenericObservation, findExistingObservation } from "./models";
 import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
 import { createConnection, insertObservation, selectObservations } from "./database";
+import { augmentElevation } from "./elevation";
 import { fetchLawisIncidents } from "./fetch_lawis_incident";
 import { fetchLawisProfiles } from "./fetch_lawis_profile";
 import { fetchLolaKronos } from "./fetch_lola_kronos";
 import { fetchLwdKip } from "./fetch_lwdkip";
-import { fetchWikiSnow } from "./fetch_wikisnow";
 import { fetchSnowLineCalculations } from "./fetch_snow_line";
-import { augmentElevation } from "./elevation";
+import { fetchWikiSnow } from "./fetch_wikisnow";
+import { type GenericObservation, findExistingObservation } from "./models";
 
 export async function fetchAndInsert(startDate: Date, endDate: Date) {
   const connection = await createConnection();
