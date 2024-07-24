@@ -29,6 +29,24 @@
     </div>
   </header>
 
+  <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
+    <p class="region-form__mindset-text">
+      {{ "strategicMindset.title" | translate }}
+      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetInfoTemplate)"></i>
+    </p>
+    <select
+      [ngModel]="bulletin.strategicMindset"
+      (ngModelChange)="onStrategicMindsetChange($event)"
+      [disabled]="disabled"
+      class="form-select"
+    >
+      <option selected></option>
+      <option *ngFor="let mindset of strategicMindset" [value]="mindset">
+        {{ "strategicMindset." + mindset | translate }}
+      </option>
+    </select>
+  </div>
+
   <div *ngIf="bulletinsService.isLocked(bulletin.getId())" class="region-form__banner banner banner-warning-strong">
     <p class="banner__text">
       <i class="ph ph-lock"></i>
@@ -443,5 +461,61 @@
     <button type="reset" class="btn btn-bare" (click)="removeDaytimeDependencyModalDecline()">
       <span>{{ "bulletins.create.removeDaytimeDependencyDialog.cancel" | translate }}</span>
     </button>
+  </div>
+</ng-template>
+
+<ng-template #strategicMindsetInfoTemplate>
+  <div class="modal-header">
+    <h3 class="modal-title pull-left">{{ "bulletins.create.strategicMindsetDialog.title" | translate }}</h3>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      (click)="closeStrategicMindsetInfoModal()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body region-form__mindset-modal">
+    <p>{{ "bulletins.create.strategicMindsetDialog.introduction" | translate }}</p>
+    <div style="overflow-x: scroll">
+      <table class="strategic-mindset__table">
+        <colgroup>
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+          <col span="1" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th *ngFor="let mindset of strategicMindset">
+              {{ ("strategicMindset." + mindset | translate).toUpperCase() }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td *ngFor="let mindset of strategicMindset">
+              <b>{{ "bulletins.create.strategicMindsetDialog.description.title" | translate }}</b
+              ><br />
+              <div
+                [innerHtml]="'bulletins.create.strategicMindsetDialog.description.text.' + mindset | translate"
+              ></div>
+              <br />
+              <b>{{ "bulletins.create.strategicMindsetDialog.examples.title" | translate }}</b
+              ><br />
+              {{ "bulletins.create.strategicMindsetDialog.examples.text." + mindset | translate }}<br /><br />
+              <b>{{ "bulletins.create.strategicMindsetDialog.communication.title" | translate }}</b
+              ><br />
+              {{ "bulletins.create.strategicMindsetDialog.communication.text." + mindset | translate }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </ng-template>

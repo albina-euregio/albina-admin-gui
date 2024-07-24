@@ -21,6 +21,8 @@ export class BulletinModel {
   public savedRegions: string[];
   public publishedRegions: string[];
 
+  public strategicMindset: Enums.StrategicMindset;
+
   public hasDaytimeDependency: boolean;
 
   public forenoon: BulletinDaytimeDescriptionModel;
@@ -210,6 +212,10 @@ export class BulletinModel {
       bulletin.dangerPattern2 = json.dangerPattern2;
     }
 
+    if (json.strategicMindset) {
+      bulletin.strategicMindset = json.strategicMindset;
+    }
+
     return bulletin;
   }
 
@@ -248,6 +254,7 @@ export class BulletinModel {
       this.tendency = bulletin.tendency;
       this.dangerPattern1 = bulletin.dangerPattern1;
       this.dangerPattern2 = bulletin.dangerPattern2;
+      this.strategicMindset = bulletin.strategicMindset;
       this.hasDaytimeDependency = bulletin.hasDaytimeDependency;
     } else {
       this.additionalAuthors = new Array<string>();
@@ -278,6 +285,7 @@ export class BulletinModel {
       this.tendency = undefined;
       this.dangerPattern1 = undefined;
       this.dangerPattern2 = undefined;
+      this.strategicMindset = undefined;
       this.hasDaytimeDependency = false;
     }
   }
@@ -584,6 +592,10 @@ export class BulletinModel {
 
     if (this.dangerPattern2) {
       json["dangerPattern2"] = this.dangerPattern2;
+    }
+
+    if (this.strategicMindset) {
+      json["strategicMindset"] = this.strategicMindset;
     }
 
     return json;
