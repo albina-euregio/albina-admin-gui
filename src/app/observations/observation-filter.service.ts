@@ -12,6 +12,8 @@ import {
   Stability,
 } from "./models/generic-observation.model";
 import { formatDate } from "@angular/common";
+import { castArray } from "lodash";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -39,10 +41,16 @@ export interface GenericFilterToggleData {
 
 export interface FilterSelectionData {
   type: LocalFilterTypes;
-  toValue: (o: GenericObservation) => undefined | string | string[];
-  all: string[];
+  key: keyof GenericObservation;
+  chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   selected: string[];
   highlighted: string[];
+  values: {
+    value: string;
+    numericRange?: [number, number];
+    color: string;
+    label: string;
+  }[];
 }
 
 @Injectable()
@@ -54,87 +62,151 @@ export class ObservationFilterService {
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
       type: LocalFilterTypes.Elevation,
-      toValue: (o) => (isFinite(o.elevation) ? String(Math.floor(o.elevation / 500) * 500) : undefined),
-      all: ["0", "500", "1000", "1500", "2000", "2500", "3000", "3500", "4000"].reverse(),
+      key: "elevation",
+      chartRichLabel: "label",
+      values: [
+        { value: "4000–∞", numericRange: [4000, 9999], color: "#CC0CE8", label: "40" },
+        { value: "3500–4000", numericRange: [3500, 4000], color: "#784BFF", label: "35" },
+        { value: "3000–3500", numericRange: [3000, 3500], color: "#035BBE", label: "30" },
+        { value: "2500–3000", numericRange: [2500, 3000], color: "#0481FF", label: "25" },
+        { value: "2000–2500", numericRange: [2000, 2500], color: "#03CDFF", label: "20" },
+        { value: "1500–2000", numericRange: [1500, 2000], color: "#8CFFFF", label: "15" },
+        { value: "1000–1500", numericRange: [1000, 1500], color: "#B0FFBC", label: "10" },
+        { value: "500–1000", numericRange: [500, 1000], color: "#FFFFB3", label: "5" },
+        { value: "0–500", numericRange: [0, 500], color: "#FFFFFE", label: "0" }, //
+      ],
       selected: [],
       highlighted: [],
     },
     Aspect: {
       type: LocalFilterTypes.Aspect,
-      toValue: (o) => o.aspect,
-      all: Object.keys(Aspect),
+      key: "aspect",
+      chartRichLabel: "label",
+      values: [
+        // FATMAP
+        { value: Aspect.N, color: "#2f74f9", label: Aspect.N },
+        { value: Aspect.NE, color: "#96c0fc", label: Aspect.NE },
+        { value: Aspect.E, color: "#b3b3b3", label: Aspect.E },
+        { value: Aspect.SE, color: "#f6ba91", label: Aspect.SE },
+        { value: Aspect.S, color: "#ef6d25", label: Aspect.S },
+        { value: Aspect.SW, color: "#6c300b", label: Aspect.SW },
+        { value: Aspect.W, color: "#000000", label: Aspect.W },
+        { value: Aspect.NW, color: "#113570", label: Aspect.NW },
+      ],
       selected: [],
       highlighted: [],
     },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
-      toValue: (o) => o.avalancheProblems,
-      all: Object.keys(AvalancheProblem).filter(
-        (type) =>
-          type !== AvalancheProblem.no_distinct_problem &&
-          type !== AvalancheProblem.cornices &&
-          type !== AvalancheProblem.favourable_situation,
-      ),
+      key: "avalancheProblems",
+      chartRichLabel: "symbol",
+      values: [
+        // The international classification for seasonal snow on the ground
+        // (except for gliding snow - no definition there)
+        { value: AvalancheProblem.new_snow, color: "#00ff00", label: "🌨" },
+        { value: AvalancheProblem.wind_slab, color: "#229b22", label: "🚩" },
+        { value: AvalancheProblem.persistent_weak_layers, color: "#0000ff", label: "❗" },
+        { value: AvalancheProblem.wet_snow, color: "#ff0000", label: "☀️" },
+        { value: AvalancheProblem.gliding_snow, color: "#aa0000", label: "🐟" },
+      ],
       selected: [],
       highlighted: [],
     },
     Stability: {
       type: LocalFilterTypes.Stability,
-      toValue: (o) => o.stability,
-      all: Object.keys(Stability).reverse(),
+      key: "stability",
+      chartRichLabel: "symbol",
+      values: [
+        // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
+        { value: Stability.very_poor, color: "#d7191c", label: "🔴" },
+        { value: Stability.poor, color: "#fdae61", label: "🟠" },
+        { value: Stability.fair, color: "#ffffbf", label: "🟡" },
+        { value: Stability.good, color: "#a6d96a", label: "🟢" },
+      ],
       selected: [],
       highlighted: [],
     },
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
-      toValue: (o) => o.$type,
-      all: Object.keys(ObservationType).filter(
-        (type) => type !== ObservationType.TimeSeries && type !== ObservationType.Webcam,
-      ),
+      key: "$type",
+      chartRichLabel: "symbol",
+      values: [
+        // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
+        { value: ObservationType.SimpleObservation, color: "#e41a1c", label: "👁" },
+        { value: ObservationType.Evaluation, color: "#377eb8", label: "✓" },
+        { value: ObservationType.Avalanche, color: "#4daf4a", label: "⛰" },
+        { value: ObservationType.Blasting, color: "#984ea3", label: "⁜" },
+        { value: ObservationType.Closure, color: "#ff7f00", label: "𐄂" },
+        { value: ObservationType.Profile, color: "#ffff33", label: "⌇" },
+      ],
       selected: [],
       highlighted: [],
     },
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
-      toValue: (o) => o.importantObservations,
-      all: Object.keys(ImportantObservation),
+      key: "importantObservations",
+      chartRichLabel: "grainShape",
+      values: [
+        // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
+        { value: ImportantObservation.SnowLine, color: "#e41a1c", label: "S" },
+        { value: ImportantObservation.SurfaceHoar, color: "#377eb8", label: "g" },
+        { value: ImportantObservation.Graupel, color: "#4daf4a", label: "o" },
+        { value: ImportantObservation.StabilityTest, color: "#984ea3", label: "k" },
+        { value: ImportantObservation.IceFormation, color: "#ff7f00", label: "i" },
+        { value: ImportantObservation.VeryLightNewSnow, color: "#ffff33", label: "m" },
+      ],
       selected: [],
       highlighted: [],
     },
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
-      toValue: (o) => o.dangerPatterns,
-      all: Object.keys(DangerPattern),
+      key: "dangerPatterns",
+      chartRichLabel: "label",
+      values: [
+        // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
+        { value: DangerPattern.dp1, color: "#e41a1c", label: "1" },
+        { value: DangerPattern.dp2, color: "#377eb8", label: "2" },
+        { value: DangerPattern.dp3, color: "#4daf4a", label: "3" },
+        { value: DangerPattern.dp4, color: "#984ea3", label: "4" },
+        { value: DangerPattern.dp5, color: "#ff7f00", label: "5" },
+        { value: DangerPattern.dp6, color: "#ffff33", label: "6" },
+        { value: DangerPattern.dp7, color: "#a65628", label: "7" },
+        { value: DangerPattern.dp8, color: "#f781bf", label: "8" },
+        { value: DangerPattern.dp9, color: "#999999", label: "9" },
+        { value: DangerPattern.dp10, color: "#e41a1c", label: "10" },
+      ],
       selected: [],
       highlighted: [],
     },
     Days: {
       type: LocalFilterTypes.Days,
-      toValue: (o) => this.getISODateString(new Date(o.eventDate)),
-      all: [],
+      key: "eventDate",
+      chartRichLabel: "label",
+      values: [],
       selected: [],
       highlighted: [],
     },
   };
 
-  public isFilterActive(): boolean {
-    return Object.values(this.filterSelection).some(
-      (filter) => filter.selected.length > 0 || filter.highlighted.length > 0,
-    );
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+  ) {
+    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
-  constructor(private constantsService: ConstantsService) {}
-
   toggleFilter(filterData: GenericFilterToggleData) {
-    const filterType = this.filterSelection[filterData["type"]];
+    const filterType = this.filterSelection[filterData.type];
     const subset = filterData.data.altKey ? "highlighted" : ("selected" as const);
 
     if (filterData.data.reset) {
-      filterType["selected"] = [];
-      filterType["highlighted"] = [];
+      filterType.selected = [];
+      filterType.highlighted = [];
     } else if (filterData.data.invert) {
       if (filterType[subset].length > 0) {
-        const result = filterType.all.filter((value) => !filterType[subset].includes(value));
+        const result = filterType.values
+          .map(({ value }) => value)
+          .filter((value) => !filterType[subset].includes(value));
         filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
       }
     } else {
@@ -143,7 +215,9 @@ export class ObservationFilterService {
       else filterType[subset].push(filterData.data.value);
       if (filterData.data.ctrlKey) {
         if (filterType[subset].length > 0) {
-          const result = filterType.all.filter((value) => !filterType[subset].includes(value));
+          const result = filterType.values
+            .map(({ value }) => value)
+            .filter((value) => !filterType[subset].includes(value));
           filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
         }
       }
@@ -163,22 +237,39 @@ export class ObservationFilterService {
   setDateRange() {
     if (this.startDate) this.startDate.setHours(0, 0, 0, 0);
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
-
     if (this.startDate && this.endDate) {
-      this.filterSelection.Days.all = [];
+      const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
+      this.filterSelection.Days.values = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        this.filterSelection.Days.all.push(this.getISODateString(i));
+        this.filterSelection.Days.values.push({
+          value: this.getISODateString(i),
+          color: colors.shift(),
+          label: formatDate(i, "dd", "en-US"),
+        });
       }
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          startDate: this.getISODateString(this.startDate),
+          endDate: this.getISODateString(this.endDate),
+        },
+        queryParamsHandling: "merge",
+      });
     }
     this.dateRange = [this.startDate, this.endDate];
   }
 
-  get startDate(): Date {
-    return this.dateRange[0];
+  private parseQueryParams(params: Params) {
+    if (!(params.startDate && params.endDate)) {
+      return;
+    }
+    this.startDate = new Date(params.startDate);
+    this.endDate = new Date(params.endDate);
+    this.setDateRange();
   }
 
-  get startDateString(): string {
-    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.startDate);
+  get startDate(): Date {
+    return this.dateRange[0];
   }
 
   set startDate(date: Date) {
@@ -195,8 +286,11 @@ export class ObservationFilterService {
     this.setDateRange();
   }
 
-  get endDateString(): string {
-    return this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.endDate);
+  get dateRangeParams() {
+    return {
+      startDate: this.startDate.toISOString(),
+      endDate: this.endDate.toISOString(),
+    };
   }
 
   public isSelected(observation: GenericObservation) {
@@ -205,7 +299,7 @@ export class ObservationFilterService {
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
       (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
-      Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, this.filterSelection[t].toValue(observation)))
+      Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, observation[this.filterSelection[t].key]))
     );
   }
 
@@ -213,7 +307,7 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.isIncluded(LocalFilterTypes.Elevation, this.filterSelection[LocalFilterTypes.Elevation].toValue(observation))
+      this.isIncluded(LocalFilterTypes.Elevation, String(observation.elevation))
     );
   }
 
@@ -222,7 +316,7 @@ export class ObservationFilterService {
       return false;
     }
     return Object.values(LocalFilterTypes).some((t) =>
-      this.isIncluded(t, this.filterSelection[t].toValue(observation), true),
+      this.isIncluded(t, observation[this.filterSelection[t].key], true),
     );
   }
 
@@ -233,86 +327,90 @@ export class ObservationFilterService {
   ): OutputDataset {
     const filter = this.filterSelection[type];
     let nan = 0;
-    const dataRaw = Object.fromEntries(
-      filter["all"].map((key) => [
-        key,
-        {
-          all: 0,
-          available: 0,
-          selected: filter.selected.includes(key) ? 1 : 0,
-          highlighted: filter.highlighted.includes(key) ? 1 : 0,
-          0: 0,
-          1: 0,
-          2: 0,
-          3: 0,
-          4: 0,
-          5: 0,
-          6: 0,
-          7: 0,
-          8: 0,
-          9: 0,
-          10: 0,
-        },
-      ]),
-    );
+    const dataRaw = filter.values.map((value) => ({
+      value,
+      data: {
+        all: 0,
+        available: 0,
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+      },
+    }));
     observations.forEach((observation) => {
-      const value = filter.toValue(observation);
-      if (!value) {
+      const value: number | string | string[] = observation[filter.key];
+      if (value === undefined || value === null) {
         nan++;
         return;
       }
-      (typeof value === "string" ? [value] : value).forEach((v) => {
-        const data = dataRaw[v];
-        if (!data) return;
-        data.all++;
-        if (this.isSelected(observation)) {
-          if (classifyType && classifyType !== type) {
-            const categories = this.filterSelection[classifyType].all;
-            const entry: string | string[] = this.filterSelection[classifyType].toValue(observation);
-            if (entry) {
-              (typeof entry === "string" ? [entry] : entry).forEach((v) => {
-                data[categories.indexOf(v) + 1]++;
-              });
-            } else {
-              data[0]++;
-            }
-          } else {
-            data.available++;
-          }
+      castArray(value).forEach((v) => {
+        const data = dataRaw.find((f) => this.testFilterSelection(f.value, v))?.data;
+        if (!data) {
+          return;
         }
+        data.all++;
+        if (!this.isSelected(observation)) {
+          return;
+        }
+        if (!classifyType || classifyType === type) {
+          data.available++;
+          return;
+        }
+        const filter2 = this.filterSelection[classifyType];
+        const value2: number | string | string[] = observation[filter2.key];
+        if (value2 === undefined || value2 === null) {
+          data[0]++;
+          return;
+        }
+        castArray(value2).forEach((v) => {
+          data[filter2.values.findIndex((f) => this.testFilterSelection(f, v)) + 1]++;
+        });
       });
     });
-    const dataset: OutputDataset["dataset"]["source"] = [
-      [
-        "category",
-        "max",
-        "all",
-        "highlighted",
-        "available",
-        "selected",
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-      ],
+
+    const header = [
+      "category",
+      "max",
+      "all",
+      "highlighted",
+      "available",
+      "selected",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
     ];
 
-    for (const key of filter["all"]) {
-      const values = dataRaw[key];
-      dataset.push([
+    const data: OutputDataset["dataset"]["source"] = dataRaw.map((f) => {
+      const key = f.value.value;
+      const values = f.data;
+      const highlighted = filter.highlighted.includes(key) ? values.all : 0;
+      const available = !filter.selected.includes(key) ? values.available : 0;
+      const selected = filter.selected.includes(key) ? values.available : 0;
+      const max = values.all;
+      const all = available > 0 ? available : selected;
+      return [
         key,
-        values["all"],
-        values["all"],
-        values["highlighted"] === 1 ? values["all"] : 0,
-        values["selected"] === 0 ? values["available"] : 0,
-        values["selected"] === 1 ? values["available"] : 0,
+        max ? all : max,
+        all,
+        highlighted ? all : highlighted,
+        available,
+        selected,
         values["0"],
         values["1"],
         values["2"],
@@ -324,57 +422,24 @@ export class ObservationFilterService {
         values["8"],
         values["9"],
         values["10"],
-      ]);
-    }
-
-    return this.normalizeData({ dataset: { source: dataset }, nan });
-  }
-
-  public normalizeData(originalDataset: OutputDataset): OutputDataset {
-    const nan = originalDataset.nan;
-    const data = originalDataset?.dataset.source.slice(1);
-    const header = originalDataset?.dataset.source[0];
-    //if(!this.isFilterActive()) console.log("normalizeData #0 ", {filterActive: this.isFilterActive(), filter: this.filterSelection, data});
-    //if (!this.isFilterActive() || !originalDataset || !data || !header) return originalDataset;
-
-    // get max values in order to normalize data
-    // let availableMax = Number.MIN_VALUE;
-    // let allMax = Number.MIN_VALUE;
-    // let maxMax = Number.MIN_VALUE;
-
-    // data.forEach((row) => {
-    //   const availableValue = row[header.indexOf("available")];
-    //   const allValue = row[header.indexOf("all")];
-    //   const maxValue = row[header.indexOf("max")];
-    //   //console.log("normalizeData #1", row[header.indexOf("category")], {available: row[header.indexOf("available")], all: row[header.indexOf("all")]});
-    //   if (+availableValue > +availableMax) {
-    //     availableMax = +availableValue;
-    //   }
-
-    //   if (+allValue > +allMax) {
-    //     allMax = +allValue;
-    //   }
-
-    //   if (+maxValue > +maxMax) {
-    //     maxMax = +maxValue;
-    //   }
-
-    // });
-
-    const newData = data.map((row) => {
-      const tempRow = row.slice();
-      const availableValue = row[header.indexOf("available")];
-      const selectedValue = row[header.indexOf("selected")];
-      const overwriteValue = +availableValue > 0 ? +availableValue : +selectedValue;
-      tempRow[header.indexOf("all")] = overwriteValue;
-      if (tempRow[header.indexOf("highlighted")]) tempRow[header.indexOf("highlighted")] = overwriteValue;
-      if (tempRow[header.indexOf("max")]) tempRow[header.indexOf("max")] = overwriteValue;
-      return tempRow;
+      ];
     });
 
-    newData.unshift(header);
-    //console.log("normalizeData #2", data[0][header.indexOf("category")], {newData, data});
-    return { dataset: { source: newData }, nan };
+    return { dataset: { source: [header, ...data] }, nan };
+  }
+
+  testFilterSelection(f: FilterSelectionData["values"][number], v: number | string | Date): boolean {
+    return (
+      (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
+      (v instanceof Date && f.value === this.getISODateString(v)) ||
+      f.value === v
+    );
+  }
+
+  findFilterSelection(filterTypes: LocalFilterTypes, observation: GenericObservation) {
+    const filterSelection = this.filterSelection[filterTypes];
+    const value = observation[filterSelection.key];
+    return filterSelection.values.find((f) => castArray(value).some((v) => this.testFilterSelection(f, v)));
   }
 
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
@@ -382,7 +447,7 @@ export class ObservationFilterService {
   }
 
   isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
-    const selectedData: string[] = this.filterSelection[LocalFilterTypes.Days]["selected"]
+    const selectedData: string[] = this.filterSelection[LocalFilterTypes.Days].selected
       .filter((element) => element !== "nan")
       .sort();
     if (selectedData.length < 1) {
@@ -422,6 +487,12 @@ export class ObservationFilterService {
   }
 
   getISODateString(date: Date) {
-    return formatDate(date, "yyyy-MM-dd", "en-US");
+    // like Date.toISOString(), but not using UTC
+    // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+    function pad(number: number): string {
+      return number < 10 ? `0${number}` : `${number}`;
+    }
   }
 }
