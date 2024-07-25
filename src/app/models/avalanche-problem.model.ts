@@ -95,6 +95,18 @@ export class AvalancheProblemModel {
 
   setAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
     this.avalancheProblem = avalancheProblem;
+    this.avalancheType = undefined;
+    switch (this.avalancheProblem) {
+      case "wind_slab":
+      case "persistent_weak_layers":
+        this.setAvalancheType(Enums.AvalancheType.slab);
+        break;
+      case "gliding_snow":
+        this.setAvalancheType(Enums.AvalancheType.glide);
+        break;
+      default:
+        break;
+    }
   }
 
   getAvalancheType(): Enums.AvalancheType {

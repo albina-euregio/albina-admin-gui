@@ -133,7 +133,12 @@
         "moveUpAvalancheProblem": "Move avalanche problem up",
         "moveDownAvalancheProblem": "Move avalanche problem down",
         "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionDown": "Downwards",
+        "avalancheType": {
+          "slab": "SLAB",
+          "loose": "LOOSE",
+          "glide": "GLIDE"
+        }
       },
       "save": " Save",
       "discard": " Discard",
@@ -164,6 +169,7 @@
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
         "avalancheProblems": "Avalanche problem",
+        "avalancheType": "Avalanche type",
         "aspects": "Aspects",
         "elevation": "Elevation",
         "highlights": "Special alert",
