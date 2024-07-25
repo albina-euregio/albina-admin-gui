@@ -64,6 +64,12 @@ export enum AvalancheProblem {
   no_distinct_problem = "no_distinct_problem",
 }
 
+export enum AvalancheType {
+  slab = "slab",
+  loose = "loose",
+  glide = "glide",
+}
+
 export enum DangerPattern {
   dp1 = "dp1",
   dp2 = "dp2",
