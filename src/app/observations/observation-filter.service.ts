@@ -14,6 +14,7 @@ import {
 import { formatDate } from "@angular/common";
 import { castArray } from "lodash";
 import { ActivatedRoute, Params, Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -40,8 +41,9 @@ export interface GenericFilterToggleData {
 }
 
 export interface FilterSelectionData {
-  type: LocalFilterTypes;
-  key: keyof GenericObservation;
+  type: LocalFilterTypes; // id
+  label: string; // caption
+  key: keyof GenericObservation; // how to extract data
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   selected: string[];
   highlighted: string[];
@@ -62,6 +64,7 @@ export class ObservationFilterService {
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
       type: LocalFilterTypes.Elevation,
+      label: this.translateService.instant("admin.observations.charts.elevation.caption"),
       key: "elevation",
       chartRichLabel: "label",
       values: [
@@ -80,6 +83,7 @@ export class ObservationFilterService {
     },
     Aspect: {
       type: LocalFilterTypes.Aspect,
+      label: this.translateService.instant("admin.observations.charts.aspect.caption"),
       key: "aspect",
       chartRichLabel: "label",
       values: [
@@ -98,6 +102,7 @@ export class ObservationFilterService {
     },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
+      label: this.translateService.instant("admin.observations.charts.avalancheProblem.caption"),
       key: "avalancheProblems",
       chartRichLabel: "symbol",
       values: [
@@ -114,6 +119,7 @@ export class ObservationFilterService {
     },
     Stability: {
       type: LocalFilterTypes.Stability,
+      label: this.translateService.instant("admin.observations.charts.stability.caption"),
       key: "stability",
       chartRichLabel: "symbol",
       values: [
@@ -128,6 +134,7 @@ export class ObservationFilterService {
     },
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
+      label: this.translateService.instant("admin.observations.charts.observationType.caption"),
       key: "$type",
       chartRichLabel: "symbol",
       values: [
@@ -144,6 +151,7 @@ export class ObservationFilterService {
     },
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
+      label: this.translateService.instant("admin.observations.charts.importantObservation.caption"),
       key: "importantObservations",
       chartRichLabel: "grainShape",
       values: [
@@ -160,6 +168,7 @@ export class ObservationFilterService {
     },
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
+      label: this.translateService.instant("admin.observations.charts.dangerPattern.caption"),
       key: "dangerPatterns",
       chartRichLabel: "label",
       values: [
@@ -180,6 +189,7 @@ export class ObservationFilterService {
     },
     Days: {
       type: LocalFilterTypes.Days,
+      label: this.translateService.instant("admin.observations.charts.days.caption"),
       key: "eventDate",
       chartRichLabel: "label",
       values: [],
@@ -191,6 +201,7 @@ export class ObservationFilterService {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private translateService: TranslateService,
   ) {
     this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }

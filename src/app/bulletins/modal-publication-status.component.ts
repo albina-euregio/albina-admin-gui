@@ -13,7 +13,7 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
 })
 export class ModalPublicationStatusComponent {
   json;
-  date;
+  date: [Date, Date];
   component: CreateBulletinComponent;
 
   public alerts: any[] = [];

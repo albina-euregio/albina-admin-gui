@@ -8,7 +8,6 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
 })
 export class ModalCheckComponent {
   text: string;
-  date;
   component: CreateBulletinComponent;
 
   constructor(public bsModalRef: BsModalRef) {}

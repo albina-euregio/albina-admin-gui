@@ -358,7 +358,7 @@
             <app-observation-chart
               class="chart-container"
               chart="rose"
-              [caption]="'admin.observations.charts.aspect.caption' | translate"
+              [caption]="filter.filterSelection[LocalFilterTypes.Aspect].label"
               [type]="LocalFilterTypes.Aspect"
               [data]="chartsData.Aspect"
               [isActive]="
@@ -377,7 +377,7 @@
               *ngFor="let type of barCharts"
               class="chart-container"
               chart="bar"
-              [caption]="'admin.observations.charts.' + type[0].toLowerCase() + type.slice(1) + '.caption' | translate"
+              [caption]="filter.filterSelection[type].label"
               [type]="type"
               [data]="chartsData[type]"
               [isActive]="
