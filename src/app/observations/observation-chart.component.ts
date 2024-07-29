@@ -486,6 +486,10 @@ export class ObservationChartComponent implements OnInit {
     let val = params.value[valKey];
     if (params.seriesName === "highlighted") {
       val = params.value[1];
+    } else if (params.seriesName === "all" && val === 0) {
+      val = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+        .map((entry) => params.value[entry])
+        .reduce((sum, entry) => sum + entry);
     }
     return (
       '<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:' +

@@ -371,10 +371,12 @@ export class ObservationFilterService {
         if (!this.isSelected(observation)) {
           return;
         }
+        /*
         if (!classifyType || classifyType === type) {
           data.available++;
           return;
         }
+        */
         const filter2 = this.filterSelection[classifyType];
         const value2: number | string | string[] = observation[filter2.key];
         if (value2 === undefined || value2 === null) {
