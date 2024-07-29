@@ -2081,7 +2081,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   openCheckBulletinsModal(message: string) {
     const initialState = {
       text: message,
-      date: this.bulletinsService.getActiveDate(),
       component: this,
     };
     this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });
