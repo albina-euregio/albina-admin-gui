@@ -620,7 +620,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   openPublishAllModal() {
     const initialState = {
-      date: this.bulletinsService.getActiveDate(),
       component: this,
     };
     this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
