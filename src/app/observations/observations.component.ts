@@ -438,7 +438,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     return this.mapService.layers[layer];
   }
 
-  onObservationClick(observation: GenericObservation): void {
+  onObservationClick(observation: GenericObservation, doShow = true): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe, imgUrl: undefined };
@@ -454,7 +454,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       }));
       this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
     }
-    this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+    if (doShow) {
+      this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+    }
   }
 
   toggleFilters() {
@@ -491,7 +493,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       observation = observations[index];
     }
     if (observation) {
-      this.onObservationClick(observation);
+      this.onObservationClick(observation, false);
     }
   }
 }
