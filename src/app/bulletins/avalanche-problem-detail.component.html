@@ -25,7 +25,12 @@
     <div class="btn-group">
       <!-- SLAB -->
       <button
-        [disabled]="disabled || isAvalancheProblem(avalancheProblemEnum.gliding_snow)"
+        [disabled]="
+          disabled ||
+          isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
+          isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
+          isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
+        "
         type="reset"
         class="btn btn-sm"
         [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-dark' : 'btn-outline-secondary'"
@@ -41,8 +46,8 @@
         [disabled]="
           disabled ||
           isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
-          isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers) ||
-          isAvalancheProblem(avalancheProblemEnum.wind_slab)
+          isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
+          isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
         "
         type="reset"
         class="btn btn-sm"
@@ -58,7 +63,7 @@
 
       <!-- GLIDE -->
       <button
-        [disabled]="disabled || !isAvalancheProblem(avalancheProblemEnum.gliding_snow)"
+        disabled
         type="reset"
         class="btn btn-sm"
         [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-dark' : 'btn-outline-secondary'"
