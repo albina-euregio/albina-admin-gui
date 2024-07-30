@@ -1,5 +1,4 @@
 export type Environment = {
-  production: boolean;
   apiBaseUrl: string;
   wsBaseUrl: string;
   textcatUrl: string;
