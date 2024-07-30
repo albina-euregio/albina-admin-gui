@@ -7,6 +7,7 @@ export const environment: Environment = {
   headerBgColor: "#839194",
   faviconPath: "assets/img/admin-favicon-beta.ico",
   logoPath: "assets/img/admin-logo-beta.svg",
+  sentryDSN: "",
 };
 
 Object.assign(environment, (window as any).ENV);

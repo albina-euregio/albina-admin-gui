@@ -73,6 +73,7 @@ build:development:
     HEADER_BG_COLOR: "#f4ea12"
     FAVICON_PATH: "assets/img/admin-favicon-dev.ico"
     LOGO_PATH: "assets/img/admin-logo-dev.svg"
+    SENTRY_DSN: "https://glet_31733ac62aeee70b77494f532cb4f898@observe.gitlab.com:443/errortracking/api/v1/projects/2700759"
   environment:
     name: dev
 
@@ -95,6 +96,7 @@ build:beta:
     HEADER_BG_COLOR: "#839194"
     FAVICON_PATH: "assets/img/admin-favicon-beta.ico"
     LOGO_PATH: "assets/img/admin-logo-beta.svg"
+    SENTRY_DSN: "https://glet_31733ac62aeee70b77494f532cb4f898@observe.gitlab.com:443/errortracking/api/v1/projects/2700759"
   environment:
     name: beta
 
@@ -117,6 +119,7 @@ build:production:
     HEADER_BG_COLOR: "#ffffff"
     FAVICON_PATH: "assets/img/admin-favicon.ico"
     LOGO_PATH: "assets/img/admin-logo.svg"
+    SENTRY_DSN: "https://glet_31733ac62aeee70b77494f532cb4f898@observe.gitlab.com:443/errortracking/api/v1/projects/2700759"
   environment:
     name: production
 

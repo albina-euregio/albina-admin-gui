@@ -12,4 +12,5 @@ export const environment: Environment = {
   headerBgColor: "#f4ea12",
   faviconPath: "assets/img/admin-favicon-dev.ico",
   logoPath: "assets/img/admin-logo-dev.svg",
+  sentryDSN: "",
 };
