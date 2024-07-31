@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
 import {
   Aspect,
   AvalancheProblem,
