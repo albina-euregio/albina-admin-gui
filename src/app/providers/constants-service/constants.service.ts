@@ -149,12 +149,8 @@ export class ConstantsService {
     return environment.apiBaseUrl;
   }
 
-  getWsBulletinUrl() {
-    return environment.wsBaseUrl + "bulletin/";
-  }
-
-  getWsUpdateUrl() {
-    return environment.wsBaseUrl + "update/";
+  getServerWsUrl() {
+    return this.getServerUrl().replace(/^http/, "ws");
   }
 
   getISOStringWithTimezoneOffsetUrlEncoded(date: Date) {

@@ -68,7 +68,6 @@ build:development:
   extends: .envsubst
   variables:
     API_BASE_URL: "https://admin.avalanche.report/albina_dev/api/"
-    WS_BASE_URL: "wss://socket.avalanche.report/albina_dev/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng-dev/"
     HEADER_BG_COLOR: "#f4ea12"
     FAVICON_PATH: "assets/img/admin-favicon-dev.ico"
@@ -91,7 +90,6 @@ build:beta:
   extends: .envsubst
   variables:
     API_BASE_URL: "https://admin.avalanche.report/albina/api/"
-    WS_BASE_URL: "wss://socket.avalanche.report/albina/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
     HEADER_BG_COLOR: "#839194"
     FAVICON_PATH: "assets/img/admin-favicon-beta.ico"
@@ -114,7 +112,6 @@ build:production:
   extends: .envsubst
   variables:
     API_BASE_URL: "https://admin.avalanche.report/albina/api/"
-    WS_BASE_URL: "wss://socket.avalanche.report/albina/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
     HEADER_BG_COLOR: "#ffffff"
     FAVICON_PATH: "assets/img/admin-favicon.ico"
@@ -139,7 +136,6 @@ build:aran:
     name: aran
   variables:
     API_BASE_URL: "https://api.lauegi.report/api/"
-    WS_BASE_URL: "wss://socket.avalanche.report/albina/"
     TEXTCAT_URL: "https://admin.lauegi.report/textcat-ng/"
     HEADER_BG_COLOR: "#ffffff"
 

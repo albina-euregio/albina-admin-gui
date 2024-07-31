@@ -98,7 +98,7 @@ export class BulletinsService {
   public wsBulletinConnect() {
     this.bulletinLocks = <Subject<BulletinLockModel>>(
       this.wsBulletinService
-        .connect(this.constantsService.getWsBulletinUrl() + this.authenticationService.getUsername())
+        .connect(this.constantsService.getServerWsUrl() + "../bulletin/" + this.authenticationService.getUsername())
         .pipe(
           map((response: any): BulletinLockModel => {
             const data = JSON.parse(response.data);
