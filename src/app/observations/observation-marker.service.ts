@@ -8,18 +8,17 @@ import {
   LocalFilterTypes,
   ObservationSource,
   ObservationType,
-  Stability,
   WeatherStationParameter,
 } from "./models/generic-observation.model";
 import { memoize } from "lodash";
 import { ObservationFilterService } from "./observation-filter.service";
-import { Aspect } from "../enums/enums";
+import { Aspect, SnowpackStability } from "../enums/enums";
 
-const zIndex: Record<Stability, number> = {
-  [Stability.good]: 1,
-  [Stability.fair]: 5,
-  [Stability.poor]: 10,
-  [Stability.very_poor]: 20,
+const zIndex: Record<SnowpackStability, number> = {
+  [SnowpackStability.good]: 1,
+  [SnowpackStability.fair]: 5,
+  [SnowpackStability.poor]: 10,
+  [SnowpackStability.very_poor]: 20,
 };
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];

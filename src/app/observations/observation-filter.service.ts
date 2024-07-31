@@ -5,13 +5,12 @@ import {
   LocalFilterTypes,
   ObservationSource,
   ObservationType,
-  Stability,
 } from "./models/generic-observation.model";
 import { formatDate } from "@angular/common";
 import { castArray } from "lodash";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
-import { Aspect, AvalancheProblem, DangerPattern } from "../enums/enums";
+import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -121,10 +120,10 @@ export class ObservationFilterService {
       chartRichLabel: "symbol",
       values: [
         // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
-        { value: Stability.very_poor, color: "#d7191c", label: "🔴" },
-        { value: Stability.poor, color: "#fdae61", label: "🟠" },
-        { value: Stability.fair, color: "#ffffbf", label: "🟡" },
-        { value: Stability.good, color: "#a6d96a", label: "🟢" },
+        { value: SnowpackStability.very_poor, color: "#d7191c", label: "🔴" },
+        { value: SnowpackStability.poor, color: "#fdae61", label: "🟠" },
+        { value: SnowpackStability.fair, color: "#ffffbf", label: "🟡" },
+        { value: SnowpackStability.good, color: "#a6d96a", label: "🟢" },
       ],
       selected: [],
       highlighted: [],

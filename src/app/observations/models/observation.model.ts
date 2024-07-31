@@ -1,8 +1,8 @@
-import { GenericObservation, ObservationSource, ObservationType, Stability } from "./generic-observation.model";
-import * as Enums from "../../enums/enums";
+import { GenericObservation, ObservationSource, ObservationType } from "./generic-observation.model";
+import { Aspect, SnowpackStability } from "../../enums/enums";
 
 export interface Observation {
-  aspect: Enums.Aspect;
+  aspect: Aspect;
   authorName: string;
   content: string;
   elevation: number;
@@ -50,18 +50,18 @@ export function isAvalancheWarningServiceObservation(
   );
 }
 
-function getObservationStability(observation: Observation): Stability {
+function getObservationStability(observation: Observation): SnowpackStability {
   switch (observation.eventType ?? EventType.Normal) {
     case EventType.PersonDead:
-      return Stability.poor;
+      return SnowpackStability.poor;
     case EventType.PersonInjured:
-      return Stability.poor;
+      return SnowpackStability.poor;
     case EventType.PersonUninjured:
-      return Stability.poor;
+      return SnowpackStability.poor;
     case EventType.PersonNo:
-      return Stability.poor;
+      return SnowpackStability.poor;
     case EventType.Important:
-      return Stability.fair;
+      return SnowpackStability.fair;
     default:
       return null;
   }

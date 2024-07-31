@@ -1,4 +1,4 @@
-import { Aspect, AvalancheProblem, DangerPattern } from "../../enums/enums";
+import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../../enums/enums";
 import { z } from "zod";
 
 export enum ImportantObservation {
@@ -8,13 +8,6 @@ export enum ImportantObservation {
   StabilityTest = "StabilityTest",
   IceFormation = "IceFormation",
   VeryLightNewSnow = "VeryLightNewSnow",
-}
-
-export enum Stability {
-  good = "good",
-  fair = "fair",
-  poor = "poor",
-  very_poor = "very_poor",
 }
 
 export enum WeatherStationParameter {
@@ -137,7 +130,7 @@ export const genericObservationSchema = z.object({
   $externalURL: z.string().optional().nullable().describe("External URL to display as iframe"),
   $externalImg: z.string().optional().nullable().describe("External image to display as img"),
   stability: z
-    .nativeEnum(Stability)
+    .nativeEnum(SnowpackStability)
     .optional()
     .nullable()
     .describe("Snowpack stability that can be inferred from this observation"),

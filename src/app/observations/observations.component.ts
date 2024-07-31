@@ -21,7 +21,6 @@ import {
   toObservationTable,
   LocalFilterTypes,
   ImportantObservation,
-  Stability,
   WeatherStationParameter,
   genericObservationSchema,
   ObservationType,
@@ -43,7 +42,7 @@ import { AlbinaObservationsService } from "./observations.service";
 import { LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
-import { AvalancheProblem, DangerPattern } from "../enums/enums";
+import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -247,7 +246,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   parseObservation(observation: GenericObservation): GenericObservation {
     const avalancheProblems = Object.values(AvalancheProblem);
     const dangerPatterns = Object.values(DangerPattern);
-    const stabilities = Object.values(Stability);
+    const stabilities = Object.values(SnowpackStability);
     const importantObservations = Object.values(ImportantObservation);
 
     const matches = [...observation.content.matchAll(/#\S*(?=\s|$)/g)].map((el) => el[0].replace("#", ""));
@@ -261,8 +260,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       } else if (importantObservations.includes(match as ImportantObservation)) {
         if (!observation.importantObservations) observation.importantObservations = [];
         observation.importantObservations.push(match as ImportantObservation);
-      } else if (stabilities.includes(match as Stability)) {
-        observation.stability = match as Stability;
+      } else if (stabilities.includes(match as SnowpackStability)) {
+        observation.stability = match as SnowpackStability;
       }
     });
 
