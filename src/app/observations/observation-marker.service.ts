@@ -254,25 +254,25 @@ export class ObservationMarkerService {
   }
 
   bindTooltip(marker: Marker | CircleMarker, observation: GenericObservation) {
-    marker.bindTooltip(this.createTooltip(observation), {
-      opacity: 1,
-      className: "obs-tooltip",
-    });
-  }
-
-  createTooltip(observation: GenericObservation): string {
-    return [
-      `<i class="ph ph-calendar"></i> ${
-        observation.eventDate instanceof Date
-          ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
-          : undefined
-      }`,
-      `<i class="ph ph-globe"></i> ${observation.locationName || undefined}`,
-      `<i class="ph ph-user"></i> ${observation.authorName || undefined}`,
-      `[${observation.$source}, ${observation.$type}]`,
-    ]
-      .filter((s) => !s.includes("undefined"))
-      .join("<br>");
+    marker.bindTooltip(
+      () =>
+        [
+          `<i class="ph ph-calendar"></i> ${
+            observation.eventDate instanceof Date
+              ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
+              : undefined
+          }`,
+          `<i class="ph ph-globe"></i> ${observation.locationName || undefined}`,
+          `<i class="ph ph-user"></i> ${observation.authorName || undefined}`,
+          `[${observation.$source}, ${observation.$type}]`,
+        ]
+          .filter((s) => !s.includes("undefined"))
+          .join("<br>"),
+      {
+        opacity: 1,
+        className: "obs-tooltip",
+      },
+    );
   }
 
   toMarkerRadius(observation: GenericObservation): number {
