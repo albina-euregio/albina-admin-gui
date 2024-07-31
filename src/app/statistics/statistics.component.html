@@ -38,14 +38,9 @@
       <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getStatistics($event)">
         {{ "statistics.button.submit" | translate }}
       </button>
+      <div *ngIf="loadingStatistics" class="spinner-border" role="status">
+        <span class="visually-hidden">{{ "admin.loadingStatistics" | translate }}</span>
+      </div>
     </div>
   </form>
-</div>
-
-<div id="overlay">
-  <span id="nav" *ngIf="loadingStatistics">
-    <div class="submit-message" style="display: block; color: #ffffff; position: fixed; left: 49.7%; top: 54.5%">
-      <p>{{ "admin.loadingStatistics" | translate }}</p>
-    </div>
-  </span>
 </div>

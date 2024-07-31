@@ -18,20 +18,25 @@
       ></textarea>
     </div>
   </div>
-  <div class="row" style="margin-top: 10px">
+  <div class="row mt-3">
     <div class="col-lg-12">
-      <input type="file" style="width: 100%" (change)="selectFile($event)" placeholder="Upload file" accept=".mp3" />
+      <input type="file" class="form-control" (change)="selectFile($event)" placeholder="Upload file" accept=".mp3" />
     </div>
   </div>
-  <div class="row" style="margin-top: 10px; margin-bottom: 20px">
+  <div class="row mt-3 mb-5">
     <div class="col-lg-12">
-      <label class="switch switch-primary" style="margin-right: 10px">
-        <input type="checkbox" class="switch-input" [(ngModel)]="important" />
-        <span class="switch-slider"></span>
-      </label>
-      <label class="col-form-label" (click)="toggleImportant()"
-        ><b>{{ "bulletins.table.mediaFileDialog.important" | translate }}</b></label
-      >
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="mediaFileDialogImportant"
+          [(ngModel)]="important"
+        />
+        <label class="form-check-label" for="mediaFileDialogImportant">
+          {{ "bulletins.table.mediaFileDialog.important" | translate }}
+        </label>
+      </div>
     </div>
   </div>
 </div>

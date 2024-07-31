@@ -28,7 +28,7 @@
                 >
                   {{ "admin.observations.selectSources.placeholder" | translate }}
                 </button>
-                <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: scroll">
+                <form class="dropdown-menu p-4 overflow-y-scroll">
                   <div *ngFor="let source of allSources" class="form-check">
                     <label class="form-check-label text-nowrap">
                       <input
@@ -129,8 +129,8 @@
       <!-- /layout-global -->
 
       <div *ngIf="layout === 'table'" class="layout-table">
-        <div class="card" style="height: 100%">
-          <div class="card-body" style="overflow-y: auto; overflow-x: auto">
+        <div class="card h-100">
+          <div class="card-body overflow-auto">
             <app-observation-table
               #observationTable
               [observations]="localObservations"
@@ -141,8 +141,8 @@
       </div>
 
       <div *ngIf="layout === 'gallery'" class="layout-gallery">
-        <div class="card" style="height: 100%">
-          <div class="card-body" style="overflow-y: auto; overflow-x: auto">
+        <div class="card h-100">
+          <div class="card-body overflow-auto">
             <app-observation-gallery
               [observations]="localWebcams"
               (observationClick)="onObservationClick($event)"
@@ -454,7 +454,7 @@
   <div class="modal-body">
     <table *ngIf="observationPopup" class="table table-sm">
       <tr *ngFor="let row of observationPopup.table">
-        <th style="padding-right: 1ex">{{ row.label }}</th>
+        <th class="pe-3">{{ row.label }}</th>
         <td>
           <span *ngIf="row.date !== undefined">
             {{ row.date | date: "full" : undefined : translateService.currentLang }}
