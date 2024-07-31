@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
+import { StressLevel } from "../../models/stress-level.model";
 
 @Injectable()
 export class UserService {
@@ -96,5 +97,21 @@ export class UserService {
     const options = { headers: headers };
 
     return this.http.delete<Response>(url, options);
+  }
+
+  public postStressLevel(stressLevel: StressLevel): Observable<StressLevel> {
+    const url = this.constantsService.getServerUrl() + "user/stress-level";
+    const headers = this.authenticationService.newAuthHeader();
+    return this.http.post<StressLevel>(url, stressLevel, { headers });
+  }
+
+  public getStressLevels(date: [Date, Date]): Observable<StressLevel[]> {
+    const url = this.constantsService.getServerUrl() + "user/stress-level";
+    const headers = this.authenticationService.newAuthHeader();
+    const params = {
+      startDate: date[0].toISOString(),
+      endDate: date[1].toISOString(),
+    };
+    return this.http.get<StressLevel[]>(url, { headers, params });
   }
 }

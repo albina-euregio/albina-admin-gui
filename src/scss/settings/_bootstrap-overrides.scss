@@ -89,6 +89,10 @@ $accordion-button-bg: transparent;
 $accordion-button-active-bg: transparent;
 
 // Forms
+:root{
+  --form-range-thumb-bg: $component-active-bg;
+}
+$form-range-thumb-bg: var(--form-range-thumb-bg);
 $input-border-color: $gray-400;
 $form-label-font-weight: 600;
 $form-label-margin-bottom: $space-1;
