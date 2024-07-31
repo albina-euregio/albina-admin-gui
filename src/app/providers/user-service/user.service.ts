@@ -99,19 +99,19 @@ export class UserService {
     return this.http.delete<Response>(url, options);
   }
 
-  public postStressLevel(stressLevel: StressLevel): Observable<Response> {
+  public postStressLevel(stressLevel: StressLevel): Observable<StressLevel> {
     const url = this.constantsService.getServerUrl() + "user/stress-level";
     const headers = this.authenticationService.newAuthHeader();
-    return this.http.post<Response>(url, stressLevel, { headers });
+    return this.http.post<StressLevel>(url, stressLevel, { headers });
   }
 
-  public getStressLevels(date: [Date, Date]): Observable<Response> {
+  public getStressLevels(date: [Date, Date]): Observable<StressLevel[]> {
     const url = this.constantsService.getServerUrl() + "user/stress-level";
     const headers = this.authenticationService.newAuthHeader();
     const params = {
       startDate: date[0].toISOString(),
       endDate: date[1].toISOString(),
     };
-    return this.http.get<Response>(url, { headers, params });
+    return this.http.get<StressLevel[]>(url, { headers, params });
   }
 }

@@ -54,8 +54,8 @@
           <input
             class="form-range"
             type="range"
-            [(ngModel)]="stress[date[0].getTime()]"
-            (input)="postStressLevel(date[0])"
+            [(ngModel)]="stress[formatDate(date[1], 'yyyy-MM-dd', 'en-US')]"
+            (input)="postStressLevel(formatDate(date[1], 'yyyy-MM-dd', 'en-US'))"
             [style.--form-range-thumb-bg]="
               !stress[date[0].getTime()]
                 ? 'gray'

@@ -13,6 +13,8 @@ import * as Enums from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
 
+type DateIsoString = `${number}-${number}-${number}`;
+
 @Component({
   templateUrl: "bulletins.component.html",
 })
@@ -20,7 +22,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
-  public stress: Record<number, number> = {};
+  public stress: Record<DateIsoString, number> = {};
 
   constructor(
     public translate: TranslateService,
@@ -38,8 +40,10 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
     this.bulletinsService.init();
     this.userService
-      .getStressLevels([this.bulletinsService.dates.at(-1)[0], this.bulletinsService.dates[0][0]])
-      .subscribe(() => {});
+      .getStressLevels([this.bulletinsService.dates.at(-1)[0], this.bulletinsService.dates.at(0)[1]])
+      .subscribe((stressLevels) => {
+        this.stress = Object.fromEntries(stressLevels.map((s) => [s.date, s.stressLevel]));
+      });
   }
 
   ngOnInit() {
@@ -169,13 +173,10 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.bulletinsService.setCopyDate(undefined);
   }
 
-  postStressLevel(date: Date) {
-    console.trace();
-    this.userService
-      .postStressLevel({
-        date,
-        stressLevel: this.stress[+date],
-      })
-      .subscribe(() => {});
+  postStressLevel(date: DateIsoString) {
+    const stressLevel = this.stress[date];
+    this.userService.postStressLevel({ date, stressLevel }).subscribe(() => {});
   }
+
+  protected readonly formatDate = formatDate;
 }
