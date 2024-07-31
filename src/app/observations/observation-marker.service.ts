@@ -623,8 +623,10 @@ function icon0(
     </g>
 </svg>
     `;
+  const blob = new Blob([svg], { type: "image/svg+xml" });
+  const iconUrl = URL.createObjectURL(blob);
   return new Icon({
-    iconUrl: "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg),
+    iconUrl,
     iconSize: [iconSize, iconSize],
     iconAnchor: [iconSize / 2, iconSize / 2],
   });
