@@ -1,8 +1,13 @@
 {
+  "daytime": {
+    "earlier": "Früher",
+    "later": "Später"
+  },
   "login": {
     "title": "Login",
     "text": "Melde dich mit deinem Account an",
     "button": "Login",
+    "stressLevel": "Stress Level",
     "errorDialog": {
       "message": "Benutzername oder Passwort falsch!",
       "accept": "Ok"
@@ -23,7 +28,11 @@
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
     "modellingZamgMeteogram": "GeoSphere Meteogramm",
     "modellingSnowpack": "SNOWPACK Modell",
-    "modellingSnowpackMeteo": "Modellierte Meteodaten SNOWPACK"
+    "modellingSnowpackMeteo": "Modellierte Meteodaten SNOWPACK",
+    "weatherbox": "Wetterbox",
+    "awsome": "AWSOME",
+    "snowpack": "SNOWPACK",
+    "geosphere": "GeoSphere"
   },
   "menu": {
     "logout": "Logout",
@@ -37,6 +46,7 @@
     "oc": "Aranesisch",
     "fullscreen": "Vollbildschirm",
     "settings": "Einstellungen",
+    "statistics": "Statistik",
     "admin": "Admin",
     "region": "Region",
     "education": "Ausbildung"
@@ -57,6 +67,8 @@
   "bulletins": {
     "title": "Lawinen.report",
     "tooltip": {
+      "edit": "Bulletin bearbeiten",
+      "read": "Bulletin lesen",
       "copy": "Lawinenvorhersage kopieren",
       "paste": "Lawinenvorhersage einfügen",
       "cancel": "Kopieren abbrechen",
@@ -81,8 +93,11 @@
       "noPublicationInfo" : "Wird NICHT automatisch publiziert",
       "loadingPreview": "Erzeuge PDF Vorschau ...",
       "loading": "Bulletin lädt ...",
+      "loadMoreBulletins": "{{count}} weitere Bulletins laden",
       "publishing": "Bulletin wird publiziert ...",
-      "submitting": "Bulletin wird abgeschickt ..."
+      "submitting": "Bulletin wird abgeschickt ...",
+      "saveError": "Bulletin konnte nicht gespeichert werden!",
+      "loadBulletinsError": "Bulletins konnten nicht geladen werden!"
     },
     "create": {
       "tooltip": {
@@ -95,6 +110,7 @@
         "rejectSuggestion": "Vorgeschlagene Regionen ablehnen",
         "saveChanges": "Änderungen speichern",
         "discardChanges": "Änderungen verwerfen",
+        "incompleteAvalancheProblem": "Unvollständiges Lawinenproblem",
         "saveBulletin": "Lawinenvorhersage speichern",
         "discardBulletin": "Änderungen an der Lawinenvorhersage verwerfen",
         "loadBulletin": "Lawinenvorhersage vom Vortag laden",
@@ -118,7 +134,12 @@
         "moveUpAvalancheProblem": "Lawinenproblem nach oben schieben",
         "moveDownAvalancheProblem": "Lawinenproblem nach unten schieben",
         "dangerRatingDirectionUp": "Aufwärts",
-        "dangerRatingDirectionDown": "Abwärts"
+        "dangerRatingDirectionDown": "Abwärts",
+        "avalancheType": {
+          "slab": "SLAB",
+          "loose": "LOOSE",
+          "glide": "GLIDE"
+        }
       },
       "save": " Speichern",
       "discard": " Verwerfen",
@@ -138,7 +159,7 @@
       "suggestions": "Vorschläge",
       "noBulletinsForSelectedDay": "Keine Regionen für dieses Datum vorhanden.",
       "autosave": "Automatisch gespeichert",
-      "regionEditable": "Diese Region kann bearbeitet werden.", 
+      "regionEditable": "Diese Region kann bearbeitet werden.",
       "regionNotEditable": "Diese Region kann nicht bearbeitet werden.",
       "regionLocked": "Diese Region ist gesperrt.",
       "changeDangerRatingElevation": "Erweitere die Gefahrenstufe",
@@ -146,8 +167,10 @@
       "mapLeft": "Karte seitlich",
       "showNotes": "Notizen anzeigen",
       "hideNotes": "Notizen ausblenden",
+      "incompleteAvalancheProblem": "Unvollständig",
       "label": {
         "avalancheProblems": "Lawinenproblem",
+        "avalancheType": "Lawinenart",
         "aspects": "Expositionen",
         "elevation": "Seehöhe",
         "highlights": "Besondere Warnung",
@@ -235,6 +258,63 @@
         "favourableSituation": "Günstige Situation",
         "cancel": "Abbrechen"
       },
+      "removeDaytimeDependencyDialog" : {
+        "message": "Welche Lawinenprobleme möchtest du behalten?",
+        "cancel": "Abbrechen"
+      },
+      "strategicMindsetDialog" : {
+        "title": "Strategisches Mindset",
+        "introduction": "Mit den „Strategic Mindsets“ soll unsere mentale Einstellung im Hinblick auf die Lawinensituation bzw. dessen Entwicklung in der entsprechenden Warnregion zum Ausdruck gebracht werden. Sie soll keine direkte Ableitung aus der Gefahrenbeurteilung darstellen, sondern vielmehr als intuitiver Eindruck der Gesamtsituation verstanden und verwendet werden. In erster Linie handelt es sich bei den „Strategic Mindsets“ also über ein Kommunikationsinstrument. Über die Mindsets und damit verbundenen Definitionen können wir Prognostikerinnen uns schnell und effizient über die Entwicklung der Gefahrensituation austauschen und eine gemeinsame Sprache in der Kommunikation finden. ",
+        "description": {
+          "title": "Beschreibung:",
+          "text": {
+            "assessment": "Es besteht <b>große Unsicherheit</b> in der Gefahrenbeurteilung aufgrund <b>unzureichender Informationen</b> aus dem Gelände.",
+            "stepping_out": "<b>Abnehmende Tendenz</b> der Gefahrensituation (auch innerhalb einer Gefahrenstufe).",
+            "status_quo": "Gleichbleibende Gefahrensituation. <b>Keine wesentliche Änderung</b> zum Vortag.",
+            "stepping_back": "<b>Ansteigende Tendenz</b> der Gefahrensituation (auch innerhalb einer Gefahrenstufe).",
+            "entrenchment": "<b>Annäherend gleichbleibende, angespannte Gefahrensituation.</b> Die Hauptgefahr geht von (einer) <b>störanfälligen, persistente(n) Schwachschicht(en)</b> aus.",
+            "free_ride": "<b>Geringe Lawinengefahr</b> mit allgemein stabiler Schneedecke. Es sind nur kleine, oberflächliche Lawinen im extremen Steilgelände möglich. ",
+            "high_alert": "Außergewöhnliche Situation mit <b>großer oder sehr großer Lawinengefahr</b>. Spontane Lawinen <b>sehr großen oder extremen Ausmaßes</b> sind möglich",
+            "spring_diurnal": "Nassschneelawinen im Tagesverlauf, welche einem <b>klaren tageszeitlichen Gang</b> unterliegen sind maßgeblich für die Gefahreneinschätzung."
+          }
+        },
+        "communication": {
+          "title": "Kommunikation:",
+          "text": {
+            "assessment": "Lawinensituation muss lokal genau überprüft werden. Zurückhaltung wird empfohlen.",
+            "stepping_out": "Allmählicher Rückgang der Gefahr. Es ist jedoch weiterhin Vorsicht geboten, die sich bessernde Situation sollte lokal beurteilt werden, bevor risikoreicheres Gelände betreten wird. ",
+            "status_quo": "Gefahrensituation ist unverändert. Rückmeldungen von Beobachtern helfen, die Gefahrensituation besser zu umreißen. Günstigeres Gelände sollte hervorgehoben kommuniziert werden.",
+            "stepping_back": "Klare Kommunikation des Anstiegs der Lawinengefahr - auch innerhalb einer Gefahrenstufe. Informationen zu den Ursachen unterstützen die Verständlichkeit in der Kommunikation.",
+            "entrenchment": "Zurückhaltung und Vorsicht ist geboten. Situation ändert sich kaum. Wenn möglich möglichst genaue Informationen zu Verbreitung und Störanfälligkeit. Verstärkte Kommunikation von Beobachtungen, welche die Situation offenkundig machen und Zurückhaltung triggern.",
+            "free_ride": "Wenig Text. Hervorheben der allgemein günstigen Gesamtsituation und potenziell isolierter Gefahrenbereiche.",
+            "high_alert": "Kommunikation über alle Kanäle. Fokus liegt nicht mehr auf Wintersport. Gefahr auch in Bereichen, welche für gewöhnlich nicht lawinengefährdet sind.",
+            "spring_diurnal": "Am Morgen günstige Situation, im Tagesverlauf Anstieg. Beurteilung sollte lokal durch Beobachten des Aufweichens der nächtlichen Schmelzharschkruste und der zunehmenden Durchnässung der Schneedecke erfolgen."
+          }
+        },
+        "examples": {
+          "title": "Beispiele:",
+          "text": {
+            "assessment": "Saisonbeginn.",
+            "stepping_out": "Abkühlung führt nach einer feucht- warmen Wetterphase zu einem Rückgang der Gefahr von Nassschneelawinen.",
+            "status_quo": "Gleichbleibend gefahrenbestimmendes Triebschneeproblem bei kalten Temperaturen, lockerem Schnee und Wind.",
+            "stepping_back": "Ergiebiger Neuschneefall führt zu einem Anstieg der Gefahrensituation.",
+            "entrenchment": "Kritisches Altschneeproblem mit Potenzial für gefährlich große Lawinen. Die Situation stabilisiert sich nur sehr langsam und erfordert viel Zurückhaltung.",
+            "free_ride": "Geringe Lawinengefahr, keine persistenten Schwachschichten, jedwedes Gelände wurde bereits angespurt.",
+            "high_alert": "Gefahrenstufe 4 oder höher aufgrund großer Neuschneemengen und/oder problematischer, anhaltender Schwachschichten.",
+            "spring_diurnal": "Frühjahrssituation mit trockenem Hochdruckwetter und moderaten Temperaturen bei ansonsten überwiegend stabiler Altschneedecke."
+          }
+        },
+        "strategicMindset": {
+          "assessment": "Große Unsicherheit",
+          "stepping_out": "Verbesserung",
+          "status_quo": "Status Quo",
+          "stepping_back": "Verschlechterung",
+          "entrenchment": "Persistent Instabil",
+          "free_ride": "Günstige Situation",
+          "high_alert": "High Alert",
+          "spring_diurnal": "Frühjahrssituation"
+        }
+      },
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-de.svg",
         "feedbackURL": "https://models.avalanche.report:8061/de/",
@@ -284,6 +364,7 @@
         "validFor": "Gültig für: ",
         "title": {
           "prod": "Produktives System",
+          "test": "Test System",
           "task": "Vorgang",
           "language": {
             "all": "ALLE",
@@ -451,49 +532,65 @@
         "save": "Speichern"
       },
       "table": {
-        "id": "ID",
-        "microRegions": "Anzahl an Mikroregionen",
-        "subRegions": "Subregionen",
-        "superRegions": "Superregionen",
-        "neighborRegions": "Nachbarregionen",
-        "showMatrix": "Matrix anzeigen",
-        "publishBulletins": "Lawinenvorhersage veröffentlichen",
-        "publishBlogs": "Blogs veröffentlichen",
-        "createCaamlV5": "CAAML v5 erzeugen",
-        "createCaamlV6": "CAAML v6 erzeugen",
-        "createJson": "JSON erzeugen",
-        "createMaps": "Karten erstellen",
-        "createPdf": "PDF erzeugen",
-        "sendEmails": "Emails verschicken",
-        "createSimpleHtml": "Einfaches HTML erzeugen",
-        "sendTelegramMessages": "Telegram Nachrichten verschicken",
-        "sendPushNotifications": "Push Nachrichten verschicken",
-        "enableMediaFile": "Mediendateien aktivieren",
-        "enableAvalancheProblemCornices": "Lawinenproblem WECHTEN aktivieren",
-        "enableAvalancheProblemNoDistinctAvalancheProblem": "Lawinenproblem KEIN AUSGEPRÄGTES PROBLEM aktivieren",
-        "pdfColor": "PDF Farbe",
-        "emailColor": "Email Farbe",
-        "pdfMapYAmPm": "Y für PDF Karte (am/pm)",
-        "pdfMapYFd": "Y für PDF Karte (fd)",
-        "pdfMapWidthAmPm": "Kartenbreite für PDF (am/pm)",
-        "pdfMapWidthFd": "Kartenbreite für PDF (fd)",
-        "pdfMapHeight": "Kartenhöhe für PDF",
-        "pdfFooterLogo": "Logo für PDF Footer",
-        "pdfFooterLogoColorPath": "Logo für PDF Footer (farbe)",
-        "pdfFooterLogoBwPath": "Logo für PDF Footer (schwarz-weiß)",
-        "mapXmax": "Karte X max",
-        "mapXmin": "Karte X min",
-        "mapYmax": "Karte Y max",
-        "mapYmin": "Karte Y min",
-        "simpleHtmlTemplateName": "Vorlage für einfaches HTML",
-        "geoDataDirectory": "Ordner für Geodaten",
-        "mapLogoColorPath": "Logo für Karte (farbe)",
-        "mapLogoBwPath": "Logo für Karte (schwarz-weiß)",
-        "mapLogoPosition": "Logoposition für Karte",
-        "mapCenterLat": "Mittelpunkt der Karte (lat)",
-        "mapCenterLng": "Mittelpunkt der Karte (long)",
-        "imageColorbarColorPath": "Farbleiste (farbe)",
-        "imageColorbarBwPath": "Farbleiste (schwarz-weiß)"
+        "general": {
+          "title": "Allgemein",
+          "id": "ID",
+          "microRegions": "Anzahl an Mikroregionen",
+          "subRegions": "Subregionen",
+          "superRegions": "Superregionen",
+          "neighborRegions": "Nachbarregionen"
+        },
+        "publication": {
+          "title": "Publikation",
+          "publishBulletins": "Lawinenvorhersage veröffentlichen",
+          "publishBlogs": "Blogs veröffentlichen",
+          "createCaamlV5": "CAAML v5 erzeugen",
+          "createCaamlV6": "CAAML v6 erzeugen",
+          "createJson": "JSON erzeugen",
+          "createMaps": "Karten erstellen",
+          "createPdf": "PDF erzeugen",
+          "sendEmails": "Emails verschicken",
+          "createSimpleHtml": "Einfaches HTML erzeugen",
+          "sendTelegramMessages": "Telegram Nachrichten verschicken",
+          "sendPushNotifications": "Push Nachrichten verschicken",
+          "pdfColor": "PDF Farbe",
+          "emailColor": "Email Farbe",
+          "pdfMapYAmPm": "Y für PDF Karte (am/pm)",
+          "pdfMapYFd": "Y für PDF Karte (fd)",
+          "pdfMapWidthAmPm": "Kartenbreite für PDF (am/pm)",
+          "pdfMapWidthFd": "Kartenbreite für PDF (fd)",
+          "pdfMapHeight": "Kartenhöhe für PDF",
+          "pdfFooterLogo": "Logo für PDF Footer",
+          "pdfFooterLogoColorPath": "Logo für PDF Footer (farbe)",
+          "pdfFooterLogoBwPath": "Logo für PDF Footer (schwarz-weiß)",
+          "mapXmax": "Karte X max",
+          "mapXmin": "Karte X min",
+          "mapYmax": "Karte Y max",
+          "mapYmin": "Karte Y min",
+          "simpleHtmlTemplateName": "Vorlage für einfaches HTML",
+          "geoDataDirectory": "Ordner für Geodaten",
+          "mapLogoColorPath": "Logo für Karte (farbe)",
+          "mapLogoBwPath": "Logo für Karte (schwarz-weiß)",
+          "mapLogoPosition": "Logoposition für Karte",
+          "mapCenterLat": "Mittelpunkt der Karte (lat)",
+          "mapCenterLng": "Mittelpunkt der Karte (long)",
+          "imageColorbarColorPath": "Farbleiste (farbe)",
+          "imageColorbarBwPath": "Farbleiste (schwarz-weiß)"
+        },
+        "components": {
+          "title": "Komponenten",
+          "enableObservations": "Beobachtungen aktivieren",
+          "enableModelling": "Modellierung aktivieren",
+          "enableWeatherbox": "Wetterbox aktivieren"
+        },
+        "configuration": {
+          "title": "Konfiguration",
+          "showMatrix": "Matrix anzeigen",
+          "enableMediaFile": "Mediendateien aktivieren",
+          "enableStrategicMindset": "Strategisches Mindset aktivieren",
+          "enableAvalancheProblemCornices": "Lawinenproblem WECHTEN aktivieren",
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Lawinenproblem KEIN AUSGEPRÄGTES PROBLEM aktivieren"
+        }
       },
       "success": "Konfiguration erfolgreich gespeichert",
       "error": "Konfiguration konnte nicht gespeichert werden"
@@ -505,6 +602,7 @@
       },
       "tooltip": {
         "edit": "Benutzer bearbeiten",
+        "changePassword": "Passwort ändern",
         "delete": "Benutzer löschen"
       },
       "table": {
@@ -534,6 +632,7 @@
     },
     "createUser": {
       "table": {
+        "image": "Bild",
         "name": "Name",
         "email": "E-Mail",
         "organization": "Organisation",
@@ -562,22 +661,15 @@
         "cancel": "Abbrechen"
       }
     },
-    "statistics": {
-      "title": "Statistik",
-      "button": {
-        "submit": "Herunterladen"
-      },
-      "label": {
-        "dateRange": "Zeitspanne",
-        "extended": "Erweitert",
-        "duplicates": "Duplikate"
-      }
-    },
     "observations": {
       "table": "Tabelle",
       "map": "Karte",
+      "gallery": "Galerie",
       "filters": "Filter",
       "title": "Rückmeldungen",
+      "newObservation": "Neue Beobachtung",
+      "exportObservations": "Beobachtungen exportieren",
+      "toggleFilterBar": "Filter anzeigen/verbergen",
       "button": {
         "submit": "Herunterladen"
       },
@@ -587,11 +679,11 @@
       },
       "selectRegion": {
         "placeholder": "Region",
-        "selectionLabel": "{0} Regionen ausgewählt"
+        "selectionLabel": "{0} Region(en) ausgewählt"
       },
       "selectSources": {
         "placeholder": "Quellen",
-        "selectionLabel": "{0} Quellen ausgewählt"
+        "selectionLabel": "{0} Quelle(n) ausgewählt"
       },
       "charts": {
         "charts": "Diagramme",
@@ -613,7 +705,7 @@
           "caption": "Beobachtungstyp"
         },
         "importantObservation": {
-          "caption": "Wichtige Beobachtung!"
+          "caption": "Wichtig"
         },
         "avalancheProblem": {
           "caption": "Lawinenproblem"
@@ -657,6 +749,7 @@
     }
   },
   "settings": {
+    "title": "Einstellungen",
     "changePassword": {
       "title": "Passwort ändern",
       "oldPassword": {
@@ -689,9 +782,19 @@
       "title": "Anzeige",
       "table": {
         "showCaaml": "CAAML anzeigen",
-        "showJson": "JSON anzeigen",
-        "showObservations": "Beobachtungen anzeigen"
+        "showJson": "JSON anzeigen"
       }
+    }
+  },
+  "statistics": {
+    "title": "Statistik",
+    "button": {
+      "submit": "Herunterladen"
+    },
+    "label": {
+      "dateRange": "Zeitspanne",
+      "extended": "Erweitert",
+      "duplicates": "Duplikate"
     }
   },
 
@@ -732,6 +835,17 @@
     "dp9": "gm.9: eingeschneiter graupel",
     "dp10": "gm.10: frühjahrssituation"
   },
+  "strategicMindset": {
+    "title": "Strategisches Mindset",
+    "assessment": "Große Unsicherheit",
+    "stepping_out": "Verbesserung",
+    "status_quo": "Status Quo",
+    "stepping_back": "Verschlechterung",
+    "entrenchment": "Persistent Instabil",
+    "free_ride": "Günstige Situation",
+    "high_alert": "High Alert",
+    "spring_diurnal": "Frühjahrssituation"
+  },
   "observationType": {
     "TimeSeries": "Zeitreihe",
     "Incident": "Ereignis",
@@ -762,6 +876,7 @@
     "NW": "NW"
   },
   "role": {
+    "SUPERADMIN": "Super Administrator",
     "ADMIN": "Administrator",
     "FORECASTER": "Lawinenwarner",
     "FOREMAN": "Vorarbeiter",
@@ -848,7 +963,34 @@
     "avalancheSize": "Lawinengröße",
     "avalancheType": "Lawinenart",
     "avalancheWidth": "Lawinenbreite",
+    "search": "Suchen",
     "count": "# Beobachtungen:",
+    "layers": {
+      "observers": "Beobachter",
+      "weatherStations": "Wetterstationen",
+      "webcams": "Webcams",
+      "observations": "Beobachtungen"
+    },
+    "weatherStations": {
+      "tooltips": {
+        "globalRadiation": "Globalstrahlung",
+        "snowHeight": "Schneehöhe",
+        "snowDifference24h": "Schneehöhendifferenz 24h",
+        "snowDifference48h": "Schneehöhendifferenz 48h",
+        "snowDifference72h": "Schneehöhendifferenz 72h",
+        "airTemperature": "Lufttemperatur",
+        "airTemperatureMax": "Maximale Lufttemperatur",
+        "airTemperatureMin": "Minimale Lufttemperatur",
+        "surfaceTemperature": "Oberflächentemperatur",
+        "surfaceHoar": "Potential zur Oberflächenreifbildung",
+        "surfaceHoarCalc": "Potential zur Oberflächenreifbildung (Lehning et. al.)",
+        "dewPoint": "Taupunkt-Temperatur",
+        "relativeHumidity": "Relative Luftfeuchtigkeit",
+        "windDirection": "Windrichtung",
+        "windSpeed": "Windgeschwindigkeit",
+        "windGust": "Wind Böe"
+      }
+    },
     "button": {
       "add": "Beobachtung erstellen",
       "save": "Beobachtung speichern",
@@ -916,18 +1058,18 @@
       "AUSL.T": "Triggertemperatur",
       "SHW-IX": "Showalter-Index",
       "WX -CUF": "signifikantes Wetter: NIL (keine), RASH (Regen), TS (Gewitter)",
-      "RR": "total precipitation [mm]",
+      "RR": "Gesamtniederschlag [mm]",
       "RR-str": "schichtweiser Niederschlag",
-      "CONV": "convective precipitation [mm]",
-      "SN": "precipitation in form of snow [mm]",
-      "SN--RA": "snowline [m]",
+      "CONV": "konvektiver Niederschlag [mm]",
+      "SN": "Niederschlag in Form von Schnee [mm]",
+      "SN--RA": "Schneefallgrenze [m]",
       "QAO ": "{{value}} hPa eq. mean wind, direction and strength, [°] and [m/s]",
       "QAN": "mean wind on the ground, direction and strength, [°] and [m/s]",
       "QANmax": "max. wind (gusts) on the ground [m/s]",
       "T ": "{{value}} hPa eq. temperature [°C]",
-      "T m": "temperature on {{value}}m [°C]",
-      "T 2m": "temperature on 2m [°C]",
-      "Tk 2m": "temperature on 2m [°K]",
+      "T m": "Temperatur auf {{value}}m [°C]",
+      "T 2m": "Temperatur auf 2m [°C]",
+      "Tk 2m": "Temperatur auf 2m [°K]",
       "T GND": "Bodentemperatur",
       "Max-ADI": "maximum mixing temperature [°C]",
       "Min Max": "min./max. temperature in the last 24h",
