@@ -20,8 +20,6 @@ import {
   toGeoJSON,
   toObservationTable,
   LocalFilterTypes,
-  AvalancheProblem,
-  DangerPattern,
   ImportantObservation,
   Stability,
   WeatherStationParameter,
@@ -45,6 +43,7 @@ import { AlbinaObservationsService } from "./observations.service";
 import { LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
+import { AvalancheProblem, DangerPattern } from "../enums/enums";
 
 export interface MultiselectDropdownData {
   id: string;

@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
 import { Canvas, CircleMarker, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
-  Aspect,
   degreeToAspect,
   GenericObservation,
   ImportantObservation,
@@ -14,6 +13,7 @@ import {
 } from "./models/generic-observation.model";
 import { memoize } from "lodash";
 import { ObservationFilterService } from "./observation-filter.service";
+import { Aspect } from "../enums/enums";
 
 const zIndex: Record<Stability, number> = {
   [Stability.good]: 1,

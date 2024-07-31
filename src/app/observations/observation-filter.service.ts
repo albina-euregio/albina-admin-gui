@@ -1,8 +1,5 @@
 import { Injectable } from "@angular/core";
 import {
-  Aspect,
-  AvalancheProblem,
-  DangerPattern,
   GenericObservation,
   ImportantObservation,
   LocalFilterTypes,
@@ -14,6 +11,7 @@ import { formatDate } from "@angular/common";
 import { castArray } from "lodash";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
+import { Aspect, AvalancheProblem, DangerPattern } from "../enums/enums";
 
 interface Dataset {
   source: Array<Array<string | number>>;

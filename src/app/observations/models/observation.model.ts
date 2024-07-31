@@ -1,7 +1,8 @@
-import { GenericObservation, Aspect, ObservationSource, ObservationType, Stability } from "./generic-observation.model";
+import { GenericObservation, ObservationSource, ObservationType, Stability } from "./generic-observation.model";
+import * as Enums from "../../enums/enums";
 
 export interface Observation {
-  aspect: Aspect;
+  aspect: Enums.Aspect;
   authorName: string;
   content: string;
   elevation: number;
