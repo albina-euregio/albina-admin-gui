@@ -7,7 +7,7 @@ import {
   ImportantObservation,
   ObservationSource,
   ObservationType,
-  Stability,
+  SnowpackStability as Stability,
 } from ".";
 
 export interface LolaKronosApi {

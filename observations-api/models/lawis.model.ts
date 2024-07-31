@@ -6,7 +6,7 @@ import {
   ObservationSource,
   ObservationTableRow,
   ObservationType,
-  Stability,
+  SnowpackStability as Stability,
   toAspect,
 } from ".";
 
