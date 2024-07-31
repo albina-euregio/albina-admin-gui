@@ -3,7 +3,7 @@
     <thead class="bulletins-table__header">
       <tr>
         <th></th>
-        <th><i class="ph ph-brain"></i> stress level</th>
+        <th><i class="ph ph-brain"></i> {{ "login.stressLevel" | translate }}</th>
         <th>{{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}</th>
         <th class="" *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">
           {{ "bulletins.table.title.status." + region | translate }}
@@ -50,7 +50,7 @@
             </div>
           </div>
         </td>
-        <td [attr.data-label]="'stress level'">
+        <td [attr.data-label]="'login.stressLevel' | translate">
           <input
             class="form-range"
             type="range"
