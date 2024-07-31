@@ -102,29 +102,6 @@ export function toObservationTable(observation: GenericObservation): Observation
   ];
 }
 
-export function toAspect(aspect: number | string | undefined): Aspect | undefined {
-  enum NumericAspect {
-    N = 1,
-    NE = 2,
-    E = 3,
-    SE = 4,
-    S = 5,
-    SW = 6,
-    W = 7,
-    NW = 8,
-  }
-  if (typeof aspect === "number") {
-    const string = NumericAspect[aspect];
-    return Aspect[string];
-  } else if (typeof aspect === "string") {
-    return Aspect[aspect];
-  }
-}
-
-export function imageCountString(images: any[] | undefined) {
-  return images?.length ? ` 📷 ${images.length}` : "";
-}
-
 export function toGeoJSON(observations: GenericObservation[]) {
   const features = observations.map(
     (o): GeoJSON.Feature => ({
@@ -205,10 +182,3 @@ export type GenericObservation<Data = any> = z.infer<typeof genericObservationSc
   $extraDialogRows?: ObservationTableRow[];
   regionLabel?: string;
 };
-
-export function findExistingObservation(
-  observations: GenericObservation[],
-  observation: GenericObservation,
-): GenericObservation | undefined {
-  return observations.find((o) => o.$source === observation.$source && o.$id === observation.$id);
-}
