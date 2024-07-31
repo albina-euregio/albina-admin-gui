@@ -34,6 +34,12 @@
     </div>
     <!-- End avalanche problem icon-->
 
+    <!-- Avalanche type -->
+    <div class="avalanche-problem-preview__info-item" style="width: 50px">
+      <app-avalanche-type [value]="avalancheProblem.avalancheType" class="avalanche-problem-preview__problem-icon" />
+    </div>
+    <!-- End avalanche type-->
+
     <!-- Aspects -->
     <div class="avalanche-problem-preview__info-item">
       <app-aspects [(aspects)]="avalancheProblem.aspects" [disabled]="true" [size]="32"></app-aspects>

@@ -17,6 +17,7 @@ import { MatrixParameterComponent } from "./matrix-parameter.component";
 import { CaamlComponent } from "./caaml.component";
 import { JsonComponent } from "./json.component";
 import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
+import { AvalancheTypeComponent } from "./avalanche-type.component";
 
 // Bulletins Routing
 import { BulletinsRoutingModule } from "./bulletins-routing.module";
@@ -41,7 +42,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     BsDropdownModule.forRoot(),
     NgxSliderModule,
   ],
-  exports: [AspectsComponent, AvalancheProblemIconsComponent],
+  exports: [AspectsComponent, AvalancheProblemIconsComponent, AvalancheTypeComponent],
   declarations: [
     BulletinsComponent,
     CreateBulletinComponent,
@@ -59,6 +60,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     CaamlComponent,
     JsonComponent,
     AvalancheProblemIconsComponent,
+    AvalancheTypeComponent,
     HtmlPipe,
   ],
 })
