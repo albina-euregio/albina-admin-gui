@@ -83,18 +83,6 @@ export interface ObservationTableRow {
   value?: string;
 }
 
-export function toObservationTable(observation: GenericObservation): ObservationTableRow[] {
-  return [
-    { label: "observations.eventDate", date: observation.eventDate },
-    { label: "observations.reportDate", date: observation.reportDate },
-    { label: "observations.authorName", value: observation.authorName },
-    { label: "observations.locationName", value: observation.locationName },
-    { label: "observations.elevation", number: observation.elevation },
-    { label: "observations.aspect", value: observation.aspect },
-    { label: "observations.comment", value: observation.content },
-  ];
-}
-
 export function toGeoJSON(observations: GenericObservation[]) {
   const features = observations.map(
     (o): GeoJSON.Feature => ({

@@ -18,7 +18,6 @@ import {
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
-  toObservationTable,
   LocalFilterTypes,
   ImportantObservation,
   WeatherStationParameter,
@@ -444,9 +443,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       const imgUrl = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalImg);
       this.observationPopup = { observation, table: [], iframe: undefined, imgUrl: imgUrl };
     } else {
-      const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
-      const rows = toObservationTable(observation);
-      const table = [...rows, ...extraRows].map((row) => ({
+      const table: ObservationTableRow[] = (
+        [
+          { label: "observations.eventDate", date: observation.eventDate },
+          { label: "observations.reportDate", date: observation.reportDate },
+          { label: "observations.authorName", value: observation.authorName },
+          { label: "observations.locationName", value: observation.locationName },
+          { label: "observations.elevation", number: observation.elevation },
+          { label: "observations.aspect", value: observation.aspect },
+          { label: "observations.comment", value: observation.content },
+          ...(Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : []),
+        ] satisfies ObservationTableRow[]
+      ).map((row) => ({
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
