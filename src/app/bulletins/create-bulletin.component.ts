@@ -1,6 +1,6 @@
 import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { DatePipe, formatDate } from "@angular/common";
+import { DatePipe } from "@angular/common";
 
 import { map, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -464,9 +464,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   changeDate(date: [Date, Date]) {
     this.deselectBulletin();
-    const format = "yyyy-MM-dd";
-    const locale = "en-US";
-    const formattedDate = formatDate(date[1], format, locale);
+    const formattedDate = this.constantsService.getISODateString(date[1]);
     this.router.navigate(["/bulletins/" + formattedDate], {
       queryParams: { readOnly: this.bulletinsService.getIsReadOnly() },
     });
@@ -686,10 +684,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const sJson = JSON.stringify(jsonBulletins);
     const element = document.createElement("a");
     element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-    element.setAttribute(
-      "download",
-      this.datePipe.transform(this.bulletinsService.getActiveDate()[1], "yyyy-MM-dd") + "_report.json",
-    );
+    const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
+    element.setAttribute("download", formattedDate + "_report.json");
     element.style.display = "none";
     document.body.appendChild(element);
     element.click(); // simulate click
@@ -1109,9 +1105,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadingPreview = true;
     this.bulletinsService.getPreviewPdf(this.bulletinsService.getActiveDate()).subscribe((blob) => {
       this.loadingPreview = false;
-      const format = "yyyy-MM-dd";
-      const locale = "en-US";
-      const formattedDate = formatDate(this.bulletinsService.getActiveDate()[1], format, locale);
+      const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
       saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");
       console.log("Preview loaded.");
     });

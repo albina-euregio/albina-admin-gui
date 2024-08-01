@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { formatDate } from "@angular/common";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 import { StatisticsService } from "../providers/statistics-service/statistics.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { saveAs } from "file-saver";
@@ -17,6 +17,7 @@ export class StatisticsComponent {
   constructor(
     public statisticsService: StatisticsService,
     public settingsService: SettingsService,
+    public constantsService: ConstantsService,
   ) {
     this.loadingStatistics = false;
   }
@@ -37,10 +38,8 @@ export class StatisticsComponent {
         .subscribe((blob) => {
           this.loadingStatistics = false;
           document.getElementById("overlay").style.display = "none";
-          const format = "yyyy-MM-dd";
-          const locale = "en-US";
-          const startDate = formatDate(this.bsRangeValue[0], format, locale);
-          const endDate = formatDate(this.bsRangeValue[1], format, locale);
+          const startDate = this.constantsService.getISODateString(this.bsRangeValue[0]);
+          const endDate = this.constantsService.getISODateString(this.bsRangeValue[1]);
           let filename = "statistic_" + startDate + "_" + endDate;
           if (this.extended || this.duplicates) {
             filename = filename + "_";

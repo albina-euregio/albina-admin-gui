@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { UserService } from "../providers/user-service/user.service";
 import { EChartsOption } from "echarts";
-import { formatDate } from "@angular/common";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 
 @Component({
   selector: "app-team-stress-levels",
@@ -12,13 +12,16 @@ export class TeamStressLevelsComponent implements OnInit {
 
   dataset: EChartsOption;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private constantsService: ConstantsService,
+  ) {}
 
   ngOnInit(): void {
     this.userService.getTeamStressLevels([this.dates.at(-1)[0], this.dates.at(0)[1]]).subscribe((stressLevels) => {
       const dates = this.dates
         .flat()
-        .map((d) => formatDate(d, "yyyy-MM-dd", "en-US"))
+        .map((d) => this.constantsService.getISODateString(d))
         .filter((d, i, arr) => arr.indexOf(d) === i)
         .sort();
       this.dataset = {

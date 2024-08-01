@@ -148,9 +148,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   }
 
   editBulletin(date: [Date, Date], isReadOnly?: boolean) {
-    const format = "yyyy-MM-dd";
-    const locale = "en-US";
-    const formattedDate = formatDate(date[1], format, locale);
+    const formattedDate = this.constantsService.getISODateString(date[1]);
     this.bulletinsService.setIsReadOnly(isReadOnly);
     this.router.navigate(["/bulletins/" + formattedDate], { queryParams: { readOnly: isReadOnly } });
   }
