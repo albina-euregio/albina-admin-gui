@@ -13,6 +13,8 @@ import * as Enums from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
 import { DateIsoString } from "../models/stress-level.model";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 
 @Component({
   templateUrl: "bulletins.component.html",
@@ -34,6 +36,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     public router: Router,
     public wsUpdateService: WsUpdateService,
     public userService: UserService,
+    private modalService: BsModalService,
   ) {
     this.copying = false;
 
@@ -191,6 +194,17 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   postStressLevel(date: DateIsoString) {
     const stressLevel = this.stress[date];
     this.userService.postStressLevel({ date, stressLevel }).subscribe(() => {});
+  }
+
+  showTeamStressLevels() {
+    if (!this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
+      return;
+    }
+    this.modalService.show(TeamStressLevelsComponent, {
+      initialState: {
+        dates: this.bulletinsService.dates,
+      },
+    });
   }
 
   protected readonly formatDate = formatDate;

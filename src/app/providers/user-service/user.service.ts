@@ -114,4 +114,14 @@ export class UserService {
     };
     return this.http.get<StressLevel[]>(url, { headers, params });
   }
+
+  public getTeamStressLevels(date: [Date, Date]): Observable<Record<string, StressLevel[]>> {
+    const url = this.constantsService.getServerUrl() + "user/stress-level/team";
+    const headers = this.authenticationService.newAuthHeader();
+    const params = {
+      startDate: date[0].toISOString(),
+      endDate: date[1].toISOString(),
+    };
+    return this.http.get<Record<string, StressLevel[]>>(url, { headers, params });
+  }
 }

@@ -31,6 +31,8 @@ import { HtmlPipe } from "./html.pipe";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BulletinTextComponent } from "./bulletin-text.component";
+import { TeamStressLevelsComponent } from "./team-stress-levels.component";
+import { NgxEchartsDirective } from "ngx-echarts";
 
 @NgModule({
   imports: [
@@ -41,6 +43,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSliderModule,
+    NgxEchartsDirective,
   ],
   exports: [AspectsComponent, AvalancheProblemIconsComponent, AvalancheTypeComponent],
   declarations: [
@@ -62,6 +65,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     AvalancheProblemIconsComponent,
     AvalancheTypeComponent,
     HtmlPipe,
+    TeamStressLevelsComponent,
   ],
 })
 export class BulletinsModule {}
