@@ -11,6 +11,7 @@ import { castArray } from "lodash";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -198,6 +199,7 @@ export class ObservationFilterService {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
+    private constantsService: ConstantsService,
   ) {
     this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
@@ -249,7 +251,7 @@ export class ObservationFilterService {
       this.filterSelection.Days.values = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
         this.filterSelection.Days.values.push({
-          value: this.getISODateString(i),
+          value: this.constantsService.getISODateString(i),
           color: colors.shift(),
           label: formatDate(i, "dd", "en-US"),
         });
@@ -257,8 +259,8 @@ export class ObservationFilterService {
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {
-          startDate: this.getISODateString(this.startDate),
-          endDate: this.getISODateString(this.endDate),
+          startDate: this.constantsService.getISODateString(this.startDate),
+          endDate: this.constantsService.getISODateString(this.endDate),
         },
         queryParamsHandling: "merge",
       });
@@ -438,7 +440,7 @@ export class ObservationFilterService {
   testFilterSelection(f: FilterSelectionData["values"][number], v: number | string | Date): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
-      (v instanceof Date && f.value === this.getISODateString(v)) ||
+      (v instanceof Date && f.value === this.constantsService.getISODateString(v)) ||
       f.value === v
     );
   }
@@ -460,7 +462,7 @@ export class ObservationFilterService {
     if (selectedData.length < 1) {
       return eventDate.getDate() === this.endDate.getDate();
     } else {
-      return selectedData.indexOf(this.getISODateString(eventDate)) === selectedData.length - 1;
+      return selectedData.indexOf(this.constantsService.getISODateString(eventDate)) === selectedData.length - 1;
     }
   }
 
@@ -491,15 +493,5 @@ export class ObservationFilterService {
       (Array.isArray(testData) && testData.some((d) => d && selectedData.includes(d))) ||
       (typeof testData === "string" && selectedData.includes(testData))
     );
-  }
-
-  getISODateString(date: Date) {
-    // like Date.toISOString(), but not using UTC
-    // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-
-    function pad(number: number): string {
-      return number < 10 ? `0${number}` : `${number}`;
-    }
   }
 }
