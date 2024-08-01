@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getAwsWeatherStations } from "../../weather-stations";
+import { getAwsWeatherStations } from "../fetch/weather-stations";
 
 export const GET: APIRoute = async () => {
   const json = JSON.stringify(await getAwsWeatherStations());

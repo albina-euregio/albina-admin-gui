@@ -1,24 +1,13 @@
 import { readFile } from "node:fs/promises";
-import { getRegionForLatLng } from "../src/app/providers/regions-service/augmentRegion";
-import { fetchJSON } from "./fetchJSON";
-import type { GenericObservation } from "./models";
-import { type FotoWebcamEUResponse, convertFotoWebcamEU } from "./models/foto-webcam.model";
-import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "./models/panocloud-webcam.modes";
-import { type PanomaxCamResponse, type PanomaxThumbnailResponse, convertPanomax } from "./models/panomax.model";
-import { convertRasWebcam, webcams as rasWebcams } from "./models/ras-webcam.model";
+import { getRegionForLatLng } from "../../../src/app/providers/regions-service/augmentRegion";
+import { fetchJSON } from "../util/fetchJSON";
+import type { GenericObservation } from "../models";
+import { convertFotoWebcamEU, type FotoWebcamEUResponse } from "../models/foto-webcam.model";
+import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "../models/panocloud-webcam.modes";
+import { convertPanomax, type PanomaxCamResponse, type PanomaxThumbnailResponse } from "../models/panomax.model";
+import { convertRasWebcam, webcams as rasWebcams } from "../models/ras-webcam.model";
 
-let lastFetch = 0;
-let webcams: Promise<GenericObservation[]>;
-
-export async function serveWebcams(): Promise<GenericObservation[]> {
-  if (Date.now() - lastFetch > 60 * 3600e3) {
-    lastFetch = Date.now();
-    webcams = fetchWebcamsPromise();
-  }
-  return await webcams;
-}
-
-async function fetchWebcamsPromise(): Promise<GenericObservation[]> {
+export async function fetchWebcamsPromise(): Promise<GenericObservation[]> {
   const webcams = [] as GenericObservation[];
   for await (const webcam of fetchWebcams()) {
     webcams.push(webcam);

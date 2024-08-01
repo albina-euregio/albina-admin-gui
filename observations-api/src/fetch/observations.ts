@@ -1,13 +1,13 @@
-import { augmentRegion } from "../src/app/providers/regions-service/augmentRegion";
-import { createConnection, insertObservation, selectObservations } from "./database";
-import { augmentElevation } from "./elevation";
-import { fetchLawisIncidents } from "./fetch_lawis_incident";
-import { fetchLawisProfiles } from "./fetch_lawis_profile";
-import { fetchLolaKronos } from "./fetch_lola_kronos";
-import { fetchLwdKip } from "./fetch_lwdkip";
-import { fetchSnowLineCalculations } from "./fetch_snow_line";
-import { fetchWikiSnow } from "./fetch_wikisnow";
-import { type GenericObservation, findExistingObservation } from "./models";
+import { augmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
+import { createConnection, insertObservation, selectObservations } from "../db/database";
+import { augmentElevation } from "../db/elevation";
+import { fetchLawisIncidents } from "./observations/lawis_incident";
+import { fetchLawisProfiles } from "./observations/lawis_profile";
+import { fetchLolaKronos } from "./observations/lola_kronos";
+import { fetchLwdKip } from "./observations/lwdkip";
+import { fetchSnowLineCalculations } from "./observations/snow_line";
+import { fetchWikiSnow } from "./observations/wikisnow";
+import { type GenericObservation, findExistingObservation } from "../models";
 
 export async function fetchAndInsert(startDate: Date, endDate: Date) {
   const connection = await createConnection();

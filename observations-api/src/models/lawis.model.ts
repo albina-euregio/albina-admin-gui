@@ -1,10 +1,12 @@
+import type {
+  GenericObservation,
+  ObservationTableRow,
+} from "../../../src/app/observations/models/generic-observation.model";
 import {
   AvalancheProblem,
-  GenericObservation,
   imageCountString,
   ImportantObservation,
   ObservationSource,
-  ObservationTableRow,
   ObservationType,
   SnowpackStability as Stability,
   toAspect,

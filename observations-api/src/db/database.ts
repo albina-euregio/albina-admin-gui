@@ -9,7 +9,7 @@ import type {
   ObservationSource,
   ObservationType,
   Stability,
-} from "./models";
+} from "../models";
 
 type GenericObservationTable = {
   REGION_ID: string;

@@ -1,8 +1,8 @@
+import type { GenericObservation } from "../../../src/app/observations/models/generic-observation.model";
 import {
   Aspect,
   AvalancheProblem,
   DangerPattern as GenericDangerPattern,
-  GenericObservation,
   imageCountString,
   ImportantObservation,
   ObservationSource,
