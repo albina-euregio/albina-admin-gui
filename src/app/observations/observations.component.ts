@@ -395,44 +395,35 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadObservers(): LayerGroup<any> {
-    return this.loadGenericObservations0(this.observationsService.getObservers(), "observers");
-  }
-
   private loadWeatherStations(): LayerGroup<any> {
-    const weatherStations = this.observationsService.getWeatherStations();
     this.weatherStations = [];
-    weatherStations.forEach((w) => {
+    this.observationsService.getWeatherStations().forEach((w) => {
       augmentRegion(w);
       if (!w.region) return;
       this.weatherStations.push(w);
     });
-    return this.loadGenericObservations0(weatherStations, "weather-stations");
+    return this.mapService.layers["weather-stations"];
   }
 
   private loadWebcams(): LayerGroup<any> {
-    const webcams = this.observationsService.getGenericWebcams();
     this.webcams = [];
-    webcams.forEach((w) => {
+    this.observationsService.getGenericWebcams().forEach((w) => {
       augmentRegion(w);
       if (!w.region) return;
       this.webcams.push(w);
     });
-    return this.loadGenericObservations0(webcams, "webcams");
+    return this.mapService.layers["webcams"];
   }
 
-  private loadGenericObservations0(
-    observations: Observable<GenericObservation>,
-    layer: keyof typeof this.mapService.layers,
-  ): LayerGroup<any> {
-    observations.forEach((observation) => {
+  private loadObservers(): LayerGroup<any> {
+    this.observationsService.getObservers().forEach((observation) => {
       this.observationsAsOverlay.push(observation);
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        layer,
+        "observers",
       );
     });
-    return this.mapService.layers[layer];
+    return this.mapService.layers["observers"];
   }
 
   onObservationClick(observation: GenericObservation, doShow = true): void {
