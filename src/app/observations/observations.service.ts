@@ -48,7 +48,7 @@ export class AlbinaObservationsService {
 
   getWeatherStations(): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/weather-stations";
-    return this.getGenericObservations0(url);
+    return this.getGenericObservations0(url, this.filter.dateRangeParams);
   }
 
   getGenericWebcams(): Observable<GenericObservation> {

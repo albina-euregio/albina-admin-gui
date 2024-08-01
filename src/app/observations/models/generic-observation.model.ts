@@ -139,7 +139,7 @@ export const genericObservationSchema = z.object({
   $data: z.any().describe("Additional data (e.g. original data stored when fetching from external API)"),
   $id: z.string().optional().nullable().describe("External ID of this observations"),
   $externalURL: z.string().optional().nullable().describe("External URL to display as iframe"),
-  $externalImg: z.string().optional().nullable().describe("External image to display as img"),
+  $externalImgs: z.array(z.string()).optional().nullable().describe("External image to display as img"),
   stability: z
     .nativeEnum(SnowpackStability)
     .optional()

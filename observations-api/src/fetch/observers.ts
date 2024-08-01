@@ -12,7 +12,7 @@ export function getAwsObservers(): GenericObservation[] {
   return [...BeobachterAT, ...BeobachterIT].map(
     (observer): GenericObservation => ({
       $data: observer,
-      $externalImg: `https://wiski.tirol.gv.at/lawine/grafiken/800/beobachter/${observer["plot.id"]}.png`,
+      $externalImgs: [`https://wiski.tirol.gv.at/lawine/grafiken/800/beobachter/${observer["plot.id"]}.png`],
       $source: ObservationSource.Observer,
       $type: ObservationType.TimeSeries,
       aspect: undefined,

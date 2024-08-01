@@ -84,7 +84,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     observation: GenericObservation;
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
-    imgUrl: SafeResourceUrl;
+    imgUrls: SafeResourceUrl[];
   };
 
   public allRegions: RegionProperties[];
@@ -395,53 +395,44 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadObservers(): LayerGroup<any> {
-    return this.loadGenericObservations0(this.observationsService.getObservers(), "observers");
-  }
-
   private loadWeatherStations(): LayerGroup<any> {
-    const weatherStations = this.observationsService.getWeatherStations();
     this.weatherStations = [];
-    weatherStations.forEach((w) => {
+    this.observationsService.getWeatherStations().forEach((w) => {
       augmentRegion(w);
       if (!w.region) return;
       this.weatherStations.push(w);
     });
-    return this.loadGenericObservations0(weatherStations, "weather-stations");
+    return this.mapService.layers["weather-stations"];
   }
 
   private loadWebcams(): LayerGroup<any> {
-    const webcams = this.observationsService.getGenericWebcams();
     this.webcams = [];
-    webcams.forEach((w) => {
+    this.observationsService.getGenericWebcams().forEach((w) => {
       augmentRegion(w);
       if (!w.region) return;
       this.webcams.push(w);
     });
-    return this.loadGenericObservations0(webcams, "webcams");
+    return this.mapService.layers["webcams"];
   }
 
-  private loadGenericObservations0(
-    observations: Observable<GenericObservation>,
-    layer: keyof typeof this.mapService.layers,
-  ): LayerGroup<any> {
-    observations.forEach((observation) => {
+  private loadObservers(): LayerGroup<any> {
+    this.observationsService.getObservers().forEach((observation) => {
       this.observationsAsOverlay.push(observation);
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        layer,
+        "observers",
       );
     });
-    return this.mapService.layers[layer];
+    return this.mapService.layers["observers"];
   }
 
   onObservationClick(observation: GenericObservation, doShow = true): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe, imgUrl: undefined };
-    } else if (observation.$externalImg) {
-      const imgUrl = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalImg);
-      this.observationPopup = { observation, table: [], iframe: undefined, imgUrl: imgUrl };
+      this.observationPopup = { observation, table: [], iframe, imgUrls: undefined };
+    } else if (observation.$externalImgs) {
+      const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
+      this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls };
     } else {
       const table: ObservationTableRow[] = (
         [
@@ -458,7 +449,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
-      this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
+      this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined };
     }
     if (doShow) {
       this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
@@ -470,11 +461,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   @HostListener("document:keydown", ["$event"])
-  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }) {
+  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown" }) {
     if (!this.observationPopup?.observation) {
       return;
     }
-    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+    if (
+      event.key !== "ArrowRight" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown"
+    ) {
       return;
     }
     let observation = this.observationPopup?.observation;
@@ -487,16 +483,28 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     if (event.key === "ArrowRight") {
       index += 1;
-      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
         index += 1;
       }
       observation = observations[index];
     } else if (event.key === "ArrowLeft") {
       index -= 1;
-      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
         index -= 1;
       }
       observation = observations[index];
+    } else if (observation?.$externalImgs && event.key === "ArrowUp") {
+      const image = document.getElementById("observationImage") as HTMLImageElement;
+      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
+      if (index > 0) {
+        image.src = observation?.$externalImgs[index - 1];
+      }
+    } else if (observation?.$externalImgs && event.key === "ArrowDown") {
+      const image = document.getElementById("observationImage") as HTMLImageElement;
+      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
+      if (observation?.$externalImgs.length <= index - 1) {
+        image.src = observation?.$externalImgs[index + 1];
+      }
     }
     if (observation) {
       this.onObservationClick(observation, false);

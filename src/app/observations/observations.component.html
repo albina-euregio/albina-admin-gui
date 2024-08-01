@@ -447,6 +447,8 @@
     <div class="d-inline-block font-weight-normal">
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowLeft' })">←</kbd>
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowRight' })">→</kbd>
+      <kbd *ngIf="observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowUp' })">↑</kbd>
+      <kbd *ngIf="observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowDown' })">↓</kbd>
       &mdash;
       <button class="btn btn-sm btn-secondary" (click)="modalService.hide()">&times;</button>
     </div>
@@ -483,8 +485,8 @@
       [src]="observationPopup?.iframe"
       style="width: 100%; height: 80vh"
     ></iframe>
-    <div *ngIf="observationPopup?.imgUrl">
-      <img [src]="observationPopup?.imgUrl" style="width: -webkit-fill-available" />
+    <div *ngIf="observationPopup?.imgUrls">
+      <img id="observationImage" [src]="observationPopup?.imgUrls[0]" style="width: -webkit-fill-available" />
     </div>
   </div>
 </ng-template>

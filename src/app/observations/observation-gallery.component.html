@@ -8,7 +8,7 @@
         <img
           (click)="observationClick.emit(observation)"
           [alt]="observation.locationName"
-          [src]="observation.$externalImg"
+          [src]="observation.$externalImgs?.[0]"
           class="card-img-top"
           loading="lazy"
           role="button"
