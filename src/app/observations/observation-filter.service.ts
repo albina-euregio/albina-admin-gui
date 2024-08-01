@@ -1,19 +1,17 @@
 import { Injectable } from "@angular/core";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
 import {
-  Aspect,
-  AvalancheProblem,
-  DangerPattern,
   GenericObservation,
   ImportantObservation,
   LocalFilterTypes,
   ObservationSource,
   ObservationType,
-  Stability,
 } from "./models/generic-observation.model";
 import { formatDate } from "@angular/common";
 import { castArray } from "lodash";
 import { ActivatedRoute, Params, Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -40,8 +38,9 @@ export interface GenericFilterToggleData {
 }
 
 export interface FilterSelectionData {
-  type: LocalFilterTypes;
-  key: keyof GenericObservation;
+  type: LocalFilterTypes; // id
+  label: string; // caption
+  key: keyof GenericObservation; // how to extract data
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   selected: string[];
   highlighted: string[];
@@ -62,6 +61,7 @@ export class ObservationFilterService {
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
     Elevation: {
       type: LocalFilterTypes.Elevation,
+      label: this.translateService.instant("admin.observations.charts.elevation.caption"),
       key: "elevation",
       chartRichLabel: "label",
       values: [
@@ -80,6 +80,7 @@ export class ObservationFilterService {
     },
     Aspect: {
       type: LocalFilterTypes.Aspect,
+      label: this.translateService.instant("admin.observations.charts.aspect.caption"),
       key: "aspect",
       chartRichLabel: "label",
       values: [
@@ -98,6 +99,7 @@ export class ObservationFilterService {
     },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
+      label: this.translateService.instant("admin.observations.charts.avalancheProblem.caption"),
       key: "avalancheProblems",
       chartRichLabel: "symbol",
       values: [
@@ -114,20 +116,22 @@ export class ObservationFilterService {
     },
     Stability: {
       type: LocalFilterTypes.Stability,
+      label: this.translateService.instant("admin.observations.charts.stability.caption"),
       key: "stability",
       chartRichLabel: "symbol",
       values: [
         // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
-        { value: Stability.very_poor, color: "#d7191c", label: "🔴" },
-        { value: Stability.poor, color: "#fdae61", label: "🟠" },
-        { value: Stability.fair, color: "#ffffbf", label: "🟡" },
-        { value: Stability.good, color: "#a6d96a", label: "🟢" },
+        { value: SnowpackStability.very_poor, color: "#d7191c", label: "🔴" },
+        { value: SnowpackStability.poor, color: "#fdae61", label: "🟠" },
+        { value: SnowpackStability.fair, color: "#ffffbf", label: "🟡" },
+        { value: SnowpackStability.good, color: "#a6d96a", label: "🟢" },
       ],
       selected: [],
       highlighted: [],
     },
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
+      label: this.translateService.instant("admin.observations.charts.observationType.caption"),
       key: "$type",
       chartRichLabel: "symbol",
       values: [
@@ -144,6 +148,7 @@ export class ObservationFilterService {
     },
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
+      label: this.translateService.instant("admin.observations.charts.importantObservation.caption"),
       key: "importantObservations",
       chartRichLabel: "grainShape",
       values: [
@@ -160,6 +165,7 @@ export class ObservationFilterService {
     },
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
+      label: this.translateService.instant("admin.observations.charts.dangerPattern.caption"),
       key: "dangerPatterns",
       chartRichLabel: "label",
       values: [
@@ -180,6 +186,7 @@ export class ObservationFilterService {
     },
     Days: {
       type: LocalFilterTypes.Days,
+      label: this.translateService.instant("admin.observations.charts.days.caption"),
       key: "eventDate",
       chartRichLabel: "label",
       values: [],
@@ -191,6 +198,8 @@ export class ObservationFilterService {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private translateService: TranslateService,
+    private constantsService: ConstantsService,
   ) {
     this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
@@ -242,7 +251,7 @@ export class ObservationFilterService {
       this.filterSelection.Days.values = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
         this.filterSelection.Days.values.push({
-          value: this.getISODateString(i),
+          value: this.constantsService.getISODateString(i),
           color: colors.shift(),
           label: formatDate(i, "dd", "en-US"),
         });
@@ -250,8 +259,8 @@ export class ObservationFilterService {
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {
-          startDate: this.getISODateString(this.startDate),
-          endDate: this.getISODateString(this.endDate),
+          startDate: this.constantsService.getISODateString(this.startDate),
+          endDate: this.constantsService.getISODateString(this.endDate),
         },
         queryParamsHandling: "merge",
       });
@@ -361,7 +370,7 @@ export class ObservationFilterService {
           return;
         }
         if (!classifyType || classifyType === type) {
-          data.available++;
+          data[0]++;
           return;
         }
         const filter2 = this.filterSelection[classifyType];
@@ -431,7 +440,7 @@ export class ObservationFilterService {
   testFilterSelection(f: FilterSelectionData["values"][number], v: number | string | Date): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
-      (v instanceof Date && f.value === this.getISODateString(v)) ||
+      (v instanceof Date && f.value === this.constantsService.getISODateString(v)) ||
       f.value === v
     );
   }
@@ -453,7 +462,7 @@ export class ObservationFilterService {
     if (selectedData.length < 1) {
       return eventDate.getDate() === this.endDate.getDate();
     } else {
-      return selectedData.indexOf(this.getISODateString(eventDate)) === selectedData.length - 1;
+      return selectedData.indexOf(this.constantsService.getISODateString(eventDate)) === selectedData.length - 1;
     }
   }
 
@@ -484,15 +493,5 @@ export class ObservationFilterService {
       (Array.isArray(testData) && testData.some((d) => d && selectedData.includes(d))) ||
       (typeof testData === "string" && selectedData.includes(testData))
     );
-  }
-
-  getISODateString(date: Date) {
-    // like Date.toISOString(), but not using UTC
-    // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-
-    function pad(number: number): string {
-      return number < 10 ? `0${number}` : `${number}`;
-    }
   }
 }

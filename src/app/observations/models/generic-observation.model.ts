@@ -1,35 +1,5 @@
+import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../../enums/enums";
 import { z } from "zod";
-
-// similar to Enum.AvalancheProblem as string enum
-export enum AvalancheProblem {
-  new_snow = "new_snow",
-  wind_slab = "wind_slab",
-  persistent_weak_layers = "persistent_weak_layers",
-  wet_snow = "wet_snow",
-  gliding_snow = "gliding_snow",
-  favourable_situation = "favourable_situation",
-  cornices = "cornices",
-  no_distinct_problem = "no_distinct_problem",
-}
-
-// similar to Enum.DangerPattern as string enum
-export enum DangerPattern {
-  dp1 = "dp1",
-  dp2 = "dp2",
-  dp3 = "dp3",
-  dp4 = "dp4",
-  dp5 = "dp5",
-  dp6 = "dp6",
-  dp7 = "dp7",
-  dp8 = "dp8",
-  dp9 = "dp9",
-  dp10 = "dp10",
-}
-
-export enum ObservationFilterType {
-  Global = "Global",
-  Local = "Local",
-}
 
 export enum ImportantObservation {
   SnowLine = "SnowLine",
@@ -38,13 +8,6 @@ export enum ImportantObservation {
   StabilityTest = "StabilityTest",
   IceFormation = "IceFormation",
   VeryLightNewSnow = "VeryLightNewSnow",
-}
-
-export enum Stability {
-  good = "good",
-  fair = "fair",
-  poor = "poor",
-  very_poor = "very_poor",
 }
 
 export enum WeatherStationParameter {
@@ -100,17 +63,6 @@ export enum ObservationType {
   Webcam = "Webcam",
 }
 
-export enum Aspect {
-  N = "N",
-  NE = "NE",
-  E = "E",
-  SE = "SE",
-  S = "S",
-  SW = "SW",
-  W = "W",
-  NW = "NW",
-}
-
 export enum LocalFilterTypes {
   Elevation = "Elevation",
   Aspect = "Aspect",
@@ -129,18 +81,6 @@ export interface ObservationTableRow {
   boolean?: boolean;
   url?: string;
   value?: string;
-}
-
-export function toObservationTable(observation: GenericObservation): ObservationTableRow[] {
-  return [
-    { label: "observations.eventDate", date: observation.eventDate },
-    { label: "observations.reportDate", date: observation.reportDate },
-    { label: "observations.authorName", value: observation.authorName },
-    { label: "observations.locationName", value: observation.locationName },
-    { label: "observations.elevation", number: observation.elevation },
-    { label: "observations.aspect", value: observation.aspect },
-    { label: "observations.comment", value: observation.content },
-  ];
 }
 
 export function toAspect(aspect: number | string | undefined): Aspect | undefined {
@@ -201,7 +141,7 @@ export const genericObservationSchema = z.object({
   $externalURL: z.string().optional().nullable().describe("External URL to display as iframe"),
   $externalImgs: z.array(z.string()).optional().nullable().describe("External image to display as img"),
   stability: z
-    .nativeEnum(Stability)
+    .nativeEnum(SnowpackStability)
     .optional()
     .nullable()
     .describe("Snowpack stability that can be inferred from this observation"),

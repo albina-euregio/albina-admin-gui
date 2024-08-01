@@ -1,5 +1,5 @@
-import { fetchJSON } from "./fetchJSON";
-import { type ApiWikisnowECT, convertWikisnow } from "./models/wikisnow.model";
+import { fetchJSON } from "../../util/fetchJSON";
+import { type ApiWikisnowECT, convertWikisnow } from "../../models/wikisnow.model";
 
 const API = process.env.ALBINA_WIKISNOW_API;
 

@@ -2,24 +2,23 @@ import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
 import { Canvas, CircleMarker, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
-  Aspect,
   degreeToAspect,
   GenericObservation,
   ImportantObservation,
   LocalFilterTypes,
   ObservationSource,
   ObservationType,
-  Stability,
   WeatherStationParameter,
 } from "./models/generic-observation.model";
 import { memoize } from "lodash";
 import { ObservationFilterService } from "./observation-filter.service";
+import { Aspect, SnowpackStability } from "../enums/enums";
 
-const zIndex: Record<Stability, number> = {
-  [Stability.good]: 1,
-  [Stability.fair]: 5,
-  [Stability.poor]: 10,
-  [Stability.very_poor]: 20,
+const zIndex: Record<SnowpackStability, number> = {
+  [SnowpackStability.good]: 1,
+  [SnowpackStability.fair]: 5,
+  [SnowpackStability.poor]: 10,
+  [SnowpackStability.very_poor]: 20,
 };
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
@@ -255,25 +254,25 @@ export class ObservationMarkerService {
   }
 
   bindTooltip(marker: Marker | CircleMarker, observation: GenericObservation) {
-    marker.bindTooltip(this.createTooltip(observation), {
-      opacity: 1,
-      className: "obs-tooltip",
-    });
-  }
-
-  createTooltip(observation: GenericObservation): string {
-    return [
-      `<i class="ph ph-calendar"></i> ${
-        observation.eventDate instanceof Date
-          ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
-          : undefined
-      }`,
-      `<i class="ph ph-globe"></i> ${observation.locationName || undefined}`,
-      `<i class="ph ph-user"></i> ${observation.authorName || undefined}`,
-      `[${observation.$source}, ${observation.$type}]`,
-    ]
-      .filter((s) => !s.includes("undefined"))
-      .join("<br>");
+    marker.bindTooltip(
+      () =>
+        [
+          `<i class="ph ph-calendar"></i> ${
+            observation.eventDate instanceof Date
+              ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
+              : undefined
+          }`,
+          `<i class="ph ph-globe"></i> ${observation.locationName || undefined}`,
+          `<i class="ph ph-user"></i> ${observation.authorName || undefined}`,
+          `[${observation.$source}, ${observation.$type}]`,
+        ]
+          .filter((s) => !s.includes("undefined"))
+          .join("<br>"),
+      {
+        opacity: 1,
+        className: "obs-tooltip",
+      },
+    );
   }
 
   toMarkerRadius(observation: GenericObservation): number {
@@ -539,7 +538,7 @@ export class ObservationMarkerService {
   private getIcon(observation: GenericObservation<any>, isHighlighted: boolean): Icon | DivIcon {
     const iconSize = this.toMarkerRadius(observation);
     const iconColor = isHighlighted ? "#ff0000" : this.toMarkerColor(observation);
-    const textColor = isHighlighted ? "#fff" : "#000";
+    const labelColor = isHighlighted ? "#fff" : "#000";
     const label = this.getLabel(observation);
     const borderColor = this.getBorderColor(observation);
     const labelFont =
@@ -549,7 +548,7 @@ export class ObservationMarkerService {
     const labelFontSize = this.getLabelFontSize(observation);
     const aspect = observation.aspect;
     const aspectColor = "#898989";
-    return icon(aspect, aspectColor, iconSize, iconColor, borderColor, textColor, labelFontSize, labelFont, label);
+    return icon(aspect, aspectColor, iconSize, iconColor, borderColor, labelColor, labelFontSize, labelFont, label);
   }
 }
 
@@ -581,7 +580,7 @@ function icon0(
   iconSize: number,
   iconColor: string,
   borderColor: string,
-  textColor: string,
+  labelColor: string,
   labelFontSize: string,
   labelFont: "snowsymbolsiacs" | string,
   label: number | string,
@@ -603,7 +602,7 @@ function icon0(
             </g>
 
             <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="${borderColor}">
-                <text x="11" y="15" text-anchor="middle" fill="${textColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
+                <text x="11" y="15" text-anchor="middle" fill="${labelColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
 
                 <g id="line-bold" stroke-width="2">
                     <circle id="Oval" cx="11" cy="11" r="11"></circle>
@@ -623,8 +622,10 @@ function icon0(
     </g>
 </svg>
     `;
+  const blob = new Blob([svg], { type: "image/svg+xml" });
+  const iconUrl = URL.createObjectURL(blob);
   return new Icon({
-    iconUrl: "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg),
+    iconUrl,
     iconSize: [iconSize, iconSize],
     iconAnchor: [iconSize / 2, iconSize / 2],
   });

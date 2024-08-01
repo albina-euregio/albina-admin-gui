@@ -1,4 +1,4 @@
-import { fetchJSON } from "./fetchJSON";
+import { fetchJSON } from "../util/fetchJSON";
 
 const API = "https://voibos.rechenraum.com/voibos/voibos";
 

@@ -37,6 +37,8 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   localTreelineLow = false;
 
   directionEnum = Enums.DangerRatingDirection;
+  avalancheTypeEnum = Enums.AvalancheType;
+  avalancheProblemEnum = Enums.AvalancheProblem;
 
   constructor(
     public settingsService: SettingsService,
@@ -195,6 +197,16 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     event.stopPropagation();
     this.avalancheProblemModel.setDangerRatingDirection(dir);
     this.bulletinDaytimeDescription.updateDangerRating();
+    this.changeAvalancheProblemDetailEvent.emit();
+  }
+
+  isAvalancheType(type: Enums.AvalancheType) {
+    return this.avalancheProblemModel?.getAvalancheType() === type;
+  }
+
+  setAvalancheType(event: Event, type: Enums.AvalancheType) {
+    event.stopPropagation();
+    this.avalancheProblemModel.setAvalancheType(type);
     this.changeAvalancheProblemDetailEvent.emit();
   }
 

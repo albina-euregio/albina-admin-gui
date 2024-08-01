@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
 

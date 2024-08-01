@@ -36,10 +36,8 @@ export class ObservationsComponent {
       this.http.get(url, { headers: headers, responseType: "blob" }).subscribe((blob) => {
         this.loadingStatistics = false;
         document.getElementById("overlay").style.display = "none";
-        const format = "yyyy-MM-dd";
-        const locale = "en-US";
-        const startDate = formatDate(this.bsRangeValue[0], format, locale);
-        const endDate = formatDate(this.bsRangeValue[1], format, locale);
+        const startDate = this.constantsService.getISODateString(this.bsRangeValue[0]);
+        const endDate = this.constantsService.getISODateString(this.bsRangeValue[1]);
         let filename = "observations_" + startDate + "_" + endDate;
         filename = filename + ".csv";
         saveAs(blob, filename);

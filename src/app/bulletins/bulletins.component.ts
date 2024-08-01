@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, OnDestroy } from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinUpdateModel } from "../models/bulletin-update.model";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -6,11 +6,15 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
-import { Subject } from "rxjs";
+import { debounceTime, Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import { Router, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import * as Enums from "../enums/enums";
 import { formatDate } from "@angular/common";
+import { UserService } from "../providers/user-service/user.service";
+import { DateIsoString, StressLevel } from "../models/stress-level.model";
+import { BsModalService } from "ngx-bootstrap/modal";
+import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 
 @Component({
   templateUrl: "bulletins.component.html",
@@ -19,6 +23,8 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
+  public stress: Record<DateIsoString, number> = {};
+  public readonly postStressLevel = new Subject<StressLevel>();
 
   constructor(
     public translate: TranslateService,
@@ -30,10 +36,21 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     public settingsService: SettingsService,
     public router: Router,
     public wsUpdateService: WsUpdateService,
+    public userService: UserService,
+    private modalService: BsModalService,
   ) {
     this.copying = false;
 
     this.bulletinsService.init();
+
+    this.postStressLevel
+      .pipe(debounceTime(1000))
+      .subscribe((stressLevel) => this.userService.postStressLevel(stressLevel).subscribe(() => {}));
+    this.userService
+      .getStressLevels([this.bulletinsService.dates.at(-1)[0], this.bulletinsService.dates.at(0)[1]])
+      .subscribe((stressLevels) => {
+        this.stress = Object.fromEntries(stressLevels.map((s) => [s.date, s.stressLevel]));
+      });
   }
 
   ngOnInit() {
@@ -48,7 +65,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   private wsUpdateConnect() {
     this.updates = <Subject<BulletinUpdateModel>>(
       this.wsUpdateService
-        .connect(this.constantsService.getWsUpdateUrl() + this.authenticationService.getUsername())
+        .connect(this.constantsService.getServerWsUrl() + "../update/" + this.authenticationService.getUsername())
         .pipe(
           map((response: any): BulletinUpdateModel => {
             const data = JSON.parse(response.data);
@@ -131,9 +148,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   }
 
   editBulletin(date: [Date, Date], isReadOnly?: boolean) {
-    const format = "yyyy-MM-dd";
-    const locale = "en-US";
-    const formattedDate = formatDate(date[1], format, locale);
+    const formattedDate = this.constantsService.getISODateString(date[1]);
     this.bulletinsService.setIsReadOnly(isReadOnly);
     this.router.navigate(["/bulletins/" + formattedDate], { queryParams: { readOnly: isReadOnly } });
   }
@@ -162,4 +177,33 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.copying = false;
     this.bulletinsService.setCopyDate(undefined);
   }
+
+  getStressLevelColor(date: DateIsoString) {
+    const stress0 = this.stress[date];
+    return !stress0 ? "gray" : stress0 < 20 ? "green" : stress0 < 70 ? "orange" : "red";
+  }
+
+  getStressLevelIcon(date: DateIsoString) {
+    const stress0 = this.stress[date];
+    return stress0 < 20
+      ? "ph-smiley"
+      : stress0 < 70
+        ? "ph-smiley-meh"
+        : stress0 <= 100
+          ? "ph-smiley-x-eyes"
+          : "ph-circle-dashed";
+  }
+
+  showTeamStressLevels() {
+    if (!this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
+      return;
+    }
+    this.modalService.show(TeamStressLevelsComponent, {
+      initialState: {
+        dates: this.bulletinsService.dates,
+      },
+    });
+  }
+
+  protected readonly formatDate = formatDate;
 }

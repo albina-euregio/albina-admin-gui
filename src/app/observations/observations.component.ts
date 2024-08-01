@@ -18,12 +18,8 @@ import {
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
-  toObservationTable,
   LocalFilterTypes,
-  AvalancheProblem,
-  DangerPattern,
   ImportantObservation,
-  Stability,
   WeatherStationParameter,
   genericObservationSchema,
   ObservationType,
@@ -42,9 +38,10 @@ import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
 import { AlbinaObservationsService } from "./observations.service";
-import { Control, LayerGroup } from "leaflet";
+import { LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
+import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -248,7 +245,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   parseObservation(observation: GenericObservation): GenericObservation {
     const avalancheProblems = Object.values(AvalancheProblem);
     const dangerPatterns = Object.values(DangerPattern);
-    const stabilities = Object.values(Stability);
+    const stabilities = Object.values(SnowpackStability);
     const importantObservations = Object.values(ImportantObservation);
 
     const matches = [...observation.content.matchAll(/#\S*(?=\s|$)/g)].map((el) => el[0].replace("#", ""));
@@ -262,8 +259,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       } else if (importantObservations.includes(match as ImportantObservation)) {
         if (!observation.importantObservations) observation.importantObservations = [];
         observation.importantObservations.push(match as ImportantObservation);
-      } else if (stabilities.includes(match as Stability)) {
-        observation.stability = match as Stability;
+      } else if (stabilities.includes(match as SnowpackStability)) {
+        observation.stability = match as SnowpackStability;
       }
     });
 
@@ -438,7 +435,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     return this.mapService.layers[layer];
   }
 
-  onObservationClick(observation: GenericObservation): void {
+  onObservationClick(observation: GenericObservation, doShow = true): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe, imgUrls: undefined };
@@ -446,15 +443,26 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
       this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls };
     } else {
-      const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
-      const rows = toObservationTable(observation);
-      const table = [...rows, ...extraRows].map((row) => ({
+      const table: ObservationTableRow[] = (
+        [
+          { label: "observations.eventDate", date: observation.eventDate },
+          { label: "observations.reportDate", date: observation.reportDate },
+          { label: "observations.authorName", value: observation.authorName },
+          { label: "observations.locationName", value: observation.locationName },
+          { label: "observations.elevation", number: observation.elevation },
+          { label: "observations.aspect", value: observation.aspect },
+          { label: "observations.comment", value: observation.content },
+          ...(Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : []),
+        ] satisfies ObservationTableRow[]
+      ).map((row) => ({
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
       this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined };
     }
-    this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+    if (doShow) {
+      this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+    }
   }
 
   toggleFilters() {
@@ -508,7 +516,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       }
     }
     if (observation) {
-      this.onObservationClick(observation);
+      this.onObservationClick(observation, false);
     }
   }
 }

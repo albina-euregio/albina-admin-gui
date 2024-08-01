@@ -3,6 +3,9 @@
     <thead class="bulletins-table__header">
       <tr>
         <th></th>
+        <th role="button" (click)="showTeamStressLevels()">
+          <i class="ph ph-brain"></i> {{ "login.stressLevel" | translate }}
+        </th>
         <th>{{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}</th>
         <th class="" *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">
           {{ "bulletins.table.title.status." + region | translate }}
@@ -47,6 +50,24 @@
                 <i class="ph ph-pencil-line"></i>
               </button>
             </div>
+          </div>
+        </td>
+        <td
+          [attr.data-label]="'login.stressLevel' | translate"
+          *ngFor="let date of [constantsService.getISODateString(date[1])]"
+          class="align-middle"
+        >
+          <div class="d-flex">
+            <input
+              class="form-range"
+              type="range"
+              [(ngModel)]="stress[date]"
+              (input)="postStressLevel.next({ date, stressLevel: stress[date] })"
+              [style.--form-range-thumb-bg]="getStressLevelColor(date)"
+            />
+            <span>
+              <i class="ph" [class]="getStressLevelIcon(date)"></i>
+            </span>
           </div>
         </td>
         <td

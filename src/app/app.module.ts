@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { LocationStrategy, HashLocationStrategy, registerLocaleData, DatePipe } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
@@ -77,6 +77,7 @@ import { ObservationMarkerService } from "./observations/observation-marker.serv
 import { ElevationService } from "./providers/map-service/elevation.service";
 import { ObservationFilterService } from "./observations/observation-filter.service";
 import { provideEcharts } from "ngx-echarts";
+import { createErrorHandler } from "@sentry/angular";
 
 registerLocaleData(localeDe, "de");
 registerLocaleData(localeIt, "it");
@@ -120,6 +121,13 @@ registerLocaleData(localeOc, "oc");
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy,
+    },
+    {
+      provide: ErrorHandler,
+      useValue: createErrorHandler({
+        logErrors: true,
+        showDialog: true,
+      }),
     },
     AlbinaObservationsService,
     AlpsolutProfileService,

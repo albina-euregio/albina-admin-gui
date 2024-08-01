@@ -42,6 +42,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "sourceMap": true,
               "outputHashing": "all"
             },
             "docker": {

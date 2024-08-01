@@ -7,6 +7,7 @@
     "title": "Login",
     "text": "Sign In to your account",
     "button": "Login",
+    "stressLevel": "Stress Level",
     "errorDialog": {
       "message": "Incorrect username or password!",
       "accept": "Ok"
@@ -133,7 +134,12 @@
         "moveUpAvalancheProblem": "Move avalanche problem up",
         "moveDownAvalancheProblem": "Move avalanche problem down",
         "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionDown": "Downwards",
+        "avalancheType": {
+          "slab": "SLAB",
+          "loose": "LOOSE",
+          "glide": "GLIDE"
+        }
       },
       "save": " Save",
       "discard": " Discard",
@@ -153,7 +159,7 @@
       "suggestions": "Suggestions",
       "noBulletinsForSelectedDay": "No regions defined for this date.",
       "autosave": "Saved automatically",
-      "regionEditable": "This region can be edited.", 
+      "regionEditable": "This region can be edited.",
       "regionNotEditable": "This region can not be edited.",
       "regionLocked": "This region is locked.",
       "changeDangerRatingElevation": "Extend the danger level",
@@ -164,6 +170,7 @@
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
         "avalancheProblems": "Avalanche problem",
+        "avalancheType": "Avalanche type",
         "aspects": "Aspects",
         "elevation": "Elevation",
         "highlights": "Special alert",

@@ -5,13 +5,12 @@
 import type { Environment } from "./environment-type";
 
 export const environment: Environment = {
-  production: false,
   apiBaseUrl: "http://localhost:8080/albina/api/",
-  wsBaseUrl: "ws://localhost:8080/albina/",
   textcatUrl: "https://admin.avalanche.report/textcat-ng-dev/",
   headerBgColor: "#f95bdc",
   faviconPath: "assets/img/admin-favicon-local.ico",
   logoPath: "assets/img/admin-logo-local.svg",
+  sentryDSN: "",
 };
 
 Object.assign(environment, (window as any).ENV);

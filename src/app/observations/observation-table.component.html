@@ -1,7 +1,7 @@
 <table #observationTable class="table table-hover observation-table">
   <thead>
     <tr>
-      <th colspan="99" style="text-align: left; padding: 0">
+      <th colspan="99" class="text-start p-0">
         <div class="global-bar-scroll">
           <div class="global-bar global-bar-left">
             <div class="form-check form-switch" title="show observations without coordinates">
@@ -20,7 +20,7 @@
             <div class="global-bar-item">
               <div class="input-group">
                 <span class="input-group-text">
-                  <i class="ph ph-magnifying-glass" style="padding-right: 0.2rem"></i>
+                  <i class="ph ph-magnifying-glass"></i>
                 </span>
                 <input
                   type="text"
@@ -46,8 +46,8 @@
   </thead>
 
   <tbody *ngFor="let observation of sortedObservations">
-    <tr *ngIf="isShowObservation(observation)" (click)="onClick(observation)" style="cursor: pointer">
-      <td style="padding: 1rem 0; white-space: nowrap; max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
+    <tr *ngIf="isShowObservation(observation)" (click)="onClick(observation)" role="button">
+      <td class="px-0 py-3 text-nowrap" style="max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
         <span class="text-truncate d-block">
           <i class="ph ph-calendar"></i>
           {{ observation.eventDate | date: "dd.MM.yyyy HH:mm" }}
@@ -66,14 +66,14 @@
           ></i>
         </span>
       </td>
-      <td style="padding: 0">
+      <td class="p-0">
         <span *ngFor="let problem of observation.avalancheProblems">
           <app-avalanche-problem-icons [value]="problem" />
         </span>
         <abbr
           *ngFor="let importantObservation of observation.importantObservations"
           [title]="importantObservation"
-          style="display: inline-block; margin: 1rem 0"
+          class="px-0 py-3 d-inline-block"
         >
           <span *ngIf="importantObservationTexts[importantObservation]" style="font-family: snowsymbolsiacs">
             {{ importantObservationTexts[importantObservation] }}
@@ -83,7 +83,7 @@
           </span>
         </abbr>
       </td>
-      <td style="padding: 1rem 0">{{ observation.content }}</td>
+      <td class="px-0 py-3">{{ observation.content }}</td>
     </tr>
   </tbody>
 </table>

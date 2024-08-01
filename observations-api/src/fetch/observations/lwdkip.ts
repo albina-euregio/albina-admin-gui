@@ -1,4 +1,4 @@
-import { fetchJSON } from "./fetchJSON";
+import { fetchJSON } from "../../util/fetchJSON";
 import {
   type ArcGisLayer,
   type LwdKipBeobachtung,
@@ -7,7 +7,7 @@ import {
   convertLwdKipBeobachtung,
   convertLwdKipLawinenabgang,
   convertLwdKipSprengerfolg,
-} from "./models/lwdkip.model";
+} from "../../models/lwdkip.model";
 
 const API = "https://gis.tirol.gv.at/arcgis";
 

@@ -7,7 +7,6 @@ import { CreateBulletinComponent } from "./create-bulletin.component";
   templateUrl: "modal-publish-all.component.html",
 })
 export class ModalPublishAllComponent {
-  date;
   component: CreateBulletinComponent;
 
   constructor(public bsModalRef: BsModalRef) {}
