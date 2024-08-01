@@ -54,7 +54,7 @@
         </td>
         <td
           [attr.data-label]="'login.stressLevel' | translate"
-          *ngFor="let date of [formatDate(date[1], 'yyyy-MM-dd', 'en-US')]"
+          *ngFor="let date of [constantsService.getISODateString(date[1])]"
           class="align-middle"
         >
           <div class="d-flex">
@@ -62,7 +62,7 @@
               class="form-range"
               type="range"
               [(ngModel)]="stress[date]"
-              (input)="postStressLevel(date)"
+              (input)="postStressLevel.next({ date, stressLevel: stress[date] })"
               [style.--form-range-thumb-bg]="getStressLevelColor(date)"
             />
             <span>

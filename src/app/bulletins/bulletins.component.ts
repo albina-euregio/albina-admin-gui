@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, OnDestroy } from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { BulletinUpdateModel } from "../models/bulletin-update.model";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -6,13 +6,13 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
-import { Subject } from "rxjs";
+import { debounceTime, Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import { Router, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import * as Enums from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
-import { DateIsoString } from "../models/stress-level.model";
+import { DateIsoString, StressLevel } from "../models/stress-level.model";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 
@@ -24,6 +24,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
   public stress: Record<DateIsoString, number> = {};
+  public readonly postStressLevel = new Subject<StressLevel>();
 
   constructor(
     public translate: TranslateService,
@@ -41,6 +42,10 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.copying = false;
 
     this.bulletinsService.init();
+
+    this.postStressLevel
+      .pipe(debounceTime(1000))
+      .subscribe((stressLevel) => this.userService.postStressLevel(stressLevel).subscribe(() => {}));
     this.userService
       .getStressLevels([this.bulletinsService.dates.at(-1)[0], this.bulletinsService.dates.at(0)[1]])
       .subscribe((stressLevels) => {
@@ -189,11 +194,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
         : stress0 <= 100
           ? "ph-smiley-x-eyes"
           : "ph-circle-dashed";
-  }
-
-  postStressLevel(date: DateIsoString) {
-    const stressLevel = this.stress[date];
-    this.userService.postStressLevel({ date, stressLevel }).subscribe(() => {});
   }
 
   showTeamStressLevels() {
