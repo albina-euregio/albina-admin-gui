@@ -12,8 +12,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import * as Enums from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
-
-type DateIsoString = `${number}-${number}-${number}`;
+import { DateIsoString } from "../models/stress-level.model";
 
 @Component({
   templateUrl: "bulletins.component.html",
@@ -171,6 +170,22 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.copying = false;
     this.bulletinsService.setCopyDate(undefined);
+  }
+
+  getStressLevelColor(date: DateIsoString) {
+    const stress0 = this.stress[date];
+    return !stress0 ? "gray" : stress0 < 20 ? "green" : stress0 < 70 ? "orange" : "red";
+  }
+
+  getStressLevelIcon(date: DateIsoString) {
+    const stress0 = this.stress[date];
+    return stress0 < 20
+      ? "ph-smiley"
+      : stress0 < 70
+        ? "ph-smiley-meh"
+        : stress0 <= 100
+          ? "ph-smiley-x-eyes"
+          : "ph-circle-dashed";
   }
 
   postStressLevel(date: DateIsoString) {

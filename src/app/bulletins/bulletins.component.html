@@ -61,23 +61,10 @@
               type="range"
               [(ngModel)]="stress[date]"
               (input)="postStressLevel(date)"
-              [style.--form-range-thumb-bg]="
-                !stress[date] ? 'gray' : stress[date] < 20 ? 'green' : stress[date] < 70 ? 'orange' : 'red'
-              "
+              [style.--form-range-thumb-bg]="getStressLevelColor(date)"
             />
             <span>
-              <i
-                class="ph"
-                [class]="
-                  stress[date] < 20
-                    ? 'ph-smiley'
-                    : stress[date] < 70
-                      ? 'ph-smiley-meh'
-                      : stress[date] <= 100
-                        ? 'ph-smiley-x-eyes'
-                        : 'ph-circle-dashed'
-                "
-              ></i>
+              <i class="ph" [class]="getStressLevelIcon(date)"></i>
             </span>
           </div>
         </td>
