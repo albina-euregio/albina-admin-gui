@@ -1,15 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { type FilterSelectionData } from "./observation-filter.service";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { ECElementEvent, EChartsOption } from "echarts";
 import { CommonModule } from "@angular/common";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { ObservationMarkerService } from "./observation-marker.service";
-
-export type ChartType = "bar" | "rose";
-
-export type Dataset = Array<Array<string | number>>;
+import type { FilterSelectionData } from "./filter-selection-data";
 
 @Component({
   standalone: true,

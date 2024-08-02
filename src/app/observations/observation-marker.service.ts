@@ -10,8 +10,8 @@ import {
   WeatherStationParameter,
 } from "./models/generic-observation.model";
 import { castArray, memoize } from "lodash";
-import { FilterSelectionData } from "./observation-filter.service";
 import { Aspect, SnowpackStability } from "../enums/enums";
+import { FilterSelectionData } from "./filter-selection-data";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
