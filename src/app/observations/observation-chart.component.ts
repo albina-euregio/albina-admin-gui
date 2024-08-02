@@ -34,6 +34,10 @@ export class ObservationChartComponent implements OnInit {
     this.options = this.filterSelection.chartType === "rose" ? this.roseOptions : this.barOptions;
   }
 
+  get fontFamily() {
+    return getComputedStyle(document.body).getPropertyValue("font-family");
+  }
+
   get barOptions(): EChartsOption {
     const barWidth = 3;
     const defaultDataBarOptions = {
@@ -69,7 +73,7 @@ export class ObservationChartComponent implements OnInit {
         borderWidth: 0,
         textStyle: {
           color: "#839194",
-          fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+          fontFamily: this.fontFamily,
         },
         formatter: (params: CallbackDataParams) => this.formatTooltip(params),
       },
@@ -127,7 +131,7 @@ export class ObservationChartComponent implements OnInit {
           label: {
             fontWeight: "normal",
             fontSize: 12,
-            fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+            fontFamily: this.fontFamily,
             //grey
             color: "#839194",
             position: [0, -14],
@@ -235,7 +239,7 @@ export class ObservationChartComponent implements OnInit {
         borderWidth: 0,
         textStyle: {
           color: "#839194",
-          fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+          fontFamily: this.fontFamily,
         },
         formatter: (params: CallbackDataParams) => this.formatTooltip(params),
       },
