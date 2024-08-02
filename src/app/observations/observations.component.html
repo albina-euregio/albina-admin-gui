@@ -358,15 +358,8 @@
             <app-observation-chart
               *ngFor="let filterSelection of filter.filterSelectionData"
               class="chart-container"
-              [chart]="filterSelection.chartType"
-              [caption]="filterSelection.label"
-              [type]="filterSelection.type"
+              [filterSelection]="filterSelection"
               [data]="chartsData[filterSelection.type]"
-              [isActive]="filterSelection['selected'].length > 0 || filterSelection['highlighted'].length > 0"
-              [nanStatus]="{
-                selected: filterSelection['selected'].includes('nan'),
-                highlighted: filterSelection['highlighted'].includes('nan')
-              }"
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
               (handleChange)="toggleFilter($event)"

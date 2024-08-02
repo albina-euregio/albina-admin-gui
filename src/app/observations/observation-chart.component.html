@@ -2,14 +2,14 @@
   <!-- !chart-header -->
   <div class="chart-header">
     <div class="chart-name">
-      {{ caption }}
+      {{ filterSelection.label }}
     </div>
 
     <div class="chart-controls">
       <div class="obs-switch">
         <div
           class="obs-switch-item"
-          [class.is-active]="type === classifyType"
+          [class.is-active]="filterSelection.type === classifyType"
           (click)="onMarkerClassify()"
           title="{{ 'admin.observations.charts.classify' | translate }}"
         >
@@ -17,7 +17,7 @@
         </div>
         <div
           class="obs-switch-item"
-          [class.is-active]="type === labelType"
+          [class.is-active]="filterSelection.type === labelType"
           (click)="onMarkerLabel()"
           title="{{ 'admin.observations.charts.label' | translate }}"
         >
@@ -46,7 +46,10 @@
 
   <!-- !chart-unspecified -->
   <div class="chart-unspecified">
-    <span [class.highlighted]="nanStatus.highlighted" [class.selected]="nanStatus.selected" (click)="onClickNan($event)"
+    <span
+      [class.highlighted]="filterSelection['highlighted'].includes('nan')"
+      [class.selected]="filterSelection['selected'].includes('nan')"
+      (click)="onClickNan($event)"
       >{{ "admin.observations.charts.nan" | translate }}: {{ data.nan }}</span
     >
   </div>

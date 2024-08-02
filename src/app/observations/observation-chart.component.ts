@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalFilterTypes } from "./models/generic-observation.model";
-import { ObservationFilterService, type GenericFilterToggleData } from "./observation-filter.service";
-import { ObservationMarkerService } from "./observation-marker.service";
+import {
+  type FilterSelectionData,
+  type GenericFilterToggleData,
+  ObservationFilterService,
+} from "./observation-filter.service";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { EChartsOption } from "echarts";
 import { CommonModule } from "@angular/common";
@@ -20,19 +23,19 @@ export class ObservationChartComponent implements OnInit {
   longClickDur = 200;
   private pressTimer;
 
-  @Input() caption: string;
-  @Input() chart: ChartType;
-  @Input() type: LocalFilterTypes;
+  @Input() filterSelection: FilterSelectionData;
   @Input() data: { dataset: object; nan: number };
   @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();
-  @Input() nanStatus: { selected: boolean; highlighted: boolean };
-  @Input() isActive: boolean;
   @Input() labelType: LocalFilterTypes;
   @Input() classifyType: LocalFilterTypes;
   public options: EChartsOption;
 
+  get isActive(): boolean {
+    return this.filterSelection["selected"].length > 0 || this.filterSelection["highlighted"].length > 0;
+  }
+
   get translationBase(): string {
-    switch (this.type) {
+    switch (this.filterSelection.type) {
       case LocalFilterTypes.Aspect:
         return "aspect.";
       case LocalFilterTypes.Stability:
@@ -52,12 +55,11 @@ export class ObservationChartComponent implements OnInit {
 
   constructor(
     public filter: ObservationFilterService,
-    protected observationMarkerService: ObservationMarkerService,
     protected translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
-    this.options = this.chart === "rose" ? this.roseOptions : this.barOptions;
+    this.options = this.filterSelection.chartType === "rose" ? this.roseOptions : this.barOptions;
   }
 
   get barOptions(): EChartsOption {
@@ -395,7 +397,10 @@ export class ObservationChartComponent implements OnInit {
   onMouseDown(event: any) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
-      this.handleChange.emit({ type: this.type, data: { value: event.data[0], altKey: true, ctrlKey: false } });
+      this.handleChange.emit({
+        type: this.filterSelection.type,
+        data: { value: event.data[0], altKey: true, ctrlKey: false },
+      });
     }, this.longClickDur);
     return false;
   }
@@ -405,12 +410,12 @@ export class ObservationChartComponent implements OnInit {
       this.resetTimeout();
       if (event.componentType === "series") {
         this.handleChange.emit({
-          type: this.type,
+          type: this.filterSelection.type,
           data: { value: event.data[0], altKey: event.event.event.altKey, ctrlKey: event.event.event.ctrlKey },
         });
       } else if (event.componentType === "angleAxis") {
         this.handleChange.emit({
-          type: this.type,
+          type: this.filterSelection.type,
           data: { value: event.value, altKey: event.event.event.altKey, ctrlKey: event.event.event.ctrlKey },
         });
       }
@@ -419,27 +424,30 @@ export class ObservationChartComponent implements OnInit {
   }
 
   onClickNan(event: any) {
-    this.handleChange.emit({ type: this.type, data: { value: "nan", altKey: event.altKey, ctrlKey: event.ctrlKey } });
+    this.handleChange.emit({
+      type: this.filterSelection.type,
+      data: { value: "nan", altKey: event.altKey, ctrlKey: event.ctrlKey },
+    });
   }
 
   onMarkerClassify() {
-    this.handleChange.emit({ type: this.type, data: { markerClassify: true } });
+    this.handleChange.emit({ type: this.filterSelection.type, data: { markerClassify: true } });
   }
 
   onMarkerLabel() {
-    this.handleChange.emit({ type: this.type, data: { markerLabel: true } });
+    this.handleChange.emit({ type: this.filterSelection.type, data: { markerLabel: true } });
   }
 
   onInvert() {
-    this.handleChange.emit({ type: this.type, data: { invert: true } });
+    this.handleChange.emit({ type: this.filterSelection.type, data: { invert: true } });
   }
 
   onReset() {
-    this.handleChange.emit({ type: this.type, data: { reset: true } });
+    this.handleChange.emit({ type: this.filterSelection.type, data: { reset: true } });
   }
 
   getItemColor(entry) {
-    if (this.classifyType === this.type) {
+    if (this.classifyType === this.filterSelection.type) {
       const filterSelection = this.filter.filterSelection[this.classifyType];
       const color = filterSelection.values.find((v) => v.value === entry.name)?.color;
       return !color || color === "white" ? "#000000" : color;
@@ -449,7 +457,7 @@ export class ObservationChartComponent implements OnInit {
   }
 
   getClassifyColor(entry, count?: number) {
-    if (this.classifyType === this.type) {
+    if (this.classifyType === this.filterSelection.type) {
       return this.getItemColor(entry);
     }
     if (this.classifyType && count !== undefined) {
@@ -463,16 +471,16 @@ export class ObservationChartComponent implements OnInit {
 
   getItemLabel(entry): string {
     let value: string;
-    if (this.type === LocalFilterTypes.Aspect) {
+    if (this.filterSelection.type === LocalFilterTypes.Aspect) {
       value = entry;
     } else {
       value = entry.value[0];
     }
-    const isSelected = this.filter.isIncluded(this.type, value);
+    const isSelected = this.filter.isIncluded(this.filterSelection.type, value);
     const result = this.translationBase ? this.translateService.instant(this.translationBase + value) : value;
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
-    if (this.labelType === this.type) {
+    if (this.labelType === this.filterSelection.type) {
       const filterSelection = this.filter.filterSelection[this.labelType];
       const value = filterSelection.values.find((v) => v.value === entry.name);
       if (value) {
