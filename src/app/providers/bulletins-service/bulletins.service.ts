@@ -10,6 +10,8 @@ import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
 import * as Enums from "../../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
+import { DateIsoString } from "app/models/stress-level.model";
+import { UserService } from "../user-service/user.service";
 
 @Injectable()
 export class BulletinsService {
@@ -21,6 +23,8 @@ export class BulletinsService {
   public lockedBulletins: Map<string, BulletinLockModel>;
   public bulletinLocks: Subject<BulletinLockModel>;
 
+  public stress: Record<DateIsoString, number> = {};
+
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
 
   public dates: [Date, Date][];
@@ -30,6 +34,7 @@ export class BulletinsService {
     private constantsService: ConstantsService,
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
+    private userService: UserService,
     private wsBulletinService: WsBulletinService,
   ) {
     this.init();
@@ -59,6 +64,10 @@ export class BulletinsService {
       date.setDate(endDate.getDate() - i);
       this.dates.push(this.getValidFromUntil(date));
     }
+
+    this.userService.getStressLevels([this.dates.at(-1)[0], this.dates.at(0)[1]]).subscribe((stressLevels) => {
+      this.stress = Object.fromEntries(stressLevels.map((s) => [s.date, s.stressLevel]));
+    });
 
     this.loadStatus();
   }
@@ -695,5 +704,21 @@ export class BulletinsService {
     } else {
       console.warn("Bulletin was not locked!");
     }
+  }
+
+  getStressLevelColor(date: DateIsoString) {
+    const stress0 = this.stress[date];
+    return !stress0 ? "gray" : stress0 < 20 ? "green" : stress0 < 70 ? "orange" : "red";
+  }
+
+  getStressLevelIcon(date: DateIsoString) {
+    const stress0 = this.stress[date];
+    return stress0 < 20
+      ? "ph-smiley"
+      : stress0 < 70
+        ? "ph-smiley-meh"
+        : stress0 <= 100
+          ? "ph-smiley-x-eyes"
+          : "ph-circle-dashed";
   }
 }

@@ -65,12 +65,12 @@
             <input
               class="form-range"
               type="range"
-              [(ngModel)]="stress[date]"
-              (input)="postStressLevel.next({ date, stressLevel: stress[date] })"
-              [style.--form-range-thumb-bg]="getStressLevelColor(date)"
+              [(ngModel)]="bulletinsService.stress[date]"
+              (input)="postStressLevel.next({ date, stressLevel: bulletinsService.stress[date] })"
+              [style.--form-range-thumb-bg]="bulletinsService.getStressLevelColor(date)"
             />
             <span>
-              <i class="ph" [class]="getStressLevelIcon(date)"></i>
+              <i class="ph" [class]="bulletinsService.getStressLevelIcon(date)"></i>
             </span>
           </div>
         </td>
