@@ -40,14 +40,14 @@ export interface FilterSelectionValue {
 }
 
 export interface FilterSelectionData {
-  type: LocalFilterTypes; // id
-  label: string; // caption
-  key: keyof GenericObservation; // how to extract data
-  chartType: ChartType;
-  chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
+  readonly type: LocalFilterTypes; // id
+  readonly label: string; // caption
+  readonly key: keyof GenericObservation; // how to extract data
+  readonly chartType: ChartType;
+  readonly chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
+  readonly values: FilterSelectionValue[];
   selected: Set<string>;
   highlighted: Set<string>;
-  values: FilterSelectionValue[];
 }
 
 @Injectable()
@@ -255,14 +255,15 @@ export class ObservationFilterService {
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
     if (this.startDate && this.endDate) {
       const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-      this.filterSelection.Days.values = [];
+      const values = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        this.filterSelection.Days.values.push({
+        values.push({
           value: this.constantsService.getISODateString(i),
           color: colors.shift(),
           label: formatDate(i, "dd", "en-US"),
         });
       }
+      this.filterSelection.Days = { ...this.filterSelection.Days, values };
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {
