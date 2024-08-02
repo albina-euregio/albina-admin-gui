@@ -13,6 +13,8 @@ import { NgxEchartsDirective } from "ngx-echarts";
 
 export type ChartType = "bar" | "rose";
 
+export type Dataset = Array<Array<string | number>>;
+
 @Component({
   standalone: true,
   selector: "app-observation-chart",
@@ -24,7 +26,8 @@ export class ObservationChartComponent implements OnInit {
   private pressTimer;
 
   @Input() filterSelection: FilterSelectionData;
-  @Input() data: { dataset: object; nan: number };
+  @Input() dataset: Dataset;
+  @Input() nan: number;
   @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();
   @Input() labelType: LocalFilterTypes;
   @Input() classifyType: LocalFilterTypes;

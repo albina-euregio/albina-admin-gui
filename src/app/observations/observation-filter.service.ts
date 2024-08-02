@@ -12,18 +12,12 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import type { ChartType } from "./observation-chart.component";
+import type { ChartType, Dataset } from "./observation-chart.component";
 
-interface Dataset {
-  source: Array<Array<string | number>>;
-}
-
-export interface OutputDataset {
+export type OutputDataset = {
   dataset: Dataset;
-  nan: any;
-}
-
-const DATASET_MAX_FACTOR = 1;
+  nan: number;
+};
 
 export interface GenericFilterToggleData {
   type: LocalFilterTypes;
@@ -420,7 +414,7 @@ export class ObservationFilterService {
       "10",
     ];
 
-    const data: OutputDataset["dataset"]["source"] = dataRaw.map((f) => {
+    const data: Dataset = dataRaw.map((f) => {
       const key = f.value.value;
       const values = f.data;
       const highlighted = filter.highlighted.includes(key) ? values.all : 0;
@@ -449,7 +443,7 @@ export class ObservationFilterService {
       ];
     });
 
-    return { dataset: { source: [header, ...data] }, nan };
+    return { dataset: [header, ...data], nan } satisfies OutputDataset;
   }
 
   testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
