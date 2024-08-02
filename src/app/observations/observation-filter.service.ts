@@ -17,8 +17,9 @@ import type { ChartType, Dataset } from "./observation-chart.component";
 export interface FilterSelectionValue {
   value: string;
   numericRange?: [number, number];
-  color: string;
-  label: string;
+  color: string; // icon color
+  label: string; // icon label
+  legend: string; // long text for chart legend
 }
 
 export interface FilterSelectionData {
@@ -49,14 +50,14 @@ export class ObservationFilterService {
       chartRichLabel: "label",
       values: [
         // FATMAP
-        { value: Aspect.N, color: "#2f74f9", label: Aspect.N },
-        { value: Aspect.NE, color: "#96c0fc", label: Aspect.NE },
-        { value: Aspect.E, color: "#b3b3b3", label: Aspect.E },
-        { value: Aspect.SE, color: "#f6ba91", label: Aspect.SE },
-        { value: Aspect.S, color: "#ef6d25", label: Aspect.S },
-        { value: Aspect.SW, color: "#6c300b", label: Aspect.SW },
-        { value: Aspect.W, color: "#000000", label: Aspect.W },
-        { value: Aspect.NW, color: "#113570", label: Aspect.NW },
+        { value: Aspect.N, color: "#2f74f9", label: Aspect.N, legend: this.translateService.instant("aspect.N") },
+        { value: Aspect.NE, color: "#96c0fc", label: Aspect.NE, legend: this.translateService.instant("aspect.NE") },
+        { value: Aspect.E, color: "#b3b3b3", label: Aspect.E, legend: this.translateService.instant("aspect.E") },
+        { value: Aspect.SE, color: "#f6ba91", label: Aspect.SE, legend: this.translateService.instant("aspect.SE") },
+        { value: Aspect.S, color: "#ef6d25", label: Aspect.S, legend: this.translateService.instant("aspect.S") },
+        { value: Aspect.SW, color: "#6c300b", label: Aspect.SW, legend: this.translateService.instant("aspect.SW") },
+        { value: Aspect.W, color: "#000000", label: Aspect.W, legend: this.translateService.instant("aspect.W") },
+        { value: Aspect.NW, color: "#113570", label: Aspect.NW, legend: this.translateService.instant("aspect.NW") },
       ],
       selected: new Set(),
       highlighted: new Set(),
@@ -82,15 +83,15 @@ export class ObservationFilterService {
       chartType: "bar",
       chartRichLabel: "label",
       values: [
-        { value: "4000 – ∞", numericRange: [4000, 9999], color: "#CC0CE8", label: "40" },
-        { value: "3500 – 4000", numericRange: [3500, 4000], color: "#784BFF", label: "35" },
-        { value: "3000 – 3500", numericRange: [3000, 3500], color: "#035BBE", label: "30" },
-        { value: "2500 – 3000", numericRange: [2500, 3000], color: "#0481FF", label: "25" },
-        { value: "2000 – 2500", numericRange: [2000, 2500], color: "#03CDFF", label: "20" },
-        { value: "1500 – 2000", numericRange: [1500, 2000], color: "#8CFFFF", label: "15" },
-        { value: "1000 – 1500", numericRange: [1000, 1500], color: "#B0FFBC", label: "10" },
-        { value: "500 – 1000", numericRange: [500, 1000], color: "#FFFFB3", label: "5" },
-        { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0" }, //
+        { value: "4000 – ∞", numericRange: [4000, 9999], color: "#CC0CE8", label: "40", legend: "4000 – ∞" },
+        { value: "3500 – 4000", numericRange: [3500, 4000], color: "#784BFF", label: "35", legend: "3500 – 4000" },
+        { value: "3000 – 3500", numericRange: [3000, 3500], color: "#035BBE", label: "30", legend: "3000 – 3500" },
+        { value: "2500 – 3000", numericRange: [2500, 3000], color: "#0481FF", label: "25", legend: "2500 – 3000" },
+        { value: "2000 – 2500", numericRange: [2000, 2500], color: "#03CDFF", label: "20", legend: "2000 – 2500" },
+        { value: "1500 – 2000", numericRange: [1500, 2000], color: "#8CFFFF", label: "15", legend: "1500 – 2000" },
+        { value: "1000 – 1500", numericRange: [1000, 1500], color: "#B0FFBC", label: "10", legend: "1000 – 1500" },
+        { value: "500 – 1000", numericRange: [500, 1000], color: "#FFFFB3", label: "5", legend: "500 – 1000" },
+        { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0", legend: "0 – 500" },
       ],
       selected: new Set(),
       highlighted: new Set(),
@@ -105,10 +106,30 @@ export class ObservationFilterService {
       chartRichLabel: "symbol",
       values: [
         // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
-        { value: SnowpackStability.very_poor, color: "#d7191c", label: "🔴" },
-        { value: SnowpackStability.poor, color: "#fdae61", label: "🟠" },
-        { value: SnowpackStability.fair, color: "#ffffbf", label: "🟡" },
-        { value: SnowpackStability.good, color: "#a6d96a", label: "🟢" },
+        {
+          value: SnowpackStability.very_poor,
+          color: "#d7191c",
+          label: "🔴",
+          legend: this.translateService.instant("snowpackStability.very_poor"),
+        },
+        {
+          value: SnowpackStability.poor,
+          color: "#fdae61",
+          label: "🟠",
+          legend: this.translateService.instant("snowpackStability.poor"),
+        },
+        {
+          value: SnowpackStability.fair,
+          color: "#ffffbf",
+          label: "🟡",
+          legend: this.translateService.instant("snowpackStability.fair"),
+        },
+        {
+          value: SnowpackStability.good,
+          color: "#a6d96a",
+          label: "🟢",
+          legend: this.translateService.instant("snowpackStability.good"),
+        },
       ],
       selected: new Set(),
       highlighted: new Set(),
@@ -123,12 +144,42 @@ export class ObservationFilterService {
       chartRichLabel: "symbol",
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
-        { value: ObservationType.SimpleObservation, color: "#e41a1c", label: "👁" },
-        { value: ObservationType.Evaluation, color: "#377eb8", label: "✓" },
-        { value: ObservationType.Avalanche, color: "#4daf4a", label: "⛰" },
-        { value: ObservationType.Blasting, color: "#984ea3", label: "⁜" },
-        { value: ObservationType.Closure, color: "#ff7f00", label: "𐄂" },
-        { value: ObservationType.Profile, color: "#ffff33", label: "⌇" },
+        {
+          value: ObservationType.SimpleObservation,
+          color: "#e41a1c",
+          label: "👁",
+          legend: this.translateService.instant("observationType.SimpleObservation"),
+        },
+        {
+          value: ObservationType.Evaluation,
+          color: "#377eb8",
+          label: "✓",
+          legend: this.translateService.instant("observationType.Evaluation"),
+        },
+        {
+          value: ObservationType.Avalanche,
+          color: "#4daf4a",
+          label: "⛰",
+          legend: this.translateService.instant("observationType.Avalanche"),
+        },
+        {
+          value: ObservationType.Blasting,
+          color: "#984ea3",
+          label: "⁜",
+          legend: this.translateService.instant("observationType.Blasting"),
+        },
+        {
+          value: ObservationType.Closure,
+          color: "#ff7f00",
+          label: "𐄂",
+          legend: this.translateService.instant("observationType.Closure"),
+        },
+        {
+          value: ObservationType.Profile,
+          color: "#ffff33",
+          label: "⌇",
+          legend: this.translateService.instant("observationType.Profile"),
+        },
       ],
       selected: new Set(),
       highlighted: new Set(),
@@ -143,12 +194,42 @@ export class ObservationFilterService {
       chartRichLabel: "grainShape",
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
-        { value: ImportantObservation.SnowLine, color: "#e41a1c", label: "S" },
-        { value: ImportantObservation.SurfaceHoar, color: "#377eb8", label: "g" },
-        { value: ImportantObservation.Graupel, color: "#4daf4a", label: "o" },
-        { value: ImportantObservation.StabilityTest, color: "#984ea3", label: "k" },
-        { value: ImportantObservation.IceFormation, color: "#ff7f00", label: "i" },
-        { value: ImportantObservation.VeryLightNewSnow, color: "#ffff33", label: "m" },
+        {
+          value: ImportantObservation.SnowLine,
+          color: "#e41a1c",
+          label: "S",
+          legend: this.translateService.instant("importantObservation.SnowLine"),
+        },
+        {
+          value: ImportantObservation.SurfaceHoar,
+          color: "#377eb8",
+          label: "g",
+          legend: this.translateService.instant("importantObservation.SurfaceHoar"),
+        },
+        {
+          value: ImportantObservation.Graupel,
+          color: "#4daf4a",
+          label: "o",
+          legend: this.translateService.instant("importantObservation.Graupel"),
+        },
+        {
+          value: ImportantObservation.StabilityTest,
+          color: "#984ea3",
+          label: "k",
+          legend: this.translateService.instant("importantObservation.StabilityTest"),
+        },
+        {
+          value: ImportantObservation.IceFormation,
+          color: "#ff7f00",
+          label: "i",
+          legend: this.translateService.instant("importantObservation.IceFormation"),
+        },
+        {
+          value: ImportantObservation.VeryLightNewSnow,
+          color: "#ffff33",
+          label: "m",
+          legend: this.translateService.instant("importantObservation.VeryLightNewSnow"),
+        },
       ],
       selected: new Set(),
       highlighted: new Set(),
@@ -164,11 +245,36 @@ export class ObservationFilterService {
       values: [
         // The international classification for seasonal snow on the ground
         // (except for gliding snow - no definition there)
-        { value: AvalancheProblem.new_snow, color: "#00ff00", label: "🌨" },
-        { value: AvalancheProblem.wind_slab, color: "#229b22", label: "🚩" },
-        { value: AvalancheProblem.persistent_weak_layers, color: "#0000ff", label: "❗" },
-        { value: AvalancheProblem.wet_snow, color: "#ff0000", label: "☀️" },
-        { value: AvalancheProblem.gliding_snow, color: "#aa0000", label: "🐟" },
+        {
+          value: AvalancheProblem.new_snow,
+          color: "#00ff00",
+          label: "🌨",
+          legend: this.translateService.instant("avalancheProblem.new_snow"),
+        },
+        {
+          value: AvalancheProblem.wind_slab,
+          color: "#229b22",
+          label: "🚩",
+          legend: this.translateService.instant("avalancheProblem.wind_slab"),
+        },
+        {
+          value: AvalancheProblem.persistent_weak_layers,
+          color: "#0000ff",
+          label: "❗",
+          legend: this.translateService.instant("avalancheProblem.persistent_weak_layers"),
+        },
+        {
+          value: AvalancheProblem.wet_snow,
+          color: "#ff0000",
+          label: "☀️",
+          legend: this.translateService.instant("avalancheProblem.wet_snow"),
+        },
+        {
+          value: AvalancheProblem.gliding_snow,
+          color: "#aa0000",
+          label: "🐟",
+          legend: this.translateService.instant("avalancheProblem.gliding_snow"),
+        },
       ],
       selected: new Set(),
       highlighted: new Set(),
@@ -183,16 +289,66 @@ export class ObservationFilterService {
       chartRichLabel: "label",
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
-        { value: DangerPattern.dp1, color: "#e41a1c", label: "1" },
-        { value: DangerPattern.dp2, color: "#377eb8", label: "2" },
-        { value: DangerPattern.dp3, color: "#4daf4a", label: "3" },
-        { value: DangerPattern.dp4, color: "#984ea3", label: "4" },
-        { value: DangerPattern.dp5, color: "#ff7f00", label: "5" },
-        { value: DangerPattern.dp6, color: "#ffff33", label: "6" },
-        { value: DangerPattern.dp7, color: "#a65628", label: "7" },
-        { value: DangerPattern.dp8, color: "#f781bf", label: "8" },
-        { value: DangerPattern.dp9, color: "#999999", label: "9" },
-        { value: DangerPattern.dp10, color: "#e41a1c", label: "10" },
+        {
+          value: DangerPattern.dp1,
+          color: "#e41a1c",
+          label: "1",
+          legend: this.translateService.instant("dangerPattern.dp1"),
+        },
+        {
+          value: DangerPattern.dp2,
+          color: "#377eb8",
+          label: "2",
+          legend: this.translateService.instant("dangerPattern.dp2"),
+        },
+        {
+          value: DangerPattern.dp3,
+          color: "#4daf4a",
+          label: "3",
+          legend: this.translateService.instant("dangerPattern.dp3"),
+        },
+        {
+          value: DangerPattern.dp4,
+          color: "#984ea3",
+          label: "4",
+          legend: this.translateService.instant("dangerPattern.dp4"),
+        },
+        {
+          value: DangerPattern.dp5,
+          color: "#ff7f00",
+          label: "5",
+          legend: this.translateService.instant("dangerPattern.dp5"),
+        },
+        {
+          value: DangerPattern.dp6,
+          color: "#ffff33",
+          label: "6",
+          legend: this.translateService.instant("dangerPattern.dp6"),
+        },
+        {
+          value: DangerPattern.dp7,
+          color: "#a65628",
+          label: "7",
+          legend: this.translateService.instant("dangerPattern.dp7"),
+        },
+        {
+          value: DangerPattern.dp8,
+          color: "#f781bf",
+          label: "8",
+          legend: this.translateService.instant("dangerPattern.dp8"),
+        },
+        {
+          value: DangerPattern.dp9,
+          color: "#999999",
+          label: "9",
+          legend: this.translateService.instant("dangerPattern.dp9"),
+        },
+        {
+          value: DangerPattern.dp10,
+          color: "#e41a1c",
+          label: "10",
+          legend: this.translateService.instant("dangerPattern.dp10"),
+        },
       ],
       selected: new Set(),
       highlighted: new Set(),
@@ -253,12 +409,13 @@ export class ObservationFilterService {
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
     if (this.startDate && this.endDate) {
       const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-      const values = [];
+      const values: FilterSelectionValue[] = [];
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
         values.push({
           value: this.constantsService.getISODateString(i),
           color: colors.shift(),
           label: formatDate(i, "dd", "en-US"),
+          legend: this.constantsService.getISODateString(i),
         });
       }
       this.filterSelection.Days = { ...this.filterSelection.Days, values };

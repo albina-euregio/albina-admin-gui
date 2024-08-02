@@ -18,7 +18,6 @@ import {
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
-  LocalFilterTypes,
   ImportantObservation,
   WeatherStationParameter,
   genericObservationSchema,

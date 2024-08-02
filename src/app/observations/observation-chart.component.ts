@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { LocalFilterTypes } from "./models/generic-observation.model";
 import { type FilterSelectionData, ObservationFilterService } from "./observation-filter.service";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { ECElementEvent, EChartsOption } from "echarts";
@@ -28,25 +27,6 @@ export class ObservationChartComponent implements OnInit {
 
   get isActive(): boolean {
     return this.filterSelection["selected"].size > 0 || this.filterSelection["highlighted"].size > 0;
-  }
-
-  get translationBase(): string {
-    switch (this.filterSelection.type) {
-      case LocalFilterTypes.Aspect:
-        return "aspect.";
-      case LocalFilterTypes.Stability:
-        return "snowpackStability.";
-      case LocalFilterTypes.ObservationType:
-        return "observationType.";
-      case LocalFilterTypes.ImportantObservation:
-        return "importantObservation.";
-      case LocalFilterTypes.AvalancheProblem:
-        return "avalancheProblem.";
-      case LocalFilterTypes.DangerPattern:
-        return "dangerPattern.";
-      default:
-        return "";
-    }
   }
 
   constructor(
@@ -493,7 +473,7 @@ export class ObservationChartComponent implements OnInit {
       value = entry.value[0];
     }
     const isSelected = this.filter.isIncluded(this.filterSelection, "selected", value);
-    const result = this.translationBase ? this.translateService.instant(this.translationBase + value) : value;
+    const result = this.filterSelection.values.find((v) => v.value === value)?.legend || value;
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
     const filterSelection = this.markerService.markerLabel;
