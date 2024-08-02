@@ -101,7 +101,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     private regionsService: RegionsService,
     public mapService: BaseMapService,
     public modalService: BsModalService,
-  ) {}
+  ) {
+    this.markerService.markerClassify = this.filter.filterSelection.Stability;
+  }
 
   async ngAfterContentInit() {
     this.allRegions = (await this.regionsService.getRegionsEuregio()).features

@@ -333,14 +333,14 @@ export class ObservationFilterService {
     return this.filterSelectionData.some((filter) => this.isIncluded(filter, "highlighted", observation[filter.key]));
   }
 
-  public buildChartsData(observations: GenericObservation[], classifyType: LocalFilterTypes) {
-    this.filterSelectionData.forEach((filter) => this.buildChartsData0(observations, filter, classifyType));
+  public buildChartsData(observations: GenericObservation[], markerClassify: FilterSelectionData) {
+    this.filterSelectionData.forEach((filter) => this.buildChartsData0(observations, filter, markerClassify));
   }
 
   private buildChartsData0(
     observations: GenericObservation[],
     filter: FilterSelectionData,
-    classifyType: LocalFilterTypes,
+    markerClassify: FilterSelectionData,
   ) {
     filter.nan = 0;
     const dataRaw = filter.values.map((value) => ({
@@ -376,18 +376,17 @@ export class ObservationFilterService {
         if (!this.isSelected(observation)) {
           return;
         }
-        if (!classifyType || classifyType === filter.type) {
+        if (!markerClassify || markerClassify.type === filter.type) {
           data[0]++;
           return;
         }
-        const filter2 = this.filterSelection[classifyType];
-        const value2: number | string | string[] = observation[filter2.key];
+        const value2: number | string | string[] = observation[markerClassify.key];
         if (value2 === undefined || value2 === null) {
           data[0]++;
           return;
         }
         castArray(value2).forEach((v) => {
-          data[filter2.values.findIndex((f) => this.testFilterSelection(f, v)) + 1]++;
+          data[markerClassify.values.findIndex((f) => this.testFilterSelection(f, v)) + 1]++;
         });
       });
     });
@@ -450,12 +449,6 @@ export class ObservationFilterService {
       (v instanceof Date && f.value === this.constantsService.getISODateString(v)) ||
       f.value === v
     );
-  }
-
-  findFilterSelection(filterTypes: LocalFilterTypes, observation: GenericObservation) {
-    const filterSelection = this.filterSelection[filterTypes];
-    const value = observation[filterSelection.key];
-    return filterSelection.values.find((f) => castArray(value).some((v) => this.testFilterSelection(f, v)));
   }
 
   inDateRange({ $source, eventDate }: GenericObservation): boolean {

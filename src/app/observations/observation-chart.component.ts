@@ -442,13 +442,13 @@ export class ObservationChartComponent implements OnInit {
 
   onMarkerClassify() {
     this.markerService.markerClassify =
-      this.filterSelection.type !== this.markerService.markerClassify ? this.filterSelection.type : undefined;
+      this.filterSelection.type !== this.markerService.markerClassify?.type ? this.filterSelection : undefined;
     this.handleChange.emit();
   }
 
   onMarkerLabel() {
     this.markerService.markerLabel =
-      this.filterSelection.type !== this.markerService.markerLabel ? this.filterSelection.type : undefined;
+      this.filterSelection.type !== this.markerService.markerLabel?.type ? this.filterSelection : undefined;
     this.handleChange.emit();
   }
 
@@ -463,8 +463,8 @@ export class ObservationChartComponent implements OnInit {
   }
 
   getItemColor(entry) {
-    if (this.markerService.markerClassify === this.filterSelection.type) {
-      const filterSelection = this.filter.filterSelection[this.markerService.markerClassify];
+    const filterSelection = this.markerService.markerClassify;
+    if (filterSelection?.type === this.filterSelection.type) {
       const color = filterSelection.values.find((v) => v.value === entry.name)?.color;
       return !color || color === "white" ? "#000000" : color;
     } else {
@@ -473,11 +473,11 @@ export class ObservationChartComponent implements OnInit {
   }
 
   getClassifyColor(entry, count?: number) {
-    if (this.markerService.markerClassify === this.filterSelection.type) {
+    const filterSelection = this.markerService.markerClassify;
+    if (filterSelection?.type === this.filterSelection.type) {
       return this.getItemColor(entry);
     }
-    if (this.markerService.markerClassify && count !== undefined) {
-      const filterSelection = this.filter.filterSelection[this.markerService.markerClassify];
+    if (filterSelection && count !== undefined) {
       const color = filterSelection.values[count]?.color;
       return !color || color === "white" ? "#000000" : color;
     } else {
@@ -496,8 +496,8 @@ export class ObservationChartComponent implements OnInit {
     const result = this.translationBase ? this.translateService.instant(this.translationBase + value) : value;
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
-    if (this.markerService.markerLabel === this.filterSelection.type) {
-      const filterSelection = this.filter.filterSelection[this.markerService.markerLabel];
+    const filterSelection = this.markerService.markerLabel;
+    if (filterSelection?.type === this.filterSelection.type) {
       const value = filterSelection.values.find((v) => v.value === entry.name);
       if (value) {
         return `{${filterSelection.chartRichLabel}|${value.label}} ${formattedResult}`;

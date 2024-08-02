@@ -5,13 +5,12 @@ import {
   degreeToAspect,
   GenericObservation,
   ImportantObservation,
-  LocalFilterTypes,
   ObservationSource,
   ObservationType,
   WeatherStationParameter,
 } from "./models/generic-observation.model";
-import { memoize } from "lodash";
-import { ObservationFilterService } from "./observation-filter.service";
+import { castArray, memoize } from "lodash";
+import { FilterSelectionData, ObservationFilterService } from "./observation-filter.service";
 import { Aspect, SnowpackStability } from "../enums/enums";
 
 const zIndex: Record<SnowpackStability, number> = {
@@ -218,9 +217,9 @@ export const importantObservationTexts = {
 
 @Injectable()
 export class ObservationMarkerService {
-  public markerLabel: LocalFilterTypes | undefined = undefined;
+  public markerLabel: FilterSelectionData | undefined = undefined;
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
-  public markerClassify: LocalFilterTypes = LocalFilterTypes.Stability;
+  public markerClassify: FilterSelectionData | undefined;
 
   constructor(private filter: ObservationFilterService) {}
 
@@ -374,7 +373,9 @@ export class ObservationMarkerService {
       return "white";
     }
 
-    const value = this.filter.findFilterSelection(this.markerClassify, observation);
+    const value = this.markerClassify.values.find((f) =>
+      castArray(observation[this.markerClassify.key]).some((v) => this.filter.testFilterSelection(f, v)),
+    );
     return value?.color ?? "white";
   }
 
@@ -524,10 +525,12 @@ export class ObservationMarkerService {
 
     if (!this.markerLabel) {
       return "";
-    } else if (this.markerLabel === LocalFilterTypes.Elevation) {
+    } else if (this.markerLabel?.key === "elevation") {
       return isFinite(observation.elevation) ? Math.round(observation.elevation / 100) : "";
     }
-    const value = this.filter.findFilterSelection(this.markerLabel, observation);
+    const value = this.markerLabel?.values.find((f) =>
+      castArray(observation[this.markerLabel.key]).some((v) => this.filter.testFilterSelection(f, v)),
+    );
     return value?.label ?? "";
   }
 
@@ -542,7 +545,7 @@ export class ObservationMarkerService {
     const label = this.getLabel(observation);
     const borderColor = this.getBorderColor(observation);
     const labelFont =
-      this.markerLabel === LocalFilterTypes.ImportantObservation
+      this.markerLabel?.key === "importantObservations"
         ? "snowsymbolsiacs"
         : `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`;
     const labelFontSize = this.getLabelFontSize(observation);
