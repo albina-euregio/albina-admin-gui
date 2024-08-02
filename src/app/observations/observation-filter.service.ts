@@ -47,6 +47,58 @@ export class FilterSelectionData implements FilterSelectionSpec {
   constructor(spec: FilterSelectionSpec) {
     Object.assign(this, spec);
   }
+
+  toggleFilterValue(subset: "highlighted" | "selected", value: string) {
+    const selectedData = this[subset];
+    if (selectedData.has(value)) {
+      selectedData.delete(value);
+    } else {
+      selectedData.add(value);
+    }
+  }
+
+  resetFilter() {
+    this.selected = new Set();
+    this.highlighted = new Set();
+  }
+
+  invertFilter(subset: "highlighted" | "selected") {
+    const selectedData = this[subset];
+    if (selectedData.size <= 0) {
+      return;
+    }
+    this[subset] = new Set(this.values.map(({ value }) => value));
+    selectedData.forEach((value) => this[subset].delete(value));
+    this[subset].add("nan");
+  }
+
+  isIncluded(subset: "highlighted" | "selected", testData: string | string[] | number): boolean {
+    const selectedData = this[subset];
+    const filterSelectionValues = this.values.filter((v) => selectedData.has(v.value));
+    return (
+      (selectedData.has("nan") && !testData) ||
+      (subset === "selected" && selectedData.size === 0) ||
+      filterSelectionValues.some((f) => castArray(testData).some((v) => FilterSelectionData.testFilterSelection(f, v)))
+    );
+  }
+
+  static testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
+    return (
+      (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
+      (v instanceof Date && f.value === FilterSelectionData.getISODateString(v)) ||
+      f.value === v
+    );
+  }
+
+  static getISODateString(date: Date) {
+    // like Date.toISOString(), but not using UTC
+    // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` as const;
+
+    function pad(number: number) {
+      return number < 10 ? (`${0}${number}` as const) : (`${number}` as const);
+    }
+  }
 }
 
 @Injectable()
@@ -352,30 +404,6 @@ export class ObservationFilterService {
     this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
-  toggleFilterValue(filterSelection: FilterSelectionData, subset: "highlighted" | "selected", value: string) {
-    const selectedData = filterSelection[subset];
-    if (selectedData.has(value)) {
-      selectedData.delete(value);
-    } else {
-      selectedData.add(value);
-    }
-  }
-
-  resetFilter(filterSelection: FilterSelectionData) {
-    filterSelection.selected = new Set();
-    filterSelection.highlighted = new Set();
-  }
-
-  invertFilter(filterSelection: FilterSelectionData, subset: "highlighted" | "selected") {
-    const selectedData = filterSelection[subset];
-    if (selectedData.size <= 0) {
-      return;
-    }
-    filterSelection[subset] = new Set(filterSelection.values.map(({ value }) => value));
-    selectedData.forEach((value) => filterSelection[subset].delete(value));
-    filterSelection[subset].add("nan");
-  }
-
   set days(days: number) {
     this.endDate = new Date();
     const newStartDate = new Date(this.endDate);
@@ -452,7 +480,7 @@ export class ObservationFilterService {
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
       (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
-      this.filterSelectionData.every((filter) => this.isIncluded(filter, "selected", observation[filter.key]))
+      this.filterSelectionData.every((filter) => filter.isIncluded("selected", observation[filter.key]))
     );
   }
 
@@ -460,7 +488,7 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.isIncluded(this.filterSelection.Elevation, "selected", observation.elevation)
+      this.filterSelection.Elevation.isIncluded("selected", observation.elevation)
     );
   }
 
@@ -468,7 +496,7 @@ export class ObservationFilterService {
     if (!this.inMapBounds(observation)) {
       return false;
     }
-    return this.filterSelectionData.some((filter) => this.isIncluded(filter, "highlighted", observation[filter.key]));
+    return this.filterSelectionData.some((filter) => filter.isIncluded("highlighted", observation[filter.key]));
   }
 
   public buildChartsData(observations: GenericObservation[], markerClassify: FilterSelectionData) {
@@ -506,7 +534,7 @@ export class ObservationFilterService {
         return;
       }
       castArray(value).forEach((v) => {
-        const data = dataRaw.find((f) => this.testFilterSelection(f.value, v))?.data;
+        const data = dataRaw.find((f) => FilterSelectionData.testFilterSelection(f.value, v))?.data;
         if (!data) {
           return;
         }
@@ -524,7 +552,7 @@ export class ObservationFilterService {
           return;
         }
         castArray(value2).forEach((v) => {
-          data[markerClassify.values.findIndex((f) => this.testFilterSelection(f, v)) + 1]++;
+          data[markerClassify.values.findIndex((f) => FilterSelectionData.testFilterSelection(f, v)) + 1]++;
         });
       });
     });
@@ -581,14 +609,6 @@ export class ObservationFilterService {
     filter.dataset = [header, ...data];
   }
 
-  testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
-    return (
-      (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
-      (v instanceof Date && f.value === this.constantsService.getISODateString(v)) ||
-      f.value === v
-    );
-  }
-
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
     return this.startDate <= eventDate && eventDate <= this.endDate;
   }
@@ -619,20 +639,6 @@ export class ObservationFilterService {
     return (
       !Object.values(this.observationSources).some((v) => v) ||
       (typeof $source === "string" && this.observationSources[$source])
-    );
-  }
-
-  isIncluded(
-    filterSelection: FilterSelectionData,
-    subset: "highlighted" | "selected",
-    testData: string | string[] | number,
-  ): boolean {
-    const selectedData = filterSelection[subset];
-    const filterSelectionValues = filterSelection.values.filter((v) => selectedData.has(v.value));
-    return (
-      (selectedData.has("nan") && !testData) ||
-      (subset === "selected" && selectedData.size === 0) ||
-      filterSelectionValues.some((f) => castArray(testData).some((v) => this.testFilterSelection(f, v)))
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { type FilterSelectionData, ObservationFilterService } from "./observation-filter.service";
+import { type FilterSelectionData } from "./observation-filter.service";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { ECElementEvent, EChartsOption } from "echarts";
 import { CommonModule } from "@angular/common";
@@ -30,7 +30,6 @@ export class ObservationChartComponent implements OnInit {
   }
 
   constructor(
-    public filter: ObservationFilterService,
     public markerService: ObservationMarkerService,
     protected translateService: TranslateService,
   ) {}
@@ -374,7 +373,7 @@ export class ObservationChartComponent implements OnInit {
   onMouseDown(event: any) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
-      this.filter.toggleFilterValue(this.filterSelection, "highlighted", event.data[0]);
+      this.filterSelection.toggleFilterValue("highlighted", event.data[0]);
       this.handleChange.emit();
     }, this.longClickDur);
     return false;
@@ -395,27 +394,27 @@ export class ObservationChartComponent implements OnInit {
 
   private onSeriesClick(event: ECElementEvent) {
     const subset = event.event.event.altKey ? "highlighted" : "selected";
-    this.filter.toggleFilterValue(this.filterSelection, subset, event.data[0]);
+    this.filterSelection.toggleFilterValue(subset, event.data[0]);
     if (event.event.event.ctrlKey) {
-      this.filter.invertFilter(this.filterSelection, subset);
+      this.filterSelection.invertFilter(subset);
     }
     this.handleChange.emit();
   }
 
   private onAngleAxisClick(event: ECElementEvent) {
     const subset = event.event.event.altKey ? "highlighted" : "selected";
-    this.filter.toggleFilterValue(this.filterSelection, subset, event.value as string);
+    this.filterSelection.toggleFilterValue(subset, event.value as string);
     if (event.event.event.ctrlKey) {
-      this.filter.invertFilter(this.filterSelection, subset);
+      this.filterSelection.invertFilter(subset);
     }
     this.handleChange.emit();
   }
 
   onClickNan(event: MouseEvent) {
     const subset = event.altKey ? "highlighted" : "selected";
-    this.filter.toggleFilterValue(this.filterSelection, subset, "nan");
+    this.filterSelection.toggleFilterValue(subset, "nan");
     if (event.ctrlKey) {
-      this.filter.invertFilter(this.filterSelection, subset);
+      this.filterSelection.invertFilter(subset);
     }
     this.handleChange.emit();
   }
@@ -433,12 +432,12 @@ export class ObservationChartComponent implements OnInit {
   }
 
   onInvert() {
-    this.filter.invertFilter(this.filterSelection, "selected");
+    this.filterSelection.invertFilter("selected");
     this.handleChange.emit();
   }
 
   onReset() {
-    this.filter.resetFilter(this.filterSelection);
+    this.filterSelection.resetFilter();
     this.handleChange.emit();
   }
 
@@ -472,7 +471,7 @@ export class ObservationChartComponent implements OnInit {
     } else {
       value = entry.value[0];
     }
-    const isSelected = this.filter.isIncluded(this.filterSelection, "selected", value);
+    const isSelected = this.filterSelection.isIncluded("selected", value);
     const result = this.filterSelection.values.find((v) => v.value === value)?.legend || value;
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 

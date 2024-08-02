@@ -10,7 +10,7 @@ import {
   WeatherStationParameter,
 } from "./models/generic-observation.model";
 import { castArray, memoize } from "lodash";
-import { FilterSelectionData, ObservationFilterService } from "./observation-filter.service";
+import { FilterSelectionData } from "./observation-filter.service";
 import { Aspect, SnowpackStability } from "../enums/enums";
 
 const zIndex: Record<SnowpackStability, number> = {
@@ -221,7 +221,7 @@ export class ObservationMarkerService {
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
   public markerClassify: FilterSelectionData | undefined;
 
-  constructor(private filter: ObservationFilterService) {}
+  constructor() {}
 
   // This is very important! Use a canvas otherwise the chart is too heavy for the browser when
   // the number of points is too high
@@ -374,7 +374,7 @@ export class ObservationMarkerService {
     }
 
     const value = this.markerClassify.values.find((f) =>
-      castArray(observation[this.markerClassify.key]).some((v) => this.filter.testFilterSelection(f, v)),
+      castArray(observation[this.markerClassify.key]).some((v) => FilterSelectionData.testFilterSelection(f, v)),
     );
     return value?.color ?? "white";
   }
@@ -529,7 +529,7 @@ export class ObservationMarkerService {
       return isFinite(observation.elevation) ? Math.round(observation.elevation / 100) : "";
     }
     const value = this.markerLabel?.values.find((f) =>
-      castArray(observation[this.markerLabel.key]).some((v) => this.filter.testFilterSelection(f, v)),
+      castArray(observation[this.markerLabel.key]).some((v) => FilterSelectionData.testFilterSelection(f, v)),
     );
     return value?.label ?? "";
   }
