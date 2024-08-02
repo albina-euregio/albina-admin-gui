@@ -51,6 +51,7 @@ export class RegionConfigurationComponent {
     json["enableModelling"] = this.config.enableModelling;
     json["enableWeatherbox"] = this.config.enableWeatherbox;
     json["enableStrategicMindset"] = this.config.enableStrategicMindset;
+    json["enableStressLevel"] = this.config.enableStressLevel;
     json["serverInstance"] = this.config.serverInstance;
     json["pdfColor"] = this.config.pdfColor;
     json["emailColor"] = this.config.emailColor;

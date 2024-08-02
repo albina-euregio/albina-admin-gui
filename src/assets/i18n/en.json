@@ -588,6 +588,7 @@
           "showMatrix": "Show matrix",
           "enableMediaFile": "Enable media file",
           "enableStrategicMindset": "Enable strategic mindset",
+          "enableStressLevel": "Enable stress level",
           "enableAvalancheProblemCornices": "Enable avalanche problem CORNICES",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM"
         }
