@@ -86,6 +86,12 @@ export class FilterSelectionData implements FilterSelectionSpec {
     }
   }
 
+  findForObservation(observation: GenericObservation) {
+    return this.values.find((f) =>
+      castArray(observation[this.key]).some((v) => FilterSelectionData.testFilterSelection(f, v)),
+    );
+  }
+
   static testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
