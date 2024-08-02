@@ -138,7 +138,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
     map.on("click", () => {
       this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
-      this.applyLocalFilter(this.markerService.markerClassify);
+      this.applyLocalFilter();
     });
 
     const resizeObserver = new ResizeObserver(() => {
@@ -198,11 +198,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   onRegionsDropdownSelect() {
     this.mapService.clickRegion(this.filter.regions);
-    this.applyLocalFilter(this.markerService.markerClassify);
+    this.applyLocalFilter();
   }
 
   onSourcesDropdownSelect() {
-    this.applyLocalFilter(this.markerService.markerClassify);
+    this.applyLocalFilter();
   }
 
   newObservation() {
@@ -214,7 +214,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.markerService.weatherStationLabel === parameter
       ? (this.markerService.weatherStationLabel = undefined)
       : (this.markerService.weatherStationLabel = parameter);
-    this.applyLocalFilter(this.markerService.markerClassify);
+    this.applyLocalFilter();
   }
 
   parseObservation(observation: GenericObservation): GenericObservation {
@@ -268,7 +268,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         this.observations.sort((o1, o2) =>
           +o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1,
         );
-        this.applyLocalFilter(this.markerService.markerClassify);
+        this.applyLocalFilter();
       });
   }
 
@@ -301,7 +301,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     } else if (data?.type) {
       this.filter.toggleFilter(data.type, data.data);
     }
-    this.applyLocalFilter(this.markerService.markerClassify);
+    this.applyLocalFilter();
   }
 
   setDate() {
@@ -309,7 +309,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.loadObservations({});
   }
 
-  applyLocalFilter(classifyType: LocalFilterTypes) {
+  applyLocalFilter() {
     Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
     this.localObservations = this.observations.filter(
       (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
@@ -336,7 +336,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ?.addTo(this.mapService.layers["weather-stations"]);
     });
 
-    this.filter.buildChartsData(this.observations, classifyType);
+    this.filter.buildChartsData(this.observations, this.markerService.markerClassify);
   }
 
   private addObservation(observation: GenericObservation): void {
