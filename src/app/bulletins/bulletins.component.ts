@@ -7,7 +7,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { debounceTime, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { groupBy, map, mergeMap } from "rxjs/operators";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as Enums from "../enums/enums";
 import { formatDate } from "@angular/common";
@@ -44,7 +44,10 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.bulletinsService.init();
 
     this.postStressLevel
-      .pipe(debounceTime(1000))
+      .pipe(
+        groupBy((l) => l.date),
+        mergeMap((ll) => ll.pipe(debounceTime(1000))),
+      )
       .subscribe((stressLevel) => this.userService.postStressLevel(stressLevel).subscribe(() => {}));
     this.userService
       .getStressLevels([this.bulletinsService.dates.at(-1)[0], this.bulletinsService.dates.at(0)[1]])
