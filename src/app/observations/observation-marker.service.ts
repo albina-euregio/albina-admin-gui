@@ -12,6 +12,7 @@ import {
 import { Aspect, SnowpackStability } from "../enums/enums";
 import { FilterSelectionData } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
+import { grainShapes } from "./grain.shapes";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
@@ -143,67 +144,6 @@ const aspectColors = {
   [Aspect.SW]: "#6c300b",
   [Aspect.W]: "#000000",
   [Aspect.NW]: "#113570",
-};
-
-const grainShapes = {
-  PP: { name: "Precipitation Particles", color: "#00FF00", key: "a" },
-  MM: { name: "Machine Made snow", color: "#FFD700", key: "b" },
-  DF: {
-    name: "Decomposing and Fragmented precipitation particles",
-    color: "#228B22",
-    key: "c",
-  },
-  RG: { name: "Rounded Grains", color: "#FFB6C1", key: "d" },
-  FC: { name: "Faceted Crystals", color: "#ADD8E6", key: "e" },
-  DH: { name: "Depth Hoar", color: "#0000FF", key: "f" },
-  SH: { name: "Surface Hoar", color: "#FF00FF", key: "g" },
-  MF: { name: "Melt Forms", color: "#FF0000", key: "h" },
-  IF: { name: "Ice Formations", color: "#00FFFF", key: "i" },
-  PPco: { name: "Columns", color: "#00FF00", key: "j" },
-  PPnd: { name: "Needles", color: "#00FF00", key: "k" },
-  PPpl: { name: "Plates", color: "#00FF00", key: "l" },
-  PPsd: { name: "Stellars, Dendrites", color: "#00FF00", key: "m" },
-  PPir: { name: "Irregular crystals", color: "#00FF00", key: "n" },
-  PPgp: { name: "Graupel", color: "#808080", key: "o" },
-  PPhl: { name: "Hail", color: "#00FF00", key: "p" },
-  PPip: { name: "Ice pellets", color: "#00FF00", key: "q" },
-  PPrm: { name: "Rime", color: "#00FF00", key: "r" },
-  MMrp: { name: "Round polycrystalline particles", color: "#FFD700", key: "s" },
-  MMci: { name: "Crushed ice particles", color: "#FFD700", key: "t" },
-  DFdc: {
-    name: "Partly decomposed precipitation particles",
-    color: "#228B22",
-    key: "u",
-  },
-  DFbk: {
-    name: "Wind-broken precipitation particles",
-    color: "#228B22",
-    key: "v",
-  },
-  RGsr: { name: "Small rounded particles", color: "#FFB6C1", key: "w" },
-  RGlr: { name: "Large rounded particles", color: "#FFB6C1", key: "x" },
-  RGwp: { name: "Wind packed", color: "#FFB6C1", key: "y" },
-  RGxf: { name: "Faceted rounded particles", color: "#FFB6C1", key: "z" },
-  FCso: { name: "Solid faceted particles", color: "#ADD8E6", key: "A" },
-  FCsf: { name: "Near surface faceted particles", color: "#ADD8E6", key: "B" },
-  FCxr: { name: "Rounding faceted particles", color: "#ADD8E6", key: "C" },
-  DHcp: { name: "Hollow cups", color: "#0000FF", key: "D" },
-  DHpr: { name: "Hollow prisms", color: "#0000FF", key: "E" },
-  DHch: { name: "Chains of depth hoar", color: "#0000FF", key: "F" },
-  DHla: { name: "Large striated crystals", color: "#0000FF", key: "G" },
-  DHxr: { name: "Rounding depth hoar", color: " #0000FF", key: "H" },
-  SHsu: { name: "Surface hoar crystals", color: "#FF00FF", key: "I" },
-  SHcv: { name: "Cavity or crevasse hoar", color: "#FF00FF", key: "J" },
-  SHxr: { name: "Rounding surface hoar", color: "#FF00FF", key: "K" },
-  MFcl: { name: "Clustered rounded grains", color: "#FF0000", key: "L" },
-  MFpc: { name: "Rounded polycrystals", color: "#FF0000", key: "M" },
-  MFsl: { name: "Slush", color: "#FF0000", key: "N" },
-  MFcr: { name: "Melt-freeze crust", color: "#FF0000", key: "O" },
-  IFil: { name: "Ice layer", color: "#00FFFF", key: "P" },
-  IFic: { name: "Ice column", color: "#00FFFF", key: "Q" },
-  IFbi: { name: "Basal ice", color: "#00FFFF", key: "R" },
-  IFrc: { name: "Rain crust", color: "#00FFFF", key: "S" },
-  IFsc: { name: "Sun crust, Firnspiegel", color: "#00FFFF", key: "T" },
 };
 
 export const importantObservationTexts = {
