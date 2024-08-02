@@ -324,7 +324,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         this.markerService.markerLabel = undefined;
       }
     } else if (data?.type) {
-      this.filter.toggleFilter(data);
+      this.filter.toggleFilter(data.type, data.data);
     }
     this.applyLocalFilter(this.markerService.markerClassify);
   }

@@ -206,31 +206,30 @@ export class ObservationFilterService {
     this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
-  toggleFilter(filterData: GenericFilterToggleData) {
-    const filterType = this.filterSelection[filterData.type];
-    const subset = filterData.data.altKey ? ("highlighted" as const) : ("selected" as const);
+  toggleFilter(type: LocalFilterTypes, data: GenericFilterToggleData["data"]) {
+    const filterSelection = this.filterSelection[type];
+    const subset = data.altKey ? ("highlighted" as const) : ("selected" as const);
+    const selectedData = filterSelection[subset];
 
-    if (filterData.data.reset) {
-      filterType.selected = [];
-      filterType.highlighted = [];
-    } else if (filterData.data.invert) {
-      if (filterType[subset].length > 0) {
-        const result = filterType.values
-          .map(({ value }) => value)
-          .filter((value) => !filterType[subset].includes(value));
-        filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
+    if (data.reset) {
+      filterSelection.selected = [];
+      filterSelection.highlighted = [];
+      return;
+    }
+    if (!data.invert) {
+      const index = selectedData.indexOf(data.value);
+      if (index !== -1) {
+        selectedData.splice(index, 1);
+      } else {
+        selectedData.push(data.value);
       }
-    } else {
-      const index = filterType[subset].indexOf(filterData.data.value);
-      if (index !== -1) filterType[subset].splice(index, 1);
-      else filterType[subset].push(filterData.data.value);
-      if (filterData.data.ctrlKey) {
-        if (filterType[subset].length > 0) {
-          const result = filterType.values
-            .map(({ value }) => value)
-            .filter((value) => !filterType[subset].includes(value));
-          filterType[subset] = !filterType[subset].includes("nan") ? result.concat("nan") : result;
-        }
+    }
+    if (data.invert || data.ctrlKey) {
+      if (selectedData.length > 0) {
+        const result = filterSelection.values
+          .map(({ value }) => value)
+          .filter((value) => !selectedData.includes(value));
+        filterSelection[subset] = !selectedData.includes("nan") ? result.concat("nan") : result;
       }
     }
   }
