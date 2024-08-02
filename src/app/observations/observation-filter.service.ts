@@ -487,13 +487,13 @@ export class ObservationFilterService {
   }
 
   isIncluded(filter: LocalFilterTypes, testData: string | string[], testHighlighted: boolean = false): boolean {
-    const testField: keyof FilterSelectionData = testHighlighted ? "highlighted" : "selected";
-    const selectedData: string[] = this.filterSelection[filter][testField];
+    const filterSelection = this.filterSelection[filter];
+    const selectedData: string[] = filterSelection[testHighlighted ? "highlighted" : "selected"];
+    const filterSelectionValues = filterSelection.values.filter((v) => selectedData.includes(v.value));
     return (
       (selectedData.includes("nan") && !testData) ||
       (!testHighlighted && selectedData.length === 0) ||
-      (Array.isArray(testData) && testData.some((d) => d && selectedData.includes(d))) ||
-      (typeof testData === "string" && selectedData.includes(testData))
+      filterSelectionValues.some((f) => castArray(testData).some((v) => this.testFilterSelection(f, v)))
     );
   }
 }
