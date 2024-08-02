@@ -101,7 +101,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public mapService: BaseMapService,
     public modalService: BsModalService,
   ) {
-    this.markerService.markerClassify = this.filter.filterSelection.Stability;
+    this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
   }
 
   async ngAfterContentInit() {

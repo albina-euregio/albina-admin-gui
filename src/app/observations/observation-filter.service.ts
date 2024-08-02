@@ -20,8 +20,8 @@ export class ObservationFilterService {
   public regions = {} as Record<string, boolean>;
   public observationSources = {} as Record<ObservationSource, boolean>;
 
-  public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
-    Aspect: new FilterSelectionData({
+  public filterSelectionData: FilterSelectionData[] = [
+    new FilterSelectionData({
       type: LocalFilterTypes.Aspect,
       label: this.translateService.instant("admin.observations.charts.aspect.caption"),
       key: "aspect",
@@ -39,7 +39,7 @@ export class ObservationFilterService {
         { value: Aspect.NW, color: "#113570", label: Aspect.NW, legend: this.translateService.instant("aspect.NW") },
       ],
     }),
-    Days: new FilterSelectionData({
+    new FilterSelectionData({
       type: LocalFilterTypes.Days,
       label: this.translateService.instant("admin.observations.charts.days.caption"),
       key: "eventDate",
@@ -47,7 +47,7 @@ export class ObservationFilterService {
       chartRichLabel: "label",
       values: [],
     }),
-    Elevation: new FilterSelectionData({
+    new FilterSelectionData({
       type: LocalFilterTypes.Elevation,
       label: this.translateService.instant("admin.observations.charts.elevation.caption"),
       key: "elevation",
@@ -65,7 +65,7 @@ export class ObservationFilterService {
         { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0", legend: "0 – 500" },
       ],
     }),
-    Stability: new FilterSelectionData({
+    new FilterSelectionData({
       type: LocalFilterTypes.Stability,
       label: this.translateService.instant("admin.observations.charts.stability.caption"),
       key: "stability",
@@ -99,7 +99,7 @@ export class ObservationFilterService {
         },
       ],
     }),
-    ObservationType: new FilterSelectionData({
+    new FilterSelectionData({
       type: LocalFilterTypes.ObservationType,
       label: this.translateService.instant("admin.observations.charts.observationType.caption"),
       key: "$type",
@@ -145,7 +145,7 @@ export class ObservationFilterService {
         },
       ],
     }),
-    ImportantObservation: new FilterSelectionData({
+    new FilterSelectionData({
       type: LocalFilterTypes.ImportantObservation,
       label: this.translateService.instant("admin.observations.charts.importantObservation.caption"),
       key: "importantObservations",
@@ -191,7 +191,7 @@ export class ObservationFilterService {
         },
       ],
     }),
-    AvalancheProblem: new FilterSelectionData({
+    new FilterSelectionData({
       type: LocalFilterTypes.AvalancheProblem,
       label: this.translateService.instant("admin.observations.charts.avalancheProblem.caption"),
       key: "avalancheProblems",
@@ -232,7 +232,7 @@ export class ObservationFilterService {
         },
       ],
     }),
-    DangerPattern: new FilterSelectionData({
+    new FilterSelectionData({
       type: LocalFilterTypes.DangerPattern,
       label: this.translateService.instant("admin.observations.charts.dangerPattern.caption"),
       key: "dangerPatterns",
@@ -302,11 +302,7 @@ export class ObservationFilterService {
         },
       ],
     }),
-  };
-
-  get filterSelectionData() {
-    return Object.values(this.filterSelection);
-  }
+  ];
 
   constructor(
     private router: Router,
@@ -332,9 +328,10 @@ export class ObservationFilterService {
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
     if (this.startDate && this.endDate) {
       const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-      this.filterSelection.Days.values.length = 0;
+      const filterSelectionData = this.filterSelectionData.find((filter) => filter.key === "eventDate");
+      filterSelectionData.values.length = 0;
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        this.filterSelection.Days.values.push({
+        filterSelectionData.values.push({
           value: this.constantsService.getISODateString(i),
           color: colors.shift(),
           label: formatDate(i, "dd", "en-US"),
@@ -401,7 +398,9 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.filterSelection.Elevation.isIncluded("selected", observation.elevation)
+      this.filterSelectionData
+        .find((filter) => filter.key === "elevation")
+        .isIncluded("selected", observation.elevation)
     );
   }
 
@@ -527,7 +526,9 @@ export class ObservationFilterService {
   }
 
   isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
-    const selectedData: string[] = Array.from(this.filterSelection[LocalFilterTypes.Days].selected)
+    const selectedData: string[] = Array.from(
+      this.filterSelectionData.find((filter) => filter.key === "eventDate").selected,
+    )
       .filter((element) => element !== "nan")
       .sort();
     if (selectedData.length < 1) {
