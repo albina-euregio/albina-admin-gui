@@ -29,7 +29,7 @@ import { saveAs } from "file-saver";
 
 import { ObservationGalleryComponent } from "./observation-gallery.component";
 import { ObservationTableComponent } from "./observation-table.component";
-import { GenericFilterToggleData, ObservationFilterService, OutputDataset } from "./observation-filter.service";
+import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
@@ -88,16 +88,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   };
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
-  public chartsData: Record<LocalFilterTypes, OutputDataset> = {
-    Elevation: {} as OutputDataset,
-    Aspect: {} as OutputDataset,
-    AvalancheProblem: {} as OutputDataset,
-    Stability: {} as OutputDataset,
-    ObservationType: {} as OutputDataset,
-    ImportantObservation: {} as OutputDataset,
-    DangerPattern: {} as OutputDataset,
-    Days: {} as OutputDataset,
-  };
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild("observationTable") observationTableComponent: ObservationTableComponent;
   @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
@@ -346,13 +336,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ?.addTo(this.mapService.layers["weather-stations"]);
     });
 
-    this.buildChartsData(classifyType);
-  }
-
-  buildChartsData(classifyType: LocalFilterTypes) {
-    for (const type of Object.values(LocalFilterTypes)) {
-      this.chartsData[type] = this.filter.toDataset(this.observations, type, classifyType);
-    }
+    this.filter.buildChartsData(this.observations, classifyType);
   }
 
   private addObservation(observation: GenericObservation): void {

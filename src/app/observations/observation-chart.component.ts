@@ -26,8 +26,6 @@ export class ObservationChartComponent implements OnInit {
   private pressTimer;
 
   @Input() filterSelection: FilterSelectionData;
-  @Input() dataset: Dataset;
-  @Input() nan: number;
   @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();
   @Input() labelType: LocalFilterTypes;
   @Input() classifyType: LocalFilterTypes;

@@ -359,8 +359,6 @@
               *ngFor="let filterSelection of filter.filterSelectionData"
               class="chart-container"
               [filterSelection]="filterSelection"
-              [dataset]="chartsData[filterSelection.type].dataset"
-              [nan]="chartsData[filterSelection.type].nan"
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
               (handleChange)="toggleFilter($event)"

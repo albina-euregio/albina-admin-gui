@@ -48,6 +48,8 @@ export interface FilterSelectionData {
   readonly values: FilterSelectionValue[];
   selected: Set<string>;
   highlighted: Set<string>;
+  dataset: Dataset;
+  nan: number;
 }
 
 @Injectable()
@@ -76,6 +78,8 @@ export class ObservationFilterService {
       ],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
     Elevation: {
       type: LocalFilterTypes.Elevation,
@@ -96,6 +100,8 @@ export class ObservationFilterService {
       ],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
@@ -114,6 +120,8 @@ export class ObservationFilterService {
       ],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
     Stability: {
       type: LocalFilterTypes.Stability,
@@ -130,6 +138,8 @@ export class ObservationFilterService {
       ],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
@@ -148,6 +158,8 @@ export class ObservationFilterService {
       ],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
@@ -166,6 +178,8 @@ export class ObservationFilterService {
       ],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
@@ -188,6 +202,8 @@ export class ObservationFilterService {
       ],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
     Days: {
       type: LocalFilterTypes.Days,
@@ -198,6 +214,8 @@ export class ObservationFilterService {
       values: [],
       selected: new Set(),
       highlighted: new Set(),
+      dataset: [],
+      nan: 0,
     },
   };
 
@@ -337,13 +355,16 @@ export class ObservationFilterService {
     );
   }
 
-  public toDataset(
+  public buildChartsData(observations: GenericObservation[], classifyType: LocalFilterTypes) {
+    Object.values(this.filterSelection).forEach((filter) => this.buildChartsData0(observations, filter, classifyType));
+  }
+
+  private buildChartsData0(
     observations: GenericObservation[],
-    type: LocalFilterTypes,
+    filter: FilterSelectionData,
     classifyType: LocalFilterTypes,
-  ): OutputDataset {
-    const filter = this.filterSelection[type];
-    let nan = 0;
+  ) {
+    filter.nan = 0;
     const dataRaw = filter.values.map((value) => ({
       value,
       data: {
@@ -365,7 +386,7 @@ export class ObservationFilterService {
     observations.forEach((observation) => {
       const value: number | string | string[] = observation[filter.key];
       if (value === undefined || value === null) {
-        nan++;
+        filter.nan++;
         return;
       }
       castArray(value).forEach((v) => {
@@ -377,7 +398,7 @@ export class ObservationFilterService {
         if (!this.isSelected(observation)) {
           return;
         }
-        if (!classifyType || classifyType === type) {
+        if (!classifyType || classifyType === filter.type) {
           data[0]++;
           return;
         }
@@ -442,7 +463,7 @@ export class ObservationFilterService {
       ];
     });
 
-    return { dataset: [header, ...data], nan } satisfies OutputDataset;
+    filter.dataset = [header, ...data];
   }
 
   testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {

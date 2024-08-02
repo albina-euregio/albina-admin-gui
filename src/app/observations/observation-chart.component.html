@@ -50,7 +50,7 @@
       [class.highlighted]="filterSelection['highlighted'].has('nan')"
       [class.selected]="filterSelection['selected'].has('nan')"
       (click)="onClickNan($event)"
-      >{{ "admin.observations.charts.nan" | translate }}: {{ nan }}</span
+      >{{ "admin.observations.charts.nan" | translate }}: {{ filterSelection.nan }}</span
     >
   </div>
   <!-- /chart-unspecified -->
@@ -58,10 +58,10 @@
   <!-- !chart-content -->
   <div class="chart-content">
     <div
-      *ngIf="dataset"
+      *ngIf="filterSelection.dataset"
       echarts
       [options]="options"
-      [merge]="{ dataset: { source: dataset } }"
+      [merge]="{ dataset: { source: filterSelection.dataset } }"
       (chartMouseDown)="onMouseDown($event)"
       (chartMouseUp)="onMouseUp($event)"
       class="chart"
