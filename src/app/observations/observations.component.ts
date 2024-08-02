@@ -29,7 +29,7 @@ import { saveAs } from "file-saver";
 
 import { ObservationGalleryComponent } from "./observation-gallery.component";
 import { ObservationTableComponent } from "./observation-table.component";
-import { GenericFilterToggleData, ObservationFilterService } from "./observation-filter.service";
+import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
@@ -283,25 +283,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const json = JSON.stringify(collection, undefined, 2);
     const blob = new Blob([json], { type: "application/geo+json" });
     saveAs(blob, "observations.geojson");
-  }
-
-  toggleFilter(data: GenericFilterToggleData = {} as GenericFilterToggleData) {
-    if (data?.type && data.data.markerClassify) {
-      if (data?.type !== this.markerService.markerClassify) {
-        this.markerService.markerClassify = data.type;
-      } else {
-        this.markerService.markerClassify = undefined;
-      }
-    } else if (data?.type && data.data.markerLabel) {
-      if (data?.type !== this.markerService.markerLabel) {
-        this.markerService.markerLabel = data.type;
-      } else {
-        this.markerService.markerLabel = undefined;
-      }
-    } else if (data?.type) {
-      this.filter.toggleFilter(data.type, data.data);
-    }
-    this.applyLocalFilter();
   }
 
   setDate() {

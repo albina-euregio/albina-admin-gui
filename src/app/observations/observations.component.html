@@ -359,9 +359,7 @@
               *ngFor="let filterSelection of filter.filterSelectionData"
               class="chart-container"
               [filterSelection]="filterSelection"
-              [labelType]="markerService.markerLabel"
-              [classifyType]="markerService.markerClassify"
-              (handleChange)="toggleFilter($event)"
+              (handleChange)="applyLocalFilter()"
             />
           </div>
           <!-- /toolset-charts -->

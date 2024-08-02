@@ -14,24 +14,6 @@ import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../e
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import type { ChartType, Dataset } from "./observation-chart.component";
 
-export type OutputDataset = {
-  dataset: Dataset;
-  nan: number;
-};
-
-export interface GenericFilterToggleData {
-  type: LocalFilterTypes;
-  data: {
-    value?: string;
-    altKey?: boolean;
-    ctrlKey?: boolean;
-    markerClassify?: boolean;
-    markerLabel?: boolean;
-    invert?: boolean;
-    reset?: boolean;
-  };
-}
-
 export interface FilterSelectionValue {
   value: string;
   numericRange?: [number, number];
@@ -232,30 +214,28 @@ export class ObservationFilterService {
     this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
-  toggleFilter(type: LocalFilterTypes, data: GenericFilterToggleData["data"]) {
-    const filterSelection = this.filterSelection[type];
-    const subset = data.altKey ? ("highlighted" as const) : ("selected" as const);
+  toggleFilterValue(filterSelection: FilterSelectionData, subset: "highlighted" | "selected", value: string) {
     const selectedData = filterSelection[subset];
+    if (selectedData.has(value)) {
+      selectedData.delete(value);
+    } else {
+      selectedData.add(value);
+    }
+  }
 
-    if (data.reset) {
-      filterSelection.selected = new Set();
-      filterSelection.highlighted = new Set();
+  resetFilter(filterSelection: FilterSelectionData) {
+    filterSelection.selected = new Set();
+    filterSelection.highlighted = new Set();
+  }
+
+  invertFilter(filterSelection: FilterSelectionData, subset: "highlighted" | "selected") {
+    const selectedData = filterSelection[subset];
+    if (selectedData.size <= 0) {
       return;
     }
-    if (!data.invert) {
-      if (selectedData.has(data.value)) {
-        selectedData.delete(data.value);
-      } else {
-        selectedData.add(data.value);
-      }
-    }
-    if (data.invert || data.ctrlKey) {
-      if (selectedData.size > 0) {
-        filterSelection[subset] = new Set(filterSelection.values.map(({ value }) => value));
-        selectedData.forEach((value) => filterSelection[subset].delete(value));
-        filterSelection[subset].add("nan");
-      }
-    }
+    filterSelection[subset] = new Set(filterSelection.values.map(({ value }) => value));
+    selectedData.forEach((value) => filterSelection[subset].delete(value));
+    filterSelection[subset].add("nan");
   }
 
   set days(days: number) {
@@ -334,7 +314,7 @@ export class ObservationFilterService {
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
       (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
-      Object.values(LocalFilterTypes).every((t) => this.isIncluded(t, observation[this.filterSelection[t].key]))
+      this.filterSelectionData.every((filter) => this.isIncluded(filter, "selected", observation[filter.key]))
     );
   }
 
@@ -342,7 +322,7 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.isIncluded(LocalFilterTypes.Elevation, observation.elevation)
+      this.isIncluded(this.filterSelection.Elevation, "selected", observation.elevation)
     );
   }
 
@@ -350,13 +330,11 @@ export class ObservationFilterService {
     if (!this.inMapBounds(observation)) {
       return false;
     }
-    return Object.values(LocalFilterTypes).some((t) =>
-      this.isIncluded(t, observation[this.filterSelection[t].key], true),
-    );
+    return this.filterSelectionData.some((filter) => this.isIncluded(filter, "highlighted", observation[filter.key]));
   }
 
   public buildChartsData(observations: GenericObservation[], classifyType: LocalFilterTypes) {
-    Object.values(this.filterSelection).forEach((filter) => this.buildChartsData0(observations, filter, classifyType));
+    this.filterSelectionData.forEach((filter) => this.buildChartsData0(observations, filter, classifyType));
   }
 
   private buildChartsData0(
@@ -514,16 +492,15 @@ export class ObservationFilterService {
   }
 
   isIncluded(
-    filter: LocalFilterTypes,
+    filterSelection: FilterSelectionData,
+    subset: "highlighted" | "selected",
     testData: string | string[] | number,
-    testHighlighted: boolean = false,
   ): boolean {
-    const filterSelection = this.filterSelection[filter];
-    const selectedData = filterSelection[testHighlighted ? "highlighted" : "selected"];
+    const selectedData = filterSelection[subset];
     const filterSelectionValues = filterSelection.values.filter((v) => selectedData.has(v.value));
     return (
       (selectedData.has("nan") && !testData) ||
-      (!testHighlighted && selectedData.size === 0) ||
+      (subset === "selected" && selectedData.size === 0) ||
       filterSelectionValues.some((f) => castArray(testData).some((v) => this.testFilterSelection(f, v)))
     );
   }

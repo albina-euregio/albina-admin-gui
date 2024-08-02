@@ -9,7 +9,7 @@
       <div class="obs-switch">
         <div
           class="obs-switch-item"
-          [class.is-active]="filterSelection.type === classifyType"
+          [class.is-active]="filterSelection.type === markerService.markerClassify"
           (click)="onMarkerClassify()"
           title="{{ 'admin.observations.charts.classify' | translate }}"
         >
@@ -17,7 +17,7 @@
         </div>
         <div
           class="obs-switch-item"
-          [class.is-active]="filterSelection.type === labelType"
+          [class.is-active]="filterSelection.type === markerService.markerLabel"
           (click)="onMarkerLabel()"
           title="{{ 'admin.observations.charts.label' | translate }}"
         >

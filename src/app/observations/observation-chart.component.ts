@@ -1,15 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalFilterTypes } from "./models/generic-observation.model";
-import {
-  type FilterSelectionData,
-  type GenericFilterToggleData,
-  ObservationFilterService,
-} from "./observation-filter.service";
+import { type FilterSelectionData, ObservationFilterService } from "./observation-filter.service";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
-import type { EChartsOption } from "echarts";
+import type { ECElementEvent, EChartsOption } from "echarts";
 import { CommonModule } from "@angular/common";
 import { NgxEchartsDirective } from "ngx-echarts";
+import { ObservationMarkerService } from "./observation-marker.service";
 
 export type ChartType = "bar" | "rose";
 
@@ -26,9 +23,7 @@ export class ObservationChartComponent implements OnInit {
   private pressTimer;
 
   @Input() filterSelection: FilterSelectionData;
-  @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();
-  @Input() labelType: LocalFilterTypes;
-  @Input() classifyType: LocalFilterTypes;
+  @Output() handleChange: EventEmitter<void> = new EventEmitter();
   public options: EChartsOption;
 
   get isActive(): boolean {
@@ -56,6 +51,7 @@ export class ObservationChartComponent implements OnInit {
 
   constructor(
     public filter: ObservationFilterService,
+    public markerService: ObservationMarkerService,
     protected translateService: TranslateService,
   ) {}
 
@@ -398,58 +394,77 @@ export class ObservationChartComponent implements OnInit {
   onMouseDown(event: any) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
-      this.handleChange.emit({
-        type: this.filterSelection.type,
-        data: { value: event.data[0], altKey: true, ctrlKey: false },
-      });
+      this.filter.toggleFilterValue(this.filterSelection, "highlighted", event.data[0]);
+      this.handleChange.emit();
     }, this.longClickDur);
     return false;
   }
 
-  onMouseUp(event: any) {
-    if (this.pressTimer) {
-      this.resetTimeout();
-      if (event.componentType === "series") {
-        this.handleChange.emit({
-          type: this.filterSelection.type,
-          data: { value: event.data[0], altKey: event.event.event.altKey, ctrlKey: event.event.event.ctrlKey },
-        });
-      } else if (event.componentType === "angleAxis") {
-        this.handleChange.emit({
-          type: this.filterSelection.type,
-          data: { value: event.value, altKey: event.event.event.altKey, ctrlKey: event.event.event.ctrlKey },
-        });
-      }
+  onMouseUp(event: ECElementEvent) {
+    if (!this.pressTimer) {
+      return false;
+    }
+    this.resetTimeout();
+    if (event.componentType === "series") {
+      this.onSeriesClick(event);
+    } else if (event.componentType === "angleAxis") {
+      this.onAngleAxisClick(event);
     }
     return false;
   }
 
-  onClickNan(event: any) {
-    this.handleChange.emit({
-      type: this.filterSelection.type,
-      data: { value: "nan", altKey: event.altKey, ctrlKey: event.ctrlKey },
-    });
+  private onSeriesClick(event: ECElementEvent) {
+    const subset = event.event.event.altKey ? "highlighted" : "selected";
+    this.filter.toggleFilterValue(this.filterSelection, subset, event.data[0]);
+    if (event.event.event.ctrlKey) {
+      this.filter.invertFilter(this.filterSelection, subset);
+    }
+    this.handleChange.emit();
+  }
+
+  private onAngleAxisClick(event: ECElementEvent) {
+    const subset = event.event.event.altKey ? "highlighted" : "selected";
+    this.filter.toggleFilterValue(this.filterSelection, subset, event.value as string);
+    if (event.event.event.ctrlKey) {
+      this.filter.invertFilter(this.filterSelection, subset);
+    }
+    this.handleChange.emit();
+  }
+
+  onClickNan(event: MouseEvent) {
+    const subset = event.altKey ? "highlighted" : "selected";
+    this.filter.toggleFilterValue(this.filterSelection, subset, "nan");
+    if (event.ctrlKey) {
+      this.filter.invertFilter(this.filterSelection, subset);
+    }
+    this.handleChange.emit();
   }
 
   onMarkerClassify() {
-    this.handleChange.emit({ type: this.filterSelection.type, data: { markerClassify: true } });
+    this.markerService.markerClassify =
+      this.filterSelection.type !== this.markerService.markerClassify ? this.filterSelection.type : undefined;
+    this.handleChange.emit();
   }
 
   onMarkerLabel() {
-    this.handleChange.emit({ type: this.filterSelection.type, data: { markerLabel: true } });
+    this.markerService.markerLabel =
+      this.filterSelection.type !== this.markerService.markerLabel ? this.filterSelection.type : undefined;
+    this.handleChange.emit();
   }
 
   onInvert() {
-    this.handleChange.emit({ type: this.filterSelection.type, data: { invert: true } });
+    this.filter.invertFilter(this.filterSelection, "selected");
+    this.handleChange.emit();
   }
 
   onReset() {
-    this.handleChange.emit({ type: this.filterSelection.type, data: { reset: true } });
+    this.filter.resetFilter(this.filterSelection);
+    this.handleChange.emit();
   }
 
   getItemColor(entry) {
-    if (this.classifyType === this.filterSelection.type) {
-      const filterSelection = this.filter.filterSelection[this.classifyType];
+    if (this.markerService.markerClassify === this.filterSelection.type) {
+      const filterSelection = this.filter.filterSelection[this.markerService.markerClassify];
       const color = filterSelection.values.find((v) => v.value === entry.name)?.color;
       return !color || color === "white" ? "#000000" : color;
     } else {
@@ -458,11 +473,11 @@ export class ObservationChartComponent implements OnInit {
   }
 
   getClassifyColor(entry, count?: number) {
-    if (this.classifyType === this.filterSelection.type) {
+    if (this.markerService.markerClassify === this.filterSelection.type) {
       return this.getItemColor(entry);
     }
-    if (this.classifyType && count !== undefined) {
-      const filterSelection = this.filter.filterSelection[this.classifyType];
+    if (this.markerService.markerClassify && count !== undefined) {
+      const filterSelection = this.filter.filterSelection[this.markerService.markerClassify];
       const color = filterSelection.values[count]?.color;
       return !color || color === "white" ? "#000000" : color;
     } else {
@@ -472,17 +487,17 @@ export class ObservationChartComponent implements OnInit {
 
   getItemLabel(entry): string {
     let value: string;
-    if (this.filterSelection.type === LocalFilterTypes.Aspect) {
+    if (this.filterSelection.chartType === "rose") {
       value = entry;
     } else {
       value = entry.value[0];
     }
-    const isSelected = this.filter.isIncluded(this.filterSelection.type, value);
+    const isSelected = this.filter.isIncluded(this.filterSelection, "selected", value);
     const result = this.translationBase ? this.translateService.instant(this.translationBase + value) : value;
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
-    if (this.labelType === this.filterSelection.type) {
-      const filterSelection = this.filter.filterSelection[this.labelType];
+    if (this.markerService.markerLabel === this.filterSelection.type) {
+      const filterSelection = this.filter.filterSelection[this.markerService.markerLabel];
       const value = filterSelection.values.find((v) => v.value === entry.name);
       if (value) {
         return `{${filterSelection.chartRichLabel}|${value.label}} ${formattedResult}`;
