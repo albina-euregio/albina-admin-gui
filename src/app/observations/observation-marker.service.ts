@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Canvas, CircleMarker, DivIcon, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
+import { Canvas, CircleMarker, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
   degreeToAspect,
   GenericObservation,
@@ -232,10 +232,25 @@ export class ObservationMarkerService {
   createMarker(observation: GenericObservation, isHighlighted: boolean = false): Marker | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     try {
+      const labelFont =
+        this.markerLabel?.key === "importantObservations"
+          ? "snowsymbolsiacs"
+          : getComputedStyle(document.body).getPropertyValue("font-family").replace(/"/g, "'");
+      const icon = makeIcon(
+        observation.aspect,
+        "#898989",
+        this.toMarkerRadius(observation),
+        isHighlighted ? "#ff0000" : this.toMarkerColor(observation),
+        this.getBorderColor(observation),
+        isHighlighted ? "#fff" : "#000",
+        this.getLabelFontSize(observation),
+        labelFont,
+        this.getLabel(observation),
+      );
       const ll = new LatLng(observation.latitude, observation.longitude);
       const marker = new Marker(ll, {
         bubblingMouseEvents: false,
-        icon: this.getIcon(observation, isHighlighted),
+        icon: icon,
         opacity: 1,
         pane: "markerPane",
         radius: this.toMarkerRadius(observation),
@@ -525,21 +540,5 @@ export class ObservationMarkerService {
 
   toZIndex(observation: GenericObservation) {
     return zIndex[observation.stability ?? "unknown"] ?? 0;
-  }
-
-  private getIcon(observation: GenericObservation, isHighlighted: boolean): Icon | DivIcon {
-    const iconSize = this.toMarkerRadius(observation);
-    const iconColor = isHighlighted ? "#ff0000" : this.toMarkerColor(observation);
-    const labelColor = isHighlighted ? "#fff" : "#000";
-    const label = this.getLabel(observation);
-    const borderColor = this.getBorderColor(observation);
-    const labelFont =
-      this.markerLabel?.key === "importantObservations"
-        ? "snowsymbolsiacs"
-        : `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`;
-    const labelFontSize = this.getLabelFontSize(observation);
-    const aspect = observation.aspect;
-    const aspectColor = "#898989";
-    return makeIcon(aspect, aspectColor, iconSize, iconColor, borderColor, labelColor, labelFontSize, labelFont, label);
   }
 }
