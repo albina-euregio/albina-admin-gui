@@ -8,6 +8,8 @@ import type { EChartsOption } from "echarts";
 import { CommonModule } from "@angular/common";
 import { NgxEchartsDirective } from "ngx-echarts";
 
+export type ChartType = "bar" | "rose";
+
 @Component({
   standalone: true,
   selector: "app-observation-chart",
@@ -19,8 +21,7 @@ export class ObservationChartComponent implements OnInit {
   private pressTimer;
 
   @Input() caption: string;
-  @Input() formatter: string;
-  @Input() chart: "bar" | "rose";
+  @Input() chart: ChartType;
   @Input() type: LocalFilterTypes;
   @Input() data: { dataset: object; nan: number };
   @Output() handleChange: EventEmitter<GenericFilterToggleData> = new EventEmitter();

@@ -12,6 +12,7 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import type { ChartType } from "./observation-chart.component";
 
 interface Dataset {
   source: Array<Array<string | number>>;
@@ -48,6 +49,7 @@ export interface FilterSelectionData {
   type: LocalFilterTypes; // id
   label: string; // caption
   key: keyof GenericObservation; // how to extract data
+  chartType: ChartType;
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   selected: string[];
   highlighted: string[];
@@ -61,29 +63,11 @@ export class ObservationFilterService {
   public observationSources = {} as Record<ObservationSource, boolean>;
 
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
-    Elevation: {
-      type: LocalFilterTypes.Elevation,
-      label: this.translateService.instant("admin.observations.charts.elevation.caption"),
-      key: "elevation",
-      chartRichLabel: "label",
-      values: [
-        { value: "4000 – ∞", numericRange: [4000, 9999], color: "#CC0CE8", label: "40" },
-        { value: "3500 – 4000", numericRange: [3500, 4000], color: "#784BFF", label: "35" },
-        { value: "3000 – 3500", numericRange: [3000, 3500], color: "#035BBE", label: "30" },
-        { value: "2500 – 3000", numericRange: [2500, 3000], color: "#0481FF", label: "25" },
-        { value: "2000 – 2500", numericRange: [2000, 2500], color: "#03CDFF", label: "20" },
-        { value: "1500 – 2000", numericRange: [1500, 2000], color: "#8CFFFF", label: "15" },
-        { value: "1000 – 1500", numericRange: [1000, 1500], color: "#B0FFBC", label: "10" },
-        { value: "500 – 1000", numericRange: [500, 1000], color: "#FFFFB3", label: "5" },
-        { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0" }, //
-      ],
-      selected: [],
-      highlighted: [],
-    },
     Aspect: {
       type: LocalFilterTypes.Aspect,
       label: this.translateService.instant("admin.observations.charts.aspect.caption"),
       key: "aspect",
+      chartType: "rose",
       chartRichLabel: "label",
       values: [
         // FATMAP
@@ -99,10 +83,31 @@ export class ObservationFilterService {
       selected: [],
       highlighted: [],
     },
+    Elevation: {
+      type: LocalFilterTypes.Elevation,
+      label: this.translateService.instant("admin.observations.charts.elevation.caption"),
+      key: "elevation",
+      chartType: "bar",
+      chartRichLabel: "label",
+      values: [
+        { value: "4000 – ∞", numericRange: [4000, 9999], color: "#CC0CE8", label: "40" },
+        { value: "3500 – 4000", numericRange: [3500, 4000], color: "#784BFF", label: "35" },
+        { value: "3000 – 3500", numericRange: [3000, 3500], color: "#035BBE", label: "30" },
+        { value: "2500 – 3000", numericRange: [2500, 3000], color: "#0481FF", label: "25" },
+        { value: "2000 – 2500", numericRange: [2000, 2500], color: "#03CDFF", label: "20" },
+        { value: "1500 – 2000", numericRange: [1500, 2000], color: "#8CFFFF", label: "15" },
+        { value: "1000 – 1500", numericRange: [1000, 1500], color: "#B0FFBC", label: "10" },
+        { value: "500 – 1000", numericRange: [500, 1000], color: "#FFFFB3", label: "5" },
+        { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0" }, //
+      ],
+      selected: [],
+      highlighted: [],
+    },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
       label: this.translateService.instant("admin.observations.charts.avalancheProblem.caption"),
       key: "avalancheProblems",
+      chartType: "bar",
       chartRichLabel: "symbol",
       values: [
         // The international classification for seasonal snow on the ground
@@ -120,6 +125,7 @@ export class ObservationFilterService {
       type: LocalFilterTypes.Stability,
       label: this.translateService.instant("admin.observations.charts.stability.caption"),
       key: "stability",
+      chartType: "bar",
       chartRichLabel: "symbol",
       values: [
         // https://colorbrewer2.org/#type=diverging&scheme=RdYlGn&n=5
@@ -135,6 +141,7 @@ export class ObservationFilterService {
       type: LocalFilterTypes.ObservationType,
       label: this.translateService.instant("admin.observations.charts.observationType.caption"),
       key: "$type",
+      chartType: "bar",
       chartRichLabel: "symbol",
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
@@ -152,6 +159,7 @@ export class ObservationFilterService {
       type: LocalFilterTypes.ImportantObservation,
       label: this.translateService.instant("admin.observations.charts.importantObservation.caption"),
       key: "importantObservations",
+      chartType: "bar",
       chartRichLabel: "grainShape",
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
@@ -169,6 +177,7 @@ export class ObservationFilterService {
       type: LocalFilterTypes.DangerPattern,
       label: this.translateService.instant("admin.observations.charts.dangerPattern.caption"),
       key: "dangerPatterns",
+      chartType: "bar",
       chartRichLabel: "label",
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
@@ -190,12 +199,17 @@ export class ObservationFilterService {
       type: LocalFilterTypes.Days,
       label: this.translateService.instant("admin.observations.charts.days.caption"),
       key: "eventDate",
+      chartType: "bar",
       chartRichLabel: "label",
       values: [],
       selected: [],
       highlighted: [],
     },
   };
+
+  get filterSelectionData() {
+    return Object.values(this.filterSelection);
+  }
 
   constructor(
     private router: Router,
@@ -317,7 +331,7 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.isIncluded(LocalFilterTypes.Elevation, observation.elevation)
+      this.isIncluded(LocalFilterTypes.Elevation, String(observation.elevation))
     );
   }
 
@@ -485,11 +499,7 @@ export class ObservationFilterService {
     );
   }
 
-  isIncluded(
-    filter: LocalFilterTypes,
-    testData: string | string[] | number,
-    testHighlighted: boolean = false,
-  ): boolean {
+  isIncluded(filter: LocalFilterTypes, testData: string | string[], testHighlighted: boolean = false): boolean {
     const filterSelection = this.filterSelection[filter];
     const selectedData: string[] = filterSelection[testHighlighted ? "highlighted" : "selected"];
     const filterSelectionValues = filterSelection.values.filter((v) => selectedData.includes(v.value));

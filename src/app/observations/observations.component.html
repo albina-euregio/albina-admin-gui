@@ -356,39 +356,17 @@
           <!-- !toolset-charts -->
           <div class="toolset-charts">
             <app-observation-chart
+              *ngFor="let filterSelection of filter.filterSelectionData"
               class="chart-container"
-              chart="rose"
-              [caption]="filter.filterSelection[LocalFilterTypes.Aspect].label"
-              [type]="LocalFilterTypes.Aspect"
-              [data]="chartsData.Aspect"
-              [isActive]="
-                filter.filterSelection[LocalFilterTypes.Aspect]['selected'].length > 0 ||
-                filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].length > 0
-              "
+              [chart]="filterSelection.chartType"
+              [caption]="filterSelection.label"
+              [type]="filterSelection.type"
+              [data]="chartsData[filterSelection.type]"
+              [isActive]="filterSelection['selected'].length > 0 || filterSelection['highlighted'].length > 0"
               [nanStatus]="{
-                selected: filter.filterSelection[LocalFilterTypes.Aspect]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[LocalFilterTypes.Aspect]['highlighted'].includes('nan')
+                selected: filterSelection['selected'].includes('nan'),
+                highlighted: filterSelection['highlighted'].includes('nan')
               }"
-              [labelType]="markerService.markerLabel"
-              [classifyType]="markerService.markerClassify"
-              (handleChange)="toggleFilter($event)"
-            />
-            <app-observation-chart
-              *ngFor="let type of barCharts"
-              class="chart-container"
-              chart="bar"
-              [caption]="filter.filterSelection[type].label"
-              [type]="type"
-              [data]="chartsData[type]"
-              [isActive]="
-                filter.filterSelection[type]['selected'].length > 0 ||
-                filter.filterSelection[type]['highlighted'].length > 0
-              "
-              [nanStatus]="{
-                selected: filter.filterSelection[type]['selected'].includes('nan'),
-                highlighted: filter.filterSelection[type]['highlighted'].includes('nan')
-              }"
-              [formatter]="'date'"
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
               (handleChange)="toggleFilter($event)"

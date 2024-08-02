@@ -86,18 +86,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     iframe: SafeResourceUrl;
     imgUrls: SafeResourceUrl[];
   };
-
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
-  public barCharts: LocalFilterTypes[] = [
-    LocalFilterTypes.Days,
-    LocalFilterTypes.Elevation,
-    LocalFilterTypes.Stability,
-    LocalFilterTypes.ObservationType,
-    LocalFilterTypes.ImportantObservation,
-    LocalFilterTypes.AvalancheProblem,
-    LocalFilterTypes.DangerPattern,
-  ];
   public chartsData: Record<LocalFilterTypes, OutputDataset> = {
     Elevation: {} as OutputDataset,
     Aspect: {} as OutputDataset,
@@ -109,13 +99,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     Days: {} as OutputDataset,
   };
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
-  @ViewChild("observationTable")
-  observationTableComponent: ObservationTableComponent;
+  @ViewChild("observationTable") observationTableComponent: ObservationTableComponent;
   @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
-
-  public get LocalFilterTypes(): typeof LocalFilterTypes {
-    return LocalFilterTypes;
-  }
 
   constructor(
     public filter: ObservationFilterService,
