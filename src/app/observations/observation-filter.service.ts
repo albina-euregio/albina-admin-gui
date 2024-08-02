@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import {
   GenericObservation,
   ImportantObservation,
-  LocalFilterTypes,
   ObservationSource,
   ObservationType,
 } from "./models/generic-observation.model";
@@ -22,7 +21,7 @@ export class ObservationFilterService {
 
   public filterSelectionData: FilterSelectionData[] = [
     new FilterSelectionData({
-      type: LocalFilterTypes.Aspect,
+      type: "Aspect",
       label: this.translateService.instant("admin.observations.charts.aspect.caption"),
       key: "aspect",
       chartType: "rose",
@@ -40,7 +39,7 @@ export class ObservationFilterService {
       ],
     }),
     new FilterSelectionData({
-      type: LocalFilterTypes.Days,
+      type: "Days",
       label: this.translateService.instant("admin.observations.charts.days.caption"),
       key: "eventDate",
       chartType: "bar",
@@ -48,7 +47,7 @@ export class ObservationFilterService {
       values: [],
     }),
     new FilterSelectionData({
-      type: LocalFilterTypes.Elevation,
+      type: "Elevation",
       label: this.translateService.instant("admin.observations.charts.elevation.caption"),
       key: "elevation",
       chartType: "bar",
@@ -66,7 +65,7 @@ export class ObservationFilterService {
       ],
     }),
     new FilterSelectionData({
-      type: LocalFilterTypes.Stability,
+      type: "Stability",
       label: this.translateService.instant("admin.observations.charts.stability.caption"),
       key: "stability",
       chartType: "bar",
@@ -100,7 +99,7 @@ export class ObservationFilterService {
       ],
     }),
     new FilterSelectionData({
-      type: LocalFilterTypes.ObservationType,
+      type: "ObservationType",
       label: this.translateService.instant("admin.observations.charts.observationType.caption"),
       key: "$type",
       chartType: "bar",
@@ -146,7 +145,7 @@ export class ObservationFilterService {
       ],
     }),
     new FilterSelectionData({
-      type: LocalFilterTypes.ImportantObservation,
+      type: "ImportantObservation",
       label: this.translateService.instant("admin.observations.charts.importantObservation.caption"),
       key: "importantObservations",
       chartType: "bar",
@@ -192,7 +191,7 @@ export class ObservationFilterService {
       ],
     }),
     new FilterSelectionData({
-      type: LocalFilterTypes.AvalancheProblem,
+      type: "AvalancheProblem",
       label: this.translateService.instant("admin.observations.charts.avalancheProblem.caption"),
       key: "avalancheProblems",
       chartType: "bar",
@@ -233,7 +232,7 @@ export class ObservationFilterService {
       ],
     }),
     new FilterSelectionData({
-      type: LocalFilterTypes.DangerPattern,
+      type: "DangerPattern",
       label: this.translateService.instant("admin.observations.charts.dangerPattern.caption"),
       key: "dangerPatterns",
       chartType: "bar",

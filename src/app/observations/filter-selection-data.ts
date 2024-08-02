@@ -1,4 +1,4 @@
-import type { GenericObservation, LocalFilterTypes } from "./models/generic-observation.model";
+import type { GenericObservation } from "./models/generic-observation.model";
 import { castArray } from "lodash";
 
 export type ChartType = "bar" | "rose";
@@ -14,7 +14,7 @@ export interface FilterSelectionValue {
 }
 
 export interface FilterSelectionSpec {
-  type: LocalFilterTypes; // id
+  type: string; // id
   label: string; // caption
   key: keyof GenericObservation; // how to extract data
   chartType: ChartType;
@@ -23,7 +23,7 @@ export interface FilterSelectionSpec {
 }
 
 export class FilterSelectionData implements FilterSelectionSpec {
-  readonly type: LocalFilterTypes;
+  readonly type: string;
   readonly label: string;
   readonly key: keyof GenericObservation;
   readonly chartType: ChartType;

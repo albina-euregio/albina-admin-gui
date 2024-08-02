@@ -63,17 +63,6 @@ export enum ObservationType {
   Webcam = "Webcam",
 }
 
-export enum LocalFilterTypes {
-  Elevation = "Elevation",
-  Aspect = "Aspect",
-  AvalancheProblem = "AvalancheProblem",
-  Stability = "Stability",
-  ObservationType = "ObservationType",
-  ImportantObservation = "ImportantObservation",
-  DangerPattern = "DangerPattern",
-  Days = "Days",
-}
-
 export interface ObservationTableRow {
   label: string;
   date?: Date;
