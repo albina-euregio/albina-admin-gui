@@ -45,8 +45,8 @@ export interface FilterSelectionData {
   key: keyof GenericObservation; // how to extract data
   chartType: ChartType;
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
-  selected: string[];
-  highlighted: string[];
+  selected: Set<string>;
+  highlighted: Set<string>;
   values: FilterSelectionValue[];
 }
 
@@ -74,8 +74,8 @@ export class ObservationFilterService {
         { value: Aspect.W, color: "#000000", label: Aspect.W },
         { value: Aspect.NW, color: "#113570", label: Aspect.NW },
       ],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
     Elevation: {
       type: LocalFilterTypes.Elevation,
@@ -94,8 +94,8 @@ export class ObservationFilterService {
         { value: "500 – 1000", numericRange: [500, 1000], color: "#FFFFB3", label: "5" },
         { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0" }, //
       ],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
     AvalancheProblem: {
       type: LocalFilterTypes.AvalancheProblem,
@@ -112,8 +112,8 @@ export class ObservationFilterService {
         { value: AvalancheProblem.wet_snow, color: "#ff0000", label: "☀️" },
         { value: AvalancheProblem.gliding_snow, color: "#aa0000", label: "🐟" },
       ],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
     Stability: {
       type: LocalFilterTypes.Stability,
@@ -128,8 +128,8 @@ export class ObservationFilterService {
         { value: SnowpackStability.fair, color: "#ffffbf", label: "🟡" },
         { value: SnowpackStability.good, color: "#a6d96a", label: "🟢" },
       ],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
     ObservationType: {
       type: LocalFilterTypes.ObservationType,
@@ -146,8 +146,8 @@ export class ObservationFilterService {
         { value: ObservationType.Closure, color: "#ff7f00", label: "𐄂" },
         { value: ObservationType.Profile, color: "#ffff33", label: "⌇" },
       ],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
     ImportantObservation: {
       type: LocalFilterTypes.ImportantObservation,
@@ -164,8 +164,8 @@ export class ObservationFilterService {
         { value: ImportantObservation.IceFormation, color: "#ff7f00", label: "i" },
         { value: ImportantObservation.VeryLightNewSnow, color: "#ffff33", label: "m" },
       ],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
     DangerPattern: {
       type: LocalFilterTypes.DangerPattern,
@@ -186,8 +186,8 @@ export class ObservationFilterService {
         { value: DangerPattern.dp9, color: "#999999", label: "9" },
         { value: DangerPattern.dp10, color: "#e41a1c", label: "10" },
       ],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
     Days: {
       type: LocalFilterTypes.Days,
@@ -196,8 +196,8 @@ export class ObservationFilterService {
       chartType: "bar",
       chartRichLabel: "label",
       values: [],
-      selected: [],
-      highlighted: [],
+      selected: new Set(),
+      highlighted: new Set(),
     },
   };
 
@@ -220,24 +220,22 @@ export class ObservationFilterService {
     const selectedData = filterSelection[subset];
 
     if (data.reset) {
-      filterSelection.selected = [];
-      filterSelection.highlighted = [];
+      filterSelection.selected = new Set();
+      filterSelection.highlighted = new Set();
       return;
     }
     if (!data.invert) {
-      const index = selectedData.indexOf(data.value);
-      if (index !== -1) {
-        selectedData.splice(index, 1);
+      if (selectedData.has(data.value)) {
+        selectedData.delete(data.value);
       } else {
-        selectedData.push(data.value);
+        selectedData.add(data.value);
       }
     }
     if (data.invert || data.ctrlKey) {
-      if (selectedData.length > 0) {
-        const result = filterSelection.values
-          .map(({ value }) => value)
-          .filter((value) => !selectedData.includes(value));
-        filterSelection[subset] = !selectedData.includes("nan") ? result.concat("nan") : result;
+      if (selectedData.size > 0) {
+        filterSelection[subset] = new Set(filterSelection.values.map(({ value }) => value));
+        selectedData.forEach((value) => filterSelection[subset].delete(value));
+        filterSelection[subset].add("nan");
       }
     }
   }
@@ -417,9 +415,9 @@ export class ObservationFilterService {
     const data: Dataset = dataRaw.map((f) => {
       const key = f.value.value;
       const values = f.data;
-      const highlighted = filter.highlighted.includes(key) ? values.all : 0;
-      const available = !filter.selected.includes(key) ? values.available : 0;
-      const selected = filter.selected.includes(key) ? values.available : 0;
+      const highlighted = filter.highlighted.has(key) ? values.all : 0;
+      const available = !filter.selected.has(key) ? values.available : 0;
+      const selected = filter.selected.has(key) ? values.available : 0;
       const max = values.all;
       const all = available > 0 ? available : selected;
       return [
@@ -465,7 +463,7 @@ export class ObservationFilterService {
   }
 
   isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
-    const selectedData: string[] = this.filterSelection[LocalFilterTypes.Days].selected
+    const selectedData: string[] = Array.from(this.filterSelection[LocalFilterTypes.Days].selected)
       .filter((element) => element !== "nan")
       .sort();
     if (selectedData.length < 1) {
@@ -495,11 +493,11 @@ export class ObservationFilterService {
 
   isIncluded(filter: LocalFilterTypes, testData: string | string[], testHighlighted: boolean = false): boolean {
     const filterSelection = this.filterSelection[filter];
-    const selectedData: string[] = filterSelection[testHighlighted ? "highlighted" : "selected"];
-    const filterSelectionValues = filterSelection.values.filter((v) => selectedData.includes(v.value));
+    const selectedData = filterSelection[testHighlighted ? "highlighted" : "selected"];
+    const filterSelectionValues = filterSelection.values.filter((v) => selectedData.has(v.value));
     return (
-      (selectedData.includes("nan") && !testData) ||
-      (!testHighlighted && selectedData.length === 0) ||
+      (selectedData.has("nan") && !testData) ||
+      (!testHighlighted && selectedData.size === 0) ||
       filterSelectionValues.some((f) => castArray(testData).some((v) => this.testFilterSelection(f, v)))
     );
   }

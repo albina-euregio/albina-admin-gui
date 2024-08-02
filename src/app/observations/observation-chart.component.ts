@@ -34,7 +34,7 @@ export class ObservationChartComponent implements OnInit {
   public options: EChartsOption;
 
   get isActive(): boolean {
-    return this.filterSelection["selected"].length > 0 || this.filterSelection["highlighted"].length > 0;
+    return this.filterSelection["selected"].size > 0 || this.filterSelection["highlighted"].size > 0;
   }
 
   get translationBase(): string {

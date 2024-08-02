@@ -47,8 +47,8 @@
   <!-- !chart-unspecified -->
   <div class="chart-unspecified">
     <span
-      [class.highlighted]="filterSelection['highlighted'].includes('nan')"
-      [class.selected]="filterSelection['selected'].includes('nan')"
+      [class.highlighted]="filterSelection['highlighted'].has('nan')"
+      [class.selected]="filterSelection['selected'].has('nan')"
       (click)="onClickNan($event)"
       >{{ "admin.observations.charts.nan" | translate }}: {{ nan }}</span
     >
