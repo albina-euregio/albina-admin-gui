@@ -22,17 +22,31 @@ export interface FilterSelectionValue {
   legend: string; // long text for chart legend
 }
 
-export interface FilterSelectionData {
-  readonly type: LocalFilterTypes; // id
-  readonly label: string; // caption
-  readonly key: keyof GenericObservation; // how to extract data
+export interface FilterSelectionSpec {
+  type: LocalFilterTypes; // id
+  label: string; // caption
+  key: keyof GenericObservation; // how to extract data
+  chartType: ChartType;
+  chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
+  values: FilterSelectionValue[];
+}
+
+export class FilterSelectionData implements FilterSelectionSpec {
+  readonly type: LocalFilterTypes;
+  readonly label: string;
+  readonly key: keyof GenericObservation;
   readonly chartType: ChartType;
   readonly chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   readonly values: FilterSelectionValue[];
-  selected: Set<string>;
-  highlighted: Set<string>;
+
+  selected = new Set<string>();
+  highlighted = new Set<string>();
   dataset: Dataset;
-  nan: number;
+  nan = 0;
+
+  constructor(spec: FilterSelectionSpec) {
+    Object.assign(this, spec);
+  }
 }
 
 @Injectable()
@@ -42,7 +56,7 @@ export class ObservationFilterService {
   public observationSources = {} as Record<ObservationSource, boolean>;
 
   public filterSelection: Record<LocalFilterTypes, FilterSelectionData> = {
-    Aspect: {
+    Aspect: new FilterSelectionData({
       type: LocalFilterTypes.Aspect,
       label: this.translateService.instant("admin.observations.charts.aspect.caption"),
       key: "aspect",
@@ -59,24 +73,16 @@ export class ObservationFilterService {
         { value: Aspect.W, color: "#000000", label: Aspect.W, legend: this.translateService.instant("aspect.W") },
         { value: Aspect.NW, color: "#113570", label: Aspect.NW, legend: this.translateService.instant("aspect.NW") },
       ],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
-    Days: {
+    }),
+    Days: new FilterSelectionData({
       type: LocalFilterTypes.Days,
       label: this.translateService.instant("admin.observations.charts.days.caption"),
       key: "eventDate",
       chartType: "bar",
       chartRichLabel: "label",
       values: [],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
-    Elevation: {
+    }),
+    Elevation: new FilterSelectionData({
       type: LocalFilterTypes.Elevation,
       label: this.translateService.instant("admin.observations.charts.elevation.caption"),
       key: "elevation",
@@ -93,12 +99,8 @@ export class ObservationFilterService {
         { value: "500 – 1000", numericRange: [500, 1000], color: "#FFFFB3", label: "5", legend: "500 – 1000" },
         { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0", legend: "0 – 500" },
       ],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
-    Stability: {
+    }),
+    Stability: new FilterSelectionData({
       type: LocalFilterTypes.Stability,
       label: this.translateService.instant("admin.observations.charts.stability.caption"),
       key: "stability",
@@ -131,12 +133,8 @@ export class ObservationFilterService {
           legend: this.translateService.instant("snowpackStability.good"),
         },
       ],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
-    ObservationType: {
+    }),
+    ObservationType: new FilterSelectionData({
       type: LocalFilterTypes.ObservationType,
       label: this.translateService.instant("admin.observations.charts.observationType.caption"),
       key: "$type",
@@ -181,12 +179,8 @@ export class ObservationFilterService {
           legend: this.translateService.instant("observationType.Profile"),
         },
       ],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
-    ImportantObservation: {
+    }),
+    ImportantObservation: new FilterSelectionData({
       type: LocalFilterTypes.ImportantObservation,
       label: this.translateService.instant("admin.observations.charts.importantObservation.caption"),
       key: "importantObservations",
@@ -231,12 +225,8 @@ export class ObservationFilterService {
           legend: this.translateService.instant("importantObservation.VeryLightNewSnow"),
         },
       ],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
-    AvalancheProblem: {
+    }),
+    AvalancheProblem: new FilterSelectionData({
       type: LocalFilterTypes.AvalancheProblem,
       label: this.translateService.instant("admin.observations.charts.avalancheProblem.caption"),
       key: "avalancheProblems",
@@ -276,12 +266,8 @@ export class ObservationFilterService {
           legend: this.translateService.instant("avalancheProblem.gliding_snow"),
         },
       ],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
-    DangerPattern: {
+    }),
+    DangerPattern: new FilterSelectionData({
       type: LocalFilterTypes.DangerPattern,
       label: this.translateService.instant("admin.observations.charts.dangerPattern.caption"),
       key: "dangerPatterns",
@@ -350,11 +336,7 @@ export class ObservationFilterService {
           legend: this.translateService.instant("dangerPattern.dp10"),
         },
       ],
-      selected: new Set(),
-      highlighted: new Set(),
-      dataset: [],
-      nan: 0,
-    },
+    }),
   };
 
   get filterSelectionData() {
@@ -409,16 +391,15 @@ export class ObservationFilterService {
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
     if (this.startDate && this.endDate) {
       const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-      const values: FilterSelectionValue[] = [];
+      this.filterSelection.Days.values.length = 0;
       for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        values.push({
+        this.filterSelection.Days.values.push({
           value: this.constantsService.getISODateString(i),
           color: colors.shift(),
           label: formatDate(i, "dd", "en-US"),
           legend: this.constantsService.getISODateString(i),
         });
       }
-      this.filterSelection.Days = { ...this.filterSelection.Days, values };
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {
