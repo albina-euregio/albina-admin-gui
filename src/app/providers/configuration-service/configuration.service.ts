@@ -28,6 +28,7 @@ export interface RegionConfiguration {
   enableModelling: boolean;
   enableWeatherbox: boolean;
   enableStrategicMindset: boolean;
+  enableStressLevel: boolean;
   showMatrix: boolean;
   serverInstance: ServerConfiguration;
   pdfColor: string;
