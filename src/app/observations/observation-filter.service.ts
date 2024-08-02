@@ -342,7 +342,7 @@ export class ObservationFilterService {
     return (
       this.inMapBounds(observation) &&
       this.inRegions(observation.region) &&
-      this.isIncluded(LocalFilterTypes.Elevation, String(observation.elevation))
+      this.isIncluded(LocalFilterTypes.Elevation, observation.elevation)
     );
   }
 
@@ -513,7 +513,11 @@ export class ObservationFilterService {
     );
   }
 
-  isIncluded(filter: LocalFilterTypes, testData: string | string[], testHighlighted: boolean = false): boolean {
+  isIncluded(
+    filter: LocalFilterTypes,
+    testData: string | string[] | number,
+    testHighlighted: boolean = false,
+  ): boolean {
     const filterSelection = this.filterSelection[filter];
     const selectedData = filterSelection[testHighlighted ? "highlighted" : "selected"];
     const filterSelectionValues = filterSelection.values.filter((v) => selectedData.has(v.value));
