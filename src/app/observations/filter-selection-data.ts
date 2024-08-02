@@ -73,6 +73,19 @@ export class FilterSelectionData implements FilterSelectionSpec {
     );
   }
 
+  setDateRange(startDate: Date, endDate: Date) {
+    const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
+    this.values.length = 0;
+    for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1)) {
+      this.values.push({
+        value: FilterSelectionData.getISODateString(i),
+        color: colors.shift(),
+        label: FilterSelectionData.getISODateString(i).slice(-2),
+        legend: FilterSelectionData.getISODateString(i),
+      });
+    }
+  }
+
   static testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||

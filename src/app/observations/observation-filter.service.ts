@@ -5,7 +5,6 @@ import {
   ObservationSource,
   ObservationType,
 } from "./models/generic-observation.model";
-import { formatDate } from "@angular/common";
 import { castArray } from "lodash";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
@@ -326,17 +325,7 @@ export class ObservationFilterService {
     if (this.startDate) this.startDate.setHours(0, 0, 0, 0);
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
     if (this.startDate && this.endDate) {
-      const colors = ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff"];
-      const filterSelectionData = this.filterSelectionData.find((filter) => filter.key === "eventDate");
-      filterSelectionData.values.length = 0;
-      for (let i = new Date(this.startDate); i <= this.endDate; i.setDate(i.getDate() + 1)) {
-        filterSelectionData.values.push({
-          value: this.constantsService.getISODateString(i),
-          color: colors.shift(),
-          label: formatDate(i, "dd", "en-US"),
-          legend: this.constantsService.getISODateString(i),
-        });
-      }
+      this.filterSelectionData.find((filter) => filter.key === "eventDate").setDateRange(this.startDate, this.endDate);
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {
