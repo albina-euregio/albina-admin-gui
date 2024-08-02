@@ -21,6 +21,64 @@
   </div>
 
   <div class="form-group row">
+    <label class="form-label" for="">{{ "bulletins.create.label.avalancheType" | translate }}</label>
+    <div class="btn-group">
+      <!-- SLAB -->
+      <button
+        [disabled]="
+          disabled ||
+          isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
+          isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
+          isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
+        "
+        type="reset"
+        class="btn btn-sm"
+        [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-dark' : 'btn-outline-secondary'"
+        (click)="setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)"
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.avalancheType.slab' | translate }}"
+      >
+        <span>{{ "bulletins.create.tooltip.avalancheType.slab" | translate }}</span>
+      </button>
+
+      <!-- LOOSE -->
+      <button
+        [disabled]="
+          disabled ||
+          isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
+          isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
+          isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
+        "
+        type="reset"
+        class="btn btn-sm"
+        [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-dark' : 'btn-outline-secondary'"
+        (click)="
+          setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
+        "
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.avalancheType.loose' | translate }}"
+      >
+        <span>{{ "bulletins.create.tooltip.avalancheType.loose" | translate }}</span>
+      </button>
+
+      <!-- GLIDE -->
+      <button
+        disabled
+        type="reset"
+        class="btn btn-sm"
+        [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-dark' : 'btn-outline-secondary'"
+        (click)="
+          setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
+        "
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.avalancheType.glide' | translate }}"
+      >
+        <span>{{ "bulletins.create.tooltip.avalancheType.glide" | translate }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="form-group row">
     <div class="col-md-5">
       <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
       <div>
@@ -139,7 +197,7 @@
             <button
               [disabled]="disabled"
               type="reset"
-              class="btn btn-sm btn-outline-secondary"
+              class="btn btn-sm"
               [ngClass]="isDangerRatingDirection(directionEnum.up) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="
                 setDangerRatingDirection(
@@ -158,7 +216,7 @@
             <button
               [disabled]="disabled"
               type="reset"
-              class="btn btn-sm btn-outline-secondary"
+              class="btn btn-sm"
               [ngClass]="isDangerRatingDirection(directionEnum.down) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="
                 setDangerRatingDirection(

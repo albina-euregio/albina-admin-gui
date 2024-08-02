@@ -28,7 +28,7 @@
                 >
                   {{ "admin.observations.selectSources.placeholder" | translate }}
                 </button>
-                <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: scroll">
+                <form class="dropdown-menu p-4 overflow-y-scroll">
                   <div *ngFor="let source of allSources" class="form-check">
                     <label class="form-check-label text-nowrap">
                       <input
@@ -129,8 +129,8 @@
       <!-- /layout-global -->
 
       <div *ngIf="layout === 'table'" class="layout-table">
-        <div class="card" style="height: 100%">
-          <div class="card-body" style="overflow-y: auto; overflow-x: auto">
+        <div class="card h-100">
+          <div class="card-body overflow-auto">
             <app-observation-table
               #observationTable
               [observations]="localObservations"
@@ -141,8 +141,8 @@
       </div>
 
       <div *ngIf="layout === 'gallery'" class="layout-gallery">
-        <div class="card" style="height: 100%">
-          <div class="card-body" style="overflow-y: auto; overflow-x: auto">
+        <div class="card h-100">
+          <div class="card-body overflow-auto">
             <app-observation-gallery
               [observations]="localWebcams"
               (observationClick)="onObservationClick($event)"
@@ -355,10 +355,10 @@
         <div class="toolset-content">
           <!-- !toolset-charts -->
           <div class="toolset-charts">
-            <app-rose-chart
+            <app-observation-chart
               class="chart-container"
-              [caption]="'admin.observations.charts.aspect.caption' | translate"
-              [translationBase]="'aspect.'"
+              chart="rose"
+              [caption]="filter.filterSelection[LocalFilterTypes.Aspect].label"
               [type]="LocalFilterTypes.Aspect"
               [data]="chartsData.Aspect"
               [isActive]="
@@ -372,12 +372,12 @@
               [labelType]="markerService.markerLabel"
               [classifyType]="markerService.markerClassify"
               (handleChange)="toggleFilter($event)"
-            >
-            </app-rose-chart>
-            <app-bar-chart
+            />
+            <app-observation-chart
               *ngFor="let type of barCharts"
               class="chart-container"
-              [caption]="'admin.observations.charts.' + type[0].toLowerCase() + type.slice(1) + '.caption' | translate"
+              chart="bar"
+              [caption]="filter.filterSelection[type].label"
               [type]="type"
               [data]="chartsData[type]"
               [isActive]="
@@ -447,6 +447,8 @@
     <div class="d-inline-block font-weight-normal">
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowLeft' })">←</kbd>
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowRight' })">→</kbd>
+      <kbd *ngIf="observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowUp' })">↑</kbd>
+      <kbd *ngIf="observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowDown' })">↓</kbd>
       &mdash;
       <button class="btn btn-sm btn-secondary" (click)="modalService.hide()">&times;</button>
     </div>
@@ -454,7 +456,7 @@
   <div class="modal-body">
     <table *ngIf="observationPopup" class="table table-sm">
       <tr *ngFor="let row of observationPopup.table">
-        <th style="padding-right: 1ex">{{ row.label }}</th>
+        <th class="pe-3">{{ row.label }}</th>
         <td>
           <span *ngIf="row.date !== undefined">
             {{ row.date | date: "full" : undefined : translateService.currentLang }}
@@ -483,8 +485,8 @@
       [src]="observationPopup?.iframe"
       style="width: 100%; height: 80vh"
     ></iframe>
-    <div *ngIf="observationPopup?.imgUrl">
-      <img [src]="observationPopup?.imgUrl" style="width: -webkit-fill-available" />
+    <div *ngIf="observationPopup?.imgUrls">
+      <img id="observationImage" [src]="observationPopup?.imgUrls[0]" style="width: -webkit-fill-available" />
     </div>
   </div>
 </ng-template>

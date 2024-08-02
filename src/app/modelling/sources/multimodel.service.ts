@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";
-import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
+import { GenericObservation } from "app/observations/models/generic-observation.model";
 
 interface MultimodelPointCsv {
   statnr: string;

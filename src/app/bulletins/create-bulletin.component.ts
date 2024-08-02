@@ -1,6 +1,6 @@
 import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { DatePipe, formatDate } from "@angular/common";
+import { DatePipe } from "@angular/common";
 
 import { map, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -464,9 +464,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   changeDate(date: [Date, Date]) {
     this.deselectBulletin();
-    const format = "yyyy-MM-dd";
-    const locale = "en-US";
-    const formattedDate = formatDate(date[1], format, locale);
+    const formattedDate = this.constantsService.getISODateString(date[1]);
     this.router.navigate(["/bulletins/" + formattedDate], {
       queryParams: { readOnly: this.bulletinsService.getIsReadOnly() },
     });
@@ -620,7 +618,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   openPublishAllModal() {
     const initialState = {
-      date: this.bulletinsService.getActiveDate(),
       component: this,
     };
     this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
@@ -687,10 +684,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const sJson = JSON.stringify(jsonBulletins);
     const element = document.createElement("a");
     element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
-    element.setAttribute(
-      "download",
-      this.datePipe.transform(this.bulletinsService.getActiveDate()[1], "yyyy-MM-dd") + "_report.json",
-    );
+    const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
+    element.setAttribute("download", formattedDate + "_report.json");
     element.style.display = "none";
     document.body.appendChild(element);
     element.click(); // simulate click
@@ -1110,9 +1105,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadingPreview = true;
     this.bulletinsService.getPreviewPdf(this.bulletinsService.getActiveDate()).subscribe((blob) => {
       this.loadingPreview = false;
-      const format = "yyyy-MM-dd";
-      const locale = "en-US";
-      const formattedDate = formatDate(this.bulletinsService.getActiveDate()[1], format, locale);
+      const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
       saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");
       console.log("Preview loaded.");
     });
@@ -1122,7 +1115,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     let error = false;
 
     for (const bulletin of this.internBulletinsList) {
-      if (this.checkAvalancheProblem(bulletin)) {
+      if (
+        bulletin
+          .getSavedAndPublishedRegions()
+          .some((region) => region.startsWith(this.authenticationService.getActiveRegionId())) &&
+        this.checkAvalancheProblem(bulletin)
+      ) {
         error = true;
       }
     }
@@ -1136,6 +1134,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem1.getDangerRating() ||
           bulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
@@ -1150,6 +1149,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem2.getDangerRating() ||
           bulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
@@ -1164,6 +1164,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem3.getDangerRating() ||
           bulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
@@ -1178,6 +1179,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem4.getDangerRating() ||
           bulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
@@ -1192,6 +1194,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem5.getDangerRating() ||
           bulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
@@ -1208,6 +1211,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem1.getDangerRating() ||
           bulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
@@ -1222,6 +1226,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem2.getDangerRating() ||
           bulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
@@ -1236,6 +1241,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem3.getDangerRating() ||
           bulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
@@ -1250,6 +1256,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem4.getDangerRating() ||
           bulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
@@ -1264,6 +1271,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
+          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem5.getDangerRating() ||
           bulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
@@ -2077,7 +2085,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   openCheckBulletinsModal(message: string) {
     const initialState = {
       text: message,
-      date: this.bulletinsService.getActiveDate(),
       component: this,
     };
     this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });

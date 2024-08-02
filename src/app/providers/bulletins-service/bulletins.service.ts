@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -98,7 +98,7 @@ export class BulletinsService {
   public wsBulletinConnect() {
     this.bulletinLocks = <Subject<BulletinLockModel>>(
       this.wsBulletinService
-        .connect(this.constantsService.getWsBulletinUrl() + this.authenticationService.getUsername())
+        .connect(this.constantsService.getServerWsUrl() + "../bulletin/" + this.authenticationService.getUsername())
         .pipe(
           map((response: any): BulletinLockModel => {
             const data = JSON.parse(response.data);

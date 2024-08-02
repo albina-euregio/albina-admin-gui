@@ -94,5 +94,12 @@ export class FullLayoutComponent {
   private change(region) {
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.loadStatus();
+    if (
+      (this.router.url.startsWith("/modelling/zamg-wbt") && !region.enableWeatherbox) ||
+      (this.router.url.startsWith("/modelling/geosphere") && !region.enableModelling) ||
+      (this.router.url.startsWith("/observations") && !region.enableObservations)
+    ) {
+      this.router.navigate(["/bulletins"]);
+    }
   }
 }

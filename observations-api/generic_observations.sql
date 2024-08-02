@@ -3,7 +3,7 @@ CREATE TABLE `generic_observations` (
   `ID` varchar(191) NOT NULL COMMENT 'External ID of this observation',
   `OBS_TYPE` enum('SimpleObservation','Evaluation','Avalanche','Blasting','Closure','Profile','TimeSeries','Webcam') NOT NULL COMMENT 'Type of this observation',
   `EXTERNAL_URL` longtext COMMENT 'External URL to display as iframe',
-  `EXTERNAL_IMG` longtext COMMENT 'External image to display',
+  `EXTERNAL_IMG` longtext COMMENT 'External image to display. Multiple images are persisted using line separator.',
   `STABILITY` enum('good','fair','poor','very_poor') DEFAULT NULL COMMENT 'Snowpack stability that can be inferred from this observation',
   `ASPECTS` set('N','NE','E','SE','S','SW','W','NW') DEFAULT NULL COMMENT 'Aspects corresponding with this observation',
   `AUTHOR_NAME` varchar(191) DEFAULT NULL COMMENT 'Name of the author',

@@ -4,6 +4,7 @@ import { TextModel } from "./text.model";
 
 export class AvalancheProblemModel {
   public avalancheProblem: Enums.AvalancheProblem;
+  public avalancheType: Enums.AvalancheType;
   public aspects: Enums.Aspect[];
   public elevationHigh: number;
   public treelineHigh: boolean;
@@ -18,6 +19,7 @@ export class AvalancheProblemModel {
     const avalancheProblem = new AvalancheProblemModel();
 
     avalancheProblem.avalancheProblem = json.avalancheProblem;
+    avalancheProblem.avalancheType = json.avalancheType;
     const jsonAspects = json.aspects;
     const aspects = new Array<Enums.Aspect>();
     for (const i in jsonAspects) {
@@ -59,6 +61,7 @@ export class AvalancheProblemModel {
 
     if (!avalancheProblem) {
       this.avalancheProblem = undefined;
+      this.avalancheType = undefined;
       this.treelineHigh = false;
       this.treelineLow = false;
       this.dangerRatingDirection = undefined;
@@ -67,6 +70,7 @@ export class AvalancheProblemModel {
       this.terrainFeature = new Array<TextModel>();
     } else {
       this.setAvalancheProblem(avalancheProblem.getAvalancheProblem());
+      this.setAvalancheType(avalancheProblem.getAvalancheType());
       for (const aspect of avalancheProblem.aspects) {
         this.aspects.push(aspect);
       }
@@ -91,6 +95,26 @@ export class AvalancheProblemModel {
 
   setAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
     this.avalancheProblem = avalancheProblem;
+    this.avalancheType = undefined;
+    switch (this.avalancheProblem) {
+      case "wind_slab":
+      case "persistent_weak_layers":
+        this.setAvalancheType(Enums.AvalancheType.slab);
+        break;
+      case "gliding_snow":
+        this.setAvalancheType(Enums.AvalancheType.glide);
+        break;
+      default:
+        break;
+    }
+  }
+
+  getAvalancheType(): Enums.AvalancheType {
+    return this.avalancheType;
+  }
+
+  setAvalancheType(avalancheType: Enums.AvalancheType) {
+    this.avalancheType = avalancheType;
   }
 
   getAspects() {
@@ -211,6 +235,9 @@ export class AvalancheProblemModel {
 
     if (this.avalancheProblem) {
       json["avalancheProblem"] = this.avalancheProblem;
+    }
+    if (this.avalancheType) {
+      json["avalancheType"] = this.avalancheType;
     }
     if (this.aspects && this.aspects.length > 0) {
       const aspects = [];

@@ -1,8 +1,13 @@
 {
+  "daytime": {
+    "earlier": "inizio giornata",
+    "later": "nel corso della giornata"
+  },
   "login": {
     "title": "Login",
     "text": "Accedi al tuo account",
     "button": "Login",
+    "stressLevel": "Stress Level",
     "errorDialog": {
       "message": "Errore nome utente o password!",
       "accept": "Ok"
@@ -23,7 +28,11 @@
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
     "modellingZamgMeteogram": "GeoSphere meteogram",
     "modellingSnowpack": "Modello SNOWPACK",
-    "modellingSnowpackMeteo": "Dati meteo simulati SNOWPACK"
+    "modellingSnowpackMeteo": "Dati meteo simulati SNOWPACK",
+    "weatherbox": "Weatherbox",
+    "awsome": "AWSOME",
+    "snowpack": "SNOWPACK",
+    "geosphere": "GeoSphere"
   },
   "menu": {
     "logout": "Logout",
@@ -37,6 +46,7 @@
     "oc": "Aranese",
     "fullscreen": "A schermo pieno",
     "settings": "Impostazioni",
+    "statistics": "Statistiche",
     "admin": "Admin",
     "region": "Regione",
     "education": "Formazione"
@@ -57,6 +67,8 @@
   "bulletins": {
     "title": "Valanghe.report",
     "tooltip": {
+      "edit": "Edit bulletin",
+      "read": "Read bulletin",
       "copy": "Copia bollettino valanghe",
       "paste": "Incollare bollettino valanghe",
       "cancel": "Annulla la copia",
@@ -81,8 +93,11 @@
       "noPublicationInfo" : "Will NOT be published automatically",
       "loadingPreview": "Creare un'anteprima in PDF ...",
       "loading": "Loading bulletin ...",
+      "loadMoreBulletins": "Load {{count}} more bulletins",
       "publishing": "Publishing bulletin ...",
-      "submitting": "Submitting bulletin ..."
+      "submitting": "Submitting bulletin ...",
+      "saveError": "Bulletin could not be saved!",
+      "loadBulletinsError": "Bulletins could not be loaded!"
     },
     "create": {
       "tooltip": {
@@ -95,6 +110,7 @@
         "rejectSuggestion": "Scarta regioni suggerite",
         "saveChanges": "Salva modifiche",
         "discardChanges": "Scarta modifiche",
+        "incompleteAvalancheProblem": "Problema valanghivo incompleto",
         "saveBulletin": "Salva bollettino valanghe",
         "discardBulletin": "Scarta modifiche del bollettino valanghe",
         "loadBulletin": "Copia il bollettino valanghe del giorno precedente",
@@ -118,7 +134,12 @@
         "moveUpAvalancheProblem": "Spostare problema valanghivo verso l'alto",
         "moveDownAvalancheProblem": "Spostare problema valanghivo verso il basso",
         "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionDown": "Downwards",
+        "avalancheType": {
+          "slab": "SLAB",
+          "loose": "LOOSE",
+          "glide": "GLIDE"
+        }
       },
       "save": " Salva",
       "discard": " Scarta",
@@ -138,7 +159,7 @@
       "suggestions": "Suggestions",
       "noBulletinsForSelectedDay": "No regions defined for this date.",
       "autosave": "Saved automatically",
-      "regionEditable": "This region can be edited.", 
+      "regionEditable": "This region can be edited.",
       "regionNotEditable": "This region can not be edited.",
       "regionLocked": "This region is locked.",
       "changeDangerRatingElevation": "Extend the danger level",
@@ -146,8 +167,10 @@
       "mapLeft": "Map aside",
       "showNotes": "Show notes",
       "hideNotes": "Hide notes",
+      "incompleteAvalancheProblem": "Incomplete",
       "label": {
         "avalancheProblems": "Problema valanghivo",
+        "avalancheType": "Tipologia della valanga",
         "aspects": "Esposizione",
         "elevation": "Quota",
         "highlights": "Alerta speciale",
@@ -235,6 +258,63 @@
         "favourableSituation": "Situazione favorevole",
         "cancel": "Cancella"
       },
+      "removeDaytimeDependencyDialog" : {
+        "message": "Which avalanche problems do you want to keep?",
+        "cancel": "Cancellare"
+      },
+      "strategicMindsetDialog" : {
+        "title": "Strategic Mindsets",
+        "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
+        "description": {
+          "title": "Description:",
+          "text": {
+            "assessment": "There is <b>great uncertainty</b> in the risk assessment due to <b>insufficient information</b> from the site.",
+            "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
+            "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
+            "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
+            "entrenchment": "<b>Almost constant, tense hazardous situation.</b> The main danger comes from (a) <b>persistent weak layer</b>(s) susceptible to interference.",
+            "free_ride": "<b>Low avalanche danger</b> with generally stable snow cover. Only small avalanches are possible in extremely steep terrain. ",
+            "high_alert": "Exceptional situation with <b>high or very high avalanche danger</b>. Spontaneous avalanches of <b>very large or extreme magnitude</b> are possible",
+            "spring_diurnal": "Wet snow avalanches during the course of the day, which are subject to a <b>clear diurnal cycle</b>, are decisive for the risk assessment."
+          }
+        },
+        "communication": {
+          "title": "Communication:",
+          "text": {
+            "assessment": "Avalanche situation must be checked locally. Restraint is recommended.",
+            "stepping_out": "Gradual decrease in danger. However, caution is still required and the improving situation should be assessed locally before entering riskier terrain.  ",
+            "status_quo": "Hazardous situation is unchanged. Feedback from observers helps to better outline the hazardous situation. More favourable terrain should be communicated with emphasis. ",
+            "stepping_back": "Clear communication of the increase in avalanche danger - even within a danger level. Information on the causes supports comprehensibility in communication. ",
+            "entrenchment": "Caution and restraint are required. Situation hardly changes. If possible, provide as precise information as possible on distribution and possibility to trigger. Increased communication of observations that reveal the situation and trigger restraint.",
+            "free_ride": "Little text. Emphasise the generally favourable overall situation and potentially isolated hazard areas",
+            "high_alert": "Communication across all channels. The focus is no longer on winter sports. Danger even in areas that are not usually at risk of avalanches.",
+            "spring_diurnal": "Favourable situation in the morning, increasing during the day. Assessment should be made locally by observing the softening of the melt-freeze crust and the increasing soaking of the snow cover."
+          }
+        },
+        "examples": {
+          "title": "Examples:",
+          "text": {
+            "assessment": "Start of the season.",
+            "stepping_out": "Cooling leads to a decrease in the risk of wet snow avalanches after a warm and humid weather phase.",
+            "status_quo": "Consistent wind-slab problem with cold temperatures, loose snow and wind.",
+            "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
+            "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
+            "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
+            "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
+            "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
+          }
+        },
+        "strategicMindset": {
+          "assessment": "High Uncertainty",
+          "stepping_out": "Improving",
+          "status_quo": "Status Quo",
+          "stepping_back": "Deteriorating",
+          "entrenchment": "Persistent Unstable",
+          "free_ride": "Favorable",
+          "high_alert": "High Alert",
+          "spring_diurnal": "Spring Diurnal"
+        }
+      },
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-it.svg",
         "feedbackURL": "https://models.avalanche.report:8061/it/",
@@ -284,6 +364,7 @@
         "validFor": "Valido per: ",
         "title": {
           "prod": "Cose serie",
+          "test": "Test system",
           "task": "Attività",
           "language": {
             "all": "TUTTO",
@@ -451,49 +532,65 @@
         "save": "Salva"
       },
       "table": {
-        "id": "ID",
-        "microRegions": "Numero micro-zone",
-        "subRegions": "Sottoregioni",
-        "superRegions": "Sovraregioni",
-        "neighborRegions": "Regioni confinanti",
-        "showMatrix": "Mostra matrice",
-        "publishBulletins": "Publica bollettino valanghe",
-        "publishBlogs": "Publica i post blog",
-        "createCaamlV5": "Crea CAAML v5",
-        "createCaamlV6": "Crea CAAML v6",
-        "createJson": "Crea JSON",
-        "createMaps": "Crea mappe",
-        "createPdf": "Crea PDF",
-        "sendEmails": "Invia Email",
-        "createSimpleHtml": "Crea HTML semplici",
-        "sendTelegramMessages": "Invia messaggi via Telegram",
-        "sendPushNotifications": "Invia notifiche push",
-        "enableMediaFile": "Attiva file media",
-        "enableAvalancheProblemCornices": "Attivare problema tipico valanghivo CORNICI",
-        "enableAvalancheProblemNoDistinctAvalancheProblem": "Attivare problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE",
-        "pdfColor": "PDF in colore",
-        "emailColor": "Email in colore",
-        "pdfMapYAmPm": "Y per mappa PDF (am/pm)",
-        "pdfMapYFd": "Y per mappa PDF (fd)",
-        "pdfMapWidthAmPm": "Larghezza della mappa per PDF (am/pm)",
-        "pdfMapWidthFd": "Larghezza della mappa per PDF (fd)",
-        "pdfMapHeight": "Altezza mappa per PDF",
-        "pdfFooterLogo": "Logo per piè di pagina PDF",
-        "pdfFooterLogoColorPath": "Logo per piè di pagina PDF (colore)",
-        "pdfFooterLogoBwPath": "Logo per piè di pagina PDF (bianco/nero)",
-        "mapXmax": "Mappa X massimo",
-        "mapXmin": "Mappa X minimo",
-        "mapYmax": "Mappa Y massimo",
-        "mapYmin": "Mappa Y minimo",
-        "simpleHtmlTemplateName": "Template HTML semplice",
-        "geoDataDirectory": "Cartella geodati",
-        "mapLogoColorPath": "Logo per mappa (colore)",
-        "mapLogoBwPath": "Logo per mappa (bianco/nero)",
-        "mapLogoPosition": "Posizione del logo nella mappa",
-        "mapCenterLat": "Posizione centrale della mappa (lat)",
-        "mapCenterLng": "Posizione centrale della mappa (long)",
-        "imageColorbarColorPath": "Barra colori (colore)",
-        "imageColorbarBwPath": "Barra colori (bianco/nero)"
+        "general": {
+          "title": "General",
+          "id": "ID",
+          "microRegions": "Numero micro-zone",
+          "subRegions": "Sottoregioni",
+          "superRegions": "Sovraregioni",
+          "neighborRegions": "Regioni confinanti"
+        },
+        "publication": {
+          "title": "Publication",
+          "publishBulletins": "Publica bollettino valanghe",
+          "publishBlogs": "Publica i post blog",
+          "createCaamlV5": "Crea CAAML v5",
+          "createCaamlV6": "Crea CAAML v6",
+          "createJson": "Crea JSON",
+          "createMaps": "Crea mappe",
+          "createPdf": "Crea PDF",
+          "sendEmails": "Invia Email",
+          "createSimpleHtml": "Crea HTML semplici",
+          "sendTelegramMessages": "Invia messaggi via Telegram",
+          "sendPushNotifications": "Invia notifiche push",
+          "pdfColor": "PDF in colore",
+          "emailColor": "Email in colore",
+          "pdfMapYAmPm": "Y per mappa PDF (am/pm)",
+          "pdfMapYFd": "Y per mappa PDF (fd)",
+          "pdfMapWidthAmPm": "Larghezza della mappa per PDF (am/pm)",
+          "pdfMapWidthFd": "Larghezza della mappa per PDF (fd)",
+          "pdfMapHeight": "Altezza mappa per PDF",
+          "pdfFooterLogo": "Logo per piè di pagina PDF",
+          "pdfFooterLogoColorPath": "Logo per piè di pagina PDF (colore)",
+          "pdfFooterLogoBwPath": "Logo per piè di pagina PDF (bianco/nero)",
+          "mapXmax": "Mappa X massimo",
+          "mapXmin": "Mappa X minimo",
+          "mapYmax": "Mappa Y massimo",
+          "mapYmin": "Mappa Y minimo",
+          "simpleHtmlTemplateName": "Template HTML semplice",
+          "geoDataDirectory": "Cartella geodati",
+          "mapLogoColorPath": "Logo per mappa (colore)",
+          "mapLogoBwPath": "Logo per mappa (bianco/nero)",
+          "mapLogoPosition": "Posizione del logo nella mappa",
+          "mapCenterLat": "Posizione centrale della mappa (lat)",
+          "mapCenterLng": "Posizione centrale della mappa (long)",
+          "imageColorbarColorPath": "Barra colori (colore)",
+          "imageColorbarBwPath": "Barra colori (bianco/nero)"
+        },
+        "components": {
+          "title": "Components",
+          "enableObservations": "Enable observations",
+          "enableModelling": "Enable modelling",
+          "enableWeatherbox": "Enable weather box"
+        },
+        "configuration": {
+          "title": "Configuration",
+          "showMatrix": "Mostra matrice",
+          "enableMediaFile": "Attiva file media",
+          "enableStrategicMindset": "Enable strategic mindset",
+          "enableAvalancheProblemCornices": "Attivare problema tipico valanghivo CORNICI",
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Attivare problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE"
+        }
       },
       "success": "Configurazione salvata con successo",
       "error": "Non é stato possibile salvare la configurazione"
@@ -505,6 +602,7 @@
       },
       "tooltip": {
         "edit": "Modifica utente",
+        "changePassword": "Cambia password",
         "delete": "Cancella utente"
       },
       "table": {
@@ -534,6 +632,7 @@
     },
     "createUser": {
       "table": {
+        "image": "Image",
         "name": "Nome",
         "email": "Email",
         "organization": "Organizazzione",
@@ -562,22 +661,15 @@
         "cancel": "Cancellare"
       }
     },
-    "statistics": {
-      "title": "Statistiche",
-      "button": {
-        "submit": "Scarica"
-      },
-      "label": {
-        "dateRange": "Periodo",
-        "extended": "Esteso",
-        "duplicates": "Doppiete"
-      }
-    },
     "observations": {
       "table": "Tabella",
       "map": "Mappa",
+      "gallery": "Gallery",
       "filters": "Filters",
       "title": "Osservazioni",
+      "newObservation": "New observation",
+      "exportObservations": "Export observations",
+      "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Scarica"
       },
@@ -587,11 +679,11 @@
       },
       "selectRegion": {
         "placeholder": "Regione",
-        "selectionLabel": "{0} regioni selezionati"
+        "selectionLabel": "{0} region(s) selected"
       },
       "selectSources": {
         "placeholder": "origine dati",
-        "selectionLabel": "{0} origini dati selezionati"
+        "selectionLabel": "{0} source(s) selected"
       },
       "charts": {
         "charts": "Charts",
@@ -613,7 +705,7 @@
           "caption": "Observation Type"
         },
         "importantObservation": {
-          "caption": "Important Observation"
+          "caption": "Important"
         },
         "avalancheProblem": {
           "caption": "Problema tipico valanghivo"
@@ -657,6 +749,7 @@
     }
   },
   "settings": {
+    "title": "Impostazioni",
     "changePassword": {
       "title": "Cambia password",
       "oldPassword": {
@@ -689,9 +782,19 @@
       "title": "Mostra",
       "table": {
         "showCaaml": "Mostra CAAML",
-        "showJson": "Mostra JSON",
-        "showObservations": "Mostra osservazioni"
+        "showJson": "Mostra JSON"
       }
+    }
+  },
+  "statistics": {
+    "title": "Statistiche",
+    "button": {
+      "submit": "Scarica"
+    },
+    "label": {
+      "dateRange": "Periodo",
+      "extended": "Esteso",
+      "duplicates": "Doppiete"
     }
   },
 
@@ -732,6 +835,17 @@
     "dp9": "st.9: neve pallottolare coperta da neve fresca",
     "dp10": "st.10: situazione primaverile"
   },
+  "strategicMindset": {
+    "title": "Strategic Mindset",
+    "assessment": "High Uncertainty",
+    "stepping_out": "Improving",
+    "status_quo": "Status Quo",
+    "stepping_back": "Deteriorating",
+    "entrenchment": "Persistent Unstable",
+    "free_ride": "Favorable",
+    "high_alert": "High Alert",
+    "spring_diurnal": "Spring Diurnal"
+  },
   "observationType": {
     "TimeSeries": "Time series",
     "Incident": "Incident",
@@ -762,6 +876,7 @@
     "NW": "NO"
   },
   "role": {
+    "SUPERADMIN": "Super Administrator",
     "ADMIN": "Amministratore",
     "FORECASTER": "Previsore",
     "FOREMAN": "Caposquadra",
@@ -848,7 +963,34 @@
     "avalancheSize": "Dimension della valanga",
     "avalancheType": "Tipologia della valanga",
     "avalancheWidth": "Larghezza della valanga",
+    "search": "Cerca",
     "count": "# osservazioni",
+    "layers": {
+      "observers": "Observers",
+      "weatherStations": "Weather stations",
+      "webcams": "Webcam",
+      "observations": "Osservazioni"
+    },
+    "weatherStations": {
+      "tooltips": {
+        "globalRadiation": "Global radiation",
+        "snowHeight": "Snow height",
+        "snowDifference24h": "Snow difference 24h",
+        "snowDifference48h": "Snow difference 48h",
+        "snowDifference72h": "Snow difference 72h",
+        "airTemperature": "Air temperature",
+        "airTemperatureMax": "Air temperature Max",
+        "airTemperatureMin": "Air temperature Min",
+        "surfaceTemperature": "Surface temperature",
+        "surfaceHoar": "Potential surface hoar formation",
+        "surfaceHoarCalc": "Potential surface hoar formation (Lehning et. al.)",
+        "dewPoint": "Dew point temperature",
+        "relativeHumidity": "Relative humidity",
+        "windDirection": "Wind direction",
+        "windSpeed": "Wind speed",
+        "windGust": "Wind gust"
+      }
+    },
     "button": {
       "add": "Aggiungere osservazione",
       "save": "Salvare l'osservazione",

@@ -8,10 +8,10 @@
         <img
           (click)="observationClick.emit(observation)"
           [alt]="observation.locationName"
-          [src]="observation.$externalImg"
+          [src]="observation.$externalImgs?.[0]"
           class="card-img-top"
           loading="lazy"
-          style="cursor: pointer"
+          role="button"
         />
         <div class="card-body">
           <p class="card-text">

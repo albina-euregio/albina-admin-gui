@@ -17,6 +17,7 @@ import { MatrixParameterComponent } from "./matrix-parameter.component";
 import { CaamlComponent } from "./caaml.component";
 import { JsonComponent } from "./json.component";
 import { AvalancheProblemIconsComponent } from "./avalanche-problem-icons.component";
+import { AvalancheTypeComponent } from "./avalanche-type.component";
 
 // Bulletins Routing
 import { BulletinsRoutingModule } from "./bulletins-routing.module";
@@ -30,6 +31,8 @@ import { HtmlPipe } from "./html.pipe";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BulletinTextComponent } from "./bulletin-text.component";
+import { TeamStressLevelsComponent } from "./team-stress-levels.component";
+import { NgxEchartsDirective } from "ngx-echarts";
 
 @NgModule({
   imports: [
@@ -40,8 +43,9 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxSliderModule,
+    NgxEchartsDirective,
   ],
-  exports: [AspectsComponent, AvalancheProblemIconsComponent],
+  exports: [AspectsComponent, AvalancheProblemIconsComponent, AvalancheTypeComponent],
   declarations: [
     BulletinsComponent,
     CreateBulletinComponent,
@@ -59,7 +63,9 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     CaamlComponent,
     JsonComponent,
     AvalancheProblemIconsComponent,
+    AvalancheTypeComponent,
     HtmlPipe,
+    TeamStressLevelsComponent,
   ],
 })
 export class BulletinsModule {}

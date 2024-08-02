@@ -18,12 +18,8 @@ import {
   ObservationSource,
   ObservationTableRow,
   toGeoJSON,
-  toObservationTable,
   LocalFilterTypes,
-  AvalancheProblem,
-  DangerPattern,
   ImportantObservation,
-  Stability,
   WeatherStationParameter,
   genericObservationSchema,
   ObservationType,
@@ -38,14 +34,14 @@ import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { BarChartComponent } from "./charts/bar-chart.component";
-import { RoseChartComponent } from "./charts/rose-chart.component";
+import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
 import { AlbinaObservationsService } from "./observations.service";
-import { Control, LayerGroup } from "leaflet";
+import { LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
+import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -55,13 +51,12 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [
-    BarChartComponent,
+    ObservationChartComponent,
     BsDatepickerModule,
     CommonModule,
     FormsModule,
     ObservationGalleryComponent,
     ObservationTableComponent,
-    RoseChartComponent,
     TranslateModule,
   ],
   templateUrl: "observations.component.html",
@@ -89,7 +84,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     observation: GenericObservation;
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
-    imgUrl: SafeResourceUrl;
+    imgUrls: SafeResourceUrl[];
   };
 
   public allRegions: RegionProperties[];
@@ -155,7 +150,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
-    this.loadObservations({ days: 7 });
+    if (this.filter.startDate && this.filter.endDate) {
+      this.loadObservations({});
+    } else {
+      this.loadObservations({ days: 7 });
+    }
     this.observationsAsOverlay = [];
 
     this.observersLayerGroup = this.loadObservers();
@@ -246,7 +245,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   parseObservation(observation: GenericObservation): GenericObservation {
     const avalancheProblems = Object.values(AvalancheProblem);
     const dangerPatterns = Object.values(DangerPattern);
-    const stabilities = Object.values(Stability);
+    const stabilities = Object.values(SnowpackStability);
     const importantObservations = Object.values(ImportantObservation);
 
     const matches = [...observation.content.matchAll(/#\S*(?=\s|$)/g)].map((el) => el[0].replace("#", ""));
@@ -260,8 +259,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       } else if (importantObservations.includes(match as ImportantObservation)) {
         if (!observation.importantObservations) observation.importantObservations = [];
         observation.importantObservations.push(match as ImportantObservation);
-      } else if (stabilities.includes(match as Stability)) {
-        observation.stability = match as Stability;
+      } else if (stabilities.includes(match as SnowpackStability)) {
+        observation.stability = match as SnowpackStability;
       }
     });
 
@@ -396,63 +395,65 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  private loadObservers(): LayerGroup<any> {
-    return this.loadGenericObservations0(this.observationsService.getObservers(), "observers");
-  }
-
   private loadWeatherStations(): LayerGroup<any> {
-    const weatherStations = this.observationsService.getWeatherStations();
     this.weatherStations = [];
-    weatherStations.forEach((w) => {
+    this.observationsService.getWeatherStations().forEach((w) => {
       augmentRegion(w);
       if (!w.region) return;
       this.weatherStations.push(w);
     });
-    return this.loadGenericObservations0(weatherStations, "weather-stations");
+    return this.mapService.layers["weather-stations"];
   }
 
   private loadWebcams(): LayerGroup<any> {
-    const webcams = this.observationsService.getGenericWebcams();
     this.webcams = [];
-    webcams.forEach((w) => {
+    this.observationsService.getGenericWebcams().forEach((w) => {
       augmentRegion(w);
       if (!w.region) return;
       this.webcams.push(w);
     });
-    return this.loadGenericObservations0(webcams, "webcams");
+    return this.mapService.layers["webcams"];
   }
 
-  private loadGenericObservations0(
-    observations: Observable<GenericObservation>,
-    layer: keyof typeof this.mapService.layers,
-  ): LayerGroup<any> {
-    observations.forEach((observation) => {
+  private loadObservers(): LayerGroup<any> {
+    this.observationsService.getObservers().forEach((observation) => {
       this.observationsAsOverlay.push(observation);
       this.mapService.addMarker(
         this.markerService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        layer,
+        "observers",
       );
     });
-    return this.mapService.layers[layer];
+    return this.mapService.layers["observers"];
   }
 
-  onObservationClick(observation: GenericObservation): void {
+  onObservationClick(observation: GenericObservation, doShow = true): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe, imgUrl: undefined };
-    } else if (observation.$externalImg) {
-      const imgUrl = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalImg);
-      this.observationPopup = { observation, table: [], iframe: undefined, imgUrl: imgUrl };
+      this.observationPopup = { observation, table: [], iframe, imgUrls: undefined };
+    } else if (observation.$externalImgs) {
+      const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
+      this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls };
     } else {
-      const extraRows = Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : [];
-      const rows = toObservationTable(observation);
-      const table = [...rows, ...extraRows].map((row) => ({
+      const table: ObservationTableRow[] = (
+        [
+          { label: "observations.eventDate", date: observation.eventDate },
+          { label: "observations.reportDate", date: observation.reportDate },
+          { label: "observations.authorName", value: observation.authorName },
+          { label: "observations.locationName", value: observation.locationName },
+          { label: "observations.elevation", number: observation.elevation },
+          { label: "observations.aspect", value: observation.aspect },
+          { label: "observations.comment", value: observation.content },
+          ...(Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : []),
+        ] satisfies ObservationTableRow[]
+      ).map((row) => ({
         ...row,
         label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
       }));
-      this.observationPopup = { observation, table, iframe: undefined, imgUrl: undefined };
+      this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined };
     }
-    this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+    if (doShow) {
+      this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+    }
   }
 
   toggleFilters() {
@@ -460,11 +461,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   @HostListener("document:keydown", ["$event"])
-  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" }) {
+  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown" }) {
     if (!this.observationPopup?.observation) {
       return;
     }
-    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+    if (
+      event.key !== "ArrowRight" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowDown"
+    ) {
       return;
     }
     let observation = this.observationPopup?.observation;
@@ -477,19 +483,31 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     if (event.key === "ArrowRight") {
       index += 1;
-      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
         index += 1;
       }
       observation = observations[index];
     } else if (event.key === "ArrowLeft") {
       index -= 1;
-      while (observation?.$externalImg && observation.$externalImg === observations[index].$externalImg) {
+      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
         index -= 1;
       }
       observation = observations[index];
+    } else if (observation?.$externalImgs && event.key === "ArrowUp") {
+      const image = document.getElementById("observationImage") as HTMLImageElement;
+      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
+      if (index > 0) {
+        image.src = observation?.$externalImgs[index - 1];
+      }
+    } else if (observation?.$externalImgs && event.key === "ArrowDown") {
+      const image = document.getElementById("observationImage") as HTMLImageElement;
+      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
+      if (observation?.$externalImgs.length <= index - 1) {
+        image.src = observation?.$externalImgs[index + 1];
+      }
     }
     if (observation) {
-      this.onObservationClick(observation);
+      this.onObservationClick(observation, false);
     }
   }
 }

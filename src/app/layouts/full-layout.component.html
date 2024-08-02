@@ -34,13 +34,27 @@
           *ngIf="authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()"
           class="nav-item"
         >
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']"> GeoSphere </a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
+            {{ "sidebar.geosphere" | translate }}</a
+          >
         </li>
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']"> SNOWPACK </a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">
+            {{ "sidebar.snowpack" | translate }}</a
+          >
         </li>
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']"> AWSOME </a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']">
+            {{ "sidebar.awsome" | translate }}</a
+          >
+        </li>
+        <li
+          *ngIf="authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()"
+          class="nav-item"
+        >
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']">
+            {{ "sidebar.weatherbox" | translate }}</a
+          >
         </li>
       </ul>
     </div>
@@ -102,9 +116,6 @@
           </li>
 
           <li>
-            <h6 class="dropdown-header">{{ "menu.education" | translate }}</h6>
-          </li>
-          <li>
             <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/education']"
               ><i class="ph ph-graduation-cap"></i> {{ "menu.education" | translate }}</a
             >
@@ -114,7 +125,14 @@
           </li>
 
           <li>
-            <h6 class="dropdown-header">{{ "menu.settings" | translate }}</h6>
+            <a
+              *ngIf="authenticationService.isCurrentUserInRole(constantsService.roleForecaster)"
+              class="dropdown-item"
+              routerLinkActive="active"
+              [routerLink]="['/statistics']"
+            >
+              <i class="ph ph-chart-line"></i>{{ "menu.statistics" | translate }}
+            </a>
           </li>
           <li>
             <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/settings']"
@@ -130,6 +148,11 @@
               ><i class="ph ph-detective"></i>{{ "menu.admin" | translate }}</a
             >
           </li>
+
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+
           <li>
             <a class="dropdown-item" href="#" routerLink="/pages/login" (click)="logout()"
               ><i class="ph ph-sign-out"></i> {{ "menu.logout" | translate }}</a
@@ -162,15 +185,27 @@
         *ngIf="authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()"
         class="nav-item"
       >
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']"
-          ><i class="ph ph-sphere"></i> GeoSphere
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
+          <i class="ph ph-sphere"></i> {{ "sidebar.geosphere" | translate }}
         </a>
       </li>
       <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']"> SNOWPACK </a>
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">
+          {{ "sidebar.snowpack" | translate }}</a
+        >
       </li>
       <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']"> AWSOME </a>
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']">
+          {{ "sidebar.awsome" | translate }}</a
+        >
+      </li>
+      <li
+        *ngIf="authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()"
+        class="nav-item"
+      >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']">
+          {{ "sidebar.weatherbox" | translate }}</a
+        >
       </li>
     </ul>
   </div>

@@ -64,6 +64,12 @@ export enum AvalancheProblem {
   no_distinct_problem = "no_distinct_problem",
 }
 
+export enum AvalancheType {
+  slab = "slab",
+  loose = "loose",
+  glide = "glide",
+}
+
 export enum DangerPattern {
   dp1 = "dp1",
   dp2 = "dp2",
@@ -75,6 +81,17 @@ export enum DangerPattern {
   dp8 = "dp8",
   dp9 = "dp9",
   dp10 = "dp10",
+}
+
+export enum StrategicMindset {
+  assessment = "assessment",
+  stepping_out = "stepping_out",
+  status_quo = "status_quo",
+  stepping_back = "stepping_back",
+  entrenchment = "entrenchment",
+  free_ride = "free_ride",
+  high_alert = "high_alert",
+  spring_diurnal = "spring_diurnal",
 }
 
 export enum AvalancheSize {

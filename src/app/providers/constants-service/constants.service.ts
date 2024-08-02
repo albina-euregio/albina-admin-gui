@@ -149,12 +149,8 @@ export class ConstantsService {
     return environment.apiBaseUrl;
   }
 
-  getWsBulletinUrl() {
-    return environment.wsBaseUrl + "bulletin/";
-  }
-
-  getWsUpdateUrl() {
-    return environment.wsBaseUrl + "update/";
+  getServerWsUrl() {
+    return this.getServerUrl().replace(/^http/, "ws");
   }
 
   getISOStringWithTimezoneOffsetUrlEncoded(date: Date) {
@@ -163,5 +159,15 @@ export class ConstantsService {
 
   getISOStringWithTimezoneOffset(date: Date) {
     return formatDate(date, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
+  }
+
+  getISODateString(date: Date) {
+    // like Date.toISOString(), but not using UTC
+    // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` as const;
+
+    function pad(number: number) {
+      return number < 10 ? (`${0}${number}` as const) : (`${number}` as const);
+    }
   }
 }

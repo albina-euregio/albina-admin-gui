@@ -1,4 +1,6 @@
+export type DateIsoString = `${number}-${number}-${number}`;
+
 export interface StressLevel {
   stressLevel: number;
-  date?: string | Date;
+  date?: DateIsoString;
 }

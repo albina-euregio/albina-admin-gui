@@ -1,0 +1,46 @@
+<div class="card">
+  <form #statisticsForm="ngForm">
+    <div class="card-body">
+      <div class="form-group row">
+        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.dateRange" | translate }}</label>
+        <div class="col-sm-10">
+          <input
+            type="text"
+            name="daterange"
+            [(ngModel)]="bsRangeValue"
+            placeholder=""
+            class="form-control"
+            bsDaterangepicker
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.extended" | translate }}</label>
+        <div class="col-sm-10">
+          <label class="switch switch-primary">
+            <input name="extended" type="checkbox" class="switch-input" [(ngModel)]="extended" />
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.duplicates" | translate }}</label>
+        <div class="col-sm-10">
+          <label class="switch switch-primary">
+            <input name="duplicates" type="checkbox" class="switch-input" [(ngModel)]="duplicates" />
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div class="card-footer">
+      <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getStatistics($event)">
+        {{ "statistics.button.submit" | translate }}
+      </button>
+      <div *ngIf="loadingStatistics" class="spinner-border" role="status">
+        <span class="visually-hidden">{{ "admin.loadingStatistics" | translate }}</span>
+      </div>
+    </div>
+  </form>
+</div>

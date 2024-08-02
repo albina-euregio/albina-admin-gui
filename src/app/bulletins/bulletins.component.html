@@ -3,7 +3,9 @@
     <thead class="bulletins-table__header">
       <tr>
         <th></th>
-        <th><i class="ph ph-brain"></i> stress level</th>
+        <th role="button" (click)="showTeamStressLevels()">
+          <i class="ph ph-brain"></i> {{ "login.stressLevel" | translate }}
+        </th>
         <th>{{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}</th>
         <th class="" *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">
           {{ "bulletins.table.title.status." + region | translate }}
@@ -50,34 +52,23 @@
             </div>
           </div>
         </td>
-        <td [attr.data-label]="'stress level'">
-          <input
-            class="form-range"
-            type="range"
-            [(ngModel)]="stress[date[0].getTime()]"
-            (input)="postStressLevel(date[0])"
-            [style.--form-range-thumb-bg]="
-              !stress[date[0].getTime()]
-                ? 'gray'
-                : stress[date[0].getTime()] < 20
-                  ? 'green'
-                  : stress[date[0].getTime()] < 70
-                    ? 'orange'
-                    : 'red'
-            "
-          />
-          <i
-            class="ph"
-            [class]="
-              stress[date[0].getTime()] < 20
-                ? 'ph-smiley'
-                : stress[date[0].getTime()] < 70
-                  ? 'ph-smiley-meh'
-                  : stress[date[0].getTime()] <= 100
-                    ? 'ph-smiley-x-eyes'
-                    : ''
-            "
-          ></i>
+        <td
+          [attr.data-label]="'login.stressLevel' | translate"
+          *ngFor="let date of [constantsService.getISODateString(date[1])]"
+          class="align-middle"
+        >
+          <div class="d-flex">
+            <input
+              class="form-range"
+              type="range"
+              [(ngModel)]="stress[date]"
+              (input)="postStressLevel.next({ date, stressLevel: stress[date] })"
+              [style.--form-range-thumb-bg]="getStressLevelColor(date)"
+            />
+            <span>
+              <i class="ph" [class]="getStressLevelIcon(date)"></i>
+            </span>
+          </div>
         </td>
         <td
           class="bulletins-table__region-status"

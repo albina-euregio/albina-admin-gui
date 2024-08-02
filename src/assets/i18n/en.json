@@ -7,6 +7,7 @@
     "title": "Login",
     "text": "Sign In to your account",
     "button": "Login",
+    "stressLevel": "Stress Level",
     "errorDialog": {
       "message": "Incorrect username or password!",
       "accept": "Ok"
@@ -27,7 +28,11 @@
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
     "modellingZamgMeteogram": "GeoSphere meteogram",
     "modellingSnowpack": "SNOWPACK model",
-    "modellingSnowpackMeteo": "SNOWPACK modelled meteo"
+    "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
+    "weatherbox": "Weatherbox",
+    "awsome": "AWSOME",
+    "snowpack": "SNOWPACK",
+    "geosphere": "GeoSphere"
   },
   "menu": {
     "logout": "Logout",
@@ -41,6 +46,7 @@
     "oc": "Aranese",
     "fullscreen": "Fullscreen",
     "settings": "Settings",
+    "statistics": "Statistics",
     "admin": "Admin",
     "region": "Region",
     "education": "Education"
@@ -128,7 +134,12 @@
         "moveUpAvalancheProblem": "Move avalanche problem up",
         "moveDownAvalancheProblem": "Move avalanche problem down",
         "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionDown": "Downwards",
+        "avalancheType": {
+          "slab": "SLAB",
+          "loose": "LOOSE",
+          "glide": "GLIDE"
+        }
       },
       "save": " Save",
       "discard": " Discard",
@@ -148,7 +159,7 @@
       "suggestions": "Suggestions",
       "noBulletinsForSelectedDay": "No regions defined for this date.",
       "autosave": "Saved automatically",
-      "regionEditable": "This region can be edited.", 
+      "regionEditable": "This region can be edited.",
       "regionNotEditable": "This region can not be edited.",
       "regionLocked": "This region is locked.",
       "changeDangerRatingElevation": "Extend the danger level",
@@ -159,6 +170,7 @@
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
         "avalancheProblems": "Avalanche problem",
+        "avalancheType": "Avalanche type",
         "aspects": "Aspects",
         "elevation": "Elevation",
         "highlights": "Special alert",
@@ -249,6 +261,59 @@
       "removeDaytimeDependencyDialog" : {
         "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancel"
+      },
+      "strategicMindsetDialog" : {
+        "title": "Strategic Mindsets",
+        "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
+        "description": {
+          "title": "Description:",
+          "text": {
+            "assessment": "There is <b>great uncertainty</b> in the risk assessment due to <b>insufficient information</b> from the site.",
+            "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
+            "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
+            "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
+            "entrenchment": "<b>Almost constant, tense hazardous situation.</b> The main danger comes from (a) <b>persistent weak layer</b>(s) susceptible to interference.",
+            "free_ride": "<b>Low avalanche danger</b> with generally stable snow cover. Only small avalanches are possible in extremely steep terrain. ",
+            "high_alert": "Exceptional situation with <b>high or very high avalanche danger</b>. Spontaneous avalanches of <b>very large or extreme magnitude</b> are possible",
+            "spring_diurnal": "Wet snow avalanches during the course of the day, which are subject to a <b>clear diurnal cycle</b>, are decisive for the risk assessment."
+          }
+        },
+        "communication": {
+          "title": "Communication:",
+          "text": {
+            "assessment": "Avalanche situation must be checked locally. Restraint is recommended.",
+            "stepping_out": "Gradual decrease in danger. However, caution is still required and the improving situation should be assessed locally before entering riskier terrain.  ",
+            "status_quo": "Hazardous situation is unchanged. Feedback from observers helps to better outline the hazardous situation. More favourable terrain should be communicated with emphasis. ",
+            "stepping_back": "Clear communication of the increase in avalanche danger - even within a danger level. Information on the causes supports comprehensibility in communication. ",
+            "entrenchment": "Caution and restraint are required. Situation hardly changes. If possible, provide as precise information as possible on distribution and possibility to trigger. Increased communication of observations that reveal the situation and trigger restraint.",
+            "free_ride": "Little text. Emphasise the generally favourable overall situation and potentially isolated hazard areas",
+            "high_alert": "Communication across all channels. The focus is no longer on winter sports. Danger even in areas that are not usually at risk of avalanches.",
+            "spring_diurnal": "Favourable situation in the morning, increasing during the day. Assessment should be made locally by observing the softening of the melt-freeze crust and the increasing soaking of the snow cover."
+          }
+        },
+        "examples": {
+          "title": "Examples:",
+          "text": {
+            "assessment": "Start of the season.",
+            "stepping_out": "Cooling leads to a decrease in the risk of wet snow avalanches after a warm and humid weather phase.",
+            "status_quo": "Consistent wind-slab problem with cold temperatures, loose snow and wind.",
+            "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
+            "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
+            "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
+            "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
+            "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
+          }
+        },
+        "strategicMindset": {
+          "assessment": "High Uncertainty",
+          "stepping_out": "Improving",
+          "status_quo": "Status Quo",
+          "stepping_back": "Deteriorating",
+          "entrenchment": "Persistent Unstable",
+          "free_ride": "Favorable",
+          "high_alert": "High Alert",
+          "spring_diurnal": "Spring Diurnal"
+        }
       },
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-en.svg",
@@ -467,49 +532,65 @@
         "save": "Save"
       },
       "table": {
-        "id": "ID",
-        "microRegions": "Number of micro regions",
-        "subRegions": "Sub regions",
-        "superRegions": "Super regions",
-        "neighborRegions": "Neighbouring regions",
-        "showMatrix": "Show matrix",
-        "publishBulletins": "Publish avalanche forecast",
-        "publishBlogs": "Publish blog posts",
-        "createCaamlV5": "Create CAAML v5",
-        "createCaamlV6": "Create CAAML v6",
-        "createJson": "Create JSON",
-        "createMaps": "Create maps",
-        "createPdf": "Create PDF",
-        "sendEmails": "Send emails",
-        "createSimpleHtml": "Create simple HTML",
-        "sendTelegramMessages": "Send telegram messages",
-        "sendPushNotifications": "Send push notifications",
-        "enableMediaFile": "Enable media file",
-        "enableAvalancheProblemCornices": "Enable avalanche problem CORNICES",
-        "enableAvalancheProblemNoDistinctAvalancheProblem": "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM",
-        "pdfColor": "PDF color",
-        "emailColor": "Email color",
-        "pdfMapYAmPm": "Y for PDF map (am/pm)",
-        "pdfMapYFd": "Y for PDF map (fd)",
-        "pdfMapWidthAmPm": "Map width for PDF (am/pm)",
-        "pdfMapWidthFd": "Map width for PDF (fd)",
-        "pdfMapHeight": "Map height for PDF",
-        "pdfFooterLogo": "Logo for PDF footer",
-        "pdfFooterLogoColorPath": "Logo for PDF footer (color)",
-        "pdfFooterLogoBwPath": "Logo for PDF footer (bw)",
-        "mapXmax": "Map X max",
-        "mapXmin": "Map X min",
-        "mapYmax": "Map Y max",
-        "mapYmin": "Map Y min",
-        "simpleHtmlTemplateName": "Simple HTML template",
-        "geoDataDirectory": "Geodata directory",
-        "mapLogoColorPath": "Logo for map (color)",
-        "mapLogoBwPath": "Logo for map (bw)",
-        "mapLogoPosition": "Logo position for map",
-        "mapCenterLat": "Center position of map (lat)",
-        "mapCenterLng": "Center position of map (long)",
-        "imageColorbarColorPath": "Colorbar (color)",
-        "imageColorbarBwPath": "Colorbar (b/w)"
+        "general": {
+          "title": "General",
+          "id": "ID",
+          "microRegions": "Number of micro regions",
+          "subRegions": "Sub regions",
+          "superRegions": "Super regions",
+          "neighborRegions": "Neighbouring regions"
+        },
+        "publication": {
+          "title": "Publication",
+          "publishBulletins": "Publish avalanche forecast",
+          "publishBlogs": "Publish blog posts",
+          "createCaamlV5": "Create CAAML v5",
+          "createCaamlV6": "Create CAAML v6",
+          "createJson": "Create JSON",
+          "createMaps": "Create maps",
+          "createPdf": "Create PDF",
+          "sendEmails": "Send emails",
+          "createSimpleHtml": "Create simple HTML",
+          "sendTelegramMessages": "Send telegram messages",
+          "sendPushNotifications": "Send push notifications",
+          "pdfColor": "PDF color",
+          "emailColor": "Email color",
+          "pdfMapYAmPm": "Y for PDF map (am/pm)",
+          "pdfMapYFd": "Y for PDF map (fd)",
+          "pdfMapWidthAmPm": "Map width for PDF (am/pm)",
+          "pdfMapWidthFd": "Map width for PDF (fd)",
+          "pdfMapHeight": "Map height for PDF",
+          "pdfFooterLogo": "Logo for PDF footer",
+          "pdfFooterLogoColorPath": "Logo for PDF footer (color)",
+          "pdfFooterLogoBwPath": "Logo for PDF footer (bw)",
+          "mapXmax": "Map X max",
+          "mapXmin": "Map X min",
+          "mapYmax": "Map Y max",
+          "mapYmin": "Map Y min",
+          "simpleHtmlTemplateName": "Simple HTML template",
+          "geoDataDirectory": "Geodata directory",
+          "mapLogoColorPath": "Logo for map (color)",
+          "mapLogoBwPath": "Logo for map (bw)",
+          "mapLogoPosition": "Logo position for map",
+          "mapCenterLat": "Center position of map (lat)",
+          "mapCenterLng": "Center position of map (long)",
+          "imageColorbarColorPath": "Colorbar (color)",
+          "imageColorbarBwPath": "Colorbar (b/w)"
+        },
+        "components": {
+          "title": "Components",
+          "enableObservations": "Enable observations",
+          "enableModelling": "Enable modelling",
+          "enableWeatherbox": "Enable weather box"
+        },
+        "configuration": {
+          "title": "Configuration",
+          "showMatrix": "Show matrix",
+          "enableMediaFile": "Enable media file",
+          "enableStrategicMindset": "Enable strategic mindset",
+          "enableAvalancheProblemCornices": "Enable avalanche problem CORNICES",
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM"
+        }
       },
       "success": "Configuration successfully saved",
       "error": "Configuration could not be saved"
@@ -578,17 +659,6 @@
         "create": "Create user",
         "update": "Update user",
         "cancel": "Cancel"
-      }
-    },
-    "statistics": {
-      "title": "Statistics",
-      "button": {
-        "submit": "Download"
-      },
-      "label": {
-        "dateRange": "Period",
-        "extended": "Extended",
-        "duplicates": "Duplicates"
       }
     },
     "observations": {
@@ -716,6 +786,17 @@
       }
     }
   },
+  "statistics": {
+    "title": "Statistics",
+    "button": {
+      "submit": "Download"
+    },
+    "label": {
+      "dateRange": "Period",
+      "extended": "Extended",
+      "duplicates": "Duplicates"
+    }
+  },
 
   "dangerRating": {
     "noRating": "no rating",
@@ -753,6 +834,17 @@
     "dp8": "dp.8: buried surface hoar",
     "dp9": "dp.9: buried graupel",
     "dp10": "dp.10: springtime scenario"
+  },
+  "strategicMindset": {
+    "title": "Strategic Mindset",
+    "assessment": "High Uncertainty",
+    "stepping_out": "Improving",
+    "status_quo": "Status Quo",
+    "stepping_back": "Deteriorating",
+    "entrenchment": "Persistent Unstable",
+    "free_ride": "Favorable",
+    "high_alert": "High Alert",
+    "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
     "TimeSeries": "Time series",

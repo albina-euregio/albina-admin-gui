@@ -8,7 +8,6 @@ import { ServerConfigurationComponent } from "./server-configuration.component";
 import { RegionsConfigurationComponent } from "./regions-configuration.component";
 import { RegionConfigurationComponent } from "./region-configuration.component";
 import { UsersComponent } from "./users.component";
-import { StatisticsComponent } from "./statistics.component";
 import { ObservationsComponent } from "./observations.component";
 import { BlogComponent } from "./blog.component";
 
@@ -38,7 +37,6 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     RegionsConfigurationComponent,
     RegionConfigurationComponent,
     UsersComponent,
-    StatisticsComponent,
     ObservationsComponent,
     BlogComponent,
   ],
