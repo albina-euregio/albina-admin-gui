@@ -491,14 +491,9 @@ export class ObservationChartComponent implements OnInit {
         .map((entry) => params.value[entry])
         .reduce((sum, entry) => sum + entry);
     }
-    return (
-      '<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:' +
-      params.color +
-      ';"></span><span style="font-size:14px;color:#839194;font-weight:400;margin-left:2px">' +
-      params.name +
-      '</span><span style="float:right;margin-left:20px;font-size:14px;color:#839194;font-weight:900">' +
-      val +
-      "</span>"
-    );
+    return `
+<span class="badge rounded-pill me-1" style="width: 0.75rem;height:0.75rem;background-color:${params.color};"></span>
+<span>${params.name}</span>
+<strong>${val}</strong>`;
   }
 }
