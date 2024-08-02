@@ -37,6 +37,13 @@ export interface GenericFilterToggleData {
   };
 }
 
+export interface FilterSelectionValue {
+  value: string;
+  numericRange?: [number, number];
+  color: string;
+  label: string;
+}
+
 export interface FilterSelectionData {
   type: LocalFilterTypes; // id
   label: string; // caption
@@ -44,12 +51,7 @@ export interface FilterSelectionData {
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   selected: string[];
   highlighted: string[];
-  values: {
-    value: string;
-    numericRange?: [number, number];
-    color: string;
-    label: string;
-  }[];
+  values: FilterSelectionValue[];
 }
 
 @Injectable()
@@ -206,7 +208,7 @@ export class ObservationFilterService {
 
   toggleFilter(filterData: GenericFilterToggleData) {
     const filterType = this.filterSelection[filterData.type];
-    const subset = filterData.data.altKey ? "highlighted" : ("selected" as const);
+    const subset = filterData.data.altKey ? ("highlighted" as const) : ("selected" as const);
 
     if (filterData.data.reset) {
       filterType.selected = [];
@@ -437,7 +439,7 @@ export class ObservationFilterService {
     return { dataset: { source: [header, ...data] }, nan };
   }
 
-  testFilterSelection(f: FilterSelectionData["values"][number], v: number | string | Date): boolean {
+  testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
       (v instanceof Date && f.value === this.constantsService.getISODateString(v)) ||
