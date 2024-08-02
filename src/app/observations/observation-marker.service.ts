@@ -4,7 +4,6 @@ import { Canvas, CircleMarker, LatLng, Marker, MarkerOptions } from "leaflet";
 import {
   degreeToAspect,
   GenericObservation,
-  ImportantObservation,
   ObservationSource,
   ObservationType,
   WeatherStationParameter,
@@ -12,7 +11,6 @@ import {
 import { Aspect, SnowpackStability } from "../enums/enums";
 import { FilterSelectionData } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
-import { grainShapes } from "./grain.shapes";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
@@ -144,15 +142,6 @@ const aspectColors = {
   [Aspect.SW]: "#6c300b",
   [Aspect.W]: "#000000",
   [Aspect.NW]: "#113570",
-};
-
-export const importantObservationTexts = {
-  [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
-  [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
-  [ImportantObservation.Graupel]: grainShapes.PPgp.key,
-  [ImportantObservation.StabilityTest]: grainShapes.PPnd.key,
-  [ImportantObservation.IceFormation]: grainShapes.IF.key,
-  [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
 };
 
 @Injectable()

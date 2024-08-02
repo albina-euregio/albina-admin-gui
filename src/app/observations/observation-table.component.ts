@@ -7,9 +7,10 @@ import { GenericObservation, ImportantObservation } from "./models/generic-obser
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { ObservationMarkerService, importantObservationTexts } from "./observation-marker.service";
+import { ObservationMarkerService } from "./observation-marker.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { BulletinsModule } from "../bulletins/bulletins.module";
+import { grainShapes } from "./grain.shapes";
 
 @Component({
   standalone: true,
@@ -25,7 +26,14 @@ export class ObservationTableComponent {
   observationSearch: string;
   saving = false;
   messages: any[] = [];
-  importantObservationTexts = importantObservationTexts;
+  importantObservationTexts = {
+    [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
+    [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
+    [ImportantObservation.Graupel]: grainShapes.PPgp.key,
+    [ImportantObservation.StabilityTest]: grainShapes.PPnd.key,
+    [ImportantObservation.IceFormation]: grainShapes.IF.key,
+    [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
+  };
   modalRef: BsModalRef;
   @ViewChild("observationEditorTemplate") observationEditorTemplate: TemplateRef<any>;
 
