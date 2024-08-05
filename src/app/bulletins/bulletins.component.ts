@@ -23,7 +23,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
-  public stress: Record<DateIsoString, number> = {};
   public readonly postStressLevel = new Subject<StressLevel>();
 
   constructor(
@@ -49,11 +48,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
         mergeMap((ll) => ll.pipe(debounceTime(1000))),
       )
       .subscribe((stressLevel) => this.userService.postStressLevel(stressLevel).subscribe(() => {}));
-    this.userService
-      .getStressLevels([this.bulletinsService.dates.at(-1)[0], this.bulletinsService.dates.at(0)[1]])
-      .subscribe((stressLevels) => {
-        this.stress = Object.fromEntries(stressLevels.map((s) => [s.date, s.stressLevel]));
-      });
   }
 
   ngOnInit() {
@@ -179,22 +173,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.copying = false;
     this.bulletinsService.setCopyDate(undefined);
-  }
-
-  getStressLevelColor(date: DateIsoString) {
-    const stress0 = this.stress[date];
-    return !stress0 ? "gray" : stress0 < 20 ? "green" : stress0 < 70 ? "orange" : "red";
-  }
-
-  getStressLevelIcon(date: DateIsoString) {
-    const stress0 = this.stress[date];
-    return stress0 < 20
-      ? "ph-smiley"
-      : stress0 < 70
-        ? "ph-smiley-meh"
-        : stress0 <= 100
-          ? "ph-smiley-x-eyes"
-          : "ph-circle-dashed";
   }
 
   showTeamStressLevels() {
