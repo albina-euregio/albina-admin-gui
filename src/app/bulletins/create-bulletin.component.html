@@ -870,7 +870,7 @@
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
             <div class="bulletins-table__day--small">
               <time>
-                {{ date | date: "fullDate" }}
+                {{ date[1] | date: "fullDate" : undefined : translateService.currentLang }}
               </time>
             </div>
           </td>
