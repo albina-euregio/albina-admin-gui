@@ -3,6 +3,7 @@ import { Observable, from, map } from "rxjs";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
 import { geoJSON } from "leaflet";
+import { formatDate } from "@angular/common";
 
 @Injectable()
 export class MeteogramSourceService {
@@ -17,7 +18,8 @@ export class MeteogramSourceService {
           .map((f): GenericObservation => {
             const center = geoJSON(f).getBounds().getCenter();
             const file = f.properties.id.replace(/AT-07-/, "");
-            const $externalURL = `https://wiski.tirol.gv.at/lawine/produkte/meteogramm_R-${file}.png`;
+            const date = formatDate(Date.now(), "yyyy-MM-dd", "en-US");
+            const $externalURL = `https://static.avalanche.report/zamg_ibk/${date}\ meteogramm_R-${file}.png`;
             return {
               $type: ObservationType.TimeSeries,
               $externalURL,
