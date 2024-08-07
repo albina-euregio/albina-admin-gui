@@ -308,11 +308,11 @@ export class MapService {
     this.selectAggregatedRegion(undefined);
   }
 
-  editAggregatedRegion(bulletin: BulletinModel) {
+  editAggregatedRegion(regionIds: string[]) {
     this.map.addLayer(this.overlayMaps.editSelection);
 
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
-      for (const region of bulletin.getAllRegions()) {
+      for (const region of regionIds) {
         if (entry.feature.properties.id === region) {
           entry.feature.properties.selected = true;
           entry.setStyle(this.getEditSelectionStyle());

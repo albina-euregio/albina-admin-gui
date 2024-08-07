@@ -18,6 +18,7 @@ import { SimpleLayoutComponent } from "./layouts/simple-layout.component";
 import { AuthenticationService } from "./providers/authentication-service/authentication.service";
 import { UserService } from "./providers/user-service/user.service";
 import { BulletinsService } from "./providers/bulletins-service/bulletins.service";
+import { DangerSourcesService } from "./danger-sources/danger-sources.service";
 import { StatisticsService } from "./providers/statistics-service/statistics.service";
 import { RegionsService } from "./providers/regions-service/regions.service";
 import { ConstantsService } from "./providers/constants-service/constants.service";
@@ -136,6 +137,7 @@ registerLocaleData(localeOc, "oc");
     BaseMapService,
     BlogService,
     BulletinsService,
+    DangerSourcesService,
     StatisticsService,
     RegionsService,
     WsRegionService,

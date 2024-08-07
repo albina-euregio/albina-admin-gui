@@ -21,6 +21,13 @@ export const routes: Routes = [
     loadChildren: () => import("./bulletins/bulletins.module").then((m) => m.BulletinsModule),
   },
   {
+    path: "danger-sources",
+    component: FullLayoutComponent,
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: "always",
+    loadChildren: () => import("./danger-sources/danger-sources.module").then((m) => m.DangerSourcesModule),
+  },
+  {
     path: "observations",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],

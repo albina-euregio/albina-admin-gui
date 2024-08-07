@@ -601,7 +601,7 @@ export class BulletinModel {
     return json;
   }
 
-  public getRegionsByStatus(type: RegionStatus): string[] {
+  public getRegionsByStatus(type?: RegionStatus): string[] {
     switch (type) {
       case RegionStatus.suggested:
         return this.getSuggestedRegions();
@@ -609,6 +609,8 @@ export class BulletinModel {
         return this.getSavedRegions();
       case RegionStatus.published:
         return this.getPublishedRegions();
+      default:
+        return this.getAllRegions();
     }
   }
 }

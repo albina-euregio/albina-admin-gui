@@ -65,6 +65,19 @@
       "dangerLevel1": "Danger level 1 (Low)"
     }
   },
+  "dangerSources": {
+    "tooltip": {
+      "read": "Read danger sources",
+      "edit": "Edit danger sources"
+    },
+    "table": {
+      "loadMore": "Load {{count}} more days",
+      "status": {
+        "missing": "missing",
+        "available": "available"
+      }
+    }
+  },
   "bulletins": {
     "title": "Avalanche.report",
     "tooltip": {
