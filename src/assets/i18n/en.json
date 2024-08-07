@@ -19,6 +19,7 @@
   },
   "sidebar": {
     "bulletins": "Avalanche.report",
+    "dangerSources": "Danger Sources",
     "observations": "Observations",
     "qfa": "QFA",
     "modelling": "Modelling",
@@ -579,6 +580,7 @@
         },
         "components": {
           "title": "Components",
+          "enableDangerSources": "Enable danger sources",
           "enableObservations": "Enable observations",
           "enableModelling": "Enable modelling",
           "enableWeatherbox": "Enable weather box"
