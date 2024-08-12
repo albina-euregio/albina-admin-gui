@@ -276,7 +276,7 @@ export class BulletinsService {
       this.constantsService
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", regions],
+          ["regions", regions],
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader();
@@ -291,7 +291,7 @@ export class BulletinsService {
       this.constantsService
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
+          ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
         ])
         .toString();
     const headers = this.authenticationService.newExternalServerAuthHeader(server);
