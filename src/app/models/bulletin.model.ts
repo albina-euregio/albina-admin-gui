@@ -4,9 +4,9 @@ import { AuthorModel } from "./author.model";
 import * as Enums from "../enums/enums";
 import { RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
-import { GenericMapObject } from "app/danger-sources/models/generic-map-object.model";
+import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
-export class BulletinModel implements GenericMapObject {
+export class BulletinModel implements PolygonObject {
   public id: string;
 
   public author: AuthorModel;

@@ -13,7 +13,7 @@ import { AmPmControl } from "./am-pm-control";
 import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
 import { filterFeature } from "../regions-service/filterFeature";
 import { TranslateService } from "@ngx-translate/core";
-import { GenericMapObject } from "../../danger-sources/models/generic-map-object.model";
+import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
 
 declare module "leaflet" {
   interface Map {
@@ -259,14 +259,14 @@ export class MapService {
 
   // colors all micro-regions of bulletin
   // does not touch any other micro-region
-  updateAggregatedRegion(mapObject: GenericMapObject) {
+  updateAggregatedRegion(mapObject: PolygonObject) {
     this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
     this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
   }
 
-  activeMapObject: GenericMapObject;
+  activeMapObject: PolygonObject;
 
-  selectAggregatedRegion(mapObject: GenericMapObject) {
+  selectAggregatedRegion(mapObject: PolygonObject) {
     this.activeMapObject = mapObject;
     if (this.activeMapObject && this.activeMapObject !== undefined) {
       this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
@@ -276,7 +276,7 @@ export class MapService {
     this.afternoonOverlayMaps?.aggregatedRegions?.rerenderTiles();
   }
 
-  private selectAggregatedRegion0(mapObject: GenericMapObject, map: Map, layer: PmLeafletLayer) {
+  private selectAggregatedRegion0(mapObject: PolygonObject, map: Map, layer: PmLeafletLayer) {
     for (const status of [Enums.RegionStatus.suggested, Enums.RegionStatus.saved, Enums.RegionStatus.published]) {
       for (const region of mapObject.getRegionsByStatus(status)) {
         layer.paintRules[region] = {
@@ -309,7 +309,7 @@ export class MapService {
     this.selectAggregatedRegion(undefined);
   }
 
-  editAggregatedRegion(mapObject: GenericMapObject) {
+  editAggregatedRegion(mapObject: PolygonObject) {
     this.map.addLayer(this.overlayMaps.editSelection);
 
     for (const entry of this.overlayMaps.editSelection.getLayers()) {

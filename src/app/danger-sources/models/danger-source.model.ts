@@ -1,6 +1,6 @@
-import { GenericMapObject } from "./generic-map-object.model";
+import { PolygonObject } from "./polygon-object.model";
 
-export interface DangerSourceModel extends GenericMapObject {
+export interface DangerSourceModel extends PolygonObject {
   id: number;
   creationDate: Date;
   description: string;

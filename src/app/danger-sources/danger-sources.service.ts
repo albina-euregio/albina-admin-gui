@@ -7,7 +7,7 @@ import { SettingsService } from "../providers/settings-service/settings.service"
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { UserService } from "../providers/user-service/user.service";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { DangerSourceVariant } from "./models/danger-source-schema.model";
+import { DangerSourceVariantModel } from "./models/danger-source-variant.model";
 
 @Injectable()
 export class DangerSourcesService {
@@ -15,7 +15,7 @@ export class DangerSourcesService {
   private isEditable: boolean;
   private isReadOnly: boolean;
 
-  public statusMap: Map<string, Map<number, DangerSourceVariant>>;
+  public statusMap: Map<string, Map<number, DangerSourceVariantModel>>;
 
   public dates: [Date, Date][];
 
@@ -122,7 +122,7 @@ export class DangerSourcesService {
       this.constantsService
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", regions],
+          ["regions", regions],
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader();
@@ -163,21 +163,43 @@ export class DangerSourcesService {
     return this.http.post(url, body, { headers });
   }
 
-  loadDangerSourceVariants(date: [Date, Date], regions: string[]): Observable<DangerSourceVariant[]> {
-    let url =
-      this.constantsService.getServerUrl() +
-      "danger-sources/variants/edit?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", regions],
-        ])
-        .toString();
+  loadDangerSourceVariants(
+    date: [Date, Date],
+    regions: string[],
+    dangerSourceId?: string,
+  ): Observable<DangerSourceVariantModel[]> {
+    let url;
+    if (dangerSourceId && dangerSourceId !== "") {
+      url =
+        this.constantsService.getServerUrl() +
+        "danger-sources/" +
+        dangerSourceId +
+        "/edit?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["regions", regions],
+          ])
+          .toString();
+    } else {
+      url =
+        this.constantsService.getServerUrl() +
+        "danger-sources/edit?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["regions", regions],
+          ])
+          .toString();
+    }
     const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<DangerSourceVariant[]>(url, { headers });
+    return this.http.get<DangerSourceVariantModel[]>(url, { headers });
   }
 
-  createDangerSourceVariant(dangerSourceVariant: DangerSourceVariant, date: [Date, Date]) {
+  createDangerSourceVariant(
+    dangerSourceVariant: DangerSourceVariantModel,
+    date: [Date, Date],
+  ): Observable<DangerSourceVariantModel[]> {
     const url =
       this.constantsService.getServerUrl() +
       "danger-sources/variants?" +
@@ -189,14 +211,17 @@ export class DangerSourcesService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSourceVariant);
-    return this.http.put(url, body, { headers });
+    return this.http.put<DangerSourceVariantModel[]>(url, body, { headers });
   }
 
-  updateDangerSourceVariant(dangerSourceVariant: DangerSourceVariant, date: [Date, Date]) {
+  updateDangerSourceVariant(
+    dangerSourceVariant: DangerSourceVariantModel,
+    date: [Date, Date],
+  ): Observable<DangerSourceVariantModel[]> {
     // check if danger source has ID
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources/variants/" +
+      "danger-sources/" +
       dangerSourceVariant.id +
       "?" +
       this.constantsService.createSearchParams([
@@ -205,14 +230,17 @@ export class DangerSourcesService {
       ]);
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSourceVariant);
-    return this.http.post(url, body, { headers });
+    return this.http.post<DangerSourceVariantModel[]>(url, body, { headers });
   }
 
-  deleteDangerSourceVariant(variant: DangerSourceVariant, date: [Date, Date]) {
+  deleteDangerSourceVariant(
+    variant: DangerSourceVariantModel,
+    date: [Date, Date],
+  ): Observable<DangerSourceVariantModel[]> {
     // check if variant has ID
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources/variants/" +
+      "danger-sources/" +
       variant.id +
       "?" +
       this.constantsService
@@ -222,6 +250,21 @@ export class DangerSourcesService {
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader();
-    return this.http.delete(url, { headers });
+    return this.http.delete<DangerSourceVariantModel[]>(url, { headers });
+  }
+
+  saveDangerSourceVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
+    const url =
+      this.constantsService.getServerUrl() +
+      "danger-sources?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
+    const headers = this.authenticationService.newAuthHeader();
+    const body = JSON.stringify(variants);
+    return this.http.post(url, body, { headers });
   }
 }

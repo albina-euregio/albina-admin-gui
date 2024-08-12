@@ -1,6 +1,6 @@
 import * as Enums from "../../enums/enums";
 
-export interface GenericMapObject {
+export interface PolygonObject {
   getAllRegions(): string[];
   getRegionsByStatus(status: Enums.RegionStatus): string[];
   getForenoonDangerRatingAbove(): Enums.DangerRating;
