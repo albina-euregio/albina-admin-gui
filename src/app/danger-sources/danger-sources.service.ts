@@ -91,6 +91,13 @@ export class DangerSourcesService {
     return this.dates[index + offset];
   }
 
+  private defaultParams(date: [Date, Date]) {
+    return new URLSearchParams({
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: this.authenticationService.getActiveRegionId(),
+    });
+  }
+
   getNextDate(): [Date, Date] | null {
     return this.getDateOffset(1);
   }
@@ -145,13 +152,7 @@ export class DangerSourcesService {
   updateDangerSource(dangerSource: DangerSourceModel, date: [Date, Date]) {
     // check if danger source has ID
     const url =
-      this.constantsService.getServerUrl() +
-      "danger-sources/" +
-      dangerSource.id +
-      "?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      this.constantsService.getServerUrl() + "danger-sources/" + dangerSource.id + "?" + this.defaultParams(date);
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSource);
     return this.http.post(url, body, { headers });
