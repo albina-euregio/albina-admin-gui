@@ -91,13 +91,6 @@ export class DangerSourcesService {
     return this.dates[index + offset];
   }
 
-  private defaultParams(date: [Date, Date]) {
-    return new URLSearchParams({
-      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
-      region: this.authenticationService.getActiveRegionId(),
-    });
-  }
-
   getNextDate(): [Date, Date] | null {
     return this.getDateOffset(1);
   }
@@ -125,13 +118,13 @@ export class DangerSourcesService {
   loadDangerSources(date: [Date, Date], regions: string[], etag?: string) {
     let url =
       this.constantsService.getServerUrl() +
-      "danger-sources/edit?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
-    if (regions) {
-      for (const region of regions) {
-        url += "&regions=" + region;
-      }
-    }
+      "danger-sources/edit?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", regions],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     if (etag) headers.set("If-None-Match", etag);
     return this.http.get(url, { headers, observe: "response" });
@@ -140,10 +133,13 @@ export class DangerSourcesService {
   createDangerSource(dangerSource: DangerSourceModel, date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "danger-sources?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSource);
     return this.http.put(url, body, { headers });
@@ -152,7 +148,16 @@ export class DangerSourcesService {
   updateDangerSource(dangerSource: DangerSourceModel, date: [Date, Date]) {
     // check if danger source has ID
     const url =
-      this.constantsService.getServerUrl() + "danger-sources/" + dangerSource.id + "?" + this.defaultParams(date);
+      this.constantsService.getServerUrl() +
+      "danger-sources/" +
+      dangerSource.id +
+      "?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSource);
     return this.http.post(url, body, { headers });
@@ -161,13 +166,13 @@ export class DangerSourcesService {
   loadDangerSourceVariants(date: [Date, Date], regions: string[]): Observable<DangerSourceVariant[]> {
     let url =
       this.constantsService.getServerUrl() +
-      "danger-sources/variants/edit?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
-    if (regions) {
-      for (const region of regions) {
-        url += "&regions=" + region;
-      }
-    }
+      "danger-sources/variants/edit?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", regions],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     return this.http.get<DangerSourceVariant[]>(url, { headers });
   }
@@ -175,10 +180,13 @@ export class DangerSourcesService {
   createDangerSourceVariant(dangerSourceVariant: DangerSourceVariant, date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources/variants?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "danger-sources/variants?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSourceVariant);
     return this.http.put(url, body, { headers });
@@ -190,10 +198,11 @@ export class DangerSourcesService {
       this.constantsService.getServerUrl() +
       "danger-sources/variants/" +
       dangerSourceVariant.id +
-      "?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "?" +
+      this.constantsService.createSearchParams([
+        ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+        ["region", this.authenticationService.getActiveRegionId()],
+      ]);
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSourceVariant);
     return this.http.post(url, body, { headers });
@@ -205,10 +214,13 @@ export class DangerSourcesService {
       this.constantsService.getServerUrl() +
       "danger-sources/variants/" +
       variant.id +
-      "?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     return this.http.delete(url, { headers });
   }
