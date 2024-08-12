@@ -1,10 +1,10 @@
 import * as Enums from "../../enums/enums";
 
 export interface GenericMapObject {
-  getAllRegions();
-  getRegionsByStatus(status: Enums.RegionStatus);
-  getForenoonDangerRatingAbove();
-  getAfternoonDangerRatingAbove();
-  getForenoonDangerRatingBelow();
-  getAfternoonDangerRatingBelow();
+  getAllRegions(): string[];
+  getRegionsByStatus(status: Enums.RegionStatus): string[];
+  getForenoonDangerRatingAbove(): Enums.DangerRating;
+  getAfternoonDangerRatingAbove(): Enums.DangerRating;
+  getForenoonDangerRatingBelow(): Enums.DangerRating;
+  getAfternoonDangerRatingBelow(): Enums.DangerRating;
 }

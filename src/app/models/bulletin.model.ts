@@ -443,7 +443,7 @@ export class BulletinModel implements GenericMapObject {
     return this.getPublishedRegions().concat(this.getSavedRegions());
   }
 
-  getAllRegions() {
+  getAllRegions(): string[] {
     return this.getPublishedRegions().concat(this.getSavedRegions()).concat(this.getSuggestedRegions());
   }
 
