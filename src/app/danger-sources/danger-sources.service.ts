@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, mergeAll } from "rxjs/operators";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import * as Enums from "../enums/enums";
 import { UserService } from "../providers/user-service/user.service";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { DangerSourceVariantModel, DangerSourceVariantType } from "./models/danger-source-variant.model";
+import { DangerSourceVariant } from "./models/danger-source-schema.model";
 
 @Injectable()
 export class DangerSourcesService {
@@ -16,7 +15,7 @@ export class DangerSourcesService {
   private isEditable: boolean;
   private isReadOnly: boolean;
 
-  public statusMap: Map<string, Map<number, DangerSourceVariantType>>;
+  public statusMap: Map<string, Map<number, DangerSourceVariant>>;
 
   public dates: [Date, Date][];
 
@@ -158,7 +157,7 @@ export class DangerSourcesService {
     return this.http.post(url, body, { headers });
   }
 
-  loadDangerSourceVariants(date: [Date, Date], regions: string[], etag?: string) {
+  loadDangerSourceVariants(date: [Date, Date], regions: string[], etag?: string): Observable<DangerSourceVariant> {
     let url =
       this.constantsService.getServerUrl() +
       "danger-sources/variants/edit?date=" +
@@ -170,10 +169,15 @@ export class DangerSourcesService {
     }
     const headers = this.authenticationService.newAuthHeader();
     if (etag) headers.set("If-None-Match", etag);
-    return this.http.get(url, { headers, observe: "response" });
+    return this.http.get<DangerSourceVariant[]>(url, { headers, observe: "response" }).pipe(
+      mergeAll(),
+      map((o) => ({
+        ...o,
+      })),
+    );
   }
 
-  createDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
+  createDangerSourceVariant(dangerSourceVariant: DangerSourceVariant, date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
       "danger-sources/variants?date=" +
@@ -185,7 +189,7 @@ export class DangerSourcesService {
     return this.http.put(url, body, { headers });
   }
 
-  updateDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
+  updateDangerSourceVariant(dangerSourceVariant: DangerSourceVariant, date: [Date, Date]) {
     // check if danger source has ID
     const url =
       this.constantsService.getServerUrl() +
@@ -200,7 +204,7 @@ export class DangerSourcesService {
     return this.http.post(url, body, { headers });
   }
 
-  deleteDangerSourceVariant(variant: DangerSourceVariantModel, date: [Date, Date]) {
+  deleteDangerSourceVariant(variant: DangerSourceVariant, date: [Date, Date]) {
     // check if variant has ID
     const url =
       this.constantsService.getServerUrl() +
