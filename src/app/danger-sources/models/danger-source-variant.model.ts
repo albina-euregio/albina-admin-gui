@@ -1,7 +1,7 @@
-import { MapObject } from "app/models/bulletin.model";
 import { Aspect, AvalancheType, Tendency } from "../../enums/enums";
 import { MatrixInformationModel } from "../../models/matrix-information.model";
 import { DangerSourceModel } from "./danger-source.model";
+import { GenericMapObject } from "./generic-map-object.model";
 
 export enum DangerSourceVariantStatus {
   active,
@@ -157,7 +157,7 @@ export enum Wetness {
   dry = "dry",
 }
 
-export interface DangerSourceVariantModel extends MapObject {
+export interface DangerSourceVariantModel extends GenericMapObject {
   id: string;
 
   dangerSourceVariantId: string;

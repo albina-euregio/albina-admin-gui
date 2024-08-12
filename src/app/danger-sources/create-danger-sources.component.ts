@@ -5,22 +5,18 @@ import { DatePipe } from "@angular/common";
 import { map, Subscription, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
-import { saveAs } from "file-saver";
 
 // models
 import { BulletinModel } from "../models/bulletin.model";
 
 // services
 import { TranslateService } from "@ngx-translate/core";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { CopyService } from "../providers/copy-service/copy.service";
 
 import * as Enums from "../enums/enums";
-import { ServerModel } from "app/models/server.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { DangerSourceVariantModel, DangerSourceVariantStatus } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
@@ -113,7 +109,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     private localStorageService: LocalStorageService,
     private constantsService: ConstantsService,
     public regionsService: RegionsService,
-    public copyService: CopyService,
     private mapService: MapService,
     private modalService: BsModalService,
     private datePipe: DatePipe,
@@ -552,7 +547,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private editVariantMicroRegions(variant: DangerSourceVariantModel) {
     this.editRegions = true;
-    this.mapService.editAggregatedRegion(variant.regions);
+    this.mapService.editAggregatedRegion(variant);
   }
 
   saveVariant(event: Event) {
