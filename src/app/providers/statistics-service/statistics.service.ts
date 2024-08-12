@@ -29,7 +29,7 @@ export class StatisticsService {
           ["region", this.authenticationService.getActiveRegionId()],
           ["lang", lang],
           ["extended", extended],
-          ["dupllicates", duplicates],
+          ["duplicates", duplicates],
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader("text/csv");

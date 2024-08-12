@@ -169,10 +169,11 @@ export class ConstantsService {
 
   createSearchParams(params: [string, any][]): URLSearchParams {
     const result = new URLSearchParams();
-    for (const param in params) {
+    for (const i in params) {
+      const param = params[i];
       if (Array.isArray(param[1])) {
-        for (const item in param[1]) {
-          result.append(param[0], item);
+        for (const j in param[1]) {
+          result.append(param[0], param[1][j]);
         }
       } else {
         result.append(param[0], param[1]);
