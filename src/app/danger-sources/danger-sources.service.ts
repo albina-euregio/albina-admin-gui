@@ -157,7 +157,7 @@ export class DangerSourcesService {
     return this.http.post(url, body, { headers });
   }
 
-  loadDangerSourceVariants(date: [Date, Date], regions: string[], etag?: string): Observable<DangerSourceVariant> {
+  loadDangerSourceVariants(date: [Date, Date], regions: string[]): Observable<DangerSourceVariant[]> {
     let url =
       this.constantsService.getServerUrl() +
       "danger-sources/variants/edit?date=" +
@@ -168,13 +168,7 @@ export class DangerSourcesService {
       }
     }
     const headers = this.authenticationService.newAuthHeader();
-    if (etag) headers.set("If-None-Match", etag);
-    return this.http.get<DangerSourceVariant[]>(url, { headers, observe: "response" }).pipe(
-      mergeAll(),
-      map((o) => ({
-        ...o,
-      })),
-    );
+    return this.http.get<DangerSourceVariant[]>(url, { headers });
   }
 
   createDangerSourceVariant(dangerSourceVariant: DangerSourceVariant, date: [Date, Date]) {
