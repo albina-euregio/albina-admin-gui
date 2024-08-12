@@ -21,18 +21,17 @@ export class StatisticsService {
   ): Observable<Blob> {
     const url =
       this.constantsService.getServerUrl() +
-      "statistics?startDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate) +
-      "&endDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId() +
-      "&lang=" +
-      lang +
-      "&extended=" +
-      extended +
-      "&duplicates=" +
-      duplicates;
+      "statistics?" +
+      this.constantsService
+        .createSearchParams([
+          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
+          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
+          ["region", this.authenticationService.getActiveRegionId()],
+          ["lang", lang],
+          ["extended", extended],
+          ["dupllicates", duplicates],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader("text/csv");
 
     return this.http.get(url, { headers: headers, responseType: "blob" });

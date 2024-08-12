@@ -17,15 +17,15 @@ export class MediaFileService {
   uploadFile(date: [Date, Date], file: File, text: string, important: boolean): Observable<HttpEvent<any>> {
     const url =
       this.constantsService.getServerUrl() +
-      "media?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[1]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId() +
-      "&lang=" +
-      this.settingsService.getLangString() +
-      "&important=" +
-      important;
-
+      "media?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[1])],
+          ["region", this.authenticationService.getActiveRegionId()],
+          ["lang", this.settingsService.getLangString()],
+          ["important", important],
+        ])
+        .toString();
     let formData = new FormData();
     formData.append("file", file);
     formData.append("text", text);

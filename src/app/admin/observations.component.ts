@@ -28,10 +28,13 @@ export class ObservationsComponent {
       document.getElementById("overlay").style.display = "block";
       const url =
         this.constantsService.getServerUrl() +
-        "observations/export?startDate=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.bsRangeValue[0]) +
-        "&endDate=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(this.bsRangeValue[1]);
+        "observations/export?" +
+        this.constantsService
+          .createSearchParams([
+            ["startDate", this.constantsService.getISOStringWithTimezoneOffset(this.bsRangeValue[0])],
+            ["endDate", this.constantsService.getISOStringWithTimezoneOffset(this.bsRangeValue[1])],
+          ])
+          .toString();
       const headers = this.authenticationService.newAuthHeader("text/csv");
       this.http.get(url, { headers: headers, responseType: "blob" }).subscribe((blob) => {
         this.loadingStatistics = false;
