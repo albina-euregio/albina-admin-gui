@@ -153,10 +153,6 @@ export class ConstantsService {
     return this.getServerUrl().replace(/^http/, "ws");
   }
 
-  getISOStringWithTimezoneOffsetUrlEncoded(date: Date) {
-    return encodeURIComponent(this.getISOStringWithTimezoneOffset(date));
-  }
-
   getISOStringWithTimezoneOffset(date: Date) {
     return formatDate(date, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
   }
@@ -169,5 +165,19 @@ export class ConstantsService {
     function pad(number: number) {
       return number < 10 ? (`${0}${number}` as const) : (`${number}` as const);
     }
+  }
+
+  createSearchParams(params: [string, any][]): URLSearchParams {
+    const result = new URLSearchParams();
+    for (const param in params) {
+      if (Array.isArray(param[1])) {
+        for (const item in param[1]) {
+          result.append(param[0], item);
+        }
+      } else {
+        result.append(param[0], param[1]);
+      }
+    }
+    return result;
   }
 }

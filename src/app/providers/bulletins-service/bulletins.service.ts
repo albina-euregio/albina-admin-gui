@@ -228,39 +228,29 @@ export class BulletinsService {
   getPreviewPdf(date: [Date, Date]): Observable<Blob> {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/preview?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId() +
-      "&lang=" +
-      this.settingsService.getLangString();
+      "bulletins/preview?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+          ["lang", this.settingsService.getLangString()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader("application/pdf");
-
     return this.http.get(url, { headers, responseType: "blob" });
   }
 
   getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/status/internal?startDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate[0]) +
-      "&endDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate[0]) +
-      "&region=" +
-      region;
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get(url, { headers });
-  }
-
-  getPublicationsStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/status/publications?startDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(startDate[0]) +
-      "&endDate=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(endDate[0]) +
-      "&region=" +
-      region;
+      "bulletins/status/internal?" +
+      this.constantsService
+        .createSearchParams([
+          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
+          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
+          ["region", region],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     return this.http.get(url, { headers });
   }
@@ -268,25 +258,27 @@ export class BulletinsService {
   getPublicationStatus(region: string, date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/status/publication?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      region;
+      "bulletins/status/publication?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", region],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
-
     return this.http.get(url, { headers });
   }
 
   loadBulletins(date: [Date, Date], regions: string[], etag?: string) {
     let url =
       this.constantsService.getServerUrl() +
-      "bulletins/edit?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
-    if (regions) {
-      for (const region of regions) {
-        url += "&regions=" + region;
-      }
-    }
+      "bulletins/edit?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", regions],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     if (etag) headers.set("If-None-Match", etag);
     return this.http.get(url, { headers, observe: "response" });
@@ -294,15 +286,14 @@ export class BulletinsService {
 
   loadExternalBulletins(date: [Date, Date], server: ServerModel) {
     let url =
-      server.apiUrl + "bulletins/edit?date=" + this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
-    if (server.regions) {
-      for (const region of server.regions) {
-        if (this.authenticationService.isInternalRegion(region)) {
-          continue;
-        }
-        url += "&regions=" + region;
-      }
-    }
+      server.apiUrl +
+      "bulletins/edit?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
+        ])
+        .toString();
     const headers = this.authenticationService.newExternalServerAuthHeader(server);
     return this.http.get(url, { headers });
   }
@@ -310,10 +301,13 @@ export class BulletinsService {
   loadCaamlBulletins(date: [Date, Date]): Observable<any> {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&lang=" +
-      this.settingsService.getLangString();
+      "bulletins?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["lang", this.settingsService.getLangString()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader("application/xml");
     return this.http.get(url, { headers, responseType: "text" });
   }
@@ -321,8 +315,10 @@ export class BulletinsService {
   loadJsonBulletins(date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
+      "bulletins?" +
+      this.constantsService
+        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     return this.http.get(url, { headers });
   }
@@ -330,10 +326,13 @@ export class BulletinsService {
   saveBulletins(bulletins: BulletinModel[], date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "bulletins?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const jsonBulletins = [];
     for (let i = bulletins.length - 1; i >= 0; i--) {
@@ -346,10 +345,13 @@ export class BulletinsService {
   createBulletin(bulletin: BulletinModel, date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "bulletins?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(bulletin.toJson());
     return this.http.put(url, body, { headers });
@@ -361,10 +363,13 @@ export class BulletinsService {
       this.constantsService.getServerUrl() +
       "bulletins/" +
       bulletin.getId() +
-      "?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(bulletin.toJson());
     return this.http.post(url, body, { headers });
@@ -376,10 +381,13 @@ export class BulletinsService {
       this.constantsService.getServerUrl() +
       "bulletins/" +
       bulletin.getId() +
-      "?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      this.authenticationService.getActiveRegionId();
+      "?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", this.authenticationService.getActiveRegionId()],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     return this.http.delete(url, { headers });
   }
@@ -387,10 +395,13 @@ export class BulletinsService {
   submitBulletins(date: [Date, Date], region: string) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/submit?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      region;
+      "bulletins/submit?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", region],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -399,10 +410,13 @@ export class BulletinsService {
   publishBulletins(date: [Date, Date], region: string) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/publish?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      region;
+      "bulletins/publish?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", region],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -411,10 +425,13 @@ export class BulletinsService {
   changeBulletins(date: [Date, Date], region: string) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/change?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      region;
+      "bulletins/change?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", region],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const jsonBulletins = [];
     const body = JSON.stringify(jsonBulletins);
@@ -424,8 +441,10 @@ export class BulletinsService {
   publishAllBulletins(date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/publish/all?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
+      "bulletins/publish/all?" +
+      this.constantsService
+        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -434,8 +453,10 @@ export class BulletinsService {
   createCaaml(date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/publish/caaml?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
+      "bulletins/publish/caaml?" +
+      this.constantsService
+        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -444,8 +465,10 @@ export class BulletinsService {
   createPdf(date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/publish/pdf?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
+      "bulletins/publish/pdf?" +
+      this.constantsService
+        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -454,8 +477,10 @@ export class BulletinsService {
   createHtml(date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/publish/html?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
+      "bulletins/publish/html?" +
+      this.constantsService
+        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -464,8 +489,10 @@ export class BulletinsService {
   createMap(date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/publish/map?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
+      "bulletins/publish/map?" +
+      this.constantsService
+        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -474,8 +501,10 @@ export class BulletinsService {
   createStaticWidget(date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/publish/staticwidget?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]);
+      "bulletins/publish/staticwidget?" +
+      this.constantsService
+        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
     return this.http.post(url, body, { headers });
@@ -486,19 +515,24 @@ export class BulletinsService {
     if (language && language !== "") {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/email?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region +
-        "&lang=" +
-        language;
+        "bulletins/publish/email?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+            ["lang", language],
+          ])
+          .toString();
     } else {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/email?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region;
+        "bulletins/publish/email?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+          ])
+          .toString();
     }
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
@@ -510,19 +544,24 @@ export class BulletinsService {
     if (language && language !== "") {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/email/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region +
-        "&lang=" +
-        language;
+        "bulletins/publish/email/test?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+            ["lang", language],
+          ])
+          .toString();
     } else {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/email/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region;
+        "bulletins/publish/email/test?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+          ])
+          .toString();
     }
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
@@ -534,19 +573,24 @@ export class BulletinsService {
     if (language && language !== "") {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/telegram?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region +
-        "&lang=" +
-        language;
+        "bulletins/publish/telegram?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+            ["lang", language],
+          ])
+          .toString();
     } else {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/telegram?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region;
+        "bulletins/publish/telegram?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+          ])
+          .toString();
     }
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
@@ -558,19 +602,24 @@ export class BulletinsService {
     if (language && language !== "") {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/telegram/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region +
-        "&lang=" +
-        language;
+        "bulletins/publish/telegram/test?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+            ["lang", language],
+          ])
+          .toString();
     } else {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/telegram/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region;
+        "bulletins/publish/telegram/test?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+          ])
+          .toString();
     }
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
@@ -582,19 +631,24 @@ export class BulletinsService {
     if (language && language !== "") {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/push?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region +
-        "&lang=" +
-        language;
+        "bulletins/publish/push?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+            ["lang", language],
+          ])
+          .toString();
     } else {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/push?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region;
+        "bulletins/publish/push?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+          ])
+          .toString();
     }
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
@@ -606,19 +660,24 @@ export class BulletinsService {
     if (language && language !== "") {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/push/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region +
-        "&lang=" +
-        language;
+        "bulletins/publish/push/test?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+            ["lang", language],
+          ])
+          .toString();
     } else {
       url =
         this.constantsService.getServerUrl() +
-        "bulletins/publish/push/test?date=" +
-        this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-        "&region=" +
-        region;
+        "bulletins/publish/push/test?" +
+        this.constantsService
+          .createSearchParams([
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+            ["region", region],
+          ])
+          .toString();
     }
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
@@ -628,10 +687,13 @@ export class BulletinsService {
   checkBulletins(date: [Date, Date], region: string) {
     const url =
       this.constantsService.getServerUrl() +
-      "bulletins/check?date=" +
-      this.constantsService.getISOStringWithTimezoneOffsetUrlEncoded(date[0]) +
-      "&region=" +
-      region;
+      "bulletins/check?" +
+      this.constantsService
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["region", region],
+        ])
+        .toString();
     const headers = this.authenticationService.newAuthHeader();
     return this.http.get(url, { headers });
   }
