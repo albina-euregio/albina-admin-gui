@@ -115,10 +115,10 @@ export class DangerSourcesService {
     this.isReadOnly = isReadOnly;
   }
 
-  loadDangerSources(date: [Date, Date], regions: string[], etag?: string) {
+  loadDangerSources(date: [Date, Date], regions: string[]): Observable<DangerSourceModel[]> {
     let url =
       this.constantsService.getServerUrl() +
-      "danger-sources/edit?" +
+      "danger-sources?" +
       this.constantsService
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
@@ -126,23 +126,7 @@ export class DangerSourcesService {
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader();
-    if (etag) headers.set("If-None-Match", etag);
-    return this.http.get(url, { headers, observe: "response" });
-  }
-
-  createDangerSource(dangerSource: DangerSourceModel, date: [Date, Date]) {
-    const url =
-      this.constantsService.getServerUrl() +
-      "danger-sources?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", this.authenticationService.getActiveRegionId()],
-        ])
-        .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    const body = JSON.stringify(dangerSource);
-    return this.http.put(url, body, { headers });
+    return this.http.get<DangerSourceModel[]>(url, { headers });
   }
 
   updateDangerSource(dangerSource: DangerSourceModel, date: [Date, Date]) {
@@ -221,7 +205,7 @@ export class DangerSourcesService {
     // check if danger source has ID
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources/" +
+      "danger-sources/variants/" +
       dangerSourceVariant.id +
       "?" +
       this.constantsService.createSearchParams([
@@ -240,7 +224,7 @@ export class DangerSourcesService {
     // check if variant has ID
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources/" +
+      "danger-sources/variants/" +
       variant.id +
       "?" +
       this.constantsService
@@ -256,7 +240,7 @@ export class DangerSourcesService {
   saveDangerSourceVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources?" +
+      "danger-sources/variants?" +
       this.constantsService
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],

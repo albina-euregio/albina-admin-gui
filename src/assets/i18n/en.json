@@ -76,6 +76,14 @@
         "missing": "missing",
         "available": "available"
       }
+    },
+    "create": {
+      "tooltip": {
+        "loadVariants": "Load variants from the day before"
+      },
+      "createDangerSource": "Create danger source",
+      "createVariant": "Create new variant",
+      "noDangerSources": "No danger sources"
     }
   },
   "bulletins": {

@@ -170,18 +170,18 @@ export class DangerSourceVariantModel implements PolygonObject {
   type: DangerSourceVariantType;
   ownerRegion: string;
   regions: string[];
-  hasDaytimeDependency: boolean;
+  hasDaytimeDependency: boolean | undefined;
   avalancheType: AvalancheType;
   aspects: Aspect[];
-  elevationHigh: number;
-  treelineHigh: boolean;
-  elevationLow: number;
-  treelineLow: boolean;
-  dangerIncreaseWithElevation: boolean;
+  elevationHigh: number | undefined;
+  treelineHigh: boolean | undefined;
+  elevationLow: number | undefined;
+  treelineLow: boolean | undefined;
+  dangerIncreaseWithElevation: boolean | undefined;
   highestDangerAspect: Aspect;
   dangerPeak: Daytime;
   slopeGradient: SlopeGradient;
-  runoutIntoGreen: boolean;
+  runoutIntoGreen: boolean | undefined;
   naturalRelease: Probability;
   dangerSigns: DangerSign[];
   eawsMatrixInformation: MatrixInformationModel;
@@ -190,35 +190,35 @@ export class DangerSourceVariantModel implements PolygonObject {
   /** LOOSE SNOW AVALANCHES */
   /** --------------------- */
   glidingSnowActivity: GlidingSnowActivity;
-  snowHeightUpperLimit: number;
-  snowHeightLowerLimit: number;
-  zeroDegreeIsotherm: boolean;
+  snowHeightUpperLimit: number | undefined;
+  snowHeightLowerLimit: number | undefined;
+  zeroDegreeIsotherm: boolean | undefined;
 
   /** --------------- */
   /** SLAB AVALANCHES */
   /** --------------- */
   slabGrainShape: GrainShape;
-  slabThicknessUpperLimit: number;
-  slabThicknessLowerLimit: number;
+  slabThicknessUpperLimit: number | undefined;
+  slabThicknessLowerLimit: number | undefined;
   slabHandHardnessUpperLimit: HandHardness;
   slabHandHardnessLowerLimit: HandHardness;
   slabHardnessProfile: Tendency;
   slabEnergyTransferPotential: Characteristic;
   slabDistribution: Distribution;
   weakLayerGrainShape: GrainShape;
-  weakLayerGrainSizeUpperLimit: number;
-  weakLayerGrainSizeLowerLimit: number;
-  weakLayerPersistent: boolean;
+  weakLayerGrainSizeUpperLimit: number | undefined;
+  weakLayerGrainSizeLowerLimit: number | undefined;
+  weakLayerPersistent: boolean | undefined;
   weakLayerThickness: Thickness;
   weakLayerStrength: Characteristic;
-  weakLayerWet: boolean;
-  weakLayerCrustAbove: boolean;
-  weakLayerCrustBelow: boolean;
+  weakLayerWet: boolean | undefined;
+  weakLayerCrustAbove: boolean | undefined;
+  weakLayerCrustBelow: boolean | undefined;
   weakLayerPosition: SnowpackPosition;
   weakLayerCreation: CreationProcess;
   weakLayerDistribution: Distribution;
   dangerSpotRecognizability: Recognizability;
-  remoteTriggering: boolean;
+  remoteTriggering: boolean | undefined;
   terrainTypes: TerrainType[];
 
   /** --------------------- */
@@ -294,8 +294,8 @@ export class DangerSourceVariantModel implements PolygonObject {
     if (variant) {
       this.dangerSourceVariantId = variant.dangerSourceVariantId;
       this.dangerSource = variant.dangerSource;
-      this.creationDate = variant.creationDate;
-      this.updateDate = variant.updateDate;
+      this.creationDate = new Date();
+      this.updateDate = new Date();
       this.validFrom = variant.validFrom;
       this.validUntil = variant.validUntil;
       this.status = variant.status;
@@ -349,8 +349,8 @@ export class DangerSourceVariantModel implements PolygonObject {
     } else {
       this.dangerSourceVariantId = undefined;
       this.dangerSource = undefined;
-      this.creationDate = undefined;
-      this.updateDate = undefined;
+      this.creationDate = new Date();
+      this.updateDate = new Date();
       this.validFrom = undefined;
       this.validUntil = undefined;
       this.status = undefined;
