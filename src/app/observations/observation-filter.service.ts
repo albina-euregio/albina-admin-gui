@@ -90,7 +90,7 @@ export class ObservationFilterService<
       this.inMapBounds(observation.latitude, observation.longitude) &&
       this.inRegions(observation.region) &&
       (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation.eventDate) : true) &&
-      this.filterSelectionData.every((filter) => filter.isIncluded("selected", observation[filter.key] as ValueType))
+      this.filterSelectionData.every((filter) => filter.isIncluded("selected", filter.getValue(observation)))
     );
   }
 
@@ -108,9 +108,7 @@ export class ObservationFilterService<
     if (!this.inMapBounds(observation.latitude, observation.longitude)) {
       return false;
     }
-    return this.filterSelectionData.some((filter) =>
-      filter.isIncluded("highlighted", observation[filter.key] as ValueType),
-    );
+    return this.filterSelectionData.some((filter) => filter.isIncluded("highlighted", filter.getValue(observation)));
   }
 
   inDateRange(eventDate: Date): boolean {

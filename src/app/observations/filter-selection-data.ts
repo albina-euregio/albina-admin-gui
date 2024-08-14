@@ -87,9 +87,17 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     }
   }
 
+  getValue(observation: T): ValueType {
+    return observation[this.key] as ValueType;
+  }
+
+  getValues(observation: T) {
+    return castArray(this.getValue(observation));
+  }
+
   findForObservation(observation: T) {
     return this.values.find((f) =>
-      castArray(observation[this.key] as ValueType).some((v) => FilterSelectionData.testFilterSelection(f, v)),
+      this.getValues(observation).some((v) => FilterSelectionData.testFilterSelection(f, v)),
     );
   }
 
@@ -132,7 +140,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
       },
     }));
     observations.forEach((observation) => {
-      const value = observation[this.key] as ValueType;
+      const value = this.getValue(observation);
       if (value === undefined || value === null) {
         this.nan++;
         return;
@@ -150,7 +158,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
           data[0]++;
           return;
         }
-        const value2 = observation[markerClassify.key] as ValueType;
+        const value2 = markerClassify.getValue(observation);
         if (value2 === undefined || value2 === null) {
           data[0]++;
           return;
