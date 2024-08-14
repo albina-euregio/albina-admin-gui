@@ -94,7 +94,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   constructor(
     public filter: ObservationFilterService<GenericObservation>,
-    public markerService: ObservationMarkerService,
+    public markerService: ObservationMarkerService<GenericObservation>,
     public translateService: TranslateService,
     private observationsService: AlbinaObservationsService,
     private sanitizer: DomSanitizer,

@@ -27,7 +27,7 @@ export class ObservationChartComponent implements OnInit {
   }
 
   constructor(
-    public markerService: ObservationMarkerService,
+    public markerService: ObservationMarkerService<GenericObservation>,
     protected translateService: TranslateService,
   ) {}
 
