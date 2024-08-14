@@ -109,4 +109,110 @@ export class FilterSelectionData implements FilterSelectionSpec {
       return number < 10 ? (`${0}${number}` as const) : (`${number}` as const);
     }
   }
+
+  buildChartsData(
+    markerClassify: FilterSelectionData,
+    observations: GenericObservation[],
+    isSelected: (o: GenericObservation) => boolean,
+  ): void {
+    this.nan = 0;
+    const dataRaw = this.values.map((value) => ({
+      value,
+      data: {
+        all: 0,
+        available: 0,
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+      },
+    }));
+    observations.forEach((observation) => {
+      const value: number | string | string[] = observation[this.key];
+      if (value === undefined || value === null) {
+        this.nan++;
+        return;
+      }
+      castArray(value).forEach((v) => {
+        const data = dataRaw.find((f) => FilterSelectionData.testFilterSelection(f.value, v))?.data;
+        if (!data) {
+          return;
+        }
+        data.all++;
+        if (!isSelected(observation)) {
+          return;
+        }
+        if (!markerClassify || markerClassify.type === this.type) {
+          data[0]++;
+          return;
+        }
+        const value2: number | string | string[] = observation[markerClassify.key];
+        if (value2 === undefined || value2 === null) {
+          data[0]++;
+          return;
+        }
+        castArray(value2).forEach((v) => {
+          data[markerClassify.values.findIndex((f) => FilterSelectionData.testFilterSelection(f, v)) + 1]++;
+        });
+      });
+    });
+
+    const header = [
+      "category",
+      "max",
+      "all",
+      "highlighted",
+      "available",
+      "selected",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+    ];
+
+    const data: Dataset = dataRaw.map((f) => {
+      const key = f.value.value;
+      const values = f.data;
+      const highlighted = this.highlighted.has(key) ? values.all : 0;
+      const available = !this.selected.has(key) ? values.available : 0;
+      const selected = this.selected.has(key) ? values.available : 0;
+      const max = values.all;
+      const all = available > 0 ? available : selected;
+      return [
+        key,
+        max ? all : max,
+        all,
+        highlighted ? all : highlighted,
+        available,
+        selected,
+        values["0"],
+        values["1"],
+        values["2"],
+        values["3"],
+        values["4"],
+        values["5"],
+        values["6"],
+        values["7"],
+        values["8"],
+        values["9"],
+        values["10"],
+      ];
+    });
+
+    this.dataset = [header, ...data];
+  }
 }
