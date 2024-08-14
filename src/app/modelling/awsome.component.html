@@ -1,0 +1,43 @@
+<div class="layout-outer" [ngClass]="'layout--is-' + layout">
+  <div class="layout-inner">
+    <div class="layout-left">
+      <div class="layout-global">
+        <div class="global-bar-scroll">
+          <div class="global-bar global-bar-left"></div>
+        </div>
+      </div>
+
+      <div class="layout-map">
+        <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
+      </div>
+    </div>
+
+    <div class="layout-right">
+      <div class="toolset">
+        <div class="toolset-header">
+          <div class="toolset-name">
+            {{ "sidebar.observations" | translate }}
+          </div>
+          <div class="toolset-keydata">
+            <div class="keydata">
+              <span class="keydata-selected">{{ 123 }}</span>
+              /
+              <span class="keydata-all">{{ 123 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolset-content">
+          <div class="toolset-charts">
+            <app-observation-chart
+              *ngFor="let filterSelection of filterService.filterSelectionData"
+              class="chart-container"
+              [filterSelection]="filterSelection"
+              (handleChange)="applyLocalFilter()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

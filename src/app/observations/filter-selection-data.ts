@@ -1,4 +1,4 @@
-import { castArray } from "lodash";
+import { castArray, get } from "lodash";
 
 export type ChartType = "bar" | "rose";
 
@@ -88,7 +88,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   }
 
   getValue(observation: T): ValueType {
-    return observation[this.key] as ValueType;
+    return get(observation, this.key) as ValueType;
   }
 
   getValues(observation: T) {
