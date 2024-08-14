@@ -12,7 +12,7 @@ export class ObservationFilterService {
   public regions = {} as Record<string, boolean>;
   public observationSources = {} as Record<ObservationSource, boolean>;
 
-  public filterSelectionData: FilterSelectionData[] = observationFilters((message) =>
+  public filterSelectionData: FilterSelectionData<GenericObservation>[] = observationFilters((message) =>
     this.translateService.instant(message),
   );
 

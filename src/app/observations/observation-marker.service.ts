@@ -146,9 +146,9 @@ const aspectColors = {
 
 @Injectable()
 export class ObservationMarkerService {
-  public markerLabel: FilterSelectionData | undefined = undefined;
+  public markerLabel: FilterSelectionData<GenericObservation> | undefined = undefined;
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
-  public markerClassify: FilterSelectionData | undefined;
+  public markerClassify: FilterSelectionData<GenericObservation> | undefined;
 
   constructor() {}
 

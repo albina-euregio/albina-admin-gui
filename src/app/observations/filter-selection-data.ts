@@ -1,9 +1,10 @@
-import type { GenericObservation } from "./models/generic-observation.model";
 import { castArray } from "lodash";
 
 export type ChartType = "bar" | "rose";
 
 export type Dataset = Array<Array<string | number>>;
+
+export type ValueType = number | string | Date | string[];
 
 export interface FilterSelectionValue {
   value: string;
@@ -13,19 +14,19 @@ export interface FilterSelectionValue {
   legend: string; // long text for chart legend
 }
 
-export interface FilterSelectionSpec {
+export interface FilterSelectionSpec<T> {
   type: string; // id
   label: string; // caption
-  key: keyof GenericObservation; // how to extract data
+  key: keyof T; // how to extract data
   chartType: ChartType;
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   values: FilterSelectionValue[];
 }
 
-export class FilterSelectionData implements FilterSelectionSpec {
+export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   readonly type: string;
   readonly label: string;
-  readonly key: keyof GenericObservation;
+  readonly key: keyof T;
   readonly chartType: ChartType;
   readonly chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   readonly values: FilterSelectionValue[];
@@ -35,7 +36,7 @@ export class FilterSelectionData implements FilterSelectionSpec {
   dataset: Dataset;
   nan = 0;
 
-  constructor(spec: FilterSelectionSpec) {
+  constructor(spec: FilterSelectionSpec<T>) {
     Object.assign(this, spec);
   }
 
@@ -63,7 +64,7 @@ export class FilterSelectionData implements FilterSelectionSpec {
     this[subset].add("nan");
   }
 
-  isIncluded(subset: "highlighted" | "selected", testData: string | string[] | number): boolean {
+  isIncluded(subset: "highlighted" | "selected", testData: ValueType): boolean {
     const selectedData = this[subset];
     const filterSelectionValues = this.values.filter((v) => selectedData.has(v.value));
     return (
@@ -86,13 +87,13 @@ export class FilterSelectionData implements FilterSelectionSpec {
     }
   }
 
-  findForObservation(observation: GenericObservation) {
+  findForObservation(observation: T) {
     return this.values.find((f) =>
-      castArray(observation[this.key]).some((v) => FilterSelectionData.testFilterSelection(f, v)),
+      castArray(observation[this.key] as ValueType).some((v) => FilterSelectionData.testFilterSelection(f, v)),
     );
   }
 
-  static testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
+  static testFilterSelection(f: FilterSelectionValue, v: Exclude<ValueType, string[]>): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
       (v instanceof Date && f.value === FilterSelectionData.getISODateString(v)) ||
@@ -110,11 +111,7 @@ export class FilterSelectionData implements FilterSelectionSpec {
     }
   }
 
-  buildChartsData(
-    markerClassify: FilterSelectionData,
-    observations: GenericObservation[],
-    isSelected: (o: GenericObservation) => boolean,
-  ): void {
+  buildChartsData(markerClassify: FilterSelectionData<T>, observations: T[], isSelected: (o: T) => boolean): void {
     this.nan = 0;
     const dataRaw = this.values.map((value) => ({
       value,
@@ -135,7 +132,7 @@ export class FilterSelectionData implements FilterSelectionSpec {
       },
     }));
     observations.forEach((observation) => {
-      const value: number | string | string[] = observation[this.key];
+      const value = observation[this.key] as ValueType;
       if (value === undefined || value === null) {
         this.nan++;
         return;
@@ -153,7 +150,7 @@ export class FilterSelectionData implements FilterSelectionSpec {
           data[0]++;
           return;
         }
-        const value2: number | string | string[] = observation[markerClassify.key];
+        const value2 = observation[markerClassify.key] as ValueType;
         if (value2 === undefined || value2 === null) {
           data[0]++;
           return;

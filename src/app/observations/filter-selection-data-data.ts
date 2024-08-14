@@ -1,10 +1,10 @@
 import { FilterSelectionData } from "./filter-selection-data";
 import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
-import { ImportantObservation, ObservationType } from "./models/generic-observation.model";
+import { GenericObservation, ImportantObservation, ObservationType } from "./models/generic-observation.model";
 
-export function observationFilters(t: (message: string) => string) {
+export function observationFilters(t: (message: string) => string): FilterSelectionData<GenericObservation>[] {
   return [
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "Aspect",
       label: t("admin.observations.charts.aspect.caption"),
       key: "aspect",
@@ -22,7 +22,7 @@ export function observationFilters(t: (message: string) => string) {
         { value: Aspect.NW, color: "#113570", label: Aspect.NW, legend: t("aspect.NW") },
       ],
     }),
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "Days",
       label: t("admin.observations.charts.days.caption"),
       key: "eventDate",
@@ -30,7 +30,7 @@ export function observationFilters(t: (message: string) => string) {
       chartRichLabel: "label",
       values: [],
     }),
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "Elevation",
       label: t("admin.observations.charts.elevation.caption"),
       key: "elevation",
@@ -48,7 +48,7 @@ export function observationFilters(t: (message: string) => string) {
         { value: "0 – 500", numericRange: [0, 500], color: "#FFFFFE", label: "0", legend: "0 – 500" },
       ],
     }),
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "Stability",
       label: t("admin.observations.charts.stability.caption"),
       key: "stability",
@@ -82,7 +82,7 @@ export function observationFilters(t: (message: string) => string) {
         },
       ],
     }),
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "ObservationType",
       label: t("admin.observations.charts.observationType.caption"),
       key: "$type",
@@ -128,7 +128,7 @@ export function observationFilters(t: (message: string) => string) {
         },
       ],
     }),
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "ImportantObservation",
       label: t("admin.observations.charts.importantObservation.caption"),
       key: "importantObservations",
@@ -174,7 +174,7 @@ export function observationFilters(t: (message: string) => string) {
         },
       ],
     }),
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "AvalancheProblem",
       label: t("admin.observations.charts.avalancheProblem.caption"),
       key: "avalancheProblems",
@@ -215,7 +215,7 @@ export function observationFilters(t: (message: string) => string) {
         },
       ],
     }),
-    new FilterSelectionData({
+    new FilterSelectionData<GenericObservation>({
       type: "DangerPattern",
       label: t("admin.observations.charts.dangerPattern.caption"),
       key: "dangerPatterns",
