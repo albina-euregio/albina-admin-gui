@@ -41,6 +41,7 @@ import { LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { observationFilters } from "./filter-selection-data-data";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -92,7 +93,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
 
   constructor(
-    public filter: ObservationFilterService,
+    public filter: ObservationFilterService<GenericObservation>,
     public markerService: ObservationMarkerService,
     public translateService: TranslateService,
     private observationsService: AlbinaObservationsService,
@@ -101,6 +102,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public mapService: BaseMapService,
     public modalService: BsModalService,
   ) {
+    this.filter.filterSelectionData = observationFilters((message) => this.translateService.instant(message));
+    this.filter.parseActivatedRoute();
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
   }
 
@@ -324,7 +327,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private addObservation(observation: GenericObservation): void {
-    if (!this.filter.inDateRange(observation)) {
+    if (!this.filter.inDateRange(observation.eventDate)) {
       return;
     }
 

@@ -1,29 +1,23 @@
 import { Injectable } from "@angular/core";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { FilterSelectionData } from "./filter-selection-data";
-import { observationFilters } from "./filter-selection-data-data";
+import { FilterSelectionData, ValueType } from "./filter-selection-data";
 
 @Injectable()
-export class ObservationFilterService {
+export class ObservationFilterService<
+  T extends Partial<Pick<GenericObservation, "$source" | "latitude" | "longitude" | "region" | "eventDate">>,
+> {
   public dateRange: Date[] = [];
   public regions = {} as Record<string, boolean>;
   public observationSources = {} as Record<ObservationSource, boolean>;
-
-  public filterSelectionData: FilterSelectionData<GenericObservation>[] = observationFilters((message) =>
-    this.translateService.instant(message),
-  );
+  public filterSelectionData: FilterSelectionData<T>[] = [];
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
     private constantsService: ConstantsService,
-  ) {
-    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
-  }
+  ) {}
 
   set days(days: number) {
     this.endDate = new Date();
@@ -50,6 +44,10 @@ export class ObservationFilterService {
       });
     }
     this.dateRange = [this.startDate, this.endDate];
+  }
+
+  parseActivatedRoute() {
+    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
   private parseQueryParams(params: Params) {
@@ -86,38 +84,40 @@ export class ObservationFilterService {
     };
   }
 
-  public isSelected(observation: GenericObservation) {
+  public isSelected(observation: T) {
     return (
-      this.inObservationSources(observation) &&
-      this.inMapBounds(observation) &&
+      this.inObservationSources(observation.$source) &&
+      this.inMapBounds(observation.latitude, observation.longitude) &&
       this.inRegions(observation.region) &&
-      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
-      this.filterSelectionData.every((filter) => filter.isIncluded("selected", observation[filter.key]))
+      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation.eventDate) : true) &&
+      this.filterSelectionData.every((filter) => filter.isIncluded("selected", observation[filter.key] as ValueType))
     );
   }
 
-  public isWeatherStationSelected(observation: GenericObservation) {
+  public isWeatherStationSelected(observation: T & { latitude?: number; longitude?: number }) {
     return (
-      this.inMapBounds(observation) &&
+      this.inMapBounds(observation.latitude, observation.longitude) &&
       this.inRegions(observation.region) &&
       this.filterSelectionData
         .find((filter) => filter.key === "elevation")
-        .isIncluded("selected", observation.elevation)
+        .isIncluded("selected", (observation as unknown as GenericObservation).elevation)
     );
   }
 
-  public isHighlighted(observation: GenericObservation) {
-    if (!this.inMapBounds(observation)) {
+  public isHighlighted(observation: T & { latitude?: number; longitude?: number }) {
+    if (!this.inMapBounds(observation.latitude, observation.longitude)) {
       return false;
     }
-    return this.filterSelectionData.some((filter) => filter.isIncluded("highlighted", observation[filter.key]));
+    return this.filterSelectionData.some((filter) =>
+      filter.isIncluded("highlighted", observation[filter.key] as ValueType),
+    );
   }
 
-  inDateRange({ $source, eventDate }: GenericObservation): boolean {
+  inDateRange(eventDate: Date): boolean {
     return this.startDate <= eventDate && eventDate <= this.endDate;
   }
 
-  isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
+  isLastDayInDateRange(eventDate: Date): boolean {
     const selectedData: string[] = Array.from(
       this.filterSelectionData.find((filter) => filter.key === "eventDate").selected,
     )
@@ -130,7 +130,7 @@ export class ObservationFilterService {
     }
   }
 
-  inMapBounds({ latitude, longitude }: GenericObservation): boolean {
+  inMapBounds(latitude?: number, longitude?: number): boolean {
     if (!latitude || !longitude) {
       return true;
     }
@@ -141,7 +141,7 @@ export class ObservationFilterService {
     return !Object.values(this.regions).some((v) => v) || (typeof region === "string" && this.regions[region]);
   }
 
-  inObservationSources({ $source }: GenericObservation): boolean {
+  inObservationSources($source?: GenericObservation["$source"]): boolean {
     return (
       !Object.values(this.observationSources).some((v) => v) ||
       (typeof $source === "string" && this.observationSources[$source])
