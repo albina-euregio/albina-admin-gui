@@ -318,7 +318,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ?.addTo(this.mapService.layers["weather-stations"]);
     });
 
-    this.filter.buildChartsData(this.observations, this.markerService.markerClassify);
+    this.filter.filterSelectionData.forEach((filter) =>
+      filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) => this.filter.isSelected(o)),
+    );
   }
 
   private addObservation(observation: GenericObservation): void {

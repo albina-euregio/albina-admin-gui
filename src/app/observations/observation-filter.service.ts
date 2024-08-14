@@ -113,12 +113,6 @@ export class ObservationFilterService {
     return this.filterSelectionData.some((filter) => filter.isIncluded("highlighted", observation[filter.key]));
   }
 
-  public buildChartsData(observations: GenericObservation[], markerClassify: FilterSelectionData) {
-    this.filterSelectionData.forEach((filter) =>
-      filter.buildChartsData(markerClassify, observations, (o) => this.isSelected(o)),
-    );
-  }
-
   inDateRange({ $source, eventDate }: GenericObservation): boolean {
     return this.startDate <= eventDate && eventDate <= this.endDate;
   }
