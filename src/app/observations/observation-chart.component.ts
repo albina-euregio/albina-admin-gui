@@ -14,11 +14,11 @@ import type { GenericObservation } from "./models/generic-observation.model";
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
   templateUrl: "./observation-chart.component.html",
 })
-export class ObservationChartComponent implements OnInit {
+export class ObservationChartComponent<T> implements OnInit {
   longClickDur = 200;
   private pressTimer;
 
-  @Input() filterSelection: FilterSelectionData<GenericObservation>;
+  @Input() filterSelection: FilterSelectionData<T>;
   @Output() handleChange: EventEmitter<void> = new EventEmitter();
   public options: EChartsOption;
 
@@ -27,7 +27,7 @@ export class ObservationChartComponent implements OnInit {
   }
 
   constructor(
-    public markerService: ObservationMarkerService<GenericObservation>,
+    public markerService: ObservationMarkerService<T>,
     protected translateService: TranslateService,
   ) {}
 
