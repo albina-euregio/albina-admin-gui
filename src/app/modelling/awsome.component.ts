@@ -6,11 +6,16 @@ import { ObservationGalleryComponent } from "../observations/observation-gallery
 import { ObservationTableComponent } from "../observations/observation-table.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { ObservationFilterService } from "../observations/observation-filter.service";
-import { FilterSelectionData } from "../observations/filter-selection-data";
+import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { ObservationMarkerService } from "../observations/observation-marker.service";
 
 type FeatureProperties = GeoJSON.Feature["properties"];
+
+export interface Awsome {
+  sources: string[];
+  filters: FilterSelectionSpec<FeatureProperties>[];
+}
 
 @Component({
   selector: "app-awsome",
@@ -37,20 +42,24 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     public filterService: ObservationFilterService<FeatureProperties>,
     public mapService: BaseMapService,
     public markerService: ObservationMarkerService<FeatureProperties>,
-  ) {
-    this.filterService.filterSelectionData = getFilterSelectionData();
-    this.markerService.markerClassify = this.filterService.filterSelectionData[0];
-  }
+  ) {}
 
   async ngOnInit() {
-    const json: GeoJSON.FeatureCollection = await this.fetchJSON(
-      "https://models.avalanche.report/snp-gridded/geojson-tirol23/2023-11-12_06-00-00.json",
+    const { sources, filters } = (await import("./awsome.json")).default;
+
+    this.filterService.filterSelectionData = (filters as FilterSelectionSpec<FeatureProperties>[]).map(
+      (f) => new FilterSelectionData(f),
     );
-    this.observations = json.features.map((feature) => {
-      feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
-      feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
-      return feature.properties;
-    });
+    this.markerService.markerClassify = this.filterService.filterSelectionData[0];
+
+    const collections = await Promise.all(sources.map((url) => this.fetchJSON<GeoJSON.FeatureCollection>(url)));
+    this.observations = collections
+      .flatMap((c) => c.features)
+      .map((feature) => {
+        feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
+        feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
+        return feature.properties;
+      });
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
         this.filterService.isSelected(o),
@@ -86,51 +95,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     console.log(observation);
   }
 
-  private async fetchJSON(input: RequestInfo | URL) {
+  private async fetchJSON<T>(input: RequestInfo | URL): Promise<T> {
     const res = await fetch(input);
     const text = (await res.text()).replace(/\bNaN\b/g, "null");
     return JSON.parse(text);
   }
-}
-
-function getFilterSelectionData() {
-  return [
-    new FilterSelectionData<FeatureProperties>({
-      chartRichLabel: "label",
-      chartType: "bar",
-      label: "flat sk38",
-      key: "snp_characteristics.flat.sk38.value",
-      type: "snp_characteristics.flat.sk38.value",
-      values: [
-        {
-          numericRange: [0.0, 0.25],
-          color: "#d7191c",
-          label: "<0.25",
-          legend: "<0.25",
-          value: "<0.25",
-        },
-        {
-          numericRange: [0.25, 0.5],
-          color: "#fdae61",
-          label: "<0.50",
-          legend: "<0.50",
-          value: "<0.50",
-        },
-        {
-          numericRange: [0.5, 0.75],
-          color: "#ffffbf",
-          label: "<0.75",
-          legend: "<0.75",
-          value: "<0.75",
-        },
-        {
-          numericRange: [0.75, 1.0],
-          color: "#a6d96a",
-          label: "<1.00",
-          legend: "<1.00",
-          value: "<1.00",
-        },
-      ],
-    }),
-  ];
 }
