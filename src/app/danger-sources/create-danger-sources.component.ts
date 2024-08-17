@@ -634,7 +634,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
           this.activeVariant.id = this.getNewId(variants, regionId);
         }
         this.mapService.deselectAggregatedRegion();
-        this.addInternalVariants(variants);
+        this.loadDangerSourcesFromServer();
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variant created on server.");
@@ -658,7 +658,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
     this.dangerSourcesService.updateDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       (variants) => {
-        this.addInternalVariants(variants);
+        this.loadDangerSourcesFromServer();
         this.saveError.delete(variant.id);
         this.loadInternalVariantsError = false;
         this.loading = false;
@@ -677,7 +677,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private deleteVariantOnServer(variant: DangerSourceVariantModel) {
     this.dangerSourcesService.deleteDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       (variants) => {
-        this.addInternalVariants(variants);
+        this.loadDangerSourcesFromServer();
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variant deleted on server.");
