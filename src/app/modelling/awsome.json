@@ -7,7 +7,46 @@
     {
       "chartRichLabel": "label",
       "chartType": "bar",
-      "label": "flat sk38",
+      "label": "LWC",
+      "key": "snp_characteristics.south.lwc.value",
+      "type": "snp_characteristics.south.lwc.value",
+      "values": [
+        {
+          "numericRange": [
+            0.0,
+            0.1
+          ],
+          "color": "#a6d96a",
+          "label": "<0.1",
+          "legend": "<0.1",
+          "value": "<0.1"
+        },
+        {
+          "numericRange": [
+            0.1,
+            0.3
+          ],
+          "color": "#fdae61",
+          "label": "<0.3",
+          "legend": "<0.3",
+          "value": "<0.3"
+        },
+        {
+          "numericRange": [
+            0.3,
+            1.0
+          ],
+          "color": "#d7191c",
+          "label": "<1.0",
+          "legend": "<1.0",
+          "value": "<1.0"
+        }
+      ]
+    },
+    {
+      "chartRichLabel": "label",
+      "chartType": "bar",
+      "label": "SK38",
       "key": "snp_characteristics.flat.sk38.value",
       "type": "snp_characteristics.flat.sk38.value",
       "values": [
