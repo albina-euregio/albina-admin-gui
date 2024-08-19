@@ -237,10 +237,10 @@ export class DangerSourcesService {
     return this.http.delete<DangerSourceVariantModel[]>(url, { headers });
   }
 
-  saveDangerSourceVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
+  saveVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
-      "danger-sources/variants?" +
+      "danger-sources?" +
       this.constantsService
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],

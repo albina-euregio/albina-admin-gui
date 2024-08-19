@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
 import { DangerSourcesComponent } from "./danger-sources.component";
+import { DangerSourceVariantComponent } from "./danger-source-variant.component";
 import { CreateDangerSourcesComponent } from "./create-danger-sources.component";
 
 // Bulletins Routing
@@ -14,6 +15,7 @@ import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { NgxEchartsDirective } from "ngx-echarts";
+import { SharedModule } from "app/shared/shared.module";
 
 @NgModule({
   imports: [
@@ -25,8 +27,9 @@ import { NgxEchartsDirective } from "ngx-echarts";
     BsDropdownModule.forRoot(),
     NgxSliderModule,
     NgxEchartsDirective,
+    SharedModule,
   ],
   exports: [],
-  declarations: [DangerSourcesComponent, CreateDangerSourcesComponent],
+  declarations: [DangerSourcesComponent, DangerSourceVariantComponent, CreateDangerSourcesComponent],
 })
 export class DangerSourcesModule {}

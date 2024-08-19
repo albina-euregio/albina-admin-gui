@@ -167,7 +167,6 @@ export class DangerSourceVariantModel implements PolygonObject {
   validFrom: Date;
   validUntil: Date;
   status: DangerSourceVariantStatus;
-  type: DangerSourceVariantType;
   ownerRegion: string;
   regions: string[];
   hasDaytimeDependency: boolean | undefined;
@@ -233,13 +232,12 @@ export class DangerSourceVariantModel implements PolygonObject {
     // TODO implement correct
     variant.id = json.id;
     variant.dangerSourceVariantId = json.dangerSourceId;
-    variant.dangerSource = json.dangerSource;
+    variant.dangerSource = DangerSourceModel.createFromJson(json.dangerSource);
     variant.creationDate = json.creationDate;
     variant.updateDate = json.updateDate;
     variant.validFrom = json.validFrom;
     variant.validUntil = json.validUntil;
     variant.status = json.status;
-    variant.type = json.type;
     variant.ownerRegion = json.ownerRegion;
     variant.regions = json.regions;
     variant.hasDaytimeDependency = json.hasDaytimeDependency;
@@ -256,7 +254,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.runoutIntoGreen = json.runoutIntoGreen;
     variant.naturalRelease = json.naturalRelease;
     variant.dangerSigns = json.dangerSigns;
-    variant.eawsMatrixInformation = json.eawsMatrixInformation;
+    variant.eawsMatrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
     variant.glidingSnowActivity = json.glidingSnowActivity;
     variant.snowHeightUpperLimit = json.snowHeightUpperLimit;
     variant.snowHeightLowerLimit = json.snowHeightLowerLimit;
@@ -292,14 +290,17 @@ export class DangerSourceVariantModel implements PolygonObject {
 
   constructor(variant?: DangerSourceVariantModel) {
     if (variant) {
-      this.dangerSourceVariantId = variant.dangerSourceVariantId;
-      this.dangerSource = variant.dangerSource;
+      if (variant.dangerSourceVariantId) {
+        this.dangerSourceVariantId = variant.dangerSourceVariantId;
+      } else if (variant.id) {
+        this.dangerSourceVariantId = variant.id;
+      }
+      this.dangerSource = DangerSourceModel.createFromJson(variant.dangerSource);
       this.creationDate = new Date();
       this.updateDate = new Date();
       this.validFrom = variant.validFrom;
       this.validUntil = variant.validUntil;
       this.status = variant.status;
-      this.type = variant.type;
       this.ownerRegion = variant.ownerRegion;
       this.regions = variant.regions;
       this.hasDaytimeDependency = variant.hasDaytimeDependency;
@@ -354,10 +355,9 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.validFrom = undefined;
       this.validUntil = undefined;
       this.status = undefined;
-      this.type = undefined;
       this.ownerRegion = undefined;
       this.regions = new Array<string>();
-      this.hasDaytimeDependency = undefined;
+      this.hasDaytimeDependency = false;
       this.avalancheType = undefined;
       this.aspects = new Array<Aspect>();
       this.elevationHigh = undefined;

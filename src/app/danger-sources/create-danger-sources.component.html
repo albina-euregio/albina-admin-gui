@@ -93,7 +93,7 @@
           <button
             *ngIf="dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()"
             [disabled]="editRegions || loading"
-            (click)="loadVariantsFromYesterday()"
+            (click)="loadAllVariantsFromYesterday()"
             class="btn btn-sm btn-bare btn-sm btn-icon"
             type="button"
             data-toggle="tooltip"
@@ -145,9 +145,8 @@
         (updateVariantOnServerEvent)="updateVariantOnServer($event)"
         (deleteVariantEvent)="eventDeleteVariant($event)"
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
-        (copyVariantEvent)="eventCopyVariant($event)"
-        (deselectVariantEvent)="eventDeselectVariant($event)"
-        (toggleVariantsSidebarEvent)="toggleVariantsSidebar($event)"
+        (deselectVariantEvent)="eventDeselectVariant()"
+        (toggleVariantsSidebarEvent)="toggleVariantsSidebar()"
       ></app-danger-source-variant>
     </div>
     <!-- End Active variant -->
@@ -184,7 +183,7 @@
           <button type="reset" class="btn btn-bare" (click)="discardVariant($event, activeVariant)">
             <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
           </button>
-          <button type="button" class="btn btn-primary" (click)="saveVariant($event, activeVariant)">
+          <button type="button" class="btn btn-primary" (click)="saveVariant($event)">
             <i class="ph-bold ph-check"></i>
             <span *ngIf="activeVariant.regions.length === 0">{{
               "bulletins.create.tooltip.createRegion" | translate
@@ -217,8 +216,10 @@
     <!-- Own regions -->
     <header class="create-bulletin__region-divider">
       <h5 class="font-s-bold">
+        {{ dangerSource.title }}
         {{ dangerSource.creationDate | date: "longDate" : undefined : translateService.currentLang }}
       </h5>
+      <h5 class="font-s-bold"></h5>
       <div class="btn-group region-divider__actions">
         <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
           <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle>

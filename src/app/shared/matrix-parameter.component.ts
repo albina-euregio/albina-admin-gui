@@ -1,10 +1,9 @@
 import { OnChanges, Component, Input, EventEmitter, Output } from "@angular/core";
-import { MatrixInformationModel } from "../models/matrix-information.model";
+import { MatrixInformationModel } from "app/models/matrix-information.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
-import { BulletinModel } from "app/models/bulletin.model";
 import type { ChangeContext, Options } from "@angular-slider/ngx-slider";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -13,7 +12,6 @@ import { TranslateService } from "@ngx-translate/core";
   templateUrl: "matrix-parameter.component.html",
 })
 export class MatrixParameterComponent implements OnChanges {
-  @Input() bulletin: BulletinModel;
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
   @Input() matrixInformation: MatrixInformationModel;
   @Input() disabled: boolean;

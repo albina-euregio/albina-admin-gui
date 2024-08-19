@@ -19,9 +19,11 @@ export class DangerSourceModel implements PolygonObject {
 
   constructor(dangerSource?: DangerSourceModel) {
     if (dangerSource) {
+      this.creationDate = dangerSource.creationDate;
       this.title = dangerSource.title;
       this.description = dangerSource.description;
     } else {
+      this.creationDate = new Date();
       this.title = "";
       this.description = "";
     }
