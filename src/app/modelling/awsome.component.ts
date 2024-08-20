@@ -58,6 +58,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       .map((feature) => {
         feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
         feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
+        feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
         return feature.properties;
       });
     this.filterService.filterSelectionData.forEach((filter) =>
