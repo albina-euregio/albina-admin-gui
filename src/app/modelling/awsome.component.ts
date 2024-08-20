@@ -52,7 +52,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   ) {}
 
   async ngOnInit() {
-    const { sources, filters } = (await import("./awsome.json")).default;
+    const { sources, filters } = await this.fetchJSON<Awsome>("https://models.avalanche.report/dashboard/awsome.json");
     this.sources = sources;
 
     this.filterService.filterSelectionData = (filters as FilterSelectionSpec<FeatureProperties>[]).map(
