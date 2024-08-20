@@ -492,23 +492,23 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     for (const v of dangerSourceVariants) {
       const variant = new DangerSourceVariantModel(v);
       variant.id = v.id;
-      if (this.activeVariant && this.activeVariant.id === variant.id) {
-        // do not update active variant (this is currently edited) except it is disabled
-        if (this.isDisabled()) {
-          this.activeVariant = variant;
-        } else {
-          if (this.activeVariant.regions !== variant.regions) {
-            this.activeVariant.regions = variant.regions;
+      variants.push(variant);
+      if (variant.hasDaytimeDependency) {
+        hasDaytimeDependency = true;
+      }
+      // set active variant
+      if (this.activeVariant) {
+        if (!this.activeVariant.id || this.activeVariant.id === "") {
+          if (
+            this.activeVariant.dangerSource?.id === variant.dangerSource?.id &&
+            this.activeVariant.regions.includes(variant.regions[0])
+          ) {
+            this.activeVariant = variant;
           }
-        }
-        variants.push(this.activeVariant);
-        if (this.activeVariant.hasDaytimeDependency) {
-          hasDaytimeDependency = true;
-        }
-      } else {
-        variants.push(variant);
-        if (variant.hasDaytimeDependency) {
-          hasDaytimeDependency = true;
+        } else {
+          if (this.activeVariant.id === variant.id) {
+            this.activeVariant = variant;
+          }
         }
       }
     }
