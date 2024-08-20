@@ -50,16 +50,20 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.filterService.filterSelectionData = (filters as FilterSelectionSpec<FeatureProperties>[]).map(
       (f) => new FilterSelectionData(f),
     );
-    this.markerService.markerClassify = this.filterService.filterSelectionData[0];
+    this.markerService.markerClassify = this.filterService.filterSelectionData.at(-1);
 
     const collections = await Promise.all(sources.map((url) => this.fetchJSON<GeoJSON.FeatureCollection>(url)));
     this.observations = collections
       .flatMap((c) => c.features)
-      .map((feature) => {
+      .flatMap((feature) => {
         feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
         feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
         feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
-        return feature.properties;
+        return ["east", "flat", "north", "south", "west"].map((aspect) => ({
+          ...feature.properties,
+          aspect,
+          snp_characteristics: feature.properties.snp_characteristics[aspect],
+        }));
       });
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>

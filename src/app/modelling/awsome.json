@@ -5,6 +5,47 @@
   ],
   "filters": [
     {
+      "type": "Aspect",
+      "label": "Aspect",
+      "key": "aspect",
+      "chartType": "rose",
+      "chartRichLabel": "label",
+      "values": [
+        {
+          "value": "north",
+          "color": "#2f74f9",
+          "label": "N",
+          "legend": "N"
+        },
+
+        {
+          "value": "east",
+          "color": "#b3b3b3",
+          "label": "E",
+          "legend": "E"
+        },
+        {
+          "value": "south",
+          "color": "#ef6d25",
+          "label": "S",
+          "legend": "S"
+        },
+
+        {
+          "value": "west",
+          "color": "#000000",
+          "label": "W",
+          "legend": "W"
+        },
+        {
+          "value": "flat",
+          "color": "#113570",
+          "label": "=",
+          "legend": "="
+        }
+      ]
+    },
+    {
       "type": "Elevation",
       "label": "Elevation",
       "key": "elevation",
@@ -107,8 +148,8 @@
       "chartRichLabel": "label",
       "chartType": "bar",
       "label": "LWC",
-      "key": "snp_characteristics.south.lwc.value",
-      "type": "snp_characteristics.south.lwc.value",
+      "key": "snp_characteristics.lwc.value",
+      "type": "snp_characteristics.lwc.value",
       "values": [
         {
           "numericRange": [
@@ -146,8 +187,8 @@
       "chartRichLabel": "label",
       "chartType": "bar",
       "label": "SK38",
-      "key": "snp_characteristics.flat.sk38.value",
-      "type": "snp_characteristics.flat.sk38.value",
+      "key": "snp_characteristics.sk38.value",
+      "type": "snp_characteristics.sk38.value",
       "values": [
         {
           "numericRange": [
