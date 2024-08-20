@@ -1,7 +1,10 @@
 {
   "$schema": "./awsome.schema.json",
   "sources": [
-    "https://models.avalanche.report/snp-gridded/geojson-tirol23/2023-11-12_06-00-00.json"
+    {
+      "name": "snp-gridded",
+      "url": "https://models.avalanche.report/snp-gridded/geojson-tirol23/2023-11-12_06-00-00.json"
+    }
   ],
   "filters": [
     {
@@ -17,7 +20,6 @@
           "label": "N",
           "legend": "N"
         },
-
         {
           "value": "east",
           "color": "#b3b3b3",
@@ -30,7 +32,6 @@
           "label": "S",
           "legend": "S"
         },
-
         {
           "value": "west",
           "color": "#000000",

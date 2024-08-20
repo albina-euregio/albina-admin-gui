@@ -3,7 +3,35 @@
     <div class="layout-left">
       <div class="layout-global">
         <div class="global-bar-scroll">
-          <div class="global-bar global-bar-left"></div>
+          <div class="global-bar global-bar-left">
+            <div class="global-bar-item global-bar-item-source">
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  data-bs-auto-close="outside"
+                >
+                  {{ "admin.observations.selectSources.placeholder" | translate }}
+                </button>
+                <form class="dropdown-menu p-4 overflow-y-scroll">
+                  <div *ngFor="let source of sources" class="form-check">
+                    <label class="form-check-label text-nowrap">
+                      <input
+                        [(ngModel)]="filterService.observationSources[source.name]"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="ngOnInit()"
+                        type="checkbox"
+                        class="form-check-input"
+                      />
+                      {{ source.name }}
+                    </label>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

@@ -12,10 +12,15 @@ import { ObservationMarkerService } from "../observations/observation-marker.ser
 
 type FeatureProperties = GeoJSON.Feature["properties"];
 
-export interface Awsome {
-  sources: string[];
+type Source = {
+  name: string;
+  url: string;
+};
+
+type Awsome = {
+  sources: Source[];
   filters: FilterSelectionSpec<FeatureProperties>[];
-}
+};
 
 @Component({
   selector: "app-awsome",
@@ -37,6 +42,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   observations: FeatureProperties[] = [];
   localObservations: FeatureProperties[] = [];
+  sources: Source[];
 
   constructor(
     public filterService: ObservationFilterService<FeatureProperties>,
@@ -46,31 +52,36 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   async ngOnInit() {
     const { sources, filters } = (await import("./awsome.json")).default;
+    this.sources = sources;
 
     this.filterService.filterSelectionData = (filters as FilterSelectionSpec<FeatureProperties>[]).map(
       (f) => new FilterSelectionData(f),
     );
     this.markerService.markerClassify = this.filterService.filterSelectionData.at(-1);
 
-    const collections = await Promise.all(sources.map((url) => this.fetchJSON<GeoJSON.FeatureCollection>(url)));
-    this.observations = collections
-      .flatMap((c) => c.features)
-      .flatMap((feature) => {
-        feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
-        feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
-        feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
-        return ["east", "flat", "north", "south", "west"].map((aspect) => ({
-          ...feature.properties,
-          aspect,
-          snp_characteristics: feature.properties.snp_characteristics[aspect],
-        }));
-      });
+    this.observations = (await Promise.all(sources.flatMap(async (source) => await this.loadSource(source)))).flat();
+
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
         this.filterService.isSelected(o),
       ),
     );
     this.applyLocalFilter();
+  }
+
+  private async loadSource(source: Source) {
+    const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(source.url);
+    return features.flatMap((feature) => {
+      feature.properties.$source = source.name;
+      feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
+      feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
+      feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
+      return ["east", "flat", "north", "south", "west"].map((aspect) => ({
+        ...feature.properties,
+        aspect,
+        snp_characteristics: feature.properties.snp_characteristics[aspect],
+      }));
+    });
   }
 
   async ngAfterViewInit() {
