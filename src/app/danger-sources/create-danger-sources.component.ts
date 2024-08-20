@@ -835,6 +835,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       .deleteDangerSourceVariant(this.variantMarkedDelete, this.dangerSourcesService.getActiveDate())
       .subscribe(() => {
         this.loading = false;
+        this.mapService.resetAggregatedRegions();
+        this.updateInternalVariantsOnMap();
       });
   }
 
