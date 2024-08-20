@@ -186,9 +186,10 @@ export class DangerSourceVariantModel implements PolygonObject {
   eawsMatrixInformation: MatrixInformationModel;
 
   /** --------------------- */
-  /** LOOSE SNOW AVALANCHES */
+  /** GLIDE SNOW AVALANCHES */
   /** --------------------- */
   glidingSnowActivity: GlidingSnowActivity;
+  glidingSnowActivityValue: number | undefined;
   snowHeightUpperLimit: number | undefined;
   snowHeightLowerLimit: number | undefined;
   zeroDegreeIsotherm: boolean | undefined;
@@ -430,5 +431,9 @@ export class DangerSourceVariantModel implements PolygonObject {
 
   getAfternoonDangerRatingBelow(): DangerRating {
     return this.eawsMatrixInformation.dangerRating;
+  }
+
+  updateDangerRating() {
+    // TODO implement (do we need it?)
   }
 }

@@ -33,17 +33,6 @@
     </p>
     <div class="btn-group banner__actions">
       <button
-        [class]="variant.hasDaytimeDependency ? 'btn-primary' : 'btn-outline-primary'"
-        *ngIf="!editRegions"
-        (click)="daytimeDependencyChanged($event, !variant.hasDaytimeDependency)"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
-        type="button"
-        class="btn btn-sm btn-icon"
-      >
-        <i class="ph ph-sun-horizon"></i>
-      </button>
-      <button
         *ngIf="!editRegions"
         (click)="editMicroRegions()"
         data-toggle="tooltip"
@@ -72,24 +61,6 @@
         class="btn btn-sm btn-icon btn-outline-primary"
       >
         <i class="ph ph-trash"></i>
-      </button>
-    </div>
-  </div>
-
-  <div
-    *ngIf="dangerSourcesService.getIsEditable() && !isCreator(variant)"
-    class="region-form__banner banner banner-warning-strong"
-  >
-    <p class="banner__text">
-      <i class="ph ph-lightbulb"></i>
-      {{ "bulletins.create.pendingSuggestions" | translate }}
-    </p>
-    <div class="btn-group banner__actions">
-      <button (click)="rejectSuggestions($event, variant)" type="button" class="btn btn-sm btn-outline-dark">
-        <i class="ph ph-x"></i> <span>{{ "bulletins.create.rejectSuggestion" | translate }}</span>
-      </button>
-      <button (click)="acceptSuggestions($event, variant)" type="button" class="btn btn-sm btn-dark">
-        <i class="ph ph-check"></i><span>{{ "bulletins.create.acceptSuggestion" | translate }}</span>
       </button>
     </div>
   </div>
@@ -127,63 +98,460 @@
   </div>
 
   <main class="region-form__content">
+    <!--
+    ------------------
+    TODO show in title
+    ------------------
+    creationDate: Date;
+    updateDate: Date;
+    status: DangerSourceVariantStatus;
+    -->
+
     <accordion class="accordion">
+      <!-- Avalanche -->
       <accordion-group
         class="accordion-group"
-        [isOpen]="isAccordionAvalancheProblemOpen"
-        (isOpenChange)="accordionChanged($event, 'avalancheProblem')"
+        [isOpen]="isAccordionAvalancheOpen"
+        (isOpenChange)="accordionChanged($event, 'avalanche')"
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-down"></i>
-            {{ "bulletins.create.title.avalancheProblem" | translate
-            }}<span *ngIf="variant.hasDaytimeDependency"
-              >&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span
-            >
+            <i *ngIf="!isAccordionAvalancheOpen" class="accordion__arrow ph ph-caret-right"></i>
+            <i *ngIf="isAccordionAvalancheOpen" class="accordion__arrow ph ph-caret-down"></i>
+            {{ "dangerSources.create.title.avalanche" | translate }}
           </h2>
+        </div>
+        <div class="form-group row">
+          <label class="form-label" for="">{{ "bulletins.create.label.avalancheType" | translate }}</label>
+          <div class="btn-group">
+            <!-- SLAB -->
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)
+              "
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.avalancheType.slab' | translate }}"
+            >
+              <span>{{ "bulletins.create.tooltip.avalancheType.slab" | translate }}</span>
+            </button>
+
+            <!-- LOOSE -->
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
+              "
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.avalancheType.loose' | translate }}"
+            >
+              <span>{{ "bulletins.create.tooltip.avalancheType.loose" | translate }}</span>
+            </button>
+
+            <!-- GLIDE -->
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
+              "
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.avalancheType.glide' | translate }}"
+            >
+              <span>{{ "bulletins.create.tooltip.avalancheType.glide" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- GLIDE SNOW AVALANCHES -->
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.glidingSnowActivity" | translate
+          }}</label>
+          <ngx-slider
+            class="gliding-snow-activity-slider"
+            [(value)]="variant.glidingSnowActivityValue"
+            [options]="glidingSnowActivityOptions"
+            (userChange)="onGlidingSnowActivityValueChange($event)"
+          ></ngx-slider>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
+          <div style="align-items: baseline" class="input-group">
+            <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+              "dangerSources.create.label.snowHeight" | translate
+            }}</label>
+            <input
+              step="1"
+              min="0"
+              id="inputSnowHeightLowerLimit"
+              class="form-control"
+              size="14"
+              type="number"
+              name="snow-height-lower-limit-input"
+              [disabled]="disabled"
+              [(ngModel)]="variant.snowHeightLowerLimit"
+            />
+            <span class="input-group-text">cm</span>
+            <label style="margin: 0 1rem" class="form-label" attr.for="snowHeightLabel"> - </label>
+            <input
+              step="1"
+              min="0"
+              id="inputSnowHeightUpperLimit"
+              class="form-control"
+              size="14"
+              type="number"
+              name="snow-height-upper-limit´-input"
+              [disabled]="disabled"
+              [(ngModel)]="variant.snowHeightUpperLimit"
+            />
+            <span class="input-group-text">cm</span>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="zeroDegreeIsothermCheckbox">{{
+                "dangerSources.create.label.zeroDegreeIsotherm" | translate
+              }}</label>
+              <input
+                id="zeroDegreeIsothermCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.zeroDegreeIsotherm"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!--
+        /** --------------- */
+        /** SLAB AVALANCHES */
+        /** --------------- */
+        slabGrainShape: GrainShape;
+        slabThicknessUpperLimit: number | undefined;
+        slabThicknessLowerLimit: number | undefined;
+        slabHandHardnessUpperLimit: HandHardness;
+        slabHandHardnessLowerLimit: HandHardness;
+        slabHardnessProfile: Tendency;
+        slabEnergyTransferPotential: Characteristic;
+        slabDistribution: Distribution;
+        weakLayerGrainShape: GrainShape;
+        weakLayerGrainSizeUpperLimit: number | undefined;
+        weakLayerGrainSizeLowerLimit: number | undefined;
+        weakLayerPersistent: boolean | undefined;
+        weakLayerThickness: Thickness;
+        weakLayerStrength: Characteristic;
+        weakLayerWet: boolean | undefined;
+        weakLayerCrustAbove: boolean | undefined;
+        weakLayerCrustBelow: boolean | undefined;
+        weakLayerPosition: SnowpackPosition;
+        weakLayerCreation: CreationProcess;
+        weakLayerDistribution: Distribution;
+        dangerSpotRecognizability: Recognizability;
+        remoteTriggering: boolean | undefined;
+        terrainTypes: TerrainType[];
+        -->
+
+        <!-- LOOSE SNOW AVALANCHES -->
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.looseSnowGrainShape" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.PP) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.PP"
+            >
+              <span>{{ grainShapeEnum.PP }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DF) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.DF"
+            >
+              <span>{{ grainShapeEnum.DF }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.RG) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.RG"
+            >
+              <span>{{ grainShapeEnum.RG }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.FC) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.FC"
+            >
+              <span>{{ grainShapeEnum.FC }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DH) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.DH) ? undefined : grainShapeEnum.DH)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.DH"
+            >
+              <span>{{ grainShapeEnum.DH }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.SH) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.SH) ? undefined : grainShapeEnum.SH)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.SH"
+            >
+              <span>{{ grainShapeEnum.SH }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.PPgp) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowGrainShape(
+                  $event,
+                  isLooseSnowGrainShape(grainShapeEnum.PPgp) ? undefined : grainShapeEnum.PPgp
+                )
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.PPgp"
+            >
+              <span>{{ grainShapeEnum.PPgp }}</span>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.looseSnowMoisture" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowMoisture(wetnessEnum.dry) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.dry) ? undefined : wetnessEnum.dry)"
+              data-toggle="tooltip"
+              title="{{ 'wetness.dry' | translate }}"
+            >
+              <span>{{ "wetness.dry" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowMoisture(wetnessEnum.moist) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.moist) ? undefined : wetnessEnum.moist)
+              "
+              data-toggle="tooltip"
+              title="{{ 'wetness.moist' | translate }}"
+            >
+              <span>{{ "wetness.moist" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isLooseSnowMoisture(wetnessEnum.wet) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.wet) ? undefined : wetnessEnum.wet)"
+              data-toggle="tooltip"
+              title="{{ 'wetness.wet' | translate }}"
+            >
+              <span>{{ "wetness.wet" | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </accordion-group>
+
+      <accordion-group
+        class="accordion-group"
+        [isOpen]="isAccordionCharacteristicsOpen"
+        (isOpenChange)="accordionChanged($event, 'characteristics')"
+      >
+        <div accordion-heading class="accordion-header accordion-header--with-buttons">
+          <h2 class="accordion-header__title">
+            <i *ngIf="!isAccordionCharacteristicsOpen" class="accordion__arrow ph ph-caret-right"></i>
+            <i *ngIf="isAccordionCharacteristicsOpen" class="accordion__arrow ph ph-caret-down"></i>
+            {{ "dangerSources.create.title.characteristics" | translate }}
+          </h2>
+        </div>
+
+        <!--
+        hasDaytimeDependency: boolean | undefined;
+        dangerIncreaseWithElevation: boolean | undefined;
+        highestDangerAspect: Aspect;
+        dangerPeak: Daytime;
+        slopeGradient: SlopeGradient;
+        runoutIntoGreen: boolean | undefined;
+        naturalRelease: Probability;
+        dangerSigns: DangerSign[];
+        -->
+      </accordion-group>
+
+      <accordion-group
+        class="accordion-group"
+        [isOpen]="isAccordionMatrixOpen"
+        (isOpenChange)="accordionChanged($event, 'matrix')"
+      >
+        <div accordion-heading class="accordion-header accordion-header--with-buttons">
+          <h2 class="accordion-header__title">
+            <i *ngIf="!isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-right"></i>
+            <i *ngIf="isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-down"></i>
+            {{ "dangerSources.create.title.matrix" | translate }}
+          </h2>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-5">
+            <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
+            <div>
+              <app-aspects
+                [(aspects)]="variant.aspects"
+                [disabled]="disabled"
+                [size]="150"
+                (aspectsChange)="updateVariantOnServer()"
+              ></app-aspects>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <label class="form-label" for="">{{ "bulletins.create.label.elevation" | translate }}</label>
+            <!-- Elevation (high) -->
+            <div class="avalanche-problem-detail__elevation">
+              <div class="avalanche-problem-detail__elevation-label form-check">
+                <input
+                  id="elevationHighCheckbox"
+                  type="checkbox"
+                  class="form-check-input"
+                  [disabled]="disabled"
+                  (change)="setUseElevationHigh($event)"
+                  [(ngModel)]="useElevationHigh"
+                />
+                <label class="form-label" attr.for="elevationHighCheckbox">{{
+                  "bulletins.create.label.elevationHigh" | translate
+                }}</label>
+              </div>
+              <div class="avalanche-problem-detail__elevation-inputs">
+                <div class="input-group">
+                  <input
+                    step="100"
+                    min="0"
+                    max="9000"
+                    id="inputElevationHigh"
+                    class="form-control"
+                    size="14"
+                    type="number"
+                    name="elevation-input"
+                    [disabled]="disabled || variant.treelineHigh || !useElevationHigh"
+                    [(ngModel)]="localElevationHigh"
+                    (change)="updateElevationHigh($event)"
+                  />
+                  <span class="input-group-text">m</span>
+                </div>
+                <button
+                  [disabled]="disabled || !useElevationHigh"
+                  type="reset"
+                  class="btn btn-icon"
+                  [ngClass]="localTreelineHigh ? 'btn-dark' : 'btn-outline-secondary'"
+                  (click)="treelineHighClicked($event)"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+                >
+                  <i class="ph ph-tree-evergreen"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Elevation (low) -->
+            <div class="avalanche-problem-detail__elevation">
+              <div class="form-check avalanche-problem-detail__elevation-label">
+                <input
+                  id="elevationLowCheckbox"
+                  type="checkbox"
+                  class="form-check-input"
+                  [disabled]="disabled"
+                  (change)="setUseElevationLow($event)"
+                  [(ngModel)]="useElevationLow"
+                />
+                <label class="form-label" attr.for="elevationLowCheckbox">{{
+                  "bulletins.create.label.elevationLow" | translate
+                }}</label>
+              </div>
+              <div class="avalanche-problem-detail__elevation-inputs">
+                <div class="input-group">
+                  <input
+                    step="100"
+                    min="0"
+                    max="9000"
+                    id="inputElevationLow"
+                    class="form-control"
+                    size="14"
+                    type="number"
+                    name="elevation-input"
+                    [disabled]="disabled || variant.treelineLow || !useElevationLow"
+                    [(ngModel)]="localElevationLow"
+                    (change)="updateElevationLow()"
+                  />
+                  <span class="input-group-text">m</span>
+                </div>
+                <button
+                  [disabled]="disabled || !useElevationLow"
+                  type="reset"
+                  class="btn btn-icon"
+                  [ngClass]="localTreelineLow ? 'btn-dark' : 'btn-outline-secondary'"
+                  (click)="treelineLowClicked($event)"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+                >
+                  <i class="ph ph-tree-evergreen"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <app-matrix-parameter
+            [(bulletinDaytimeDescription)]="variant"
+            [(matrixInformation)]="variant.eawsMatrixInformation"
+            [disabled]="disabled"
+            [count]="1"
+            [afternoon]="false"
+            (changeMatrixEvent)="updateVariantOnServer()"
+          ></app-matrix-parameter>
         </div>
       </accordion-group>
     </accordion>
   </main>
 </div>
-
-<ng-template #catalogOfPhrasesTemplate>
-  <button type="reset" class="btn btn-bare pull-end" (click)="hideDialog()">&times;</button>
-  <iframe
-    (load)="initCatalogOfPhrases($event)"
-    (message)="getText($event)"
-    [src]="pmUrl"
-    width="100%"
-    height="100%"
-  ></iframe>
-</ng-template>
-
-<ng-template #removeDaytimeDependencyTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.create.removeDaytimeDependencyDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button
-      [disabled]="loadingModal"
-      type="button"
-      class="btn btn-primary"
-      (click)="removeDaytimeDependencyModalConfirm($event, true)"
-    >
-      {{ "daytime.earlier" | translate }}
-    </button>
-
-    <button
-      [disabled]="loadingModal"
-      type="button"
-      class="btn btn-primary"
-      (click)="removeDaytimeDependencyModalConfirm($event, false)"
-    >
-      <span>{{ "daytime.later" | translate }}</span>
-    </button>
-
-    <button type="reset" class="btn btn-bare" (click)="removeDaytimeDependencyModalDecline()">
-      <span>{{ "bulletins.create.removeDaytimeDependencyDialog.cancel" | translate }}</span>
-    </button>
-  </div>
-</ng-template>

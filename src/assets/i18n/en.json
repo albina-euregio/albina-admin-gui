@@ -83,7 +83,19 @@
       },
       "createDangerSource": "Create danger source",
       "createVariant": "Create new variant",
-      "noDangerSources": "No danger sources"
+      "noDangerSources": "No danger sources",
+      "title": {
+        "avalanche": "Avalanche",
+        "matrix": "Matrix",
+        "characteristics": "Characteristics"
+      },
+      "label": {
+        "glidingSnowActivity": "Gliding snow activity",
+        "snowHeight": "Snow height",
+        "zeroDegreeIsotherm": "0°C isotherm",
+        "looseSnowMoisture": "Loose snow moisture",
+        "looseSnowGrainShape": "Loose snow grain shape"
+      }
     }
   },
   "bulletins": {
@@ -935,6 +947,16 @@
     "easy": " Easy",
     "challenging": " Challenging",
     "complex": " Complex"
+  },
+  "glidingSnowActivity": {
+    "low": "low",
+    "medium": "medium",
+    "high": "high"
+  },
+  "wetness": {
+    "dry": "dry",
+    "moist": "moist",
+    "wet": "wet"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",

@@ -492,10 +492,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     for (const v of dangerSourceVariants) {
       const variant = new DangerSourceVariantModel(v);
       variant.id = v.id;
-      variants.push(variant);
-      if (variant.hasDaytimeDependency) {
-        hasDaytimeDependency = true;
-      }
+
       // set active variant
       if (this.activeVariant) {
         if (!this.activeVariant.id || this.activeVariant.id === "") {
@@ -505,10 +502,29 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
           ) {
             this.activeVariant = variant;
           }
-        } else {
-          if (this.activeVariant.id === variant.id) {
-            this.activeVariant = variant;
+          variants.push(variant);
+          if (variant.hasDaytimeDependency) {
+            hasDaytimeDependency = true;
           }
+        } else {
+          // do not replace active variant
+          if (this.activeVariant.id === variant.id) {
+            this.activeVariant.regions = variant.regions;
+            variants.push(this.activeVariant);
+            if (this.activeVariant.hasDaytimeDependency) {
+              hasDaytimeDependency = true;
+            }
+          } else {
+            variants.push(variant);
+            if (variant.hasDaytimeDependency) {
+              hasDaytimeDependency = true;
+            }
+          }
+        }
+      } else {
+        variants.push(variant);
+        if (variant.hasDaytimeDependency) {
+          hasDaytimeDependency = true;
         }
       }
     }
