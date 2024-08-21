@@ -166,7 +166,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   updateDate: Date;
   validFrom: Date;
   validUntil: Date;
-  status: DangerSourceVariantStatus;
+  dangerSourceVariantStatus: DangerSourceVariantStatus;
   ownerRegion: string;
   regions: string[];
   hasDaytimeDependency: boolean | undefined;
@@ -238,7 +238,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.updateDate = json.updateDate;
     variant.validFrom = json.validFrom;
     variant.validUntil = json.validUntil;
-    variant.status = json.status;
+    variant.dangerSourceVariantStatus = json.status;
     variant.ownerRegion = json.ownerRegion;
     variant.regions = json.regions;
     variant.hasDaytimeDependency = json.hasDaytimeDependency;
@@ -257,6 +257,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.dangerSigns = json.dangerSigns;
     variant.eawsMatrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
     variant.glidingSnowActivity = json.glidingSnowActivity;
+    variant.glidingSnowActivityValue = json.glidingSnowActivityValue;
     variant.snowHeightUpperLimit = json.snowHeightUpperLimit;
     variant.snowHeightLowerLimit = json.snowHeightLowerLimit;
     variant.zeroDegreeIsotherm = json.zeroDegreeIsotherm;
@@ -301,7 +302,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.updateDate = new Date();
       this.validFrom = variant.validFrom;
       this.validUntil = variant.validUntil;
-      this.status = variant.status;
+      this.dangerSourceVariantStatus = variant.dangerSourceVariantStatus;
       this.ownerRegion = variant.ownerRegion;
       this.regions = variant.regions;
       this.hasDaytimeDependency = variant.hasDaytimeDependency;
@@ -320,6 +321,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.dangerSigns = variant.dangerSigns;
       this.eawsMatrixInformation = new MatrixInformationModel(variant.eawsMatrixInformation);
       this.glidingSnowActivity = variant.glidingSnowActivity;
+      this.glidingSnowActivityValue = variant.glidingSnowActivityValue;
       this.snowHeightUpperLimit = variant.snowHeightUpperLimit;
       this.snowHeightLowerLimit = variant.snowHeightLowerLimit;
       this.zeroDegreeIsotherm = variant.zeroDegreeIsotherm;
@@ -355,7 +357,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.updateDate = new Date();
       this.validFrom = undefined;
       this.validUntil = undefined;
-      this.status = undefined;
+      this.dangerSourceVariantStatus = undefined;
       this.ownerRegion = undefined;
       this.regions = new Array<string>();
       this.hasDaytimeDependency = false;
@@ -374,6 +376,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.dangerSigns = new Array<DangerSign>();
       this.eawsMatrixInformation = new MatrixInformationModel();
       this.glidingSnowActivity = undefined;
+      this.glidingSnowActivityValue = undefined;
       this.snowHeightUpperLimit = undefined;
       this.snowHeightLowerLimit = undefined;
       this.zeroDegreeIsotherm = undefined;
@@ -431,9 +434,5 @@ export class DangerSourceVariantModel implements PolygonObject {
 
   getAfternoonDangerRatingBelow(): DangerRating {
     return this.eawsMatrixInformation.dangerRating;
-  }
-
-  updateDangerRating() {
-    // TODO implement (do we need it?)
   }
 }
