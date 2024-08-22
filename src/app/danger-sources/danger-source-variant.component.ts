@@ -16,9 +16,17 @@ import * as Enums from "../enums/enums";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
 import {
+  Characteristic,
+  CreationProcess,
   DangerSourceVariantModel,
+  Daytime,
+  Distribution,
   GlidingSnowActivity,
   GrainShape,
+  Probability,
+  Recognizability,
+  SlopeGradient,
+  SnowpackPosition,
   Thickness,
   Wetness,
 } from "./models/danger-source-variant.model";
@@ -52,6 +60,15 @@ export class DangerSourceVariantComponent {
   wetnessEnum = Wetness;
   grainShapeEnum = GrainShape;
   thicknessEnum = Thickness;
+  characteristicEnum = Characteristic;
+  snowpackPositionEnum = SnowpackPosition;
+  creationProcessEnum = CreationProcess;
+  distributionEnum = Distribution;
+  recognizabilityEnum = Recognizability;
+  aspectEnum = Enums.Aspect;
+  daytimeEnum = Daytime;
+  slopeGradientEnum = SlopeGradient;
+  probabilityEnum = Probability;
 
   useElevationHigh = false;
   useElevationLow = false;
@@ -234,6 +251,96 @@ export class DangerSourceVariantComponent {
   setWeakLayerThickness(event: Event, thickness: Thickness) {
     event.stopPropagation();
     this.variant.weakLayerThickness = thickness;
+    this.updateVariantOnServer();
+  }
+
+  isWeakLayerStrength(strength: Characteristic) {
+    return this.variant?.weakLayerStrength === strength;
+  }
+
+  setWeakLayerStrength(event: Event, strength: Characteristic) {
+    event.stopPropagation();
+    this.variant.weakLayerStrength = strength;
+    this.updateVariantOnServer();
+  }
+
+  isWeakLayerPosition(snowpackPosition: SnowpackPosition) {
+    return this.variant?.weakLayerPosition === snowpackPosition;
+  }
+
+  setWeakLayerPosition(event: Event, snowpackPosition: SnowpackPosition) {
+    event.stopPropagation();
+    this.variant.weakLayerPosition = snowpackPosition;
+    this.updateVariantOnServer();
+  }
+
+  isWeakLayerCreation(creationProcess: CreationProcess) {
+    return this.variant?.weakLayerCreation === creationProcess;
+  }
+
+  setWeakLayerCreation(event: Event, creationProcess: CreationProcess) {
+    event.stopPropagation();
+    this.variant.weakLayerCreation = creationProcess;
+    this.updateVariantOnServer();
+  }
+
+  isWeakLayerDistribution(distribution: Distribution) {
+    return this.variant?.weakLayerDistribution === distribution;
+  }
+
+  setWeakLayerDistribution(event: Event, distribution: Distribution) {
+    event.stopPropagation();
+    this.variant.weakLayerDistribution = distribution;
+    this.updateVariantOnServer();
+  }
+
+  isDangerSpotRecognizability(dangerSpotRecognizability: Recognizability) {
+    return this.variant?.dangerSpotRecognizability === dangerSpotRecognizability;
+  }
+
+  setDangerSpotRecognizability(event: Event, dangerSpotRecognizability: Recognizability) {
+    event.stopPropagation();
+    this.variant.dangerSpotRecognizability = dangerSpotRecognizability;
+    this.updateVariantOnServer();
+  }
+
+  isHighestDangerAspect(highestDangerAspect: Enums.Aspect) {
+    return this.variant?.highestDangerAspect === highestDangerAspect;
+  }
+
+  setHighestDangerAspect(event: Event, highestDangerAspect: Enums.Aspect) {
+    event.stopPropagation();
+    this.variant.highestDangerAspect = highestDangerAspect;
+    this.updateVariantOnServer();
+  }
+
+  isDangerPeak(dangerPeak: Daytime) {
+    return this.variant?.dangerPeak === dangerPeak;
+  }
+
+  setDangerPeak(event: Event, dangerPeak: Daytime) {
+    event.stopPropagation();
+    this.variant.dangerPeak = dangerPeak;
+    this.updateVariantOnServer();
+  }
+
+  isSlopeGradient(slopeGradient: SlopeGradient) {
+    return this.variant?.slopeGradient === slopeGradient;
+  }
+
+  setSlopeGradient(event: Event, slopeGradient: SlopeGradient) {
+    event.stopPropagation();
+    this.variant.slopeGradient = slopeGradient;
+    this.updateVariantOnServer();
+  }
+
+  isNaturalRelease(naturalRelease: Probability) {
+    return this.variant?.naturalRelease === naturalRelease;
+  }
+
+  setNaturalRelease(event: Event, naturalRelease: Probability) {
+    event.stopPropagation();
+    this.variant.naturalRelease = naturalRelease;
     this.updateVariantOnServer();
   }
 

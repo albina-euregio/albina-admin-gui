@@ -523,16 +523,407 @@
           </div>
         </div>
 
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.weakLayerStrength" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.low) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerStrength(
+                  $event,
+                  isWeakLayerStrength(characteristicEnum.low) ? undefined : characteristicEnum.low
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.low' | translate }}"
+            >
+              <span>{{ "characteristic.low" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.medium) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerStrength(
+                  $event,
+                  isWeakLayerStrength(characteristicEnum.medium) ? undefined : characteristicEnum.medium
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.medium' | translate }}"
+            >
+              <span>{{ "characteristic.medium" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.high) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerStrength(
+                  $event,
+                  isWeakLayerStrength(characteristicEnum.high) ? undefined : characteristicEnum.high
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.high' | translate }}"
+            >
+              <span>{{ "characteristic.high" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.very_high) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerStrength(
+                  $event,
+                  isWeakLayerStrength(characteristicEnum.very_high) ? undefined : characteristicEnum.very_high
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.very_high' | translate }}"
+            >
+              <span>{{ "characteristic.very_high" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="weakLayerWetCheckbox">{{
+                "dangerSources.create.label.weakLayerWet" | translate
+              }}</label>
+              <input
+                id="weakLayerWetCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.weakLayerWet"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="weakLayerCrustAboveCheckbox">{{
+                "dangerSources.create.label.weakLayerCrustAbove" | translate
+              }}</label>
+              <input
+                id="weakLayerCrustAboveCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.weakLayerCrustAbove"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="weakLayerCrustBelowCheckbox">{{
+                "dangerSources.create.label.weakLayerCrustBelow" | translate
+              }}</label>
+              <input
+                id="weakLayerCrustBelowCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.weakLayerCrustBelow"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.weakLayerPosition" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.ground) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerPosition(
+                  $event,
+                  isWeakLayerPosition(snowpackPositionEnum.ground) ? undefined : snowpackPositionEnum.ground
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'snowpackPosition.ground' | translate }}"
+            >
+              <span>{{ "snowpackPosition.ground" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.lower) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerPosition(
+                  $event,
+                  isWeakLayerPosition(snowpackPositionEnum.lower) ? undefined : snowpackPositionEnum.lower
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'snowpackPosition.lower' | translate }}"
+            >
+              <span>{{ "snowpackPosition.lower" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.middle) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerPosition(
+                  $event,
+                  isWeakLayerPosition(snowpackPositionEnum.middle) ? undefined : snowpackPositionEnum.middle
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'snowpackPosition.middle' | translate }}"
+            >
+              <span>{{ "snowpackPosition.middle" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.upper) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerPosition(
+                  $event,
+                  isWeakLayerPosition(snowpackPositionEnum.upper) ? undefined : snowpackPositionEnum.upper
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'snowpackPosition.upper' | translate }}"
+            >
+              <span>{{ "snowpackPosition.upper" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.weakLayerCreation" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="
+                isWeakLayerCreation(creationProcessEnum.radiation_recrystallization)
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="
+                setWeakLayerCreation(
+                  $event,
+                  isWeakLayerCreation(creationProcessEnum.radiation_recrystallization)
+                    ? undefined
+                    : creationProcessEnum.radiation_recrystallization
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'creationProcess.radiation_recrystallization' | translate }}"
+            >
+              <span>{{ "creationProcess.radiation_recrystallization" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="
+                isWeakLayerCreation(creationProcessEnum.diurnal_recrystallization)
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="
+                setWeakLayerCreation(
+                  $event,
+                  isWeakLayerCreation(creationProcessEnum.diurnal_recrystallization)
+                    ? undefined
+                    : creationProcessEnum.diurnal_recrystallization
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'creationProcess.diurnal_recrystallization' | translate }}"
+            >
+              <span>{{ "creationProcess.diurnal_recrystallization" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="
+                isWeakLayerCreation(creationProcessEnum.melt_layer_recrystallization)
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="
+                setWeakLayerCreation(
+                  $event,
+                  isWeakLayerCreation(creationProcessEnum.melt_layer_recrystallization)
+                    ? undefined
+                    : creationProcessEnum.melt_layer_recrystallization
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'creationProcess.melt_layer_recrystallization' | translate }}"
+            >
+              <span>{{ "creationProcess.melt_layer_recrystallization" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.weakLayerDistribution" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerDistribution(distributionEnum.isolated) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerDistribution(
+                  $event,
+                  isWeakLayerDistribution(distributionEnum.isolated) ? undefined : distributionEnum.isolated
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'distribution.isolated' | translate }}"
+            >
+              <span>{{ "distribution.isolated" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerDistribution(distributionEnum.specific) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerDistribution(
+                  $event,
+                  isWeakLayerDistribution(distributionEnum.specific) ? undefined : distributionEnum.specific
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'distribution.specific' | translate }}"
+            >
+              <span>{{ "distribution.specific" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerDistribution(distributionEnum.widespread) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerDistribution(
+                  $event,
+                  isWeakLayerDistribution(distributionEnum.widespread) ? undefined : distributionEnum.widespread
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'distribution.widespread' | translate }}"
+            >
+              <span>{{ "distribution.widespread" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.dangerSpotRecognizability" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="
+                isDangerSpotRecognizability(recognizabilityEnum.very_easy) ? 'btn-dark' : 'btn-outline-secondary'
+              "
+              (click)="
+                setDangerSpotRecognizability(
+                  $event,
+                  isDangerSpotRecognizability(recognizabilityEnum.very_easy) ? undefined : recognizabilityEnum.very_easy
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'recognizability.very_easy' | translate }}"
+            >
+              <span>{{ "recognizability.very_easy" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerSpotRecognizability(recognizabilityEnum.easy) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setDangerSpotRecognizability(
+                  $event,
+                  isDangerSpotRecognizability(recognizabilityEnum.easy) ? undefined : recognizabilityEnum.easy
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'recognizability.easy' | translate }}"
+            >
+              <span>{{ "recognizability.easy" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerSpotRecognizability(recognizabilityEnum.hard) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setDangerSpotRecognizability(
+                  $event,
+                  isDangerSpotRecognizability(recognizabilityEnum.hard) ? undefined : recognizabilityEnum.hard
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'recognizability.hard' | translate }}"
+            >
+              <span>{{ "recognizability.hard" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="
+                isDangerSpotRecognizability(recognizabilityEnum.very_hard) ? 'btn-dark' : 'btn-outline-secondary'
+              "
+              (click)="
+                setDangerSpotRecognizability(
+                  $event,
+                  isDangerSpotRecognizability(recognizabilityEnum.very_hard) ? undefined : recognizabilityEnum.very_hard
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'recognizability.very_hard' | translate }}"
+            >
+              <span>{{ "recognizability.very_hard" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="remoteTriggeringCheckbox">{{
+                "dangerSources.create.label.remoteTriggering" | translate
+              }}</label>
+              <input
+                id="remoteTriggeringCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.remoteTriggering"
+              />
+            </div>
+          </div>
+        </div>
+
         <!--
-        weakLayerStrength: Characteristic;
-        weakLayerWet: boolean | undefined;
-        weakLayerCrustAbove: boolean | undefined;
-        weakLayerCrustBelow: boolean | undefined;
-        weakLayerPosition: SnowpackPosition;
-        weakLayerCreation: CreationProcess;
-        weakLayerDistribution: Distribution;
-        dangerSpotRecognizability: Recognizability;
-        remoteTriggering: boolean | undefined;
         terrainTypes: TerrainType[];
         -->
 
@@ -686,14 +1077,299 @@
           </h2>
         </div>
 
+        <div class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="hasDaytimeDependencyCheckbox">{{
+                "dangerSources.create.label.hasDaytimeDependency" | translate
+              }}</label>
+              <input
+                id="hasDaytimeDependencyCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.hasDaytimeDependency"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="dangerIncreaseWithElevationCheckbox">{{
+                "dangerSources.create.label.dangerIncreaseWithElevation" | translate
+              }}</label>
+              <input
+                id="dangerIncreaseWithElevationCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.dangerIncreaseWithElevation"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.highestDangerAspect" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isHighestDangerAspect(aspectEnum.N) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.N) ? undefined : aspectEnum.N)"
+              data-toggle="tooltip"
+              title="{{ 'aspect.N' | translate }}"
+            >
+              <span>{{ "aspect.N" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isHighestDangerAspect(aspectEnum.E) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.E) ? undefined : aspectEnum.E)"
+              data-toggle="tooltip"
+              title="{{ 'aspect.E' | translate }}"
+            >
+              <span>{{ "aspect.E" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isHighestDangerAspect(aspectEnum.S) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.S) ? undefined : aspectEnum.S)"
+              data-toggle="tooltip"
+              title="{{ 'aspect.S' | translate }}"
+            >
+              <span>{{ "aspect.S" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isHighestDangerAspect(aspectEnum.W) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.W) ? undefined : aspectEnum.W)"
+              data-toggle="tooltip"
+              title="{{ 'aspect.W' | translate }}"
+            >
+              <span>{{ "aspect.W" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.dangerPeak" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerPeak(daytimeEnum.evening) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.evening) ? undefined : daytimeEnum.evening)"
+              data-toggle="tooltip"
+              title="{{ 'detailedDaytime.evening' | translate }}"
+            >
+              <span>{{ "detailedDaytime.evening" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerPeak(daytimeEnum.first_night_half) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setDangerPeak(
+                  $event,
+                  isDangerPeak(daytimeEnum.first_night_half) ? undefined : daytimeEnum.first_night_half
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'detailedDaytime.first_night_half' | translate }}"
+            >
+              <span>{{ "detailedDaytime.first_night_half" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerPeak(daytimeEnum.second_night_half) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setDangerPeak(
+                  $event,
+                  isDangerPeak(daytimeEnum.second_night_half) ? undefined : daytimeEnum.second_night_half
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'detailedDaytime.second_night_half' | translate }}"
+            >
+              <span>{{ "detailedDaytime.second_night_half" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerPeak(daytimeEnum.morning) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.morning) ? undefined : daytimeEnum.morning)"
+              data-toggle="tooltip"
+              title="{{ 'detailedDaytime.morning' | translate }}"
+            >
+              <span>{{ "detailedDaytime.morning" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerPeak(daytimeEnum.forenoon) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.forenoon) ? undefined : daytimeEnum.forenoon)"
+              data-toggle="tooltip"
+              title="{{ 'detailedDaytime.forenoon' | translate }}"
+            >
+              <span>{{ "detailedDaytime.forenoon" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerPeak(daytimeEnum.afternoon) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.afternoon) ? undefined : daytimeEnum.afternoon)"
+              data-toggle="tooltip"
+              title="{{ 'detailedDaytime.afternoon' | translate }}"
+            >
+              <span>{{ "detailedDaytime.afternoon" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.slopeGradient" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlopeGradient(slopeGradientEnum.moderately_steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlopeGradient(
+                  $event,
+                  isSlopeGradient(slopeGradientEnum.moderately_steep) ? undefined : slopeGradientEnum.moderately_steep
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'slopeGradient.moderately_steep' | translate }}"
+            >
+              <span>{{ "slopeGradient.moderately_steep" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlopeGradient(slopeGradientEnum.steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlopeGradient($event, isSlopeGradient(slopeGradientEnum.steep) ? undefined : slopeGradientEnum.steep)
+              "
+              data-toggle="tooltip"
+              title="{{ 'slopeGradient.steep' | translate }}"
+            >
+              <span>{{ "slopeGradient.steep" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlopeGradient(slopeGradientEnum.very_steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlopeGradient(
+                  $event,
+                  isSlopeGradient(slopeGradientEnum.very_steep) ? undefined : slopeGradientEnum.very_steep
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'slopeGradient.very_steep' | translate }}"
+            >
+              <span>{{ "slopeGradient.very_steep" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlopeGradient(slopeGradientEnum.extremely_steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlopeGradient(
+                  $event,
+                  isSlopeGradient(slopeGradientEnum.extremely_steep) ? undefined : slopeGradientEnum.extremely_steep
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'slopeGradient.extremely_steep' | translate }}"
+            >
+              <span>{{ "slopeGradient.extremely_steep" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="runoutIntoGreenCheckbox">{{
+                "dangerSources.create.label.runoutIntoGreen" | translate
+              }}</label>
+              <input
+                id="runoutIntoGreenCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.runoutIntoGreen"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.naturalRelease" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isNaturalRelease(probabilityEnum.likely) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setNaturalRelease($event, isNaturalRelease(probabilityEnum.likely) ? undefined : probabilityEnum.likely)
+              "
+              data-toggle="tooltip"
+              title="{{ 'probability.likely' | translate }}"
+            >
+              <span>{{ "probability.likely" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isNaturalRelease(probabilityEnum.possible) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setNaturalRelease(
+                  $event,
+                  isNaturalRelease(probabilityEnum.possible) ? undefined : probabilityEnum.possible
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'probability.possible' | translate }}"
+            >
+              <span>{{ "probability.possible" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isNaturalRelease(probabilityEnum.unlikely) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setNaturalRelease(
+                  $event,
+                  isNaturalRelease(probabilityEnum.unlikely) ? undefined : probabilityEnum.unlikely
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'probability.unlikely' | translate }}"
+            >
+              <span>{{ "probability.unlikely" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
         <!--
-        hasDaytimeDependency: boolean | undefined;
-        dangerIncreaseWithElevation: boolean | undefined;
-        highestDangerAspect: Aspect;
-        dangerPeak: Daytime;
-        slopeGradient: SlopeGradient;
-        runoutIntoGreen: boolean | undefined;
-        naturalRelease: Probability;
         dangerSigns: DangerSign[];
         -->
       </accordion-group>

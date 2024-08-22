@@ -106,6 +106,22 @@
         "weakLayerGrainSize": "Weak layer grain size",
         "weakLayerPersistent": "Weak layer persistent",
         "weakLayerThickness": "Weak layer thickness",
+        "weakLayerStrength": "Weak layer strength",
+        "weakLayerWet": "Weak layer wet",
+        "weakLayerCrustAbove": "Weak layer crust above",
+        "weakLayerCrustBelow": "Weak layer crust below",
+        "weakLayerPosition": "Weak layer position",
+        "weakLayerCreation": "Weak layer creation",
+        "weakLayerDistribution": "Weak layer distribution",
+        "dangerSpotRecognizability": "Danger spot recognizability",
+        "remoteTriggering": "Remote triggering",
+        "hasDaytimeDependency": "Daytime dependency",
+        "dangerIncreaseWithElevation": "Danger increase with elevation",
+        "runoutIntoGreen": "Runout into green",
+        "highestDangerAspect": "Highest danger aspect",
+        "dangerPeak": "Danger peak",
+        "slopeGradient": "Slope gradient",
+        "naturalRelease": "Natural release",
         "aspects": "Aspects"
       }
     }
@@ -979,9 +995,56 @@
     "moist": "moist",
     "wet": "wet"
   },
+  "characteristic": {
+    "low": "low",
+    "medium": "medium",
+    "high": "high",
+    "very_high": "very high"
+  },
   "thickness": {
     "thin": "thin",
     "thick": "thick"
+  },
+  "snowpackPosition": {
+    "upper": "upper",
+    "middle": "middle",
+    "lower": "lower",
+    "ground": "ground"
+  },
+  "creationProcess": {
+    "radiation_recrystallization": "radiation",
+    "diurnal_recrystallization": "diurnal",
+    "melt_layer_recrystallization": "melt layer"
+  },
+  "recognizability": {
+    "very_easy": "very easy",
+    "easy": "easy",
+    "hard": "hard",
+    "very_hard": "very hard"
+  },
+  "distribution": {
+    "isolated": "isolated",
+    "specific": "specific",
+    "widespread": "widespread"
+  },
+  "probability": {
+    "likely": "likely",
+    "possible": "possible",
+    "unlikely": "unlikely"
+  },
+  "detailedDaytime": {
+    "evening": "evening",
+    "first_night_half": "first night half",
+    "second_night_half": "second night half",
+    "morning": "morning",
+    "forenoon": "forenoon",
+    "afternoon": "afternoon"
+  },
+  "slopeGradient": {
+    "moderately_steep": "moderately steep",
+    "steep": "steep",
+    "very_steep": "very steep",
+    "extremely_steep": "extremely steep"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",
