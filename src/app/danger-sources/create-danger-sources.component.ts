@@ -562,6 +562,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  eventCopyVariant(variant: DangerSourceVariantModel) {
+    this.copyVariant(undefined, variant);
+  }
+
   copyVariant(event: Event, originalVariant: DangerSourceVariantModel) {
     this.showNewVariantModal = true;
     const newVariant = new DangerSourceVariantModel(originalVariant);

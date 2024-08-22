@@ -144,6 +144,7 @@
         [isComparedVariant]="false"
         (updateVariantOnServerEvent)="updateVariantOnServer($event)"
         (deleteVariantEvent)="eventDeleteVariant($event)"
+        (copyVariantEvent)="eventCopyVariant($event)"
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
         (deselectVariantEvent)="eventDeselectVariant()"
         (toggleVariantsSidebarEvent)="toggleVariantsSidebar()"
@@ -272,7 +273,7 @@
 <ng-template #noVariantsTemplate>
   <div class="create-bulletin__nobulletins">
     <i class="ph ph-mountains"></i>
-    <p>{{ "bulletins.create.noBulletinsForSelectedDay" | translate }}</p>
+    <p>{{ "dangerSources.create.noVariantsForSelectedDay" | translate }}</p>
   </div>
 </ng-template>
 
