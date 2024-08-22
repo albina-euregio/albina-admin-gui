@@ -206,7 +206,7 @@
               class="form-control"
               size="14"
               type="number"
-              name="snow-height-upper-limit´-input"
+              name="snow-height-upper-limit-input"
               [disabled]="disabled"
               [(ngModel)]="variant.snowHeightUpperLimit"
             />
@@ -231,23 +231,299 @@
           </div>
         </div>
 
+        <!-- SLAB AVALANCHES -->
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.slabGrainShape" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.PP) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)"
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.PP"
+            >
+              <span>{{ grainShapeEnum.PP }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.DF) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)"
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.DF"
+            >
+              <span>{{ grainShapeEnum.DF }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.RG) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)"
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.RG"
+            >
+              <span>{{ grainShapeEnum.RG }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.MF) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)"
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.MF"
+            >
+              <span>{{ grainShapeEnum.MF }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.IF) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.IF) ? undefined : grainShapeEnum.IF)"
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.IF"
+            >
+              <span>{{ grainShapeEnum.IF }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.MFcr) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MFcr) ? undefined : grainShapeEnum.MFcr)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.MFcr"
+            >
+              <span>{{ grainShapeEnum.MFcr }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <div style="align-items: baseline" class="input-group">
+            <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+              "dangerSources.create.label.slabThickness" | translate
+            }}</label>
+            <input
+              step="1"
+              min="0"
+              id="inputSlabThicknessLowerLimit"
+              class="form-control"
+              size="14"
+              type="number"
+              name="slab-thickness-lower-limit-input"
+              [disabled]="disabled"
+              [(ngModel)]="variant.slabThicknessLowerLimit"
+            />
+            <span class="input-group-text">cm</span>
+            <label style="margin: 0 1rem" class="form-label" attr.for="slabThicknessLabel"> - </label>
+            <input
+              step="1"
+              min="0"
+              id="inputSlabThicknessUpperLimit"
+              class="form-control"
+              size="14"
+              type="number"
+              name="slab-thickness-upper-limit-input"
+              [disabled]="disabled"
+              [(ngModel)]="variant.slabThicknessUpperLimit"
+            />
+            <span class="input-group-text">cm</span>
+          </div>
+        </div>
+
         <!--
-        /** --------------- */
-        /** SLAB AVALANCHES */
-        /** --------------- */
-        slabGrainShape: GrainShape;
-        slabThicknessUpperLimit: number | undefined;
-        slabThicknessLowerLimit: number | undefined;
         slabHandHardnessUpperLimit: HandHardness;
         slabHandHardnessLowerLimit: HandHardness;
         slabHardnessProfile: Tendency;
         slabEnergyTransferPotential: Characteristic;
         slabDistribution: Distribution;
-        weakLayerGrainShape: GrainShape;
-        weakLayerGrainSizeUpperLimit: number | undefined;
-        weakLayerGrainSizeLowerLimit: number | undefined;
-        weakLayerPersistent: boolean | undefined;
-        weakLayerThickness: Thickness;
+        -->
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.weakLayerGrainShape" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PP) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.PP"
+            >
+              <span>{{ grainShapeEnum.PP }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DF) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.DF"
+            >
+              <span>{{ grainShapeEnum.DF }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.RG) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.RG"
+            >
+              <span>{{ grainShapeEnum.RG }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.FC) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.FC"
+            >
+              <span>{{ grainShapeEnum.FC }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DH) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.DH) ? undefined : grainShapeEnum.DH)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.DH"
+            >
+              <span>{{ grainShapeEnum.DH }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.SH) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.SH) ? undefined : grainShapeEnum.SH)
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.SH"
+            >
+              <span>{{ grainShapeEnum.SH }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PPgp) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerGrainShape(
+                  $event,
+                  isWeakLayerGrainShape(grainShapeEnum.PPgp) ? undefined : grainShapeEnum.PPgp
+                )
+              "
+              data-toggle="tooltip"
+              [title]="grainShapeEnum.PPgp"
+            >
+              <span>{{ grainShapeEnum.PPgp }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <div style="align-items: baseline" class="input-group">
+            <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+              "dangerSources.create.label.weakLayerGrainSize" | translate
+            }}</label>
+            <input
+              step="0.25"
+              min="0"
+              id="inputWeakLayerGrainSizeLowerLimit"
+              class="form-control"
+              size="14"
+              type="number"
+              name="weak-layer-grain-size-lower-limit-input"
+              [disabled]="disabled"
+              [(ngModel)]="variant.weakLayerGrainSizeLowerLimit"
+            />
+            <span class="input-group-text">cm</span>
+            <label style="margin: 0 1rem" class="form-label" attr.for="weakLayerGrainSizeLabel"> - </label>
+            <input
+              step="0.25"
+              min="0"
+              id="inputWeakLayerGrainSizeUpperLimit"
+              class="form-control"
+              size="14"
+              type="number"
+              name="weak-layer-grain-size-upper-limit-input"
+              [disabled]="disabled"
+              [(ngModel)]="variant.weakLayerGrainSizeUpperLimit"
+            />
+            <span class="input-group-text">cm</span>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <div class="avalanche-problem-detail__elevation">
+            <div class="form-check avalanche-problem-detail__elevation-label">
+              <label class="form-label" attr.for="weakLayerPersistentCheckbox">{{
+                "dangerSources.create.label.weakLayerPersistent" | translate
+              }}</label>
+              <input
+                id="weakLayerPersistentCheckbox"
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="disabled"
+                [(ngModel)]="variant.weakLayerPersistent"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.weakLayerThickness" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerThickness(thicknessEnum.thin) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerThickness($event, isWeakLayerThickness(thicknessEnum.thin) ? undefined : thicknessEnum.thin)
+              "
+              data-toggle="tooltip"
+              title="{{ 'thickness.thin' | translate }}"
+            >
+              <span>{{ "thickness.thin" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isWeakLayerThickness(thicknessEnum.thick) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerThickness(
+                  $event,
+                  isWeakLayerThickness(thicknessEnum.thick) ? undefined : thicknessEnum.thick
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'thickness.thick' | translate }}"
+            >
+              <span>{{ "thickness.thick" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!--
         weakLayerStrength: Characteristic;
         weakLayerWet: boolean | undefined;
         weakLayerCrustAbove: boolean | undefined;
@@ -355,6 +631,7 @@
             </button>
           </div>
         </div>
+
         <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
           <label class="form-label" for="textarea-input">{{
             "dangerSources.create.label.looseSnowMoisture" | translate

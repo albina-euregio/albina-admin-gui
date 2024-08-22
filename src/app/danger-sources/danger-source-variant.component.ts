@@ -19,6 +19,7 @@ import {
   DangerSourceVariantModel,
   GlidingSnowActivity,
   GrainShape,
+  Thickness,
   Wetness,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
@@ -50,6 +51,7 @@ export class DangerSourceVariantComponent {
   avalancheTypeEnum = Enums.AvalancheType;
   wetnessEnum = Wetness;
   grainShapeEnum = GrainShape;
+  thicknessEnum = Thickness;
 
   useElevationHigh = false;
   useElevationLow = false;
@@ -202,6 +204,36 @@ export class DangerSourceVariantComponent {
   setLooseSnowGrainShape(event: Event, grainShape: GrainShape) {
     event.stopPropagation();
     this.variant.looseSnowGrainShape = grainShape;
+    this.updateVariantOnServer();
+  }
+
+  isSlabGrainShape(grainShape: GrainShape) {
+    return this.variant?.slabGrainShape === grainShape;
+  }
+
+  setSlabGrainShape(event: Event, grainShape: GrainShape) {
+    event.stopPropagation();
+    this.variant.slabGrainShape = grainShape;
+    this.updateVariantOnServer();
+  }
+
+  isWeakLayerGrainShape(grainShape: GrainShape) {
+    return this.variant?.weakLayerGrainShape === grainShape;
+  }
+
+  setWeakLayerGrainShape(event: Event, grainShape: GrainShape) {
+    event.stopPropagation();
+    this.variant.weakLayerGrainShape = grainShape;
+    this.updateVariantOnServer();
+  }
+
+  isWeakLayerThickness(thickness: Thickness) {
+    return this.variant?.weakLayerThickness === thickness;
+  }
+
+  setWeakLayerThickness(event: Event, thickness: Thickness) {
+    event.stopPropagation();
+    this.variant.weakLayerThickness = thickness;
     this.updateVariantOnServer();
   }
 

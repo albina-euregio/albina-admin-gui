@@ -94,7 +94,13 @@
         "snowHeight": "Snow height",
         "zeroDegreeIsotherm": "0°C isotherm",
         "looseSnowMoisture": "Loose snow moisture",
-        "looseSnowGrainShape": "Loose snow grain shape"
+        "looseSnowGrainShape": "Loose snow grain shape",
+        "slabGrainShape": "Slab grain shape",
+        "slabThickness": "Slab thickness",
+        "weakLayerGrainShape": "Weak layer grain shape",
+        "weakLayerGrainSize": "Weak layer grain size",
+        "weakLayerPersistent": "Weak layer persistent",
+        "weakLayerThickness": "Weak layer thickness"
       }
     }
   },
@@ -957,6 +963,10 @@
     "dry": "dry",
     "moist": "moist",
     "wet": "wet"
+  },
+  "thickness": {
+    "thin": "thin",
+    "thick": "thick"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",
