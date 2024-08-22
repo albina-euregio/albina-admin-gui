@@ -746,6 +746,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   updateVariantOnServer(variant: DangerSourceVariantModel, checkErrors: boolean = true) {
     variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+    variant.updateDate = new Date();
     this.dangerSourcesService.updateDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       (variants) => {
         this.loadDangerSourcesFromServer();

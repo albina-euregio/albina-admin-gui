@@ -335,13 +335,388 @@
           </div>
         </div>
 
-        <!--
-        slabHandHardnessUpperLimit: HandHardness;
-        slabHandHardnessLowerLimit: HandHardness;
-        slabHardnessProfile: Tendency;
-        slabEnergyTransferPotential: Characteristic;
-        slabDistribution: Distribution;
-        -->
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.slabHandHardness" | translate
+          }}</label>
+          <div style="align-items: baseline" class="input-group">
+            <div class="btn-group">
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessLowerLimit(
+                    $event,
+                    isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? undefined : handHardnessEnum.fist
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.fist' | translate }}"
+              >
+                <span>{{ "handHardness.fist" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers) ? 'btn-dark' : 'btn-outline-secondary'
+                "
+                (click)="
+                  setSlabHandHardnessLowerLimit(
+                    $event,
+                    isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers)
+                      ? undefined
+                      : handHardnessEnum.four_fingers
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.four_fingers' | translate }}"
+              >
+                <span>{{ "handHardness.four_fingers" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger) ? 'btn-dark' : 'btn-outline-secondary'
+                "
+                (click)="
+                  setSlabHandHardnessLowerLimit(
+                    $event,
+                    isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger) ? undefined : handHardnessEnum.one_finger
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.one_finger' | translate }}"
+              >
+                <span>{{ "handHardness.one_finger" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessLowerLimit(
+                    $event,
+                    isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? undefined : handHardnessEnum.pencil
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.pencil' | translate }}"
+              >
+                <span>{{ "handHardness.pencil" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessLowerLimit(
+                    $event,
+                    isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? undefined : handHardnessEnum.knife
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.knife' | translate }}"
+              >
+                <span>{{ "handHardness.knife" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessLowerLimit(
+                    $event,
+                    isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? undefined : handHardnessEnum.ice
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.ice' | translate }}"
+              >
+                <span>{{ "handHardness.ice" | translate }}</span>
+              </button>
+            </div>
+            <label style="margin: 0 1rem" class="form-label" attr.for="slabHandHardnessLabel"> - </label>
+            <div class="btn-group">
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessUpperLimit(
+                    $event,
+                    isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? undefined : handHardnessEnum.fist
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.fist' | translate }}"
+              >
+                <span>{{ "handHardness.fist" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers) ? 'btn-dark' : 'btn-outline-secondary'
+                "
+                (click)="
+                  setSlabHandHardnessUpperLimit(
+                    $event,
+                    isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers)
+                      ? undefined
+                      : handHardnessEnum.four_fingers
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.four_fingers' | translate }}"
+              >
+                <span>{{ "handHardness.four_fingers" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger) ? 'btn-dark' : 'btn-outline-secondary'
+                "
+                (click)="
+                  setSlabHandHardnessUpperLimit(
+                    $event,
+                    isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger) ? undefined : handHardnessEnum.one_finger
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.one_finger' | translate }}"
+              >
+                <span>{{ "handHardness.one_finger" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessUpperLimit(
+                    $event,
+                    isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? undefined : handHardnessEnum.pencil
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.pencil' | translate }}"
+              >
+                <span>{{ "handHardness.pencil" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessUpperLimit(
+                    $event,
+                    isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? undefined : handHardnessEnum.knife
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.knife' | translate }}"
+              >
+                <span>{{ "handHardness.knife" | translate }}</span>
+              </button>
+              <button
+                type="reset"
+                class="btn btn-sm"
+                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? 'btn-dark' : 'btn-outline-secondary'"
+                (click)="
+                  setSlabHandHardnessUpperLimit(
+                    $event,
+                    isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? undefined : handHardnessEnum.ice
+                  )
+                "
+                data-toggle="tooltip"
+                title="{{ 'handHardness.ice' | translate }}"
+              >
+                <span>{{ "handHardness.ice" | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.slabHardnessProfile" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabHardnessProfile(tendencyEnum.increasing) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabHardnessProfile(
+                  $event,
+                  isSlabHardnessProfile(tendencyEnum.increasing) ? undefined : tendencyEnum.increasing
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'hardnessTendency.increasing' | translate }}"
+            >
+              <span>{{ "hardnessTendency.increasing" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabHardnessProfile(tendencyEnum.steady) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabHardnessProfile(
+                  $event,
+                  isSlabHardnessProfile(tendencyEnum.steady) ? undefined : tendencyEnum.steady
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'hardnessTendency.steady' | translate }}"
+            >
+              <span>{{ "hardnessTendency.steady" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabHardnessProfile(tendencyEnum.decreasing) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabHardnessProfile(
+                  $event,
+                  isSlabHardnessProfile(tendencyEnum.decreasing) ? undefined : tendencyEnum.decreasing
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'hardnessTendency.decreasing' | translate }}"
+            >
+              <span>{{ "hardnessTendency.decreasing" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.slabEnergyTransferPotential" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabEnergyTransferPotential(characteristicEnum.low) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabEnergyTransferPotential(
+                  $event,
+                  isSlabEnergyTransferPotential(characteristicEnum.low) ? undefined : characteristicEnum.low
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.low' | translate }}"
+            >
+              <span>{{ "characteristic.low" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="
+                isSlabEnergyTransferPotential(characteristicEnum.medium) ? 'btn-dark' : 'btn-outline-secondary'
+              "
+              (click)="
+                setSlabEnergyTransferPotential(
+                  $event,
+                  isSlabEnergyTransferPotential(characteristicEnum.medium) ? undefined : characteristicEnum.medium
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.medium' | translate }}"
+            >
+              <span>{{ "characteristic.medium" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabEnergyTransferPotential(characteristicEnum.high) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabEnergyTransferPotential(
+                  $event,
+                  isSlabEnergyTransferPotential(characteristicEnum.high) ? undefined : characteristicEnum.high
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.high' | translate }}"
+            >
+              <span>{{ "characteristic.high" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="
+                isSlabEnergyTransferPotential(characteristicEnum.very_high) ? 'btn-dark' : 'btn-outline-secondary'
+              "
+              (click)="
+                setSlabEnergyTransferPotential(
+                  $event,
+                  isSlabEnergyTransferPotential(characteristicEnum.very_high) ? undefined : characteristicEnum.very_high
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'characteristic.very_high' | translate }}"
+            >
+              <span>{{ "characteristic.very_high" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.slabDistribution" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabDistribution(distributionEnum.isolated) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabDistribution(
+                  $event,
+                  isSlabDistribution(distributionEnum.isolated) ? undefined : distributionEnum.isolated
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'distribution.isolated' | translate }}"
+            >
+              <span>{{ "distribution.isolated" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabDistribution(distributionEnum.specific) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabDistribution(
+                  $event,
+                  isSlabDistribution(distributionEnum.specific) ? undefined : distributionEnum.specific
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'distribution.specific' | translate }}"
+            >
+              <span>{{ "distribution.specific" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isSlabDistribution(distributionEnum.widespread) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setSlabDistribution(
+                  $event,
+                  isSlabDistribution(distributionEnum.widespread) ? undefined : distributionEnum.widespread
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'distribution.widespread' | translate }}"
+            >
+              <span>{{ "distribution.widespread" | translate }}</span>
+            </button>
+          </div>
+        </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
           <label class="form-label" for="textarea-input">{{
@@ -923,9 +1298,53 @@
           </div>
         </div>
 
-        <!--
-        terrainTypes: TerrainType[];
-        -->
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.terrainTypes" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isTerrainType(terrainTypeEnum.gullies) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.gullies)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.gullies' | translate }}"
+            >
+              <span>{{ "terrainType.gullies" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isTerrainType(terrainTypeEnum.bowls) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.bowls)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.bowls' | translate }}"
+            >
+              <span>{{ "terrainType.bowls" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isTerrainType(terrainTypeEnum.pass_areas) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.pass_areas)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.pass_areas' | translate }}"
+            >
+              <span>{{ "terrainType.pass_areas" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isTerrainType(terrainTypeEnum.ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.ridge_lines)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.ridge_lines' | translate }}"
+            >
+              <span>{{ "terrainType.ridge_lines" | translate }}</span>
+            </button>
+          </div>
+        </div>
 
         <!-- LOOSE SNOW AVALANCHES -->
         <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
@@ -1369,9 +1788,33 @@
           </div>
         </div>
 
-        <!--
-        dangerSigns: DangerSign[];
-        -->
+        <div class="form-group row">
+          <label class="form-label" for="textarea-input">{{
+            "dangerSources.create.label.dangerSigns" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerSign(dangerSignEnum.shooting_cracks) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerSign($event, dangerSignEnum.shooting_cracks)"
+              data-toggle="tooltip"
+              title="{{ 'dangerSign.shooting_cracks' | translate }}"
+            >
+              <span>{{ "dangerSign.shooting_cracks" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerSign(dangerSignEnum.whumpfing) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerSign($event, dangerSignEnum.whumpfing)"
+              data-toggle="tooltip"
+              title="{{ 'dangerSign.whumpfing' | translate }}"
+            >
+              <span>{{ "dangerSign.whumpfing" | translate }}</span>
+            </button>
+          </div>
+        </div>
       </accordion-group>
 
       <accordion-group

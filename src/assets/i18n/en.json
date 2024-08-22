@@ -103,6 +103,10 @@
         "looseSnowGrainShape": "Loose snow grain shape",
         "slabGrainShape": "Slab grain shape",
         "slabThickness": "Slab thickness",
+        "slabHandHardness": "Slab hand hardness",
+        "slabHardnessProfile": "Slab hardness",
+        "slabEnergyTransferPotential": "Slab energy transfer potential",
+        "slabDistribution": "Slab distribution",
         "weakLayerGrainShape": "Weak layer grain shape",
         "weakLayerGrainSize": "Weak layer grain size",
         "weakLayerPersistent": "Weak layer persistent",
@@ -123,6 +127,8 @@
         "dangerPeak": "Danger peak",
         "slopeGradient": "Slope gradient",
         "naturalRelease": "Natural release",
+        "terrainTypes": "Terrain types",
+        "dangerSigns": "Danger signs",
         "aspects": "Aspects"
       }
     }
@@ -1046,6 +1052,29 @@
     "steep": "steep",
     "very_steep": "very steep",
     "extremely_steep": "extremely steep"
+  },
+  "handHardness": {
+    "fist": "F",
+    "four_fingers": "4F",
+    "one_finger": "1F",
+    "pencil": "P",
+    "knife": "K",
+    "ice": "I"
+  },
+  "hardnessTendency": {
+    "decreasing": "decreasing with height",
+    "steady": "uniform",
+    "increasing": "increasing with height"
+  },
+  "terrainType": {
+    "gullies": "gullies",
+    "bowls": "bowls",
+    "pass_areas": "pass areas",
+    "ridge_lines": "ridge lines"
+  },
+  "dangerSign": {
+    "shooting_cracks": "shooting cracks",
+    "whumpfing": "whumpfing"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",

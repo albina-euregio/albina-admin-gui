@@ -1,8 +1,6 @@
-import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, HostListener } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnChanges } from "@angular/core";
 
 import { debounceTime, Subject } from "rxjs";
-
-import { environment } from "../../environments/environment";
 
 // services
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -18,28 +16,29 @@ import { TranslateService } from "@ngx-translate/core";
 import {
   Characteristic,
   CreationProcess,
+  DangerSign,
   DangerSourceVariantModel,
   Daytime,
   Distribution,
   GlidingSnowActivity,
   GrainShape,
+  HandHardness,
   Probability,
   Recognizability,
   SlopeGradient,
   SnowpackPosition,
+  TerrainType,
   Thickness,
   Wetness,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
 import { ChangeContext, Options } from "@angular-slider/ngx-slider";
 
-import { grainShapes } from "..//observations/grain.shapes";
-
 @Component({
   selector: "app-danger-source-variant",
   templateUrl: "danger-source-variant.component.html",
 })
-export class DangerSourceVariantComponent {
+export class DangerSourceVariantComponent implements OnChanges {
   @Input() variant: DangerSourceVariantModel;
   @Input() disabled: boolean;
   @Input() isCompactMapLayout: boolean;
@@ -69,6 +68,10 @@ export class DangerSourceVariantComponent {
   daytimeEnum = Daytime;
   slopeGradientEnum = SlopeGradient;
   probabilityEnum = Probability;
+  tendencyEnum = Enums.Tendency;
+  handHardnessEnum = HandHardness;
+  terrainTypeEnum = TerrainType;
+  dangerSignEnum = DangerSign;
 
   useElevationHigh = false;
   useElevationLow = false;
@@ -131,6 +134,20 @@ export class DangerSourceVariantComponent {
     this.updateVariantOnServerEventDebounce
       .pipe(debounceTime(1000))
       .subscribe((variant) => this.updateVariantOnServerEvent.emit(variant));
+  }
+
+  ngOnChanges() {
+    if (!this.isElevationHighEditing) {
+      this.useElevationHigh = this.variant.treelineHigh || this.variant.elevationHigh !== undefined;
+      this.localElevationHigh = this.variant.elevationHigh;
+      this.localTreelineHigh = this.variant.treelineHigh;
+    }
+    if (!this.isElevationLowEditing) {
+      this.useElevationLow = this.variant.treelineLow || this.variant.elevationLow !== undefined;
+      this.localElevationLow = this.variant.elevationLow;
+      this.localTreelineLow = this.variant.treelineLow;
+    }
+    this.glidingSnowActivityOptions = Object.assign({}, this.glidingSnowActivityOptions, { disabled: this.disabled });
   }
 
   updateVariantOnServer() {
@@ -231,6 +248,56 @@ export class DangerSourceVariantComponent {
   setSlabGrainShape(event: Event, grainShape: GrainShape) {
     event.stopPropagation();
     this.variant.slabGrainShape = grainShape;
+    this.updateVariantOnServer();
+  }
+
+  isSlabHandHardnessLowerLimit(handHardness: HandHardness) {
+    return this.variant?.slabHandHardnessLowerLimit === handHardness;
+  }
+
+  setSlabHandHardnessLowerLimit(event: Event, handHardness: HandHardness) {
+    event.stopPropagation();
+    this.variant.slabHandHardnessLowerLimit = handHardness;
+    this.updateVariantOnServer();
+  }
+
+  isSlabHandHardnessUpperLimit(handHardness: HandHardness) {
+    return this.variant?.slabHandHardnessUpperLimit === handHardness;
+  }
+
+  setSlabHandHardnessUpperLimit(event: Event, handHardness: HandHardness) {
+    event.stopPropagation();
+    this.variant.slabHandHardnessUpperLimit = handHardness;
+    this.updateVariantOnServer();
+  }
+
+  isSlabHardnessProfile(tendency: Enums.Tendency) {
+    return this.variant?.slabHardnessProfile === tendency;
+  }
+
+  setSlabHardnessProfile(event: Event, tendency: Enums.Tendency) {
+    event.stopPropagation();
+    this.variant.slabHardnessProfile = tendency;
+    this.updateVariantOnServer();
+  }
+
+  isSlabEnergyTransferPotential(slabEnergyTransferPotential: Characteristic) {
+    return this.variant?.slabEnergyTransferPotential === slabEnergyTransferPotential;
+  }
+
+  setSlabEnergyTransferPotential(event: Event, slabEnergyTransferPotential: Characteristic) {
+    event.stopPropagation();
+    this.variant.slabEnergyTransferPotential = slabEnergyTransferPotential;
+    this.updateVariantOnServer();
+  }
+
+  isSlabDistribution(slabDistribution: Distribution) {
+    return this.variant?.slabDistribution === slabDistribution;
+  }
+
+  setSlabDistribution(event: Event, slabDistribution: Distribution) {
+    event.stopPropagation();
+    this.variant.slabDistribution = slabDistribution;
     this.updateVariantOnServer();
   }
 
@@ -341,6 +408,40 @@ export class DangerSourceVariantComponent {
   setNaturalRelease(event: Event, naturalRelease: Probability) {
     event.stopPropagation();
     this.variant.naturalRelease = naturalRelease;
+    this.updateVariantOnServer();
+  }
+
+  isTerrainType(terrainType: TerrainType) {
+    return this.variant?.terrainTypes.includes(terrainType);
+  }
+
+  setTerrainType(event: Event, terrainType: TerrainType) {
+    event.stopPropagation();
+    if (this.variant?.terrainTypes.includes(terrainType)) {
+      const index = this.variant?.terrainTypes.indexOf(terrainType, 0);
+      if (index > -1) {
+        this.variant?.terrainTypes.splice(index, 1);
+      }
+    } else {
+      this.variant?.terrainTypes.push(terrainType);
+    }
+    this.updateVariantOnServer();
+  }
+
+  isDangerSign(dangerSign: DangerSign) {
+    return this.variant?.dangerSigns.includes(dangerSign);
+  }
+
+  setDangerSign(event: Event, dangerSign: DangerSign) {
+    event.stopPropagation();
+    if (this.variant?.dangerSigns.includes(dangerSign)) {
+      const index = this.variant?.dangerSigns.indexOf(dangerSign, 0);
+      if (index > -1) {
+        this.variant?.dangerSigns.splice(index, 1);
+      }
+    } else {
+      this.variant?.dangerSigns.push(dangerSign);
+    }
     this.updateVariantOnServer();
   }
 
