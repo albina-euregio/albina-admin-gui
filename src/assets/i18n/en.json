@@ -78,8 +78,13 @@
       }
     },
     "create": {
+      "variantEditable": "This variant can be edited.",
+      "variantNotEditable": "This variant can not be edited.",
       "tooltip": {
-        "loadVariants": "Load variants from the day before"
+        "loadVariants": "Load variants from the day before",
+        "edit": "Edit micro regions",
+        "copy": "Copy variant",
+        "delete": "Delete variant"
       },
       "createDangerSource": "Create danger source",
       "createVariant": "Create new variant",
@@ -100,9 +105,29 @@
         "weakLayerGrainShape": "Weak layer grain shape",
         "weakLayerGrainSize": "Weak layer grain size",
         "weakLayerPersistent": "Weak layer persistent",
-        "weakLayerThickness": "Weak layer thickness"
+        "weakLayerThickness": "Weak layer thickness",
+        "aspects": "Aspects"
       }
     }
+  },
+  "avalancheType": {
+    "title": "Avalanche type",
+    "label": {
+      "slab": "SLAB",
+      "loose": "LOOSE",
+      "glide": "GLIDE"
+    },
+    "tooltip": {
+      "slab": "Slab avalanche",
+      "loose": "Loose snow avalanche",
+      "glide": "Glide snow avalanche"
+    }
+  },
+  "elevation": {
+    "title": "Elevation",
+    "high": "Below",
+    "low": "Above",
+    "treeline": "Treeline"
   },
   "bulletins": {
     "title": "Avalanche.report",
@@ -157,7 +182,6 @@
         "uploadJsonBulletin": "Upload bulletin in JSON format",
         "downloadJsonBulletin": "Download bulletin in JSON format",
         "daytimeDependency": "Daytime dependency",
-        "treeline": "Treeline",
         "tendency": {
           "decreasing": "Avalanche danger decreases",
           "steady": "Avalanche danger stays the same",
@@ -174,12 +198,7 @@
         "moveUpAvalancheProblem": "Move avalanche problem up",
         "moveDownAvalancheProblem": "Move avalanche problem down",
         "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards",
-        "avalancheType": {
-          "slab": "SLAB",
-          "loose": "LOOSE",
-          "glide": "GLIDE"
-        }
+        "dangerRatingDirectionDown": "Downwards"
       },
       "save": " Save",
       "discard": " Discard",
@@ -210,16 +229,12 @@
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
         "avalancheProblems": "Avalanche problem",
-        "avalancheType": "Avalanche type",
         "aspects": "Aspects",
-        "elevation": "Elevation",
         "highlights": "Special alert",
         "avActivityHighlights": "Headline avalanche situation",
         "avActivityComment": "Description of avalanche danger",
         "snowpackStructureComment": "Description of snowpack structure",
         "dangerPatterns": "Danger patterns",
-        "elevationHigh": "Below",
-        "elevationLow": "Above",
         "tendencyComment": "Description of tendency",
         "notes": "Notes"
       },

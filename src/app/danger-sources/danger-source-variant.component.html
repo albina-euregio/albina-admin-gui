@@ -29,14 +29,14 @@
   >
     <p class="banner__text">
       <i class="ph ph-pencil-line"></i>
-      {{ "bulletins.create.regionEditable" | translate }}
+      {{ "dangerSources.create.variantEditable" | translate }}
     </p>
     <div class="btn-group banner__actions">
       <button
         *ngIf="!editRegions"
         (click)="editMicroRegions()"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.edit' | translate }}"
+        title="{{ 'dangerSources.create.tooltip.edit' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
       >
@@ -46,7 +46,7 @@
         *ngIf="!editRegions && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
         (click)="copyVariant()"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.copy' | translate }}"
+        title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
       >
@@ -56,7 +56,7 @@
         *ngIf="!editRegions"
         (click)="deleteVariant()"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.delete' | translate }}"
+        title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
       >
@@ -71,14 +71,14 @@
   >
     <p class="banner__text">
       <i class="ph ph-pencil-slash"></i>
-      {{ "bulletins.create.regionNotEditable" | translate }}
+      {{ "dangerSources.create.variantNotEditable" | translate }}
     </p>
     <div class="btn-group banner__actions">
       <button
         *ngIf="showEditMicroRegionsButton()"
         (click)="editMicroRegions()"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.edit' | translate }}"
+        title="{{ 'dangerSources.create.tooltip.edit' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
       >
@@ -88,7 +88,7 @@
         *ngIf="!isComparedVariant && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
         (click)="copyVariant()"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.copy' | translate }}"
+        title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
       >
@@ -122,7 +122,7 @@
           </h2>
         </div>
         <div class="form-group row">
-          <label class="form-label" for="">{{ "bulletins.create.label.avalancheType" | translate }}</label>
+          <label class="form-label" for="">{{ "avalancheType.title" | translate }}</label>
           <div class="btn-group">
             <!-- SLAB -->
             <button
@@ -133,9 +133,9 @@
                 setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)
               "
               data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.avalancheType.slab' | translate }}"
+              title="{{ 'avalancheType.tooltip.slab' | translate }}"
             >
-              <span>{{ "bulletins.create.tooltip.avalancheType.slab" | translate }}</span>
+              <span>{{ "avalancheType.label.slab" | translate }}</span>
             </button>
 
             <!-- LOOSE -->
@@ -147,9 +147,9 @@
                 setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
               "
               data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.avalancheType.loose' | translate }}"
+              title="{{ 'avalancheType.tooltip.loose' | translate }}"
             >
-              <span>{{ "bulletins.create.tooltip.avalancheType.loose" | translate }}</span>
+              <span>{{ "avalancheType.label.loose" | translate }}</span>
             </button>
 
             <!-- GLIDE -->
@@ -161,9 +161,9 @@
                 setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
               "
               data-toggle="tooltip"
-              title="{{ 'bulletins.create.tooltip.avalancheType.glide' | translate }}"
+              title="{{ 'avalancheType.tooltip.glide' | translate }}"
             >
-              <span>{{ "bulletins.create.tooltip.avalancheType.glide" | translate }}</span>
+              <span>{{ "avalancheType.label.glide" | translate }}</span>
             </button>
           </div>
         </div>
@@ -712,7 +712,7 @@
         </div>
         <div class="form-group row">
           <div class="col-md-5">
-            <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
+            <label class="form-label" for="">{{ "dangerSources.create.label.aspects" | translate }}</label>
             <div>
               <app-aspects
                 [(aspects)]="variant.aspects"
@@ -723,7 +723,7 @@
             </div>
           </div>
           <div class="col-md-7">
-            <label class="form-label" for="">{{ "bulletins.create.label.elevation" | translate }}</label>
+            <label class="form-label" for="">{{ "elevation.title" | translate }}</label>
             <!-- Elevation (high) -->
             <div class="avalanche-problem-detail__elevation">
               <div class="avalanche-problem-detail__elevation-label form-check">
@@ -735,9 +735,7 @@
                   (change)="setUseElevationHigh($event)"
                   [(ngModel)]="useElevationHigh"
                 />
-                <label class="form-label" attr.for="elevationHighCheckbox">{{
-                  "bulletins.create.label.elevationHigh" | translate
-                }}</label>
+                <label class="form-label" attr.for="elevationHighCheckbox">{{ "elevation.high" | translate }}</label>
               </div>
               <div class="avalanche-problem-detail__elevation-inputs">
                 <div class="input-group">
@@ -763,7 +761,7 @@
                   [ngClass]="localTreelineHigh ? 'btn-dark' : 'btn-outline-secondary'"
                   (click)="treelineHighClicked($event)"
                   data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+                  title="{{ 'elevation.treeline' | translate }}"
                 >
                   <i class="ph ph-tree-evergreen"></i>
                 </button>
@@ -781,9 +779,7 @@
                   (change)="setUseElevationLow($event)"
                   [(ngModel)]="useElevationLow"
                 />
-                <label class="form-label" attr.for="elevationLowCheckbox">{{
-                  "bulletins.create.label.elevationLow" | translate
-                }}</label>
+                <label class="form-label" attr.for="elevationLowCheckbox">{{ "elevation.low" | translate }}</label>
               </div>
               <div class="avalanche-problem-detail__elevation-inputs">
                 <div class="input-group">
@@ -809,7 +805,7 @@
                   [ngClass]="localTreelineLow ? 'btn-dark' : 'btn-outline-secondary'"
                   (click)="treelineLowClicked($event)"
                   data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+                  title="{{ 'elevation.treeline' | translate }}"
                 >
                   <i class="ph ph-tree-evergreen"></i>
                 </button>
