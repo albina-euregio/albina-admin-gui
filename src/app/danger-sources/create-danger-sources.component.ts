@@ -496,10 +496,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       // set active variant
       if (this.activeVariant) {
         if (!this.activeVariant.id || this.activeVariant.id === "") {
-          if (
-            this.activeVariant.dangerSource?.id === variant.dangerSource?.id &&
-            this.activeVariant.regions.includes(variant.regions[0])
-          ) {
+          if (this.activeVariant.creationDate.getTime() === variant.creationDate.getTime()) {
             this.activeVariant = variant;
           }
           variants.push(variant);
@@ -593,8 +590,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     newVariant.ownerRegion = this.authenticationService.getActiveRegionId();
     newVariant.validFrom = this.dangerSourcesService.getActiveDate()[0];
     newVariant.validUntil = this.dangerSourcesService.getActiveDate()[1];
-    this.addInternalVariant(newVariant);
-
+    newVariant.creationDate = new Date();
     this.selectVariant(newVariant);
     this.editVariantMicroRegions(newVariant);
   }

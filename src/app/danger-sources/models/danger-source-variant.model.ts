@@ -298,8 +298,8 @@ export class DangerSourceVariantModel implements PolygonObject {
         this.dangerSourceVariantId = variant.id;
       }
       this.dangerSource = DangerSourceModel.createFromJson(variant.dangerSource);
-      this.creationDate = new Date();
-      this.updateDate = new Date();
+      this.creationDate = new Date(variant.creationDate);
+      this.updateDate = new Date(variant.updateDate);
       this.validFrom = variant.validFrom;
       this.validUntil = variant.validUntil;
       this.dangerSourceVariantStatus = variant.dangerSourceVariantStatus;
