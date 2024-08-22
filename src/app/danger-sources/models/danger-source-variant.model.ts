@@ -435,4 +435,6 @@ export class DangerSourceVariantModel implements PolygonObject {
   getAfternoonDangerRatingBelow(): DangerRating {
     return this.eawsMatrixInformation.dangerRating;
   }
+
+  updateDangerRating() {}
 }
