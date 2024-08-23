@@ -1,0 +1,45 @@
+<div class="modal-body">
+  <div class="text-center">
+    <!--<h6 class="font-xs text-secondary">{{ regionsService.getRegionName(variant.ownerRegion) }}</h6>-->
+    <h2 class="font-l">
+      <span>{{ dangerSource.title }} </span>
+    </h2>
+    <div class="user-avatar__name">
+      {{ dangerSource.creationDate | date: "fullDate" : undefined : translateService.currentLang }}
+    </div>
+  </div>
+  <h2 class="form-label" style="margin-top: 1rem">Title</h2>
+  <div class="row">
+    <div class="col-lg-12">
+      <textarea
+        id="textarea-input"
+        name="textarea-input"
+        label="textarea-input"
+        rows="1"
+        class="form-control"
+        [(ngModel)]="dangerSource.title"
+      ></textarea>
+    </div>
+  </div>
+  <h2 class="form-label" style="margin-top: 1rem">Description</h2>
+  <div class="row">
+    <div class="col-lg-12">
+      <textarea
+        id="textarea-input"
+        name="textarea-input"
+        label="textarea-input"
+        rows="10"
+        class="form-control"
+        [(ngModel)]="dangerSource.description"
+      ></textarea>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="editDangerSourceModalConfirm()">
+    {{ "dangerSources.create.editDangerSourceDialog.save" | translate }}
+  </button>
+  <button type="button" class="btn btn-default" (click)="editDangerSourceModalDecline()">
+    {{ "dangerSources.create.editDangerSourceDialog.cancel" | translate }}
+  </button>
+</div>

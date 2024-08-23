@@ -66,6 +66,16 @@
     }
   },
   "dangerSources": {
+    "status": {
+      "missing": "missing",
+      "forecast": "forecast",
+      "analysis": "analysis"
+    },
+    "variantStatus": {
+      "active": "active",
+      "dormant": "dormant",
+      "inactive": "inactive"
+    },
     "tooltip": {
       "read": "Read danger sources",
       "edit": "Edit danger sources"
@@ -82,6 +92,7 @@
       "variantNotEditable": "This variant can not be edited.",
       "noVariantsForSelectedDay": "No variants defined for this date.",
       "tooltip": {
+        "editDangerSource": "Edit danger source",
         "loadVariants": "Load variants from the day before",
         "edit": "Edit micro regions",
         "copy": "Copy variant",
@@ -130,6 +141,10 @@
         "terrainTypes": "Terrain types",
         "dangerSigns": "Danger signs",
         "aspects": "Aspects"
+      },
+      "editDangerSourceDialog": {
+        "save": "Save",
+        "cancel": "Cancel"
       }
     }
   },

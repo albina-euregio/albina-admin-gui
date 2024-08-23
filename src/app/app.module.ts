@@ -51,6 +51,7 @@ import { ModalCheckComponent } from "./bulletins/modal-check.component";
 import { ModalPublicationStatusComponent } from "./bulletins/modal-publication-status.component";
 import { ModalPublishAllComponent } from "./bulletins/modal-publish-all.component";
 import { ModalMediaFileComponent } from "./bulletins/modal-media-file.component";
+import { ModalEditDangerSourceComponent } from "./danger-sources/modal-edit-danger-source.component";
 
 import localeDe from "@angular/common/locales/de";
 import localeIt from "@angular/common/locales/it";
@@ -99,6 +100,7 @@ registerLocaleData(localeOc, "oc");
     ModalPublicationStatusComponent,
     ModalPublishAllComponent,
     ModalMediaFileComponent,
+    ModalEditDangerSourceComponent,
     UpdateUserComponent,
     ChangePasswordComponent,
   ],

@@ -20,6 +20,18 @@
         }}</span>
         <span *ngIf="variant.regions.length > 1"> + {{ variant.regions.length - 1 }} </span>
       </h2>
+      <div class="user-avatar__name">
+        Updated on {{ variant.updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
+      </div>
+      <span *ngIf="variant.dangerSourceVariantStatus === variantStatus.active" class="badge bg-danger">
+        <i class="ph-bold ph-exclamation-mark"></i> {{ "dangerSources.variantStatus.active" | translate }}
+      </span>
+      <span *ngIf="variant.dangerSourceVariantStatus === variantStatus.dormant" class="badge bg-warning">
+        <i class="ph-bold ph-moon"></i> {{ "dangerSources.variantStatus.dormant" | translate }}
+      </span>
+      <span *ngIf="variant.dangerSourceVariantStatus === variantStatus.inactive" class="badge bg-primary">
+        <i class="ph-bold ph-check"></i> {{ "dangerSources.variantStatus.inactive" | translate }}
+      </span>
     </div>
   </header>
 
@@ -98,15 +110,6 @@
   </div>
 
   <main class="region-form__content">
-    <!--
-    ------------------
-    TODO show in title
-    ------------------
-    creationDate: Date;
-    updateDate: Date;
-    status: DangerSourceVariantStatus;
-    -->
-
     <accordion class="accordion">
       <!-- Avalanche -->
       <accordion-group

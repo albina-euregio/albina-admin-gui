@@ -20,6 +20,7 @@ import { LocalStorageService } from "app/providers/local-storage-service/local-s
 import { DangerSourceVariantModel, DangerSourceVariantStatus } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
+import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",
@@ -83,6 +84,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   public checkBulletinsErrorModalRef: BsModalRef;
   @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
+
+  public editDangerSourceModalRef: BsModalRef;
+  @ViewChild("editDangerSourceTemplate") editDangerSourceTemplate: TemplateRef<any>;
 
   public config = {
     animated: false,
@@ -209,7 +213,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadDangerSourcesFromServer() {
+  public loadDangerSourcesFromServer() {
     console.log("Load danger sources");
     this.internVariantsList = new Array<DangerSourceVariantModel>();
     this.dangerSourcesService
@@ -607,6 +611,36 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  getStatusString(dangerSource: DangerSourceModel) {
+    return (
+      " (" +
+      this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.active) +
+      "/" +
+      this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.dormant) +
+      "/" +
+      this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.inactive) +
+      ")"
+    );
+  }
+
+  getVariantCountByStatus(dangerSource: DangerSourceModel, status: DangerSourceVariantStatus): number {
+    return this.internVariantsList.filter(
+      (variant) => variant.dangerSource.id === dangerSource.id && variant.dangerSourceVariantStatus === status,
+    ).length;
+  }
+
+  openEditDangerSourceModal(dangerSource: DangerSourceModel) {
+    const initialState = {
+      dangerSource: dangerSource,
+      component: this,
+    };
+    this.editDangerSourceModalRef = this.modalService.show(ModalEditDangerSourceComponent, { initialState });
+  }
+
+  editDangerSourceModalConfirm(): void {
+    this.editDangerSourceModalRef.hide();
+  }
+
   selectVariant(variant: DangerSourceVariantModel) {
     if (!this.editRegions) {
       this.deselectVariant();
@@ -893,14 +927,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   saveErrorModalConfirm(): void {
     this.saveErrorModalRef.hide();
     this.loading = false;
-  }
-
-  openChangeErrorModal(template: TemplateRef<any>) {
-    this.changeErrorModalRef = this.modalService.show(template, this.config);
-  }
-
-  changeErrorModalConfirm(): void {
-    this.changeErrorModalRef.hide();
   }
 
   getRegionNames(bulletin: BulletinModel): string {

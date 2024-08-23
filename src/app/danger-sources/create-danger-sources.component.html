@@ -216,11 +216,15 @@
   <div class="create-bulletin__regions">
     <!-- Own regions -->
     <header class="create-bulletin__region-divider">
-      <h5 class="font-s-bold">
-        {{ dangerSource.title }}
-        {{ dangerSource.creationDate | date: "longDate" : undefined : translateService.currentLang }}
-      </h5>
-      <h5 class="font-s-bold"></h5>
+      <div class="region-thumb__details">
+        <h5 class="font-s-bold">
+          {{ dangerSource.title }}
+        </h5>
+        <div class="region-thumb__author font-s text-secondary" role="button">
+          {{ dangerSource.creationDate | date: "mediumDate" : undefined : translateService.currentLang }}
+          {{ getStatusString(dangerSource) }}
+        </div>
+      </div>
       <div class="btn-group region-divider__actions">
         <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
           <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle>
@@ -230,6 +234,18 @@
           <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
             <!-- load variants from yesterday -->
             <li>
+              <button
+                *ngIf="dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()"
+                [disabled]="editRegions || loading"
+                type="reset"
+                class="dropdown-item"
+                (click)="openEditDangerSourceModal(dangerSource)"
+                data-toggle="tooltip"
+                title="{{ 'dangerSources.create.tooltip.editDangerSource' | translate }}"
+              >
+                <i class="ph-bold ph-pencil icon-md"></i>
+                {{ "dangerSources.create.tooltip.editDangerSource" | translate }}
+              </button>
               <button
                 *ngIf="dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()"
                 [disabled]="editRegions || loading"
@@ -285,6 +301,9 @@
         <span *ngIf="variant.regions.length > 0">{{ regionsService.getRegionName(variant.regions[0]) }}</span>
         <span *ngIf="variant.regions.length > 1"> + {{ variant.regions.length - 1 }} </span>
       </h6>
+      <p class="region-thumb__author font-s text-secondary" role="button">
+        Updated on {{ variant.updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
+      </p>
 
       <div class="region-thumb__avalanche-info">
         <app-danger-rating-icon

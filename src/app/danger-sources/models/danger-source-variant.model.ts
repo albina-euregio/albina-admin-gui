@@ -230,7 +230,6 @@ export class DangerSourceVariantModel implements PolygonObject {
   static createFromJson(json) {
     const variant = new DangerSourceVariantModel();
 
-    // TODO implement correct
     variant.id = json.id;
     variant.dangerSourceVariantId = json.dangerSourceId;
     variant.dangerSource = DangerSourceModel.createFromJson(json.dangerSource);
@@ -353,6 +352,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     } else {
       this.creationDate = new Date();
       this.updateDate = new Date();
+      this.dangerSourceVariantStatus = DangerSourceVariantStatus.active;
       this.regions = new Array<string>();
       this.hasDaytimeDependency = false;
       this.aspects = new Array<Aspect>();

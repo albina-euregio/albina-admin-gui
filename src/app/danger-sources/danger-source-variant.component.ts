@@ -18,6 +18,7 @@ import {
   CreationProcess,
   DangerSign,
   DangerSourceVariantModel,
+  DangerSourceVariantStatus,
   Daytime,
   Distribution,
   GlidingSnowActivity,
@@ -72,6 +73,7 @@ export class DangerSourceVariantComponent implements OnChanges {
   handHardnessEnum = HandHardness;
   terrainTypeEnum = TerrainType;
   dangerSignEnum = DangerSign;
+  variantStatus = DangerSourceVariantStatus;
 
   useElevationHigh = false;
   useElevationLow = false;
