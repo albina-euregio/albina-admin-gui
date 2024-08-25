@@ -17,7 +17,6 @@ import { DomSanitizer } from "@angular/platform-browser";
   templateUrl: "./full-layout.component.html",
 })
 export class FullLayoutComponent {
-  public disabled: boolean = false;
   public status: { isopen: boolean } = { isopen: false };
   public isSidebarOpen = false;
 
