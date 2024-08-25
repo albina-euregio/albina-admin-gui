@@ -42,7 +42,7 @@ type Awsome = {
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
   // https://gitlab.com/avalanche-warning
-  configURL = '"https://models.avalanche.report/dashboard/awsome.json';
+  configURL = "https://models.avalanche.report/dashboard/awsome.json";
   config: Awsome = {} as Awsome;
   date: string = "";
   layout = "map" as const;
