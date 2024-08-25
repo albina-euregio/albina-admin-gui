@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg" [style]="getStyle()">
+<nav *ngIf="isNavbarShown" class="navbar navbar-expand-lg" [style]="getStyle()">
   <div class="container-fluid">
     <button
       class="navbar__toggler"

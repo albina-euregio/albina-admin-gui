@@ -48,6 +48,10 @@ export class FullLayoutComponent {
     return environment;
   }
 
+  get isNavbarShown(): boolean {
+    return this.authenticationService.isUserLoggedIn() || !this.router.url.startsWith("/modelling");
+  }
+
   getStyle() {
     const style = `background-color: ${environment.headerBgColor}`;
     return this.sanitizer.bypassSecurityTrustStyle(style);
