@@ -57,7 +57,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
-    this.config = await this.fetchJSON<Awsome>("https://models.avalanche.report/dashboard/awsome.json");
+    this.config = await this.fetchJSON<Awsome>("https://models.avalanche.report/dashboard/awsome.json?_=" + Date.now());
     this.date = this.config.date;
     this.sources = this.config.sources;
 
