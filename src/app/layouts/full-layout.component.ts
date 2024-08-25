@@ -4,6 +4,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import { RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { Router } from "@angular/router";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -22,7 +23,7 @@ export class FullLayoutComponent {
 
   public message: string;
 
-  public tmpRegion: string;
+  public tmpRegion: RegionConfiguration;
 
   public environment: any;
 
@@ -66,8 +67,8 @@ export class FullLayoutComponent {
     this.authenticationService.logout();
   }
 
-  changeRegion(region) {
-    if (!this.authenticationService.getActiveRegionId().startsWith(region)) {
+  changeRegion(region: RegionConfiguration) {
+    if (!this.authenticationService.getActiveRegionId().startsWith(region.id)) {
       if (this.router.url.startsWith("/bulletins/") && this.bulletinsService.getIsEditable()) {
         this.tmpRegion = region;
         this.openChangeRegionModal(this.changeRegionTemplate);
@@ -91,7 +92,7 @@ export class FullLayoutComponent {
     this.changeRegionModalRef.hide();
   }
 
-  private change(region) {
+  private change(region: RegionConfiguration) {
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.loadStatus();
     if (
