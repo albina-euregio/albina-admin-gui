@@ -19,8 +19,6 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class FullLayoutComponent {
   public isSidebarOpen = false;
 
-  public message: string;
-
   public tmpRegion: RegionConfiguration;
 
   public environment: any;
@@ -45,7 +43,6 @@ export class FullLayoutComponent {
     private modalService: BsModalService,
     private sanitizer: DomSanitizer,
   ) {
-    this.message = "";
     this.tmpRegion = undefined;
     this.environment = environment;
   }
