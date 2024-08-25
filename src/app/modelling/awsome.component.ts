@@ -10,6 +10,7 @@ import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { ObservationMarkerService } from "../observations/observation-marker.service";
 import { GenericObservation } from "../observations/models/generic-observation.model";
+import { ActivatedRoute } from "@angular/router";
 
 type FeatureProperties = GeoJSON.Feature["properties"];
 
@@ -41,6 +42,7 @@ type Awsome = {
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
   // https://gitlab.com/avalanche-warning
+  configURL = '"https://models.avalanche.report/dashboard/awsome.json';
   config: Awsome = {} as Awsome;
   date: string = "";
   layout = "map" as const;
@@ -50,6 +52,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   sources: Source[];
 
   constructor(
+    private route: ActivatedRoute,
     public filterService: ObservationFilterService<FeatureProperties>,
     public mapService: BaseMapService,
     public markerService: ObservationMarkerService<FeatureProperties>,
@@ -57,7 +60,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
-    this.config = await this.fetchJSON<Awsome>("https://models.avalanche.report/dashboard/awsome.json?_=" + Date.now());
+    this.route.queryParamMap.subscribe((params) => {
+      const configURL = params.get("config");
+      if (!configURL) return;
+      this.configURL = configURL;
+    });
+    const configURL = this.configURL.includes("?") ? this.configURL : `${this.configURL}?_=${Date.now()}`;
+    this.config = await this.fetchJSON<Awsome>(configURL);
     this.date = this.config.date;
     this.sources = this.config.sources;
 
