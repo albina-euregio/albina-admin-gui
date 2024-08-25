@@ -53,8 +53,6 @@ export class FullLayoutComponent {
     return this.sanitizer.bypassSecurityTrustStyle(style);
   }
 
-  public toggled(): void {}
-
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
