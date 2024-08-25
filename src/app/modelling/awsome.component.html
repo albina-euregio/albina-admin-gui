@@ -31,6 +31,16 @@
                 </form>
               </div>
             </div>
+
+            <div class="global-bar-item">
+              <input
+                type="datetime-local"
+                [step]="config.dateStepSeconds"
+                class="form-control"
+                [(ngModel)]="date"
+                (ngModelChange)="loadSources()"
+              />
+            </div>
           </div>
         </div>
       </div>

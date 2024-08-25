@@ -3,10 +3,19 @@
   "$id": "https://admin.avalanche.report/schemas/awsome-source",
   "type": "object",
   "required": [
+    "date",
+    "dateStep",
     "sources",
     "filters"
   ],
   "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "dateStepSeconds": {
+      "type": "number"
+    },
     "sources": {
       "type": "array",
       "items": {

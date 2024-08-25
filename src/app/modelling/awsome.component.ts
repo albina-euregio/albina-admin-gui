@@ -19,6 +19,8 @@ type Source = {
 };
 
 type Awsome = {
+  date: string;
+  dateStepSeconds: string;
   sources: Source[];
   filters: FilterSelectionSpec<FeatureProperties>[];
 };
@@ -39,6 +41,8 @@ type Awsome = {
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
   // https://gitlab.com/avalanche-warning
+  config: Awsome = {} as Awsome;
+  date: string = "";
   layout = "map" as const;
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   observations: FeatureProperties[] = [];
@@ -52,15 +56,25 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   ) {}
 
   async ngOnInit() {
-    const { sources, filters } = await this.fetchJSON<Awsome>("https://models.avalanche.report/dashboard/awsome.json");
-    this.sources = sources;
+    // this.config = (await import("./awsome.json")) as unknown as Awsome;
+    this.config = await this.fetchJSON<Awsome>("https://models.avalanche.report/dashboard/awsome.json");
+    this.date = this.config.date;
+    this.sources = this.config.sources;
 
-    this.filterService.filterSelectionData = (filters as FilterSelectionSpec<FeatureProperties>[]).map(
+    this.filterService.filterSelectionData = (this.config.filters as FilterSelectionSpec<FeatureProperties>[]).map(
       (f) => new FilterSelectionData(f),
     );
     this.markerService.markerClassify = this.filterService.filterSelectionData.at(-1);
+    await this.loadSources();
+  }
 
-    this.observations = (await Promise.all(sources.flatMap(async (source) => await this.loadSource(source)))).flat();
+  async loadSources() {
+    this.observations.length = 0;
+    this.applyLocalFilter();
+
+    this.observations = (
+      await Promise.all(this.sources.flatMap(async (source) => await this.loadSource(source)))
+    ).flat();
 
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
@@ -71,7 +85,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private async loadSource(source: Source) {
-    const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(source.url);
+    // replace 2023-11-12_06-00-00 with current date
+    const date = this.date.replace(/T/, "_").replace(/:/g, "-");
+    const url =
+      date.length === "2006-01-02T03:04:05".length
+        ? source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, date)
+        : source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
+
+    const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(url);
     return features.flatMap((feature) => {
       const observationLikeProperties = feature.properties as GenericObservation;
       observationLikeProperties.$source = source.name as any;
