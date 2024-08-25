@@ -21,8 +21,6 @@ export class FullLayoutComponent {
 
   public tmpRegion: RegionConfiguration;
 
-  public environment: any;
-
   public changeRegionModalRef: BsModalRef;
   @ViewChild("changeRegionTemplate") changeRegionTemplate: TemplateRef<any>;
 
@@ -44,7 +42,10 @@ export class FullLayoutComponent {
     private sanitizer: DomSanitizer,
   ) {
     this.tmpRegion = undefined;
-    this.environment = environment;
+  }
+
+  get environment() {
+    return environment;
   }
 
   getStyle() {
