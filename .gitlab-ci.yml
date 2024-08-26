@@ -156,7 +156,7 @@ build:observations-api:
     - cd ../
     - mkdir dist/
     - mv observations-api/dist/server/* dist/
-    - cp package.json dist/
+    - cp observations-api/package.json dist/
   environment:
     name: observations-api
   artifacts:
