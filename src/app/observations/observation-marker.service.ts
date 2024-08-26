@@ -11,6 +11,8 @@ import {
 import { Aspect, SnowpackStability } from "../enums/enums";
 import { FilterSelectionData } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
+import type { AwsomeSource } from "../modelling/awsome.component";
+import { get as _get } from "lodash";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
@@ -196,10 +198,13 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     }
   }
 
-  bindTooltip(marker: Marker | CircleMarker, observation: T) {
+  bindTooltip(marker: Marker | CircleMarker, observation: T & { $sourceObject?: AwsomeSource }) {
     marker.bindTooltip(
-      () =>
-        [
+      () => {
+        if (observation.$sourceObject?.tooltipTemplate) {
+          return formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
+        }
+        return [
           `<i class="ph ph-calendar"></i> ${
             observation.eventDate instanceof Date
               ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
@@ -210,7 +215,8 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
           `[${observation.$source}, ${observation.$type}]`,
         ]
           .filter((s) => !s.includes("undefined"))
-          .join("<br>"),
+          .join("<br>");
+      },
       {
         opacity: 1,
         className: "obs-tooltip",
@@ -470,4 +476,8 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   toZIndex(observation: T) {
     return zIndex[observation.stability ?? "unknown"] ?? 0;
   }
+}
+
+export function formatTemplate(t: string, data: unknown): string {
+  return t.replace(/{([^{}]+)}/g, (_match, key) => _get(data, key, ""));
 }

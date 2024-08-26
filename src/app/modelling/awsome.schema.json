@@ -26,6 +26,12 @@
           },
           "url": {
             "type": "string"
+          },
+          "tooltipTemplate": {
+            "type": "string"
+          },
+          "detailsTemplate": {
+            "type": "string"
           }
         }
       }

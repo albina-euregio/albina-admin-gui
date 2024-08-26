@@ -14,15 +14,17 @@ import { ActivatedRoute } from "@angular/router";
 
 type FeatureProperties = GeoJSON.Feature["properties"];
 
-type Source = {
+export type AwsomeSource = {
   name: string;
   url: string;
+  tooltipTemplate: string;
+  detailsTemplate: string;
 };
 
 type Awsome = {
   date: string;
   dateStepSeconds: string;
-  sources: Source[];
+  sources: AwsomeSource[];
   filters: FilterSelectionSpec<FeatureProperties>[];
 };
 
@@ -49,7 +51,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   observations: FeatureProperties[] = [];
   localObservations: FeatureProperties[] = [];
-  sources: Source[];
+  sources: AwsomeSource[];
 
   constructor(
     private route: ActivatedRoute,
@@ -93,7 +95,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.applyLocalFilter();
   }
 
-  private async loadSource(source: Source) {
+  private async loadSource(source: AwsomeSource) {
     // replace 2023-11-12_06-00-00 with current date
     const date = this.date.replace(/T/, "_").replace(/:/g, "-");
     const url =
@@ -108,6 +110,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       observationLikeProperties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
       observationLikeProperties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
       observationLikeProperties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
+      feature.properties.$sourceObject = source;
       return ["east", "flat", "north", "south", "west"].map((aspect) => ({
         ...feature.properties,
         aspect,
