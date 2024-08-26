@@ -84,5 +84,20 @@
         </div>
       </div>
     </div>
+
+    <div class="layout-switch">
+      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
+        <span class="button-icon ph ph-map-trifold"></span>
+        <span class="button-text">
+          {{ "admin.observations.map" | translate }}
+        </span>
+      </div>
+      <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
+        <span class="button-icon ph ph-chart-line"></span>
+        <span class="button-text">
+          {{ "admin.observations.charts.charts" | translate }}
+        </span>
+      </div>
+    </div>
   </div>
 </div>

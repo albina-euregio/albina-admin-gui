@@ -51,7 +51,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   configURL = "https://models.avalanche.report/dashboard/awsome.json";
   config: Awsome = {} as Awsome;
   date: string = "";
-  layout = "map" as const;
+  layout: "map" | "chart" = "map";
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   observations: FeatureProperties[] = [];
   localObservations: FeatureProperties[] = [];
@@ -152,10 +152,18 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.selectedObservationDetails = detailsTemplate
       ? this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(detailsTemplate, observation))
       : undefined;
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      // see scss/sections/_observations.scss
+      this.layout = "chart";
+    }
   }
 
   closeObservation() {
     this.selectedObservationDetails = undefined;
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      // see scss/sections/_observations.scss
+      this.layout = "map";
+    }
   }
 
   @HostListener("document:keydown", ["$event"])
