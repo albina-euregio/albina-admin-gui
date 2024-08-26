@@ -168,7 +168,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   @HostListener("document:keydown", ["$event"])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.keyCode === 27) {
+    if (event.key === "Escape") {
       this.closeObservation();
     }
   }
