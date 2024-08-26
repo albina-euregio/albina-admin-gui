@@ -9,10 +9,13 @@ import { ObservationFilterService } from "../observations/observation-filter.ser
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { ObservationMarkerService } from "../observations/observation-marker.service";
-import { GenericObservation } from "../observations/models/generic-observation.model";
+import type { GenericObservation } from "../observations/models/generic-observation.model";
 import { ActivatedRoute } from "@angular/router";
 
-type FeatureProperties = GeoJSON.Feature["properties"];
+type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
+    GenericObservation,
+    "$source" | "latitude" | "longitude" | "elevation"
+  >;
 
 export type AwsomeSource = {
   name: string;
@@ -104,12 +107,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         : source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
 
     const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(url);
-    return features.flatMap((feature) => {
-      const observationLikeProperties = feature.properties as GenericObservation;
-      observationLikeProperties.$source = source.name as any;
-      observationLikeProperties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
-      observationLikeProperties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
-      observationLikeProperties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
+    return features.flatMap((feature: FeatureProperties) => {
+      feature.properties.$source = source.name as any;
+      feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
+      feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
+      feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
       feature.properties.$sourceObject = source;
       return ["east", "flat", "north", "south", "west"].map((aspect) => ({
         ...feature.properties,
