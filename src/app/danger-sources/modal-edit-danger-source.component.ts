@@ -24,7 +24,9 @@ export class ModalEditDangerSourceComponent {
   ) {}
 
   editDangerSourceModalConfirm(): void {
-    this.dangerSourcesService.updateDangerSource(this.dangerSource, this.dangerSourcesService.getActiveDate());
+    this.dangerSourcesService.updateDangerSource(this.dangerSource).subscribe(() => {
+      console.log("Danger source updated!");
+    });
     this.component.editDangerSourceModalConfirm();
   }
 

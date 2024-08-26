@@ -129,19 +129,8 @@ export class DangerSourcesService {
     return this.http.get<DangerSourceModel[]>(url, { headers });
   }
 
-  updateDangerSource(dangerSource: DangerSourceModel, date: [Date, Date]) {
-    // check if danger source has ID
-    const url =
-      this.constantsService.getServerUrl() +
-      "danger-sources/" +
-      dangerSource.id +
-      "?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", this.authenticationService.getActiveRegionId()],
-        ])
-        .toString();
+  updateDangerSource(dangerSource: DangerSourceModel) {
+    const url = this.constantsService.getServerUrl() + "danger-sources/" + dangerSource.id;
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSource);
     return this.http.post(url, body, { headers });
