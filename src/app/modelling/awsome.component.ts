@@ -152,18 +152,21 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.selectedObservationDetails = detailsTemplate
       ? this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(detailsTemplate, observation))
       : undefined;
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      // see scss/sections/_observations.scss
+    if (this.isMobile) {
       this.layout = "chart";
     }
   }
 
   closeObservation() {
     this.selectedObservationDetails = undefined;
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      // see scss/sections/_observations.scss
+    if (this.isMobile) {
       this.layout = "map";
     }
+  }
+
+  private get isMobile() {
+    // see scss/sections/_observations.scss
+    return window.matchMedia("(max-width: 768px)").matches;
   }
 
   @HostListener("document:keydown", ["$event"])
