@@ -56,13 +56,14 @@ build:
 .deploy:
   stage: deploy
   image: alpine:latest
-  script:
+  before_script:
     - apk add openssh-client rsync
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --exclude=node_modules --recursive --verbose dist/ $SFTP_SERVER
+  script:
+    - rsync -e 'ssh -p2201' --compress --delete --recursive --verbose dist/ $SFTP_SERVER
 
 build:development:
   extends: .envsubst
@@ -149,19 +150,16 @@ build:observations-api:
   image:
     name: oven/bun:latest
   script:
+    - bun --version
     - bun install --no-save --ignore-scripts
     - cd observations-api/
     - bun install --no-save --ignore-scripts
     - bun run build
-    - cd ../
-    - mkdir dist/
-    - mv observations-api/dist/server/* dist/
-    - cp observations-api/package.json dist/
   environment:
     name: observations-api
   artifacts:
     paths:
-      - dist/
+      - observations-api/
 
 deploy:observations-api:
   extends: .deploy
@@ -169,5 +167,7 @@ deploy:observations-api:
     - build:observations-api
   environment:
     name: observations-api
+  script:
+    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose observations-api/ $SFTP_SERVER
   rules:
     - when: manual
