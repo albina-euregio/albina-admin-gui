@@ -59,6 +59,19 @@
   border-radius: 0 !important;
 }
 
+.gliding-snow-activity-slider span.ngx-slider-ticks span.ngx-slider-tick:nth-of-type(33n + 17) {
+  visibility: visible !important;
+  height: 0;
+}
+
+.gliding-snow-activity-slider span.ngx-slider-ticks span.ngx-slider-tick:nth-of-type(33n + 1) {
+  visibility: visible !important;
+  width: 2px !important;
+  height: 15px !important;
+  top: -3px !important;
+  border-radius: 0 !important;
+}
+
 .ngx-slider-tick-legend {
   font-size: smaller;
 }

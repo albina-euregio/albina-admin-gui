@@ -108,7 +108,7 @@ export class DangerSourceVariantComponent implements OnChanges {
       switch (value) {
         case 16:
           return this.translateService.instant("glidingSnowActivity.low");
-        case 48:
+        case 49:
           return this.translateService.instant("glidingSnowActivity.medium");
         case 82:
           return this.translateService.instant("glidingSnowActivity.high");
