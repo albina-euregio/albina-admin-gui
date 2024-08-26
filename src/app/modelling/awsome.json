@@ -5,7 +5,9 @@
   "sources": [
     {
       "name": "snp-gridded",
-      "url": "https://models.avalanche.report/snp-gridded/geojson-tirol23/2023-11-12_06-00-00.json"
+      "url": "https://models.avalanche.report/snp-gridded/geojson-tirol23/2023-11-12_06-00-00.json",
+      "tooltipTemplate": "sk38 {snp_characteristics.sk38.value}",
+      "detailsTemplate": "<b>sk38</b> {snp_characteristics.sk38.value}"
     }
   ],
   "filters": [

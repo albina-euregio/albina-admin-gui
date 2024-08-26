@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
@@ -10,6 +10,7 @@ import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { ObservationMarkerService } from "../observations/observation-marker.service";
 import type { GenericObservation } from "../observations/models/generic-observation.model";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
@@ -54,6 +55,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   observations: FeatureProperties[] = [];
   localObservations: FeatureProperties[] = [];
+  selectedObservationDetails: SafeHtml | undefined = undefined;
   sources: AwsomeSource[];
 
   constructor(
@@ -61,6 +63,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     public filterService: ObservationFilterService<FeatureProperties>,
     public mapService: BaseMapService,
     public markerService: ObservationMarkerService<FeatureProperties>,
+    private sanitizer: DomSanitizer,
   ) {}
 
   async ngOnInit() {
@@ -145,7 +148,21 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private onObservationClick(observation: FeatureProperties) {
-    console.log(observation);
+    const detailsTemplate = observation.$sourceObject.detailsTemplate;
+    this.selectedObservationDetails = detailsTemplate
+      ? this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(detailsTemplate, observation))
+      : undefined;
+  }
+
+  closeObservation() {
+    this.selectedObservationDetails = undefined;
+  }
+
+  @HostListener("document:keydown", ["$event"])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.keyCode === 27) {
+      this.closeObservation();
+    }
   }
 
   private async fetchJSON<T>(input: RequestInfo | URL): Promise<T> {

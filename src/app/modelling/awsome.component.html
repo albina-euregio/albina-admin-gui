@@ -51,7 +51,14 @@
     </div>
 
     <div class="layout-right">
-      <div class="toolset">
+      <div *ngIf="selectedObservationDetails">
+        <div class="toolset-header">
+          <button type="button" class="btn-close" (click)="closeObservation()"></button>
+        </div>
+        <div class="toolset-content" [innerHTML]="selectedObservationDetails"></div>
+      </div>
+
+      <div *ngIf="!selectedObservationDetails" class="toolset">
         <div class="toolset-header">
           <div class="toolset-name">
             {{ "sidebar.observations" | translate }}

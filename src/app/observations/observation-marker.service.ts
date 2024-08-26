@@ -202,7 +202,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     marker.bindTooltip(
       () => {
         if (observation.$sourceObject?.tooltipTemplate) {
-          return formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
+          return this.formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
         }
         return [
           `<i class="ph ph-calendar"></i> ${
@@ -476,8 +476,8 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   toZIndex(observation: T) {
     return zIndex[observation.stability ?? "unknown"] ?? 0;
   }
-}
 
-export function formatTemplate(t: string, data: unknown): string {
-  return t.replace(/{([^{}]+)}/g, (_match, key) => _get(data, key, ""));
+  formatTemplate(t: string, data: unknown): string {
+    return t.replace(/{([^{}]+)}/g, (_match, key) => _get(data, key, ""));
+  }
 }
