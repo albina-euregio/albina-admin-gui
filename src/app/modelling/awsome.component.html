@@ -1,0 +1,103 @@
+<div class="layout-outer" [ngClass]="'layout--is-' + layout">
+  <div class="layout-inner">
+    <div class="layout-left">
+      <div class="layout-global">
+        <div class="global-bar-scroll">
+          <div class="global-bar global-bar-left">
+            <div class="global-bar-item global-bar-item-source">
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  data-bs-auto-close="outside"
+                >
+                  {{ "admin.observations.selectSources.placeholder" | translate }}
+                </button>
+                <form class="dropdown-menu p-4 overflow-y-scroll">
+                  <div *ngFor="let source of sources" class="form-check">
+                    <label class="form-check-label text-nowrap">
+                      <input
+                        [(ngModel)]="filterService.observationSources[source.name]"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="ngOnInit()"
+                        type="checkbox"
+                        class="form-check-input"
+                      />
+                      {{ source.name }}
+                    </label>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="global-bar-item">
+              <input
+                type="datetime-local"
+                [step]="config.dateStepSeconds"
+                class="form-control"
+                [(ngModel)]="date"
+                (ngModelChange)="loadSources()"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layout-map">
+        <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
+      </div>
+    </div>
+
+    <div class="layout-right">
+      <div *ngIf="selectedObservationDetails">
+        <div class="toolset-header">
+          <button type="button" class="btn-close" (click)="closeObservation()"></button>
+        </div>
+        <div class="toolset-content" [innerHTML]="selectedObservationDetails"></div>
+      </div>
+
+      <div *ngIf="!selectedObservationDetails" class="toolset">
+        <div class="toolset-header">
+          <div class="toolset-name">
+            {{ "sidebar.observations" | translate }}
+          </div>
+          <div class="toolset-keydata">
+            <div class="keydata">
+              <span class="keydata-selected">{{ localObservations.length }}</span>
+              /
+              <span class="keydata-all">{{ observations.length }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolset-content">
+          <div class="toolset-charts">
+            <app-observation-chart
+              *ngFor="let filterSelection of filterService.filterSelectionData"
+              class="chart-container"
+              [filterSelection]="filterSelection"
+              (handleChange)="applyLocalFilter()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout-switch">
+      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
+        <span class="button-icon ph ph-map-trifold"></span>
+        <span class="button-text">
+          {{ "admin.observations.map" | translate }}
+        </span>
+      </div>
+      <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
+        <span class="button-icon ph ph-chart-line"></span>
+        <span class="button-text">
+          {{ "admin.observations.charts.charts" | translate }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

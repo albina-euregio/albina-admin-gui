@@ -1,30 +1,23 @@
 import { Injectable } from "@angular/core";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
-import { castArray } from "lodash";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { type Dataset, FilterSelectionData } from "./filter-selection-data";
-import { observationFilters } from "./filter-selection-data-data";
+import { FilterSelectionData, ValueType } from "./filter-selection-data";
 
 @Injectable()
-export class ObservationFilterService {
+export class ObservationFilterService<
+  T extends Partial<Pick<GenericObservation, "$source" | "latitude" | "longitude" | "region" | "eventDate">>,
+> {
   public dateRange: Date[] = [];
   public regions = {} as Record<string, boolean>;
   public observationSources = {} as Record<ObservationSource, boolean>;
-
-  public filterSelectionData: FilterSelectionData[] = observationFilters((message) =>
-    this.translateService.instant(message),
-  );
+  public filterSelectionData: FilterSelectionData<T>[] = [];
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private translateService: TranslateService,
     private constantsService: ConstantsService,
-  ) {
-    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
-  }
+  ) {}
 
   set days(days: number) {
     this.endDate = new Date();
@@ -51,6 +44,10 @@ export class ObservationFilterService {
       });
     }
     this.dateRange = [this.startDate, this.endDate];
+  }
+
+  parseActivatedRoute() {
+    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
   private parseQueryParams(params: Params) {
@@ -87,148 +84,38 @@ export class ObservationFilterService {
     };
   }
 
-  public isSelected(observation: GenericObservation) {
+  public isSelected(observation: T) {
     return (
-      this.inObservationSources(observation) &&
-      this.inMapBounds(observation) &&
+      this.inObservationSources(observation.$source) &&
+      this.inMapBounds(observation.latitude, observation.longitude) &&
       this.inRegions(observation.region) &&
-      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation) : true) &&
-      this.filterSelectionData.every((filter) => filter.isIncluded("selected", observation[filter.key]))
+      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation.eventDate) : true) &&
+      this.filterSelectionData.every((filter) => filter.isIncluded("selected", filter.getValue(observation)))
     );
   }
 
-  public isWeatherStationSelected(observation: GenericObservation) {
+  public isWeatherStationSelected(observation: T & { latitude?: number; longitude?: number }) {
     return (
-      this.inMapBounds(observation) &&
+      this.inMapBounds(observation.latitude, observation.longitude) &&
       this.inRegions(observation.region) &&
       this.filterSelectionData
         .find((filter) => filter.key === "elevation")
-        .isIncluded("selected", observation.elevation)
+        .isIncluded("selected", (observation as unknown as GenericObservation).elevation)
     );
   }
 
-  public isHighlighted(observation: GenericObservation) {
-    if (!this.inMapBounds(observation)) {
+  public isHighlighted(observation: T & { latitude?: number; longitude?: number }) {
+    if (!this.inMapBounds(observation.latitude, observation.longitude)) {
       return false;
     }
-    return this.filterSelectionData.some((filter) => filter.isIncluded("highlighted", observation[filter.key]));
+    return this.filterSelectionData.some((filter) => filter.isIncluded("highlighted", filter.getValue(observation)));
   }
 
-  public buildChartsData(observations: GenericObservation[], markerClassify: FilterSelectionData) {
-    this.filterSelectionData.forEach((filter) => this.buildChartsData0(observations, filter, markerClassify));
-  }
-
-  private buildChartsData0(
-    observations: GenericObservation[],
-    filter: FilterSelectionData,
-    markerClassify: FilterSelectionData,
-  ) {
-    filter.nan = 0;
-    const dataRaw = filter.values.map((value) => ({
-      value,
-      data: {
-        all: 0,
-        available: 0,
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-        10: 0,
-      },
-    }));
-    observations.forEach((observation) => {
-      const value: number | string | string[] = observation[filter.key];
-      if (value === undefined || value === null) {
-        filter.nan++;
-        return;
-      }
-      castArray(value).forEach((v) => {
-        const data = dataRaw.find((f) => FilterSelectionData.testFilterSelection(f.value, v))?.data;
-        if (!data) {
-          return;
-        }
-        data.all++;
-        if (!this.isSelected(observation)) {
-          return;
-        }
-        if (!markerClassify || markerClassify.type === filter.type) {
-          data[0]++;
-          return;
-        }
-        const value2: number | string | string[] = observation[markerClassify.key];
-        if (value2 === undefined || value2 === null) {
-          data[0]++;
-          return;
-        }
-        castArray(value2).forEach((v) => {
-          data[markerClassify.values.findIndex((f) => FilterSelectionData.testFilterSelection(f, v)) + 1]++;
-        });
-      });
-    });
-
-    const header = [
-      "category",
-      "max",
-      "all",
-      "highlighted",
-      "available",
-      "selected",
-      "0",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-    ];
-
-    const data: Dataset = dataRaw.map((f) => {
-      const key = f.value.value;
-      const values = f.data;
-      const highlighted = filter.highlighted.has(key) ? values.all : 0;
-      const available = !filter.selected.has(key) ? values.available : 0;
-      const selected = filter.selected.has(key) ? values.available : 0;
-      const max = values.all;
-      const all = available > 0 ? available : selected;
-      return [
-        key,
-        max ? all : max,
-        all,
-        highlighted ? all : highlighted,
-        available,
-        selected,
-        values["0"],
-        values["1"],
-        values["2"],
-        values["3"],
-        values["4"],
-        values["5"],
-        values["6"],
-        values["7"],
-        values["8"],
-        values["9"],
-        values["10"],
-      ];
-    });
-
-    filter.dataset = [header, ...data];
-  }
-
-  inDateRange({ $source, eventDate }: GenericObservation): boolean {
+  inDateRange(eventDate: Date): boolean {
     return this.startDate <= eventDate && eventDate <= this.endDate;
   }
 
-  isLastDayInDateRange({ $source, eventDate }: GenericObservation): boolean {
+  isLastDayInDateRange(eventDate: Date): boolean {
     const selectedData: string[] = Array.from(
       this.filterSelectionData.find((filter) => filter.key === "eventDate").selected,
     )
@@ -241,7 +128,7 @@ export class ObservationFilterService {
     }
   }
 
-  inMapBounds({ latitude, longitude }: GenericObservation): boolean {
+  inMapBounds(latitude?: number, longitude?: number): boolean {
     if (!latitude || !longitude) {
       return true;
     }
@@ -252,7 +139,7 @@ export class ObservationFilterService {
     return !Object.values(this.regions).some((v) => v) || (typeof region === "string" && this.regions[region]);
   }
 
-  inObservationSources({ $source }: GenericObservation): boolean {
+  inObservationSources($source?: GenericObservation["$source"]): boolean {
     return (
       !Object.values(this.observationSources).some((v) => v) ||
       (typeof $source === "string" && this.observationSources[$source])

@@ -1,6 +1,6 @@
 import type { Aspect } from "../enums/enums";
 import { Icon } from "leaflet";
-import { memoize } from "lodash";
+import { escape, memoize } from "lodash";
 
 export const makeIcon = memoize(icon0, (...args) => args.join("-"));
 
@@ -37,6 +37,7 @@ function icon0(
 ): Icon {
   // 700533 - drawImage() fails silently when drawing an SVG image without @width or @height
   // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
+  label = escape(String(label));
   const svg = `
     <svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     ${labelFont === "snowsymbolsiacs" ? snowsymbolsiacs : ""}
