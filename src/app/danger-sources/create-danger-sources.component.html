@@ -37,16 +37,19 @@
       <!-- End Date Switch -->
 
       <span class="create-bulletin__bulletin-info" *ngIf="loading"
-        ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loading" | translate }}</span
+        ><i class="ph ph-circle-notch"></i> {{ "dangerSources.status.loading" | translate }}</span
       >
       <span class="create-bulletin__bulletin-alert" *ngIf="saveError.size" (click)="updateSaveErrors()"
-        ><i class="ph ph-warning icon-left"></i> {{ "bulletins.status.saveError" | translate }}
+        ><i class="ph ph-warning icon-left"></i> {{ "dangerSources.status.saveError" | translate }}
         <button class="btn btn-outline btn-danger btn-small lm-2">
           <i class="ph ph-repeat icon-right"></i>
         </button>
       </span>
       <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalVariantsError"
-        ><i class="ph ph-info"></i> {{ "bulletins.status.loadBulletinsError" | translate }}</span
+        ><i class="ph ph-info"></i> {{ "dangerSources.status.loadVariantsError" | translate }}</span
+      >
+      <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalDangerSourcesError"
+        ><i class="ph ph-info"></i> {{ "dangerSources.status.loadDangerSourcesError" | translate }}</span
       >
     </header>
     <!-- End sidebar header -->

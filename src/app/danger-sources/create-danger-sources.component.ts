@@ -32,6 +32,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public loading: boolean;
   public saveError: Map<string, DangerSourceVariantModel>;
   public loadInternalVariantsError: boolean;
+  public loadInternalDangerSourcesError: boolean;
 
   public showAfternoonMap: boolean;
 
@@ -220,6 +221,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       .loadDangerSources(this.dangerSourcesService.getActiveDate(), this.authenticationService.getInternalRegions())
       .subscribe(
         (dangerSources) => {
+          this.loadInternalDangerSourcesError = false;
           this.addInternalDangerSources(dangerSources);
           this.dangerSourcesService
             .loadDangerSourceVariants(
@@ -242,7 +244,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         (error) => {
           console.error("Danger sources could not be loaded!");
           this.loading = false;
-          this.loadInternalVariantsError = true;
+          this.loadInternalDangerSourcesError = true;
         },
       );
   }

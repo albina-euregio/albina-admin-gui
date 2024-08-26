@@ -69,7 +69,11 @@
     "status": {
       "missing": "missing",
       "forecast": "forecast",
-      "analysis": "analysis"
+      "analysis": "analysis",
+      "loading": "Loading danger sources ...",
+      "saveError": "Danger source could not be saved!",
+      "loadDangerSourcesError": "Danger sources could not be loaded!",
+      "loadVariantsError": "Danger source variants could not be loaded!"
     },
     "variantStatus": {
       "active": "active",
