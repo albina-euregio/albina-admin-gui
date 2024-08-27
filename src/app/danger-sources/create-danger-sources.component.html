@@ -329,11 +329,11 @@
         <!-- Elevations -->
         <span class="badge text-bg-light" *ngIf="variant.treelineHigh || variant.elevationHigh">
           <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
-          {{ variant.treelineHigh ? ("bulletins.create.tooltip.treeline" | translate) : variant.elevationHigh + " m" }}
+          {{ variant.treelineHigh ? ("elevation.treeline" | translate) : variant.elevationHigh + " m" }}
         </span>
         <span class="badge text-bg-light" *ngIf="variant.treelineLow || variant.elevationLow">
           <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
-          {{ variant.treelineLow ? ("bulletins.create.tooltip.treeline" | translate) : variant.elevationLow + " m" }}
+          {{ variant.treelineLow ? ("elevation.treeline" | translate) : variant.elevationLow + " m" }}
         </span>
         <!-- Elevations -->
       </div>
