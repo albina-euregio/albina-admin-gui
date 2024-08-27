@@ -41,6 +41,7 @@ import { LayerGroup } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { observationFilters } from "./filter-selection-data-data";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -92,8 +93,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
 
   constructor(
-    public filter: ObservationFilterService,
-    public markerService: ObservationMarkerService,
+    public filter: ObservationFilterService<GenericObservation>,
+    public markerService: ObservationMarkerService<GenericObservation>,
     public translateService: TranslateService,
     private observationsService: AlbinaObservationsService,
     private sanitizer: DomSanitizer,
@@ -101,6 +102,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public mapService: BaseMapService,
     public modalService: BsModalService,
   ) {
+    this.filter.filterSelectionData = observationFilters((message) => this.translateService.instant(message));
+    this.filter.parseActivatedRoute();
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
   }
 
@@ -318,11 +321,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ?.addTo(this.mapService.layers["weather-stations"]);
     });
 
-    this.filter.buildChartsData(this.observations, this.markerService.markerClassify);
+    this.filter.filterSelectionData.forEach((filter) =>
+      filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) => this.filter.isSelected(o)),
+    );
   }
 
   private addObservation(observation: GenericObservation): void {
-    if (!this.filter.inDateRange(observation)) {
+    if (!this.filter.inDateRange(observation.eventDate)) {
       return;
     }
 
@@ -385,21 +390,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
       this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls };
     } else {
-      const table: ObservationTableRow[] = (
-        [
-          { label: "observations.eventDate", date: observation.eventDate },
-          { label: "observations.reportDate", date: observation.reportDate },
-          { label: "observations.authorName", value: observation.authorName },
-          { label: "observations.locationName", value: observation.locationName },
-          { label: "observations.elevation", number: observation.elevation },
-          { label: "observations.aspect", value: observation.aspect },
-          { label: "observations.comment", value: observation.content },
-          ...(Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : []),
-        ] satisfies ObservationTableRow[]
-      ).map((row) => ({
-        ...row,
-        label: row.label.startsWith("observations.") ? this.translateService.instant(row.label) : row.label,
-      }));
+      const table: ObservationTableRow[] = [
+        { label: this.translateService.instant("observations.eventDate"), date: observation.eventDate },
+        { label: this.translateService.instant("observations.reportDate"), date: observation.reportDate },
+        { label: this.translateService.instant("observations.authorName"), value: observation.authorName },
+        { label: this.translateService.instant("observations.locationName"), value: observation.locationName },
+        { label: this.translateService.instant("observations.elevation"), number: observation.elevation },
+        { label: this.translateService.instant("observations.aspect"), value: observation.aspect },
+        { label: this.translateService.instant("observations.comment"), value: observation.content },
+        ...(Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : []),
+      ] satisfies ObservationTableRow[];
       this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined };
     }
     if (doShow) {

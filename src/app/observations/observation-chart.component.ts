@@ -6,6 +6,7 @@ import { CommonModule } from "@angular/common";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { ObservationMarkerService } from "./observation-marker.service";
 import type { FilterSelectionData } from "./filter-selection-data";
+import type { GenericObservation } from "./models/generic-observation.model";
 
 @Component({
   standalone: true,
@@ -13,11 +14,11 @@ import type { FilterSelectionData } from "./filter-selection-data";
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
   templateUrl: "./observation-chart.component.html",
 })
-export class ObservationChartComponent implements OnInit {
+export class ObservationChartComponent<T> implements OnInit {
   longClickDur = 200;
   private pressTimer;
 
-  @Input() filterSelection: FilterSelectionData;
+  @Input() filterSelection: FilterSelectionData<T>;
   @Output() handleChange: EventEmitter<void> = new EventEmitter();
   public options: EChartsOption;
 
@@ -26,7 +27,7 @@ export class ObservationChartComponent implements OnInit {
   }
 
   constructor(
-    public markerService: ObservationMarkerService,
+    public markerService: ObservationMarkerService<T>,
     protected translateService: TranslateService,
   ) {}
 

@@ -11,6 +11,8 @@ import {
 import { Aspect, SnowpackStability } from "../enums/enums";
 import { FilterSelectionData } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
+import type { AwsomeSource } from "../modelling/awsome.component";
+import { get as _get } from "lodash";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
@@ -145,10 +147,10 @@ const aspectColors = {
 };
 
 @Injectable()
-export class ObservationMarkerService {
-  public markerLabel: FilterSelectionData | undefined = undefined;
+export class ObservationMarkerService<T extends Partial<GenericObservation>> {
+  public markerLabel: FilterSelectionData<T> | undefined = undefined;
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
-  public markerClassify: FilterSelectionData | undefined;
+  public markerClassify: FilterSelectionData<T> | undefined;
 
   constructor() {}
 
@@ -158,7 +160,7 @@ export class ObservationMarkerService {
     padding: 0.5,
   });
 
-  createMarker(observation: GenericObservation, isHighlighted: boolean = false): Marker | undefined {
+  createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     try {
       const labelFont =
@@ -196,10 +198,13 @@ export class ObservationMarkerService {
     }
   }
 
-  bindTooltip(marker: Marker | CircleMarker, observation: GenericObservation) {
+  bindTooltip(marker: Marker | CircleMarker, observation: T & { $sourceObject?: AwsomeSource }) {
     marker.bindTooltip(
-      () =>
-        [
+      () => {
+        if (observation.$sourceObject?.tooltipTemplate) {
+          return this.formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
+        }
+        return [
           `<i class="ph ph-calendar"></i> ${
             observation.eventDate instanceof Date
               ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
@@ -210,7 +215,8 @@ export class ObservationMarkerService {
           `[${observation.$source}, ${observation.$type}]`,
         ]
           .filter((s) => !s.includes("undefined"))
-          .join("<br>"),
+          .join("<br>");
+      },
       {
         opacity: 1,
         className: "obs-tooltip",
@@ -218,7 +224,7 @@ export class ObservationMarkerService {
     );
   }
 
-  toMarkerRadius(observation: GenericObservation): number {
+  toMarkerRadius(observation: T): number {
     if (this.isWebcam(observation)) {
       return 20;
     } else if (this.isObserver(observation)) {
@@ -229,7 +235,7 @@ export class ObservationMarkerService {
     return 40;
   }
 
-  getBorderColor(observation: GenericObservation) {
+  getBorderColor(observation: T) {
     if (this.isWeatherStation(observation)) {
       return "#555555";
     } else if (this.isWebcam(observation)) {
@@ -241,7 +247,7 @@ export class ObservationMarkerService {
     }
   }
 
-  getLabelFontSize(observation: GenericObservation) {
+  getLabelFontSize(observation: T) {
     if (this.isWebcam(observation)) {
       return "6";
     } else if (this.isWeatherStation(observation)) {
@@ -251,7 +257,7 @@ export class ObservationMarkerService {
     }
   }
 
-  toMarkerColor(observation: GenericObservation): string {
+  toMarkerColor(observation: T): string {
     if (this.isWebcam(observation)) {
       return "black";
     } else if (this.isObserver(observation)) {
@@ -263,7 +269,7 @@ export class ObservationMarkerService {
     }
   }
 
-  private toMarkerColorWeatherStation(observation: GenericObservation) {
+  private toMarkerColorWeatherStation(observation: T) {
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
         return this.globalRadiationColor(observation.$data.GS_O);
@@ -302,15 +308,15 @@ export class ObservationMarkerService {
     }
   }
 
-  private isWebcam(observation: GenericObservation) {
+  private isWebcam(observation: T) {
     return observation?.$type === ObservationType.Webcam;
   }
 
-  private isObserver(observation: GenericObservation) {
+  private isObserver(observation: T) {
     return observation?.$type === ObservationType.TimeSeries && observation?.$source === ObservationSource.Observer;
   }
 
-  private isWeatherStation(observation: GenericObservation) {
+  private isWeatherStation(observation: T) {
     return (
       observation?.$type === ObservationType.TimeSeries &&
       observation?.$source === ObservationSource.AvalancheWarningService
@@ -422,7 +428,7 @@ export class ObservationMarkerService {
     }
   }
 
-  private getLabel(observation: GenericObservation) {
+  private getLabel(observation: T) {
     if (this.isWeatherStation(observation)) {
       return this.getLabelWeatherStation(observation);
     } else if (this.markerLabel?.key === "elevation") {
@@ -432,7 +438,7 @@ export class ObservationMarkerService {
     }
   }
 
-  private getLabelWeatherStation(observation: GenericObservation) {
+  private getLabelWeatherStation(observation: T) {
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
         return observation.$data.GS_O ? Math.round(observation.$data.GS_O) : "";
@@ -467,7 +473,11 @@ export class ObservationMarkerService {
     }
   }
 
-  toZIndex(observation: GenericObservation) {
+  toZIndex(observation: T) {
     return zIndex[observation.stability ?? "unknown"] ?? 0;
+  }
+
+  formatTemplate(t: string, data: unknown): string {
+    return t.replace(/{([^{}]+)}/g, (_match, key) => _get(data, key, ""));
   }
 }

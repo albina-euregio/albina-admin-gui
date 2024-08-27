@@ -4,6 +4,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import { RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { Router } from "@angular/router";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -16,15 +17,9 @@ import { DomSanitizer } from "@angular/platform-browser";
   templateUrl: "./full-layout.component.html",
 })
 export class FullLayoutComponent {
-  public disabled: boolean = false;
-  public status: { isopen: boolean } = { isopen: false };
   public isSidebarOpen = false;
 
-  public message: string;
-
-  public tmpRegion: string;
-
-  public environment: any;
+  public tmpRegion: RegionConfiguration;
 
   public changeRegionModalRef: BsModalRef;
   @ViewChild("changeRegionTemplate") changeRegionTemplate: TemplateRef<any>;
@@ -46,17 +41,21 @@ export class FullLayoutComponent {
     private modalService: BsModalService,
     private sanitizer: DomSanitizer,
   ) {
-    this.message = "";
     this.tmpRegion = undefined;
-    this.environment = environment;
+  }
+
+  get environment() {
+    return environment;
+  }
+
+  get isNavbarShown(): boolean {
+    return this.authenticationService.isUserLoggedIn() || !this.router.url.startsWith("/modelling");
   }
 
   getStyle() {
     const style = `background-color: ${environment.headerBgColor}`;
     return this.sanitizer.bypassSecurityTrustStyle(style);
   }
-
-  public toggled(): void {}
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
@@ -66,8 +65,8 @@ export class FullLayoutComponent {
     this.authenticationService.logout();
   }
 
-  changeRegion(region) {
-    if (!this.authenticationService.getActiveRegionId().startsWith(region)) {
+  changeRegion(region: RegionConfiguration) {
+    if (!this.authenticationService.getActiveRegionId().startsWith(region.id)) {
       if (this.router.url.startsWith("/bulletins/") && this.bulletinsService.getIsEditable()) {
         this.tmpRegion = region;
         this.openChangeRegionModal(this.changeRegionTemplate);
@@ -91,7 +90,7 @@ export class FullLayoutComponent {
     this.changeRegionModalRef.hide();
   }
 
-  private change(region) {
+  private change(region: RegionConfiguration) {
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.loadStatus();
     if (

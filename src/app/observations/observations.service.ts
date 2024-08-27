@@ -14,7 +14,7 @@ import { formatDate } from "@angular/common";
 export class AlbinaObservationsService {
   constructor(
     private http: HttpClient,
-    private filter: ObservationFilterService,
+    private filter: ObservationFilterService<GenericObservation>,
     private authenticationService: AuthenticationService,
     private constantsService: ConstantsService,
   ) {}

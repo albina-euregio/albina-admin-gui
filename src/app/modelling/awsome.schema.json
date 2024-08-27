@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://admin.avalanche.report/schemas/awsome-source",
+  "type": "object",
+  "required": [
+    "date",
+    "dateStepSeconds",
+    "sources",
+    "filters"
+  ],
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "dateStepSeconds": {
+      "type": "number"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "tooltipTemplate": {
+            "type": "string"
+          },
+          "detailsTemplate": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "filters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FilterSelectionSpec"
+      }
+    }
+  },
+  "definitions": {
+    "FilterSelectionValue": {
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "legend": {
+          "type": "string"
+        },
+        "numericRange": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "color",
+        "label",
+        "legend"
+      ],
+      "type": "object"
+    },
+    "FilterSelectionSpec": {
+      "properties": {
+        "chartRichLabel": {
+          "enum": [
+            "highlight",
+            "label",
+            "symbol",
+            "grainShape"
+          ],
+          "type": "string"
+        },
+        "chartType": {
+          "enum": [
+            "bar",
+            "rose"
+          ],
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "values": {
+          "items": {
+            "$ref": "#/definitions/FilterSelectionValue"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "label",
+        "key",
+        "chartType",
+        "chartRichLabel",
+        "values"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -40,7 +40,7 @@ export class ObservationTableComponent {
   constructor(
     public modalService: BsModalService,
     private observationsService: AlbinaObservationsService,
-    private markerService: ObservationMarkerService,
+    private markerService: ObservationMarkerService<GenericObservation>,
     private translate: TranslateService,
   ) {}
 

@@ -1,9 +1,10 @@
-import type { GenericObservation } from "./models/generic-observation.model";
-import { castArray } from "lodash";
+import { castArray, get } from "lodash";
 
 export type ChartType = "bar" | "rose";
 
 export type Dataset = Array<Array<string | number>>;
+
+export type ValueType = number | string | Date | string[];
 
 export interface FilterSelectionValue {
   value: string;
@@ -13,19 +14,19 @@ export interface FilterSelectionValue {
   legend: string; // long text for chart legend
 }
 
-export interface FilterSelectionSpec {
+export interface FilterSelectionSpec<T> {
   type: string; // id
   label: string; // caption
-  key: keyof GenericObservation; // how to extract data
+  key: keyof T; // how to extract data
   chartType: ChartType;
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   values: FilterSelectionValue[];
 }
 
-export class FilterSelectionData implements FilterSelectionSpec {
+export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   readonly type: string;
   readonly label: string;
-  readonly key: keyof GenericObservation;
+  readonly key: keyof T;
   readonly chartType: ChartType;
   readonly chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   readonly values: FilterSelectionValue[];
@@ -35,7 +36,7 @@ export class FilterSelectionData implements FilterSelectionSpec {
   dataset: Dataset;
   nan = 0;
 
-  constructor(spec: FilterSelectionSpec) {
+  constructor(spec: FilterSelectionSpec<T>) {
     Object.assign(this, spec);
   }
 
@@ -63,7 +64,7 @@ export class FilterSelectionData implements FilterSelectionSpec {
     this[subset].add("nan");
   }
 
-  isIncluded(subset: "highlighted" | "selected", testData: string | string[] | number): boolean {
+  isIncluded(subset: "highlighted" | "selected", testData: ValueType): boolean {
     const selectedData = this[subset];
     const filterSelectionValues = this.values.filter((v) => selectedData.has(v.value));
     return (
@@ -86,13 +87,21 @@ export class FilterSelectionData implements FilterSelectionSpec {
     }
   }
 
-  findForObservation(observation: GenericObservation) {
+  getValue(observation: T): ValueType {
+    return get(observation, this.key) as ValueType;
+  }
+
+  getValues(observation: T) {
+    return castArray(this.getValue(observation));
+  }
+
+  findForObservation(observation: T) {
     return this.values.find((f) =>
-      castArray(observation[this.key]).some((v) => FilterSelectionData.testFilterSelection(f, v)),
+      this.getValues(observation).some((v) => FilterSelectionData.testFilterSelection(f, v)),
     );
   }
 
-  static testFilterSelection(f: FilterSelectionValue, v: number | string | Date): boolean {
+  static testFilterSelection(f: FilterSelectionValue, v: Exclude<ValueType, string[]>): boolean {
     return (
       (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
       (v instanceof Date && f.value === FilterSelectionData.getISODateString(v)) ||
@@ -108,5 +117,107 @@ export class FilterSelectionData implements FilterSelectionSpec {
     function pad(number: number) {
       return number < 10 ? (`${0}${number}` as const) : (`${number}` as const);
     }
+  }
+
+  buildChartsData(markerClassify: FilterSelectionData<T>, observations: T[], isSelected: (o: T) => boolean): void {
+    this.nan = 0;
+    const dataRaw = this.values.map((value) => ({
+      value,
+      data: {
+        all: 0,
+        available: 0,
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0,
+        10: 0,
+      },
+    }));
+    observations.forEach((observation) => {
+      const value = this.getValue(observation);
+      if (value === undefined || value === null) {
+        this.nan++;
+        return;
+      }
+      castArray(value).forEach((v) => {
+        const data = dataRaw.find((f) => FilterSelectionData.testFilterSelection(f.value, v))?.data;
+        if (!data) {
+          return;
+        }
+        data.all++;
+        if (!isSelected(observation)) {
+          return;
+        }
+        if (!markerClassify || markerClassify.type === this.type) {
+          data[0]++;
+          return;
+        }
+        const value2 = markerClassify.getValue(observation);
+        if (value2 === undefined || value2 === null) {
+          data[0]++;
+          return;
+        }
+        castArray(value2).forEach((v) => {
+          data[markerClassify.values.findIndex((f) => FilterSelectionData.testFilterSelection(f, v)) + 1]++;
+        });
+      });
+    });
+
+    const header = [
+      "category",
+      "max",
+      "all",
+      "highlighted",
+      "available",
+      "selected",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+    ];
+
+    const data: Dataset = dataRaw.map((f) => {
+      const key = f.value.value;
+      const values = f.data;
+      const highlighted = this.highlighted.has(key) ? values.all : 0;
+      const available = !this.selected.has(key) ? values.available : 0;
+      const selected = this.selected.has(key) ? values.available : 0;
+      const max = values.all;
+      const all = available > 0 ? available : selected;
+      return [
+        key,
+        max ? all : max,
+        all,
+        highlighted ? all : highlighted,
+        available,
+        selected,
+        values["0"],
+        values["1"],
+        values["2"],
+        values["3"],
+        values["4"],
+        values["5"],
+        values["6"],
+        values["7"],
+        values["8"],
+        values["9"],
+        values["10"],
+      ];
+    });
+
+    this.dataset = [header, ...data];
   }
 }
