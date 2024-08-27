@@ -10,7 +10,6 @@ export class ObservationMarkerWebcamService<T extends Partial<GenericObservation
 
   createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
     try {
-      const labelFont = getComputedStyle(document.body).getPropertyValue("font-family").replace(/"/g, "'");
       const icon = makeIcon(
         observation.aspect,
         "#898989",
@@ -19,7 +18,7 @@ export class ObservationMarkerWebcamService<T extends Partial<GenericObservation
         "#000",
         isHighlighted ? "#fff" : "#000",
         "6",
-        labelFont,
+        undefined,
         this.observationMarkerService.getLabel(observation),
       );
       return this.observationMarkerService.createMarkerForIcon(observation, icon, isHighlighted);

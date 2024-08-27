@@ -139,7 +139,6 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
   createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     try {
-      const labelFont = getComputedStyle(document.body).getPropertyValue("font-family").replace(/"/g, "'");
       const icon = makeIcon(
         observation.aspect,
         "#898989",
@@ -148,7 +147,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         "#555555",
         isHighlighted ? "#fff" : "#000",
         "10",
-        labelFont,
+        undefined,
         this.getLabel(observation),
       );
       return this.observationMarkerService.createMarkerForIcon(observation, icon, isHighlighted);

@@ -28,10 +28,6 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
 
   createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
     try {
-      const labelFont =
-        this.markerLabel?.key === "importantObservations"
-          ? "snowsymbolsiacs"
-          : getComputedStyle(document.body).getPropertyValue("font-family").replace(/"/g, "'");
       const icon = makeIcon(
         observation.aspect,
         "#898989",
@@ -40,7 +36,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
         observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000",
         isHighlighted ? "#fff" : "#000",
         "12",
-        labelFont,
+        this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,
         this.getLabel(observation),
       );
       return this.createMarkerForIcon(observation, icon, isHighlighted);
