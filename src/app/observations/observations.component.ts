@@ -42,6 +42,7 @@ import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { observationFilters } from "./filter-selection-data-data";
+import { ObservationMarkerWeatherStationService } from "./observation-marker-weather-station.service";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -95,6 +96,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   constructor(
     public filter: ObservationFilterService<GenericObservation>,
     public markerService: ObservationMarkerService<GenericObservation>,
+    public markerWeatherStationService: ObservationMarkerWeatherStationService<GenericObservation>,
     public translateService: TranslateService,
     private observationsService: AlbinaObservationsService,
     private sanitizer: DomSanitizer,
@@ -215,9 +217,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   selectParameter(parameter: WeatherStationParameter) {
-    this.markerService.weatherStationLabel === parameter
-      ? (this.markerService.weatherStationLabel = undefined)
-      : (this.markerService.weatherStationLabel = parameter);
+    this.markerWeatherStationService.weatherStationLabel === parameter
+      ? (this.markerWeatherStationService.weatherStationLabel = undefined)
+      : (this.markerWeatherStationService.weatherStationLabel = parameter);
     this.applyLocalFilter();
   }
 
@@ -315,7 +317,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.isWeatherStationSelected(weatherStation),
     );
     this.localWeatherStations.forEach((weatherStation) => {
-      const marker = this.markerService
+      this.markerWeatherStationService
         .createMarker(weatherStation, false)
         ?.on("click", () => this.onObservationClick(weatherStation))
         ?.addTo(this.mapService.layers["weather-stations"]);
