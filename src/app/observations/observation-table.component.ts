@@ -162,14 +162,6 @@ export class ObservationTableComponent {
     };
   }
 
-  getTableIconStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
-    return {
-      color: this.markerService.toMarkerColor(observation),
-      width: "20px",
-      height: "20px",
-    };
-  }
-
   formatImportantObservation(importantObservation: ImportantObservation): string {
     return String(importantObservation).replace(/[a-z]/g, "");
   }
