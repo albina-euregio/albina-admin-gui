@@ -13,7 +13,7 @@
       </button>
     </div>
     <div class="region-form__title">
-      <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(variant.ownerRegion) }}</h6>
+      <h6 class="font-xs text-secondary">{{ variant.dangerSource?.title }}</h6>
       <h2 class="font-l">
         <span *ngIf="variant.regions.length > 0">{{
           regionsService.getRegionName(variant.regions[0].toString())
