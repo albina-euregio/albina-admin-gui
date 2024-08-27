@@ -23,38 +23,25 @@
       <div class="user-avatar__name">
         Updated on {{ variant.updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
       </div>
-      <span *ngIf="isDangerSourceVariantStatus(variantStatusEnum.active)" class="badge bg-danger">
-        {{ "dangerSources.variantStatus.active" | translate }}
-      </span>
-      <span
-        (click)="setDangerSourceVariantStatus(variantStatusEnum.active)"
-        *ngIf="!isDangerSourceVariantStatus(variantStatusEnum.active)"
-        class="badge bg-light-gray"
-      >
-        {{ "dangerSources.variantStatus.active" | translate }}
-      </span>
-      <span *ngIf="isDangerSourceVariantStatus(variantStatusEnum.dormant)" class="badge bg-warning">
-        {{ "dangerSources.variantStatus.dormant" | translate }}
-      </span>
-      <span
-        (click)="setDangerSourceVariantStatus(variantStatusEnum.dormant)"
-        *ngIf="!isDangerSourceVariantStatus(variantStatusEnum.dormant)"
-        class="badge bg-light-gray"
-      >
-        {{ "dangerSources.variantStatus.dormant" | translate }}
-      </span>
-      <span *ngIf="isDangerSourceVariantStatus(variantStatusEnum.inactive)" class="badge bg-success">
-        {{ "dangerSources.variantStatus.inactive" | translate }}
-      </span>
-      <span
-        (click)="setDangerSourceVariantStatus(variantStatusEnum.inactive)"
-        *ngIf="!isDangerSourceVariantStatus(variantStatusEnum.inactive)"
-        class="badge bg-light-gray"
-      >
-        {{ "dangerSources.variantStatus.inactive" | translate }}
-      </span>
     </div>
   </header>
+
+  <div class="form-group region-form__mindset">
+    <p class="region-form__mindset-text">
+      {{ "dangerSources.create.variantStatus" | translate }}
+    </p>
+    <select
+      [ngModel]="variant.dangerSourceVariantStatus"
+      (ngModelChange)="onVariantStatusChange($event)"
+      [disabled]="disabled"
+      class="form-select"
+    >
+      <option selected></option>
+      <option *ngFor="let status of variantStatus" [value]="status">
+        {{ "dangerSources.variantStatus." + status | translate }}
+      </option>
+    </select>
+  </div>
 
   <div
     *ngIf="dangerSourcesService.getIsEditable() && isCreator(variant)"

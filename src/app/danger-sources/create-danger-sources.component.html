@@ -299,6 +299,18 @@
 <ng-template #variantTemplate let-variant="variant">
   <div (click)="toggleVariant(variant)" class="region-thumb" [class.region-thumb--active]="variant === activeVariant">
     <div class="region-thumb__details">
+      <p>
+        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatusEnum.active)" class="badge bg-secondary">
+          {{ "dangerSources.variantStatus.active" | translate }}
+        </span>
+        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatusEnum.dormant)" class="badge bg-gray">
+          {{ "dangerSources.variantStatus.dormant" | translate }}
+        </span>
+        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatusEnum.inactive)" class="badge bg-light-gray">
+          {{ "dangerSources.variantStatus.inactive" | translate }}
+        </span>
+      </p>
+
       <h6 class="region-thumb__title font-s-medium" role="button">
         <span *ngIf="saveError.has(variant.id)">* </span>
         <span *ngIf="variant.regions.length > 0">{{ regionsService.getRegionName(variant.regions[0]) }}</span>

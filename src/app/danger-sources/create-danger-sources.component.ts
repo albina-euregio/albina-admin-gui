@@ -51,6 +51,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public isVariantsSidebarVisible = true;
   private variantMarkedDelete: DangerSourceVariantModel;
 
+  private variantStatusEnum = DangerSourceVariantStatus;
+
   public copying: boolean;
 
   @ViewChild("scrollActiveVariant") scrollActiveVariant: ElementRef;
@@ -853,6 +855,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   goBack() {
     this.deselectVariant();
     this.router.navigate(["/bulletins"]);
+  }
+
+  isDangerSourceVariantStatus(variant: DangerSourceVariantModel, status: DangerSourceVariantStatus) {
+    return variant.dangerSourceVariantStatus === status;
   }
 
   @HostListener("document:keydown", ["$event"])

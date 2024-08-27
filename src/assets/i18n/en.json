@@ -92,6 +92,7 @@
       }
     },
     "create": {
+      "variantStatus": "Status",
       "variantEditable": "This variant can be edited.",
       "variantNotEditable": "This variant can not be edited.",
       "noVariantsForSelectedDay": "No variants defined for this date.",

@@ -56,6 +56,8 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
+  variantStatus: DangerSourceVariantStatus[] = Object.values(DangerSourceVariantStatus);
+
   avalancheTypeEnum = Enums.AvalancheType;
   wetnessEnum = Wetness;
   grainShapeEnum = GrainShape;
@@ -73,7 +75,6 @@ export class DangerSourceVariantComponent implements OnChanges {
   handHardnessEnum = HandHardness;
   terrainTypeEnum = TerrainType;
   dangerSignEnum = DangerSign;
-  variantStatusEnum = DangerSourceVariantStatus;
 
   useElevationHigh = false;
   useElevationLow = false;
@@ -156,6 +157,11 @@ export class DangerSourceVariantComponent implements OnChanges {
     this.updateVariantOnServerEventDebounce.next(this.variant);
   }
 
+  onVariantStatusChange(event: DangerSourceVariantStatus) {
+    this.variant.dangerSourceVariantStatus = event;
+    this.updateVariantOnServer();
+  }
+
   copyVariant(event) {
     this.copyVariantEvent.emit(this.variant);
   }
@@ -211,15 +217,6 @@ export class DangerSourceVariantComponent implements OnChanges {
       default:
         break;
     }
-  }
-
-  isDangerSourceVariantStatus(status: DangerSourceVariantStatus) {
-    return this.variant?.dangerSourceVariantStatus === status;
-  }
-
-  setDangerSourceVariantStatus(status: DangerSourceVariantStatus) {
-    this.variant.dangerSourceVariantStatus = status;
-    this.updateVariantOnServer();
   }
 
   isAvalancheType(type: Enums.AvalancheType) {
