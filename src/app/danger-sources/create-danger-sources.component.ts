@@ -222,7 +222,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       .subscribe(
         (dangerSources) => {
           this.loadInternalDangerSourcesError = false;
-          this.addInternalDangerSources(dangerSources);
+          //this.addInternalDangerSources(dangerSources);
           this.dangerSourcesService
             .loadDangerSourceVariants(
               this.dangerSourcesService.getActiveDate(),
@@ -231,7 +231,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             .subscribe(
               (variants) => {
                 this.loadInternalVariantsError = false;
-                this.addInternalVariants(variants);
+                this.addInternalVariants(dangerSources, variants);
                 this.loading = false;
               },
               (error) => {
@@ -491,7 +491,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
    * Replaces all old variants with new ones.
    * @param dangerSourceVariants new variants
    */
-  private addInternalVariants(dangerSourceVariants: DangerSourceVariantModel[]) {
+  private addInternalVariants(dangerSources: DangerSourceModel[], dangerSourceVariants: DangerSourceVariantModel[]) {
+    this.addInternalDangerSources(dangerSources);
     let hasDaytimeDependency = false;
 
     const variants = new Array<DangerSourceVariantModel>();
