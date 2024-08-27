@@ -490,10 +490,14 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private sortInternVariantsList() {
     this.internVariantsList.sort((a, b): number => {
-      if (a.eawsMatrixInformation?.dangerRating < b.eawsMatrixInformation?.dangerRating) {
+      if (
+        Enums.WarnLevel[a.eawsMatrixInformation?.dangerRating] < Enums.WarnLevel[b.eawsMatrixInformation?.dangerRating]
+      ) {
         return 1;
       }
-      if (a.eawsMatrixInformation?.dangerRating > b.eawsMatrixInformation?.dangerRating) {
+      if (
+        Enums.WarnLevel[a.eawsMatrixInformation?.dangerRating] > Enums.WarnLevel[b.eawsMatrixInformation?.dangerRating]
+      ) {
         return -1;
       }
       return 0;
