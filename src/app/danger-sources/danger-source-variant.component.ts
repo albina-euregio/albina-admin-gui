@@ -73,7 +73,7 @@ export class DangerSourceVariantComponent implements OnChanges {
   handHardnessEnum = HandHardness;
   terrainTypeEnum = TerrainType;
   dangerSignEnum = DangerSign;
-  variantStatus = DangerSourceVariantStatus;
+  variantStatusEnum = DangerSourceVariantStatus;
 
   useElevationHigh = false;
   useElevationLow = false;
@@ -211,6 +211,15 @@ export class DangerSourceVariantComponent implements OnChanges {
       default:
         break;
     }
+  }
+
+  isDangerSourceVariantStatus(status: DangerSourceVariantStatus) {
+    return this.variant?.dangerSourceVariantStatus === status;
+  }
+
+  setDangerSourceVariantStatus(status: DangerSourceVariantStatus) {
+    this.variant.dangerSourceVariantStatus = status;
+    this.updateVariantOnServer();
   }
 
   isAvalancheType(type: Enums.AvalancheType) {

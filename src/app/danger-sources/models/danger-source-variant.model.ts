@@ -4,15 +4,15 @@ import { DangerSourceModel } from "./danger-source.model";
 import { PolygonObject } from "./polygon-object.model";
 
 export enum DangerSourceVariantStatus {
-  active,
-  dormant,
-  inactive,
+  active = "active",
+  dormant = "dormant",
+  inactive = "inactive",
 }
 
 export enum DangerSourceVariantType {
-  missing,
-  forecasted,
-  verified,
+  missing = "missing",
+  forecasted = "forecasted",
+  verified = "verified",
 }
 
 export enum Daytime {

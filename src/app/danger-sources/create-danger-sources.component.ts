@@ -489,6 +489,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   private sortInternVariantsList() {
+    // TODO use dangerRating, dangerRating in brackets, snowpack stability, avalancheSize
     this.internVariantsList.sort((a, b): number => {
       if (
         Enums.WarnLevel[a.eawsMatrixInformation?.dangerRating] < Enums.WarnLevel[b.eawsMatrixInformation?.dangerRating]

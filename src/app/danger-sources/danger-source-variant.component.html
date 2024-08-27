@@ -23,14 +23,35 @@
       <div class="user-avatar__name">
         Updated on {{ variant.updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
       </div>
-      <span *ngIf="variant.dangerSourceVariantStatus === variantStatus.active" class="badge bg-danger">
-        <i class="ph-bold ph-exclamation-mark"></i> {{ "dangerSources.variantStatus.active" | translate }}
+      <span *ngIf="isDangerSourceVariantStatus(variantStatusEnum.active)" class="badge bg-danger">
+        {{ "dangerSources.variantStatus.active" | translate }}
       </span>
-      <span *ngIf="variant.dangerSourceVariantStatus === variantStatus.dormant" class="badge bg-warning">
-        <i class="ph-bold ph-moon"></i> {{ "dangerSources.variantStatus.dormant" | translate }}
+      <span
+        (click)="setDangerSourceVariantStatus(variantStatusEnum.active)"
+        *ngIf="!isDangerSourceVariantStatus(variantStatusEnum.active)"
+        class="badge bg-light-gray"
+      >
+        {{ "dangerSources.variantStatus.active" | translate }}
       </span>
-      <span *ngIf="variant.dangerSourceVariantStatus === variantStatus.inactive" class="badge bg-primary">
-        <i class="ph-bold ph-check"></i> {{ "dangerSources.variantStatus.inactive" | translate }}
+      <span *ngIf="isDangerSourceVariantStatus(variantStatusEnum.dormant)" class="badge bg-warning">
+        {{ "dangerSources.variantStatus.dormant" | translate }}
+      </span>
+      <span
+        (click)="setDangerSourceVariantStatus(variantStatusEnum.dormant)"
+        *ngIf="!isDangerSourceVariantStatus(variantStatusEnum.dormant)"
+        class="badge bg-light-gray"
+      >
+        {{ "dangerSources.variantStatus.dormant" | translate }}
+      </span>
+      <span *ngIf="isDangerSourceVariantStatus(variantStatusEnum.inactive)" class="badge bg-success">
+        {{ "dangerSources.variantStatus.inactive" | translate }}
+      </span>
+      <span
+        (click)="setDangerSourceVariantStatus(variantStatusEnum.inactive)"
+        *ngIf="!isDangerSourceVariantStatus(variantStatusEnum.inactive)"
+        class="badge bg-light-gray"
+      >
+        {{ "dangerSources.variantStatus.inactive" | translate }}
       </span>
     </div>
   </header>
