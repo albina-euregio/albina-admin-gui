@@ -554,17 +554,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.mapService.resetInternalAggregatedRegions();
     this.mapService.resetActiveSelection();
 
-    // TODO sort correctly
-    variants.sort((a, b): number => {
-      if (a.ownerRegion < b.ownerRegion) {
-        return 1;
-      }
-      if (a.ownerRegion > b.ownerRegion) {
-        return -1;
-      }
-      return 0;
-    });
-
     if (hasDaytimeDependency && this.showAfternoonMap === false) {
       this.onShowAfternoonMapChange(true);
     } else if (!hasDaytimeDependency && this.showAfternoonMap === true) {
@@ -583,8 +572,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   private updateInternalVariantsOnMap() {
-    for (const variant of this.internVariantsList) {
-      this.mapService.updateAggregatedRegion(variant);
+    for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
+      this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
     }
   }
 

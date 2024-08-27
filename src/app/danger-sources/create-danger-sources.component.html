@@ -54,9 +54,9 @@
     </header>
     <!-- End sidebar header -->
 
-    <!-- List of regions -->
+    <!-- List of danger sources -->
     <div class="create-bulletin__regions">
-      <!-- Own regions -->
+      <!-- Own danger sources -->
       <header class="create-bulletin__region-divider" style="background: none; border-top: none">
         <h5 class="font-s-bold">
           <button
@@ -106,10 +106,10 @@
           </button>
         </div>
       </header>
-      <!-- End own regions header -->
-      <!-- List of own regions -->
+      <!-- End own danger sources header -->
+      <!-- List of own danger sources -->
       <nav class="create-bulletin__region-list">
-        <!-- Show the list of variants if there are any -->
+        <!-- Show the list of danger sources if there are any -->
         <ng-container *ngIf="internDangerSourcesList.length; else noDangerSourcesTemplate">
           <ng-container *ngFor="let dangerSource of internDangerSourcesList">
             <ng-container
@@ -206,7 +206,7 @@
   </div>
 </div>
 
-<!-- Display this template when there are no danger source -->
+<!-- Display this template when there are no danger sources -->
 <ng-template #noDangerSourcesTemplate>
   <div class="create-bulletin__nobulletins">
     <i class="ph ph-mountains"></i>
@@ -215,9 +215,9 @@
 </ng-template>
 
 <ng-template #dangerSourceTemplate let-dangerSource="dangerSource">
-  <!-- List of regions -->
+  <!-- List of danger sources -->
   <div class="create-bulletin__regions">
-    <!-- Own regions -->
+    <!-- Own danger sources -->
     <header class="create-bulletin__region-divider">
       <div class="region-thumb__details">
         <h5 class="font-s-bold">
@@ -276,8 +276,8 @@
         </button>
       </div>
     </header>
-    <!-- End own regions header -->
-    <!-- List of own regions -->
+    <!-- End own danger sources header -->
+    <!-- List of variants of danger source -->
     <nav class="create-bulletin__region-list">
       <!-- Show the list of variants if there are any -->
       <ng-container>
@@ -314,13 +314,6 @@
           [dangerRatingAbove]="variant.eawsMatrixInformation.dangerRating"
           [dangerRatingBelow]="variant.eawsMatrixInformation.dangerRating"
         ></app-danger-rating-icon>
-        <!-- Avalanche problem -->
-        <app-avalanche-problem-icons
-          *ngIf="variant?.avalancheProblem"
-          [value]="variant.avalancheProblem"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <!-- Avalanche problem -->
         <!-- Elevations -->
         <span class="badge text-bg-light" *ngIf="variant.treelineHigh || variant.elevationHigh">
           <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
