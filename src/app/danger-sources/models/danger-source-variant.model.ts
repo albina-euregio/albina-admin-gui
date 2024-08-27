@@ -160,7 +160,7 @@ export enum Wetness {
 export class DangerSourceVariantModel implements PolygonObject {
   id: string;
 
-  dangerSourceVariantId: string;
+  originalDangerSourceVariantId: string;
   dangerSource: DangerSourceModel;
   creationDate: Date;
   updateDate: Date;
@@ -231,7 +231,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     const variant = new DangerSourceVariantModel();
 
     variant.id = json.id;
-    variant.dangerSourceVariantId = json.dangerSourceId;
+    variant.originalDangerSourceVariantId = json.originalDangerSourceId;
     variant.dangerSource = DangerSourceModel.createFromJson(json.dangerSource);
     variant.creationDate = json.creationDate;
     variant.updateDate = json.updateDate;
@@ -291,10 +291,10 @@ export class DangerSourceVariantModel implements PolygonObject {
 
   constructor(variant?: DangerSourceVariantModel) {
     if (variant) {
-      if (variant.dangerSourceVariantId) {
-        this.dangerSourceVariantId = variant.dangerSourceVariantId;
+      if (variant.originalDangerSourceVariantId) {
+        this.originalDangerSourceVariantId = variant.originalDangerSourceVariantId;
       } else if (variant.id) {
-        this.dangerSourceVariantId = variant.id;
+        this.originalDangerSourceVariantId = variant.id;
       }
       this.dangerSource = DangerSourceModel.createFromJson(variant.dangerSource);
       this.creationDate = new Date(variant.creationDate);
