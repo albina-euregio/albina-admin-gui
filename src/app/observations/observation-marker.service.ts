@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
 import { Canvas, CircleMarker, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
-import { GenericObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
+import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
@@ -35,9 +35,9 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       const icon = makeIcon(
         observation.aspect,
         "#898989",
-        this.toMarkerRadius(observation),
+        40,
         isHighlighted ? "#ff0000" : this.toMarkerColor(observation),
-        this.getBorderColor(observation),
+        observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000",
         isHighlighted ? "#fff" : "#000",
         "12",
         labelFont,
@@ -60,10 +60,10 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       icon: icon,
       opacity: 1,
       pane: "markerPane",
-      radius: this.toMarkerRadius(observation),
+      radius: 40,
       renderer: this.myRenderer,
       weight: isHighlighted ? 1 : 0,
-      zIndexOffset: this.toZIndex(observation),
+      zIndexOffset: zIndex[observation.stability ?? "unknown"] ?? 0,
     } as MarkerOptions);
     this.bindTooltip(marker, observation);
     return marker;
@@ -95,32 +95,8 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     );
   }
 
-  toMarkerRadius(observation: T): number {
-    if (this.isObserver(observation)) {
-      return 20;
-    } else {
-      return 40;
-    }
-  }
-
-  getBorderColor(observation: T) {
-    if (observation?.$source === ObservationSource.SnowLine) {
-      return "#777777";
-    } else {
-      return "#000";
-    }
-  }
-
   toMarkerColor(observation: T): string {
-    if (this.isObserver(observation)) {
-      return "#ca0020";
-    } else {
-      return this.markerClassify?.findForObservation(observation)?.color ?? "white";
-    }
-  }
-
-  private isObserver(observation: T) {
-    return observation?.$type === ObservationType.TimeSeries && observation?.$source === ObservationSource.Observer;
+    return this.markerClassify?.findForObservation(observation)?.color ?? "white";
   }
 
   getLabel(observation: T) {
@@ -129,10 +105,6 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     } else {
       return this.markerLabel?.findForObservation(observation)?.label ?? "";
     }
-  }
-
-  toZIndex(observation: T) {
-    return zIndex[observation.stability ?? "unknown"] ?? 0;
   }
 
   formatTemplate(t: string, data: unknown): string {
