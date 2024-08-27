@@ -31,7 +31,7 @@ function icon0(
   iconColor: string,
   borderColor: string,
   labelColor: string,
-  labelFontSize: string,
+  labelFontSize: number,
   labelFont: "snowsymbolsiacs" | string,
   label: number | string,
 ): Icon {

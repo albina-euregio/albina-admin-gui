@@ -137,20 +137,20 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
   constructor(private observationMarkerService: ObservationMarkerService<T>) {}
 
   createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
-    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) return;
     try {
+      const filterSelectionValue = isHighlighted ? this.observationMarkerService.highlighted : undefined;
       const icon = makeIcon(
         observation.aspect,
         "#898989",
-        30,
-        isHighlighted ? "#ff0000" : this.toMarkerColor(observation),
-        "#555555",
-        isHighlighted ? "#fff" : "#000",
-        "10",
+        filterSelectionValue?.radius ?? 30,
+        filterSelectionValue?.color ?? this.toMarkerColor(observation),
+        filterSelectionValue?.borderColor ?? "#555555",
+        filterSelectionValue?.labelColor ?? "#000",
+        filterSelectionValue?.labelFontSize ?? 10,
         undefined,
         this.getLabel(observation),
       );
-      return this.observationMarkerService.createMarkerForIcon(observation, icon, isHighlighted);
+      return this.observationMarkerService.createMarkerForIcon(observation, icon, filterSelectionValue);
     } catch (e) {
       console.error(e);
       throw e;

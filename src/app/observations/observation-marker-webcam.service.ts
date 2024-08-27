@@ -10,18 +10,19 @@ export class ObservationMarkerWebcamService<T extends Partial<GenericObservation
 
   createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
     try {
+      const filterSelectionValue = isHighlighted ? this.observationMarkerService.highlighted : undefined;
       const icon = makeIcon(
         observation.aspect,
         "#898989",
-        20,
-        isHighlighted ? "#ff0000" : "black",
-        "#000",
-        isHighlighted ? "#fff" : "#000",
-        "6",
+        filterSelectionValue?.radius ?? 20,
+        filterSelectionValue?.color ?? "black",
+        filterSelectionValue?.borderColor ?? "#000",
+        filterSelectionValue?.labelColor ?? "#000",
+        filterSelectionValue?.labelFontSize ?? 6,
         undefined,
         this.observationMarkerService.getLabel(observation),
       );
-      return this.observationMarkerService.createMarkerForIcon(observation, icon, isHighlighted);
+      return this.observationMarkerService.createMarkerForIcon(observation, icon, filterSelectionValue);
     } catch (e) {
       console.error(e);
       throw e;

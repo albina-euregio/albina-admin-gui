@@ -3,7 +3,7 @@ import { formatDate } from "@angular/common";
 import { Canvas, CircleMarker, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
-import { FilterSelectionData } from "./filter-selection-data";
+import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
 import type { AwsomeSource } from "../modelling/awsome.component";
 import { get as _get } from "lodash";
@@ -19,6 +19,11 @@ const zIndex: Record<SnowpackStability, number> = {
 export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   public markerLabel: FilterSelectionData<T> | undefined = undefined;
   public markerClassify: FilterSelectionData<T> | undefined;
+  readonly highlighted = {
+    color: "#ff0000",
+    weight: 1,
+    labelColor: "#fff",
+  } as FilterSelectionValue;
 
   // This is very important! Use a canvas otherwise the chart is too heavy for the browser when
   // the number of points is too high
@@ -28,25 +33,32 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
 
   createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
     try {
+      const filterSelectionValue = isHighlighted
+        ? this.highlighted
+        : this.markerClassify?.findForObservation(observation);
       const icon = makeIcon(
         observation.aspect,
         "#898989",
-        40,
-        isHighlighted ? "#ff0000" : this.toMarkerColor(observation),
-        observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000",
-        isHighlighted ? "#fff" : "#000",
-        "12",
+        filterSelectionValue?.radius ?? 40,
+        filterSelectionValue?.color ?? "white",
+        filterSelectionValue?.borderColor ?? observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000",
+        filterSelectionValue?.labelColor ?? "#000",
+        filterSelectionValue?.labelFontSize ?? 12,
         this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,
         this.getLabel(observation),
       );
-      return this.createMarkerForIcon(observation, icon, isHighlighted);
+      return this.createMarkerForIcon(observation, icon, filterSelectionValue);
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  createMarkerForIcon(observation: T, icon: Icon, isHighlighted: boolean): Marker | undefined {
+  createMarkerForIcon(
+    observation: T,
+    icon: Icon,
+    filterSelectionValue: FilterSelectionValue | undefined,
+  ): Marker | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) {
       return;
     }
@@ -54,12 +66,12 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     const marker = new Marker(ll, {
       bubblingMouseEvents: false,
       icon: icon,
-      opacity: 1,
+      opacity: filterSelectionValue?.opacity ?? 1,
       pane: "markerPane",
-      radius: 40,
+      radius: filterSelectionValue?.radius ?? 40,
       renderer: this.myRenderer,
-      weight: isHighlighted ? 1 : 0,
-      zIndexOffset: zIndex[observation.stability ?? "unknown"] ?? 0,
+      weight: filterSelectionValue?.weight ?? 0,
+      zIndexOffset: filterSelectionValue?.zIndexOffset ?? zIndex[observation.stability ?? "unknown"] ?? 0,
     } as MarkerOptions);
     this.bindTooltip(marker, observation);
     return marker;

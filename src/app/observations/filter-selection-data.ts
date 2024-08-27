@@ -12,6 +12,14 @@ export interface FilterSelectionValue {
   color: string; // icon color
   label: string; // icon label
   legend: string; // long text for chart legend
+  // optional
+  borderColor?: string;
+  labelColor?: string;
+  labelFontSize?: number;
+  opacity?: number;
+  radius?: number;
+  weight?: number;
+  zIndexOffset?: number;
 }
 
 export interface FilterSelectionSpec<T> {
