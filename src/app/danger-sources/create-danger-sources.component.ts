@@ -287,13 +287,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private onMapClick() {
     if (!this.showNewVariantModal && !this.editRegions) {
       const clickedRegion = this.mapService.getClickedRegion();
-      for (const variant of this.internVariantsList) {
-        if (variant.regions.includes(clickedRegion)) {
-          if (this.activeVariant === variant) {
+      for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
+        if (this.internVariantsList[i].regions.includes(clickedRegion)) {
+          if (this.activeVariant === this.internVariantsList[i]) {
             this.deselectVariant();
             break;
           } else {
-            this.selectVariant(variant);
+            this.selectVariant(this.internVariantsList[i]);
             break;
           }
         }
@@ -479,12 +479,25 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
    */
   private addInternalVariant(variant: DangerSourceVariantModel) {
     this.internVariantsList.push(variant);
+    this.sortInternVariantsList();
     if (this.activeVariant && this.activeVariant.id === variant.id) {
       this.activeVariant = variant;
     }
     if (variant.hasDaytimeDependency && this.showAfternoonMap === false) {
       this.onShowAfternoonMapChange(true);
     }
+  }
+
+  private sortInternVariantsList() {
+    this.internVariantsList.sort((a, b): number => {
+      if (a.eawsMatrixInformation?.dangerRating < b.eawsMatrixInformation?.dangerRating) {
+        return 1;
+      }
+      if (a.eawsMatrixInformation?.dangerRating > b.eawsMatrixInformation?.dangerRating) {
+        return -1;
+      }
+      return 0;
+    });
   }
 
   /**
@@ -554,6 +567,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
 
     variants.forEach((item) => this.internVariantsList.push(item));
+    this.sortInternVariantsList();
     this.updateInternalVariantsOnMap();
 
     if (this.editRegions) {
@@ -662,6 +676,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       this.activeVariant = undefined;
       this.comparedVariant = undefined;
     }
+    this.updateInternalVariantsOnMap();
   }
 
   eventDeselectComparedVariant(variant: DangerSourceVariantModel) {
