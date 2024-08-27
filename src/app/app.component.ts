@@ -1,5 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { environment } from "../environments/environment";
+import { SettingsService } from "./providers/settings-service/settings.service";
 
 @Component({
   // eslint-disable-next-line
@@ -7,7 +8,9 @@ import { environment } from "../environments/environment";
   template: "<router-outlet></router-outlet>",
 })
 export class AppComponent {
-  constructor() {
+  constructor(
+    public settings: SettingsService, // init i18n
+  ) {
     document.getElementById("appFavicon").setAttribute("href", `${environment.faviconPath}`);
   }
 }

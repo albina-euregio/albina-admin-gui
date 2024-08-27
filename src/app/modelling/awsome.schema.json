@@ -65,6 +65,34 @@
         },
         "value": {
           "type": "string"
+        },
+        "borderColor": {
+          "type": "string",
+          "default": "#000"
+        },
+        "labelColor": {
+          "type": "string",
+          "default": "#000"
+        },
+        "labelFontSize": {
+          "type": "number",
+          "default": 12
+        },
+        "opacity": {
+          "type": "number",
+          "default": 1
+        },
+        "radius": {
+          "type": "number",
+          "default": 40
+        },
+        "weight": {
+          "type": "number",
+          "default": 0
+        },
+        "zIndexOffset": {
+          "type": "number",
+          "default": 0
         }
       },
       "required": [

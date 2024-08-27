@@ -80,6 +80,9 @@ import { ElevationService } from "./providers/map-service/elevation.service";
 import { ObservationFilterService } from "./observations/observation-filter.service";
 import { provideEcharts } from "ngx-echarts";
 import { createErrorHandler } from "@sentry/angular";
+import { ObservationMarkerWeatherStationService } from "./observations/observation-marker-weather-station.service";
+import { ObservationMarkerWebcamService } from "./observations/observation-marker-webcam.service";
+import { ObservationMarkerObserverService } from "./observations/observation-marker-observer.service";
 
 registerLocaleData(localeDe, "de");
 registerLocaleData(localeIt, "it");
@@ -162,6 +165,9 @@ registerLocaleData(localeOc, "oc");
     MultimodelSourceService,
     ObservationFilterService,
     ObservationMarkerService,
+    ObservationMarkerObserverService,
+    ObservationMarkerWeatherStationService,
+    ObservationMarkerWebcamService,
     ObservedProfileSourceService,
     ParamService,
     provideEcharts(),

@@ -197,7 +197,7 @@
       <div *ngIf="showWeatherStations && layout === 'map'" class="parameter-switch">
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'SnowHeight'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowHeight'"
           (click)="selectParameter('SnowHeight')"
           title="{{ 'observations.weatherStations.tooltips.snowHeight' | translate }}"
         >
@@ -206,7 +206,7 @@
         <!--
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'SnowDifference24h'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference24h'"
           (click)="selectParameter('SnowDifference24h')"
           title="{{ 'observations.weatherStations.tooltips.snowDifference24h' | translate }}"
         >
@@ -214,7 +214,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'SnowDifference48h'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference48h'"
           (click)="selectParameter('SnowDifference48h')"
           title="{{ 'observations.weatherStations.tooltips.snowDifference48h' | translate }}"
         >
@@ -222,7 +222,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'SnowDifference72h'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference72h'"
           (click)="selectParameter('SnowDifference72h')"
           title="{{ 'observations.weatherStations.tooltips.snowDifference72h' | translate }}"
         >
@@ -231,7 +231,7 @@
         -->
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'AirTemperature'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'AirTemperature'"
           (click)="selectParameter('AirTemperature')"
           title="{{ 'observations.weatherStations.tooltips.airTemperature' | translate }}"
         >
@@ -240,7 +240,7 @@
         <!--
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'AirTemperatureMax'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'AirTemperatureMax'"
           (click)="selectParameter('AirTemperatureMax')"
           title="{{ 'observations.weatherStations.tooltips.airTemperatureMax' | translate }}"
         >
@@ -248,7 +248,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'AirTemperatureMin'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'AirTemperatureMin'"
           (click)="selectParameter('AirTemperatureMin')"
           title="{{ 'observations.weatherStations.tooltips.airTemperatureMin' | translate }}"
         >
@@ -257,7 +257,7 @@
         -->
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'SurfaceTemperature'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SurfaceTemperature'"
           (click)="selectParameter('SurfaceTemperature')"
           title="{{ 'observations.weatherStations.tooltips.surfaceTemperature' | translate }}"
         >
@@ -265,7 +265,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'DewPoint'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'DewPoint'"
           (click)="selectParameter('DewPoint')"
           title="{{ 'observations.weatherStations.tooltips.dewPoint' | translate }}"
         >
@@ -273,7 +273,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'SurfaceHoar'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SurfaceHoar'"
           (click)="selectParameter('SurfaceHoar')"
           title="{{ 'observations.weatherStations.tooltips.surfaceHoar' | translate }}"
         >
@@ -281,7 +281,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'SurfaceHoarCalc'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SurfaceHoarCalc'"
           (click)="selectParameter('SurfaceHoarCalc')"
           title="{{ 'observations.weatherStations.tooltips.surfaceHoarCalc' | translate }}"
         >
@@ -289,7 +289,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'WindSpeed'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'WindSpeed'"
           (click)="selectParameter('WindSpeed')"
           title="{{ 'observations.weatherStations.tooltips.windSpeed' | translate }}"
         >
@@ -297,7 +297,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'WindGust'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'WindGust'"
           (click)="selectParameter('WindGust')"
           title="{{ 'observations.weatherStations.tooltips.windGust' | translate }}"
         >
@@ -305,7 +305,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'WindDirection'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'WindDirection'"
           (click)="selectParameter('WindDirection')"
           title="{{ 'observations.weatherStations.tooltips.windDirection' | translate }}"
         >
@@ -313,7 +313,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'RelativeHumidity'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'RelativeHumidity'"
           (click)="selectParameter('RelativeHumidity')"
           title="{{ 'observations.weatherStations.tooltips.relativeHumidity' | translate }}"
         >
@@ -321,7 +321,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="markerService.weatherStationLabel === 'GlobalRadiation'"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'GlobalRadiation'"
           (click)="selectParameter('GlobalRadiation')"
           title="{{ 'observations.weatherStations.tooltips.globalRadiation' | translate }}"
         >
