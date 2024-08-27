@@ -43,6 +43,7 @@ import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { observationFilters } from "./filter-selection-data-data";
 import { ObservationMarkerWeatherStationService } from "./observation-marker-weather-station.service";
+import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -97,6 +98,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     public filter: ObservationFilterService<GenericObservation>,
     public markerService: ObservationMarkerService<GenericObservation>,
     public markerWeatherStationService: ObservationMarkerWeatherStationService<GenericObservation>,
+    private markerWebcamService: ObservationMarkerWebcamService<GenericObservation>,
     public translateService: TranslateService,
     private observationsService: AlbinaObservationsService,
     private sanitizer: DomSanitizer,
@@ -308,9 +310,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
     });
 
+    this.mapService.layers["webcams"].clearLayers();
     this.localWebcams = this.webcams.filter(
       (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
     );
+    this.localWebcams.forEach((weatherStation) => {
+      this.markerWebcamService
+        .createMarker(weatherStation, false)
+        ?.on("click", () => this.onObservationClick(weatherStation))
+        ?.addTo(this.mapService.layers["webcams"]);
+    });
 
     this.mapService.layers["weather-stations"].clearLayers();
     this.localWeatherStations = this.weatherStations.filter((weatherStation) =>

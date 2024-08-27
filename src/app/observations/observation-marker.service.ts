@@ -39,7 +39,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
         isHighlighted ? "#ff0000" : this.toMarkerColor(observation),
         this.getBorderColor(observation),
         isHighlighted ? "#fff" : "#000",
-        this.getLabelFontSize(observation),
+        "12",
         labelFont,
         this.getLabel(observation),
       );
@@ -96,9 +96,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   }
 
   toMarkerRadius(observation: T): number {
-    if (this.isWebcam(observation)) {
-      return 20;
-    } else if (this.isObserver(observation)) {
+    if (this.isObserver(observation)) {
       return 20;
     } else {
       return 40;
@@ -106,42 +104,26 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   }
 
   getBorderColor(observation: T) {
-    if (this.isWebcam(observation)) {
-      return "#000";
-    } else if (observation?.$source === ObservationSource.SnowLine) {
+    if (observation?.$source === ObservationSource.SnowLine) {
       return "#777777";
     } else {
       return "#000";
     }
   }
 
-  getLabelFontSize(observation: T) {
-    if (this.isWebcam(observation)) {
-      return "6";
-    } else {
-      return "12";
-    }
-  }
-
   toMarkerColor(observation: T): string {
-    if (this.isWebcam(observation)) {
-      return "black";
-    } else if (this.isObserver(observation)) {
+    if (this.isObserver(observation)) {
       return "#ca0020";
     } else {
       return this.markerClassify?.findForObservation(observation)?.color ?? "white";
     }
   }
 
-  private isWebcam(observation: T) {
-    return observation?.$type === ObservationType.Webcam;
-  }
-
   private isObserver(observation: T) {
     return observation?.$type === ObservationType.TimeSeries && observation?.$source === ObservationSource.Observer;
   }
 
-  private getLabel(observation: T) {
+  getLabel(observation: T) {
     if (this.markerLabel?.key === "elevation") {
       return isFinite(observation.elevation) ? Math.round(observation.elevation / 100) : "";
     } else {
