@@ -17,7 +17,11 @@ import { RegionsService } from "../providers/regions-service/regions.service";
 
 import * as Enums from "../enums/enums";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
-import { DangerSourceVariantModel, DangerSourceVariantStatus } from "./models/danger-source-variant.model";
+import {
+  DangerSourceVariantModel,
+  DangerSourceVariantStatus,
+  DangerSourceVariantType,
+} from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
 import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
@@ -186,7 +190,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     if (this.dangerSourcesService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
       this.reset();
 
-      this.loadDangerSourcesFromServer();
+      this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
       this.mapService.deselectAggregatedRegion();
 
       this.dangerSourcesService.setIsEditable(true);
@@ -216,7 +220,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  public loadDangerSourcesFromServer() {
+  public loadDangerSourcesFromServer(type: DangerSourceVariantType) {
     console.log("Load danger sources");
     this.internVariantsList = new Array<DangerSourceVariantModel>();
     this.dangerSourcesService
@@ -224,7 +228,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       .subscribe(
         (dangerSources) => {
           this.loadInternalDangerSourcesError = false;
-          //this.addInternalDangerSources(dangerSources);
           this.dangerSourcesService
             .loadDangerSourceVariants(
               this.dangerSourcesService.getActiveDate(),
@@ -233,7 +236,17 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             .subscribe(
               (variants) => {
                 this.loadInternalVariantsError = false;
-                this.addInternalVariants(dangerSources, variants);
+
+                if (
+                  type === DangerSourceVariantType.analysis &&
+                  !variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)
+                ) {
+                  const newVariants = this.copyVariants(variants, true);
+                  this.addInternalVariants(dangerSources, variants.concat(newVariants), type);
+                  this.save(variants.concat(newVariants));
+                } else {
+                  this.addInternalVariants(dangerSources, variants, type);
+                }
                 this.loading = false;
               },
               (error) => {
@@ -322,7 +335,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   getVariantsOfDangerSource(dangerSourceId: string) {
     const result = new Array<DangerSourceVariantModel>();
     for (const variant of this.internVariantsList) {
-      if (variant.dangerSource.id === dangerSourceId) {
+      if (
+        variant.dangerSource.id === dangerSourceId &&
+        variant.dangerSourceVariantType === this.dangerSourcesService.getDangerSourceVariantType()
+      ) {
         result.push(variant);
       }
     }
@@ -375,7 +391,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.copyVariants(variants).forEach((element) => resultVariants.push(element));
+          this.copyVariants(variants, false).forEach((element) => resultVariants.push(element));
           this.save(resultVariants);
           this.loading = false;
         },
@@ -396,7 +412,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.copyVariants(variants).forEach((element) => resultVariants.push(element));
+          this.copyVariants(variants, false).forEach((element) => resultVariants.push(element));
           this.save(resultVariants);
           this.loading = false;
         },
@@ -409,7 +425,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   // create a copy of every variant (with new id)
-  private copyVariants(response): DangerSourceVariantModel[] {
+  private copyVariants(response, setForecastVariantId: boolean): DangerSourceVariantModel[] {
     const result = Array<DangerSourceVariantModel>();
     for (const jsonVariant of response) {
       const originalVariant = DangerSourceVariantModel.createFromJson(jsonVariant);
@@ -418,6 +434,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       variant.ownerRegion = this.authenticationService.getActiveRegionId();
       variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
       variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+      variant.dangerSourceVariantType = this.dangerSourcesService.getDangerSourceVariantType();
+      if (setForecastVariantId) {
+        variant.forecastDangerSourceVariantId = jsonVariant.id;
+      }
 
       // reset regions
       const regions = new Array<string>();
@@ -441,7 +461,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
     this.dangerSourcesService.saveVariants(variants, this.dangerSourcesService.getActiveDate()).subscribe(
       (variants) => {
-        this.loadDangerSourcesFromServer();
+        this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variants saved on server.");
@@ -511,7 +531,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
    * Replaces all old variants with new ones.
    * @param dangerSourceVariants new variants
    */
-  private addInternalVariants(dangerSources: DangerSourceModel[], dangerSourceVariants: DangerSourceVariantModel[]) {
+  private addInternalVariants(
+    dangerSources: DangerSourceModel[],
+    dangerSourceVariants: DangerSourceVariantModel[],
+    type: DangerSourceVariantType,
+  ) {
     this.addInternalDangerSources(dangerSources);
     let hasDaytimeDependency = false;
 
@@ -564,7 +588,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
     variants.forEach((item) => this.internVariantsList.push(item));
     this.sortInternVariantsList();
-    this.updateInternalVariantsOnMap();
+    this.updateInternalVariantsOnMap(type);
 
     if (this.editRegions) {
       this.mapService.showEditSelection();
@@ -573,9 +597,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateInternalVariantsOnMap() {
+  private updateInternalVariantsOnMap(type: DangerSourceVariantType) {
     for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
-      this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+      if (this.internVariantsList[i].dangerSourceVariantType === type) {
+        this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+      }
     }
   }
 
@@ -672,7 +698,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       this.activeVariant = undefined;
       this.comparedVariant = undefined;
     }
-    this.updateInternalVariantsOnMap();
+    this.updateInternalVariantsOnMap(this.dangerSourcesService.getDangerSourceVariantType());
   }
 
   eventDeselectComparedVariant(variant: DangerSourceVariantModel) {
@@ -770,9 +796,14 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private createVariantOnServer(variant: DangerSourceVariantModel) {
     variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+    if (this.dangerSourcesService.hasBeenPublished5PM(this.dangerSourcesService.getActiveDate())) {
+      variant.dangerSourceVariantType = DangerSourceVariantType.analysis;
+    } else {
+      variant.dangerSourceVariantType = DangerSourceVariantType.forecast;
+    }
     this.dangerSourcesService.createDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       (variants) => {
-        this.loadDangerSourcesFromServer();
+        this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variant created on server.");
@@ -797,7 +828,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     variant.updateDate = new Date();
     this.dangerSourcesService.updateDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       (variants) => {
-        this.loadDangerSourcesFromServer();
+        this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.saveError.delete(variant.id);
         this.loadInternalVariantsError = false;
         this.loading = false;
@@ -816,7 +847,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private deleteVariantOnServer(variant: DangerSourceVariantModel) {
     this.dangerSourcesService.deleteDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       (variants) => {
-        this.loadDangerSourcesFromServer();
+        this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variant deleted on server.");
@@ -905,7 +936,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.loading = false;
         this.mapService.resetAggregatedRegions();
-        this.updateInternalVariantsOnMap();
+        this.updateInternalVariantsOnMap(this.dangerSourcesService.getDangerSourceVariantType());
       });
   }
 
@@ -950,17 +981,5 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   getRegionNames(bulletin: BulletinModel): string {
     const regionNames = bulletin.savedRegions.map((regionCode) => this.regionsService.getRegionName(regionCode));
     return regionNames.join(", ");
-  }
-
-  getActiveRegionStatus(date: [Date, Date]) {
-    const regionStatusMap = this.dangerSourcesService.statusMap.get(this.authenticationService.getActiveRegionId());
-    if (regionStatusMap) return regionStatusMap.get(date[0].getTime());
-    else return Enums.BulletinStatus.missing;
-  }
-
-  getRegionStatus(region: string, date: [Date, Date]) {
-    const regionStatusMap = this.dangerSourcesService.statusMap.get(region);
-    if (regionStatusMap) return regionStatusMap.get(date[0].getTime());
-    else return Enums.BulletinStatus.missing;
   }
 }
