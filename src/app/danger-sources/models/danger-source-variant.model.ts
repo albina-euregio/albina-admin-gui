@@ -232,8 +232,8 @@ export class DangerSourceVariantModel implements PolygonObject {
     const variant = new DangerSourceVariantModel();
 
     variant.id = json.id;
-    variant.originalDangerSourceVariantId = json.originalDangerSourceId;
-    variant.forecastDangerSourceVariantId = json.forecastDangerSourceId;
+    variant.originalDangerSourceVariantId = json.originalDangerSourceVariantId;
+    variant.forecastDangerSourceVariantId = json.forecastDangerSourceVariantId;
     variant.dangerSource = DangerSourceModel.createFromJson(json.dangerSource);
     variant.creationDate = json.creationDate;
     variant.updateDate = json.updateDate;
