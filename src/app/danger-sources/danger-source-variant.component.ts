@@ -141,12 +141,12 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   ngOnChanges() {
     if (!this.isElevationHighEditing) {
-      this.useElevationHigh = this.variant.treelineHigh || this.variant.elevationHigh !== undefined;
+      this.useElevationHigh = this.variant.treelineHigh || this.variant.elevationHigh !== null;
       this.localElevationHigh = this.variant.elevationHigh;
       this.localTreelineHigh = this.variant.treelineHigh;
     }
     if (!this.isElevationLowEditing) {
-      this.useElevationLow = this.variant.treelineLow || this.variant.elevationLow !== undefined;
+      this.useElevationLow = this.variant.treelineLow || this.variant.elevationLow !== null;
       this.localElevationLow = this.variant.elevationLow;
       this.localTreelineLow = this.variant.treelineLow;
     }
@@ -465,6 +465,7 @@ export class DangerSourceVariantComponent implements OnChanges {
         }
       }
       this.isElevationHighEditing = false;
+      this.updateVariantOnServer();
     }
   }
 
@@ -480,6 +481,7 @@ export class DangerSourceVariantComponent implements OnChanges {
         }
       }
       this.isElevationLowEditing = false;
+      this.updateVariantOnServer();
     }
   }
 
@@ -497,6 +499,7 @@ export class DangerSourceVariantComponent implements OnChanges {
       this.localTreelineHigh = true;
       this.isElevationHighEditing = false;
     }
+    this.updateVariantOnServer();
   }
 
   treelineLowClicked(event) {
@@ -513,6 +516,7 @@ export class DangerSourceVariantComponent implements OnChanges {
       this.localTreelineLow = true;
       this.isElevationLowEditing = false;
     }
+    this.updateVariantOnServer();
   }
 
   setUseElevationHigh(event) {
@@ -522,6 +526,8 @@ export class DangerSourceVariantComponent implements OnChanges {
       this.variant.treelineHigh = false;
       this.variant.elevationHigh = undefined;
       this.isElevationHighEditing = false;
+      this.useElevationHigh = false;
+      this.updateVariantOnServer();
     } else {
       this.useElevationHigh = true;
       this.isElevationHighEditing = true;
@@ -535,6 +541,8 @@ export class DangerSourceVariantComponent implements OnChanges {
       this.variant.treelineLow = false;
       this.variant.elevationLow = undefined;
       this.isElevationLowEditing = false;
+      this.useElevationLow = false;
+      this.updateVariantOnServer();
     } else {
       this.useElevationLow = true;
       this.isElevationLowEditing = true;
