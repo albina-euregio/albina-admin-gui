@@ -331,6 +331,23 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  hasForecast(variant: DangerSourceVariantModel): boolean {
+    if (
+      variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
+      this.internVariantsList.some((v) => variant.forecastDangerSourceVariantId === v.id)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  compareForecast(event: Event, variant: DangerSourceVariantModel) {
+    event.stopPropagation();
+    this.selectVariant(variant);
+    this.comparedVariant = this.internVariantsList.find((v) => variant.forecastDangerSourceVariantId === v.id);
+  }
+
   getVariantsOfDangerSource(dangerSourceId: string) {
     const result = new Array<DangerSourceVariantModel>();
     for (const variant of this.internVariantsList) {
@@ -549,6 +566,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     const variants = new Array<DangerSourceVariantModel>();
     for (const v of dangerSourceVariants) {
       const variant = new DangerSourceVariantModel(v);
+      variant.forecastDangerSourceVariantId = v.forecastDangerSourceVariantId;
       variant.id = v.id;
 
       // set active variant

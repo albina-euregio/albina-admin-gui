@@ -102,7 +102,9 @@
         "loadVariants": "Load variants from the day before",
         "edit": "Edit micro regions",
         "copy": "Copy variant",
-        "delete": "Delete variant"
+        "delete": "Delete variant",
+        "compare": "Compare variant",
+        "forecast": "Compare with forecast"
       },
       "createDangerSource": "Create danger source",
       "createVariant": "Create new variant",

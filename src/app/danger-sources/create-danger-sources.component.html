@@ -366,7 +366,7 @@
         class="btn btn-sm btn-bare btn-sm btn-icon"
         (click)="copyVariant($event, variant)"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.copy' | translate }}"
+        title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
       >
         <i class="ph ph-copy"></i>
       </button>
@@ -378,7 +378,7 @@
         class="btn btn-sm btn-icon btn-bare"
         (click)="deleteVariant($event, variant)"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.delete' | translate }}"
+        title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
       >
         <i class="ph ph-trash"></i>
       </button>
@@ -389,8 +389,22 @@
         type="button"
         class="btn btn-bare btn-sm btn-icon"
         (click)="compareVariant($event, variant)"
+        data-toggle="tooltip"
+        title="{{ 'dangerSources.create.tooltip.compare' | translate }}"
       >
         <i class="ph ph-square-half"></i>
+      </button>
+
+      <button
+        *ngIf="hasForecast(variant)"
+        [disabled]="loading || editRegions"
+        type="button"
+        class="btn btn-bare btn-sm btn-icon"
+        (click)="compareForecast($event, variant)"
+        data-toggle="tooltip"
+        title="{{ 'dangerSources.create.tooltip.forecast' | translate }}"
+      >
+        <i class="ph ph-git-diff"></i>
       </button>
     </div>
   </div>
