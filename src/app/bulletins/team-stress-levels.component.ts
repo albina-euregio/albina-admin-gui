@@ -28,7 +28,9 @@ export class TeamStressLevelsComponent implements OnInit {
         xAxis: {
           data: dates,
         },
-        yAxis: {},
+        yAxis: {
+          splitNumber: 4,
+        },
         series: Object.values(stressLevels).map((ll) => ({
           type: "line",
           data: dates.map((date) => ll.find((l) => l.date === date)?.stressLevel),
