@@ -3,6 +3,13 @@
     <thead class="bulletins-table__header">
       <tr>
         <th></th>
+        <th>
+          {{ "dangerSources.table.title.forecast" | translate }}
+        </th>
+        <th>
+          {{ "dangerSources.table.title.analysis" | translate }}
+        </th>
+        <th></th>
       </tr>
     </thead>
     <tbody class="bulletins-table__body">
@@ -25,18 +32,6 @@
               <button
                 class="btn btn-secondary btn-icon bulletins-table__day-buttons"
                 type="button"
-                (click)="editDangerSources(date, true)"
-                title="{{ 'dangerSources.tooltip.read' | translate }}"
-              >
-                <i class="ph ph-eye"></i>
-              </button>
-              <button
-                *ngIf="
-                  authenticationService.isCurrentUserInRole(constantsService.roleForecaster) ||
-                  authenticationService.isCurrentUserInRole(constantsService.roleForeman)
-                "
-                class="btn btn-secondary btn-icon bulletins-table__day-buttons"
-                type="button"
                 (click)="editDangerSources(date, false)"
                 title="{{ 'dangerSources.tooltip.edit' | translate }}"
               >
@@ -44,6 +39,22 @@
               </button>
             </div>
           </div>
+        </td>
+        <td class="bulletins-table__region-status" [attr.data-label]="'dangerSources.table.title.forecast' | translate">
+          <span *ngIf="getForecastStatus(date)" class="badge bg-primary">
+            {{ "dangerSources.status.available" | translate }}
+          </span>
+          <span *ngIf="!getForecastStatus(date)" class="badge bg-danger">
+            {{ "dangerSources.status.missing" | translate }}
+          </span>
+        </td>
+        <td class="bulletins-table__region-status" [attr.data-label]="'dangerSources.table.title.analysis' | translate">
+          <span *ngIf="getAnalysisStatus(date)" class="badge bg-success">
+            {{ "dangerSources.status.available" | translate }}
+          </span>
+          <span *ngIf="!getAnalysisStatus(date)" class="badge bg-danger">
+            {{ "dangerSources.status.missing" | translate }}
+          </span>
         </td>
       </tr>
     </tbody>

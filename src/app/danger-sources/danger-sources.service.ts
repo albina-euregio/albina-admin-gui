@@ -7,7 +7,12 @@ import { SettingsService } from "../providers/settings-service/settings.service"
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { UserService } from "../providers/user-service/user.service";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { DangerSourceVariantModel } from "./models/danger-source-variant.model";
+import {
+  DangerSourceVariantModel,
+  DangerSourceVariantStatus,
+  DangerSourceVariantType,
+} from "./models/danger-source-variant.model";
+import { JsonArray } from "protomaps-leaflet";
 
 @Injectable()
 export class DangerSourcesService {
@@ -15,7 +20,8 @@ export class DangerSourcesService {
   private isEditable: boolean;
   private isReadOnly: boolean;
 
-  public statusMap: Map<string, Map<number, DangerSourceVariantModel>>;
+  public forecastStatusMap: Map<number, boolean>;
+  public analysisStatusMap: Map<number, boolean>;
 
   public dates: [Date, Date][];
 
@@ -47,6 +53,40 @@ export class DangerSourcesService {
       date.setDate(endDate.getDate() - i);
       this.dates.push(this.getValidFromUntil(date));
     }
+    this.loadStatus();
+  }
+
+  public loadStatus() {
+    const startDate = this.dates[this.dates.length - 1];
+    const endDate = this.dates[0];
+    this.forecastStatusMap = new Map<number, boolean>();
+    this.analysisStatusMap = new Map<number, boolean>();
+    this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
+      (data) => {
+        for (let i = (data as JsonArray).length - 1; i >= 0; i--) {
+          this.forecastStatusMap.set(new Date(data[i].date).getTime(), data[i].forecast);
+          this.analysisStatusMap.set(new Date(data[i].date).getTime(), data[i].analysis);
+        }
+      },
+      () => {
+        console.error("Danger source variants status could not be loaded!");
+      },
+    );
+  }
+
+  getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
+    const url =
+      this.constantsService.getServerUrl() +
+      "danger-sources/status?" +
+      this.constantsService
+        .createSearchParams([
+          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
+          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
+          ["region", region],
+        ])
+        .toString();
+    const headers = this.authenticationService.newAuthHeader();
+    return this.http.get(url, { headers });
   }
 
   getActiveDate(): [Date, Date] {
@@ -113,6 +153,14 @@ export class DangerSourcesService {
 
   setIsReadOnly(isReadOnly: boolean) {
     this.isReadOnly = isReadOnly;
+  }
+
+  getDangerSourceVariantType() {
+    if (this.hasBeenPublished5PM(this.activeDate)) {
+      return DangerSourceVariantType.analysis;
+    } else {
+      return DangerSourceVariantType.forecast;
+    }
   }
 
   loadDangerSources(date: [Date, Date], regions: string[]): Observable<DangerSourceModel[]> {

@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { formatDate } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
 import { DangerSourcesService } from "./danger-sources.service";
+import { DangerSourceVariantType } from "./models/danger-source-variant.model";
 
 @Component({
   templateUrl: "danger-sources.component.html",
@@ -39,6 +40,14 @@ export class DangerSourcesComponent {
     const formattedDate = this.constantsService.getISODateString(date[1]);
     this.dangerSourcesService.setIsReadOnly(isReadOnly);
     this.router.navigate(["/danger-sources/" + formattedDate], { queryParams: { readOnly: isReadOnly } });
+  }
+
+  getForecastStatus(date: [Date, Date]) {
+    return this.dangerSourcesService.forecastStatusMap.get(date[0].getTime());
+  }
+
+  getAnalysisStatus(date: [Date, Date]) {
+    return this.dangerSourcesService.analysisStatusMap.get(date[0].getTime());
   }
 
   protected readonly formatDate = formatDate;

@@ -68,6 +68,7 @@
   "dangerSources": {
     "status": {
       "missing": "missing",
+      "available": "available",
       "forecast": "forecast",
       "analysis": "analysis",
       "loading": "Loading danger sources ...",
@@ -86,9 +87,9 @@
     },
     "table": {
       "loadMore": "Load {{count}} more days",
-      "status": {
-        "missing": "missing",
-        "available": "available"
+      "title": {
+        "forecast": "Forecast",
+        "analysis": "Analysis"
       }
     },
     "create": {

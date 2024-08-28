@@ -10,9 +10,8 @@ export enum DangerSourceVariantStatus {
 }
 
 export enum DangerSourceVariantType {
-  missing = "missing",
-  forecasted = "forecasted",
-  verified = "verified",
+  forecast = "forecast",
+  analysis = "analysis",
 }
 
 export enum Daytime {
@@ -167,6 +166,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   validFrom: Date;
   validUntil: Date;
   dangerSourceVariantStatus: DangerSourceVariantStatus;
+  dangerSourceVariantType: DangerSourceVariantType;
   ownerRegion: string;
   regions: string[];
   hasDaytimeDependency: boolean | undefined;
@@ -237,7 +237,8 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.updateDate = json.updateDate;
     variant.validFrom = json.validFrom;
     variant.validUntil = json.validUntil;
-    variant.dangerSourceVariantStatus = json.status;
+    variant.dangerSourceVariantStatus = json.dangerSourceVariantStatus;
+    variant.dangerSourceVariantType = json.dangerSourceVariantType;
     variant.ownerRegion = json.ownerRegion;
     variant.regions = json.regions;
     variant.hasDaytimeDependency = json.hasDaytimeDependency;
@@ -302,6 +303,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.validFrom = variant.validFrom;
       this.validUntil = variant.validUntil;
       this.dangerSourceVariantStatus = variant.dangerSourceVariantStatus;
+      this.dangerSourceVariantType = variant.dangerSourceVariantType;
       this.ownerRegion = variant.ownerRegion;
       this.regions = variant.regions;
       this.hasDaytimeDependency = variant.hasDaytimeDependency;
