@@ -36,6 +36,25 @@
       </div>
       <!-- End Date Switch -->
 
+      <!-- Status -->
+      <div class="create-bulletin__status">
+        <div>
+          <span
+            *ngIf="dangerSourcesService.getDangerSourceVariantType() === variantType.forecast"
+            class="badge bg-primary"
+          >
+            {{ "dangerSources.status.forecast" | translate }}
+          </span>
+          <span
+            *ngIf="dangerSourcesService.getDangerSourceVariantType() === variantType.analysis"
+            class="badge bg-success"
+          >
+            {{ "dangerSources.status.analysis" | translate }}
+          </span>
+        </div>
+      </div>
+      <!-- End status-->
+
       <span class="create-bulletin__bulletin-info" *ngIf="loading"
         ><i class="ph ph-circle-notch"></i> {{ "dangerSources.status.loading" | translate }}</span
       >
@@ -300,13 +319,13 @@
   <div (click)="toggleVariant(variant)" class="region-thumb" [class.region-thumb--active]="variant === activeVariant">
     <div class="region-thumb__details">
       <p>
-        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatusEnum.active)" class="badge bg-secondary">
+        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.active)" class="badge bg-secondary">
           {{ "dangerSources.variantStatus.active" | translate }}
         </span>
-        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatusEnum.dormant)" class="badge bg-gray">
+        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.dormant)" class="badge bg-gray">
           {{ "dangerSources.variantStatus.dormant" | translate }}
         </span>
-        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatusEnum.inactive)" class="badge bg-light-gray">
+        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.inactive)" class="badge bg-light-gray">
           {{ "dangerSources.variantStatus.inactive" | translate }}
         </span>
       </p>

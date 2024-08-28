@@ -31,6 +31,7 @@ import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.compo
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public variantStatus = DangerSourceVariantStatus;
+  public variantType = DangerSourceVariantType;
 
   public editRegions: boolean;
   public loading: boolean;
@@ -54,8 +55,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public isCompactMapLayout: boolean = false;
   public isVariantsSidebarVisible = true;
   private variantMarkedDelete: DangerSourceVariantModel;
-
-  private variantStatusEnum = DangerSourceVariantStatus;
 
   public copying: boolean;
 
