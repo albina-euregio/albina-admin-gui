@@ -770,17 +770,27 @@ export class BulletinsService {
 
   getStressLevelColor(date: DateIsoString) {
     const stress0 = this.stress[date];
-    return !stress0 ? "gray" : stress0 < 20 ? "green" : stress0 < 70 ? "orange" : "red";
+    return !stress0
+      ? this.constantsService.colorDangerRatingMissing
+      : stress0 < 25
+        ? this.constantsService.colorDangerRatingLow
+        : stress0 < 50
+          ? this.constantsService.colorDangerRatingModerate
+          : stress0 < 75
+            ? this.constantsService.colorDangerRatingConsiderable
+            : this.constantsService.colorDangerRatingHigh;
   }
 
   getStressLevelIcon(date: DateIsoString) {
     const stress0 = this.stress[date];
-    return stress0 < 20
+    return stress0 < 25
       ? "ph-smiley"
-      : stress0 < 70
+      : stress0 < 50
         ? "ph-smiley-meh"
-        : stress0 <= 100
-          ? "ph-smiley-x-eyes"
-          : "ph-circle-dashed";
+        : stress0 < 75
+          ? "ph-smiley-nervous"
+          : stress0 <= 100
+            ? "ph-smiley-x-eyes"
+            : "ph-circle-dashed";
   }
 }
