@@ -391,7 +391,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.copyVariants(variants, false).forEach((element) => resultVariants.push(element));
+          this.copyVariants(
+            variants.filter((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis),
+            false,
+          ).forEach((element) => resultVariants.push(element));
+
           this.save(resultVariants);
           this.loading = false;
         },
@@ -412,7 +416,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.copyVariants(variants, false).forEach((element) => resultVariants.push(element));
+          this.copyVariants(
+            variants.filter((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis),
+            false,
+          ).forEach((element) => resultVariants.push(element));
+
           this.save(resultVariants);
           this.loading = false;
         },
