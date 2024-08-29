@@ -438,10 +438,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     let observation = this.observationPopup?.observation;
-    const observations = [...this.observations, ...this.observationsAsOverlay].filter(
-      (o) => o.$source === observation.$source && o.$type === observation.$type,
-    );
-    var index = observations.indexOf(observation);
+    const observations = [
+      ...this.observations,
+      ...this.observationsAsOverlay,
+      ...this.weatherStations,
+      ...this.webcams,
+    ].filter((o) => o.$source === observation.$source && o.$type === observation.$type);
+    let index = observations.indexOf(observation);
     if (index < 0) {
       return;
     }
