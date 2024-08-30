@@ -11,10 +11,12 @@
   "properties": {
     "date": {
       "type": "string",
-      "format": "date"
+      "format": "date",
+      "description": "Initial date/time when opening the dashboard"
     },
     "dateStepSeconds": {
-      "type": "number"
+      "type": "number",
+      "description": "Seconds between two models runs"
     },
     "sources": {
       "type": "array",
@@ -22,16 +24,20 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Identifier shown in source multiselect"
           },
           "url": {
-            "type": "string"
+            "type": "string",
+            "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."
           },
           "tooltipTemplate": {
-            "type": "string"
+            "type": "string",
+            "description": "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature."
           },
           "detailsTemplate": {
-            "type": "string"
+            "type": "string",
+            "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature."
           }
         }
       }
@@ -47,13 +53,16 @@
     "FilterSelectionValue": {
       "properties": {
         "color": {
-          "type": "string"
+          "type": "string",
+          "description": "Fill color"
         },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Label string shown inside the marker"
         },
         "legend": {
-          "type": "string"
+          "type": "string",
+          "description": "Legend string shown in the chart"
         },
         "numericRange": {
           "items": {
@@ -68,30 +77,37 @@
         },
         "borderColor": {
           "type": "string",
+          "description": "Stroke color",
           "default": "#000"
         },
         "labelColor": {
           "type": "string",
+          "description": "Label color",
           "default": "#000"
         },
         "labelFontSize": {
           "type": "number",
+          "description": "Label font size, in pt",
           "default": 12
         },
         "opacity": {
           "type": "number",
+          "description": "Marker opacity",
           "default": 1
         },
         "radius": {
           "type": "number",
+          "description": "Radius of the circle marker, in pixels",
           "default": 40
         },
         "weight": {
           "type": "number",
+          "description": "Stroke width, in pixels",
           "default": 0
         },
         "zIndexOffset": {
           "type": "number",
+          "description": "The explicit zIndex of this marker",
           "default": 0
         }
       },
@@ -112,7 +128,8 @@
             "symbol",
             "grainShape"
           ],
-          "type": "string"
+          "type": "string",
+          "default": "symbol"
         },
         "chartType": {
           "enum": [
@@ -122,13 +139,16 @@
           "type": "string"
         },
         "key": {
-          "type": "string"
+          "type": "string",
+          "description": "Key name defining how to obtain the value from a GeoJSON Feature representing this filter, such as `path.to.variable.in.json`, evaluated relative to the `properties` of a GeoJSON Feature."
         },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Label text shown in the chart"
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "Identifier for this filter"
         },
         "values": {
           "items": {

@@ -480,7 +480,7 @@ export class ObservationChartComponent<T> implements OnInit {
     if (filterSelection?.type === this.filterSelection.type) {
       const value = filterSelection.values.find((v) => v.value === entry.name);
       if (value) {
-        return `{${filterSelection.chartRichLabel}|${value.label}} ${formattedResult}`;
+        return `{${filterSelection.chartRichLabel ?? "symbol"}|${value.label}} ${formattedResult}`;
       }
     }
     return formattedResult;
