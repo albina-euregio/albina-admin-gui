@@ -12,6 +12,7 @@ import { ObservationMarkerService } from "../observations/observation-marker.ser
 import type { GenericObservation } from "../observations/models/generic-observation.model";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
+import Split from "split.js";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
     GenericObservation,
@@ -125,6 +126,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async ngAfterViewInit() {
+    Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
     await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => console.log(o));
   }
 
