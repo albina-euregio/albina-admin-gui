@@ -1184,6 +1184,10 @@
       "class": "Ice Formations"
     }
   },
+  "button": {
+    "yes": "yes",
+    "no": "no"
+  },
   "observations": {
     "aspect": "Aspect",
     "authorName": "Author name",

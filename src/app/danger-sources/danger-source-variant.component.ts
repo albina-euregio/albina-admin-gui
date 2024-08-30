@@ -229,6 +229,69 @@ export class DangerSourceVariantComponent implements OnChanges {
     this.updateVariantOnServer();
   }
 
+  setZeroDegreeIsotherm(zeroDegreeIsotherm: boolean) {
+    this.variant?.zeroDegreeIsotherm === zeroDegreeIsotherm
+      ? (this.variant.zeroDegreeIsotherm = undefined)
+      : (this.variant.zeroDegreeIsotherm = zeroDegreeIsotherm);
+    this.updateVariantOnServer();
+  }
+
+  setWeakLayerPersistent(weakLayerPersistent: boolean) {
+    this.variant?.weakLayerPersistent === weakLayerPersistent
+      ? (this.variant.weakLayerPersistent = undefined)
+      : (this.variant.weakLayerPersistent = weakLayerPersistent);
+    this.updateVariantOnServer();
+  }
+
+  setWeakLayerWet(weakLayerWet: boolean) {
+    this.variant?.weakLayerWet === weakLayerWet
+      ? (this.variant.weakLayerWet = undefined)
+      : (this.variant.weakLayerWet = weakLayerWet);
+    this.updateVariantOnServer();
+  }
+
+  setWeakLayerCrustAbove(weakLayerCrustAbove: boolean) {
+    this.variant?.weakLayerCrustAbove === weakLayerCrustAbove
+      ? (this.variant.weakLayerCrustAbove = undefined)
+      : (this.variant.weakLayerCrustAbove = weakLayerCrustAbove);
+    this.updateVariantOnServer();
+  }
+
+  setWeakLayerCrustBelow(weakLayerCrustBelow: boolean) {
+    this.variant?.weakLayerCrustBelow === weakLayerCrustBelow
+      ? (this.variant.weakLayerCrustBelow = undefined)
+      : (this.variant.weakLayerCrustBelow = weakLayerCrustBelow);
+    this.updateVariantOnServer();
+  }
+
+  setRemoteTriggering(remoteTriggering: boolean) {
+    this.variant?.remoteTriggering === remoteTriggering
+      ? (this.variant.remoteTriggering = undefined)
+      : (this.variant.remoteTriggering = remoteTriggering);
+    this.updateVariantOnServer();
+  }
+
+  setHasDaytimeDependency(hasDaytimeDependency: boolean) {
+    this.variant?.hasDaytimeDependency === hasDaytimeDependency
+      ? (this.variant.hasDaytimeDependency = undefined)
+      : (this.variant.hasDaytimeDependency = hasDaytimeDependency);
+    this.updateVariantOnServer();
+  }
+
+  setDangerIncreaseWithElevation(dangerIncreaseWithElevation: boolean) {
+    this.variant?.dangerIncreaseWithElevation === dangerIncreaseWithElevation
+      ? (this.variant.dangerIncreaseWithElevation = undefined)
+      : (this.variant.dangerIncreaseWithElevation = dangerIncreaseWithElevation);
+    this.updateVariantOnServer();
+  }
+
+  setRunoutIntoGreen(runoutIntoGreen: boolean) {
+    this.variant?.runoutIntoGreen === runoutIntoGreen
+      ? (this.variant.runoutIntoGreen = undefined)
+      : (this.variant.runoutIntoGreen = runoutIntoGreen);
+    this.updateVariantOnServer();
+  }
+
   isLooseSnowMoisture(wetness: Wetness) {
     return this.variant?.looseSnowMoisture === wetness;
   }

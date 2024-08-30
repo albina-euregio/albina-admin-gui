@@ -229,19 +229,36 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="zeroDegreeIsothermCheckbox">{{
-                "dangerSources.create.label.zeroDegreeIsotherm" | translate
-              }}</label>
-              <input
-                id="zeroDegreeIsothermCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.zeroDegreeIsotherm"
-              />
-            </div>
+          <label class="form-label" attr.for="zeroDegreeIsothermCheckbox">{{
+            "dangerSources.create.label.zeroDegreeIsotherm" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.zeroDegreeIsotherm !== undefined && variant.zeroDegreeIsotherm === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setZeroDegreeIsotherm(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.zeroDegreeIsotherm !== undefined && variant.zeroDegreeIsotherm === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setZeroDegreeIsotherm(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
@@ -896,19 +913,36 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="weakLayerPersistentCheckbox">{{
-                "dangerSources.create.label.weakLayerPersistent" | translate
-              }}</label>
-              <input
-                id="weakLayerPersistentCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.weakLayerPersistent"
-              />
-            </div>
+          <label class="form-label" attr.for="weakLayerPersistentCheckbox">{{
+            "dangerSources.create.label.weakLayerPersistent" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerPersistent !== undefined && variant.weakLayerPersistent === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerPersistent(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerPersistent !== undefined && variant.weakLayerPersistent === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerPersistent(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
@@ -1022,53 +1056,104 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="weakLayerWetCheckbox">{{
-                "dangerSources.create.label.weakLayerWet" | translate
-              }}</label>
-              <input
-                id="weakLayerWetCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.weakLayerWet"
-              />
-            </div>
+          <label class="form-label" attr.for="weakLayerWetCheckbox">{{
+            "dangerSources.create.label.weakLayerWet" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerWet !== undefined && variant.weakLayerWet === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerWet(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerWet !== undefined && variant.weakLayerWet === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerWet(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="weakLayerCrustAboveCheckbox">{{
-                "dangerSources.create.label.weakLayerCrustAbove" | translate
-              }}</label>
-              <input
-                id="weakLayerCrustAboveCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.weakLayerCrustAbove"
-              />
-            </div>
+          <label class="form-label" attr.for="weakLayerCrustAboveCheckbox">{{
+            "dangerSources.create.label.weakLayerCrustAbove" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerCrustAbove !== undefined && variant.weakLayerCrustAbove === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerCrustAbove(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerCrustAbove !== undefined && variant.weakLayerCrustAbove === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerCrustAbove(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="weakLayerCrustBelowCheckbox">{{
-                "dangerSources.create.label.weakLayerCrustBelow" | translate
-              }}</label>
-              <input
-                id="weakLayerCrustBelowCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.weakLayerCrustBelow"
-              />
-            </div>
+          <label class="form-label" attr.for="weakLayerCrustBelowCheckbox">{{
+            "dangerSources.create.label.weakLayerCrustBelow" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerCrustBelow !== undefined && variant.weakLayerCrustBelow === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerCrustBelow(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.weakLayerCrustBelow !== undefined && variant.weakLayerCrustBelow === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setWeakLayerCrustBelow(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
@@ -1351,19 +1436,36 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="remoteTriggeringCheckbox">{{
-                "dangerSources.create.label.remoteTriggering" | translate
-              }}</label>
-              <input
-                id="remoteTriggeringCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.remoteTriggering"
-              />
-            </div>
+          <label class="form-label" attr.for="remoteTriggeringCheckbox">{{
+            "dangerSources.create.label.remoteTriggering" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.remoteTriggering !== undefined && variant.remoteTriggering === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setRemoteTriggering(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.remoteTriggering !== undefined && variant.remoteTriggering === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setRemoteTriggering(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
@@ -1580,36 +1682,70 @@
         </div>
 
         <div class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="hasDaytimeDependencyCheckbox">{{
-                "dangerSources.create.label.hasDaytimeDependency" | translate
-              }}</label>
-              <input
-                id="hasDaytimeDependencyCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.hasDaytimeDependency"
-              />
-            </div>
+          <label class="form-label" attr.for="hasDaytimeDependencyCheckbox">{{
+            "dangerSources.create.label.hasDaytimeDependency" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.hasDaytimeDependency !== undefined && variant.hasDaytimeDependency === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setHasDaytimeDependency(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.hasDaytimeDependency !== undefined && variant.hasDaytimeDependency === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setHasDaytimeDependency(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
         <div class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="dangerIncreaseWithElevationCheckbox">{{
-                "dangerSources.create.label.dangerIncreaseWithElevation" | translate
-              }}</label>
-              <input
-                id="dangerIncreaseWithElevationCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.dangerIncreaseWithElevation"
-              />
-            </div>
+          <label class="form-label" attr.for="dangerIncreaseWithElevationCheckbox">{{
+            "dangerSources.create.label.dangerIncreaseWithElevation" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.dangerIncreaseWithElevation !== undefined && variant.dangerIncreaseWithElevation === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setDangerIncreaseWithElevation(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.dangerIncreaseWithElevation !== undefined && variant.dangerIncreaseWithElevation === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setDangerIncreaseWithElevation(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
@@ -1819,19 +1955,36 @@
         </div>
 
         <div class="form-group row">
-          <div class="avalanche-problem-detail__elevation">
-            <div class="form-check avalanche-problem-detail__elevation-label">
-              <label class="form-label" attr.for="runoutIntoGreenCheckbox">{{
-                "dangerSources.create.label.runoutIntoGreen" | translate
-              }}</label>
-              <input
-                id="runoutIntoGreenCheckbox"
-                type="checkbox"
-                class="form-check-input"
-                [disabled]="disabled"
-                [(ngModel)]="variant.runoutIntoGreen"
-              />
-            </div>
+          <label class="form-label" attr.for="runoutIntoGreenCheckbox">{{
+            "dangerSources.create.label.runoutIntoGreen" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.runoutIntoGreen !== undefined && variant.runoutIntoGreen === true
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setRunoutIntoGreen(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled"
+              [ngClass]="
+                variant.runoutIntoGreen !== undefined && variant.runoutIntoGreen === false
+                  ? 'btn-dark'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setRunoutIntoGreen(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
           </div>
         </div>
 
