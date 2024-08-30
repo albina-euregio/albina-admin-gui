@@ -8,18 +8,18 @@ import * as Enums from "../enums/enums";
   templateUrl: "danger-rating-icon.component.html",
 })
 export class DangerRatingIconComponent {
-  @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
+  @Input() dangerRatingAbove: Enums.DangerRating;
+  @Input() dangerRatingBelow: Enums.DangerRating;
+  @Input() hasElevationDependency: boolean;
 
   constructor(private constantsService: ConstantsService) {}
 
   getColorAbove() {
-    const dangerRating = this.bulletinDaytimeDescription?.getDangerRatingAbove();
-    return this.getDangerRatingColor(dangerRating);
+    return this.getDangerRatingColor(this.dangerRatingAbove);
   }
 
   getColorBelow() {
-    const dangerRating = this.bulletinDaytimeDescription?.getDangerRatingBelow();
-    return this.getDangerRatingColor(dangerRating);
+    return this.getDangerRatingColor(this.dangerRatingBelow);
   }
 
   private getDangerRatingColor(dangerRating: Enums.DangerRating) {

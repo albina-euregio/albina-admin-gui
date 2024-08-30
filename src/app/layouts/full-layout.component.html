@@ -23,6 +23,14 @@
           }}</a>
         </li>
         <li
+          *ngIf="authenticationService.getActiveRegion()?.enableDangerSources && authenticationService.isUserLoggedIn()"
+          class="nav-item"
+        >
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']">{{
+            "sidebar.dangerSources" | translate
+          }}</a>
+        </li>
+        <li
           *ngIf="authenticationService.getActiveRegion()?.enableObservations && authenticationService.isUserLoggedIn()"
           class="nav-item"
         >
@@ -171,6 +179,14 @@
       <li *ngIf="authenticationService.isUserLoggedIn()" class="nav-item">
         <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']"
           ><i class="ph ph-snowflake"></i> {{ "sidebar.bulletins" | translate }}</a
+        >
+      </li>
+      <li
+        *ngIf="authenticationService.getActiveRegion()?.enableDangerSources && authenticationService.isUserLoggedIn()"
+        class="nav-item"
+      >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']"
+          ><i class="ph ph-snowflake"></i> {{ "sidebar.dangerSources" | translate }}</a
         >
       </li>
       <li

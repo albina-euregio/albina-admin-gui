@@ -132,6 +132,14 @@ $badge-font-weight: 600;
   background-color: $orange;
 }
 
+.badge.bg-gray {
+  background-color: $gray-400;
+}
+
+.badge.bg-light-gray {
+  background-color: $gray-300;
+}
+
 // Modal
 $modal-footer-margin-between: $space-1;
 $modal-footer-gap: $space-1;

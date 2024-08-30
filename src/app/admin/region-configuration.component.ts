@@ -47,6 +47,7 @@ export class RegionConfigurationComponent {
     json["sendTelegramMessages"] = this.config.sendTelegramMessages;
     json["sendPushNotifications"] = this.config.sendPushNotifications;
     json["enableMediaFile"] = this.config.enableMediaFile;
+    json["enableDangerSources"] = this.config.enableDangerSources;
     json["enableObservations"] = this.config.enableObservations;
     json["enableModelling"] = this.config.enableModelling;
     json["enableWeatherbox"] = this.config.enableWeatherbox;

@@ -4,8 +4,9 @@ import { AuthorModel } from "./author.model";
 import * as Enums from "../enums/enums";
 import { RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
+import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
-export class BulletinModel {
+export class BulletinModel implements PolygonObject {
   public id: string;
 
   public author: AuthorModel;
@@ -442,7 +443,7 @@ export class BulletinModel {
     return this.getPublishedRegions().concat(this.getSavedRegions());
   }
 
-  getAllRegions() {
+  getAllRegions(): string[] {
     return this.getPublishedRegions().concat(this.getSavedRegions()).concat(this.getSuggestedRegions());
   }
 
@@ -601,7 +602,7 @@ export class BulletinModel {
     return json;
   }
 
-  public getRegionsByStatus(type: RegionStatus): string[] {
+  public getRegionsByStatus(type?: RegionStatus): string[] {
     switch (type) {
       case RegionStatus.suggested:
         return this.getSuggestedRegions();
@@ -609,6 +610,8 @@ export class BulletinModel {
         return this.getSavedRegions();
       case RegionStatus.published:
         return this.getPublishedRegions();
+      default:
+        return this.getAllRegions();
     }
   }
 }

@@ -21,7 +21,7 @@
   </div>
 
   <div class="form-group row">
-    <label class="form-label" for="">{{ "bulletins.create.label.avalancheType" | translate }}</label>
+    <label class="form-label" for="">{{ "avalancheType.title" | translate }}</label>
     <div class="btn-group">
       <!-- SLAB -->
       <button
@@ -36,9 +36,9 @@
         [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-dark' : 'btn-outline-secondary'"
         (click)="setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)"
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.avalancheType.slab' | translate }}"
+        title="{{ 'avalancheType.tooltip.slab' | translate }}"
       >
-        <span>{{ "bulletins.create.tooltip.avalancheType.slab" | translate }}</span>
+        <span>{{ "avalancheType.label.slab" | translate }}</span>
       </button>
 
       <!-- LOOSE -->
@@ -56,9 +56,9 @@
           setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
         "
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.avalancheType.loose' | translate }}"
+        title="{{ 'avalancheType.tooltip.loose' | translate }}"
       >
-        <span>{{ "bulletins.create.tooltip.avalancheType.loose" | translate }}</span>
+        <span>{{ "avalancheType.label.loose" | translate }}</span>
       </button>
 
       <!-- GLIDE -->
@@ -71,9 +71,9 @@
           setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
         "
         data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.avalancheType.glide' | translate }}"
+        title="{{ 'avalancheType.tooltip.glide' | translate }}"
       >
-        <span>{{ "bulletins.create.tooltip.avalancheType.glide" | translate }}</span>
+        <span>{{ "avalancheType.label.glide" | translate }}</span>
       </button>
     </div>
   </div>
@@ -91,7 +91,7 @@
       </div>
     </div>
     <div class="col-md-7">
-      <label class="form-label" for="">{{ "bulletins.create.label.elevation" | translate }}</label>
+      <label class="form-label" for="">{{ "elevation.title" | translate }}</label>
       <!-- Elevation (high) -->
       <div class="avalanche-problem-detail__elevation">
         <div class="avalanche-problem-detail__elevation-label form-check">
@@ -105,7 +105,7 @@
             [(ngModel)]="useElevationHigh"
           />
           <label class="form-label" [attr.for]="forLabelId('elevationHighCheckbox')">{{
-            "bulletins.create.label.elevationHigh" | translate
+            "elevation.high" | translate
           }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
@@ -132,7 +132,7 @@
             [ngClass]="localTreelineHigh ? 'btn-dark' : 'btn-outline-secondary'"
             (click)="treelineHighClicked($event)"
             data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+            title="{{ 'elevation.treeline' | translate }}"
           >
             <i class="ph ph-tree-evergreen"></i>
           </button>
@@ -151,7 +151,7 @@
             [(ngModel)]="useElevationLow"
           />
           <label class="form-label" [attr.for]="forLabelId('elevationLowCheckbox')">{{
-            "bulletins.create.label.elevationLow" | translate
+            "elevation.low" | translate
           }}</label>
         </div>
         <div class="avalanche-problem-detail__elevation-inputs">
@@ -178,7 +178,7 @@
             [ngClass]="localTreelineLow ? 'btn-dark' : 'btn-outline-secondary'"
             (click)="treelineLowClicked($event)"
             data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.treeline' | translate }}"
+            title="{{ 'elevation.treeline' | translate }}"
           >
             <i class="ph ph-tree-evergreen"></i>
           </button>
@@ -239,7 +239,6 @@
   </div>
   <div class="form-group">
     <app-matrix-parameter
-      [(bulletin)]="bulletin"
       [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
       [(matrixInformation)]="avalancheProblemModel.matrixInformation"
       [disabled]="disabled"
@@ -250,7 +249,6 @@
   </div>
   <div *ngIf="authenticationService.getActiveRegion().showMatrix" class="form-group">
     <app-matrix
-      [(bulletin)]="bulletin"
       [(bulletinDaytimeDescription)]="bulletinDaytimeDescription"
       [(matrixInformation)]="avalancheProblemModel.matrixInformation"
       [snowpackStability]="avalancheProblemModel.matrixInformation.snowpackStability"

@@ -13,6 +13,7 @@ import { AmPmControl } from "./am-pm-control";
 import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
 import { filterFeature } from "../regions-service/filterFeature";
 import { TranslateService } from "@ngx-translate/core";
+import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
 
 declare module "leaflet" {
   interface Map {
@@ -258,26 +259,26 @@ export class MapService {
 
   // colors all micro-regions of bulletin
   // does not touch any other micro-region
-  updateAggregatedRegion(bulletin: BulletinModel) {
-    this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps.aggregatedRegions);
-    this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+  updateAggregatedRegion(mapObject: PolygonObject) {
+    this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
+    this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
   }
 
-  activeBulletin: BulletinModel;
+  activeMapObject: PolygonObject;
 
-  selectAggregatedRegion(bulletin: BulletinModel) {
-    this.activeBulletin = bulletin;
-    if (this.activeBulletin && this.activeBulletin !== undefined) {
-      this.selectAggregatedRegion0(bulletin, this.map, this.overlayMaps.aggregatedRegions);
-      this.selectAggregatedRegion0(bulletin, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+  selectAggregatedRegion(mapObject: PolygonObject) {
+    this.activeMapObject = mapObject;
+    if (this.activeMapObject && this.activeMapObject !== undefined) {
+      this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
+      this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
     }
     this.overlayMaps?.aggregatedRegions?.rerenderTiles();
     this.afternoonOverlayMaps?.aggregatedRegions?.rerenderTiles();
   }
 
-  private selectAggregatedRegion0(bulletin: BulletinModel, map: Map, layer: PmLeafletLayer) {
+  private selectAggregatedRegion0(mapObject: PolygonObject, map: Map, layer: PmLeafletLayer) {
     for (const status of [Enums.RegionStatus.suggested, Enums.RegionStatus.saved, Enums.RegionStatus.published]) {
-      for (const region of bulletin.getRegionsByStatus(status)) {
+      for (const region of mapObject.getRegionsByStatus(status)) {
         layer.paintRules[region] = {
           dataSource,
           dataLayer: "micro-regions_elevation",
@@ -288,13 +289,13 @@ export class MapService {
             const isAbove = properties.elevation === "high" || properties.elevation === "low_high";
             const dangerRating = isAbove
               ? map !== this.afternoonMap
-                ? bulletin.getForenoonDangerRatingAbove()
-                : bulletin.getAfternoonDangerRatingAbove()
+                ? mapObject.getForenoonDangerRatingAbove()
+                : mapObject.getAfternoonDangerRatingAbove()
               : map !== this.afternoonMap
-                ? bulletin.getForenoonDangerRatingBelow()
-                : bulletin.getAfternoonDangerRatingBelow();
+                ? mapObject.getForenoonDangerRatingBelow()
+                : mapObject.getAfternoonDangerRatingBelow();
             if (!dangerRating) return undefined;
-            return bulletin === this.activeBulletin
+            return mapObject === this.activeMapObject
               ? this.getActiveSelectionStyle(properties.id, dangerRating, status)
               : this.getDangerRatingStyle(properties.id, dangerRating, status);
           }),
@@ -308,11 +309,11 @@ export class MapService {
     this.selectAggregatedRegion(undefined);
   }
 
-  editAggregatedRegion(bulletin: BulletinModel) {
+  editAggregatedRegion(mapObject: PolygonObject) {
     this.map.addLayer(this.overlayMaps.editSelection);
 
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
-      for (const region of bulletin.getAllRegions()) {
+      for (const region of mapObject.getAllRegions()) {
         if (entry.feature.properties.id === region) {
           entry.feature.properties.selected = true;
           entry.setStyle(this.getEditSelectionStyle());

@@ -24,6 +24,7 @@ export interface RegionConfiguration {
   enableMediaFile: boolean;
   enableAvalancheProblemCornices: boolean;
   enableAvalancheProblemNoDistinctAvalancheProblem: boolean;
+  enableDangerSources: boolean;
   enableObservations: boolean;
   enableModelling: boolean;
   enableWeatherbox: boolean;

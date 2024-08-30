@@ -18,6 +18,7 @@ import { SimpleLayoutComponent } from "./layouts/simple-layout.component";
 import { AuthenticationService } from "./providers/authentication-service/authentication.service";
 import { UserService } from "./providers/user-service/user.service";
 import { BulletinsService } from "./providers/bulletins-service/bulletins.service";
+import { DangerSourcesService } from "./danger-sources/danger-sources.service";
 import { StatisticsService } from "./providers/statistics-service/statistics.service";
 import { RegionsService } from "./providers/regions-service/regions.service";
 import { ConstantsService } from "./providers/constants-service/constants.service";
@@ -50,6 +51,7 @@ import { ModalCheckComponent } from "./bulletins/modal-check.component";
 import { ModalPublicationStatusComponent } from "./bulletins/modal-publication-status.component";
 import { ModalPublishAllComponent } from "./bulletins/modal-publish-all.component";
 import { ModalMediaFileComponent } from "./bulletins/modal-media-file.component";
+import { ModalEditDangerSourceComponent } from "./danger-sources/modal-edit-danger-source.component";
 
 import localeDe from "@angular/common/locales/de";
 import localeIt from "@angular/common/locales/it";
@@ -101,6 +103,7 @@ registerLocaleData(localeOc, "oc");
     ModalPublicationStatusComponent,
     ModalPublishAllComponent,
     ModalMediaFileComponent,
+    ModalEditDangerSourceComponent,
     UpdateUserComponent,
     ChangePasswordComponent,
   ],
@@ -139,6 +142,7 @@ registerLocaleData(localeOc, "oc");
     BaseMapService,
     BlogService,
     BulletinsService,
+    DangerSourcesService,
     StatisticsService,
     RegionsService,
     WsRegionService,

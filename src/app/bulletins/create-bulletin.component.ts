@@ -161,7 +161,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     public copyService: CopyService,
     private mapService: MapService,
     private modalService: BsModalService,
-    private datePipe: DatePipe,
   ) {
     this.loading = false;
     this.showAfternoonMap = false;

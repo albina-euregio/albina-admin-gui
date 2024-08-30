@@ -35,14 +35,14 @@ export class MatrixInformationModel {
       this.snowpackStabilityValue = undefined;
       this.frequencyValue = undefined;
     } else {
-      this.setDangerRating(matrixInformation.getDangerRating());
-      this.dangerRatingModificator = matrixInformation.getDangerRatingModificator();
-      this.avalancheSize = matrixInformation.getAvalancheSize();
-      this.snowpackStability = matrixInformation.getSnowpackStability();
-      this.frequency = matrixInformation.getFrequency();
-      this.avalancheSizeValue = matrixInformation.getAvalancheSizeValue();
-      this.snowpackStabilityValue = matrixInformation.getSnowpackStabilityValue();
-      this.frequencyValue = matrixInformation.getFrequencyValue();
+      this.setDangerRating(matrixInformation.dangerRating);
+      this.dangerRatingModificator = matrixInformation.dangerRatingModificator;
+      this.avalancheSize = matrixInformation.avalancheSize;
+      this.snowpackStability = matrixInformation.snowpackStability;
+      this.frequency = matrixInformation.frequency;
+      this.avalancheSizeValue = matrixInformation.avalancheSizeValue;
+      this.snowpackStabilityValue = matrixInformation.snowpackStabilityValue;
+      this.frequencyValue = matrixInformation.frequencyValue;
     }
   }
 

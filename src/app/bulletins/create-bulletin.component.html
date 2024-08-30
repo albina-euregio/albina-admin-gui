@@ -622,7 +622,11 @@
       </div>
 
       <div *ngIf="!checkAvalancheProblem(bulletin)" class="region-thumb__avalanche-info">
-        <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.forenoon"></app-danger-rating-icon>
+        <app-danger-rating-icon
+          [hasElevationDependency]="bulletin.forenoon.hasElevationDependency"
+          [dangerRatingAbove]="bulletin.forenoon.dangerRatingAbove"
+          [dangerRatingBelow]="bulletin.forenoon.dangerRatingBelow"
+        ></app-danger-rating-icon>
         <!-- Avalanche problems -->
         <app-avalanche-problem-icons
           *ngIf="bulletin?.forenoon?.avalancheProblem1"
@@ -662,7 +666,11 @@
         <!-- Elevations -->
       </div>
       <div *ngIf="bulletin?.hasDaytimeDependency" class="region-thumb__avalanche-info">
-        <app-danger-rating-icon [bulletinDaytimeDescription]="bulletin.afternoon"></app-danger-rating-icon>
+        <app-danger-rating-icon
+          [hasElevationDependency]="bulletin.afternoon.hasElevationDependency"
+          [dangerRatingAbove]="bulletin.afternoon.dangerRatingAbove"
+          [dangerRatingBelow]="bulletin.afternoon.dangerRatingBelow"
+        ></app-danger-rating-icon>
         <!-- Avalanche problems -->
         <app-avalanche-problem-icons
           *ngIf="bulletin?.afternoon?.avalancheProblem1"
