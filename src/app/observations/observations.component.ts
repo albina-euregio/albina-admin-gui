@@ -45,6 +45,7 @@ import { observationFilters } from "./filter-selection-data-data";
 import { ObservationMarkerWeatherStationService } from "./observation-marker-weather-station.service";
 import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
+import Split from "split.js";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -130,6 +131,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   ngAfterViewInit() {
+    Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
     this.initMap();
   }
 

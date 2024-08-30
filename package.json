@@ -66,6 +66,7 @@
     "protomaps-leaflet": "^3.1.1",
     "rbush": "^3.0.1",
     "rxjs": "7.8.1",
+    "split.js": "^1.6.5",
     "which-polygon": "^2.2.1",
     "zod": "^3.22.4",
     "zone.js": "~0.14.7"
