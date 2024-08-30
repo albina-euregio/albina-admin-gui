@@ -1142,6 +1142,48 @@
       "TA_table_season": "temperature table (season)"
     }
   },
+  "grainShape": {
+    "PP": {
+      "code": "PP",
+      "class": "Precipitation Particles"
+    },
+    "PPgp": {
+      "code": "PPgp",
+      "class": "Graupel"
+    },
+    "DF": {
+      "code": "DF",
+      "class": "Decomposing and Fragmented precipitation particles"
+    },
+    "RG": {
+      "code": "RG",
+      "class": "Rounded Grains"
+    },
+    "FC": {
+      "code": "FC",
+      "class": "Faceted Crystals"
+    },
+    "DH": {
+      "code": "DH",
+      "class": "Depth Hoar"
+    },
+    "SH": {
+      "code": "SH",
+      "class": "Surface Hoar"
+    },
+    "MF": {
+      "code": "MF",
+      "class": "Melt Forms"
+    },
+    "MFcr": {
+      "code": "MFcr",
+      "class": "Melt-freeze crust"
+    },
+    "IF": {
+      "code": "IF",
+      "class": "Ice Formations"
+    }
+  },
   "observations": {
     "aspect": "Aspect",
     "authorName": "Author name",
