@@ -31,6 +31,7 @@ import { ConfigurationService } from "./providers/configuration-service/configur
 import { CopyService } from "./providers/copy-service/copy.service";
 import { BlogService } from "./providers/blog-service/blog.service";
 import { MediaFileService } from "./providers/media-file-service/media-file.service";
+import { UndoRedoService } from "./providers/undo-redo-service/undo-redo.service";
 
 import { AuthGuard } from "./guards/auth.guard";
 
@@ -176,6 +177,7 @@ registerLocaleData(localeOc, "oc");
     SettingsService,
     StatisticsService,
     TranslateService,
+    UndoRedoService,
     UserService,
     WsBulletinService,
     WsRegionService,

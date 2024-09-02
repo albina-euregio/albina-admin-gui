@@ -33,6 +33,7 @@ import { Subscription } from "rxjs";
 import * as Enums from "../enums/enums";
 import { ServerModel } from "app/models/server.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
+import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -139,9 +140,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public checkBulletinsErrorModalRef: BsModalRef;
   @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
 
-  public undoStack: Record<string, string[]> = {};
-  public redoStack: Record<string, string[]> = {};
-
   internalBulletinsSubscription!: Subscription;
   externalBulletinsSubscription!: Subscription;
 
@@ -164,6 +162,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     public copyService: CopyService,
     private mapService: MapService,
     private modalService: BsModalService,
+    private undoRedoService: UndoRedoService,
   ) {
     this.loading = false;
     this.showAfternoonMap = false;
@@ -909,16 +908,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private undoRedoActiveBulletin(type: "undo" | "redo") {
     const activeId = this.activeBulletin?.getId();
-    if (!activeId) return;
-    if (type === "undo" && this.undoStack[activeId].length > 1) {
-      this.redoStack[activeId].push(this.undoStack[activeId].pop());
-    } else if (type === "redo" && this.redoStack[activeId].length > 0 && this.undoStack[activeId].length > 0) {
-      this.undoStack[activeId].push(this.redoStack[activeId].pop());
-    } else {
-      return;
-    }
-    const jsonBulletin = JSON.parse(this.undoStack[activeId].at(-1));
-    const bulletin = BulletinModel.createFromJson(jsonBulletin);
+    const bulletin = this.undoRedoService.undoRedoActiveBulletin(type, activeId);
     const index = this.internBulletinsList.indexOf(this.activeBulletin);
     console.info(type, activeId, this.activeBulletin, bulletin);
     this.activeBulletin = bulletin;
@@ -933,13 +923,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
-      this.undoStack[bulletin.getId()] ??= [];
-      this.redoStack[bulletin.getId()] ??= [];
-      // if there is no entry or only one entry on the stack, then the user did not push any undo-actions
-      if (this.undoStack[bulletin.id].length <= 1) {
-        this.undoStack[bulletin.getId()].push(JSON.stringify(jsonBulletin));
-      }
-
+      this.undoRedoService.initUndoRedoStacksFromServer(bulletin);
       if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
         // do not update active bulletin (this is currently edited) except if it is disabled
         if (this.isDisabled()) {
@@ -1480,8 +1464,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.setValidFrom(this.bulletinsService.getActiveDate()[0]);
     bulletin.setValidUntil(this.bulletinsService.getActiveDate()[1]);
     if (writeUndoStack) {
-      this.undoStack[bulletin.getId()] ??= [];
-      this.undoStack[bulletin.getId()].push(JSON.stringify(bulletin.toJson()));
+      this.undoRedoService.pushToUndoStack(bulletin);
     }
     this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
