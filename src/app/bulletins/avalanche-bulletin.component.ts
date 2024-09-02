@@ -22,6 +22,7 @@ import * as Enums from "../enums/enums";
 import { LangTexts } from "../models/text.model";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
+import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -42,6 +43,7 @@ export class AvalancheBulletinComponent {
   @Output() copyBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() toggleBulletinSidebarEvent = new EventEmitter<void>();
+  @Output() undoRedoEvent = new EventEmitter<"undo" | "redo">();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -83,6 +85,7 @@ export class AvalancheBulletinComponent {
     public regionsService: RegionsService,
     public copyService: CopyService,
     public translateService: TranslateService,
+    public undoRedoService: UndoRedoService,
   ) {
     this.updateBulletinOnServerEventDebounce
       .pipe(debounceTime(1000))

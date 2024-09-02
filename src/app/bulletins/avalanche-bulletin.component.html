@@ -108,6 +108,24 @@
       >
         <i class="ph ph-trash"></i>
       </button>
+      <button
+        *ngIf="!editRegions"
+        (click)="undoRedoEvent.emit('undo')"
+        [disabled]="!undoRedoService.isEnabled('undo', bulletin.getId())"
+        type="button"
+        class="btn btn-sm btn-icon btn-outline-primary"
+      >
+        <i class="ph ph-arrow-counter-clockwise"></i>
+      </button>
+      <button
+        *ngIf="!editRegions"
+        (click)="undoRedoEvent.emit('redo')"
+        [disabled]="!undoRedoService.isEnabled('redo', bulletin.getId())"
+        type="button"
+        class="btn btn-sm btn-icon btn-outline-primary"
+      >
+        <i class="ph ph-arrow-clockwise"></i>
+      </button>
     </div>
   </div>
 

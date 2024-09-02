@@ -906,7 +906,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
-  private undoRedoActiveBulletin(type: "undo" | "redo") {
+  undoRedoActiveBulletin(type: "undo" | "redo") {
     const activeId = this.activeBulletin?.getId();
     const bulletin = this.undoRedoService.undoRedoActiveBulletin(type, activeId);
     const index = this.internBulletinsList.indexOf(this.activeBulletin);
