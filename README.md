@@ -4,7 +4,7 @@ https://admin.avalanche.report/ – A frontend to enter avalanche bulletins.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.  
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ```sh
 nvm install
@@ -12,6 +12,8 @@ corepack enable
 yarn install
 yarn run start-dev
 ```
+
+If you encounter Yarn Plug'n'Play errors, make sure there is no `.pnp.cjs` in any folder that could be picked up by yarn (e.g. in your home directory).
 
 ## Code scaffolding
 
