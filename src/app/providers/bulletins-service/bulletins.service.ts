@@ -36,9 +36,7 @@ export class BulletinsService {
     private settingsService: SettingsService,
     private userService: UserService,
     private wsBulletinService: WsBulletinService,
-  ) {
-    this.init();
-  }
+  ) {}
 
   init({ days } = { days: 10 }) {
     this.dates = [];
