@@ -28,6 +28,7 @@ export class UndoRedoService {
   }
 
   pushToUndoStack(bulletin: BulletinModel) {
+    this.redoStack[bulletin.getId()] = [];
     this.undoStack[bulletin.getId()] ??= [];
     this.undoStack[bulletin.getId()].push(JSON.stringify(bulletin.toJson()));
   }
@@ -35,9 +36,9 @@ export class UndoRedoService {
   initUndoRedoStacksFromServer(bulletin: BulletinModel) {
     this.undoStack[bulletin.getId()] ??= [];
     this.redoStack[bulletin.getId()] ??= [];
-    // if there is no entry or only one entry on the stack, then the user did not push any undo-actions
-    if (this.undoStack[bulletin.getId()].length <= 1) {
-      this.undoStack[bulletin.getId()].pop();
+    // If the user did not perform any actions of their own, and the state changes on the server, the undo stack should be re-initialized with the state from the server.
+    // On the other hand: if the undo stack has length <= 1 because the user is in the middle of some undo/redo, the stacks should not be overwritten.
+    if (this.undoStack[bulletin.getId()].length <= 1 && this.redoStack[bulletin.getId()].length === 0) {
       this.pushToUndoStack(bulletin);
     }
   }
