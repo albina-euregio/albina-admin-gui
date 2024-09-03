@@ -30,6 +30,10 @@ export class UndoRedoService {
   pushToUndoStack(bulletin: BulletinModel) {
     this.redoStack[bulletin.getId()] = [];
     this.undoStack[bulletin.getId()] ??= [];
+    // cap undo stack at 100 entries
+    if (this.undoStack[bulletin.getId()].length >= 100) {
+      this.undoStack[bulletin.getId()].shift();
+    }
     this.undoStack[bulletin.getId()].push(JSON.stringify(bulletin.toJson()));
   }
 
