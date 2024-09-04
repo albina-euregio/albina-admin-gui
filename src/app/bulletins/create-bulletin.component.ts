@@ -1602,10 +1602,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     } else if (event.keyCode === 27 && (this.copyService.isCopyTextcat() || this.copyService.isCopyBulletin())) {
       this.copyService.resetCopyTextcat();
       this.copyService.resetCopyBulletin();
-    } else if (event.ctrlKey && event.key === "z") {
-      this.undoRedoActiveBulletin("undo");
-    } else if (event.ctrlKey && event.key === "y") {
-      this.undoRedoActiveBulletin("redo");
     }
   }
 
