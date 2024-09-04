@@ -230,6 +230,7 @@
         "uploadJsonBulletin": "Upload bulletin in JSON format",
         "downloadJsonBulletin": "Download bulletin in JSON format",
         "daytimeDependency": "Daytime dependency",
+        "treeline": "Treeline",
         "tendency": {
           "decreasing": "Avalanche danger decreases",
           "steady": "Avalanche danger stays the same",
