@@ -26,9 +26,9 @@ export class UndoRedoService {
 
   isEnabled(type: "undo" | "redo", activeBulletinID: string) {
     if (type === "undo") {
-      return this.undoStack[activeBulletinID].length > 1;
+      return this.undoStack[activeBulletinID]?.length > 1;
     } else if (type === "redo") {
-      return this.undoStack[activeBulletinID].length > 0 && this.redoStack[activeBulletinID]?.length > 0;
+      return this.undoStack[activeBulletinID]?.length > 0 && this.redoStack[activeBulletinID]?.length > 0;
     } else return false;
   }
 
