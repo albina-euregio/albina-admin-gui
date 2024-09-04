@@ -1,7 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, HostListener } from "@angular/core";
 
-import { debounceTime, Subject } from "rxjs";
-
 import { environment } from "../../environments/environment";
 
 // models
@@ -35,7 +33,6 @@ export class AvalancheBulletinComponent {
   @Input() isBulletinSidebarVisible: boolean;
   @Input() isComparedBulletin: boolean;
 
-  private readonly updateBulletinOnServerEventDebounce = new Subject<BulletinModel>();
   @Output() updateBulletinOnServerEvent = new EventEmitter<BulletinModel>();
   @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
   @Output() deleteBulletinEvent = new EventEmitter<BulletinModel>();
@@ -86,14 +83,10 @@ export class AvalancheBulletinComponent {
     public copyService: CopyService,
     public translateService: TranslateService,
     public undoRedoService: UndoRedoService,
-  ) {
-    this.updateBulletinOnServerEventDebounce
-      .pipe(debounceTime(1000))
-      .subscribe((bulletin) => this.updateBulletinOnServerEvent.emit(bulletin));
-  }
+  ) {}
 
   updateBulletinOnServer() {
-    this.updateBulletinOnServerEventDebounce.next(this.bulletin);
+    this.updateBulletinOnServerEvent.next(this.bulletin);
   }
 
   copyBulletin(event) {

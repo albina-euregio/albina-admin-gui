@@ -1,8 +1,7 @@
 import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { DatePipe } from "@angular/common";
 
-import { map, timer } from "rxjs";
+import { debounceTime, map, Subject, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
@@ -143,6 +142,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   internalBulletinsSubscription!: Subscription;
   externalBulletinsSubscription!: Subscription;
 
+  private updateBulletinOnServerEventDebounce = new Subject<{
+    bulletin: BulletinModel;
+    checkErrors: boolean;
+    writeUndoStack: boolean;
+  }>();
+
   public config = {
     animated: false,
     keyboard: true,
@@ -192,6 +197,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe((params) => {
       this.bulletinsService.setIsReadOnly(params.readOnly ? params.readOnly.toLocaleLowerCase() === "true" : false);
     });
+
+    this.updateBulletinOnServerEventDebounce
+      .pipe(debounceTime(1000))
+      .subscribe(({ bulletin, checkErrors, writeUndoStack }) =>
+        this.updateBulletinOnServerNow(bulletin, checkErrors, writeUndoStack),
+      );
   }
 
   @HostListener("window:resize", ["$event"])
@@ -1459,6 +1470,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   updateBulletinOnServer(bulletin: BulletinModel, checkErrors: boolean = true, writeUndoStack: boolean = true) {
+    this.updateBulletinOnServerEventDebounce.next({ bulletin, checkErrors, writeUndoStack });
+  }
+
+  private updateBulletinOnServerNow(
+    bulletin: BulletinModel,
+    checkErrors: boolean = true,
+    writeUndoStack: boolean = true,
+  ) {
     if (this.isWriteDisabled()) return;
     bulletin.setValidFrom(this.bulletinsService.getActiveDate()[0]);
     bulletin.setValidUntil(this.bulletinsService.getActiveDate()[1]);
