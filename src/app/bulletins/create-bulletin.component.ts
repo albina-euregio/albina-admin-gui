@@ -899,7 +899,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.showExternRegionsMap.set(server.getApiUrl(), false);
     }
 
-    if (this.activeBulletin && this.activeBulletin !== undefined) {
+    if (this.activeBulletin) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
   }
@@ -977,7 +977,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     if (this.editRegions) {
       this.mapService.showEditSelection();
-    } else if (this.activeBulletin && this.activeBulletin !== undefined) {
+    } else if (this.activeBulletin) {
       this.mapService.selectAggregatedRegion(this.activeBulletin);
     }
   }
@@ -1442,7 +1442,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.setValidUntil(this.bulletinsService.getActiveDate()[1]);
     this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
-        if (this.activeBulletin && this.activeBulletin != undefined && this.activeBulletin.getId() == undefined) {
+        if (this.activeBulletin && this.activeBulletin.getId() == undefined) {
           this.activeBulletin.setId(this.getNewId(data, regionId));
         }
         this.mapService.deselectAggregatedRegion();
@@ -1553,7 +1553,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.delBulletin(bulletin);
       this.activeBulletin = undefined;
     } else {
-      if (this.activeBulletin && this.activeBulletin !== undefined) {
+      if (this.activeBulletin) {
         this.mapService.selectAggregatedRegion(this.activeBulletin);
       }
     }

@@ -268,7 +268,7 @@ export class MapService {
 
   selectAggregatedRegion(mapObject: PolygonObject) {
     this.activeMapObject = mapObject;
-    if (this.activeMapObject && this.activeMapObject !== undefined) {
+    if (this.activeMapObject) {
       this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
       this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
     }

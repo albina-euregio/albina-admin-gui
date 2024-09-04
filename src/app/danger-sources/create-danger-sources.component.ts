@@ -392,7 +392,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     const date = this.dangerSourcesService.getNextDate();
     const regions = [this.authenticationService.getActiveRegionId()];
 
-    if (dangerSourceId && dangerSourceId !== undefined) {
+    if (dangerSourceId) {
       this.dangerSourcesService.loadDangerSourceVariants(date, regions, dangerSourceId).subscribe(
         (variants) => {
           // delete own regions of danger source
@@ -617,7 +617,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
     if (this.editRegions) {
       this.mapService.showEditSelection();
-    } else if (this.activeVariant && this.activeVariant !== undefined) {
+    } else if (this.activeVariant) {
       this.mapService.selectAggregatedRegion(this.activeVariant);
     }
   }
@@ -901,7 +901,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
       this.activeVariant = undefined;
     } else {
-      if (this.activeVariant && this.activeVariant !== undefined) {
+      if (this.activeVariant) {
         this.mapService.selectAggregatedRegion(this.activeVariant);
       }
     }

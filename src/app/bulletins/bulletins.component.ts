@@ -137,7 +137,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   isOwnRegion(region) {
     const userRegion = this.authenticationService.getActiveRegionId();
-    if (userRegion && userRegion !== undefined) {
+    if (userRegion) {
       return this.authenticationService.getActiveRegionId().startsWith(region);
     } else {
       return false;

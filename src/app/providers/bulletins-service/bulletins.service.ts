@@ -510,7 +510,7 @@ export class BulletinsService {
 
   sendEmail(date: [Date, Date], region: string, language: string) {
     let url: string;
-    if (language && language !== "") {
+    if (language) {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/email?" +
@@ -539,7 +539,7 @@ export class BulletinsService {
 
   sendTestEmail(date: [Date, Date], region: string, language: string) {
     let url: string;
-    if (language && language !== "") {
+    if (language) {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/email/test?" +
@@ -568,7 +568,7 @@ export class BulletinsService {
 
   triggerTelegramChannel(date: [Date, Date], region: string, language: string) {
     let url: string;
-    if (language && language !== "") {
+    if (language) {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/telegram?" +
@@ -597,7 +597,7 @@ export class BulletinsService {
 
   triggerTestTelegramChannel(date: [Date, Date], region: string, language: string) {
     let url: string;
-    if (language && language !== "") {
+    if (language) {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/telegram/test?" +
@@ -626,7 +626,7 @@ export class BulletinsService {
 
   triggerPushNotifications(date: [Date, Date], region: string, language: string) {
     let url: string;
-    if (language && language !== "") {
+    if (language) {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/push?" +
@@ -655,7 +655,7 @@ export class BulletinsService {
 
   triggerTestPushNotifications(date: [Date, Date], region: string, language: string) {
     let url: string;
-    if (language && language !== "") {
+    if (language) {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/push/test?" +

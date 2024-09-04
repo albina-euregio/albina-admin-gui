@@ -157,16 +157,16 @@ export class AuthorModel {
   toJson() {
     const json = Object();
 
-    if (this.name && this.name !== undefined && this.name !== "") {
+    if (this.name) {
       json["name"] = this.name;
     }
-    if (this.email && this.email !== undefined && this.email !== "") {
+    if (this.email) {
       json["email"] = this.email;
     }
-    if (this.phone && this.phone !== undefined && this.phone !== "") {
+    if (this.phone) {
       json["phone"] = this.phone;
     }
-    if (this.organization && this.organization !== undefined && this.organization !== "") {
+    if (this.organization) {
       json["organization"] = this.organization;
     }
     if (this.regions && this.regions.length > 0) {
@@ -181,7 +181,7 @@ export class AuthorModel {
       [...new Set(this.roles)].forEach((role) => roles.push(role));
       json["roles"] = roles;
     }
-    if (this.languageCode && this.languageCode !== undefined && this.languageCode !== "") {
+    if (this.languageCode) {
       json["languageCode"] = this.languageCode;
     }
 
