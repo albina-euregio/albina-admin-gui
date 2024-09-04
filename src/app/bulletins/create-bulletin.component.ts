@@ -1,10 +1,11 @@
 import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { debounceTime, map, Subject, timer } from "rxjs";
+import { map, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
+import { debounce } from "lodash";
 
 // models
 import { BulletinModel } from "../models/bulletin.model";
@@ -142,17 +143,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   internalBulletinsSubscription!: Subscription;
   externalBulletinsSubscription!: Subscription;
 
-  private updateBulletinOnServerEventDebounce = new Subject<{
-    bulletin: BulletinModel;
-    checkErrors: boolean;
-    writeUndoStack: boolean;
-  }>();
-
   public config = {
     animated: false,
     keyboard: true,
     class: "modal-md",
   };
+
+  updateBulletinOnServer = debounce(this.updateBulletinOnServerNow, 1000);
 
   constructor(
     private router: Router,
@@ -197,12 +194,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe((params) => {
       this.bulletinsService.setIsReadOnly(params.readOnly ? params.readOnly.toLocaleLowerCase() === "true" : false);
     });
-
-    this.updateBulletinOnServerEventDebounce
-      .pipe(debounceTime(1000))
-      .subscribe(({ bulletin, checkErrors, writeUndoStack }) =>
-        this.updateBulletinOnServerNow(bulletin, checkErrors, writeUndoStack),
-      );
   }
 
   @HostListener("window:resize", ["$event"])
@@ -918,6 +909,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   undoRedoActiveBulletin(type: "undo" | "redo") {
+    this.updateBulletinOnServer.flush();
     const activeId = this.activeBulletin?.getId();
     const bulletin = this.undoRedoService.undoRedoActiveBulletin(type, activeId);
     const index = this.internBulletinsList.indexOf(this.activeBulletin);
@@ -1467,10 +1459,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     for (const bulletin of this.saveError.values()) {
       this.updateBulletinOnServer(bulletin, false);
     }
-  }
-
-  updateBulletinOnServer(bulletin: BulletinModel, checkErrors: boolean = true, writeUndoStack: boolean = true) {
-    this.updateBulletinOnServerEventDebounce.next({ bulletin, checkErrors, writeUndoStack });
   }
 
   private updateBulletinOnServerNow(
