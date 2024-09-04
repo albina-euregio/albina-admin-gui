@@ -15,6 +15,11 @@ export class UndoRedoService {
     } else {
       return undefined;
     }
+    console.info(
+      "performing " + type,
+      "undo stack size: " + this.undoStack[activeBulletinID].length,
+      "redo stack size: " + this.redoStack[activeBulletinID].length,
+    );
     const jsonBulletin = JSON.parse(this.undoStack[activeBulletinID].at(-1));
     return BulletinModel.createFromJson(jsonBulletin);
   }
@@ -35,6 +40,10 @@ export class UndoRedoService {
       this.undoStack[bulletin.getId()].shift();
     }
     this.undoStack[bulletin.getId()].push(JSON.stringify(bulletin.toJson()));
+    console.info(
+      "undo stack size: " + this.undoStack[bulletin.getId()].length,
+      "redo stack size: " + this.redoStack[bulletin.getId()].length,
+    );
   }
 
   initUndoRedoStacksFromServer(bulletin: BulletinModel) {

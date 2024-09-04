@@ -910,7 +910,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const activeId = this.activeBulletin?.getId();
     const bulletin = this.undoRedoService.undoRedoActiveBulletin(type, activeId);
     const index = this.internBulletinsList.indexOf(this.activeBulletin);
-    console.info(type, activeId, this.activeBulletin, bulletin);
     this.activeBulletin = bulletin;
     this.internBulletinsList.splice(index, 1, bulletin);
     this.mapService.updateAggregatedRegion(bulletin);
