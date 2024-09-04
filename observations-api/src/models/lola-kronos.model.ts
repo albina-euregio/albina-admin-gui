@@ -305,6 +305,20 @@ export interface Temperature {
   position: number;
 }
 
+export type LolaEntity =
+  | {
+      entityId: "651ea4bfc7740c4fbb635188";
+      entityName: "SNOBS";
+      entityShortName: "";
+      entityIcon: "noIcon";
+    }
+  | {
+      entityId: string;
+      entityName: string;
+      entityShortName: string;
+      entityIcon: string;
+    };
+
 export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): GenericObservation[] {
   return [
     ...kronos.lolaAvalancheEvent.map((obs) =>
@@ -349,7 +363,7 @@ export function convertLoLaToGeneric(
     $id: obs.uuId,
     $data: obs,
     $externalURL: urlPrefix + obs.uuId + "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN,
-    $source: obs.lolaApplication === "SNOBS" ? ObservationSource.Snobs : ObservationSource.LoLaKronos,
+    $source: ObservationSource.LoLaKronos,
     $type,
     stability:
       $type === ObservationType.Avalanche
