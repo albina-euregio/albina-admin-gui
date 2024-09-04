@@ -166,6 +166,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private undoRedoService: UndoRedoService,
   ) {
+    if (!this.bulletinsService.dates?.length) {
+      this.bulletinsService.init();
+    }
     this.loading = false;
     this.showAfternoonMap = false;
     this.showForeignRegions = true;
