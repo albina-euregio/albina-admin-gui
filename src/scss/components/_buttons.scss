@@ -33,6 +33,7 @@ $icon-button-size-sm: $space-6;
     &:disabled {
         background-color: $secondary;
         border-color: $secondary;
+        filter: grayscale(50%);
     }
 }
 
@@ -44,6 +45,10 @@ $icon-button-size-sm: $space-6;
         color: $primary !important;
         background: $primary-pale;
     }
+    &:disabled {
+        filter: grayscale(50%);
+        opacity: 0.4;
+    }
 }
 
 .btn-outline-secondary {
@@ -54,6 +59,7 @@ $icon-button-size-sm: $space-6;
         background-color: white;
     }
     &:disabled {
+        filter: grayscale(50%);
         opacity: 0.4;
     }
 }
