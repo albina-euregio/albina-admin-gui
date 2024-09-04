@@ -215,6 +215,8 @@
         "edit": "Edit micro regions",
         "copy": "Copy region",
         "delete": "Delete region",
+        "undo": "Undo last change in region",
+        "redo": "Redo change in region",
         "createRegion": "Create region",
         "cancel": "Cancel",
         "acceptSuggestion": "Accept suggested regions",

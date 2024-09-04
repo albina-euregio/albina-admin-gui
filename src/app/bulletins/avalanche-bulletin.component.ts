@@ -1,7 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, HostListener } from "@angular/core";
 
-import { debounceTime, Subject } from "rxjs";
-
 import { environment } from "../../environments/environment";
 
 // models
@@ -22,6 +20,7 @@ import * as Enums from "../enums/enums";
 import { LangTexts } from "../models/text.model";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { TranslateService } from "@ngx-translate/core";
+import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -34,7 +33,6 @@ export class AvalancheBulletinComponent {
   @Input() isBulletinSidebarVisible: boolean;
   @Input() isComparedBulletin: boolean;
 
-  private readonly updateBulletinOnServerEventDebounce = new Subject<BulletinModel>();
   @Output() updateBulletinOnServerEvent = new EventEmitter<BulletinModel>();
   @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
   @Output() deleteBulletinEvent = new EventEmitter<BulletinModel>();
@@ -42,6 +40,7 @@ export class AvalancheBulletinComponent {
   @Output() copyBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
   @Output() toggleBulletinSidebarEvent = new EventEmitter<void>();
+  @Output() undoRedoEvent = new EventEmitter<"undo" | "redo">();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -83,14 +82,11 @@ export class AvalancheBulletinComponent {
     public regionsService: RegionsService,
     public copyService: CopyService,
     public translateService: TranslateService,
-  ) {
-    this.updateBulletinOnServerEventDebounce
-      .pipe(debounceTime(1000))
-      .subscribe((bulletin) => this.updateBulletinOnServerEvent.emit(bulletin));
-  }
+    public undoRedoService: UndoRedoService,
+  ) {}
 
   updateBulletinOnServer() {
-    this.updateBulletinOnServerEventDebounce.next(this.bulletin);
+    this.updateBulletinOnServerEvent.next(this.bulletin);
   }
 
   copyBulletin(event) {
@@ -405,6 +401,15 @@ export class AvalancheBulletinComponent {
 
   toggleBulletinSidebar() {
     this.toggleBulletinSidebarEvent.emit();
+  }
+
+  @HostListener("document:keydown", ["$event"])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === "z") {
+      this.undoRedoEvent.emit("undo");
+    } else if (event.ctrlKey && event.key === "y") {
+      this.undoRedoEvent.emit("redo");
+    }
   }
 }
 

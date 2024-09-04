@@ -1,11 +1,11 @@
 import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { DatePipe } from "@angular/common";
 
 import { map, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
+import { debounce } from "lodash";
 
 // models
 import { BulletinModel } from "../models/bulletin.model";
@@ -33,6 +33,7 @@ import { Subscription } from "rxjs";
 import * as Enums from "../enums/enums";
 import { ServerModel } from "app/models/server.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
+import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -148,6 +149,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     class: "modal-md",
   };
 
+  updateBulletinOnServer = debounce(this.updateBulletinOnServerNow, 1000);
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -161,6 +164,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     public copyService: CopyService,
     private mapService: MapService,
     private modalService: BsModalService,
+    private undoRedoService: UndoRedoService,
   ) {
     this.loading = false;
     this.showAfternoonMap = false;
@@ -904,15 +908,26 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
+  undoRedoActiveBulletin(type: "undo" | "redo") {
+    this.updateBulletinOnServer.flush();
+    const activeId = this.activeBulletin?.getId();
+    const bulletin = this.undoRedoService.undoRedoActiveBulletin(type, activeId);
+    const index = this.internBulletinsList.indexOf(this.activeBulletin);
+    this.activeBulletin = bulletin;
+    this.internBulletinsList.splice(index, 1, bulletin);
+    this.mapService.updateAggregatedRegion(bulletin);
+    this.updateBulletinOnServer(bulletin, true, false);
+  }
+
   private addInternalBulletins(response) {
     let hasDaytimeDependency = false;
 
     const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
-
+      this.undoRedoService.initUndoRedoStacksFromServer(bulletin);
       if (this.activeBulletin && this.activeBulletin.getId() === bulletin.getId()) {
-        // do not update active bulletin (this is currently edited) except it is disabled
+        // do not update active bulletin (this is currently edited) except if it is disabled
         if (this.isDisabled()) {
           this.activeBulletin = bulletin;
         } else {
@@ -1446,10 +1461,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateBulletinOnServer(bulletin: BulletinModel, checkErrors: boolean = true) {
+  private updateBulletinOnServerNow(
+    bulletin: BulletinModel,
+    checkErrors: boolean = true,
+    writeUndoStack: boolean = true,
+  ) {
     if (this.isWriteDisabled()) return;
     bulletin.setValidFrom(this.bulletinsService.getActiveDate()[0]);
     bulletin.setValidUntil(this.bulletinsService.getActiveDate()[1]);
+    if (writeUndoStack) {
+      this.undoRedoService.pushToUndoStack(bulletin);
+    }
     this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         this.addInternalBulletins(data);
