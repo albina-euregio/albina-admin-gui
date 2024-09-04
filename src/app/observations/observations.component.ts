@@ -103,7 +103,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     private markerWebcamService: ObservationMarkerWebcamService<GenericObservation>,
     private markerObserverService: ObservationMarkerObserverService<GenericObservation>,
     public translateService: TranslateService,
-    private observationsService: AlbinaObservationsService,
+    protected observationsService: AlbinaObservationsService,
     private sanitizer: DomSanitizer,
     private regionsService: RegionsService,
     public mapService: BaseMapService,

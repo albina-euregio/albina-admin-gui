@@ -9,6 +9,7 @@ import { map, mergeAll } from "rxjs/operators";
 import { ObservationFilterService } from "./observation-filter.service";
 import { environment } from "../../environments/environment";
 import { formatDate } from "@angular/common";
+import { saveAs } from "file-saver";
 
 @Injectable()
 export class AlbinaObservationsService {
@@ -99,6 +100,29 @@ export class AlbinaObservationsService {
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers };
     await this.http.delete(url, options).toPromise();
+  }
+
+  getStatistics() {
+    if (!this.filter.startDate || !this.filter.endDate) {
+      return;
+    }
+    const url =
+      this.constantsService.getServerUrl() +
+      "observations/export?" +
+      this.constantsService
+        .createSearchParams([
+          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(this.filter.startDate)],
+          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(this.filter.endDate)],
+        ])
+        .toString();
+    const headers = this.authenticationService.newAuthHeader("text/csv");
+    this.http.get(url, { headers: headers, responseType: "blob" }).subscribe((blob) => {
+      const startDate = this.constantsService.getISODateString(this.filter.startDate);
+      const endDate = this.constantsService.getISODateString(this.filter.endDate);
+      const filename = `observations_${startDate}_${endDate}.csv`;
+      saveAs(blob, filename);
+      console.log("Observations loaded.");
+    });
   }
 }
 

@@ -113,6 +113,17 @@
             <div class="global-bar-item global-bar-item-load">
               <button
                 type="button"
+                (click)="observationsService.getStatistics()"
+                class="btn btn-bare"
+                title="{{ 'menu.statistics' | translate }}"
+              >
+                <i class="ph ph-trend-up"></i>
+              </button>
+            </div>
+
+            <div class="global-bar-item global-bar-item-load">
+              <button
+                type="button"
                 class="btn btn-bare"
                 (click)="toggleFilters()"
                 title="{{ 'admin.observations.toggleFilterBar' | translate }}"
