@@ -112,6 +112,8 @@
         *ngIf="!editRegions"
         (click)="undoRedoEvent.emit('undo')"
         [disabled]="!undoRedoService.isEnabled('undo', bulletin.getId())"
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.undo' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
       >
@@ -121,6 +123,8 @@
         *ngIf="!editRegions"
         (click)="undoRedoEvent.emit('redo')"
         [disabled]="!undoRedoService.isEnabled('redo', bulletin.getId())"
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.redo' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
       >
