@@ -6,7 +6,7 @@
   </div>
   <div type="button" class="form-group row mb-3">
     <div class="col-md-6">
-      <button (click)="createUser($event)" class="btn btn-sm btn-primary px-3">
+      <button (click)="createUser()" class="btn btn-sm btn-primary px-3">
         <i class="ph ph-plus"></i> {{ "admin.users.button.create" | translate }}
       </button>
     </div>
@@ -42,7 +42,7 @@
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            (click)="editUser($event, user, true)"
+            (click)="editUser(user)"
             data-toggle="tooltip"
             title="{{ 'admin.users.tooltip.edit' | translate }}"
           >
@@ -53,7 +53,7 @@
           <button
             type="button"
             class="btn btn-primary btn-sm"
-            (click)="changePassword($event, user)"
+            (click)="changePassword(user)"
             data-toggle="tooltip"
             title="{{ 'admin.users.tooltip.changePassword' | translate }}"
           >
@@ -64,7 +64,7 @@
           <button
             type="button"
             class="btn btn-danger btn-sm"
-            (click)="deleteUser($event, user)"
+            (click)="deleteUser(user)"
             data-toggle="tooltip"
             title="{{ 'admin.users.tooltip.delete' | translate }}"
           >

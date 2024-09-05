@@ -223,7 +223,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observationTableComponent.newObservation();
   }
 
-  selectParameter(parameter: WeatherStationParameter) {
+  selectParameter(parameter0: keyof typeof WeatherStationParameter) {
+    const parameter = WeatherStationParameter[parameter0];
     this.markerWeatherStationService.weatherStationLabel === parameter
       ? (this.markerWeatherStationService.weatherStationLabel = undefined)
       : (this.markerWeatherStationService.weatherStationLabel = parameter);

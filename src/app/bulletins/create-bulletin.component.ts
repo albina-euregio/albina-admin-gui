@@ -159,7 +159,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     public authenticationService: AuthenticationService,
     public translateService: TranslateService,
     private localStorageService: LocalStorageService,
-    private constantsService: ConstantsService,
+    protected constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
     private mapService: MapService,
@@ -539,7 +539,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  showPublishAllButton(date: [Date, Date]) {
+  showPublishAllButton() {
     return (
       !this.bulletinsService.getIsReadOnly() &&
       !this.publishing &&
@@ -1145,7 +1145,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return error;
   }
 
-  private checkAvalancheProblem(bulletin: BulletinModel) {
+  protected checkAvalancheProblem(bulletin: BulletinModel) {
     if (bulletin.forenoon) {
       if (bulletin.forenoon.avalancheProblem1) {
         if (

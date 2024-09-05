@@ -89,7 +89,7 @@ export class AvalancheBulletinComponent {
     this.updateBulletinOnServerEvent.next(this.bulletin);
   }
 
-  copyBulletin(event) {
+  copyBulletin() {
     this.copyBulletinEvent.emit(this.bulletin);
   }
 
@@ -180,7 +180,7 @@ export class AvalancheBulletinComponent {
     }
   }
 
-  acceptSuggestions(event) {
+  acceptSuggestions(event: Event) {
     event.stopPropagation();
     const suggested = new Array<string>();
     for (const region of this.bulletin.getSuggestedRegions()) {
@@ -196,7 +196,7 @@ export class AvalancheBulletinComponent {
     this.updateBulletinOnServer();
   }
 
-  rejectSuggestions(event) {
+  rejectSuggestions(event: Event) {
     event.stopPropagation();
     const suggested = new Array<string>();
     for (const region of this.bulletin.getSuggestedRegions()) {
@@ -265,7 +265,8 @@ export class AvalancheBulletinComponent {
   }
 
   @HostListener("window:message", ["$event"])
-  getText(e: MessageEvent) {
+  getText(e0: Event) {
+    const e = e0 as MessageEvent;
     e.preventDefault();
     if (
       e.data.type !== "webpackInvalid" &&

@@ -74,25 +74,25 @@ export class ObservationEditorComponent {
     }, 0);
   }
 
-  setEventDate(event: InputEvent) {
+  setEventDate(event: Event) {
     const date = (event.target as HTMLInputElement).value;
     const time = this.getTime(this.observation.eventDate);
     this.observation.eventDate = `${date}T${time}`;
   }
 
-  setReportDate(event: InputEvent) {
+  setReportDate(event: Event) {
     const date = (event.target as HTMLInputElement).value;
     const time = this.getTime(this.observation.reportDate);
     this.observation.reportDate = `${date}T${time}`;
   }
 
-  setEventTime(event: InputEvent) {
+  setEventTime(event: Event) {
     const date = this.getDate(this.observation.eventDate);
     const time = (event.target as HTMLInputElement).value;
     this.observation.eventDate = `${date}T${time}`;
   }
 
-  setReportTime(event: InputEvent) {
+  setReportTime(event: Event) {
     const date = this.getDate(this.observation.reportDate);
     const time = (event.target as HTMLInputElement).value;
     this.observation.reportDate = `${date}T${time}`;

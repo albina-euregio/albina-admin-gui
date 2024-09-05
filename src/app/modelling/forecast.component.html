@@ -21,7 +21,7 @@
                       <input
                         [(ngModel)]="selectedSources[source.id]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="onSourcesDropdownSelect($event)"
+                        (change)="onSourcesDropdownSelect()"
                         type="checkbox"
                         class="form-check-input"
                       />
@@ -49,7 +49,7 @@
                       <input
                         [(ngModel)]="selectedRegions[region.id]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="onRegionsDropdownSelect($event)"
+                        (change)="onRegionsDropdownSelect()"
                         type="checkbox"
                         class="form-check-input"
                       />
@@ -115,7 +115,7 @@
         class="custom-select"
         style="max-width: 70vw"
         [(ngModel)]="qfa.file.filename"
-        (change)="setQfa($event.target.value)"
+        (change)="setQfa(qfa.file.filename)"
       >
         <option *ngFor="let file of files[selectedCity]" [value]="file.filename">
           {{ file.date }} {{ file.city }}

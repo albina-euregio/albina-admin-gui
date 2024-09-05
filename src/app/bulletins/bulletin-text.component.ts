@@ -25,8 +25,8 @@ export class BulletinTextComponent {
   modalRef: BsModalRef;
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private constantsService: ConstantsService,
+    protected authenticationService: AuthenticationService,
+    protected constantsService: ConstantsService,
     private modalService: BsModalService,
     public copyService: CopyService,
     public translateService: TranslateService,
@@ -101,7 +101,7 @@ export class BulletinTextComponent {
     });
   }
 
-  loadExampleText(avalancheProblem: Enums.AvalancheProblem) {
+  loadExampleText(avalancheProblem: keyof typeof Enums.AvalancheProblem) {
     const textcat = this.constantsService[this.bulletinTextcatKey]?.[avalancheProblem];
     if (!textcat) return;
     this.bulletin[this.bulletinTextcatKey] = this.concatTextcat(this.bulletin[this.bulletinTextcatKey], textcat);

@@ -27,9 +27,11 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BulletinTextComponent } from "./bulletin-text.component";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 import { NgxEchartsDirective } from "ngx-echarts";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 
 @NgModule({
   imports: [
+    AvalancheProblemIconsComponent,
     BulletinsRoutingModule,
     FormsModule,
     CommonModule,

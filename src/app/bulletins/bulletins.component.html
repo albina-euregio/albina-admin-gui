@@ -108,7 +108,7 @@
             {{ "bulletins.table.status.republished" | translate }}
           </span>
           <span
-            *ngIf="bulletinsService.isLocked(date, authenticationService.getActiveRegionId())"
+            *ngIf="bulletinsService.isLocked(date + authenticationService.getActiveRegionId())"
             class="badge text-bg-light"
           >
             <i class="ph-bold ph-lock"></i>
@@ -118,7 +118,7 @@
           class="bulletins-table__region-status"
           *ngFor="let region of authenticationService.getActiveRegion().neighborRegions"
           [attr.data-label]="'bulletins.table.title.status.' + region | translate"
-          [style.background-color]="bulletinsService.isLocked(date, region) ? 'rgba(255,0,0,0.2)' : ''"
+          [style.background-color]="bulletinsService.isLocked(date + region) ? 'rgba(255,0,0,0.2)' : ''"
         >
           <span
             *ngIf="
@@ -145,7 +145,7 @@
           <span *ngIf="getRegionStatus(region, date) === bulletinStatus.republished" class="badge bg-success"
             ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
           >
-          <span *ngIf="bulletinsService.isLocked(date, region)" class="badge text-bg-light">
+          <span *ngIf="bulletinsService.isLocked(date + region)" class="badge text-bg-light">
             <i class="ph-bold ph-lock"></i>
           </span>
         </td>
