@@ -56,7 +56,7 @@ export class UsersComponent implements AfterContentInit {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 
-  createUser(event) {
+  createUser() {
     this.showUpdateDialog(false);
   }
 
@@ -88,7 +88,7 @@ export class UsersComponent implements AfterContentInit {
     });
   }
 
-  editUser(event, user) {
+  editUser(user: UserModel) {
     this.showUpdateDialog(true, user);
   }
 
@@ -112,11 +112,11 @@ export class UsersComponent implements AfterContentInit {
     });
   }
 
-  changePassword(event, user) {
+  changePassword(user: UserModel) {
     this.showChangePasswordDialog(user);
   }
 
-  deleteUser(event, user) {
+  deleteUser(user: UserModel) {
     this.activeUser = user;
     this.openDeleteUserModal(this.deleteUserTemplate);
   }

@@ -162,7 +162,7 @@ export class DangerSourceVariantComponent implements OnChanges {
     this.updateVariantOnServer();
   }
 
-  copyVariant(event) {
+  copyVariant() {
     this.copyVariantEvent.emit(this.variant);
   }
 

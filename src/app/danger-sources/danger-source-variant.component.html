@@ -212,7 +212,7 @@
               [(ngModel)]="variant.snowHeightLowerLimit"
             />
             <span class="input-group-text">cm</span>
-            <label style="margin: 0 1rem" class="form-label" attr.for="snowHeightLabel"> - </label>
+            <label style="margin: 0 1rem" class="form-label" for="snowHeightLabel"> - </label>
             <input
               step="1"
               min="0"
@@ -229,7 +229,7 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label class="form-label" attr.for="zeroDegreeIsothermCheckbox">{{
+          <label class="form-label" for="zeroDegreeIsothermCheckbox">{{
             "dangerSources.create.label.zeroDegreeIsotherm" | translate
           }}</label>
           <div class="btn-group">
@@ -356,7 +356,7 @@
               [(ngModel)]="variant.slabThicknessLowerLimit"
             />
             <span class="input-group-text">cm</span>
-            <label style="margin: 0 1rem" class="form-label" attr.for="slabThicknessLabel"> - </label>
+            <label style="margin: 0 1rem" class="form-label" for="slabThicknessLabel"> - </label>
             <input
               step="1"
               min="0"
@@ -481,7 +481,7 @@
                 <span>{{ "handHardness.ice" | translate }}</span>
               </button>
             </div>
-            <label style="margin: 0 1rem" class="form-label" attr.for="slabHandHardnessLabel"> - </label>
+            <label style="margin: 0 1rem" class="form-label" for="slabHandHardnessLabel"> - </label>
             <div class="btn-group" style="flex: 1 1 auto">
               <button
                 type="reset"
@@ -896,7 +896,7 @@
               [(ngModel)]="variant.weakLayerGrainSizeLowerLimit"
             />
             <span class="input-group-text">cm</span>
-            <label style="margin: 0 1rem" class="form-label" attr.for="weakLayerGrainSizeLabel"> - </label>
+            <label style="margin: 0 1rem" class="form-label" for="weakLayerGrainSizeLabel"> - </label>
             <input
               step="0.25"
               min="0"
@@ -913,7 +913,7 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" attr.for="weakLayerPersistentCheckbox">{{
+          <label class="form-label" for="weakLayerPersistentCheckbox">{{
             "dangerSources.create.label.weakLayerPersistent" | translate
           }}</label>
           <div class="btn-group">
@@ -1056,7 +1056,7 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" attr.for="weakLayerWetCheckbox">{{
+          <label class="form-label" for="weakLayerWetCheckbox">{{
             "dangerSources.create.label.weakLayerWet" | translate
           }}</label>
           <div class="btn-group">
@@ -1090,7 +1090,7 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" attr.for="weakLayerCrustAboveCheckbox">{{
+          <label class="form-label" for="weakLayerCrustAboveCheckbox">{{
             "dangerSources.create.label.weakLayerCrustAbove" | translate
           }}</label>
           <div class="btn-group">
@@ -1124,7 +1124,7 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" attr.for="weakLayerCrustBelowCheckbox">{{
+          <label class="form-label" for="weakLayerCrustBelowCheckbox">{{
             "dangerSources.create.label.weakLayerCrustBelow" | translate
           }}</label>
           <div class="btn-group">
@@ -1436,7 +1436,7 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" attr.for="remoteTriggeringCheckbox">{{
+          <label class="form-label" for="remoteTriggeringCheckbox">{{
             "dangerSources.create.label.remoteTriggering" | translate
           }}</label>
           <div class="btn-group">
@@ -1682,7 +1682,7 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" attr.for="hasDaytimeDependencyCheckbox">{{
+          <label class="form-label" for="hasDaytimeDependencyCheckbox">{{
             "dangerSources.create.label.hasDaytimeDependency" | translate
           }}</label>
           <div class="btn-group">
@@ -1716,7 +1716,7 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" attr.for="dangerIncreaseWithElevationCheckbox">{{
+          <label class="form-label" for="dangerIncreaseWithElevationCheckbox">{{
             "dangerSources.create.label.dangerIncreaseWithElevation" | translate
           }}</label>
           <div class="btn-group">
@@ -1955,7 +1955,7 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" attr.for="runoutIntoGreenCheckbox">{{
+          <label class="form-label" for="runoutIntoGreenCheckbox">{{
             "dangerSources.create.label.runoutIntoGreen" | translate
           }}</label>
           <div class="btn-group">
@@ -2109,7 +2109,7 @@
                   (change)="setUseElevationHigh($event)"
                   [(ngModel)]="useElevationHigh"
                 />
-                <label class="form-label" attr.for="elevationHighCheckbox">{{ "elevation.high" | translate }}</label>
+                <label class="form-label" for="elevationHighCheckbox">{{ "elevation.high" | translate }}</label>
               </div>
               <div class="avalanche-problem-detail__elevation-inputs">
                 <div class="input-group">
@@ -2153,7 +2153,7 @@
                   (change)="setUseElevationLow($event)"
                   [(ngModel)]="useElevationLow"
                 />
-                <label class="form-label" attr.for="elevationLowCheckbox">{{ "elevation.low" | translate }}</label>
+                <label class="form-label" for="elevationLowCheckbox">{{ "elevation.low" | translate }}</label>
               </div>
               <div class="avalanche-problem-detail__elevation-inputs">
                 <div class="input-group">
@@ -2190,8 +2190,8 @@
 
         <div class="form-group">
           <app-matrix-parameter
-            [(bulletinDaytimeDescription)]="variant"
-            [(matrixInformation)]="variant.eawsMatrixInformation"
+            [bulletinDaytimeDescription]="variant"
+            [matrixInformation]="variant.eawsMatrixInformation"
             [disabled]="disabled"
             [count]="1"
             [afternoon]="false"

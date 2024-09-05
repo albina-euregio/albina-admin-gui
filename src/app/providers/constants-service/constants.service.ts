@@ -163,7 +163,7 @@ export class ConstantsService {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` as const;
 
     function pad(number: number) {
-      return number < 10 ? (`${0}${number}` as const) : (`${number}` as const);
+      return number < 10 ? (`${0}${number}` as unknown as number) : number;
     }
   }
 

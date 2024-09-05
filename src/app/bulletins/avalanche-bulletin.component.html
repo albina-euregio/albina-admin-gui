@@ -147,10 +147,10 @@
       {{ "bulletins.create.pendingSuggestions" | translate }}
     </p>
     <div class="btn-group banner__actions">
-      <button (click)="rejectSuggestions($event, bulletin)" type="button" class="btn btn-sm btn-outline-dark">
+      <button (click)="rejectSuggestions($event)" type="button" class="btn btn-sm btn-outline-dark">
         <i class="ph ph-x"></i> <span>{{ "bulletins.create.rejectSuggestion" | translate }}</span>
       </button>
-      <button (click)="acceptSuggestions($event, bulletin)" type="button" class="btn btn-sm btn-dark">
+      <button (click)="acceptSuggestions($event)" type="button" class="btn btn-sm btn-dark">
         <i class="ph ph-check"></i><span>{{ "bulletins.create.acceptSuggestion" | translate }}</span>
       </button>
     </div>
@@ -216,7 +216,7 @@
 
           <div class="btn-group accordion-header__buttons">
             <button
-              [disabled]="editRegions || loading || hasFiveAvalancheProblems(false)"
+              [disabled]="editRegions || hasFiveAvalancheProblems(false)"
               *ngIf="!disabled"
               (click)="createAvalancheProblem(false); $event.stopPropagation()"
               class="btn btn-primary btn-icon btn-sm ml-2"
@@ -253,7 +253,7 @@
 
           <div class="btn-group accordion-header__buttons">
             <button
-              [disabled]="editRegions || loading || hasFiveAvalancheProblems(false) || !isCreator(bulletin)"
+              [disabled]="editRegions || hasFiveAvalancheProblems(false) || !isCreator(bulletin)"
               *ngIf="!disabled"
               (click)="createAvalancheProblem(true); $event.stopPropagation()"
               class="btn btn-primary btn-icon btn-sm"
@@ -268,7 +268,7 @@
           [bulletinDaytimeDescription]="bulletin.afternoon"
           [afternoon]="true"
           [disabled]="disabled"
-          (changeAvalancheProblemEvent)="updateBulletinOnServer(bulletin)"
+          (changeAvalancheProblemEvent)="updateBulletinOnServer()"
         ></app-avalanche-problem>
       </accordion-group>
       <!-- End avalanche problems -->
@@ -296,7 +296,7 @@
           <!-- Special alert -->
           <app-bulletin-text
             textField="highlights"
-            rows="1"
+            [rows]="1"
             [bulletin]="bulletin"
             [disabled]="disabled"
             (showDialog)="showDialog($event)"
@@ -307,7 +307,7 @@
           <!-- Danger situation headline -->
           <app-bulletin-text
             textField="avActivityHighlights"
-            rows="3"
+            [rows]="3"
             [bulletin]="bulletin"
             [disabled]="disabled"
             (showDialog)="showDialog($event)"
@@ -317,7 +317,7 @@
           <!-- Danger situation description -->
           <app-bulletin-text
             textField="avActivityComment"
-            rows="9"
+            [rows]="9"
             [bulletin]="bulletin"
             [disabled]="disabled"
             (showDialog)="showDialog($event)"
@@ -377,7 +377,7 @@
           <!-- Danger pattern description -->
           <app-bulletin-text
             textField="snowpackStructureComment"
-            rows="9"
+            [rows]="9"
             [bulletin]="bulletin"
             [disabled]="disabled"
             (showDialog)="showDialog($event)"
@@ -431,7 +431,7 @@
           <!-- Tendency comment -->
           <app-bulletin-text
             textField="tendencyComment"
-            rows="5"
+            [rows]="5"
             [bulletin]="bulletin"
             [disabled]="disabled"
             (showDialog)="showDialog($event)"
@@ -462,21 +462,11 @@
     <p>{{ "bulletins.create.removeDaytimeDependencyDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button
-      [disabled]="loadingModal"
-      type="button"
-      class="btn btn-primary"
-      (click)="removeDaytimeDependencyModalConfirm($event, true)"
-    >
+    <button type="button" class="btn btn-primary" (click)="removeDaytimeDependencyModalConfirm($event, true)">
       {{ "daytime.earlier" | translate }}
     </button>
 
-    <button
-      [disabled]="loadingModal"
-      type="button"
-      class="btn btn-primary"
-      (click)="removeDaytimeDependencyModalConfirm($event, false)"
-    >
+    <button type="button" class="btn btn-primary" (click)="removeDaytimeDependencyModalConfirm($event, false)">
       <span>{{ "daytime.later" | translate }}</span>
     </button>
 

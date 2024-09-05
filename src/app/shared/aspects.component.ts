@@ -9,7 +9,7 @@ export class AspectsComponent {
   @Input() aspects: Enums.Aspect[];
   @Output() aspectsChange = new EventEmitter<Enums.Aspect[]>();
   @Input() disabled: boolean;
-  @Input() size: string;
+  @Input() size: number;
 
   aspect = Enums.Aspect;
 

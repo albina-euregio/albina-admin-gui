@@ -13,10 +13,9 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
 @NgModule({
-  imports: [TranslateModule, NgxSliderModule, FormsModule, CommonModule],
+  imports: [AvalancheProblemIconsComponent, TranslateModule, NgxSliderModule, FormsModule, CommonModule],
   declarations: [
     AspectsComponent,
-    AvalancheProblemIconsComponent,
     AvalancheTypeComponent,
     DangerRatingComponent,
     DangerRatingIconComponent,
@@ -25,7 +24,6 @@ import { CommonModule } from "@angular/common";
   ],
   exports: [
     AspectsComponent,
-    AvalancheProblemIconsComponent,
     AvalancheTypeComponent,
     DangerRatingComponent,
     DangerRatingIconComponent,

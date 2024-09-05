@@ -22,7 +22,7 @@
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
-    "strictTemplates": false
+    "strictTemplates": true
   },
   "files": [
     "main.ts"

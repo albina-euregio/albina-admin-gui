@@ -34,7 +34,7 @@
                       <input
                         [(ngModel)]="filter.observationSources[source.id]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="onSourcesDropdownSelect($event)"
+                        (change)="onSourcesDropdownSelect()"
                         type="checkbox"
                         class="form-check-input"
                       />
@@ -62,7 +62,7 @@
                       <input
                         [(ngModel)]="filter.regions[region.id]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="onRegionsDropdownSelect($event)"
+                        (change)="onRegionsDropdownSelect()"
                         type="checkbox"
                         class="form-check-input"
                       />
@@ -426,8 +426,12 @@
     <div class="d-inline-block font-weight-normal">
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowLeft' })">←</kbd>
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowRight' })">→</kbd>
-      <kbd *ngIf="observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowUp' })">↑</kbd>
-      <kbd *ngIf="observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowDown' })">↓</kbd>
+      <kbd *ngIf="observationPopup?.observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowUp' })"
+        >↑</kbd
+      >
+      <kbd *ngIf="observationPopup?.observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowDown' })"
+        >↓</kbd
+      >
       &mdash;
       <button class="btn btn-sm btn-secondary" (click)="modalService.hide()">&times;</button>
     </div>

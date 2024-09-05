@@ -528,7 +528,7 @@
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
         (copyBulletinEvent)="eventCopyBulletin($event)"
         (deselectBulletinEvent)="eventDeselectBulletin($event)"
-        (toggleBulletinSidebarEvent)="toggleBulletinSidebar($event)"
+        (toggleBulletinSidebarEvent)="toggleBulletinSidebar()"
         (undoRedoEvent)="undoRedoActiveBulletin($event)"
       ></app-avalanche-bulletin>
     </div>
@@ -566,7 +566,7 @@
           <button type="reset" class="btn btn-bare" (click)="discardBulletin($event, activeBulletin)">
             <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
           </button>
-          <button type="button" class="btn btn-primary" (click)="saveBulletin($event, activeBulletin)">
+          <button type="button" class="btn btn-primary" (click)="saveBulletin($event)">
             <i class="ph-bold ph-check"></i>
             <span *ngIf="activeBulletin.savedRegions.length === 0 && activeBulletin.publishedRegions.length === 0">{{
               "bulletins.create.tooltip.createRegion" | translate
@@ -919,7 +919,7 @@
               {{ "bulletins.table.status.republished" | translate }}
             </span>
             <span
-              *ngIf="bulletinsService.isLocked(date, authenticationService.getActiveRegionId())"
+              *ngIf="bulletinsService.isLocked(date + authenticationService.getActiveRegionId())"
               class="badge text-bg-light"
             >
               <i class="ph-bold ph-lock"></i>
