@@ -74,8 +74,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       if (!configURL) return;
       this.configURL = configURL;
     });
-    const configURL = this.configURL.includes("?") ? this.configURL : `${this.configURL}?_=${Date.now()}`;
-    this.config = await this.fetchJSON<Awsome>(configURL);
+    this.config = await this.fetchJSON<Awsome>(this.configURL);
     this.date = this.config.date;
     this.sources = this.config.sources;
 
@@ -182,6 +181,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private async fetchJSON<T>(input: RequestInfo | URL): Promise<T> {
+    if (typeof input === "string" && !input.includes("?")) {
+      input = `${input}?_=${Date.now()}`;
+    }
+    // FIXME const headers = { "Cache-Control": "no-cache" };
+    // FIXME CORS Access-Control-Request-Headers: cache-control
     const res = await fetch(input);
     const text = (await res.text()).replace(/\bNaN\b/g, "null");
     return JSON.parse(text);
