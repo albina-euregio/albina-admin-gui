@@ -39,7 +39,7 @@ export class FullLayoutComponent {
     public regionsService: RegionsService,
     public constantsService: ConstantsService,
     public router: Router,
-    private localStorageService: LocalStorageService,
+    public localStorageService: LocalStorageService,
     private modalService: BsModalService,
     private sanitizer: DomSanitizer,
   ) {

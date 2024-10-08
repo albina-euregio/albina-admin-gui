@@ -68,6 +68,14 @@
     </div>
 
     <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
+      <li
+        class="navbar-text"
+        *ngIf="localStorageService.isTrainingEnabled"
+        title="{{ 'training.timestamp' | translate }}"
+      >
+        <i class="ph ph-clock-afternoon"></i>
+        {{ localStorageService.trainingTimestamp }}
+      </li>
       <li class="nav-item dropdown" dropdown>
         <a
           class="nav-link dropdown-toggle navbar__lang-toggle"
