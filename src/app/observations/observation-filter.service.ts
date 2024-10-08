@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { FilterSelectionData, ValueType } from "./filter-selection-data";
 
 @Injectable()
@@ -17,10 +18,12 @@ export class ObservationFilterService<
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private constantsService: ConstantsService,
+    private localStorageService: LocalStorageService,
   ) {}
 
   set days(days: number) {
-    this.endDate = new Date();
+    const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
+    this.endDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
     const newStartDate = new Date(this.endDate);
     newStartDate.setDate(newStartDate.getDate() - (days - 1));
     newStartDate.setHours(0, 0, 0, 0);
@@ -44,6 +47,11 @@ export class ObservationFilterService<
       });
     }
     this.dateRange = [this.startDate, this.endDate];
+  }
+
+  get dateRangeMaxDate(): Date | undefined {
+    const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
+    return isTrainingEnabled ? new Date(trainingTimestamp) : undefined;
   }
 
   parseActivatedRoute() {

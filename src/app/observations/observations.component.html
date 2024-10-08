@@ -81,6 +81,7 @@
                 [(ngModel)]="filter.dateRange"
                 (ngModelChange)="setDate()"
                 [bsConfig]="{ dateInputFormat: 'DD.MM.YYYY' }"
+                [maxDate]="filter.dateRangeMaxDate"
               />
             </div>
           </div>
