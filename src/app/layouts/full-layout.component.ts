@@ -6,6 +6,7 @@ import { SettingsService } from "../providers/settings-service/settings.service"
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { Router } from "@angular/router";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -38,6 +39,7 @@ export class FullLayoutComponent {
     public regionsService: RegionsService,
     public constantsService: ConstantsService,
     public router: Router,
+    private localStorageService: LocalStorageService,
     private modalService: BsModalService,
     private sanitizer: DomSanitizer,
   ) {
@@ -53,7 +55,8 @@ export class FullLayoutComponent {
   }
 
   getStyle() {
-    const style = `background-color: ${environment.headerBgColor}`;
+    const color = this.localStorageService.isTrainingEnabled ? "#a6d96a" : environment.headerBgColor;
+    const style = `background-color: ${color}`;
     return this.sanitizer.bypassSecurityTrustStyle(style);
   }
 
