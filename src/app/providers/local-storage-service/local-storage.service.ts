@@ -74,4 +74,16 @@ export class LocalStorageService {
   setCompactMapLayout(compactMapLayout: boolean): void {
     return this.set("compactmapLayout", compactMapLayout);
   }
+
+  get isTrainingEnabled(): boolean {
+    return !!this.trainingTimestamp;
+  }
+
+  get trainingTimestamp(): string {
+    return this.get("trainingTimestamp");
+  }
+
+  set trainingTimestamp(trainingTimestamp: string) {
+    this.set("trainingTimestamp", trainingTimestamp);
+  }
 }

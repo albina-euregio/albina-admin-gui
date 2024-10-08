@@ -604,6 +604,10 @@
       }
     }
   },
+  "training": {
+    "training": "Training",
+    "timestamp": "Training timestamp"
+  },
   "admin": {
     "loadingStatistics": "Creating CSV ...",
     "server-configuration": {
