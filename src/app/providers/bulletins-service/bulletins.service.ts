@@ -6,6 +6,7 @@ import { ConstantsService } from "../constants-service/constants.service";
 import { SettingsService } from "../settings-service/settings.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
 import * as Enums from "../../enums/enums";
@@ -34,6 +35,7 @@ export class BulletinsService {
     private constantsService: ConstantsService,
     private authenticationService: AuthenticationService,
     private settingsService: SettingsService,
+    private localStorageService: LocalStorageService,
     private userService: UserService,
     private wsBulletinService: WsBulletinService,
   ) {}
@@ -49,11 +51,12 @@ export class BulletinsService {
     // connect to websockets
     this.wsBulletinConnect();
 
-    const startDate = new Date();
+    const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
+    const startDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
     startDate.setDate(startDate.getDate() - 7);
     startDate.setHours(0, 0, 0, 0);
 
-    const endDate = new Date();
+    const endDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
     endDate.setDate(endDate.getDate() + 3);
     endDate.setHours(0, 0, 0, 0);
 
@@ -140,7 +143,7 @@ export class BulletinsService {
   hasBeenPublished5PM(date: [Date, Date]): boolean {
     // date[0] = validFrom = 17:00 = published at
     const published = date[0];
-    return Date.now() >= published.getTime();
+    return new Date().getTime() >= published.getTime();
   }
 
   hasBeenPublished8AM(date: [Date, Date]): boolean {
@@ -148,7 +151,7 @@ export class BulletinsService {
     // date[1] at 08:00 = updated at
     const updated = new Date(date[1]);
     updated.setHours(8, 0, 0, 0);
-    return Date.now() >= updated.getTime();
+    return new Date().getTime() >= updated.getTime();
   }
 
   getValidFromUntil(date: Date): [Date, Date] {
