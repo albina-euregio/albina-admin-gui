@@ -284,7 +284,11 @@ export class BulletinsService {
     return this.http.get(url, { headers });
   }
 
-  loadBulletins(date: [Date, Date], regions: string[], etag?: string): Observable<HttpResponse<BulletinModel[]>> {
+  loadBulletins(
+    date: [Date, Date],
+    regions: string[],
+    etag?: string,
+  ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
     let url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?" +
@@ -296,10 +300,12 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     if (etag) headers.set("If-None-Match", etag);
-    return this.http.get<BulletinModelAsJSON[]>(url, { headers, observe: "response" });
+    return this.http
+      .get<BulletinModelAsJSON[]>(url, { headers, observe: "response" })
+      .pipe(map((response) => ({ bulletins: response.body, etag: response.headers.get("ETag") })));
   }
 
-  loadExternalBulletins(date: [Date, Date], server: ServerModel): Observable<BulletinModel[]> {
+  loadExternalBulletins(date: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
       return of([]);
     }

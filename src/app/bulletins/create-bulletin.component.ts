@@ -288,15 +288,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         // load own bulletins from the date they are copied from
         let regions = [this.authenticationService.getActiveRegionId()];
         this.bulletinsService.loadBulletins(this.bulletinsService.getCopyDate(), regions).subscribe(
-          (data) => {
-            this.copyBulletins(data.body);
+          ({ bulletins }) => {
+            this.copyBulletins(bulletins);
             this.bulletinsService.setCopyDate(undefined);
             // load bulletins from the current date, add foreign bulletins
             this.bulletinsService
               .loadBulletins(this.bulletinsService.getActiveDate(), this.authenticationService.getInternalRegions())
               .subscribe(
-                (data2) => {
-                  this.addForeignBulletins(data2.body);
+                ({ bulletins }) => {
+                  this.addForeignBulletins(bulletins);
                   this.save();
                   this.loading = false;
                 },
@@ -364,11 +364,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.internBulletinsListEtag,
       )
       .subscribe(
-        (data) => {
-          const etag = data.headers?.get("ETag");
+        ({ bulletins, etag }) => {
           this.loadInternalBulletinsError = false;
           if (!etag || etag !== this.internBulletinsListEtag) {
-            this.addInternalBulletins(data.body);
+            this.addInternalBulletins(bulletins);
             this.internBulletinsListEtag = etag;
           } else {
             console.info("Skipping internal bulletin update for", this.internBulletinsListEtag);
@@ -1636,7 +1635,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     const regions = [this.authenticationService.getActiveRegionId()];
     this.bulletinsService.loadBulletins(date, regions).subscribe(
-      (data) => {
+      ({ bulletins }) => {
         // delete own regions
         const entries = new Array<BulletinModel>();
 
@@ -1649,7 +1648,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.delBulletin(entry);
         }
 
-        this.copyBulletins(data.body);
+        this.copyBulletins(bulletins);
         this.loading = false;
       },
       () => {
