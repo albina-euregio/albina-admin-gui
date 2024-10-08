@@ -4,7 +4,7 @@
       <tr>
         <th></th>
         <th
-          *ngIf="authenticationService.getActiveRegion().enableStressLevel"
+          *ngIf="authenticationService.getActiveRegion().enableStressLevel && !localStorageService.isTrainingEnabled"
           role="button"
           (click)="showTeamStressLevels()"
         >
@@ -57,7 +57,7 @@
           </div>
         </td>
         <td
-          *ngIf="authenticationService.getActiveRegion().enableStressLevel"
+          *ngIf="authenticationService.getActiveRegion().enableStressLevel && !localStorageService.isTrainingEnabled"
           [attr.data-label]="'login.stressLevel' | translate"
           class="align-middle"
         >
