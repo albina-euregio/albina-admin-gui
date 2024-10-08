@@ -6,6 +6,8 @@ import { RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
+export type BulletinModelAsJSON = BulletinModel; // somewhat
+
 export class BulletinModel implements PolygonObject {
   public id: string;
 

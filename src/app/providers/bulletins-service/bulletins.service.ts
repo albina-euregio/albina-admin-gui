@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable, Subject } from "rxjs";
+import { HttpClient, HttpResponse } from "@angular/common/http";
+import { Observable, of, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
 import { SettingsService } from "../settings-service/settings.service";
@@ -10,7 +10,7 @@ import { LocalStorageService } from "../local-storage-service/local-storage.serv
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
 import * as Enums from "../../enums/enums";
-import { BulletinModel } from "app/models/bulletin.model";
+import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { DateIsoString } from "app/models/stress-level.model";
 import { UserService } from "../user-service/user.service";
 
@@ -66,11 +66,17 @@ export class BulletinsService {
       this.dates.push(this.getValidFromUntil(date));
     }
 
+    this.loadStressLevels();
+    this.loadStatus();
+  }
+
+  private loadStressLevels() {
+    if (this.localStorageService.isTrainingEnabled) {
+      return;
+    }
     this.userService.getStressLevels([this.dates.at(-1)[0], this.dates.at(0)[1]]).subscribe((stressLevels) => {
       this.stress = Object.fromEntries(stressLevels.map((s) => [s.date, s.stressLevel]));
     });
-
-    this.loadStatus();
   }
 
   public loadStatus() {
@@ -241,7 +247,15 @@ export class BulletinsService {
     return this.http.get(url, { headers, responseType: "blob" });
   }
 
-  getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
+  getStatus(
+    region: string,
+    startDate: [Date, Date],
+    endDate: [Date, Date],
+  ): Observable<{ date: string; status: keyof typeof Enums.BulletinStatus }[]> {
+    if (this.localStorageService.isTrainingEnabled) {
+      // TODO
+      return of([]);
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/status/internal?" +
@@ -253,7 +267,7 @@ export class BulletinsService {
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader();
-    return this.http.get(url, { headers });
+    return this.http.get<any>(url, { headers });
   }
 
   getPublicationStatus(region: string, date: [Date, Date]) {
@@ -270,7 +284,7 @@ export class BulletinsService {
     return this.http.get(url, { headers });
   }
 
-  loadBulletins(date: [Date, Date], regions: string[], etag?: string) {
+  loadBulletins(date: [Date, Date], regions: string[], etag?: string): Observable<HttpResponse<BulletinModel[]>> {
     let url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?" +
@@ -282,10 +296,13 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     if (etag) headers.set("If-None-Match", etag);
-    return this.http.get(url, { headers, observe: "response" });
+    return this.http.get<BulletinModelAsJSON[]>(url, { headers, observe: "response" });
   }
 
-  loadExternalBulletins(date: [Date, Date], server: ServerModel) {
+  loadExternalBulletins(date: [Date, Date], server: ServerModel): Observable<BulletinModel[]> {
+    if (this.localStorageService.isTrainingEnabled) {
+      return of([]);
+    }
     let url =
       server.apiUrl +
       "bulletins/edit?" +
@@ -296,7 +313,7 @@ export class BulletinsService {
         ])
         .toString();
     const headers = this.authenticationService.newExternalServerAuthHeader(server);
-    return this.http.get(url, { headers });
+    return this.http.get<BulletinModelAsJSON[]>(url, { headers });
   }
 
   loadCaamlBulletins(date: [Date, Date]): Observable<any> {
