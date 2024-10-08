@@ -3,6 +3,7 @@ import { environment } from "../../../environments/environment";
 import type { RegionConfiguration } from "../configuration-service/configuration.service";
 import type { AuthorModel } from "../../models/author.model";
 import type { ServerModel } from "../../models/server.model";
+import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
 
 @Injectable()
 export class LocalStorageService {
@@ -85,5 +86,16 @@ export class LocalStorageService {
 
   set trainingTimestamp(trainingTimestamp: string) {
     this.set("trainingTimestamp", trainingTimestamp);
+  }
+
+  getTrainingBulletins(date: [Date, Date]): BulletinModelAsJSON[] {
+    return this.get("trainingBulletins_" + date[0].toISOString()) ?? [];
+  }
+
+  setTrainingBulletins(date: [Date, Date], bulletins: BulletinModelAsJSON[]): void {
+    if (bulletins.some((b: any) => b instanceof BulletinModel)) {
+      throw new Error("Provide bulletins as JSON via BulletinModel.toJson!");
+    }
+    return this.set("trainingBulletins_" + date[0].toISOString(), bulletins);
   }
 }

@@ -14,6 +14,8 @@ import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { DateIsoString } from "app/models/stress-level.model";
 import { UserService } from "../user-service/user.service";
 
+class TrainingModeError extends Error {}
+
 @Injectable()
 export class BulletinsService {
   private activeDate: [Date, Date];
@@ -253,8 +255,14 @@ export class BulletinsService {
     endDate: [Date, Date],
   ): Observable<{ date: string; status: keyof typeof Enums.BulletinStatus }[]> {
     if (this.localStorageService.isTrainingEnabled) {
-      // TODO
-      return of([]);
+      return of(
+        this.dates.map((date) => {
+          return {
+            date: date[0].toISOString(),
+            status: this.localStorageService.getTrainingBulletins(date)?.length ? "draft" : undefined,
+          } as const;
+        }),
+      );
     }
     const url =
       this.constantsService.getServerUrl() +
@@ -289,6 +297,10 @@ export class BulletinsService {
     regions: string[],
     etag?: string,
   ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
+    if (this.localStorageService.isTrainingEnabled) {
+      const bulletins = this.localStorageService.getTrainingBulletins(date);
+      return of({ bulletins, etag: null });
+    }
     let url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?" +
@@ -323,6 +335,9 @@ export class BulletinsService {
   }
 
   loadCaamlBulletins(date: [Date, Date]): Observable<any> {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?" +
@@ -337,6 +352,9 @@ export class BulletinsService {
   }
 
   loadJsonBulletins(date: [Date, Date]) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?" +
@@ -347,7 +365,12 @@ export class BulletinsService {
     return this.http.get(url, { headers });
   }
 
-  saveBulletins(bulletins: BulletinModel[], date: [Date, Date]) {
+  saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
+    if (this.localStorageService.isTrainingEnabled) {
+      const newBulletins = bulletins.map((b) => b.toJson());
+      this.localStorageService.setTrainingBulletins(date, newBulletins);
+      return of(newBulletins);
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?" +
@@ -363,10 +386,17 @@ export class BulletinsService {
       jsonBulletins.push(bulletins[i].toJson());
     }
     const body = JSON.stringify(jsonBulletins);
-    return this.http.post(url, body, { headers });
+    return this.http.post<BulletinModelAsJSON[]>(url, body, { headers });
   }
 
-  createBulletin(bulletin: BulletinModel, date: [Date, Date]) {
+  createBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
+    if (this.localStorageService.isTrainingEnabled) {
+      bulletin.id ??= crypto.randomUUID();
+      const bulletins = this.localStorageService.getTrainingBulletins(date);
+      const newBulletins = [...bulletins, bulletin.toJson()];
+      this.localStorageService.setTrainingBulletins(date, newBulletins);
+      return of(newBulletins);
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins?" +
@@ -378,11 +408,17 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(bulletin.toJson());
-    return this.http.put(url, body, { headers });
+    return this.http.put<BulletinModelAsJSON[]>(url, body, { headers });
   }
 
-  updateBulletin(bulletin: BulletinModel, date: [Date, Date]) {
+  updateBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
     // check if bulletin has ID
+    if (this.localStorageService.isTrainingEnabled) {
+      const bulletins = this.localStorageService.getTrainingBulletins(date);
+      const newBulletins = [...bulletins.filter((b) => b.id !== bulletin.id), bulletin.toJson()];
+      this.localStorageService.setTrainingBulletins(date, newBulletins);
+      return of(newBulletins);
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
@@ -396,11 +432,17 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(bulletin.toJson());
-    return this.http.post(url, body, { headers });
+    return this.http.post<BulletinModelAsJSON[]>(url, body, { headers });
   }
 
-  deleteBulletin(bulletin: BulletinModel, date: [Date, Date]) {
+  deleteBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
     // check if bulletin has ID
+    if (this.localStorageService.isTrainingEnabled) {
+      const bulletins = this.localStorageService.getTrainingBulletins(date);
+      const newBulletins = bulletins.filter((b) => b.id !== bulletin.id);
+      this.localStorageService.setTrainingBulletins(date, newBulletins);
+      return of(newBulletins);
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
@@ -413,10 +455,13 @@ export class BulletinsService {
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader();
-    return this.http.delete(url, { headers });
+    return this.http.delete<BulletinModelAsJSON[]>(url, { headers });
   }
 
   submitBulletins(date: [Date, Date], region: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/submit?" +
@@ -428,10 +473,13 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post<{}>(url, body, { headers });
   }
 
   publishBulletins(date: [Date, Date], region: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish?" +
@@ -443,10 +491,13 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post<{}>(url, body, { headers });
   }
 
   changeBulletins(date: [Date, Date], region: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/change?" +
@@ -459,10 +510,13 @@ export class BulletinsService {
     const headers = this.authenticationService.newAuthHeader();
     const jsonBulletins = [];
     const body = JSON.stringify(jsonBulletins);
-    return this.http.post(url, body, { headers });
+    return this.http.post<{}>(url, body, { headers });
   }
 
   publishAllBulletins(date: [Date, Date]) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/all?" +
@@ -471,10 +525,13 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post<{}>(url, body, { headers });
   }
 
   createCaaml(date: [Date, Date]) {
+    if (this.localStorageService.isTrainingEnabled) {
+      // TODO create CAAML from POST JSON
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/caaml?" +
@@ -487,6 +544,9 @@ export class BulletinsService {
   }
 
   createPdf(date: [Date, Date]) {
+    if (this.localStorageService.isTrainingEnabled) {
+      // TODO create PDF from POST JSON
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/pdf?" +
@@ -499,6 +559,9 @@ export class BulletinsService {
   }
 
   createHtml(date: [Date, Date]) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/html?" +
@@ -511,6 +574,9 @@ export class BulletinsService {
   }
 
   createMap(date: [Date, Date]) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/map?" +
@@ -523,6 +589,9 @@ export class BulletinsService {
   }
 
   createStaticWidget(date: [Date, Date]) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/publish/staticwidget?" +
@@ -535,6 +604,9 @@ export class BulletinsService {
   }
 
   sendEmail(date: [Date, Date], region: string, language: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     let url: string;
     if (language) {
       url =
@@ -564,6 +636,9 @@ export class BulletinsService {
   }
 
   sendTestEmail(date: [Date, Date], region: string, language: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     let url: string;
     if (language) {
       url =
@@ -593,6 +668,9 @@ export class BulletinsService {
   }
 
   triggerTelegramChannel(date: [Date, Date], region: string, language: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     let url: string;
     if (language) {
       url =
@@ -622,6 +700,9 @@ export class BulletinsService {
   }
 
   triggerTestTelegramChannel(date: [Date, Date], region: string, language: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     let url: string;
     if (language) {
       url =
@@ -651,6 +732,9 @@ export class BulletinsService {
   }
 
   triggerPushNotifications(date: [Date, Date], region: string, language: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     let url: string;
     if (language) {
       url =
@@ -680,6 +764,9 @@ export class BulletinsService {
   }
 
   triggerTestPushNotifications(date: [Date, Date], region: string, language: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      throw new TrainingModeError();
+    }
     let url: string;
     if (language) {
       url =
@@ -709,6 +796,9 @@ export class BulletinsService {
   }
 
   checkBulletins(date: [Date, Date], region: string) {
+    if (this.localStorageService.isTrainingEnabled) {
+      // TODO check bulletins from POST JSON
+    }
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/check?" +

@@ -8,7 +8,7 @@ import { saveAs } from "file-saver";
 import { debounce } from "lodash";
 
 // models
-import { BulletinModel } from "../models/bulletin.model";
+import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
 
 // services
 import { TranslateService } from "@ngx-translate/core";
@@ -854,7 +854,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.save();
   }
 
-  private addForeignBulletins(response) {
+  private addForeignBulletins(response: BulletinModelAsJSON[]) {
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
@@ -870,7 +870,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.deselectAggregatedRegion();
   }
 
-  private addExternalBulletins(server: ServerModel, response) {
+  private addExternalBulletins(server: ServerModel, response: BulletinModelAsJSON[]) {
     let bulletinsList = new Array<BulletinModel>();
     if (response) {
       for (const jsonBulletin of response) {
@@ -903,7 +903,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getNewId(response, regionId) {
+  private getNewId(response: BulletinModelAsJSON[], regionId: string) {
     for (const jsonBulletin of response) {
       if (jsonBulletin.savedRegions.includes(regionId)) return jsonBulletin.id;
     }
@@ -921,7 +921,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.updateBulletinOnServer(bulletin, true, false);
   }
 
-  private addInternalBulletins(response) {
+  private addInternalBulletins(response: BulletinModelAsJSON[]) {
     let hasDaytimeDependency = false;
 
     const bulletinsList = new Array<BulletinModel>();
