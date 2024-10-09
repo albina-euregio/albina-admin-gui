@@ -3,7 +3,6 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Observable, of, Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
-import { SettingsService } from "../settings-service/settings.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
@@ -13,6 +12,7 @@ import * as Enums from "../../enums/enums";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { DateIsoString } from "app/models/stress-level.model";
 import { UserService } from "../user-service/user.service";
+import { TranslateService } from "@ngx-translate/core";
 
 class TrainingModeError extends Error {}
 
@@ -36,7 +36,7 @@ export class BulletinsService {
     public http: HttpClient,
     private constantsService: ConstantsService,
     private authenticationService: AuthenticationService,
-    private settingsService: SettingsService,
+    private translateService: TranslateService,
     private localStorageService: LocalStorageService,
     private userService: UserService,
     private wsBulletinService: WsBulletinService,
@@ -242,7 +242,7 @@ export class BulletinsService {
       this.constantsService
         .createSearchParams([
           ["region", this.authenticationService.getActiveRegionId()],
-          ["lang", this.settingsService.getLangString()],
+          ["lang", this.translateService.currentLang],
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader("application/pdf");
@@ -344,7 +344,7 @@ export class BulletinsService {
       this.constantsService
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["lang", this.settingsService.getLangString()],
+          ["lang", this.translateService.currentLang],
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader("application/xml");

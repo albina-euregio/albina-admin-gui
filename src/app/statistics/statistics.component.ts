@@ -1,12 +1,11 @@
 import { Component } from "@angular/core";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { StatisticsService } from "../providers/statistics-service/statistics.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { saveAs } from "file-saver";
 import { FormsModule } from "@angular/forms";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { NgIf } from "@angular/common";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   templateUrl: "statistics.component.html",
@@ -22,7 +21,7 @@ export class StatisticsComponent {
 
   constructor(
     public statisticsService: StatisticsService,
-    public settingsService: SettingsService,
+    public translateService: TranslateService,
     public constantsService: ConstantsService,
   ) {
     this.loadingStatistics = false;
@@ -37,7 +36,7 @@ export class StatisticsComponent {
         .getStatisticsCsv(
           this.bsRangeValue[0],
           this.bsRangeValue[1],
-          this.settingsService.getLangString(),
+          this.translateService.currentLang,
           this.extended,
           this.duplicates,
         )
@@ -56,7 +55,7 @@ export class StatisticsComponent {
               filename = filename + "e";
             }
           }
-          filename = filename + "_" + this.settingsService.getLangString() + ".csv";
+          filename = filename + "_" + this.translateService.currentLang + ".csv";
           saveAs(blob, filename);
           console.log("Statistics loaded.");
         });

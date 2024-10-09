@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams, HttpRequest, HttpEvent } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
-import { SettingsService } from "../settings-service/settings.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { Observable } from "rxjs";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class MediaFileService {
   constructor(
     public http: HttpClient,
     private constantsService: ConstantsService,
-    private settingsService: SettingsService,
+    private translateService: TranslateService,
     private authenticationService: AuthenticationService,
   ) {}
 
@@ -22,7 +22,7 @@ export class MediaFileService {
         .createSearchParams([
           ["date", this.constantsService.getISOStringWithTimezoneOffset(date[1])],
           ["region", this.authenticationService.getActiveRegionId()],
-          ["lang", this.settingsService.getLangString()],
+          ["lang", this.translateService.currentLang],
           ["important", important],
         ])
         .toString();

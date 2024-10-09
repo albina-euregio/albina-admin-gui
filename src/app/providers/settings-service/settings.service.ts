@@ -32,10 +32,6 @@ export class SettingsService {
     this.setLangString(lang);
   }
 
-  getLangString(): string {
-    return this.translateService.currentLang;
-  }
-
   setLangString(language: string) {
     if (!language) {
       return;

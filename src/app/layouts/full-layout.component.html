@@ -85,7 +85,7 @@
           aria-expanded="false"
           dropdownToggle
         >
-          {{ settingsService.getLangString() }}
+          {{ translateService.currentLang }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
           <li>
@@ -94,7 +94,7 @@
           <li *ngFor="let lang of translateService.langs">
             <a class="dropdown-item" (click)="settingsService.setLangString(lang)" role="button">
               {{ "menu." + lang | translate }}
-              <i *ngIf="settingsService.getLangString() === lang" class="ph ph-check"></i>
+              <i *ngIf="translateService.currentLang === lang" class="ph ph-check"></i>
             </a>
           </li>
         </ul>
