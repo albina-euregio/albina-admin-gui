@@ -5,7 +5,15 @@
       <input type="datetime-local" required [(ngModel)]="observation.eventDate" class="form-control" />
     </div>
   </div>
-  <div class="col-12">
+  <div class="col-12 col-md-6">
+    <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
+    <select id="snowpackStability" [(ngModel)]="observation.stability" class="form-select">
+      <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
+        {{ "snowpackStability." + stability | translate }}
+      </option>
+    </select>
+  </div>
+  <div class="col-12 col-md-9">
     <label for="locationName"><i class="ph ph-globe"></i> {{ "observations.locationName" | translate }}</label>
     <input
       id="locationName"
@@ -19,7 +27,16 @@
       class="form-control"
     />
   </div>
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-3">
+    <app-aspects
+      [aspects]="[observation.aspect]"
+      (aspectsChange)="observation.aspect = $event[0]"
+      [size]="100"
+      [singleton]="true"
+    />
+    {{ observation.aspect }}
+  </div>
+  <div class="col-12 col-md-3">
     <label for="latitude"><i class="ph ph-map-pin"></i> {{ "observations.latitude" | translate }}</label>
     <input
       id="latitude"
@@ -30,7 +47,7 @@
       class="form-control"
     />
   </div>
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-3">
     <label for="longitude"><i class="ph ph-map-pin"></i> {{ "observations.longitude" | translate }}</label>
     <div class="input-group">
       <input
@@ -46,11 +63,34 @@
       </button>
     </div>
   </div>
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-3">
     <label for="elevation">
       <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevation" | translate }}
     </label>
     <input id="elevation" [(ngModel)]="observation.elevation" type="number" step="1" class="form-control" />
+  </div>
+  <div class="col-12 col-md-3">
+    <label for="elevationLowerBound">
+      <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevationRange" | translate }}
+    </label>
+    <div class="input-group">
+      <input
+        id="elevationLowerBound"
+        [(ngModel)]="observation.elevationLowerBound"
+        type="number"
+        step="1"
+        class="form-control"
+        title="{{ 'observations.elevationLowerBound' | translate }}"
+      />
+      <input
+        id="elevationUpperBound"
+        [(ngModel)]="observation.elevationUpperBound"
+        type="number"
+        step="1"
+        class="form-control"
+        title="{{ 'observations.elevationUpperBound' | translate }}"
+      />
+    </div>
   </div>
   <div class="col-12 col-md-6">
     <label for="authorName"><i class="ph ph-user"></i> {{ "observations.authorName" | translate }}</label>

@@ -7,12 +7,14 @@ import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
 import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
 import { Observable, Observer, map, of, switchMap } from "rxjs";
+import { SnowpackStability } from "../enums/enums";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { GenericObservation } from "./models/generic-observation.model";
+import { AspectsComponent } from "../shared/aspects.component";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TypeaheadModule],
+  imports: [CommonModule, FormsModule, TranslateModule, TypeaheadModule, AspectsComponent],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
 })
@@ -23,6 +25,7 @@ export class ObservationEditorComponent {
   ) {}
 
   @Input() observation: GenericObservation;
+  snowpackStabilityValues: SnowpackStability[] = Object.values(SnowpackStability);
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation.locationName),
   ).pipe(

@@ -1229,6 +1229,9 @@
     "content": "Content",
     "dangerRating": "Danger rating",
     "elevation": "Elevation",
+    "elevationRange": "Elevation range",
+    "elevationLowerBound": "Elevation lower bound",
+    "elevationUpperBound": "Elevation upper bound",
     "eventDate": "Event date",
     "eventType": "Event type",
     "eventTypes": {
