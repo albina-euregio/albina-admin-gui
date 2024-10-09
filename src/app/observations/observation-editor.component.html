@@ -133,12 +133,34 @@
       <div class="btn-group">
         <button
           *ngFor="let dangerPattern of dangerPatterns"
-          class="btn btn-sm"
-          [ngClass]="observation.dangerPatterns?.includes(dangerPattern) ? 'btn-dark' : 'btn-outline-secondary'"
+          [ngClass]="
+            observation.dangerPatterns?.includes(dangerPattern)
+              ? 'btn btn-sm btn-dark'
+              : 'btn btn-sm btn-outline-secondary'
+          "
           (click)="observation.dangerPatterns = xor(observation.dangerPatterns ?? [], [dangerPattern])"
           title="{{ 'dangerPattern.' + dangerPattern | translate }}"
         >
           {{ dangerPattern }}
+        </button>
+      </div>
+    </div>
+
+    <label class="mt-30">{{ "bulletins.create.label.importantObservations" | translate }}</label>
+    <div class="input-group">
+      <div class="btn-group">
+        <button
+          *ngFor="let importantObservation of importantObservations"
+          [ngClass]="
+            observation.importantObservations?.includes(importantObservation)
+              ? 'btn btn-sm btn-dark'
+              : 'btn btn-sm btn-outline-secondary'
+          "
+          (click)="
+            observation.importantObservations = xor(observation.importantObservations ?? [], [importantObservation])
+          "
+        >
+          {{ "importantObservation." + importantObservation | translate }}
         </button>
       </div>
     </div>
