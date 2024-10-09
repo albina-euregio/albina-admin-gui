@@ -40,9 +40,6 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
     BsDropdownModule.forRoot(),
     NgxEchartsDirective,
     SharedModule,
-  ],
-  exports: [],
-  declarations: [
     BulletinsComponent,
     CreateBulletinComponent,
     AvalancheBulletinComponent,
@@ -56,5 +53,6 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
     HtmlPipe,
     TeamStressLevelsComponent,
   ],
+  exports: [],
 })
 export class BulletinsModule {}

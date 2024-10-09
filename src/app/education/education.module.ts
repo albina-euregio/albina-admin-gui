@@ -8,7 +8,6 @@ import { EducationRoutingModule } from "./education-routing.module";
 import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
-  imports: [EducationRoutingModule, FormsModule, CommonModule, TranslateModule],
-  declarations: [EducationComponent],
+  imports: [EducationRoutingModule, FormsModule, CommonModule, TranslateModule, EducationComponent],
 })
 export class EducationModule {}

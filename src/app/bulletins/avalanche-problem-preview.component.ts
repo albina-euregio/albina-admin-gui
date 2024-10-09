@@ -1,14 +1,28 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
+import { NgIf } from "@angular/common";
+import { DangerRatingComponent } from "../shared/danger-rating.component";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { AvalancheTypeComponent } from "../shared/avalanche-type.component";
+import { AspectsComponent } from "../shared/aspects.component";
 
 @Component({
   selector: "app-avalanche-problem-preview",
   templateUrl: "avalanche-problem-preview.component.html",
+  standalone: true,
+  imports: [
+    NgIf,
+    DangerRatingComponent,
+    AvalancheProblemIconsComponent,
+    AvalancheTypeComponent,
+    AspectsComponent,
+    TranslateModule,
+  ],
 })
 export class AvalancheProblemPreviewComponent {
   @Input() bulletin: BulletinModel;

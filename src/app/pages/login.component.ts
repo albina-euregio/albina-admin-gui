@@ -6,9 +6,14 @@ import { environment } from "../../environments/environment";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { ConfigurationService, ServerConfiguration } from "app/providers/configuration-service/configuration.service";
+import { FormsModule } from "@angular/forms";
+import { NgIf, NgFor } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   templateUrl: "login.component.html",
+  standalone: true,
+  imports: [FormsModule, NgIf, NgFor, TranslateModule],
 })
 export class LoginComponent implements OnInit {
   public username: string;

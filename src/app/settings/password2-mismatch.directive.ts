@@ -17,6 +17,7 @@ export const password2MismatchValidator: ValidatorFn = (control: AbstractControl
       multi: true,
     },
   ],
+  standalone: true,
 })
 export class Password2MismatchValidatorDirective implements Validator {
   validate(control: AbstractControl): ValidationErrors {

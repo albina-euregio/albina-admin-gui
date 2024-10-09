@@ -12,7 +12,15 @@ import { PasswordMismatchValidatorDirective } from "./password-mismatch.directiv
 import { Password2MismatchValidatorDirective } from "./password2-mismatch.directive";
 
 @NgModule({
-  imports: [SettingsRoutingModule, FormsModule, CommonModule, TranslateModule, AlertModule.forRoot()],
-  declarations: [SettingsComponent, PasswordMismatchValidatorDirective, Password2MismatchValidatorDirective],
+  imports: [
+    SettingsRoutingModule,
+    FormsModule,
+    CommonModule,
+    TranslateModule,
+    AlertModule.forRoot(),
+    SettingsComponent,
+    PasswordMismatchValidatorDirective,
+    Password2MismatchValidatorDirective,
+  ],
 })
 export class SettingsModule {}

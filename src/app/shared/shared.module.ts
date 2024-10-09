@@ -13,8 +13,12 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
 @NgModule({
-  imports: [AvalancheProblemIconsComponent, TranslateModule, NgxSliderModule, FormsModule, CommonModule],
-  declarations: [
+  imports: [
+    AvalancheProblemIconsComponent,
+    TranslateModule,
+    NgxSliderModule,
+    FormsModule,
+    CommonModule,
     AspectsComponent,
     AvalancheTypeComponent,
     DangerRatingComponent,

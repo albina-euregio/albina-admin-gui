@@ -1,12 +1,16 @@
 import { Component, Input } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
 import * as Enums from "../enums/enums";
-import { AlertComponent } from "ngx-bootstrap/alert";
+import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { NgFor, NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   templateUrl: "server-configuration.component.html",
   selector: "app-server-configuration",
+  standalone: true,
+  imports: [NgFor, AlertModule, FormsModule, NgIf, TranslateModule],
 })
 export class ServerConfigurationComponent {
   @Input() config: ServerConfiguration;

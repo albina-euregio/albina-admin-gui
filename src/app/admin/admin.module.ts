@@ -28,8 +28,6 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     AlertModule.forRoot(),
     TabsModule,
     BsDatepickerModule.forRoot(),
-  ],
-  declarations: [
     AdminComponent,
     ServersConfigurationComponent,
     ServerConfigurationComponent,

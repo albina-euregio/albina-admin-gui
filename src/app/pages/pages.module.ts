@@ -10,7 +10,14 @@ import { LoginComponent } from "./login.component";
 import { PagesRoutingModule } from "./pages-routing.module";
 
 @NgModule({
-  imports: [PagesRoutingModule, FormsModule, TranslateModule, CommonModule],
-  declarations: [P404Component, P500Component, LoginComponent],
+  imports: [
+    PagesRoutingModule,
+    FormsModule,
+    TranslateModule,
+    CommonModule,
+    P404Component,
+    P500Component,
+    LoginComponent,
+  ],
 })
 export class PagesModule {}

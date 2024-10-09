@@ -1,12 +1,15 @@
 import { Component } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { BlogService } from "../providers/blog-service/blog.service";
-import { AlertComponent } from "ngx-bootstrap/alert";
+import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { NgFor } from "@angular/common";
 
 @Component({
   templateUrl: "blog.component.html",
   selector: "app-blog",
+  standalone: true,
+  imports: [NgFor, AlertModule, TranslateModule],
 })
 export class BlogComponent {
   public alerts: any[] = [];

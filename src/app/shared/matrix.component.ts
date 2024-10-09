@@ -5,10 +5,13 @@ import { SettingsService } from "../providers/settings-service/settings.service"
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   selector: "app-matrix",
   templateUrl: "matrix.component.html",
+  standalone: true,
+  imports: [TranslateModule],
 })
 export class MatrixComponent implements AfterViewInit, OnChanges {
   @Input() bulletin: BulletinModel;

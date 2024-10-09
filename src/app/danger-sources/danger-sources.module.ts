@@ -28,8 +28,10 @@ import { SharedModule } from "app/shared/shared.module";
     NgxSliderModule,
     NgxEchartsDirective,
     SharedModule,
+    DangerSourcesComponent,
+    DangerSourceVariantComponent,
+    CreateDangerSourcesComponent,
   ],
   exports: [],
-  declarations: [DangerSourcesComponent, DangerSourceVariantComponent, CreateDangerSourcesComponent],
 })
 export class DangerSourcesModule {}

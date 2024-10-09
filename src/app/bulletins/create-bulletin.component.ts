@@ -11,7 +11,7 @@ import { debounce } from "lodash";
 import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
 
 // services
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
@@ -34,9 +34,27 @@ import * as Enums from "../enums/enums";
 import { ServerModel } from "app/models/server.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
+import { NgIf, NgFor, NgTemplateOutlet, DatePipe, KeyValuePipe } from "@angular/common";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
+import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    BsDropdownModule,
+    NgTemplateOutlet,
+    AvalancheBulletinComponent,
+    DangerRatingIconComponent,
+    AvalancheProblemIconsComponent,
+    DatePipe,
+    KeyValuePipe,
+    TranslateModule,
+  ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;

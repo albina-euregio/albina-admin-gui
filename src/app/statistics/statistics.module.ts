@@ -22,7 +22,7 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
     AlertModule.forRoot(),
     TabsModule,
     BsDatepickerModule.forRoot(),
+    StatisticsComponent,
   ],
-  declarations: [StatisticsComponent],
 })
 export class StatisticsModule {}

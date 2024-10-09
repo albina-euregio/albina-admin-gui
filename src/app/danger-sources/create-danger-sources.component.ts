@@ -9,7 +9,7 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 import { BulletinModel } from "../models/bulletin.model";
 
 // services
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -25,9 +25,24 @@ import {
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
 import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
+import { NgIf, NgFor, NgTemplateOutlet, DatePipe } from "@angular/common";
+import { DangerSourceVariantComponent } from "./danger-source-variant.component";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    NgTemplateOutlet,
+    DangerSourceVariantComponent,
+    BsDropdownModule,
+    DangerRatingIconComponent,
+    DatePipe,
+    TranslateModule,
+  ],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public variantStatus = DangerSourceVariantStatus;

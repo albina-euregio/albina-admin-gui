@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import * as Enums from "../enums/enums";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
@@ -8,6 +8,8 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
   selector: "app-avalanche-problem-decision-tree",
   templateUrl: "avalanche-problem-decision-tree.component.html",
   styleUrls: ["avalanche-problem-decision-tree.component.scss"],
+  standalone: true,
+  imports: [TranslateModule],
 })
 export class AvalancheProblemDecisionTreeComponent {
   private resultIcons: HTMLElement[];

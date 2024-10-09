@@ -12,7 +12,7 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 import * as Enums from "../enums/enums";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import {
   Characteristic,
   CreationProcess,
@@ -33,11 +33,31 @@ import {
   Wetness,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
-import { ChangeContext, Options } from "@angular-slider/ngx-slider";
+import { ChangeContext, Options, NgxSliderModule } from "@angular-slider/ngx-slider";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { NgIf, NgFor, NgClass, DatePipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+import { AspectsComponent } from "../shared/aspects.component";
+import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 
 @Component({
   selector: "app-danger-source-variant",
   templateUrl: "danger-source-variant.component.html",
+  standalone: true,
+  imports: [
+    BsDropdownModule,
+    NgIf,
+    FormsModule,
+    NgFor,
+    AccordionModule,
+    NgClass,
+    NgxSliderModule,
+    AspectsComponent,
+    MatrixParameterComponent,
+    DatePipe,
+    TranslateModule,
+  ],
 })
 export class DangerSourceVariantComponent implements OnChanges {
   @Input() variant: DangerSourceVariantModel;
