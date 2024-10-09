@@ -102,6 +102,19 @@
       <input type="datetime-local" required [(ngModel)]="observation.reportDate" class="date form-control" />
     </div>
   </div>
+  <div class="col-12 col-md-6">
+    <div class="avalanche-problem-detail__problem-icons">
+      <app-avalanche-problem-icons
+        *ngFor="let problem of avalancheProblems"
+        (click)="toggleAvalancheProblem(problem)"
+        [class.is-disabled]="!observation.avalancheProblems?.includes(problem)"
+        [value]="problem"
+        class="avalanche-problem-detail__problem-icon"
+        role="button"
+        title="{{ 'avalancheProblem.' + problem | translate }}"
+      />
+    </div>
+  </div>
   <div class="col-12">
     <label for="content"><i class="ph ph-chat"></i> {{ "observations.content" | translate }}</label>
     <textarea

@@ -9,6 +9,7 @@ import { AuthorModel } from "../../models/author.model";
 import { ServerModel } from "../../models/server.model";
 import { RegionConfiguration, ServerConfiguration } from "../configuration-service/configuration.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import * as Enums from "../../enums/enums";
 
 @Injectable()
 export class AuthenticationService {
@@ -241,6 +242,19 @@ export class AuthenticationService {
     } else {
       return null;
     }
+  }
+
+  public getActiveRegionAvalancheProblems(): Enums.AvalancheProblem[] {
+    return [
+      Enums.AvalancheProblem.new_snow,
+      Enums.AvalancheProblem.wind_slab,
+      Enums.AvalancheProblem.persistent_weak_layers,
+      Enums.AvalancheProblem.wet_snow,
+      Enums.AvalancheProblem.gliding_snow,
+      this.getActiveRegion().enableAvalancheProblemCornices && Enums.AvalancheProblem.cornices,
+      this.getActiveRegion().enableAvalancheProblemNoDistinctAvalancheProblem &&
+        Enums.AvalancheProblem.no_distinct_problem,
+    ].filter((p) => !!p);
   }
 
   public getActiveRegion(): RegionConfiguration | undefined {

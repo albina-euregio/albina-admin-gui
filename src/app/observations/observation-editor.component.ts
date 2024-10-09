@@ -7,25 +7,38 @@ import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
 import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
 import { Observable, Observer, map, of, switchMap } from "rxjs";
-import { SnowpackStability } from "../enums/enums";
+import * as Enums from "../enums/enums";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { AspectsComponent } from "../shared/aspects.component";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { GenericObservation } from "./models/generic-observation.model";
-import { AspectsComponent } from "../shared/aspects.component";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TypeaheadModule, AspectsComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    TypeaheadModule,
+    AspectsComponent,
+    AvalancheProblemIconsComponent,
+  ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
 })
 export class ObservationEditorComponent {
   constructor(
+    authenticationService: AuthenticationService,
     private geocodingService: GeocodingService,
     private coordinateDataService: CoordinateDataService,
-  ) {}
+  ) {
+    this.avalancheProblems = authenticationService.getActiveRegionAvalancheProblems();
+  }
 
   @Input() observation: GenericObservation;
-  snowpackStabilityValues: SnowpackStability[] = Object.values(SnowpackStability);
+  avalancheProblems: Enums.AvalancheProblem[];
+  snowpackStabilityValues = Object.values(Enums.SnowpackStability);
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation.locationName),
   ).pipe(
@@ -73,6 +86,17 @@ export class ObservationEditorComponent {
 
       this.fetchElevation();
     }, 0);
+  }
+
+  toggleAvalancheProblem(p: Enums.AvalancheProblem) {
+    this.observation.avalancheProblems ??= [];
+    const set = new Set(this.observation.avalancheProblems);
+    if (set.has(p)) {
+      set.delete(p);
+    } else {
+      set.add(p);
+    }
+    this.observation.avalancheProblems = Array.from(set);
   }
 
   parseContent($event: { clipboardData: DataTransfer }): void {
