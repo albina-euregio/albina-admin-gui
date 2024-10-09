@@ -33,8 +33,13 @@ export class ObservationFilterService<
   }
 
   setDateRange() {
+    const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
     if (this.startDate) this.startDate.setHours(0, 0, 0, 0);
     if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
+    if (isTrainingEnabled && this.endDate > new Date(trainingTimestamp)) {
+      // update existing endDate to avoid recursion via `set endDate`
+      this.endDate.setTime(+new Date(trainingTimestamp));
+    }
     if (this.startDate && this.endDate) {
       this.filterSelectionData.find((filter) => filter.key === "eventDate").setDateRange(this.startDate, this.endDate);
       this.router.navigate([], {
