@@ -8,7 +8,7 @@ import { saveAs } from "file-saver";
 import { debounce } from "lodash";
 
 // models
-import { BulletinModel } from "../models/bulletin.model";
+import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
 
 // services
 import { TranslateService } from "@ngx-translate/core";
@@ -288,15 +288,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         // load own bulletins from the date they are copied from
         let regions = [this.authenticationService.getActiveRegionId()];
         this.bulletinsService.loadBulletins(this.bulletinsService.getCopyDate(), regions).subscribe(
-          (data) => {
-            this.copyBulletins(data.body);
+          ({ bulletins }) => {
+            this.copyBulletins(bulletins);
             this.bulletinsService.setCopyDate(undefined);
             // load bulletins from the current date, add foreign bulletins
             this.bulletinsService
               .loadBulletins(this.bulletinsService.getActiveDate(), this.authenticationService.getInternalRegions())
               .subscribe(
-                (data2) => {
-                  this.addForeignBulletins(data2.body);
+                ({ bulletins }) => {
+                  this.addForeignBulletins(bulletins);
                   this.save();
                   this.loading = false;
                 },
@@ -364,11 +364,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.internBulletinsListEtag,
       )
       .subscribe(
-        (data) => {
-          const etag = data.headers?.get("ETag");
+        ({ bulletins, etag }) => {
           this.loadInternalBulletinsError = false;
           if (!etag || etag !== this.internBulletinsListEtag) {
-            this.addInternalBulletins(data.body);
+            this.addInternalBulletins(bulletins);
             this.internBulletinsListEtag = etag;
           } else {
             console.info("Skipping internal bulletin update for", this.internBulletinsListEtag);
@@ -855,7 +854,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.save();
   }
 
-  private addForeignBulletins(response) {
+  private addForeignBulletins(response: BulletinModelAsJSON[]) {
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
@@ -871,7 +870,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.deselectAggregatedRegion();
   }
 
-  private addExternalBulletins(server: ServerModel, response) {
+  private addExternalBulletins(server: ServerModel, response: BulletinModelAsJSON[]) {
     let bulletinsList = new Array<BulletinModel>();
     if (response) {
       for (const jsonBulletin of response) {
@@ -904,7 +903,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getNewId(response, regionId) {
+  private getNewId(response: BulletinModelAsJSON[], regionId: string) {
     for (const jsonBulletin of response) {
       if (jsonBulletin.savedRegions.includes(regionId)) return jsonBulletin.id;
     }
@@ -922,7 +921,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.updateBulletinOnServer(bulletin, true, false);
   }
 
-  private addInternalBulletins(response) {
+  private addInternalBulletins(response: BulletinModelAsJSON[]) {
     let hasDaytimeDependency = false;
 
     const bulletinsList = new Array<BulletinModel>();
@@ -1120,7 +1119,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   preview() {
     this.loadingPreview = true;
-    this.bulletinsService.getPreviewPdf(this.bulletinsService.getActiveDate()).subscribe((blob) => {
+    this.bulletinsService.getPreviewPdf(this.internBulletinsList).subscribe((blob) => {
       this.loadingPreview = false;
       const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
       saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");
@@ -1636,7 +1635,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     const regions = [this.authenticationService.getActiveRegionId()];
     this.bulletinsService.loadBulletins(date, regions).subscribe(
-      (data) => {
+      ({ bulletins }) => {
         // delete own regions
         const entries = new Array<BulletinModel>();
 
@@ -1649,7 +1648,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.delBulletin(entry);
         }
 
-        this.copyBulletins(data.body);
+        this.copyBulletins(bulletins);
         this.loading = false;
       },
       () => {

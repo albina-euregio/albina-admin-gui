@@ -6,6 +6,9 @@ import { RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
+const secret = Symbol();
+export type BulletinModelAsJSON = BulletinModel & typeof secret; // somewhat
+
 export class BulletinModel implements PolygonObject {
   public id: string;
 
@@ -54,7 +57,7 @@ export class BulletinModel implements PolygonObject {
   public dangerPattern1: Enums.DangerPattern;
   public dangerPattern2: Enums.DangerPattern;
 
-  static createFromJson(json) {
+  static createFromJson(json: BulletinModelAsJSON | any) {
     const bulletin = new BulletinModel();
 
     bulletin.setId(json.id);
@@ -447,7 +450,7 @@ export class BulletinModel implements PolygonObject {
     return this.getPublishedRegions().concat(this.getSavedRegions()).concat(this.getSuggestedRegions());
   }
 
-  toJson() {
+  toJson(): BulletinModelAsJSON {
     const json = Object();
 
     if (this.id) {

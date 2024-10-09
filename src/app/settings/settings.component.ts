@@ -3,6 +3,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
+import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { AlertComponent } from "ngx-bootstrap/alert";
 import { UserService } from "app/providers/user-service/user.service";
 import { UpdateUserComponent } from "app/admin/update-user.component";
@@ -23,6 +24,7 @@ export class SettingsComponent {
   constructor(
     private translateService: TranslateService,
     public authenticationService: AuthenticationService,
+    public localStorageService: LocalStorageService,
     private userService: UserService,
     private modalService: BsModalService,
     private settingsService: SettingsService,
