@@ -5,11 +5,10 @@ import { TranslateModule } from "@ngx-translate/core";
 import type { FotoWebcamEU } from "../../../observations-api/src/models/foto-webcam.model";
 import type { PanomaxThumbnailResponse } from "../../../observations-api/src/models/panomax.model";
 import { GenericObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
-import { ObservationEditorComponent } from "./observation-editor.component";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, ObservationEditorComponent, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   selector: "app-observation-gallery",
   templateUrl: "observation-gallery.component.html",
 })

@@ -1,5 +1,6 @@
-// Spaces
+@use "sass:color";
 
+// Spaces
 $spacers: (
   0: $space-0,
   1: $space-1,
@@ -106,7 +107,7 @@ $sidebar-width: 0px;
 $sidebar-padding: 1rem;
 $sidebar-color: #fff;
 $sidebar-bg: $secondary-dark;
-$sidebar-bg-active: lighten($sidebar-bg, 5%);
+$sidebar-bg-active: color.adjust($sidebar-bg, $lightness: 5%);
 $mobile-sidebar-width: 220px;
 
 // Badges
