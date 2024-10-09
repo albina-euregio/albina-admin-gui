@@ -3,7 +3,12 @@ import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { isAvalancheWarningServiceObservation } from "./models/observation.model";
 import { AlbinaObservationsService } from "./observations.service";
-import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+} from "./models/generic-observation.model";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -49,7 +54,10 @@ export class ObservationTableComponent {
   }
 
   newObservation() {
-    this.observation = {} satisfies GenericObservation;
+    this.observation = {
+      $source: ObservationSource.AvalancheWarningService,
+      $type: ObservationType.SimpleObservation,
+    } satisfies GenericObservation;
     this.showDialog();
   }
 
