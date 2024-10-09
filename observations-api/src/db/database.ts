@@ -1,15 +1,18 @@
 import * as mysql from "mysql2/promise";
-import type {
-  Aspect,
-  AvalancheProblem,
-  DangerPattern,
-  ForecastSource,
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationType,
-  Stability,
+import { augmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
+import {
+  findExistingObservation,
+  type Aspect,
+  type AvalancheProblem,
+  type DangerPattern,
+  type ForecastSource,
+  type GenericObservation,
+  type ImportantObservation,
+  type ObservationSource,
+  type ObservationType,
+  type Stability,
 } from "../models";
+import { augmentElevation } from "./elevation";
 
 type GenericObservationTable = {
   REGION_ID: string;
@@ -37,7 +40,7 @@ type GenericObservationTable = {
   OBS_CONTENT: string;
 };
 
-export async function createConnection() {
+export async function createConnection(): Promise<mysql.Connection> {
   return await mysql.createConnection({
     host: "127.0.0.1",
     port: 3306,
@@ -46,6 +49,20 @@ export async function createConnection() {
     database: "albina_dev",
   });
 }
+
+export async function augmentAndInsertObservation(
+  connection: mysql.Connection,
+  o: GenericObservation,
+  existing: GenericObservation[] = [],
+) {
+  const ex = findExistingObservation(existing, o);
+  if (!ex || o.latitude !== ex.latitude || o.longitude !== ex.longitude) {
+    augmentRegion(o);
+    await augmentElevation(o);
+  }
+  await insertObservation(connection, o);
+}
+
 export async function insertObservation(connection: mysql.Connection, o: GenericObservation) {
   if (!o) return;
   console.log("Inserting observation", o.$id, o.$source);
