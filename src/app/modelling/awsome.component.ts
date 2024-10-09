@@ -2,8 +2,6 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild }
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
-import { ObservationGalleryComponent } from "../observations/observation-gallery.component";
-import { ObservationTableComponent } from "../observations/observation-table.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { ObservationFilterService } from "../observations/observation-filter.service";
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
@@ -36,15 +34,7 @@ type Awsome = {
 @Component({
   selector: "app-awsome",
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    FormsModule,
-    ObservationChartComponent,
-    ObservationGalleryComponent,
-    ObservationTableComponent,
-    TranslateModule,
-  ],
+  imports: [CommonModule, FormsModule, FormsModule, ObservationChartComponent, TranslateModule],
   templateUrl: "awsome.component.html",
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
