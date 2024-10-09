@@ -1119,7 +1119,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   preview() {
     this.loadingPreview = true;
-    this.bulletinsService.getPreviewPdf(this.bulletinsService.getActiveDate()).subscribe((blob) => {
+    this.bulletinsService.getPreviewPdf(this.internBulletinsList).subscribe((blob) => {
       this.loadingPreview = false;
       const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
       saveAs(blob, "PREVIEW_" + formattedDate + ".pdf");

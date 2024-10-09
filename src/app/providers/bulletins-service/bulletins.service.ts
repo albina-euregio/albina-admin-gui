@@ -234,19 +234,19 @@ export class BulletinsService {
     this.statusMap.get(region).set(date[0].getTime(), status);
   }
 
-  getPreviewPdf(date: [Date, Date]): Observable<Blob> {
+  getPreviewPdf(bulletins: BulletinModel[]): Observable<Blob> {
+    const body = JSON.stringify(bulletins.map((b) => b.toJson()));
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/preview?" +
       this.constantsService
         .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
           ["region", this.authenticationService.getActiveRegionId()],
           ["lang", this.settingsService.getLangString()],
         ])
         .toString();
     const headers = this.authenticationService.newAuthHeader("application/pdf");
-    return this.http.get(url, { headers, responseType: "blob" });
+    return this.http.post(url, body, { headers, responseType: "blob" });
   }
 
   getStatus(
@@ -530,7 +530,7 @@ export class BulletinsService {
 
   createCaaml(date: [Date, Date]) {
     if (this.localStorageService.isTrainingEnabled) {
-      // TODO create CAAML from POST JSON
+      throw new TrainingModeError();
     }
     const url =
       this.constantsService.getServerUrl() +
@@ -545,7 +545,7 @@ export class BulletinsService {
 
   createPdf(date: [Date, Date]) {
     if (this.localStorageService.isTrainingEnabled) {
-      // TODO create PDF from POST JSON
+      throw new TrainingModeError();
     }
     const url =
       this.constantsService.getServerUrl() +
