@@ -144,12 +144,12 @@ export const genericObservationSchema = z.object({
   elevation: z.number().optional().nullable().describe("Elevation in meters"),
   elevationLowerBound: z.number().optional().nullable().describe("Lower bound of elevation in meters"),
   elevationUpperBound: z.number().optional().nullable().describe("Upper bound of elevation in meters"),
-  eventDate: z.date().describe("Date when the event occurred"),
+  eventDate: z.coerce.date().describe("Date when the event occurred"),
   locationName: z.string().optional().nullable().describe("Location name"),
   latitude: z.number().optional().nullable().describe("Location latitude (WGS 84)"),
   longitude: z.number().optional().nullable().describe("Location longitude (WGS 84)"),
   region: z.string().optional().nullable().describe("Micro-region code (computed from latitude/longitude)"),
-  reportDate: z.date().optional().nullable().describe("Date when the observation has been reported"),
+  reportDate: z.coerce.date().optional().nullable().describe("Date when the observation has been reported"),
   avalancheProblems: z
     .array(z.nativeEnum(AvalancheProblem))
     .optional()
@@ -167,8 +167,12 @@ export const genericObservationSchema = z.object({
     .describe("Important observations"),
 });
 
+export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });
+
+export type RawGenericObservation = z.infer<typeof genericObservationSchema>;
+
 export type GenericObservation<Data = any> = z.infer<typeof genericObservationSchema> & {
-  $data: Data;
+  $data?: Data;
   /**
    * Additional information to display as table rows in the observation dialog
    */

@@ -60,7 +60,7 @@ export async function augmentAndInsertObservation(
     augmentRegion(o);
     await augmentElevation(o);
   }
-  await insertObservation(connection, o);
+  return await insertObservation(connection, o);
 }
 
 export async function insertObservation(connection: mysql.Connection, o: GenericObservation) {
@@ -97,14 +97,26 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
   VALUES (${Object.keys(data)
     .map(() => "?")
     .join(", ")})
-  ;`;
+  `;
   try {
-    await connection.execute(sql, Object.values(data));
+    return await connection.execute(sql, Object.values(data));
   } catch (err) {
     if ((err as mysql.QueryError).code === "ER_DUP_ENTRY") {
       console.debug("Skipping existing observation", o.$id, data);
       return;
     }
+    console.error(err, JSON.stringify(o));
+    throw err;
+  }
+}
+
+export async function deleteObservation(connection: mysql.Connection, o: GenericObservation) {
+  if (!o || !o.$id) return;
+  console.log("Deleting observation", o.$id, o.$source);
+  const sql = "DELETE FROM generic_observations WHERE ID = ?";
+  try {
+    return await connection.execute(sql, [o.$id]);
+  } catch (err) {
     console.error(err, JSON.stringify(o));
     throw err;
   }

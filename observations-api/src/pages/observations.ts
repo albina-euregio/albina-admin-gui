@@ -1,7 +1,12 @@
 import type { APIRoute } from "astro";
-import type { GenericObservation } from "../../../src/app/observations/models/generic-observation.model";
+import {
+  genericObservationSchema,
+  genericObservationWithIdSchema,
+  type GenericObservation,
+  type RawGenericObservation,
+} from "../../../src/app/observations/models/generic-observation.model";
+import { augmentAndInsertObservation, createConnection, deleteObservation, selectObservations } from "../db/database";
 import { fetchAndInsert } from "../fetch/observations";
-import { createConnection, selectObservations } from "../db/database";
 
 let lastFetch = 0;
 
@@ -41,4 +46,56 @@ export const GET: APIRoute = async ({ url }) => {
     status: 200,
     headers: { "Content-Type": "application/json" },
   });
+};
+
+export const POST: APIRoute = async ({ request }) => {
+  if (request.headers.get("Content-Type") !== "application/json") {
+    return new Response("Expecting application/json", { status: 415 });
+  }
+  let observation: RawGenericObservation;
+  try {
+    const body = await request.json();
+    observation = genericObservationSchema.parse(body);
+    observation.$id ??= crypto.randomUUID();
+  } catch (e) {
+    return new Response(e, { status: 400 });
+  }
+  try {
+    const connection = await createConnection();
+    try {
+      await augmentAndInsertObservation(connection, observation);
+    } finally {
+      connection.destroy();
+    }
+  } catch (e) {
+    return new Response(e, { status: 500 });
+  }
+  return new Response(JSON.stringify(observation), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
+export const DELETE: APIRoute = async ({ request }) => {
+  if (request.headers.get("Content-Type") !== "application/json") {
+    return new Response("Expecting application/json", { status: 415 });
+  }
+  let observation: RawGenericObservation;
+  try {
+    const body = await request.json();
+    observation = genericObservationWithIdSchema.parse(body);
+  } catch (e) {
+    return new Response(e, { status: 400 });
+  }
+  try {
+    const connection = await createConnection();
+    try {
+      await deleteObservation(connection, observation);
+    } finally {
+      connection.destroy();
+    }
+  } catch (e) {
+    return new Response(e, { status: 500 });
+  }
+  return new Response("", { status: 200 });
 };
