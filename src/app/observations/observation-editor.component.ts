@@ -13,6 +13,7 @@ import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import { GenericObservation } from "./models/generic-observation.model";
+import { xor } from "lodash";
 
 @Component({
   standalone: true,
@@ -38,7 +39,9 @@ export class ObservationEditorComponent {
 
   @Input() observation: GenericObservation;
   avalancheProblems: Enums.AvalancheProblem[];
+  dangerPatterns = Object.values(Enums.DangerPattern);
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);
+  xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation.locationName),
   ).pipe(
@@ -86,17 +89,6 @@ export class ObservationEditorComponent {
 
       this.fetchElevation();
     }, 0);
-  }
-
-  toggleAvalancheProblem(p: Enums.AvalancheProblem) {
-    this.observation.avalancheProblems ??= [];
-    const set = new Set(this.observation.avalancheProblems);
-    if (set.has(p)) {
-      set.delete(p);
-    } else {
-      set.add(p);
-    }
-    this.observation.avalancheProblems = Array.from(set);
   }
 
   parseContent($event: { clipboardData: DataTransfer }): void {

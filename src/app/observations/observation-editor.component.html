@@ -5,6 +5,7 @@
       <input type="datetime-local" required [(ngModel)]="observation.eventDate" class="form-control" />
     </div>
   </div>
+
   <div class="col-12 col-md-6">
     <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
     <select id="snowpackStability" [(ngModel)]="observation.stability" class="form-select">
@@ -13,6 +14,7 @@
       </option>
     </select>
   </div>
+
   <div class="col-12 col-md-9">
     <label for="locationName"><i class="ph ph-globe"></i> {{ "observations.locationName" | translate }}</label>
     <input
@@ -27,6 +29,7 @@
       class="form-control"
     />
   </div>
+
   <div class="col-12 col-md-3">
     <app-aspects
       [aspects]="[observation.aspect]"
@@ -36,6 +39,7 @@
     />
     {{ observation.aspect }}
   </div>
+
   <div class="col-12 col-md-3">
     <label for="latitude"><i class="ph ph-map-pin"></i> {{ "observations.latitude" | translate }}</label>
     <input
@@ -47,6 +51,7 @@
       class="form-control"
     />
   </div>
+
   <div class="col-12 col-md-3">
     <label for="longitude"><i class="ph ph-map-pin"></i> {{ "observations.longitude" | translate }}</label>
     <div class="input-group">
@@ -63,12 +68,14 @@
       </button>
     </div>
   </div>
+
   <div class="col-12 col-md-3">
     <label for="elevation">
       <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevation" | translate }}
     </label>
     <input id="elevation" [(ngModel)]="observation.elevation" type="number" step="1" class="form-control" />
   </div>
+
   <div class="col-12 col-md-3">
     <label for="elevationLowerBound">
       <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevationRange" | translate }}
@@ -92,21 +99,25 @@
       />
     </div>
   </div>
+
   <div class="col-12 col-md-6">
     <label for="authorName"><i class="ph ph-user"></i> {{ "observations.authorName" | translate }}</label>
     <input id="authorName" required [(ngModel)]="observation.authorName" type="text" class="form-control" />
   </div>
+
   <div class="col-12 col-md-6">
     <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" class="input-group">
       <input type="datetime-local" required [(ngModel)]="observation.reportDate" class="date form-control" />
     </div>
   </div>
+
   <div class="col-12 col-md-6">
+    <label>{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
     <div class="avalanche-problem-detail__problem-icons">
       <app-avalanche-problem-icons
         *ngFor="let problem of avalancheProblems"
-        (click)="toggleAvalancheProblem(problem)"
+        (click)="observation.avalancheProblems = xor(observation.avalancheProblems ?? [], [problem])"
         [class.is-disabled]="!observation.avalancheProblems?.includes(problem)"
         [value]="problem"
         class="avalanche-problem-detail__problem-icon"
@@ -115,6 +126,24 @@
       />
     </div>
   </div>
+
+  <div class="col-12 col-md-6">
+    <label>{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
+    <div class="input-group">
+      <div class="btn-group">
+        <button
+          *ngFor="let dangerPattern of dangerPatterns"
+          class="btn btn-sm"
+          [ngClass]="observation.dangerPatterns?.includes(dangerPattern) ? 'btn-dark' : 'btn-outline-secondary'"
+          (click)="observation.dangerPatterns = xor(observation.dangerPatterns ?? [], [dangerPattern])"
+          title="{{ 'dangerPattern.' + dangerPattern | translate }}"
+        >
+          {{ dangerPattern }}
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="col-12">
     <label for="content"><i class="ph ph-chat"></i> {{ "observations.content" | translate }}</label>
     <textarea
