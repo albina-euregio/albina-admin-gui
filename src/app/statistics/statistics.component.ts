@@ -3,10 +3,16 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { StatisticsService } from "../providers/statistics-service/statistics.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
 import { saveAs } from "file-saver";
+import { FormsModule } from "@angular/forms";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { NgIf } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   templateUrl: "statistics.component.html",
   selector: "app-statistics",
+  standalone: true,
+  imports: [FormsModule, BsDatepickerModule, NgIf, TranslateModule],
 })
 export class StatisticsComponent {
   public loadingStatistics: boolean;

@@ -19,12 +19,30 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import * as Enums from "../enums/enums";
 import { LangTexts } from "../models/text.model";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { NgIf, NgFor, DatePipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+import { AvalancheProblemComponent } from "./avalanche-problem.component";
+import { BulletinTextComponent } from "./bulletin-text.component";
 
 @Component({
   selector: "app-avalanche-bulletin",
   templateUrl: "avalanche-bulletin.component.html",
+  standalone: true,
+  imports: [
+    BsDropdownModule,
+    NgIf,
+    FormsModule,
+    NgFor,
+    AccordionModule,
+    AvalancheProblemComponent,
+    BulletinTextComponent,
+    DatePipe,
+    TranslateModule,
+  ],
 })
 export class AvalancheBulletinComponent {
   @Input() bulletin: BulletinModel;

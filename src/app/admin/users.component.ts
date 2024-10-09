@@ -1,7 +1,7 @@
 import { AfterContentInit, Component, ViewChild } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { AlertComponent } from "ngx-bootstrap/alert";
+import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { UserService } from "../providers/user-service/user.service";
 import { TemplateRef } from "@angular/core";
@@ -10,10 +10,13 @@ import { UpdateUserComponent } from "./update-user.component";
 import { ChangePasswordComponent } from "./change-password.component";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { UserModel } from "../models/user.model";
+import { NgFor, NgIf } from "@angular/common";
 
 @Component({
   templateUrl: "users.component.html",
   selector: "app-users",
+  standalone: true,
+  imports: [NgFor, AlertModule, NgIf, TranslateModule],
 })
 export class UsersComponent implements AfterContentInit {
   public alerts: any[] = [];

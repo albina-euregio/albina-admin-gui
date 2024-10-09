@@ -3,10 +3,16 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
+import { NgIf, NgFor } from "@angular/common";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+import { RegionConfigurationComponent } from "./region-configuration.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   templateUrl: "regions-configuration.component.html",
   selector: "app-regions-configuration",
+  standalone: true,
+  imports: [NgIf, AccordionModule, NgFor, RegionConfigurationComponent, TranslateModule],
 })
 export class RegionsConfigurationComponent implements AfterContentInit {
   public configurationPropertiesLoaded: boolean = false;

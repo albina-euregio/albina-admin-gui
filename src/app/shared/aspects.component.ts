@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import * as Enums from "../enums/enums";
+import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   selector: "app-aspects",
   templateUrl: "aspects.component.html",
+  standalone: true,
+  imports: [TranslateModule],
 })
 export class AspectsComponent {
   @Input() aspects: Enums.Aspect[];

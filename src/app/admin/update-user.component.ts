@@ -1,5 +1,5 @@
 import { Component, AfterContentInit } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
@@ -8,6 +8,8 @@ import { UserModel } from "../models/user.model";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
 import { BsModalRef } from "ngx-bootstrap/modal";
+import { FormsModule } from "@angular/forms";
+import { NgIf, NgFor } from "@angular/common";
 
 type Result =
   | "" // cancel
@@ -19,6 +21,8 @@ type Result =
 @Component({
   templateUrl: "update-user.component.html",
   selector: "app-update-user",
+  standalone: true,
+  imports: [FormsModule, NgIf, NgFor, TranslateModule],
 })
 export class UpdateUserComponent implements AfterContentInit {
   public updateUserLoading: boolean;

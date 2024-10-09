@@ -3,13 +3,16 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { AlertComponent } from "ngx-bootstrap/alert";
-import { TranslateService } from "@ngx-translate/core";
+import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { CreateBulletinComponent } from "./create-bulletin.component";
+import { NgFor, DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-modal-publication-status",
   templateUrl: "modal-publication-status.component.html",
+  standalone: true,
+  imports: [NgFor, AlertModule, DatePipe, TranslateModule],
 })
 export class ModalPublicationStatusComponent {
   json;

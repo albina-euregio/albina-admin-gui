@@ -1,13 +1,9 @@
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
-
-// Layouts
+import { Routes } from "@angular/router";
+import { AuthGuard } from "./guards/auth.guard";
 import { FullLayoutComponent } from "./layouts/full-layout.component";
 import { SimpleLayoutComponent } from "./layouts/simple-layout.component";
 
-import { AuthGuard } from "./guards/auth.guard";
-
-export const routes: Routes = [
+export default [
   {
     path: "",
     redirectTo: "bulletins",
@@ -18,14 +14,14 @@ export const routes: Routes = [
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
     runGuardsAndResolvers: "always",
-    loadChildren: () => import("./bulletins/bulletins.module").then((m) => m.BulletinsModule),
+    loadChildren: () => import("./bulletins/routes"),
   },
   {
     path: "danger-sources",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
     runGuardsAndResolvers: "always",
-    loadChildren: () => import("./danger-sources/danger-sources.module").then((m) => m.DangerSourcesModule),
+    loadChildren: () => import("./danger-sources/routes"),
   },
   {
     path: "observations",
@@ -37,13 +33,13 @@ export const routes: Routes = [
     path: "admin",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./admin/admin.module").then((m) => m.AdminModule),
+    loadChildren: () => import("./admin/routes"),
   },
   {
     path: "education",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./education/education.module").then((m) => m.EducationModule),
+    loadChildren: () => import("./education/routes"),
   },
   {
     path: "modelling",
@@ -55,13 +51,13 @@ export const routes: Routes = [
     path: "statistics",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./statistics/statistics.module").then((m) => m.StatisticsModule),
+    loadChildren: () => import("./statistics/routes"),
   },
   {
     path: "settings",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],
-    loadChildren: () => import("./settings/settings.module").then((m) => m.SettingsModule),
+    loadChildren: () => import("./settings/routes"),
   },
   {
     path: "pages",
@@ -72,14 +68,8 @@ export const routes: Routes = [
     children: [
       {
         path: "",
-        loadChildren: () => import("./pages/pages.module").then((m) => m.PagesModule),
+        loadChildren: () => import("./pages/routes"),
       },
     ],
   },
-];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: "reload" })],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}
+] satisfies Routes;

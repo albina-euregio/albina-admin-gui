@@ -1,14 +1,11 @@
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
-
+import { Routes } from "@angular/router";
+import { AuthGuard } from "../guards/auth.guard";
 import { BulletinsComponent } from "./bulletins.component";
-import { CreateBulletinComponent } from "./create-bulletin.component";
 import { CaamlComponent } from "./caaml.component";
+import { CreateBulletinComponent } from "./create-bulletin.component";
 import { JsonComponent } from "./json.component";
 
-import { AuthGuard } from "../guards/auth.guard";
-
-const routes: Routes = [
+export default [
   {
     path: "",
     component: BulletinsComponent,
@@ -41,10 +38,4 @@ const routes: Routes = [
       title: "JSON",
     },
   },
-];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class BulletinsRoutingModule {}
+] satisfies Routes;

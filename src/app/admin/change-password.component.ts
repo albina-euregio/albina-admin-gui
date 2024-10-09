@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { UserService } from "../providers/user-service/user.service";
 import { BsModalRef } from "ngx-bootstrap/modal";
+import { FormsModule } from "@angular/forms";
+import { NgIf } from "@angular/common";
 
 type Result =
   | "" // cancel
@@ -13,6 +15,8 @@ type Result =
 @Component({
   templateUrl: "change-password.component.html",
   selector: "app-change-password",
+  standalone: true,
+  imports: [FormsModule, NgIf, TranslateModule],
 })
 export class ChangePasswordComponent {
   public changePasswordLoading: boolean;

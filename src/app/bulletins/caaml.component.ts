@@ -3,10 +3,14 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { Router } from "@angular/router";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { NgIf, DatePipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   templateUrl: "caaml.component.html",
+  standalone: true,
+  imports: [NgIf, FormsModule, DatePipe, TranslateModule],
 })
 export class CaamlComponent implements OnInit {
   public bulletins: string;

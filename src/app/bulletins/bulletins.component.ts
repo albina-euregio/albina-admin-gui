@@ -1,5 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BulletinUpdateModel } from "../models/bulletin-update.model";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -11,14 +11,17 @@ import { debounceTime, Subject } from "rxjs";
 import { groupBy, map, mergeMap } from "rxjs/operators";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as Enums from "../enums/enums";
-import { formatDate } from "@angular/common";
+import { formatDate, NgIf, NgFor, DatePipe } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
 import { DateIsoString, StressLevel } from "../models/stress-level.model";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   templateUrl: "bulletins.component.html",
+  standalone: true,
+  imports: [NgIf, NgFor, FormsModule, DatePipe, TranslateModule],
 })
 export class BulletinsComponent implements OnInit, OnDestroy {
   public bulletinStatus = Enums.BulletinStatus;

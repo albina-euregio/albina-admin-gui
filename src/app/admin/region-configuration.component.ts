@@ -1,12 +1,17 @@
 import { Component, Input } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { AlertComponent } from "ngx-bootstrap/alert";
+import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { NgFor, NgIf } from "@angular/common";
+import { TabsModule } from "ngx-bootstrap/tabs";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   templateUrl: "region-configuration.component.html",
   selector: "app-region-configuration",
+  standalone: true,
+  imports: [NgFor, AlertModule, TabsModule, FormsModule, NgIf, TranslateModule],
 })
 export class RegionConfigurationComponent {
   @Input() config: RegionConfiguration;

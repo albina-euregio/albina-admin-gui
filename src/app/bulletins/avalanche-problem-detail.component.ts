@@ -5,14 +5,32 @@ import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-desc
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
+import { NgIf, NgFor, NgClass } from "@angular/common";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { AspectsComponent } from "../shared/aspects.component";
+import { FormsModule } from "@angular/forms";
+import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
+import { MatrixComponent } from "../shared/matrix.component";
 
 @Component({
   selector: "app-avalanche-problem-detail",
   templateUrl: "avalanche-problem-detail.component.html",
   styleUrls: ["avalanche-problem-detail.component.scss"],
+  standalone: true,
+  imports: [
+    NgIf,
+    NgFor,
+    AvalancheProblemIconsComponent,
+    NgClass,
+    AspectsComponent,
+    FormsModule,
+    MatrixParameterComponent,
+    MatrixComponent,
+    TranslateModule,
+  ],
 })
 export class AvalancheProblemDetailComponent implements OnChanges {
   @Input() bulletin: BulletinModel;

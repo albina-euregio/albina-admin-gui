@@ -3,14 +3,18 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { AlertComponent } from "ngx-bootstrap/alert";
-import { TranslateService } from "@ngx-translate/core";
+import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { MediaFileService } from "app/providers/media-file-service/media-file.service";
 import { CreateBulletinComponent } from "./create-bulletin.component";
+import { NgFor, NgIf, DatePipe } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-modal-media-file",
   templateUrl: "modal-media-file.component.html",
+  standalone: true,
+  imports: [NgFor, AlertModule, FormsModule, NgIf, DatePipe, TranslateModule],
 })
 export class ModalMediaFileComponent {
   date: [Date, Date];

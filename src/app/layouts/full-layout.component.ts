@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { SettingsService } from "../providers/settings-service/settings.service";
@@ -7,15 +7,19 @@ import { RegionsService } from "../providers/regions-service/regions.service";
 import { RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
-import { Router } from "@angular/router";
+import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { environment } from "../../environments/environment";
 import { DomSanitizer } from "@angular/platform-browser";
+import { NgIf, NgFor } from "@angular/common";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 
 @Component({
   selector: "app-dashboard",
   templateUrl: "./full-layout.component.html",
+  standalone: true,
+  imports: [NgIf, RouterLinkActive, RouterLink, BsDropdownModule, NgFor, RouterOutlet, TranslateModule],
 })
 export class FullLayoutComponent {
   public isSidebarOpen = false;

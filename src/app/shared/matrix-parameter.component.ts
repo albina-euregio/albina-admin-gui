@@ -5,12 +5,18 @@ import { SettingsService } from "../providers/settings-service/settings.service"
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
 import type { ChangeContext, Options } from "@angular-slider/ngx-slider";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import type { DangerSourceVariantModel } from "../danger-sources/models/danger-source-variant.model";
+import { NgxSliderModule } from "@angular-slider/ngx-slider";
+import { NgIf, NgFor } from "@angular/common";
+import { DangerRatingComponent } from "./danger-rating.component";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-matrix-parameter",
   templateUrl: "matrix-parameter.component.html",
+  standalone: true,
+  imports: [NgxSliderModule, NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule],
 })
 export class MatrixParameterComponent implements OnChanges {
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel | DangerSourceVariantModel;

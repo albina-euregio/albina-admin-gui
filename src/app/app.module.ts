@@ -8,7 +8,7 @@ import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 // Routing Module
-import { AppRoutingModule } from "./app.routing";
+import { AppRoutingModule } from "./routes";
 
 // Layouts
 import { FullLayoutComponent } from "./layouts/full-layout.component";
@@ -94,20 +94,7 @@ registerLocaleData(localeCa, "ca");
 registerLocaleData(localeOc, "oc");
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    FullLayoutComponent,
-    SimpleLayoutComponent,
-    ModalSubmitComponent,
-    ModalPublishComponent,
-    ModalCheckComponent,
-    ModalPublicationStatusComponent,
-    ModalPublishAllComponent,
-    ModalMediaFileComponent,
-    ModalEditDangerSourceComponent,
-    UpdateUserComponent,
-    ChangePasswordComponent,
-  ],
+  declarations: [AppComponent],
   bootstrap: [AppComponent],
   exports: [TranslateModule],
   imports: [
@@ -123,6 +110,17 @@ registerLocaleData(localeOc, "oc");
     BrowserAnimationsModule,
     ModalModule.forRoot(),
     TranslateModule.forRoot(),
+    FullLayoutComponent,
+    SimpleLayoutComponent,
+    ModalSubmitComponent,
+    ModalPublishComponent,
+    ModalCheckComponent,
+    ModalPublicationStatusComponent,
+    ModalPublishAllComponent,
+    ModalMediaFileComponent,
+    ModalEditDangerSourceComponent,
+    UpdateUserComponent,
+    ChangePasswordComponent,
   ],
   providers: [
     {

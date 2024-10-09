@@ -2,10 +2,13 @@ import { Component, Input, OnInit } from "@angular/core";
 import { UserService } from "../providers/user-service/user.service";
 import { EChartsOption } from "echarts";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { NgxEchartsDirective } from "ngx-echarts";
 
 @Component({
   selector: "app-team-stress-levels",
   template: ` <div echarts [options]="dataset"></div>`,
+  standalone: true,
+  imports: [NgxEchartsDirective],
 })
 export class TeamStressLevelsComponent implements OnInit {
   @Input() dates: [Date, Date][];
