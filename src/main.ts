@@ -51,7 +51,6 @@ import { ElevationService } from "./app/providers/map-service/elevation.service"
 import { MapService } from "./app/providers/map-service/map.service";
 import { MediaFileService } from "./app/providers/media-file-service/media-file.service";
 import { RegionsService } from "./app/providers/regions-service/regions.service";
-import { SettingsService } from "./app/providers/settings-service/settings.service";
 import { StatisticsService } from "./app/providers/statistics-service/statistics.service";
 import { UndoRedoService } from "./app/providers/undo-redo-service/undo-redo.service";
 import { UserService } from "./app/providers/user-service/user.service";
@@ -137,7 +136,6 @@ bootstrapApplication(AppComponent, {
     provideEcharts(),
     QfaService,
     RegionsService,
-    SettingsService,
     StatisticsService,
     TranslateService,
     UndoRedoService,

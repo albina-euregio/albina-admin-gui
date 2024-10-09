@@ -1,7 +1,6 @@
 import { OnChanges, Component, Input, EventEmitter, Output } from "@angular/core";
 import { MatrixInformationModel } from "app/models/matrix-information.model";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
 import type { ChangeContext, Options } from "@angular-slider/ngx-slider";
@@ -213,7 +212,6 @@ export class MatrixParameterComponent implements OnChanges {
   };
 
   constructor(
-    public settingsService: SettingsService,
     public constantsService: ConstantsService,
     public translateService: TranslateService,
   ) {

@@ -4,10 +4,11 @@ import type { RegionConfiguration } from "../configuration-service/configuration
 import type { AuthorModel } from "../../models/author.model";
 import type { ServerModel } from "../../models/server.model";
 import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class LocalStorageService {
-  constructor() {}
+  constructor(private translateService: TranslateService) {}
 
   private get<T>(key: string): T {
     try {
@@ -33,6 +34,14 @@ export class LocalStorageService {
   }
 
   setLanguage(language: string): void {
+    if (!language) {
+      return;
+    }
+    if (!this.translateService.langs.includes(language)) {
+      language = "en";
+    }
+    document.documentElement.setAttribute("lang", language);
+    this.translateService.use(language);
     return this.set("language", language);
   }
 

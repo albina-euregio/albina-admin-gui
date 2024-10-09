@@ -1,17 +1,10 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, Subject } from "rxjs";
-import { map, mergeAll } from "rxjs/operators";
+import { Observable } from "rxjs";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { UserService } from "../providers/user-service/user.service";
 import { DangerSourceModel } from "./models/danger-source.model";
-import {
-  DangerSourceVariantModel,
-  DangerSourceVariantStatus,
-  DangerSourceVariantType,
-} from "./models/danger-source-variant.model";
+import { DangerSourceVariantModel, DangerSourceVariantType } from "./models/danger-source-variant.model";
 import { JsonArray } from "protomaps-leaflet";
 
 @Injectable()
@@ -29,8 +22,6 @@ export class DangerSourcesService {
     public http: HttpClient,
     private constantsService: ConstantsService,
     private authenticationService: AuthenticationService,
-    private settingsService: SettingsService,
-    private userService: UserService,
   ) {
     this.init();
   }

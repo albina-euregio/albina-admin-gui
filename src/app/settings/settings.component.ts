@@ -1,11 +1,9 @@
 import { Component } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
-import { UserService } from "app/providers/user-service/user.service";
 import { UpdateUserComponent } from "app/admin/update-user.component";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
 import { UserModel } from "app/models/user.model";
@@ -26,12 +24,9 @@ export class SettingsComponent {
   public alerts: any[] = [];
 
   constructor(
-    private translateService: TranslateService,
     public authenticationService: AuthenticationService,
     public localStorageService: LocalStorageService,
-    private userService: UserService,
     private modalService: BsModalService,
-    private settingsService: SettingsService,
     private constantsService: ConstantsService,
   ) {}
 

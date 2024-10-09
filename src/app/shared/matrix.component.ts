@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
@@ -70,10 +69,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   @ViewChild("45") cell45: ElementRef;
   @ViewChild("46") cell46: ElementRef;
 
-  constructor(
-    public settingsService: SettingsService,
-    public constantsService: ConstantsService,
-  ) {}
+  constructor(public constantsService: ConstantsService) {}
 
   ngAfterViewInit() {
     this.resetMatrix();

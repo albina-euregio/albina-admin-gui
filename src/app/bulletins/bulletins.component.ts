@@ -5,7 +5,6 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { debounceTime, Subject } from "rxjs";
 import { groupBy, map, mergeMap } from "rxjs/operators";
@@ -13,7 +12,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import * as Enums from "../enums/enums";
 import { formatDate, NgIf, NgFor, DatePipe } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
-import { DateIsoString, StressLevel } from "../models/stress-level.model";
+import { StressLevel } from "../models/stress-level.model";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 import { FormsModule } from "@angular/forms";
@@ -36,7 +35,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     public translateService: TranslateService,
     public authenticationService: AuthenticationService,
     public constantsService: ConstantsService,
-    public settingsService: SettingsService,
     public localStorageService: LocalStorageService,
     public router: Router,
     public wsUpdateService: WsUpdateService,

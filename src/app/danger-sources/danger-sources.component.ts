@@ -2,12 +2,10 @@ import { Component } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { formatDate, NgFor, NgIf, DatePipe } from "@angular/common";
 import { UserService } from "../providers/user-service/user.service";
 import { DangerSourcesService } from "./danger-sources.service";
-import { DangerSourceVariantType } from "./models/danger-source-variant.model";
 
 @Component({
   templateUrl: "danger-sources.component.html",
@@ -22,7 +20,6 @@ export class DangerSourcesComponent {
     public translateService: TranslateService,
     public authenticationService: AuthenticationService,
     public constantsService: ConstantsService,
-    public settingsService: SettingsService,
     public router: Router,
     public userService: UserService,
   ) {

@@ -92,7 +92,7 @@
             <h6 class="dropdown-header">{{ "menu.language" | translate }}</h6>
           </li>
           <li *ngFor="let lang of translateService.langs">
-            <a class="dropdown-item" (click)="settingsService.setLangString(lang)" role="button">
+            <a class="dropdown-item" (click)="localStorageService.setLanguage(lang)" role="button">
               {{ "menu." + lang | translate }}
               <i *ngIf="translateService.currentLang === lang" class="ph ph-check"></i>
             </a>

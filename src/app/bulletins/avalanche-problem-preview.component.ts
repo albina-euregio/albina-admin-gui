@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
@@ -34,10 +33,7 @@ export class AvalancheProblemPreviewComponent {
 
   avalancheProblemEnum = Enums.AvalancheProblem;
 
-  constructor(
-    public translateService: TranslateService,
-    public settingsService: SettingsService,
-  ) {}
+  constructor(public translateService: TranslateService) {}
 
   isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
     return this.avalancheProblem.avalancheProblem === avalancheProblem;

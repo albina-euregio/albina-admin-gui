@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -59,7 +58,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   avalancheProblemEnum = Enums.AvalancheProblem;
 
   constructor(
-    public settingsService: SettingsService,
     public authenticationService: AuthenticationService,
     private modalService: BsModalService,
     public translateService: TranslateService,

@@ -2,7 +2,6 @@ import { Component, ViewChild, TemplateRef } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -39,7 +38,6 @@ export class FullLayoutComponent {
     public translateService: TranslateService,
     public authenticationService: AuthenticationService,
     public bulletinsService: BulletinsService,
-    public settingsService: SettingsService,
     public regionsService: RegionsService,
     public constantsService: ConstantsService,
     public router: Router,

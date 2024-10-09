@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { SettingsService } from "../providers/settings-service/settings.service";
 import { BulletinModel } from "../models/bulletin.model";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -20,7 +19,7 @@ export class AvalancheProblemComponent {
   @Input() disabled: boolean;
   @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
 
-  constructor(public settingsService: SettingsService) {}
+  constructor() {}
 
   changeAvalancheProblemDetail(event) {
     this.changeAvalancheProblemEvent.emit();
