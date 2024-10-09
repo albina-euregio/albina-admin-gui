@@ -43,7 +43,7 @@ export function convertObservationToGeneric(observation: Observation): GenericOb
 
 export function isAvalancheWarningServiceObservation(
   observation: GenericObservation,
-): observation is GenericObservation<Observation> {
+): observation is GenericObservation {
   return (
     observation.$source === ObservationSource.AvalancheWarningService &&
     !/models.avalanche.report/.test(observation.$externalURL)

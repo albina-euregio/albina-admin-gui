@@ -262,10 +262,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     this.clear();
 
-    this.loading = onErrorResumeNext(
-      this.observationsService.getObservations(),
-      this.observationsService.getGenericObservations(),
-    );
+    this.loading = onErrorResumeNext(this.observationsService.getGenericObservations());
     this.loading
       .forEach((observation) => {
         try {

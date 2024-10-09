@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { convertObservationToGeneric, Observation } from "./models/observation.model";
 import { GenericObservation } from "./models/generic-observation.model";
 import { Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
@@ -19,23 +18,6 @@ export class AlbinaObservationsService {
     private authenticationService: AuthenticationService,
     private constantsService: ConstantsService,
   ) {}
-
-  getObservation(id: number): Observable<GenericObservation<Observation>> {
-    const url = this.constantsService.getServerUrl() + "observations/" + id;
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers };
-    return this.http.get<Observation>(url, options).pipe(map((o) => convertObservationToGeneric(o)));
-  }
-
-  getObservations(): Observable<GenericObservation<Observation>> {
-    const url = this.constantsService.getServerUrl() + "observations";
-    const headers = this.authenticationService.newAuthHeader();
-    const params = this.filter.dateRangeParams;
-    return this.http.get<Observation[]>(url, { headers, params }).pipe(
-      mergeAll(),
-      map((o) => convertObservationToGeneric(o)),
-    );
-  }
 
   getGenericObservations(): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/observations";
@@ -69,23 +51,19 @@ export class AlbinaObservationsService {
     );
   }
 
-  postObservation(observation: Observation): Observable<GenericObservation<Observation>> {
-    observation = this.serializeObservation(observation);
-    const url = this.constantsService.getServerUrl() + "observations";
+  postObservation(observation: GenericObservation): Observable<GenericObservation> {
+    const body = this.serializeObservation(observation);
+    const url = environment.apiBaseUrl + "../api_ext/observations";
     const headers = this.authenticationService.newAuthHeader();
     const options = { headers };
-    return this.http.post<Observation>(url, observation, options).pipe(map((o) => convertObservationToGeneric(o)));
+    return this.http.post<GenericObservation>(url, body, options);
   }
 
-  putObservation(observation: Observation): Observable<GenericObservation<Observation>> {
-    observation = this.serializeObservation(observation);
-    const url = this.constantsService.getServerUrl() + "observations/" + observation.id;
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers };
-    return this.http.put<Observation>(url, observation, options).pipe(map((o) => convertObservationToGeneric(o)));
+  putObservation(observation: GenericObservation): Observable<GenericObservation> {
+    return this.postObservation(observation);
   }
 
-  private serializeObservation(observation: Observation): Observation {
+  private serializeObservation(observation: GenericObservation) {
     return {
       ...observation,
       eventDate:
@@ -95,10 +73,11 @@ export class AlbinaObservationsService {
     };
   }
 
-  async deleteObservation(observation: Observation): Promise<void> {
-    const url = this.constantsService.getServerUrl() + "observations/" + observation.id;
+  async deleteObservation(observation: GenericObservation): Promise<void> {
+    const body = this.serializeObservation(observation);
+    const url = environment.apiBaseUrl + "../api_ext/observations";
     const headers = this.authenticationService.newAuthHeader();
-    const options = { headers };
+    const options = { headers, body };
     await this.http.delete(url, options).toPromise();
   }
 

@@ -1,29 +1,8 @@
 <div *ngIf="observation" class="row g-3">
   <div class="col-12 col-md-6">
-    <label for="eventType"><i class="ph ph-square"></i> {{ "observations.eventType" | translate }}</label>
-    <select id="eventType" [(ngModel)]="observation.eventType" class="form-select">
-      <option *ngFor="let eventType of eventTypes" [value]="eventType">
-        {{ "observations.eventTypes." + eventType | translate }}
-      </option>
-    </select>
-  </div>
-  <div class="col-12 col-md-6">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
-      <input
-        type="date"
-        required
-        (change)="setEventDate($event)"
-        [ngModel]="getDate(observation.eventDate)"
-        class="form-control"
-      />
-      <input
-        type="time"
-        required
-        (change)="setEventTime($event)"
-        [ngModel]="getTime(observation.eventDate)"
-        class="form-control"
-      />
+      <input type="datetime-local" required [(ngModel)]="observation.eventDate" class="form-control" />
     </div>
   </div>
   <div class="col-12">
@@ -80,20 +59,7 @@
   <div class="col-12 col-md-6">
     <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" class="input-group">
-      <input
-        type="date"
-        required
-        (change)="setReportDate($event)"
-        [ngModel]="getDate(observation.reportDate)"
-        class="date form-control"
-      />
-      <input
-        type="time"
-        required
-        (change)="setReportTime($event)"
-        [ngModel]="getTime(observation.reportDate)"
-        class="time form-control"
-      />
+      <input type="datetime-local" required [(ngModel)]="observation.reportDate" class="date form-control" />
     </div>
   </div>
   <div class="col-12">

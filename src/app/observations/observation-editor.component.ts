@@ -1,14 +1,14 @@
-import { Component, Input } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { Observation, EventType } from "./models/observation.model";
-import { Feature, Point } from "geojson";
-import { GeocodingProperties, GeocodingService } from "./geocoding.service";
-import { geocoders } from "leaflet-control-geocoder";
-import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
-import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { Observable, Observer, map, of, switchMap } from "rxjs";
+import { Component, Input } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
+import { Feature, Point } from "geojson";
+import { geocoders } from "leaflet-control-geocoder";
 import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
+import { Observable, Observer, map, of, switchMap } from "rxjs";
+import { GeocodingProperties, GeocodingService } from "./geocoding.service";
+import { GenericObservation } from "./models/generic-observation.model";
 
 @Component({
   standalone: true,
@@ -18,13 +18,11 @@ import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
 })
 export class ObservationEditorComponent {
   constructor(
-    private translate: TranslateService,
     private geocodingService: GeocodingService,
     private coordinateDataService: CoordinateDataService,
   ) {}
 
-  @Input() observation: Observation;
-  eventTypes: EventType[] = Object.values(EventType);
+  @Input() observation: GenericObservation;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation.locationName),
   ).pipe(
@@ -74,48 +72,14 @@ export class ObservationEditorComponent {
     }, 0);
   }
 
-  setEventDate(event: Event) {
-    const date = (event.target as HTMLInputElement).value;
-    const time = this.getTime(this.observation.eventDate);
-    this.observation.eventDate = `${date}T${time}`;
-  }
-
-  setReportDate(event: Event) {
-    const date = (event.target as HTMLInputElement).value;
-    const time = this.getTime(this.observation.reportDate);
-    this.observation.reportDate = `${date}T${time}`;
-  }
-
-  setEventTime(event: Event) {
-    const date = this.getDate(this.observation.eventDate);
-    const time = (event.target as HTMLInputElement).value;
-    this.observation.eventDate = `${date}T${time}`;
-  }
-
-  setReportTime(event: Event) {
-    const date = this.getDate(this.observation.reportDate);
-    const time = (event.target as HTMLInputElement).value;
-    this.observation.reportDate = `${date}T${time}`;
-  }
-
-  getDate(obj: string | Date) {
-    const date = (obj as string) || "T00:00";
-    return date?.split("T")[0];
-  }
-
-  getTime(obj: string | Date) {
-    const date = (obj as string) || "T00:00";
-    return date?.split("T")[1] || "00:00";
-  }
-
   parseContent($event: { clipboardData: DataTransfer }): void {
-    const codes = {
-      "ALP-LAW-NEG": EventType.PersonNo,
-      "ALP-LAW-UNKL": EventType.PersonUninjured,
-      "ALP-LAW-KLEIN": EventType.PersonUninjured,
-      "ALP-LAW-GROSS": EventType.PersonUninjured,
-      "ALP-LAW-FREI": EventType.PersonUninjured,
-    };
+    // const codes = {
+    //   "ALP-LAW-NEG": EventType.PersonNo,
+    //   "ALP-LAW-UNKL": EventType.PersonUninjured,
+    //   "ALP-LAW-KLEIN": EventType.PersonUninjured,
+    //   "ALP-LAW-GROSS": EventType.PersonUninjured,
+    //   "ALP-LAW-FREI": EventType.PersonUninjured,
+    // };
 
     setTimeout(() => {
       const content = this.observation.content;
@@ -125,9 +89,6 @@ export class ObservationEditorComponent {
         content.includes("beschickte Einsatzmittel")
       ) {
         this.observation.authorName = "Leitstelle Tirol";
-
-        const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
-        if (codes[code]) this.observation.eventType = codes[code];
       }
       if (!this.observation.locationName && content.includes("Einsatzort")) {
         const match = content.match(/Einsatzort:.*\n\s+.*\s+(.*)/);
