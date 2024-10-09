@@ -9,20 +9,12 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { BulletinsModule } from "../bulletins/bulletins.module";
 import { grainShapes } from "./grain.shapes";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 
 @Component({
   standalone: true,
-  imports: [
-    AvalancheProblemIconsComponent,
-    CommonModule,
-    FormsModule,
-    ObservationEditorComponent,
-    TranslateModule,
-    BulletinsModule,
-  ],
+  imports: [AvalancheProblemIconsComponent, CommonModule, FormsModule, ObservationEditorComponent, TranslateModule],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })

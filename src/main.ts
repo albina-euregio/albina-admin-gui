@@ -13,6 +13,7 @@ import { ErrorHandler, importProvidersFrom } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideRouter } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { CollapseModule } from "ngx-bootstrap/collapse";
@@ -21,7 +22,6 @@ import { ModalModule } from "ngx-bootstrap/modal";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { provideEcharts } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
-import { AppRoutingModule } from "./app/app.routing";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaService } from "./app/modelling/qfa";
@@ -58,6 +58,7 @@ import { UserService } from "./app/providers/user-service/user.service";
 import { WsBulletinService } from "./app/providers/ws-bulletin-service/ws-bulletin.service";
 import { WsRegionService } from "./app/providers/ws-region-service/ws-region.service";
 import { WsUpdateService } from "./app/providers/ws-update-service/ws-update.service";
+import routes from "./app/routes";
 import { environment } from "./environments/environment";
 
 registerLocaleData(localeDe, "de");
@@ -74,9 +75,9 @@ if (environment.sentryDSN) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideRouter(routes),
     importProvidersFrom(
       BrowserModule,
-      AppRoutingModule,
       NgxSliderModule,
       BsDropdownModule.forRoot(),
       CollapseModule.forRoot(),
