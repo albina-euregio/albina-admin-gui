@@ -2,8 +2,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
-import { SharedModule } from "../shared/shared.module";
-
 import { BulletinsComponent } from "./bulletins.component";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
@@ -39,7 +37,6 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
     AccordionModule.forRoot(),
     BsDropdownModule.forRoot(),
     NgxEchartsDirective,
-    SharedModule,
     BulletinsComponent,
     CreateBulletinComponent,
     AvalancheBulletinComponent,

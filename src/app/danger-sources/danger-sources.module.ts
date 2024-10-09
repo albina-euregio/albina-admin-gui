@@ -15,7 +15,6 @@ import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { NgxEchartsDirective } from "ngx-echarts";
-import { SharedModule } from "app/shared/shared.module";
 
 @NgModule({
   imports: [
@@ -27,7 +26,6 @@ import { SharedModule } from "app/shared/shared.module";
     BsDropdownModule.forRoot(),
     NgxSliderModule,
     NgxEchartsDirective,
-    SharedModule,
     DangerSourcesComponent,
     DangerSourceVariantComponent,
     CreateDangerSourcesComponent,
