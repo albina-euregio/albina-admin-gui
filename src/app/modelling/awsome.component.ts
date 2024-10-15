@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
+import { CommonModule, formatDate } from "@angular/common";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { ObservationFilterService } from "../observations/observation-filter.service";
@@ -26,7 +26,7 @@ export type AwsomeSource = {
 
 type Awsome = {
   date: string;
-  dateStepSeconds: string;
+  dateStepSeconds: number;
   sources: AwsomeSource[];
   filters: FilterSelectionSpec<FeatureProperties>[];
 };
@@ -120,6 +120,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   async ngAfterViewInit() {
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
     await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => console.log(o));
+  }
+
+  switchDate(direction: -1 | 1) {
+    const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
+    const date = new Date(Date.parse(this.date) + direction * dateStepSeconds * 1000);
+    this.date = formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
   }
 
   applyLocalFilter() {

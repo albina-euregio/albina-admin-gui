@@ -33,13 +33,21 @@
             </div>
 
             <div class="global-bar-item">
-              <input
-                type="datetime-local"
-                [step]="config.dateStepSeconds"
-                class="form-control"
-                [(ngModel)]="date"
-                (ngModelChange)="loadSources()"
-              />
+              <div class="input-group">
+                <input
+                  type="datetime-local"
+                  [step]="config.dateStepSeconds"
+                  class="form-control"
+                  [(ngModel)]="date"
+                  (ngModelChange)="loadSources()"
+                />
+                <button class="btn btn-outline-secondary" (click)="switchDate(-1)">
+                  <i class="ph ph-caret-double-left"></i>
+                </button>
+                <button class="btn btn-outline-secondary" (click)="switchDate(+1)">
+                  <i class="ph ph-caret-double-right"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
