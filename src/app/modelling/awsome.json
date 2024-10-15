@@ -23,6 +23,7 @@
       "key": "aspect",
       "chartType": "rose",
       "chartRichLabel": "label",
+      "selectedValues": ["north", "nan"],
       "values": [
         {
           "value": "north",
