@@ -1,13 +1,19 @@
 {
   "$schema": "./awsome.schema.json",
-  "date": "2023-11-12T06:00:00",
-  "dateStepSeconds": 21600,
+  "date": "2024-02-14T00:00:00",
+  "dateStepSeconds": 43200,
   "sources": [
     {
-      "name": "snp-gridded",
-      "url": "https://models.avalanche.report/snp-gridded/geojson-tirol23-1/2023-11-12_06-00-00.json",
-      "tooltipTemplate": "sk38 {snp_characteristics.sk38.value}",
-      "detailsTemplate": "<b>sk38</b> {snp_characteristics.sk38.value} <iframe style='width:100%; height:500px' src='https://models.avalanche.report/iplots/meteogram.html'></iframe>"
+      "name": "gridded",
+      "url": "https://models.avalanche.report/snp-gridded/geojson-tirol23-4/2024-02-14_00-00-00.json",
+      "tooltipTemplate": "Vstation: {vstation}",
+      "detailsTemplate": "<b>Clouds:</b> {snp_characteristics.sk38.value} <iframe style='width:100%; height:500px' src='https://models.avalanche.report/iplots/meteogram.html'></iframe>"
+    },
+    {
+      "name": "snowobs",
+      "url": "https://models.avalanche.report/snowobs-chain/geojson-tirol23/2024-02-14_00-00-00.json",
+      "tooltipTemplate": "Profile: {name}",
+      "detailsTemplate": "<b> AVAPRO for snow profile: {longname}</b> <iframe style='width:100%; height:500px' src='https://models.avalanche.report/snowobs-chain/avapro-tirol23/{filename}.png'></iframe>"
     }
   ],
   "filters": [
@@ -152,88 +158,127 @@
     {
       "chartRichLabel": "label",
       "chartType": "bar",
-      "label": "LWC",
-      "key": "snp_characteristics.lwc.value",
-      "type": "snp_characteristics.lwc.value",
+      "label": "Punstable",
+      "key": "snp_characteristics.Punstable.value",
+      "type": "snp_characteristics.Punstable.value",
       "values": [
         {
           "numericRange": [
-            0.0,
-            0.1
-          ],
-          "color": "#a6d96a",
-          "label": "<0.1",
-          "legend": "<0.1",
-          "value": "<0.1"
-        },
-        {
-          "numericRange": [
-            0.1,
-            0.3
-          ],
-          "color": "#fdae61",
-          "label": "<0.3",
-          "legend": "<0.3",
-          "value": "<0.3"
-        },
-        {
-          "numericRange": [
-            0.3,
+            0.77,
             1.0
           ],
-          "color": "#d7191c",
-          "label": "<1.0",
-          "legend": "<1.0",
-          "value": "<1.0"
+          "color": "#d7301f",
+          "label": ">0.78",
+          "legend": "poor (>=0.77)",
+          "value": ">=0.77"
+        },
+        {
+          "numericRange": [
+            0.7,
+            0.77
+          ],
+          "color": "#fdcc8a",
+          "label": "<0.77",
+          "legend": "fair (<0.77)",
+          "value": "<0.77"
+        },
+        {
+          "numericRange": [
+            0.0,
+            0.7
+          ],
+          "color": "#fef0d9",
+          "label": "<0.7",
+          "legend": "rather stable (<0.7)",
+          "value": "<0.7"
         }
       ]
     },
     {
       "chartRichLabel": "label",
       "chartType": "bar",
-      "label": "SK38",
-      "key": "snp_characteristics.sk38.value",
-      "type": "snp_characteristics.sk38.value",
+      "label": "SK38 (RTA > 0.75)",
+      "key": "snp_characteristics.sk38_rta.value",
+      "type": "snp_characteristics.sk38_rta.value",
       "values": [
         {
           "numericRange": [
             0.0,
-            0.25
-          ],
-          "color": "#d7191c",
-          "label": "<0.25",
-          "legend": "<0.25",
-          "value": "<0.25"
-        },
-        {
-          "numericRange": [
-            0.25,
             0.5
           ],
-          "color": "#fdae61",
-          "label": "<0.50",
-          "legend": "<0.50",
-          "value": "<0.50"
+          "color": "#d7301f",
+          "label": "<=0.5",
+          "legend": "very poor (<=0.5)",
+          "value": "<=0.5"
         },
         {
           "numericRange": [
             0.5,
-            0.75
+            0.95
           ],
-          "color": "#ffffbf",
-          "label": "<0.75",
-          "legend": "<0.75",
-          "value": "<0.75"
+          "color": "#fc8d59",
+          "label": "<0.95",
+          "legend": "poor (<0.95)",
+          "value": "<0.95"
         },
         {
           "numericRange": [
-            0.75,
-            1.0
+            0.95,
+            1.05
           ],
-          "color": "#a6d96a",
-          "label": "<1.00",
-          "legend": "<1.00",
-          "value": "<1.00"
+          "color": "#fdcc8a",
+          "label": "<1.05",
+          "legend": "fair (<1.05)",
+          "value": "<1.05"
+        },
+        {
+          "numericRange": [
+            1.05,
+            100.0
+          ],
+          "color": "#fef0d9",
+          "label": ">1.05",
+          "legend": "rather stable (>1.05)",
+          "value": ">1.05"
+        }
+      ]
+    },
+    {
+      "chartRichLabel": "label",
+      "chartType": "bar",
+      "label": "Critical Cut Length",
+      "key": "snp_characteristics.ccl.value",
+      "type": "snp_characteristics.ccl.value",
+      "values": [
+        {
+          "numericRange": [
+            0.0,
+            0.28
+          ],
+          "color": "#d7301f",
+          "label": "<=0.28",
+          "legend": "very poor (<=0.28)",
+          "value": "<=0.28"
+        },
+        {
+          "numericRange": [
+            0.28,
+            0.4
+          ],
+          "color": "#fc8d59",
+          "label": "<=0.4",
+          "legend": "poor (<=0.4)",
+          "value": "<=0.4"
+        },
+        {
+          "numericRange": [
+            0.4,
+            30
+          ],
+          "color": "#fef0d9",
+          "label": ">0.4",
+          "legend": "rather stable (>0.4)",
+          "value": ">0.4"
         }
       ]
     }
