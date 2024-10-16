@@ -7,7 +7,16 @@
       "name": "gridded",
       "url": "https://models.avalanche.report/snp-gridded/geojson-tirol23-4/2024-02-14_00-00-00.json",
       "tooltipTemplate": "Vstation: {vstation}",
-      "detailsTemplate": "<b>Clouds:</b> {snp_characteristics.sk38.value} <iframe style='width:100%; height:500px' src='https://models.avalanche.report/iplots/meteogram.html'></iframe>"
+      "detailsTemplates": [
+        {
+          "label": "Clouds",
+          "template": "{snp_characteristics.sk38.value} <iframe style='width:100%; height:500px' src='https://models.avalanche.report/iplots/meteogram.html'></iframe>"
+        },
+        {
+          "label": "Lorem Ipsum",
+          "template": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        }
+      ]
     },
     {
       "name": "snowobs",
@@ -66,90 +75,63 @@
       "values": [
         {
           "value": "4000 – ∞",
-          "numericRange": [
-            4000,
-            9999
-          ],
+          "numericRange": [4000, 9999],
           "color": "#CC0CE8",
           "label": "40",
           "legend": "4000 – ∞"
         },
         {
           "value": "3500 – 4000",
-          "numericRange": [
-            3500,
-            4000
-          ],
+          "numericRange": [3500, 4000],
           "color": "#784BFF",
           "label": "35",
           "legend": "3500 – 4000"
         },
         {
           "value": "3000 – 3500",
-          "numericRange": [
-            3000,
-            3500
-          ],
+          "numericRange": [3000, 3500],
           "color": "#035BBE",
           "label": "30",
           "legend": "3000 – 3500"
         },
         {
           "value": "2500 – 3000",
-          "numericRange": [
-            2500,
-            3000
-          ],
+          "numericRange": [2500, 3000],
           "color": "#0481FF",
           "label": "25",
           "legend": "2500 – 3000"
         },
         {
           "value": "2000 – 2500",
-          "numericRange": [
-            2000,
-            2500
-          ],
+          "numericRange": [2000, 2500],
           "color": "#03CDFF",
           "label": "20",
           "legend": "2000 – 2500"
         },
         {
           "value": "1500 – 2000",
-          "numericRange": [
-            1500,
-            2000
-          ],
+          "numericRange": [1500, 2000],
           "color": "#8CFFFF",
           "label": "15",
           "legend": "1500 – 2000"
         },
         {
           "value": "1000 – 1500",
-          "numericRange": [
-            1000,
-            1500
-          ],
+          "numericRange": [1000, 1500],
           "color": "#B0FFBC",
           "label": "10",
           "legend": "1000 – 1500"
         },
         {
           "value": "500 – 1000",
-          "numericRange": [
-            500,
-            1000
-          ],
+          "numericRange": [500, 1000],
           "color": "#FFFFB3",
           "label": "5",
           "legend": "500 – 1000"
         },
         {
           "value": "0 – 500",
-          "numericRange": [
-            0,
-            500
-          ],
+          "numericRange": [0, 500],
           "color": "#FFFFFE",
           "label": "0",
           "legend": "0 – 500"
@@ -164,30 +146,21 @@
       "type": "snp_characteristics.Punstable.value",
       "values": [
         {
-          "numericRange": [
-            0.77,
-            1.0
-          ],
+          "numericRange": [0.77, 1.0],
           "color": "#d7301f",
           "label": ">0.78",
           "legend": "poor (>=0.77)",
           "value": ">=0.77"
         },
         {
-          "numericRange": [
-            0.7,
-            0.77
-          ],
+          "numericRange": [0.7, 0.77],
           "color": "#fdcc8a",
           "label": "<0.77",
           "legend": "fair (<0.77)",
           "value": "<0.77"
         },
         {
-          "numericRange": [
-            0.0,
-            0.7
-          ],
+          "numericRange": [0.0, 0.7],
           "color": "#fef0d9",
           "label": "<0.7",
           "legend": "rather stable (<0.7)",
@@ -203,40 +176,28 @@
       "type": "snp_characteristics.sk38_rta.value",
       "values": [
         {
-          "numericRange": [
-            0.0,
-            0.5
-          ],
+          "numericRange": [0.0, 0.5],
           "color": "#d7301f",
           "label": "<=0.5",
           "legend": "very poor (<=0.5)",
           "value": "<=0.5"
         },
         {
-          "numericRange": [
-            0.5,
-            0.95
-          ],
+          "numericRange": [0.5, 0.95],
           "color": "#fc8d59",
           "label": "<0.95",
           "legend": "poor (<0.95)",
           "value": "<0.95"
         },
         {
-          "numericRange": [
-            0.95,
-            1.05
-          ],
+          "numericRange": [0.95, 1.05],
           "color": "#fdcc8a",
           "label": "<1.05",
           "legend": "fair (<1.05)",
           "value": "<1.05"
         },
         {
-          "numericRange": [
-            1.05,
-            100.0
-          ],
+          "numericRange": [1.05, 100.0],
           "color": "#fef0d9",
           "label": ">1.05",
           "legend": "rather stable (>1.05)",
@@ -252,30 +213,21 @@
       "type": "snp_characteristics.ccl.value",
       "values": [
         {
-          "numericRange": [
-            0.0,
-            0.28
-          ],
+          "numericRange": [0.0, 0.28],
           "color": "#d7301f",
           "label": "<=0.28",
           "legend": "very poor (<=0.28)",
           "value": "<=0.28"
         },
         {
-          "numericRange": [
-            0.28,
-            0.4
-          ],
+          "numericRange": [0.28, 0.4],
           "color": "#fc8d59",
           "label": "<=0.4",
           "legend": "poor (<=0.4)",
           "value": "<=0.4"
         },
         {
-          "numericRange": [
-            0.4,
-            30
-          ],
+          "numericRange": [0.4, 30],
           "color": "#fef0d9",
           "label": ">0.4",
           "legend": "rather stable (>0.4)",

@@ -63,7 +63,18 @@
         <div class="toolset-header">
           <button type="button" class="btn-close" (click)="closeObservation()"></button>
         </div>
-        <div class="toolset-content" [innerHTML]="selectedObservationDetails"></div>
+        <div class="toolset-content">
+          <tabset>
+            <tab
+              *ngFor="let tab of selectedObservationDetails"
+              [heading]="tab.label"
+              [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
+              (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
+            >
+              <div [innerHTML]="tab.html"></div>
+            </tab>
+          </tabset>
+        </div>
       </div>
 
       <div *ngIf="!selectedObservationDetails" class="toolset">
