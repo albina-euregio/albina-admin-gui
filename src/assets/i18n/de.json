@@ -7,7 +7,7 @@
     "title": "Login",
     "text": "Melde dich mit deinem Account an",
     "button": "Login",
-    "stressLevel": "Stress Level",
+    "stressLevel": "Stresslevel",
     "errorDialog": {
       "message": "Benutzername oder Passwort falsch!",
       "accept": "Ok"
@@ -19,6 +19,7 @@
   },
   "sidebar": {
     "bulletins": "Lawinen.report",
+    "dangerSources": "Gefahrenquellen",
     "observations": "Beobachtungen",
     "qfa": "QFA",
     "modelling": "Modellierung",
@@ -64,6 +65,116 @@
       "dangerLevel1": "Gefahrenstufe 1 (Gering)"
     }
   },
+  "dangerSources": {
+    "status": {
+      "missing": "fehlt",
+      "available": "verfügbar",
+      "forecast": "Vorhersage",
+      "analysis": "Analyse",
+      "loading": "Gefahrenquellen werden geladen ...",
+      "saveError": "Gefahrenquelle konnte nicht gespeichert werden!",
+      "loadDangerSourcesError": "Gefahrenquellen konnten nicht geladen werden!",
+      "loadVariantsError": "Varianten der Gefahrenquellen konnten nicht geladen werden!"
+    },
+    "variantStatus": {
+      "active": "aktiv",
+      "dormant": "schlafend",
+      "inactive": "inaktiv"
+    },
+    "tooltip": {
+      "read": "Gefahrenquellen lesen",
+      "edit": "Gefahrenquellen bearbeiten"
+    },
+    "table": {
+      "loadMore": "{{count}} Tage mehr laden",
+      "title": {
+        "forecast": "Vorhersage",
+        "analysis": "Analyse"
+      }
+    },
+    "create": {
+      "variantStatus": "Status",
+      "variantEditable": "Diese Variante kann bearbeitet werden.",
+      "variantNotEditable": "Diese Variante kann nicht bearbeitet werden.",
+      "noVariantsForSelectedDay": "Für dieses Datum sind keine Varianten definiert.",
+      "tooltip": {
+        "editDangerSource": "Gefahrenquelle bearbeiten",
+        "loadVariants": "Varianten von gestern laden",
+        "edit": "Kleinstregionen editieren",
+        "copy": "Variante kopieren",
+        "delete": "Variante löschen",
+        "compare": "Variante vergleichen",
+        "forecast": "Mit Vorhersage vergleichen"
+      },
+      "createDangerSource": "Gefahrenquelle erstellen",
+      "createVariant": "Neue Variante erstellen",
+      "noDangerSources": "Keine Gefahrenquellen",
+      "title": {
+        "avalanche": "Lawine",
+        "matrix": "Matrix",
+        "characteristics": "Merkmale"
+      },
+      "label": {
+        "glidingSnowActivity": "Gleitschneeaktivität",
+        "snowHeight": "Schneehöhe",
+        "zeroDegreeIsotherm": "0°C isotherm",
+        "looseSnowMoisture": "Feuchte des Lockerschnees",
+        "looseSnowGrainShape": "Kornform des Lockerschnees",
+        "slabGrainShape": "Kornform des Bretts",
+        "slabThickness": "Dicke des Bretts",
+        "slabHandHardness": "Handhärte des Bretts",
+        "slabHardnessProfile": "Härte des Bretts",
+        "slabEnergyTransferPotential": "Energieübertragungspotential des Bretts",
+        "slabDistribution": "Verteilung des Bretts",
+        "weakLayerGrainShape": "Kornform der Schwachschicht",
+        "weakLayerGrainSize": "Korngröße der Schwachschicht",
+        "weakLayerPersistent": "Persistenz der Schwachschicht",
+        "weakLayerThickness": "Dicker der Schwachschicht",
+        "weakLayerStrength": "Festigkeit der Schwachschicht",
+        "weakLayerWet": "Feuchte der Schwachschicht",
+        "weakLayerCrustAbove": "Kruste oberhalb der Schwachschicht",
+        "weakLayerCrustBelow": "Kruste unterhalb der Schwachschicht",
+        "weakLayerPosition": "Position der Schwachschicht",
+        "weakLayerCreation": "Entstehung der Schwachschicht",
+        "weakLayerDistribution": "Verteilung der Schwachschicht",
+        "dangerSpotRecognizability": "Erkennbarkeit der Gefahrenstellen",
+        "remoteTriggering": "Fernauslösungen",
+        "hasDaytimeDependency": "Tageszeitliche Abhängigkeit",
+        "dangerIncreaseWithElevation": "Zunahme der Gefahr mit der Höhe",
+        "runoutIntoGreen": "Auslauf bis ins Grüne",
+        "highestDangerAspect": "Exposition der höchsten Gefahr",
+        "dangerPeak": "Gefahrenspitze",
+        "slopeGradient": "Hangneigung",
+        "naturalRelease": "Spontane Lawinen",
+        "terrainTypes": "Geländeformen",
+        "dangerSigns": "Gefahrenzeichen",
+        "aspects": "Expositionen"
+      },
+      "editDangerSourceDialog": {
+        "save": "Speichern",
+        "cancel": "Abbrechen"
+      }
+    }
+  },
+  "avalancheType": {
+    "title": "Lawinenart",
+    "label": {
+      "slab": "SCHNEEBRETT",
+      "loose": "LOCKERSCHNEE",
+      "glide": "GLEITSCHNEE"
+    },
+    "tooltip": {
+      "slab": "Schneebrettlawine",
+      "loose": "Lockerschneelawine",
+      "glide": "Gleitschneelawine"
+    }
+  },
+  "elevation": {
+    "title": "Seehöhe",
+    "high": "Unten",
+    "low": "Oben",
+    "treeline": "Waldgrenze"
+  },
   "bulletins": {
     "title": "Lawinen.report",
     "tooltip": {
@@ -104,6 +215,8 @@
         "edit": "Kleinstregionen editieren",
         "copy": "Region kopieren",
         "delete": "Region löschen",
+        "undo": "Letzte Änderung in der Warnregion rückgängig machen",
+        "redo": "Letzte Änderung in der Warnregion wiederherstellen",
         "createRegion": "Neue Region",
         "cancel": "Abbrechen",
         "acceptSuggestion": "Vorgeschlagene Regionen annehmen",
@@ -134,12 +247,7 @@
         "moveUpAvalancheProblem": "Lawinenproblem nach oben schieben",
         "moveDownAvalancheProblem": "Lawinenproblem nach unten schieben",
         "dangerRatingDirectionUp": "Aufwärts",
-        "dangerRatingDirectionDown": "Abwärts",
-        "avalancheType": {
-          "slab": "SLAB",
-          "loose": "LOOSE",
-          "glide": "GLIDE"
-        }
+        "dangerRatingDirectionDown": "Abwärts"
       },
       "save": " Speichern",
       "discard": " Verwerfen",
@@ -170,16 +278,12 @@
       "incompleteAvalancheProblem": "Unvollständig",
       "label": {
         "avalancheProblems": "Lawinenproblem",
-        "avalancheType": "Lawinenart",
         "aspects": "Expositionen",
-        "elevation": "Seehöhe",
         "highlights": "Besondere Warnung",
         "avActivityHighlights": "Schlagzeile Gefahrensituation",
         "avActivityComment": "Beurteilung der Lawinengefahr",
         "snowpackStructureComment": "Beschreibung des Schneedeckenaufbaus",
         "dangerPatterns": "Gefahrenmuster",
-        "elevationHigh": "Unter",
-        "elevationLow": "Über",
         "tendencyComment": "Beschreibung der Tendenz",
         "notes": "Notizen"
       },
@@ -328,9 +432,18 @@
       "title": {
         "date": "Datum",
         "status": {
+          "AT-02": "Kärnten",
+          "AT-03": "Niederösterreich",
+          "AT-04": "Oberösterreich",
+          "AT-05": "Salzburg",
+          "AT-06": "Steiermark",
+          "AT-07": "Tirol",
+          "AT-08": "Vorarlberg",
+          "CH" : "Schweiz",
+          "DE-BY" : "Bayern",
+          "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "Südtirol",
-          "AT-07": "Tirol",
           "ES-CT-L": "Aran"
         }
       },
@@ -500,6 +613,10 @@
       }
     }
   },
+  "training": {
+    "training": "Training",
+    "timestamp": "Trainingszeitpunkt"
+  },
   "admin": {
     "loadingStatistics": "CSV wird erzeugt ...",
     "server-configuration": {
@@ -579,6 +696,7 @@
         },
         "components": {
           "title": "Komponenten",
+          "enableDangerSources": "Gefahrenquellen aktivieren",
           "enableObservations": "Beobachtungen aktivieren",
           "enableModelling": "Modellierung aktivieren",
           "enableWeatherbox": "Wetterbox aktivieren"
@@ -588,6 +706,7 @@
           "showMatrix": "Matrix anzeigen",
           "enableMediaFile": "Mediendateien aktivieren",
           "enableStrategicMindset": "Strategisches Mindset aktivieren",
+          "enableStressLevel": "Stresslevel aktivieren",
           "enableAvalancheProblemCornices": "Lawinenproblem WECHTEN aktivieren",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Lawinenproblem KEIN AUSGEPRÄGTES PROBLEM aktivieren"
         }
@@ -912,6 +1031,90 @@
     "challenging": "Fordernd",
     "complex": "Komplex"
   },
+  "glidingSnowActivity": {
+    "low": "gering",
+    "medium": "mittel",
+    "high": "groß"
+  },
+  "wetness": {
+    "dry": "trocken",
+    "moist": "feucht",
+    "wet": "nass"
+  },
+  "characteristic": {
+    "low": "gering",
+    "medium": "mittel",
+    "high": "groß",
+    "very_high": "sehr groß"
+  },
+  "thickness": {
+    "thin": "dünn",
+    "thick": "dick"
+  },
+  "snowpackPosition": {
+    "upper": "oben",
+    "middle": "mittig",
+    "lower": "unten",
+    "ground": "Boden"
+  },
+  "creationProcess": {
+    "radiation_recrystallization": "Strahlung",
+    "diurnal_recrystallization": "Tageszeit",
+    "melt_layer_recrystallization": "Schmelzschicht"
+  },
+  "recognizability": {
+    "very_easy": "sehr leicht",
+    "easy": "leicht",
+    "hard": "schwer",
+    "very_hard": "sehr schwer"
+  },
+  "distribution": {
+    "isolated": "isolated",
+    "specific": "specific",
+    "widespread": "widespread"
+  },
+  "probability": {
+    "likely": "wahrscheinlich",
+    "possible": "möglich",
+    "unlikely": "unwahrscheinlich"
+  },
+  "detailedDaytime": {
+    "evening": "Abend",
+    "first_night_half": "Erste Nachthälfte",
+    "second_night_half": "Zweite Nachthälfte",
+    "morning": "Am Morgen",
+    "forenoon": "Vormittag",
+    "afternoon": "Nachmittag"
+  },
+  "slopeGradient": {
+    "moderately_steep": "mäßig steil",
+    "steep": "steil",
+    "very_steep": "sehr steil",
+    "extremely_steep": "extrem steil"
+  },
+  "handHardness": {
+    "fist": "F",
+    "four_fingers": "4F",
+    "one_finger": "1F",
+    "pencil": "P",
+    "knife": "K",
+    "ice": "I"
+  },
+  "hardnessTendency": {
+    "decreasing": "Abnahme mit der Höhe",
+    "steady": "gleichmäßig",
+    "increasing": "Zunahme mit der Höhe"
+  },
+  "terrainType": {
+    "gullies": "Rinnen",
+    "bowls": "Mulden",
+    "pass_areas": "Passlagen",
+    "ridge_lines": "Kammlagen"
+  },
+  "dangerSign": {
+    "shooting_cracks": "Rissbildung",
+    "whumpfing": "Setzungsgeräusche"
+  },
   "changeRegionDialog": {
     "message": "Möchtest du die Region ändern?",
     "accept": "Ja",
@@ -954,6 +1157,52 @@
       "TA_table_72h": "Tabelle Temperatur (3T)",
       "TA_table_season": "Tabelle Temperatur (Saison)"
     }
+  },
+  "grainShape": {
+    "PP": {
+      "code": "PP",
+      "class": "Neuschnee"
+    },
+    "PPgp": {
+      "code": "PPgp",
+      "class": "Graupel"
+    },
+    "DF": {
+      "code": "DF",
+      "class": "Filz"
+    },
+    "RG": {
+      "code": "RG",
+      "class": "kleine runde Kristalle"
+    },
+    "FC": {
+      "code": "FC",
+      "class": "kantige Kristalle"
+    },
+    "DH": {
+      "code": "DH",
+      "class": "Tiefenreif"
+    },
+    "SH": {
+      "code": "SH",
+      "class": "Oberflächenreif"
+    },
+    "MF": {
+      "code": "MF",
+      "class": "Schmelzformen"
+    },
+    "MFcr": {
+      "code": "MFcr",
+      "class": "Schmelzkruste"
+    },
+    "IF": {
+      "code": "IF",
+      "class": "Eislamelle"
+    }
+  },
+  "button": {
+    "yes": "ja",
+    "no": "nein"
   },
   "observations": {
     "aspect": "Exposition",
@@ -1073,7 +1322,7 @@
       "T GND": "Bodentemperatur",
       "Max-ADI": "maximum mixing temperature [°C]",
       "Min Max": "min./max. temperature in the last 24h",
-      "FROST": "zero degree line [m]",
+      "FROST": "Nullgrad Grenze [m]",
       "W cm": "500 hPa eq. vertical wind [cm/s]",
       "W --": "700 hPa eq. vertical wind [cm/s]",
       "W s": "{{value}} hPa eq. vertical wind [cm/s]",
