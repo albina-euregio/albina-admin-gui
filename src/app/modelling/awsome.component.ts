@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
+import { CommonModule, formatDate } from "@angular/common";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { ObservationFilterService } from "../observations/observation-filter.service";
@@ -11,6 +11,7 @@ import type { GenericObservation } from "../observations/models/generic-observat
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
+import { TabsModule } from "ngx-bootstrap/tabs";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
     GenericObservation,
@@ -21,20 +22,26 @@ export type AwsomeSource = {
   name: string;
   url: string;
   tooltipTemplate: string;
+  /**
+   * @deprecated
+   */
   detailsTemplate: string;
+  detailsTemplates: { label: DetailsTabLabel; template: string }[];
 };
 
 type Awsome = {
   date: string;
-  dateStepSeconds: string;
+  dateStepSeconds: number;
   sources: AwsomeSource[];
   filters: FilterSelectionSpec<FeatureProperties>[];
 };
 
+type DetailsTabLabel = string;
+
 @Component({
   selector: "app-awsome",
   standalone: true,
-  imports: [CommonModule, FormsModule, FormsModule, ObservationChartComponent, TranslateModule],
+  imports: [CommonModule, FormsModule, FormsModule, ObservationChartComponent, TabsModule, TranslateModule],
   templateUrl: "awsome.component.html",
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
@@ -46,7 +53,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   observations: FeatureProperties[] = [];
   localObservations: FeatureProperties[] = [];
-  selectedObservationDetails: SafeHtml | undefined = undefined;
+  selectedObservation: FeatureProperties | undefined = undefined;
+  selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
+  selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
 
   constructor(
@@ -122,6 +131,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => console.log(o));
   }
 
+  switchDate(direction: -1 | 1) {
+    const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
+    const date = new Date(Date.parse(this.date) + direction * dateStepSeconds * 1000);
+    this.date = formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
+  }
+
   applyLocalFilter() {
     Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
     this.localObservations = this.observations.filter(
@@ -142,16 +157,24 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private onObservationClick(observation: FeatureProperties) {
-    const detailsTemplate = observation.$sourceObject.detailsTemplate;
-    this.selectedObservationDetails = detailsTemplate
-      ? this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(detailsTemplate, observation))
-      : undefined;
+    const detailsTemplates =
+      observation.$sourceObject.detailsTemplates ??
+      (observation.$sourceObject.detailsTemplate
+        ? [{ label: "Details", template: observation.$sourceObject.detailsTemplate }]
+        : []);
+    this.selectedObservation = observation;
+    this.selectedObservationDetails = detailsTemplates.map(({ label, template }) => ({
+      label,
+      html: this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(template, observation)),
+    }));
+    this.selectedObservationActiveTabs[observation.$source] ??= this.selectedObservationDetails[0]?.label;
     if (this.isMobile) {
       this.layout = "chart";
     }
   }
 
   closeObservation() {
+    this.selectedObservation = undefined;
     this.selectedObservationDetails = undefined;
     if (this.isMobile) {
       this.layout = "map";

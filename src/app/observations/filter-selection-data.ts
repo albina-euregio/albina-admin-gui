@@ -29,6 +29,7 @@ export interface FilterSelectionSpec<T> {
   chartType: ChartType;
   chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
   values: FilterSelectionValue[];
+  selectedValues?: string[];
 }
 
 export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
@@ -46,6 +47,9 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
 
   constructor(spec: FilterSelectionSpec<T>) {
     Object.assign(this, spec);
+    if (Array.isArray(spec.selectedValues)) {
+      this.selected = new Set(spec.selectedValues);
+    }
   }
 
   toggleFilterValue(subset: "highlighted" | "selected", value: string) {
