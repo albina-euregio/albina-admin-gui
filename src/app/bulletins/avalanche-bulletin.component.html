@@ -32,7 +32,7 @@
   <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
     <p class="region-form__mindset-text">
       {{ "strategicMindset.title" | translate }}
-      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetInfoTemplate)"></i>
+      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate)"></i>
     </p>
     <select
       [ngModel]="bulletin.strategicMindset"
@@ -476,7 +476,7 @@
   </div>
 </ng-template>
 
-<ng-template #strategicMindsetInfoTemplate>
+<ng-template #strategicMindsetTemplate>
   <div class="modal-header">
     <h3 class="modal-title pull-left">{{ "bulletins.create.strategicMindsetDialog.title" | translate }}</h3>
     <button
