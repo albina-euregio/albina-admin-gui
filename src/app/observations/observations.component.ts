@@ -46,7 +46,6 @@ import { ObservationMarkerWeatherStationService } from "./observation-marker-wea
 import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
 import Split from "split.js";
-import type { LolaEntity } from "../../../observations-api/src/models/lola-kronos.model";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -273,12 +272,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
           genericObservationSchema.parse(observation);
         } catch (err) {
           console.warn("Observation does not match schema", observation, err);
-        }
-        if (observation.$source === ObservationSource.LoLaKronos) {
-          const entities: LolaEntity[] = observation.$data.entities;
-          if (Array.isArray(entities) && entities.every((e) => e.entityName === "SNOBS")) {
-            observation.$source = ObservationSource.Snobs;
-          }
         }
         this.addObservation(observation);
       })

@@ -19,6 +19,7 @@ export interface LolaKronosApi {
 }
 
 export interface LolaAvalancheEvent {
+  entities: LolaEntity[];
   uuId: string;
   lolaApplication: string;
   avalancheEventTime: string;
@@ -63,6 +64,7 @@ export interface Image {
 }
 
 export interface LolaEvaluation {
+  entities: LolaEntity[];
   uuId: string;
   lolaApplication: string;
   avalanchePotential: number;
@@ -208,6 +210,7 @@ export interface Weather {
 }
 
 export interface LolaSimpleObservation {
+  entities: LolaEntity[];
   uuId: string;
   lolaApplication: string;
   comment: string;
@@ -238,6 +241,7 @@ export interface LolaSimpleObservation {
 }
 
 export interface LolaSnowProfile {
+  entities: LolaEntity[];
   uuId: string;
   lolaApplication: string;
   altitude: number | null;
@@ -363,7 +367,10 @@ export function convertLoLaToGeneric(
     $id: obs.uuId,
     $data: obs,
     $externalURL: urlPrefix + obs.uuId + "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN,
-    $source: ObservationSource.LoLaKronos,
+    $source:
+      Array.isArray(obs.entities) && obs.entities.every((e) => e.entityName === "SNOBS")
+        ? ObservationSource.Snobs
+        : ObservationSource.LoLaKronos,
     $type,
     stability:
       $type === ObservationType.Avalanche
