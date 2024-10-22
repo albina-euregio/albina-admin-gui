@@ -296,12 +296,19 @@ export class BulletinsService {
     date: [Date, Date],
     regions: string[],
     etag?: string,
-    loadPreviousDay?: boolean,
   ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
-    if (this.localStorageService.isTrainingEnabled && !loadPreviousDay) {
+    if (this.localStorageService.isTrainingEnabled) {
       const bulletins = this.localStorageService.getTrainingBulletins(date);
       return of({ bulletins, etag: null });
     }
+    return this.loadBulletinsFromServer(date, regions, etag);
+  }
+
+  loadBulletinsFromServer(
+    date: [Date, Date],
+    regions: string[],
+    etag?: string,
+  ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
     let url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?" +
