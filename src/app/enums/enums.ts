@@ -61,7 +61,7 @@ export enum AvalancheProblem {
   gliding_snow = "gliding_snow",
   favourable_situation = "favourable_situation",
   cornices = "cornices",
-  no_distinct_problem = "no_distinct_problem",
+  no_distinct_avalanche_problem = "no_distinct_avalanche_problem",
 }
 
 export enum AvalancheType {

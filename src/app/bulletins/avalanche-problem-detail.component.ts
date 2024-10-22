@@ -72,7 +72,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       Enums.AvalancheProblem.gliding_snow,
       this.authenticationService.getActiveRegion().enableAvalancheProblemCornices && Enums.AvalancheProblem.cornices,
       this.authenticationService.getActiveRegion().enableAvalancheProblemNoDistinctAvalancheProblem &&
-        Enums.AvalancheProblem.no_distinct_problem,
+        Enums.AvalancheProblem.no_distinct_avalanche_problem,
     ].filter((p) => !!p);
     if (!this.isElevationHighEditing) {
       this.useElevationHigh =

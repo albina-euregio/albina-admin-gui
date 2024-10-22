@@ -17,7 +17,7 @@ export class AvalancheProblemDecisionTreeComponent {
   private resultIconLabelMap = ["9", "10", "8", "7", "6", "5", "4", "3", "2", "1", "0", "11"];
   private resultProblemMap = [
     Enums.AvalancheProblem.wet_snow,
-    Enums.AvalancheProblem.no_distinct_problem,
+    Enums.AvalancheProblem.no_distinct_avalanche_problem,
     Enums.AvalancheProblem.new_snow,
     Enums.AvalancheProblem.wet_snow,
     Enums.AvalancheProblem.persistent_weak_layers,
