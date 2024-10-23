@@ -305,7 +305,7 @@
               <!-- load bulletin from yesterday -->
               <li>
                 <button
-                  *ngIf="bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()"
+                  *ngIf="(bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) || localStorageService.isTrainingEnabled"
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"

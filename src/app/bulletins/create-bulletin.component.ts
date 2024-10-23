@@ -176,7 +176,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     public bulletinsService: BulletinsService,
     public authenticationService: AuthenticationService,
     public translateService: TranslateService,
-    private localStorageService: LocalStorageService,
+    public localStorageService: LocalStorageService,
     protected constantsService: ConstantsService,
     public regionsService: RegionsService,
     public copyService: CopyService,
@@ -1652,7 +1652,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const date = this.bulletinsService.getPreviousDate();
 
     const regions = [this.authenticationService.getActiveRegionId()];
-    this.bulletinsService.loadBulletins(date, regions).subscribe(
+    this.bulletinsService.loadBulletinsFromServer(date, regions).subscribe(
       ({ bulletins }) => {
         // delete own regions
         const entries = new Array<BulletinModel>();

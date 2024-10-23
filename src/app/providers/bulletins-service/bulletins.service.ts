@@ -173,7 +173,7 @@ export class BulletinsService {
   /**
    * Returns a date that's offset from the activeDate by a given amount.
    *
-   * @param offset - Number of days to offset. Can be positive (future) or negative (past).
+   * @param offset - Number of days to offset. Can be negative (future) or positive (past).
    * @returns Date offset from the activeDate or null if not found or out of bounds.
    */
   private getDateOffset(offset: number): [Date, Date] | null {
@@ -191,11 +191,11 @@ export class BulletinsService {
   }
 
   getNextDate(): [Date, Date] | null {
-    return this.getDateOffset(1);
+    return this.getDateOffset(-1);
   }
 
   getPreviousDate(): [Date, Date] | null {
-    return this.getDateOffset(-1);
+    return this.getDateOffset(1);
   }
 
   getCopyDate(): [Date, Date] {
@@ -301,6 +301,14 @@ export class BulletinsService {
       const bulletins = this.localStorageService.getTrainingBulletins(date);
       return of({ bulletins, etag: null });
     }
+    return this.loadBulletinsFromServer(date, regions, etag);
+  }
+
+  loadBulletinsFromServer(
+    date: [Date, Date],
+    regions: string[],
+    etag?: string,
+  ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
     let url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?" +
