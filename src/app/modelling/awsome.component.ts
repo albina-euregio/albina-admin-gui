@@ -135,6 +135,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
     const date = new Date(Date.parse(this.date) + direction * dateStepSeconds * 1000);
     this.date = formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
+    this.loadSources();
   }
 
   applyLocalFilter() {
