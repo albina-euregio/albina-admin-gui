@@ -52,6 +52,12 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     }
   }
 
+  setFilterValue(subset: "highlighted" | "selected", value: string) {
+    const selectedData = this[subset];
+    selectedData.clear();
+    selectedData.add(value);
+  }
+
   toggleFilterValue(subset: "highlighted" | "selected", value: string) {
     const selectedData = this[subset];
     if (selectedData.has(value)) {

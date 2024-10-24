@@ -394,7 +394,11 @@ export class ObservationChartComponent<T> implements OnInit {
 
   onSeriesClick(event: MouseEvent | TouchEvent, value: "nan" | string) {
     const subset = event.altKey ? "highlighted" : "selected";
-    this.filterSelection.toggleFilterValue(subset, value);
+    if (event.shiftKey) {
+      this.filterSelection.toggleFilterValue(subset, value);
+    } else {
+      this.filterSelection.setFilterValue(subset, value);
+    }
     if (event.ctrlKey) {
       this.filterSelection.invertFilter(subset);
     }
@@ -480,6 +484,8 @@ export class ObservationChartComponent<T> implements OnInit {
     return `
 <span class="badge rounded-pill me-1" style="width: 0.75rem;height:0.75rem;background-color:${params.color};"></span>
 <span>${params.name}</span>
-<strong>${val}</strong>`;
+<strong>${val}</strong>
+<div>Click to set, <kbd>Shift</kbd> click to add, <kbd>Ctrl</kbd> click to invert</div>
+`;
   }
 }
