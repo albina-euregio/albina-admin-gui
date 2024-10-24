@@ -433,8 +433,7 @@
       <kbd *ngIf="observationPopup?.observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowDown' })"
         >↓</kbd
       >
-      &mdash;
-      <button class="btn btn-sm btn-secondary" (click)="modalService.hide()">&times;</button>
+      <button type="button" class="btn-close ms-3" aria-label="Close" (click)="modalService.hide()"></button>
     </div>
   </div>
   <div class="modal-body">
