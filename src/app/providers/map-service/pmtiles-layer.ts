@@ -2,7 +2,7 @@
 
 import * as L from "leaflet";
 import type { PMTiles } from "pmtiles";
-import type Point from "@mapbox/point-geometry";
+import Point from "@mapbox/point-geometry";
 import {
   type Feature,
   Labelers,
@@ -178,7 +178,7 @@ export class PmLeafletLayer extends L.GridLayer {
       maxX: 256 * (coords.x + 1) + buf,
       maxY: 256 * (coords.y + 1) + buf,
     };
-    const origin = new L.Point(256 * coords.x, 256 * coords.y);
+    const origin = new Point(256 * coords.x, 256 * coords.y);
 
     element.width = this.tileSize;
     element.height = this.tileSize;
