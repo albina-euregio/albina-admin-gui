@@ -128,8 +128,10 @@
       <kbd (click)="changeRun('previous')">←</kbd>,
       <kbd (click)="changeRun('next')">→</kbd>
       zum Blättern
+      <button type="button" class="btn-close ms-3" aria-label="Close" (click)="modalService.hide()"></button>
     </div>
   </div>
+
   <div class="modal-body" (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
     <div *ngIf="selectedModelPoint && !observationPopupIframe">
       <img *ngIf="selectedModelPoint" [src]="selectedModelPoint.$externalURL" class="img-fluid" />

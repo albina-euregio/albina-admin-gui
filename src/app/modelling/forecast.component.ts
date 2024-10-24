@@ -88,7 +88,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     private qfaService: QfaService,
     public paramService: ParamService,
     private translateService: TranslateService,
-    private modalService: BsModalService,
+    public modalService: BsModalService,
   ) {}
 
   files = {};
