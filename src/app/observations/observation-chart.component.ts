@@ -392,18 +392,9 @@ export class ObservationChartComponent<T> implements OnInit {
     return false;
   }
 
-  private onSeriesClick(event: MouseEvent | TouchEvent, value: string) {
+  onSeriesClick(event: MouseEvent | TouchEvent, value: "nan" | string) {
     const subset = event.altKey ? "highlighted" : "selected";
     this.filterSelection.toggleFilterValue(subset, value);
-    if (event.ctrlKey) {
-      this.filterSelection.invertFilter(subset);
-    }
-    this.handleChange.emit();
-  }
-
-  onClickNan(event: MouseEvent) {
-    const subset = event.altKey ? "highlighted" : "selected";
-    this.filterSelection.toggleFilterValue(subset, "nan");
     if (event.ctrlKey) {
       this.filterSelection.invertFilter(subset);
     }

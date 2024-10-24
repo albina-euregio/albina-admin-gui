@@ -49,7 +49,7 @@
     <span
       [class.highlighted]="filterSelection['highlighted'].has('nan')"
       [class.selected]="filterSelection['selected'].has('nan')"
-      (click)="onClickNan($event)"
+      (click)="onSeriesClick($event, 'nan')"
       >{{ "admin.observations.charts.nan" | translate }}: {{ filterSelection.nan }}</span
     >
   </div>
