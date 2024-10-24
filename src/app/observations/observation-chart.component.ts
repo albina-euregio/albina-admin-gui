@@ -6,7 +6,6 @@ import { CommonModule } from "@angular/common";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { ObservationMarkerService } from "./observation-marker.service";
 import type { FilterSelectionData } from "./filter-selection-data";
-import type { GenericObservation } from "./models/generic-observation.model";
 
 @Component({
   standalone: true,
@@ -386,26 +385,17 @@ export class ObservationChartComponent<T> implements OnInit {
     }
     this.resetTimeout();
     if (event.componentType === "series") {
-      this.onSeriesClick(event);
+      this.onSeriesClick(event.event.event, event.data[0]);
     } else if (event.componentType === "angleAxis") {
-      this.onAngleAxisClick(event);
+      this.onSeriesClick(event.event.event, event.value as string);
     }
     return false;
   }
 
-  private onSeriesClick(event: ECElementEvent) {
-    const subset = event.event.event.altKey ? "highlighted" : "selected";
-    this.filterSelection.toggleFilterValue(subset, event.data[0]);
-    if (event.event.event.ctrlKey) {
-      this.filterSelection.invertFilter(subset);
-    }
-    this.handleChange.emit();
-  }
-
-  private onAngleAxisClick(event: ECElementEvent) {
-    const subset = event.event.event.altKey ? "highlighted" : "selected";
-    this.filterSelection.toggleFilterValue(subset, event.value as string);
-    if (event.event.event.ctrlKey) {
+  private onSeriesClick(event: MouseEvent | TouchEvent, value: string) {
+    const subset = event.altKey ? "highlighted" : "selected";
+    this.filterSelection.toggleFilterValue(subset, value);
+    if (event.ctrlKey) {
       this.filterSelection.invertFilter(subset);
     }
     this.handleChange.emit();
