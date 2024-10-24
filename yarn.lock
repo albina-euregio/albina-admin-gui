@@ -2718,19 +2718,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/point-geometry@npm:^0.1.0, @mapbox/point-geometry@npm:~0.1.0":
-  version: 0.1.0
-  resolution: "@mapbox/point-geometry@npm:0.1.0"
-  checksum: 10c0/e4d861908574cb3165f5ad37b000416ebc90a2d6b3e0073191e6b6dc5074a6159d84ac5114d78557399bb429134f0d05bfb529e7902d1cb2b36d722b72ab662c
+"@mapbox/point-geometry@npm:^1.1.0, @mapbox/point-geometry@npm:~1.1.0":
+  version: 1.1.0
+  resolution: "@mapbox/point-geometry@npm:1.1.0"
+  checksum: 10c0/fe43d00a92592a28835090722df771be50182ff5fc40705cbd571534e2397beef884a97f701869b4a99a61289700cf709f588883f4b085c034bbe722cf17155d
   languageName: node
   linkType: hard
 
-"@mapbox/vector-tile@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "@mapbox/vector-tile@npm:1.3.1"
+"@mapbox/vector-tile@npm:^2.0.2":
+  version: 2.0.3
+  resolution: "@mapbox/vector-tile@npm:2.0.3"
   dependencies:
-    "@mapbox/point-geometry": "npm:~0.1.0"
-  checksum: 10c0/ffb271b95c383923768295e72bdf95e428efb906434b864ea04d3853a8373cf0de19f039bd6615f7cf018fbfb4dbf4599f27ebaa86c2b7b09f7d69187f8d7da1
+    "@mapbox/point-geometry": "npm:~1.1.0"
+    "@types/geojson": "npm:^7946.0.14"
+    pbf: "npm:^4.0.1"
+  checksum: 10c0/eb17b5f7af88ddebd605aeac3f7d52ffd461878559ec2f074fc8b840ccc01f067636c6fc31f9668a56fb147401f731a81532ff6dbbbf5be7d4ba12f75212bc52
   languageName: node
   linkType: hard
 
@@ -3653,10 +3655,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/geojson@npm:*, @types/geojson@npm:^7946.0.10":
-  version: 7946.0.10
-  resolution: "@types/geojson@npm:7946.0.10"
-  checksum: 10c0/4abba554467494c1496a60622c2cb6f8c7f80b0dbb909ff898812a9f67799fd1b254802d7d266361974bd8b0c9ef32a7686183aac83b20c437f6d0eee89cd0a1
+"@types/geojson@npm:*, @types/geojson@npm:^7946.0.10, @types/geojson@npm:^7946.0.14":
+  version: 7946.0.14
+  resolution: "@types/geojson@npm:7946.0.14"
+  checksum: 10c0/54f3997708fa2970c03eeb31f7e4540a0eb6387b15e9f8a60513a1409c23cafec8d618525404573468b59c6fecbfd053724b3327f7fca416729c26271d799f55
   languageName: node
   linkType: hard
 
@@ -4353,7 +4355,7 @@ __metadata:
     ngx-echarts: "npm:^18.0.0"
     ngx-image-compress: "npm:^18.1.5"
     prettier: "npm:^3.1.0"
-    protomaps-leaflet: "npm:^3.1.1"
+    protomaps-leaflet: "npm:^4.0.1"
     rbush: "npm:^3.0.1"
     rxjs: "npm:7.8.1"
     split.js: "npm:^1.6.5"
@@ -6734,7 +6736,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ieee754@npm:^1.1.12, ieee754@npm:^1.1.13":
+"ieee754@npm:^1.1.13":
   version: 1.2.1
   resolution: "ieee754@npm:1.2.1"
   checksum: 10c0/b0782ef5e0935b9f12883a2e2aa37baa75da6e66ce6515c168697b42160807d9330de9a32ec1ed73149aea02e0d822e572bca6f1e22bdcbd2149e13b050b17bb
@@ -8617,15 +8619,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pbf@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "pbf@npm:3.2.1"
+"pbf@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "pbf@npm:4.0.1"
   dependencies:
-    ieee754: "npm:^1.1.12"
     resolve-protobuf-schema: "npm:^2.1.0"
   bin:
     pbf: bin/pbf
-  checksum: 10c0/63b4a27749a9b5a3cf4260d75f9d91ad8d8b326bcdd2bfafd9460a94d0a297a80f80c70d5481213d6c4ebf03c027aca0ac9287c7d8217d327a6d0456f23b9d3c
+  checksum: 10c0/1a95cc3bdc61ee01d4728f4a57a9f1233732d183a8568818b714a747fd8b957d99b63e1c67f0f72dc5623657c42f88a1a7e44e1fbcd06e2fe2ef9a85a964832e
   languageName: node
   linkType: hard
 
@@ -8687,13 +8688,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pmtiles@npm:^3.0.3":
-  version: 3.0.5
-  resolution: "pmtiles@npm:3.0.5"
+"pmtiles@npm:^3.0.7":
+  version: 3.2.0
+  resolution: "pmtiles@npm:3.2.0"
   dependencies:
     "@types/leaflet": "npm:^1.9.8"
     fflate: "npm:^0.8.0"
-  checksum: 10c0/6a7df9d742b2dd0ecd5d47a9c3da94080e0ebf8da0ab3a525e25cb053b49f7321577e749c2ef20dc9ec81c0de04718605e0f39bf89f4013795c11f17848b5f6a
+  checksum: 10c0/3990a39064a62389442a656fc743da457d33e86d5ebea7fd4b7cb321407dabe1c2b92345b8daa2df0210e0553c13a18cf9e41994577590a6fb20675f37c879e4
   languageName: node
   linkType: hard
 
@@ -8864,19 +8865,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protomaps-leaflet@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "protomaps-leaflet@npm:3.1.1"
+"protomaps-leaflet@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "protomaps-leaflet@npm:4.0.1"
   dependencies:
-    "@mapbox/point-geometry": "npm:^0.1.0"
-    "@mapbox/vector-tile": "npm:^1.3.1"
+    "@mapbox/point-geometry": "npm:^1.1.0"
+    "@mapbox/vector-tile": "npm:^2.0.2"
     "@types/css-font-loading-module": "npm:^0.0.7"
     color2k: "npm:^2.0.3"
-    pbf: "npm:^3.2.1"
-    pmtiles: "npm:^3.0.3"
+    pbf: "npm:^4.0.1"
+    pmtiles: "npm:^3.0.7"
     potpack: "npm:^1.0.2"
     rbush: "npm:^3.0.1"
-  checksum: 10c0/1fc74ed203b9c21594bb27eff733fc274414879668d2d769cafec4d1436d6e67ee5c8de36b24368dd6cb9c750a09445b7d9d4393d1d1b22a4ddf66508ad3891a
+  checksum: 10c0/33b89c6a99f8132431fbf90e3d7347a43d174f84b610d90f211bcce37bb786386e2baf1ad730ad0faba812436b39aae7ba1d88552f3d709a4e04b99e26442199
   languageName: node
   linkType: hard
 
