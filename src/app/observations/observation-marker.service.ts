@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Canvas, CircleMarker, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
+import { Canvas, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
@@ -68,39 +68,31 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       icon: icon,
       opacity: filterSelectionValue?.opacity ?? 1,
       pane: "markerPane",
-      radius: filterSelectionValue?.radius ?? 40,
-      renderer: this.myRenderer,
-      weight: filterSelectionValue?.weight ?? 0,
       zIndexOffset: filterSelectionValue?.zIndexOffset ?? zIndex[observation.stability ?? "unknown"] ?? 0,
-    } as MarkerOptions);
-    this.bindTooltip(marker, observation);
+    } satisfies MarkerOptions);
+    marker.bindTooltip(() => this.createTooltipText(observation), {
+      opacity: 1,
+      className: "obs-tooltip",
+    });
     return marker;
   }
 
-  bindTooltip(marker: Marker | CircleMarker, observation: T & { $sourceObject?: AwsomeSource }) {
-    marker.bindTooltip(
-      () => {
-        if (observation.$sourceObject?.tooltipTemplate) {
-          return this.formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
-        }
-        return [
-          `<i class="ph ph-calendar"></i> ${
-            observation.eventDate instanceof Date
-              ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
-              : undefined
-          }`,
-          `<i class="ph ph-globe"></i> ${observation.locationName || undefined}`,
-          `<i class="ph ph-user"></i> ${observation.authorName || undefined}`,
-          `[${observation.$source}, ${observation.$type}]`,
-        ]
-          .filter((s) => !s.includes("undefined"))
-          .join("<br>");
-      },
-      {
-        opacity: 1,
-        className: "obs-tooltip",
-      },
-    );
+  private createTooltipText(observation: T & { $sourceObject?: AwsomeSource }): string {
+    if (observation.$sourceObject?.tooltipTemplate) {
+      return this.formatTemplate(observation.$sourceObject?.tooltipTemplate, observation);
+    }
+    return [
+      `<i class="ph ph-calendar"></i> ${
+        observation.eventDate instanceof Date
+          ? formatDate(observation.eventDate, "yyyy-MM-dd HH:mm", "en-US")
+          : undefined
+      }`,
+      `<i class="ph ph-globe"></i> ${observation.locationName || undefined}`,
+      `<i class="ph ph-user"></i> ${observation.authorName || undefined}`,
+      `[${observation.$source}, ${observation.$type}]`,
+    ]
+      .filter((s) => !s.includes("undefined"))
+      .join("<br>");
   }
 
   toMarkerColor(observation: T): string {
