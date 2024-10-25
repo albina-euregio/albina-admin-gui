@@ -2,12 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://admin.avalanche.report/schemas/awsome-source",
   "type": "object",
-  "required": [
-    "date",
-    "dateStepSeconds",
-    "sources",
-    "filters"
-  ],
+  "required": ["date", "dateStepSeconds", "sources", "filters"],
   "properties": {
     "date": {
       "type": "string",
@@ -123,31 +118,18 @@
           "default": 0
         }
       },
-      "required": [
-        "value",
-        "color",
-        "label",
-        "legend"
-      ],
+      "required": ["value", "color", "label", "legend"],
       "type": "object"
     },
     "FilterSelectionSpec": {
       "properties": {
         "chartRichLabel": {
-          "enum": [
-            "highlight",
-            "label",
-            "symbol",
-            "grainShape"
-          ],
+          "enum": ["highlight", "label", "symbol", "grainShape"],
           "type": "string",
           "default": "symbol"
         },
         "chartType": {
-          "enum": [
-            "bar",
-            "rose"
-          ],
+          "enum": ["bar", "rose"],
           "type": "string"
         },
         "key": {
@@ -168,7 +150,7 @@
           },
           "type": "array"
         },
-        "selectedValues":  {
+        "selectedValues": {
           "items": {
             "type": "string"
           },
@@ -176,14 +158,7 @@
           "description": "Initially selected values, use 'nan' for features w/o specification"
         }
       },
-      "required": [
-        "type",
-        "label",
-        "key",
-        "chartType",
-        "chartRichLabel",
-        "values"
-      ],
+      "required": ["type", "label", "key", "chartType", "chartRichLabel", "values"],
       "type": "object"
     }
   }
