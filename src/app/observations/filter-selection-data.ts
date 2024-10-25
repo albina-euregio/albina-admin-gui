@@ -18,6 +18,7 @@ export interface FilterSelectionValue {
   labelFontSize?: number;
   opacity?: number;
   radius?: number;
+  radiusByZoom?: number[];
   weight?: number;
   zIndexOffset?: number;
 }

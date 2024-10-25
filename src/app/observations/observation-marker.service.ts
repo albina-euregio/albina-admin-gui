@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Canvas, Icon, LatLng, Marker, MarkerOptions } from "leaflet";
+import { Canvas, Icon, LatLng, Map, Marker, MarkerOptions } from "leaflet";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
@@ -36,18 +36,35 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       const filterSelectionValue = isHighlighted
         ? this.highlighted
         : this.markerClassify?.findForObservation(observation);
-      const icon = makeIcon(
-        observation.aspect,
-        "#898989",
-        filterSelectionValue?.radius ?? 40,
-        filterSelectionValue?.color ?? "white",
-        filterSelectionValue?.borderColor ?? observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000",
-        filterSelectionValue?.labelColor ?? "#000",
-        filterSelectionValue?.labelFontSize ?? 12,
-        this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,
-        this.getLabel(observation),
-      );
-      return this.createMarkerForIcon(observation, icon, filterSelectionValue);
+      const makeIcon0 = (radius: number | undefined) =>
+        makeIcon(
+          observation.aspect,
+          "#898989",
+          radius ?? 40,
+          filterSelectionValue?.color ?? "white",
+          filterSelectionValue?.borderColor ?? observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000",
+          filterSelectionValue?.labelColor ?? "#000",
+          filterSelectionValue?.labelFontSize ?? 12,
+          this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,
+          this.getLabel(observation),
+        );
+      const icon = makeIcon0(filterSelectionValue?.radius);
+      const marker = this.createMarkerForIcon(observation, icon, filterSelectionValue);
+      if (Array.isArray(filterSelectionValue.radiusByZoom)) {
+        marker.on("add", (e) => {
+          const map = (marker as any)._map as Map;
+          if (map instanceof Map) {
+            const setIcon0 = () => {
+              const zoom = Math.round(map.getZoom());
+              const radius = filterSelectionValue.radiusByZoom[zoom];
+              marker.setIcon(makeIcon0(radius));
+            };
+            setIcon0();
+            map.on("zoomend", () => setIcon0());
+          }
+        });
+      }
+      return marker;
     } catch (e) {
       console.error(e);
       throw e;

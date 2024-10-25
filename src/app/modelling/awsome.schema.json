@@ -107,6 +107,15 @@
           "description": "Radius of the circle marker, in pixels",
           "default": 40
         },
+        "radiusByZoom": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 19,
+          "minItems": 19,
+          "type": "array",
+          "description": "Radius of the circle marker, as array indexed by the map zoom level"
+        },
         "weight": {
           "type": "number",
           "description": "Stroke width, in pixels",
