@@ -50,7 +50,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
         );
       const icon = makeIcon0(filterSelectionValue?.radius);
       const marker = this.createMarkerForIcon(observation, icon, filterSelectionValue);
-      if (Array.isArray(filterSelectionValue.radiusByZoom)) {
+      if (Array.isArray(filterSelectionValue?.radiusByZoom)) {
         marker.on("add", (e) => {
           const map = (marker as any)._map as Map;
           if (map instanceof Map) {
