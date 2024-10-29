@@ -63,6 +63,14 @@ export enum ObservationType {
   Webcam = "Webcam",
 }
 
+export enum PersonInvolvement {
+  Dead = "Dead",
+  Injured = "Injured",
+  Uninjured = "Uninjured",
+  No = "No",
+  Unknown = "Unknown",
+}
+
 export interface ObservationTableRow {
   label: string;
   date?: Date;
@@ -165,6 +173,7 @@ export const genericObservationSchema = z.object({
     .optional()
     .nullable()
     .describe("Important observations"),
+  personInvolvement: z.nativeEnum(PersonInvolvement).optional().nullable().describe("Person involvement"),
 });
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });

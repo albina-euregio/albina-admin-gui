@@ -12,7 +12,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
-import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
+import { GenericObservation, ImportantObservation, PersonInvolvement } from "./models/generic-observation.model";
 import { xor } from "lodash";
 
 @Component({
@@ -42,6 +42,7 @@ export class ObservationEditorComponent {
   dangerPatterns = Object.values(Enums.DangerPattern);
   importantObservations = Object.values(ImportantObservation);
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);
+  personInvolvementValues = Object.values(PersonInvolvement);
   xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation.locationName),

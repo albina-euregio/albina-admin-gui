@@ -1,16 +1,27 @@
 <div *ngIf="observation" class="row g-3">
-  <div class="col-12 col-md-6">
+  <div class="col-12 col-md-4">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
       <input type="datetime-local" required [(ngModel)]="observation.eventDate" class="form-control" />
     </div>
   </div>
 
-  <div class="col-12 col-md-6">
+  <div class="col-12 col-md-4">
     <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
     <select id="snowpackStability" [(ngModel)]="observation.stability" class="form-select">
+      <option [value]="undefined"></option>
       <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
         {{ "snowpackStability." + stability | translate }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-12 col-md-4">
+    <label for="personInvolvement">{{ "observations.personInvolvement" | translate }}</label>
+    <select id="personInvolvement" [(ngModel)]="observation.personInvolvement" class="form-select">
+      <option [value]="undefined"></option>
+      <option *ngFor="let stability of personInvolvementValues" [value]="stability">
+        {{ "personInvolvement." + stability | translate }}
       </option>
     </select>
   </div>

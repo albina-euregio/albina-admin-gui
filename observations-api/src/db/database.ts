@@ -10,7 +10,8 @@ import {
   type ImportantObservation,
   type ObservationSource,
   type ObservationType,
-  type Stability,
+  type PersonInvolvement,
+  type SnowpackStability,
 } from "../models";
 import { augmentElevation } from "./elevation";
 
@@ -38,6 +39,7 @@ type GenericObservationTable = {
   LATITUDE: number;
   LOCATION_NAME: string;
   OBS_CONTENT: string;
+  PERSON_INVOLVEMENT: string;
 };
 
 export async function createConnection(): Promise<mysql.Connection> {
@@ -90,6 +92,7 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
     DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
     EXTRA_DIALOG_ROWS: o.$extraDialogRows ? JSON.stringify(o.$extraDialogRows) : null,
+    PERSON_INVOLVEMENT: o.personInvolvement ?? null,
   };
   const sql = `
   REPLACE INTO generic_observations
@@ -137,7 +140,7 @@ export async function selectObservations(
       $type: (row.OBS_TYPE as ObservationType) ?? undefined,
       $externalURL: row.EXTERNAL_URL ?? undefined,
       $externalImgs: row.EXTERNAL_IMG ? row.EXTERNAL_IMG.split("\n") : undefined,
-      stability: (row.STABILITY as Stability) ?? undefined,
+      stability: (row.STABILITY as SnowpackStability) ?? undefined,
       aspect: (row.ASPECTS?.split(",")?.[0] as Aspect) ?? undefined,
       authorName: row.AUTHOR_NAME ?? undefined,
       content: row.OBS_CONTENT ?? undefined,
@@ -157,6 +160,7 @@ export async function selectObservations(
       avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
       dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
       importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(",") as ImportantObservation[],
+      personInvolvement: (row.PERSON_INVOLVEMENT as PersonInvolvement) ?? undefined,
     }),
   );
 }
