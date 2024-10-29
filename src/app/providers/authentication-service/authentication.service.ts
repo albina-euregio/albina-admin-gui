@@ -253,7 +253,7 @@ export class AuthenticationService {
       Enums.AvalancheProblem.gliding_snow,
       this.getActiveRegion().enableAvalancheProblemCornices && Enums.AvalancheProblem.cornices,
       this.getActiveRegion().enableAvalancheProblemNoDistinctAvalancheProblem &&
-        Enums.AvalancheProblem.no_distinct_problem,
+        Enums.AvalancheProblem.no_distinct_avalanche_problem,
     ].filter((p) => !!p);
   }
 
