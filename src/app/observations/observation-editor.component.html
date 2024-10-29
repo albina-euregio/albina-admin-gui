@@ -2,7 +2,13 @@
   <div class="col-12 col-md-4">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
-      <input type="datetime-local" required [(ngModel)]="observation.eventDate" class="form-control" />
+      <input
+        type="datetime-local"
+        required
+        [valueAsDate]="eventDate"
+        (change)="eventDate = $event"
+        class="form-control"
+      />
     </div>
   </div>
 
@@ -119,7 +125,13 @@
   <div class="col-12 col-md-6">
     <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" class="input-group">
-      <input type="datetime-local" required [(ngModel)]="observation.reportDate" class="date form-control" />
+      <input
+        type="datetime-local"
+        required
+        [valueAsDate]="reportDate"
+        (change)="reportDate = $event"
+        class="date form-control"
+      />
     </div>
   </div>
 

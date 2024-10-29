@@ -68,6 +68,30 @@ export class ObservationEditorComponent {
     navigator.clipboard.writeText(`${this.observation.latitude}, ${this.observation.longitude}`);
   }
 
+  get eventDate(): Date {
+    const date = this.observation.eventDate;
+    return isFinite(+date) ? toUTC(date) : undefined;
+  }
+
+  set eventDate(date: Date | Event) {
+    if (date instanceof Event) {
+      date = (date.target as HTMLInputElement).valueAsDate;
+    }
+    this.observation.eventDate = isFinite(+date) ? fromUTC(date) : undefined;
+  }
+
+  get reportDate(): Date {
+    const date = this.observation.reportDate;
+    return isFinite(+date) ? toUTC(date) : undefined;
+  }
+
+  set reportDate(date: Date | Event) {
+    if (date instanceof Event) {
+      date = (date.target as HTMLInputElement).valueAsDate;
+    }
+    this.observation.reportDate = isFinite(+date) ? fromUTC(date) : undefined;
+  }
+
   setLatitude(event: Event) {
     this.observation.latitude = (event.target as HTMLInputElement).value as unknown as number;
     this.fetchElevation();
@@ -129,4 +153,28 @@ export class ObservationEditorComponent {
       }
     });
   }
+}
+
+function toUTC(value: Date) {
+  return new Date(
+    Date.UTC(
+      value.getFullYear(),
+      value.getMonth(),
+      value.getDate(),
+      value.getHours(),
+      value.getMinutes(),
+      value.getSeconds(),
+    ),
+  );
+}
+
+function fromUTC(value: Date) {
+  return new Date(
+    value.getUTCFullYear(),
+    value.getUTCMonth(),
+    value.getUTCDate(),
+    value.getUTCHours(),
+    value.getUTCMinutes(),
+    value.getUTCSeconds(),
+  );
 }
