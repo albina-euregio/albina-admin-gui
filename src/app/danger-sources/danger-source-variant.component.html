@@ -196,10 +196,10 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+          <label class="form-label me-3" for="textarea-input">{{
             "dangerSources.create.label.snowHeight" | translate
           }}</label>
-          <div style="align-items: baseline" class="input-group">
+          <div class="input-group align-items-baseline">
             <input
               step="1"
               min="0"
@@ -212,7 +212,7 @@
               [(ngModel)]="variant.snowHeightLowerLimit"
             />
             <span class="input-group-text">cm</span>
-            <label style="margin: 0 1rem" class="form-label" for="snowHeightLabel"> - </label>
+            <label class="form-label mx-3" for="snowHeightLabel"> - </label>
             <input
               step="1"
               min="0"
@@ -340,10 +340,10 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+          <label class="form-label pe-3" for="textarea-input">{{
             "dangerSources.create.label.slabThickness" | translate
           }}</label>
-          <div style="align-items: baseline" class="input-group">
+          <div class="input-group align-items-baseline">
             <input
               step="1"
               min="0"
@@ -356,7 +356,7 @@
               [(ngModel)]="variant.slabThicknessLowerLimit"
             />
             <span class="input-group-text">cm</span>
-            <label style="margin: 0 1rem" class="form-label" for="slabThicknessLabel"> - </label>
+            <label class="form-label mx-3" for="slabThicknessLabel"> - </label>
             <input
               step="1"
               min="0"
@@ -373,11 +373,11 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+          <label class="form-label pe-3" for="textarea-input">{{
             "dangerSources.create.label.slabHandHardness" | translate
           }}</label>
-          <div style="align-items: baseline" class="input-group">
-            <div class="btn-group" style="flex: 1 1 auto">
+          <div class="input-group align-items-baseline">
+            <div class="btn-group flex-fill">
               <button
                 type="reset"
                 class="btn btn-sm"
@@ -481,8 +481,8 @@
                 <span>{{ "handHardness.ice" | translate }}</span>
               </button>
             </div>
-            <label style="margin: 0 1rem" class="form-label" for="slabHandHardnessLabel"> - </label>
-            <div class="btn-group" style="flex: 1 1 auto">
+            <label class="form-label mx-3" for="slabHandHardnessLabel"> - </label>
+            <div class="btn-group flex-fill">
               <button
                 type="reset"
                 class="btn btn-sm"
@@ -880,10 +880,10 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label style="padding-right: 1rem" class="form-label" for="textarea-input">{{
+          <label class="form-label pe-3" for="textarea-input">{{
             "dangerSources.create.label.weakLayerGrainSize" | translate
           }}</label>
-          <div style="align-items: baseline" class="input-group">
+          <div class="input-group align-items-baseline">
             <input
               step="0.25"
               min="0"
@@ -896,7 +896,7 @@
               [(ngModel)]="variant.weakLayerGrainSizeLowerLimit"
             />
             <span class="input-group-text">cm</span>
-            <label style="margin: 0 1rem" class="form-label" for="weakLayerGrainSizeLabel"> - </label>
+            <label class="form-label mx-3" for="weakLayerGrainSizeLabel"> - </label>
             <input
               step="0.25"
               min="0"
