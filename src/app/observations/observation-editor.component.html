@@ -1,32 +1,38 @@
 <div *ngIf="observation" class="row g-3">
-  <div class="col-12 col-md-6">
-    <label for="eventType"><i class="ph ph-square"></i> {{ "observations.eventType" | translate }}</label>
-    <select id="eventType" [(ngModel)]="observation.eventType" class="form-select">
-      <option *ngFor="let eventType of eventTypes" [value]="eventType">
-        {{ "observations.eventTypes." + eventType | translate }}
-      </option>
-    </select>
-  </div>
-  <div class="col-12 col-md-6">
+  <div class="col-12 col-md-4">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
       <input
-        type="date"
+        type="datetime-local"
         required
-        (change)="setEventDate($event)"
-        [ngModel]="getDate(observation.eventDate)"
-        class="form-control"
-      />
-      <input
-        type="time"
-        required
-        (change)="setEventTime($event)"
-        [ngModel]="getTime(observation.eventDate)"
+        [valueAsDate]="eventDate"
+        (change)="eventDate = $event"
         class="form-control"
       />
     </div>
   </div>
-  <div class="col-12">
+
+  <div class="col-12 col-md-4">
+    <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
+    <select id="snowpackStability" [(ngModel)]="observation.stability" class="form-select">
+      <option [value]="undefined"></option>
+      <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
+        {{ "snowpackStability." + stability | translate }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-12 col-md-4">
+    <label for="personInvolvement">{{ "observations.personInvolvement" | translate }}</label>
+    <select id="personInvolvement" [(ngModel)]="observation.personInvolvement" class="form-select">
+      <option [value]="undefined"></option>
+      <option *ngFor="let stability of personInvolvementValues" [value]="stability">
+        {{ "personInvolvement." + stability | translate }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-12 col-md-9">
     <label for="locationName"><i class="ph ph-globe"></i> {{ "observations.locationName" | translate }}</label>
     <input
       id="locationName"
@@ -40,7 +46,18 @@
       class="form-control"
     />
   </div>
-  <div class="col-12 col-md-4">
+
+  <div class="col-12 col-md-3">
+    <app-aspects
+      [aspects]="[observation.aspect]"
+      (aspectsChange)="observation.aspect = $event[0]"
+      [size]="100"
+      [singleton]="true"
+    />
+    {{ observation.aspect }}
+  </div>
+
+  <div class="col-12 col-md-3">
     <label for="latitude"><i class="ph ph-map-pin"></i> {{ "observations.latitude" | translate }}</label>
     <input
       id="latitude"
@@ -51,7 +68,8 @@
       class="form-control"
     />
   </div>
-  <div class="col-12 col-md-4">
+
+  <div class="col-12 col-md-3">
     <label for="longitude"><i class="ph ph-map-pin"></i> {{ "observations.longitude" | translate }}</label>
     <div class="input-group">
       <input
@@ -67,35 +85,110 @@
       </button>
     </div>
   </div>
-  <div class="col-12 col-md-4">
+
+  <div class="col-12 col-md-3">
     <label for="elevation">
       <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevation" | translate }}
     </label>
     <input id="elevation" [(ngModel)]="observation.elevation" type="number" step="1" class="form-control" />
   </div>
+
+  <div class="col-12 col-md-3">
+    <label for="elevationLowerBound">
+      <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevationRange" | translate }}
+    </label>
+    <div class="input-group">
+      <input
+        id="elevationLowerBound"
+        [(ngModel)]="observation.elevationLowerBound"
+        type="number"
+        step="1"
+        class="form-control"
+        title="{{ 'observations.elevationLowerBound' | translate }}"
+      />
+      <input
+        id="elevationUpperBound"
+        [(ngModel)]="observation.elevationUpperBound"
+        type="number"
+        step="1"
+        class="form-control"
+        title="{{ 'observations.elevationUpperBound' | translate }}"
+      />
+    </div>
+  </div>
+
   <div class="col-12 col-md-6">
     <label for="authorName"><i class="ph ph-user"></i> {{ "observations.authorName" | translate }}</label>
     <input id="authorName" required [(ngModel)]="observation.authorName" type="text" class="form-control" />
   </div>
+
   <div class="col-12 col-md-6">
     <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" class="input-group">
       <input
-        type="date"
+        type="datetime-local"
         required
-        (change)="setReportDate($event)"
-        [ngModel]="getDate(observation.reportDate)"
+        [valueAsDate]="reportDate"
+        (change)="reportDate = $event"
         class="date form-control"
-      />
-      <input
-        type="time"
-        required
-        (change)="setReportTime($event)"
-        [ngModel]="getTime(observation.reportDate)"
-        class="time form-control"
       />
     </div>
   </div>
+
+  <div class="col-12 col-md-6">
+    <label>{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
+    <div class="avalanche-problem-detail__problem-icons">
+      <app-avalanche-problem-icons
+        *ngFor="let problem of avalancheProblems"
+        (click)="observation.avalancheProblems = xor(observation.avalancheProblems ?? [], [problem])"
+        [class.is-disabled]="!observation.avalancheProblems?.includes(problem)"
+        [value]="problem"
+        class="avalanche-problem-detail__problem-icon"
+        role="button"
+        title="{{ 'avalancheProblem.' + problem | translate }}"
+      />
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label>{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
+    <div class="input-group">
+      <div class="btn-group">
+        <button
+          *ngFor="let dangerPattern of dangerPatterns"
+          [ngClass]="
+            observation.dangerPatterns?.includes(dangerPattern)
+              ? 'btn btn-sm btn-dark'
+              : 'btn btn-sm btn-outline-secondary'
+          "
+          (click)="observation.dangerPatterns = xor(observation.dangerPatterns ?? [], [dangerPattern])"
+          title="{{ 'dangerPattern.' + dangerPattern | translate }}"
+        >
+          {{ dangerPattern }}
+        </button>
+      </div>
+    </div>
+
+    <label class="mt-30">{{ "bulletins.create.label.importantObservations" | translate }}</label>
+    <div class="input-group">
+      <div class="btn-group">
+        <button
+          *ngFor="let importantObservation of importantObservations"
+          [ngClass]="
+            observation.importantObservations?.includes(importantObservation)
+              ? 'btn btn-sm btn-dark'
+              : 'btn btn-sm btn-outline-secondary'
+          "
+          (click)="
+            observation.importantObservations = xor(observation.importantObservations ?? [], [importantObservation])
+          "
+        >
+          {{ "importantObservation." + importantObservation | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="col-12">
     <label for="content"><i class="ph ph-chat"></i> {{ "observations.content" | translate }}</label>
     <textarea

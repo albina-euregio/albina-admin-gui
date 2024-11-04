@@ -64,16 +64,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   ) {}
 
   ngOnChanges() {
-    this.avalancheProblems = [
-      Enums.AvalancheProblem.new_snow,
-      Enums.AvalancheProblem.wind_slab,
-      Enums.AvalancheProblem.persistent_weak_layers,
-      Enums.AvalancheProblem.wet_snow,
-      Enums.AvalancheProblem.gliding_snow,
-      this.authenticationService.getActiveRegion().enableAvalancheProblemCornices && Enums.AvalancheProblem.cornices,
-      this.authenticationService.getActiveRegion().enableAvalancheProblemNoDistinctAvalancheProblem &&
-        Enums.AvalancheProblem.no_distinct_avalanche_problem,
-    ].filter((p) => !!p);
+    this.avalancheProblems = this.authenticationService.getActiveRegionAvalancheProblems();
     if (!this.isElevationHighEditing) {
       this.useElevationHigh =
         this.avalancheProblemModel.getTreelineHigh() || this.avalancheProblemModel.getElevationHigh() !== undefined;

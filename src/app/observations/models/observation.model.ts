@@ -1,5 +1,5 @@
-import { GenericObservation, ObservationSource, ObservationType } from "./generic-observation.model";
-import { Aspect, SnowpackStability } from "../../enums/enums";
+import { Aspect } from "../../enums/enums";
+import { GenericObservation, ObservationSource, ObservationType, PersonInvolvement } from "./generic-observation.model";
 
 export interface Observation {
   aspect: Aspect;
@@ -33,9 +33,10 @@ export function convertObservationToGeneric(observation: Observation): GenericOb
     ...observation,
     $data: observation,
     $extraDialogRows: null,
+    $id: String(observation.id).padStart(12, "0"),
     $source: ObservationSource.AvalancheWarningService,
     $type: getObservationType(observation),
-    stability: getObservationStability(observation),
+    personInvolvement: getPersonInvolvement(observation),
     eventDate: observation.eventDate ? new Date(observation.eventDate) : undefined,
     reportDate: observation.reportDate ? new Date(observation.reportDate) : undefined,
   };
@@ -43,25 +44,23 @@ export function convertObservationToGeneric(observation: Observation): GenericOb
 
 export function isAvalancheWarningServiceObservation(
   observation: GenericObservation,
-): observation is GenericObservation<Observation> {
+): observation is GenericObservation {
   return (
     observation.$source === ObservationSource.AvalancheWarningService &&
     !/models.avalanche.report/.test(observation.$externalURL)
   );
 }
 
-function getObservationStability(observation: Observation): SnowpackStability {
+function getPersonInvolvement(observation: Observation): PersonInvolvement {
   switch (observation.eventType ?? EventType.Normal) {
     case EventType.PersonDead:
-      return SnowpackStability.poor;
+      return PersonInvolvement.Dead;
     case EventType.PersonInjured:
-      return SnowpackStability.poor;
+      return PersonInvolvement.Injured;
     case EventType.PersonUninjured:
-      return SnowpackStability.poor;
+      return PersonInvolvement.Uninjured;
     case EventType.PersonNo:
-      return SnowpackStability.poor;
-    case EventType.Important:
-      return SnowpackStability.fair;
+      return PersonInvolvement.No;
     default:
       return null;
   }

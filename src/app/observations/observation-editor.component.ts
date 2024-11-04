@@ -1,30 +1,49 @@
-import { Component, Input } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { Observation, EventType } from "./models/observation.model";
-import { Feature, Point } from "geojson";
-import { GeocodingProperties, GeocodingService } from "./geocoding.service";
-import { geocoders } from "leaflet-control-geocoder";
-import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
-import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { Observable, Observer, map, of, switchMap } from "rxjs";
+import { Component, Input } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
+import { Feature, Point } from "geojson";
+import { geocoders } from "leaflet-control-geocoder";
 import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
+import { Observable, Observer, map, of, switchMap } from "rxjs";
+import * as Enums from "../enums/enums";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { AspectsComponent } from "../shared/aspects.component";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { GeocodingProperties, GeocodingService } from "./geocoding.service";
+import { GenericObservation, ImportantObservation, PersonInvolvement } from "./models/generic-observation.model";
+import { xor } from "lodash";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, TypeaheadModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    TypeaheadModule,
+    AspectsComponent,
+    AvalancheProblemIconsComponent,
+  ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
 })
 export class ObservationEditorComponent {
   constructor(
-    private translate: TranslateService,
+    authenticationService: AuthenticationService,
     private geocodingService: GeocodingService,
     private coordinateDataService: CoordinateDataService,
-  ) {}
+  ) {
+    this.avalancheProblems = authenticationService.getActiveRegionAvalancheProblems();
+  }
 
-  @Input() observation: Observation;
-  eventTypes: EventType[] = Object.values(EventType);
+  @Input() observation: GenericObservation;
+  avalancheProblems: Enums.AvalancheProblem[];
+  dangerPatterns = Object.values(Enums.DangerPattern);
+  importantObservations = Object.values(ImportantObservation);
+  snowpackStabilityValues = Object.values(Enums.SnowpackStability);
+  personInvolvementValues = Object.values(PersonInvolvement);
+  xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation.locationName),
   ).pipe(
@@ -47,6 +66,30 @@ export class ObservationEditorComponent {
 
   copyLatLng() {
     navigator.clipboard.writeText(`${this.observation.latitude}, ${this.observation.longitude}`);
+  }
+
+  get eventDate(): Date {
+    const date = this.observation.eventDate;
+    return isFinite(+date) ? toUTC(date) : undefined;
+  }
+
+  set eventDate(date: Date | Event) {
+    if (date instanceof Event) {
+      date = (date.target as HTMLInputElement).valueAsDate;
+    }
+    this.observation.eventDate = isFinite(+date) ? fromUTC(date) : undefined;
+  }
+
+  get reportDate(): Date {
+    const date = this.observation.reportDate;
+    return isFinite(+date) ? toUTC(date) : undefined;
+  }
+
+  set reportDate(date: Date | Event) {
+    if (date instanceof Event) {
+      date = (date.target as HTMLInputElement).valueAsDate;
+    }
+    this.observation.reportDate = isFinite(+date) ? fromUTC(date) : undefined;
   }
 
   setLatitude(event: Event) {
@@ -74,48 +117,14 @@ export class ObservationEditorComponent {
     }, 0);
   }
 
-  setEventDate(event: Event) {
-    const date = (event.target as HTMLInputElement).value;
-    const time = this.getTime(this.observation.eventDate);
-    this.observation.eventDate = `${date}T${time}`;
-  }
-
-  setReportDate(event: Event) {
-    const date = (event.target as HTMLInputElement).value;
-    const time = this.getTime(this.observation.reportDate);
-    this.observation.reportDate = `${date}T${time}`;
-  }
-
-  setEventTime(event: Event) {
-    const date = this.getDate(this.observation.eventDate);
-    const time = (event.target as HTMLInputElement).value;
-    this.observation.eventDate = `${date}T${time}`;
-  }
-
-  setReportTime(event: Event) {
-    const date = this.getDate(this.observation.reportDate);
-    const time = (event.target as HTMLInputElement).value;
-    this.observation.reportDate = `${date}T${time}`;
-  }
-
-  getDate(obj: string | Date) {
-    const date = (obj as string) || "T00:00";
-    return date?.split("T")[0];
-  }
-
-  getTime(obj: string | Date) {
-    const date = (obj as string) || "T00:00";
-    return date?.split("T")[1] || "00:00";
-  }
-
   parseContent($event: { clipboardData: DataTransfer }): void {
-    const codes = {
-      "ALP-LAW-NEG": EventType.PersonNo,
-      "ALP-LAW-UNKL": EventType.PersonUninjured,
-      "ALP-LAW-KLEIN": EventType.PersonUninjured,
-      "ALP-LAW-GROSS": EventType.PersonUninjured,
-      "ALP-LAW-FREI": EventType.PersonUninjured,
-    };
+    // const codes = {
+    //   "ALP-LAW-NEG": EventType.PersonNo,
+    //   "ALP-LAW-UNKL": EventType.PersonUninjured,
+    //   "ALP-LAW-KLEIN": EventType.PersonUninjured,
+    //   "ALP-LAW-GROSS": EventType.PersonUninjured,
+    //   "ALP-LAW-FREI": EventType.PersonUninjured,
+    // };
 
     setTimeout(() => {
       const content = this.observation.content;
@@ -125,9 +134,6 @@ export class ObservationEditorComponent {
         content.includes("beschickte Einsatzmittel")
       ) {
         this.observation.authorName = "Leitstelle Tirol";
-
-        const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
-        if (codes[code]) this.observation.eventType = codes[code];
       }
       if (!this.observation.locationName && content.includes("Einsatzort")) {
         const match = content.match(/Einsatzort:.*\n\s+.*\s+(.*)/);
@@ -147,4 +153,28 @@ export class ObservationEditorComponent {
       }
     });
   }
+}
+
+function toUTC(value: Date) {
+  return new Date(
+    Date.UTC(
+      value.getFullYear(),
+      value.getMonth(),
+      value.getDate(),
+      value.getHours(),
+      value.getMinutes(),
+      value.getSeconds(),
+    ),
+  );
+}
+
+function fromUTC(value: Date) {
+  return new Date(
+    value.getUTCFullYear(),
+    value.getUTCMonth(),
+    value.getUTCDate(),
+    value.getUTCHours(),
+    value.getUTCMinutes(),
+    value.getUTCSeconds(),
+  );
 }

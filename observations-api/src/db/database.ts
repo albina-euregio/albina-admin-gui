@@ -1,15 +1,19 @@
 import * as mysql from "mysql2/promise";
-import type {
-  Aspect,
-  AvalancheProblem,
-  DangerPattern,
-  ForecastSource,
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationType,
-  Stability,
+import { augmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
+import {
+  findExistingObservation,
+  type Aspect,
+  type AvalancheProblem,
+  type DangerPattern,
+  type ForecastSource,
+  type GenericObservation,
+  type ImportantObservation,
+  type ObservationSource,
+  type ObservationType,
+  type PersonInvolvement,
+  type SnowpackStability,
 } from "../models";
+import { augmentElevation } from "./elevation";
 
 type GenericObservationTable = {
   REGION_ID: string;
@@ -35,9 +39,10 @@ type GenericObservationTable = {
   LATITUDE: number;
   LOCATION_NAME: string;
   OBS_CONTENT: string;
+  PERSON_INVOLVEMENT: string;
 };
 
-export async function createConnection() {
+export async function createConnection(): Promise<mysql.Connection> {
   return await mysql.createConnection({
     host: "127.0.0.1",
     port: 3306,
@@ -46,6 +51,20 @@ export async function createConnection() {
     database: "albina_dev",
   });
 }
+
+export async function augmentAndInsertObservation(
+  connection: mysql.Connection,
+  o: GenericObservation,
+  existing: GenericObservation[] = [],
+) {
+  const ex = findExistingObservation(existing, o);
+  if (!ex || o.latitude !== ex.latitude || o.longitude !== ex.longitude) {
+    augmentRegion(o);
+    await augmentElevation(o);
+  }
+  return await insertObservation(connection, o);
+}
+
 export async function insertObservation(connection: mysql.Connection, o: GenericObservation) {
   if (!o) return;
   console.log("Inserting observation", o.$id, o.$source);
@@ -73,6 +92,7 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
     DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
     EXTRA_DIALOG_ROWS: o.$extraDialogRows ? JSON.stringify(o.$extraDialogRows) : null,
+    PERSON_INVOLVEMENT: o.personInvolvement ?? null,
   };
   const sql = `
   REPLACE INTO generic_observations
@@ -80,14 +100,26 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
   VALUES (${Object.keys(data)
     .map(() => "?")
     .join(", ")})
-  ;`;
+  `;
   try {
-    await connection.execute(sql, Object.values(data));
+    return await connection.execute(sql, Object.values(data));
   } catch (err) {
     if ((err as mysql.QueryError).code === "ER_DUP_ENTRY") {
       console.debug("Skipping existing observation", o.$id, data);
       return;
     }
+    console.error(err, JSON.stringify(o));
+    throw err;
+  }
+}
+
+export async function deleteObservation(connection: mysql.Connection, o: GenericObservation) {
+  if (!o || !o.$id) return;
+  console.log("Deleting observation", o.$id, o.$source);
+  const sql = "DELETE FROM generic_observations WHERE ID = ?";
+  try {
+    return await connection.execute(sql, [o.$id]);
+  } catch (err) {
     console.error(err, JSON.stringify(o));
     throw err;
   }
@@ -108,7 +140,7 @@ export async function selectObservations(
       $type: (row.OBS_TYPE as ObservationType) ?? undefined,
       $externalURL: row.EXTERNAL_URL ?? undefined,
       $externalImgs: row.EXTERNAL_IMG ? row.EXTERNAL_IMG.split("\n") : undefined,
-      stability: (row.STABILITY as Stability) ?? undefined,
+      stability: (row.STABILITY as SnowpackStability) ?? undefined,
       aspect: (row.ASPECTS?.split(",")?.[0] as Aspect) ?? undefined,
       authorName: row.AUTHOR_NAME ?? undefined,
       content: row.OBS_CONTENT ?? undefined,
@@ -128,6 +160,7 @@ export async function selectObservations(
       avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
       dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
       importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(",") as ImportantObservation[],
+      personInvolvement: (row.PERSON_INVOLVEMENT as PersonInvolvement) ?? undefined,
     }),
   );
 }

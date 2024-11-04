@@ -100,13 +100,7 @@
     <app-observation-editor *ngIf="observation" [observation]="observation"></app-observation-editor>
     <button
       type="button"
-      [disabled]="
-        saving ||
-        observation?.reportDate === undefined ||
-        observation?.eventDate === undefined ||
-        observation?.reportDate === '' ||
-        observation?.eventDate === ''
-      "
+      [disabled]="saving || !observation?.reportDate || !observation?.eventDate"
       (click)="saveObservation()"
       class="btn btn-sm btn-primary"
     >
@@ -116,7 +110,7 @@
     </button>
     <button
       type="button"
-      [disabled]="saving || observation?.id === undefined"
+      [disabled]="saving || !observation?.$id"
       (click)="deleteObservation()"
       class="btn btn-sm btn-danger"
     >

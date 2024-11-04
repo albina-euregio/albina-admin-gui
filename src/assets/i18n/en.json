@@ -277,6 +277,7 @@
       "hideNotes": "Hide notes",
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
+        "importantObservations": "Important observations",
         "avalancheProblems": "Avalanche problem",
         "aspects": "Aspects",
         "highlights": "Special alert",
@@ -1229,6 +1230,9 @@
     "content": "Content",
     "dangerRating": "Danger rating",
     "elevation": "Elevation",
+    "elevationRange": "Elevation range",
+    "elevationLowerBound": "Elevation lower bound",
+    "elevationUpperBound": "Elevation upper bound",
     "eventDate": "Event date",
     "eventType": "Event type",
     "eventTypes": {
@@ -1248,6 +1252,7 @@
     "latitude": "Latitude",
     "locationName": "Location",
     "longitude": "Longitude",
+    "personInvolvement": "Person involvement",
     "reportDate": "Report date",
     "showTable": "Table",
     "withoutCoordinates": "Observations without coordinates:",
@@ -1265,6 +1270,13 @@
         "title": "Views"
       }
     }
+  },
+  "personInvolvement": {
+    "Dead": "Event involving persons (dead)",
+    "Injured": "Event involving persons (injured)",
+    "No": "Event not involving persons",
+    "Uninjured": "Event involving persons (uninjured)",
+    "Unknown": "Event (unknown)"
   },
   "units": {
     "cm": "cm",

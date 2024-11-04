@@ -22,6 +22,7 @@ CREATE TABLE `generic_observations` (
   `DANGER_PATTERNS` set('dp1','dp2','dp3','dp4','dp5','dp6','dp7','dp8','dp9','dp10') DEFAULT NULL COMMENT 'Danger patterns corresponding with this observation',
   `IMPORTANT_OBSERVATION` set('SnowLine','SurfaceHoar','Graupel','StabilityTest','IceFormation','VeryLightNewSnow') DEFAULT NULL COMMENT 'Important observations',
   `EXTRA_DIALOG_ROWS` longtext COMMENT 'Additional information to display as table rows in the observation dialog' CHECK (json_valid(`EXTRA_DIALOG_ROWS`)),
+  `PERSON_INVOLVEMENT` enum('Dead', 'Injured', 'Uninjured', 'No', 'Unknown') DEFAULT NULL COMMENT 'Person involvement',
   PRIMARY KEY (`SOURCE`,`ID`),
   KEY `generic_observations_EVENT_DATE_IDX` (`EVENT_DATE`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

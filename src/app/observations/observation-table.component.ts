@@ -1,9 +1,14 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { EventType, isAvalancheWarningServiceObservation, Observation } from "./models/observation.model";
+import { isAvalancheWarningServiceObservation } from "./models/observation.model";
 import { AlbinaObservationsService } from "./observations.service";
-import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+} from "./models/generic-observation.model";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -22,7 +27,7 @@ export class ObservationTableComponent {
   @Input() observations: GenericObservation[] = [];
   @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
   showObservationsWithoutCoordinates: boolean = false;
-  observation: Observation;
+  observation: GenericObservation;
   observationSearch: string;
   saving = false;
   messages: any[] = [];
@@ -50,8 +55,9 @@ export class ObservationTableComponent {
 
   newObservation() {
     this.observation = {
-      eventType: EventType.Normal,
-    } as Observation;
+      $source: ObservationSource.AvalancheWarningService,
+      $type: ObservationType.SimpleObservation,
+    } satisfies GenericObservation;
     this.showDialog();
   }
 
@@ -67,27 +73,12 @@ export class ObservationTableComponent {
 
   onClick(observation: GenericObservation) {
     if (isAvalancheWarningServiceObservation(observation)) {
-      this.editObservation(observation.$data);
+      // FIXME? this.observationsService.getObservation(observation.id).toPromise()
+      this.observation = observation;
+      this.showDialog();
     } else {
       this.observationClick.emit(observation);
     }
-  }
-
-  async editObservation(observation: Observation) {
-    this.observation = (await this.observationsService.getObservation(observation.id).toPromise()).$data;
-    if (typeof this.observation?.eventDate === "object") {
-      this.observation.eventDate = this.observation.eventDate.toISOString();
-    }
-    if (typeof this.observation?.eventDate === "string") {
-      this.observation.eventDate = this.observation.eventDate.slice(0, "2006-01-02T15:04".length);
-    }
-    if (typeof this.observation?.reportDate === "object") {
-      this.observation.reportDate = this.observation.reportDate.toISOString();
-    }
-    if (typeof this.observation?.reportDate === "string") {
-      this.observation.reportDate = this.observation.reportDate.slice(0, "2006-01-02T15:04".length);
-    }
-    this.showDialog();
   }
 
   showDialog() {
@@ -105,10 +96,10 @@ export class ObservationTableComponent {
     const { observation } = this;
     try {
       this.saving = true;
-      if (observation.id) {
+      if (observation.$id) {
         const newObservation = await this.observationsService.putObservation(observation).toPromise();
         Object.assign(
-          this.observations.find((o) => isAvalancheWarningServiceObservation(o) && o.$data.id === observation.id),
+          this.observations.find((o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id),
           newObservation,
         );
       } else {
@@ -132,7 +123,7 @@ export class ObservationTableComponent {
       this.saving = true;
       await this.observationsService.deleteObservation(observation);
       const index = this.observations.findIndex(
-        (o) => isAvalancheWarningServiceObservation(o) && o.$data.id === observation.id,
+        (o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id,
       );
       this.observations.splice(index, 1);
       this.hideDialog();

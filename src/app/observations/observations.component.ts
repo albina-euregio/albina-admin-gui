@@ -236,7 +236,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const stabilities = Object.values(SnowpackStability);
     const importantObservations = Object.values(ImportantObservation);
 
-    const matches = [...observation.content.matchAll(/#\S*(?=\s|$)/g)].map((el) => el[0].replace("#", ""));
+    const matches = [...(observation.content ?? "").matchAll(/#\S*(?=\s|$)/g)].map((el) => el[0].replace("#", ""));
     matches.forEach((match) => {
       if (avalancheProblems.includes(match as AvalancheProblem)) {
         if (!observation.avalancheProblems) observation.avalancheProblems = [];
@@ -262,10 +262,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     this.clear();
 
-    this.loading = onErrorResumeNext(
-      this.observationsService.getObservations(),
-      this.observationsService.getGenericObservations(),
-    );
+    this.loading = onErrorResumeNext(this.observationsService.getGenericObservations());
     this.loading
       .forEach((observation) => {
         try {

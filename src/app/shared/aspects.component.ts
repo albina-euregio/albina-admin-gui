@@ -11,7 +11,8 @@ import { TranslateModule } from "@ngx-translate/core";
 export class AspectsComponent {
   @Input() aspects: Enums.Aspect[];
   @Output() aspectsChange = new EventEmitter<Enums.Aspect[]>();
-  @Input() disabled: boolean;
+  @Input() disabled: boolean = false;
+  @Input() singleton: boolean = false;
   @Input() size: number;
 
   aspect = Enums.Aspect;
@@ -30,7 +31,11 @@ export class AspectsComponent {
     if (this.disabled) {
       return;
     }
-    if (this.aspects?.length !== 1) {
+    if (this.aspects[0] === aspect && this.singleton) {
+      this.aspects = [];
+      return this.aspectsChange.emit(this.aspects);
+    }
+    if (this.aspects?.length !== 1 || this.singleton) {
       this.aspects = [aspect];
       return this.aspectsChange.emit(this.aspects);
     }
