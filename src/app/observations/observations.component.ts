@@ -28,11 +28,12 @@ import { saveAs } from "file-saver";
 
 import { ObservationGalleryComponent } from "./observation-gallery.component";
 import { ObservationTableComponent } from "./observation-table.component";
+import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
 import { onErrorResumeNext, type Observable } from "rxjs";
-import { BsModalService } from "ngx-bootstrap/modal";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
@@ -46,6 +47,8 @@ import { ObservationMarkerWeatherStationService } from "./observation-marker-wea
 import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
 import Split from "split.js";
+import { isAvalancheWarningServiceObservation } from "./models/observation.model";
+import { HttpErrorResponse } from "@angular/common/http";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -59,6 +62,7 @@ export interface MultiselectDropdownData {
     BsDatepickerModule,
     CommonModule,
     FormsModule,
+    ObservationEditorComponent,
     ObservationGalleryComponent,
     ObservationTableComponent,
     TranslateModule,
@@ -92,9 +96,14 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   };
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
+  observation: GenericObservation;
+  saving = false;
+  modalRef: BsModalRef;
+  messages: any[] = [];
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild("observationTable") observationTableComponent: ObservationTableComponent;
   @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
+  @ViewChild("observationEditorTemplate") observationEditorTemplate: TemplateRef<any>;
 
   constructor(
     public filter: ObservationFilterService<GenericObservation>,
@@ -218,8 +227,81 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   newObservation() {
-    this.layout = "table";
-    this.observationTableComponent.newObservation();
+    this.observation = {
+      $source: ObservationSource.AvalancheWarningService,
+      $type: ObservationType.SimpleObservation,
+    } satisfies GenericObservation;
+    this.showDialog();
+  }
+
+  editObservation(observation: GenericObservation) {
+    this.observation = observation;
+    this.showDialog();
+  }
+
+  showDialog() {
+    this.modalRef = this.modalService.show(this.observationEditorTemplate, {
+      class: "modal-fullscreen",
+    });
+  }
+
+  hideDialog() {
+    this.modalRef.hide();
+    this.modalRef = undefined;
+  }
+
+  async saveObservation() {
+    const { observation } = this;
+    try {
+      this.saving = true;
+      if (observation.$id) {
+        const newObservation = await this.observationsService.putObservation(observation).toPromise();
+        Object.assign(
+          this.observations.find((o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id),
+          newObservation,
+        );
+      } else {
+        const newObservation = await this.observationsService.postObservation(observation).toPromise();
+        this.observations.splice(0, 0, newObservation);
+      }
+      this.hideDialog();
+    } catch (error) {
+      this.reportError(error);
+    } finally {
+      this.saving = false;
+    }
+  }
+  async deleteObservation() {
+    const { observation } = this;
+    if (!window.confirm(this.translateService.instant("observations.button.deleteConfirm"))) {
+      return;
+    }
+    try {
+      this.saving = true;
+      await this.observationsService.deleteObservation(observation);
+      const index = this.observations.findIndex(
+        (o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id,
+      );
+      this.observations.splice(index, 1);
+      this.hideDialog();
+    } catch (error) {
+      this.reportError(error);
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  discardObservation() {
+    this.observation = undefined;
+    this.hideDialog();
+  }
+
+  private reportError(error: HttpErrorResponse) {
+    this.messages.push({
+      severity: "error",
+      summary: error.statusText,
+      detail: error.message,
+    });
   }
 
   selectParameter(parameter0: keyof typeof WeatherStationParameter) {

@@ -1,14 +1,7 @@
-import { HttpErrorResponse } from "@angular/common/http";
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { isAvalancheWarningServiceObservation } from "./models/observation.model";
-import { AlbinaObservationsService } from "./observations.service";
-import {
-  GenericObservation,
-  ImportantObservation,
-  ObservationSource,
-  ObservationType,
-} from "./models/generic-observation.model";
+import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -26,11 +19,9 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
 export class ObservationTableComponent {
   @Input() observations: GenericObservation[] = [];
   @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
+  @Output() editObservationEvent: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
   showObservationsWithoutCoordinates: boolean = false;
-  observation: GenericObservation;
   observationSearch: string;
-  saving = false;
-  messages: any[] = [];
   importantObservationTexts = {
     [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
     [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
@@ -44,21 +35,11 @@ export class ObservationTableComponent {
 
   constructor(
     public modalService: BsModalService,
-    private observationsService: AlbinaObservationsService,
     private markerService: ObservationMarkerService<GenericObservation>,
-    private translate: TranslateService,
   ) {}
 
   get sortedObservations(): GenericObservation[] {
     return (this.observations || []).sort((o1, o2) => +o2.eventDate - +o1.eventDate);
-  }
-
-  newObservation() {
-    this.observation = {
-      $source: ObservationSource.AvalancheWarningService,
-      $type: ObservationType.SimpleObservation,
-    } satisfies GenericObservation;
-    this.showDialog();
   }
 
   isShowObservation(observation: GenericObservation): boolean {
@@ -74,77 +55,10 @@ export class ObservationTableComponent {
   onClick(observation: GenericObservation) {
     if (isAvalancheWarningServiceObservation(observation)) {
       // FIXME? this.observationsService.getObservation(observation.id).toPromise()
-      this.observation = observation;
-      this.showDialog();
+      this.editObservationEvent.emit(observation);
     } else {
       this.observationClick.emit(observation);
     }
-  }
-
-  showDialog() {
-    this.modalRef = this.modalService.show(this.observationEditorTemplate, {
-      class: "modal-fullscreen",
-    });
-  }
-
-  hideDialog() {
-    this.modalRef.hide();
-    this.modalRef = undefined;
-  }
-
-  async saveObservation() {
-    const { observation } = this;
-    try {
-      this.saving = true;
-      if (observation.$id) {
-        const newObservation = await this.observationsService.putObservation(observation).toPromise();
-        Object.assign(
-          this.observations.find((o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id),
-          newObservation,
-        );
-      } else {
-        const newObservation = await this.observationsService.postObservation(observation).toPromise();
-        this.observations.splice(0, 0, newObservation);
-      }
-      this.hideDialog();
-    } catch (error) {
-      this.reportError(error);
-    } finally {
-      this.saving = false;
-    }
-  }
-
-  async deleteObservation() {
-    const { observation } = this;
-    if (!window.confirm(this.translate.instant("observations.button.deleteConfirm"))) {
-      return;
-    }
-    try {
-      this.saving = true;
-      await this.observationsService.deleteObservation(observation);
-      const index = this.observations.findIndex(
-        (o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id,
-      );
-      this.observations.splice(index, 1);
-      this.hideDialog();
-    } catch (error) {
-      this.reportError(error);
-    } finally {
-      this.saving = false;
-    }
-  }
-
-  discardObservation() {
-    this.observation = undefined;
-    this.hideDialog();
-  }
-
-  private reportError(error: HttpErrorResponse) {
-    this.messages.push({
-      severity: "error",
-      summary: error.statusText,
-      detail: error.message,
-    });
   }
 
   getTableRowStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
