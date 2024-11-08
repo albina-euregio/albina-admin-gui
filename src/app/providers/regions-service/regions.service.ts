@@ -10,13 +10,7 @@ import { default as regionsNamesFr } from "@eaws/micro-regions_names/fr.json";
 import { default as regionsNamesEs } from "@eaws/micro-regions_names/es.json";
 import { default as regionsNamesCa } from "@eaws/micro-regions_names/ca.json";
 import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
-import {
-  loadRegions,
-  loadRegionsAran,
-  loadRegionsEuregio,
-  loadRegionsSwitzerland,
-  loadRegionsWithElevation,
-} from "./regions-loader.mjs";
+import { loadRegions, loadRegionsAran, loadRegionsEuregio, loadRegionsSwitzerland } from "./regions-loader.mjs";
 
 @Injectable()
 export class RegionsService {
@@ -37,10 +31,6 @@ export class RegionsService {
 
   getRegionsAsync(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
     return loadRegions().then((r) => this.translateNames(r));
-  }
-
-  getRegionsWithElevationAsync(): Promise<FeatureCollection<MultiPolygon, RegionWithElevationProperties>> {
-    return loadRegionsWithElevation().then((r) => this.translateNames(r));
   }
 
   async getActiveRegion(activeRegionCode: string): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {

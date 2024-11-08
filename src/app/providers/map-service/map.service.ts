@@ -70,9 +70,8 @@ export class MapService {
   }
 
   protected async initOverlayMaps(isPM = false): Promise<typeof this.overlayMaps> {
-    const [regions, regionsWithElevation, activeRegion] = await Promise.all([
+    const [regions, activeRegion] = await Promise.all([
       this.regionsService.getRegionsAsync(),
-      this.regionsService.getRegionsWithElevationAsync(),
       this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()),
     ]);
 

@@ -45,7 +45,6 @@
     "@angular/upgrade": "^19.0.0-rc.1",
     "@auth0/angular-jwt": "^5.2.0",
     "@eaws/micro-regions": "^6.1.0",
-    "@eaws/micro-regions_elevation": "^6.1.0",
     "@eaws/micro-regions_names": "^6.1.0",
     "@ngx-translate/core": "^15.0.0",
     "@phosphor-icons/web": "^2.1.1",

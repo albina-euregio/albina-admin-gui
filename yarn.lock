@@ -1729,13 +1729,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eaws/micro-regions_elevation@npm:^6.1.0":
-  version: 6.2.0
-  resolution: "@eaws/micro-regions_elevation@npm:6.2.0::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions_elevation%2F-%2F%40eaws%2Fmicro-regions_elevation-6.2.0.tgz"
-  checksum: 10c0/9019e03adfb3ecb78eb327a21f5186ca8bdfe7a1a9f5a4efd93f8edb5dbd5264929c831339ab2ec0f6825bab2e08fdeb5827fb46d6e20bcb678d501cbd29c8ca
-  languageName: node
-  linkType: hard
-
 "@eaws/micro-regions_names@npm:^6.1.0":
   version: 6.2.0
   resolution: "@eaws/micro-regions_names@npm:6.2.0::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions_names%2F-%2F%40eaws%2Fmicro-regions_names-6.2.0.tgz"
@@ -4135,7 +4128,6 @@ __metadata:
     "@angular/upgrade": "npm:^19.0.0-rc.1"
     "@auth0/angular-jwt": "npm:^5.2.0"
     "@eaws/micro-regions": "npm:^6.1.0"
-    "@eaws/micro-regions_elevation": "npm:^6.1.0"
     "@eaws/micro-regions_names": "npm:^6.1.0"
     "@ngx-translate/core": "npm:^15.0.0"
     "@phosphor-icons/web": "npm:^2.1.1"
