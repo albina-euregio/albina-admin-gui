@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { isAvalancheWarningServiceObservation } from "./models/observation.model";
 import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
-import { ObservationEditorComponent } from "./observation-editor.component";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService } from "./observation-marker.service";
@@ -12,7 +11,7 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
 
 @Component({
   standalone: true,
-  imports: [AvalancheProblemIconsComponent, CommonModule, FormsModule, ObservationEditorComponent, TranslateModule],
+  imports: [AvalancheProblemIconsComponent, CommonModule, FormsModule, TranslateModule],
   selector: "app-observation-table",
   templateUrl: "observation-table.component.html",
 })
