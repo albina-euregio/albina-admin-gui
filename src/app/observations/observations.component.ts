@@ -96,10 +96,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   };
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
-  observation: GenericObservation;
-  saving = false;
-  modalRef: BsModalRef;
-  messages: any[] = [];
+  public observationEditor: {
+    observation: GenericObservation;
+    saving: boolean;
+    modalRef: BsModalRef;
+    messages: any[];
+  } = { observation: undefined, saving: false, modalRef: undefined, messages: [] };
   @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
   @ViewChild("observationTable") observationTableComponent: ObservationTableComponent;
   @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
@@ -227,33 +229,34 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   newObservation() {
-    this.observation = {
+    const observation = {
       $source: ObservationSource.AvalancheWarningService,
       $type: ObservationType.SimpleObservation,
     } satisfies GenericObservation;
+    this.observationEditor.observation = observation;
     this.showDialog();
   }
 
   editObservation(observation: GenericObservation) {
-    this.observation = observation;
+    this.observationEditor.observation = observation;
     this.showDialog();
   }
 
   showDialog() {
-    this.modalRef = this.modalService.show(this.observationEditorTemplate, {
+    this.observationEditor.modalRef = this.modalService.show(this.observationEditorTemplate, {
       class: "modal-fullscreen",
     });
   }
 
   hideDialog() {
-    this.modalRef.hide();
-    this.modalRef = undefined;
+    this.observationEditor.modalRef.hide();
+    this.observationEditor.modalRef = undefined;
   }
 
   async saveObservation() {
-    const { observation } = this;
+    const { observation } = this.observationEditor;
     try {
-      this.saving = true;
+      this.observationEditor.saving = true;
       const newObservation = await this.observationsService.postObservation(observation).toPromise();
       if (observation.$id) {
         Object.assign(
@@ -268,16 +271,17 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     } catch (error) {
       this.reportError(error);
     } finally {
-      this.saving = false;
+      this.observationEditor.saving = false;
     }
   }
+
   async deleteObservation() {
-    const { observation } = this;
+    const { observation } = this.observationEditor;
     if (!window.confirm(this.translateService.instant("observations.button.deleteConfirm"))) {
       return;
     }
     try {
-      this.saving = true;
+      this.observationEditor.saving = true;
       await this.observationsService.deleteObservation(observation);
       const index = this.observations.findIndex(
         (o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id,
@@ -288,17 +292,17 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     } catch (error) {
       this.reportError(error);
     } finally {
-      this.saving = false;
+      this.observationEditor.saving = false;
     }
   }
 
   discardObservation() {
-    this.observation = undefined;
+    this.observationEditor.observation = undefined;
     this.hideDialog();
   }
 
   private reportError(error: HttpErrorResponse) {
-    this.messages.push({
+    this.observationEditor.messages.push({
       severity: "error",
       summary: error.statusText,
       detail: error.message,

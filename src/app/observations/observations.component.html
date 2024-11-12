@@ -477,32 +477,39 @@
 
 <ng-template #observationEditorTemplate>
   <div class="modal-header">
-    <span>{{ observation?.locationName }}</span>
+    <span>{{ observationEditor.observation?.locationName }}</span>
     <div class="d-inline-block font-weight-normal">
       <button type="button" class="btn-close ms-3" aria-label="Close" (click)="modalService.hide()"></button>
     </div>
   </div>
   <div class="modal-body">
-    {{ messages }}
-    <app-observation-editor *ngIf="observation" [observation]="observation"></app-observation-editor>
+    {{ observationEditor.messages }}
+    <app-observation-editor
+      *ngIf="observationEditor.observation"
+      [observation]="observationEditor.observation"
+    ></app-observation-editor>
     <button
       type="button"
-      [disabled]="saving || !observation?.reportDate || !observation?.eventDate"
+      [disabled]="
+        observationEditor.saving ||
+        !observationEditor.observation?.reportDate ||
+        !observationEditor.observation?.eventDate
+      "
       (click)="saveObservation()"
       class="btn btn-sm btn-primary"
     >
-      <i *ngIf="saving" class="ph ph-circle-notch"></i>
-      <i *ngIf="!saving" class="ph ph-floppy-disk"></i>
+      <i *ngIf="observationEditor.saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!observationEditor.saving" class="ph ph-floppy-disk"></i>
       {{ "observations.button.save" | translate }}
     </button>
     <button
       type="button"
-      [disabled]="saving || !observation?.$id"
+      [disabled]="observationEditor.saving || !observationEditor.observation?.$id"
       (click)="deleteObservation()"
       class="btn btn-sm btn-danger"
     >
-      <i *ngIf="saving" class="ph ph-circle-notch"></i>
-      <i *ngIf="!saving" class="ph ph-trash"></i>
+      <i *ngIf="observationEditor.saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!observationEditor.saving" class="ph ph-trash"></i>
       {{ "observations.button.delete" | translate }}
     </button>
     <button type="button" (click)="discardObservation()" class="btn btn-sm btn-secondary">
