@@ -32,7 +32,8 @@ export class TeamStressLevelsComponent implements OnInit {
           data: dates,
         },
         yAxis: {
-          splitNumber: 4,
+          min: 0,
+          max: 100,
         },
         series: Object.values(stressLevels).map((ll) => ({
           type: "line",

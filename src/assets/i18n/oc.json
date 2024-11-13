@@ -421,7 +421,7 @@
       },
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-en.svg",
-        "feedbackURL": "https://models.avalanche.report:8061/en/",
+        "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
         "decisionTree" : "Arbre de decisions",
         "feedback" : "Comentaris",
         "save": "Sauvar",
