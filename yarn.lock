@@ -2745,14 +2745,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ngx-translate/core@npm:^15.0.0":
-  version: 15.0.0
-  resolution: "@ngx-translate/core@npm:15.0.0"
+"@ngx-translate/core@npm:^16.0.3":
+  version: 16.0.3
+  resolution: "@ngx-translate/core@npm:16.0.3"
+  dependencies:
+    tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": ">=16.0.0"
-    "@angular/core": ">=16.0.0"
-    rxjs: ^6.5.5 || ^7.4.0
-  checksum: 10c0/a79c80f1ed9dc36285fb7cef82957089d7f7682a0cc6f97bb6682a8587beaebc5daddb3f44408a09f58991a7a68abb6a05d252a2f0e4d091366bc059cad7edfa
+    "@angular/common": ">=16"
+    "@angular/core": ">=16"
+  checksum: 10c0/e458cf66681eeceaf01290a774c9babebc2a601e661fa9acf21bf0992ab800888fbb62710ab3f344a5ddaa3c8bce3035a84e221693ab2287bc6dd5a5f170e61c
   languageName: node
   linkType: hard
 
@@ -4129,7 +4130,7 @@ __metadata:
     "@auth0/angular-jwt": "npm:^5.2.0"
     "@eaws/micro-regions": "npm:^6.1.0"
     "@eaws/micro-regions_names": "npm:^6.1.0"
-    "@ngx-translate/core": "npm:^15.0.0"
+    "@ngx-translate/core": "npm:^16.0.3"
     "@phosphor-icons/web": "npm:^2.1.1"
     "@popperjs/core": "npm:^2.11.8"
     "@sentry/angular": "npm:^8.27.0"
