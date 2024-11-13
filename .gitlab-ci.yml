@@ -139,6 +139,8 @@ build:aran:
     API_BASE_URL: "https://api.lauegi.report/api/"
     TEXTCAT_URL: "https://admin.lauegi.report/textcat-ng/"
     HEADER_BG_COLOR: "#ffffff"
+    FAVICON_PATH: "assets/img/admin-favicon-aran.ico"
+    LOGO_PATH: "assets/img/admin-logo-aran.svg"
 
 build:docker:
   extends: .envsubst

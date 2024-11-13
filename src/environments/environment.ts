@@ -7,7 +7,7 @@ import type { Environment } from "./environment-type";
 export const environment: Environment = {
   apiBaseUrl: "http://localhost:8080/albina/api/",
   textcatUrl: "https://admin.avalanche.report/textcat-ng-dev/",
-  headerBgColor: "#f95bdc",
+  headerBgColor: "#8e2232",
   faviconPath: "assets/img/admin-favicon-local.ico",
   logoPath: "assets/img/admin-logo-local.svg",
   sentryDSN: "",
