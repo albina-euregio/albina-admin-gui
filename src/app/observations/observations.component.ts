@@ -257,17 +257,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const { observation } = this.observationEditor;
     try {
       this.observationEditor.saving = true;
-      const newObservation = await this.observationsService.postObservation(observation).toPromise();
-      if (observation.$id) {
-        Object.assign(
-          this.observations.find((o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id),
-          newObservation,
-        );
-      } else {
-        this.observations.splice(0, 0, newObservation);
-      }
+      await this.observationsService.postObservation(observation).toPromise();
+      this.loadObservations();
       this.hideDialog();
-      this.applyLocalFilter();
     } catch (error) {
       this.reportError(error);
     } finally {
@@ -283,11 +275,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     try {
       this.observationEditor.saving = true;
       await this.observationsService.deleteObservation(observation);
-      const index = this.observations.findIndex(
-        (o) => isAvalancheWarningServiceObservation(o) && o.$id === observation.$id,
-      );
-      this.observations.splice(index, 1);
-      this.applyLocalFilter();
+      this.loadObservations();
       this.hideDialog();
     } catch (error) {
       this.reportError(error);
