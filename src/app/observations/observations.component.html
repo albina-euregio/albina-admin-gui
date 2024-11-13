@@ -483,7 +483,6 @@
     </div>
   </div>
   <div class="modal-body">
-    {{ observationEditor.messages }}
     <app-observation-editor
       *ngIf="observationEditor.observation"
       [observation]="observationEditor.observation"
@@ -516,5 +515,9 @@
       <i class="ph ph-x"></i>
       {{ "observations.button.discard" | translate }}
     </button>
+    <div *ngFor="let message of observationEditor.messages" class="alert alert-danger alert-dismissible my-2" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   </div>
 </ng-template>

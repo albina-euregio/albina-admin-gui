@@ -290,11 +290,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private reportError(error: HttpErrorResponse) {
-    this.observationEditor.messages.push({
-      severity: "error",
-      summary: error.statusText,
-      detail: error.message,
-    });
+    this.observationEditor.messages.push(error.message);
   }
 
   selectParameter(parameter0: keyof typeof WeatherStationParameter) {
