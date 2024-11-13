@@ -5,7 +5,6 @@ import { GenericObservation, ImportantObservation } from "./models/generic-obser
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { grainShapes } from "./grain.shapes";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 
@@ -29,13 +28,8 @@ export class ObservationTableComponent {
     [ImportantObservation.IceFormation]: grainShapes.IF.key,
     [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
   };
-  modalRef: BsModalRef;
-  @ViewChild("observationEditorTemplate") observationEditorTemplate: TemplateRef<any>;
 
-  constructor(
-    public modalService: BsModalService,
-    private markerService: ObservationMarkerService<GenericObservation>,
-  ) {}
+  constructor(private markerService: ObservationMarkerService<GenericObservation>) {}
 
   get sortedObservations(): GenericObservation[] {
     return (this.observations || []).sort((o1, o2) => +o2.eventDate - +o1.eventDate);
