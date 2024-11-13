@@ -147,6 +147,7 @@
               #observationTable
               [observations]="localObservations"
               (observationClick)="onObservationClick($event)"
+              (editObservationEvent)="editObservation($event)"
             ></app-observation-table>
           </div>
         </div>
@@ -470,6 +471,53 @@
     ></iframe>
     <div *ngIf="observationPopup?.imgUrls">
       <img id="observationImage" [src]="observationPopup?.imgUrls[0]" style="width: -webkit-fill-available" />
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #observationEditorTemplate>
+  <div class="modal-header">
+    <span>{{ observationEditor.observation?.locationName }}</span>
+    <div class="d-inline-block font-weight-normal">
+      <button type="button" class="btn-close ms-3" aria-label="Close" (click)="hideObservationEditor()"></button>
+    </div>
+  </div>
+  <div class="modal-body">
+    <app-observation-editor
+      *ngIf="observationEditor.observation"
+      [observation]="observationEditor.observation"
+    ></app-observation-editor>
+    <button
+      type="button"
+      [disabled]="
+        observationEditor.saving ||
+        !observationEditor.observation?.reportDate ||
+        !observationEditor.observation?.eventDate
+      "
+      (click)="saveObservation()"
+      class="btn btn-sm btn-primary"
+    >
+      <i *ngIf="observationEditor.saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!observationEditor.saving" class="ph ph-floppy-disk"></i>
+      {{ "observations.button.save" | translate }}
+    </button>
+    <button
+      type="button"
+      [disabled]="observationEditor.saving || !observationEditor.observation?.$id"
+      (click)="deleteObservation()"
+      class="btn btn-sm btn-danger"
+    >
+      <i *ngIf="observationEditor.saving" class="ph ph-circle-notch"></i>
+      <i *ngIf="!observationEditor.saving" class="ph ph-trash"></i>
+      {{ "observations.button.delete" | translate }}
+    </button>
+    <button type="button" (click)="discardObservation()" class="btn btn-sm btn-secondary">
+      <i class="ph ph-x"></i>
+      {{ "observations.button.discard" | translate }}
+    </button>
+    <div *ngFor="let message of observationEditor.messages" class="alert alert-danger alert-dismissible my-2" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   </div>
 </ng-template>

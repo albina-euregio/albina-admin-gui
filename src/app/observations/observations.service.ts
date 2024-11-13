@@ -59,10 +59,6 @@ export class AlbinaObservationsService {
     return this.http.post<GenericObservation>(url, body, options);
   }
 
-  putObservation(observation: GenericObservation): Observable<GenericObservation> {
-    return this.postObservation(observation);
-  }
-
   private serializeObservation(observation: GenericObservation) {
     return {
       ...observation,
