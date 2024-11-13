@@ -277,6 +277,7 @@
       "hideNotes": "Notizen ausblenden",
       "incompleteAvalancheProblem": "Unvollständig",
       "label": {
+        "importantObservations": "Wichtige Beobachtungen",
         "avalancheProblems": "Lawinenproblem",
         "aspects": "Expositionen",
         "highlights": "Besondere Warnung",
@@ -372,7 +373,7 @@
         "description": {
           "title": "Beschreibung:",
           "text": {
-            "assessment": "Es besteht <b>große Unsicherheit</b> in der Gefahrenbeurteilung aufgrund <b>unzureichender Informationen</b> aus dem Gelände.",
+            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
             "stepping_out": "<b>Abnehmende Tendenz</b> der Gefahrensituation (auch innerhalb einer Gefahrenstufe).",
             "status_quo": "Gleichbleibende Gefahrensituation. <b>Keine wesentliche Änderung</b> zum Vortag.",
             "stepping_back": "<b>Ansteigende Tendenz</b> der Gefahrensituation (auch innerhalb einer Gefahrenstufe).",
@@ -588,28 +589,6 @@
         "message": "Willst du alle Regionen publizieren?",
         "accept": "Ja",
         "reject": "Nein"
-      }
-    },
-    "caaml": {
-      "title": "CAAML",
-      "caamlNotLoadedDialog": {
-        "message": "CAAML konnte nicht geladen werden!",
-        "accept": "Ok"
-      },
-      "noCaamlDialog": {
-        "message": "Keine publizierte Lawinenvorhersage vorhanden!",
-        "accept": "Ok"
-      }
-    },
-    "json": {
-      "title": "JSON",
-      "jsonNotLoadedDialog": {
-        "message": "JSON konnte nicht geladen werden!",
-        "accept": "Ok"
-      },
-      "noJsonDialog": {
-        "message": "Keine publizierte Lawinenvorhersage vorhanden!",
-        "accept": "Ok"
       }
     }
   },
@@ -937,8 +916,8 @@
     "glidingSnow": "Gleitschnee",
     "gliding_snow": "Gleitschneeproblem",
     "cornices": "Wechten",
-    "noDistinctAvalancheProblem": "Kein ausgeprägtes Lawinenproblem",
-    "no_distinct_problem": "Kein ausgeprägtes Lawinenproblem",
+    "noDistinctAvalancheProblem": " Kein ausgeprägtes Lawinenproblem",
+    "no_distinct_avalanche_problem": " Kein ausgeprägtes Lawinenproblem",
     "favourableSituation": "Günstige Situation",
     "favourable_situation": "Günstige Situation"
   },
@@ -1069,9 +1048,9 @@
     "very_hard": "sehr schwer"
   },
   "distribution": {
-    "isolated": "isolated",
-    "specific": "specific",
-    "widespread": "widespread"
+    "isolated": "vereinzelt",
+    "specific": "eingrenzbar",
+    "widespread": "weitverbreited"
   },
   "probability": {
     "likely": "wahrscheinlich",
@@ -1251,6 +1230,9 @@
     "content": "Inhalt",
     "dangerRating": "Gefahrenstufe",
     "elevation": "Seehöhe",
+    "elevationRange": "Höhenband",
+    "elevationLowerBound": "Untere Höhengrenze",
+    "elevationUpperBound": "Obere Höhengrenze",
     "eventDate": "Ereignisdatum",
     "eventType": "Ereignisart",
     "eventTypes": {
@@ -1270,6 +1252,7 @@
     "latitude": "Breitengrad",
     "locationName": "Ort",
     "longitude": "Längengrad",
+    "personInvolvement": "Personenbeteiligung",
     "reportDate": "Meldedatum",
     "showTable": "Tabelle",
     "withoutCoordinates": "Beobachtungen ohne Koordinaten:",
@@ -1287,6 +1270,13 @@
         "title": "Ansichten"
       }
     }
+  },
+  "personInvolvement": {
+    "Dead": "Personenbeteiligung (tot)",
+    "Injured": "Personenbeteiligung (verletzt)",
+    "No": "Keine Personenbeteiligung",
+    "Uninjured": "Personenbeteiligung (unverletzt)",
+    "Unknown": "Ereignis (unbekannt)"
   },
   "units": {
     "cm": "cm",
@@ -1312,22 +1302,22 @@
       "CONV": "konvektiver Niederschlag [mm]",
       "SN": "Niederschlag in Form von Schnee [mm]",
       "SN--RA": "Schneefallgrenze [m]",
-      "QAO ": "{{value}} hPa eq. mean wind, direction and strength, [°] and [m/s]",
-      "QAN": "mean wind on the ground, direction and strength, [°] and [m/s]",
-      "QANmax": "max. wind (gusts) on the ground [m/s]",
-      "T ": "{{value}} hPa eq. temperature [°C]",
+      "QAO ": "{{value}} hPa eq. Mittelwind, Windrichtung und -stärke, [°] und [m/s]",
+      "QAN": "Mittlerer Bodenwind, Windrichtung aund -stärke, [°] und [m/s]",
+      "QANmax": "Bodenwind max. (Böe) [m/s]",
+      "T ": "{{value}} hPa equivalente Temperatur [°C]",
       "T m": "Temperatur auf {{value}}m [°C]",
       "T 2m": "Temperatur auf 2m [°C]",
       "Tk 2m": "Temperatur auf 2m [°K]",
       "T GND": "Bodentemperatur",
       "Max-ADI": "maximum mixing temperature [°C]",
-      "Min Max": "min./max. temperature in the last 24h",
+      "Min Max": "Minimum/Maximum Temperatur der letzten 24h",
       "FROST": "Nullgrad Grenze [m]",
-      "W cm": "500 hPa eq. vertical wind [cm/s]",
-      "W --": "700 hPa eq. vertical wind [cm/s]",
-      "W s": "{{value}} hPa eq. vertical wind [cm/s]",
-      "H ": "{{value}} hPa geopotential height [m]",
-      "RF ": "{{value}} hPa eq. relative moisture [%]"
+      "W cm": "500 hPa equivalent vertikaler Wind [cm/s]",
+      "W --": "700 hPa equivalent vertikaler Wind [cm/s]",
+      "W s": "{{value}} hPa equivalent vertikaler Wind [cm/s]",
+      "H ": "{{value}} hPa geopotentielle Höhe [m]",
+      "RF ": "{{value}} hPa equivalente relative Feuchte [%]"
     }
   }
 }

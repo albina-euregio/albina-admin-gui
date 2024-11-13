@@ -7,7 +7,7 @@
     "title": "Login",
     "text": "Accedi al tuo account",
     "button": "Login",
-    "stressLevel": "Stress Level",
+    "stressLevel": "Livello di stress",
     "errorDialog": {
       "message": "Errore nome utente o password!",
       "accept": "Ok"
@@ -19,18 +19,18 @@
   },
   "sidebar": {
     "bulletins": "Valanghe.report",
-    "dangerSources": "Danger Sources",
+    "dangerSources": "Origini di pericolo",
     "observations": "Osservazioni",
     "qfa": "QFA",
-    "modelling": "Modelling",
-    "modellingForecast": "Forecast",
+    "modelling": "Modelli",
+    "modellingForecast": "Previsione",
     "modellingZamg": "Multi modelli dello ZAMG ",
     "modellingZamgECMWF": "ZAMG ECMWF-EPS",
     "modellingZamgCLAEF": "ZAMG CLAEF-EPS",
-    "modellingZamgMeteogram": "GeoSphere meteogram",
+    "modellingZamgMeteogram": "GeoSphere meteogramma",
     "modellingSnowpack": "Modello SNOWPACK",
     "modellingSnowpackMeteo": "Dati meteo simulati SNOWPACK",
-    "weatherbox": "Weatherbox",
+    "weatherbox": "Dashboard meteo",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere"
@@ -68,86 +68,86 @@
   "dangerSources": {
     "status": {
       "missing": "manca",
-      "available": "available",
-      "forecast": "forecast",
-      "analysis": "analysis",
-      "loading": "Loading danger sources ...",
-      "saveError": "Danger source could not be saved!",
-      "loadDangerSourcesError": "Danger sources could not be loaded!",
-      "loadVariantsError": "Danger source variants could not be loaded!"
+      "available": "disponibile",
+      "forecast": "previsione",
+      "analysis": "analisi",
+      "loading": "Caricamento origini di pericolo ...",
+      "saveError": "L'origine di pericolo non poteva essere salvata!",
+      "loadDangerSourcesError": "L'origine di pericolo non può essere caricato!",
+      "loadVariantsError": "Le variazioni dell'origine di pericolo non può essere caricato!"
     },
     "variantStatus": {
-      "active": "active",
-      "dormant": "dormant",
-      "inactive": "inactive"
+      "active": "attivo",
+      "dormant": "muto",
+      "inactive": "inattivo"
     },
     "tooltip": {
-      "read": "Read danger sources",
-      "edit": "Edit danger sources"
+      "read": "Leggi origine di pericolo",
+      "edit": "Modifica l'origine di pericolo"
     },
     "table": {
-      "loadMore": "Load {{count}} more days",
+      "loadMore": "Carica {{count}} più giorni",
       "title": {
-        "forecast": "Forecast",
-        "analysis": "Analysis"
+        "forecast": "Previsione",
+        "analysis": "Analisi"
       }
     },
     "create": {
-      "variantStatus": "Status",
-      "variantEditable": "This variant can be edited.",
-      "variantNotEditable": "This variant can not be edited.",
-      "noVariantsForSelectedDay": "No variants defined for this date.",
+      "variantStatus": "Lo stato",
+      "variantEditable": "Questa variazione può essere modificata.",
+      "variantNotEditable": "Questa variazione non può essere modificata.",
+      "noVariantsForSelectedDay": "Non sono state definite variazioni per questa data.",
       "tooltip": {
-        "editDangerSource": "Edit danger source",
-        "loadVariants": "Load variants from the day before",
-        "edit": "Edit micro regions",
-        "copy": "Copy variant",
-        "delete": "Delete variant",
-        "compare": "Compare variant",
-        "forecast": "Compare with forecast"
+        "editDangerSource": "Modifica l'origine di pericolo",
+        "loadVariants": "Carica le variazioni del giorno precedente",
+        "edit": "Modifica le micro aree",
+        "copy": "Copia variazione",
+        "delete": "elimina la variazione",
+        "compare": "paragona le variazioni",
+        "forecast": "paragona con la previsione"
       },
-      "createDangerSource": "Create danger source",
-      "createVariant": "Create new variant",
-      "noDangerSources": "No danger sources",
+      "createDangerSource": "crea un'origine di pericolo",
+      "createVariant": "crea una nuova variazione",
+      "noDangerSources": "nessuna origine di pericolo",
       "title": {
-        "avalanche": "Avalanche",
+        "avalanche": "valanga",
         "matrix": "Matrice",
         "characteristics": "Caratteristiche"
       },
       "label": {
-        "glidingSnowActivity": "Gliding snow activity",
-        "snowHeight": "Snow height",
-        "zeroDegreeIsotherm": "0°C isotherm",
-        "looseSnowMoisture": "Loose snow moisture",
-        "looseSnowGrainShape": "Loose snow grain shape",
-        "slabGrainShape": "Slab grain shape",
-        "slabThickness": "Slab thickness",
-        "slabHandHardness": "Slab hand hardness",
-        "slabHardnessProfile": "Slab hardness",
-        "slabEnergyTransferPotential": "Slab energy transfer potential",
-        "slabDistribution": "Slab distribution",
-        "weakLayerGrainShape": "Weak layer grain shape",
-        "weakLayerGrainSize": "Weak layer grain size",
-        "weakLayerPersistent": "Weak layer persistent",
-        "weakLayerThickness": "Weak layer thickness",
-        "weakLayerStrength": "Weak layer strength",
-        "weakLayerWet": "Weak layer wet",
-        "weakLayerCrustAbove": "Weak layer crust above",
-        "weakLayerCrustBelow": "Weak layer crust below",
-        "weakLayerPosition": "Weak layer position",
+        "glidingSnowActivity": "attività di slittamento",
+        "snowHeight": "altezza neve",
+        "zeroDegreeIsotherm": "Isoterma a 0°C",
+        "looseSnowMoisture": "Umidità neve a debole coesione",
+        "looseSnowGrainShape": "Tipologia grano neve a debole coesione",
+        "slabGrainShape": "Tipologia grano lastrone",
+        "slabThickness": "Spessore lastrone",
+        "slabHandHardness": "Durezza mano lastrone",
+        "slabHardnessProfile": "Durezza lastrone",
+        "slabEnergyTransferPotential": "Potenzialità del lastrone di supportare la propagazione",
+        "slabDistribution": "Disribuzione del lastrone",
+        "weakLayerGrainShape": "Tipologia del strato debole",
+        "weakLayerGrainSize": "Dimensione grano del strato debole",
+        "weakLayerPersistent": "Tipologia del grano del strato debole persistente?",
+        "weakLayerThickness": "Spessore del strato debole",
+        "weakLayerStrength": "Resistenza al taglio strato debole",
+        "weakLayerWet": "Strato debole umido?",
+        "weakLayerCrustAbove": "Crosta sopra lo strato debole?",
+        "weakLayerCrustBelow": "Crosta sotto lo strato debole?",
+        "weakLayerPosition": "Posizione dello strato debole nel manto nevoso",
         "weakLayerCreation": "Weak layer creation",
-        "weakLayerDistribution": "Weak layer distribution",
-        "dangerSpotRecognizability": "Danger spot recognizability",
-        "remoteTriggering": "Remote triggering",
+        "weakLayerDistribution": "Distribuzione strato debole?",
+        "dangerSpotRecognizability": "Punti pericolosi riconoscibili?",
+        "remoteTriggering": "Distaccho a distanza?",
         "hasDaytimeDependency": "Dipendenzza diurna",
-        "dangerIncreaseWithElevation": "Danger increase with elevation",
-        "runoutIntoGreen": "Runout into green",
-        "highestDangerAspect": "Highest danger aspect",
-        "dangerPeak": "Danger peak",
+        "dangerIncreaseWithElevation": "Pericolo aumenta con la quota?",
+        "runoutIntoGreen": "Valanghe avanazano fino all'aperta campagna?",
+        "highestDangerAspect": "Esposizione del pericolo più elevato?",
+        "dangerPeak": "Picco del pericolo?",
         "slopeGradient": "Inclinazione del pendio",
-        "naturalRelease": "Natural release",
-        "terrainTypes": "Terrain types",
-        "dangerSigns": "Danger signs",
+        "naturalRelease": "Distacco spontaneo?",
+        "terrainTypes": "Tipo di terreno?",
+        "dangerSigns": "Segnali d'allarme?",
         "aspects": "Esposizione"
       },
       "editDangerSourceDialog": {
@@ -159,14 +159,14 @@
   "avalancheType": {
     "title": "Tipologia della valanga",
     "label": {
-      "slab": "SLAB",
-      "loose": "LOOSE",
-      "glide": "GLIDE"
+      "slab": "LASTRONE",
+      "loose": "DEBOLE COESIONE",
+      "glide": "SLITTAMENTO"
     },
     "tooltip": {
-      "slab": "Slab avalanche",
-      "loose": "Loose snow avalanche",
-      "glide": "Glide snow avalanche"
+      "slab": "Valanga a lastrone",
+      "loose": "Valanga a debole coesione",
+      "glide": "Valanga di slittamento"
     }
   },
   "elevation": {
@@ -178,16 +178,16 @@
   "bulletins": {
     "title": "Valanghe.report",
     "tooltip": {
-      "edit": "Edit bulletin",
-      "read": "Read bulletin",
+      "edit": "Modifica bollettino",
+      "read": "Leggi bollettino",
       "copy": "Copia bollettino valanghe",
       "paste": "Incollare bollettino valanghe",
       "cancel": "Annulla la copia",
       "update": "Modifica",
-      "submit": "Submit",
-      "submitUpdate": "Submit update",
-      "publishChange": "Publish now (no messages)",
-      "publishUpdate": "Publish now",
+      "submit": "Invia",
+      "submitUpdate": "Invia update",
+      "publishChange": "Pubblica ora (senza messagi)",
+      "publishUpdate": "Pubblica ora",
       "caaml": "Mostra CAAML",
       "json": "Mostra JSON",
       "create": "Crea bollettino valanghe",
@@ -198,25 +198,25 @@
       "mediaFile": "Carica file media"
     },
     "status": {
-      "submittedInfo": "Will be published at 5PM",
-      "resubmittedInfo": "Will be published at 8AM",
-      "publishedInfo" : "Has been published",
-      "noPublicationInfo" : "Will NOT be published automatically",
+      "submittedInfo": "Verrà pubblicato alle 17:00",
+      "resubmittedInfo": "Verrà pubblicato alle 08:00",
+      "publishedInfo" : "È stato pubblicato",
+      "noPublicationInfo" : "NON verrà pubblicato automaticamente",
       "loadingPreview": "Creare un'anteprima in PDF ...",
-      "loading": "Loading bulletin ...",
-      "loadMoreBulletins": "Load {{count}} more bulletins",
-      "publishing": "Publishing bulletin ...",
-      "submitting": "Submitting bulletin ...",
-      "saveError": "Bulletin could not be saved!",
-      "loadBulletinsError": "Bulletins could not be loaded!"
+      "loading": "Carica bollettino ...",
+      "loadMoreBulletins": "Carica {{count}} più bollettini",
+      "publishing": "Publica bollettino ...",
+      "submitting": "Invia bollettino ...",
+      "saveError": "Non é stato possibile salvare il bollettino!",
+      "loadBulletinsError": "Non é stato possibile caricare il bollettino!"
     },
     "create": {
       "tooltip": {
-        "edit": "Edit micro regions",
+        "edit": "Modifica le micro aree",
         "copy": "Copia regione",
         "delete": "Elimina regione",
-        "undo": "Undo last change in region",
-        "redo": "Redo change in region",
+        "undo": "Annulla l'ultima modifica apportata alla regione",
+        "redo": "Ripetere l'ultima modifica nella regione",
         "createRegion": "Crea regione",
         "cancel": "Cancellare",
         "acceptSuggestion": "Acceta regioni suggerite",
@@ -235,7 +235,7 @@
           "decreasing": "Pericolo valanghe in diminuazione",
           "steady": "Pericolo valanghe stabile",
           "increasing": "Pericolo valanghe in aumento",
-          "danger": "Avalanche danger"
+          "danger": "Pericolo valanghe"
         },
         "textcat": {
           "edit": "Modifica",
@@ -246,37 +246,38 @@
         },
         "moveUpAvalancheProblem": "Spostare problema valanghivo verso l'alto",
         "moveDownAvalancheProblem": "Spostare problema valanghivo verso il basso",
-        "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionUp": "Verso l'alto",
+        "dangerRatingDirectionDown": "Verso il basso"
       },
       "save": " Salva",
       "discard": " Scarta",
       "back": " Indietro",
       "createAggregatedRegion": " Nuova regione",
       "pasteAggregatedRegion": "Incolla la regione",
-      "pendingSuggestions": "Suggestions",
-      "rejectSuggestion": "Reject",
-      "acceptSuggestion": "Accept",
+      "pendingSuggestions": "Proposte",
+      "rejectSuggestion": "Rifiuta",
+      "acceptSuggestion": "Accetta",
       "cancelCopyBulletin": "Cancella",
       "createAvalancheProblem": "Nuovo problema valanghivo",
       "ownRegions": "Proprie regioni",
       "foreignRegions": "Altre regioni",
       "externalRegions": "Regioni esterne",
-      "mapSelectRegion": "Select regions on the map.",
-      "statusHeader": "Status of the bulletin",
-      "suggestions": "Suggestions",
-      "noBulletinsForSelectedDay": "No regions defined for this date.",
-      "autosave": "Saved automatically",
-      "regionEditable": "This region can be edited.",
-      "regionNotEditable": "This region can not be edited.",
-      "regionLocked": "This region is locked.",
-      "changeDangerRatingElevation": "Extend the danger level",
-      "mapTop": "Map above",
-      "mapLeft": "Map aside",
-      "showNotes": "Show notes",
-      "hideNotes": "Hide notes",
-      "incompleteAvalancheProblem": "Incomplete",
+      "mapSelectRegion": "Seleziona micro-aree sulla mappa",
+      "statusHeader": "Stato del bollettino",
+      "suggestions": "Proposte",
+      "noBulletinsForSelectedDay": "Nessun micro-zona definita per questa data.",
+      "autosave": "Salvato automaticamente",
+      "regionEditable": "Questa regione può essere modificata.",
+      "regionNotEditable": "Questa regione non può essere modificata.",
+      "regionLocked": "Questa regione è bloccata.",
+      "changeDangerRatingElevation": "Estendi il pericolo valanghe",
+      "mapTop": "Mappa in alto",
+      "mapLeft": "Mappa a lato",
+      "showNotes": "Mostra gli appunti",
+      "hideNotes": "Nascondi gli appunti",
+      "incompleteAvalancheProblem": "Incompleto",
       "label": {
+        "importantObservations": "Osservazioni importanti",
         "avalancheProblems": "Problema valanghivo",
         "aspects": "Esposizione",
         "highlights": "Alerta speciale",
@@ -288,9 +289,9 @@
         "notes": "Commenti"
       },
       "copyRegion": {
-        "label": "Copy warning region to another bulletin",
-        "select": "Paste into ...",
-        "currentBulletin": "This bulletin"
+        "label": "Copia la regione in un altro bollettino",
+        "select": "Incolla in ...",
+        "currentBulletin": "Questo bollettino"
       },
       "title": {
         "avalancheProblem": "Problemi valanghivi",
@@ -363,16 +364,16 @@
         "cancel": "Cancella"
       },
       "removeDaytimeDependencyDialog" : {
-        "message": "Which avalanche problems do you want to keep?",
+        "message": "Quali problemi valanghivi voi mantenere?",
         "cancel": "Cancellare"
       },
       "strategicMindsetDialog" : {
         "title": "Strategic Mindsets",
-        "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
+        "introduction": " Gli “Strategic Mindsets” sono intesi come espressione del nostro atteggiamento mentale nei confronti della situazione valanghiva e del suo sviluppo nella regione corrispondente. Non dovrebbero derivare direttamente dalla valutazione del pericolo, ma piuttosto essere compresi e utilizzati come un'impressione intuitiva della situazione generale. I “Strategic Mindsets” sono quindi principalmente uno strumento di comunicazione. Utilizzando i mindset e le definizioni associate, noi previsori possiamo scambiare in modo rapido ed efficiente informazioni sullo sviluppo della situazione di pericolo e trovare un linguaggio comune per la comunicazione.",
         "description": {
-          "title": "Description:",
+          "title": "Descrizione:",
           "text": {
-            "assessment": "There is <b>great uncertainty</b> in the risk assessment due to <b>insufficient information</b> from the site.",
+            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
             "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
             "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
             "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
@@ -421,7 +422,7 @@
       },
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-it.svg",
-        "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/it/",
+        "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
         "decisionTree" : "Decision tree",
         "feedback" : "Feedback",
         "save": "Salva",
@@ -588,28 +589,6 @@
         "message": "Vuoi pubblicare tutte le regioni?",
         "accept": "Sí",
         "reject": "No"
-      }
-    },
-    "caaml": {
-      "title": "CAAML",
-      "caamlNotLoadedDialog": {
-        "message": "Errore caricando CAAML!",
-        "accept": "Ok"
-      },
-      "noCaamlDialog": {
-        "message": "Manca il bolletino valanghe pubblicato!",
-        "accept": "Ok"
-      }
-    },
-    "json": {
-      "title": "JSON",
-      "jsonNotLoadedDialog": {
-        "message": "Errore caricando JSON!",
-        "accept": "Ok"
-      },
-      "noJsonDialog": {
-        "message": "Bolletino valanghe pubblicato non esiste!",
-        "accept": "Ok"
       }
     }
   },
@@ -937,8 +916,8 @@
     "glidingSnow": "Valanghe di slittamento",
     "gliding_snow": "Valanghe di slittamento",
     "cornices": "Cornice",
-    "noDistinctAvalancheProblem": "Nessun problema valanghivo evidente",
-    "no_distinct_problem": "Nessun problema valanghivo evidente",
+    "noDistinctAvalancheProblem": "No distinct avalanche problem",
+    "no_distinct_avalanche_problem": "No distinct avalanche problem",
     "favourableSituation": "Situazione favorevole",
     "favourable_situation": "Situazione favorevole"
   },
@@ -971,7 +950,7 @@
     "Profile": "Snow profile",
     "Closure": "Closure",
     "Blasting": "Blasting",
-    "Avalanche": "Avalanche",
+    "Avalanche": "valanga",
     "Evaluation": "Evaluation",
     "SimpleObservation": "Simple observation",
     "Webcam": "Webcam"
@@ -1069,12 +1048,12 @@
     "very_hard": "very hard"
   },
   "distribution": {
-    "isolated": "isolated",
-    "specific": "specific",
-    "widespread": "widespread"
+    "isolated": "isolato",
+    "specific": "determinato",
+    "widespread": "diffuso"
   },
   "probability": {
-    "likely": "likely",
+    "likely": "Crosta sopra lo strato debole?",
     "possible": "possible",
     "unlikely": "unlikely"
   },
@@ -1223,7 +1202,7 @@
     "weatherStations": {
       "tooltips": {
         "globalRadiation": "Global radiation",
-        "snowHeight": "Snow height",
+        "snowHeight": "altezza neve",
         "snowDifference24h": "Snow difference 24h",
         "snowDifference48h": "Snow difference 48h",
         "snowDifference72h": "Snow difference 72h",
@@ -1251,6 +1230,9 @@
     "content": "Contenuto",
     "dangerRating": "Grado pericolo valanghe",
     "elevation": "Quota",
+    "elevationRange": "Elevation range",
+    "elevationLowerBound": "Elevation lower bound",
+    "elevationUpperBound": "Elevation upper bound",
     "eventDate": "Data dell'evento",
     "eventType": "Tipologia dell'evento",
     "eventTypes": {
@@ -1270,6 +1252,7 @@
     "latitude": "Latitudine",
     "locationName": "Località",
     "longitude": "Longitudine",
+    "personInvolvement": "Person involvement",
     "reportDate": "Data del report",
     "showTable": "Table",
     "withoutCoordinates": "Osservazioni senza coordinate:",
@@ -1287,6 +1270,13 @@
         "title": "Views"
       }
     }
+  },
+  "personInvolvement": {
+    "Dead": "Evento con persone coinvolte (vittime)",
+    "Injured": "Evento con persone coinvolte (feriti)",
+    "No": "Evento senza coinvolgimento persone",
+    "Uninjured": "Evento che coinvolge persone (non ferite)",
+    "Unknown": "Evento (sconosciuto)"
   },
   "units": {
     "cm": "cm",
