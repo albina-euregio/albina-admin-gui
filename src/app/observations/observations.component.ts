@@ -234,21 +234,21 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       $type: ObservationType.SimpleObservation,
     } satisfies GenericObservation;
     this.observationEditor.observation = observation;
-    this.showDialog();
+    this.showObservationEditor();
   }
 
   editObservation(observation: GenericObservation) {
     this.observationEditor.observation = observation;
-    this.showDialog();
+    this.showObservationEditor();
   }
 
-  showDialog() {
+  showObservationEditor() {
     this.observationEditor.modalRef = this.modalService.show(this.observationEditorTemplate, {
       class: "modal-fullscreen",
     });
   }
 
-  hideDialog() {
+  hideObservationEditor() {
     this.observationEditor.modalRef.hide();
     this.observationEditor.modalRef = undefined;
   }
@@ -259,7 +259,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.observationEditor.saving = true;
       await this.observationsService.postObservation(observation).toPromise();
       this.loadObservations();
-      this.hideDialog();
+      this.hideObservationEditor();
     } catch (error) {
       this.reportError(error);
     } finally {
@@ -276,7 +276,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.observationEditor.saving = true;
       await this.observationsService.deleteObservation(observation);
       this.loadObservations();
-      this.hideDialog();
+      this.hideObservationEditor();
     } catch (error) {
       this.reportError(error);
     } finally {
@@ -286,7 +286,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   discardObservation() {
     this.observationEditor.observation = undefined;
-    this.hideDialog();
+    this.hideObservationEditor();
   }
 
   private reportError(error: HttpErrorResponse) {
