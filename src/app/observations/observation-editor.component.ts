@@ -74,10 +74,7 @@ export class ObservationEditorComponent {
   }
 
   set eventDate(date: Date | Event) {
-    if (date instanceof Event) {
-      date = (date.target as HTMLInputElement).valueAsDate;
-    }
-    this.observation.eventDate = isFinite(+date) ? fromUTC(date) : undefined;
+    this.setDate(date, "eventDate");
   }
 
   get reportDate(): Date {
@@ -86,10 +83,27 @@ export class ObservationEditorComponent {
   }
 
   set reportDate(date: Date | Event) {
+    this.setDate(date, "reportDate");
+  }
+
+  private setDate(date: Date | Event, key: "eventDate" | "reportDate") {
+    if (date === undefined) {
+      this.observation[key] = undefined;
+      return;
+    }
+    let type = "";
     if (date instanceof Event) {
+      type = (date.target as HTMLInputElement).type;
       date = (date.target as HTMLInputElement).valueAsDate;
     }
-    this.observation.reportDate = isFinite(+date) ? fromUTC(date) : undefined;
+    date = isFinite(+date) ? fromUTC(date) : undefined;
+    if (isFinite(+this.observation[key]) && type === "date") {
+      this.observation[key].setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    } else if (isFinite(+this.observation[key]) && type === "time") {
+      this.observation[key].setHours(date.getHours(), date.getMinutes(), date.getSeconds());
+    } else {
+      this.observation[key] = date;
+    }
   }
 
   setLatitude(event: Event) {

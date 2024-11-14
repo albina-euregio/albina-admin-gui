@@ -2,13 +2,11 @@
   <div class="col-12 col-md-4">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
-      <input
-        type="datetime-local"
-        required
-        [valueAsDate]="eventDate"
-        (change)="eventDate = $event"
-        class="form-control"
-      />
+      <input type="date" required [valueAsDate]="eventDate" (change)="eventDate = $event" class="date form-control" />
+      <input type="time" required [valueAsDate]="eventDate" (change)="eventDate = $event" class="date form-control" />
+      <button class="btn btn-outline-secondary" type="button" (click)="eventDate = undefined">
+        <i class="ph ph-x"></i>
+      </button>
     </div>
   </div>
 
@@ -125,13 +123,11 @@
   <div class="col-12 col-md-6">
     <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" class="input-group">
-      <input
-        type="datetime-local"
-        required
-        [valueAsDate]="reportDate"
-        (change)="reportDate = $event"
-        class="date form-control"
-      />
+      <input type="date" required [valueAsDate]="reportDate" (change)="reportDate = $event" class="date form-control" />
+      <input type="time" required [valueAsDate]="reportDate" (change)="reportDate = $event" class="date form-control" />
+      <button class="btn btn-outline-secondary" type="button" (click)="reportDate = undefined">
+        <i class="ph ph-x"></i>
+      </button>
     </div>
   </div>
 
