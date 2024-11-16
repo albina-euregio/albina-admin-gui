@@ -3592,6 +3592,7 @@ __metadata:
     "@types/which-polygon": "npm:^2.2.5"
     astro: "npm:^5.0.3"
     mysql2: "npm:^3.11.5"
+    simple-statistics: "npm:^7.8.7"
     typescript: "npm:^5.7.2"
     which-polygon: "npm:^2.2.1"
   languageName: unknown
@@ -4344,6 +4345,13 @@ __metadata:
   version: 4.1.0
   resolution: "signal-exit@npm:4.1.0"
   checksum: 10c0/41602dce540e46d599edba9d9860193398d135f7ff72cab629db5171516cfae628d21e7bfccde1bbfdf11c48726bc2a6d1a8fb8701125852fbfda7cf19c6aa83
+  languageName: node
+  linkType: hard
+
+"simple-statistics@npm:^7.8.7":
+  version: 7.8.7
+  resolution: "simple-statistics@npm:7.8.7"
+  checksum: 10c0/9745896653e518aa5a1d0671d8b72109038c5ed4f7b83120cde0ed916aff6f57bce87398c8fc1779a6cde296af5cd4b9e7c949b7cc4aef89a0d7d874fa9039b3
   languageName: node
   linkType: hard
 
