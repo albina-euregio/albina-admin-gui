@@ -2,9 +2,9 @@
   <div class="col-12 col-md-4">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
-      <input type="date" required [valueAsDate]="eventDate" (change)="eventDate = $event" class="date form-control" />
-      <input type="time" required [valueAsDate]="eventDate" (change)="eventDate = $event" class="date form-control" />
-      <button class="btn btn-outline-secondary" type="button" (click)="eventDate = undefined">
+      <input #eventDateDate type="date" required class="date form-control" />
+      <input #eventDateTime type="time" required class="date form-control" />
+      <button class="btn btn-outline-secondary" type="button" (click)="setDate(undefined, 'eventDate')">
         <i class="ph ph-x"></i>
       </button>
     </div>
@@ -123,9 +123,9 @@
   <div class="col-12 col-md-6">
     <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" class="input-group">
-      <input type="date" required [valueAsDate]="reportDate" (change)="reportDate = $event" class="date form-control" />
-      <input type="time" required [valueAsDate]="reportDate" (change)="reportDate = $event" class="date form-control" />
-      <button class="btn btn-outline-secondary" type="button" (click)="reportDate = undefined">
+      <input #reportDateDate type="date" required class="date form-control" />
+      <input #reportDateTime type="time" required class="date form-control" />
+      <button class="btn btn-outline-secondary" type="button" (click)="setDate(undefined, 'reportDate')">
         <i class="ph ph-x"></i>
       </button>
     </div>

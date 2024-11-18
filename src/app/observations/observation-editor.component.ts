@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
@@ -28,7 +28,7 @@ import { xor } from "lodash";
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
 })
-export class ObservationEditorComponent {
+export class ObservationEditorComponent implements AfterViewInit {
   constructor(
     authenticationService: AuthenticationService,
     private geocodingService: GeocodingService,
@@ -38,6 +38,10 @@ export class ObservationEditorComponent {
   }
 
   @Input() observation: GenericObservation;
+  @ViewChild("eventDateDate") eventDateDate: ElementRef<HTMLInputElement>;
+  @ViewChild("eventDateTime") eventDateTime: ElementRef<HTMLInputElement>;
+  @ViewChild("reportDateDate") reportDateDate: ElementRef<HTMLInputElement>;
+  @ViewChild("reportDateTime") reportDateTime: ElementRef<HTMLInputElement>;
   avalancheProblems: Enums.AvalancheProblem[];
   dangerPatterns = Object.values(Enums.DangerPattern);
   importantObservations = Object.values(ImportantObservation);
@@ -68,13 +72,22 @@ export class ObservationEditorComponent {
     navigator.clipboard.writeText(`${this.observation.latitude}, ${this.observation.longitude}`);
   }
 
+  ngAfterViewInit() {
+    // Use ElementRef to achieve a one-way binding between observation.eventDate and the two input fields.
+    // To allow for modifying an existing observation, initially the observation.eventDate is written to the two input fields.
+    for (let { nativeElement } of [this.eventDateDate, this.eventDateTime]) {
+      nativeElement.valueAsDate = this.eventDate;
+      nativeElement.onchange = (e) => this.setDate(e, "eventDate");
+    }
+    for (let { nativeElement } of [this.reportDateDate, this.reportDateTime]) {
+      nativeElement.valueAsDate = this.reportDate;
+      nativeElement.onchange = (e) => this.setDate(e, "reportDate");
+    }
+  }
+
   get eventDate(): Date {
     const date = this.observation.eventDate;
     return isFinite(+date) ? toUTC(date) : undefined;
-  }
-
-  set eventDate(date: Date | Event) {
-    this.setDate(date, "eventDate");
   }
 
   get reportDate(): Date {
@@ -82,19 +95,18 @@ export class ObservationEditorComponent {
     return isFinite(+date) ? toUTC(date) : undefined;
   }
 
-  set reportDate(date: Date | Event) {
-    this.setDate(date, "reportDate");
-  }
-
-  private setDate(date: Date | Event, key: "eventDate" | "reportDate") {
-    if (date === undefined) {
-      this.observation[key] = undefined;
-      return;
-    }
+  setDate(date: Date | Event, key: "eventDate" | "reportDate") {
     let type = "";
     if (date instanceof Event) {
       type = (date.target as HTMLInputElement).type;
       date = (date.target as HTMLInputElement).valueAsDate;
+    }
+    if (date === undefined || date === null) {
+      // date is null when clicking "clear" in Chrome's calendar
+      this.observation[key] = undefined;
+      this[`${key}Date`].nativeElement.valueAsDate = undefined;
+      this[`${key}Time`].nativeElement.valueAsDate = undefined;
+      return;
     }
     date = isFinite(+date) ? fromUTC(date) : undefined;
     if (isFinite(+this.observation[key]) && type === "date") {

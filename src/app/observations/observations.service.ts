@@ -62,10 +62,9 @@ export class AlbinaObservationsService {
   private serializeObservation(observation: GenericObservation) {
     return {
       ...observation,
-      eventDate:
-        typeof observation.eventDate === "object" ? getISOString(observation.eventDate) : observation.eventDate,
+      eventDate: observation.eventDate instanceof Date ? getISOString(observation.eventDate) : observation.eventDate,
       reportDate:
-        typeof observation.reportDate === "object" ? getISOString(observation.reportDate) : observation.reportDate,
+        observation.reportDate instanceof Date ? getISOString(observation.reportDate) : observation.reportDate,
     };
   }
 
