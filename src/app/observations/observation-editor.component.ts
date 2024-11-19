@@ -96,6 +96,11 @@ export class ObservationEditorComponent implements AfterViewInit {
   }
 
   setDate(date: Date | Event, key: "eventDate" | "reportDate") {
+    if (date instanceof Date) {
+      this.observation[key] = date;
+      this[`${key}Date`].nativeElement.valueAsDate = date;
+      this[`${key}Time`].nativeElement.valueAsDate = date;
+    }
     let type = "";
     if (date instanceof Event) {
       type = (date.target as HTMLInputElement).type;

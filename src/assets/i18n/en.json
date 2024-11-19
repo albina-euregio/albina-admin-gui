@@ -1224,7 +1224,8 @@
       "save": "Save observation",
       "delete": "Delete observation",
       "deleteConfirm": "Delete observation?",
-      "discard": "Discard"
+      "discard": "Discard",
+      "copyDate": "Copy event date"
     },
     "comment": "Comment",
     "content": "Content",

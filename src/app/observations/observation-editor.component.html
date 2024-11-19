@@ -123,6 +123,9 @@
   <div class="col-12 col-md-6">
     <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
     <div id="reportDate" class="input-group">
+      <button class="btn btn-outline-secondary" type="button" (click)="setDate(eventDate, 'reportDate')" title="{{ 'observations.button.copyDate' | translate }}">
+        <i class="ph ph-calendar-star"></i>
+      </button>
       <input #reportDateDate type="date" required class="date form-control" />
       <input #reportDateTime type="time" required class="date form-control" />
       <button class="btn btn-outline-secondary" type="button" (click)="setDate(undefined, 'reportDate')">
