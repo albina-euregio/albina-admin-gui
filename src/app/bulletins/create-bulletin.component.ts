@@ -1,7 +1,7 @@
 import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { map, timer } from "rxjs";
+import { forkJoin, map, Observable, of, tap, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
@@ -1337,7 +1337,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private delBulletin(bulletin: BulletinModel) {
     this.deselectBulletin(true);
-    this.deleteBulletinOnServer(bulletin);
+    this.deleteBulletinOnServer(bulletin).subscribe();
   }
 
   eventEditMicroRegions(bulletin: BulletinModel) {
@@ -1510,19 +1510,24 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  private deleteBulletinOnServer(bulletin: BulletinModel) {
-    if (this.isWriteDisabled()) return;
-    this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
-      (data) => {
-        this.addInternalBulletins(data);
-        this.loadInternalBulletinsError = false;
-        this.loading = false;
-        console.log("Bulletin deleted on server.");
-      },
-      (error) => {
-        console.error("Bulletin could not be deleted on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
-      },
+  private deleteBulletinOnServer(bulletin: BulletinModel): Observable<BulletinModelAsJSON[]> {
+    if (this.isWriteDisabled()) {
+      return of(null);
+    }
+    // tap is used to perform side-effects for the observable
+    return this.bulletinsService.deleteBulletin(bulletin, this.bulletinsService.getActiveDate()).pipe(
+      tap({
+        next: (data) => {
+          this.addInternalBulletins(data);
+          this.loadInternalBulletinsError = false;
+          this.loading = false;
+          console.log("Bulletin deleted on server.");
+        },
+        error: (error) => {
+          console.error("Bulletin could not be deleted on server!");
+          this.openSaveErrorModal(this.saveErrorTemplate);
+        },
+      }),
     );
   }
 
@@ -1656,18 +1661,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       ({ bulletins }) => {
         // delete own regions
         const entries = new Array<BulletinModel>();
-
         for (const bulletin of this.internBulletinsList) {
           if (bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
             entries.push(bulletin);
           }
         }
-        for (const entry of entries) {
-          this.delBulletin(entry);
-        }
-
-        this.copyBulletins(bulletins);
-        this.loading = false;
+        this.deselectBulletin(true);
+        const delObservables: Observable<unknown>[] = entries.map((entry) => this.deleteBulletinOnServer(entry));
+        forkJoin(delObservables).subscribe({
+          complete: () => {
+            // only copy after all deletions are complete
+            this.copyBulletins(bulletins);
+            this.loading = false;
+          },
+        });
       },
       () => {
         this.loading = false;
