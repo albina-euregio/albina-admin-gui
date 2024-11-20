@@ -30,3 +30,16 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Translation
 
 This project uses Transifex for its translations: https://www.transifex.com/albina-euregio/albina-admin-gui/dashboard/
+
+## Generate CHANGELOG
+
+We use **git-cliff** to generate a changelog from conventional commit messages.
+The tool is available from [NPM](https://git-cliff.org/docs/installation/npm) and is available once
+you successfully executed `yarn install`. To generate the changelog file use
+
+```sh
+yarn git-cliff -o CHANGELOG.md
+```
+
+More examples on available command line options can be found [here](https://git-cliff.org/docs/usage/examples)
+(Customization)[https://git-cliff.org/docs/configuration/git] is available through the `cliff.toml` file.
