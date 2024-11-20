@@ -28,7 +28,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prepare": "husky"
+    "prepare": "husky",
+    "changelog": "git-cliff -o CHANGELOG.md"
   },
   "private": true,
   "dependencies": {

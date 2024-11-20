@@ -35,10 +35,10 @@ This project uses Transifex for its translations: https://www.transifex.com/albi
 
 We use **git-cliff** to generate a changelog from conventional commit messages.
 The tool is available from [NPM](https://git-cliff.org/docs/installation/npm) and is available once
-you successfully executed `yarn install`. To generate the changelog file use
+you successfully executed `yarn install`. To regenerate the changelog file use
 
 ```sh
-yarn git-cliff -o CHANGELOG.md
+yarn changelog
 ```
 
 More examples on available command line options can be found [here](https://git-cliff.org/docs/usage/examples)

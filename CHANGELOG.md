@@ -4,9 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🚀 Features
+
+- Generate CHANGELOG with git-cliff
+
 ### 🐛 Bug Fixes
 
 - *(create-bulletin.component)* Perform copy after deletion in loadBulletinsFromYesterday
+
+### 📚 Documentation
+
+- *(Readme)* Infos about git-cliff
 
 ## [7.0.2] - 2024-11-18
 
