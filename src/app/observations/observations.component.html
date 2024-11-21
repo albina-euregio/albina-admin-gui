@@ -470,7 +470,11 @@
       style="width: 100%; height: 80vh"
     ></iframe>
     <div *ngIf="observationPopup?.imgUrls">
-      <img id="observationImage" [src]="observationPopup?.imgUrls[0]" style="width: -webkit-fill-available" />
+      <img
+        id="observationImage"
+        [src]="observationPopup?.imgUrls[0]"
+        style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
+      />
     </div>
   </div>
 </ng-template>
@@ -515,7 +519,11 @@
       <i class="ph ph-x"></i>
       {{ "observations.button.discard" | translate }}
     </button>
-    <div *ngFor="let message of observationEditor.messages" class="alert alert-danger alert-dismissible my-2" role="alert">
+    <div
+      *ngFor="let message of observationEditor.messages"
+      class="alert alert-danger alert-dismissible my-2"
+      role="alert"
+    >
       {{ message }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>

@@ -66,7 +66,7 @@
         <td colspan="999">
           <button
             *ngFor="let days of [7]"
-            style="width: -webkit-fill-available"
+            style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
             class="btn btn-icon btn-sm"
             (click)="dangerSourcesService.init({ days: dangerSourcesService.dates.length + days })"
             title="{{ 'dangerSources.table.loadMore' | translate: { count: days } }}"
