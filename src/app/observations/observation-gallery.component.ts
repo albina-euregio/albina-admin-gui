@@ -2,8 +2,8 @@ import { CommonModule, formatDate } from "@angular/common";
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
-import type { FotoWebcamEU } from "../../../observations-api/src/models/foto-webcam.model";
-import type { PanomaxThumbnailResponse } from "../../../observations-api/src/models/panomax.model";
+import type { FotoWebcamEU } from "../../../observations-api/src/fetch/webcams/foto-webcam.model";
+import type { PanomaxThumbnailResponse } from "../../../observations-api/src/fetch/webcams/panomax.model";
 import { GenericObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
 
 @Component({

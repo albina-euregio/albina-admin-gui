@@ -1,8 +1,8 @@
 import { augmentAndInsertObservation, createConnection, selectObservations } from "../db/database";
-import { type GenericObservation } from "../models";
+import { type GenericObservation } from "../generic-observation";
 import { fetchLawisIncidents } from "./observations/lawis_incident";
 import { fetchLawisProfiles } from "./observations/lawis_profile";
-import { fetchLolaKronos } from "./observations/lola_kronos";
+import { fetchLolaKronos } from "./observations/lola-kronos";
 import { fetchLwdKip } from "./observations/lwdkip";
 import { fetchSnowLineCalculations } from "./observations/snow_line";
 import { fetchWikiSnow } from "./observations/wikisnow";

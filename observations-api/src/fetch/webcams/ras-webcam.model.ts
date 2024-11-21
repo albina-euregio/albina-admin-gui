@@ -1,5 +1,4 @@
-import type { GenericObservation } from "../../../src/app/observations/models/generic-observation.model";
-import { ObservationSource, ObservationType } from ".";
+import { type GenericObservation, ObservationSource, ObservationType } from "../../generic-observation";
 
 // https://www.ras.bz.it/de/webcams/
 export const webcams = [

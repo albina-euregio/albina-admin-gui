@@ -1,5 +1,5 @@
 import { fetchJSON } from "../util/fetchJSON";
-import { type GenericObservation, ObservationSource, ObservationType } from "../models";
+import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 
 export async function getAwsWeatherStations(endDate: string): Promise<GenericObservation[]> {
   const url = endDate

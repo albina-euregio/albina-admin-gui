@@ -1,5 +1,10 @@
 import { fetchJSON } from "../../util/fetchJSON";
-import { type GenericObservation, ImportantObservation, ObservationSource, ObservationType } from "../../models";
+import {
+  type GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+} from "../../generic-observation";
 
 const API = "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson";
 const WEB = "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}";

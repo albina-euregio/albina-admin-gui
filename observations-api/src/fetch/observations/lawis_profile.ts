@@ -1,6 +1,6 @@
 import { fetchJSON } from "../../util/fetchJSON";
-import { type GenericObservation, findExistingObservation } from "../../models";
-import { type Profile, type ProfileDetails, toLawisProfile, toLawisProfileDetails } from "../../models/lawis.model";
+import { type GenericObservation, findExistingObservation } from "../../generic-observation";
+import { type Profile, type ProfileDetails, toLawisProfile, toLawisProfileDetails } from "./lawis.model";
 
 const API = "https://lawis.at/lawis_api/public/profile";
 const WEB = "https://lawis.at/lawis_api/v2_2/files/profiles/snowprofile_{{id}}.pdf";

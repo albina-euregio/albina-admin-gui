@@ -7,7 +7,7 @@ import {
   convertLwdKipBeobachtung,
   convertLwdKipLawinenabgang,
   convertLwdKipSprengerfolg,
-} from "../../models/lwdkip.model";
+} from "./lwdkip.model";
 
 const API = "https://gis.tirol.gv.at/arcgis";
 

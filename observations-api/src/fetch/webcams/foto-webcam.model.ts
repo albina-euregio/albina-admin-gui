@@ -1,4 +1,4 @@
-import { type GenericObservation, ObservationSource, ObservationType, degreeToAspect } from ".";
+import { type GenericObservation, ObservationSource, ObservationType, degreeToAspect } from "../../generic-observation";
 
 export interface FotoWebcamEU {
   id: string;

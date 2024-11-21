@@ -1,5 +1,5 @@
-import type { GenericObservation } from "../../../src/app/observations/models/generic-observation.model";
 import {
+  type GenericObservation,
   Aspect,
   AvalancheProblem,
   DangerPattern as GenericDangerPattern,
@@ -8,7 +8,7 @@ import {
   ObservationSource,
   ObservationType,
   SnowpackStability as Stability,
-} from ".";
+} from "../../generic-observation";
 
 export interface LolaKronosApi {
   lolaSimpleObservation: LolaSimpleObservation[];

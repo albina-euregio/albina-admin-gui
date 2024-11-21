@@ -12,7 +12,7 @@ import {
   type ObservationType,
   type PersonInvolvement,
   type SnowpackStability,
-} from "../models";
+} from "../generic-observation";
 import { augmentElevation } from "./elevation";
 
 type GenericObservationTable = {

@@ -1,8 +1,6 @@
-import type {
-  GenericObservation,
-  ObservationTableRow,
-} from "../../../src/app/observations/models/generic-observation.model";
 import {
+  type GenericObservation,
+  type ObservationTableRow,
   AvalancheProblem,
   imageCountString,
   ImportantObservation,
@@ -10,7 +8,7 @@ import {
   ObservationType,
   SnowpackStability as Stability,
   toAspect,
-} from ".";
+} from "../../generic-observation";
 
 export const LAWIS_FETCH_DETAILS = true;
 
