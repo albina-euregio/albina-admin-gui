@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
+import { formatDate } from "@angular/common";
 
 interface MultimodelPointCsv {
   statnr: string;
@@ -37,6 +38,7 @@ export class MultimodelSourceService {
   }
 
   getZamgMultiModelPoints(): Observable<GenericObservation[]> {
+    const date = formatDate(Date.now(), "yyyy-MM-dd", "en-US");
     return this.http.get(this.URL + "snowgridmultimodel_stationlist.txt", { responseType: "text" }).pipe(
       map((response) => this.parseCSV<MultimodelPointCsv>(response.toString().replace(/^#\s*/, ""))),
       map((points) =>
@@ -51,11 +53,11 @@ export class MultimodelSourceService {
               $extraDialogRows: [
                 ...["HN", "HS"].map((type) => ({
                   label: `ECMWF ${type}`,
-                  url: `${this.URL}eps_ecmwf/snowgrid_ECMWF_EPS_${id}_${type}.png`,
+                  url: `${this.URL}eps_ecmwf/${date}-00UTC_snowgrid_ECMWF_EPS_${id}_${type}.png`,
                 })),
                 ...["HN", "HS"].map((type) => ({
                   label: `CLAEF ${type}`,
-                  url: `${this.URL}eps_claef/snowgrid_C-LAEF_EPS_${id}_${type}.png`,
+                  url: `${this.URL}eps_claef/${date}-00UTC_snowgrid_C-LAEF_EPS_${id}_${type}.png`,
                 })),
               ],
               latitude: parseFloat(row.lat),
