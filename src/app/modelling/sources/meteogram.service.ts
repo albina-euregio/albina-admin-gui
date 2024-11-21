@@ -19,7 +19,7 @@ export class MeteogramSourceService {
             const center = geoJSON(f).getBounds().getCenter();
             const file = f.properties.id.replace(/AT-07-/, "");
             const date = formatDate(Date.now(), "yyyy-MM-dd", "en-US");
-            const $externalURL = `https://static.avalanche.report/zamg_ibk/${date}\ meteogramm_R-${file}.png`;
+            const $externalURL = `https://static.avalanche.report/zamg_ibk/${date}_meteogramm_R-${file}.png`;
             return {
               $type: ObservationType.TimeSeries,
               $externalURL,
