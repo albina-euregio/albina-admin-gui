@@ -521,13 +521,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     if (event.key === "ArrowRight") {
       index += 1;
-      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
+      while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
         index += 1;
       }
       observation = observations[index];
     } else if (event.key === "ArrowLeft") {
       index -= 1;
-      while (observation?.$externalImgs && observation.$externalImgs === observations[index].$externalImgs) {
+      while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
         index -= 1;
       }
       observation = observations[index];
