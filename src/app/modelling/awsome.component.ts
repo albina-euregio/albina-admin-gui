@@ -108,6 +108,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ? source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, date)
         : source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
 
+    const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "Aspect");
+    const aspects = Array.isArray(aspectFilter?.values)
+      ? aspectFilter.values.map((v) => v.value)
+      : ["east", "flat", "north", "south", "west"];
+
     const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(url);
     return features.flatMap((feature: FeatureProperties) => {
       feature.properties.$source = source.name as any;
@@ -116,11 +121,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
       feature.properties.$sourceObject = source;
       if (feature.properties?.snp_characteristics?.flat) {
-        return ["east", "flat", "north", "south", "west"].map((aspect) => ({
-          ...feature.properties,
-          aspect,
-          snp_characteristics: feature.properties.snp_characteristics[aspect],
-        }));
+        return aspects
+          .filter((aspect) => feature.properties.snp_characteristics[aspect])
+          .map((aspect) => ({
+            ...feature.properties,
+            aspect,
+            snp_characteristics: feature.properties.snp_characteristics[aspect],
+          }));
       }
       return [feature.properties];
     });
