@@ -3,7 +3,7 @@ import { type GenericObservation, findExistingObservation } from "../../generic-
 import { type Profile, type ProfileDetails, toLawisProfile, toLawisProfileDetails } from "./lawis.model";
 
 const API = "https://lawis.at/lawis_api/public/profile";
-const WEB = "https://lawis.at/lawis_api/v2_2/files/profiles/snowprofile_{{id}}.pdf";
+const WEB = "https://lawis.at/lawis_api/v2_3/files/profiles/snowprofile_{{id}}.pdf";
 
 export async function* fetchLawisProfiles(startDate: Date, endDate: Date, existing: GenericObservation[]) {
   const url = `${API}?${new URLSearchParams({
