@@ -3,6 +3,7 @@ import { UserService } from "../providers/user-service/user.service";
 import type { EChartsOption } from "echarts";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { NgxEchartsDirective } from "ngx-echarts";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 
 @Component({
   selector: "app-team-stress-levels",
@@ -11,18 +12,18 @@ import { NgxEchartsDirective } from "ngx-echarts";
   imports: [NgxEchartsDirective],
 })
 export class TeamStressLevelsComponent implements OnInit {
-  readonly dates = input<[Date, Date][]>(undefined);
-
   dataset: EChartsOption;
 
   constructor(
+    private bulletinsService: BulletinsService,
     private userService: UserService,
     private constantsService: ConstantsService,
   ) {}
 
   ngOnInit(): void {
-    this.userService.getTeamStressLevels([this.dates().at(-1)[0], this.dates().at(0)[1]]).subscribe((stressLevels) => {
-      const dates = this.dates()
+    const inputDates = this.bulletinsService.dates;
+    this.userService.getTeamStressLevels([inputDates.at(-1)[0], inputDates.at(0)[1]]).subscribe((stressLevels) => {
+      const dates = inputDates
         .flat()
         .map((d) => this.constantsService.getISODateString(d))
         .filter((d, i, arr) => arr.indexOf(d) === i)

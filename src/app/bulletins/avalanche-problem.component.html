@@ -1,135 +1,135 @@
 <accordion class="avalanche-problems__accordion">
-  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem1" #accordionAvalancheProblem1>
+  <accordion-group *ngIf="bulletinDaytimeDescription().avalancheProblem1" #accordionAvalancheProblem1>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-right"></i>
 
       <app-avalanche-problem-preview
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem1"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem1"
         [count]="1"
         [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
       ></app-avalanche-problem-preview>
     </div>
     <div>
       <app-avalanche-problem-detail
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem1"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem1"
         [count]="1"
         [afternoon]="afternoon()"
         [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem2" #accordionAvalancheProblem2>
+  <accordion-group *ngIf="bulletinDaytimeDescription().avalancheProblem2" #accordionAvalancheProblem2>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem2.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem2.isOpen" class="accordion__arrow ph ph-caret-right"></i>
 
       <app-avalanche-problem-preview
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem2"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem2"
         [count]="2"
         [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
       ></app-avalanche-problem-preview>
     </div>
     <div>
       <app-avalanche-problem-detail
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem2"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem2"
         [count]="2"
         [afternoon]="afternoon()"
         [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem3" #accordionAvalancheProblem3>
+  <accordion-group *ngIf="bulletinDaytimeDescription().avalancheProblem3" #accordionAvalancheProblem3>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem3.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem3.isOpen" class="accordion__arrow ph ph-caret-right"></i>
 
       <app-avalanche-problem-preview
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem3"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem3"
         [count]="3"
         [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
       ></app-avalanche-problem-preview>
     </div>
     <div>
       <app-avalanche-problem-detail
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem3"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem3"
         [count]="3"
         [afternoon]="afternoon()"
         [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem4" #accordionAvalancheProblem4>
+  <accordion-group *ngIf="bulletinDaytimeDescription().avalancheProblem4" #accordionAvalancheProblem4>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem4.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem4.isOpen" class="accordion__arrow ph ph-caret-right"></i>
 
       <app-avalanche-problem-preview
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem4"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem4"
         [count]="4"
         [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
       ></app-avalanche-problem-preview>
     </div>
     <div>
       <app-avalanche-problem-detail
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem4"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem4"
         [count]="4"
         [afternoon]="afternoon()"
         [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>
 
-  <accordion-group *ngIf="bulletinDaytimeDescription.avalancheProblem5" #accordionAvalancheProblem5>
+  <accordion-group *ngIf="bulletinDaytimeDescription().avalancheProblem5" #accordionAvalancheProblem5>
     <div accordion-heading class="avalanche-problem-preview__header">
       <i *ngIf="accordionAvalancheProblem5.isOpen" class="accordion__arrow ph ph-caret-down"></i>
       <i *ngIf="!accordionAvalancheProblem5.isOpen" class="accordion__arrow ph ph-caret-right"></i>
 
       <app-avalanche-problem-preview
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblem]="bulletinDaytimeDescription.avalancheProblem5"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem5"
         [count]="5"
         [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview($event)"
+        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
       ></app-avalanche-problem-preview>
     </div>
     <div>
       <app-avalanche-problem-detail
         [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-        [avalancheProblemModel]="bulletinDaytimeDescription.avalancheProblem5"
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem5"
         [count]="5"
         [afternoon]="afternoon()"
         [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail($event)"
+        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
       ></app-avalanche-problem-detail>
     </div>
   </accordion-group>

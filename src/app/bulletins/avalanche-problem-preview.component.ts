@@ -29,7 +29,7 @@ export class AvalancheProblemPreviewComponent {
   @Input() avalancheProblem: AvalancheProblemModel;
   readonly count = input<number>(undefined);
   @Input() disabled: boolean;
-  readonly changeAvalancheProblemPreviewEvent = output<string>();
+  readonly changeAvalancheProblemPreviewEvent = output();
 
   avalancheProblemEnum = Enums.AvalancheProblem;
 

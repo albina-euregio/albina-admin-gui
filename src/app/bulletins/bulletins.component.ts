@@ -182,11 +182,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     if (!this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster)) {
       return;
     }
-    this.modalService.show(TeamStressLevelsComponent, {
-      initialState: {
-        dates: this.bulletinsService.dates,
-      },
-    });
+    this.modalService.show(TeamStressLevelsComponent, {});
   }
 
   protected readonly formatDate = formatDate;

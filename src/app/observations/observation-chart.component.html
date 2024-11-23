@@ -2,14 +2,14 @@
   <!-- !chart-header -->
   <div class="chart-header">
     <div class="chart-name">
-      {{ filterSelection.label }}
+      {{ filterSelection().label }}
     </div>
 
     <div class="chart-controls">
       <div class="obs-switch">
         <div
           class="obs-switch-item"
-          [class.is-active]="filterSelection.type === markerService.markerClassify?.type"
+          [class.is-active]="filterSelection().type === markerService.markerClassify?.type"
           (click)="onMarkerClassify()"
           title="{{ 'admin.observations.charts.classify' | translate }}"
         >
@@ -17,7 +17,7 @@
         </div>
         <div
           class="obs-switch-item"
-          [class.is-active]="filterSelection.type === markerService.markerLabel?.type"
+          [class.is-active]="filterSelection().type === markerService.markerLabel?.type"
           (click)="onMarkerLabel()"
           title="{{ 'admin.observations.charts.label' | translate }}"
         >
@@ -47,10 +47,10 @@
   <!-- !chart-unspecified -->
   <div class="chart-unspecified">
     <span
-      [class.highlighted]="filterSelection['highlighted'].has('nan')"
-      [class.selected]="filterSelection['selected'].has('nan')"
+      [class.highlighted]="filterSelection()['highlighted'].has('nan')"
+      [class.selected]="filterSelection()['selected'].has('nan')"
       (click)="onSeriesClick($event, 'nan')"
-      >{{ "admin.observations.charts.nan" | translate }}: {{ filterSelection.nan }}</span
+      >{{ "admin.observations.charts.nan" | translate }}: {{ filterSelection().nan }}</span
     >
   </div>
   <!-- /chart-unspecified -->
@@ -58,10 +58,10 @@
   <!-- !chart-content -->
   <div class="chart-content">
     <div
-      *ngIf="filterSelection.dataset"
+      *ngIf="filterSelection().dataset"
       echarts
       [options]="options"
-      [merge]="{ dataset: { source: filterSelection.dataset } }"
+      [merge]="{ dataset: { source: filterSelection().dataset } }"
       (chartMouseDown)="onMouseDown($event)"
       (chartMouseUp)="onMouseUp($event)"
       class="chart"

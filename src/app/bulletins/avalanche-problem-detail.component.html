@@ -83,10 +83,10 @@
       <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
       <div>
         <app-aspects
-          [(aspects)]="avalancheProblemModel.aspects"
+          [(aspects)]="avalancheProblemModel().aspects"
           [disabled]="disabled()"
           [size]="150"
-          (aspectsChange)="changeAspects($event)"
+          (aspectsChange)="changeAspects()"
         ></app-aspects>
       </div>
     </div>
@@ -119,9 +119,9 @@
               size="14"
               type="number"
               name="elevation-input"
-              [disabled]="disabled() || avalancheProblemModel.treelineHigh || !useElevationHigh"
+              [disabled]="disabled() || avalancheProblemModel().treelineHigh || !useElevationHigh"
               [(ngModel)]="localElevationHigh"
-              (change)="updateElevationHigh($event)"
+              (change)="updateElevationHigh()"
             />
             <span class="input-group-text">m</span>
           </div>
@@ -165,7 +165,7 @@
               size="14"
               type="number"
               name="elevation-input"
-              [disabled]="disabled() || avalancheProblemModel.treelineLow || !useElevationLow"
+              [disabled]="disabled() || avalancheProblemModel().treelineLow || !useElevationLow"
               [(ngModel)]="localElevationLow"
               (change)="updateElevationLow()"
             />
@@ -188,7 +188,9 @@
         <!-- Extend sea level danger up/down -->
         <div
           class="avalanche-problem__elevation-change-danger-rating"
-          *ngIf="count() === 1 && avalancheProblemModel.hasElevationHigh() && avalancheProblemModel.hasElevationLow()"
+          *ngIf="
+            count() === 1 && avalancheProblemModel().hasElevationHigh() && avalancheProblemModel().hasElevationLow()
+          "
         >
           <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
 
@@ -240,20 +242,20 @@
   <div class="form-group">
     <app-matrix-parameter
       [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-      [matrixInformation]="avalancheProblemModel.matrixInformation"
+      [matrixInformation]="avalancheProblemModel().matrixInformation"
       [disabled]="disabled()"
       [count]="count()"
       [afternoon]="afternoon()"
-      (changeMatrixEvent)="changeMatrix($event)"
+      (changeMatrixEvent)="changeMatrix()"
     ></app-matrix-parameter>
   </div>
   <div *ngIf="authenticationService.getActiveRegion().showMatrix" class="form-group">
     <app-matrix
       [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-      [matrixInformation]="avalancheProblemModel.matrixInformation"
-      [snowpackStability]="avalancheProblemModel.matrixInformation.snowpackStability"
-      [frequency]="avalancheProblemModel.matrixInformation.frequency"
-      [avalancheSize]="avalancheProblemModel.matrixInformation.avalancheSize"
+      [matrixInformation]="avalancheProblemModel().matrixInformation"
+      [snowpackStability]="avalancheProblemModel().matrixInformation.snowpackStability"
+      [frequency]="avalancheProblemModel().matrixInformation.frequency"
+      [avalancheSize]="avalancheProblemModel().matrixInformation.avalancheSize"
       [disabled]="true"
     ></app-matrix>
   </div>

@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, input, output } from "@angular/core";
+import { Component, TemplateRef, input, output } from "@angular/core";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import type { BulletinModel } from "../models/bulletin.model";
@@ -19,10 +19,10 @@ import { HtmlPipe } from "./html.pipe";
   imports: [NgClass, NgIf, FormsModule, NgFor, UpperCasePipe, TranslateModule, HtmlPipe],
 })
 export class BulletinTextComponent {
-  @Input() textField: TextcatTextfield;
+  readonly textField = input<TextcatTextfield>(undefined);
   readonly rows = input<number>(undefined);
   readonly disabled = input<boolean>(undefined);
-  @Input() bulletin: BulletinModel;
+  readonly bulletin = input<BulletinModel>(undefined);
   readonly showDialog = output<TextcatLegacyIn>();
   readonly updateBulletinOnServer = output();
   showTranslations = false;
@@ -53,25 +53,26 @@ export class BulletinTextComponent {
     };
     const activeRegion = this.authenticationService.getActiveRegionId();
     this.showDialog.emit({
-      textField: this.textField,
-      textDef: this.bulletin[this.bulletinTextcatKey] || "",
+      textField: this.textField(),
+      textDef: this.bulletin()[this.bulletinTextcatKey] || "",
       currentLang: this.translateService.currentLang,
       region: regions[activeRegion] || "",
     });
   }
 
   get bulletinTextKey(): `${TextcatTextfield}$` {
-    return `${this.textField}$`;
+    return `${this.textField()}$`;
   }
 
   get bulletinTextcatKey(): `${TextcatTextfield}Textcat` {
-    return `${this.textField}Textcat`;
+    return `${this.textField()}Textcat`;
   }
 
   copyTextcat() {
     this.copyService.setCopyTextcat(true);
-    this.copyService.setTextTextcat(this.bulletin[this.bulletinTextcatKey]);
-    this.copyService.setFromLangTexts(this.bulletin[this.bulletinTextKey]);
+    const bulletin = this.bulletin();
+    this.copyService.setTextTextcat(bulletin[this.bulletinTextcatKey]);
+    this.copyService.setFromLangTexts(bulletin[this.bulletinTextKey]);
   }
 
   concatTextcat(text1: string | undefined, text2: string | undefined) {
@@ -81,12 +82,12 @@ export class BulletinTextComponent {
   }
 
   pasteTextcat() {
-    this.bulletin[this.bulletinTextcatKey] = this.concatTextcat(
-      this.bulletin[this.bulletinTextcatKey],
+    this.bulletin()[this.bulletinTextcatKey] = this.concatTextcat(
+      this.bulletin()[this.bulletinTextcatKey],
       this.copyService.getTextTextcat(),
     );
-    this.bulletin[this.bulletinTextKey] = concatenateLangTexts(
-      this.bulletin[this.bulletinTextKey],
+    this.bulletin()[this.bulletinTextKey] = concatenateLangTexts(
+      this.bulletin()[this.bulletinTextKey],
       this.copyService.toLangTexts,
     );
     this.copyService.resetCopyTextcat();
@@ -94,8 +95,8 @@ export class BulletinTextComponent {
   }
 
   deleteTextcat() {
-    this.bulletin[this.bulletinTextcatKey] = undefined;
-    this.bulletin[this.bulletinTextKey] = {} as LangTexts;
+    this.bulletin()[this.bulletinTextcatKey] = undefined;
+    this.bulletin()[this.bulletinTextKey] = {} as LangTexts;
     this.updateBulletinOnServer.emit();
   }
 
@@ -109,7 +110,7 @@ export class BulletinTextComponent {
   loadExampleText(avalancheProblem: keyof typeof Enums.AvalancheProblem) {
     const textcat = this.constantsService[this.bulletinTextcatKey]?.[avalancheProblem];
     if (!textcat) return;
-    this.bulletin[this.bulletinTextcatKey] = this.concatTextcat(this.bulletin[this.bulletinTextcatKey], textcat);
+    this.bulletin()[this.bulletinTextcatKey] = this.concatTextcat(this.bulletin()[this.bulletinTextcatKey], textcat);
     this.openTextcat();
     this.modalRef.hide();
   }

@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef, HostListener, input, output, viewChild } from "@angular/core";
+import { Component, TemplateRef, HostListener, input, output, viewChild } from "@angular/core";
 
 import { environment } from "../../environments/environment";
 
@@ -45,7 +45,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
   ],
 })
 export class AvalancheBulletinComponent {
-  @Input() bulletin: BulletinModel;
+  readonly bulletin = input<BulletinModel>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly isCompactMapLayout = input<boolean>(undefined);
   readonly isBulletinSidebarVisible = input<boolean>(undefined);
@@ -104,37 +104,37 @@ export class AvalancheBulletinComponent {
   ) {}
 
   updateBulletinOnServer() {
-    this.updateBulletinOnServerEvent.emit(this.bulletin);
+    this.updateBulletinOnServerEvent.emit(this.bulletin());
   }
 
   copyBulletin() {
-    this.copyBulletinEvent.emit(this.bulletin);
+    this.copyBulletinEvent.emit(this.bulletin());
   }
 
   deselectBulletin() {
-    this.deselectBulletinEvent.emit(this.bulletin);
+    this.deselectBulletinEvent.emit(this.bulletin());
   }
 
   deleteBulletin() {
-    this.deleteBulletinEvent.emit(this.bulletin);
+    this.deleteBulletinEvent.emit(this.bulletin());
   }
 
   editMicroRegions() {
-    this.editMicroRegionsEvent.emit(this.bulletin);
+    this.editMicroRegionsEvent.emit(this.bulletin());
   }
 
   setTendency(event: Event, tendency: Enums.Tendency) {
     event.stopPropagation();
-    this.bulletin.tendency = tendency;
+    this.bulletin().tendency = tendency;
     this.updateBulletinOnServer();
   }
 
   isTendency(tendency: Enums.Tendency) {
-    return tendency === this.bulletin.tendency;
+    return tendency === this.bulletin().tendency;
   }
 
   isInternal(): boolean {
-    const ownerRegion = this.bulletin.getOwnerRegion();
+    const ownerRegion = this.bulletin().getOwnerRegion();
     return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion);
   }
 
@@ -158,17 +158,17 @@ export class AvalancheBulletinComponent {
   }
 
   onDangerPattern1Change(event: Enums.DangerPattern) {
-    this.bulletin.dangerPattern1 = event;
+    this.bulletin().dangerPattern1 = event;
     this.updateBulletinOnServer();
   }
 
   onDangerPattern2Change(event: Enums.DangerPattern) {
-    this.bulletin.dangerPattern2 = event;
+    this.bulletin().dangerPattern2 = event;
     this.updateBulletinOnServer();
   }
 
   onStrategicMindsetChange(event: Enums.StrategicMindset) {
-    this.bulletin.strategicMindset = event;
+    this.bulletin().strategicMindset = event;
     this.updateBulletinOnServer();
   }
 
@@ -203,15 +203,15 @@ export class AvalancheBulletinComponent {
   acceptSuggestions(event: Event) {
     event.stopPropagation();
     const suggested = new Array<string>();
-    for (const region of this.bulletin.getSuggestedRegions()) {
+    for (const region of this.bulletin().getSuggestedRegions()) {
       if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-        this.bulletin.getSavedRegions().push(region);
+        this.bulletin().getSavedRegions().push(region);
       } else {
         suggested.push(region);
       }
     }
-    this.bulletin.setSuggestedRegions(suggested);
-    this.bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+    this.bulletin().setSuggestedRegions(suggested);
+    this.bulletin().addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
 
     this.updateBulletinOnServer();
   }
@@ -219,12 +219,12 @@ export class AvalancheBulletinComponent {
   rejectSuggestions(event: Event) {
     event.stopPropagation();
     const suggested = new Array<string>();
-    for (const region of this.bulletin.getSuggestedRegions()) {
+    for (const region of this.bulletin().getSuggestedRegions()) {
       if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
         suggested.push(region);
       }
     }
-    this.bulletin.setSuggestedRegions(suggested);
+    this.bulletin().setSuggestedRegions(suggested);
 
     this.updateBulletinOnServer();
   }
@@ -236,37 +236,38 @@ export class AvalancheBulletinComponent {
 
   daytimeDependencyChanged(event, value) {
     event.stopPropagation();
-    if (this.bulletinsService.getIsEditable() && this.isCreator(this.bulletin)) {
+    const bulletin = this.bulletin();
+    if (this.bulletinsService.getIsEditable() && this.isCreator(bulletin)) {
       if (value) {
-        this.bulletin.setHasDaytimeDependency(value);
+        bulletin.setHasDaytimeDependency(value);
 
-        this.bulletin.afternoon.setDangerRatingAbove(this.bulletin.forenoon.getDangerRatingAbove());
-        const avalancheProblem1 = this.bulletin.forenoon.getAvalancheProblem1();
+        bulletin.afternoon.setDangerRatingAbove(bulletin.forenoon.getDangerRatingAbove());
+        const avalancheProblem1 = bulletin.forenoon.getAvalancheProblem1();
         if (avalancheProblem1) {
-          this.bulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(avalancheProblem1));
+          bulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(avalancheProblem1));
         }
-        const avalancheProblem2 = this.bulletin.forenoon.getAvalancheProblem2();
+        const avalancheProblem2 = bulletin.forenoon.getAvalancheProblem2();
         if (avalancheProblem2) {
-          this.bulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(avalancheProblem2));
+          bulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(avalancheProblem2));
         }
-        const avalancheProblem3 = this.bulletin.forenoon.getAvalancheProblem3();
+        const avalancheProblem3 = bulletin.forenoon.getAvalancheProblem3();
         if (avalancheProblem3) {
-          this.bulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(avalancheProblem3));
+          bulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(avalancheProblem3));
         }
-        const avalancheProblem4 = this.bulletin.forenoon.getAvalancheProblem4();
+        const avalancheProblem4 = bulletin.forenoon.getAvalancheProblem4();
         if (avalancheProblem4) {
-          this.bulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(avalancheProblem4));
+          bulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(avalancheProblem4));
         }
-        const avalancheProblem5 = this.bulletin.forenoon.getAvalancheProblem5();
+        const avalancheProblem5 = bulletin.forenoon.getAvalancheProblem5();
         if (avalancheProblem5) {
-          this.bulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(avalancheProblem5));
+          bulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(avalancheProblem5));
         }
-        if (this.bulletin.forenoon.hasElevationDependency) {
-          this.bulletin.afternoon.setHasElevationDependency(true);
-          this.bulletin.afternoon.setDangerRatingBelow(this.bulletin.forenoon.getDangerRatingBelow());
+        if (bulletin.forenoon.hasElevationDependency) {
+          bulletin.afternoon.setHasElevationDependency(true);
+          bulletin.afternoon.setDangerRatingBelow(bulletin.forenoon.getDangerRatingBelow());
         }
-        this.bulletin.getForenoon().updateDangerRating();
-        this.bulletin.getAfternoon().updateDangerRating();
+        bulletin.getForenoon().updateDangerRating();
+        bulletin.getAfternoon().updateDangerRating();
 
         this.updateBulletinOnServer();
       } else {
@@ -295,11 +296,11 @@ export class AvalancheBulletinComponent {
     ) {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
       if (pmData.textDef === undefined || pmData.textDef === "") {
-        this.bulletin[`${pmData.textField}Textcat`] = "";
-        this.bulletin[`${pmData.textField}$`] = {} as LangTexts;
+        this.bulletin()[`${pmData.textField}Textcat`] = "";
+        this.bulletin()[`${pmData.textField}$`] = {} as LangTexts;
       } else {
-        this.bulletin[`${pmData.textField}Textcat`] = pmData.textDef;
-        this.bulletin[`${pmData.textField}$`] = convertTextcatToLangTexts(pmData);
+        this.bulletin()[`${pmData.textField}Textcat`] = pmData.textDef;
+        this.bulletin()[`${pmData.textField}$`] = convertTextcatToLangTexts(pmData);
       }
       this.hideDialog();
       this.updateBulletinOnServer();
@@ -310,9 +311,9 @@ export class AvalancheBulletinComponent {
     this.isAccordionAvalancheProblemOpen = true;
     let daytime;
     if (isAfternoon) {
-      daytime = this.bulletin.afternoon;
+      daytime = this.bulletin().afternoon;
     } else {
-      daytime = this.bulletin.forenoon;
+      daytime = this.bulletin().forenoon;
     }
     let lastAvalancheProblem = daytime.avalancheProblem1;
     let count = 1;
@@ -361,7 +362,7 @@ export class AvalancheBulletinComponent {
   }
 
   hasFiveAvalancheProblems(isAfternoon: boolean) {
-    const daytime = isAfternoon ? this.bulletin.afternoon : this.bulletin.forenoon;
+    const daytime = isAfternoon ? this.bulletin().afternoon : this.bulletin().forenoon;
     return daytime.avalancheProblem5 !== undefined;
   }
 
@@ -377,29 +378,31 @@ export class AvalancheBulletinComponent {
   removeDaytimeDependencyModalConfirm(event, earlier: boolean): void {
     event.stopPropagation();
     this.removeDaytimeDependencyModalRef.hide();
-    this.bulletin.setHasDaytimeDependency(false);
+    this.bulletin().setHasDaytimeDependency(false);
 
+    const bulletin = this.bulletin();
     if (!earlier) {
-      this.bulletin.forenoon.setDangerRatingAbove(this.bulletin.afternoon.getDangerRatingAbove());
-      this.bulletin.forenoon.setAvalancheProblem1(this.bulletin.afternoon.getAvalancheProblem1());
-      this.bulletin.forenoon.setAvalancheProblem2(this.bulletin.afternoon.getAvalancheProblem2());
-      this.bulletin.forenoon.setAvalancheProblem3(this.bulletin.afternoon.getAvalancheProblem3());
-      this.bulletin.forenoon.setAvalancheProblem4(this.bulletin.afternoon.getAvalancheProblem4());
-      this.bulletin.forenoon.setAvalancheProblem5(this.bulletin.afternoon.getAvalancheProblem5());
-      this.bulletin.forenoon.setHasElevationDependency(this.bulletin.afternoon.getHasElevationDependency());
-      this.bulletin.forenoon.setDangerRatingBelow(this.bulletin.afternoon.getDangerRatingBelow());
+      const bulletin = this.bulletin();
+      this.bulletin().forenoon.setDangerRatingAbove(bulletin.afternoon.getDangerRatingAbove());
+      bulletin.forenoon.setAvalancheProblem1(bulletin.afternoon.getAvalancheProblem1());
+      bulletin.forenoon.setAvalancheProblem2(bulletin.afternoon.getAvalancheProblem2());
+      bulletin.forenoon.setAvalancheProblem3(bulletin.afternoon.getAvalancheProblem3());
+      bulletin.forenoon.setAvalancheProblem4(bulletin.afternoon.getAvalancheProblem4());
+      bulletin.forenoon.setAvalancheProblem5(bulletin.afternoon.getAvalancheProblem5());
+      bulletin.forenoon.setHasElevationDependency(bulletin.afternoon.getHasElevationDependency());
+      bulletin.forenoon.setDangerRatingBelow(bulletin.afternoon.getDangerRatingBelow());
     }
-    this.bulletin.afternoon.setDangerRatingAbove(Enums.DangerRating.missing);
-    this.bulletin.afternoon.setAvalancheProblem1(undefined);
-    this.bulletin.afternoon.setAvalancheProblem2(undefined);
-    this.bulletin.afternoon.setAvalancheProblem3(undefined);
-    this.bulletin.afternoon.setAvalancheProblem4(undefined);
-    this.bulletin.afternoon.setAvalancheProblem5(undefined);
-    this.bulletin.afternoon.setHasElevationDependency(false);
-    this.bulletin.afternoon.setDangerRatingBelow(Enums.DangerRating.missing);
+    bulletin.afternoon.setDangerRatingAbove(Enums.DangerRating.missing);
+    bulletin.afternoon.setAvalancheProblem1(undefined);
+    bulletin.afternoon.setAvalancheProblem2(undefined);
+    bulletin.afternoon.setAvalancheProblem3(undefined);
+    bulletin.afternoon.setAvalancheProblem4(undefined);
+    bulletin.afternoon.setAvalancheProblem5(undefined);
+    bulletin.afternoon.setHasElevationDependency(false);
+    bulletin.afternoon.setDangerRatingBelow(Enums.DangerRating.missing);
 
-    this.bulletin.getForenoon().updateDangerRating();
-    this.bulletin.getAfternoon().updateDangerRating();
+    bulletin.getForenoon().updateDangerRating();
+    bulletin.getAfternoon().updateDangerRating();
 
     this.updateBulletinOnServer();
   }

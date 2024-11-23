@@ -1,4 +1,4 @@
-import { Component, Input, input, output } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 import { BulletinModel } from "../models/bulletin.model";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -14,18 +14,18 @@ import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.comp
 })
 export class AvalancheProblemComponent {
   readonly bulletinModel = input<BulletinModel>(undefined);
-  @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
+  readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly afternoon = input<boolean>(undefined);
   readonly disabled = input<boolean>(undefined);
-  readonly changeAvalancheProblemEvent = output<string>();
+  readonly changeAvalancheProblemEvent = output();
 
   constructor() {}
 
-  changeAvalancheProblemDetail(event) {
+  changeAvalancheProblemDetail() {
     this.changeAvalancheProblemEvent.emit();
   }
 
-  changeAvalancheProblemPreview(event) {
+  changeAvalancheProblemPreview() {
     this.changeAvalancheProblemEvent.emit();
   }
 }

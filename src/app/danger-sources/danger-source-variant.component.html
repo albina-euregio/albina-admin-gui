@@ -13,15 +13,15 @@
       </button>
     </div>
     <div class="region-form__title">
-      <h6 class="font-xs text-secondary">{{ variant.dangerSource?.title }}</h6>
+      <h6 class="font-xs text-secondary">{{ variant().dangerSource?.title }}</h6>
       <h2 class="font-l">
-        <span *ngIf="variant.regions.length > 0">{{
-          regionsService.getRegionName(variant.regions[0].toString())
+        <span *ngIf="variant().regions.length > 0">{{
+          regionsService.getRegionName(variant().regions[0].toString())
         }}</span>
-        <span *ngIf="variant.regions.length > 1"> + {{ variant.regions.length - 1 }} </span>
+        <span *ngIf="variant().regions.length > 1"> + {{ variant().regions.length - 1 }} </span>
       </h2>
       <div class="user-avatar__name">
-        Updated on {{ variant.updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
+        Updated on {{ variant().updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
       </div>
     </div>
   </header>
@@ -31,7 +31,7 @@
       {{ "dangerSources.create.variantStatus" | translate }}
     </p>
     <select
-      [ngModel]="variant.dangerSourceVariantStatus"
+      [ngModel]="variant().dangerSourceVariantStatus"
       (ngModelChange)="onVariantStatusChange($event)"
       [disabled]="disabled()"
       class="form-select"
@@ -44,7 +44,7 @@
   </div>
 
   <div
-    *ngIf="dangerSourcesService.getIsEditable() && isCreator(variant)"
+    *ngIf="dangerSourcesService.getIsEditable() && isCreator(variant())"
     class="region-form__banner banner banner-info"
   >
     <p class="banner__text">
@@ -86,7 +86,7 @@
   </div>
 
   <div
-    *ngIf="!dangerSourcesService.getIsEditable() || (dangerSourcesService.getIsEditable() && !isCreator(variant))"
+    *ngIf="!dangerSourcesService.getIsEditable() || (dangerSourcesService.getIsEditable() && !isCreator(variant()))"
     class="region-form__banner banner banner-warning"
   >
     <p class="banner__text">
@@ -189,7 +189,7 @@
           }}</label>
           <ngx-slider
             class="gliding-snow-activity-slider"
-            [(value)]="variant.glidingSnowActivityValue"
+            [(value)]="variant().glidingSnowActivityValue"
             [options]="glidingSnowActivityOptions"
             (userChange)="onGlidingSnowActivityValueChange($event)"
           ></ngx-slider>
@@ -209,7 +209,7 @@
               type="number"
               name="snow-height-lower-limit-input"
               [disabled]="disabled()"
-              [(ngModel)]="variant.snowHeightLowerLimit"
+              [(ngModel)]="variant().snowHeightLowerLimit"
             />
             <span class="input-group-text">cm</span>
             <label class="form-label mx-3" for="snowHeightLabel"> - </label>
@@ -222,7 +222,7 @@
               type="number"
               name="snow-height-upper-limit-input"
               [disabled]="disabled()"
-              [(ngModel)]="variant.snowHeightUpperLimit"
+              [(ngModel)]="variant().snowHeightUpperLimit"
             />
             <span class="input-group-text">cm</span>
           </div>
@@ -238,7 +238,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.zeroDegreeIsotherm !== undefined && variant.zeroDegreeIsotherm === true
+                variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -251,7 +251,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.zeroDegreeIsotherm !== undefined && variant.zeroDegreeIsotherm === false
+                variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -353,7 +353,7 @@
               type="number"
               name="slab-thickness-lower-limit-input"
               [disabled]="disabled()"
-              [(ngModel)]="variant.slabThicknessLowerLimit"
+              [(ngModel)]="variant().slabThicknessLowerLimit"
             />
             <span class="input-group-text">cm</span>
             <label class="form-label mx-3" for="slabThicknessLabel"> - </label>
@@ -366,7 +366,7 @@
               type="number"
               name="slab-thickness-upper-limit-input"
               [disabled]="disabled()"
-              [(ngModel)]="variant.slabThicknessUpperLimit"
+              [(ngModel)]="variant().slabThicknessUpperLimit"
             />
             <span class="input-group-text">cm</span>
           </div>
@@ -893,7 +893,7 @@
               type="number"
               name="weak-layer-grain-size-lower-limit-input"
               [disabled]="disabled()"
-              [(ngModel)]="variant.weakLayerGrainSizeLowerLimit"
+              [(ngModel)]="variant().weakLayerGrainSizeLowerLimit"
             />
             <span class="input-group-text">cm</span>
             <label class="form-label mx-3" for="weakLayerGrainSizeLabel"> - </label>
@@ -906,7 +906,7 @@
               type="number"
               name="weak-layer-grain-size-upper-limit-input"
               [disabled]="disabled()"
-              [(ngModel)]="variant.weakLayerGrainSizeUpperLimit"
+              [(ngModel)]="variant().weakLayerGrainSizeUpperLimit"
             />
             <span class="input-group-text">cm</span>
           </div>
@@ -922,7 +922,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerPersistent !== undefined && variant.weakLayerPersistent === true
+                variant().weakLayerPersistent !== undefined && variant().weakLayerPersistent === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -935,7 +935,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerPersistent !== undefined && variant.weakLayerPersistent === false
+                variant().weakLayerPersistent !== undefined && variant().weakLayerPersistent === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1065,7 +1065,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerWet !== undefined && variant.weakLayerWet === true
+                variant().weakLayerWet !== undefined && variant().weakLayerWet === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1078,7 +1078,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerWet !== undefined && variant.weakLayerWet === false
+                variant().weakLayerWet !== undefined && variant().weakLayerWet === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1099,7 +1099,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerCrustAbove !== undefined && variant.weakLayerCrustAbove === true
+                variant().weakLayerCrustAbove !== undefined && variant().weakLayerCrustAbove === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1112,7 +1112,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerCrustAbove !== undefined && variant.weakLayerCrustAbove === false
+                variant().weakLayerCrustAbove !== undefined && variant().weakLayerCrustAbove === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1133,7 +1133,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerCrustBelow !== undefined && variant.weakLayerCrustBelow === true
+                variant().weakLayerCrustBelow !== undefined && variant().weakLayerCrustBelow === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1146,7 +1146,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.weakLayerCrustBelow !== undefined && variant.weakLayerCrustBelow === false
+                variant().weakLayerCrustBelow !== undefined && variant().weakLayerCrustBelow === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1445,7 +1445,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.remoteTriggering !== undefined && variant.remoteTriggering === true
+                variant().remoteTriggering !== undefined && variant().remoteTriggering === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1458,7 +1458,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.remoteTriggering !== undefined && variant.remoteTriggering === false
+                variant().remoteTriggering !== undefined && variant().remoteTriggering === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1691,7 +1691,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.hasDaytimeDependency !== undefined && variant.hasDaytimeDependency === true
+                variant().hasDaytimeDependency !== undefined && variant().hasDaytimeDependency === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1704,7 +1704,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.hasDaytimeDependency !== undefined && variant.hasDaytimeDependency === false
+                variant().hasDaytimeDependency !== undefined && variant().hasDaytimeDependency === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1725,7 +1725,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.dangerIncreaseWithElevation !== undefined && variant.dangerIncreaseWithElevation === true
+                variant().dangerIncreaseWithElevation !== undefined && variant().dangerIncreaseWithElevation === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1738,7 +1738,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.dangerIncreaseWithElevation !== undefined && variant.dangerIncreaseWithElevation === false
+                variant().dangerIncreaseWithElevation !== undefined && variant().dangerIncreaseWithElevation === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1964,7 +1964,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.runoutIntoGreen !== undefined && variant.runoutIntoGreen === true
+                variant().runoutIntoGreen !== undefined && variant().runoutIntoGreen === true
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -1977,7 +1977,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                variant.runoutIntoGreen !== undefined && variant.runoutIntoGreen === false
+                variant().runoutIntoGreen !== undefined && variant().runoutIntoGreen === false
                   ? 'btn-dark'
                   : 'btn-outline-secondary'
               "
@@ -2089,7 +2089,7 @@
             <label class="form-label" for="">{{ "dangerSources.create.label.aspects" | translate }}</label>
             <div>
               <app-aspects
-                [(aspects)]="variant.aspects"
+                [(aspects)]="variant().aspects"
                 [disabled]="disabled()"
                 [size]="150"
                 (aspectsChange)="updateVariantOnServer()"
@@ -2122,7 +2122,7 @@
                     size="14"
                     type="number"
                     name="elevation-input"
-                    [disabled]="disabled() || variant.treelineHigh || !useElevationHigh"
+                    [disabled]="disabled() || variant().treelineHigh || !useElevationHigh"
                     [(ngModel)]="localElevationHigh"
                     (change)="updateElevationHigh($event)"
                   />
@@ -2166,7 +2166,7 @@
                     size="14"
                     type="number"
                     name="elevation-input"
-                    [disabled]="disabled() || variant.treelineLow || !useElevationLow"
+                    [disabled]="disabled() || variant().treelineLow || !useElevationLow"
                     [(ngModel)]="localElevationLow"
                     (change)="updateElevationLow()"
                   />
@@ -2190,8 +2190,8 @@
 
         <div class="form-group">
           <app-matrix-parameter
-            [bulletinDaytimeDescription]="variant"
-            [matrixInformation]="variant.eawsMatrixInformation"
+            [bulletinDaytimeDescription]="variant()"
+            [matrixInformation]="variant().eawsMatrixInformation"
             [disabled]="disabled()"
             [count]="1"
             [afternoon]="false"

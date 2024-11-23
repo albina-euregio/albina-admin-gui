@@ -1,4 +1,4 @@
-import { Component, Input, input, output } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 import * as Enums from "../enums/enums";
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -9,7 +9,7 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [TranslateModule],
 })
 export class AspectsComponent {
-  @Input() aspects: Enums.Aspect[];
+  readonly aspects = input<Enums.Aspect[]>(undefined);
   readonly aspectsChange = output<Enums.Aspect[]>();
   readonly disabled = input<boolean>(false);
   readonly singleton = input<boolean>(false);
@@ -24,7 +24,7 @@ export class AspectsComponent {
   }
 
   getColor(aspect: Enums.Aspect) {
-    return this.aspects.includes(aspect) ? "#000000" : "#FFFFFF";
+    return this.aspects().includes(aspect) ? "#000000" : "#FFFFFF";
   }
 
   selectAspect(aspect: Enums.Aspect) {
@@ -32,25 +32,27 @@ export class AspectsComponent {
       return;
     }
     const singleton = this.singleton();
-    if (this.aspects[0] === aspect && singleton) {
-      this.aspects = [];
-      return this.aspectsChange.emit(this.aspects);
+    const aspects = this.aspects();
+    if (aspects[0] === aspect && singleton) {
+      aspects.length = 0;
+      return this.aspectsChange.emit(aspects);
     }
-    if (this.aspects?.length !== 1 || singleton) {
-      this.aspects = [aspect];
-      return this.aspectsChange.emit(this.aspects);
+    if (aspects?.length !== 1 || singleton) {
+      aspects.length = 0;
+      aspects.push(aspect);
+      return this.aspectsChange.emit(aspects);
     }
-    if (this.aspects[0] === aspect) {
-      this.aspects = [];
-      return this.aspectsChange.emit(this.aspects);
+    if (aspects[0] === aspect) {
+      aspects.length = 0;
+      return this.aspectsChange.emit(aspects);
     }
     const values: Enums.Aspect[] = Object.values(Enums.Aspect);
     const end: number = values.indexOf(aspect);
-    let a: number = values.indexOf(this.aspects[0]);
+    let a: number = values.indexOf(aspects[0]);
     do {
       a = (a + 1) % values.length;
-      this.aspects.push(values[a]);
+      aspects.push(values[a]);
     } while (a !== end);
-    return this.aspectsChange.emit(this.aspects);
+    return this.aspectsChange.emit(aspects);
   }
 }

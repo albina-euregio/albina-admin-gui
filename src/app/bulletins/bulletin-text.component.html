@@ -2,7 +2,7 @@
   <div class="row">
     <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
       <label class="form-label">
-        {{ "bulletins.create.label." + textField | translate }}
+        {{ "bulletins.create.label." + textField() | translate }}
       </label>
       <div class="form-field-with-toolbar">
         <!-- Toolbar -->
@@ -18,7 +18,7 @@
             <i class="ph ph-pencil-line"></i>
           </button>
           <button
-            *ngIf="textField === 'avActivityComment'"
+            *ngIf="textField() === 'avActivityComment'"
             class="btn btn-sm btn-icon btn-bare"
             [disabled]="disabled()"
             type="reset"
@@ -29,7 +29,7 @@
             <i class="ph ph-article"></i>
           </button>
           <button
-            *ngIf="textField === 'snowpackStructureComment'"
+            *ngIf="textField() === 'snowpackStructureComment'"
             class="btn btn-sm btn-icon btn-bare"
             [disabled]="disabled()"
             type="reset"
@@ -73,11 +73,11 @@
         </div>
         <!-- End of toolbar -->
         <textarea
-          *ngIf="bulletin && bulletin[bulletinTextKey]"
+          *ngIf="bulletin() && bulletin()[bulletinTextKey]"
           class="form-control"
           [rows]="rows()"
           disabled
-          [ngModel]="bulletin[bulletinTextKey][translateService.currentLang] | html"
+          [ngModel]="bulletin()[bulletinTextKey][translateService.currentLang] | html"
         ></textarea>
       </div>
     </div>
@@ -87,7 +87,7 @@
         class="form-control"
         [rows]="rows()"
         [disabled]="authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
-        [(ngModel)]="bulletin[textField + 'Notes']"
+        [(ngModel)]="bulletin()[textField() + 'Notes']"
         (focusout)="updateBulletinOnServer.emit()"
         placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
       ></textarea>
@@ -128,7 +128,7 @@
         class="form-control"
         [rows]="rows()"
         disabled
-        [ngModel]="bulletin[bulletinTextKey][lang] | html"
+        [ngModel]="bulletin()[bulletinTextKey][lang] | html"
       ></textarea>
     </div>
   </div>

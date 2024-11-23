@@ -3,7 +3,7 @@
   <label class="form-label" for="textarea-input">{{ "matrix.label.snowpackStability" | translate }}</label>
   <ngx-slider
     class="snowpack-stability-slider"
-    [(value)]="matrixInformation.snowpackStabilityValue"
+    [(value)]="matrixInformation().snowpackStabilityValue"
     [options]="snowpackStabilityOptions"
     (userChange)="onSnowpackStabilityValueChange($event)"
   ></ngx-slider>
@@ -14,7 +14,7 @@
   <label class="form-label" for="textarea-input">{{ "matrix.label.frequency" | translate }}</label>
   <ngx-slider
     class="frequency-slider"
-    [(value)]="matrixInformation.frequencyValue"
+    [(value)]="matrixInformation().frequencyValue"
     [options]="frequencyOptions"
     (userChange)="onFrequencyValueChange($event)"
   ></ngx-slider>
@@ -25,7 +25,7 @@
   <label class="form-label" for="textarea-input">{{ "matrix.label.avalancheSize" | translate }}</label>
   <ngx-slider
     class="avalanche-size-slider"
-    [(value)]="matrixInformation.avalancheSizeValue"
+    [(value)]="matrixInformation().avalancheSizeValue"
     [options]="avalancheSizeOptions"
     (userChange)="onAvalancheSizeValueChange($event)"
   ></ngx-slider>
@@ -62,11 +62,11 @@
     <button
       *ngIf="isDangerRatingModificator(modificatorEnum.minus)"
       [disabled]="
-        disabled ||
-        !matrixInformation ||
-        !matrixInformation.snowpackStability ||
-        !matrixInformation.frequency ||
-        !matrixInformation.avalancheSize
+        disabled() ||
+        !matrixInformation() ||
+        !matrixInformation().snowpackStability ||
+        !matrixInformation().frequency ||
+        !matrixInformation().avalancheSize
       "
       type="reset"
       class="btn btn-sm btn-dark btn-icon"
@@ -77,11 +77,11 @@
     <button
       *ngIf="!isDangerRatingModificator(modificatorEnum.minus)"
       [disabled]="
-        disabled ||
-        !matrixInformation ||
-        !matrixInformation.snowpackStability ||
-        !matrixInformation.frequency ||
-        !matrixInformation.avalancheSize
+        disabled() ||
+        !matrixInformation() ||
+        !matrixInformation().snowpackStability ||
+        !matrixInformation().frequency ||
+        !matrixInformation().avalancheSize
       "
       type="reset"
       class="btn btn-sm btn-outline-secondary btn-icon"
@@ -93,11 +93,11 @@
     <button
       *ngIf="isDangerRatingModificator(modificatorEnum.equal)"
       [disabled]="
-        disabled ||
-        !matrixInformation ||
-        !matrixInformation.snowpackStability ||
-        !matrixInformation.frequency ||
-        !matrixInformation.avalancheSize
+        disabled() ||
+        !matrixInformation() ||
+        !matrixInformation().snowpackStability ||
+        !matrixInformation().frequency ||
+        !matrixInformation().avalancheSize
       "
       type="reset"
       class="btn btn-sm btn-dark btn-icon"
@@ -108,11 +108,11 @@
     <button
       *ngIf="!isDangerRatingModificator(modificatorEnum.equal)"
       [disabled]="
-        disabled ||
-        !matrixInformation ||
-        !matrixInformation.snowpackStability ||
-        !matrixInformation.frequency ||
-        !matrixInformation.avalancheSize
+        disabled() ||
+        !matrixInformation() ||
+        !matrixInformation().snowpackStability ||
+        !matrixInformation().frequency ||
+        !matrixInformation().avalancheSize
       "
       type="reset"
       class="btn btn-sm btn-outline-secondary btn-icon"
@@ -124,11 +124,11 @@
     <button
       *ngIf="isDangerRatingModificator(modificatorEnum.plus)"
       [disabled]="
-        disabled ||
-        !matrixInformation ||
-        !matrixInformation.snowpackStability ||
-        !matrixInformation.frequency ||
-        !matrixInformation.avalancheSize
+        disabled() ||
+        !matrixInformation() ||
+        !matrixInformation().snowpackStability ||
+        !matrixInformation().frequency ||
+        !matrixInformation().avalancheSize
       "
       type="reset"
       class="btn btn-sm btn-dark btn-icon"
@@ -139,11 +139,11 @@
     <button
       *ngIf="!isDangerRatingModificator(modificatorEnum.plus)"
       [disabled]="
-        disabled ||
-        !matrixInformation ||
-        !matrixInformation.snowpackStability ||
-        !matrixInformation.frequency ||
-        !matrixInformation.avalancheSize
+        disabled() ||
+        !matrixInformation() ||
+        !matrixInformation().snowpackStability ||
+        !matrixInformation().frequency ||
+        !matrixInformation().avalancheSize
       "
       type="reset"
       class="btn btn-sm btn-outline-secondary btn-icon"
@@ -151,23 +151,23 @@
     >
       <i class="ph ph-plus"></i>
     </button>
-    <div *ngIf="!disabled" class="form-check ms-3">
+    <div *ngIf="!disabled()" class="form-check ms-3">
       <input
         [id]="forLabelId('overrideCheckbox')"
         type="checkbox"
         class="form-check-input"
         [disabled]="
-          disabled ||
-          !matrixInformation ||
-          !matrixInformation.snowpackStability ||
-          !matrixInformation.frequency ||
-          !matrixInformation.avalancheSize
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
         "
         [ngModel]="dangerRatingEnabled"
         (click)="setDangerRatingEnabled($event)"
       />
 
-      <label *ngIf="!disabled" class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{
+      <label *ngIf="!disabled()" class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{
         "matrix.label.override" | translate
       }}</label>
     </div>

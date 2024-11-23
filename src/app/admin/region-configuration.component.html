@@ -11,7 +11,7 @@
               <label class="col-form-label">{{ "admin.region-configuration.table.general.id" | translate }}</label>
             </td>
             <td>
-              <input type="text" class="form-control" id="input-name" placeholder="" [(ngModel)]="config.id" />
+              <input type="text" class="form-control" id="input-name" placeholder="" [(ngModel)]="config().id" />
             </td>
           </tr>
           <tr>
@@ -26,7 +26,7 @@
                 class="form-control"
                 id="input-name"
                 placeholder=""
-                [(ngModel)]="config.microRegions"
+                [(ngModel)]="config().microRegions"
               />
             </td>
           </tr>
@@ -42,8 +42,8 @@
                 class="form-control"
                 id="input-name"
                 placeholder=""
-                [ngModel]="config.subRegions"
-                (ngModelChange)="config.subRegions = $event.split(',')"
+                [ngModel]="config().subRegions"
+                (ngModelChange)="config().subRegions = $event.split(',')"
               />
             </td>
           </tr>
@@ -59,8 +59,8 @@
                 class="form-control"
                 id="input-name"
                 placeholder=""
-                [ngModel]="config.superRegions"
-                (ngModelChange)="config.superRegions = $event.split(',')"
+                [ngModel]="config().superRegions"
+                (ngModelChange)="config().superRegions = $event.split(',')"
               />
             </td>
           </tr>
@@ -76,8 +76,8 @@
                 class="form-control"
                 id="input-name"
                 placeholder=""
-                [ngModel]="config.neighborRegions"
-                (ngModelChange)="config.neighborRegions = $event.split(',')"
+                [ngModel]="config().neighborRegions"
+                (ngModelChange)="config().neighborRegions = $event.split(',')"
               />
             </td>
           </tr>
@@ -95,7 +95,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.publishBulletins" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().publishBulletins" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -108,7 +108,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.publishBlogs" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().publishBlogs" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -121,7 +121,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.createCaamlV5" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().createCaamlV5" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -134,7 +134,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.createCaamlV6" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().createCaamlV6" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -147,7 +147,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.createJson" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().createJson" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -160,12 +160,12 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.createMaps" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().createMaps" />
                 <span class="switch-slider"></span>
               </label>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps">
+          <tr *ngIf="config().createMaps">
             <td colspan="2">
               <table class="table">
                 <tr>
@@ -180,7 +180,7 @@
                       class="form-control"
                       id="input-geoDataDirectory"
                       placeholder=""
-                      [(ngModel)]="config.geoDataDirectory"
+                      [(ngModel)]="config().geoDataDirectory"
                     />
                   </td>
                 </tr>
@@ -196,7 +196,7 @@
                       class="form-control"
                       id="input-mapXmax"
                       placeholder=""
-                      [(ngModel)]="config.mapXmax"
+                      [(ngModel)]="config().mapXmax"
                     />
                   </td>
                 </tr>
@@ -212,7 +212,7 @@
                       class="form-control"
                       id="input-mapXmin"
                       placeholder=""
-                      [(ngModel)]="config.mapXmin"
+                      [(ngModel)]="config().mapXmin"
                     />
                   </td>
                 </tr>
@@ -228,7 +228,7 @@
                       class="form-control"
                       id="input-mapYmax"
                       placeholder=""
-                      [(ngModel)]="config.mapYmax"
+                      [(ngModel)]="config().mapYmax"
                     />
                   </td>
                 </tr>
@@ -244,7 +244,7 @@
                       class="form-control"
                       id="input-mapYmin"
                       placeholder=""
-                      [(ngModel)]="config.mapYmin"
+                      [(ngModel)]="config().mapYmin"
                     />
                   </td>
                 </tr>
@@ -260,7 +260,7 @@
                       class="form-control"
                       id="input-mapLogoColorPath"
                       placeholder=""
-                      [(ngModel)]="config.mapLogoColorPath"
+                      [(ngModel)]="config().mapLogoColorPath"
                     />
                   </td>
                 </tr>
@@ -276,7 +276,7 @@
                       class="form-control"
                       id="input-mapLogoBwPath"
                       placeholder=""
-                      [(ngModel)]="config.mapLogoBwPath"
+                      [(ngModel)]="config().mapLogoBwPath"
                     />
                   </td>
                 </tr>
@@ -292,7 +292,7 @@
                       class="form-control"
                       id="input-mapLogoPosition"
                       placeholder=""
-                      [(ngModel)]="config.mapLogoPosition"
+                      [(ngModel)]="config().mapLogoPosition"
                     />
                   </td>
                 </tr>
@@ -308,7 +308,7 @@
                       class="form-control"
                       id="input-mapCenterLat"
                       placeholder=""
-                      [(ngModel)]="config.mapCenterLat"
+                      [(ngModel)]="config().mapCenterLat"
                     />
                   </td>
                 </tr>
@@ -324,14 +324,14 @@
                       class="form-control"
                       id="input-mapCenterLng"
                       placeholder=""
-                      [(ngModel)]="config.mapCenterLng"
+                      [(ngModel)]="config().mapCenterLng"
                     />
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps">
+          <tr *ngIf="config().createMaps">
             <td>
               <label class="col-form-label">{{
                 "admin.region-configuration.table.publication.createPdf" | translate
@@ -339,12 +339,12 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.createPdf" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().createPdf" />
                 <span class="switch-slider"></span>
               </label>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps && config.createPdf">
+          <tr *ngIf="config().createMaps && config().createPdf">
             <td colspan="2">
               <table class="table">
                 <tr>
@@ -359,7 +359,7 @@
                       class="form-control"
                       id="input-pdfColor"
                       placeholder=""
-                      [(ngModel)]="config.pdfColor"
+                      [(ngModel)]="config().pdfColor"
                     />
                   </td>
                 </tr>
@@ -375,7 +375,7 @@
                       class="form-control"
                       id="input-pdfMapYAmPm"
                       placeholder=""
-                      [(ngModel)]="config.pdfMapYAmPm"
+                      [(ngModel)]="config().pdfMapYAmPm"
                     />
                   </td>
                 </tr>
@@ -391,7 +391,7 @@
                       class="form-control"
                       id="input-pdfMapYFd"
                       placeholder=""
-                      [(ngModel)]="config.pdfMapYFd"
+                      [(ngModel)]="config().pdfMapYFd"
                     />
                   </td>
                 </tr>
@@ -407,7 +407,7 @@
                       class="form-control"
                       id="input-pdfMapWidthAmPm"
                       placeholder=""
-                      [(ngModel)]="config.pdfMapWidthAmPm"
+                      [(ngModel)]="config().pdfMapWidthAmPm"
                     />
                   </td>
                 </tr>
@@ -423,7 +423,7 @@
                       class="form-control"
                       id="input-pdfMapWidthFd"
                       placeholder=""
-                      [(ngModel)]="config.pdfMapWidthFd"
+                      [(ngModel)]="config().pdfMapWidthFd"
                     />
                   </td>
                 </tr>
@@ -439,7 +439,7 @@
                       class="form-control"
                       id="input-pdfMapHeight"
                       placeholder=""
-                      [(ngModel)]="config.pdfMapHeight"
+                      [(ngModel)]="config().pdfMapHeight"
                     />
                   </td>
                 </tr>
@@ -451,7 +451,7 @@
                   </td>
                   <td>
                     <label class="switch switch-primary">
-                      <input type="checkbox" class="switch-pdfFooterLogo" [(ngModel)]="config.pdfFooterLogo" />
+                      <input type="checkbox" class="switch-pdfFooterLogo" [(ngModel)]="config().pdfFooterLogo" />
                       <span class="switch-slider"></span>
                     </label>
                   </td>
@@ -468,7 +468,7 @@
                       class="form-control"
                       id="input-pdfFooterLogoColorPath"
                       placeholder=""
-                      [(ngModel)]="config.pdfFooterLogoColorPath"
+                      [(ngModel)]="config().pdfFooterLogoColorPath"
                     />
                   </td>
                 </tr>
@@ -484,7 +484,7 @@
                       class="form-control"
                       id="input-pdfFooterLogoBwPath"
                       placeholder=""
-                      [(ngModel)]="config.pdfFooterLogoBwPath"
+                      [(ngModel)]="config().pdfFooterLogoBwPath"
                     />
                   </td>
                 </tr>
@@ -500,7 +500,7 @@
                       class="form-control"
                       id="input-imageColorbarColorPath"
                       placeholder=""
-                      [(ngModel)]="config.imageColorbarColorPath"
+                      [(ngModel)]="config().imageColorbarColorPath"
                     />
                   </td>
                 </tr>
@@ -516,14 +516,14 @@
                       class="form-control"
                       id="input-imageColorbarBwPath"
                       placeholder=""
-                      [(ngModel)]="config.imageColorbarBwPath"
+                      [(ngModel)]="config().imageColorbarBwPath"
                     />
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps">
+          <tr *ngIf="config().createMaps">
             <td>
               <label class="col-form-label">{{
                 "admin.region-configuration.table.publication.createSimpleHtml" | translate
@@ -531,12 +531,12 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.createSimpleHtml" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().createSimpleHtml" />
                 <span class="switch-slider"></span>
               </label>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps && config.createSimpleHtml">
+          <tr *ngIf="config().createMaps && config().createSimpleHtml">
             <td colspan="2">
               <table class="table">
                 <tr>
@@ -551,14 +551,14 @@
                       class="form-control"
                       id="input-simpleHtmlTemplateName"
                       placeholder=""
-                      [(ngModel)]="config.simpleHtmlTemplateName"
+                      [(ngModel)]="config().simpleHtmlTemplateName"
                     />
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps">
+          <tr *ngIf="config().createMaps">
             <td>
               <label class="col-form-label">{{
                 "admin.region-configuration.table.publication.sendEmails" | translate
@@ -566,12 +566,12 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.sendEmails" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendEmails" />
                 <span class="switch-slider"></span>
               </label>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps && config.sendEmails">
+          <tr *ngIf="config().createMaps && config().sendEmails">
             <td colspan="2">
               <table class="table">
                 <tr>
@@ -586,7 +586,7 @@
                       class="form-control"
                       id="input-imageColorbarColorPath"
                       placeholder=""
-                      [(ngModel)]="config.imageColorbarColorPath"
+                      [(ngModel)]="config().imageColorbarColorPath"
                     />
                   </td>
                 </tr>
@@ -602,7 +602,7 @@
                       class="form-control"
                       id="input-imageColorbarBwPath"
                       placeholder=""
-                      [(ngModel)]="config.imageColorbarBwPath"
+                      [(ngModel)]="config().imageColorbarBwPath"
                     />
                   </td>
                 </tr>
@@ -618,14 +618,14 @@
                       class="form-control"
                       id="input-emailColor"
                       placeholder=""
-                      [(ngModel)]="config.emailColor"
+                      [(ngModel)]="config().emailColor"
                     />
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps">
+          <tr *ngIf="config().createMaps">
             <td>
               <label class="col-form-label">{{
                 "admin.region-configuration.table.publication.sendTelegramMessages" | translate
@@ -633,12 +633,12 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.sendTelegramMessages" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendTelegramMessages" />
                 <span class="switch-slider"></span>
               </label>
             </td>
           </tr>
-          <tr *ngIf="config.createMaps">
+          <tr *ngIf="config().createMaps">
             <td>
               <label class="col-form-label">{{
                 "admin.region-configuration.table.publication.sendPushNotifications" | translate
@@ -646,7 +646,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.sendPushNotifications" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendPushNotifications" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -665,7 +665,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableDangerSources" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableDangerSources" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -678,7 +678,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableObservations" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableObservations" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -691,7 +691,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableModelling" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableModelling" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -704,7 +704,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableWeatherbox" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableWeatherbox" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -723,7 +723,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.showMatrix" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().showMatrix" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -736,7 +736,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableMediaFile" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableMediaFile" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -749,7 +749,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableStrategicMindset" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableStrategicMindset" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -762,7 +762,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableStressLevel" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableStressLevel" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -775,7 +775,7 @@
             </td>
             <td>
               <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config.enableAvalancheProblemCornices" />
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableAvalancheProblemCornices" />
                 <span class="switch-slider"></span>
               </label>
             </td>
@@ -792,7 +792,7 @@
                 <input
                   type="checkbox"
                   class="switch-input"
-                  [(ngModel)]="config.enableAvalancheProblemNoDistinctAvalancheProblem"
+                  [(ngModel)]="config().enableAvalancheProblemNoDistinctAvalancheProblem"
                 />
                 <span class="switch-slider"></span>
               </label>
@@ -806,7 +806,7 @@
 <button
   *ngIf="!saveConfigurationLoading"
   type="submit"
-  [disabled]="!config.id"
+  [disabled]="!config().id"
   class="btn btn-sm btn-primary px-3"
   (click)="save()"
 >
