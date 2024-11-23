@@ -13,12 +13,22 @@ import { environment } from "../../environments/environment";
 import { DomSanitizer } from "@angular/platform-browser";
 import { NgIf, NgFor } from "@angular/common";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   selector: "app-dashboard",
   templateUrl: "./full-layout.component.html",
   standalone: true,
-  imports: [NgIf, RouterLinkActive, RouterLink, BsDropdownModule, NgFor, RouterOutlet, TranslateModule],
+  imports: [
+    NgIf,
+    RouterLinkActive,
+    RouterLink,
+    BsDropdownModule,
+    NgFor,
+    RouterOutlet,
+    TranslateModule,
+    NgxMousetrapDirective,
+  ],
 })
 export class FullLayoutComponent {
   public isSidebarOpen = false;

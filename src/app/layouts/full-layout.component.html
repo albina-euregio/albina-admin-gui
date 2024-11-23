@@ -18,51 +18,51 @@
     <div class="navbar-collapse" id="navbarContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li *ngIf="authenticationService.isUserLoggedIn()" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']">{{
-            "sidebar.bulletins" | translate
-          }}</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']" ngxMousetrapKey="g b">
+            {{ "sidebar.bulletins" | translate }}
+          </a>
         </li>
         <li
           *ngIf="authenticationService.getActiveRegion()?.enableDangerSources && authenticationService.isUserLoggedIn()"
           class="nav-item"
         >
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']">{{
-            "sidebar.dangerSources" | translate
-          }}</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']">
+            {{ "sidebar.dangerSources" | translate }}
+          </a>
         </li>
         <li
           *ngIf="authenticationService.getActiveRegion()?.enableObservations && authenticationService.isUserLoggedIn()"
           class="nav-item"
         >
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']">{{
-            "sidebar.observations" | translate
-          }}</a>
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']" ngxMousetrapKey="g o">
+            {{ "sidebar.observations" | translate }}
+          </a>
         </li>
         <li
           *ngIf="authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()"
           class="nav-item"
         >
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
-            {{ "sidebar.geosphere" | translate }}</a
-          >
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']" ngxMousetrapKey="g m">
+            {{ "sidebar.geosphere" | translate }}
+          </a>
         </li>
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">
-            {{ "sidebar.snowpack" | translate }}</a
-          >
+            {{ "sidebar.snowpack" | translate }}
+          </a>
         </li>
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']">
-            {{ "sidebar.awsome" | translate }}</a
-          >
+            {{ "sidebar.awsome" | translate }}
+          </a>
         </li>
         <li
           *ngIf="authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()"
           class="nav-item"
         >
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']">
-            {{ "sidebar.weatherbox" | translate }}</a
-          >
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']" ngxMousetrapKey="g w">
+            {{ "sidebar.weatherbox" | translate }}
+          </a>
         </li>
       </ul>
     </div>
@@ -122,7 +122,8 @@
 
           <li *ngFor="let region of authenticationService.getCurrentAuthorRegions()">
             <a class="dropdown-item" (click)="changeRegion(region)" role="button">
-              <i class="ph ph-globe"></i>{{ regionsService.getRegionName(region.id) }}
+              <i class="ph ph-globe"></i>
+              {{ regionsService.getRegionName(region.id) }}
               <i *ngIf="authenticationService.getActiveRegionId() === region.id" class="ph ph-check"></i>
             </a>
           </li>
@@ -132,9 +133,10 @@
           </li>
 
           <li>
-            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/education']"
-              ><i class="ph ph-graduation-cap"></i> {{ "menu.education" | translate }}</a
-            >
+            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/education']" ngxMou`setrapKey="g e">
+              <i class="ph ph-graduation-cap"></i>
+              {{ "menu.education" | translate }}
+            </a>
           </li>
           <li>
             <hr class="dropdown-divider" />
@@ -147,13 +149,15 @@
               routerLinkActive="active"
               [routerLink]="['/statistics']"
             >
-              <i class="ph ph-chart-line"></i>{{ "menu.statistics" | translate }}
+              <i class="ph ph-chart-line"></i>
+              {{ "menu.statistics" | translate }}
             </a>
           </li>
           <li>
-            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/settings']"
-              ><i class="ph ph-gear"></i> {{ "menu.settings" | translate }}</a
-            >
+            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/settings']">
+              <i class="ph ph-gear"></i>
+              {{ "menu.settings" | translate }}
+            </a>
           </li>
           <li>
             <a
@@ -161,8 +165,10 @@
               class="dropdown-item"
               routerLinkActive="active"
               [routerLink]="['/admin']"
-              ><i class="ph ph-detective"></i>{{ "menu.admin" | translate }}</a
             >
+              <i class="ph ph-detective"></i>
+              {{ "menu.admin" | translate }}
+            </a>
           </li>
 
           <li>
@@ -170,9 +176,10 @@
           </li>
 
           <li>
-            <a class="dropdown-item" href="#" routerLink="/pages/login" (click)="logout()"
-              ><i class="ph ph-sign-out"></i> {{ "menu.logout" | translate }}</a
-            >
+            <a class="dropdown-item" href="#" routerLink="/pages/login" (click)="logout()">
+              <i class="ph ph-sign-out"></i>
+              {{ "menu.logout" | translate }}
+            </a>
           </li>
         </ul>
       </li>
@@ -185,51 +192,55 @@
   <div class="sidebar-content">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li *ngIf="authenticationService.isUserLoggedIn()" class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']"
-          ><i class="ph ph-snowflake"></i> {{ "sidebar.bulletins" | translate }}</a
-        >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/bulletins']">
+          <i class="ph ph-snowflake"></i>
+          {{ "sidebar.bulletins" | translate }}
+        </a>
       </li>
       <li
         *ngIf="authenticationService.getActiveRegion()?.enableDangerSources && authenticationService.isUserLoggedIn()"
         class="nav-item"
       >
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']"
-          ><i class="ph ph-snowflake"></i> {{ "sidebar.dangerSources" | translate }}</a
-        >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']">
+          <i class="ph ph-snowflake"></i>
+          {{ "sidebar.dangerSources" | translate }}
+        </a>
       </li>
       <li
         *ngIf="authenticationService.getActiveRegion()?.enableObservations && authenticationService.isUserLoggedIn()"
         class="nav-item"
       >
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']"
-          ><i class="ph ph-eye"></i> {{ "sidebar.observations" | translate }}</a
-        >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']">
+          <i class="ph ph-eye"></i>
+          {{ "sidebar.observations" | translate }}
+        </a>
       </li>
       <li
         *ngIf="authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()"
         class="nav-item"
       >
         <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
-          <i class="ph ph-sphere"></i> {{ "sidebar.geosphere" | translate }}
+          <i class="ph ph-sphere"></i>
+          {{ "sidebar.geosphere" | translate }}
         </a>
       </li>
       <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">
-          {{ "sidebar.snowpack" | translate }}</a
-        >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']" ngxMousetrapKey="g s">
+          {{ "sidebar.snowpack" | translate }}
+        </a>
       </li>
       <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']">
-          {{ "sidebar.awsome" | translate }}</a
-        >
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']" ngxMousetrapKey="g a">
+          {{ "sidebar.awsome" | translate }}
+        </a>
       </li>
       <li
         *ngIf="authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()"
         class="nav-item"
       >
         <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']">
-          {{ "sidebar.weatherbox" | translate }}</a
-        >
+          {{ "sidebar.weatherbox" | translate }}
+        </a>
       </li>
     </ul>
   </div>
