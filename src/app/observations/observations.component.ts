@@ -3,10 +3,10 @@ import {
   AfterContentInit,
   AfterViewInit,
   OnDestroy,
-  ViewChild,
   ElementRef,
   HostListener,
   TemplateRef,
+  viewChild,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -102,10 +102,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     modalRef: BsModalRef;
     messages: any[];
   } = { observation: undefined, saving: false, modalRef: undefined, messages: [] };
-  @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
-  @ViewChild("observationTable") observationTableComponent: ObservationTableComponent;
-  @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
-  @ViewChild("observationEditorTemplate") observationEditorTemplate: TemplateRef<any>;
+  readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
+  readonly observationTableComponent = viewChild<ObservationTableComponent>("observationTable");
+  readonly observationPopupTemplate = viewChild<TemplateRef<any>>("observationPopupTemplate");
+  readonly observationEditorTemplate = viewChild<TemplateRef<any>>("observationEditorTemplate");
 
   constructor(
     public filter: ObservationFilterService<GenericObservation>,
@@ -147,7 +147,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private async initMap() {
-    const map = await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => this.onObservationClick(o));
+    const map = await this.mapService.initMaps(this.mapDiv().nativeElement, (o) => this.onObservationClick(o));
     if (this.filter.startDate && this.filter.endDate) {
       this.loadObservations({});
     } else {
@@ -167,7 +167,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const resizeObserver = new ResizeObserver(() => {
       this.mapService.map?.invalidateSize();
     });
-    resizeObserver.observe(this.mapDiv.nativeElement);
+    resizeObserver.observe(this.mapDiv().nativeElement);
   }
 
   toggleObservations() {
@@ -243,7 +243,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   showObservationEditor() {
-    this.observationEditor.modalRef = this.modalService.show(this.observationEditorTemplate, {
+    this.observationEditor.modalRef = this.modalService.show(this.observationEditorTemplate(), {
       class: "modal-fullscreen",
     });
   }
@@ -487,7 +487,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined };
     }
     if (doShow) {
-      this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+      this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
     }
   }
 

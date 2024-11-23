@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ViewChild } from "@angular/core";
+import { AfterContentInit, Component, viewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
@@ -23,7 +23,7 @@ export class UsersComponent implements AfterContentInit {
   public users: any;
 
   public deleteUserModalRef: BsModalRef;
-  @ViewChild("deleteUserTemplate") deleteUserTemplate: TemplateRef<any>;
+  readonly deleteUserTemplate = viewChild<TemplateRef<any>>("deleteUserTemplate");
 
   public config = {
     animated: false,
@@ -121,7 +121,7 @@ export class UsersComponent implements AfterContentInit {
 
   deleteUser(user: UserModel) {
     this.activeUser = user;
-    this.openDeleteUserModal(this.deleteUserTemplate);
+    this.openDeleteUserModal(this.deleteUserTemplate());
   }
 
   openDeleteUserModal(template: TemplateRef<any>) {

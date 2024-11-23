@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from "@angular/common";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import type { FotoWebcamEU } from "../../../observations-api/src/fetch/webcams/foto-webcam.model";
@@ -13,12 +13,12 @@ import { GenericObservation, ObservationSource, ObservationType } from "./models
   templateUrl: "observation-gallery.component.html",
 })
 export class ObservationGalleryComponent {
-  @Input() observations: GenericObservation[] = [];
-  @Output() observationClick: EventEmitter<GenericObservation> = new EventEmitter<GenericObservation>();
+  readonly observations = input<GenericObservation[]>([]);
+  readonly observationClick = output<GenericObservation>();
   public webcamDate: string;
 
   get sortedObservations(): GenericObservation[] {
-    return (this.observations || [])
+    return (this.observations() || [])
       .filter((o) => o.$type === ObservationType.Webcam)
       .map((o) => {
         if (o.$source == ObservationSource.FotoWebcamsEU) {

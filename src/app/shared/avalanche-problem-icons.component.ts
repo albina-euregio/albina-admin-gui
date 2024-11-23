@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, input } from "@angular/core";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
 import { NgIf } from "@angular/common";
@@ -10,11 +10,11 @@ import { NgIf } from "@angular/common";
   templateUrl: "./avalanche-problem-icons.component.html",
 })
 export class AvalancheProblemIconsComponent {
-  @Input() value: AvalancheProblemModel | Enums.AvalancheProblem;
+  readonly value = input<AvalancheProblemModel | Enums.AvalancheProblem>(undefined);
   avalancheProblemEnum = Enums.AvalancheProblem;
 
   isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
-    const v = this.value;
+    const v = this.value();
     return v === avalancheProblem || (typeof v === "object" && v?.avalancheProblem === avalancheProblem);
   }
 }

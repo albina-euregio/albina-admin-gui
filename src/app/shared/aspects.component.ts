@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, Input, input, output } from "@angular/core";
 import * as Enums from "../enums/enums";
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -10,17 +10,17 @@ import { TranslateModule } from "@ngx-translate/core";
 })
 export class AspectsComponent {
   @Input() aspects: Enums.Aspect[];
-  @Output() aspectsChange = new EventEmitter<Enums.Aspect[]>();
-  @Input() disabled: boolean = false;
-  @Input() singleton: boolean = false;
-  @Input() size: number;
+  readonly aspectsChange = output<Enums.Aspect[]>();
+  readonly disabled = input<boolean>(false);
+  readonly singleton = input<boolean>(false);
+  readonly size = input<number>(undefined);
 
   aspect = Enums.Aspect;
 
   constructor() {}
 
   getSize() {
-    return this.size + "px";
+    return this.size() + "px";
   }
 
   getColor(aspect: Enums.Aspect) {
@@ -28,14 +28,15 @@ export class AspectsComponent {
   }
 
   selectAspect(aspect: Enums.Aspect) {
-    if (this.disabled) {
+    if (this.disabled()) {
       return;
     }
-    if (this.aspects[0] === aspect && this.singleton) {
+    const singleton = this.singleton();
+    if (this.aspects[0] === aspect && singleton) {
       this.aspects = [];
       return this.aspectsChange.emit(this.aspects);
     }
-    if (this.aspects?.length !== 1 || this.singleton) {
+    if (this.aspects?.length !== 1 || singleton) {
       this.aspects = [aspect];
       return this.aspectsChange.emit(this.aspects);
     }

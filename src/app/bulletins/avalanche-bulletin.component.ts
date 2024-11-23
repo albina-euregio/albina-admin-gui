@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, TemplateRef, HostListener } from "@angular/core";
+import { Component, Input, TemplateRef, HostListener, input, output, viewChild } from "@angular/core";
 
 import { environment } from "../../environments/environment";
 
@@ -46,19 +46,19 @@ import { BulletinTextComponent } from "./bulletin-text.component";
 })
 export class AvalancheBulletinComponent {
   @Input() bulletin: BulletinModel;
-  @Input() disabled: boolean;
-  @Input() isCompactMapLayout: boolean;
-  @Input() isBulletinSidebarVisible: boolean;
-  @Input() isComparedBulletin: boolean;
+  readonly disabled = input<boolean>(undefined);
+  readonly isCompactMapLayout = input<boolean>(undefined);
+  readonly isBulletinSidebarVisible = input<boolean>(undefined);
+  readonly isComparedBulletin = input<boolean>(undefined);
 
-  @Output() updateBulletinOnServerEvent = new EventEmitter<BulletinModel>();
-  @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
-  @Output() deleteBulletinEvent = new EventEmitter<BulletinModel>();
-  @Output() editMicroRegionsEvent = new EventEmitter<BulletinModel>();
-  @Output() copyBulletinEvent = new EventEmitter<BulletinModel>();
-  @Output() deselectBulletinEvent = new EventEmitter<BulletinModel>();
-  @Output() toggleBulletinSidebarEvent = new EventEmitter<void>();
-  @Output() undoRedoEvent = new EventEmitter<"undo" | "redo">();
+  readonly updateBulletinOnServerEvent = output<BulletinModel>();
+  readonly changeAvalancheProblemEvent = output<string>();
+  readonly deleteBulletinEvent = output<BulletinModel>();
+  readonly editMicroRegionsEvent = output<BulletinModel>();
+  readonly copyBulletinEvent = output<BulletinModel>();
+  readonly deselectBulletinEvent = output<BulletinModel>();
+  readonly toggleBulletinSidebarEvent = output<void>();
+  readonly undoRedoEvent = output<"undo" | "redo">();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -75,13 +75,13 @@ export class AvalancheBulletinComponent {
   public catalogOfPhrasesModalRef: BsModalRef;
   public pmUrl: SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl);
   public pmData: TextcatLegacyIn | undefined;
-  @ViewChild("catalogOfPhrasesTemplate") catalogOfPhrasesTemplate: TemplateRef<any>;
+  readonly catalogOfPhrasesTemplate = viewChild<TemplateRef<any>>("catalogOfPhrasesTemplate");
 
   public removeDaytimeDependencyModalRef: BsModalRef;
-  @ViewChild("removeDaytimeDependencyTemplate") removeDaytimeDependencyTemplate: TemplateRef<any>;
+  readonly removeDaytimeDependencyTemplate = viewChild<TemplateRef<any>>("removeDaytimeDependencyTemplate");
 
   public strategicMindsetModalRef: BsModalRef;
-  @ViewChild("strategicMindsetTemplate") strategicMindsetTemplate: TemplateRef<any>;
+  readonly strategicMindsetTemplate = viewChild<TemplateRef<any>>("strategicMindsetTemplate");
 
   stopListening: Function;
 
@@ -104,7 +104,7 @@ export class AvalancheBulletinComponent {
   ) {}
 
   updateBulletinOnServer() {
-    this.updateBulletinOnServerEvent.next(this.bulletin);
+    this.updateBulletinOnServerEvent.emit(this.bulletin);
   }
 
   copyBulletin() {
@@ -140,7 +140,7 @@ export class AvalancheBulletinComponent {
 
   showDialog(pmData: TextcatLegacyIn) {
     this.pmData = pmData;
-    this.catalogOfPhrasesModalRef = this.modalService.show(this.catalogOfPhrasesTemplate, {
+    this.catalogOfPhrasesModalRef = this.modalService.show(this.catalogOfPhrasesTemplate(), {
       animated: false,
       keyboard: true,
       class: "modal-fullscreen",
@@ -173,7 +173,9 @@ export class AvalancheBulletinComponent {
   }
 
   showEditMicroRegionsButton(): boolean {
-    return !this.isComparedBulletin && !this.editRegions && this.isInternal() && this.bulletinsService.getIsEditable();
+    return (
+      !this.isComparedBulletin() && !this.editRegions && this.isInternal() && this.bulletinsService.getIsEditable()
+    );
   }
 
   accordionChanged(event: boolean, groupName: string) {
@@ -268,7 +270,7 @@ export class AvalancheBulletinComponent {
 
         this.updateBulletinOnServer();
       } else {
-        this.openRemoveDaytimeDependencyModal(this.removeDaytimeDependencyTemplate);
+        this.openRemoveDaytimeDependencyModal(this.removeDaytimeDependencyTemplate());
       }
     }
   }

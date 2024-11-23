@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, TemplateRef } from "@angular/core";
+import { Component, Input, TemplateRef, input, output } from "@angular/core";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import type { BulletinModel } from "../models/bulletin.model";
@@ -20,11 +20,11 @@ import { HtmlPipe } from "./html.pipe";
 })
 export class BulletinTextComponent {
   @Input() textField: TextcatTextfield;
-  @Input() rows: number;
-  @Input() disabled: boolean;
+  readonly rows = input<number>(undefined);
+  readonly disabled = input<boolean>(undefined);
   @Input() bulletin: BulletinModel;
-  @Output() showDialog = new EventEmitter<TextcatLegacyIn>();
-  @Output() updateBulletinOnServer = new EventEmitter();
+  readonly showDialog = output<TextcatLegacyIn>();
+  readonly updateBulletinOnServer = output();
   showTranslations = false;
   showNotes = false;
   modalRef: BsModalRef;

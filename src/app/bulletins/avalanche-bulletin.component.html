@@ -1,5 +1,5 @@
 <div>
-  <div class="region-form__mobile-header" [class.d-none]="isBulletinSidebarVisible">
+  <div class="region-form__mobile-header" [class.d-none]="isBulletinSidebarVisible()">
     <h1 class="font-m-bold">
       {{ bulletinsService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.currentLang }}
       {{ bulletinsService.getActiveDate()[1] | date: "longDate" : undefined : translateService.currentLang }}
@@ -32,12 +32,12 @@
   <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
     <p class="region-form__mindset-text">
       {{ "strategicMindset.title" | translate }}
-      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate)"></i>
+      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"></i>
     </p>
     <select
       [ngModel]="bulletin.strategicMindset"
       (ngModelChange)="onStrategicMindsetChange($event)"
-      [disabled]="disabled"
+      [disabled]="disabled()"
       class="form-select"
     >
       <option selected></option>
@@ -181,7 +181,7 @@
       </button>
       <button
         *ngIf="
-          !isComparedBulletin &&
+          !isComparedBulletin() &&
           !copyService.isCopyBulletin() &&
           !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
         "
@@ -217,7 +217,7 @@
           <div class="btn-group accordion-header__buttons">
             <button
               [disabled]="editRegions || hasFiveAvalancheProblems(false)"
-              *ngIf="!disabled"
+              *ngIf="!disabled()"
               (click)="createAvalancheProblem(false); $event.stopPropagation()"
               class="btn btn-primary btn-icon btn-sm ml-2"
               title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -231,7 +231,7 @@
           [bulletinModel]="bulletin"
           [bulletinDaytimeDescription]="bulletin.forenoon"
           [afternoon]="false"
-          [disabled]="disabled"
+          [disabled]="disabled()"
           (changeAvalancheProblemEvent)="updateBulletinOnServer()"
         ></app-avalanche-problem>
         <!-- End Avalanche problems panel content -->
@@ -254,7 +254,7 @@
           <div class="btn-group accordion-header__buttons">
             <button
               [disabled]="editRegions || hasFiveAvalancheProblems(false) || !isCreator(bulletin)"
-              *ngIf="!disabled"
+              *ngIf="!disabled()"
               (click)="createAvalancheProblem(true); $event.stopPropagation()"
               class="btn btn-primary btn-icon btn-sm"
               title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -267,7 +267,7 @@
           [bulletinModel]="bulletin"
           [bulletinDaytimeDescription]="bulletin.afternoon"
           [afternoon]="true"
-          [disabled]="disabled"
+          [disabled]="disabled()"
           (changeAvalancheProblemEvent)="updateBulletinOnServer()"
         ></app-avalanche-problem>
       </accordion-group>
@@ -298,7 +298,7 @@
             textField="highlights"
             [rows]="1"
             [bulletin]="bulletin"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -309,7 +309,7 @@
             textField="avActivityHighlights"
             [rows]="3"
             [bulletin]="bulletin"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -319,7 +319,7 @@
             textField="avActivityComment"
             [rows]="9"
             [bulletin]="bulletin"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -355,7 +355,7 @@
             <select
               [ngModel]="bulletin.dangerPattern1"
               (ngModelChange)="onDangerPattern1Change($event)"
-              [disabled]="disabled"
+              [disabled]="disabled()"
               class="form-select"
             >
               <option selected></option>
@@ -365,7 +365,7 @@
             <select
               [ngModel]="bulletin.dangerPattern2"
               (ngModelChange)="onDangerPattern2Change($event)"
-              [disabled]="disabled"
+              [disabled]="disabled()"
               class="form-select"
             >
               <option selected></option>
@@ -379,7 +379,7 @@
             textField="snowpackStructureComment"
             [rows]="9"
             [bulletin]="bulletin"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -409,7 +409,7 @@
             <div class="btn-group">
               <button
                 *ngFor="let t of tendency"
-                [disabled]="disabled"
+                [disabled]="disabled()"
                 type="reset"
                 [class]="isTendency(t) ? 'btn btn-small btn-dark' : 'btn btn-small btn-outline-secondary'"
                 (click)="setTendency($event, isTendency(t) ? undefined : t)"
@@ -433,7 +433,7 @@
             textField="tendencyComment"
             [rows]="5"
             [bulletin]="bulletin"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />

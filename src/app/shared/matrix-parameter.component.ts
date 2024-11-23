@@ -1,4 +1,4 @@
-import { OnChanges, Component, Input, EventEmitter, Output } from "@angular/core";
+import { OnChanges, Component, Input, input, output } from "@angular/core";
 import { MatrixInformationModel } from "app/models/matrix-information.model";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -18,19 +18,19 @@ import { FormsModule } from "@angular/forms";
   imports: [NgxSliderModule, NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule],
 })
 export class MatrixParameterComponent implements OnChanges {
-  @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel | DangerSourceVariantModel;
+  readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel | DangerSourceVariantModel>(undefined);
   @Input() matrixInformation: MatrixInformationModel;
   @Input() disabled: boolean;
-  @Input() count: number;
-  @Input() afternoon: boolean;
-  @Output() changeMatrixEvent = new EventEmitter<string>();
+  readonly count = input<number>(undefined);
+  readonly afternoon = input<boolean>(undefined);
+  readonly changeMatrixEvent = output<string>();
 
   dangerRating = Enums.DangerRating;
   dangerRatingEnabled: boolean;
   modificatorEnum = Enums.DangerRatingModificator;
 
   public forLabelId(key: string): string {
-    return this.count + (this.afternoon ? "_pm_" : "_am_") + key;
+    return this.count() + (this.afternoon() ? "_pm_" : "_am_") + key;
   }
 
   snowpackStabilityOptions: Options = {
@@ -309,7 +309,7 @@ export class MatrixParameterComponent implements OnChanges {
   setDangerRating(event: Event, dangerRating: Enums.DangerRating) {
     event.stopPropagation();
     this.matrixInformation.setDangerRating(dangerRating);
-    this.bulletinDaytimeDescription.updateDangerRating();
+    this.bulletinDaytimeDescription().updateDangerRating();
   }
 
   overrideDangerRating(event: Event, dangerRating: Enums.DangerRating) {
@@ -582,7 +582,7 @@ export class MatrixParameterComponent implements OnChanges {
         this.matrixInformation.setDangerRating(Enums.DangerRating.missing);
         break;
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
+    this.bulletinDaytimeDescription().updateDangerRating();
   }
 
   isDangerRatingModificator(modificator: Enums.DangerRatingModificator) {

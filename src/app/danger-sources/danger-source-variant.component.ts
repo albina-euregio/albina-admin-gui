@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, input, output } from "@angular/core";
 
 import { debounceTime, Subject } from "rxjs";
 
@@ -61,18 +61,18 @@ import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 })
 export class DangerSourceVariantComponent implements OnChanges {
   @Input() variant: DangerSourceVariantModel;
-  @Input() disabled: boolean;
-  @Input() isCompactMapLayout: boolean;
-  @Input() isVariantsSidebarVisible: boolean;
-  @Input() isComparedVariant: boolean;
+  readonly disabled = input<boolean>(undefined);
+  readonly isCompactMapLayout = input<boolean>(undefined);
+  readonly isVariantsSidebarVisible = input<boolean>(undefined);
+  readonly isComparedVariant = input<boolean>(undefined);
 
   private readonly updateVariantOnServerEventDebounce = new Subject<DangerSourceVariantModel>();
-  @Output() updateVariantOnServerEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() deleteVariantEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() editMicroRegionsEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() copyVariantEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() deselectVariantEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() toggleVariantsSidebarEvent = new EventEmitter<void>();
+  readonly updateVariantOnServerEvent = output<DangerSourceVariantModel>();
+  readonly deleteVariantEvent = output<DangerSourceVariantModel>();
+  readonly editMicroRegionsEvent = output<DangerSourceVariantModel>();
+  readonly copyVariantEvent = output<DangerSourceVariantModel>();
+  readonly deselectVariantEvent = output<DangerSourceVariantModel>();
+  readonly toggleVariantsSidebarEvent = output<void>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -170,7 +170,7 @@ export class DangerSourceVariantComponent implements OnChanges {
       this.localElevationLow = this.variant.elevationLow;
       this.localTreelineLow = this.variant.treelineLow;
     }
-    this.glidingSnowActivityOptions = Object.assign({}, this.glidingSnowActivityOptions, { disabled: this.disabled });
+    this.glidingSnowActivityOptions = Object.assign({}, this.glidingSnowActivityOptions, { disabled: this.disabled() });
   }
 
   updateVariantOnServer() {
@@ -205,7 +205,7 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   showEditMicroRegionsButton(): boolean {
     return (
-      !this.isComparedVariant && !this.editRegions && this.isInternal() && this.dangerSourcesService.getIsEditable()
+      !this.isComparedVariant() && !this.editRegions && this.isInternal() && this.dangerSourcesService.getIsEditable()
     );
   }
 

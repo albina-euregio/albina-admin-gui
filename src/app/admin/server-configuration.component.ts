@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, input } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
 import * as Enums from "../enums/enums";
@@ -14,7 +14,7 @@ import { FormsModule } from "@angular/forms";
 })
 export class ServerConfigurationComponent {
   @Input() config: ServerConfiguration;
-  @Input() externalServer: boolean;
+  readonly externalServer = input<boolean>(undefined);
 
   public statusMap: Map<number, Enums.BulletinStatus>;
   public saveConfigurationLoading: boolean;

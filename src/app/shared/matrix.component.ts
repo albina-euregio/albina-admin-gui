@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, OnChanges, SimpleChange, input, viewChild } from "@angular/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -13,61 +13,61 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [TranslateModule],
 })
 export class MatrixComponent implements AfterViewInit, OnChanges {
-  @Input() bulletin: BulletinModel;
-  @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
-  @Input() matrixInformation: MatrixInformationModel;
-  @Input() snowpackStability: Enums.SnowpackStability;
-  @Input() frequency: Enums.Frequency;
-  @Input() avalancheSize: Enums.AvalancheSize;
-  @Input() disabled: boolean;
+  readonly bulletin = input<BulletinModel>(undefined);
+  readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
+  readonly matrixInformation = input<MatrixInformationModel>(undefined);
+  readonly snowpackStability = input<Enums.SnowpackStability>(undefined);
+  readonly frequency = input<Enums.Frequency>(undefined);
+  readonly avalancheSize = input<Enums.AvalancheSize>(undefined);
+  readonly disabled = input<boolean>(undefined);
 
-  @ViewChild("0") cell0: ElementRef;
-  @ViewChild("1") cell1: ElementRef;
-  @ViewChild("2") cell2: ElementRef;
-  @ViewChild("3") cell3: ElementRef;
-  @ViewChild("4") cell4: ElementRef;
-  @ViewChild("5") cell5: ElementRef;
-  @ViewChild("6") cell6: ElementRef;
-  @ViewChild("7") cell7: ElementRef;
-  @ViewChild("8") cell8: ElementRef;
-  @ViewChild("9") cell9: ElementRef;
-  @ViewChild("10") cell10: ElementRef;
-  @ViewChild("11") cell11: ElementRef;
-  @ViewChild("12") cell12: ElementRef;
-  @ViewChild("13") cell13: ElementRef;
-  @ViewChild("14") cell14: ElementRef;
-  @ViewChild("15") cell15: ElementRef;
-  @ViewChild("16") cell16: ElementRef;
-  @ViewChild("17") cell17: ElementRef;
-  @ViewChild("18") cell18: ElementRef;
-  @ViewChild("19") cell19: ElementRef;
-  @ViewChild("20") cell20: ElementRef;
-  @ViewChild("21") cell21: ElementRef;
-  @ViewChild("22") cell22: ElementRef;
-  @ViewChild("23") cell23: ElementRef;
-  @ViewChild("24") cell24: ElementRef;
-  @ViewChild("25") cell25: ElementRef;
-  @ViewChild("26") cell26: ElementRef;
-  @ViewChild("27") cell27: ElementRef;
-  @ViewChild("28") cell28: ElementRef;
-  @ViewChild("29") cell29: ElementRef;
-  @ViewChild("30") cell30: ElementRef;
-  @ViewChild("31") cell31: ElementRef;
-  @ViewChild("32") cell32: ElementRef;
-  @ViewChild("33") cell33: ElementRef;
-  @ViewChild("34") cell34: ElementRef;
-  @ViewChild("35") cell35: ElementRef;
-  @ViewChild("36") cell36: ElementRef;
-  @ViewChild("37") cell37: ElementRef;
-  @ViewChild("38") cell38: ElementRef;
-  @ViewChild("39") cell39: ElementRef;
-  @ViewChild("40") cell40: ElementRef;
-  @ViewChild("41") cell41: ElementRef;
-  @ViewChild("42") cell42: ElementRef;
-  @ViewChild("43") cell43: ElementRef;
-  @ViewChild("44") cell44: ElementRef;
-  @ViewChild("45") cell45: ElementRef;
-  @ViewChild("46") cell46: ElementRef;
+  readonly cell0 = viewChild<ElementRef>("0");
+  readonly cell1 = viewChild<ElementRef>("1");
+  readonly cell2 = viewChild<ElementRef>("2");
+  readonly cell3 = viewChild<ElementRef>("3");
+  readonly cell4 = viewChild<ElementRef>("4");
+  readonly cell5 = viewChild<ElementRef>("5");
+  readonly cell6 = viewChild<ElementRef>("6");
+  readonly cell7 = viewChild<ElementRef>("7");
+  readonly cell8 = viewChild<ElementRef>("8");
+  readonly cell9 = viewChild<ElementRef>("9");
+  readonly cell10 = viewChild<ElementRef>("10");
+  readonly cell11 = viewChild<ElementRef>("11");
+  readonly cell12 = viewChild<ElementRef>("12");
+  readonly cell13 = viewChild<ElementRef>("13");
+  readonly cell14 = viewChild<ElementRef>("14");
+  readonly cell15 = viewChild<ElementRef>("15");
+  readonly cell16 = viewChild<ElementRef>("16");
+  readonly cell17 = viewChild<ElementRef>("17");
+  readonly cell18 = viewChild<ElementRef>("18");
+  readonly cell19 = viewChild<ElementRef>("19");
+  readonly cell20 = viewChild<ElementRef>("20");
+  readonly cell21 = viewChild<ElementRef>("21");
+  readonly cell22 = viewChild<ElementRef>("22");
+  readonly cell23 = viewChild<ElementRef>("23");
+  readonly cell24 = viewChild<ElementRef>("24");
+  readonly cell25 = viewChild<ElementRef>("25");
+  readonly cell26 = viewChild<ElementRef>("26");
+  readonly cell27 = viewChild<ElementRef>("27");
+  readonly cell28 = viewChild<ElementRef>("28");
+  readonly cell29 = viewChild<ElementRef>("29");
+  readonly cell30 = viewChild<ElementRef>("30");
+  readonly cell31 = viewChild<ElementRef>("31");
+  readonly cell32 = viewChild<ElementRef>("32");
+  readonly cell33 = viewChild<ElementRef>("33");
+  readonly cell34 = viewChild<ElementRef>("34");
+  readonly cell35 = viewChild<ElementRef>("35");
+  readonly cell36 = viewChild<ElementRef>("36");
+  readonly cell37 = viewChild<ElementRef>("37");
+  readonly cell38 = viewChild<ElementRef>("38");
+  readonly cell39 = viewChild<ElementRef>("39");
+  readonly cell40 = viewChild<ElementRef>("40");
+  readonly cell41 = viewChild<ElementRef>("41");
+  readonly cell42 = viewChild<ElementRef>("42");
+  readonly cell43 = viewChild<ElementRef>("43");
+  readonly cell44 = viewChild<ElementRef>("44");
+  readonly cell45 = viewChild<ElementRef>("45");
+  readonly cell46 = viewChild<ElementRef>("46");
 
   constructor(public constantsService: ConstantsService) {}
 
@@ -88,23 +88,23 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   initMatrix() {
-    const index = this.getCell(this.matrixInformation);
+    const index = this.getCell(this.matrixInformation());
     if (index != "0") this.setCellStyleActive(index);
   }
 
   private selectCell(cell) {
-    this.matrixInformation.setDangerRating(this.getDangerRating(cell));
-    this.matrixInformation.setAvalancheSize(this.getAvalancheSize(cell));
-    this.matrixInformation.setSnowpackStability(this.getSnowpackStability(cell));
-    this.matrixInformation.setFrequency(this.getFrequency(cell));
+    this.matrixInformation().setDangerRating(this.getDangerRating(cell));
+    this.matrixInformation().setAvalancheSize(this.getAvalancheSize(cell));
+    this.matrixInformation().setSnowpackStability(this.getSnowpackStability(cell));
+    this.matrixInformation().setFrequency(this.getFrequency(cell));
     this.setCellStyleActive(cell);
   }
 
   private deselectCell(cell) {
-    this.matrixInformation.setDangerRating(this.getDangerRating(Enums.DangerRating.missing));
-    this.matrixInformation.setAvalancheSize(undefined);
-    this.matrixInformation.setSnowpackStability(undefined);
-    this.matrixInformation.setFrequency(undefined);
+    this.matrixInformation().setDangerRating(this.getDangerRating(Enums.DangerRating.missing));
+    this.matrixInformation().setAvalancheSize(undefined);
+    this.matrixInformation().setSnowpackStability(undefined);
+    this.matrixInformation().setFrequency(undefined);
     this.setCellStyleInactive(cell);
   }
 
@@ -131,8 +131,8 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   public selectDangerRatingById(id) {
-    if (!this.disabled) {
-      const oldCell = this.getCell(this.matrixInformation);
+    if (!this.disabled()) {
+      const oldCell = this.getCell(this.matrixInformation());
       this.setCellStyleInactive(oldCell);
 
       if (oldCell !== id) {
@@ -141,106 +141,106 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         this.deselectCell(id);
       }
 
-      this.bulletinDaytimeDescription.updateDangerRating();
+      this.bulletinDaytimeDescription().updateDangerRating();
     }
   }
 
   private getElement(id) {
     switch (id) {
       case "0":
-        return this.cell0;
+        return this.cell0();
       case "1":
-        return this.cell1;
+        return this.cell1();
       case "2":
-        return this.cell2;
+        return this.cell2();
       case "3":
-        return this.cell3;
+        return this.cell3();
       case "4":
-        return this.cell4;
+        return this.cell4();
       case "5":
-        return this.cell5;
+        return this.cell5();
       case "6":
-        return this.cell6;
+        return this.cell6();
       case "7":
-        return this.cell7;
+        return this.cell7();
       case "8":
-        return this.cell8;
+        return this.cell8();
       case "9":
-        return this.cell9;
+        return this.cell9();
       case "10":
-        return this.cell10;
+        return this.cell10();
       case "11":
-        return this.cell11;
+        return this.cell11();
       case "12":
-        return this.cell12;
+        return this.cell12();
       case "13":
-        return this.cell13;
+        return this.cell13();
       case "14":
-        return this.cell14;
+        return this.cell14();
       case "15":
-        return this.cell15;
+        return this.cell15();
       case "16":
-        return this.cell16;
+        return this.cell16();
       case "17":
-        return this.cell17;
+        return this.cell17();
       case "18":
-        return this.cell18;
+        return this.cell18();
       case "19":
-        return this.cell19;
+        return this.cell19();
       case "20":
-        return this.cell20;
+        return this.cell20();
       case "21":
-        return this.cell21;
+        return this.cell21();
       case "22":
-        return this.cell22;
+        return this.cell22();
       case "23":
-        return this.cell23;
+        return this.cell23();
       case "24":
-        return this.cell24;
+        return this.cell24();
       case "25":
-        return this.cell25;
+        return this.cell25();
       case "26":
-        return this.cell26;
+        return this.cell26();
       case "27":
-        return this.cell27;
+        return this.cell27();
       case "28":
-        return this.cell28;
+        return this.cell28();
       case "29":
-        return this.cell29;
+        return this.cell29();
       case "30":
-        return this.cell30;
+        return this.cell30();
       case "31":
-        return this.cell31;
+        return this.cell31();
       case "32":
-        return this.cell32;
+        return this.cell32();
       case "33":
-        return this.cell33;
+        return this.cell33();
       case "34":
-        return this.cell34;
+        return this.cell34();
       case "35":
-        return this.cell35;
+        return this.cell35();
       case "36":
-        return this.cell36;
+        return this.cell36();
       case "37":
-        return this.cell37;
+        return this.cell37();
       case "38":
-        return this.cell38;
+        return this.cell38();
       case "39":
-        return this.cell39;
+        return this.cell39();
       case "40":
-        return this.cell40;
+        return this.cell40();
       case "41":
-        return this.cell41;
+        return this.cell41();
       case "42":
-        return this.cell42;
+        return this.cell42();
       case "43":
-        return this.cell43;
+        return this.cell43();
       case "44":
-        return this.cell44;
+        return this.cell44();
       case "45":
-        return this.cell45;
+        return this.cell45();
       case "46":
-        return this.cell46;
+        return this.cell46();
 
       default:
         return undefined;

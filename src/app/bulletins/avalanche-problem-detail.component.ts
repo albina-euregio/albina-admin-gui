@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import { Component, Input, OnChanges, input, output } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -32,13 +32,13 @@ import { MatrixComponent } from "../shared/matrix.component";
   ],
 })
 export class AvalancheProblemDetailComponent implements OnChanges {
-  @Input() bulletin: BulletinModel;
-  @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
+  readonly bulletin = input<BulletinModel>(undefined);
+  readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   @Input() avalancheProblemModel: AvalancheProblemModel;
-  @Input() disabled: boolean;
-  @Input() count: number;
-  @Input() afternoon: boolean;
-  @Output() changeAvalancheProblemDetailEvent = new EventEmitter<string>();
+  readonly disabled = input<boolean>(undefined);
+  readonly count = input<number>(undefined);
+  readonly afternoon = input<boolean>(undefined);
+  readonly changeAvalancheProblemDetailEvent = output<string>();
 
   avalancheProblems: Enums.AvalancheProblem[];
   snowpackStability = Enums.SnowpackStability;
@@ -80,7 +80,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   public forLabelId(key: string): string {
-    return this.count + (this.afternoon ? "_pm_" : "_am_") + key;
+    return this.count() + (this.afternoon() ? "_pm_" : "_am_") + key;
   }
 
   isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
@@ -107,7 +107,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
           this.avalancheProblemModel.elevationHigh = 0;
         }
       }
-      this.bulletinDaytimeDescription.updateDangerRating();
+      this.bulletinDaytimeDescription().updateDangerRating();
       this.isElevationHighEditing = false;
       this.changeAvalancheProblemDetailEvent.emit();
     }
@@ -124,7 +124,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
           this.avalancheProblemModel.elevationLow = 0;
         }
       }
-      this.bulletinDaytimeDescription.updateDangerRating();
+      this.bulletinDaytimeDescription().updateDangerRating();
       this.isElevationLowEditing = false;
       this.changeAvalancheProblemDetailEvent.emit();
     }
@@ -144,7 +144,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.localTreelineHigh = true;
       this.isElevationHighEditing = false;
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
+    this.bulletinDaytimeDescription().updateDangerRating();
     this.changeAvalancheProblemDetailEvent.emit();
   }
 
@@ -162,7 +162,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.localTreelineLow = true;
       this.isElevationLowEditing = false;
     }
-    this.bulletinDaytimeDescription.updateDangerRating();
+    this.bulletinDaytimeDescription().updateDangerRating();
     this.changeAvalancheProblemDetailEvent.emit();
   }
 
@@ -174,7 +174,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.avalancheProblemModel.elevationHigh = undefined;
       this.isElevationHighEditing = false;
       this.changeAvalancheProblemDetailEvent.emit();
-      this.bulletinDaytimeDescription.updateDangerRating();
+      this.bulletinDaytimeDescription().updateDangerRating();
     } else {
       this.useElevationHigh = true;
       this.isElevationHighEditing = true;
@@ -188,7 +188,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.avalancheProblemModel.treelineLow = false;
       this.avalancheProblemModel.elevationLow = undefined;
       this.isElevationLowEditing = false;
-      this.bulletinDaytimeDescription.updateDangerRating();
+      this.bulletinDaytimeDescription().updateDangerRating();
       this.changeAvalancheProblemDetailEvent.emit();
     } else {
       this.useElevationLow = true;
@@ -203,7 +203,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   setDangerRatingDirection(event: Event, dir: Enums.DangerRatingDirection) {
     event.stopPropagation();
     this.avalancheProblemModel.setDangerRatingDirection(dir);
-    this.bulletinDaytimeDescription.updateDangerRating();
+    this.bulletinDaytimeDescription().updateDangerRating();
     this.changeAvalancheProblemDetailEvent.emit();
   }
 

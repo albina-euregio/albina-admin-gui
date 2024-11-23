@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, Input, OnInit, output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { ECElementEvent, EChartsOption } from "echarts";
@@ -18,7 +18,7 @@ export class ObservationChartComponent<T> implements OnInit {
   private pressTimer;
 
   @Input() filterSelection: FilterSelectionData<T>;
-  @Output() handleChange: EventEmitter<void> = new EventEmitter();
+  readonly handleChange = output();
   public options: EChartsOption;
 
   get isActive(): boolean {

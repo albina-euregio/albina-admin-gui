@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
@@ -38,10 +38,10 @@ export class ObservationEditorComponent implements AfterViewInit {
   }
 
   @Input() observation: GenericObservation;
-  @ViewChild("eventDateDate") eventDateDate: ElementRef<HTMLInputElement>;
-  @ViewChild("eventDateTime") eventDateTime: ElementRef<HTMLInputElement>;
-  @ViewChild("reportDateDate") reportDateDate: ElementRef<HTMLInputElement>;
-  @ViewChild("reportDateTime") reportDateTime: ElementRef<HTMLInputElement>;
+  readonly eventDateDate = viewChild<ElementRef<HTMLInputElement>>("eventDateDate");
+  readonly eventDateTime = viewChild<ElementRef<HTMLInputElement>>("eventDateTime");
+  readonly reportDateDate = viewChild<ElementRef<HTMLInputElement>>("reportDateDate");
+  readonly reportDateTime = viewChild<ElementRef<HTMLInputElement>>("reportDateTime");
   avalancheProblems: Enums.AvalancheProblem[];
   dangerPatterns = Object.values(Enums.DangerPattern);
   importantObservations = Object.values(ImportantObservation);
@@ -75,11 +75,11 @@ export class ObservationEditorComponent implements AfterViewInit {
   ngAfterViewInit() {
     // Use ElementRef to achieve a one-way binding between observation.eventDate and the two input fields.
     // To allow for modifying an existing observation, initially the observation.eventDate is written to the two input fields.
-    for (let { nativeElement } of [this.eventDateDate, this.eventDateTime]) {
+    for (let { nativeElement } of [this.eventDateDate(), this.eventDateTime()]) {
       nativeElement.valueAsDate = this.eventDate;
       nativeElement.onchange = (e) => this.handleDateEvent(e, "eventDate");
     }
-    for (let { nativeElement } of [this.reportDateDate, this.reportDateTime]) {
+    for (let { nativeElement } of [this.reportDateDate(), this.reportDateTime()]) {
       nativeElement.valueAsDate = this.reportDate;
       nativeElement.onchange = (e) => this.handleDateEvent(e, "reportDate");
     }

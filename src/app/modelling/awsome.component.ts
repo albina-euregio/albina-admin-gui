@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule, formatDate } from "@angular/common";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
@@ -50,7 +50,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   config: Awsome = {} as Awsome;
   date: string = "";
   layout: "map" | "chart" = "map";
-  @ViewChild("observationsMap") mapDiv: ElementRef<HTMLDivElement>;
+  readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   observations: FeatureProperties[] = [];
   localObservations: FeatureProperties[] = [];
   selectedObservation: FeatureProperties | undefined = undefined;
@@ -135,7 +135,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   async ngAfterViewInit() {
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
-    await this.mapService.initMaps(this.mapDiv.nativeElement, (o) => console.log(o));
+    await this.mapService.initMaps(this.mapDiv().nativeElement, (o) => console.log(o));
   }
 
   switchDate(direction: -1 | 1) {

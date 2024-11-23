@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit, input } from "@angular/core";
 import { UserService } from "../providers/user-service/user.service";
 import type { EChartsOption } from "echarts";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -11,7 +11,7 @@ import { NgxEchartsDirective } from "ngx-echarts";
   imports: [NgxEchartsDirective],
 })
 export class TeamStressLevelsComponent implements OnInit {
-  @Input() dates: [Date, Date][];
+  readonly dates = input<[Date, Date][]>(undefined);
 
   dataset: EChartsOption;
 
@@ -21,8 +21,8 @@ export class TeamStressLevelsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.getTeamStressLevels([this.dates.at(-1)[0], this.dates.at(0)[1]]).subscribe((stressLevels) => {
-      const dates = this.dates
+    this.userService.getTeamStressLevels([this.dates().at(-1)[0], this.dates().at(0)[1]]).subscribe((stressLevels) => {
+      const dates = this.dates()
         .flat()
         .map((d) => this.constantsService.getISODateString(d))
         .filter((d, i, arr) => arr.indexOf(d) === i)

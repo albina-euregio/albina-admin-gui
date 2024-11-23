@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, Input, input, output } from "@angular/core";
 import { BulletinModel } from "../models/bulletin.model";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -13,11 +13,11 @@ import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.comp
   imports: [AccordionModule, NgIf, AvalancheProblemPreviewComponent, AvalancheProblemDetailComponent],
 })
 export class AvalancheProblemComponent {
-  @Input() bulletinModel: BulletinModel;
+  readonly bulletinModel = input<BulletinModel>(undefined);
   @Input() bulletinDaytimeDescription: BulletinDaytimeDescriptionModel;
-  @Input() afternoon: boolean;
-  @Input() disabled: boolean;
-  @Output() changeAvalancheProblemEvent = new EventEmitter<string>();
+  readonly afternoon = input<boolean>(undefined);
+  readonly disabled = input<boolean>(undefined);
+  readonly changeAvalancheProblemEvent = output<string>();
 
   constructor() {}
 

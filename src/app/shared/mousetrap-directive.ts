@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit } from "@angular/core";
+import { Directive, ElementRef, OnDestroy, OnInit, input } from "@angular/core";
 import Mousetrap from "mousetrap";
 
 const MOUSETRAP = new Mousetrap();
@@ -9,26 +9,28 @@ const MOUSETRAP = new Mousetrap();
 })
 export class NgxMousetrapDirective implements OnInit, OnDestroy {
   // list of hot key combination for this element.
-  @Input() ngxMousetrapKey: string;
+  readonly ngxMousetrapKey = input<string>(undefined);
 
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit() {
-    if (!this.ngxMousetrapKey) {
+    const ngxMousetrapKey = this.ngxMousetrapKey();
+    if (!ngxMousetrapKey) {
       return;
     }
     const nativeElement: HTMLElement = this.elementRef.nativeElement;
 
     const title = nativeElement.getAttribute("title") || "";
-    nativeElement.setAttribute("title", `${title} [${this.ngxMousetrapKey}]`.trim());
+    nativeElement.setAttribute("title", `${title} [${ngxMousetrapKey}]`.trim());
 
-    MOUSETRAP.bind(this.ngxMousetrapKey, (event) => nativeElement.dispatchEvent(new MouseEvent("click")));
+    MOUSETRAP.bind(ngxMousetrapKey, (event) => nativeElement.dispatchEvent(new MouseEvent("click")));
   }
 
   ngOnDestroy() {
-    if (!this.ngxMousetrapKey) {
+    const ngxMousetrapKey = this.ngxMousetrapKey();
+    if (!ngxMousetrapKey) {
       return;
     }
-    MOUSETRAP.unbind(this.ngxMousetrapKey);
+    MOUSETRAP.unbind(ngxMousetrapKey);
   }
 }
