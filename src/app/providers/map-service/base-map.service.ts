@@ -10,8 +10,9 @@ export class BaseMapService extends MapService {
   public observationTypeLayers: Record<ObservationType, LayerGroup>;
   public layers = {
     forecast: new LayerGroup(),
+    observations: new LayerGroup(),
     observers: new LayerGroup(),
-    "weather-stations": new LayerGroup(),
+    weatherStations: new LayerGroup(),
     webcams: new LayerGroup(),
   };
 
@@ -69,6 +70,10 @@ export class BaseMapService extends MapService {
 
   addMarkerLayer(name: keyof typeof this.layers) {
     this.map.addLayer(this.layers[name]);
+  }
+
+  clearMarkerLayer(name: keyof typeof this.layers) {
+    this.layers[name].clearLayers();
   }
 
   addMarker(

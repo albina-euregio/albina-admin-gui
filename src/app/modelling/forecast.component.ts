@@ -155,7 +155,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   applyFilter() {
-    Object.values(this.mapService.layers).forEach((layer) => layer.clearLayers());
+    this.mapService.clearMarkerLayer("forecast");
 
     const filtered = this.modelPoints.filter((el) => {
       const correctRegion = !Object.values(this.selectedRegions).some((v) => v) || this.selectedRegions[el.region];

@@ -145,7 +145,7 @@
           <div class="card-body overflow-auto">
             <app-observation-table
               #observationTable
-              [observations]="localObservations"
+              [observations]="this.data.observations.filtered"
               (observationClick)="onObservationClick($event)"
               (editObservationEvent)="editObservation($event)"
             ></app-observation-table>
@@ -157,7 +157,7 @@
         <div class="card h-100">
           <div class="card-body overflow-auto">
             <app-observation-gallery
-              [observations]="localWebcams"
+              [observations]="this.data.webcams.filtered"
               (observationClick)="onObservationClick($event)"
             ></app-observation-gallery>
           </div>
@@ -174,7 +174,7 @@
       <div *ngIf="layout === 'map'" class="layer-switch">
         <div
           class="obs-button"
-          [class.is-active]="showObservations"
+          [class.is-active]="this.data.observations.show"
           (click)="toggleObservations()"
           title="{{ 'observations.layers.observations' | translate }}"
         >
@@ -182,7 +182,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="showWebcams"
+          [class.is-active]="this.data.webcams.show"
           (click)="toggleWebcams()"
           title="{{ 'observations.layers.webcams' | translate }}"
         >
@@ -190,7 +190,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="showObservers"
+          [class.is-active]="this.data.observers.show"
           (click)="toggleObservers()"
           title="{{ 'observations.layers.observers' | translate }}"
         >
@@ -198,7 +198,7 @@
         </div>
         <div
           class="obs-button"
-          [class.is-active]="showWeatherStations"
+          [class.is-active]="this.data.weatherStations.show"
           (click)="toggleWeatherStations()"
           title="{{ 'observations.layers.weatherStations' | translate }}"
         >
@@ -207,7 +207,7 @@
       </div>
 
       <!-- !parameter-switch -->
-      <div *ngIf="showWeatherStations && layout === 'map'" class="parameter-switch">
+      <div *ngIf="this.data.weatherStations.show && layout === 'map'" class="parameter-switch">
         <div
           class="obs-button"
           [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowHeight'"
@@ -356,9 +356,9 @@
           </div>
           <div class="toolset-keydata">
             <div class="keydata">
-              <span class="keydata-selected">{{ localObservations.length }}</span>
+              <span class="keydata-selected">{{ this.data.observations.filtered.length }}</span>
               /
-              <span class="keydata-all">{{ observations.length }}</span>
+              <span class="keydata-all">{{ this.data.observations.all.length }}</span>
             </div>
           </div>
         </div>
