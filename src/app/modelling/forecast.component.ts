@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { ParamService, QfaResult, QfaService } from "./qfa";
-import { CircleMarker, LatLngLiteral } from "leaflet";
+import { CircleMarker, LatLngLiteral, LayerGroup } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";
@@ -57,6 +57,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private translateService = inject(TranslateService);
   modalService = inject(BsModalService);
 
+  readonly mapLayer = new LayerGroup();
   layout = "map" as const;
   selectedModelPoint: GenericObservation;
   selectedModelType: ForecastSource;
@@ -102,7 +103,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   async ngAfterViewInit() {
-    this.initMaps().then(() => this.load());
+    await this.initMaps();
+    await this.load();
   }
 
   async load() {
@@ -155,7 +157,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   applyFilter() {
-    this.mapService.clearMarkerLayer("forecast");
+    this.mapLayer.clearLayers();
 
     const filtered = this.modelPoints.filter((el) => {
       const correctRegion = !Object.values(this.selectedRegions).some((v) => v) || this.selectedRegions[el.region];
@@ -190,16 +192,10 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       .filter((s) => !/undefined/.test(s))
       .join("<br>");
 
-    const marker = new CircleMarker(
-      { lat: latitude, lng: longitude },
-      this.getModelPointOptions($source as ForecastSource),
-    )
+    new CircleMarker({ lat: latitude, lng: longitude }, this.getModelPointOptions($source as ForecastSource))
+      .addTo(this.mapLayer)
       .on("click", callback)
       .bindTooltip(tooltip);
-
-    const fullSource = this.allSources.find((el) => el.id === $source);
-    const attribution = `<span style="color: ${fullSource.fillColor}">●</span> ${fullSource.name}`;
-    this.mapService.addMarker(marker, "forecast", attribution);
   }
 
   loadAll() {
@@ -243,16 +239,16 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   async initMaps() {
-    const map = await this.mapService.initMaps(this.observationsMap().nativeElement, () => {});
+    const map = await this.mapService.initMaps(this.observationsMap().nativeElement);
     map.on("click", () => {
       this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyFilter();
     });
-    this.mapService.removeObservationLayers();
-    this.mapService.addMarkerLayer("forecast");
+    this.mapLayer.addTo(map);
   }
 
   ngOnDestroy() {
+    this.mapLayer.clearLayers();
     this.mapService.removeMaps();
   }
 

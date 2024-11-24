@@ -135,7 +135,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   async ngAfterViewInit() {
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
-    await this.mapService.initMaps(this.mapDiv().nativeElement, (o) => console.log(o));
+    await this.mapService.initMaps(this.mapDiv().nativeElement);
     this.mapLayer.addTo(this.mapService.map);
   }
 

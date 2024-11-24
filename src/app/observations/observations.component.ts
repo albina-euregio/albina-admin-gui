@@ -166,7 +166,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private async initMap() {
-    const map = await this.mapService.initMaps(this.mapDiv().nativeElement, (o) => this.onObservationClick(o));
+    const map = await this.mapService.initMaps(this.mapDiv().nativeElement);
 
     this.toggleObservations();
     if (this.filter.startDate && this.filter.endDate) {
