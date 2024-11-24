@@ -75,7 +75,7 @@ export class MapService {
       this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()),
     ]);
 
-    let overlayMaps: typeof this.overlayMaps = {
+    const overlayMaps: typeof this.overlayMaps = {
       // overlay to show micro regions without elevation (only outlines)
       regions: new GeoJSON(regions, {
         onEachFeature: isPM
@@ -224,7 +224,7 @@ export class MapService {
 
   resetInternalAggregatedRegions() {
     for (const layer of [this.overlayMaps.aggregatedRegions, this.afternoonOverlayMaps.aggregatedRegions]) {
-      let regions = Object.keys(layer.paintRules).filter((region) =>
+      const regions = Object.keys(layer.paintRules).filter((region) =>
         this.authenticationService.isInternalRegion(region),
       );
       layer.resetStyle(regions);

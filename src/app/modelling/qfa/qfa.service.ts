@@ -6,13 +6,13 @@ import { GetFilenamesService } from "./filenames.service";
 import { GetDustParamService } from "./dust.service";
 import { ParamService } from "./param.service";
 
-export type QfaResult = {
+export interface QfaResult {
   data: types.data;
   date: string;
   dates: string[];
   parameters: string[];
   file: any;
-};
+}
 
 @Injectable()
 export class QfaService {

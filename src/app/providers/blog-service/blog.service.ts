@@ -13,7 +13,7 @@ export class BlogService {
   ) {}
 
   sendLatestBlogPost(region: string, language: string, test: boolean): Observable<Response> {
-    var url;
+    let url;
     if (test) {
       url = this.constantsService.getServerUrl() + "blogs/publish/latest/test?&region=" + region + "&lang=" + language;
     } else {
@@ -27,7 +27,7 @@ export class BlogService {
   }
 
   sendLatestBlogPostEmail(region: string, language: string, test: boolean): Observable<Response> {
-    var url;
+    let url;
     if (test) {
       url =
         this.constantsService.getServerUrl() +
@@ -46,7 +46,7 @@ export class BlogService {
   }
 
   sendLatestBlogPostTelegram(region: string, language: string, test: boolean): Observable<Response> {
-    var url;
+    let url;
     if (test) {
       url =
         this.constantsService.getServerUrl() +
@@ -66,7 +66,7 @@ export class BlogService {
   }
 
   sendLatestBlogPostPush(region: string, language: string, test: boolean): Observable<Response> {
-    var url;
+    let url;
     if (test) {
       url =
         this.constantsService.getServerUrl() + "blogs/publish/latest/push/test?&region=" + region + "&lang=" + language;

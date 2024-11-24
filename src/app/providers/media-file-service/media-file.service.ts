@@ -26,11 +26,11 @@ export class MediaFileService {
           ["important", important],
         ])
         .toString();
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append("file", file);
     formData.append("text", text);
 
-    let params = new HttpParams();
+    const params = new HttpParams();
 
     const headers = this.authenticationService.newFileAuthHeader("multipart/form-data");
     const options = {

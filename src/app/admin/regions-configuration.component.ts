@@ -15,7 +15,7 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [NgIf, AccordionModule, NgFor, RegionConfigurationComponent, TranslateModule],
 })
 export class RegionsConfigurationComponent implements AfterContentInit {
-  public configurationPropertiesLoaded: boolean = false;
+  public configurationPropertiesLoaded = false;
   public saveConfigurationLoading: boolean;
   public regionConfigurations: RegionConfiguration[];
 
@@ -45,7 +45,7 @@ export class RegionsConfigurationComponent implements AfterContentInit {
   }
 
   public createRegion(event) {
-    let newRegion = {} as RegionConfiguration;
+    const newRegion = {} as RegionConfiguration;
     newRegion.isNew = true;
     this.regionConfigurations.push(newRegion);
   }

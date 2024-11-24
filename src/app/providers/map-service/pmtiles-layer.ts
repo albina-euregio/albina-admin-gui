@@ -279,7 +279,7 @@ export class PmLeafletLayer extends L.GridLayer {
 
   public resetStyle(regions?: string[]) {
     if (Array.isArray(regions)) {
-      for (let region of regions) {
+      for (const region of regions) {
         delete this.paintRules[region];
       }
     } else {

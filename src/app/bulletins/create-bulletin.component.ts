@@ -80,11 +80,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public externRegionsMap: Map<ServerModel, BulletinModel[]>;
   public showExternRegionsMap: Map<string, boolean>;
 
-  public showStatusOfAllRegions: boolean = false;
+  public showStatusOfAllRegions = false;
 
-  public showNewBulletinModal: boolean = false;
+  public showNewBulletinModal = false;
 
-  public isCompactMapLayout: boolean = false;
+  public isCompactMapLayout = false;
   public isBulletinSidebarVisible = true;
   private bulletinMarkedDelete: BulletinModel;
 
@@ -306,7 +306,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       // copy bulletins from other date
       if (this.bulletinsService.getCopyDate()) {
         // load own bulletins from the date they are copied from
-        let regions = [this.authenticationService.getActiveRegionId()];
+        const regions = [this.authenticationService.getActiveRegionId()];
         this.bulletinsService.loadBulletins(this.bulletinsService.getCopyDate(), regions).subscribe(
           ({ bulletins }) => {
             this.copyBulletins(bulletins);
@@ -893,7 +893,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addExternalBulletins(server: ServerModel, response: BulletinModelAsJSON[]) {
-    let bulletinsList = new Array<BulletinModel>();
+    const bulletinsList = new Array<BulletinModel>();
     if (response) {
       for (const jsonBulletin of response) {
         const bulletin = BulletinModel.createFromJson(jsonBulletin);
@@ -1362,10 +1362,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   saveBulletin(event: Event) {
     event.stopPropagation();
 
-    let isUpdate: boolean;
-    isUpdate = this.activeBulletin.getSavedRegions().length !== 0;
-
-    // save selected regions to active bulletin
+    const isUpdate: boolean = this.activeBulletin.getSavedRegions().length !== 0; // save selected regions to active bulletin
     const regions = this.mapService.getSelectedRegions();
 
     let newRegionsHit = false;
@@ -1485,11 +1482,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateBulletinOnServerNow(
-    bulletin: BulletinModel,
-    checkErrors: boolean = true,
-    writeUndoStack: boolean = true,
-  ) {
+  private updateBulletinOnServerNow(bulletin: BulletinModel, checkErrors = true, writeUndoStack = true) {
     if (this.isWriteDisabled()) return;
     bulletin.setValidFrom(this.bulletinsService.getActiveDate()[0]);
     bulletin.setValidUntil(this.bulletinsService.getActiveDate()[1]);
@@ -1995,7 +1988,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
-  publish(event: Event, date: [Date, Date], change: boolean = false) {
+  publish(event: Event, date: [Date, Date], change = false) {
     event.stopPropagation();
     this.publishing = true;
 

@@ -46,10 +46,6 @@ export class ModalMediaFileComponent {
     this.file = event.target.files[0];
   }
 
-  toggleImportant() {
-    this.important ? (this.important = false) : (this.important = true);
-  }
-
   uploadFile() {
     if (this.text == null || this.text == "") {
       this.text = "---";

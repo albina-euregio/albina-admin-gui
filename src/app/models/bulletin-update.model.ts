@@ -11,7 +11,7 @@ export class BulletinUpdateModel {
 
     bulletinUpdate.setRegion(json.region);
     bulletinUpdate.setDate(new Date(json.date));
-    bulletinUpdate.setStatus(Enums.BulletinStatus[<string>json.status]);
+    bulletinUpdate.setStatus(Enums.BulletinStatus[json.status as string]);
 
     return bulletinUpdate;
   }

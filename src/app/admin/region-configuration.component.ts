@@ -16,7 +16,7 @@ import { FormsModule } from "@angular/forms";
 export class RegionConfigurationComponent {
   readonly config = input<RegionConfiguration>(undefined);
 
-  public configurationPropertiesLoaded: boolean = false;
+  public configurationPropertiesLoaded = false;
   public saveConfigurationLoading: boolean;
 
   public alerts: any[] = [];

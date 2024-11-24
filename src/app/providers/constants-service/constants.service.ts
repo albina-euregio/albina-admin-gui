@@ -15,24 +15,24 @@ export class ConstantsService {
   }));
 
   // region (ISO-3166)
-  public codeSwitzerland: string = "CH";
-  public codeTyrol: string = "AT-07";
-  public codeSouthTyrol: string = "IT-32-BZ";
-  public codeTrentino: string = "IT-32-TN";
-  public codeAran: string = "ES-CT-L";
-  public codeAndorra: string = "AD";
+  public codeSwitzerland = "CH";
+  public codeTyrol = "AT-07";
+  public codeSouthTyrol = "IT-32-BZ";
+  public codeTrentino = "IT-32-TN";
+  public codeAran = "ES-CT-L";
+  public codeAndorra = "AD";
 
-  public codePiemonte: string = "IT-21";
-  public codeAosta: string = "IT-23";
-  public codeLombardia: string = "IT-25";
-  public codeVeneto: string = "IT-34";
-  public codeFriuliVeneziaGiulia: string = "IT-36";
-  public codeMarche: string = "IT-57";
+  public codePiemonte = "IT-21";
+  public codeAosta = "IT-23";
+  public codeLombardia = "IT-25";
+  public codeVeneto = "IT-34";
+  public codeFriuliVeneziaGiulia = "IT-36";
+  public codeMarche = "IT-57";
 
-  public roleAdmin: string = "ADMIN";
-  public roleForecaster: string = "FORECASTER";
-  public roleForeman: string = "FOREMAN";
-  public roleObserver: string = "OBSERVER";
+  public roleAdmin = "ADMIN";
+  public roleForecaster = "FORECASTER";
+  public roleForeman = "FOREMAN";
+  public roleObserver = "OBSERVER";
 
   // danger rating (color)
   public colorDangerRatingLow = "#CCFF66";
