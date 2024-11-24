@@ -77,11 +77,11 @@ export class ObservationEditorComponent implements AfterViewInit {
     // To allow for modifying an existing observation, initially the observation.eventDate is written to the two input fields.
     for (let { nativeElement } of [this.eventDateDate, this.eventDateTime]) {
       nativeElement.valueAsDate = this.eventDate;
-      nativeElement.onchange = (e) => this.setDate(e, "eventDate");
+      nativeElement.onchange = (e) => this.handleDateEvent(e, "eventDate");
     }
     for (let { nativeElement } of [this.reportDateDate, this.reportDateTime]) {
       nativeElement.valueAsDate = this.reportDate;
-      nativeElement.onchange = (e) => this.setDate(e, "reportDate");
+      nativeElement.onchange = (e) => this.handleDateEvent(e, "reportDate");
     }
   }
 
@@ -95,17 +95,19 @@ export class ObservationEditorComponent implements AfterViewInit {
     return isFinite(+date) ? toUTC(date) : undefined;
   }
 
-  setDate(date: Date | Event, key: "eventDate" | "reportDate") {
-    let type = "";
-    if (date instanceof Event) {
-      type = (date.target as HTMLInputElement).type;
-      date = (date.target as HTMLInputElement).valueAsDate;
-    }
+  setDate(date: Date, key: "eventDate" | "reportDate") {
+    this[`${key}Date`].nativeElement.valueAsDate = date;
+    this[`${key}Time`].nativeElement.valueAsDate = date;
+    date = isFinite(+date) ? fromUTC(date) : undefined;
+    this.observation[key] = date;
+  }
+
+  handleDateEvent(event: Event, key: "eventDate" | "reportDate") {
+    const type = (event.target as HTMLInputElement).type;
+    let date = (event.target as HTMLInputElement).valueAsDate;
     if (date === undefined || date === null) {
       // date is null when clicking "clear" in Chrome's calendar
-      this.observation[key] = undefined;
-      this[`${key}Date`].nativeElement.valueAsDate = undefined;
-      this[`${key}Time`].nativeElement.valueAsDate = undefined;
+      this.setDate(undefined, key);
       return;
     }
     date = isFinite(+date) ? fromUTC(date) : undefined;
