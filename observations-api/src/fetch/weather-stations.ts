@@ -1,7 +1,7 @@
 import { fetchJSON } from "../util/fetchJSON";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 
-export async function getAwsWeatherStations(endDate: string): Promise<GenericObservation[]> {
+export async function getAwsWeatherStations(endDate: string): Promise<GenericObservation<FeatureProperties>[]> {
   const url = endDate
     ? `https://static.avalanche.report/weather_stations/${endDate}_12-00_stations.geojson`
     : "https://static.avalanche.report/weather_stations/stations.geojson";

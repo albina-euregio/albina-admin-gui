@@ -1,12 +1,13 @@
 import type { APIRoute } from "astro";
 import {
+  type GenericObservation,
   genericObservationSchema,
   genericObservationWithIdSchema,
-  type GenericObservation,
   type RawGenericObservation,
 } from "../../../src/app/observations/models/generic-observation.model";
 import { augmentAndInsertObservation, createConnection, deleteObservation, selectObservations } from "../db/database";
 import { fetchAndInsert } from "../fetch/observations";
+import { newDate } from "../util/newDate.ts";
 
 let lastFetch = 0;
 
@@ -31,13 +32,6 @@ export async function serveObservations(url: URL): Promise<GenericObservation[]>
   } finally {
     connection.destroy();
   }
-}
-
-function newDate(delta: { days: number }): Date {
-  const date = new Date();
-  date.setSeconds(0, 0);
-  date.setDate(date.getDate() + delta.days);
-  return date;
 }
 
 export const GET: APIRoute = async ({ url }) => {
