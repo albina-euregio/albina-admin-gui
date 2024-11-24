@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getAwsWeatherStations } from "../fetch/weather-stations";
+import { type FeatureProperties, getAwsWeatherStations } from "../fetch/weather-stations";
 import { average, sum, min, max, median } from "simple-statistics";
 import { newDate } from "../util/newDate";
 
@@ -29,10 +29,7 @@ export const GET: APIRoute = async ({ url }) => {
       continue;
     }
     console.log(station);
-    const id = station.$data["LWD-Nummer"];
-    const url = `https://api.avalanche.report/lawine/grafiken/smet/woche/${id}.smet.gz`;
-    const smet = await (await fetch(url)).text();
-    const data = parseData(smet, startDate, endDate);
+    const { id, data } = await fetchData(station.$data, startDate, endDate);
     html += `<h1>${id}</h1>`;
     html += `<table>`;
     html += `<tr>`;
@@ -44,18 +41,15 @@ export const GET: APIRoute = async ({ url }) => {
     html += `<th>max</th>`;
     html += `<th>sum</th>`;
     html += `</tr>`;
-    for (const { parameter, unit, values } of Object.values(data)) {
+    for (const { parameter, unit, min, average, median, max, sum } of Object.values(data)) {
       html += `<tr>`;
       html += `<td>${parameter}</td>`;
       html += `<td>${unit}</td>`;
-      if (!values.length) {
-        values.push(NaN);
-      }
-      html += `<td>${format.format(min(values))}</td>`;
-      html += `<td>${format.format(average(values))}</td>`;
-      html += `<td>${format.format(median(values))}</td>`;
-      html += `<td>${format.format(max(values))}</td>`;
-      html += `<td>${format.format(sum(values))}</td>`;
+      html += `<td>${format.format(min)}</td>`;
+      html += `<td>${format.format(average)}</td>`;
+      html += `<td>${format.format(median)}</td>`;
+      html += `<td>${format.format(max)}</td>`;
+      html += `<td>${format.format(sum)}</td>`;
       html += `</tr>`;
     }
     html += `</table>`;
@@ -67,6 +61,23 @@ export const GET: APIRoute = async ({ url }) => {
   });
 };
 
+async function fetchData($data: FeatureProperties, startDate: Date, endDate: Date) {
+  const id = $data["LWD-Nummer"];
+  const url = `https://api.avalanche.report/lawine/grafiken/smet/woche/${id}.smet.gz`;
+  const smet = await (await fetch(url)).text();
+  const data = parseData(smet, startDate, endDate);
+  return {
+    id,
+    startDate,
+    endDate,
+    "LWD-Nummer": $data["LWD-Nummer"],
+    "LWD-Region": $data["LWD-Region"],
+    name: $data.name,
+    operator: $data.operator,
+    operatorLink: $data.operatorLink,
+    data,
+  };
+}
 // P Air pressure, in Pa
 // TA Temperature Air, in Kelvin
 // TD Temperature Dew Point, in Kelvin
@@ -112,7 +123,7 @@ function parseData(smet: string, startDate: Date, endDate: Date) {
   let fields = [] as ParameterType[];
   let units = [] as string[];
   let nodata = "-777";
-  const result: { parameter: ParameterType; unit: string; values: number[] }[] = [];
+  const result: number[][] = [];
   smet.split(/\r?\n/).forEach((line) => {
     if (line.startsWith("fields =")) {
       fields = line.slice("fields =".length).trim().split(" ") as ParameterType[];
@@ -127,13 +138,7 @@ function parseData(smet: string, startDate: Date, endDate: Date) {
       return;
     }
     if (!result.length) {
-      result.push(
-        ...fields.map((parameter, i) => ({
-          parameter,
-          unit: units.map((u) => UNIT_MAPPING[u]?.to ?? u)[i],
-          values: [],
-        })),
-      );
+      result.push(...fields.map(() => []));
     }
     const cells = line.split(" ");
     const date = new Date(cells[0]);
@@ -143,8 +148,19 @@ function parseData(smet: string, startDate: Date, endDate: Date) {
     result.forEach((p, i) => {
       if (cells[i] === nodata) return;
       const value = +cells[i].replace(",", ".");
-      p.values.push(UNIT_MAPPING[units[i]]?.convert(value) ?? value);
+      p.push(UNIT_MAPPING[units[i]]?.convert(value) ?? value);
     });
   });
-  return result.slice(1);
+  return result
+    .map((values, i) => ({
+      values,
+      parameter: fields[i],
+      unit: units.map((u) => UNIT_MAPPING[u]?.to ?? u)[i],
+      min: values.length ? min(values) : NaN,
+      average: values.length ? average(values) : NaN,
+      median: values.length ? median(values) : NaN,
+      max: values.length ? max(values) : NaN,
+      sum: values.length ? sum(values) : NaN,
+    }))
+    .slice(1);
 }
