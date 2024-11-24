@@ -12,8 +12,8 @@
           <div class="global-bar global-bar-left">
             <div class="global-bar-item global-bar-item-load">
               <button type="button" class="btn btn-bare" (click)="loadObservations()">
-                <i *ngIf="!loading" class="ph ph-arrows-clockwise"></i>
-                <i *ngIf="loading" class="ph ph-circle-notch"></i>
+                <i *ngIf="!this.data.observations.loading" class="ph ph-arrows-clockwise"></i>
+                <i *ngIf="this.data.observations.loading" class="ph ph-circle-notch"></i>
               </button>
             </div>
 
@@ -126,7 +126,7 @@
               <button
                 type="button"
                 class="btn btn-bare"
-                (click)="toggleFilters()"
+                (click)="this.layoutFilters = !this.layoutFilters"
                 title="{{ 'admin.observations.toggleFilterBar' | translate }}"
               >
                 <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
@@ -175,7 +175,7 @@
         <div
           class="obs-button"
           [class.is-active]="this.data.observations.show"
-          (click)="toggleObservations()"
+          (click)="this.data.observations.toggle(this.map)"
           title="{{ 'observations.layers.observations' | translate }}"
         >
           <i class="ph ph-circle" aria-hidden="true"></i>
@@ -183,7 +183,7 @@
         <div
           class="obs-button"
           [class.is-active]="this.data.webcams.show"
-          (click)="toggleWebcams()"
+          (click)="this.data.webcams.toggle(this.map)"
           title="{{ 'observations.layers.webcams' | translate }}"
         >
           <i class="ph ph-webcam" aria-hidden="true"></i>
@@ -191,7 +191,7 @@
         <div
           class="obs-button"
           [class.is-active]="this.data.observers.show"
-          (click)="toggleObservers()"
+          (click)="this.data.observers.toggle(this.map)"
           title="{{ 'observations.layers.observers' | translate }}"
         >
           <i class="ph ph-eye" aria-hidden="true"></i>
@@ -199,7 +199,7 @@
         <div
           class="obs-button"
           [class.is-active]="this.data.weatherStations.show"
-          (click)="toggleWeatherStations()"
+          (click)="this.data.weatherStations.toggle(this.map)"
           title="{{ 'observations.layers.weatherStations' | translate }}"
         >
           <i class="ph ph-chart-line" aria-hidden="true"></i>
