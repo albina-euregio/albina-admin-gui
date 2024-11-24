@@ -1,4 +1,4 @@
-import { Component, Input, input, output } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -26,9 +26,9 @@ import { AspectsComponent } from "../shared/aspects.component";
 export class AvalancheProblemPreviewComponent {
   readonly bulletin = input<BulletinModel>(undefined);
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
-  @Input() avalancheProblem: AvalancheProblemModel;
+  readonly avalancheProblem = input<AvalancheProblemModel>(undefined);
   readonly count = input<number>(undefined);
-  @Input() disabled: boolean;
+  readonly disabled = input<boolean>(undefined);
   readonly changeAvalancheProblemPreviewEvent = output();
 
   avalancheProblemEnum = Enums.AvalancheProblem;
@@ -36,11 +36,12 @@ export class AvalancheProblemPreviewComponent {
   constructor(public translateService: TranslateService) {}
 
   isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
-    return this.avalancheProblem.avalancheProblem === avalancheProblem;
+    return this.avalancheProblem().avalancheProblem === avalancheProblem;
   }
 
   hasAspects() {
-    return this.avalancheProblem && this.avalancheProblem.aspects && this.avalancheProblem.aspects.length > 0;
+    const avalancheProblem = this.avalancheProblem();
+    return avalancheProblem && avalancheProblem.aspects && avalancheProblem.aspects.length > 0;
   }
 
   isFirst() {
@@ -63,18 +64,20 @@ export class AvalancheProblemPreviewComponent {
   }
 
   getElevationLowString() {
-    if (this.avalancheProblem && this.avalancheProblem.getTreelineLow()) {
+    const avalancheProblem = this.avalancheProblem();
+    if (avalancheProblem && avalancheProblem.getTreelineLow()) {
       return this.translateService.instant("bulletins.create.tooltip.treeline");
-    } else if (this.avalancheProblem) {
-      return this.avalancheProblem.getElevationLow() + "m";
+    } else if (avalancheProblem) {
+      return avalancheProblem.getElevationLow() + "m";
     }
   }
 
   getElevationHighString() {
-    if (this.avalancheProblem && this.avalancheProblem.getTreelineHigh()) {
+    const avalancheProblem = this.avalancheProblem();
+    if (avalancheProblem && avalancheProblem.getTreelineHigh()) {
       return this.translateService.instant("bulletins.create.tooltip.treeline");
-    } else if (this.avalancheProblem) {
-      return this.avalancheProblem.getElevationHigh() + "m";
+    } else if (avalancheProblem) {
+      return avalancheProblem.getElevationHigh() + "m";
     }
   }
 
@@ -156,32 +159,35 @@ export class AvalancheProblemPreviewComponent {
 
   moveUpAvalancheProblem(event) {
     event.stopPropagation();
-    let tmpAvalancheProblem = undefined;
     switch (this.count()) {
-      case 2:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem1);
-        this.bulletinDaytimeDescription().setAvalancheProblem2(this.avalancheProblem);
+      case 2: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem1 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem1);
+        this.bulletinDaytimeDescription().setAvalancheProblem2(avalancheProblem1);
         this.bulletinDaytimeDescription().setAvalancheProblem1(tmpAvalancheProblem);
         break;
-      case 3:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem2);
-        this.bulletinDaytimeDescription().setAvalancheProblem3(this.avalancheProblem);
+      }
+      case 3: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem2 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem2);
+        this.bulletinDaytimeDescription().setAvalancheProblem3(avalancheProblem2);
         this.bulletinDaytimeDescription().setAvalancheProblem2(tmpAvalancheProblem);
         break;
-      case 4:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem3);
-        this.bulletinDaytimeDescription().setAvalancheProblem4(this.avalancheProblem);
+      }
+      case 4: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem3 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem3);
+        this.bulletinDaytimeDescription().setAvalancheProblem4(avalancheProblem3);
         this.bulletinDaytimeDescription().setAvalancheProblem3(tmpAvalancheProblem);
         break;
-      case 5:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem4);
-        this.bulletinDaytimeDescription().setAvalancheProblem5(this.avalancheProblem);
+      }
+      case 5: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem4 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem4);
+        this.bulletinDaytimeDescription().setAvalancheProblem5(avalancheProblem4);
         this.bulletinDaytimeDescription().setAvalancheProblem4(tmpAvalancheProblem);
         break;
+      }
 
       default:
         break;
@@ -192,32 +198,35 @@ export class AvalancheProblemPreviewComponent {
 
   moveDownAvalancheProblem(event) {
     event.stopPropagation();
-    let tmpAvalancheProblem = undefined;
     switch (this.count()) {
-      case 1:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem2);
-        this.bulletinDaytimeDescription().setAvalancheProblem1(this.avalancheProblem);
+      case 1: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem2 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem2);
+        this.bulletinDaytimeDescription().setAvalancheProblem1(avalancheProblem2);
         this.bulletinDaytimeDescription().setAvalancheProblem2(tmpAvalancheProblem);
         break;
-      case 2:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem3);
-        this.bulletinDaytimeDescription().setAvalancheProblem2(this.avalancheProblem);
+      }
+      case 2: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem3 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem3);
+        this.bulletinDaytimeDescription().setAvalancheProblem2(avalancheProblem3);
         this.bulletinDaytimeDescription().setAvalancheProblem3(tmpAvalancheProblem);
         break;
-      case 3:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem4);
-        this.bulletinDaytimeDescription().setAvalancheProblem3(this.avalancheProblem);
+      }
+      case 3: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem4 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem4);
+        this.bulletinDaytimeDescription().setAvalancheProblem3(avalancheProblem4);
         this.bulletinDaytimeDescription().setAvalancheProblem4(tmpAvalancheProblem);
         break;
-      case 4:
-        tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem);
-        this.avalancheProblem = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem5);
-        this.bulletinDaytimeDescription().setAvalancheProblem4(this.avalancheProblem);
+      }
+      case 4: {
+        const tmpAvalancheProblem = new AvalancheProblemModel(this.avalancheProblem());
+        const avalancheProblem5 = new AvalancheProblemModel(this.bulletinDaytimeDescription().avalancheProblem5);
+        this.bulletinDaytimeDescription().setAvalancheProblem4(avalancheProblem5);
         this.bulletinDaytimeDescription().setAvalancheProblem5(tmpAvalancheProblem);
         break;
+      }
 
       default:
         break;
