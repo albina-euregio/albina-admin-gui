@@ -6,7 +6,7 @@ import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
 import type { AwsomeSource } from "../modelling/awsome.component";
-import { get as _get } from "lodash";
+import { castArray, get as _get } from "lodash";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
@@ -38,7 +38,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
         : this.markerClassify?.findForObservation(observation);
       const makeIcon0 = (radius: number | undefined) =>
         makeIcon(
-          observation.aspect,
+          castArray(observation.aspect)[0],
           "#898989",
           radius ?? 40,
           filterSelectionValue?.color ?? "white",

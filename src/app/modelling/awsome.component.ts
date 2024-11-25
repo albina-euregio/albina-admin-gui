@@ -120,9 +120,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
       feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
       feature.properties.$sourceObject = source;
-      if (feature.properties?.snp_characteristics?.flat) {
+      if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
         return aspects
-          .filter((aspect) => feature.properties.snp_characteristics[aspect])
+          .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
           .map((aspect) => ({
             ...feature.properties,
             aspect,
