@@ -429,12 +429,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     let observation = this.observationPopup?.observation;
-    const observations = [
-      ...this.data.observations.all,
-      ...this.data.observers.all,
-      ...this.data.weatherStations.all,
-      ...this.data.webcams.all,
-    ].filter((o) => o.$source === observation.$source && o.$type === observation.$type);
+    const observations = Object.values(this.data)
+      .flatMap((d) => d.all)
+      .filter((o) => o.$source === observation.$source && o.$type === observation.$type);
     let index = observations.indexOf(observation);
     if (index < 0) {
       return;
