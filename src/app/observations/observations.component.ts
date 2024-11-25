@@ -85,7 +85,7 @@ class ObservationData {
     await observable
       .forEach((observation) => {
         try {
-          genericObservationSchema.parse(observation);
+          genericObservationSchema.partial().parse(observation);
         } catch (err) {
           console.warn("Observation does not match schema", observation, err);
         }
