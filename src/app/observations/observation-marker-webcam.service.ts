@@ -8,7 +8,7 @@ import { ObservationMarkerService } from "./observation-marker.service";
 export class ObservationMarkerWebcamService<T extends Partial<GenericObservation>> {
   constructor(private observationMarkerService: ObservationMarkerService<T>) {}
 
-  createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
+  createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {
       const filterSelectionValue = isHighlighted ? this.observationMarkerService.highlighted : undefined;
       const icon = makeIcon(

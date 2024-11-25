@@ -31,7 +31,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     padding: 0.5,
   });
 
-  createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
+  createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {
       const filterSelectionValue = isHighlighted
         ? this.highlighted

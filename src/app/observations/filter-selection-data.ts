@@ -2,7 +2,7 @@ import { castArray, get } from "lodash";
 
 export type ChartType = "bar" | "rose";
 
-export type Dataset = Array<Array<string | number>>;
+export type Dataset = (string | number)[][];
 
 export type ValueType = number | string | Date | string[];
 

@@ -27,8 +27,8 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
 
   //Multiple layers at a time for rBush performance
   addMarkers(markers: CanvasMarker[]) {
-    var tmpMark = [];
-    var tmpLatLng = [];
+    const tmpMark = [];
+    const tmpLatLng = [];
 
     markers.forEach((marker) => {
       if (!(marker.options.pane == "markerPane" && marker.options.icon)) {
@@ -36,9 +36,9 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
         return;
       }
 
-      var latlng = marker.getLatLng();
-      var isDisplaying = this._map.getBounds().contains(latlng);
-      var s = this._addMarker(marker, latlng, isDisplaying);
+      const latlng = marker.getLatLng();
+      const isDisplaying = this._map.getBounds().contains(latlng);
+      const s = this._addMarker(marker, latlng, isDisplaying);
 
       //Only add to Point Lookup if we are on map
       if (isDisplaying === true) tmpMark.push(s[0]);
@@ -52,9 +52,9 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
 
   //Adds single layer at a time. Less efficient for rBush
   addMarker(marker: CanvasMarker) {
-    var latlng = marker.getLatLng();
-    var isDisplaying = this._map?.getBounds()?.contains(latlng);
-    var dat = this._addMarker(marker, latlng, isDisplaying);
+    const latlng = marker.getLatLng();
+    const isDisplaying = this._map?.getBounds()?.contains(latlng);
+    const dat = this._addMarker(marker, latlng, isDisplaying);
 
     //Only add to Point Lookup if we are on map
     if (isDisplaying === true) this._markers.insert(dat[0]);
@@ -79,10 +79,10 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
     //If we are removed point
     if (marker["minX"]) marker = marker.data;
 
-    var latlng = marker.getLatLng();
-    var isDisplaying = this._map.getBounds().contains(latlng);
+    const latlng = marker.getLatLng();
+    const isDisplaying = this._map.getBounds().contains(latlng);
 
-    var markerData = {
+    const markerData = {
       minX: latlng.lng,
       minY: latlng.lat,
       maxX: latlng.lng,
@@ -153,12 +153,12 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
 
     L.Util.stamp(marker);
 
-    var pointPos = this._map.latLngToContainerPoint(latlng);
-    var iconSize = marker.options.icon.options.iconSize;
+    const pointPos = this._map.latLngToContainerPoint(latlng);
+    const iconSize = marker.options.icon.options.iconSize;
 
-    var adj_x = iconSize[0] / 2;
-    var adj_y = iconSize[1] / 2;
-    var ret = [
+    const adj_x = iconSize[0] / 2;
+    const adj_y = iconSize[1] / 2;
+    const ret = [
       {
         minX: pointPos.x - adj_x,
         minY: pointPos.y - adj_y,
@@ -190,7 +190,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
       pointPos = this._map.latLngToContainerPoint(marker.getLatLng());
     }
 
-    var iconUrl = marker.options.icon.options.iconUrl;
+    const iconUrl = marker.options.icon.options.iconUrl;
 
     if (marker.canvas_img) {
       this._drawImage(marker, pointPos);
@@ -204,7 +204,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
           this._drawImage(marker, pointPos);
         }
       } else {
-        var i = new Image();
+        const i = new Image();
         i.src = iconUrl;
         marker.canvas_img = i;
 
@@ -220,7 +220,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
   },
 
   _drawImage(marker: CanvasMarker, pointPos: L.Point) {
-    var options = marker.options.icon.options;
+    const options = marker.options.icon.options;
 
     this._context.drawImage(
       marker.canvas_img,
@@ -232,10 +232,10 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
   },
 
   _reset() {
-    var topLeft = this._map.containerPointToLayerPoint([0, 0]);
+    const topLeft = this._map.containerPointToLayerPoint([0, 0]);
     L.DomUtil.setPosition(this._canvas, topLeft);
 
-    var size = this._map.getSize();
+    const size = this._map.getSize();
 
     this._canvas.width = size.x;
     this._canvas.height = size.y;
@@ -248,7 +248,7 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
     if (clear) this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
     if (!this._map || !this._latlngMarkers) return;
 
-    var tmp = [];
+    let tmp = [];
 
     //If we are 10% individual inserts\removals, reconstruct lookup for efficiency
     if (this._latlngMarkers.dirty / this._latlngMarkers.total >= 0.1) {
@@ -260,11 +260,11 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
       tmp = [];
     }
 
-    var mapBounds = this._map.getBounds();
+    const mapBounds = this._map.getBounds();
 
     //Only re-draw what we are showing on the map.
 
-    var mapBoxCoords = {
+    const mapBoxCoords = {
       minX: mapBounds.getWest(),
       minY: mapBounds.getSouth(),
       maxX: mapBounds.getEast(),
@@ -273,13 +273,13 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
 
     this._latlngMarkers.search(mapBoxCoords).forEach((e) => {
       //Readjust Point Map
-      var pointPos = this._map.latLngToContainerPoint(e.data.getLatLng());
+      const pointPos = this._map.latLngToContainerPoint(e.data.getLatLng());
 
-      var iconSize = e.data.options.icon.options.iconSize;
-      var adj_x = iconSize[0] / 2;
-      var adj_y = iconSize[1] / 2;
+      const iconSize = e.data.options.icon.options.iconSize;
+      const adj_x = iconSize[0] / 2;
+      const adj_y = iconSize[1] / 2;
 
-      var newCoords = {
+      const newCoords = {
         minX: pointPos.x - adj_x,
         minY: pointPos.y - adj_y,
         maxX: pointPos.x + adj_x,
@@ -300,16 +300,16 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
 
   _initCanvas() {
     this._canvas = L.DomUtil.create("canvas", "leaflet-canvas-icon-layer leaflet-layer");
-    var originProp = L.DomUtil.testProp(["transformOrigin", "WebkitTransformOrigin", "msTransformOrigin"]);
+    const originProp = L.DomUtil.testProp(["transformOrigin", "WebkitTransformOrigin", "msTransformOrigin"]);
     this._canvas.style[originProp || ""] = "50% 50%";
 
-    var size = this._map.getSize();
+    const size = this._map.getSize();
     this._canvas.width = size.x;
     this._canvas.height = size.y;
 
     this._context = this._canvas.getContext("2d");
 
-    var animated = this._map.options.zoomAnimation && L.Browser.any3d;
+    const animated = this._map.options.zoomAnimation && L.Browser.any3d;
     L.DomUtil.addClass(this._canvas, "leaflet-zoom-" + (animated ? "animated" : "hide"));
   },
 
@@ -324,28 +324,28 @@ export const CanvasIconLayer = (L.Layer ? L.Layer : L.Class).extend({
   _executeListeners(event: L.LeafletMouseEvent) {
     if (!this._markers) return;
 
-    var x = event.containerPoint.x;
-    var y = event.containerPoint.y;
+    const x = event.containerPoint.x;
+    const y = event.containerPoint.y;
 
     if (this._openToolTip) {
       this._openToolTip.closeTooltip();
       delete this._openToolTip;
     }
 
-    var ret = this._markers.search({ minX: x, minY: y, maxX: x, maxY: y });
+    const ret = this._markers.search({ minX: x, minY: y, maxX: x, maxY: y });
 
     if (ret && ret.length > 0) {
       this._map._container.style.cursor = "pointer";
 
       if (event.type === "click") {
-        var hasPopup = ret[0].data.getPopup();
+        const hasPopup = ret[0].data.getPopup();
         if (hasPopup) ret[0].data.openPopup();
 
         this._onClickListeners.forEach((listener) => listener(event, ret));
       }
 
       if (event.type === "mousemove") {
-        var hasTooltip = ret[0].data.getTooltip();
+        const hasTooltip = ret[0].data.getTooltip();
         if (hasTooltip) {
           this._openToolTip = ret[0].data;
           ret[0].data.openTooltip();

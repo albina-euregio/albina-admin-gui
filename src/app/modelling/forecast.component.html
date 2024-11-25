@@ -84,7 +84,7 @@
 <ng-template #observationPopupTemplate>
   <div class="modal-header">
     <div class="d-inline-block" *ngIf="selectedModelPoint">
-      <select [(ngModel)]="selectedModelPoint" autofocus class="custom-select" style="max-width: 70vw">
+      <select [(ngModel)]="selectedModelPoint" class="custom-select" style="max-width: 70vw">
         <option
           *ngFor="let point of dropDownOptions[selectedModelType]"
           [ngValue]="point"

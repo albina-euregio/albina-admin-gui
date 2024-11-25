@@ -76,11 +76,11 @@ export class ObservationEditorComponent implements AfterViewInit {
   ngAfterViewInit() {
     // Use ElementRef to achieve a one-way binding between observation.eventDate and the two input fields.
     // To allow for modifying an existing observation, initially the observation.eventDate is written to the two input fields.
-    for (let { nativeElement } of [this.eventDateDate(), this.eventDateTime()]) {
+    for (const { nativeElement } of [this.eventDateDate(), this.eventDateTime()]) {
       nativeElement.valueAsDate = this.eventDate;
       nativeElement.onchange = (e) => this.handleDateEvent(e, "eventDate");
     }
-    for (let { nativeElement } of [this.reportDateDate(), this.reportDateTime()]) {
+    for (const { nativeElement } of [this.reportDateDate(), this.reportDateTime()]) {
       nativeElement.valueAsDate = this.reportDate;
       nativeElement.onchange = (e) => this.handleDateEvent(e, "reportDate");
     }

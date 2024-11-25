@@ -83,8 +83,6 @@ export class AvalancheBulletinComponent {
   public strategicMindsetModalRef: BsModalRef;
   readonly strategicMindsetTemplate = viewChild<TemplateRef<any>>("strategicMindsetTemplate");
 
-  stopListening: Function;
-
   public config = {
     animated: false,
     keyboard: true,

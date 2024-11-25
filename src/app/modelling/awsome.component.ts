@@ -18,7 +18,7 @@ type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: Awsom
     "$source" | "latitude" | "longitude" | "elevation"
   >;
 
-export type AwsomeSource = {
+export interface AwsomeSource {
   name: string;
   url: string;
   tooltipTemplate: string;
@@ -27,14 +27,14 @@ export type AwsomeSource = {
    */
   detailsTemplate: string;
   detailsTemplates: { label: DetailsTabLabel; template: string }[];
-};
+}
 
-type Awsome = {
+interface Awsome {
   date: string;
   dateStepSeconds: number;
   sources: AwsomeSource[];
   filters: FilterSelectionSpec<FeatureProperties>[];
-};
+}
 
 type DetailsTabLabel = string;
 
@@ -48,7 +48,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   // https://gitlab.com/avalanche-warning
   configURL = "https://models.avalanche.report/dashboard/awsome.json";
   config: Awsome = {} as Awsome;
-  date: string = "";
+  date = "";
   layout: "map" | "chart" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   observations: FeatureProperties[] = [];

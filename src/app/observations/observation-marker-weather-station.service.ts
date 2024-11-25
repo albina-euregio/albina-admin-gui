@@ -136,7 +136,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
   constructor(private observationMarkerService: ObservationMarkerService<T>) {}
 
-  createMarker(observation: T, isHighlighted: boolean = false): Marker | undefined {
+  createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {
       const filterSelectionValue = isHighlighted ? this.observationMarkerService.highlighted : undefined;
       const icon = makeIcon(
@@ -214,7 +214,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     const lw = 2256 * 1000;
     const li = 2838 * 1000;
 
-    var result = -1;
+    let result = -1;
 
     if (data.HS > 0 && data.OFT <= 0) {
       const satp_w = 610.5 * Math.exp((lw * data.LT) / (461.9 * (data.LT + 273.16) * 273.16));

@@ -78,16 +78,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public localWebcams: GenericObservation[] = [];
   public weatherStations: GenericObservation[] = [];
   public localWeatherStations: GenericObservation[] = [];
-  public showObservations: boolean = true;
-  public showWeatherStations: boolean = false;
-  public showWebcams: boolean = false;
-  public showObservers: boolean = false;
+  public showObservations = true;
+  public showWeatherStations = false;
+  public showWebcams = false;
+  public showObservers = false;
   public weatherStationsLayerGroup: LayerGroup<any>;
   public observersLayerGroup: LayerGroup<any>;
   public webcamsLayerGroup: LayerGroup<any>;
   public observationsAsOverlay: GenericObservation[] = [];
   public localObservations: GenericObservation[] = [];
-  public observationsWithoutCoordinates: number = 0;
+  public observationsWithoutCoordinates = 0;
   public observationPopup: {
     observation: GenericObservation;
     table: ObservationTableRow[];
@@ -295,9 +295,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   selectParameter(parameter0: keyof typeof WeatherStationParameter) {
     const parameter = WeatherStationParameter[parameter0];
-    this.markerWeatherStationService.weatherStationLabel === parameter
-      ? (this.markerWeatherStationService.weatherStationLabel = undefined)
-      : (this.markerWeatherStationService.weatherStationLabel = parameter);
+    if (this.markerWeatherStationService.weatherStationLabel === parameter) {
+      this.markerWeatherStationService.weatherStationLabel = undefined;
+    } else {
+      this.markerWeatherStationService.weatherStationLabel = parameter;
+    }
     this.applyLocalFilter();
   }
 

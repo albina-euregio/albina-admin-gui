@@ -155,7 +155,7 @@ export class DangerSourcesService {
   }
 
   loadDangerSources(date: [Date, Date], regions: string[]): Observable<DangerSourceModel[]> {
-    let url =
+    const url =
       this.constantsService.getServerUrl() +
       "danger-sources?" +
       this.constantsService

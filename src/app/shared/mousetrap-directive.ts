@@ -5,6 +5,7 @@ const MOUSETRAP = new Mousetrap();
 
 @Directive({
   standalone: true,
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: "[ngxMousetrapKey]",
 })
 export class NgxMousetrapDirective implements OnInit, OnDestroy {

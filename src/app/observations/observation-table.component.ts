@@ -18,7 +18,7 @@ export class ObservationTableComponent {
   readonly observations = input<GenericObservation[]>([]);
   readonly observationClick = output<GenericObservation>();
   readonly editObservationEvent = output<GenericObservation>();
-  showObservationsWithoutCoordinates: boolean = false;
+  showObservationsWithoutCoordinates = false;
   observationSearch: string;
   importantObservationTexts = {
     [ImportantObservation.SnowLine]: grainShapes.IFrc.key,

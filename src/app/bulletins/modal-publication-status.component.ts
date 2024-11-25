@@ -129,7 +129,7 @@ export class ModalPublicationStatusComponent {
     );
   }
 
-  sendEmail(event, language: string = "") {
+  sendEmail(event, language = "") {
     event.stopPropagation();
     this.bulletinsService.sendEmail(this.date, this.authenticationService.getActiveRegionId(), language).subscribe(
       (data) => {
@@ -157,7 +157,7 @@ export class ModalPublicationStatusComponent {
     );
   }
 
-  triggerTelegramChannel(event, language: string = "") {
+  triggerTelegramChannel(event, language = "") {
     event.stopPropagation();
     this.bulletinsService
       .triggerTelegramChannel(this.date, this.authenticationService.getActiveRegionId(), language)
@@ -195,7 +195,7 @@ export class ModalPublicationStatusComponent {
       );
   }
 
-  triggerPushNotifications(event, language: string = "") {
+  triggerPushNotifications(event, language = "") {
     event.stopPropagation();
 
     this.bulletinsService

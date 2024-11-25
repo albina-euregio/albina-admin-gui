@@ -61,8 +61,8 @@ export class AuthenticationService {
       map((data) => {
         if (data.access_token) {
           this.setCurrentAuthor(data);
-          let authorRegions = this.getCurrentAuthorRegions();
-          let activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
+          const authorRegions = this.getCurrentAuthorRegions();
+          const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
           this.setActiveRegion(
             authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
           );
@@ -159,7 +159,7 @@ export class AuthenticationService {
     if (!json) {
       return;
     }
-    var server = ServerModel.createFromJson(json);
+    const server = ServerModel.createFromJson(json);
     server.setApiUrl(apiUrl);
     server.setName(serverName);
     this.externalServers.push(server);
@@ -174,7 +174,7 @@ export class AuthenticationService {
   }
 
   public checkExternalServerLogin() {
-    for (let server of this.externalServers) {
+    for (const server of this.externalServers) {
       if (this.jwtHelper.isTokenExpired(server.accessToken)) {
         this.externalServers = [];
         this.localStorageService.setExternalServers(undefined);

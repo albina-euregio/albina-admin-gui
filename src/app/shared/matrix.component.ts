@@ -76,7 +76,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     this.initMatrix();
   }
 
-  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+  ngOnChanges(changes: Record<string, SimpleChange>) {
     this.resetMatrix();
     this.initMatrix();
   }
@@ -395,9 +395,9 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   private getCell(matrixInformation: MatrixInformationModel): string {
-    var snowpackStabilityFactor = 0;
-    var frequencyFactor = 0;
-    var avalancheSizeFactor = 0;
+    let snowpackStabilityFactor = 0;
+    let frequencyFactor = 0;
+    let avalancheSizeFactor = 0;
 
     switch (matrixInformation.getSnowpackStability()) {
       case Enums.SnowpackStability.very_poor:

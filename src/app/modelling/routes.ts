@@ -6,10 +6,10 @@ import { ZamgWbtComponent } from "./zamg-wbt.component";
 
 import { AuthGuard } from "../guards/auth.guard";
 
-export type ModellingRouteData = {
+export interface ModellingRouteData {
   title: string;
   modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt";
-};
+}
 
 export default [
   {

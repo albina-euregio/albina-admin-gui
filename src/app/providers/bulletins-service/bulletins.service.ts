@@ -87,9 +87,9 @@ export class BulletinsService {
     this.statusMap = new Map<string, Map<number, Enums.BulletinStatus>>();
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
-        let map = new Map<number, Enums.BulletinStatus>();
+        const map = new Map<number, Enums.BulletinStatus>();
         for (let i = (data as any).length - 1; i >= 0; i--) {
-          map.set(Date.parse((data as any)[i].date), Enums.BulletinStatus[<string>(data as any)[i].status]);
+          map.set(Date.parse((data as any)[i].date), Enums.BulletinStatus[(data as any)[i].status as string]);
         }
         this.statusMap.set(this.authenticationService.getActiveRegionId(), map);
       },
@@ -100,9 +100,9 @@ export class BulletinsService {
     this.authenticationService.getActiveRegion()?.neighborRegions.forEach((neighborRegion) => {
       this.getStatus(neighborRegion, startDate, endDate).subscribe(
         (data) => {
-          let map = new Map<number, Enums.BulletinStatus>();
+          const map = new Map<number, Enums.BulletinStatus>();
           for (let i = (data as any).length - 1; i >= 0; i--) {
-            map.set(Date.parse((data as any)[i].date), Enums.BulletinStatus[<string>(data as any)[i].status]);
+            map.set(Date.parse((data as any)[i].date), Enums.BulletinStatus[(data as any)[i].status as string]);
           }
           this.statusMap.set(neighborRegion, map);
         },
@@ -114,24 +114,22 @@ export class BulletinsService {
   }
 
   public wsBulletinConnect() {
-    this.bulletinLocks = <Subject<BulletinLockModel>>(
-      this.wsBulletinService
-        .connect(this.constantsService.getServerWsUrl() + "../bulletin/" + this.authenticationService.getUsername())
-        .pipe(
-          map((response: any): BulletinLockModel => {
-            const data = JSON.parse(response.data);
-            const bulletinLock = BulletinLockModel.createFromJson(data);
-            if (bulletinLock.getLock()) {
-              console.debug("Bulletin lock received: " + bulletinLock.getBulletin());
-              this.addLockedBulletin(bulletinLock);
-            } else {
-              console.debug("Bulletin unlock received: " + bulletinLock.getBulletin());
-              this.removeLockedBulletin(bulletinLock.getBulletin());
-            }
-            return bulletinLock;
-          }),
-        )
-    );
+    this.bulletinLocks = this.wsBulletinService
+      .connect(this.constantsService.getServerWsUrl() + "../bulletin/" + this.authenticationService.getUsername())
+      .pipe(
+        map((response: any): BulletinLockModel => {
+          const data = JSON.parse(response.data);
+          const bulletinLock = BulletinLockModel.createFromJson(data);
+          if (bulletinLock.getLock()) {
+            console.debug("Bulletin lock received: " + bulletinLock.getBulletin());
+            this.addLockedBulletin(bulletinLock);
+          } else {
+            console.debug("Bulletin unlock received: " + bulletinLock.getBulletin());
+            this.removeLockedBulletin(bulletinLock.getBulletin());
+          }
+          return bulletinLock;
+        }),
+      ) as Subject<BulletinLockModel>;
 
     this.bulletinLocks.subscribe(() => {});
   }
@@ -309,7 +307,7 @@ export class BulletinsService {
     regions: string[],
     etag?: string,
   ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
-    let url =
+    const url =
       this.constantsService.getServerUrl() +
       "bulletins/edit?" +
       this.constantsService
@@ -329,7 +327,7 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       return of([]);
     }
-    let url =
+    const url =
       server.apiUrl +
       "bulletins/edit?" +
       this.constantsService
@@ -481,7 +479,7 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post<{}>(url, body, { headers });
+    return this.http.post<void>(url, body, { headers });
   }
 
   publishBulletins(date: [Date, Date], region: string) {
@@ -499,7 +497,7 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post<{}>(url, body, { headers });
+    return this.http.post<void>(url, body, { headers });
   }
 
   changeBulletins(date: [Date, Date], region: string) {
@@ -518,7 +516,7 @@ export class BulletinsService {
     const headers = this.authenticationService.newAuthHeader();
     const jsonBulletins = [];
     const body = JSON.stringify(jsonBulletins);
-    return this.http.post<{}>(url, body, { headers });
+    return this.http.post<void>(url, body, { headers });
   }
 
   publishAllBulletins(date: [Date, Date]) {
@@ -533,7 +531,7 @@ export class BulletinsService {
         .toString();
     const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post<{}>(url, body, { headers });
+    return this.http.post<void>(url, body, { headers });
   }
 
   createCaaml(date: [Date, Date]) {
@@ -822,8 +820,8 @@ export class BulletinsService {
 
   loadLockedBulletins() {
     this.lockedBulletins.clear();
-    let url = this.constantsService.getServerUrl() + "bulletins/locked";
-    let headers = this.authenticationService.newAuthHeader();
+    const url = this.constantsService.getServerUrl() + "bulletins/locked";
+    const headers = this.authenticationService.newAuthHeader();
     this.http.get(url, { headers }).subscribe(
       (data) => {
         for (const response of data as any) {

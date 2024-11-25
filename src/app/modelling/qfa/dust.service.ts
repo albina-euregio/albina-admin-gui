@@ -7,9 +7,7 @@ enum Cities {
   LIENZ = "lienz",
 }
 
-type DustParams = {
-  [key in Cities]?: Array<Promise<string[]>>;
-};
+type DustParams = Partial<Record<Cities, Promise<string[]>[]>>;
 
 @Injectable()
 export class GetDustParamService {
@@ -84,7 +82,7 @@ export class GetDustParamService {
       canvas.width = 1;
       canvas.height = 1;
       canvas.getContext("2d")?.drawImage(image, x, y, 1, 1, 0, 0, 1, 1);
-      const rgba = [...canvas.getContext("2d")?.getImageData(0, 0, 1, 1).data];
+      const rgba = [...(canvas.getContext("2d")?.getImageData(0, 0, 1, 1).data ?? [])];
       rgba.pop();
       resolve(rgba);
     });
@@ -107,7 +105,7 @@ export class GetDustParamService {
     return hex;
   };
 
-  private getParamsForCity = (city: string): Array<Promise<string[]>> => {
+  private getParamsForCity = (city: string): Promise<string[]>[] => {
     const nSteps = 35;
     const promises = [];
 

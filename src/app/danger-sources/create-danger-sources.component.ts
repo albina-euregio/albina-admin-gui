@@ -63,11 +63,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public internVariantsList: DangerSourceVariantModel[];
   public internDangerSourcesList: DangerSourceModel[];
 
-  public showStatusOfAllRegions: boolean = false;
+  public showStatusOfAllRegions = false;
 
-  public showNewVariantModal: boolean = false;
+  public showNewVariantModal = false;
 
-  public isCompactMapLayout: boolean = false;
+  public isCompactMapLayout = false;
   public isVariantsSidebarVisible = true;
   private variantMarkedDelete: DangerSourceVariantModel;
 
@@ -780,10 +780,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   saveVariant(event: Event) {
     event.stopPropagation();
 
-    let isUpdate: boolean;
-    isUpdate = this.activeVariant.regions.length !== 0;
-
-    // save selected regions to active variant
+    const isUpdate: boolean = this.activeVariant.regions.length !== 0; // save selected regions to active variant
     const regions = this.mapService.getSelectedRegions();
 
     let newRegionsHit = false;
@@ -864,7 +861,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateVariantOnServer(variant: DangerSourceVariantModel, checkErrors: boolean = true) {
+  updateVariantOnServer(variant: DangerSourceVariantModel, checkErrors = true) {
     variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
     variant.updateDate = new Date();

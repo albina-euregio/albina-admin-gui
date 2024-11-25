@@ -15,9 +15,7 @@ export interface metadata {
   dates?: Date[];
 }
 
-export interface parameters {
-  [key: string]: any[];
-}
+export type parameters = Record<string, any[]>;
 
 export interface data {
   metadata: metadata;
@@ -36,9 +34,7 @@ export interface QFA {
   listParameters(): string[];
 }
 
-export interface markers {
-  [key: string]: coordinates;
-}
+export type markers = Record<string, coordinates>;
 
 export interface MarkerData {
   markers: markers;

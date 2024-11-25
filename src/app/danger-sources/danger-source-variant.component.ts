@@ -111,8 +111,6 @@ export class DangerSourceVariantComponent implements OnChanges {
   public isAccordionMatrixOpen: boolean;
   public isAccordionCharacteristicsOpen: boolean;
 
-  stopListening: Function;
-
   public config = {
     animated: false,
     keyboard: true,
@@ -253,71 +251,91 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   setZeroDegreeIsotherm(zeroDegreeIsotherm: boolean) {
     const variant = this.variant();
-    variant?.zeroDegreeIsotherm === zeroDegreeIsotherm
-      ? (variant.zeroDegreeIsotherm = undefined)
-      : (variant.zeroDegreeIsotherm = zeroDegreeIsotherm);
+    if (variant?.zeroDegreeIsotherm === zeroDegreeIsotherm) {
+      variant.zeroDegreeIsotherm = undefined;
+    } else {
+      variant.zeroDegreeIsotherm = zeroDegreeIsotherm;
+    }
     this.updateVariantOnServer();
   }
 
   setWeakLayerPersistent(weakLayerPersistent: boolean) {
     const variant = this.variant();
-    variant?.weakLayerPersistent === weakLayerPersistent
-      ? (variant.weakLayerPersistent = undefined)
-      : (variant.weakLayerPersistent = weakLayerPersistent);
+    if (variant?.weakLayerPersistent === weakLayerPersistent) {
+      variant.weakLayerPersistent = undefined;
+    } else {
+      variant.weakLayerPersistent = weakLayerPersistent;
+    }
     this.updateVariantOnServer();
   }
 
   setWeakLayerWet(weakLayerWet: boolean) {
     const variant = this.variant();
-    variant?.weakLayerWet === weakLayerWet ? (variant.weakLayerWet = undefined) : (variant.weakLayerWet = weakLayerWet);
+    if (variant?.weakLayerWet === weakLayerWet) {
+      variant.weakLayerWet = undefined;
+    } else {
+      variant.weakLayerWet = weakLayerWet;
+    }
     this.updateVariantOnServer();
   }
 
   setWeakLayerCrustAbove(weakLayerCrustAbove: boolean) {
     const variant = this.variant();
-    variant?.weakLayerCrustAbove === weakLayerCrustAbove
-      ? (variant.weakLayerCrustAbove = undefined)
-      : (variant.weakLayerCrustAbove = weakLayerCrustAbove);
+    if (variant?.weakLayerCrustAbove === weakLayerCrustAbove) {
+      variant.weakLayerCrustAbove = undefined;
+    } else {
+      variant.weakLayerCrustAbove = weakLayerCrustAbove;
+    }
     this.updateVariantOnServer();
   }
 
   setWeakLayerCrustBelow(weakLayerCrustBelow: boolean) {
     const variant = this.variant();
-    variant?.weakLayerCrustBelow === weakLayerCrustBelow
-      ? (variant.weakLayerCrustBelow = undefined)
-      : (variant.weakLayerCrustBelow = weakLayerCrustBelow);
+    if (variant?.weakLayerCrustBelow === weakLayerCrustBelow) {
+      variant.weakLayerCrustBelow = undefined;
+    } else {
+      variant.weakLayerCrustBelow = weakLayerCrustBelow;
+    }
     this.updateVariantOnServer();
   }
 
   setRemoteTriggering(remoteTriggering: boolean) {
     const variant = this.variant();
-    variant?.remoteTriggering === remoteTriggering
-      ? (variant.remoteTriggering = undefined)
-      : (variant.remoteTriggering = remoteTriggering);
+    if (variant?.remoteTriggering === remoteTriggering) {
+      variant.remoteTriggering = undefined;
+    } else {
+      variant.remoteTriggering = remoteTriggering;
+    }
     this.updateVariantOnServer();
   }
 
   setHasDaytimeDependency(hasDaytimeDependency: boolean) {
     const variant = this.variant();
-    variant?.hasDaytimeDependency === hasDaytimeDependency
-      ? (variant.hasDaytimeDependency = undefined)
-      : (variant.hasDaytimeDependency = hasDaytimeDependency);
+    if (variant?.hasDaytimeDependency === hasDaytimeDependency) {
+      variant.hasDaytimeDependency = undefined;
+    } else {
+      variant.hasDaytimeDependency = hasDaytimeDependency;
+    }
     this.updateVariantOnServer();
   }
 
   setDangerIncreaseWithElevation(dangerIncreaseWithElevation: boolean) {
     const variant = this.variant();
-    variant?.dangerIncreaseWithElevation === dangerIncreaseWithElevation
-      ? (variant.dangerIncreaseWithElevation = undefined)
-      : (variant.dangerIncreaseWithElevation = dangerIncreaseWithElevation);
+    if (variant?.dangerIncreaseWithElevation === dangerIncreaseWithElevation) {
+      variant.dangerIncreaseWithElevation = undefined;
+    } else {
+      variant.dangerIncreaseWithElevation = dangerIncreaseWithElevation;
+    }
     this.updateVariantOnServer();
   }
 
   setRunoutIntoGreen(runoutIntoGreen: boolean) {
     const variant = this.variant();
-    variant?.runoutIntoGreen === runoutIntoGreen
-      ? (variant.runoutIntoGreen = undefined)
-      : (variant.runoutIntoGreen = runoutIntoGreen);
+    if (variant?.runoutIntoGreen === runoutIntoGreen) {
+      variant.runoutIntoGreen = undefined;
+    } else {
+      variant.runoutIntoGreen = runoutIntoGreen;
+    }
     this.updateVariantOnServer();
   }
 
