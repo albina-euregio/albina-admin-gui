@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { TranslateService } from "@ngx-translate/core";
 import { Observable } from "rxjs";
@@ -6,13 +6,11 @@ import { FeatureCollection, Point } from "geojson";
 
 @Injectable()
 export class GeocodingService {
+  private http = inject(HttpClient);
+  private translateService = inject(TranslateService);
+
   private readonly osmNominatimApi = "https://nominatim.openstreetmap.org/search";
   private readonly osmNominatimCountries = "at,it";
-
-  constructor(
-    private http: HttpClient,
-    private translateService: TranslateService,
-  ) {}
 
   searchLocation(query: string, limit = 8): Observable<FeatureCollection<Point, GeocodingProperties>> {
     // https://nominatim.org/release-docs/develop/api/Search/

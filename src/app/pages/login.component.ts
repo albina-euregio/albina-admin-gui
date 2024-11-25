@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, TemplateRef, viewChild } from "@angular/core";
+import { Component, OnInit, HostListener, TemplateRef, viewChild, inject } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { Router } from "@angular/router";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -16,6 +16,13 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [FormsModule, NgIf, NgFor, TranslateModule],
 })
 export class LoginComponent implements OnInit {
+  private router = inject(Router);
+  private authenticationService = inject(AuthenticationService);
+  constantsService = inject(ConstantsService);
+  configurationService = inject(ConfigurationService);
+  private modalService = inject(BsModalService);
+  private sanitizer = inject(DomSanitizer);
+
   public username: string;
   public password: string;
   public returnUrl: string;
@@ -31,14 +38,7 @@ export class LoginComponent implements OnInit {
   };
   serverInfo: ServerConfiguration & { version: string };
 
-  constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService,
-    public constantsService: ConstantsService,
-    public configurationService: ConfigurationService,
-    private modalService: BsModalService,
-    private sanitizer: DomSanitizer,
-  ) {
+  constructor() {
     this.loading = false;
   }
 

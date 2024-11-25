@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { catchError, map } from "rxjs/operators";
@@ -17,7 +17,7 @@ export interface AvalancheWarningServiceObservedProfiles {
 
 @Injectable()
 export class ObservedProfileSourceService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   private readonly URL = "https://models.avalanche.report/profiles/observed-profiles/observed_profiles.json";
 

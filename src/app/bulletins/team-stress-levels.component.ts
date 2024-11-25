@@ -1,4 +1,4 @@
-import { Component, OnInit, input } from "@angular/core";
+import { Component, OnInit, input, inject } from "@angular/core";
 import { UserService } from "../providers/user-service/user.service";
 import type { EChartsOption } from "echarts";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -12,13 +12,11 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
   imports: [NgxEchartsDirective],
 })
 export class TeamStressLevelsComponent implements OnInit {
-  dataset: EChartsOption;
+  private bulletinsService = inject(BulletinsService);
+  private userService = inject(UserService);
+  private constantsService = inject(ConstantsService);
 
-  constructor(
-    private bulletinsService: BulletinsService,
-    private userService: UserService,
-    private constantsService: ConstantsService,
-  ) {}
+  dataset: EChartsOption;
 
   ngOnInit(): void {
     const inputDates = this.bulletinsService.dates;

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { UserService } from "../providers/user-service/user.service";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -19,6 +19,10 @@ type Result =
   imports: [FormsModule, NgIf, TranslateModule],
 })
 export class ChangePasswordComponent {
+  private translateService = inject(TranslateService);
+  private userService = inject(UserService);
+  private bsModalRef = inject(BsModalRef);
+
   public changePasswordLoading: boolean;
 
   public oldPassword: string;
@@ -30,11 +34,7 @@ export class ChangePasswordComponent {
 
   public result: Result;
 
-  constructor(
-    private translateService: TranslateService,
-    private userService: UserService,
-    private bsModalRef: BsModalRef,
-  ) {
+  constructor() {
     this.changePasswordLoading = false;
   }
 

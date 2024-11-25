@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, viewChild } from "@angular/core";
+import { AfterContentInit, Component, viewChild, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
@@ -19,6 +19,12 @@ import { NgFor, NgIf } from "@angular/common";
   imports: [NgFor, AlertModule, NgIf, TranslateModule],
 })
 export class UsersComponent implements AfterContentInit {
+  authenticationService = inject(AuthenticationService);
+  private translateService = inject(TranslateService);
+  private userService = inject(UserService);
+  private modalService = inject(BsModalService);
+  configurationService = inject(ConfigurationService);
+
   public alerts: any[] = [];
   public users: any;
 
@@ -31,14 +37,6 @@ export class UsersComponent implements AfterContentInit {
     class: "modal-sm",
   };
   activeUser: any;
-
-  constructor(
-    public authenticationService: AuthenticationService,
-    private translateService: TranslateService,
-    private userService: UserService,
-    private modalService: BsModalService,
-    public configurationService: ConfigurationService,
-  ) {}
 
   ngAfterContentInit() {
     this.updateUsers();

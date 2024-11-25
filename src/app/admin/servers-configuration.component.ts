@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
@@ -14,15 +14,15 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [AccordionModule, NgIf, ServerConfigurationComponent, NgFor, TranslateModule],
 })
 export class ServersConfigurationComponent implements OnInit {
+  private authenticationService = inject(AuthenticationService);
+  private constantsService = inject(ConstantsService);
+  configurationService = inject(ConfigurationService);
+
   public saveConfigurationLoading: boolean;
   public localServerConfiguration: ServerConfiguration;
   public externalServerConfigurations: ServerConfiguration[];
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private constantsService: ConstantsService,
-    public configurationService: ConfigurationService,
-  ) {
+  constructor() {
     this.saveConfigurationLoading = false;
   }
 

@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
 import * as Enums from "../enums/enums";
@@ -13,6 +13,9 @@ import { FormsModule } from "@angular/forms";
   imports: [NgFor, AlertModule, FormsModule, NgIf, TranslateModule],
 })
 export class ServerConfigurationComponent {
+  private translateService = inject(TranslateService);
+  configurationService = inject(ConfigurationService);
+
   readonly config = input<ServerConfiguration>(undefined);
   readonly externalServer = input<boolean>(undefined);
 
@@ -21,10 +24,7 @@ export class ServerConfigurationComponent {
 
   public alerts: any[] = [];
 
-  constructor(
-    private translateService: TranslateService,
-    public configurationService: ConfigurationService,
-  ) {
+  constructor() {
     this.statusMap = new Map<number, Enums.BulletinStatus>();
     this.saveConfigurationLoading = false;
   }

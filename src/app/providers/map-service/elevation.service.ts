@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -26,10 +26,10 @@ interface Response {
 
 @Injectable()
 export class ElevationService {
+  private http = inject(HttpClient);
+
   private CRS = 4326;
   private readonly url = "https://voibos.rechenraum.com/voibos/voibos";
-
-  constructor(private http: HttpClient) {}
 
   getElevation(lat: number, lng: number): Observable<number> {
     const params = {

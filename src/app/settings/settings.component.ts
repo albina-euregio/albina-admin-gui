@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -17,18 +17,16 @@ import { FormsModule } from "@angular/forms";
   imports: [NgFor, AlertModule, FormsModule, TranslateModule],
 })
 export class SettingsComponent {
+  authenticationService = inject(AuthenticationService);
+  localStorageService = inject(LocalStorageService);
+  private modalService = inject(BsModalService);
+  private constantsService = inject(ConstantsService);
+
   public oldPassword: string;
   public newPassword1: string;
   public newPassword2: string;
 
   public alerts: any[] = [];
-
-  constructor(
-    public authenticationService: AuthenticationService,
-    public localStorageService: LocalStorageService,
-    private modalService: BsModalService,
-    private constantsService: ConstantsService,
-  ) {}
 
   showUpdateDialog() {
     const user = new UserModel();

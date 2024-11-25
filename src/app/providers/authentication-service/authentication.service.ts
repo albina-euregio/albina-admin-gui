@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext } from "@angular/core";
+import { Injectable, SecurityContext, inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -13,18 +13,18 @@ import * as Enums from "../../enums/enums";
 
 @Injectable()
 export class AuthenticationService {
+  private localStorageService = inject(LocalStorageService);
+  private http = inject(HttpClient);
+  private constantsService = inject(ConstantsService);
+  private sanitizer = inject(DomSanitizer);
+
   private currentAuthor: AuthorModel;
   private internalRegions: RegionConfiguration[];
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
 
-  constructor(
-    private localStorageService: LocalStorageService,
-    private http: HttpClient,
-    private constantsService: ConstantsService,
-    private sanitizer: DomSanitizer,
-  ) {
+  constructor() {
     this.externalServers = [];
     try {
       this.setCurrentAuthor(this.localStorageService.getCurrentAuthor());

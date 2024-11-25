@@ -1,4 +1,4 @@
-import { Component, TemplateRef, input, output } from "@angular/core";
+import { Component, TemplateRef, input, output, inject } from "@angular/core";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import type { BulletinModel } from "../models/bulletin.model";
@@ -19,6 +19,12 @@ import { HtmlPipe } from "./html.pipe";
   imports: [NgClass, NgIf, FormsModule, NgFor, UpperCasePipe, TranslateModule, HtmlPipe],
 })
 export class BulletinTextComponent {
+  protected authenticationService = inject(AuthenticationService);
+  protected constantsService = inject(ConstantsService);
+  private modalService = inject(BsModalService);
+  copyService = inject(CopyService);
+  translateService = inject(TranslateService);
+
   readonly textField = input<TextcatTextfield>(undefined);
   readonly rows = input<number>(undefined);
   readonly disabled = input<boolean>(undefined);
@@ -28,14 +34,6 @@ export class BulletinTextComponent {
   showTranslations = false;
   showNotes = false;
   modalRef: BsModalRef;
-
-  constructor(
-    protected authenticationService: AuthenticationService,
-    protected constantsService: ConstantsService,
-    private modalService: BsModalService,
-    public copyService: CopyService,
-    public translateService: TranslateService,
-  ) {}
 
   get translationLanguages() {
     return LANGUAGES.filter((l) => l !== this.translateService.currentLang);

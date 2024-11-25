@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
 
@@ -25,9 +25,9 @@ interface File {
 
 @Injectable()
 export class GetFilenamesService {
-  private baseUrl = "https://static.avalanche.report/zamg_qfa";
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private baseUrl = "https://static.avalanche.report/zamg_qfa";
 
   private getHTMLResponse() {
     // Caddy serves directory index as JSON for Accept=application/json

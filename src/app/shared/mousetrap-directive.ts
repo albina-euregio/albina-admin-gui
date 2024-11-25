@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnDestroy, OnInit, input } from "@angular/core";
+import { Directive, ElementRef, OnDestroy, OnInit, input, inject } from "@angular/core";
 import Mousetrap from "mousetrap";
 
 const MOUSETRAP = new Mousetrap();
@@ -9,10 +9,10 @@ const MOUSETRAP = new Mousetrap();
   selector: "[ngxMousetrapKey]",
 })
 export class NgxMousetrapDirective implements OnInit, OnDestroy {
+  private elementRef = inject(ElementRef);
+
   // list of hot key combination for this element.
   readonly ngxMousetrapKey = input<string>(undefined);
-
-  constructor(private elementRef: ElementRef) {}
 
   ngOnInit() {
     const ngxMousetrapKey = this.ngxMousetrapKey();

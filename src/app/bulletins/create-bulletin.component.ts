@@ -1,4 +1,4 @@
-import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild } from "@angular/core";
+import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { forkJoin, map, Observable, of, tap, timer } from "rxjs";
@@ -57,6 +57,20 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
   ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private activeRoute = inject(ActivatedRoute);
+  bulletinsService = inject(BulletinsService);
+  authenticationService = inject(AuthenticationService);
+  translateService = inject(TranslateService);
+  localStorageService = inject(LocalStorageService);
+  protected constantsService = inject(ConstantsService);
+  regionsService = inject(RegionsService);
+  copyService = inject(CopyService);
+  private mapService = inject(MapService);
+  private modalService = inject(BsModalService);
+  private undoRedoService = inject(UndoRedoService);
+
   public bulletinStatus = Enums.BulletinStatus;
 
   public autoSaving: boolean;
@@ -171,21 +185,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   updateBulletinOnServer = debounce(this.updateBulletinOnServerNow, 1000);
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private activeRoute: ActivatedRoute,
-    public bulletinsService: BulletinsService,
-    public authenticationService: AuthenticationService,
-    public translateService: TranslateService,
-    public localStorageService: LocalStorageService,
-    protected constantsService: ConstantsService,
-    public regionsService: RegionsService,
-    public copyService: CopyService,
-    private mapService: MapService,
-    private modalService: BsModalService,
-    private undoRedoService: UndoRedoService,
-  ) {
+  constructor() {
     if (!this.bulletinsService.dates?.length) {
       this.bulletinsService.init();
     }

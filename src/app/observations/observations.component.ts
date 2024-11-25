@@ -7,6 +7,7 @@ import {
   HostListener,
   TemplateRef,
   viewChild,
+  inject,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -70,6 +71,23 @@ export interface MultiselectDropdownData {
   templateUrl: "observations.component.html",
 })
 export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+  filter = inject<ObservationFilterService<GenericObservation>>(ObservationFilterService);
+  markerService = inject<ObservationMarkerService<GenericObservation>>(ObservationMarkerService);
+  markerWeatherStationService = inject<ObservationMarkerWeatherStationService<GenericObservation>>(
+    ObservationMarkerWeatherStationService,
+  );
+  private markerWebcamService =
+    inject<ObservationMarkerWebcamService<GenericObservation>>(ObservationMarkerWebcamService);
+  private markerObserverService = inject<ObservationMarkerObserverService<GenericObservation>>(
+    ObservationMarkerObserverService,
+  );
+  translateService = inject(TranslateService);
+  protected observationsService = inject(AlbinaObservationsService);
+  private sanitizer = inject(DomSanitizer);
+  private regionsService = inject(RegionsService);
+  mapService = inject(BaseMapService);
+  modalService = inject(BsModalService);
+
   public loading: Observable<GenericObservation<any>> | undefined = undefined;
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
@@ -107,19 +125,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   readonly observationPopupTemplate = viewChild<TemplateRef<any>>("observationPopupTemplate");
   readonly observationEditorTemplate = viewChild<TemplateRef<any>>("observationEditorTemplate");
 
-  constructor(
-    public filter: ObservationFilterService<GenericObservation>,
-    public markerService: ObservationMarkerService<GenericObservation>,
-    public markerWeatherStationService: ObservationMarkerWeatherStationService<GenericObservation>,
-    private markerWebcamService: ObservationMarkerWebcamService<GenericObservation>,
-    private markerObserverService: ObservationMarkerObserverService<GenericObservation>,
-    public translateService: TranslateService,
-    protected observationsService: AlbinaObservationsService,
-    private sanitizer: DomSanitizer,
-    private regionsService: RegionsService,
-    public mapService: BaseMapService,
-    public modalService: BsModalService,
-  ) {
+  constructor() {
     this.filter.filterSelectionData = observationFilters((message) => this.translateService.instant(message));
     this.filter.parseActivatedRoute();
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");

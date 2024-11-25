@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -78,11 +78,9 @@ export interface ServerConfiguration {
 
 @Injectable()
 export class ConfigurationService {
-  constructor(
-    public http: HttpClient,
-    private constantsService: ConstantsService,
-    private authenticationService: AuthenticationService,
-  ) {}
+  http = inject(HttpClient);
+  private constantsService = inject(ConstantsService);
+  private authenticationService = inject(AuthenticationService);
 
   public loadPublicLocalServerConfiguration(): Observable<ServerConfiguration & { version: string }> {
     const url = this.constantsService.getServerUrl() + "server/info";

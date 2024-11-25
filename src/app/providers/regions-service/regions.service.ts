@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -14,10 +14,8 @@ import { loadRegions, loadRegionsAran, loadRegionsEuregio, loadRegionsSwitzerlan
 
 @Injectable()
 export class RegionsService {
-  constructor(
-    private translateService: TranslateService,
-    private constantsService: ConstantsService,
-  ) {}
+  private translateService = inject(TranslateService);
+  private constantsService = inject(ConstantsService);
 
   // Level 1 regions: parts of provinces
   getLevel1Regions(id: string): string[] {

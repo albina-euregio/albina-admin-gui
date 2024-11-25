@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -17,6 +17,13 @@ import { FormsModule } from "@angular/forms";
   imports: [NgFor, AlertModule, FormsModule, NgIf, DatePipe, TranslateModule],
 })
 export class ModalMediaFileComponent {
+  bsModalRef = inject(BsModalRef);
+  authenticationService = inject(AuthenticationService);
+  bulletinsService = inject(BulletinsService);
+  constantsService = inject(ConstantsService);
+  mediaFileService = inject(MediaFileService);
+  translateService = inject(TranslateService);
+
   date: [Date, Date];
   component: CreateBulletinComponent;
   file;
@@ -24,15 +31,6 @@ export class ModalMediaFileComponent {
   important;
 
   public alerts: any[] = [];
-
-  constructor(
-    public bsModalRef: BsModalRef,
-    public authenticationService: AuthenticationService,
-    public bulletinsService: BulletinsService,
-    public constantsService: ConstantsService,
-    public mediaFileService: MediaFileService,
-    public translateService: TranslateService,
-  ) {}
 
   mediaFileModalConfirm(): void {
     this.uploadFile();

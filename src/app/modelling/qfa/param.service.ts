@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class ParamService {
-  parameterClasses = {};
+  private translateService = inject(TranslateService);
 
-  constructor(private translateService: TranslateService) {}
+  parameterClasses = {};
 
   public setParameterClasses(parameters: string[]) {
     for (const param of parameters) {

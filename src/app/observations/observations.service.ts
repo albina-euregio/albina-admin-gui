@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -12,12 +12,10 @@ import { saveAs } from "file-saver";
 
 @Injectable()
 export class AlbinaObservationsService {
-  constructor(
-    private http: HttpClient,
-    private filter: ObservationFilterService<GenericObservation>,
-    private authenticationService: AuthenticationService,
-    private constantsService: ConstantsService,
-  ) {}
+  private http = inject(HttpClient);
+  private filter = inject<ObservationFilterService<GenericObservation>>(ObservationFilterService);
+  private authenticationService = inject(AuthenticationService);
+  private constantsService = inject(ConstantsService);
 
   getGenericObservations(): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/observations";

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import * as types from "./qfa-types";
 import { QfaFile } from "./qfa-file.model";
@@ -16,6 +16,11 @@ export interface QfaResult {
 
 @Injectable()
 export class QfaService {
+  filenamesService = inject(GetFilenamesService);
+  dustParamService = inject(GetDustParamService);
+  paramService = inject(ParamService);
+  private http = inject(HttpClient);
+
   baseUrl = "https://static.avalanche.report/zamg_qfa/";
   dustParams = {};
   coords = {
@@ -39,12 +44,7 @@ export class QfaService {
     lienz: [],
   };
 
-  constructor(
-    public filenamesService: GetFilenamesService,
-    public dustParamService: GetDustParamService,
-    public paramService: ParamService,
-    private http: HttpClient,
-  ) {
+  constructor() {
     this.cities = Object.keys(this.files);
   }
 

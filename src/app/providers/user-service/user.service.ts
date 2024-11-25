@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -7,11 +7,9 @@ import { StressLevel } from "../../models/stress-level.model";
 
 @Injectable()
 export class UserService {
-  constructor(
-    public http: HttpClient,
-    public constantsService: ConstantsService,
-    public authenticationService: AuthenticationService,
-  ) {}
+  http = inject(HttpClient);
+  constantsService = inject(ConstantsService);
+  authenticationService = inject(AuthenticationService);
 
   public changePassword(oldPassword: string, newPassword: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/change";

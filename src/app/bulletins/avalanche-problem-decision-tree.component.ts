@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import * as Enums from "../enums/enums";
@@ -12,6 +12,10 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
   imports: [TranslateModule],
 })
 export class AvalancheProblemDecisionTreeComponent {
+  private bsModalRef = inject(BsModalRef);
+  private sanitizer = inject(DomSanitizer);
+  private translateService = inject(TranslateService);
+
   private resultIcons: HTMLElement[];
   private resultLabels: HTMLElement[];
   private resultIconLabelMap = ["9", "10", "8", "7", "6", "5", "4", "3", "2", "1", "0", "11"];
@@ -33,11 +37,7 @@ export class AvalancheProblemDecisionTreeComponent {
   public problem: Enums.AvalancheProblem;
   localizedImage: SafeResourceUrl;
 
-  public constructor(
-    private bsModalRef: BsModalRef,
-    private sanitizer: DomSanitizer,
-    private translateService: TranslateService,
-  ) {
+  public constructor() {
     const url = this.translateService.instant("bulletins.create.decisionTree.filepath");
     this.localizedImage = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }

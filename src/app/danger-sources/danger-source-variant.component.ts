@@ -1,4 +1,4 @@
-import { Component, OnChanges, input, output } from "@angular/core";
+import { Component, OnChanges, input, output, inject } from "@angular/core";
 
 import { debounceTime, Subject } from "rxjs";
 
@@ -60,6 +60,14 @@ import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
   ],
 })
 export class DangerSourceVariantComponent implements OnChanges {
+  dangerSourcesService = inject(DangerSourcesService);
+  private sanitizer = inject(DomSanitizer);
+  authenticationService = inject(AuthenticationService);
+  private modalService = inject(BsModalService);
+  constantsService = inject(ConstantsService);
+  regionsService = inject(RegionsService);
+  translateService = inject(TranslateService);
+
   readonly variant = input<DangerSourceVariantModel>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly isCompactMapLayout = input<boolean>(undefined);
@@ -143,15 +151,7 @@ export class DangerSourceVariantComponent implements OnChanges {
     },
   };
 
-  constructor(
-    public dangerSourcesService: DangerSourcesService,
-    private sanitizer: DomSanitizer,
-    public authenticationService: AuthenticationService,
-    private modalService: BsModalService,
-    public constantsService: ConstantsService,
-    public regionsService: RegionsService,
-    public translateService: TranslateService,
-  ) {
+  constructor() {
     this.updateVariantOnServerEventDebounce
       .pipe(debounceTime(1000))
       .subscribe((variant) => this.updateVariantOnServerEvent.emit(variant));

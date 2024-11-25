@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, viewChild, input } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, viewChild, input, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
@@ -29,11 +29,12 @@ import { xor } from "lodash";
   templateUrl: "observation-editor.component.html",
 })
 export class ObservationEditorComponent implements AfterViewInit {
-  constructor(
-    authenticationService: AuthenticationService,
-    private geocodingService: GeocodingService,
-    private coordinateDataService: CoordinateDataService,
-  ) {
+  private geocodingService = inject(GeocodingService);
+  private coordinateDataService = inject(CoordinateDataService);
+
+  constructor() {
+    const authenticationService = inject(AuthenticationService);
+
     this.avalancheProblems = authenticationService.getActiveRegionAvalancheProblems();
   }
 

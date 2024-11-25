@@ -1,4 +1,4 @@
-import { OnChanges, Component, input, output } from "@angular/core";
+import { OnChanges, Component, input, output, inject } from "@angular/core";
 import { MatrixInformationModel } from "app/models/matrix-information.model";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -18,6 +18,9 @@ import { FormsModule } from "@angular/forms";
   imports: [NgxSliderModule, NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule],
 })
 export class MatrixParameterComponent implements OnChanges {
+  constantsService = inject(ConstantsService);
+  translateService = inject(TranslateService);
+
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel | DangerSourceVariantModel>(undefined);
   readonly matrixInformation = input<MatrixInformationModel>(undefined);
   readonly disabled = input<boolean>(undefined);
@@ -211,10 +214,7 @@ export class MatrixParameterComponent implements OnChanges {
     },
   };
 
-  constructor(
-    public constantsService: ConstantsService,
-    public translateService: TranslateService,
-  ) {
+  constructor() {
     this.dangerRatingEnabled = false;
   }
 

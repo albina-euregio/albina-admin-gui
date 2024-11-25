@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { flatMap, last, map } from "rxjs/operators";
@@ -9,14 +9,12 @@ import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AlpsolutProfileService {
+  private http = inject(HttpClient);
+  private authenticationService = inject(AuthenticationService);
+  private sanitizer = inject(DomSanitizer);
+
   private readonly TOKEN_URL = environment.apiBaseUrl + "../api_ext/widget.alpsolut.eu/";
   private readonly WEB = "https://salient.alpsolut.eu/v1/geo/stations";
-
-  constructor(
-    private http: HttpClient,
-    private authenticationService: AuthenticationService,
-    private sanitizer: DomSanitizer,
-  ) {}
 
   /**
    * https://salient.alpsolut.eu/docs

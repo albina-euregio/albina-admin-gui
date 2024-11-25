@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { Marker } from "leaflet";
 import { degreeToAspect, GenericObservation, WeatherStationParameter } from "./models/generic-observation.model";
 import { Aspect } from "../enums/enums";
@@ -132,9 +132,9 @@ const aspectColors = {
 
 @Injectable()
 export class ObservationMarkerWeatherStationService<T extends Partial<GenericObservation>> {
-  public weatherStationLabel: WeatherStationParameter | undefined = undefined;
+  private observationMarkerService = inject<ObservationMarkerService<T>>(ObservationMarkerService);
 
-  constructor(private observationMarkerService: ObservationMarkerService<T>) {}
+  public weatherStationLabel: WeatherStationParameter | undefined = undefined;
 
   createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -15,19 +15,17 @@ import { NgFor, DatePipe } from "@angular/common";
   imports: [NgFor, AlertModule, DatePipe, TranslateModule],
 })
 export class ModalPublicationStatusComponent {
+  bsModalRef = inject(BsModalRef);
+  authenticationService = inject(AuthenticationService);
+  bulletinsService = inject(BulletinsService);
+  constantsService = inject(ConstantsService);
+  translateService = inject(TranslateService);
+
   json;
   date: [Date, Date];
   component: CreateBulletinComponent;
 
   public alerts: any[] = [];
-
-  constructor(
-    public bsModalRef: BsModalRef,
-    public authenticationService: AuthenticationService,
-    public bulletinsService: BulletinsService,
-    public constantsService: ConstantsService,
-    public translateService: TranslateService,
-  ) {}
 
   publicationStatusModalConfirm(): void {
     this.component.publicationStatusModalConfirm();

@@ -1,6 +1,6 @@
 //implement a service which returns the height, aspect name and angle of two coordinates using plane.model.ts
 
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { ElevationService } from "../map-service/elevation.service";
 import { Observable } from "rxjs";
 
@@ -27,6 +27,8 @@ export interface Plane {
 
 @Injectable()
 export class CoordinateDataService implements Plane {
+  private elevationService = inject(ElevationService);
+
   public EARTH_RADIUS = 6371000;
   public ASPECTS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   public lat: number;
@@ -35,8 +37,6 @@ export class CoordinateDataService implements Plane {
   private p1: Point;
   private p2: Point;
   private p3: Point;
-
-  constructor(private elevationService: ElevationService) {}
 
   //public function to set coordinates, fetch height for each point, return aspectName and angle of plane
   public getCoordData(lat: number, lng: number): Observable<PlaneData> {

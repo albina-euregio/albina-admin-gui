@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import * as L from "leaflet";
 import { Browser, GeoJSON, Map, TileLayer, TileLayerOptions } from "leaflet";
 import "leaflet.sync";
@@ -35,6 +35,11 @@ const dataSource = "eaws-regions";
 
 @Injectable()
 export class MapService {
+  protected regionsService = inject(RegionsService);
+  translateService = inject(TranslateService);
+  protected authenticationService = inject(AuthenticationService);
+  protected constantsService = inject(ConstantsService);
+
   public map: Map;
   public afternoonMap: Map;
   private amControl: L.Control;
@@ -55,12 +60,7 @@ export class MapService {
     aggregatedRegions: PmLeafletLayer;
   };
 
-  constructor(
-    protected regionsService: RegionsService,
-    public translateService: TranslateService,
-    protected authenticationService: AuthenticationService,
-    protected constantsService: ConstantsService,
-  ) {
+  constructor() {
     this.amControl = new AmPmControl({ position: "bottomleft" }).setText(
       this.translateService.instant("daytime.earlier"),
     );

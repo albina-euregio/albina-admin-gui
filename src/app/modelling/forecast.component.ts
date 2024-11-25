@@ -7,6 +7,7 @@ import {
   AfterContentInit,
   TemplateRef,
   viewChild,
+  inject,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
@@ -44,6 +45,18 @@ export interface MultiselectDropdownData {
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private regionsService = inject(RegionsService);
+  mapService = inject(BaseMapService);
+  private multimodelSource = inject(MultimodelSourceService);
+  private meteogramSource = inject(MeteogramSourceService);
+  private observedProfileSource = inject(ObservedProfileSourceService);
+  private alpsolutProfileSource = inject(AlpsolutProfileService);
+  private qfaService = inject(QfaService);
+  paramService = inject(ParamService);
+  private translateService = inject(TranslateService);
+  modalService = inject(BsModalService);
+
   layout = "map" as const;
   selectedModelPoint: GenericObservation;
   selectedModelType: ForecastSource;
@@ -76,20 +89,6 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   readonly observationsMap = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   readonly qfaSelect = viewChild<ElementRef<HTMLSelectElement>>("qfaSelect");
   readonly observationPopupTemplate = viewChild<TemplateRef<any>>("observationPopupTemplate");
-
-  constructor(
-    private route: ActivatedRoute,
-    private regionsService: RegionsService,
-    public mapService: BaseMapService,
-    private multimodelSource: MultimodelSourceService,
-    private meteogramSource: MeteogramSourceService,
-    private observedProfileSource: ObservedProfileSourceService,
-    private alpsolutProfileSource: AlpsolutProfileService,
-    private qfaService: QfaService,
-    public paramService: ParamService,
-    private translateService: TranslateService,
-    public modalService: BsModalService,
-  ) {}
 
   files = {};
 

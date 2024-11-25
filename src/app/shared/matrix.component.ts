@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnChanges, SimpleChange, input, viewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, OnChanges, SimpleChange, input, viewChild, inject } from "@angular/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -13,6 +13,8 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [TranslateModule],
 })
 export class MatrixComponent implements AfterViewInit, OnChanges {
+  constantsService = inject(ConstantsService);
+
   readonly bulletin = input<BulletinModel>(undefined);
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly matrixInformation = input<MatrixInformationModel>(undefined);
@@ -68,8 +70,6 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   readonly cell44 = viewChild<ElementRef>("44");
   readonly cell45 = viewChild<ElementRef>("45");
   readonly cell46 = viewChild<ElementRef>("46");
-
-  constructor(public constantsService: ConstantsService) {}
 
   ngAfterViewInit() {
     this.resetMatrix();

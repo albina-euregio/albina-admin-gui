@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import type { RegionConfiguration } from "../configuration-service/configuration.service";
 import type { AuthorModel } from "../../models/author.model";
@@ -8,7 +8,7 @@ import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class LocalStorageService {
-  constructor(private translateService: TranslateService) {}
+  private translateService = inject(TranslateService);
 
   private get<T>(key: string): T {
     try {
