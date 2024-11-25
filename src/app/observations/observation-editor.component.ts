@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, viewChild, input } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, viewChild, input, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
@@ -29,20 +29,16 @@ import { xor } from "lodash";
   templateUrl: "observation-editor.component.html",
 })
 export class ObservationEditorComponent implements AfterViewInit {
-  constructor(
-    authenticationService: AuthenticationService,
-    private geocodingService: GeocodingService,
-    private coordinateDataService: CoordinateDataService,
-  ) {
-    this.avalancheProblems = authenticationService.getActiveRegionAvalancheProblems();
-  }
+  private geocodingService = inject(GeocodingService);
+  private coordinateDataService = inject(CoordinateDataService);
+  private authenticationService = inject(AuthenticationService);
 
   readonly observation = input<GenericObservation>(undefined);
   readonly eventDateDate = viewChild<ElementRef<HTMLInputElement>>("eventDateDate");
   readonly eventDateTime = viewChild<ElementRef<HTMLInputElement>>("eventDateTime");
   readonly reportDateDate = viewChild<ElementRef<HTMLInputElement>>("reportDateDate");
   readonly reportDateTime = viewChild<ElementRef<HTMLInputElement>>("reportDateTime");
-  avalancheProblems: Enums.AvalancheProblem[];
+  avalancheProblems: Enums.AvalancheProblem[] = this.authenticationService.getActiveRegionAvalancheProblems();
   dangerPatterns = Object.values(Enums.DangerPattern);
   importantObservations = Object.values(ImportantObservation);
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);

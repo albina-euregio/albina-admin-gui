@@ -1,4 +1,4 @@
-import { Component, input } from "@angular/core";
+import { Component, input, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -14,20 +14,15 @@ import { FormsModule } from "@angular/forms";
   imports: [NgFor, AlertModule, TabsModule, FormsModule, NgIf, TranslateModule],
 })
 export class RegionConfigurationComponent {
+  private translateService = inject(TranslateService);
+  configurationService = inject(ConfigurationService);
+  authenticationService = inject(AuthenticationService);
+
   readonly config = input<RegionConfiguration>(undefined);
 
-  public configurationPropertiesLoaded = false;
-  public saveConfigurationLoading: boolean;
+  public saveConfigurationLoading = false;
 
   public alerts: any[] = [];
-
-  constructor(
-    private translateService: TranslateService,
-    public configurationService: ConfigurationService,
-    public authenticationService: AuthenticationService,
-  ) {
-    this.saveConfigurationLoading = false;
-  }
 
   public save() {
     this.saveConfigurationLoading = true;

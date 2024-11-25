@@ -1,4 +1,4 @@
-import { Component, input, output } from "@angular/core";
+import { Component, input, output, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -24,6 +24,8 @@ import { AspectsComponent } from "../shared/aspects.component";
   ],
 })
 export class AvalancheProblemPreviewComponent {
+  translateService = inject(TranslateService);
+
   readonly bulletin = input<BulletinModel>(undefined);
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly avalancheProblem = input<AvalancheProblemModel>(undefined);
@@ -32,8 +34,6 @@ export class AvalancheProblemPreviewComponent {
   readonly changeAvalancheProblemPreviewEvent = output();
 
   avalancheProblemEnum = Enums.AvalancheProblem;
-
-  constructor(public translateService: TranslateService) {}
 
   isAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
     return this.avalancheProblem().avalancheProblem === avalancheProblem;

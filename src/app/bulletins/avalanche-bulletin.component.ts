@@ -1,4 +1,4 @@
-import { Component, TemplateRef, HostListener, input, output, viewChild } from "@angular/core";
+import { Component, TemplateRef, HostListener, input, output, viewChild, inject } from "@angular/core";
 
 import { environment } from "../../environments/environment";
 
@@ -45,6 +45,16 @@ import { BulletinTextComponent } from "./bulletin-text.component";
   ],
 })
 export class AvalancheBulletinComponent {
+  bulletinsService = inject(BulletinsService);
+  private sanitizer = inject(DomSanitizer);
+  authenticationService = inject(AuthenticationService);
+  private modalService = inject(BsModalService);
+  constantsService = inject(ConstantsService);
+  regionsService = inject(RegionsService);
+  copyService = inject(CopyService);
+  translateService = inject(TranslateService);
+  undoRedoService = inject(UndoRedoService);
+
   readonly bulletin = input<BulletinModel>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly isCompactMapLayout = input<boolean>(undefined);
@@ -88,18 +98,6 @@ export class AvalancheBulletinComponent {
     keyboard: true,
     class: "modal-md",
   };
-
-  constructor(
-    public bulletinsService: BulletinsService,
-    private sanitizer: DomSanitizer,
-    public authenticationService: AuthenticationService,
-    private modalService: BsModalService,
-    public constantsService: ConstantsService,
-    public regionsService: RegionsService,
-    public copyService: CopyService,
-    public translateService: TranslateService,
-    public undoRedoService: UndoRedoService,
-  ) {}
 
   updateBulletinOnServer() {
     this.updateBulletinOnServerEvent.emit(this.bulletin());

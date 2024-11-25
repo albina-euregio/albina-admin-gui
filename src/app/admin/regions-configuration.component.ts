@@ -1,4 +1,4 @@
-import { Component, AfterContentInit } from "@angular/core";
+import { Component, AfterContentInit, inject } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
@@ -15,18 +15,13 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [NgIf, AccordionModule, NgFor, RegionConfigurationComponent, TranslateModule],
 })
 export class RegionsConfigurationComponent implements AfterContentInit {
-  public configurationPropertiesLoaded = false;
-  public saveConfigurationLoading: boolean;
-  public regionConfigurations: RegionConfiguration[];
+  private authenticationService = inject(AuthenticationService);
+  private constantsService = inject(ConstantsService);
+  regionsService = inject(RegionsService);
+  configurationService = inject(ConfigurationService);
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private constantsService: ConstantsService,
-    public regionsService: RegionsService,
-    public configurationService: ConfigurationService,
-  ) {
-    this.saveConfigurationLoading = false;
-  }
+  public configurationPropertiesLoaded = false;
+  public regionConfigurations: RegionConfiguration[];
 
   ngAfterContentInit() {
     if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {

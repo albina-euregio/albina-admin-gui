@@ -1,4 +1,4 @@
-import { Component, AfterContentInit } from "@angular/core";
+import { Component, AfterContentInit, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
@@ -25,6 +25,14 @@ type Result =
   imports: [FormsModule, NgIf, NgFor, TranslateModule],
 })
 export class UpdateUserComponent implements AfterContentInit {
+  private imageCompress = inject(NgxImageCompressService);
+  private translateService = inject(TranslateService);
+  private userService = inject(UserService);
+  configurationService = inject(ConfigurationService);
+  authenticationService = inject(AuthenticationService);
+  regionsService = inject(RegionsService);
+  private bsModalRef = inject(BsModalRef);
+
   public updateUserLoading: boolean;
   public update: boolean;
   public isAdmin: boolean;
@@ -45,16 +53,6 @@ export class UpdateUserComponent implements AfterContentInit {
   public activeLanguageCode: string;
 
   public result: Result;
-
-  constructor(
-    private imageCompress: NgxImageCompressService,
-    private translateService: TranslateService,
-    private userService: UserService,
-    public configurationService: ConfigurationService,
-    public authenticationService: AuthenticationService,
-    public regionsService: RegionsService,
-    private bsModalRef: BsModalRef,
-  ) {}
 
   ngAfterContentInit() {
     if (this.user) {

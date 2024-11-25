@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { BlogService } from "../providers/blog-service/blog.service";
@@ -12,13 +12,11 @@ import { NgFor } from "@angular/common";
   imports: [NgFor, AlertModule, TranslateModule],
 })
 export class BlogComponent {
-  public alerts: any[] = [];
+  blogService = inject(BlogService);
+  regionsService = inject(RegionsService);
+  translateService = inject(TranslateService);
 
-  constructor(
-    public blogService: BlogService,
-    public regionsService: RegionsService,
-    public translateService: TranslateService,
-  ) {}
+  public alerts: any[] = [];
 
   sendLatestBlogPost(event, region, language, test) {
     event.stopPropagation();

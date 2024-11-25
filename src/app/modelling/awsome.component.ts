@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, viewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, viewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule, formatDate } from "@angular/common";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
@@ -45,6 +45,12 @@ type DetailsTabLabel = string;
   templateUrl: "awsome.component.html",
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
+  private route = inject(ActivatedRoute);
+  filterService = inject<ObservationFilterService<FeatureProperties>>(ObservationFilterService);
+  mapService = inject(BaseMapService);
+  markerService = inject<ObservationMarkerService<FeatureProperties>>(ObservationMarkerService);
+  private sanitizer = inject(DomSanitizer);
+
   // https://gitlab.com/avalanche-warning
   configURL = "https://models.avalanche.report/dashboard/awsome.json";
   config: Awsome = {} as Awsome;
@@ -57,14 +63,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
-
-  constructor(
-    private route: ActivatedRoute,
-    public filterService: ObservationFilterService<FeatureProperties>,
-    public mapService: BaseMapService,
-    public markerService: ObservationMarkerService<FeatureProperties>,
-    private sanitizer: DomSanitizer,
-  ) {}
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from "@angular/core";
+import { Component, HostListener, OnDestroy, OnInit, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BulletinUpdateModel } from "../models/bulletin-update.model";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -23,24 +23,24 @@ import { FormsModule } from "@angular/forms";
   imports: [NgIf, NgFor, FormsModule, DatePipe, TranslateModule],
 })
 export class BulletinsComponent implements OnInit, OnDestroy {
+  translate = inject(TranslateService);
+  bulletinsService = inject(BulletinsService);
+  route = inject(ActivatedRoute);
+  translateService = inject(TranslateService);
+  authenticationService = inject(AuthenticationService);
+  constantsService = inject(ConstantsService);
+  localStorageService = inject(LocalStorageService);
+  router = inject(Router);
+  wsUpdateService = inject(WsUpdateService);
+  userService = inject(UserService);
+  private modalService = inject(BsModalService);
+
   public bulletinStatus = Enums.BulletinStatus;
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
   public readonly postStressLevel = new Subject<StressLevel>();
 
-  constructor(
-    public translate: TranslateService,
-    public bulletinsService: BulletinsService,
-    public route: ActivatedRoute,
-    public translateService: TranslateService,
-    public authenticationService: AuthenticationService,
-    public constantsService: ConstantsService,
-    public localStorageService: LocalStorageService,
-    public router: Router,
-    public wsUpdateService: WsUpdateService,
-    public userService: UserService,
-    private modalService: BsModalService,
-  ) {
+  constructor() {
     this.copying = false;
 
     this.bulletinsService.init();

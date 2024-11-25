@@ -17,8 +17,6 @@ export class AspectsComponent {
 
   aspect = Enums.Aspect;
 
-  constructor() {}
-
   getSize() {
     return this.size() + "px";
   }

@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, input, output } from "@angular/core";
+import { Component, TemplateRef, ViewChild, input, output, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { isAvalancheWarningServiceObservation } from "./models/observation.model";
 import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
@@ -15,6 +15,8 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
   templateUrl: "observation-table.component.html",
 })
 export class ObservationTableComponent {
+  private markerService = inject<ObservationMarkerService<GenericObservation>>(ObservationMarkerService);
+
   readonly observations = input<GenericObservation[]>([]);
   readonly observationClick = output<GenericObservation>();
   readonly editObservationEvent = output<GenericObservation>();
@@ -28,8 +30,6 @@ export class ObservationTableComponent {
     [ImportantObservation.IceFormation]: grainShapes.IF.key,
     [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
   };
-
-  constructor(private markerService: ObservationMarkerService<GenericObservation>) {}
 
   get sortedObservations(): GenericObservation[] {
     return (this.observations() || []).sort((o1, o2) => +o2.eventDate - +o1.eventDate);

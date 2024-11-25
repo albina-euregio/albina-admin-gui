@@ -1,4 +1,4 @@
-import { Component, OnChanges, input, output } from "@angular/core";
+import { Component, OnChanges, input, output, inject } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -32,6 +32,10 @@ import { MatrixComponent } from "../shared/matrix.component";
   ],
 })
 export class AvalancheProblemDetailComponent implements OnChanges {
+  authenticationService = inject(AuthenticationService);
+  private modalService = inject(BsModalService);
+  translateService = inject(TranslateService);
+
   readonly bulletin = input<BulletinModel>(undefined);
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly avalancheProblemModel = input<AvalancheProblemModel>(undefined);
@@ -56,12 +60,6 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   directionEnum = Enums.DangerRatingDirection;
   avalancheTypeEnum = Enums.AvalancheType;
   avalancheProblemEnum = Enums.AvalancheProblem;
-
-  constructor(
-    public authenticationService: AuthenticationService,
-    private modalService: BsModalService,
-    public translateService: TranslateService,
-  ) {}
 
   ngOnChanges() {
     this.avalancheProblems = this.authenticationService.getActiveRegionAvalancheProblems();

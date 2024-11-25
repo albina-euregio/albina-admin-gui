@@ -1,4 +1,4 @@
-import { Component, OnInit, output, input } from "@angular/core";
+import { Component, OnInit, output, input, inject } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { ECElementEvent, EChartsOption } from "echarts";
@@ -14,6 +14,9 @@ import type { FilterSelectionData } from "./filter-selection-data";
   templateUrl: "./observation-chart.component.html",
 })
 export class ObservationChartComponent<T> implements OnInit {
+  markerService = inject<ObservationMarkerService<T>>(ObservationMarkerService);
+  protected translateService = inject(TranslateService);
+
   longClickDur = 200;
   private pressTimer;
 
@@ -24,11 +27,6 @@ export class ObservationChartComponent<T> implements OnInit {
   get isActive(): boolean {
     return this.filterSelection()["selected"].size > 0 || this.filterSelection()["highlighted"].size > 0;
   }
-
-  constructor(
-    public markerService: ObservationMarkerService<T>,
-    protected translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.options = this.filterSelection().chartType === "rose" ? this.roseOptions : this.barOptions;

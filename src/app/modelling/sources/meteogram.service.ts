@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { Observable, from, map } from "rxjs";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
@@ -7,7 +7,7 @@ import { formatDate } from "@angular/common";
 
 @Injectable()
 export class MeteogramSourceService {
-  constructor(private regionsService: RegionsService) {}
+  private regionsService = inject(RegionsService);
 
   getZamgMeteograms(): Observable<GenericObservation[]> {
     return from(this.regionsService.getActiveRegion("AT-07")).pipe(

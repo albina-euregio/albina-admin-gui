@@ -4,6 +4,4 @@ import { Component } from "@angular/core";
   templateUrl: "500.component.html",
   standalone: true,
 })
-export class P500Component {
-  constructor() {}
-}
+export class P500Component {}

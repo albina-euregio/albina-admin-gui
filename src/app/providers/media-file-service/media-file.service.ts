@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient, HttpParams, HttpRequest, HttpEvent } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -7,12 +7,10 @@ import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class MediaFileService {
-  constructor(
-    public http: HttpClient,
-    private constantsService: ConstantsService,
-    private translateService: TranslateService,
-    private authenticationService: AuthenticationService,
-  ) {}
+  http = inject(HttpClient);
+  private constantsService = inject(ConstantsService);
+  private translateService = inject(TranslateService);
+  private authenticationService = inject(AuthenticationService);
 
   uploadFile(date: [Date, Date], file: File, text: string, important: boolean): Observable<HttpEvent<any>> {
     const url =

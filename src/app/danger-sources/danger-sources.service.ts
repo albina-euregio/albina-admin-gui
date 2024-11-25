@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -9,6 +9,10 @@ import { JsonArray } from "protomaps-leaflet";
 
 @Injectable()
 export class DangerSourcesService {
+  http = inject(HttpClient);
+  private constantsService = inject(ConstantsService);
+  private authenticationService = inject(AuthenticationService);
+
   private activeDate: [Date, Date];
   private isEditable: boolean;
   private isReadOnly: boolean;
@@ -18,11 +22,7 @@ export class DangerSourcesService {
 
   public dates: [Date, Date][];
 
-  constructor(
-    public http: HttpClient,
-    private constantsService: ConstantsService,
-    private authenticationService: AuthenticationService,
-  ) {
+  constructor() {
     this.init();
   }
 

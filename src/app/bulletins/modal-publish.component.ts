@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { TranslateModule } from "@ngx-translate/core";
@@ -10,12 +10,12 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [TranslateModule],
 })
 export class ModalPublishComponent {
+  bsModalRef = inject(BsModalRef);
+
   text: string;
   date: [Date, Date];
   change: boolean;
   component: CreateBulletinComponent;
-
-  constructor(public bsModalRef: BsModalRef) {}
 
   publishBulletinsModalConfirm(): void {
     this.component.publishBulletinsModalConfirm(this.date, this.change);

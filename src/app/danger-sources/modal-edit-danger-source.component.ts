@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -16,16 +16,14 @@ import { DatePipe } from "@angular/common";
   imports: [FormsModule, DatePipe, TranslateModule],
 })
 export class ModalEditDangerSourceComponent {
+  bsModalRef = inject(BsModalRef);
+  authenticationService = inject(AuthenticationService);
+  dangerSourcesService = inject(DangerSourcesService);
+  constantsService = inject(ConstantsService);
+  translateService = inject(TranslateService);
+
   dangerSource: DangerSourceModel;
   component: CreateDangerSourcesComponent;
-
-  constructor(
-    public bsModalRef: BsModalRef,
-    public authenticationService: AuthenticationService,
-    public dangerSourcesService: DangerSourcesService,
-    public constantsService: ConstantsService,
-    public translateService: TranslateService,
-  ) {}
 
   editDangerSourceModalConfirm(): void {
     this.dangerSourcesService.updateDangerSource(this.dangerSource).subscribe(() => {

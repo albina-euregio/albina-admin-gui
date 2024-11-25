@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -13,16 +13,16 @@ import { DangerSourcesService } from "./danger-sources.service";
   imports: [NgFor, NgIf, DatePipe, TranslateModule],
 })
 export class DangerSourcesComponent {
-  constructor(
-    public translate: TranslateService,
-    public dangerSourcesService: DangerSourcesService,
-    public route: ActivatedRoute,
-    public translateService: TranslateService,
-    public authenticationService: AuthenticationService,
-    public constantsService: ConstantsService,
-    public router: Router,
-    public userService: UserService,
-  ) {
+  translate = inject(TranslateService);
+  dangerSourcesService = inject(DangerSourcesService);
+  route = inject(ActivatedRoute);
+  translateService = inject(TranslateService);
+  authenticationService = inject(AuthenticationService);
+  constantsService = inject(ConstantsService);
+  router = inject(Router);
+  userService = inject(UserService);
+
+  constructor() {
     this.dangerSourcesService.init();
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -9,17 +9,15 @@ import { FilterSelectionData, ValueType } from "./filter-selection-data";
 export class ObservationFilterService<
   T extends Partial<Pick<GenericObservation, "$source" | "latitude" | "longitude" | "region" | "eventDate">>,
 > {
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private constantsService = inject(ConstantsService);
+  private localStorageService = inject(LocalStorageService);
+
   public dateRange: Date[] = [];
   public regions = {} as Record<string, boolean>;
   public observationSources = {} as Record<ObservationSource, boolean>;
   public filterSelectionData: FilterSelectionData<T>[] = [];
-
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private constantsService: ConstantsService,
-    private localStorageService: LocalStorageService,
-  ) {}
 
   set days(days: number) {
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;

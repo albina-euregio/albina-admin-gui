@@ -1,4 +1,4 @@
-import { Component, TemplateRef, viewChild } from "@angular/core";
+import { Component, TemplateRef, viewChild, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -31,6 +31,16 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
   ],
 })
 export class FullLayoutComponent {
+  translateService = inject(TranslateService);
+  authenticationService = inject(AuthenticationService);
+  bulletinsService = inject(BulletinsService);
+  regionsService = inject(RegionsService);
+  constantsService = inject(ConstantsService);
+  router = inject(Router);
+  localStorageService = inject(LocalStorageService);
+  private modalService = inject(BsModalService);
+  private sanitizer = inject(DomSanitizer);
+
   public isSidebarOpen = false;
 
   public tmpRegion: RegionConfiguration;
@@ -43,20 +53,6 @@ export class FullLayoutComponent {
     keyboard: true,
     class: "modal-sm",
   };
-
-  constructor(
-    public translateService: TranslateService,
-    public authenticationService: AuthenticationService,
-    public bulletinsService: BulletinsService,
-    public regionsService: RegionsService,
-    public constantsService: ConstantsService,
-    public router: Router,
-    public localStorageService: LocalStorageService,
-    private modalService: BsModalService,
-    private sanitizer: DomSanitizer,
-  ) {
-    this.tmpRegion = undefined;
-  }
 
   get environment() {
     return environment;

@@ -1,17 +1,19 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { BulletinModel } from "app/models/bulletin.model";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LangTexts } from "../../models/text.model";
 
 @Injectable()
 export class CopyService {
+  constantsService = inject(ConstantsService);
+
   private copyTextcat: boolean;
   private copyBulletin: boolean;
   private textTextcat: string;
   private bulletin: BulletinModel;
   private texts: LangTexts;
 
-  constructor(public constantsService: ConstantsService) {
+  constructor() {
     this.copyTextcat = false;
     this.copyBulletin = false;
   }

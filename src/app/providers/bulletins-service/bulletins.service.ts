@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Observable, of, Subject } from "rxjs";
 import { map } from "rxjs/operators";
@@ -18,6 +18,14 @@ class TrainingModeError extends Error {}
 
 @Injectable()
 export class BulletinsService {
+  http = inject(HttpClient);
+  private constantsService = inject(ConstantsService);
+  private authenticationService = inject(AuthenticationService);
+  private translateService = inject(TranslateService);
+  private localStorageService = inject(LocalStorageService);
+  private userService = inject(UserService);
+  private wsBulletinService = inject(WsBulletinService);
+
   private activeDate: [Date, Date];
   private copyDate: [Date, Date];
   private isEditable: boolean;
@@ -31,16 +39,6 @@ export class BulletinsService {
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
 
   public dates: [Date, Date][];
-
-  constructor(
-    public http: HttpClient,
-    private constantsService: ConstantsService,
-    private authenticationService: AuthenticationService,
-    private translateService: TranslateService,
-    private localStorageService: LocalStorageService,
-    private userService: UserService,
-    private wsBulletinService: WsBulletinService,
-  ) {}
 
   init({ days } = { days: 10 }) {
     this.dates = [];

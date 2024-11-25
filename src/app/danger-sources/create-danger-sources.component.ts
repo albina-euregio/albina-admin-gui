@@ -1,4 +1,4 @@
-import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild } from "@angular/core";
+import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { map, Subscription, timer } from "rxjs";
@@ -45,6 +45,18 @@ import { DangerRatingIconComponent } from "../shared/danger-rating-icon.componen
   ],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private activeRoute = inject(ActivatedRoute);
+  dangerSourcesService = inject(DangerSourcesService);
+  authenticationService = inject(AuthenticationService);
+  translateService = inject(TranslateService);
+  private localStorageService = inject(LocalStorageService);
+  constantsService = inject(ConstantsService);
+  regionsService = inject(RegionsService);
+  private mapService = inject(MapService);
+  private modalService = inject(BsModalService);
+
   public variantStatus = DangerSourceVariantStatus;
   public variantType = DangerSourceVariantType;
 
@@ -115,19 +127,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     class: "modal-md",
   };
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private activeRoute: ActivatedRoute,
-    public dangerSourcesService: DangerSourcesService,
-    public authenticationService: AuthenticationService,
-    public translateService: TranslateService,
-    private localStorageService: LocalStorageService,
-    public constantsService: ConstantsService,
-    public regionsService: RegionsService,
-    private mapService: MapService,
-    private modalService: BsModalService,
-  ) {
+  constructor() {
     this.loading = false;
     this.showAfternoonMap = false;
     this.showForeignRegions = true;

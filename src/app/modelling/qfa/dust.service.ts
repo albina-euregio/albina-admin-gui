@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 enum Cities {
@@ -11,6 +11,8 @@ type DustParams = Partial<Record<Cities, Promise<string[]>[]>>;
 
 @Injectable()
 export class GetDustParamService {
+  private http = inject(HttpClient);
+
   private pxOfCity = {
     bozen: {
       x: 278,
@@ -47,8 +49,6 @@ export class GetDustParamService {
     "rgb(202,126,113)": "#CA7E71",
     "rgb(202,102,80)": "#CA6650",
   };
-
-  constructor(private http: HttpClient) {}
 
   private readonly URL = "https://admin.avalanche.report/forecast.uoa.gr/0day/DUST/GRID1/zoomdload/%d.zoomdload.png";
 

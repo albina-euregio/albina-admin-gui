@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import ca from "../assets/i18n/ca.json";
@@ -19,10 +19,10 @@ import { LocalStorageService } from "./providers/local-storage-service/local-sto
   imports: [RouterOutlet],
 })
 export class AppComponent {
-  constructor(
-    private translateService: TranslateService,
-    private localStorageService: LocalStorageService,
-  ) {
+  private translateService = inject(TranslateService);
+  private localStorageService = inject(LocalStorageService);
+
+  constructor() {
     // lang
     this.translateService.addLangs(["de", "it", "en", "fr", "es", "ca", "oc"]);
     this.translateService.setTranslation("de", de);

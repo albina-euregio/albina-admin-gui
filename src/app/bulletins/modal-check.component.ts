@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { TranslateModule } from "@ngx-translate/core";
@@ -10,10 +10,10 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [TranslateModule],
 })
 export class ModalCheckComponent {
+  bsModalRef = inject(BsModalRef);
+
   text: string;
   component: CreateBulletinComponent;
-
-  constructor(public bsModalRef: BsModalRef) {}
 
   confirm(): void {
     this.component.checkBulletinsModalConfirm();

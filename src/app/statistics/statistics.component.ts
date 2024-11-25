@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { StatisticsService } from "../providers/statistics-service/statistics.service";
 import { saveAs } from "file-saver";
@@ -14,18 +14,14 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
   imports: [FormsModule, BsDatepickerModule, NgIf, TranslateModule],
 })
 export class StatisticsComponent {
-  public loadingStatistics: boolean;
+  statisticsService = inject(StatisticsService);
+  translateService = inject(TranslateService);
+  constantsService = inject(ConstantsService);
+
+  public loadingStatistics = false;
   public bsRangeValue: Date[];
   public duplicates: boolean;
   public extended: boolean;
-
-  constructor(
-    public statisticsService: StatisticsService,
-    public translateService: TranslateService,
-    public constantsService: ConstantsService,
-  ) {
-    this.loadingStatistics = false;
-  }
 
   getStatistics(event) {
     event.stopPropagation();
