@@ -31,7 +31,7 @@ export class StatisticsComponent {
     event.stopPropagation();
     if (this.bsRangeValue) {
       this.loadingStatistics = true;
-      document.getElementById("overlay").style.display = "block";
+      //document.getElementById("overlay").style.display = "block";
       this.statisticsService
         .getStatisticsCsv(
           this.bsRangeValue[0],
@@ -42,7 +42,7 @@ export class StatisticsComponent {
         )
         .subscribe((blob) => {
           this.loadingStatistics = false;
-          document.getElementById("overlay").style.display = "none";
+          //document.getElementById("overlay").style.display = "none";
           const startDate = this.constantsService.getISODateString(this.bsRangeValue[0]);
           const endDate = this.constantsService.getISODateString(this.bsRangeValue[1]);
           let filename = "statistic_" + startDate + "_" + endDate;
