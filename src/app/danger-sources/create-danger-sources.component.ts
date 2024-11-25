@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
+import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { map, Subscription, timer } from "rxjs";
@@ -73,41 +73,41 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   public copying: boolean;
 
-  @ViewChild("scrollActiveVariant") scrollActiveVariant: ElementRef;
-  @ViewChild("scrollComparedVariant") scrollComparedVariant: ElementRef;
+  readonly scrollActiveVariant = viewChild<ElementRef>("scrollActiveVariant");
+  readonly scrollComparedVariant = viewChild<ElementRef>("scrollComparedVariant");
 
   public loadingErrorModalRef: BsModalRef;
-  @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
+  readonly loadingErrorTemplate = viewChild<TemplateRef<any>>("loadingErrorTemplate");
 
   public loadModalRef: BsModalRef;
-  @ViewChild("loadTemplate") loadTemplate: TemplateRef<any>;
+  readonly loadTemplate = viewChild<TemplateRef<any>>("loadTemplate");
 
   public deleteAggregatedRegionModalRef: BsModalRef;
-  @ViewChild("deleteAggregatedRegionTemplate") deleteAggregatedRegionTemplate: TemplateRef<any>;
+  readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<any>>("deleteAggregatedRegionTemplate");
 
   public noRegionModalRef: BsModalRef;
-  @ViewChild("noRegionTemplate") noRegionTemplate: TemplateRef<any>;
+  readonly noRegionTemplate = viewChild<TemplateRef<any>>("noRegionTemplate");
 
   public discardModalRef: BsModalRef;
-  @ViewChild("discardTemplate") discardTemplate: TemplateRef<any>;
+  readonly discardTemplate = viewChild<TemplateRef<any>>("discardTemplate");
 
   public saveErrorModalRef: BsModalRef;
-  @ViewChild("saveErrorTemplate") saveErrorTemplate: TemplateRef<any>;
+  readonly saveErrorTemplate = viewChild<TemplateRef<any>>("saveErrorTemplate");
 
   public changeErrorModalRef: BsModalRef;
-  @ViewChild("changeErrorTemplate") changeErrorTemplate: TemplateRef<any>;
+  readonly changeErrorTemplate = viewChild<TemplateRef<any>>("changeErrorTemplate");
 
   public avalancheProblemErrorModalRef: BsModalRef;
-  @ViewChild("avalancheProblemErrorTemplate") avalancheProblemErrorTemplate: TemplateRef<any>;
+  readonly avalancheProblemErrorTemplate = viewChild<TemplateRef<any>>("avalancheProblemErrorTemplate");
 
   public checkBulletinsModalRef: BsModalRef;
-  @ViewChild("checkBulletinsTemplate") checkBulletinsTemplate: TemplateRef<any>;
+  readonly checkBulletinsTemplate = viewChild<TemplateRef<any>>("checkBulletinsTemplate");
 
   public checkBulletinsErrorModalRef: BsModalRef;
-  @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
+  readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<any>>("checkBulletinsErrorTemplate");
 
   public editDangerSourceModalRef: BsModalRef;
-  @ViewChild("editDangerSourceTemplate") editDangerSourceTemplate: TemplateRef<any>;
+  readonly editDangerSourceTemplate = viewChild<TemplateRef<any>>("editDangerSourceTemplate");
 
   public config = {
     animated: false,
@@ -225,12 +225,14 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   updateVariantScroll(scrollId: string, event): void {
     event.preventDefault();
     event.stopPropagation();
-    if (!this.scrollActiveVariant?.nativeElement) return;
-    if (!this.scrollComparedVariant?.nativeElement) return;
+    const scrollActiveVariant = this.scrollActiveVariant();
+    if (!scrollActiveVariant?.nativeElement) return;
+    const scrollComparedVariant = this.scrollComparedVariant();
+    if (!scrollComparedVariant?.nativeElement) return;
     if (scrollId === "scrollComparedVariant") {
-      this.scrollActiveVariant.nativeElement.scrollTop = this.scrollComparedVariant.nativeElement.scrollTop;
+      scrollActiveVariant.nativeElement.scrollTop = scrollComparedVariant.nativeElement.scrollTop;
     } else if (scrollId === "scrollActiveVariant") {
-      this.scrollComparedVariant.nativeElement.scrollTop = this.scrollActiveVariant.nativeElement.scrollTop;
+      scrollComparedVariant.nativeElement.scrollTop = scrollActiveVariant.nativeElement.scrollTop;
     }
   }
 
@@ -400,7 +402,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   loadAllVariantsFromYesterday() {
-    this.openLoadModal(this.loadTemplate);
+    this.openLoadModal(this.loadTemplate());
   }
 
   loadVariantsFromYesterday(dangerSourceId?: string) {
@@ -432,7 +434,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         },
         () => {
           this.loading = false;
-          this.openLoadingErrorModal(this.loadingErrorTemplate);
+          this.openLoadingErrorModal(this.loadingErrorTemplate());
         },
       );
     } else {
@@ -457,7 +459,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         },
         () => {
           this.loading = false;
-          this.openLoadingErrorModal(this.loadingErrorTemplate);
+          this.openLoadingErrorModal(this.loadingErrorTemplate());
         },
       );
     }
@@ -507,7 +509,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error("Variants could not be saved on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
+        this.openSaveErrorModal(this.saveErrorTemplate());
       },
     );
   }
@@ -752,7 +754,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   eventDeleteVariant(variant: DangerSourceVariantModel) {
     this.variantMarkedDelete = variant;
-    this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate);
+    this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate());
   }
 
   compareVariant(event: Event, variant: DangerSourceVariantModel) {
@@ -829,7 +831,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         this.createVariantOnServer(this.activeVariant);
       }
     } else {
-      this.openNoRegionModal(this.noRegionTemplate);
+      this.openNoRegionModal(this.noRegionTemplate());
     }
   }
 
@@ -851,7 +853,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       (error) => {
         this.deselectVariant();
         console.error("Variant could not be created on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
+        this.openSaveErrorModal(this.saveErrorTemplate());
       },
     );
   }
@@ -894,7 +896,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error("Variant could not be deleted on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
+        this.openSaveErrorModal(this.saveErrorTemplate());
       },
     );
   }

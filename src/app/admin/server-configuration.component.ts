@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, input } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
 import * as Enums from "../enums/enums";
@@ -13,8 +13,8 @@ import { FormsModule } from "@angular/forms";
   imports: [NgFor, AlertModule, FormsModule, NgIf, TranslateModule],
 })
 export class ServerConfigurationComponent {
-  @Input() config: ServerConfiguration;
-  @Input() externalServer: boolean;
+  readonly config = input<ServerConfiguration>(undefined);
+  readonly externalServer = input<boolean>(undefined);
 
   public statusMap: Map<number, Enums.BulletinStatus>;
   public saveConfigurationLoading: boolean;
@@ -32,22 +32,22 @@ export class ServerConfigurationComponent {
   public save() {
     this.saveConfigurationLoading = true;
     const json = Object();
-    json["id"] = this.config.id;
-    json["name"] = this.config.name;
-    json["userName"] = this.config.userName;
-    json["password"] = this.config.password;
-    json["apiUrl"] = this.config.apiUrl;
-    json["externalServer"] = this.config.externalServer;
-    json["publishAt5PM"] = this.config.publishAt5PM;
-    json["publishAt8AM"] = this.config.publishAt8AM;
-    json["pdfDirectory"] = this.config.pdfDirectory;
-    json["htmlDirectory"] = this.config.htmlDirectory;
-    json["serverImagesUrl"] = this.config.serverImagesUrl;
-    json["mapsPath"] = this.config.mapsPath;
-    json["mediaPath"] = this.config.mediaPath;
-    json["mapProductionUrl"] = this.config.mapProductionUrl;
+    json["id"] = this.config().id;
+    json["name"] = this.config().name;
+    json["userName"] = this.config().userName;
+    json["password"] = this.config().password;
+    json["apiUrl"] = this.config().apiUrl;
+    json["externalServer"] = this.config().externalServer;
+    json["publishAt5PM"] = this.config().publishAt5PM;
+    json["publishAt8AM"] = this.config().publishAt8AM;
+    json["pdfDirectory"] = this.config().pdfDirectory;
+    json["htmlDirectory"] = this.config().htmlDirectory;
+    json["serverImagesUrl"] = this.config().serverImagesUrl;
+    json["mapsPath"] = this.config().mapsPath;
+    json["mediaPath"] = this.config().mediaPath;
+    json["mapProductionUrl"] = this.config().mapProductionUrl;
 
-    if (!this.config.isNew) {
+    if (!this.config().isNew) {
       this.configurationService.updateServerConfiguration(json).subscribe(
         (data) => {
           this.saveConfigurationLoading = false;

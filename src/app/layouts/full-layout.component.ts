@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from "@angular/core";
+import { Component, TemplateRef, viewChild } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -36,7 +36,7 @@ export class FullLayoutComponent {
   public tmpRegion: RegionConfiguration;
 
   public changeRegionModalRef: BsModalRef;
-  @ViewChild("changeRegionTemplate") changeRegionTemplate: TemplateRef<any>;
+  readonly changeRegionTemplate = viewChild<TemplateRef<any>>("changeRegionTemplate");
 
   public config = {
     animated: false,
@@ -84,7 +84,7 @@ export class FullLayoutComponent {
     if (!this.authenticationService.getActiveRegionId().startsWith(region.id)) {
       if (this.router.url.startsWith("/bulletins/") && this.bulletinsService.getIsEditable()) {
         this.tmpRegion = region;
-        this.openChangeRegionModal(this.changeRegionTemplate);
+        this.openChangeRegionModal(this.changeRegionTemplate());
       } else {
         this.change(region);
       }

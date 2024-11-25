@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, OnInit, output, input } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { ECElementEvent, EChartsOption } from "echarts";
@@ -17,12 +17,12 @@ export class ObservationChartComponent<T> implements OnInit {
   longClickDur = 200;
   private pressTimer;
 
-  @Input() filterSelection: FilterSelectionData<T>;
-  @Output() handleChange: EventEmitter<void> = new EventEmitter();
+  readonly filterSelection = input<FilterSelectionData<T>>(undefined);
+  readonly handleChange = output();
   public options: EChartsOption;
 
   get isActive(): boolean {
-    return this.filterSelection["selected"].size > 0 || this.filterSelection["highlighted"].size > 0;
+    return this.filterSelection()["selected"].size > 0 || this.filterSelection()["highlighted"].size > 0;
   }
 
   constructor(
@@ -31,7 +31,7 @@ export class ObservationChartComponent<T> implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.options = this.filterSelection.chartType === "rose" ? this.roseOptions : this.barOptions;
+    this.options = this.filterSelection().chartType === "rose" ? this.roseOptions : this.barOptions;
   }
 
   get fontFamily() {
@@ -373,7 +373,7 @@ export class ObservationChartComponent<T> implements OnInit {
   onMouseDown(event: any) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
-      this.filterSelection.toggleFilterValue("highlighted", event.data[0]);
+      this.filterSelection().toggleFilterValue("highlighted", event.data[0]);
       this.handleChange.emit();
     }, this.longClickDur);
     return false;
@@ -395,41 +395,43 @@ export class ObservationChartComponent<T> implements OnInit {
   onSeriesClick(event: MouseEvent | TouchEvent, value: "nan" | string) {
     const subset = event.altKey ? "highlighted" : "selected";
     if (event.shiftKey) {
-      this.filterSelection.toggleFilterValue(subset, value);
+      this.filterSelection().toggleFilterValue(subset, value);
     } else {
-      this.filterSelection.setFilterValue(subset, value);
+      this.filterSelection().setFilterValue(subset, value);
     }
     if (event.ctrlKey) {
-      this.filterSelection.invertFilter(subset);
+      this.filterSelection().invertFilter(subset);
     }
     this.handleChange.emit();
   }
 
   onMarkerClassify() {
+    const filterSelection = this.filterSelection();
     this.markerService.markerClassify =
-      this.filterSelection.type !== this.markerService.markerClassify?.type ? this.filterSelection : undefined;
+      filterSelection.type !== this.markerService.markerClassify?.type ? filterSelection : undefined;
     this.handleChange.emit();
   }
 
   onMarkerLabel() {
+    const filterSelection = this.filterSelection();
     this.markerService.markerLabel =
-      this.filterSelection.type !== this.markerService.markerLabel?.type ? this.filterSelection : undefined;
+      filterSelection.type !== this.markerService.markerLabel?.type ? filterSelection : undefined;
     this.handleChange.emit();
   }
 
   onInvert() {
-    this.filterSelection.invertFilter("selected");
+    this.filterSelection().invertFilter("selected");
     this.handleChange.emit();
   }
 
   onReset() {
-    this.filterSelection.resetFilter();
+    this.filterSelection().resetFilter();
     this.handleChange.emit();
   }
 
   getItemColor(entry) {
     const filterSelection = this.markerService.markerClassify;
-    if (filterSelection?.type === this.filterSelection.type) {
+    if (filterSelection?.type === this.filterSelection().type) {
       const color = filterSelection.values.find((v) => v.value === entry.name)?.color;
       return !color || color === "white" ? "#000000" : color;
     } else {
@@ -439,7 +441,7 @@ export class ObservationChartComponent<T> implements OnInit {
 
   getClassifyColor(entry, count?: number) {
     const filterSelection = this.markerService.markerClassify;
-    if (filterSelection?.type === this.filterSelection.type) {
+    if (filterSelection?.type === this.filterSelection().type) {
       return this.getItemColor(entry);
     }
     if (filterSelection && count !== undefined) {
@@ -452,17 +454,18 @@ export class ObservationChartComponent<T> implements OnInit {
 
   getItemLabel(entry): string {
     let value: string;
-    if (this.filterSelection.chartType === "rose") {
+    const filterSelectionValue = this.filterSelection();
+    if (filterSelectionValue.chartType === "rose") {
       value = entry;
     } else {
       value = entry.value[0];
     }
-    const isSelected = this.filterSelection.isIncluded("selected", value);
-    const result = this.filterSelection.values.find((v) => v.value === value)?.legend || value;
+    const isSelected = filterSelectionValue.isIncluded("selected", value);
+    const result = filterSelectionValue.values.find((v) => v.value === value)?.legend || value;
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
     const filterSelection = this.markerService.markerLabel;
-    if (filterSelection?.type === this.filterSelection.type) {
+    if (filterSelection?.type === filterSelectionValue.type) {
       const value = filterSelection.values.find((v) => v.value === entry.name);
       if (value) {
         return `{${filterSelection.chartRichLabel ?? "symbol"}|${value.label}} ${formattedResult}`;

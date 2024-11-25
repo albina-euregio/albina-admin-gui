@@ -19,7 +19,7 @@
     <!-- Danger rating -->
     <div class="avalanche-problem-preview__info-item">
       <app-danger-rating
-        [value]="avalancheProblem.getDangerRating()"
+        [value]="avalancheProblem().getDangerRating()"
         class="avalanche-problem-preview__danger-rating"
       />
     </div>
@@ -28,7 +28,7 @@
     <!-- Avalanche problem icon -->
     <div class="avalanche-problem-preview__info-item">
       <app-avalanche-problem-icons
-        [value]="avalancheProblem.avalancheProblem"
+        [value]="avalancheProblem().avalancheProblem"
         class="avalanche-problem-preview__problem-icon"
       />
     </div>
@@ -36,21 +36,21 @@
 
     <!-- Avalanche type -->
     <div class="avalanche-problem-preview__info-item">
-      <app-avalanche-type [value]="avalancheProblem.avalancheType" class="avalanche-problem-preview__problem-icon" />
+      <app-avalanche-type [value]="avalancheProblem().avalancheType" class="avalanche-problem-preview__problem-icon" />
     </div>
     <!-- End avalanche type-->
 
     <!-- Aspects -->
     <div class="avalanche-problem-preview__info-item">
-      <app-aspects [(aspects)]="avalancheProblem.aspects" [disabled]="true" [size]="32"></app-aspects>
+      <app-aspects [(aspects)]="avalancheProblem().aspects" [disabled]="true" [size]="32"></app-aspects>
     </div>
     <!-- End aspects -->
     <!-- Altitude -->
     <div class="avalanche-problem-preview__info-item avalanche-problem-preview__info-elevation">
-      <p *ngIf="avalancheProblem.hasElevationHigh()">
+      <p *ngIf="avalancheProblem().hasElevationHigh()">
         <i class="ph ph-arrow-line-down-right"></i> {{ getElevationHighString() }}
       </p>
-      <p *ngIf="avalancheProblem.hasElevationLow()">
+      <p *ngIf="avalancheProblem().hasElevationLow()">
         <i class="ph ph-arrow-line-up-right"></i> {{ getElevationLowString() }}
       </p>
     </div>
@@ -80,8 +80,8 @@
     </button>
 
     <button
-      *ngIf="!disabled"
-      [disabled]="disabled"
+      *ngIf="!disabled()"
+      [disabled]="disabled()"
       type="reset"
       class="btn btn-sm btn-icon btn-bare--grey"
       (click)="deleteAvalancheProblem($event)"

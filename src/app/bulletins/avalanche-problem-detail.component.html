@@ -1,7 +1,7 @@
 <div class="avalanche-problem-container">
   <div class="form-group">
     <label class="form-label" for="">{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
-    <div *ngIf="!disabled">
+    <div *ngIf="!disabled()">
       <button type="button" class="btn btn-outline-primary btn-sm" (click)="showDecisionTreeDialog()">
         {{ "bulletins.create.decisionTree.decisionTree" | translate }}
       </button>
@@ -26,7 +26,7 @@
       <!-- SLAB -->
       <button
         [disabled]="
-          disabled ||
+          disabled() ||
           isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
           isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
           isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
@@ -44,7 +44,7 @@
       <!-- LOOSE -->
       <button
         [disabled]="
-          disabled ||
+          disabled() ||
           isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
           isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
           isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
@@ -83,10 +83,10 @@
       <label class="form-label" for="">{{ "bulletins.create.label.aspects" | translate }}</label>
       <div>
         <app-aspects
-          [(aspects)]="avalancheProblemModel.aspects"
-          [disabled]="disabled"
+          [(aspects)]="avalancheProblemModel().aspects"
+          [disabled]="disabled()"
           [size]="150"
-          (aspectsChange)="changeAspects($event)"
+          (aspectsChange)="changeAspects()"
         ></app-aspects>
       </div>
     </div>
@@ -100,7 +100,7 @@
             [id]="forLabelId('elevationHighCheckbox')"
             type="checkbox"
             class="form-check-input"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             (change)="setUseElevationHigh($event)"
             [(ngModel)]="useElevationHigh"
           />
@@ -119,14 +119,14 @@
               size="14"
               type="number"
               name="elevation-input"
-              [disabled]="disabled || avalancheProblemModel.treelineHigh || !useElevationHigh"
+              [disabled]="disabled() || avalancheProblemModel().treelineHigh || !useElevationHigh"
               [(ngModel)]="localElevationHigh"
-              (change)="updateElevationHigh($event)"
+              (change)="updateElevationHigh()"
             />
             <span class="input-group-text">m</span>
           </div>
           <button
-            [disabled]="disabled || !useElevationHigh"
+            [disabled]="disabled() || !useElevationHigh"
             type="reset"
             class="btn btn-icon"
             [ngClass]="localTreelineHigh ? 'btn-dark' : 'btn-outline-secondary'"
@@ -146,7 +146,7 @@
             [id]="forLabelId('elevationLowCheckbox')"
             type="checkbox"
             class="form-check-input"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             (change)="setUseElevationLow($event)"
             [(ngModel)]="useElevationLow"
           />
@@ -165,14 +165,14 @@
               size="14"
               type="number"
               name="elevation-input"
-              [disabled]="disabled || avalancheProblemModel.treelineLow || !useElevationLow"
+              [disabled]="disabled() || avalancheProblemModel().treelineLow || !useElevationLow"
               [(ngModel)]="localElevationLow"
               (change)="updateElevationLow()"
             />
             <span class="input-group-text">m</span>
           </div>
           <button
-            [disabled]="disabled || !useElevationLow"
+            [disabled]="disabled() || !useElevationLow"
             type="reset"
             class="btn btn-icon"
             [ngClass]="localTreelineLow ? 'btn-dark' : 'btn-outline-secondary'"
@@ -188,14 +188,16 @@
         <!-- Extend sea level danger up/down -->
         <div
           class="avalanche-problem__elevation-change-danger-rating"
-          *ngIf="count === 1 && avalancheProblemModel.hasElevationHigh() && avalancheProblemModel.hasElevationLow()"
+          *ngIf="
+            count() === 1 && avalancheProblemModel().hasElevationHigh() && avalancheProblemModel().hasElevationLow()
+          "
         >
           <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
 
           <!-- UP Button -->
           <div class="btn-group">
             <button
-              [disabled]="disabled"
+              [disabled]="disabled()"
               type="reset"
               class="btn btn-sm"
               [ngClass]="isDangerRatingDirection(directionEnum.up) ? 'btn-dark' : 'btn-outline-secondary'"
@@ -214,7 +216,7 @@
 
             <!-- DOWN Button -->
             <button
-              [disabled]="disabled"
+              [disabled]="disabled()"
               type="reset"
               class="btn btn-sm"
               [ngClass]="isDangerRatingDirection(directionEnum.down) ? 'btn-dark' : 'btn-outline-secondary'"
@@ -239,21 +241,21 @@
   </div>
   <div class="form-group">
     <app-matrix-parameter
-      [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-      [matrixInformation]="avalancheProblemModel.matrixInformation"
-      [disabled]="disabled"
-      [count]="count"
-      [afternoon]="afternoon"
-      (changeMatrixEvent)="changeMatrix($event)"
+      [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+      [matrixInformation]="avalancheProblemModel().matrixInformation"
+      [disabled]="disabled()"
+      [count]="count()"
+      [afternoon]="afternoon()"
+      (changeMatrixEvent)="changeMatrix()"
     ></app-matrix-parameter>
   </div>
   <div *ngIf="authenticationService.getActiveRegion().showMatrix" class="form-group">
     <app-matrix
-      [bulletinDaytimeDescription]="bulletinDaytimeDescription"
-      [matrixInformation]="avalancheProblemModel.matrixInformation"
-      [snowpackStability]="avalancheProblemModel.matrixInformation.snowpackStability"
-      [frequency]="avalancheProblemModel.matrixInformation.frequency"
-      [avalancheSize]="avalancheProblemModel.matrixInformation.avalancheSize"
+      [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+      [matrixInformation]="avalancheProblemModel().matrixInformation"
+      [snowpackStability]="avalancheProblemModel().matrixInformation.snowpackStability"
+      [frequency]="avalancheProblemModel().matrixInformation.frequency"
+      [avalancheSize]="avalancheProblemModel().matrixInformation.avalancheSize"
       [disabled]="true"
     ></app-matrix>
   </div>

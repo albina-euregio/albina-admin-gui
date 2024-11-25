@@ -2,14 +2,14 @@
   <div class="row">
     <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
       <label class="form-label">
-        {{ "bulletins.create.label." + textField | translate }}
+        {{ "bulletins.create.label." + textField() | translate }}
       </label>
       <div class="form-field-with-toolbar">
         <!-- Toolbar -->
         <div class="btn-group--border form-field-toolbar">
           <button
             class="btn btn-sm btn-icon btn-bare"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             type="reset"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
@@ -18,9 +18,9 @@
             <i class="ph ph-pencil-line"></i>
           </button>
           <button
-            *ngIf="textField === 'avActivityComment'"
+            *ngIf="textField() === 'avActivityComment'"
             class="btn btn-sm btn-icon btn-bare"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             type="reset"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
@@ -29,9 +29,9 @@
             <i class="ph ph-article"></i>
           </button>
           <button
-            *ngIf="textField === 'snowpackStructureComment'"
+            *ngIf="textField() === 'snowpackStructureComment'"
             class="btn btn-sm btn-icon btn-bare"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             type="reset"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
@@ -52,7 +52,7 @@
           <button
             class="btn btn-sm btn-icon btn-bare"
             *ngIf="copyService.isCopyTextcat()"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             type="reset"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
@@ -62,7 +62,7 @@
           </button>
           <button
             class="btn btn-sm btn-icon btn-bare"
-            [disabled]="disabled"
+            [disabled]="disabled()"
             type="reset"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
@@ -73,11 +73,11 @@
         </div>
         <!-- End of toolbar -->
         <textarea
-          *ngIf="bulletin && bulletin[bulletinTextKey]"
+          *ngIf="bulletin() && bulletin()[bulletinTextKey]"
           class="form-control"
-          [rows]="rows"
+          [rows]="rows()"
           disabled
-          [ngModel]="bulletin[bulletinTextKey][translateService.currentLang] | html"
+          [ngModel]="bulletin()[bulletinTextKey][translateService.currentLang] | html"
         ></textarea>
       </div>
     </div>
@@ -85,9 +85,9 @@
       <label class="form-label">{{ "bulletins.create.label.notes" | translate }} </label>
       <textarea
         class="form-control"
-        [rows]="rows"
+        [rows]="rows()"
         [disabled]="authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
-        [(ngModel)]="bulletin[textField + 'Notes']"
+        [(ngModel)]="bulletin()[textField() + 'Notes']"
         (focusout)="updateBulletinOnServer.emit()"
         placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
       ></textarea>
@@ -126,9 +126,9 @@
       <span class="input-group-text">{{ lang | uppercase }}</span>
       <textarea
         class="form-control"
-        [rows]="rows"
+        [rows]="rows()"
         disabled
-        [ngModel]="bulletin[bulletinTextKey][lang] | html"
+        [ngModel]="bulletin()[bulletinTextKey][lang] | html"
       ></textarea>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild, ElementRef, TemplateRef, OnDestroy, OnInit } from "@angular/core";
+import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { forkJoin, map, Observable, of, tap, timer } from "rxjs";
@@ -92,71 +92,73 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public submitting: boolean;
   public copying: boolean;
 
-  @ViewChild("scrollActiveBulletin") scrollActiveBulletin: ElementRef;
-  @ViewChild("scrollComparedBulletin") scrollComparedBulletin: ElementRef;
+  readonly scrollActiveBulletin = viewChild<ElementRef>("scrollActiveBulletin");
+  readonly scrollComparedBulletin = viewChild<ElementRef>("scrollComparedBulletin");
 
   public loadingErrorModalRef: BsModalRef;
-  @ViewChild("loadingErrorTemplate") loadingErrorTemplate: TemplateRef<any>;
+  readonly loadingErrorTemplate = viewChild<TemplateRef<any>>("loadingErrorTemplate");
 
   public loadingJsonFileErrorModalRef: BsModalRef;
-  @ViewChild("loadingJsonFileErrorTemplate") loadingJsonFileErrorTemplate: TemplateRef<any>;
+  readonly loadingJsonFileErrorTemplate = viewChild<TemplateRef<any>>("loadingJsonFileErrorTemplate");
 
   public loadModalRef: BsModalRef;
-  @ViewChild("loadTemplate") loadTemplate: TemplateRef<any>;
+  readonly loadTemplate = viewChild<TemplateRef<any>>("loadTemplate");
 
   public deleteAggregatedRegionModalRef: BsModalRef;
-  @ViewChild("deleteAggregatedRegionTemplate") deleteAggregatedRegionTemplate: TemplateRef<any>;
+  readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<any>>("deleteAggregatedRegionTemplate");
 
   public noRegionModalRef: BsModalRef;
-  @ViewChild("noRegionTemplate") noRegionTemplate: TemplateRef<any>;
+  readonly noRegionTemplate = viewChild<TemplateRef<any>>("noRegionTemplate");
 
   public discardModalRef: BsModalRef;
-  @ViewChild("discardTemplate") discardTemplate: TemplateRef<any>;
+  readonly discardTemplate = viewChild<TemplateRef<any>>("discardTemplate");
 
   public saveErrorModalRef: BsModalRef;
-  @ViewChild("saveErrorTemplate") saveErrorTemplate: TemplateRef<any>;
+  readonly saveErrorTemplate = viewChild<TemplateRef<any>>("saveErrorTemplate");
 
   public changeErrorModalRef: BsModalRef;
-  @ViewChild("changeErrorTemplate") changeErrorTemplate: TemplateRef<any>;
+  readonly changeErrorTemplate = viewChild<TemplateRef<any>>("changeErrorTemplate");
 
   public avalancheProblemErrorModalRef: BsModalRef;
-  @ViewChild("avalancheProblemErrorTemplate") avalancheProblemErrorTemplate: TemplateRef<any>;
+  readonly avalancheProblemErrorTemplate = viewChild<TemplateRef<any>>("avalancheProblemErrorTemplate");
 
   public copyRegionModalRef: BsModalRef;
-  @ViewChild("copyRegionTemplate") copyRegionTemplate: TemplateRef<any>;
+  readonly copyRegionTemplate = viewChild<TemplateRef<any>>("copyRegionTemplate");
 
   public submitBulletinsModalRef: BsModalRef;
-  @ViewChild("submitBulletinsTemplate") submitBulletinsTemplate: TemplateRef<any>;
+  readonly submitBulletinsTemplate = viewChild<TemplateRef<any>>("submitBulletinsTemplate");
 
   public submitBulletinsDuplicateRegionModalRef: BsModalRef;
-  @ViewChild("submitBulletinsDuplicateRegionTemplate") submitBulletinsDuplicateRegionTemplate: TemplateRef<any>;
+  readonly submitBulletinsDuplicateRegionTemplate = viewChild<TemplateRef<any>>(
+    "submitBulletinsDuplicateRegionTemplate",
+  );
 
   public submitBulletinsErrorModalRef: BsModalRef;
-  @ViewChild("submitBulletinsErrorTemplate") submitBulletinsErrorTemplate: TemplateRef<any>;
+  readonly submitBulletinsErrorTemplate = viewChild<TemplateRef<any>>("submitBulletinsErrorTemplate");
 
   public publishBulletinsModalRef: BsModalRef;
-  @ViewChild("publishBulletinsTemplate") publishBulletinsTemplate: TemplateRef<any>;
+  readonly publishBulletinsTemplate = viewChild<TemplateRef<any>>("publishBulletinsTemplate");
 
   public publishBulletinsErrorModalRef: BsModalRef;
-  @ViewChild("publishBulletinsErrorTemplate") publishBulletinsErrorTemplate: TemplateRef<any>;
+  readonly publishBulletinsErrorTemplate = viewChild<TemplateRef<any>>("publishBulletinsErrorTemplate");
 
   public previewErrorModalRef: BsModalRef;
-  @ViewChild("previewErrorTemplate") previewErrorTemplate: TemplateRef<any>;
+  readonly previewErrorTemplate = viewChild<TemplateRef<any>>("previewErrorTemplate");
 
   public publicationStatusModalRef: BsModalRef;
-  @ViewChild("publicationStatusTemplate") publicationStatusTemplate: TemplateRef<any>;
+  readonly publicationStatusTemplate = viewChild<TemplateRef<any>>("publicationStatusTemplate");
 
   public mediaFileModalRef: BsModalRef;
-  @ViewChild("mediaFileTemplate") mediaFileTemplate: TemplateRef<any>;
+  readonly mediaFileTemplate = viewChild<TemplateRef<any>>("mediaFileTemplate");
 
   public publishAllModalRef: BsModalRef;
-  @ViewChild("publishAllTemplate") publishAllTemplate: TemplateRef<any>;
+  readonly publishAllTemplate = viewChild<TemplateRef<any>>("publishAllTemplate");
 
   public checkBulletinsModalRef: BsModalRef;
-  @ViewChild("checkBulletinsTemplate") checkBulletinsTemplate: TemplateRef<any>;
+  readonly checkBulletinsTemplate = viewChild<TemplateRef<any>>("checkBulletinsTemplate");
 
   public checkBulletinsErrorModalRef: BsModalRef;
-  @ViewChild("checkBulletinsErrorTemplate") checkBulletinsErrorTemplate: TemplateRef<any>;
+  readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<any>>("checkBulletinsErrorTemplate");
 
   internalBulletinsSubscription!: Subscription;
   externalBulletinsSubscription!: Subscription;
@@ -321,14 +323,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
                 () => {
                   console.error("Foreign bulletins could not be loaded!");
                   this.loading = false;
-                  this.openLoadingErrorModal(this.loadingErrorTemplate);
+                  this.openLoadingErrorModal(this.loadingErrorTemplate());
                 },
               );
           },
           () => {
             console.error("Own bulletins could not be loaded!");
             this.loading = false;
-            this.openLoadingErrorModal(this.loadingErrorTemplate);
+            this.openLoadingErrorModal(this.loadingErrorTemplate());
           },
         );
 
@@ -364,12 +366,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   updateBulletinScroll(scrollId: string, event): void {
     event.preventDefault();
     event.stopPropagation();
-    if (!this.scrollActiveBulletin?.nativeElement) return;
-    if (!this.scrollComparedBulletin?.nativeElement) return;
+    const scrollActiveBulletin = this.scrollActiveBulletin();
+    if (!scrollActiveBulletin?.nativeElement) return;
+    const scrollComparedBulletin = this.scrollComparedBulletin();
+    if (!scrollComparedBulletin?.nativeElement) return;
     if (scrollId === "scrollComparedBulletin") {
-      this.scrollActiveBulletin.nativeElement.scrollTop = this.scrollComparedBulletin.nativeElement.scrollTop;
+      scrollActiveBulletin.nativeElement.scrollTop = scrollComparedBulletin.nativeElement.scrollTop;
     } else if (scrollId === "scrollActiveBulletin") {
-      this.scrollComparedBulletin.nativeElement.scrollTop = this.scrollActiveBulletin.nativeElement.scrollTop;
+      scrollComparedBulletin.nativeElement.scrollTop = scrollActiveBulletin.nativeElement.scrollTop;
     }
   }
 
@@ -551,7 +555,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error("Bulletins could not be checked!");
-        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+        this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate());
       },
     );
   }
@@ -659,7 +663,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error("All bulletins could not be published!");
-        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+        this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
       },
     );
   }
@@ -728,7 +732,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     };
     fileReader.onerror = (error) => {
       console.error("Bulletins could not be loaded from file: " + error);
-      this.openLoadingJsonFileErrorModal(this.loadingJsonFileErrorTemplate);
+      this.openLoadingJsonFileErrorModal(this.loadingJsonFileErrorTemplate());
     };
   }
 
@@ -823,7 +827,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   loadBulletinsFromYesterday() {
-    this.openLoadModal(this.loadTemplate);
+    this.openLoadModal(this.loadTemplate());
   }
 
   // create a copy of every bulletin (with new id)
@@ -1327,7 +1331,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   eventDeleteBulletin(bulletin: BulletinModel) {
     this.bulletinMarkedDelete = bulletin;
-    this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate);
+    this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate());
   }
 
   compareBulletin(event: Event, bulletin: BulletinModel) {
@@ -1438,7 +1442,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.createBulletinOnServer(this.activeBulletin);
       }
     } else {
-      this.openNoRegionModal(this.noRegionTemplate);
+      this.openNoRegionModal(this.noRegionTemplate());
     }
   }
 
@@ -1470,7 +1474,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error("Bulletin could not be created on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
+        this.openSaveErrorModal(this.saveErrorTemplate());
       },
     );
   }
@@ -1525,7 +1529,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error("Bulletin could not be deleted on server!");
-          this.openSaveErrorModal(this.saveErrorTemplate);
+          this.openSaveErrorModal(this.saveErrorTemplate());
         },
       }),
     );
@@ -1610,7 +1614,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       () => {
         this.autoSaving = false;
         console.error("Bulletins could not be saved on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate);
+        this.openSaveErrorModal(this.saveErrorTemplate());
       },
     );
   }
@@ -1678,7 +1682,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       },
       () => {
         this.loading = false;
-        this.openLoadingErrorModal(this.loadingErrorTemplate);
+        this.openLoadingErrorModal(this.loadingErrorTemplate());
       },
     );
   }
@@ -1725,7 +1729,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   eventCopyBulletin(bulletin: BulletinModel) {
     this.copyBulletin(bulletin);
-    this.copyRegionModalRef = this.modalService.show(this.copyRegionTemplate, this.config);
+    this.copyRegionModalRef = this.modalService.show(this.copyRegionTemplate(), this.config);
   }
 
   openCopyRegionModal(event, bulletin: BulletinModel) {
@@ -1870,18 +1874,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
 
           if (duplicateRegion) {
-            this.openSubmitBulletinsDuplicateRegionModal(this.submitBulletinsDuplicateRegionTemplate);
+            this.openSubmitBulletinsDuplicateRegionModal(this.submitBulletinsDuplicateRegionTemplate());
           } else {
-            this.openSubmitBulletinsModal(this.submitBulletinsTemplate, message, date);
+            this.openSubmitBulletinsModal(this.submitBulletinsTemplate(), message, date);
           }
         },
         (error) => {
           console.error("Bulletins could not be checked!");
-          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate());
         },
       );
     } else {
-      this.openAvalancheProblemErrorModal(this.avalancheProblemErrorTemplate);
+      this.openAvalancheProblemErrorModal(this.avalancheProblemErrorTemplate());
     }
   }
 
@@ -1932,7 +1936,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       },
       (error) => {
         console.error("Bulletins could not be submitted!");
-        this.openSubmitBulletinsErrorModal(this.submitBulletinsErrorTemplate);
+        this.openSubmitBulletinsErrorModal(this.submitBulletinsErrorTemplate());
       },
     );
   }
@@ -2044,15 +2048,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.openPublishBulletinsModal(this.publishBulletinsTemplate, message, date, change);
+          this.openPublishBulletinsModal(this.publishBulletinsTemplate(), message, date, change);
         },
         (error) => {
           console.error("Bulletins could not be checked!");
-          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate);
+          this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate());
         },
       );
     } else {
-      this.openAvalancheProblemErrorModal(this.avalancheProblemErrorTemplate);
+      this.openAvalancheProblemErrorModal(this.avalancheProblemErrorTemplate());
     }
   }
 
@@ -2085,7 +2089,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.error("Bulletins could not be published (no messages)!");
-          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
         },
       );
     } else {
@@ -2101,7 +2105,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.error("Bulletins could not be published!");
-          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate);
+          this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
         },
       );
     }

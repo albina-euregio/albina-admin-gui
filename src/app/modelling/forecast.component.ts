@@ -1,12 +1,12 @@
 import {
   Component,
   AfterViewInit,
-  ViewChild,
   ElementRef,
   OnDestroy,
   HostListener,
   AfterContentInit,
   TemplateRef,
+  viewChild,
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
@@ -73,9 +73,9 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   public selectedSources = {} as Record<string, boolean>;
   private modelPoints: GenericObservation[] = [];
 
-  @ViewChild("observationsMap") observationsMap: ElementRef<HTMLDivElement>;
-  @ViewChild("qfaSelect") qfaSelect: ElementRef<HTMLSelectElement>;
-  @ViewChild("observationPopupTemplate") observationPopupTemplate: TemplateRef<any>;
+  readonly observationsMap = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
+  readonly qfaSelect = viewChild<ElementRef<HTMLSelectElement>>("qfaSelect");
+  readonly observationPopupTemplate = viewChild<TemplateRef<any>>("observationPopupTemplate");
 
   constructor(
     private route: ActivatedRoute,
@@ -176,7 +176,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       this.selectedModelPoint = $source === "qfa" ? undefined : point;
       this.selectedModelType = $source as ForecastSource;
       this.observationConfiguration = (point as AlpsolutObservation).$data?.configuration;
-      this.modalService.show(this.observationPopupTemplate, { class: "modal-fullscreen" });
+      this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
     };
 
     const tooltip = [
@@ -244,7 +244,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   }
 
   async initMaps() {
-    const map = await this.mapService.initMaps(this.observationsMap.nativeElement, () => {});
+    const map = await this.mapService.initMaps(this.observationsMap().nativeElement, () => {});
     map.on("click", () => {
       this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
       this.applyFilter();

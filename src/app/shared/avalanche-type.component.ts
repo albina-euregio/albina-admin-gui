@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, input } from "@angular/core";
 import * as Enums from "../enums/enums";
 import { NgIf } from "@angular/common";
 
@@ -9,11 +9,11 @@ import { NgIf } from "@angular/common";
   imports: [NgIf],
 })
 export class AvalancheTypeComponent {
-  @Input() value: Enums.AvalancheType;
+  readonly value = input<Enums.AvalancheType>(undefined);
   avalancheTypeEnum = Enums.AvalancheType;
 
   isAvalancheType(avalancheType: Enums.AvalancheType) {
-    const v = this.value;
+    const v = this.value();
     return v === avalancheType;
   }
 }

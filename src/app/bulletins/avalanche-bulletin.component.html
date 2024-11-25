@@ -1,5 +1,5 @@
 <div>
-  <div class="region-form__mobile-header" [class.d-none]="isBulletinSidebarVisible">
+  <div class="region-form__mobile-header" [class.d-none]="isBulletinSidebarVisible()">
     <h1 class="font-m-bold">
       {{ bulletinsService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.currentLang }}
       {{ bulletinsService.getActiveDate()[1] | date: "longDate" : undefined : translateService.currentLang }}
@@ -13,18 +13,18 @@
       </button>
     </div>
     <div class="region-form__title">
-      <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(bulletin.getOwnerRegion()) }}</h6>
+      <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(bulletin().getOwnerRegion()) }}</h6>
       <h2 class="font-l">
-        <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 0">{{
-          regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0].toString())
+        <span *ngIf="bulletin().getSavedAndPublishedRegions().length > 0">{{
+          regionsService.getRegionName(bulletin().getSavedAndPublishedRegions()[0].toString())
         }}</span>
-        <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 1">
-          + {{ bulletin.getSavedAndPublishedRegions().length - 1 }}
+        <span *ngIf="bulletin().getSavedAndPublishedRegions().length > 1">
+          + {{ bulletin().getSavedAndPublishedRegions().length - 1 }}
         </span>
       </h2>
 
       <div class="user-avatar region-form__author">
-        <span class="user-avatar__name">{{ bulletin.getAuthor().getName() }}</span>
+        <span class="user-avatar__name">{{ bulletin().getAuthor().getName() }}</span>
       </div>
     </div>
   </header>
@@ -32,12 +32,12 @@
   <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
     <p class="region-form__mindset-text">
       {{ "strategicMindset.title" | translate }}
-      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate)"></i>
+      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"></i>
     </p>
     <select
-      [ngModel]="bulletin.strategicMindset"
+      [ngModel]="bulletin().strategicMindset"
       (ngModelChange)="onStrategicMindsetChange($event)"
-      [disabled]="disabled"
+      [disabled]="disabled()"
       class="form-select"
     >
       <option selected></option>
@@ -47,7 +47,7 @@
     </select>
   </div>
 
-  <div *ngIf="bulletinsService.isLocked(bulletin.getId())" class="region-form__banner banner banner-warning-strong">
+  <div *ngIf="bulletinsService.isLocked(bulletin().getId())" class="region-form__banner banner banner-warning-strong">
     <p class="banner__text">
       <i class="ph ph-lock"></i>
       {{ "bulletins.create.regionLocked" | translate }}
@@ -55,7 +55,7 @@
   </div>
 
   <div
-    *ngIf="!bulletinsService.isLocked(bulletin.getId()) && bulletinsService.getIsEditable() && isCreator(bulletin)"
+    *ngIf="!bulletinsService.isLocked(bulletin().getId()) && bulletinsService.getIsEditable() && isCreator(bulletin())"
     class="region-form__banner banner banner-info"
   >
     <p class="banner__text">
@@ -64,9 +64,9 @@
     </p>
     <div class="btn-group banner__actions">
       <button
-        [class]="bulletin.hasDaytimeDependency ? 'btn-primary' : 'btn-outline-primary'"
+        [class]="bulletin().hasDaytimeDependency ? 'btn-primary' : 'btn-outline-primary'"
         *ngIf="!editRegions"
-        (click)="daytimeDependencyChanged($event, !bulletin.hasDaytimeDependency)"
+        (click)="daytimeDependencyChanged($event, !bulletin().hasDaytimeDependency)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
         type="button"
@@ -111,7 +111,7 @@
       <button
         *ngIf="!editRegions"
         (click)="undoRedoEvent.emit('undo')"
-        [disabled]="!undoRedoService.isEnabled('undo', bulletin.getId())"
+        [disabled]="!undoRedoService.isEnabled('undo', bulletin().getId())"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.undo' | translate }}"
         type="button"
@@ -122,7 +122,7 @@
       <button
         *ngIf="!editRegions"
         (click)="undoRedoEvent.emit('redo')"
-        [disabled]="!undoRedoService.isEnabled('redo', bulletin.getId())"
+        [disabled]="!undoRedoService.isEnabled('redo', bulletin().getId())"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.redo' | translate }}"
         type="button"
@@ -135,10 +135,10 @@
 
   <div
     *ngIf="
-      !bulletinsService.isLocked(bulletin.getId()) &&
+      !bulletinsService.isLocked(bulletin().getId()) &&
       bulletinsService.getIsEditable() &&
-      !isCreator(bulletin) &&
-      hasSuggestions(bulletin)
+      !isCreator(bulletin()) &&
+      hasSuggestions(bulletin())
     "
     class="region-form__banner banner banner-warning-strong"
   >
@@ -158,9 +158,9 @@
 
   <div
     *ngIf="
-      !bulletinsService.isLocked(bulletin.getId()) &&
+      !bulletinsService.isLocked(bulletin().getId()) &&
       (!bulletinsService.getIsEditable() ||
-        (bulletinsService.getIsEditable() && !isCreator(bulletin) && !hasSuggestions(bulletin)))
+        (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())))
     "
     class="region-form__banner banner banner-warning"
   >
@@ -181,7 +181,7 @@
       </button>
       <button
         *ngIf="
-          !isComparedBulletin &&
+          !isComparedBulletin() &&
           !copyService.isCopyBulletin() &&
           !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
         "
@@ -209,7 +209,7 @@
             <i *ngIf="!isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-right"></i>
             <i *ngIf="isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-down"></i>
             {{ "bulletins.create.title.avalancheProblem" | translate
-            }}<span *ngIf="bulletin.hasDaytimeDependency"
+            }}<span *ngIf="bulletin().hasDaytimeDependency"
               >&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span
             >
           </h2>
@@ -217,7 +217,7 @@
           <div class="btn-group accordion-header__buttons">
             <button
               [disabled]="editRegions || hasFiveAvalancheProblems(false)"
-              *ngIf="!disabled"
+              *ngIf="!disabled()"
               (click)="createAvalancheProblem(false); $event.stopPropagation()"
               class="btn btn-primary btn-icon btn-sm ml-2"
               title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -228,16 +228,16 @@
         </div>
         <!-- Avalanche problems panel content -->
         <app-avalanche-problem
-          [bulletinModel]="bulletin"
-          [bulletinDaytimeDescription]="bulletin.forenoon"
+          [bulletinModel]="bulletin()"
+          [bulletinDaytimeDescription]="bulletin().forenoon"
           [afternoon]="false"
-          [disabled]="disabled"
+          [disabled]="disabled()"
           (changeAvalancheProblemEvent)="updateBulletinOnServer()"
         ></app-avalanche-problem>
         <!-- End Avalanche problems panel content -->
       </accordion-group>
       <accordion-group
-        *ngIf="bulletin.hasDaytimeDependency"
+        *ngIf="bulletin().hasDaytimeDependency"
         #accordionAvalancheProblemAfternoon
         class="accordion-group"
       >
@@ -253,8 +253,8 @@
 
           <div class="btn-group accordion-header__buttons">
             <button
-              [disabled]="editRegions || hasFiveAvalancheProblems(false) || !isCreator(bulletin)"
-              *ngIf="!disabled"
+              [disabled]="editRegions || hasFiveAvalancheProblems(false) || !isCreator(bulletin())"
+              *ngIf="!disabled()"
               (click)="createAvalancheProblem(true); $event.stopPropagation()"
               class="btn btn-primary btn-icon btn-sm"
               title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
@@ -264,10 +264,10 @@
           </div>
         </div>
         <app-avalanche-problem
-          [bulletinModel]="bulletin"
-          [bulletinDaytimeDescription]="bulletin.afternoon"
+          [bulletinModel]="bulletin()"
+          [bulletinDaytimeDescription]="bulletin().afternoon"
           [afternoon]="true"
-          [disabled]="disabled"
+          [disabled]="disabled()"
           (changeAvalancheProblemEvent)="updateBulletinOnServer()"
         ></app-avalanche-problem>
       </accordion-group>
@@ -297,8 +297,8 @@
           <app-bulletin-text
             textField="highlights"
             [rows]="1"
-            [bulletin]="bulletin"
-            [disabled]="disabled"
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -308,8 +308,8 @@
           <app-bulletin-text
             textField="avActivityHighlights"
             [rows]="3"
-            [bulletin]="bulletin"
-            [disabled]="disabled"
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -318,8 +318,8 @@
           <app-bulletin-text
             textField="avActivityComment"
             [rows]="9"
-            [bulletin]="bulletin"
-            [disabled]="disabled"
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -353,9 +353,9 @@
           <div class="form-group region-form__danger-patterns">
             <label class="form-label" for="">{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
             <select
-              [ngModel]="bulletin.dangerPattern1"
+              [ngModel]="bulletin().dangerPattern1"
               (ngModelChange)="onDangerPattern1Change($event)"
-              [disabled]="disabled"
+              [disabled]="disabled()"
               class="form-select"
             >
               <option selected></option>
@@ -363,9 +363,9 @@
             </select>
 
             <select
-              [ngModel]="bulletin.dangerPattern2"
+              [ngModel]="bulletin().dangerPattern2"
               (ngModelChange)="onDangerPattern2Change($event)"
-              [disabled]="disabled"
+              [disabled]="disabled()"
               class="form-select"
             >
               <option selected></option>
@@ -378,8 +378,8 @@
           <app-bulletin-text
             textField="snowpackStructureComment"
             [rows]="9"
-            [bulletin]="bulletin"
-            [disabled]="disabled"
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />
@@ -409,7 +409,7 @@
             <div class="btn-group">
               <button
                 *ngFor="let t of tendency"
-                [disabled]="disabled"
+                [disabled]="disabled()"
                 type="reset"
                 [class]="isTendency(t) ? 'btn btn-small btn-dark' : 'btn btn-small btn-outline-secondary'"
                 (click)="setTendency($event, isTendency(t) ? undefined : t)"
@@ -432,8 +432,8 @@
           <app-bulletin-text
             textField="tendencyComment"
             [rows]="5"
-            [bulletin]="bulletin"
-            [disabled]="disabled"
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
           />

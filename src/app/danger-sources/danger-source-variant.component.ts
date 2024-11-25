@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges } from "@angular/core";
+import { Component, OnChanges, input, output } from "@angular/core";
 
 import { debounceTime, Subject } from "rxjs";
 
@@ -60,19 +60,19 @@ import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
   ],
 })
 export class DangerSourceVariantComponent implements OnChanges {
-  @Input() variant: DangerSourceVariantModel;
-  @Input() disabled: boolean;
-  @Input() isCompactMapLayout: boolean;
-  @Input() isVariantsSidebarVisible: boolean;
-  @Input() isComparedVariant: boolean;
+  readonly variant = input<DangerSourceVariantModel>(undefined);
+  readonly disabled = input<boolean>(undefined);
+  readonly isCompactMapLayout = input<boolean>(undefined);
+  readonly isVariantsSidebarVisible = input<boolean>(undefined);
+  readonly isComparedVariant = input<boolean>(undefined);
 
   private readonly updateVariantOnServerEventDebounce = new Subject<DangerSourceVariantModel>();
-  @Output() updateVariantOnServerEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() deleteVariantEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() editMicroRegionsEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() copyVariantEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() deselectVariantEvent = new EventEmitter<DangerSourceVariantModel>();
-  @Output() toggleVariantsSidebarEvent = new EventEmitter<void>();
+  readonly updateVariantOnServerEvent = output<DangerSourceVariantModel>();
+  readonly deleteVariantEvent = output<DangerSourceVariantModel>();
+  readonly editMicroRegionsEvent = output<DangerSourceVariantModel>();
+  readonly copyVariantEvent = output<DangerSourceVariantModel>();
+  readonly deselectVariantEvent = output<DangerSourceVariantModel>();
+  readonly toggleVariantsSidebarEvent = output<void>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -161,51 +161,53 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   ngOnChanges() {
     if (!this.isElevationHighEditing) {
-      this.useElevationHigh = this.variant.treelineHigh || this.variant.elevationHigh !== null;
-      this.localElevationHigh = this.variant.elevationHigh;
-      this.localTreelineHigh = this.variant.treelineHigh;
+      const variant = this.variant();
+      this.useElevationHigh = variant.treelineHigh || variant.elevationHigh !== null;
+      this.localElevationHigh = this.variant().elevationHigh;
+      this.localTreelineHigh = this.variant().treelineHigh;
     }
     if (!this.isElevationLowEditing) {
-      this.useElevationLow = this.variant.treelineLow || this.variant.elevationLow !== null;
-      this.localElevationLow = this.variant.elevationLow;
-      this.localTreelineLow = this.variant.treelineLow;
+      const variant = this.variant();
+      this.useElevationLow = variant.treelineLow || variant.elevationLow !== null;
+      this.localElevationLow = this.variant().elevationLow;
+      this.localTreelineLow = this.variant().treelineLow;
     }
-    this.glidingSnowActivityOptions = Object.assign({}, this.glidingSnowActivityOptions, { disabled: this.disabled });
+    this.glidingSnowActivityOptions = Object.assign({}, this.glidingSnowActivityOptions, { disabled: this.disabled() });
   }
 
   updateVariantOnServer() {
-    this.updateVariantOnServerEventDebounce.next(this.variant);
+    this.updateVariantOnServerEventDebounce.next(this.variant());
   }
 
   onVariantStatusChange(event: DangerSourceVariantStatus) {
-    this.variant.dangerSourceVariantStatus = event;
+    this.variant().dangerSourceVariantStatus = event;
     this.updateVariantOnServer();
   }
 
   copyVariant() {
-    this.copyVariantEvent.emit(this.variant);
+    this.copyVariantEvent.emit(this.variant());
   }
 
   deselectVariant() {
-    this.deselectVariantEvent.emit(this.variant);
+    this.deselectVariantEvent.emit(this.variant());
   }
 
   deleteVariant() {
-    this.deleteVariantEvent.emit(this.variant);
+    this.deleteVariantEvent.emit(this.variant());
   }
 
   editMicroRegions() {
-    this.editMicroRegionsEvent.emit(this.variant);
+    this.editMicroRegionsEvent.emit(this.variant());
   }
 
   isInternal(): boolean {
-    const ownerRegion = this.variant.ownerRegion;
+    const ownerRegion = this.variant().ownerRegion;
     return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion);
   }
 
   showEditMicroRegionsButton(): boolean {
     return (
-      !this.isComparedVariant && !this.editRegions && this.isInternal() && this.dangerSourcesService.getIsEditable()
+      !this.isComparedVariant() && !this.editRegions && this.isInternal() && this.dangerSourcesService.getIsEditable()
     );
   }
 
@@ -240,311 +242,321 @@ export class DangerSourceVariantComponent implements OnChanges {
   }
 
   isAvalancheType(type: Enums.AvalancheType) {
-    return this.variant?.avalancheType === type;
+    return this.variant()?.avalancheType === type;
   }
 
   setAvalancheType(event: Event, type: Enums.AvalancheType) {
     event.stopPropagation();
-    this.variant.avalancheType = type;
+    this.variant().avalancheType = type;
     this.updateVariantOnServer();
   }
 
   setZeroDegreeIsotherm(zeroDegreeIsotherm: boolean) {
-    this.variant?.zeroDegreeIsotherm === zeroDegreeIsotherm
-      ? (this.variant.zeroDegreeIsotherm = undefined)
-      : (this.variant.zeroDegreeIsotherm = zeroDegreeIsotherm);
+    const variant = this.variant();
+    variant?.zeroDegreeIsotherm === zeroDegreeIsotherm
+      ? (variant.zeroDegreeIsotherm = undefined)
+      : (variant.zeroDegreeIsotherm = zeroDegreeIsotherm);
     this.updateVariantOnServer();
   }
 
   setWeakLayerPersistent(weakLayerPersistent: boolean) {
-    this.variant?.weakLayerPersistent === weakLayerPersistent
-      ? (this.variant.weakLayerPersistent = undefined)
-      : (this.variant.weakLayerPersistent = weakLayerPersistent);
+    const variant = this.variant();
+    variant?.weakLayerPersistent === weakLayerPersistent
+      ? (variant.weakLayerPersistent = undefined)
+      : (variant.weakLayerPersistent = weakLayerPersistent);
     this.updateVariantOnServer();
   }
 
   setWeakLayerWet(weakLayerWet: boolean) {
-    this.variant?.weakLayerWet === weakLayerWet
-      ? (this.variant.weakLayerWet = undefined)
-      : (this.variant.weakLayerWet = weakLayerWet);
+    const variant = this.variant();
+    variant?.weakLayerWet === weakLayerWet ? (variant.weakLayerWet = undefined) : (variant.weakLayerWet = weakLayerWet);
     this.updateVariantOnServer();
   }
 
   setWeakLayerCrustAbove(weakLayerCrustAbove: boolean) {
-    this.variant?.weakLayerCrustAbove === weakLayerCrustAbove
-      ? (this.variant.weakLayerCrustAbove = undefined)
-      : (this.variant.weakLayerCrustAbove = weakLayerCrustAbove);
+    const variant = this.variant();
+    variant?.weakLayerCrustAbove === weakLayerCrustAbove
+      ? (variant.weakLayerCrustAbove = undefined)
+      : (variant.weakLayerCrustAbove = weakLayerCrustAbove);
     this.updateVariantOnServer();
   }
 
   setWeakLayerCrustBelow(weakLayerCrustBelow: boolean) {
-    this.variant?.weakLayerCrustBelow === weakLayerCrustBelow
-      ? (this.variant.weakLayerCrustBelow = undefined)
-      : (this.variant.weakLayerCrustBelow = weakLayerCrustBelow);
+    const variant = this.variant();
+    variant?.weakLayerCrustBelow === weakLayerCrustBelow
+      ? (variant.weakLayerCrustBelow = undefined)
+      : (variant.weakLayerCrustBelow = weakLayerCrustBelow);
     this.updateVariantOnServer();
   }
 
   setRemoteTriggering(remoteTriggering: boolean) {
-    this.variant?.remoteTriggering === remoteTriggering
-      ? (this.variant.remoteTriggering = undefined)
-      : (this.variant.remoteTriggering = remoteTriggering);
+    const variant = this.variant();
+    variant?.remoteTriggering === remoteTriggering
+      ? (variant.remoteTriggering = undefined)
+      : (variant.remoteTriggering = remoteTriggering);
     this.updateVariantOnServer();
   }
 
   setHasDaytimeDependency(hasDaytimeDependency: boolean) {
-    this.variant?.hasDaytimeDependency === hasDaytimeDependency
-      ? (this.variant.hasDaytimeDependency = undefined)
-      : (this.variant.hasDaytimeDependency = hasDaytimeDependency);
+    const variant = this.variant();
+    variant?.hasDaytimeDependency === hasDaytimeDependency
+      ? (variant.hasDaytimeDependency = undefined)
+      : (variant.hasDaytimeDependency = hasDaytimeDependency);
     this.updateVariantOnServer();
   }
 
   setDangerIncreaseWithElevation(dangerIncreaseWithElevation: boolean) {
-    this.variant?.dangerIncreaseWithElevation === dangerIncreaseWithElevation
-      ? (this.variant.dangerIncreaseWithElevation = undefined)
-      : (this.variant.dangerIncreaseWithElevation = dangerIncreaseWithElevation);
+    const variant = this.variant();
+    variant?.dangerIncreaseWithElevation === dangerIncreaseWithElevation
+      ? (variant.dangerIncreaseWithElevation = undefined)
+      : (variant.dangerIncreaseWithElevation = dangerIncreaseWithElevation);
     this.updateVariantOnServer();
   }
 
   setRunoutIntoGreen(runoutIntoGreen: boolean) {
-    this.variant?.runoutIntoGreen === runoutIntoGreen
-      ? (this.variant.runoutIntoGreen = undefined)
-      : (this.variant.runoutIntoGreen = runoutIntoGreen);
+    const variant = this.variant();
+    variant?.runoutIntoGreen === runoutIntoGreen
+      ? (variant.runoutIntoGreen = undefined)
+      : (variant.runoutIntoGreen = runoutIntoGreen);
     this.updateVariantOnServer();
   }
 
   isLooseSnowMoisture(wetness: Wetness) {
-    return this.variant?.looseSnowMoisture === wetness;
+    return this.variant()?.looseSnowMoisture === wetness;
   }
 
   setLooseSnowMoisture(event: Event, wetness: Wetness) {
     event.stopPropagation();
-    this.variant.looseSnowMoisture = wetness;
+    this.variant().looseSnowMoisture = wetness;
     this.updateVariantOnServer();
   }
 
   isLooseSnowGrainShape(grainShape: GrainShape) {
-    return this.variant?.looseSnowGrainShape === grainShape;
+    return this.variant()?.looseSnowGrainShape === grainShape;
   }
 
   setLooseSnowGrainShape(event: Event, grainShape: GrainShape) {
     event.stopPropagation();
-    this.variant.looseSnowGrainShape = grainShape;
+    this.variant().looseSnowGrainShape = grainShape;
     this.updateVariantOnServer();
   }
 
   isSlabGrainShape(grainShape: GrainShape) {
-    return this.variant?.slabGrainShape === grainShape;
+    return this.variant()?.slabGrainShape === grainShape;
   }
 
   setSlabGrainShape(event: Event, grainShape: GrainShape) {
     event.stopPropagation();
-    this.variant.slabGrainShape = grainShape;
+    this.variant().slabGrainShape = grainShape;
     this.updateVariantOnServer();
   }
 
   isSlabHandHardnessLowerLimit(handHardness: HandHardness) {
-    return this.variant?.slabHandHardnessLowerLimit === handHardness;
+    return this.variant()?.slabHandHardnessLowerLimit === handHardness;
   }
 
   setSlabHandHardnessLowerLimit(event: Event, handHardness: HandHardness) {
     event.stopPropagation();
-    this.variant.slabHandHardnessLowerLimit = handHardness;
+    this.variant().slabHandHardnessLowerLimit = handHardness;
     this.updateVariantOnServer();
   }
 
   isSlabHandHardnessUpperLimit(handHardness: HandHardness) {
-    return this.variant?.slabHandHardnessUpperLimit === handHardness;
+    return this.variant()?.slabHandHardnessUpperLimit === handHardness;
   }
 
   setSlabHandHardnessUpperLimit(event: Event, handHardness: HandHardness) {
     event.stopPropagation();
-    this.variant.slabHandHardnessUpperLimit = handHardness;
+    this.variant().slabHandHardnessUpperLimit = handHardness;
     this.updateVariantOnServer();
   }
 
   isSlabHardnessProfile(tendency: Enums.Tendency) {
-    return this.variant?.slabHardnessProfile === tendency;
+    return this.variant()?.slabHardnessProfile === tendency;
   }
 
   setSlabHardnessProfile(event: Event, tendency: Enums.Tendency) {
     event.stopPropagation();
-    this.variant.slabHardnessProfile = tendency;
+    this.variant().slabHardnessProfile = tendency;
     this.updateVariantOnServer();
   }
 
   isSlabEnergyTransferPotential(slabEnergyTransferPotential: Characteristic) {
-    return this.variant?.slabEnergyTransferPotential === slabEnergyTransferPotential;
+    return this.variant()?.slabEnergyTransferPotential === slabEnergyTransferPotential;
   }
 
   setSlabEnergyTransferPotential(event: Event, slabEnergyTransferPotential: Characteristic) {
     event.stopPropagation();
-    this.variant.slabEnergyTransferPotential = slabEnergyTransferPotential;
+    this.variant().slabEnergyTransferPotential = slabEnergyTransferPotential;
     this.updateVariantOnServer();
   }
 
   isSlabDistribution(slabDistribution: Distribution) {
-    return this.variant?.slabDistribution === slabDistribution;
+    return this.variant()?.slabDistribution === slabDistribution;
   }
 
   setSlabDistribution(event: Event, slabDistribution: Distribution) {
     event.stopPropagation();
-    this.variant.slabDistribution = slabDistribution;
+    this.variant().slabDistribution = slabDistribution;
     this.updateVariantOnServer();
   }
 
   isWeakLayerGrainShape(grainShape: GrainShape) {
-    return this.variant?.weakLayerGrainShape === grainShape;
+    return this.variant()?.weakLayerGrainShape === grainShape;
   }
 
   setWeakLayerGrainShape(event: Event, grainShape: GrainShape) {
     event.stopPropagation();
-    this.variant.weakLayerGrainShape = grainShape;
+    this.variant().weakLayerGrainShape = grainShape;
     this.updateVariantOnServer();
   }
 
   isWeakLayerThickness(thickness: Thickness) {
-    return this.variant?.weakLayerThickness === thickness;
+    return this.variant()?.weakLayerThickness === thickness;
   }
 
   setWeakLayerThickness(event: Event, thickness: Thickness) {
     event.stopPropagation();
-    this.variant.weakLayerThickness = thickness;
+    this.variant().weakLayerThickness = thickness;
     this.updateVariantOnServer();
   }
 
   isWeakLayerStrength(strength: Characteristic) {
-    return this.variant?.weakLayerStrength === strength;
+    return this.variant()?.weakLayerStrength === strength;
   }
 
   setWeakLayerStrength(event: Event, strength: Characteristic) {
     event.stopPropagation();
-    this.variant.weakLayerStrength = strength;
+    this.variant().weakLayerStrength = strength;
     this.updateVariantOnServer();
   }
 
   isWeakLayerPosition(snowpackPosition: SnowpackPosition) {
-    return this.variant?.weakLayerPosition === snowpackPosition;
+    return this.variant()?.weakLayerPosition === snowpackPosition;
   }
 
   setWeakLayerPosition(event: Event, snowpackPosition: SnowpackPosition) {
     event.stopPropagation();
-    this.variant.weakLayerPosition = snowpackPosition;
+    this.variant().weakLayerPosition = snowpackPosition;
     this.updateVariantOnServer();
   }
 
   isWeakLayerCreation(creationProcess: CreationProcess) {
-    return this.variant?.weakLayerCreation === creationProcess;
+    return this.variant()?.weakLayerCreation === creationProcess;
   }
 
   setWeakLayerCreation(event: Event, creationProcess: CreationProcess) {
     event.stopPropagation();
-    this.variant.weakLayerCreation = creationProcess;
+    this.variant().weakLayerCreation = creationProcess;
     this.updateVariantOnServer();
   }
 
   isWeakLayerDistribution(distribution: Distribution) {
-    return this.variant?.weakLayerDistribution === distribution;
+    return this.variant()?.weakLayerDistribution === distribution;
   }
 
   setWeakLayerDistribution(event: Event, distribution: Distribution) {
     event.stopPropagation();
-    this.variant.weakLayerDistribution = distribution;
+    this.variant().weakLayerDistribution = distribution;
     this.updateVariantOnServer();
   }
 
   isDangerSpotRecognizability(dangerSpotRecognizability: Recognizability) {
-    return this.variant?.dangerSpotRecognizability === dangerSpotRecognizability;
+    return this.variant()?.dangerSpotRecognizability === dangerSpotRecognizability;
   }
 
   setDangerSpotRecognizability(event: Event, dangerSpotRecognizability: Recognizability) {
     event.stopPropagation();
-    this.variant.dangerSpotRecognizability = dangerSpotRecognizability;
+    this.variant().dangerSpotRecognizability = dangerSpotRecognizability;
     this.updateVariantOnServer();
   }
 
   isHighestDangerAspect(highestDangerAspect: Enums.Aspect) {
-    return this.variant?.highestDangerAspect === highestDangerAspect;
+    return this.variant()?.highestDangerAspect === highestDangerAspect;
   }
 
   setHighestDangerAspect(event: Event, highestDangerAspect: Enums.Aspect) {
     event.stopPropagation();
-    this.variant.highestDangerAspect = highestDangerAspect;
+    this.variant().highestDangerAspect = highestDangerAspect;
     this.updateVariantOnServer();
   }
 
   isDangerPeak(dangerPeak: Daytime) {
-    return this.variant?.dangerPeak === dangerPeak;
+    return this.variant()?.dangerPeak === dangerPeak;
   }
 
   setDangerPeak(event: Event, dangerPeak: Daytime) {
     event.stopPropagation();
-    this.variant.dangerPeak = dangerPeak;
+    this.variant().dangerPeak = dangerPeak;
     this.updateVariantOnServer();
   }
 
   isSlopeGradient(slopeGradient: SlopeGradient) {
-    return this.variant?.slopeGradient === slopeGradient;
+    return this.variant()?.slopeGradient === slopeGradient;
   }
 
   setSlopeGradient(event: Event, slopeGradient: SlopeGradient) {
     event.stopPropagation();
-    this.variant.slopeGradient = slopeGradient;
+    this.variant().slopeGradient = slopeGradient;
     this.updateVariantOnServer();
   }
 
   isNaturalRelease(naturalRelease: Probability) {
-    return this.variant?.naturalRelease === naturalRelease;
+    return this.variant()?.naturalRelease === naturalRelease;
   }
 
   setNaturalRelease(event: Event, naturalRelease: Probability) {
     event.stopPropagation();
-    this.variant.naturalRelease = naturalRelease;
+    this.variant().naturalRelease = naturalRelease;
     this.updateVariantOnServer();
   }
 
   isTerrainType(terrainType: TerrainType) {
-    return this.variant?.terrainTypes.includes(terrainType);
+    return this.variant()?.terrainTypes.includes(terrainType);
   }
 
   setTerrainType(event: Event, terrainType: TerrainType) {
     event.stopPropagation();
-    if (this.variant?.terrainTypes.includes(terrainType)) {
-      const index = this.variant?.terrainTypes.indexOf(terrainType, 0);
+    const variant = this.variant();
+    if (variant?.terrainTypes.includes(terrainType)) {
+      const index = variant?.terrainTypes.indexOf(terrainType, 0);
       if (index > -1) {
-        this.variant?.terrainTypes.splice(index, 1);
+        variant?.terrainTypes.splice(index, 1);
       }
     } else {
-      this.variant?.terrainTypes.push(terrainType);
+      variant?.terrainTypes.push(terrainType);
     }
     this.updateVariantOnServer();
   }
 
   isDangerSign(dangerSign: DangerSign) {
-    return this.variant?.dangerSigns.includes(dangerSign);
+    return this.variant()?.dangerSigns.includes(dangerSign);
   }
 
   setDangerSign(event: Event, dangerSign: DangerSign) {
     event.stopPropagation();
-    if (this.variant?.dangerSigns.includes(dangerSign)) {
-      const index = this.variant?.dangerSigns.indexOf(dangerSign, 0);
+    const variant = this.variant();
+    if (variant?.dangerSigns.includes(dangerSign)) {
+      const index = variant?.dangerSigns.indexOf(dangerSign, 0);
       if (index > -1) {
-        this.variant?.dangerSigns.splice(index, 1);
+        variant?.dangerSigns.splice(index, 1);
       }
     } else {
-      this.variant?.dangerSigns.push(dangerSign);
+      variant?.dangerSigns.push(dangerSign);
     }
     this.updateVariantOnServer();
   }
 
   updateElevationHigh(event) {
     if (!this.localTreelineHigh) {
-      if (this.variant && this.localElevationHigh !== undefined && this.localElevationHigh !== "") {
+      const variant = this.variant();
+      if (variant && this.localElevationHigh !== undefined && this.localElevationHigh !== "") {
         this.localElevationHigh = Math.round(this.localElevationHigh / 100) * 100;
-        this.variant.elevationHigh = this.localElevationHigh;
-        if (this.variant.elevationHigh > 9000) {
-          this.variant.elevationHigh = 9000;
-        } else if (this.variant.elevationHigh < 0) {
-          this.variant.elevationHigh = 0;
+        variant.elevationHigh = this.localElevationHigh;
+        if (variant.elevationHigh > 9000) {
+          variant.elevationHigh = 9000;
+        } else if (variant.elevationHigh < 0) {
+          variant.elevationHigh = 0;
         }
       }
       this.isElevationHighEditing = false;
@@ -554,13 +566,14 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   updateElevationLow() {
     if (!this.localTreelineLow) {
-      if (this.variant && this.localElevationLow !== undefined && this.localElevationLow !== "") {
+      const variant = this.variant();
+      if (variant && this.localElevationLow !== undefined && this.localElevationLow !== "") {
         this.localElevationLow = Math.round(this.localElevationLow / 100) * 100;
-        this.variant.elevationLow = this.localElevationLow;
-        if (this.variant.elevationLow > 9000) {
-          this.variant.elevationLow = 9000;
-        } else if (this.variant.elevationLow < 0) {
-          this.variant.elevationLow = 0;
+        variant.elevationLow = this.localElevationLow;
+        if (variant.elevationLow > 9000) {
+          variant.elevationLow = 9000;
+        } else if (variant.elevationLow < 0) {
+          variant.elevationLow = 0;
         }
       }
       this.isElevationLowEditing = false;
@@ -570,14 +583,15 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   treelineHighClicked(event) {
     event.stopPropagation();
-    if (this.variant.treelineHigh) {
+    const variant = this.variant();
+    if (variant.treelineHigh) {
       this.isElevationHighEditing = true;
-      this.variant.treelineHigh = false;
+      variant.treelineHigh = false;
       this.localElevationHigh = "";
       this.localTreelineHigh = false;
     } else {
-      this.variant.treelineHigh = true;
-      this.variant.elevationHigh = undefined;
+      variant.treelineHigh = true;
+      variant.elevationHigh = undefined;
       this.localElevationHigh = "";
       this.localTreelineHigh = true;
       this.isElevationHighEditing = false;
@@ -587,14 +601,15 @@ export class DangerSourceVariantComponent implements OnChanges {
 
   treelineLowClicked(event) {
     event.stopPropagation();
-    if (this.variant.treelineLow) {
+    const variant = this.variant();
+    if (variant.treelineLow) {
       this.isElevationLowEditing = true;
       this.localTreelineLow = false;
       this.localElevationLow = "";
-      this.variant.treelineLow = false;
+      variant.treelineLow = false;
     } else {
-      this.variant.treelineLow = true;
-      this.variant.elevationLow = undefined;
+      variant.treelineLow = true;
+      variant.elevationLow = undefined;
       this.localElevationLow = "";
       this.localTreelineLow = true;
       this.isElevationLowEditing = false;
@@ -606,8 +621,9 @@ export class DangerSourceVariantComponent implements OnChanges {
     if (!event.currentTarget.checked) {
       this.localElevationHigh = "";
       this.localTreelineHigh = false;
-      this.variant.treelineHigh = false;
-      this.variant.elevationHigh = undefined;
+      const variant = this.variant();
+      variant.treelineHigh = false;
+      variant.elevationHigh = undefined;
       this.isElevationHighEditing = false;
       this.useElevationHigh = false;
       this.updateVariantOnServer();
@@ -621,8 +637,9 @@ export class DangerSourceVariantComponent implements OnChanges {
     if (!event.currentTarget.checked) {
       this.localElevationLow = "";
       this.localTreelineLow = false;
-      this.variant.treelineLow = false;
-      this.variant.elevationLow = undefined;
+      const variant = this.variant();
+      variant.treelineLow = false;
+      variant.elevationLow = undefined;
       this.isElevationLowEditing = false;
       this.useElevationLow = false;
       this.updateVariantOnServer();
@@ -635,13 +652,13 @@ export class DangerSourceVariantComponent implements OnChanges {
   onGlidingSnowActivityValueChange(changeContext: ChangeContext): void {
     switch (true) {
       case changeContext.value < 33:
-        this.variant.glidingSnowActivity = GlidingSnowActivity.low;
+        this.variant().glidingSnowActivity = GlidingSnowActivity.low;
         break;
       case changeContext.value < 66:
-        this.variant.glidingSnowActivity = GlidingSnowActivity.medium;
+        this.variant().glidingSnowActivity = GlidingSnowActivity.medium;
         break;
       default:
-        this.variant.glidingSnowActivity = GlidingSnowActivity.high;
+        this.variant().glidingSnowActivity = GlidingSnowActivity.high;
         break;
     }
     this.updateVariantOnServer();

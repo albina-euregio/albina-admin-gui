@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, input } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -14,7 +14,7 @@ import { FormsModule } from "@angular/forms";
   imports: [NgFor, AlertModule, TabsModule, FormsModule, NgIf, TranslateModule],
 })
 export class RegionConfigurationComponent {
-  @Input() config: RegionConfiguration;
+  readonly config = input<RegionConfiguration>(undefined);
 
   public configurationPropertiesLoaded: boolean = false;
   public saveConfigurationLoading: boolean;
@@ -31,59 +31,59 @@ export class RegionConfigurationComponent {
 
   public save() {
     this.saveConfigurationLoading = true;
-    if (this.authenticationService.getActiveRegionId() == this.config.id)
-      this.authenticationService.setActiveRegion(this.config);
+    const config = this.config();
+    if (this.authenticationService.getActiveRegionId() == config.id) this.authenticationService.setActiveRegion(config);
     const json = Object();
-    json["id"] = this.config.id;
-    json["microRegions"] = this.config.microRegions;
-    json["subRegions"] = this.config.subRegions;
-    json["superRegions"] = this.config.superRegions;
-    json["neighborRegions"] = this.config.neighborRegions;
-    json["showMatrix"] = this.config.showMatrix;
-    json["publishBulletins"] = this.config.publishBulletins;
-    json["publishBlogs"] = this.config.publishBlogs;
-    json["createCaamlV5"] = this.config.createCaamlV5;
-    json["createCaamlV6"] = this.config.createCaamlV6;
-    json["createJson"] = this.config.createJson;
-    json["createMaps"] = this.config.createMaps;
-    json["createPdf"] = this.config.createPdf;
-    json["createSimpleHtml"] = this.config.createSimpleHtml;
-    json["sendEmails"] = this.config.sendEmails;
-    json["sendTelegramMessages"] = this.config.sendTelegramMessages;
-    json["sendPushNotifications"] = this.config.sendPushNotifications;
-    json["enableMediaFile"] = this.config.enableMediaFile;
-    json["enableDangerSources"] = this.config.enableDangerSources;
-    json["enableObservations"] = this.config.enableObservations;
-    json["enableModelling"] = this.config.enableModelling;
-    json["enableWeatherbox"] = this.config.enableWeatherbox;
-    json["enableStrategicMindset"] = this.config.enableStrategicMindset;
-    json["enableStressLevel"] = this.config.enableStressLevel;
-    json["serverInstance"] = this.config.serverInstance;
-    json["pdfColor"] = this.config.pdfColor;
-    json["emailColor"] = this.config.emailColor;
-    json["pdfMapYAmPm"] = this.config.pdfMapYAmPm;
-    json["pdfMapYFd"] = this.config.pdfMapYFd;
-    json["pdfMapWidthAmPm"] = this.config.pdfMapWidthAmPm;
-    json["pdfMapWidthFd"] = this.config.pdfMapWidthFd;
-    json["pdfMapHeight"] = this.config.pdfMapHeight;
-    json["pdfFooterLogo"] = this.config.pdfFooterLogo;
-    json["pdfFooterLogoColorPath"] = this.config.pdfFooterLogoColorPath;
-    json["pdfFooterLogoBwPath"] = this.config.pdfFooterLogoBwPath;
-    json["mapXmax"] = this.config.mapXmax;
-    json["mapXmin"] = this.config.mapXmin;
-    json["mapYmax"] = this.config.mapYmax;
-    json["mapYmin"] = this.config.mapYmin;
-    json["simpleHtmlTemplateName"] = this.config.simpleHtmlTemplateName;
-    json["geoDataDirectory"] = this.config.geoDataDirectory;
-    json["mapLogoColorPath"] = this.config.mapLogoColorPath;
-    json["mapLogoBwPath"] = this.config.mapLogoBwPath;
-    json["mapLogoPosition"] = this.config.mapLogoPosition;
-    json["mapCenterLat"] = this.config.mapCenterLat;
-    json["mapCenterLng"] = this.config.mapCenterLng;
-    json["imageColorbarColorPath"] = this.config.imageColorbarColorPath;
-    json["imageColorbarBwPath"] = this.config.imageColorbarBwPath;
+    json["id"] = config.id;
+    json["microRegions"] = config.microRegions;
+    json["subRegions"] = config.subRegions;
+    json["superRegions"] = config.superRegions;
+    json["neighborRegions"] = config.neighborRegions;
+    json["showMatrix"] = config.showMatrix;
+    json["publishBulletins"] = config.publishBulletins;
+    json["publishBlogs"] = config.publishBlogs;
+    json["createCaamlV5"] = config.createCaamlV5;
+    json["createCaamlV6"] = config.createCaamlV6;
+    json["createJson"] = config.createJson;
+    json["createMaps"] = config.createMaps;
+    json["createPdf"] = config.createPdf;
+    json["createSimpleHtml"] = config.createSimpleHtml;
+    json["sendEmails"] = config.sendEmails;
+    json["sendTelegramMessages"] = config.sendTelegramMessages;
+    json["sendPushNotifications"] = config.sendPushNotifications;
+    json["enableMediaFile"] = config.enableMediaFile;
+    json["enableDangerSources"] = config.enableDangerSources;
+    json["enableObservations"] = config.enableObservations;
+    json["enableModelling"] = config.enableModelling;
+    json["enableWeatherbox"] = config.enableWeatherbox;
+    json["enableStrategicMindset"] = config.enableStrategicMindset;
+    json["enableStressLevel"] = config.enableStressLevel;
+    json["serverInstance"] = config.serverInstance;
+    json["pdfColor"] = config.pdfColor;
+    json["emailColor"] = config.emailColor;
+    json["pdfMapYAmPm"] = config.pdfMapYAmPm;
+    json["pdfMapYFd"] = config.pdfMapYFd;
+    json["pdfMapWidthAmPm"] = config.pdfMapWidthAmPm;
+    json["pdfMapWidthFd"] = config.pdfMapWidthFd;
+    json["pdfMapHeight"] = config.pdfMapHeight;
+    json["pdfFooterLogo"] = config.pdfFooterLogo;
+    json["pdfFooterLogoColorPath"] = config.pdfFooterLogoColorPath;
+    json["pdfFooterLogoBwPath"] = config.pdfFooterLogoBwPath;
+    json["mapXmax"] = config.mapXmax;
+    json["mapXmin"] = config.mapXmin;
+    json["mapYmax"] = config.mapYmax;
+    json["mapYmin"] = config.mapYmin;
+    json["simpleHtmlTemplateName"] = config.simpleHtmlTemplateName;
+    json["geoDataDirectory"] = config.geoDataDirectory;
+    json["mapLogoColorPath"] = config.mapLogoColorPath;
+    json["mapLogoBwPath"] = config.mapLogoBwPath;
+    json["mapLogoPosition"] = config.mapLogoPosition;
+    json["mapCenterLat"] = config.mapCenterLat;
+    json["mapCenterLng"] = config.mapCenterLng;
+    json["imageColorbarColorPath"] = config.imageColorbarColorPath;
+    json["imageColorbarBwPath"] = config.imageColorbarBwPath;
 
-    if (!this.config.isNew) {
+    if (!config.isNew) {
       this.configurationService.updateRegionConfiguration(json).subscribe(
         (data) => {
           this.saveConfigurationLoading = false;

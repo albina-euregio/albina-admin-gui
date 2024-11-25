@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, TemplateRef, ViewChild } from "@angular/core";
+import { Component, OnInit, HostListener, TemplateRef, viewChild } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { Router } from "@angular/router";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   public loading: boolean;
 
   public errorModalRef: BsModalRef;
-  @ViewChild("errorTemplate") errorTemplate: TemplateRef<any>;
+  readonly errorTemplate = viewChild<TemplateRef<any>>("errorTemplate");
 
   public config = {
     animated: false,
@@ -74,12 +74,12 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         } else {
           console.error("[" + this.username + "] Login failed!");
-          this.openErrorModal(this.errorTemplate);
+          this.openErrorModal(this.errorTemplate());
         }
       },
       (error) => {
         console.error("[" + this.username + "] Login failed: " + JSON.stringify(error._body));
-        this.openErrorModal(this.errorTemplate);
+        this.openErrorModal(this.errorTemplate());
       },
     );
   }
