@@ -18,14 +18,10 @@ export class StatisticsComponent {
   translateService = inject(TranslateService);
   constantsService = inject(ConstantsService);
 
-  public loadingStatistics: boolean;
+  public loadingStatistics = false;
   public bsRangeValue: Date[];
   public duplicates: boolean;
   public extended: boolean;
-
-  constructor() {
-    this.loadingStatistics = false;
-  }
 
   getStatistics(event) {
     event.stopPropagation();

@@ -19,15 +19,9 @@ export class ServerConfigurationComponent {
   readonly config = input<ServerConfiguration>(undefined);
   readonly externalServer = input<boolean>(undefined);
 
-  public statusMap: Map<number, Enums.BulletinStatus>;
-  public saveConfigurationLoading: boolean;
+  public saveConfigurationLoading = false;
 
   public alerts: any[] = [];
-
-  constructor() {
-    this.statusMap = new Map<number, Enums.BulletinStatus>();
-    this.saveConfigurationLoading = false;
-  }
 
   public save() {
     this.saveConfigurationLoading = true;

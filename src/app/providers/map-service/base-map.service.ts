@@ -1,13 +1,9 @@
-import { Injectable, inject } from "@angular/core";
-import { ConstantsService } from "../constants-service/constants.service";
+import { Injectable } from "@angular/core";
 import { CircleMarker, Control, LatLng, LayerGroup, Map, Marker } from "leaflet";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
 
-import { AuthenticationService } from "../authentication-service/authentication.service";
-import { RegionsService } from "../regions-service/regions.service";
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
-import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -20,12 +16,7 @@ export class BaseMapService extends MapService {
   };
 
   constructor() {
-    const authenticationService = inject(AuthenticationService);
-    const regionsService = inject(RegionsService);
-    const translateService = inject(TranslateService);
-    const constantsService = inject(ConstantsService);
-
-    super(regionsService, translateService, authenticationService, constantsService);
+    super();
     this.observationTypeLayers = {} as any;
     Object.keys(ObservationType).forEach((type) => (this.observationTypeLayers[type] = new LayerGroup()));
   }

@@ -31,19 +31,14 @@ import { xor } from "lodash";
 export class ObservationEditorComponent implements AfterViewInit {
   private geocodingService = inject(GeocodingService);
   private coordinateDataService = inject(CoordinateDataService);
-
-  constructor() {
-    const authenticationService = inject(AuthenticationService);
-
-    this.avalancheProblems = authenticationService.getActiveRegionAvalancheProblems();
-  }
+  private authenticationService = inject(AuthenticationService);
 
   readonly observation = input<GenericObservation>(undefined);
   readonly eventDateDate = viewChild<ElementRef<HTMLInputElement>>("eventDateDate");
   readonly eventDateTime = viewChild<ElementRef<HTMLInputElement>>("eventDateTime");
   readonly reportDateDate = viewChild<ElementRef<HTMLInputElement>>("reportDateDate");
   readonly reportDateTime = viewChild<ElementRef<HTMLInputElement>>("reportDateTime");
-  avalancheProblems: Enums.AvalancheProblem[];
+  avalancheProblems: Enums.AvalancheProblem[] = this.authenticationService.getActiveRegionAvalancheProblems();
   dangerPatterns = Object.values(Enums.DangerPattern);
   importantObservations = Object.values(ImportantObservation);
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);

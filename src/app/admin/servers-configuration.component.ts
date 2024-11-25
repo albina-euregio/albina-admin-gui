@@ -18,13 +18,8 @@ export class ServersConfigurationComponent implements OnInit {
   private constantsService = inject(ConstantsService);
   configurationService = inject(ConfigurationService);
 
-  public saveConfigurationLoading: boolean;
   public localServerConfiguration: ServerConfiguration;
   public externalServerConfigurations: ServerConfiguration[];
-
-  constructor() {
-    this.saveConfigurationLoading = false;
-  }
 
   ngOnInit() {
     if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {

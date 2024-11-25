@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   public username: string;
   public password: string;
   public returnUrl: string;
-  public loading: boolean;
+  public loading = false;
 
   public errorModalRef: BsModalRef;
   readonly errorTemplate = viewChild<TemplateRef<any>>("errorTemplate");
@@ -37,10 +37,6 @@ export class LoginComponent implements OnInit {
     class: "modal-sm",
   };
   serverInfo: ServerConfiguration & { version: string };
-
-  constructor() {
-    this.loading = false;
-  }
 
   ngOnInit() {
     // reset login status

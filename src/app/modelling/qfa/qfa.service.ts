@@ -37,16 +37,12 @@ export class QfaService {
       lat: 46.83,
     },
   };
-  cities: string[];
   files = {
     innsbruck: [],
     bozen: [],
     lienz: [],
   };
-
-  constructor() {
-    this.cities = Object.keys(this.files);
-  }
+  cities = Object.keys(this.files);
 
   async loadDustParams() {
     this.dustParams = await this.dustParamService.parseDustParams();

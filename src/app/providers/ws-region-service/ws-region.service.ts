@@ -5,8 +5,6 @@ import * as Rx from "rxjs";
 export class WsRegionService {
   private subject: Rx.Subject<MessageEvent>;
 
-  constructor() {}
-
   public connect(url): Rx.Subject<MessageEvent> {
     if (!this.subject) {
       this.subject = this.create(url);

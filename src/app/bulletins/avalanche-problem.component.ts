@@ -19,8 +19,6 @@ export class AvalancheProblemComponent {
   readonly disabled = input<boolean>(undefined);
   readonly changeAvalancheProblemEvent = output();
 
-  constructor() {}
-
   changeAvalancheProblemDetail() {
     this.changeAvalancheProblemEvent.emit();
   }

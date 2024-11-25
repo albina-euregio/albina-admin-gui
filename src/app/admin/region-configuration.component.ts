@@ -20,14 +20,9 @@ export class RegionConfigurationComponent {
 
   readonly config = input<RegionConfiguration>(undefined);
 
-  public configurationPropertiesLoaded = false;
-  public saveConfigurationLoading: boolean;
+  public saveConfigurationLoading = false;
 
   public alerts: any[] = [];
-
-  constructor() {
-    this.saveConfigurationLoading = false;
-  }
 
   public save() {
     this.saveConfigurationLoading = true;

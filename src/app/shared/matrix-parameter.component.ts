@@ -29,7 +29,7 @@ export class MatrixParameterComponent implements OnChanges {
   readonly changeMatrixEvent = output();
 
   dangerRating = Enums.DangerRating;
-  dangerRatingEnabled: boolean;
+  dangerRatingEnabled = false;
   modificatorEnum = Enums.DangerRatingModificator;
 
   public forLabelId(key: string): string {
@@ -213,10 +213,6 @@ export class MatrixParameterComponent implements OnChanges {
       return "grey";
     },
   };
-
-  constructor() {
-    this.dangerRatingEnabled = false;
-  }
 
   ngOnChanges(): void {
     this.snowpackStabilityOptions = Object.assign({}, this.snowpackStabilityOptions, { disabled: this.disabled() });

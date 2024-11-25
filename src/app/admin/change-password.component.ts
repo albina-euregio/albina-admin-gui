@@ -23,7 +23,7 @@ export class ChangePasswordComponent {
   private userService = inject(UserService);
   private bsModalRef = inject(BsModalRef);
 
-  public changePasswordLoading: boolean;
+  public changePasswordLoading = false;
 
   public oldPassword: string;
   public newPassword1: string;
@@ -33,10 +33,6 @@ export class ChangePasswordComponent {
   public userId: string;
 
   public result: Result;
-
-  constructor() {
-    this.changePasswordLoading = false;
-  }
 
   changePassword() {
     this.changePasswordLoading = true;

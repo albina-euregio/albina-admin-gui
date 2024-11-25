@@ -21,12 +21,7 @@ export class RegionsConfigurationComponent implements AfterContentInit {
   configurationService = inject(ConfigurationService);
 
   public configurationPropertiesLoaded = false;
-  public saveConfigurationLoading: boolean;
   public regionConfigurations: RegionConfiguration[];
-
-  constructor() {
-    this.saveConfigurationLoading = false;
-  }
 
   ngAfterContentInit() {
     if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {

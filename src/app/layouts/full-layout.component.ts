@@ -54,10 +54,6 @@ export class FullLayoutComponent {
     class: "modal-sm",
   };
 
-  constructor() {
-    this.tmpRegion = undefined;
-  }
-
   get environment() {
     return environment;
   }
