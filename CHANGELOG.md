@@ -46,10 +46,19 @@ All notable changes to this project will be documented in this file.
 
 ## [7.0.0] - 2024-11-08
 
-### Create Bulletins
+### Bulletins
 
-- show/hide sidebar #320
 - undo/redo actions using Ctrl+Z Ctrl+Y or buttons #343
+- read only mode
+- show/hide sidebar #320
+- Select am or pm problems if daytime removed
+- _(map)_ Use earlier/later
+- _(create-bulletins)_ Prioritze published over saved over suggested regions for coloring the map
+- _(create-bulletins)_ Highlight suggested micro regions of selected warning region
+- Show validation warning per bulletin
+- _(avalanche-type)_ Add button group for avalanche type
+- _(avalanche-types)_ Disable avalanche type for glide, wind slab and persistent weak layers
+- _(avalanche-type)_ Add type to avalanche problem preview
 
 ### Stress Level
 
@@ -96,6 +105,24 @@ All notable changes to this project will be documented in this file.
 - _(observation-editor)_ Add personInvolvement
 - _(observation-editor)_ ValueAsDate
 - _(observation)_ Migrate
+- _(observations)_ Color table rows
+- _(observations)_ Color selected params in charts
+- _(observations)_ Add highlight in rose chart
+- _(observations)_ Introduce stacked charts
+- _(observations)_ Move text search to table
+- _(observations)_ Background gradient only in first column of table
+- _(observations)_ Use today as date range end for selection of days
+- _(notes)_ Enable notes for all (except observer)
+- _(observations)_ Allow revert selecting with ctrl
+- _(observations-api)_ Snow line
+- _(observation)_ Update generic observation model
+- _(observations)_ Filter weather stationsbased on elevation
+- _(observations)_ Add advanced layer control dependency
+- _(observations)_ Show weather station data as label (incomplete)
+- _(observations)_ Optional outer circle for icon
+- _(observations)_ Day switcher
+- _(observations)_ Allow multiple external images
+- _(observations)_ Add buttons for arrowUp and arrowDown
 
 ### Training Mode
 
@@ -106,591 +133,8 @@ All notable changes to this project will be documented in this file.
 - _(training mode)_ Load bulletins from day before in training mode
 - _(training mode)_ Observers are upgraded to forecasters in training mode
 
-### Miscellaneous
+### Danger Sources
 
-- Integrate ZAMG Wetterbox
-
-- _(bulletins)_ Define layout to compare bulletins in default and compact layout #332
-- _(bulletins)_ Always use the compact view for comparing bulletins as intended in the design prototype. #332
-- _(weather-stations)_ Data from the past
-
-### 🐛 Bug Fixes
-
-- All services to app.module providers
-- All services to app.module providers
-- Do not show null avatar
-- _(types)_ Use string instead of String
-- _(avalanche-problem-decision-tree)_ No fall-through in event handler
-- _(avalanche-bulletin)_ Show edit micro regions for own bulletins
-- _(avalanche-bulletin)_ Hide edit micro regions buttons for some status
-- Remove EUREGIO region specialities
-- _(bulletins.service)_ LoadExternalBulletins skip isInternalRegion
-- _(bulletin-map)_ Keep editSelection on update
-- _(status)_ Load status on region change
-- _(observations)_ Stacked charts
-- _(external-regions)_ Check for null
-- _(bulletins)_ Show edit button not for role observer
-- _(create-bulletin)_ Show copy button not for role observer
-- _(create-bulletin)_ Check role on init
-- _(avalanche-bulletin)_ Show copy region button not for role observer
-- _(qfa)_ Month "Mar" and "Jun"
-- _(qfa)_ Disable swipe to allow horizontal scrolling of table
-- _(create-region)_ Show correct text
-- _(settings-service)_ Check for null
-- _(bulletin.model)_ GetRegionsByStatus
-- _(observations)_ Duplicated CSS
-- _(create-bulletin)_ Use query param for read only mode
-- _(bulletin-text)_ Simplify disabled
-- _(bulletin-text)_ Undefined
-- _(daytime)_ Allow cancel
-- _(create-bulletin)_ Deselect bulletin if region select canceled
-- _(bulletins)_ Region selection overlay #326
-- _(bulletins)_ Mobile nav- and sidebar #315, #321, #331
-- App.module
-- _(bulletins)_ Avalanche problem icons extend available area #298
-- _(bulletins)_ Keep image size ratio on small displays #327
-- _(bulletins)_ Vertical align danger- and problem icons
-- Align buttons in card-footer
-- _(observations)_ Count of selected micro regions (hack)
-- _(observations-api)_ Augment region
-- _(build)_ Deploy:observations-api
-- _(observations-api)_ Skip old wikisnow
-- _(observations-api)_ JSON.stringify
-- _(matrix)_ Add margin to checkbox
-- _(observation)_ Restore initial layout
-- _(create-bulletin)_ NativeElement on undefined
-- _(region)_ Change region fix
-- _(weather-stations)_ Apply filters only once
-- Yarn.lock
-- _(yarn.lock)_ Revert file
-- _(observations-api)_ Lawis.at/incident URL
-- _(observations)_ I18n
-- $header-nav-height: 60px
-- _(i18n)_ Typo
-- Lint errors
-- "AWSOME"
-- _(weather-stations)_ Do not allow highlighting of weather stations
-- _(bulletins)_ [Date, Date] for validFrom/validUntil
-- _(create-bulletin)_ Remember accepted/declined suggestions
-- _(avalanche-problems)_ Check only avalanche problems in own province
-- _(avalanche-problem)_ Style of up/down buttons
-- _(avalanche-problem-preview)_ Margin of elevations
-- _(region)_ Save missing configuration parameters
-- _(observation-marker)_ No classify
-- _(observation-api)_ Robustness
-- _(observation-filter)_ Bad performance of getISODateString
-- _(observation-chart)_ Undefined
-- _(observation-filter)_ Array types
-- _(modal-media-file.component)_ Date
-- _(observations)_ Do not open new modal when using arrow keys
-- _(observations)_ Update tooltip, fixes #355
-- _(observations)_ Tooltip, fixes #355
-- _(create-bulletin.component)_ Tooltip
-- _(stress-level)_ Date for style
-- _(observations)_ Duplicate requests
-- _(stress-level)_ Debounce by date
-- _(observation-filter)_ Filtering for day or elevation
-- _(observations)_ Elevation filter for weather stations
-- _(observations)_ Elevation filter for weather stations
-- _(observation-filter)_ Order of filter types
-- _(stress-level)_ Load stress level for additional dates
-- _(date)_ Copy dialog
-- _(statistics)_ Typo
-- _(search-params)_ Array handling
-- _(search-params)_ Use regions (plural) in url
-- _(awsome)_ Selected count
-- _(make-icon)_ Escape HTML chars of label
-- _(full-layout.component)_ Types
-- _(awsome)_ Typo in configURL
-- _(awsome)_ DateStepSeconds in schema
-- _(app.component)_ Init i18n
-- _(observations.component)_ Keyboard shortcuts
-- _(danger-sources)_ Update map after delete
-- _(danger-sources)_ Compare variants by creationDate, set creationDate correctly
-- _(danger-sources)_ Copy variant
-- _(danger-sources)_ Add empty method for compability
-- _(danger-sources)_ Gliding snow slider
-- _(danger-sources)_ Sort by danger rating
-- _(danger-sources)_ I18n key
-- _(danger-sources)_ Copy only analysis variants from yesterday
-- _(danger-sources)_ Variant constructor
-- _(elevation)_ Store changes, initialize checkbox correctly
-- _(bulletins.service)_ Do not init in constructor
-- _(undo-redo.service)_ Undefined
-- _(create-bulletin.component)_ BulletinsService.init
-- AngularCompilerOptions.strictTemplates
-- _(strategic-mindset)_ Template name
-- _(no-distinct-avalanche-problem)_ Use same wording everywhere
-- _(avalanche-problem)_ Rename no distinct avalanche problem icons
-- _(bulletins.service)_ Next and previous date
-- _(awsome)_ Date stepper buttons (call loadSources)
-- _(authentication.service)_ No_distinct_avalanche_problem
-- _(observation-marker)_ Undefined
-- _(observations)_ Undefined
-
-### 🚜 Refactor
-
-- Import package.json
-- _(avalanche-bulletin)_ Simplify openTextcat
-- _(avalanche-bulletin)_ Textcat types
-- _(bulletins)_ Prettier
-- _(avalanche-bulletin)_ Simplify if
-- _(avalanche-bulletin)_ Unused variables
-- _(avalanche-bulletin)_ Simplify concatTextcat
-- _(avalanche-bulletin)_ Simplify setAvalancheProblem
-- Remove unused class ConditionsModel
-- Remove unused enums
-- _(models)_ Simplify if
-- _(map.service)_ Types
-- _(avalanche-bulletin)_ GetTextcatRegionCode
-- _(avalanche-bulletin)_ NgFor for tendency types
-- _(avalanche-bulletin)_ Type Tendency = "decreasing"|"steady"|"increasing"
-- _(avalanche-bulletin)_ NgFor lang of translationLanguages
-- _(avalanche-bulletin)_ Simplify textcat example texts
-- _(avalanche-bulletin)_ Use string templates
-- _(bulletin.model)_ Inline textcat getters/setters
-- _(avalanche-bulletin)_ Simplify textcat event handlers
-- _(bulletin-text)_ Extract component
-- _(bulletin-text)_ Extract component
-- _(bulletin-text)_ Extract component
-- _(authentication.service)_ Simplify if
-- _(authentication.service)_ Inline getAccessToken
-- _(create-bulletin.component)_ Unused getTextcatUrl
-- _(authentication.service)_ Simplify if
-- _(authentication.service)_ Unused isInSuperRegion
-- _(create-bulletin.component)_ Unused isForeign
-- _(authentication.service)_ GetCurrentAuthorRegionIds
-- _(create-bulletin.component)_ Simplify if
-- _(create-bulletin.component)_ Unused onDangerPattern1Change
-- _(create-bulletin.component)_ Unused var L
-- _(create-bulletin.component)_ Unused fields
-- _(create-bulletin.component)_ Types
-- _(create-bulletin.component)_ Unused methods
-- _(create-bulletin.component)_ Simplify if
-- _(create-bulletin.component)_ Extract isWriteDisabled
-- _(create-bulletin.component)_ Simplify if in save
-- _(create-bulletin.component)_ Simplify if
-- _(create-bulletin.component)_ UpdateBulletinOnServer visibility
-- _(avalanche-problem-detail)_ Simplify if
-- _(avalanche-problem-decision-tree)_ Prefer-const
-- _(avalanche-problem-icons)_ Move files
-- _(avalanche-problem-decision-tree)_ Use (load) and [data]
-- _(avalanche-problem-decision-tree)_ Use HTMLElement[]
-- _(regions.service)_ Unused initialAggregatedRegion
-- Remove unused tabs.component
-- _(danger-rating-icon)_ Use ?.
-- _(matrix.component)_ Types
-- _(avalanche-problem-detail)_ Unused terrainFeatureTextcat
-- _(avalanche-bulletin)_ String enum DangerPattern
-- _(avalanche-bulletin)_ Unused imports
-- _(avalanche-bulletin)_ String enum Tendency
-- _(avalanche-bulletin)_ String enum DangerRating
-- _(bulletins)_ Prettier
-- _(models)_ Prettier
-- _(avalanche-bulletin)_ String enum AvalancheProblem
-- _(matrix)_ String enum AvalancheSize
-- _(matrix)_ String enum SnowpackStability
-- _(matrix)_ String enum Frequency
-- _(avalanche-problem)_ String enum DangerRatingDirection
-- _(matrix)_ String enum DangerRatingModificator
-- _(avalanche-bulletin)_ String enum DangerRating
-- Replace Enums.LanguageCode with string
-- _(enums)_ Prettier
-- _(settings.service)_ Unused methods
-- _(settings.service)_ Use translateService.currentLang
-- _(settings.service)_ Unused eventEmitter
-- Use translateService.langs
-- _(settings.service)_ Simplify setLangString
-- _(settings.service)_ Use translateService.setTranslation
-- _(authentication.service)_ Rename getInternalRegions
-- _(bulletin.service)_ AuthenticationService.getInternalRegions
-- _(authentication.service)_ Prettier
-- _(authentication.service)_ ExternalServerLogins
-- _(authentication.service)_ Extract LocalStorageService
-- _(base-map.service)_ Use getAlbinaBaseMap
-- Prettier
-- _(aspects)_ String enum Aspects
-- _(html)_ Prettier
-- _(avalanche-problem)_ Simplify hasAvalancheProblem
-- Use Array.includes
-- _(modal)_ Types
-- _(map.service)_ Simplify onEachFeature
-- _(map.service)_ Simplify selectAggregatedRegion
-- _(map.service)_ Simplify updateAggregatedRegion
-- _(map.service)_ Types
-- Remove unused fallback arguments
-- _(map.service)_ SelectAggregatedRegion0
-- _(map.service)_ Simplify
-- Use @angular-slider/ngx-slider
-- Remove unused socialmedia.service
-- Remove unused breadcrumb.component
-- Remove unused nav-dropdown.directive
-- Remove unused aside.directive
-- Remove unused sidebar.directive
-- Move password-mismatch.directive
-- Remove unused svg/circle\_\*
-- Remove unused jquery-ui
-- Use bootstrap modal for textcat
-- Use bootstrap modal for change password
-- Use bootstrap modal for update user
-- Remove @angular/material
-- _(observation-editor.component)_ Bootstrap forms
-- _(observation-table.component)_ Bootstrap forms/modal
-- _(observations.component)_ Bootstrap dropdown checkboxes
-- _(observations.component)_ Bootstrap datepicker
-- _(observations.component)_ Bootstrap modal
-- _(forecast.component)_ Bootstrap dropdown checkboxes
-- _(forecast.component)_ Bootstrap modal
-- _(avalanche-problem-decision-tree.component)_ Bootstrap modal
-- Remove primeng and primeicons
-- Remove @angular/material
-- Unused imports
-- Remove obsolete package
-- _(observation-api)_ Index.ts
-- _(constants.service)_ Get rid of observationWeb constant
-- _(constants.service)_ Get rid of rechenraumApi constant
-- _(constants.service)_ Get rid of osmNominatimApi constant
-- _(constants.service)_ Get rid of observationApi.observed_profile constant
-- _(constants.service)_ Get rid of observationApi['forecast.uoa.gr'] constant
-- _(constants.service)_ Get rid of observationApi.multimodel constant
-- _(observations.component)_ Unused onSidebarChange
-- _(observations.component)_ Arrow callback
-- _(bulletins.service)_ Types
-- _(constants.service)_ Inline mapBoundary into observation-filter
-- Locale argument of DatePipe
-- Move html pipe to bulletins module
-- Html pipe is pure
-- Use danger-rating.component
-- Remove unused window.\_\_theme
-- _(bulletins-service)_ Fix Observable<Response> type
-- _(awsome)_ Inline template
-- _(danger-rating)_ Signals
-- Use avalanche-problem-icons.component
-- Remove unused test files
-- Include observations.scss via style.scss
-- Remove empty \*-chart.component.scss
-- _(charts)_ Code duplication
-- _(charts)_ Extract formatTooltip
-- _(observation-editor)_ Reuse getDate/getTime
-- _(observation-editor)_ FetchElevation
-- _(copy.service)_ Simplify
-- _(avalanche-problem-preview)_ Simplify
-- Simplify ngClass
-- Use formatDate for ISO 8601 formatting
-- _(constants.service)_ Inline variables
-- _(observation-filter)_ Dot-notation
-- _(observation-filter)_ Simplify toDataset
-- _(observation-filter)_ Simplify toDataset
-- _(observation-filter)_ Simplify toDataset
-- _(observation-marker)_ Remove obsolete colors
-- _(observation-filter)_ DateRangeParams for API
-- _(observation-filter)_ Try DivIcon
-- _(observation-chart)_ Merge bar and rose
-- _(observation-chart)_ Rename to observation-chart
-- _(observation-chart)_ Move
-- _(observation-marker)_ Rename labelColor
-- _(modal-publish-all.component)_ Date
-- _(modal-check.component)_ Date
-- _(modal-publication-status.component)_ Date
-- Remove discouraged enableProdMode
-- Use bootstrap classes instead of inline styles
-- Remove unused imports
-- _(observation)_ Reuse existing enums
-- _(observation)_ Remove unused functions
-- _(observation)_ Reuse existing enums
-- _(observation)_ Inline toObservationTable
-- _(observation)_ Compute tooltip when needed
-- _(constants)_ Compute wss:// URL
-- _(observation)_ Remove unused functions
-- _(observation)_ Reuse existing enums
-- _(observations-api)_ Restructure project directories
-- _(stress-level)_ Extract methods
-- ConstantsService.getISODateString
-- Use ConstantsService.getISODateString
-- _(observation-filter)_ Interface FilterSelectionValue
-- _(observation-filter)_ Simplify toggleFilter
-- _(observation-filter)_ Use FilterSelectionData for app-observation-chart
-- _(observation-filter)_ Use FilterSelectionData in app-observation-chart
-- _(observation-chart)_ Type Dataset, type OutputDataset
-- _(observation-filter)_ Use Set in FilterSelectionData
-- _(observation-filter)_ Use readonly in FilterSelectionData
-- _(observation-filter)_ FilterSelectionData.dataset
-- _(observation-filter)_ Unused method argument
-- _(observation-chart)_ Simplify event handling
-- _(observation-marker)_ Use FilterSelectionData for markerClassify/markerLabel
-- _(observation-filter)_ Use FilterSelectionData for legend text
-- _(observation-filter)_ Class FilterSelectionData implements FilterSelectionSpec
-- _(observation-filter)_ Class FilterSelectionData methods
-- _(observation-filter)_ Extract filter-selection-data.ts
-- _(observation-filter)_ FilterSelectionData: FilterSelectionData[]
-- _(observation-filter)_ Remove enum LocalFilterTypes
-- _(observation-filter)_ FilterSelectionData.setDateRange
-- _(observation-filter)_ FilterSelectionData.findForObservation
-- _(observation-marker)_ Extract make-icon.ts
-- _(observation-marker)_ Inline ObservationMarkerService.getIcon
-- _(observation-marker)_ Extract grain.shapes.ts
-- _(observation-marker)_ Inline const importantObservationTexts
-- _(observation-chart)_ FormatTooltip using bootstrap classes
-- _(observation-chart)_ Use bootstrap font-family
-- _(url-params)_ Use URLSearchParams
-- _(app.component)_ Simplify
-- _(observations)_ Simplify
-- _(observations)_ Extract filter-selection-data-data.ts
-- _(observations)_ Extract FilterSelectionData.buildChartsData
-- _(observations)_ Inline ObservationFilterService.buildChartsData
-- _(observations)_ FilterSelectionData<T> generics
-- _(observations)_ ObservationFilterService<T> generics
-- _(observations)_ FilterSelectionData.getValue
-- _(observations)_ ObservationMarkerService<T> generics
-- _(observations)_ ObservationChartComponent<T> generics
-- _(awsome)_ ObservationLikeProperties
-- _(full-layout.component)_ Remove unused disable field
-- _(full-layout.component)_ Remove unused status.isopen field
-- _(full-layout.component)_ Remove unused message field
-- _(full-layout.component)_ Getter for environment
-- _(full-layout.component)_ Remove unused toggled()
-- _(awsome)_ Type AwsomeSource
-- _(awsome)_ KeyboardEvent.key
-- _(awsome)_ IsMobile
-- _(observation-marker.service)_ Extract observation-marker-weather-station.service
-- _(observation-marker.service)_ Extract observation-marker-webcam.service
-- _(observation-marker.service)_ Extract observation-marker-observer.service
-- _(observation-marker)_ Default labelFont
-- _(observation-table.component)_ Remove unused getTableIconStyle
-- Extract undo/redo to service
-- _(undo-redo.service)_ Move shortcut handling to avalanche-bulletin.component
-- _(observations.component)_ Move statistics export from admin
-- Simplify boolean expressions
-- _(bulletins.service)_ LoadBulletins returns objects of bulletins and etag
-- Convert all components, directives and pipes to standalone
-- Remove unnecessary NgModule classes
-- Bootstrap the application using standalone APIs
-- Replace routing modules with route exports
-- Use translateService.currentLang
-- Remove obsolete app.module
-- Init translateService in app.component
-- Yarn dedupe
-- Remove caaml.component and json.component
-- Remove unused app.component.html
-- _(observations-api)_ Define snobs as own source
-- _(observation-chart)_ Combine onSeriesClick and onAngleAxisClick
-- _(observation-chart)_ Combine onSeriesClick and onClickNan
-- _(observation-marker)_ CreateTooltipText
-- _(awsome.schema)_ Reformat with prettier
-- _(danger-sources)_ Use bootstrap spacing classes
-- _(observations-api)_ Function augmentAndInsertObservation
-- _(observation-editor)_ Migrate to GenericObservation
-- _(regions-loader)_ Remove unused @eaws/micro-regions_elevation
-
-### 📚 Documentation
-
-- _(Readme)_ Info for yarn plug'n play error
-
-### 🎨 Styling
-
-- _(\_buttons)_ Grayscale for disabled buttons
-
-### ⚙️ Miscellaneous Tasks
-
-- _(bulletins)_ Add read only mode
-- _(observations)_ Color table rows
-- Update .git-blame-ignore-revs
-- Set lang on <body>
-- _(avalanche-bulletin)_ Debounce server updates
-- _(avalanche-problem-decision-tree)_ Cursor=pointer
-- _(avalanche-problem-decision-tree)_ Confirm dialog when clicking a problem
-- _(bulletins)_ Show copy button even if suggestions are unanswered
-- _(authentication.service)_ Remember active region after logout
-- Ph-dots-three-outline-vertical
-- _(authentication.service)_ Load internal regions from API
-- _(map.service)_ Use ALBINA base map as WEBP
-- Prettier via husky
-- _(aspects)_ Cursor=pointer
-- Update echarts to 5.5.0
-- _(bulletins-table)_ Align buttons
-- _(observations)_ Color selected params in charts
-- _(observations)_ Add highlight in rose chart
-- _(observations)_ Introduce stacked charts
-- _(observations)_ Move text search to table
-- _(observations)_ Background gradient only in first column of table
-- _(observations)_ Use today as date range end for selection of days
-- _(notes)_ Enable notes for all (except observer)
-- _(observations)_ Allow revert selecting with ctrl
-- _(bulletin)_ SaveError per bulletin
-- Use enableObservations and enableModelling
-- Update to angular 17.3.2
-- Yarn-deduplicate
-- _(map)_ Add attribution, remove opentopomap
-- _(user)_ Extend user model with languageCode
-- _(user)_ Save user language
-- _(user)_ Show image in table view
-- _(user)_ Allow to update user image
-- _(i18n)_ Add translation for super admin
-- _(user)_ Merge update and create component
-- _(user)_ Remove option to show/hide observations (obsolete)
-- _(user)_ Separate changePasswordComponent
-- _(user)_ Allow user to update own infos and password, remove bcrypt
-- _(map.service)_ Use pmtiles for aggregatedRegions
-- _(map.service)_ Use pmtiles for aggregatedRegions
-- _(map.service)_ Use pmtiles for activeSelection
-- _(map.service)_ Fix resetInternalAggregatedRegions
-- _(bulletin-text.component)_ Show notes button
-- _(create-bulletin.component)_ Map left/top button
-- _(create-bulletin.component)_ Drop getForeignRegionNames
-- _(i18n)_ Update translations
-- _(observations)_ Unwrap "more" dropdown
-- Unused dependencies
-- _(bulletin)_ Always allow copy of texts
-- _(bulletin)_ Select am or pm problems if daytime removed
-- _(map)_ Use earlier/later
-- _(create-bulletin)_ Select bulletin after creation
-- _(layout)_ Save prefered map layout in local storage
-- _(create-bulletins)_ Check avalanche problem on publish, but not during copy
-- _(map)_ InvalidateSize for PM map only if visible
-- _(avalanche-bulletin)_ Open accordion if avalanche problem is created
-- _(modal)_ Remove animation
-- _(delete)_ Indicate loading of bulletins
-- _(create-bulletins)_ Disable buttons while loading/edit regions
-- _(create-bulletins)_ Emphasize save error
-- _(build)_ Yarn 4 using Node.js Corepack
-- _(filterFeature)_ Const TODAY for performance
-- _(create-bulletin)_ Save all altered bulletins when network is back
-- _(snow-line)_ Load snow line calculations
-- _(observations)_ Sort observations after loading
-- _(snow-line)_ Jump always to next diagram that is different
-- _(observations)_ Use imgUrl for weather stations and observers
-- _(observations-api)_ Snow line
-- _(snow-line)_ Show snow line calculations for most recent selected date
-- _(observations)_ Add externalImg to model
-- _(observation)_ Update generic observation model
-- _(observations)_ Filter weather stationsbased on elevation
-- _(observations)_ Add advanced layer control dependency
-- _(observations)_ Show weather station data as label (incomplete)
-- _(observations)_ Optional outer circle for icon
-- _(weather-stations)_ Add buttons to select parameters
-- _(weather-stations)_ Try different buttons
-- _(icons)_ Use phosphor icons
-- _(icons)_ Use phosphor icons
-- _(icons)_ Remove font-awesome
-- _(pButton)_ Remove
-- Remove roboto font
-- Remove material icons font
-- Update to angular 18.0.1
-- Update to ngx-echarts 18.0.0s
-- _(login)_ Add open-source Licenses list
-- _(i18n)_ Use tranlated strings for tooltips
-- _(observations-api)_ Update express
-- _(observations-api)_ Update mysql2
-- _(observations-api)_ Use json_valid in SQL
-- _(create-bulletins)_ Allow to compare bulletins
-- _(sidebar)_ Always show button on map to toggle sidebar
-- _(create-bulletins)_ Show number of warning regions
-- _(admin)_ Sort regions by name
-- _(admin)_ Show also region IDs
-- _(observations)_ Day switcher
-- _(base-map)_ Remove leaflet attribution prefix
-- _(base-map)_ Remove scale control
-- _(create-bulletin)_ Pointer cursor for bulletins header
-- _(build)_ Yarn 4.3.1
-- _(create-bulletins)_ Prioritze published over saved over suggested regions for coloring the map
-- _(create-bulletins)_ Highlight suggested micro regions of selected warning region
-- _(observations)_ Style dropdown buttons
-- _(notes)_ Disable notes
-- _(weather-stations)_ Label marker with weather station parameters
-- _(weather-stations)_ Color markers according to selected parameter
-- _(weather-stations)_ Add additional parameters
-- _(weather-stations)_ Use integer as labels
-- _(weather-stations)_ Add relative humidity colors
-- _(weather-stations)_ Add color for global radiation
-- _(weather-stations)_ Update icon!
-- _(phosphoricons)_ Update version
-- Revert phosphoricons version
-- Update to ngx-slider 18
-- Update to phosphor-icons 2.1.1
-- _(navbar)_ Pointer cursor for dropdown-items
-- _(observations)_ Filter weather stations only by elevation
-- _(observations)_ Add control buttons for layers
-- _(observations)_ Rotate attribution, rearrange buttons
-- _(observations)_ Show overlay buttons only in map view
-- _(observations)_ Shrink weather station parameter buttons
-- _(observations)_ Add surface hoar to weather station parameters
-- _(observations)_ Add dew point to weather station parameters
-- _(observations)_ Show/hide observations
-- _(weather-stations)_ Update upper limit for coloring
-- _(weather-stations)_ Add surface hoar calculation by lehning
-- Update to angular 18.0.6
-- Update to angular 18.1.0
-- _(bulletin)_ Button to close textcat dialog
-- _(observations)_ Button to close dialog
-- Update to angular 18.1.0
-- Update ngx-bootstrap
-- Use "longDate" format
-- _(localStorage)_ Save user language
-- _(login)_ Fix whitespace
-- _(observation-editor)_ Spacing
-- _(validity)_ Change validity to 5pm until 5pm
-- _(bulletins)_ Style button to load more
-- _(create-bulletin)_ Show error for avalanche problem, fixes #354
-- _(region)_ Add enableObservations and enableModelling
-- _(strategic-mindset)_ Add dropdown to bulletin component, add enum
-- _(strategic-mindset)_ Style dropdown
-- _(strategic-mindset)_ Add info modal, add config
-- _(strategic-mindset)_ Remove background colors
-- _(strategic-mindset)_ Prepare i18n keys
-- _(strategic-mindset)_ Add texts
-- _(zamg-wbt)_ Open link in new tab
-- _(zamg-wbt)_ User has to be logged in
-- _(zamg-wbt)_ Add config for region, add to sidebar menu, use i18n labels
-- _(region-configuration)_ Restructure
-- _(router)_ Prevent unauthorized access due to change of region2
-- _(statistics)_ Move to own page
-- _(observations)_ Allow multiple external images
-- _(observations)_ Add buttons for arrowUp and arrowDown
-- _(observation-marker)_ Memoize L.Icon for performance
-- _(observation-filter)_ CastArray
-- _(observation-filter)_ Remove unused isFilterActive
-- _(observation-filter)_ FilterSelectionData.values with color and label
-- _(observation-filter)_ Retain elevation order
-- _(observation-filter)_ ChartRichLabel
-- _(observation-filter)_ For marker color and label
-- _(observation-filter)_ Elevation range as label
-- _(observation-filter)_ ParseQueryParams 23:59:59
-- _(observation-filter)_ EventDate
-- _(observations-api)_ Astro.build init
-- _(observations-api)_ Astro.build
-- _(observations-api)_ Type GenericObservationTable
-- _(observations-api)_ Split astro check/build
-- _(avalanche-type)_ Add enum, include in avalanche problem
-- _(avalanche-type)_ Add button group for avalanche type
-- _(avalanche-types)_ Disable avalanche type for glide, wind slab and persistent weak layers
-- _(observation-filter)_ Filter label
-- _(Sentry)_ Enable and use GitLab
-- _(avalanche-type)_ Add type to avalanche problem preview
-- _(avalanche-type)_ Add style
-- _(Sentry)_ Enable and use GitLab
-- _(create-bulletin.component)_ Text-danger class
-- _(build)_ Enable sourcemap
-- _(observation-marker)_ URL.createObjectURL for performance
-- _(stress-level)_ I18n
-- _(i18n)_ Update translations
-- _(stress-level)_ Style
-- Update to angular 18.1.3
-- Yarn dedupe
-- _(stress-level)_ Debounce update
-- _(observations)_ Persist external images using line separator
-- _(observations)_ $externalImgs
-- _(observations-api)_ Astro 4.12.2
-- _(stress-level)_ Add to region config
-- _(observations)_ Rename elevation bands
-- _(forecast)_ Style buttons
-- _(meteograms)_ Load meteograms from albina server, closes #358
-- VS code extensions
-- _(awsome)_ Add second diagram
-- _(awsome)_ No-cache
-- _(awsome)_ Iframe
-- Update to angular 18.2.1
-- _(stress-level)_ Set diagram split number to 4!
-- _(stress-level)_ Introduce 4 classes, adopt color and icon
 - _(danger-sources)_ Add to menu, add to config
 - _(danger-sources)_ Add menu entry, controller, service, model (incomplete)
 - _(danger-source)_ Add generic map object
@@ -700,8 +144,6 @@ All notable changes to this project will be documented in this file.
 - _(danger-sources)_ Use URLSearchParams
 - _(danger-sources)_ Add return type to generic map object
 - _(danger-sources)_ Implement view (incomplete)
-- _(danger-rating-icon)_ Change input variables
-- _(matrix-information)_ Do not use setters in constructor!
 - _(danger-sources)_ Extend danger source logic
 - _(danger-sources)_ Implement save/load for danger sources and variants
 - _(danger-sources)_ Add shared module, fix load from yesterday
@@ -726,28 +168,43 @@ All notable changes to this project will be documented in this file.
 - _(danger-sources)_ Add forecast/analysis differentiation
 - _(danger-sources)_ Show type below date in create danger sources view
 - _(danger-sources)_ Compare forecast with analysis
-- _(vs-code)_ Add i18n ally to extension recommendations
-- _(grain-shapes)_ Add codes and descriptions to translation files
 - _(danger-sources)_ Put label in own row
 - _(danger-sources)_ Use checkboxes for all parameter
 - _(danger-sources)_ Use full width for slab hand hardness
-- _(awsome)_ Update source url
-- Update to angular 18.2.2
-- _(build)_ Yarn 4.4.1
-- _(awsome)_ Auto-aspects only if snp_characteristics
-- _(undo-redo.service)_ Debounce server update after undo/redo
-- _(undo-redo.service)_ Flush server update before undo/redo
-- _(i18n)_ Add missing create.tooltip.treeline
-- _(awsome)_ No caching for GeoJSON
-- Update to angular 19.0.0-next.8
-- _(i18n)_ Update translations
-- Update awsome.json
-- Update protomaps-leaflet
-- _(observations)_ Btn-close for close button
-- _(forecast)_ Btn-close for close button
-- Update to angular 19.0.0-next.13
-- Update protomaps-leaflet (@mapbox/point-geometry)
-- _(observations-api)_ Refetch after 300s
-- Update to angular 19.0.0-rc.0
-- Update to angular-eslint 18.4.0
-- Update to angular 19.0.0-rc.1
+
+### Miscellaneous
+
+- Integrate ZAMG Wetterbox
+- compare bulletins
+  - _(bulletins)_ Define layout to compare bulletins in default and compact layout #332
+  - _(bulletins)_ Always use the compact view for comparing bulletins as intended in the design prototype. #332
+  - _(create-bulletins)_ Allow to compare bulletins
+- _(weather-stations)_ Data from the past
+- _(weather-stations)_ Label marker with weather station parameters
+- _(weather-stations)_ Color markers according to selected parameter
+- _(weather-stations)_ Add additional parameters
+- _(observations)_ Add surface hoar to weather station parameters
+- _(observations)_ Add dew point to weather station parameters
+- user management
+  - _(user)_ Extend user model with languageCode
+  - _(user)_ Save user language
+  - _(user)_ Show image in table view
+  - _(user)_ Allow to update user image
+  - _(user)_ Allow user to update own infos and password, remove bcrypt
+- map performance
+  - _(map.service)_ Use pmtiles for aggregatedRegions
+  - _(map.service)_ Use pmtiles for aggregatedRegions
+  - _(map.service)_ Use pmtiles for activeSelection
+  - _(map.service)_ Fix resetInternalAggregatedRegions
+- _(layout)_ Save prefered map layout in local storage
+- _(weather-stations)_ Add buttons to select parameters
+- _(weather-stations)_ Try different buttons
+- _(validity)_ Change validity to 5pm until 5pm **Breaking Change?**
+- _(zamg-wbt)_ Open link in new tab
+- _(zamg-wbt)_ User has to be logged in
+- _(zamg-wbt)_ Add config for region, add to sidebar menu, use i18n labels
+
+### TODO: Where there notable changes in these areas?
+
+- roles: especially observer role (there were some commits in the Bug Fix section)
+- synchronisation of bulletins
