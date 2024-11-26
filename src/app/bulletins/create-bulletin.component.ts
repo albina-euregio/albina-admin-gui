@@ -1,7 +1,7 @@
 import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { forkJoin, map, Observable, of, tap, timer } from "rxjs";
+import { forkJoin, map, Observable, of, Subject, takeUntil, tap, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
@@ -80,6 +80,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public saveError: Map<string, BulletinModel>;
   public loadInternalBulletinsError: boolean;
   public loadExternalBulletinsError: boolean;
+
+  private destroy$ = new Subject<void>();
 
   public originalBulletins: Map<string, BulletinModel>;
 
@@ -266,6 +268,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.initializeComponent();
 
       this.internalBulletinsSubscription = timer(5000, 5000)
+        .pipe(takeUntil(this.destroy$))
         .pipe(
           map(() => {
             if (!this.loading && !this.publishing && !this.submitting && !this.copying && !this.showNewBulletinModal) {
@@ -276,6 +279,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         .subscribe();
 
       this.externalBulletinsSubscription = timer(2000, 30000)
+        .pipe(takeUntil(this.destroy$))
         .pipe(
           map(() => {
             this.loadExternalBulletinsFromServer();
@@ -424,8 +428,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.internalBulletinsSubscription.unsubscribe();
-    this.externalBulletinsSubscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
 
     this.mapService.resetAll();
 
