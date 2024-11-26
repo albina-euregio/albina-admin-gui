@@ -38,7 +38,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
         : this.markerClassify?.findForObservation(observation);
       const makeIcon0 = (radius: number | undefined) =>
         makeIcon(
-          castArray(observation.aspect)[0],
+          castArray(observation.aspect)[0], // if first element is __hidden__ (via snp_characteristics), no aspect indicator is shown
           "#898989",
           radius ?? 40,
           filterSelectionValue?.color ?? "white",

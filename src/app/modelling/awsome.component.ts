@@ -123,7 +123,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
           .map((aspect) => ({
             ...feature.properties,
-            aspect,
+            aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
             snp_characteristics: feature.properties.snp_characteristics[aspect],
           }));
       }
