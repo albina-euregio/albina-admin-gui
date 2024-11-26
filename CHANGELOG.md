@@ -1,24 +1,6 @@
-# Changelog - Automatically Generated Section
+# Changelog
 
-All notable changes to this project will be documented in this file.
-
-## [unreleased]
-
-### 🚜 Refactor
-
-- @angular/core:signals
-- @angular/core:signals
-- @angular/core:signals
-
-### 📚 Documentation
-
-- _(changelog)_ Generate CHANGELOG with git-cliff
-- _(Readme)_ Infos about git-cliff
-- Script for changelog generation
-
-### ⚙️ Miscellaneous Tasks
-
-- Update to angular-eslint 19.0.0-alpha.4
+<!-- To update, run `yarn changelog`. -->
 
 ## [7.0.3] - 2024-11-24
 
@@ -30,8 +12,6 @@ All notable changes to this project will be documented in this file.
 
 - Keyboard shortcuts for navigating the NavBar: #356
 
-# Release Notes - Curated Section
-
 ## [7.0.2] - 2024-11-18
 
 ### Observations
@@ -40,25 +20,30 @@ All notable changes to this project will be documented in this file.
 
 ## [7.0.1] - 2024-11-14
 
-### Obervations
+### Observations
 
 - Bugfix for filtering of observations that have been newly created using the Observation Editor.
 
 ## [7.0.0] - 2024-11-08
 
+### Breaking Changes
+
+- Bulletins are now valid from 5pm until 5pm.
+
 ### Bulletins
 
+Completely redesigned UI for creating and editing bulletins. We now use Bootstrap 5 and Phosphor Icons
+throughout the user interface.
+Other notable features:
+
+- Automatically synchronize bulletins with server (no need to click save).
 - Ability to undo/redo actions using Ctrl+Z Ctrl+Y or buttons.
 - Add read only mode for bulletins.
-- Option to show/hide sidebar.
-- Show validation warnings per bulletin.
-- Button group for avalanche type. albina-euregio/albina-admin-gui!176
-
-- Select am or pm problems if daytime removed
-- _(map)_ Use earlier/later
-- _(create-bulletins)_ Prioritze published over saved over suggested regions for coloring the map
-- _(create-bulletins)_ Highlight suggested micro regions of selected warning region
-- _(notes)_ Enable notes for all (except observer)
+- Show validation warnings per bulletin
+- Add Strategic Mindset per region (intended to express mental attitude with regard to the avalanche situation).
+- Add avalanche type (Slab, Loose, Glide) per avalanche problem.
+- Ability to compare bulletins side by side.
+- Enable notes for all roles (except observer).
 
 ### Stress Level
 
@@ -66,7 +51,7 @@ Option to track stress level of the individual users via the bulletin calendar v
 Supported features:
 
 - Can be enabled/disabled for each region via the Admin settings.
-- The stress level is selected on a slider with 5 levels.
+- The stress level is selected on a slider between 0 and 100.
 - Forecasters can view an anonymized line chart comparing stress levels in their team.
 
 ### Training Mode
@@ -83,60 +68,7 @@ Specifically, the following features are supported:
 - When using "Load bulletin from the day before" the actual published bulletin from the selected date is loaded from the server.
 - Observations are only loaded and displayed up until the date provided in the training timestamp.
 - Training Mode can be used in all roles (also Observer).
-- Resulting bulletins can be exported as PDF and JSON.
-
-### AWSOME Dashboard
-
-- _(awsome)_ Dashboard for snp_characteristics.flat.sk38.value
-- _(awsome)_ Load awsome.json
-- _(awsome)_ Elevation
-- _(awsome)_ Aspects
-- _(awsome)_ Sources
-- _(awsome)_ Load models.avalanche.report/dashboard/awsome.json
-- _(awsome)_ Date and dateStep
-- _(awsome)_ ConfigURL via config= parameter
-- _(awsome)_ Hide navbar unless logged-in
-- _(awsome)_ Make tooltip configurable
-- _(awsome)_ Show details in sidebar
-- _(awsome)_ Mobile
-- _(awsome)_ Make sidebar resizable
-- _(awsome)_ Docs
-- _(awsome)_ Make initially selected values configurable
-- _(awsome)_ Date stepper buttons
-- _(awsome)_ Support multiple details templates
-- _(awsome)_ Support radius by map zoom
-
-### Observations
-
-- _(observations)_ Remember date range in URL
-- _(observation-marker.service)_ Add many more fields to FilterSelectionValue
-- _(observations)_ Make sidebar resizable
-- _(observations)_ Define snobs as own source
-- _(observation-chart)_ Click to set, shift click to add, ctrl click to invert
-- _(observations-api)_ Add POST and DELETE
-- _(observation-editor)_ Add aspects, stability, elevationLowerBound, elevationUpperBound
-- _(observation-editor)_ Add avalancheProblems
-- _(observation-editor)_ Add dangerPatterns
-- _(observation-editor)_ Add importantObservations
-- _(observation-editor)_ Add $source and $type
-- _(observation-editor)_ Add personInvolvement
-- _(observations)_ Color table rows
-- _(observations)_ Color selected params in charts
-- _(observations)_ Add highlight in rose chart
-- _(observations)_ Introduce stacked charts
-- _(observations)_ Move text search to table
-- _(observations)_ Background gradient only in first column of table
-- _(observations)_ Use today as date range end for selection of days
-- _(observations)_ Allow revert selecting with ctrl
-- _(observations-api)_ Snow line
-- _(observation)_ Update generic observation model
-- _(observations)_ Filter weather stationsbased on elevation
-- _(observations)_ Add advanced layer control dependency
-- _(observations)_ Show weather station data as label (incomplete)
-- _(observations)_ Optional outer circle for icon
-- _(observations)_ Day switcher
-- _(observations)_ Allow multiple external images
-- _(observations)_ Add buttons for arrowUp and arrowDown
+- Bulletins are saved only in local storage and can be exported as PDF and JSON.
 
 ### Danger Sources
 
@@ -177,39 +109,28 @@ Specifically, the following features are supported:
 - _(danger-sources)_ Use checkboxes for all parameter
 - _(danger-sources)_ Use full width for slab hand hardness
 
-### Miscellaneous
+### Observations
 
-- Integrate ZAMG Wetterbox
-- compare bulletins
-  - _(bulletins)_ Define layout to compare bulletins in default and compact layout #332
-  - _(bulletins)_ Always use the compact view for comparing bulletins as intended in the design prototype. #332
-  - _(create-bulletins)_ Allow to compare bulletins
-- _(weather-stations)_ Data from the past
-- _(weather-stations)_ Label marker with weather station parameters
-- _(weather-stations)_ Color markers according to selected parameter
-- _(weather-stations)_ Add additional parameters
-- _(observations)_ Add surface hoar to weather station parameters
-- _(observations)_ Add dew point to weather station parameters
-- user management
-  - _(user)_ Extend user model with languageCode
-  - _(user)_ Save user language
-  - _(user)_ Show image in table view
-  - _(user)_ Allow to update user image
-  - _(user)_ Allow user to update own infos and password, remove bcrypt
-- map performance
-  - _(map.service)_ Use pmtiles for aggregatedRegions
-  - _(map.service)_ Use pmtiles for aggregatedRegions
-  - _(map.service)_ Use pmtiles for activeSelection
-  - _(map.service)_ Fix resetInternalAggregatedRegions
-- _(layout)_ Save prefered map layout in local storage
-- _(weather-stations)_ Add buttons to select parameters
-- _(weather-stations)_ Try different buttons
-- _(validity)_ Change validity to 5pm until 5pm **Breaking Change?**
-- _(zamg-wbt)_ Open link in new tab
-- _(zamg-wbt)_ User has to be logged in
-- _(zamg-wbt)_ Add config for region, add to sidebar menu, use i18n labels
+- Analyze (histogram) and colorize, label (map) and filter based on the following properties:
+  - Aspect, Day, Elevation, Stability, Observation Type, Important, Avalanche Problem, Danger Pattern
+- Implement observations API in Astro. This fetches observations from multiple sources and stores them in the MySQL database.
+  This results in faster loading times.
+- Weather stations can be integrated into Observations dashboard. Parameters can be selected, measurements are shown on the map.
+  Clicking a marker opens a dialog with detailed charts. Surface hoar and snow line can be calculated from measurements and displayed as well.
+- Observation Editor: Use new data model. Now it supports the following additional fields:
+  - aspects, stability, elevationLowerBound, elevationUpperBound, avalancheProblems, dangerPatterns, importantObservations, personInvolvement
 
-### TODO: Where there notable changes in these areas?
+### AWSOME Dashboard
 
-- roles: especially observer role (there were some commits in the Bug Fix section)
-- synchronisation of bulletins
+Add highly configurable dashboard for the [AWSOME project](https://gitlab.com/avalanche-warning).
+It is modeled after the existing Observations Dashboard.
+
+- Configuration is managed via a JSON file which defines multiple sources to be loaded.
+  A different configuration can be set by specifying a URL parameter.
+- Features for a specified timeframe are displayed on a map.
+- After clicking on a feature, details are shown in the sidebar.
+- Custom filter options to analyze the displayed features can be configured.
+
+### Settings
+
+- Allow user to update own infos, image and password
