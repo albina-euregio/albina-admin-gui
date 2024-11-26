@@ -4,9 +4,51 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
+### 🚜 Refactor
+
+- @angular/core:signals
+- @angular/core:signals
+- @angular/core:signals
+
+### 📚 Documentation
+
+- *(changelog)* Generate CHANGELOG with git-cliff
+- *(Readme)* Infos about git-cliff
+- Script for changelog generation
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to angular-eslint 19.0.0-alpha.4
+
+## [7.0.3] - 2024-11-24
+
+### 🚀 Features
+
+- *(full-layout.component)* Add shortcuts using mousetrap
+- *(observation-editor)* Button to copy event date
+
 ### 🐛 Bug Fixes
 
 - *(create-bulletin.component)* Perform copy after deletion in loadBulletinsFromYesterday
+- *(meteogram.service)* $externalURL
+- *(multimodel.service)* $externalURL
+- *(snow-line)* Jump always to next diagram that is different
+- Width=fill-available
+- *(observations)* Lawis.at/profile PDF URL
+
+### 🚜 Refactor
+
+- *(observations-api)* Reorganize files
+- *(observation-editor)* SetDate
+
+### 🎨 Styling
+
+- *(observation-editor)* Improve spacing
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to angular 19.0.0
+- *(awsome)* Obtain aspects for snp_characteristics from config
 
 ## [7.0.2] - 2024-11-18
 
