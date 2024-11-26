@@ -58,6 +58,7 @@ All notable changes to this project will be documented in this file.
 - _(map)_ Use earlier/later
 - _(create-bulletins)_ Prioritze published over saved over suggested regions for coloring the map
 - _(create-bulletins)_ Highlight suggested micro regions of selected warning region
+- _(notes)_ Enable notes for all (except observer)
 
 ### Stress Level
 
@@ -70,7 +71,7 @@ Supported features:
 
 ### Training Mode
 
-In Training Mode you can create and edit bulletins without with them being synchronized to the server.
+In Training Mode you can create and edit bulletins without them being synchronized to the server.
 Training Mode is always linked to a specific date in the past. This is the simulated date, up to which
 you can use the resources (observations, bulletin from the day before) supplied by the admin gui.
 As the name suggests this is intended for training purposes, where you can let multiple users
@@ -80,9 +81,9 @@ Specifically, the following features are supported:
 - Configure the training timestamp in Settings.
 - The color of the Navbar distinguishes between training mode (green) and normal mode (yellow). The training timestamp is also displayed in the Navbar.
 - When using "Load bulletin from the day before" the actual published bulletin from the selected date is loaded from the server.
-- While creating the bulletin no communication with the server takes place.
+- Observations are only loaded and displayed up until the date provided in the training timestamp.
 - Training Mode can be used in all roles (also Observer).
-- Resulting bulletins can be exported as PDF or JSON.
+- Resulting bulletins can be exported as PDF and JSON.
 
 ### AWSOME Dashboard
 
@@ -111,9 +112,6 @@ Specifically, the following features are supported:
 - _(observation-marker.service)_ Add many more fields to FilterSelectionValue
 - _(observations)_ Make sidebar resizable
 - _(observations)_ Define snobs as own source
-- _(observations)_ Use training timestamp
-- _(bulletins.service)_ PDF in training mode
-- _(observations)_ Use training timestamp
 - _(observation-chart)_ Click to set, shift click to add, ctrl click to invert
 - _(observations-api)_ Add POST and DELETE
 - _(observation-editor)_ Add aspects, stability, elevationLowerBound, elevationUpperBound
@@ -122,8 +120,6 @@ Specifically, the following features are supported:
 - _(observation-editor)_ Add importantObservations
 - _(observation-editor)_ Add $source and $type
 - _(observation-editor)_ Add personInvolvement
-- _(observation-editor)_ ValueAsDate
-- _(observation)_ Migrate
 - _(observations)_ Color table rows
 - _(observations)_ Color selected params in charts
 - _(observations)_ Add highlight in rose chart
@@ -131,7 +127,6 @@ Specifically, the following features are supported:
 - _(observations)_ Move text search to table
 - _(observations)_ Background gradient only in first column of table
 - _(observations)_ Use today as date range end for selection of days
-- _(notes)_ Enable notes for all (except observer)
 - _(observations)_ Allow revert selecting with ctrl
 - _(observations-api)_ Snow line
 - _(observation)_ Update generic observation model
