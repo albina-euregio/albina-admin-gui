@@ -48,22 +48,41 @@ All notable changes to this project will be documented in this file.
 
 ### Bulletins
 
-- undo/redo actions using Ctrl+Z Ctrl+Y or buttons #343
-- read only mode
-- show/hide sidebar #320
+- Ability to undo/redo actions using Ctrl+Z Ctrl+Y or buttons.
+- Add read only mode for bulletins.
+- Option to show/hide sidebar.
+- Show validation warnings per bulletin.
+- Button group for avalanche type. albina-euregio/albina-admin-gui!176
+
 - Select am or pm problems if daytime removed
 - _(map)_ Use earlier/later
 - _(create-bulletins)_ Prioritze published over saved over suggested regions for coloring the map
 - _(create-bulletins)_ Highlight suggested micro regions of selected warning region
-- Show validation warning per bulletin
-- _(avalanche-type)_ Add button group for avalanche type
-- _(avalanche-types)_ Disable avalanche type for glide, wind slab and persistent weak layers
-- _(avalanche-type)_ Add type to avalanche problem preview
 
 ### Stress Level
 
-- Option to track stress level of the individual users via the bulletin calendar view.
-  TODO: explain which roles have stress level and who can see it.
+Option to track stress level of the individual users via the bulletin calendar view.
+Supported features:
+
+- Can be enabled/disabled for each region via the Admin settings.
+- The stress level is selected on a slider with 5 levels.
+- Forecasters can view an anonymized line chart comparing stress levels in their team.
+
+### Training Mode
+
+In Training Mode you can create and edit bulletins without with them being synchronized to the server.
+Training Mode is always linked to a specific date in the past. This is the simulated date, up to which
+you can use the resources (observations, bulletin from the day before) supplied by the admin gui.
+As the name suggests this is intended for training purposes, where you can let multiple users
+train on the same simulation date and then compare and discuss the resulting bulletins.
+Specifically, the following features are supported:
+
+- Configure the training timestamp in Settings.
+- The color of the Navbar distinguishes between training mode (green) and normal mode (yellow). The training timestamp is also displayed in the Navbar.
+- When using "Load bulletin from the day before" the actual published bulletin from the selected date is loaded from the server.
+- While creating the bulletin no communication with the server takes place.
+- Training Mode can be used in all roles (also Observer).
+- Resulting bulletins can be exported as PDF or JSON.
 
 ### AWSOME Dashboard
 
@@ -123,15 +142,6 @@ All notable changes to this project will be documented in this file.
 - _(observations)_ Day switcher
 - _(observations)_ Allow multiple external images
 - _(observations)_ Add buttons for arrowUp and arrowDown
-
-### Training Mode
-
-- _(settings)_ Configure training timestamp
-- _(settings)_ Green navbar when training enabled
-- _(settings)_ Training timestamp in navbar
-- _(bulletins)_ Use training timestamp for table
-- _(training mode)_ Load bulletins from day before in training mode
-- _(training mode)_ Observers are upgraded to forecasters in training mode
 
 ### Danger Sources
 
