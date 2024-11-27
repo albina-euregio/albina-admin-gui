@@ -21,7 +21,6 @@ import {
   ObservationType,
   PersonInvolvement,
   toGeoJSON,
-  WeatherStationParameter,
 } from "./models/generic-observation.model";
 import { saveAs } from "file-saver";
 import { ObservationGalleryComponent } from "./observation-gallery.component";
@@ -41,7 +40,10 @@ import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { observationFilters } from "./filter-selection-data-data";
-import { ObservationMarkerWeatherStationService } from "./observation-marker-weather-station.service";
+import {
+  ObservationMarkerWeatherStationService,
+  WeatherStationParameter,
+} from "./observation-marker-weather-station.service";
 import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
 import Split from "split.js";

@@ -1,6 +1,6 @@
-import { Injectable, inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Marker } from "leaflet";
-import { degreeToAspect, GenericObservation, WeatherStationParameter } from "./models/generic-observation.model";
+import { degreeToAspect, GenericObservation } from "./models/generic-observation.model";
 import { Aspect } from "../enums/enums";
 import { makeIcon } from "./make-icon";
 import { ObservationMarkerService } from "./observation-marker.service";
@@ -130,6 +130,25 @@ const aspectColors = {
   [Aspect.W]: "#000000",
   [Aspect.NW]: "#113570",
 };
+
+export enum WeatherStationParameter {
+  GlobalRadiation = "GlobalRadiation",
+  SnowHeight = "SnowHeight",
+  SnowDifference24h = "SnowDifference24h",
+  SnowDifference48h = "SnowDifference48h",
+  SnowDifference72h = "SnowDifference72h",
+  AirTemperature = "AirTemperature",
+  AirTemperatureMax = "AirTemperatureMax",
+  AirTemperatureMin = "AirTemperatureMin",
+  SurfaceTemperature = "SurfaceTemperature",
+  SurfaceHoar = "SurfaceHoar",
+  SurfaceHoarCalc = "SurfaceHoarCalc",
+  DewPoint = "DewPoint",
+  RelativeHumidity = "RelativeHumidity",
+  WindDirection = "WindDirection",
+  WindSpeed = "WindSpeed",
+  WindGust = "WindGust",
+}
 
 @Injectable()
 export class ObservationMarkerWeatherStationService<T extends Partial<GenericObservation<FeatureProperties>>> {
