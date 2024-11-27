@@ -4,6 +4,7 @@ import { degreeToAspect, GenericObservation, WeatherStationParameter } from "./m
 import { Aspect } from "../enums/enums";
 import { makeIcon } from "./make-icon";
 import { ObservationMarkerService } from "./observation-marker.service";
+import type { FeatureProperties } from "../../../observations-api/src/fetch/weather-stations";
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
 const elevationColors = {
@@ -131,7 +132,7 @@ const aspectColors = {
 };
 
 @Injectable()
-export class ObservationMarkerWeatherStationService<T extends Partial<GenericObservation>> {
+export class ObservationMarkerWeatherStationService<T extends Partial<GenericObservation<FeatureProperties>>> {
   private observationMarkerService = inject<ObservationMarkerService<T>>(ObservationMarkerService);
 
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
@@ -196,7 +197,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     }
   }
 
-  private getSurfaceHoar(data) {
+  private getSurfaceHoar(data: T["$data"]): number {
     const tempDiff = data.TD - data.OFT;
     if (data.OFT < 0 && tempDiff > 0) {
       return tempDiff;
@@ -206,7 +207,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
   }
 
   // Lehning et. al. 2002
-  private calcSurfaceHoarProbability(data) {
+  private calcSurfaceHoarProbability(data: T["$data"]): number {
     const grainSize = 1; // assumption
     //z0 0.5 to 2.4 mm for snow surfaces.
     const z0 = (0.003 + grainSize / 5) / 1000; //Lehning 2000, for grainSize = 1 mm only 0,203
