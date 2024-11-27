@@ -26,7 +26,7 @@
           *ngIf="authenticationService.getActiveRegion()?.enableDangerSources && authenticationService.isUserLoggedIn()"
           class="nav-item"
         >
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']" ngxMousetrapKey="g d">
             {{ "sidebar.dangerSources" | translate }}
           </a>
         </li>
@@ -47,12 +47,12 @@
           </a>
         </li>
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']" ngxMousetrapKey="g s">
             {{ "sidebar.snowpack" | translate }}
           </a>
         </li>
         <li *ngIf="authenticationService.getActiveRegion()?.enableModelling" class="nav-item">
-          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/awsome']" ngxMousetrapKey="g a">
             {{ "sidebar.awsome" | translate }}
           </a>
         </li>
