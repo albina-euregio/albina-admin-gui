@@ -178,39 +178,40 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
   }
 
   toValue(observation: T): number {
+    const data: FeatureProperties = observation.$data;
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
-        return observation.$data.GS_O;
+        return data.GS_O;
       case WeatherStationParameter.SnowHeight:
-        return observation.$data.HS;
+        return data.HS;
       case WeatherStationParameter.SnowDifference24h:
-        return observation.$data.HSD24;
+        return data.HSD24;
       case WeatherStationParameter.SnowDifference48h:
-        return observation.$data.HSD48;
+        return data.HSD48;
       case WeatherStationParameter.SnowDifference72h:
-        return observation.$data.HSD72;
+        return data.HSD72;
       case WeatherStationParameter.AirTemperature:
-        return observation.$data.LT;
+        return data.LT;
       case WeatherStationParameter.AirTemperatureMax:
-        return observation.$data.LT_MAX;
+        return data.LT_MAX;
       case WeatherStationParameter.AirTemperatureMin:
-        return observation.$data.LT_MIN;
+        return data.LT_MIN;
       case WeatherStationParameter.SurfaceTemperature:
-        return observation.$data.OFT;
+        return data.OFT;
       case WeatherStationParameter.SurfaceHoar:
-        return this.getSurfaceHoar(observation.$data);
+        return this.getSurfaceHoar(data);
       case WeatherStationParameter.SurfaceHoarCalc:
-        return this.calcSurfaceHoarProbability(observation.$data);
+        return this.calcSurfaceHoarProbability(data);
       case WeatherStationParameter.DewPoint:
-        return observation.$data.TD;
+        return data.TD;
       case WeatherStationParameter.RelativeHumidity:
-        return observation.$data.RH;
+        return data.RH;
       case WeatherStationParameter.WindSpeed:
-        return observation.$data.WG;
+        return data.WG;
       case WeatherStationParameter.WindDirection:
-        return observation.$data.WR;
+        return data.WR;
       case WeatherStationParameter.WindGust:
-        return observation.$data.WG_BOE;
+        return data.WG_BOE;
       default:
         return NaN;
     }
