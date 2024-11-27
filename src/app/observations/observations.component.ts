@@ -226,9 +226,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       .map((key) => ({ id: key, name: key }));
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    await this.initMap();
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
-    this.initMap();
   }
 
   loadObservations() {
