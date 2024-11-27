@@ -6,30 +6,32 @@ export async function getAwsWeatherStations(endDate: string): Promise<GenericObs
     ? `https://static.avalanche.report/weather_stations/${endDate}_12-00_stations.geojson`
     : "https://static.avalanche.report/weather_stations/stations.geojson";
   const geojson: GeoJSON.FeatureCollection<GeoJSON.Point, FeatureProperties> = await fetchJSON(url);
-  return geojson.features.map(
-    (feature): GenericObservation => ({
-      $data: feature.properties,
-      $externalImgs: [
-        `https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/${feature.properties.plot}.png`,
-        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-6/${feature.properties.plot}.png`,
-        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-12/${feature.properties.plot}.png`,
-        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-24/${feature.properties.plot}.png`,
-        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/24-48/${feature.properties.plot}.png`,
-        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/48-72/${feature.properties.plot}.png`,
-        `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/72-168/${feature.properties.plot}.png`,
-      ],
-      $source: ObservationSource.AvalancheWarningService,
-      $type: ObservationType.TimeSeries,
-      aspect: undefined,
-      authorName: "",
-      locationName: feature.properties.name,
-      content: "",
-      elevation: feature.geometry.coordinates[2],
-      latitude: feature.geometry.coordinates[1],
-      longitude: feature.geometry.coordinates[0],
-      region: feature.properties["LWD-Region"]?.split(" ")?.[0] || "",
-    }),
-  );
+  return geojson.features.map((feature) => mapFeature(feature));
+}
+
+function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>): GenericObservation {
+  return {
+    $data: feature.properties,
+    $externalImgs: [
+      `https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/${feature.properties.plot}.png`,
+      `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-6/${feature.properties.plot}.png`,
+      `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-12/${feature.properties.plot}.png`,
+      `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-24/${feature.properties.plot}.png`,
+      `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/24-48/${feature.properties.plot}.png`,
+      `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/48-72/${feature.properties.plot}.png`,
+      `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/72-168/${feature.properties.plot}.png`,
+    ],
+    $source: ObservationSource.AvalancheWarningService,
+    $type: ObservationType.TimeSeries,
+    aspect: undefined,
+    authorName: "",
+    locationName: feature.properties.name,
+    content: "",
+    elevation: feature.geometry.coordinates[2],
+    latitude: feature.geometry.coordinates[1],
+    longitude: feature.geometry.coordinates[0],
+    region: feature.properties["LWD-Region"]?.split(" ")?.[0] || "",
+  } satisfies GenericObservation;
 }
 
 interface FeatureProperties {
