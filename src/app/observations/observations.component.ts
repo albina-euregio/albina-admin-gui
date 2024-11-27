@@ -242,9 +242,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
   }
 
-  loadObservations() {
+  async loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
-    return this.data.observations.loadFrom(this.observationsService.getGenericObservations(), this.observationSearch);
+    this.data.observations.loadFrom(this.observationsService.getGenericObservations(), this.observationSearch);
+    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
   }
 
   private async initMap() {
@@ -254,7 +255,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     if (!this.filter.startDate || !this.filter.endDate) {
       this.filter.days = 7;
     }
-    this.loadObservations();
+    this.loadObservationsAndWeatherStations();
     this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
     this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
     this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
@@ -323,7 +324,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     try {
       this.observationEditor.saving = true;
       await this.observationsService.postObservation(observation).toPromise();
-      this.loadObservations();
+      this.loadObservationsAndWeatherStations();
       this.hideObservationEditor();
     } catch (error) {
       this.reportError(error);
@@ -340,7 +341,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     try {
       this.observationEditor.saving = true;
       await this.observationsService.deleteObservation(observation);
-      this.loadObservations();
+      this.loadObservationsAndWeatherStations();
       this.hideObservationEditor();
     } catch (error) {
       this.reportError(error);

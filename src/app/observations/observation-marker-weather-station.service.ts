@@ -179,39 +179,40 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
   toValue(observation: T): number {
     const data: FeatureProperties = observation.$data;
+    const statistics = data.statistics;
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
-        return data.GS_O;
+        return statistics?.ISWR?.average;
       case WeatherStationParameter.SnowHeight:
-        return data.HS;
+        return statistics?.HS?.average;
       case WeatherStationParameter.SnowDifference24h:
-        return data.HSD24;
+        return NaN;
       case WeatherStationParameter.SnowDifference48h:
-        return data.HSD48;
+        return NaN;
       case WeatherStationParameter.SnowDifference72h:
-        return data.HSD72;
+        return NaN;
       case WeatherStationParameter.AirTemperature:
-        return data.LT;
+        return statistics?.TA?.average;
       case WeatherStationParameter.AirTemperatureMax:
-        return data.LT_MAX;
+        return statistics?.TA?.max;
       case WeatherStationParameter.AirTemperatureMin:
-        return data.LT_MIN;
+        return statistics?.TA?.min;
       case WeatherStationParameter.SurfaceTemperature:
-        return data.OFT;
+        return statistics?.TSS?.average;
       case WeatherStationParameter.SurfaceHoar:
         return this.getSurfaceHoar(data);
       case WeatherStationParameter.SurfaceHoarCalc:
         return this.calcSurfaceHoarProbability(data);
       case WeatherStationParameter.DewPoint:
-        return data.TD;
+        return statistics?.TD?.average;
       case WeatherStationParameter.RelativeHumidity:
-        return data.RH;
+        return statistics?.RH?.average;
       case WeatherStationParameter.WindSpeed:
-        return data.WG;
+        return statistics?.VW?.average;
       case WeatherStationParameter.WindDirection:
-        return data.WR;
+        return statistics?.DW?.median;
       case WeatherStationParameter.WindGust:
-        return data.WG_BOE;
+        return statistics?.VW_MAX?.max;
       default:
         return NaN;
     }

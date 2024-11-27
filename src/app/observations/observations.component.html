@@ -11,7 +11,7 @@
           <!-- !global-bar-left -->
           <div class="global-bar global-bar-left">
             <div class="global-bar-item global-bar-item-load">
-              <button type="button" class="btn btn-bare" (click)="loadObservations()">
+              <button type="button" class="btn btn-bare" (click)="loadObservationsAndWeatherStations()">
                 <i *ngIf="!this.data.observations.loading" class="ph ph-arrows-clockwise"></i>
                 <i *ngIf="this.data.observations.loading" class="ph ph-circle-notch"></i>
               </button>
@@ -79,7 +79,7 @@
                 #drp="bsDaterangepicker"
                 bsDaterangepicker
                 [(ngModel)]="filter.dateRange"
-                (ngModelChange)="this.loadObservations()"
+                (ngModelChange)="this.loadObservationsAndWeatherStations()"
                 [bsConfig]="{ withTimepicker: true }"
                 [maxDate]="filter.dateRangeMaxDate"
               />
