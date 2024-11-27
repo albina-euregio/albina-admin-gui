@@ -39,6 +39,7 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -54,6 +55,7 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
     DatePipe,
     KeyValuePipe,
     TranslateModule,
+    NgxMousetrapDirective,
   ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {

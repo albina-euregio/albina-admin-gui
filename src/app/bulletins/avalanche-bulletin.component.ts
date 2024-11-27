@@ -27,6 +27,7 @@ import { FormsModule } from "@angular/forms";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -42,6 +43,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     BulletinTextComponent,
     DatePipe,
     TranslateModule,
+    NgxMousetrapDirective,
   ],
 })
 export class AvalancheBulletinComponent {
