@@ -58,7 +58,8 @@ export const POST: APIRoute = async ({ request }) => {
     observation = genericObservationSchema.parse(body);
     observation.$id ??= crypto.randomUUID();
   } catch (e) {
-    return new Response(e, { status: 400 });
+    console.error(e);
+    return new Response(String(e), { status: 400 });
   }
   try {
     const connection = await createConnection();
@@ -68,7 +69,8 @@ export const POST: APIRoute = async ({ request }) => {
       connection.destroy();
     }
   } catch (e) {
-    return new Response(e, { status: 500 });
+    console.error(e);
+    return new Response(String(e), { status: 500 });
   }
   return new Response(JSON.stringify(observation), {
     status: 200,
@@ -85,7 +87,8 @@ export const DELETE: APIRoute = async ({ request }) => {
     const body = await request.json();
     observation = genericObservationWithIdSchema.parse(body);
   } catch (e) {
-    return new Response(e, { status: 400 });
+    console.error(e);
+    return new Response(String(e), { status: 400 });
   }
   try {
     const connection = await createConnection();
@@ -95,7 +98,8 @@ export const DELETE: APIRoute = async ({ request }) => {
       connection.destroy();
     }
   } catch (e) {
-    return new Response(e, { status: 500 });
+    console.error(e);
+    return new Response(String(e), { status: 500 });
   }
   return new Response("", { status: 200 });
 };
