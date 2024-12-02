@@ -44,7 +44,7 @@ export async function getAwsWeatherStations(
 async function fetchSMET(
   stations: GenericObservation<FeatureProperties>[],
 ): Promise<Record<GenericObservation["$id"], string>> {
-  const data = await Promise.allSettled(
+  const data = await Promise.all(
     stations.map(async (station) => {
       if (!station?.$id) {
         return;
