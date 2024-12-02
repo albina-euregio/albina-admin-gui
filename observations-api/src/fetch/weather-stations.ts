@@ -2,6 +2,9 @@ import { fetchJSON } from "../util/fetchJSON";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { average, max, median, min, sum } from "simple-statistics";
 
+let lastFetch = 0;
+let cache: Promise<Record<GenericObservation["$id"], string>> = undefined;
+
 export async function getAwsWeatherStations(
   startDate: Date,
   endDate: Date,
@@ -17,21 +20,49 @@ export async function getAwsWeatherStations(
   const geojson: GeoJSON.FeatureCollection<GeoJSON.Point, FeatureProperties> = await fetchJSON(url);
   const stations = geojson.features.map((feature) => mapFeature(feature));
 
+  if (Date.now() - lastFetch > 60e3) {
+    cache = fetchSMET(stations);
+    lastFetch = Date.now();
+  }
+
+  const smetData = await cache;
+
   for (const station of stations) {
     if (!station?.$id) {
       continue;
     }
-    const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
-    console.log("Fetching", url);
-    const response = await fetch(url);
-    if (!response.ok) {
+    const smet = smetData[station.$id];
+    if (!smet) {
       continue;
     }
-    const smet = await response.text();
     station.$data.statistics = parseSMET(smet, startDate, endDate);
   }
 
   return stations;
+}
+
+async function fetchSMET(
+  stations: GenericObservation<FeatureProperties>[],
+): Promise<Record<GenericObservation["$id"], string>> {
+  const data = await Promise.allSettled(
+    stations.map(async (station) => {
+      if (!station?.$id) {
+        return;
+      }
+      const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
+      console.log("Fetching", url);
+      const response = await fetch(url);
+      if (!response.ok) {
+        return;
+      }
+      const smet = await response.text();
+      if (!smet) {
+        return;
+      }
+      return [station?.$id, smet] satisfies [GenericObservation["$id"], string];
+    }),
+  );
+  return Object.fromEntries(data.filter((d) => Array.isArray(d)));
 }
 
 function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>): GenericObservation<FeatureProperties> {
