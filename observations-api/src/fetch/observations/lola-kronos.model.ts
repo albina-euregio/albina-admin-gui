@@ -16,6 +16,7 @@ export interface LolaKronosApi {
   lolaCommissionEvaluation: LolaEvaluation[];
   lolaSnowProfile: LolaSnowProfile[];
   lolaAvalancheEvent: LolaAvalancheEvent[];
+  lolaRainBoundary: LolaRainBoundary[];
 }
 
 export interface LolaAvalancheEvent {
@@ -54,6 +55,17 @@ export interface LolaAvalancheEvent {
 export interface GpsPoint {
   lat: number | null;
   lng: number | null;
+  alt?: number | null;
+  accuracy?: number | null;
+  adsRegion?: AvalancheReportRegions | null;
+  markerLabel?: string | null;
+  expositionGrad?: number;
+}
+
+export interface AvalancheReportRegions {
+  loc_ref: string;
+  source: string;
+  loc_name: string;
 }
 
 export interface Image {
@@ -309,6 +321,38 @@ export interface Temperature {
   position: number;
 }
 
+export interface LolaRainBoundary {
+  _id?: any;
+  uuId: string;
+  entities: LolaEntity[];
+  lolaApplication: string;
+  time: Date;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  processStatus: string;
+  serverStatus: string;
+  images: Image[];
+  position: GpsPoint | null;
+  regionName: never;
+  placeDescription: string;
+  elevation: number | null;
+  elevationTolerance: LolaRainBoundaryElevationTolerance;
+  elevationPeriod: LolaRainBoundaryElevationPeriod;
+  comment: string;
+  deleted: boolean;
+  deletedTime: Date;
+  deletedUsername: string;
+  pdfName: string;
+  pdfGeneratedTime: Date;
+  pdfGenerated: boolean;
+  storedInDb: Date;
+  edited: any[];
+}
+
+export type LolaRainBoundaryElevationTolerance = "n/a" | "exact" | "50m" | "100m" | "200";
+export type LolaRainBoundaryElevationPeriod = "n/a" | "duringPrecipitationEvent" | "observationPeriod";
+
 export type LolaEntity =
   | {
       entityId: "651ea4bfc7740c4fbb635188";
@@ -348,25 +392,38 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
           obs,
           ObservationType.SimpleObservation,
           urlPrefix + "detail-by-token/lolaSimpleObservation/",
-          true,
+          "snowLine",
         ),
       ),
     ...kronos.lolaSnowProfile.map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail-by-token/lolaSnowProfile/"),
     ),
+    ...kronos.lolaRainBoundary.map((obs) =>
+      convertLoLaToGeneric(
+        obs,
+        ObservationType.SimpleObservation,
+        urlPrefix + "detail-by-token/lolaRainBoundary/",
+        "elevation",
+      ),
+    ),
   ];
 }
 
 export function convertLoLaToGeneric(
-  obs: LolaSimpleObservation | LolaAvalancheEvent | LolaSnowProfile | LolaEvaluation,
+  obs: LolaSimpleObservation | LolaAvalancheEvent | LolaSnowProfile | LolaEvaluation | LolaRainBoundary,
   $type: ObservationType,
   urlPrefix: string,
-  snowLine?: boolean,
+  snowLine?: "snowLine" | "elevation",
 ): GenericObservation {
+  const gpsPoint =
+    (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ??
+    (obs as LolaSnowProfile | LolaEvaluation | LolaRainBoundary).position;
   return {
     $id: obs.uuId,
     $data: obs,
-    $externalURL: urlPrefix + obs.uuId + "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN,
+    $externalURL: urlPrefix.includes("lolaFiles/pdf/serve")
+      ? `${urlPrefix}${obs.pdfName}`
+      : `${urlPrefix}${obs.uuId}/${process.env.ALBINA_LOLA_KRONOS_API_TOKEN}`,
     $source:
       Array.isArray(obs.entities) && obs.entities.every((e) => e.entityName === "SNOBS")
         ? ObservationSource.Snobs
@@ -379,6 +436,11 @@ export function convertLoLaToGeneric(
     aspect: (obs as LolaSnowProfile).aspects?.[0],
     authorName: obs.firstName + " " + obs.lastName,
     content:
+      (snowLine === "elevation"
+        ? `Trockene Schneefallgrenze zum Beobachtungszeitpunkt: ${(obs as LolaRainBoundary).elevation}m ± ${
+            (obs as LolaRainBoundary).elevationTolerance
+          }m `
+        : "") +
       obs.comment +
       imageCountString(obs.images) +
       ((obs as LolaSnowProfile).snowStabilityTest ?? [])
@@ -388,23 +450,25 @@ export function convertLoLaToGeneric(
           t.comment ?? "",
         ])
         .join(" "),
-    elevation: snowLine ? (obs as LolaSimpleObservation).snowLine : (obs as LolaSnowProfile).altitude,
+    elevation:
+      snowLine === "snowLine"
+        ? (obs as LolaSimpleObservation).snowLine
+        : snowLine === "elevation"
+          ? (obs as LolaRainBoundary).elevation
+          : (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
-    latitude: (
-      (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position
-    )?.lat,
+    latitude: gpsPoint?.lat,
     locationName:
       (obs as LolaSimpleObservation | LolaAvalancheEvent).locationDescription ??
-      (obs as LolaSnowProfile | LolaEvaluation).placeDescription,
-    longitude: (
-      (obs as LolaSimpleObservation | LolaAvalancheEvent).gpsPoint ?? (obs as LolaSnowProfile | LolaEvaluation).position
-    )?.lng,
+      (obs as LolaSnowProfile | LolaEvaluation | LolaRainBoundary).placeDescription,
+    longitude: gpsPoint?.lng,
     avalancheProblems: getAvalancheProblems(obs as LolaEvaluation | LolaAvalancheEvent),
     dangerPatterns: (obs as LolaEvaluation).dangerPatterns?.map((dp) => getDangerPattern(dp)) || [],
-    region: obs.regionName,
+    region: gpsPoint?.adsRegion?.loc_name || obs.regionName,
     importantObservations: [
-      (obs as LolaSimpleObservation).snowLine ? ImportantObservation.SnowLine : undefined,
+      snowLine === "snowLine" && (obs as LolaSimpleObservation).snowLine ? ImportantObservation.SnowLine : undefined,
+      snowLine === "elevation" && (obs as LolaRainBoundary).elevation ? ImportantObservation.SnowLine : undefined,
       (obs as LolaSimpleObservation).snowSurface?.includes("surfaceHoar")
         ? ImportantObservation.SurfaceHoar
         : undefined,
