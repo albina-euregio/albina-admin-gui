@@ -55,6 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
   let observation: RawGenericObservation;
   try {
     const body = await request.json();
+    console.info("Creating/updating observation", body);
     observation = genericObservationSchema.parse(body);
     observation.$id ??= crypto.randomUUID();
   } catch (e) {
@@ -85,6 +86,7 @@ export const DELETE: APIRoute = async ({ request }) => {
   let observation: RawGenericObservation;
   try {
     const body = await request.json();
+    console.info("Deleting observation", body);
     observation = genericObservationWithIdSchema.parse(body);
   } catch (e) {
     console.error(e);
