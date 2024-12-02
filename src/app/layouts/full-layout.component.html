@@ -107,6 +107,7 @@
           aria-haspopup="true"
           aria-expanded="false"
           dropdownToggle
+          ngxMousetrapKey="u"
         >
           <img
             *ngIf="authenticationService.getCurrentAuthor() && authenticationService.getCurrentAuthor().image"
@@ -120,8 +121,8 @@
             <h6 class="dropdown-header">{{ "menu.region" | translate }}</h6>
           </li>
 
-          <li *ngFor="let region of authenticationService.getCurrentAuthorRegions()">
-            <a class="dropdown-item" (click)="changeRegion(region)" role="button">
+          <li *ngFor="let region of authenticationService.getCurrentAuthorRegions(); let i = index">
+            <a class="dropdown-item" (click)="changeRegion(region)" role="button" [ngxMousetrapKey]="(i + 1).toString()">
               <i class="ph ph-globe"></i>
               {{ regionsService.getRegionName(region.id) }}
               <i *ngIf="authenticationService.getActiveRegionId() === region.id" class="ph ph-check"></i>
@@ -133,7 +134,7 @@
           </li>
 
           <li>
-            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/education']" ngxMousetrapKey="g e">
+            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/education']" ngxMousetrapKey="e">
               <i class="ph ph-graduation-cap"></i>
               {{ "menu.education" | translate }}
             </a>
@@ -154,7 +155,7 @@
             </a>
           </li>
           <li>
-            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/settings']">
+            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/settings']" ngxMousetrapKey="s">
               <i class="ph ph-gear"></i>
               {{ "menu.settings" | translate }}
             </a>
@@ -165,6 +166,7 @@
               class="dropdown-item"
               routerLinkActive="active"
               [routerLink]="['/admin']"
+              ngxMousetrapKey="a"
             >
               <i class="ph ph-detective"></i>
               {{ "menu.admin" | translate }}
@@ -176,7 +178,7 @@
           </li>
 
           <li>
-            <a class="dropdown-item" href="#" routerLink="/pages/login" (click)="logout()">
+            <a class="dropdown-item" href="#" routerLink="/pages/login" (click)="logout()" ngxMousetrapKey="l">
               <i class="ph ph-sign-out"></i>
               {{ "menu.logout" | translate }}
             </a>
