@@ -1,45 +1,42 @@
 import {
-  Component,
   AfterContentInit,
   AfterViewInit,
-  OnDestroy,
+  Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   TemplateRef,
   viewChild,
   inject,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { RegionsService, RegionProperties } from "../providers/regions-service/regions.service";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
-
 import {
   GenericObservation,
+  genericObservationSchema,
+  ImportantObservation,
   ObservationSource,
   ObservationTableRow,
-  toGeoJSON,
-  ImportantObservation,
-  WeatherStationParameter,
-  genericObservationSchema,
   ObservationType,
+  toGeoJSON,
+  WeatherStationParameter,
 } from "./models/generic-observation.model";
-
 import { saveAs } from "file-saver";
-
 import { ObservationGalleryComponent } from "./observation-gallery.component";
 import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
-import { onErrorResumeNext, type Observable } from "rxjs";
+import { type Observable, onErrorResumeNext } from "rxjs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
 import { AlbinaObservationsService } from "./observations.service";
-import { LayerGroup } from "leaflet";
+import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
@@ -48,12 +45,75 @@ import { ObservationMarkerWeatherStationService } from "./observation-marker-wea
 import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
 import Split from "split.js";
-import { isAvalancheWarningServiceObservation } from "./models/observation.model";
 import { HttpErrorResponse } from "@angular/common/http";
 
 export interface MultiselectDropdownData {
   id: string;
   name: string;
+}
+
+class ObservationData {
+  loading = false;
+  show = false;
+  all = [] as GenericObservation[];
+  filtered = [] as GenericObservation[];
+  layer = new LayerGroup();
+
+  constructor(
+    private onObservationClick: (observation: GenericObservation, doShow?: boolean) => void,
+    private filter: ObservationFilterService<any> | undefined,
+    private markerService: {
+      createMarker(observation: GenericObservation, isHighlighted?: boolean): Marker | undefined;
+    },
+    private forEachObservation0: (observation: GenericObservation) => void = () => {},
+    private applyLocalFilter0: () => void = () => {},
+  ) {}
+
+  toggle(map: LeafletMap) {
+    if (this.show) {
+      this.show = false;
+      map.removeLayer(this.layer);
+    } else {
+      this.show = true;
+      map.addLayer(this.layer);
+    }
+  }
+
+  async loadFrom(observable: Observable<GenericObservation>) {
+    this.loading = true;
+    this.layer.clearLayers();
+    this.all = [];
+    await observable.forEach((observation) => this.forEachObservation(observation)).catch((e) => console.error(e));
+    this.applyLocalFilter();
+    this.all.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
+    this.loading = false;
+  }
+
+  forEachObservation(observation: GenericObservation) {
+    try {
+      genericObservationSchema.partial().parse(observation);
+    } catch (err) {
+      console.warn("Observation does not match schema", observation, err);
+    }
+    augmentRegion(observation);
+    this.forEachObservation0(observation);
+    if (!observation.region) return;
+    this.all.push(observation);
+  }
+
+  applyLocalFilter() {
+    this.layer.clearLayers();
+    this.filtered = this.all.filter(
+      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
+    );
+    this.filtered.forEach((observation) => {
+      this.markerService
+        .createMarker(observation, this.filter.isHighlighted(observation))
+        ?.on("click", () => this.onObservationClick(observation))
+        ?.addTo(this.layer);
+    });
+    this.applyLocalFilter0();
+  }
 }
 
 @Component({
@@ -88,24 +148,43 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
 
-  public loading: Observable<GenericObservation<any>> | undefined = undefined;
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
-  public observations: GenericObservation[] = [];
-  public webcams: GenericObservation[] = [];
-  public localWebcams: GenericObservation[] = [];
-  public weatherStations: GenericObservation[] = [];
-  public localWeatherStations: GenericObservation[] = [];
-  public showObservations = true;
-  public showWeatherStations = false;
-  public showWebcams = false;
-  public showObservers = false;
-  public weatherStationsLayerGroup: LayerGroup<any>;
-  public observersLayerGroup: LayerGroup<any>;
-  public webcamsLayerGroup: LayerGroup<any>;
-  public observationsAsOverlay: GenericObservation[] = [];
-  public localObservations: GenericObservation[] = [];
-  public observationsWithoutCoordinates = 0;
+
+  public readonly data = {
+    observations: new ObservationData(
+      this.onObservationClick.bind(this),
+      this.filter,
+      this.markerService,
+      (observation) => {
+        if (!this.filter.inDateRange(observation.eventDate)) {
+          return;
+        }
+        if (observation.$source === ObservationSource.AvalancheWarningService) {
+          observation = this.parseObservation(observation);
+          augmentRegion(observation);
+        }
+        if (observation.region) {
+          observation.regionLabel = observation.region + " " + this.regionsService.getRegionName(observation.region);
+        }
+      },
+      () => {
+        this.filter.filterSelectionData.forEach((filter) =>
+          filter.buildChartsData(this.markerService.markerClassify, this.data.observations.all, (o) =>
+            this.filter.isSelected(o),
+          ),
+        );
+      },
+    ),
+    observers: new ObservationData(this.onObservationClick.bind(this), this.filter, this.markerObserverService),
+    weatherStations: new ObservationData(
+      this.onObservationClick.bind(this),
+      this.filter,
+      this.markerWeatherStationService,
+    ),
+    webcams: new ObservationData(this.onObservationClick.bind(this), this.filter, this.markerWebcamService),
+  };
+
   public observationPopup: {
     observation: GenericObservation;
     table: ObservationTableRow[];
@@ -152,18 +231,21 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.initMap();
   }
 
-  private async initMap() {
-    const map = await this.mapService.initMaps(this.mapDiv().nativeElement, (o) => this.onObservationClick(o));
-    if (this.filter.startDate && this.filter.endDate) {
-      this.loadObservations({});
-    } else {
-      this.loadObservations({ days: 7 });
-    }
-    this.observationsAsOverlay = [];
+  loadObservations() {
+    return this.data.observations.loadFrom(this.observationsService.getGenericObservations());
+  }
 
-    this.observersLayerGroup = this.loadObservers();
-    this.weatherStationsLayerGroup = this.loadWeatherStations();
-    this.webcamsLayerGroup = this.loadWebcams();
+  private async initMap() {
+    const map = await this.mapService.initMaps(this.mapDiv().nativeElement);
+
+    this.data.observations.toggle(this.map);
+    if (!this.filter.startDate || !this.filter.endDate) {
+      this.filter.days = 7;
+    }
+    this.loadObservations();
+    this.data.observers.loadFrom(this.observationsService.getObservers());
+    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations());
+    this.data.webcams.loadFrom(this.observationsService.getGenericWebcams());
 
     map.on("click", () => {
       this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
@@ -176,51 +258,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     resizeObserver.observe(this.mapDiv().nativeElement);
   }
 
-  toggleObservations() {
-    if (this.showObservations) {
-      this.showObservations = false;
-      Object.keys(ObservationType).forEach((type) =>
-        this.mapService.map.removeLayer(this.mapService.observationTypeLayers[type]),
-      );
-    } else {
-      this.showObservations = true;
-      Object.keys(ObservationType).forEach((type) =>
-        this.mapService.map.addLayer(this.mapService.observationTypeLayers[type]),
-      );
-    }
-  }
-
-  toggleWeatherStations() {
-    if (this.showWeatherStations) {
-      this.showWeatherStations = false;
-      this.mapService.map.removeLayer(this.weatherStationsLayerGroup);
-    } else {
-      this.showWeatherStations = true;
-      this.mapService.map.addLayer(this.weatherStationsLayerGroup);
-    }
-  }
-
-  toggleObservers() {
-    if (this.showObservers) {
-      this.showObservers = false;
-      this.mapService.map.removeLayer(this.observersLayerGroup);
-    } else {
-      this.showObservers = true;
-      this.mapService.map.addLayer(this.observersLayerGroup);
-    }
-  }
-
-  toggleWebcams() {
-    if (this.showWebcams) {
-      this.showWebcams = false;
-      this.mapService.map.removeLayer(this.webcamsLayerGroup);
-    } else {
-      this.showWebcams = true;
-      this.mapService.map.addLayer(this.webcamsLayerGroup);
-    }
+  get map() {
+    return this.mapService.map;
   }
 
   ngOnDestroy() {
+    Object.values(this.data).forEach(({ layer }) => layer.clearLayers());
     this.mapService.resetAll();
     this.mapService.removeMaps();
   }
@@ -335,40 +378,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     return observation;
   }
 
-  loadObservations({ days }: { days?: number } = {}) {
-    if (typeof days === "number") {
-      this.filter.days = days;
-    }
-    this.clear();
-
-    this.loading = onErrorResumeNext(this.observationsService.getGenericObservations());
-    this.loading
-      .forEach((observation) => {
-        try {
-          genericObservationSchema.parse(observation);
-        } catch (err) {
-          console.warn("Observation does not match schema", observation, err);
-        }
-        this.addObservation(observation);
-      })
-      .catch((e) => console.error(e))
-      .finally(() => {
-        this.loading = undefined;
-        this.observations.sort((o1, o2) =>
-          +o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1,
-        );
-        this.applyLocalFilter();
-      });
-  }
-
-  private clear() {
-    this.observationsWithoutCoordinates = 0;
-    this.observations.length = 0;
-    Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
-  }
-
   exportObservations() {
-    const collection: GeoJSON.FeatureCollection = toGeoJSON(this.observations);
+    const collection: GeoJSON.FeatureCollection = toGeoJSON(this.data.observations.all);
     const json = JSON.stringify(collection, undefined, 2);
     const blob = new Blob([json], { type: "application/geo+json" });
     saveAs(blob, "observations.geojson");
@@ -376,102 +387,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   setDate() {
     this.filter.setDateRange();
-    this.loadObservations({});
+    this.loadObservations();
   }
 
   applyLocalFilter() {
-    Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
-    this.localObservations = this.observations.filter(
-      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
-    );
-    this.localObservations.forEach((observation) => {
-      this.markerService
-        .createMarker(observation, this.filter.isHighlighted(observation))
-        ?.on("click", () => this.onObservationClick(observation))
-        ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
-    });
-
-    this.mapService.layers["webcams"].clearLayers();
-    this.localWebcams = this.webcams.filter(
-      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
-    );
-    this.localWebcams.forEach((weatherStation) => {
-      this.markerWebcamService
-        .createMarker(weatherStation, false)
-        ?.on("click", () => this.onObservationClick(weatherStation))
-        ?.addTo(this.mapService.layers["webcams"]);
-    });
-
-    this.mapService.layers["weather-stations"].clearLayers();
-    this.localWeatherStations = this.weatherStations.filter((weatherStation) =>
-      this.filter.isWeatherStationSelected(weatherStation),
-    );
-    this.localWeatherStations.forEach((weatherStation) => {
-      this.markerWeatherStationService
-        .createMarker(weatherStation, false)
-        ?.on("click", () => this.onObservationClick(weatherStation))
-        ?.addTo(this.mapService.layers["weather-stations"]);
-    });
-
-    this.filter.filterSelectionData.forEach((filter) =>
-      filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) => this.filter.isSelected(o)),
-    );
-  }
-
-  private addObservation(observation: GenericObservation): void {
-    if (!this.filter.inDateRange(observation.eventDate)) {
-      return;
-    }
-
-    if (observation.$source === ObservationSource.AvalancheWarningService) {
-      observation = this.parseObservation(observation);
-      augmentRegion(observation);
-    }
-
-    if (observation.region) {
-      observation.regionLabel = observation.region + " " + this.regionsService.getRegionName(observation.region);
-    }
-
-    this.observations.push(observation);
-
-    const marker = this.markerService
-      .createMarker(observation)
-      ?.on("click", () => this.onObservationClick(observation))
-      ?.addTo(this.mapService.observationTypeLayers[observation.$type]);
-    if (!marker) {
-      this.observationsWithoutCoordinates++;
-    }
-  }
-
-  private loadWeatherStations(): LayerGroup<any> {
-    this.weatherStations = [];
-    this.observationsService.getWeatherStations().forEach((w) => {
-      augmentRegion(w);
-      if (!w.region) return;
-      this.weatherStations.push(w);
-    });
-    return this.mapService.layers["weather-stations"];
-  }
-
-  private loadWebcams(): LayerGroup<any> {
-    this.webcams = [];
-    this.observationsService.getGenericWebcams().forEach((w) => {
-      augmentRegion(w);
-      if (!w.region) return;
-      this.webcams.push(w);
-    });
-    return this.mapService.layers["webcams"];
-  }
-
-  private loadObservers(): LayerGroup<any> {
-    this.observationsService.getObservers().forEach((observation) => {
-      this.observationsAsOverlay.push(observation);
-      this.mapService.addMarker(
-        this.markerObserverService.createMarker(observation)?.on("click", () => this.onObservationClick(observation)),
-        "observers",
-      );
-    });
-    return this.mapService.layers["observers"];
+    Object.values(this.data).forEach((data) => data.applyLocalFilter());
   }
 
   onObservationClick(observation: GenericObservation, doShow = true): void {
@@ -499,10 +419,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  toggleFilters() {
-    this.layoutFilters = !this.layoutFilters;
-  }
-
   @HostListener("document:keydown", ["$event"])
   handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown" }) {
     if (!this.observationPopup?.observation) {
@@ -517,12 +433,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     let observation = this.observationPopup?.observation;
-    const observations = [
-      ...this.observations,
-      ...this.observationsAsOverlay,
-      ...this.weatherStations,
-      ...this.webcams,
-    ].filter((o) => o.$source === observation.$source && o.$type === observation.$type);
+    const observations = Object.values(this.data)
+      .flatMap((d) => d.all)
+      .filter((o) => o.$source === observation.$source && o.$type === observation.$type);
     let index = observations.indexOf(observation);
     if (index < 0) {
       return;

@@ -12,8 +12,8 @@
           <div class="global-bar global-bar-left">
             <div class="global-bar-item global-bar-item-load">
               <button type="button" class="btn btn-bare" (click)="loadObservations()">
-                <i *ngIf="!loading" class="ph ph-arrows-clockwise"></i>
-                <i *ngIf="loading" class="ph ph-circle-notch"></i>
+                <i *ngIf="!this.data.observations.loading" class="ph ph-arrows-clockwise"></i>
+                <i *ngIf="this.data.observations.loading" class="ph ph-circle-notch"></i>
               </button>
             </div>
 
@@ -126,7 +126,7 @@
               <button
                 type="button"
                 class="btn btn-bare"
-                (click)="toggleFilters()"
+                (click)="this.layoutFilters = !this.layoutFilters"
                 title="{{ 'admin.observations.toggleFilterBar' | translate }}"
               >
                 <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
@@ -145,7 +145,7 @@
           <div class="card-body overflow-auto">
             <app-observation-table
               #observationTable
-              [observations]="localObservations"
+              [observations]="this.data.observations.filtered"
               (observationClick)="onObservationClick($event)"
               (editObservationEvent)="editObservation($event)"
             ></app-observation-table>
@@ -157,7 +157,7 @@
         <div class="card h-100">
           <div class="card-body overflow-auto">
             <app-observation-gallery
-              [observations]="localWebcams"
+              [observations]="this.data.webcams.filtered"
               (observationClick)="onObservationClick($event)"
             ></app-observation-gallery>
           </div>
@@ -174,32 +174,32 @@
       <div *ngIf="layout === 'map'" class="layer-switch">
         <div
           class="obs-button"
-          [class.is-active]="showObservations"
-          (click)="toggleObservations()"
+          [class.is-active]="this.data.observations.show"
+          (click)="this.data.observations.toggle(this.map)"
           title="{{ 'observations.layers.observations' | translate }}"
         >
           <i class="ph ph-circle" aria-hidden="true"></i>
         </div>
         <div
           class="obs-button"
-          [class.is-active]="showWebcams"
-          (click)="toggleWebcams()"
+          [class.is-active]="this.data.webcams.show"
+          (click)="this.data.webcams.toggle(this.map)"
           title="{{ 'observations.layers.webcams' | translate }}"
         >
           <i class="ph ph-webcam" aria-hidden="true"></i>
         </div>
         <div
           class="obs-button"
-          [class.is-active]="showObservers"
-          (click)="toggleObservers()"
+          [class.is-active]="this.data.observers.show"
+          (click)="this.data.observers.toggle(this.map)"
           title="{{ 'observations.layers.observers' | translate }}"
         >
           <i class="ph ph-eye" aria-hidden="true"></i>
         </div>
         <div
           class="obs-button"
-          [class.is-active]="showWeatherStations"
-          (click)="toggleWeatherStations()"
+          [class.is-active]="this.data.weatherStations.show"
+          (click)="this.data.weatherStations.toggle(this.map)"
           title="{{ 'observations.layers.weatherStations' | translate }}"
         >
           <i class="ph ph-chart-line" aria-hidden="true"></i>
@@ -207,7 +207,7 @@
       </div>
 
       <!-- !parameter-switch -->
-      <div *ngIf="showWeatherStations && layout === 'map'" class="parameter-switch">
+      <div *ngIf="this.data.weatherStations.show && layout === 'map'" class="parameter-switch">
         <div
           class="obs-button"
           [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowHeight'"
@@ -356,9 +356,9 @@
           </div>
           <div class="toolset-keydata">
             <div class="keydata">
-              <span class="keydata-selected">{{ localObservations.length }}</span>
+              <span class="keydata-selected">{{ this.data.observations.filtered.length }}</span>
               /
-              <span class="keydata-all">{{ observations.length }}</span>
+              <span class="keydata-all">{{ this.data.observations.all.length }}</span>
             </div>
           </div>
         </div>

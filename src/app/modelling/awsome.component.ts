@@ -12,6 +12,7 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
+import { LayerGroup } from "leaflet";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
     GenericObservation,
@@ -63,6 +64,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
+  mapLayer = new LayerGroup();
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
@@ -133,7 +135,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   async ngAfterViewInit() {
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
-    await this.mapService.initMaps(this.mapDiv().nativeElement, (o) => console.log(o));
+    await this.mapService.initMaps(this.mapDiv().nativeElement);
+    this.mapLayer.addTo(this.mapService.map);
   }
 
   switchDate(direction: -1 | 1) {
@@ -144,7 +147,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   applyLocalFilter() {
-    Object.values(this.mapService.observationTypeLayers).forEach((layer) => layer.clearLayers());
+    this.mapLayer.clearLayers();
     this.localObservations = this.observations.filter(
       (observation) => this.filterService.isHighlighted(observation) || this.filterService.isSelected(observation),
     );
@@ -152,7 +155,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.markerService
         .createMarker(observation, this.filterService.isHighlighted(observation))
         ?.on("click", () => this.onObservationClick(observation))
-        ?.addTo(this.mapService.observationTypeLayers.Profile);
+        ?.addTo(this.mapLayer);
     });
 
     this.filterService.filterSelectionData.forEach((filter) =>
