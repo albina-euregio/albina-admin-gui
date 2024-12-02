@@ -66,6 +66,7 @@ class ObservationData {
       createMarker(observation: GenericObservation, isHighlighted?: boolean): Marker | undefined;
     },
     private forEachObservation0: (observation: GenericObservation) => void = () => {},
+    private applyLocalFilter0: () => void = () => {},
   ) {}
 
   toggle(map: LeafletMap) {
@@ -111,6 +112,7 @@ class ObservationData {
         ?.on("click", () => this.onObservationClick(observation))
         ?.addTo(this.layer);
     });
+    this.applyLocalFilter0();
   }
 }
 
@@ -165,6 +167,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         if (observation.region) {
           observation.regionLabel = observation.region + " " + this.regionsService.getRegionName(observation.region);
         }
+      },
+      () => {
+        this.filter.filterSelectionData.forEach((filter) =>
+          filter.buildChartsData(this.markerService.markerClassify, this.data.observations.all, (o) =>
+            this.filter.isSelected(o),
+          ),
+        );
       },
     ),
     observers: new ObservationData(this.onObservationClick.bind(this), this.filter, this.markerObserverService),
@@ -383,13 +392,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   applyLocalFilter() {
     Object.values(this.data).forEach((data) => data.applyLocalFilter());
-
-    this.filter.filterSelectionData.forEach((filter) =>
-      filter.buildChartsData(this.markerService.markerClassify, this.data.observations.all, (o) =>
-        this.filter.isSelected(o),
-      ),
-    );
   }
+
   onObservationClick(observation: GenericObservation, doShow = true): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
