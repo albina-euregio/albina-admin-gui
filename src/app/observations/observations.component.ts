@@ -65,7 +65,7 @@ class ObservationData {
     private markerService: {
       createMarker(observation: GenericObservation, isHighlighted?: boolean): Marker | undefined;
     },
-    private forEachObservation: (observation: GenericObservation) => void = () => {},
+    private forEachObservation0: (observation: GenericObservation) => void = () => {},
   ) {}
 
   toggle(map: LeafletMap) {
@@ -82,22 +82,22 @@ class ObservationData {
     this.loading = true;
     this.layer.clearLayers();
     this.all = [];
-    await observable
-      .forEach((observation) => {
-        try {
-          genericObservationSchema.partial().parse(observation);
-        } catch (err) {
-          console.warn("Observation does not match schema", observation, err);
-        }
-        augmentRegion(observation);
-        this.forEachObservation(observation);
-        if (!observation.region) return;
-        this.all.push(observation);
-      })
-      .catch((e) => console.error(e));
+    await observable.forEach((observation) => this.forEachObservation(observation)).catch((e) => console.error(e));
     this.applyLocalFilter();
     this.all.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
     this.loading = false;
+  }
+
+  forEachObservation(observation: GenericObservation) {
+    try {
+      genericObservationSchema.partial().parse(observation);
+    } catch (err) {
+      console.warn("Observation does not match schema", observation, err);
+    }
+    augmentRegion(observation);
+    this.forEachObservation0(observation);
+    if (!observation.region) return;
+    this.all.push(observation);
   }
 
   applyLocalFilter() {
