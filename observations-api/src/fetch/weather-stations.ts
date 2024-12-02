@@ -50,11 +50,12 @@ async function fetchSMET(
         return;
       }
       const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
-      console.log("Fetching", url);
       const response = await fetch(url);
       if (!response.ok) {
-        console.warn(url, response.statusText);
+        console.warn("Fetching", url, response.statusText);
         return;
+      } else {
+        console.log("Fetching", url, response.statusText, response.headers.get("Content-Length"));
       }
       let smet: string;
       if (
