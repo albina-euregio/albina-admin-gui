@@ -18,10 +18,10 @@ export async function getAwsWeatherStations(
   const stations = geojson.features.map((feature) => mapFeature(feature));
 
   for (const station of stations) {
-    if (station.$data.operator !== "LWD Tirol") {
+    if (!station?.$id) {
       continue;
     }
-    const url = `https://api.avalanche.report/lawine/grafiken/smet/woche/${station.$id}.smet.gz`;
+    const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
     console.log("Fetching", url);
     const response = await fetch(url);
     if (!response.ok) {
