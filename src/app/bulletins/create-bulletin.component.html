@@ -21,6 +21,7 @@
             class="btn btn-icon btn-sm btn-bare--grey"
             (click)="changeDate(bulletinsService.getNextDate())"
             *ngIf="bulletinsService.getNextDate()"
+            ngxMousetrapKey="ctrl+left"
           >
             <i class="ph-bold ph-caret-left"></i>
           </button>
@@ -29,6 +30,7 @@
             class="btn btn-icon btn-sm btn-bare--grey"
             (click)="changeDate(bulletinsService.getPreviousDate())"
             *ngIf="bulletinsService.getPreviousDate()"
+            ngxMousetrapKey="ctrl+right"
           >
             <i class="ph-bold ph-caret-right"></i>
           </button>
@@ -221,6 +223,7 @@
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
         (click)="submit($event, bulletinsService.getActiveDate())"
+        ngxMousetrapKey="ctrl+enter"
       >
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ "bulletins.tooltip.submit" | translate }}</span>
@@ -233,6 +236,7 @@
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
         (click)="createUpdate($event)"
+        ngxMousetrapKey="e"
       >
         <i class="ph ph-pencil"></i>
         <span>{{ "bulletins.tooltip.update" | translate }}</span>
@@ -245,6 +249,7 @@
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
         (click)="publish($event, bulletinsService.getActiveDate())"
+        ngxMousetrapKey="ctrl+enter"
       >
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
@@ -257,6 +262,7 @@
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
         (click)="publish($event, bulletinsService.getActiveDate(), true)"
+        ngxMousetrapKey="ctrl+shift+enter"
       >
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
@@ -287,14 +293,14 @@
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
-            <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle>
+            <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle ngxMousetrapKey="m">
               <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
 
             <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
               <!-- map above / map aside -->
               <li>
-                <button class="dropdown-item" (click)="toggleCompactMapLayout()">
+                <button class="dropdown-item" (click)="toggleCompactMapLayout()" ngxMousetrapKey="v">
                   <i *ngIf="isCompactMapLayout" class="ph icon-md ph-square-split-horizontal"></i>
                   <i *ngIf="!isCompactMapLayout" class="ph icon-md ph-square-split-vertical"></i>
                   <span *ngIf="isCompactMapLayout">{{ "bulletins.create.mapLeft" | translate }}</span>
@@ -305,13 +311,17 @@
               <!-- load bulletin from yesterday -->
               <li>
                 <button
-                  *ngIf="(bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) || localStorageService.isTrainingEnabled"
+                  *ngIf="
+                    (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) ||
+                    localStorageService.isTrainingEnabled
+                  "
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
                   (click)="loadBulletinsFromYesterday()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
+                  ngxMousetrapKey="y"
                 >
                   <i class="ph-bold ph-copy icon-md"></i>
                   {{ "bulletins.create.tooltip.loadBulletin" | translate }}
@@ -328,6 +338,7 @@
                   (click)="preview()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.preview' | translate }}"
+                  ngxMousetrapKey="p"
                 >
                   <i class="ph-bold ph-eye icon-md"></i>
                   {{ "bulletins.tooltip.preview" | translate }}
@@ -344,6 +355,7 @@
                   (click)="openMediaFileModal()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
+                  ngxMousetrapKey="u m"
                 >
                   <i class="ph-bold ph-microphone icon-md"></i>
                   {{ "bulletins.tooltip.mediaFile" | translate }}
@@ -364,6 +376,7 @@
                   (click)="jsonBulletinUploader.click()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
+                  ngxMousetrapKey="u j"
                 >
                   <i class="ph-bold ph-upload-simple icon-md"></i>
                   {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
@@ -380,6 +393,7 @@
                   (click)="downloadJsonBulletin()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
+                  ngxMousetrapKey="d j"
                 >
                   <i class="ph-bold ph-download-simple icon-md"></i>
                   {{ "bulletins.create.tooltip.downloadJsonBulletin" | translate }}
@@ -442,8 +456,10 @@
       <nav class="create-bulletin__region-list">
         <!-- Show the list of bulletins if there are any -->
         <ng-container *ngIf="getOwnBulletins().length; else noBulletinsTemplate">
-          <ng-container *ngFor="let bulletin of getOwnBulletins()">
-            <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
+          <ng-container *ngFor="let bulletin of getOwnBulletins(); let i = index">
+            <ng-container
+              *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: i + 1 }"
+            ></ng-container>
           </ng-container>
         </ng-container>
       </nav>
@@ -451,7 +467,7 @@
 
     <div class="create-bulletin__regions">
       <!-- Foreign regions -->
-      <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()">
+      <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()" ngxMousetrapKey="f">
         <h5 class="font-s-bold">
           {{ "bulletins.create.foreignRegions" | translate }} ({{ getForeignBulletins().length }})
         </h5>
@@ -466,8 +482,10 @@
       </header>
       <!-- List of foreign regions -->
       <nav *ngIf="showForeignRegions" class="create-bulletin__region-list">
-        <ng-container *ngFor="let bulletin of getForeignBulletins()">
-          <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
+        <ng-container *ngFor="let bulletin of getForeignBulletins(); let i = index">
+          <ng-container
+            *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: i + getOwnBulletins().length + 1 }"
+          ></ng-container>
         </ng-container>
       </nav>
     </div>
@@ -491,8 +509,13 @@
         </header>
         <!-- List of external regions -->
         <nav *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="create-bulletin__region-list">
-          <ng-container *ngFor="let bulletin of externalRegion.value">
-            <ng-container *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin }"></ng-container>
+          <ng-container *ngFor="let bulletin of externalRegion.value; let i = index">
+            <ng-container
+              *ngTemplateOutlet="
+                bulletinTemplate;
+                context: { bulletin: bulletin, key: i + getOwnBulletins().length + getForeignBulletins().length + 1 }
+              "
+            ></ng-container>
           </ng-container>
         </nav>
       </ng-container>
@@ -567,7 +590,7 @@
           <button type="reset" class="btn btn-bare" (click)="discardBulletin($event, activeBulletin)">
             <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
           </button>
-          <button type="button" class="btn btn-primary" (click)="saveBulletin($event)">
+          <button type="button" class="btn btn-primary" (click)="saveBulletin($event)" ngxMousetrapKey="enter">
             <i class="ph-bold ph-check"></i>
             <span *ngIf="activeBulletin.savedRegions.length === 0 && activeBulletin.publishedRegions.length === 0">{{
               "bulletins.create.tooltip.createRegion" | translate
@@ -594,9 +617,10 @@
   </div>
 </ng-template>
 
-<ng-template #bulletinTemplate let-bulletin="bulletin">
+<ng-template #bulletinTemplate let-bulletin="bulletin" let-key="key">
   <div
     (click)="toggleBulletin(bulletin)"
+    ngxMousetrapKey="ctrl+{{ key }}"
     class="region-thumb"
     [class.region-thumb--active]="bulletin === activeBulletin"
   >
@@ -766,7 +790,7 @@
     <p>{{ "bulletins.create.loadingErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="loadingErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="loadingErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.loadingErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -777,7 +801,7 @@
     <p>{{ "bulletins.create.loadingJsonFileErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="loadingJsonFileErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="loadingJsonFileErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.loadingJsonFileErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -788,7 +812,7 @@
     <p>{{ "bulletins.create.loadDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="loadModalConfirm($event)">
+    <button type="button" class="btn btn-primary" (click)="loadModalConfirm($event)" ngxMousetrapKey="enter">
       {{ "bulletins.create.loadDialog.accept" | translate }}
     </button>
     <button type="button" class="btn btn-default" (click)="loadModalDecline($event)">
@@ -802,7 +826,12 @@
     <p>{{ "bulletins.create.deleteAggregatedRegionDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="deleteAggregatedRegionModalConfirm()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="deleteAggregatedRegionModalConfirm()"
+      ngxMousetrapKey="enter"
+    >
       {{ "bulletins.create.deleteAggregatedRegionDialog.accept" | translate }}
     </button>
     <button type="button" class="btn btn-default" (click)="deleteAggregatedRegionModalDecline()">
@@ -816,7 +845,7 @@
     <p>{{ "bulletins.create.noRegionDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="noRegionModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="noRegionModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.noRegionDialog.accept" | translate }}
     </button>
   </div>
@@ -827,7 +856,7 @@
     <p>{{ "bulletins.create.discardDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="discardModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="discardModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.discardDialog.accept" | translate }}
     </button>
     <button type="button" class="btn btn-default" (click)="discardModalDecline()">
@@ -841,7 +870,7 @@
     <p>{{ "bulletins.create.saveErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="saveErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="saveErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.saveErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -852,7 +881,7 @@
     <p>{{ "bulletins.create.changeErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="changeErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="changeErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.changeErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -863,7 +892,12 @@
     <p>{{ "bulletins.create.avalancheProblemErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="avalancheProblemErrorModalConfirm()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="avalancheProblemErrorModalRef.hide()"
+      ngxMousetrapKey="enter"
+    >
       {{ "bulletins.create.avalancheProblemErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -957,7 +991,12 @@
     <p>{{ "bulletins.table.submitBulletinsDuplicateRegionDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="submitBulletinsDuplicateRegionModalConfirm()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="submitBulletinsDuplicateRegionModalConfirm()"
+      ngxMousetrapKey="enter"
+    >
       {{ "bulletins.table.submitBulletinsDuplicateRegionDialog.accept" | translate }}
     </button>
   </div>
@@ -968,7 +1007,7 @@
     <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -979,7 +1018,7 @@
     <p>{{ "bulletins.table.submitBulletinsErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="submitBulletinsErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="submitBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.table.submitBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -990,7 +1029,7 @@
     <p>{{ "bulletins.table.publishBulletinsErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="publishBulletinsErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="publishBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.table.publishBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -1001,7 +1040,7 @@
     <p>{{ "bulletins.table.previewErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="previewErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="previewErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.table.previewErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -1012,7 +1051,7 @@
     <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -1023,7 +1062,7 @@
     <p>{{ "bulletins.table.publishAllDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>

@@ -122,7 +122,7 @@
           </li>
 
           <li *ngFor="let region of authenticationService.getCurrentAuthorRegions(); let i = index">
-            <a class="dropdown-item" (click)="changeRegion(region)" role="button" [ngxMousetrapKey]="(i + 1).toString()">
+            <a class="dropdown-item" (click)="changeRegion(region)" role="button" ngxMousetrapKey="{{ i + 1 }}">
               <i class="ph ph-globe"></i>
               {{ regionsService.getRegionName(region.id) }}
               <i *ngIf="authenticationService.getActiveRegionId() === region.id" class="ph ph-check"></i>
