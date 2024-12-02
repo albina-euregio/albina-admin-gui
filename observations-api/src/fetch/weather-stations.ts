@@ -1,6 +1,6 @@
-import { fetchJSON } from "../util/fetchJSON";
-import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { average, max, median, min, sum } from "simple-statistics";
+import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
+import { fetchJSON } from "../util/fetchJSON";
 
 let lastFetch = 0;
 let cache: Promise<Record<GenericObservation["$id"], string>> = undefined;
@@ -53,9 +53,20 @@ async function fetchSMET(
       console.log("Fetching", url);
       const response = await fetch(url);
       if (!response.ok) {
+        console.warn(url, response.statusText);
         return;
       }
-      const smet = await response.text();
+      let smet: string;
+      if (
+        response.headers.get("Content-Encoding") === "gzip" ||
+        response.headers.get("Content-Type") === "application/x-gzip"
+      ) {
+        const stream = (await response.blob()).stream().pipeThrough(new DecompressionStream("gzip"));
+        const blob = await new Response(stream).blob();
+        smet = await blob.text();
+      } else {
+        smet = await response.text();
+      }
       if (!smet) {
         return;
       }
