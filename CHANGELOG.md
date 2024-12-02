@@ -72,42 +72,14 @@ Specifically, the following features are supported:
 
 ### Danger Sources
 
-- _(danger-sources)_ Add to menu, add to config
-- _(danger-sources)_ Add menu entry, controller, service, model (incomplete)
-- _(danger-source)_ Add generic map object
-- _(danger-sources)_ Add danger source schema (incomplete)
-- _(danger-sources)_ Simplify service
-- _(danger-sources)_ DefaultParams
-- _(danger-sources)_ Use URLSearchParams
-- _(danger-sources)_ Add return type to generic map object
-- _(danger-sources)_ Implement view (incomplete)
-- _(danger-sources)_ Extend danger source logic
-- _(danger-sources)_ Implement save/load for danger sources and variants
-- _(danger-sources)_ Add shared module, fix load from yesterday
-- _(danger-sources)_ Set active variant after create
-- _(danger-sources)_ Extend danger source variant component
-- _(danger-sources)_ Add glidingSnowActivityValue, rename status to dangerSourceVariantStatus
-- _(danger-sources)_ Add parameter to danger source variant view
-- _(danger-sources)_ Update i18n strings
-- _(danger-sources)_ Add parameter to view, update i18n strings
-- _(danger-sources)_ Add properties to variant gui
-- _(danger-sources)_ Add infos to headers, edit danger source modal
-- _(danger-sources)_ Update status texts
-- _(danger-sources)_ Update danger source method
-- _(danger-sources)_ Disable compared variant
-- _(danger-sources)_ Create internal danger source and variants at once
-- _(danger-sources)_ Sort variants by danger rating
-- _(danger-sources)_ Add danger source title to variant header
-- _(danger-sources)_ Add status and make it editable
-- _(danger-sources)_ Sort variants to update map correctly
-- _(danger-sources)_ Show status of variant and make it editable
-- _(danger-sources)_ Add danger source variant type, load status
-- _(danger-sources)_ Add forecast/analysis differentiation
-- _(danger-sources)_ Show type below date in create danger sources view
-- _(danger-sources)_ Compare forecast with analysis
-- _(danger-sources)_ Put label in own row
-- _(danger-sources)_ Use checkboxes for all parameter
-- _(danger-sources)_ Use full width for slab hand hardness
+This feature proposes a stronger integration of the hazard assessment process into the workflow of public avalanche forecasters. By using danger sources the focus lies no longer solely on the creation of a (daily) bulletin for communication, but rather on the temporal and spatial tracking, documentation and assessment of hazard sources and its variants. This makes the forecasting process more consistent and comprehensible. It provides a more profound basis for communication and discussion between forecasters and neighboring AWS’, enables better transitions during shift changes and prevents information loss. At the same time, uncertainties in the assessment process can be better identified and addressed (see https://arc.lib.montana.edu/snow-science/item/2896). The current implementation allows to track danger sources and their variants. There is no automatic suggestion of the bulletin yet.
+
+- Enable users to forecast danger sources and validate the forecast on the next day
+- Allow to compare analyzed danger source variants with forecast
+- Sort danger sources by creation date
+- Sort danger source variants by danger rating
+- Show highest danger rating for each micro-region resulting from any danger source as color in map
+- Add status (active, dormant, inactive) to danger source variants
 
 ### Observations
 
