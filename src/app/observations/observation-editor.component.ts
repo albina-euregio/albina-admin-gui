@@ -96,7 +96,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     this[`${key}Date`]().nativeElement.valueAsDate = date;
     this[`${key}Time`]().nativeElement.valueAsDate = date;
     date = isFinite(+date) ? fromUTC(date) : undefined;
-    this.observation[key] = date;
+    this.observation()[key] = date;
   }
 
   handleDateEvent(event: Event, key: "eventDate" | "reportDate") {
