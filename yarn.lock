@@ -4184,7 +4184,7 @@ __metadata:
     "@types/which-polygon": "npm:^2.2.3"
     angular-eslint: "npm:^19.0.0-alpha.4"
     bootstrap: "npm:^5.3.1"
-    echarts: "patch:echarts@npm%3A5.5.1#~/.yarn/patches/echarts-npm-5.5.1-87c5448f72.patch"
+    echarts: "npm:^5.5.1"
     eslint: "npm:^9.15.0"
     file-saver: "npm:^2.0.5"
     git-cliff: "npm:^2.7.0"
@@ -4196,7 +4196,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     mousetrap: "npm:^1.6.5"
     ngx-bootstrap: "npm:^18.0.2"
-    ngx-echarts: "npm:^18.0.0"
+    ngx-echarts: "npm:^19.0.0"
     ngx-image-compress: "npm:^18.1.5"
     prettier: "npm:^3.1.0"
     protomaps-leaflet: "npm:^4.0.1"
@@ -5267,23 +5267,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"echarts@npm:5.5.1":
+"echarts@npm:^5.5.1":
   version: 5.5.1
   resolution: "echarts@npm:5.5.1"
   dependencies:
     tslib: "npm:2.3.0"
     zrender: "npm:5.6.0"
   checksum: 10c0/2f7e3037f17fda99d977092767943f4d9b0c8f886f86701ec88591707713b5e5fd683e56086b6ba5245b322f088184bdb06eac488234c20a1869b08cb6b4e523
-  languageName: node
-  linkType: hard
-
-"echarts@patch:echarts@npm%3A5.5.1#~/.yarn/patches/echarts-npm-5.5.1-87c5448f72.patch":
-  version: 5.5.1
-  resolution: "echarts@patch:echarts@npm%3A5.5.1#~/.yarn/patches/echarts-npm-5.5.1-87c5448f72.patch::version=5.5.1&hash=4a1666"
-  dependencies:
-    tslib: "npm:2.3.0"
-    zrender: "npm:5.6.0"
-  checksum: 10c0/035098f91362d333f73968dc91769b99e28d39c74aaa35623143705271b31bcf2de2199c1ecccc51a22ef6664f1e84951da78054c9d0045a3d5973c24974aa81
   languageName: node
   linkType: hard
 
@@ -7874,14 +7864,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ngx-echarts@npm:^18.0.0":
-  version: 18.0.0
-  resolution: "ngx-echarts@npm:18.0.0"
+"ngx-echarts@npm:^19.0.0":
+  version: 19.0.0
+  resolution: "ngx-echarts@npm:19.0.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
     echarts: ">=5.0.0"
-  checksum: 10c0/60f3d8ec857f4b9a770de73fb37c57ace94a63e9ce3667a0552d6c0ac9eb5706293d2a63cd938187029fcf58dca50eedfdbe5ca11363fed87e54aec15b6402d7
+  checksum: 10c0/53137a2a2d49c078450176bbf37c154767a78c87114d639515c59ff3429f07c84e34fec888f288c90f01115c464e066d67c310ad7f01b36a33a4f57d9cc217a8
   languageName: node
   linkType: hard
 

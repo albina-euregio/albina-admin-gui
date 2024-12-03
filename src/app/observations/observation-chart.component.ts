@@ -1,7 +1,7 @@
 import { Component, OnInit, output, input, inject } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { CallbackDataParams } from "echarts/types/dist/shared";
-import type { ECElementEvent, EChartsOption } from "echarts";
+import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import { CommonModule } from "@angular/common";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { ObservationMarkerService } from "./observation-marker.service";
