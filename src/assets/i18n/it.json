@@ -49,7 +49,7 @@
     "settings": "Impostazioni",
     "statistics": "Statistiche",
     "admin": "Admin",
-    "region": "Regione",
+    "region": "Meteo-nivo zona",
     "education": "Formazione"
   },
   "matrix": {
@@ -93,14 +93,14 @@
       }
     },
     "create": {
-      "variantStatus": "Lo stato",
+      "variantStatus": "Status",
       "variantEditable": "Questa variazione può essere modificata.",
       "variantNotEditable": "Questa variazione non può essere modificata.",
       "noVariantsForSelectedDay": "Non sono state definite variazioni per questa data.",
       "tooltip": {
         "editDangerSource": "Modifica l'origine di pericolo",
         "loadVariants": "Carica le variazioni del giorno precedente",
-        "edit": "Modifica le micro aree",
+        "edit": "Modifica le micro-zone",
         "copy": "Copia variazione",
         "delete": "elimina la variazione",
         "compare": "paragona le variazioni",
@@ -125,54 +125,54 @@
         "slabHandHardness": "Durezza mano lastrone",
         "slabHardnessProfile": "Durezza lastrone",
         "slabEnergyTransferPotential": "Potenzialità del lastrone di supportare la propagazione",
-        "slabDistribution": "Disribuzione del lastrone",
-        "weakLayerGrainShape": "Tipologia del strato debole",
-        "weakLayerGrainSize": "Dimensione grano del strato debole",
-        "weakLayerPersistent": "Tipologia del grano del strato debole persistente?",
-        "weakLayerThickness": "Spessore del strato debole",
+        "slabDistribution": "Distribuzione del lastrone",
+        "weakLayerGrainShape": "Tipologia grani dello strato debole",
+        "weakLayerGrainSize": "Dimensione grani dello strato debole",
+        "weakLayerPersistent": "Persistenza dello strato debole",
+        "weakLayerThickness": "Spessore dello strato debole",
         "weakLayerStrength": "Resistenza al taglio strato debole",
-        "weakLayerWet": "Strato debole umido?",
-        "weakLayerCrustAbove": "Crosta sopra lo strato debole?",
-        "weakLayerCrustBelow": "Crosta sotto lo strato debole?",
+        "weakLayerWet": "Umidità dello strato debole",
+        "weakLayerCrustAbove": "Crosta al di sopra dello strato debole",
+        "weakLayerCrustBelow": "Crosta al di sotto dello strato debole",
         "weakLayerPosition": "Posizione dello strato debole nel manto nevoso",
-        "weakLayerCreation": "Weak layer creation",
-        "weakLayerDistribution": "Distribuzione strato debole?",
-        "dangerSpotRecognizability": "Punti pericolosi riconoscibili?",
-        "remoteTriggering": "Distaccho a distanza?",
-        "hasDaytimeDependency": "Dipendenzza diurna",
-        "dangerIncreaseWithElevation": "Pericolo aumenta con la quota?",
-        "runoutIntoGreen": "Valanghe avanazano fino all'aperta campagna?",
-        "highestDangerAspect": "Esposizione del pericolo più elevato?",
-        "dangerPeak": "Picco del pericolo?",
+        "weakLayerCreation": "Formazione di uno strato debole",
+        "weakLayerDistribution": "Distribuzione dello strato debole",
+        "dangerSpotRecognizability": "Riconoscibilità dei punti pericolosi",
+        "remoteTriggering": "Distacco a distanza",
+        "hasDaytimeDependency": "Dipendenza diurna",
+        "dangerIncreaseWithElevation": "Pericolo aumenta con la quota",
+        "runoutIntoGreen": "Valanghe arrivano fino ai prati",
+        "highestDangerAspect": "Esposizione al pericolo più elevato",
+        "dangerPeak": "Picco del pericolo",
         "slopeGradient": "Inclinazione del pendio",
-        "naturalRelease": "Distacco spontaneo?",
-        "terrainTypes": "Tipo di terreno?",
-        "dangerSigns": "Segnali d'allarme?",
+        "naturalRelease": "Distacco spontaneo",
+        "terrainTypes": "Tipo di terreno",
+        "dangerSigns": "Segni d'allarme",
         "aspects": "Esposizione"
       },
       "editDangerSourceDialog": {
         "save": "Salva",
-        "cancel": "Cancellare"
+        "cancel": "Cancella"
       }
     }
   },
   "avalancheType": {
-    "title": "Tipologia della valanga",
+    "title": "Tipi di valanghe",
     "label": {
       "slab": "LASTRONE",
-      "loose": "DEBOLE COESIONE",
+      "loose": "A DEBOLE COESIONE",
       "glide": "SLITTAMENTO"
     },
     "tooltip": {
-      "slab": "Valanga a lastrone",
-      "loose": "Valanga a debole coesione",
+      "slab": "Valanga di neve a lastroni",
+      "loose": "Valanga di neve a debole coesione",
       "glide": "Valanga di slittamento"
     }
   },
   "elevation": {
     "title": "Quota",
-    "high": "Al disotto",
-    "low": "Al disopra",
+    "high": "al di sotto",
+    "low": "al di sopra",
     "treeline": "Limite del bosco"
   },
   "bulletins": {
@@ -181,12 +181,12 @@
       "edit": "Modifica bollettino",
       "read": "Leggi bollettino",
       "copy": "Copia bollettino valanghe",
-      "paste": "Incollare bollettino valanghe",
+      "paste": "Incolla bollettino valanghe",
       "cancel": "Annulla la copia",
       "update": "Modifica",
       "submit": "Invia",
       "submitUpdate": "Invia update",
-      "publishChange": "Pubblica ora (senza messagi)",
+      "publishChange": "Pubblica ora (senza messaggi)",
       "publishUpdate": "Pubblica ora",
       "caaml": "Mostra CAAML",
       "json": "Mostra JSON",
@@ -194,7 +194,7 @@
       "preview": "Anteprima del bollettino valanghe (PDF)",
       "check": "Controlla bollettino valanghe",
       "info": "Mostra lo stato pubblicazione",
-      "publishAll": "Pubblica tutte le regioni",
+      "publishAll": "Pubblica tutte le meteo-nivo zone",
       "mediaFile": "Carica file media"
     },
     "status": {
@@ -205,22 +205,22 @@
       "loadingPreview": "Creare un'anteprima in PDF ...",
       "loading": "Carica bollettino ...",
       "loadMoreBulletins": "Carica {{count}} più bollettini",
-      "publishing": "Publica bollettino ...",
+      "publishing": "Pubblica bollettino ...",
       "submitting": "Invia bollettino ...",
       "saveError": "Non é stato possibile salvare il bollettino!",
       "loadBulletinsError": "Non é stato possibile caricare il bollettino!"
     },
     "create": {
       "tooltip": {
-        "edit": "Modifica le micro aree",
-        "copy": "Copia regione",
+        "edit": "Modifica le micro-zone",
+        "copy": "Copia meteo-nivo zona",
         "delete": "Elimina regione",
-        "undo": "Annulla l'ultima modifica apportata alla regione",
-        "redo": "Ripetere l'ultima modifica nella regione",
-        "createRegion": "Crea regione",
-        "cancel": "Cancellare",
-        "acceptSuggestion": "Acceta regioni suggerite",
-        "rejectSuggestion": "Scarta regioni suggerite",
+        "undo": "Annulla l'ultima modifica apportata alla meteo-nivo zona",
+        "redo": "Ripeti l'ultima modifica nella meteo-nivo zona",
+        "createRegion": "Crea meteo-nivo zona",
+        "cancel": "Cancella",
+        "acceptSuggestion": "Accetta meteo-nivo zone suggerite",
+        "rejectSuggestion": "Scarta meteo-nivo zone suggerite",
         "saveChanges": "Salva modifiche",
         "discardChanges": "Scarta modifiche",
         "incompleteAvalancheProblem": "Problema valanghivo incompleto",
@@ -229,7 +229,7 @@
         "loadBulletin": "Copia il bollettino valanghe del giorno precedente",
         "uploadJsonBulletin": "Carica il bollettino valanghe in formato JSON",
         "downloadJsonBulletin": "Scarica il bollettino valanghe in formato JSON",
-        "daytimeDependency": "Dipendenzza diurna",
+        "daytimeDependency": "Dipendenza diurna",
         "treeline": "Limite del bosco",
         "tendency": {
           "decreasing": "Pericolo valanghe in diminuazione",
@@ -241,35 +241,35 @@
           "edit": "Modifica",
           "copy": "Copia",
           "paste": "Incolla",
-          "example": "Carica testo di esempio",
+          "example": "Carica testo campione",
           "delete": "Elimina"
         },
-        "moveUpAvalancheProblem": "Spostare problema valanghivo verso l'alto",
-        "moveDownAvalancheProblem": "Spostare problema valanghivo verso il basso",
+        "moveUpAvalancheProblem": "Sposta problema valanghivo verso l'alto",
+        "moveDownAvalancheProblem": "Sposta problema valanghivo verso il basso",
         "dangerRatingDirectionUp": "Verso l'alto",
         "dangerRatingDirectionDown": "Verso il basso"
       },
       "save": " Salva",
       "discard": " Scarta",
       "back": " Indietro",
-      "createAggregatedRegion": " Nuova regione",
-      "pasteAggregatedRegion": "Incolla la regione",
+      "createAggregatedRegion": " Nuova meteo-nivo zona",
+      "pasteAggregatedRegion": "Incolla meteo-nivo zona",
       "pendingSuggestions": "Proposte",
       "rejectSuggestion": "Rifiuta",
       "acceptSuggestion": "Accetta",
       "cancelCopyBulletin": "Cancella",
       "createAvalancheProblem": "Nuovo problema valanghivo",
-      "ownRegions": "Proprie regioni",
-      "foreignRegions": "Altre regioni",
-      "externalRegions": "Regioni esterne",
-      "mapSelectRegion": "Seleziona micro-aree sulla mappa",
+      "ownRegions": "Proprie meteo-nivo zone",
+      "foreignRegions": "Altre meteo-nivo zone",
+      "externalRegions": "Meteo-nivo zone esterne",
+      "mapSelectRegion": "Seleziona micro-zone sulla mappa",
       "statusHeader": "Stato del bollettino",
       "suggestions": "Proposte",
       "noBulletinsForSelectedDay": "Nessun micro-zona definita per questa data.",
       "autosave": "Salvato automaticamente",
-      "regionEditable": "Questa regione può essere modificata.",
-      "regionNotEditable": "Questa regione non può essere modificata.",
-      "regionLocked": "Questa regione è bloccata.",
+      "regionEditable": "Questa meteo-nivo zona può essere modificata.",
+      "regionNotEditable": "Questa meteo-nivo zona non può essere modificata.",
+      "regionLocked": "Questa meteo-nivo zona è bloccata.",
       "changeDangerRatingElevation": "Estendi il pericolo valanghe",
       "mapTop": "Mappa in alto",
       "mapLeft": "Mappa a lato",
@@ -280,7 +280,7 @@
         "importantObservations": "Osservazioni importanti",
         "avalancheProblems": "Problema valanghivo",
         "aspects": "Esposizione",
-        "highlights": "Alerta speciale",
+        "highlights": "Allerta speciale",
         "avActivityHighlights": "Titolo situazione pericolo valanghe",
         "avActivityComment": "Descrizione pericolo valanghe",
         "snowpackStructureComment": "Descrizione struttura manto nevoso",
@@ -289,7 +289,7 @@
         "notes": "Commenti"
       },
       "copyRegion": {
-        "label": "Copia la regione in un altro bollettino",
+        "label": "Copia la meteo-nivo zona in un altro bollettino",
         "select": "Incolla in ...",
         "currentBulletin": "Questo bollettino"
       },
@@ -315,12 +315,12 @@
         "reject": "No"
       },
       "deleteAggregatedRegionDialog": {
-        "message": "Vuoi scartare la regione?",
+        "message": "Vuoi cancellare la meteo-nivo zona?",
         "accept": "Sí",
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "Almeno una micro-zone deve appartenere la tua Provincia.",
+        "message": "At least one micro-region has to be yours.",
         "accept": "Ok"
       },
       "loadDialog": {
@@ -354,9 +354,9 @@
         "accept": "Ok"
       },
       "loadAvActivityCommentExampleTextDialog": {
-        "message": "Per quale situazione voi caricare il testo?",
+        "message": "Per quale situazione vuoi caricare il testo?",
         "newSnow": "Neve fresca",
-        "windSlab": "Neve ventata",
+        "windSlab": "Lastroni da vento",
         "persistentWeakLayers": "Strati deboli persistenti",
         "wetSnow": "Neve bagnata",
         "glidingSnow": "Valanghe di slittamento",
@@ -364,44 +364,44 @@
         "cancel": "Cancella"
       },
       "removeDaytimeDependencyDialog" : {
-        "message": "Quali problemi valanghivi voi mantenere?",
-        "cancel": "Cancellare"
+        "message": "Quali problemi valanghivi vuoi mantenere?",
+        "cancel": "Cancella"
       },
       "strategicMindsetDialog" : {
         "title": "Strategic Mindsets",
-        "introduction": " Gli “Strategic Mindsets” sono intesi come espressione del nostro atteggiamento mentale nei confronti della situazione valanghiva e del suo sviluppo nella regione corrispondente. Non dovrebbero derivare direttamente dalla valutazione del pericolo, ma piuttosto essere compresi e utilizzati come un'impressione intuitiva della situazione generale. I “Strategic Mindsets” sono quindi principalmente uno strumento di comunicazione. Utilizzando i mindset e le definizioni associate, noi previsori possiamo scambiare in modo rapido ed efficiente informazioni sullo sviluppo della situazione di pericolo e trovare un linguaggio comune per la comunicazione.",
+        "introduction": "Gli “Strategic Mindsets” sono intesi come espressione del nostro atteggiamento mentale nei confronti della situazione valanghiva e del suo sviluppo nella regione corrispondente. Non dovrebbero derivare direttamente dalla valutazione del pericolo, ma piuttosto essere compresi e utilizzati come un'impressione intuitiva della situazione generale. I “Strategic Mindsets” sono quindi principalmente uno strumento di comunicazione. Utilizzando i mindset e le definizioni associate, noi previsori possiamo scambiare in modo rapido ed efficiente informazioni sullo sviluppo della situazione di pericolo e trovare un linguaggio comune per la comunicazione.",
         "description": {
           "title": "Descrizione:",
           "text": {
-            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
-            "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
-            "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
-            "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
-            "entrenchment": "<b>Almost constant, tense hazardous situation.</b> The main danger comes from (a) <b>persistent weak layer</b>(s) susceptible to interference.",
-            "free_ride": "<b>Low avalanche danger</b> with generally stable snow cover. Only small avalanches are possible in extremely steep terrain. ",
-            "high_alert": "Exceptional situation with <b>high or very high avalanche danger</b>. Spontaneous avalanches of <b>very large or extreme magnitude</b> are possible",
-            "spring_diurnal": "Wet snow avalanches during the course of the day, which are subject to a <b>clear diurnal cycle</b>, are decisive for the risk assessment."
+            "assessment": "C'è una <b>grande incertezza</b> nella valutazione del pericolo a causa delle<b>informazioni insufficienti</b> osservati sul terreno.",
+            "stepping_out": "<b>Tendenza alla diminuzione</b> della situazione di pericolo (anche all'interno di un grado di pericolo).",
+            "status_quo": "Stessa situazione di pericolo.<b>Nessun cambiamento significativo</b> rispetto al giorno precedente.",
+            "stepping_back": "<b>Tendenza all'aumento</b> della situazione di pericolo (anche all'interno di un livello di pericolo).",
+            "entrenchment": "<b>Situazione di pericolo quasi costante e tesa.</b> Il pericolo principale deriva da (a) <b>uno strato debole persistente</b>(s) suscettibile al distacco.",
+            "free_ride": "<b>Debole pericolo di valanghe</b> con un manto nevoso generalmente stabile. Sono possibili solo valanghe di dimensioni piccole nei terreni estremamente ripidi. ",
+            "high_alert": "Situazione eccezionale con <b>pericolo di valanghe forte o molto forte</b>. Sono possibili valanghe spontanee di <b>dimensioni molto grandi o estreme </b>",
+            "spring_diurnal": "Determinanti per la valutazione del rischio sono valanghe di neve umida nel corso della giornata che sono soggetti ad un <b>cicolo diurno chiaro</b>."
           }
         },
         "communication": {
-          "title": "Communication:",
+          "title": "Comunicazione",
           "text": {
-            "assessment": "Avalanche situation must be checked locally. Restraint is recommended.",
-            "stepping_out": "Gradual decrease in danger. However, caution is still required and the improving situation should be assessed locally before entering riskier terrain.  ",
-            "status_quo": "Hazardous situation is unchanged. Feedback from observers helps to better outline the hazardous situation. More favourable terrain should be communicated with emphasis. ",
-            "stepping_back": "Clear communication of the increase in avalanche danger - even within a danger level. Information on the causes supports comprehensibility in communication. ",
-            "entrenchment": "Caution and restraint are required. Situation hardly changes. If possible, provide as precise information as possible on distribution and possibility to trigger. Increased communication of observations that reveal the situation and trigger restraint.",
-            "free_ride": "Little text. Emphasise the generally favourable overall situation and potentially isolated hazard areas",
-            "high_alert": "Communication across all channels. The focus is no longer on winter sports. Danger even in areas that are not usually at risk of avalanches.",
-            "spring_diurnal": "Favourable situation in the morning, increasing during the day. Assessment should be made locally by observing the softening of the melt-freeze crust and the increasing soaking of the snow cover."
+            "assessment": "La situazione valanghiva deve essere verificata a livello locale. Un comportamento prudente è opportuno.",
+            "stepping_out": "Graduale diminuzione del pericolo. Tuttavia, occorre ancora prudenza e valutare localmente il miglioramento della situazione prima di addentrarsi in terreni più rischiosi. ",
+            "status_quo": "La situazione di pericolo è invariata. Il riscontro degli osservatori aiuta a delineare meglio la situazione di pericolo. I terreni più favorevoli devono essere comunicati e messi in evidenza.",
+            "stepping_back": "Comunicazione chiara dell'aumento del pericolo di valanghe, anche all'interno di un grado di pericolo. Informazioni sulle cause supportano la comprensibilità della comunicazione.",
+            "entrenchment": "Sono necessarie cautela e moderazione. È difficile che la situazione cambi. Se possibile, fornire informazioni il più possibile precise sulla distribuzione e sulla suscettibilità al distacco. Maggiore comunicazione delle osservazioni che rendono evidente la situazione e inducono alla un comportamento prudente.",
+            "free_ride": "Poco testo. Sottolineare la situazione generale favorevole e le zone di pericolo potenzialmente isolate.",
+            "high_alert": "Comunicazione su tutti i canali. L'attenzione non è più rivolta agli sport invernali. Pericolo anche in aree solitamente non a rischio di valanghe.",
+            "spring_diurnal": "Situazione favorevole al mattino, pericolo in aumento durante il giorno. La valutazione va fatta localmente osservando l'ammorbidimento della crosta da fusione e rigelo e la crescente umidificazione del manto nevoso."
           }
         },
         "examples": {
-          "title": "Examples:",
+          "title": "Esempi:",
           "text": {
-            "assessment": "Start of the season.",
-            "stepping_out": "Cooling leads to a decrease in the risk of wet snow avalanches after a warm and humid weather phase.",
-            "status_quo": "Consistent wind-slab problem with cold temperatures, loose snow and wind.",
+            "assessment": "Inizio stagione.",
+            "stepping_out": "Un raffreddamento porta a una diminuzione del pericolo di valanghe di neve bagnata dopo una fase di tempo caldo e umido.",
+            "status_quo": "Problema persistente di lastroni da vento con temperature fredde, neve a debole coesione e vento.",
             "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
             "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
             "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
@@ -423,7 +423,7 @@
       "decisionTree" : {
         "filepath": "./assets/img/decision_tree-it.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
-        "decisionTree" : "Decision tree",
+        "decisionTree" : "Albero decisionale",
         "feedback" : "Feedback",
         "save": "Salva",
         "discard": "Scarta"
@@ -444,7 +444,7 @@
           "DE-BY" : "Baviera",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
-          "IT-32-BZ": "Alto adige",
+          "IT-32-BZ": "Alto Adige",
           "ES-CT-L": "Aran"
         }
       },
@@ -461,7 +461,7 @@
         "message": "Vuoi pubblicare il bollettino valanghe?",
         "missingDangerRating": "Grado di pericolo non definito",
         "missingRegion": "Regioni non valutate",
-        "duplicateRegion": "Micro-aree valutate più volte",
+        "duplicateRegion": "Meteo-nivo zone valutate più volte",
         "missingAvActivityHighlights": "Manca il titolo situazione di pericolo",
         "missingAvActivityComment": "Manca la valutazione pericolo valanghe",
         "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
@@ -497,7 +497,7 @@
         "map": {
           "label": "Mappe",
           "tooltip": "Crea mappe",
-          "success": "{{prefix}}Mappe creati con successo!",
+          "success": "{{prefix}}Mappe create con successo!",
           "error": "{{prefix}}Non è stato possibile creare le mappe!"
         },
         "pdf": {
@@ -513,7 +513,7 @@
           "error": "{{prefix}}Non è stato possibile creare i file HTML semplici!"
         },
         "email": {
-          "label": "Emails",
+          "label": "Email",
           "tooltip": "Inviare Email",
           "success": "{{prefix}}Email inviati con successo!",
           "error": "{{prefix}}Non è stato possibile inviare le Email!"
@@ -547,7 +547,7 @@
       "submitBulletinsDialog": {
         "message": "Vuoi inviare il bollettino valanghe?",
         "missingDangerRating": "Grado di pericolo non definito",
-        "missingRegion": "Micro-aree non valutate",
+        "missingRegion": "Micro-zone non valutate",
         "missingAvActivityHighlights": "Manca titolo situazione di pericolo",
         "missingAvActivityComment": "Manca valutazione pericolo valanghe",
         "missingSnowpackStructureHighlights": "Manca il titolo della descrizione manto nevoso",
@@ -594,7 +594,7 @@
   },
   "training": {
     "training": "Training",
-    "timestamp": "Training timestamp"
+    "timestamp": "Momento del training"
   },
   "admin": {
     "loadingStatistics": "Creando CSV ...",
@@ -629,7 +629,7 @@
       },
       "table": {
         "general": {
-          "title": "General",
+          "title": "In generale",
           "id": "ID",
           "microRegions": "Numero micro-zone",
           "subRegions": "Sottoregioni",
@@ -637,7 +637,7 @@
           "neighborRegions": "Regioni confinanti"
         },
         "publication": {
-          "title": "Publication",
+          "title": "Pubblicazione",
           "publishBulletins": "Publica bollettino valanghe",
           "publishBlogs": "Publica i post blog",
           "createCaamlV5": "Crea CAAML v5",
@@ -645,7 +645,7 @@
           "createJson": "Crea JSON",
           "createMaps": "Crea mappe",
           "createPdf": "Crea PDF",
-          "sendEmails": "Invia Email",
+          "sendEmails": "Invia email",
           "createSimpleHtml": "Crea HTML semplici",
           "sendTelegramMessages": "Invia messaggi via Telegram",
           "sendPushNotifications": "Invia notifiche push",
@@ -674,7 +674,7 @@
           "imageColorbarBwPath": "Barra colori (bianco/nero)"
         },
         "components": {
-          "title": "Components",
+          "title": "Componenti",
           "enableDangerSources": "Enable danger sources",
           "enableObservations": "Enable observations",
           "enableModelling": "Enable modelling",
@@ -730,7 +730,7 @@
     },
     "createUser": {
       "table": {
-        "image": "Image",
+        "image": "Immagine",
         "name": "Nome",
         "email": "Email",
         "organization": "Organizazzione",
@@ -762,11 +762,11 @@
     "observations": {
       "table": "Tabella",
       "map": "Mappa",
-      "gallery": "Gallery",
-      "filters": "Filters",
+      "gallery": "Galleria",
+      "filters": "Filtri",
       "title": "Osservazioni",
-      "newObservation": "New observation",
-      "exportObservations": "Export observations",
+      "newObservation": "Nuova osservazione",
+      "exportObservations": "Esporta osservazioni",
       "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Scarica"
@@ -777,7 +777,7 @@
       },
       "selectRegion": {
         "placeholder": "Regione",
-        "selectionLabel": "{0} region(s) selected"
+        "selectionLabel": "{0} meteo-nivo zona/e selezionata/e"
       },
       "selectSources": {
         "placeholder": "origine dati",
@@ -1224,7 +1224,8 @@
       "save": "Salvare l'osservazione",
       "delete": "Cancellare l'osservazione",
       "deleteConfirm": "Cancellare l'osservazione?",
-      "discard": "Scarta"
+      "discard": "Scarta",
+      "copyDate": "Copy event date"
     },
     "comment": "Commento",
     "content": "Contenuto",

@@ -320,7 +320,7 @@
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "At least one region has to be yours.",
+        "message": "At least one micro-region has to be yours.",
         "accept": "Ok"
       },
       "loadDialog": {

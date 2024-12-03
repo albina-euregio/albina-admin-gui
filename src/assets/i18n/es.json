@@ -277,6 +277,7 @@
       "hideNotes": "Ocultar notas",
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
+        "importantObservations": "Important observations",
         "avalancheProblems": "Problema de aludes",
         "aspects": "Orientaciones",
         "highlights": "Alerta especial",
@@ -319,7 +320,7 @@
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "Al menos una región debe ser tuya",
+        "message": "At least one micro-region has to be yours.",
         "accept": "De acuerdo"
       },
       "loadDialog": {
@@ -372,7 +373,7 @@
         "description": {
           "title": "Description:",
           "text": {
-            "assessment": "There is <b>great uncertainty</b> in the risk assessment due to <b>insufficient information</b> from the site.",
+            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
             "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
             "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
             "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
@@ -588,28 +589,6 @@
         "message": "¿Quieres publicar todas las regiones?",
         "accept": "Si",
         "reject": "No"
-      }
-    },
-    "caaml": {
-      "title": "CAAML",
-      "caamlNotLoadedDialog": {
-        "message": "¡No se ha podido cargar el CAAML!",
-        "accept": "De acuerdo"
-      },
-      "noCaamlDialog": {
-        "message": "No hay ningun boletín publicado disponible",
-        "accept": "De acuerdo"
-      }
-    },
-    "json": {
-      "title": "JSON",
-      "jsonNotLoadedDialog": {
-        "message": "No se ha podido cargar el JSON",
-        "accept": "De acuerdo"
-      },
-      "noJsonDialog": {
-        "message": "No hay ningun boletín publicado disponible",
-        "accept": "De acuerdo"
       }
     }
   },
@@ -937,8 +916,8 @@
     "glidingSnow": "Deslizamientos basales",
     "gliding_snow": "Deslizamientos basales",
     "cornices": "Cornisas",
-    "noDistinctAvalancheProblem": "Ningún problema de aludes evidente",
-    "no_distinct_problem": "Ningún problema de aludes evidente",
+    "noDistinctAvalancheProblem": "No distinct avalanche problem",
+    "no_distinct_avalanche_problem": "No distinct avalanche problem",
     "favourableSituation": "Situación favorable",
     "favourable_situation": "Situación favorable"
   },
@@ -1245,12 +1224,16 @@
       "save": "Guardar observación",
       "delete": "Eliminar observación",
       "deleteConfirm": "Eliminar observación?",
-      "discard": "Descartar"
+      "discard": "Descartar",
+      "copyDate": "Copy event date"
     },
     "comment": "Comentario",
     "content": "Contenido",
     "dangerRating": "Clasificación del peligro",
     "elevation": "Altitud",
+    "elevationRange": "Elevation range",
+    "elevationLowerBound": "Elevation lower bound",
+    "elevationUpperBound": "Elevation upper bound",
     "eventDate": "Fecha del evento",
     "eventType": "Tipo de evento",
     "eventTypes": {
@@ -1270,6 +1253,7 @@
     "latitude": "Laltitud",
     "locationName": "Localización",
     "longitude": "Longitud",
+    "personInvolvement": "Person involvement",
     "reportDate": "Fecha del informe",
     "showTable": "Tabla",
     "withoutCoordinates": "Observaciones sin coordenadas:",
@@ -1287,6 +1271,13 @@
         "title": "Vistas"
       }
     }
+  },
+  "personInvolvement": {
+    "Dead": "Evento con personas implicadas (muertos)",
+    "Injured": "Evento con personas implicadas (heridos)",
+    "No": "Evento sin personas implicadas",
+    "Uninjured": "Evento con personas implicadas (ilesos)",
+    "Unknown": "Evento (desconocido)"
   },
   "units": {
     "cm": "cm",

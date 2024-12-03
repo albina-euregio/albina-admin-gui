@@ -277,6 +277,7 @@
       "hideNotes": "Amagar nòtes",
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
+        "importantObservations": "Important observations",
         "avalancheProblems": "Problèma de lauegi",
         "aspects": "Orientacions",
         "highlights": "Alèrte especiau",
@@ -319,7 +320,7 @@
         "reject": "Non"
       },
       "noRegionDialog": {
-        "message": "Aumens ua region cau èster tua.",
+        "message": "At least one micro-region has to be yours.",
         "accept": "D'acòrd"
       },
       "loadDialog": {
@@ -372,7 +373,7 @@
         "description": {
           "title": "Description:",
           "text": {
-            "assessment": "There is <b>great uncertainty</b> in the risk assessment due to <b>insufficient information</b> from the site.",
+            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
             "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
             "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
             "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
@@ -588,28 +589,6 @@
         "message": "Vòs publicar totes es regions?",
         "accept": "Òc",
         "reject": "Non"
-      }
-    },
-    "caaml": {
-      "title": "CAAML",
-      "caamlNotLoadedDialog": {
-        "message": "Non s'a pogut cargar eth CAAML.",
-        "accept": "D'acòrd"
-      },
-      "noCaamlDialog": {
-        "message": "Non i a bulletin publicat disponible!",
-        "accept": "D'acòrd"
-      }
-    },
-    "json": {
-      "title": "JSON",
-      "jsonNotLoadedDialog": {
-        "message": "Non s'a pogut cargar eth JSON!",
-        "accept": "D'acòrd"
-      },
-      "noJsonDialog": {
-        "message": "Non i a bulletin publicat disponible!",
-        "accept": "D'acòrd"
       }
     }
   },
@@ -937,8 +916,8 @@
     "glidingSnow": "Esguitlaments basaus",
     "gliding_snow": "Esguitlaments basaus",
     "cornices": "Cornises",
-    "noDistinctAvalancheProblem": "Cap problèma de lauegi evident",
-    "no_distinct_problem": "Cap problèma de lauegi evident",
+    "noDistinctAvalancheProblem": "No distinct avalanche problem",
+    "no_distinct_avalanche_problem": "No distinct avalanche problem",
     "favourableSituation": "Situacion favorabla",
     "favourable_situation": "Situacion favorabla"
   },
@@ -1245,12 +1224,16 @@
       "save": "Sauvar observacion",
       "delete": "Eliminar observacion",
       "deleteConfirm": "Eliminar observacion?",
-      "discard": "Escartar"
+      "discard": "Escartar",
+      "copyDate": "Copy event date"
     },
     "comment": "Comentari",
     "content": "Contengut",
     "dangerRating": "Grad de perilh",
     "elevation": "Nautada",
+    "elevationRange": "Elevation range",
+    "elevationLowerBound": "Elevation lower bound",
+    "elevationUpperBound": "Elevation upper bound",
     "eventDate": "Data d'eveniment",
     "eventType": "Tipe d'eveniment",
     "eventTypes": {
@@ -1270,6 +1253,7 @@
     "latitude": "Latitud",
     "locationName": "Localitat",
     "longitude": "Longitud",
+    "personInvolvement": "Person involvement",
     "reportDate": "Data der infòrme",
     "showTable": "Taula",
     "withoutCoordinates": "Observacions sense coordenades:",
@@ -1287,6 +1271,13 @@
         "title": "Vistes"
       }
     }
+  },
+  "personInvolvement": {
+    "Dead": "Eveniment damb persones implicades (mòrtes)",
+    "Injured": "Eveniment damb persones implicades (herides)",
+    "No": "Eveniment sense persones implicades",
+    "Uninjured": "Eveniment damb persones implicades (il·leses)",
+    "Unknown": "Eveniment (desconeishut)"
   },
   "units": {
     "cm": "cm",

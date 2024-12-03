@@ -320,7 +320,7 @@
         "reject": "Nein"
       },
       "noRegionDialog": {
-        "message": "Zumindest eine Region muss deine sein.",
+        "message": "Zumindest eine Kleinstregion muss deine sein.",
         "accept": "Ok"
       },
       "loadDialog": {
@@ -373,7 +373,7 @@
         "description": {
           "title": "Beschreibung:",
           "text": {
-            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
+            "assessment": "Es besteht <b>große Unsicherheit</b> in der Gefahrenbeurteilung aufgrund <b>unzureichender Informationen</b> aus dem Gelände.",
             "stepping_out": "<b>Abnehmende Tendenz</b> der Gefahrensituation (auch innerhalb einer Gefahrenstufe).",
             "status_quo": "Gleichbleibende Gefahrensituation. <b>Keine wesentliche Änderung</b> zum Vortag.",
             "stepping_back": "<b>Ansteigende Tendenz</b> der Gefahrensituation (auch innerhalb einer Gefahrenstufe).",
@@ -1224,7 +1224,8 @@
       "save": "Beobachtung speichern",
       "delete": "Beobachtung löschen",
       "deleteConfirm": "Beobachtung wirklich löschen?",
-      "discard": "Verwerfen"
+      "discard": "Verwerfen",
+      "copyDate": "Ereignisdatum kopieren"
     },
     "comment": "Kommentar",
     "content": "Inhalt",
