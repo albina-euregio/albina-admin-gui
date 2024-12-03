@@ -1,6 +1,6 @@
 import { Component, OnInit, input, inject } from "@angular/core";
 import { UserService } from "../providers/user-service/user.service";
-import type { EChartsOption } from "echarts";
+import type { EChartsCoreOption as EChartsOption } from "echarts/core";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";

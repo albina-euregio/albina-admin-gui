@@ -20,7 +20,7 @@ import { CollapseModule } from "ngx-bootstrap/collapse";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { provideEcharts } from "ngx-echarts";
+import { provideEchartsCore } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
@@ -59,6 +59,33 @@ import { WsRegionService } from "./app/providers/ws-region-service/ws-region.ser
 import { WsUpdateService } from "./app/providers/ws-update-service/ws-update.service";
 import routes from "./app/routes";
 import { environment } from "./environments/environment";
+import * as echarts from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { BarChart, LineChart } from "echarts/charts";
+import {
+  DatasetComponent,
+  GridComponent,
+  LegendComponent,
+  PolarComponent,
+  SingleAxisComponent,
+  TitleComponent,
+  TooltipComponent,
+  TransformComponent,
+} from "echarts/components";
+
+echarts.use([
+  BarChart,
+  CanvasRenderer,
+  DatasetComponent,
+  GridComponent,
+  LegendComponent,
+  LineChart,
+  PolarComponent,
+  SingleAxisComponent,
+  TitleComponent,
+  TooltipComponent,
+  TransformComponent,
+]);
 
 registerLocaleData(localeDe, "de");
 registerLocaleData(localeIt, "it");
@@ -133,7 +160,7 @@ bootstrapApplication(AppComponent, {
     ObservationMarkerWebcamService,
     ObservedProfileSourceService,
     ParamService,
-    provideEcharts(),
+    provideEchartsCore({ echarts }),
     QfaService,
     RegionsService,
     StatisticsService,
