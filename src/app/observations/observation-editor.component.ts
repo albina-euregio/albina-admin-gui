@@ -96,7 +96,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     this[`${key}Date`]().nativeElement.valueAsDate = date;
     this[`${key}Time`]().nativeElement.valueAsDate = date;
     date = isFinite(+date) ? fromUTC(date) : undefined;
-    this.observation[key] = date;
+    this.observation()[key] = date;
   }
 
   handleDateEvent(event: Event, key: "eventDate" | "reportDate") {
@@ -115,16 +115,6 @@ export class ObservationEditorComponent implements AfterViewInit {
     } else {
       this.observation()[key] = date;
     }
-  }
-
-  setLatitude(event: Event) {
-    this.observation().latitude = (event.target as HTMLInputElement).value as unknown as number;
-    this.fetchElevation();
-  }
-
-  setLongitude(event: Event) {
-    this.observation().longitude = (event.target as HTMLInputElement).value as unknown as number;
-    this.fetchElevation();
   }
 
   selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
