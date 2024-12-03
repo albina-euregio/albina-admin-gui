@@ -471,8 +471,7 @@
     ></iframe>
     <div *ngIf="observationPopup?.imgUrls">
       <img
-        id="observationImage"
-        [src]="observationPopup?.imgUrls[0]"
+        [src]="observationPopup?.imgUrls[observationPopup?.imgIndex]"
         style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
       />
     </div>

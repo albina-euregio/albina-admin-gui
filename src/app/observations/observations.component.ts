@@ -190,6 +190,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     table: ObservationTableRow[];
     iframe: SafeResourceUrl;
     imgUrls: SafeResourceUrl[];
+    imgIndex: number;
   };
   public allRegions: RegionProperties[];
   public allSources: MultiselectDropdownData[];
@@ -394,13 +395,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     Object.values(this.data).forEach((data) => data.applyLocalFilter());
   }
 
-  onObservationClick(observation: GenericObservation, doShow = true): void {
+  onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
-      this.observationPopup = { observation, table: [], iframe, imgUrls: undefined };
+      this.observationPopup = { observation, table: [], iframe, imgUrls: undefined, imgIndex };
     } else if (observation.$externalImgs) {
       const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
-      this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls };
+      this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls, imgIndex };
     } else {
       const table: ObservationTableRow[] = [
         { label: this.translateService.instant("observations.eventDate"), date: observation.eventDate },
@@ -412,7 +413,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         { label: this.translateService.instant("observations.comment"), value: observation.content },
         ...(Array.isArray(observation.$extraDialogRows) ? observation.$extraDialogRows : []),
       ] satisfies ObservationTableRow[];
-      this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined };
+      this.observationPopup = { observation, table, iframe: undefined, imgUrls: undefined, imgIndex };
     }
     if (doShow) {
       this.modalService.show(this.observationPopupTemplate(), { class: "modal-fullscreen" });
@@ -446,27 +447,26 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         index += 1;
       }
       observation = observations[index];
+      if (observation) {
+        this.onObservationClick(observation, false, 0);
+      }
     } else if (event.key === "ArrowLeft") {
       index -= 1;
       while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
         index -= 1;
       }
       observation = observations[index];
+      if (observation) {
+        this.onObservationClick(observation, false, 0);
+      }
     } else if (observation?.$externalImgs && event.key === "ArrowUp") {
-      const image = document.getElementById("observationImage") as HTMLImageElement;
-      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
-      if (index > 0) {
-        image.src = observation?.$externalImgs[index - 1];
+      if (this.observationPopup.imgIndex > 0) {
+        this.observationPopup.imgIndex -= 1;
       }
     } else if (observation?.$externalImgs && event.key === "ArrowDown") {
-      const image = document.getElementById("observationImage") as HTMLImageElement;
-      const index = observation?.$externalImgs.findIndex((img) => img == image.src);
-      if (observation?.$externalImgs.length <= index - 1) {
-        image.src = observation?.$externalImgs[index + 1];
+      if (observation?.$externalImgs.length > this.observationPopup.imgIndex + 1) {
+        this.observationPopup.imgIndex += 1;
       }
-    }
-    if (observation) {
-      this.onObservationClick(observation, false);
     }
   }
 }
