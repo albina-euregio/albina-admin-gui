@@ -13,7 +13,7 @@
   <div class="col-12 col-md-4">
     <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
     <select id="snowpackStability" [(ngModel)]="observation().stability" class="form-select">
-      <option [value]="undefined"></option>
+      <option [ngValue]=undefined></option>
       <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
         {{ "snowpackStability." + stability | translate }}
       </option>
@@ -23,7 +23,7 @@
   <div class="col-12 col-md-4">
     <label for="personInvolvement">{{ "observations.personInvolvement" | translate }}</label>
     <select id="personInvolvement" [(ngModel)]="observation().personInvolvement" class="form-select">
-      <option [value]="undefined"></option>
+      <option [ngValue]=undefined></option>
       <option *ngFor="let stability of personInvolvementValues" [value]="stability">
         {{ "personInvolvement." + stability | translate }}
       </option>
@@ -59,8 +59,8 @@
     <label for="latitude"><i class="ph ph-map-pin"></i> {{ "observations.latitude" | translate }}</label>
     <input
       id="latitude"
-      (change)="setLatitude($event)"
-      [ngModel]="observation().latitude"
+      (change)="fetchElevation()"
+      [(ngModel)]="observation().latitude"
       type="number"
       step="0.0000001"
       class="form-control"
@@ -72,8 +72,8 @@
     <div class="input-group">
       <input
         id="longitude"
-        (change)="setLongitude($event)"
-        [ngModel]="observation().longitude"
+        (change)="fetchElevation()"
+        [(ngModel)]="observation().longitude"
         type="number"
         step="0.0000001"
         class="form-control"

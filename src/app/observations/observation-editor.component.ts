@@ -117,16 +117,6 @@ export class ObservationEditorComponent implements AfterViewInit {
     }
   }
 
-  setLatitude(event: Event) {
-    this.observation().latitude = (event.target as HTMLInputElement).value as unknown as number;
-    this.fetchElevation();
-  }
-
-  setLongitude(event: Event) {
-    this.observation().longitude = (event.target as HTMLInputElement).value as unknown as number;
-    this.fetchElevation();
-  }
-
   selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
     const feature = match.item;
     setTimeout(() => {
