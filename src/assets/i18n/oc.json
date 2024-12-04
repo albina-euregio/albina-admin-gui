@@ -488,30 +488,6 @@
           }
         },
 
-        "caaml": {
-          "label": "Fichèrs CAAML",
-          "tooltip": "Crear fichèrs CAAML",
-          "success": "{{prefix}}Es fichèrs CAAML s'an creat corrèctaments!",
-          "error": "{{prefix}}Es fichèrs CAAML non s'an pogut crear!"
-        },
-        "map": {
-          "label": "Mapes",
-          "tooltip": "Crear Mapes",
-          "success": "{{prefix}}Mapes creadi corrèctaments!",
-          "error": "{{prefix}}Non s'an pogut crear es mapes!"
-        },
-        "pdf": {
-          "label": "PDFs",
-          "tooltip": "Crear PDFs",
-          "success": "{{prefix}}Els PDF s'han creat correctament!",
-          "error": "{{prefix}}No s'han pogut crear els PDF!"
-        },
-        "html": {
-          "label": "HTMLs simples",
-          "tooltip": "Creatz fichèrs HTML simples",
-          "success": "{{prefix}}S'an creat fichèrs HTML simples corrèctaments!",
-          "error": "{{prefix}}Non s'an pogut crear fichèrs HTML simples!"
-        },
         "email": {
           "label": "Emails",
           "tooltip": "Enviar Emails",

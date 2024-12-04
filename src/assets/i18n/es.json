@@ -488,30 +488,6 @@
           }
         },
 
-        "caaml": {
-          "label": "Ficheros CAAML",
-          "tooltip": "Crear ficheros CAAML",
-          "success": "{{prefix}}¡Archivos CAAML creados con éxito!",
-          "error": "{{prefix}}¡No se pudieron crear los archivos CAAML!"
-        },
-        "map": {
-          "label": "Mapas",
-          "tooltip": "Crear mapas",
-          "success": "{{prefix}}¡Mapas creados con éxito!",
-          "error": "{{prefix}}¡No se pudieron crear los mapas!"
-        },
-        "pdf": {
-          "label": "PDFs",
-          "tooltip": "Crear PDFs",
-          "success": "{{prefix}}¡PDFs creados con éxito!",
-          "error": "{{prefix}}¡No se pudieron crear archivos PDF!"
-        },
-        "html": {
-          "label": "HTMLs simples",
-          "tooltip": "Crear archivos HTML simples",
-          "success": "{{prefix}}¡Archivos HTML simples creados con éxito!",
-          "error": "{{prefix}}¡No se pudieron crear archivos HTML simples!"
-        },
         "email": {
           "label": "Correos electrónicos",
           "tooltip": "Enviar correos electrónicos",

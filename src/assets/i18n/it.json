@@ -320,7 +320,7 @@
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "At least one micro-region has to be yours.",
+        "message": "Almeno una micro-area deve appartenere la tua Provincia.",
         "accept": "Ok"
       },
       "loadDialog": {
@@ -488,30 +488,6 @@
           }
         },
 
-        "caaml": {
-          "label": "Files CAAML",
-          "tooltip": "Crea CAAML",
-          "success": "{{prefix}}Files CAAML creati con successo!",
-          "error": "{{prefix}}Non è stato possibile creare i file CAAML!"
-        },
-        "map": {
-          "label": "Mappe",
-          "tooltip": "Crea mappe",
-          "success": "{{prefix}}Mappe create con successo!",
-          "error": "{{prefix}}Non è stato possibile creare le mappe!"
-        },
-        "pdf": {
-          "label": "PDF",
-          "tooltip": "Crea PDF",
-          "success": "{{prefix}}PDF creati con successo!",
-          "error": "{{prefix}}Non è stato possibile creare i PDF!"
-        },
-        "html": {
-          "label": "HTML semplici",
-          "tooltip": "Crea files HTML semplici",
-          "success": "{{prefix}}files HTML simplicity creati con successo!",
-          "error": "{{prefix}}Non è stato possibile creare i file HTML semplici!"
-        },
         "email": {
           "label": "Email",
           "tooltip": "Inviare Email",

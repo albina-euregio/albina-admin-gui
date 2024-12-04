@@ -488,30 +488,6 @@
           }
         },
 
-        "caaml": {
-          "label": "CAAML Dateien",
-          "tooltip": "CAAML Dateien erzeugen",
-          "success": "{{prefix}}CAAML Dateien erfolgreich erstellt!",
-          "error": "{{prefix}}CAAML Dateien konnten nicht erstellt werden!"
-        },
-        "map": {
-          "label": "Karten",
-          "tooltip": "Karten erzeugen",
-          "success": "{{prefix}}Karten erfolgreich erstellt!",
-          "error": "{{prefix}}Karten konnten nicht erstellt werden!"
-        },
-        "pdf": {
-          "label": "PDFs",
-          "tooltip": "PDFs erstellen",
-          "success": "{{prefix}}PDFs erfolgreich erstellt!",
-          "error": "{{prefix}}PDFs konnten nicht erstellt werden!"
-        },
-        "html": {
-          "label": "Einfache HTML Dateien",
-          "tooltip": "Einfache HTML Dateien erstellen",
-          "success": "{{prefix}}Einfache HTML Dateien erfolgreich erstellt!",
-          "error": "{{prefix}}Einfache HTML Dateien konnte nicht erstellt werden!"
-        },
         "email": {
           "label": "E-Mails",
           "tooltip": "E-Mails versenden",
