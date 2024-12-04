@@ -24,7 +24,6 @@ export function loadRegions() {
     import("@eaws/micro-regions/IT-36_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-57_micro-regions.geojson.json"),
     import("@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json"),
-    import("@eaws/micro-regions/CH_micro-regions.geojson.json"),
     import("@eaws/micro-regions/SK_micro-regions.geojson.json"),
     import("@eaws/micro-regions/PL-12_micro-regions.geojson.json"),
   ));
@@ -52,16 +51,6 @@ export function loadRegionsEuregio() {
   ));
 }
 
-let $regionsSwitzerland = undefined;
-
-/**
- * @returns {Promise<import("geojson").FeatureCollection[]>}
- */
-export function loadRegionsSwitzerland() {
-  return ($regionsSwitzerland ??= loadAndMerge(import("@eaws/micro-regions/CH_micro-regions.geojson.json")));
-}
-
-let $regionsWithElevation = undefined;
 /**
  * @param {Promise<import("geojson").FeatureCollection>} imports
  * @returns {Promise<import("geojson").FeatureCollection>}

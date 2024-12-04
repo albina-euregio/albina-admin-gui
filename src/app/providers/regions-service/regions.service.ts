@@ -10,7 +10,7 @@ import { default as regionsNamesFr } from "@eaws/micro-regions_names/fr.json";
 import { default as regionsNamesEs } from "@eaws/micro-regions_names/es.json";
 import { default as regionsNamesCa } from "@eaws/micro-regions_names/ca.json";
 import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
-import { loadRegions, loadRegionsAran, loadRegionsEuregio, loadRegionsSwitzerland } from "./regions-loader.mjs";
+import { loadRegions, loadRegionsAran, loadRegionsEuregio } from "./regions-loader.mjs";
 
 @Injectable()
 export class RegionsService {
@@ -35,8 +35,6 @@ export class RegionsService {
     switch (activeRegionCode) {
       case this.constantsService.codeAran:
         return loadRegionsAran();
-      case this.constantsService.codeSwitzerland:
-        return loadRegionsSwitzerland();
       case this.constantsService.codeTyrol:
       case this.constantsService.codeSouthTyrol:
       case this.constantsService.codeTrentino:
