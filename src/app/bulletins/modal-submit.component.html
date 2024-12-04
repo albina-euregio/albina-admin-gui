@@ -2,7 +2,7 @@
   <p [innerHTML]="text"></p>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-primary" (click)="submitBulletinsModalConfirm()">
+  <button type="button" class="btn btn-primary" (click)="submitBulletinsModalConfirm()" ngxMousetrapKey="enter">
     {{ "bulletins.table.submitBulletinsDialog.accept" | translate }}
   </button>
   <button type="button" class="btn btn-default" (click)="submitBulletinsModalDecline()">

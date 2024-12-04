@@ -27,6 +27,7 @@ import { FormsModule } from "@angular/forms";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -42,6 +43,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     BulletinTextComponent,
     DatePipe,
     TranslateModule,
+    NgxMousetrapDirective,
   ],
 })
 export class AvalancheBulletinComponent {
@@ -421,15 +423,6 @@ export class AvalancheBulletinComponent {
 
   toggleBulletinSidebar() {
     this.toggleBulletinSidebarEvent.emit();
-  }
-
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.ctrlKey && event.key === "z") {
-      this.undoRedoEvent.emit("undo");
-    } else if (event.ctrlKey && event.key === "y") {
-      this.undoRedoEvent.emit("redo");
-    }
   }
 }
 

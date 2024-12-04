@@ -39,6 +39,8 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import Mousetrap from "mousetrap";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -54,6 +56,7 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
     DatePipe,
     KeyValuePipe,
     TranslateModule,
+    NgxMousetrapDirective,
   ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
@@ -1775,12 +1778,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   openAvalancheProblemErrorModal(template: TemplateRef<any>) {
     this.avalancheProblemErrorModalRef = this.modalService.show(template, this.config);
-  }
-
-  avalancheProblemErrorModalConfirm(): void {
-    this.avalancheProblemErrorModalRef.hide();
-    this.publishing = false;
-    this.submitting = false;
+    this.modalService.onHide.subscribe(() => {
+      this.publishing = false;
+      this.submitting = false;
+    });
   }
 
   getRegionNames(bulletin: BulletinModel): string {
