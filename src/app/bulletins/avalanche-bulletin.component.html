@@ -95,7 +95,7 @@
         title="{{ 'bulletins.create.tooltip.copy' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
-        ngxMousetrapKey="ctrl+c"
+        [ngxMousetrapKey]="['ctrl+c', 'command+c']"
       >
         <i class="ph ph-copy"></i>
       </button>
@@ -118,7 +118,7 @@
         title="{{ 'bulletins.create.tooltip.undo' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
-        ngxMousetrapKey="ctrl+z"
+        [ngxMousetrapKey]="['ctrl+z', 'command+z']"
       >
         <i class="ph ph-arrow-counter-clockwise"></i>
       </button>
@@ -130,7 +130,7 @@
         title="{{ 'bulletins.create.tooltip.redo' | translate }}"
         type="button"
         class="btn btn-sm btn-icon btn-outline-primary"
-        ngxMousetrapKey="ctrl+y"
+        [ngxMousetrapKey]="['ctrl+y', 'command+y']"
       >
         <i class="ph ph-arrow-clockwise"></i>
       </button>

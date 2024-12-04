@@ -21,7 +21,7 @@
             class="btn btn-icon btn-sm btn-bare--grey"
             (click)="changeDate(bulletinsService.getNextDate())"
             *ngIf="bulletinsService.getNextDate()"
-            ngxMousetrapKey="ctrl+left"
+            [ngxMousetrapKey]="['ctrl+left', 'command+left']"
           >
             <i class="ph-bold ph-caret-left"></i>
           </button>
@@ -30,7 +30,7 @@
             class="btn btn-icon btn-sm btn-bare--grey"
             (click)="changeDate(bulletinsService.getPreviousDate())"
             *ngIf="bulletinsService.getPreviousDate()"
-            ngxMousetrapKey="ctrl+right"
+            [ngxMousetrapKey]="['ctrl+right', 'command+right']"
           >
             <i class="ph-bold ph-caret-right"></i>
           </button>
@@ -223,7 +223,7 @@
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
         (click)="submit($event, bulletinsService.getActiveDate())"
-        ngxMousetrapKey="ctrl+enter"
+        [ngxMousetrapKey]="['ctrl+enter', 'command+enter']"
       >
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ "bulletins.tooltip.submit" | translate }}</span>
@@ -249,7 +249,7 @@
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
         (click)="publish($event, bulletinsService.getActiveDate())"
-        ngxMousetrapKey="ctrl+enter"
+        [ngxMousetrapKey]="['ctrl+enter', 'command+enter']"
       >
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
@@ -262,7 +262,7 @@
         type="button"
         class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
         (click)="publish($event, bulletinsService.getActiveDate(), true)"
-        ngxMousetrapKey="ctrl+shift+enter"
+        [ngxMousetrapKey]="['ctrl+shift+enter', 'command+shift+enter']"
       >
         <i class="ph ph-paper-plane-tilt"></i>
         <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
@@ -620,7 +620,7 @@
 <ng-template #bulletinTemplate let-bulletin="bulletin" let-key="key">
   <div
     (click)="toggleBulletin(bulletin)"
-    ngxMousetrapKey="ctrl+{{ key }}"
+    [ngxMousetrapKey]="['ctrl+' + key, 'command+' + key]"
     class="region-thumb"
     [class.region-thumb--active]="bulletin === activeBulletin"
   >
