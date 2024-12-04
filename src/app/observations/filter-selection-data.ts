@@ -1,10 +1,11 @@
 import { castArray, get } from "lodash";
+import type { GenericObservation } from "./models/generic-observation.model";
 
 export type ChartType = "bar" | "rose";
 
 export type Dataset = (string | number)[][];
 
-export type ValueType = number | string | Date | string[];
+export type ValueType = number | string | Date | number[] | string[];
 
 export interface FilterSelectionValue {
   value: string;
@@ -107,6 +108,17 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   }
 
   getValue(observation: T): ValueType {
+    if (this.key === "elevation") {
+      const o = observation as GenericObservation;
+      if (typeof o.elevationLowerBound === "number" && typeof o.elevationUpperBound === "number") {
+        const values: number[] = [];
+        for (let i = o.elevationLowerBound; i < o.elevationUpperBound; i += 100) {
+          values.push(i);
+        }
+        values.push(o.elevationUpperBound);
+        return values;
+      }
+    }
     return get(observation, this.key) as ValueType;
   }
 
