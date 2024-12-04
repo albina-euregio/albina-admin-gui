@@ -105,16 +105,6 @@ export class ObservationFilterService<
     );
   }
 
-  public isWeatherStationSelected(observation: T & { latitude?: number; longitude?: number }) {
-    return (
-      this.inMapBounds(observation.latitude, observation.longitude) &&
-      this.inRegions(observation.region) &&
-      this.filterSelectionData
-        .find((filter) => filter.key === "elevation")
-        .isIncluded("selected", (observation as unknown as GenericObservation).elevation)
-    );
-  }
-
   public isHighlighted(observation: T & { latitude?: number; longitude?: number }) {
     if (!this.inMapBounds(observation.latitude, observation.longitude)) {
       return false;
