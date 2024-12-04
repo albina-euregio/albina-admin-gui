@@ -424,15 +424,6 @@ export class AvalancheBulletinComponent {
   toggleBulletinSidebar() {
     this.toggleBulletinSidebarEvent.emit();
   }
-
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.ctrlKey && event.key === "z") {
-      this.undoRedoEvent.emit("undo");
-    } else if (event.ctrlKey && event.key === "y") {
-      this.undoRedoEvent.emit("redo");
-    }
-  }
 }
 
 export type TextcatTextfield =
