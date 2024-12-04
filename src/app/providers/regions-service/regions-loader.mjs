@@ -7,7 +7,14 @@ let $regions = undefined;
  */
 export function loadRegions() {
   return ($regions ??= loadAndMerge(
+    import("@eaws/micro-regions/AT-02_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/AT-03_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/AT-04_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/AT-05_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/AT-06_micro-regions.geojson.json"),
     import("@eaws/micro-regions/AT-07_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/AT-08_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/DE-BY_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-21_micro-regions.geojson.json"),
