@@ -59,7 +59,8 @@
   </div>
   <div class="avalanche-problem-preview__actions">
     <button
-      *ngIf="!isFirst()"
+      *ngIf="!disabled() && !isFirst()"
+      [disabled]="disabled()"
       class="btn btn-sm btn-bare--grey btn-icon"
       type="button"
       (click)="moveUpAvalancheProblem($event)"
@@ -69,7 +70,8 @@
       <i class="ph ph-arrow-up"></i>
     </button>
     <button
-      *ngIf="!isLast()"
+      *ngIf="!disabled() && !isLast()"
+      [disabled]="disabled()"
       class="btn btn-sm btn-bare--grey btn-icon"
       type="button"
       (click)="moveDownAvalancheProblem($event)"
