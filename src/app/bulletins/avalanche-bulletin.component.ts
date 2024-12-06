@@ -461,7 +461,7 @@ interface TextcatLegacyOut {
 function convertTextcatToLangTexts(pmData: TextcatLegacyOut): LangTexts {
   return {
     it: pmData.textIt,
-    de: pmData.textDe_AT,
+    de: pmData.textDe_AT || pmData.textDe,
     en: pmData.textEn,
     fr: pmData.textFr,
     es: pmData.textEs,
