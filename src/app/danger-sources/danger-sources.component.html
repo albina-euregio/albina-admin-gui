@@ -43,21 +43,17 @@
           <span *ngIf="getForecastStatus(date)" class="badge bg-primary">
             {{ "dangerSources.status.available" | translate }}
           </span>
-          <!--
-          <span *ngIf="!getForecastStatus(date)" class="badge bg-danger">
+          <span *ngIf="!getForecastStatus(date)" class="badge bg-gray">
             {{ "dangerSources.status.missing" | translate }}
           </span>
-          -->
         </td>
         <td class="bulletins-table__region-status" [attr.data-label]="'dangerSources.table.title.analysis' | translate">
           <span *ngIf="getAnalysisStatus(date)" class="badge bg-success">
             {{ "dangerSources.status.available" | translate }}
           </span>
-          <!--
-          <span *ngIf="!getAnalysisStatus(date)" class="badge bg-danger">
+          <span *ngIf="!getAnalysisStatus(date)" class="badge bg-gray">
             {{ "dangerSources.status.missing" | translate }}
           </span>
-          -->
         </td>
       </tr>
     </tbody>
