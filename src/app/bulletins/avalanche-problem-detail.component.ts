@@ -88,12 +88,14 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   selectAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
-    if (this.isAvalancheProblem(avalancheProblem)) {
-      this.avalancheProblemModel().setAvalancheProblem(undefined);
-    } else {
-      this.avalancheProblemModel().setAvalancheProblem(avalancheProblem);
+    if (!this.disabled) {
+      if (this.isAvalancheProblem(avalancheProblem)) {
+        this.avalancheProblemModel().setAvalancheProblem(undefined);
+      } else {
+        this.avalancheProblemModel().setAvalancheProblem(avalancheProblem);
+      }
+      this.changeAvalancheProblemDetailEvent.emit();
     }
-    this.changeAvalancheProblemDetailEvent.emit();
   }
 
   updateElevationHigh() {
