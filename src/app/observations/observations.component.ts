@@ -233,6 +233,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   loadObservations() {
+    this.filter.updateDateInURL();
     return this.data.observations.loadFrom(this.observationsService.getGenericObservations());
   }
 
@@ -384,11 +385,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const json = JSON.stringify(collection, undefined, 2);
     const blob = new Blob([json], { type: "application/geo+json" });
     saveAs(blob, "observations.geojson");
-  }
-
-  setDate() {
-    this.filter.setDateRange();
-    this.loadObservations();
   }
 
   applyLocalFilter() {
