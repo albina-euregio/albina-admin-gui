@@ -41,6 +41,7 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
+  providers: [AlpsolutProfileService, MeteogramSourceService, MultimodelSourceService, ObservedProfileSourceService],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
