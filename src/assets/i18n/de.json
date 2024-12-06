@@ -129,9 +129,9 @@
         "weakLayerGrainShape": "Kornform der Schwachschicht",
         "weakLayerGrainSize": "Korngröße der Schwachschicht",
         "weakLayerPersistent": "Persistenz der Schwachschicht",
-        "weakLayerThickness": "Dicker der Schwachschicht",
+        "weakLayerThickness": "Dicke der Schwachschicht",
         "weakLayerStrength": "Festigkeit der Schwachschicht",
-        "weakLayerWet": "Feuchte der Schwachschicht",
+        "weakLayerWet": "Ist die Schwachschicht feucht?",
         "weakLayerCrustAbove": "Kruste oberhalb der Schwachschicht",
         "weakLayerCrustBelow": "Kruste unterhalb der Schwachschicht",
         "weakLayerPosition": "Position der Schwachschicht",
@@ -1013,9 +1013,9 @@
     "ground": "Boden"
   },
   "creationProcess": {
-    "radiation_recrystallization": "Strahlung",
-    "diurnal_recrystallization": "Tageszeit",
-    "melt_layer_recrystallization": "Schmelzschicht"
+    "radiation_recrystallization": "Radiation recrystallization",
+    "diurnal_recrystallization": "Diurnal recrystallization",
+    "melt_layer_recrystallization": "Melt-layer recrystallization"
   },
   "recognizability": {
     "very_easy": "sehr leicht",
@@ -1056,9 +1056,9 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "Abnahme mit der Höhe",
+    "decreasing": "Weicher an der Oberfläche",
     "steady": "gleichmäßig",
-    "increasing": "Zunahme mit der Höhe"
+    "increasing": "Zunahme mit der Tiefe"
   },
   "terrainType": {
     "gullies": "Rinnen",
