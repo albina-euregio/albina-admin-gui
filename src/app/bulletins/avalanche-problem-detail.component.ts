@@ -88,7 +88,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   selectAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
-    if (!this.disabled) {
+    if (!this.disabled()) {
       if (this.isAvalancheProblem(avalancheProblem)) {
         this.avalancheProblemModel().setAvalancheProblem(undefined);
       } else {
