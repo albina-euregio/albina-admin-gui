@@ -223,7 +223,7 @@ export function convertRasWebcam(webcam: (typeof webcams)[number]): GenericObser
   return {
     $data: webcam,
     $externalURL: webcam.detailPage,
-    $source: ObservationSource.FotoWebcamsEU,
+    $source: ObservationSource.RasBzIt,
     $type: ObservationType.Webcam,
     authorName: "ras.bz.it",
     eventDate: new Date(),

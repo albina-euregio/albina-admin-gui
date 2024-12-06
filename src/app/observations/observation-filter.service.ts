@@ -21,35 +21,26 @@ export class ObservationFilterService<
 
   set days(days: number) {
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
-    this.endDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
-    const newStartDate = new Date(this.endDate);
+    const newEndDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
+    const newStartDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
     newStartDate.setDate(newStartDate.getDate() - (days - 1));
     newStartDate.setHours(0, 0, 0, 0);
-
-    this.startDate = newStartDate;
-    this.setDateRange();
+    this.dateRange = [newStartDate, newEndDate];
   }
 
-  setDateRange() {
-    const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
-    if (this.startDate) this.startDate.setHours(0, 0, 0, 0);
-    if (this.endDate) this.endDate.setHours(23, 59, 59, 999);
-    if (isTrainingEnabled && this.endDate > new Date(trainingTimestamp)) {
-      // update existing endDate to avoid recursion via `set endDate`
-      this.endDate.setTime(+new Date(trainingTimestamp));
+  updateDateInURL() {
+    if (!this.startDate || !this.endDate) {
+      return;
     }
-    if (this.startDate && this.endDate) {
-      this.filterSelectionData.find((filter) => filter.key === "eventDate").setDateRange(this.startDate, this.endDate);
-      this.router.navigate([], {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          startDate: this.constantsService.getISODateString(this.startDate),
-          endDate: this.constantsService.getISODateString(this.endDate),
-        },
-        queryParamsHandling: "merge",
-      });
-    }
-    this.dateRange = [this.startDate, this.endDate];
+    this.filterSelectionData.find((filter) => filter.key === "eventDate").setDateRange(this.startDate, this.endDate);
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        startDate: this.constantsService.getISODateString(this.startDate),
+        endDate: this.constantsService.getISODateString(this.endDate),
+      },
+      queryParamsHandling: "merge",
+    });
   }
 
   get dateRangeMaxDate(): Date | undefined {
@@ -61,31 +52,32 @@ export class ObservationFilterService<
     this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
   }
 
-  private parseQueryParams(params: Params) {
-    if (!(params.startDate && params.endDate)) {
+  private parseQueryParams({ startDate, endDate }: Params) {
+    if (typeof startDate !== "string" || !startDate || typeof endDate !== "string" || !endDate) {
       return;
     }
-    this.startDate = new Date(params.startDate);
-    this.endDate = new Date(params.endDate);
-    this.setDateRange();
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+    // When the time zone offset is absent, date-only forms are interpreted as a UTC time and date-time forms are interpreted as a local time.
+    if (!startDate.includes("T")) {
+      startDate += "T00:00:00";
+    }
+    if (!endDate.includes("T")) {
+      endDate += "T23:59:59";
+    }
+    this.dateRange = [new Date(startDate), new Date(endDate)];
   }
 
   get startDate(): Date {
     return this.dateRange[0];
   }
 
-  set startDate(date: Date) {
-    this.dateRange[0] = date;
-    this.setDateRange();
-  }
-
   get endDate(): Date {
-    return this.dateRange[1];
-  }
-
-  set endDate(date: Date) {
-    this.dateRange[1] = date;
-    this.setDateRange();
+    const endDate = this.dateRange[1];
+    const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
+    if (isTrainingEnabled && endDate > new Date(trainingTimestamp)) {
+      return new Date(trainingTimestamp);
+    }
+    return endDate;
   }
 
   get dateRangeParams() {

@@ -38,21 +38,22 @@ export class ObservationGalleryComponent {
   private mapFotoWebcamsEU(o: GenericObservation) {
     // https://www.foto-webcam.eu/webcam/innsbruck-uni/current/400.jpg
     // https://www.foto-webcam.eu/webcam/innsbruck-uni/2024/06/11/1300_hd.jpg
-    o.$externalImgs = [(o.$data as FotoWebcamEU).imgurl];
-    if (this.webcamDate && o.$externalImgs) {
-      o.$externalImgs = o.$externalImgs.map((img) =>
-        img.replace(/current.*/, formatDate(this.webcamDate, "yyyy/MM/dd/HHmm", "en-US") + "_hd.jpg"),
-      );
+    let img = (o.$data as FotoWebcamEU).imgurl;
+    if (this.webcamDate && img) {
+      const date = formatDate(this.webcamDate, "yyyy/MM/dd/HHmm", "en-US") + "_hd.jpg";
+      img = img.replace(/current.*/, date);
     }
+    o.$externalImgs = [img];
   }
+
   private mapPanomax(o: GenericObservation) {
     // https://panodata9.panomax.com/cams/501/2024/06/22/09-50-00_small.jpg
     // https://panodata9.panomax.com/cams/501/2024/06/22/09-00-00_default.jpg
-    o.$externalImgs = [(o.$data as PanomaxThumbnailResponse).latest];
-    if (this.webcamDate && o.$externalImgs) {
-      o.$externalImgs = o.$externalImgs.map((img) =>
-        img.replace(/20\d\d\/\d\d\/\d\d.*/, formatDate(this.webcamDate, "yyyy/MM/dd/HH-mm-ss", "en-US") + "_small.jpg"),
-      );
+    let img = (o.$data as PanomaxThumbnailResponse).latest;
+    if (this.webcamDate && img) {
+      const date = formatDate(this.webcamDate, "yyyy/MM/dd/HH-mm-ss", "en-US") + "_small.jpg";
+      img = img.replace(/20\d\d\/\d\d\/\d\d.*/, date);
     }
+    o.$externalImgs = [img];
   }
 }

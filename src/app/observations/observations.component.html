@@ -79,8 +79,8 @@
                 #drp="bsDaterangepicker"
                 bsDaterangepicker
                 [(ngModel)]="filter.dateRange"
-                (ngModelChange)="setDate()"
-                [bsConfig]="{ dateInputFormat: 'DD.MM.YYYY' }"
+                (ngModelChange)="this.loadObservations()"
+                [bsConfig]="{ withTimepicker: true }"
                 [maxDate]="filter.dateRangeMaxDate"
               />
             </div>

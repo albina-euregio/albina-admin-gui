@@ -13,14 +13,14 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/node": "^8.3.4",
-    "astro": "^4.16.12",
-    "mysql2": "^3.11.4",
-    "typescript": "^5.6.3",
+    "@astrojs/node": "^9.0.0",
+    "astro": "^5.0.3",
+    "mysql2": "^3.11.5",
+    "typescript": "^5.7.2",
     "which-polygon": "^2.2.1"
   },
   "devDependencies": {
-    "@types/geojson": "^7946.0.14",
+    "@types/geojson": "^7946.0.15",
     "@types/which-polygon": "^2.2.5"
   }
 }
