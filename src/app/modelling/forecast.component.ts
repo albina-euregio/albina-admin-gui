@@ -26,6 +26,7 @@ import {
   MeteogramSourceService,
   MultimodelSourceService,
   ObservedProfileSourceService,
+  ZamgMeteoSourceService,
 } from "./sources";
 import type { ModellingRouteData } from "./routes";
 import "bootstrap";
@@ -41,8 +42,21 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
-  providers: [AlpsolutProfileService, MeteogramSourceService, MultimodelSourceService, ObservedProfileSourceService],
+  providers: [
+    AlpsolutProfileService,
+    MeteogramSourceService,
+    MultimodelSourceService,
+    ObservedProfileSourceService,
+    ZamgMeteoSourceService,
+  ],
   templateUrl: "./forecast.component.html",
+  styles: `
+    .leaflet-pane.leaflet-overlay-pane,
+    .leaflet-pane .leaflet-image-layer,
+    .leaflet-pane svg {
+      mix-blend-mode: multiply;
+    }
+  `,
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
@@ -53,6 +67,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private meteogramSource = inject(MeteogramSourceService);
   private observedProfileSource = inject(ObservedProfileSourceService);
   private alpsolutProfileSource = inject(AlpsolutProfileService);
+  zamgMeteoSourceService = inject(ZamgMeteoSourceService);
   private qfaService = inject(QfaService);
   paramService = inject(ParamService);
   private translateService = inject(TranslateService);
@@ -147,6 +162,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
               },
             ]
           : [];
+    this.selectedSources = Object.fromEntries(this.allSources.map((s) => [s.id, true]));
 
     this.modelPoints = [];
     this.loading = true;
