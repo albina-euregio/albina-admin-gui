@@ -171,8 +171,8 @@
   },
   "elevation": {
     "title": "Seehöhe",
-    "high": "Unten",
-    "low": "Oben",
+    "high": "Unter",
+    "low": "Über",
     "treeline": "Waldgrenze"
   },
   "bulletins": {
