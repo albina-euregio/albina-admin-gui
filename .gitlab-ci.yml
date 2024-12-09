@@ -22,7 +22,7 @@ variables:
   before_script:
     - corepack enable
     - yarn install --immutable
-    - npm --no-git-tag-version version $(git describe)
+    - npm --no-git-tag-version version $(git describe --tags)
 
 lint:
   extends: .build
