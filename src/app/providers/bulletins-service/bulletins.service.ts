@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Observable, of, Subject } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
@@ -321,21 +321,29 @@ export class BulletinsService {
       .pipe(map((response) => ({ bulletins: response.body, etag: response.headers.get("ETag") })));
   }
 
-  loadExternalBulletins(date: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
+  loadExternalBulletins([date0]: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
       return of([]);
     }
-    const url =
-      server.apiUrl +
-      "bulletins/edit?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
-        ])
-        .toString();
     const headers = this.authenticationService.newExternalServerAuthHeader(server);
-    return this.http.get<BulletinModelAsJSON[]>(url, { headers });
+    return this.http.get<{ date: string }>(server.apiUrl + "bulletins/latest", { headers }).pipe(
+      switchMap((latest) => {
+        const date = new Date(date0);
+        if (latest.date.endsWith("T22:00:00Z") || latest.date.endsWith("T23:00:00Z")) {
+          date.setHours(24, 0, 0);
+        }
+        const url =
+          server.apiUrl +
+          "bulletins/edit?" +
+          this.constantsService
+            .createSearchParams([
+              ["date", this.constantsService.getISOStringWithTimezoneOffset(date)],
+              ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
+            ])
+            .toString();
+        return this.http.get<BulletinModelAsJSON[]>(url, { headers });
+      }),
+    );
   }
 
   loadCaamlBulletins(date: [Date, Date]): Observable<any> {
