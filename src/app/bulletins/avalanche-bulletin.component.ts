@@ -155,21 +155,6 @@ export class AvalancheBulletinComponent {
     this.pmData = undefined;
   }
 
-  onDangerPattern1Change(event: Enums.DangerPattern) {
-    this.bulletin().dangerPattern1 = event;
-    this.updateBulletinOnServer();
-  }
-
-  onDangerPattern2Change(event: Enums.DangerPattern) {
-    this.bulletin().dangerPattern2 = event;
-    this.updateBulletinOnServer();
-  }
-
-  onStrategicMindsetChange(event: Enums.StrategicMindset) {
-    this.bulletin().strategicMindset = event;
-    this.updateBulletinOnServer();
-  }
-
   showEditMicroRegionsButton(): boolean {
     return (
       !this.isComparedBulletin() && !this.editRegions && this.isInternal() && this.bulletinsService.getIsEditable()

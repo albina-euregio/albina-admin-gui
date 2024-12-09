@@ -35,12 +35,12 @@
       <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"></i>
     </p>
     <select
-      [ngModel]="bulletin().strategicMindset"
-      (ngModelChange)="onStrategicMindsetChange($event)"
+      [(ngModel)]="bulletin().strategicMindset"
+      (change)="updateBulletinOnServer()"
       [disabled]="disabled()"
       class="form-select"
     >
-      <option selected></option>
+      <option [ngValue]="undefined"></option>
       <option *ngFor="let mindset of strategicMindset" [value]="mindset">
         {{ "strategicMindset." + mindset | translate }}
       </option>
@@ -358,22 +358,22 @@
           <div class="form-group region-form__danger-patterns">
             <label class="form-label" for="">{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
             <select
-              [ngModel]="bulletin().dangerPattern1"
-              (ngModelChange)="onDangerPattern1Change($event)"
+              [(ngModel)]="bulletin().dangerPattern1"
+              (change)="updateBulletinOnServer()"
               [disabled]="disabled()"
               class="form-select"
             >
-              <option selected></option>
+              <option [ngValue]="undefined"></option>
               <option *ngFor="let dp of dangerPattern" [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
             </select>
 
             <select
-              [ngModel]="bulletin().dangerPattern2"
-              (ngModelChange)="onDangerPattern2Change($event)"
+              [(ngModel)]="bulletin().dangerPattern2"
+              (change)="updateBulletinOnServer()"
               [disabled]="disabled()"
               class="form-select"
             >
-              <option selected></option>
+              <option [ngValue]="undefined"></option>
               <option *ngFor="let dp of dangerPattern" [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
             </select>
           </div>
