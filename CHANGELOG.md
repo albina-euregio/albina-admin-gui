@@ -2,6 +2,27 @@
 
 <!-- To update, run `yarn changelog`. -->
 
+## [7.1.0] - 2024-12-08
+
+### Bulletins
+
+- Load additional regions (AT-02,..., AT-06, AT-08, DE-BY) and display them on the map.
+
+### Observations
+
+- Rain boundary for LO.LA Kronos observations.
+- Elevation for observations can be given as range. The filter functionality includes all observations with ranges that contain that elevation.
+- Improve filtering by allowing simple clicks to unset filters.
+- The date picker for filtering elevations now allows setting the time as well.
+
+### Keyboard Shortcuts
+
+- Keyboard shortcuts for navbar entries and bulletins. Available shortcuts are shown on on mouseover. An overview can be found [here](https://gitlab.com/albina-euregio/albina-admin-gui/-/issues/356).
+
+### Documentation
+
+- Comprehensive CHANGELOG.
+
 ## [7.0.3] - 2024-11-24
 
 ### Observations
