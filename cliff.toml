@@ -9,7 +9,7 @@
 # template for the changelog header
 header = """
 # Changelog\n
-All notable changes to this project will be documented in this file.\n
+<!-- To update, run `yarn changelog`. --> \n
 """
 # template for the changelog body
 # https://keats.github.io/tera/docs/#introduction
@@ -47,7 +47,7 @@ postprocessors = [
 # parse the commits based on https://www.conventionalcommits.org
 conventional_commits = true
 # filter out the commits that are not conventional
-filter_unconventional = true
+filter_unconventional = false
 # process each line of a commit as an individual commit
 split_commits = false
 # regex for preprocessing the commit messages
