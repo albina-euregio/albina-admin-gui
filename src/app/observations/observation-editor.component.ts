@@ -134,13 +134,13 @@ export class ObservationEditorComponent implements AfterViewInit {
   }
 
   parseContent($event: { clipboardData: DataTransfer }): void {
-    // const codes = {
-    //   "ALP-LAW-NEG": EventType.PersonNo,
-    //   "ALP-LAW-UNKL": EventType.PersonUninjured,
-    //   "ALP-LAW-KLEIN": EventType.PersonUninjured,
-    //   "ALP-LAW-GROSS": EventType.PersonUninjured,
-    //   "ALP-LAW-FREI": EventType.PersonUninjured,
-    // };
+    const codes = {
+      "ALP-LAW-NEG": PersonInvolvement.No,
+      "ALP-LAW-UNKL": PersonInvolvement.Uninjured,
+      "ALP-LAW-KLEIN": PersonInvolvement.Uninjured,
+      "ALP-LAW-GROSS": PersonInvolvement.Uninjured,
+      "ALP-LAW-FREI": PersonInvolvement.Uninjured,
+    };
 
     setTimeout(() => {
       const content = this.observation().content;
@@ -148,6 +148,10 @@ export class ObservationEditorComponent implements AfterViewInit {
       if (!observation.authorName && content.includes("Einsatzcode") && content.includes("beschickte Einsatzmittel")) {
         observation.authorName = "Leitstelle Tirol";
       }
+
+      const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
+      if (codes[code]) observation.personInvolvement = codes[code];
+
       if (!observation.locationName && content.includes("Einsatzort")) {
         const match = content.match(/Einsatzort:.*\n\s+.*\s+(.*)/);
         if (match) {
