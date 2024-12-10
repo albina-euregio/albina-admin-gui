@@ -66,7 +66,6 @@
     "ngx-echarts": "^19.0.0",
     "ngx-image-compress": "^18.1.5",
     "protomaps-leaflet": "^4.0.1",
-    "rbush": "^3.0.1",
     "rxjs": "7.8.1",
     "split.js": "^1.6.5",
     "which-polygon": "^2.2.1",
