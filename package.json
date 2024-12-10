@@ -115,7 +115,6 @@
     "useTabs": false
   },
   "lint-staged": {
-    "**/*.html": "prettier --write --ignore-unknown",
-    "**/*.ts": "prettier --write --ignore-unknown"
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

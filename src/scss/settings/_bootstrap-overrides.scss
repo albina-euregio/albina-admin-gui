@@ -10,7 +10,7 @@ $spacers: (
   6: $space-6,
   8: $space-8,
   16: $space-16,
-  32: $space-32
+  32: $space-32,
 );
 
 // Colors
@@ -61,7 +61,7 @@ $font-sizes: (
   3: $h3-font-size,
   4: $h4-font-size,
   5: $h5-font-size,
-  6: $h6-font-size
+  6: $h6-font-size,
 );
 
 // Borders
@@ -90,7 +90,7 @@ $accordion-button-bg: transparent;
 $accordion-button-active-bg: transparent;
 
 // Forms
-:root{
+:root {
   --form-range-thumb-bg: $component-active-bg;
 }
 $form-range-thumb-bg: var(--form-range-thumb-bg);

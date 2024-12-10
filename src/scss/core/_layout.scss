@@ -1,5 +1,5 @@
 // IE10&11 Flexbox fix
-@media all and (-ms-high-contrast:none) {
+@media all and (-ms-high-contrast: none) {
   html {
     display: flex;
     flex-direction: column;
@@ -25,7 +25,7 @@ app-root {
 
 .app-body {
   display: flex;
-  flex-grow:1;
+  flex-grow: 1;
   flex-direction: row;
 
   .main {
@@ -63,14 +63,12 @@ app-root {
 // Sidebar
 //
 .sidebar-hidden {
-
   .sidebar {
-    margin-left: - $sidebar-width;
+    margin-left: -$sidebar-width;
   }
 }
 
 .sidebar-fixed {
-
   .sidebar {
     position: fixed;
     height: 100%;
@@ -80,13 +78,14 @@ app-root {
     }
   }
 
-  .main, .app-footer {
+  .main,
+  .app-footer {
     margin-left: $sidebar-width;
   }
 
   &.sidebar-hidden {
-
-    .main, .app-footer {
+    .main,
+    .app-footer {
       margin-left: 0;
     }
   }
@@ -97,7 +96,6 @@ app-root {
     position: fixed;
     z-index: $zindex-navbar - 1;
     height: 100%;
-
 
     .sidebar-nav {
       height: calc(100vh - #{$navbar-height});
@@ -111,21 +109,20 @@ app-root {
   }
 
   &.sidebar-hidden {
-
     .sidebar {
-      margin-left: - $sidebar-compact-width;
+      margin-left: -$sidebar-compact-width;
     }
   }
 
   &.sidebar-fixed {
-
-    .main, .app-footer {
+    .main,
+    .app-footer {
       margin-left: $sidebar-compact-width;
     }
 
     &.sidebar-hidden {
-
-      .main, .app-footer {
+      .main,
+      .app-footer {
         margin-left: 0;
       }
     }
@@ -136,14 +133,12 @@ app-root {
 // Aside Menu
 //
 .aside-menu-hidden {
-
   .aside-menu {
-    margin-right: - $aside-menu-width;
+    margin-right: -$aside-menu-width;
   }
 }
 
 .aside-menu-fixed {
-
   .aside-menu {
     position: fixed;
     right: 0;
@@ -154,13 +149,14 @@ app-root {
     }
   }
 
-  .main, .app-footer {
+  .main,
+  .app-footer {
     margin-right: $aside-menu-width;
   }
 
   &.aside-menu-hidden {
-
-    .main, .app-footer {
+    .main,
+    .app-footer {
       margin-right: 0;
     }
   }
@@ -183,7 +179,6 @@ app-root {
 // Footer
 //
 .footer-fixed {
-
   .app-footer {
     position: fixed;
     bottom: 0;
@@ -213,7 +208,6 @@ app-root {
 //
 
 @include media-breakpoint-down(md) {
-
   .app-header {
     position: fixed !important;
     z-index: $zindex-navbar;
@@ -228,7 +222,7 @@ app-root {
     }
 
     .navbar-toggler {
-      @if (lightness( $navbar-brand-bg ) > 40) {
+      @if (lightness($navbar-brand-bg) > 40) {
         color: $navbar-color;
       } @else {
         color: #fff;
@@ -256,7 +250,7 @@ app-root {
     position: fixed;
     width: $mobile-sidebar-width;
     height: 100%;
-    margin-left: - $mobile-sidebar-width;
+    margin-left: -$mobile-sidebar-width;
 
     .sidebar-nav,
     .nav {
@@ -264,7 +258,8 @@ app-root {
     }
   }
 
-  .main, .app-footer {
+  .main,
+  .app-footer {
     margin-left: 0 !important;
   }
 
@@ -273,7 +268,6 @@ app-root {
   }
 
   .sidebar-mobile-show {
-
     .sidebar {
       width: $mobile-sidebar-width;
       margin-left: 0;
@@ -284,7 +278,7 @@ app-root {
     }
 
     .main {
-      margin-right: - $mobile-sidebar-width !important;
+      margin-right: -$mobile-sidebar-width !important;
       margin-left: $mobile-sidebar-width !important;
     }
   }

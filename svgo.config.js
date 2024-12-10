@@ -4,9 +4,9 @@ module.exports = {
       name: "preset-default",
       params: {
         overrides: {
-          cleanupIds: false
-        }
-      }
-    }
-  ]
+          cleanupIds: false,
+        },
+      },
+    },
+  ],
 };

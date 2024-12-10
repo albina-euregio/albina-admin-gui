@@ -1,40 +1,39 @@
 // Map
 .create-bulletin__map-container,
 .create-bulletin__map {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 
-    .leaflet-top.leaflet-right .info.leaflet-control {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 2px;
-        color: $black;
-        padding: $space-1 $space-2;
-        @include font-m;
-    }
+  .leaflet-top.leaflet-right .info.leaflet-control {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    color: $black;
+    padding: $space-1 $space-2;
+    @include font-m;
+  }
 }
 
 .create-bulletin__map--pm {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .create-bulletin__map--am {
-    visibility: visible;
+  visibility: visible;
 }
 
 .leaflet-bottom.leaflet-right {
-    .leaflet-control {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      float: none;
-    }
-    .leaflet-control-attribution {
-      position: relative;
-      font-size: 0.6rem;
-      background-color: rgba($white, 0.5) !important;
-      transform-origin: bottom left;
-      transform: translateX(100%) rotate(-90deg);
-    }
+  .leaflet-control {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    float: none;
   }
-  
+  .leaflet-control-attribution {
+    position: relative;
+    font-size: 0.6rem;
+    background-color: rgba($white, 0.5) !important;
+    transform-origin: bottom left;
+    transform: translateX(100%) rotate(-90deg);
+  }
+}

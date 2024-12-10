@@ -4,19 +4,14 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "mapRoot": "./",
     "module": "es2020",
     "moduleResolution": "node",
     "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "target": "ES2022",
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
+    "typeRoots": ["../node_modules/@types"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "useDefineForClassFields": false
@@ -24,10 +19,6 @@
   "angularCompilerOptions": {
     "strictTemplates": true
   },
-  "files": [
-    "main.ts"
-  ],
-  "include": [
-    "src/**/*.d.ts"
-  ]
+  "files": ["main.ts"],
+  "include": ["src/**/*.d.ts"]
 }

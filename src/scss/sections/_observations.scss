@@ -27,8 +27,8 @@ $observations-height: calc(100vh - $header-nav-height);
   position: relative;
   height: 100%;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-  Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
+    "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 14px;
   line-height: 1.4;
 }
@@ -109,7 +109,9 @@ $observations-height: calc(100vh - $header-nav-height);
   padding: 0.25em 0.5em;
   background-color: #fff;
   border: 1px solid #e6eef2;
-  box-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.1), 0 0px 0 1px rgba(0, 0, 0, 0.02);
+  box-shadow:
+    0 0.5em 1em -0.125em rgba(0, 0, 0, 0.1),
+    0 0px 0 1px rgba(0, 0, 0, 0.02);
 }
 
 .layout--is-map .layout-switch .layout-switch-map {
@@ -313,8 +315,8 @@ $observations-height: calc(100vh - $header-nav-height);
 
 .obs-tooltip {
   padding: 5px !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-  Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
+    "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) !important;
 }
 
@@ -461,7 +463,9 @@ $observations-height: calc(100vh - $header-nav-height);
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #e6eef2;
-  box-shadow: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.1), 0 0px 0 1px rgba(0, 0, 0, 0.02);
+  box-shadow:
+    0 0.5em 1em -0.125em rgba(0, 0, 0, 0.1),
+    0 0px 0 1px rgba(0, 0, 0, 0.02);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 }
@@ -478,6 +482,6 @@ table app-avalanche-problem-icons img {
   background-position: 50%;
 }
 .gutter.gutter-horizontal {
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
   cursor: col-resize;
 }
