@@ -8,6 +8,7 @@ export enum ImportantObservation {
   StabilityTest = "StabilityTest",
   IceFormation = "IceFormation",
   VeryLightNewSnow = "VeryLightNewSnow",
+  ForBlog = "ForBlog",
 }
 
 export enum WeatherStationParameter {
