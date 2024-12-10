@@ -40,7 +40,6 @@ import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import Mousetrap from "mousetrap";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -1119,6 +1118,24 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.deselectBulletin();
     } else {
       this.selectBulletin(bulletin);
+    }
+  }
+
+  toggleNextBulletin() {
+    const index = this.internBulletinsList.indexOf(this.activeBulletin);
+    if (this.activeBulletin && index >= 0 && index < this.internBulletinsList.length - 1) {
+      this.selectBulletin(this.internBulletinsList[index + 1]);
+    } else if (!this.activeBulletin && this.internBulletinsList.length > 0) {
+      this.selectBulletin(this.internBulletinsList[0]);
+    }
+  }
+
+  togglePreviousBulletin() {
+    const index = this.internBulletinsList.indexOf(this.activeBulletin);
+    if (this.activeBulletin && index > 0) {
+      this.selectBulletin(this.internBulletinsList[index - 1]);
+    } else if (!this.activeBulletin && this.internBulletinsList.length > 0) {
+      this.selectBulletin(this.internBulletinsList[this.internBulletinsList.length - 1]);
     }
   }
 

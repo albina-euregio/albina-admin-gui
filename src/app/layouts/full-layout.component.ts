@@ -101,6 +101,13 @@ export class FullLayoutComponent {
     this.changeRegionModalRef.hide();
   }
 
+  focusMap() {
+    const mapElement = document.getElementById("map") ?? document.getElementById("observationsMap");
+    if (mapElement) {
+      mapElement.focus();
+    }
+  }
+
   private change(region: RegionConfiguration) {
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.loadStatus();
