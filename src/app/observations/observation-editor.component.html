@@ -194,6 +194,11 @@
     </div>
   </div>
 
+  <div class="col-12">
+    <label for="externalURL"><i class="ph ph-link"></i> {{ "observations.externalURL" | translate }}</label>
+    <input id="externalURL" type="url" [(ngModel)]="observation().$externalURL" class="form-control" />
+  </div>
+
   <div class="col-12 mb-3">
     <label for="content"><i class="ph ph-chat"></i> {{ "observations.content" | translate }}</label>
     <textarea
