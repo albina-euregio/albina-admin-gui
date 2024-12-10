@@ -31,7 +31,7 @@ import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
-import { type Observable, onErrorResumeNext } from "rxjs";
+import { type Observable } from "rxjs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
@@ -47,6 +47,7 @@ import { ObservationMarkerWebcamService } from "./observation-marker-webcam.serv
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
 import Split from "split.js";
 import { HttpErrorResponse } from "@angular/common/http";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -128,6 +129,7 @@ class ObservationData {
     ObservationGalleryComponent,
     ObservationTableComponent,
     TranslateModule,
+    NgxMousetrapDirective,
   ],
   templateUrl: "observations.component.html",
 })
