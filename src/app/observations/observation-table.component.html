@@ -32,7 +32,7 @@
   </thead>
 
   <tbody *ngFor="let observation of sortedObservations">
-    <tr *ngIf="isShowObservation(observation)" (click)="onClick(observation)" role="button">
+    <tr *ngIf="isShowObservation(observation)" (click)="observationClick.emit(observation)" role="button">
       <td class="px-0 py-3 text-nowrap" style="max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
         <span class="text-truncate d-block">
           <i class="ph ph-calendar"></i>
@@ -69,7 +69,12 @@
           </span>
         </abbr>
       </td>
-      <td class="px-0 py-3">{{ observation.content }}</td>
+      <td class="px-0 py-3">
+        {{ observation.content }}
+        <button class="btn btn-bare float-end" (click)="editObservationEvent.emit(observation); $event.stopPropagation()">
+          <i class="ph-bold ph-pencil icon-md"></i>
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>

@@ -1,6 +1,5 @@
-import { Component, TemplateRef, ViewChild, input, output, inject } from "@angular/core";
+import { Component, input, output, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { isAvalancheWarningServiceObservation } from "./models/observation.model";
 import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -36,15 +35,6 @@ export class ObservationTableComponent {
 
   isShowObservation(observation: GenericObservation): boolean {
     return !this.showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude);
-  }
-
-  onClick(observation: GenericObservation) {
-    if (isAvalancheWarningServiceObservation(observation)) {
-      // FIXME? this.observationsService.getObservation(observation.id).toPromise()
-      this.editObservationEvent.emit(observation);
-    } else {
-      this.observationClick.emit(observation);
-    }
   }
 
   getTableRowStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {
