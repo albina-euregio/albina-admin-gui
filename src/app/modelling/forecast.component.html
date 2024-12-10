@@ -123,13 +123,13 @@
       </select>
     </div>
 
-    <div class="d-inline-block font-weight-normal">
+    <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
       &mdash; Tipp:
       <kbd (click)="changeRun('previous')">←</kbd>,
       <kbd (click)="changeRun('next')">→</kbd>
       zum Blättern
-      <button type="button" class="btn-close ms-3" aria-label="Close" (click)="modalService.hide()"></button>
     </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modalService.hide()"></button>
   </div>
 
   <div class="modal-body" (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">

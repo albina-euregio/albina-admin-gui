@@ -419,13 +419,15 @@
 
 <ng-template #observationPopupTemplate>
   <div class="modal-header">
-    <span
-      [style]="{ color: markerService.toMarkerColor(observationPopup?.observation) }"
-      [title]="observationPopup?.observation?.$source"
-      >█</span
-    >
-    {{ observationPopup?.observation?.locationName }}
-    <div class="d-inline-block font-weight-normal">
+    <div class="modal-title w-50">
+      <span
+        [style]="{ color: markerService.toMarkerColor(observationPopup?.observation) }"
+        [title]="observationPopup?.observation?.$source"
+        >█</span
+      >
+      {{ observationPopup?.observation?.locationName }}
+    </div>
+    <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowLeft' })">←</kbd>
       <kbd (click)="handleKeyBoardEvent({ key: 'ArrowRight' })">→</kbd>
       <kbd *ngIf="observationPopup?.observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowUp' })"
@@ -434,8 +436,8 @@
       <kbd *ngIf="observationPopup?.observation?.$externalImgs" (click)="handleKeyBoardEvent({ key: 'ArrowDown' })"
         >↓</kbd
       >
-      <button type="button" class="btn-close ms-3" aria-label="Close" (click)="modalService.hide()"></button>
     </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modalService.hide()"></button>
   </div>
   <div class="modal-body">
     <table *ngIf="observationPopup" class="table table-sm">
