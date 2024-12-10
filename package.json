@@ -29,7 +29,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prepare": "husky",
-    "changelog": "git-cliff --current --unreleased --prepend CHANGELOG.md"
+    "changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag",
+    "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },
   "private": true,
   "dependencies": {

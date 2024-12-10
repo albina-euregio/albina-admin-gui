@@ -31,15 +31,16 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 This project uses Transifex for its translations: https://www.transifex.com/albina-euregio/albina-admin-gui/dashboard/
 
-## Generate CHANGELOG
+## Update CHANGELOG (for new releases)
 
-We use **git-cliff** to generate a changelog from conventional commit messages.
-The tool is available from [NPM](https://git-cliff.org/docs/installation/npm) and is available once
-you successfully executed `yarn install`. To generate the changelog file use
+Please use the following workflow when releasing new versions:
 
-```sh
-yarn git-cliff -o CHANGELOG.md
-```
+1. determine new version number `<TAG>` and
+   run `yarn changelog <TAG>`
+2. edit `CHANGELOG.md` by hand if necessary and commit
+3. create `<TAG>` with git
 
-More examples on available command line options can be found [here](https://git-cliff.org/docs/usage/examples)
-(Customization)[https://git-cliff.org/docs/configuration/git] is available through the `cliff.toml` file.
+If you forgot to update the changelog before creating a new tag in git, use
+`yarn changelog-latest`. This will add all commits for the newest tag to
+the CHANGELOG. The downside compared to the workflow above is, that the
+changes to CHANGELOG itself are not included in the release.

@@ -1,6 +1,6 @@
 # Changelog
 
-<!-- To update, run `yarn changelog`. -->
+<!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
 ## [7.1.0] - 2024-12-08
 
