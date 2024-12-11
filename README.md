@@ -4,16 +4,39 @@ https://admin.avalanche.report/ – A frontend to enter avalanche bulletins.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### First set up
 
 ```sh
 nvm install
 corepack enable
 yarn install
-yarn run start-dev
 ```
 
 If you encounter Yarn Plug'n'Play errors, make sure there is no `.pnp.cjs` in any folder that could be picked up by yarn (e.g. in your home directory).
+
+### Run
+
+There are different [environments](src/environments/) defined for different versions of textcat and the server backend.
+Once the app is started with one of the environments it is available at `http://localhost:4200/`.
+It will automatically reload if you change any of the source files.
+
+#### Start frontend with dev server (admin.avalanche.report/albina_dev)
+
+Use:
+
+```sh
+yarn run start-dev
+```
+
+#### Start frontend with local server
+
+Follow the instructions for setting up a local development server given in [albina-server](https://gitlab.com/albina-euregio/albina-server/-/blob/master/README.md).
+The server should be available under http://localhost:8080/albina.
+Then use:
+
+```sh
+yarn run start-local
+```
 
 ## Code scaffolding
 
