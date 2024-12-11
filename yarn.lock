@@ -1724,13 +1724,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eaws/micro-regions_names@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@eaws/micro-regions_names@npm:7.0.0::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions_names%2F-%2F%40eaws%2Fmicro-regions_names-7.0.0.tgz"
-  checksum: 10c0/d8eb2cf11eed840017f152843a4c2acc089945146e2d9ace6311418f55727ca8d0daa8d3248a42ff5e8200c8ada6d51830ec7d7ec1f1817932a16a46525adc9c
-  languageName: node
-  linkType: hard
-
 "@esbuild/aix-ppc64@npm:0.21.5":
   version: 0.21.5
   resolution: "@esbuild/aix-ppc64@npm:0.21.5"
@@ -4171,7 +4164,6 @@ __metadata:
     "@angular/upgrade": "npm:^19.0.3"
     "@auth0/angular-jwt": "npm:^5.2.0"
     "@eaws/micro-regions": "npm:^7.0.0"
-    "@eaws/micro-regions_names": "npm:^7.0.0"
     "@eslint/js": "npm:^9.16.0"
     "@ngx-translate/core": "npm:^16.0.3"
     "@phosphor-icons/web": "npm:^2.1.1"
