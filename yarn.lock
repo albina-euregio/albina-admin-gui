@@ -4192,7 +4192,7 @@ __metadata:
     ngx-bootstrap: "npm:19.0.0"
     ngx-echarts: "npm:^19.0.0"
     ngx-image-compress: "npm:^18.1.5"
-    prettier: "npm:^3.1.0"
+    prettier: "npm:^3.4.2"
     protomaps-leaflet: "npm:^4.0.1"
     rxjs: "npm:7.8.1"
     split.js: "npm:^1.6.5"
@@ -8571,12 +8571,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "prettier@npm:3.1.0"
+"prettier@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "prettier@npm:3.4.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/a45ea70aa97fde162ea4c4aba3dfc7859aa6a732a1db34458d9535dc3c2c16d3bc3fb5689e6cd76aa835562555303b02d9449fd2e15af3b73c8053557e25c5b6
+  checksum: 10c0/99e076a26ed0aba4ebc043880d0f08bbb8c59a4c6641cdee6cdadf2205bdd87aa1d7823f50c3aea41e015e99878d37c58d7b5f0e663bba0ef047f94e36b96446
   languageName: node
   linkType: hard
 
