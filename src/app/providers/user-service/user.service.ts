@@ -117,6 +117,7 @@ export class UserService {
     const url = this.constantsService.getServerUrl() + "user/stress-level/team";
     const headers = this.authenticationService.newAuthHeader();
     const params = {
+      region: this.authenticationService.getActiveRegionId(),
       startDate: date[0].toISOString(),
       endDate: date[1].toISOString(),
     };
