@@ -64,6 +64,10 @@
             {{ "sidebar.weatherbox" | translate }}
           </a>
         </li>
+        <!-- dummy button for keyboard shortcut to place focus on map -->
+        <li class="nav-item invisible">
+          <button class="btn" type="button" (click)="focusMap()" ngxMousetrapKey="f m">Focus Map</button>
+        </li>
       </ul>
     </div>
 
@@ -260,7 +264,7 @@
     <p>{{ "changeRegionDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="changeRegionModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="changeRegionModalConfirm()" ngxMousetrapKey="enter">
       {{ "changeRegionDialog.accept" | translate }}
     </button>
     <button type="button" class="btn btn-default" (click)="changeRegionModalDecline()">

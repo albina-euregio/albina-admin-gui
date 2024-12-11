@@ -18,6 +18,24 @@
         <nav class="btn-group create-bulleting__days-nav">
           <button
             type="button"
+            class="btn btn-icon btn-sm btn-bare--grey invisible"
+            (click)="toggleNextBulletin()"
+            *ngIf="bulletinsService.getNextDate()"
+            [ngxMousetrapKey]="['alt+down']"
+          >
+            <i class="ph-bold ph-caret-down"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-bare--grey invisible"
+            (click)="togglePreviousBulletin()"
+            *ngIf="bulletinsService.getPreviousDate()"
+            [ngxMousetrapKey]="['alt+up']"
+          >
+            <i class="ph-bold ph-caret-up"></i>
+          </button>
+          <button
+            type="button"
             class="btn btn-icon btn-sm btn-bare--grey"
             (click)="changeDate(bulletinsService.getNextDate())"
             *ngIf="bulletinsService.getNextDate()"
@@ -293,14 +311,14 @@
         </h5>
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
-            <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle ngxMousetrapKey="m">
+            <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle ngxMousetrapKey="b">
               <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
 
             <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
               <!-- map above / map aside -->
               <li>
-                <button class="dropdown-item" (click)="toggleCompactMapLayout()" ngxMousetrapKey="v">
+                <button class="dropdown-item" (click)="toggleCompactMapLayout(); dropdown.hide()" ngxMousetrapKey="v">
                   <i *ngIf="isCompactMapLayout" class="ph icon-md ph-square-split-horizontal"></i>
                   <i *ngIf="!isCompactMapLayout" class="ph icon-md ph-square-split-vertical"></i>
                   <span *ngIf="isCompactMapLayout">{{ "bulletins.create.mapLeft" | translate }}</span>
@@ -318,7 +336,7 @@
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
-                  (click)="loadBulletinsFromYesterday()"
+                  (click)="loadBulletinsFromYesterday(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
                   ngxMousetrapKey="y"
@@ -335,7 +353,7 @@
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
-                  (click)="preview()"
+                  (click)="preview(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.preview' | translate }}"
                   ngxMousetrapKey="p"
@@ -352,7 +370,7 @@
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
-                  (click)="openMediaFileModal()"
+                  (click)="openMediaFileModal(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
                   ngxMousetrapKey="u m"
@@ -373,7 +391,7 @@
                   [disabled]="editRegions || loading"
                   type="button"
                   class="dropdown-item"
-                  (click)="jsonBulletinUploader.click()"
+                  (click)="jsonBulletinUploader.click(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
                   ngxMousetrapKey="u j"
@@ -390,7 +408,7 @@
                   [disabled]="editRegions || loading"
                   type="button"
                   class="dropdown-item"
-                  (click)="downloadJsonBulletin()"
+                  (click)="downloadJsonBulletin(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
                   ngxMousetrapKey="d j"
@@ -436,6 +454,11 @@
                   {{ "bulletins.tooltip.publishAll" | translate }}
                 </button>
               </li>
+
+              <!--- dummy button to hide dropdown -->
+              <li style="display: none">
+                <button class="btn" type="button" (click)="dropdown.hide()" ngxMousetrapKey="esc">Hide dropdown</button>
+              </li>
             </ul>
           </div>
           <button
@@ -467,7 +490,11 @@
 
     <div class="create-bulletin__regions">
       <!-- Foreign regions -->
-      <header class="create-bulletin__region-divider foreign" (click)="toggleShowForeignRegions()" ngxMousetrapKey="f">
+      <header
+        class="create-bulletin__region-divider foreign"
+        (click)="toggleShowForeignRegions()"
+        ngxMousetrapKey="f 0"
+      >
         <h5 class="font-s-bold">
           {{ "bulletins.create.foreignRegions" | translate }} ({{ getForeignBulletins().length }})
         </h5>
@@ -492,10 +519,11 @@
 
     <!-- External regions -->
     <div *ngIf="hasExternalRegions()" class="create-bulletin__regions">
-      <ng-container *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue">
+      <ng-container *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue; let i = index">
         <header
           class="create-bulletin__region-divider foreign"
           (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)"
+          ngxMousetrapKey="f {{ i + 1 }}"
         >
           <h5 class="font-s-medium">{{ externalRegion.key.name }} ({{ externalRegion.value.length }})</h5>
           <div class="btn-group region-divider__actions">
@@ -509,12 +537,9 @@
         </header>
         <!-- List of external regions -->
         <nav *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="create-bulletin__region-list">
-          <ng-container *ngFor="let bulletin of externalRegion.value; let i = index">
+          <ng-container *ngFor="let bulletin of externalRegion.value">
             <ng-container
-              *ngTemplateOutlet="
-                bulletinTemplate;
-                context: { bulletin: bulletin, key: i + getOwnBulletins().length + getForeignBulletins().length + 1 }
-              "
+              *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: undefined }"
             ></ng-container>
           </ng-container>
         </nav>
@@ -620,7 +645,7 @@
 <ng-template #bulletinTemplate let-bulletin="bulletin" let-key="key">
   <div
     (click)="toggleBulletin(bulletin)"
-    [ngxMousetrapKey]="['ctrl+' + key, 'command+' + key]"
+    [ngxMousetrapKey]="key !== undefined ? ['ctrl+' + key, 'command+' + key] : []"
     class="region-thumb"
     [class.region-thumb--active]="bulletin === activeBulletin"
   >

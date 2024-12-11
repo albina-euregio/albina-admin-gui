@@ -28,6 +28,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -292,7 +293,7 @@ export class AvalancheBulletinComponent {
 
   createAvalancheProblem(isAfternoon: boolean) {
     this.isAccordionAvalancheProblemOpen = true;
-    let daytime;
+    let daytime: BulletinDaytimeDescriptionModel;
     if (isAfternoon) {
       daytime = this.bulletin().afternoon;
     } else {
@@ -322,21 +323,27 @@ export class AvalancheBulletinComponent {
         break;
       }
     }
+    daytime.isAvalancheProblemOpen = Array(5).fill(false);
     switch (count) {
       case 1:
         daytime.avalancheProblem1 = new AvalancheProblemModel();
+        daytime.isAvalancheProblemOpen[0] = true;
         break;
       case 2:
         daytime.avalancheProblem2 = new AvalancheProblemModel();
+        daytime.isAvalancheProblemOpen[1] = true;
         break;
       case 3:
         daytime.avalancheProblem3 = new AvalancheProblemModel();
+        daytime.isAvalancheProblemOpen[2] = true;
         break;
       case 4:
         daytime.avalancheProblem4 = new AvalancheProblemModel();
+        daytime.isAvalancheProblemOpen[3] = true;
         break;
       case 5:
         daytime.avalancheProblem5 = new AvalancheProblemModel();
+        daytime.isAvalancheProblemOpen[4] = true;
         break;
       default:
         break;

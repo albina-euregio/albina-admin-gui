@@ -1,8 +1,9 @@
+<!-- eslint-disable @angular-eslint/template/no-autofocus -->
 <div class="avalanche-problem-container">
   <div class="form-group">
     <label class="form-label" for="">{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
     <div *ngIf="!disabled()">
-      <button type="button" class="btn btn-outline-primary btn-sm" (click)="showDecisionTreeDialog()">
+      <button type="button" class="btn btn-outline-primary btn-sm" (click)="showDecisionTreeDialog()" autofocus>
         {{ "bulletins.create.decisionTree.decisionTree" | translate }}
       </button>
       <a class="btn btn-link" href="{{ 'bulletins.create.decisionTree.feedbackURL' | translate }}" target="_blank"

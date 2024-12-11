@@ -21,6 +21,8 @@ export class BulletinDaytimeDescriptionModel {
   public avalancheProblem4: AvalancheProblemModel;
   public avalancheProblem5: AvalancheProblemModel;
 
+  public isAvalancheProblemOpen = Array(5).fill(false);
+
   static createFromJson(json) {
     const bulletinDaytimeDescription = new BulletinDaytimeDescriptionModel();
 

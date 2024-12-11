@@ -1,8 +1,9 @@
+<!-- eslint-disable @angular-eslint/template/no-autofocus -->
 <div *ngIf="observation()" class="row g-3">
   <div class="col-12 col-md-4">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
-      <input #eventDateDate type="date" required class="date form-control" />
+      <input #eventDateDate type="date" required class="date form-control" autofocus />
       <input #eventDateTime type="time" required class="date form-control" />
       <button class="btn btn-outline-secondary" type="button" (click)="setDate(undefined, 'eventDate')">
         <i class="ph ph-x"></i>
