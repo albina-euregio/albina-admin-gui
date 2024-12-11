@@ -21,7 +21,6 @@ export class ObservationTableComponent {
   readonly observationClick = output<GenericObservation>();
   readonly editObservationEvent = output<GenericObservation>();
   showObservationsWithoutCoordinates = false;
-  observationSearch: string;
   importantObservationTexts = {
     [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
     [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
@@ -36,13 +35,7 @@ export class ObservationTableComponent {
   }
 
   isShowObservation(observation: GenericObservation): boolean {
-    return (
-      (!this.showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude)) &&
-      (!this.observationSearch ||
-        [observation.authorName, observation.locationName, observation.content].some((text) =>
-          (text || "").toLocaleLowerCase().includes(this.observationSearch.toLocaleLowerCase()),
-        ))
-    );
+    return !this.showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude);
   }
 
   onClick(observation: GenericObservation) {

@@ -85,6 +85,20 @@
               />
             </div>
           </div>
+          <div class="global-bar-item">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="ph ph-magnifying-glass"></i>
+              </span>
+              <input
+                type="text"
+                [(ngModel)]="observationSearch"
+                (change)="this.applyLocalFilter()"
+                placeholder="{{ 'observations.search' | translate }}"
+                class="form-control"
+              />
+            </div>
+          </div>
           <!-- /global-bar-left -->
 
           <!-- !global-bar-right -->

@@ -81,12 +81,12 @@ class ObservationData {
     }
   }
 
-  async loadFrom(observable: Observable<GenericObservation>) {
+  async loadFrom(observable: Observable<GenericObservation>, observationSearch: string) {
     this.loading = true;
     this.layer.clearLayers();
     this.all = [];
     await observable.forEach((observation) => this.forEachObservation(observation)).catch((e) => console.error(e));
-    this.applyLocalFilter();
+    this.applyLocalFilter(observationSearch);
     this.all.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
     this.loading = false;
   }
@@ -103,11 +103,17 @@ class ObservationData {
     this.all.push(observation);
   }
 
-  applyLocalFilter() {
+  applyLocalFilter(observationSearch: string) {
     this.layer.clearLayers();
-    this.filtered = this.all.filter(
-      (observation) => this.filter.isHighlighted(observation) || this.filter.isSelected(observation),
-    );
+    this.filtered = this.all
+      .filter((o) => this.filter.isHighlighted(o) || this.filter.isSelected(o))
+      .filter(
+        (o) =>
+          !observationSearch ||
+          [o.authorName, o.locationName, o.content].some((text) =>
+            (text || "").toLocaleLowerCase().includes(observationSearch.toLocaleLowerCase()),
+          ),
+      );
     this.filtered.forEach((observation) => {
       this.markerService
         .createMarker(observation, this.filter.isHighlighted(observation))
@@ -153,6 +159,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
+  public observationSearch = "";
 
   public readonly data = {
     observations: new ObservationData(
@@ -237,7 +244,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   loadObservations() {
     this.filter.updateDateInURL();
-    return this.data.observations.loadFrom(this.observationsService.getGenericObservations());
+    return this.data.observations.loadFrom(this.observationsService.getGenericObservations(), this.observationSearch);
   }
 
   private async initMap() {
@@ -248,9 +255,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.days = 7;
     }
     this.loadObservations();
-    this.data.observers.loadFrom(this.observationsService.getObservers());
-    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations());
-    this.data.webcams.loadFrom(this.observationsService.getGenericWebcams());
+    this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
+    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
+    this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
 
     map.on("click", () => {
       this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
@@ -396,7 +403,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   applyLocalFilter() {
-    Object.values(this.data).forEach((data) => data.applyLocalFilter());
+    Object.values(this.data).forEach((data) => data.applyLocalFilter(this.observationSearch));
   }
 
   onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
