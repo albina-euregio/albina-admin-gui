@@ -99,7 +99,6 @@ class ObservationData {
     }
     augmentRegion(observation);
     this.forEachObservation0(observation);
-    if (!observation.region) return;
     this.all.push(observation);
   }
 
