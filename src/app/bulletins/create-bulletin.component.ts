@@ -1,4 +1,14 @@
-import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild, inject } from "@angular/core";
+import {
+  Component,
+  HostListener,
+  ElementRef,
+  TemplateRef,
+  OnDestroy,
+  OnInit,
+  viewChild,
+  inject,
+  ViewChild,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { forkJoin, map, Observable, of, Subject, takeUntil, tap, timer } from "rxjs";
@@ -35,7 +45,7 @@ import { ServerModel } from "app/models/server.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 import { NgIf, NgFor, NgTemplateOutlet, DatePipe, KeyValuePipe } from "@angular/common";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
@@ -177,6 +187,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   public checkBulletinsErrorModalRef: BsModalRef;
   readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<any>>("checkBulletinsErrorTemplate");
+
+  @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
   internalBulletinsSubscription!: Subscription;
   externalBulletinsSubscription!: Subscription;

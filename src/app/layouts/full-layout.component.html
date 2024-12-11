@@ -264,7 +264,7 @@
     <p>{{ "changeRegionDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="changeRegionModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="changeRegionModalConfirm()" ngxMousetrapKey="enter">
       {{ "changeRegionDialog.accept" | translate }}
     </button>
     <button type="button" class="btn btn-default" (click)="changeRegionModalDecline()">

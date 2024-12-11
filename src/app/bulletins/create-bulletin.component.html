@@ -318,7 +318,7 @@
             <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
               <!-- map above / map aside -->
               <li>
-                <button class="dropdown-item" (click)="toggleCompactMapLayout()" ngxMousetrapKey="v">
+                <button class="dropdown-item" (click)="toggleCompactMapLayout(); dropdown.hide()" ngxMousetrapKey="v">
                   <i *ngIf="isCompactMapLayout" class="ph icon-md ph-square-split-horizontal"></i>
                   <i *ngIf="!isCompactMapLayout" class="ph icon-md ph-square-split-vertical"></i>
                   <span *ngIf="isCompactMapLayout">{{ "bulletins.create.mapLeft" | translate }}</span>
@@ -336,7 +336,7 @@
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
-                  (click)="loadBulletinsFromYesterday()"
+                  (click)="loadBulletinsFromYesterday(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
                   ngxMousetrapKey="y"
@@ -353,7 +353,7 @@
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
-                  (click)="preview()"
+                  (click)="preview(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.preview' | translate }}"
                   ngxMousetrapKey="p"
@@ -370,7 +370,7 @@
                   [disabled]="editRegions || loading"
                   type="reset"
                   class="dropdown-item"
-                  (click)="openMediaFileModal()"
+                  (click)="openMediaFileModal(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
                   ngxMousetrapKey="u m"
@@ -391,7 +391,7 @@
                   [disabled]="editRegions || loading"
                   type="button"
                   class="dropdown-item"
-                  (click)="jsonBulletinUploader.click()"
+                  (click)="jsonBulletinUploader.click(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
                   ngxMousetrapKey="u j"
@@ -408,7 +408,7 @@
                   [disabled]="editRegions || loading"
                   type="button"
                   class="dropdown-item"
-                  (click)="downloadJsonBulletin()"
+                  (click)="downloadJsonBulletin(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
                   ngxMousetrapKey="d j"
@@ -453,6 +453,11 @@
                   <i class="ph-bold ph-warning icon-md"></i>
                   {{ "bulletins.tooltip.publishAll" | translate }}
                 </button>
+              </li>
+
+              <!--- dummy button to hide dropdown -->
+              <li style="display: none">
+                <button class="btn" type="button" (click)="dropdown.hide()" ngxMousetrapKey="esc">Hide dropdown</button>
               </li>
             </ul>
           </div>
