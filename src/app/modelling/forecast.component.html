@@ -95,6 +95,14 @@
                 />
                 {{ source.label }}
               </label>
+              {{ " " }}
+              <span *ngIf="selectedSources[source.label]" class="text-bg-light">
+                <kbd (click)="source.change(-1)" ngxMousetrapKey="left">←</kbd>
+                {{ " " }}
+                {{ source.date | date: "medium" : undefined : translateService.currentLang }}
+                {{ " " }}
+                <kbd (click)="source.change(+1)" ngxMousetrapKey="right">→</kbd>
+              </span>
             </span>
           </div>
         </div>

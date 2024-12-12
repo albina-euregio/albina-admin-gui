@@ -103,14 +103,12 @@ class MapLink {
     Object.assign(this, data);
   }
 
-  withChange(change: 1 | -1 | Date): MapLink {
+  change(change: 1 | -1 | Date) {
     if (!this.date || !this.dateStepHour) {
       return this;
     }
-    return new MapLink({
-      ...this,
-      date: change instanceof Date ? change : new Date(+this.date + change * this.dateStepHour * 3600 * 1000),
-    });
+    this.date = change instanceof Date ? change : new Date(+this.date + change * this.dateStepHour * 3600 * 1000);
+    this.imageOverlay.setUrl(this.linkHref);
   }
 
   async fetchDate(): Promise<void> {

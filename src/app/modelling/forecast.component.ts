@@ -70,7 +70,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   zamgMeteoSourceService = inject(ZamgMeteoSourceService);
   private qfaService = inject(QfaService);
   paramService = inject(ParamService);
-  private translateService = inject(TranslateService);
+  translateService = inject(TranslateService);
   modalService = inject(BsModalService);
 
   readonly mapLayer = new LayerGroup();
