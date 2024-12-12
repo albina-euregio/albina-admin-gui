@@ -12,7 +12,13 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
-import { GenericObservation, ImportantObservation, PersonInvolvement } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+  PersonInvolvement,
+} from "./models/generic-observation.model";
 import { xor } from "lodash";
 
 @Component({
@@ -43,6 +49,7 @@ export class ObservationEditorComponent implements AfterViewInit {
   importantObservations = Object.values(ImportantObservation);
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);
   personInvolvementValues = Object.values(PersonInvolvement);
+  observationTypeValues = Object.values(ObservationType);
   xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation().locationName),
@@ -67,6 +74,17 @@ export class ObservationEditorComponent implements AfterViewInit {
 
   copyLatLng() {
     navigator.clipboard.writeText(`${this.observation().latitude}, ${this.observation().longitude}`);
+  }
+
+  setObservationType() {
+    const observation = this.observation();
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      if (observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown) {
+        observation.$type = ObservationType.Avalanche;
+      } else {
+        observation.$type = ObservationType.SimpleObservation;
+      }
+    }
   }
 
   ngAfterViewInit() {

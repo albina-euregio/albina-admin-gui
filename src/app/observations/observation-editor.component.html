@@ -1,6 +1,6 @@
 <!-- eslint-disable @angular-eslint/template/no-autofocus -->
 <div *ngIf="observation()" class="row g-3">
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-3">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
       <input #eventDateDate type="date" required class="date form-control" autofocus />
@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-3">
     <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
     <select id="snowpackStability" [(ngModel)]="observation().stability" class="form-select">
       <option [ngValue]="undefined"></option>
@@ -21,12 +21,27 @@
     </select>
   </div>
 
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-3">
     <label for="personInvolvement">{{ "observations.personInvolvement" | translate }}</label>
-    <select id="personInvolvement" [(ngModel)]="observation().personInvolvement" class="form-select">
+    <select
+      id="personInvolvement"
+      [(ngModel)]="observation().personInvolvement"
+      (change)="setObservationType()"
+      class="form-select"
+    >
       <option [ngValue]="undefined"></option>
-      <option *ngFor="let stability of personInvolvementValues" [value]="stability">
-        {{ "personInvolvement." + stability | translate }}
+      <option *ngFor="let personInvolvement of personInvolvementValues" [value]="personInvolvement">
+        {{ "personInvolvement." + personInvolvement | translate }}
+      </option>
+    </select>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <label for="observationType">{{ "observations.observationType" | translate }}</label>
+    <select id="observationType" [(ngModel)]="observation().$type" class="form-select">
+      <option [ngValue]="undefined"></option>
+      <option *ngFor="let type of observationTypeValues" [value]="type">
+        {{ "observationType." + type | translate }}
       </option>
     </select>
   </div>

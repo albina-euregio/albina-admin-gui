@@ -1231,6 +1231,7 @@
     "latitude": "Latitude",
     "locationName": "Location",
     "longitude": "Longitude",
+    "observationType": "Observation type",
     "personInvolvement": "Person involvement",
     "reportDate": "Report date",
     "showTable": "Table",

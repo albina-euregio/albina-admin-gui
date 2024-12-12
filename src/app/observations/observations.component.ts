@@ -314,13 +314,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   async saveObservation() {
     const { observation } = this.observationEditor;
-    if (observation.$source === ObservationSource.AvalancheWarningService) {
-      if (observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown) {
-        observation.$type = ObservationType.Avalanche;
-      } else {
-        observation.$type = ObservationType.SimpleObservation;
-      }
-    }
     try {
       this.observationEditor.saving = true;
       await this.observationsService.postObservation(observation).toPromise();
