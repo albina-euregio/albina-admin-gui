@@ -23,6 +23,12 @@ CREATE TABLE `generic_observations` (
   `IMPORTANT_OBSERVATION` set('SnowLine','SurfaceHoar','Graupel','StabilityTest','IceFormation','VeryLightNewSnow','ForBlog') DEFAULT NULL COMMENT 'Important observations',
   `EXTRA_DIALOG_ROWS` longtext COMMENT 'Additional information to display as table rows in the observation dialog' CHECK (json_valid(`EXTRA_DIALOG_ROWS`)),
   `PERSON_INVOLVEMENT` enum('Dead', 'Injured', 'Uninjured', 'No', 'Unknown') DEFAULT NULL COMMENT 'Person involvement',
+  `DELETED` bit DEFAULT false,
+  `ALLOW_EDIT` bit DEFAULT false,
   PRIMARY KEY (`SOURCE`,`ID`),
   KEY `generic_observations_EVENT_DATE_IDX` (`EVENT_DATE`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--ALTER TABLE generic_observations ADD DELETED bit DEFAULT false NULL;
+--ALTER TABLE generic_observations ADD ALLOW_EDIT bit DEFAULT false NULL;
+--ALTER TABLE generic_observations MODIFY COLUMN IMPORTANT_OBSERVATION set('SnowLine','SurfaceHoar','Graupel','StabilityTest','IceFormation','VeryLightNewSnow','ForBlog') DEFAULT NULL COMMENT 'Important observations';

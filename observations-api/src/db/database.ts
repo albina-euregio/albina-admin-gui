@@ -15,7 +15,7 @@ import {
 } from "../generic-observation";
 import { augmentElevation } from "./elevation";
 
-type GenericObservationTable = {
+interface GenericObservationTable {
   REGION_ID: string;
   EVENT_DATE: Date;
   ASPECTS: string;
@@ -40,7 +40,9 @@ type GenericObservationTable = {
   LOCATION_NAME: string;
   OBS_CONTENT: string;
   PERSON_INVOLVEMENT: string;
-};
+  DELETED: boolean;
+  ALLOW_EDIT: boolean;
+}
 
 export async function createConnection(): Promise<mysql.Connection> {
   return await mysql.createConnection({
