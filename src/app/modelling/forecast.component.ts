@@ -254,6 +254,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   getModelPointOptions(type: ForecastSource): L.CircleMarkerOptions {
     return {
+      pane: "markerPane",
       radius: 8,
       fillColor: this.allSources.find((s) => s.id === type)?.fillColor,
       color: "black",
