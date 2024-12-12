@@ -81,8 +81,8 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
   const data: GenericObservationTable = {
     ID: o.$id,
     SOURCE: o.$source,
-    ALLOW_EDIT: o.$allowEdit,
-    DELETED: o.$deleted,
+    ALLOW_EDIT: o.$allowEdit ?? false,
+    DELETED: o.$deleted ?? false,
     OBS_TYPE: o.$type ?? null,
     EXTERNAL_URL: o.$externalURL ?? null,
     EXTERNAL_IMG: Array.isArray(o.$externalImgs) ? o.$externalImgs.join("\n") : null,
