@@ -1223,6 +1223,7 @@
       "PERSON_UNKNOWN": "Event (unknown)",
       "TRAFFIC": "Traffic"
     },
+    "externalURL": "External URL (e.g. to photo database)",
     "fractureDepth": "Fracture depth",
     "hasCoordinates": "Has coordinates",
     "incline": "Incline",
