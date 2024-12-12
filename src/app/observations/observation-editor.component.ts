@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, ElementRef, viewChild, input, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { Feature, Point } from "geojson";
@@ -26,6 +26,7 @@ import { xor } from "lodash";
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     TranslateModule,
     TypeaheadModule,
     AspectsComponent,
@@ -50,6 +51,7 @@ export class ObservationEditorComponent implements AfterViewInit {
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);
   personInvolvementValues = Object.values(PersonInvolvement);
   observationTypeValues = Object.values(ObservationType);
+  ObservationSource = ObservationSource;
   xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation().locationName),

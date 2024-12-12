@@ -1,11 +1,39 @@
 <!-- eslint-disable @angular-eslint/template/no-autofocus -->
 <div *ngIf="observation()" class="row g-3">
+  <div *ngIf="observation().$source !== ObservationSource.AvalancheWarningService" class="d-flex align-items-center">
+    <i [style.color]="observation().$allowEdit ? null : 'rgba(0, 0, 0, 0.2)'" class="ph ph-rows-plus-bottom me-2"></i>
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        role="switch"
+        [(ngModel)]="observation().$allowEdit"
+        [title]="'observations.allowEditTooltip' | translate: { value: observation().$source }"
+      />
+      <label class="form-check-label mb-0" for="toggleBoolean">
+        {{ "observations.allowEdit" | translate }}
+      </label>
+    </div>
+  </div>
+
   <div class="col-12 col-md-3">
     <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
     <div id="eventDate" class="input-group">
-      <input #eventDateDate type="date" required class="date form-control" autofocus />
-      <input #eventDateTime type="time" required class="date form-control" />
-      <button class="btn btn-outline-secondary" type="button" (click)="setDate(undefined, 'eventDate')">
+      <input
+        #eventDateDate
+        type="date"
+        required
+        class="date form-control"
+        [disabled]="!observation().$allowEdit"
+        autofocus
+      />
+      <input #eventDateTime type="time" required class="date form-control" [disabled]="!observation().$allowEdit" />
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        (click)="setDate(undefined, 'eventDate')"
+        [disabled]="!observation().$allowEdit"
+      >
         <i class="ph ph-x"></i>
       </button>
     </div>
@@ -13,7 +41,12 @@
 
   <div class="col-12 col-md-3">
     <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
-    <select id="snowpackStability" [(ngModel)]="observation().stability" class="form-select">
+    <select
+      id="snowpackStability"
+      [(ngModel)]="observation().stability"
+      class="form-select"
+      [disabled]="!observation().$allowEdit"
+    >
       <option [ngValue]="undefined"></option>
       <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
         {{ "snowpackStability." + stability | translate }}
@@ -28,6 +61,7 @@
       [(ngModel)]="observation().personInvolvement"
       (change)="setObservationType()"
       class="form-select"
+      [disabled]="!observation().$allowEdit"
     >
       <option [ngValue]="undefined"></option>
       <option *ngFor="let personInvolvement of personInvolvementValues" [value]="personInvolvement">
@@ -38,7 +72,12 @@
 
   <div class="col-12 col-md-3">
     <label for="observationType">{{ "observations.observationType" | translate }}</label>
-    <select id="observationType" [(ngModel)]="observation().$type" class="form-select">
+    <select
+      id="observationType"
+      [(ngModel)]="observation().$type"
+      class="form-select"
+      [disabled]="!observation().$allowEdit"
+    >
       <option [ngValue]="undefined"></option>
       <option *ngFor="let type of observationTypeValues" [value]="type">
         {{ "observationType." + type | translate }}
@@ -58,6 +97,7 @@
       (typeaheadOnSelect)="selectLocation($event)"
       typeaheadOptionField="properties.display_name"
       class="form-control"
+      [disabled]="!observation().$allowEdit"
     />
   </div>
 
@@ -67,6 +107,7 @@
       (aspectsChange)="observation().aspect = $event[0]"
       [size]="100"
       [singleton]="true"
+      [disabled]="!observation().$allowEdit"
     />
     {{ observation().aspect }}
   </div>
@@ -80,6 +121,7 @@
       type="number"
       step="0.0000001"
       class="form-control"
+      [disabled]="!observation().$allowEdit"
     />
   </div>
 
@@ -93,6 +135,7 @@
         type="number"
         step="0.0000001"
         class="form-control"
+        [disabled]="!observation().$allowEdit"
       />
       <button class="btn btn-outline-secondary" type="button" (click)="copyLatLng()">
         <i class="ph ph-copy"></i>
@@ -104,7 +147,14 @@
     <label for="elevation">
       <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevation" | translate }}
     </label>
-    <input id="elevation" [(ngModel)]="observation().elevation" type="number" step="1" class="form-control" />
+    <input
+      id="elevation"
+      [(ngModel)]="observation().elevation"
+      type="number"
+      step="1"
+      class="form-control"
+      [disabled]="!observation().$allowEdit"
+    />
   </div>
 
   <div class="col-12 col-md-3">
@@ -119,6 +169,7 @@
         step="1"
         class="form-control"
         title="{{ 'observations.elevationLowerBound' | translate }}"
+        [disabled]="!observation().$allowEdit"
       />
       <input
         id="elevationUpperBound"
@@ -127,13 +178,21 @@
         step="1"
         class="form-control"
         title="{{ 'observations.elevationUpperBound' | translate }}"
+        [disabled]="!observation().$allowEdit"
       />
     </div>
   </div>
 
   <div class="col-12 col-md-6">
     <label for="authorName"><i class="ph ph-user"></i> {{ "observations.authorName" | translate }}</label>
-    <input id="authorName" required [(ngModel)]="observation().authorName" type="text" class="form-control" />
+    <input
+      id="authorName"
+      required
+      [(ngModel)]="observation().authorName"
+      type="text"
+      class="form-control"
+      [disabled]="!observation().$allowEdit"
+    />
   </div>
 
   <div class="col-12 col-md-6">
@@ -144,12 +203,18 @@
         type="button"
         (click)="setDate(eventDate, 'reportDate')"
         title="{{ 'observations.button.copyDate' | translate }}"
+        [disabled]="!observation().$allowEdit"
       >
         <i class="ph ph-calendar-star"></i>
       </button>
-      <input #reportDateDate type="date" required class="date form-control" />
-      <input #reportDateTime type="time" required class="date form-control" />
-      <button class="btn btn-outline-secondary" type="button" (click)="setDate(undefined, 'reportDate')">
+      <input #reportDateDate type="date" required class="date form-control" [disabled]="!observation().$allowEdit" />
+      <input #reportDateTime type="time" required class="date form-control" [disabled]="!observation().$allowEdit" />
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        (click)="setDate(undefined, 'reportDate')"
+        [disabled]="!observation().$allowEdit"
+      >
         <i class="ph ph-x"></i>
       </button>
     </div>
@@ -160,7 +225,10 @@
     <div class="avalanche-problem-detail__problem-icons">
       <app-avalanche-problem-icons
         *ngFor="let problem of avalancheProblems"
-        (click)="observation().avalancheProblems = xor(observation().avalancheProblems ?? [], [problem])"
+        (click)="
+          observation().$allowEdit &&
+            (observation().avalancheProblems = xor(observation().avalancheProblems ?? [], [problem]))
+        "
         [class.is-disabled]="!observation().avalancheProblems?.includes(problem)"
         [value]="problem"
         class="avalanche-problem-detail__problem-icon"
@@ -183,6 +251,7 @@
           "
           (click)="observation().dangerPatterns = xor(observation().dangerPatterns ?? [], [dangerPattern])"
           title="{{ 'dangerPattern.' + dangerPattern | translate }}"
+          [disabled]="!observation().$allowEdit"
         >
           {{ dangerPattern }}
         </button>
@@ -202,6 +271,7 @@
           (click)="
             observation().importantObservations = xor(observation().importantObservations ?? [], [importantObservation])
           "
+          [disabled]="!observation().$allowEdit"
         >
           {{ "importantObservation." + importantObservation | translate }}
         </button>
@@ -211,7 +281,13 @@
 
   <div class="col-12">
     <label for="externalURL"><i class="ph ph-link"></i> {{ "observations.externalURL" | translate }}</label>
-    <input id="externalURL" type="url" [(ngModel)]="observation().$externalURL" class="form-control" />
+    <input
+      id="externalURL"
+      type="url"
+      [(ngModel)]="observation().$externalURL"
+      class="form-control"
+      [disabled]="!observation().$allowEdit"
+    />
   </div>
 
   <div class="col-12 mb-3">
@@ -224,6 +300,7 @@
       type="text"
       rows="8"
       class="form-control"
+      [disabled]="!observation().$allowEdit"
     ></textarea>
   </div>
 </div>

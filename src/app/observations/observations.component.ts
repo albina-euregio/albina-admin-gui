@@ -291,12 +291,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const observation = {
       $source: ObservationSource.AvalancheWarningService,
       $type: ObservationType.SimpleObservation,
+      $allowEdit: true,
     } satisfies GenericObservation;
     this.observationEditor.observation = observation;
     this.showObservationEditor();
   }
 
   editObservation(observation: GenericObservation) {
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      observation.$allowEdit = true; // observations created by AWS are always editable
+    }
     this.observationEditor.observation = observation;
     this.showObservationEditor();
   }

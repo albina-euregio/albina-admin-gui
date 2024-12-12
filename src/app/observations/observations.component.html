@@ -518,6 +518,7 @@
     <button
       type="button"
       [disabled]="
+        !observationEditor.observation?.$allowEdit ||
         observationEditor.saving ||
         !observationEditor.observation?.reportDate ||
         !observationEditor.observation?.eventDate
@@ -531,7 +532,9 @@
     </button>
     <button
       type="button"
-      [disabled]="observationEditor.saving || !observationEditor.observation?.$id"
+      [disabled]="
+        !observationEditor.observation?.$allowEdit || observationEditor.saving || !observationEditor.observation?.$id
+      "
       (click)="deleteObservation()"
       class="btn btn-sm btn-danger"
     >

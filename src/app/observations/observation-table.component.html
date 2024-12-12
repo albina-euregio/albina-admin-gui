@@ -71,9 +71,16 @@
       </td>
       <td class="px-0 py-3">
         {{ observation.content }}
-        <button class="btn btn-bare float-end" (click)="editObservationEvent.emit(observation); $event.stopPropagation()">
-          <i class="ph-bold ph-pencil icon-md"></i>
-        </button>
+        <div class="float-end">
+          <i
+            *ngIf="observation.$allowEdit && observation.$source !== ObservationSource.AvalancheWarningService"
+            class="ph ph-rows-plus-bottom icon-md"
+            title="{{ 'observations.editIconTooltip' | translate: { value: observation.$source } }}"
+          ></i>
+          <button class="btn btn-bare" (click)="editObservationEvent.emit(observation); $event.stopPropagation()">
+            <i class="ph-bold ph-pencil icon-md"></i>
+          </button>
+        </div>
       </td>
     </tr>
   </tbody>
