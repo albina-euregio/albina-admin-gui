@@ -1,9 +1,12 @@
 import { Injectable } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { ImageOverlay } from "leaflet";
 import L from "leaflet";
 
 @Injectable()
 export class ZamgMeteoSourceService {
+  constructor(private translateService: TranslateService) {}
+
   maps = Object.freeze([
     ...[6, 12, 24, 48, 72].map(
       (i) =>
@@ -16,7 +19,7 @@ export class ZamgMeteoSourceService {
           dateStepHour: Math.min(i, 24),
           dateMin: i,
           dateMax: i >= 48 ? i : 72,
-          label: `${String(i)}h-Summen Neuschnee`,
+          label: i + "h " + this.translateService.instant("observations.weatherStations.tooltips.newSnow"),
         }),
     ),
     new MapLink({
@@ -27,7 +30,7 @@ export class ZamgMeteoSourceService {
       dateStepHour: 1,
       dateMin: 1,
       dateMax: 60,
-      label: "Schneefallgrenze",
+      label: this.translateService.instant("observations.weatherStations.tooltips.snowLine"),
     }),
     new MapLink({
       cls: "Prognosen",
@@ -37,7 +40,7 @@ export class ZamgMeteoSourceService {
       dateStepHour: 1,
       dateMin: 1,
       dateMax: 60,
-      label: "Temperatur",
+      label: this.translateService.instant("observations.weatherStations.tooltips.airTemperature"),
     }),
     new MapLink({
       cls: "Prognosen",
@@ -47,7 +50,7 @@ export class ZamgMeteoSourceService {
       dateStepHour: 1,
       dateMin: 1,
       dateMax: 72,
-      label: "Wind 3000m",
+      label: this.translateService.instant("observations.weatherStations.tooltips.windSpeed") + " 3000m",
     }),
     new MapLink({
       cls: "Prognosen",
@@ -55,7 +58,7 @@ export class ZamgMeteoSourceService {
       dateHref: "https://static.avalanche.report/zamg_meteo/overlays/wind/startDate.ok",
       dateStepHour: 1,
       dateMax: 60,
-      label: "Wind 10m",
+      label: this.translateService.instant("observations.weatherStations.tooltips.windSpeed") + " 10m",
     }),
     new MapLink({
       cls: "Prognosen",
@@ -63,7 +66,7 @@ export class ZamgMeteoSourceService {
       dateHref: "https://static.avalanche.report/zamg_meteo/overlays/wind/startDate.ok",
       dateStepHour: 1,
       dateMax: 60,
-      label: "Windböe 10m",
+      label: this.translateService.instant("observations.weatherStations.tooltips.windGust") + " 10m",
     }),
   ]);
 }
