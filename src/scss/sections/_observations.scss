@@ -303,8 +303,8 @@ $observations-height: calc(100vh - $header-nav-height);
   height: calc(100vh - 110px);
 }
 
-.layout-map .leaflet-pane {
-  mix-blend-mode: normal;
+.mix-blend-mode-multiply {
+  mix-blend-mode: multiply;
 }
 
 @media screen and (max-width: 768px) {

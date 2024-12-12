@@ -98,7 +98,7 @@ class MapLink {
         [45.6167, 9.4],
         [47.8167, 13.0333],
       ],
-      { className: "mix-blend-mode-multiply" },
+      { pane: "tilePane", className: "mix-blend-mode-multiply" },
     );
     Object.assign(this, data);
   }

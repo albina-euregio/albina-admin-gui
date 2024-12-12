@@ -50,13 +50,6 @@ export interface MultiselectDropdownData {
     ZamgMeteoSourceService,
   ],
   templateUrl: "./forecast.component.html",
-  styles: `
-    .leaflet-pane.leaflet-overlay-pane,
-    .leaflet-pane .leaflet-image-layer,
-    .leaflet-pane svg {
-      mix-blend-mode: multiply;
-    }
-  `,
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
