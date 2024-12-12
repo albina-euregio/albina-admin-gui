@@ -203,7 +203,12 @@
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
         </div>
         <div class="floating-action__actions btn-toolbar">
-          <button type="reset" class="btn btn-bare" (click)="discardVariant($event, activeVariant)">
+          <button
+            type="reset"
+            class="btn btn-bare"
+            (click)="discardVariant($event, activeVariant)"
+            ngxMousetrapKey="esc"
+          >
             <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
           </button>
           <button type="button" class="btn btn-primary" (click)="saveVariant($event)">

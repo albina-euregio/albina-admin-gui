@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, viewChild, inject } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, OnInit, viewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule, formatDate } from "@angular/common";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
@@ -13,6 +13,7 @@ import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { LayerGroup } from "leaflet";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
     GenericObservation,
@@ -42,7 +43,15 @@ type DetailsTabLabel = string;
 @Component({
   selector: "app-awsome",
   standalone: true,
-  imports: [CommonModule, FormsModule, FormsModule, ObservationChartComponent, TabsModule, TranslateModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    FormsModule,
+    ObservationChartComponent,
+    TabsModule,
+    TranslateModule,
+    NgxMousetrapDirective,
+  ],
   templateUrl: "awsome.component.html",
 })
 export class AwsomeComponent implements AfterViewInit, OnInit {
@@ -193,13 +202,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private get isMobile() {
     // see scss/sections/_observations.scss
     return window.matchMedia("(max-width: 768px)").matches;
-  }
-
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-      this.closeObservation();
-    }
   }
 
   private async fetchJSON<T>(input: RequestInfo | URL): Promise<T> {

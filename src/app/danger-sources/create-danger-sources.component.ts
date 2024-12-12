@@ -1,7 +1,6 @@
 import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { map, Subscription, timer } from "rxjs";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
 
@@ -29,6 +28,7 @@ import { NgIf, NgFor, NgTemplateOutlet, DatePipe } from "@angular/common";
 import { DangerSourceVariantComponent } from "./danger-source-variant.component";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",
@@ -42,6 +42,7 @@ import { DangerRatingIconComponent } from "../shared/danger-rating-icon.componen
     DangerRatingIconComponent,
     DatePipe,
     TranslateModule,
+    NgxMousetrapDirective,
   ],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
@@ -929,13 +930,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   isDangerSourceVariantStatus(variant: DangerSourceVariantModel, status: DangerSourceVariantStatus) {
     return variant.dangerSourceVariantStatus === status;
-  }
-
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.keyCode === 27 && this.editRegions) {
-      this.discardVariant(event, this.activeVariant);
-    }
   }
 
   openLoadModal(template: TemplateRef<any>) {

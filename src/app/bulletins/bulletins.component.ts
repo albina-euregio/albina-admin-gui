@@ -16,11 +16,12 @@ import { StressLevel } from "../models/stress-level.model";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 import { FormsModule } from "@angular/forms";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   templateUrl: "bulletins.component.html",
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, DatePipe, TranslateModule],
+  imports: [NgIf, NgFor, FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective],
 })
 export class BulletinsComponent implements OnInit, OnDestroy {
   translate = inject(TranslateService);
@@ -163,14 +164,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.editBulletin(date);
   }
 
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.keyCode === 27 && this.copying) {
-      this.cancelCopy(event);
-    }
-  }
-
-  cancelCopy(event) {
+  cancelCopy(event: Event) {
     event.stopPropagation();
     this.copying = false;
     this.bulletinsService.setCopyDate(undefined);

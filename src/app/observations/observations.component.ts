@@ -3,7 +3,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  HostListener,
   OnDestroy,
   TemplateRef,
   viewChild,
@@ -430,17 +429,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  @HostListener("document:keydown", ["$event"])
-  handleKeyBoardEvent(event: KeyboardEvent | { key: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown" }) {
+  changeObservation(change: -1 | 1) {
     if (!this.observationPopup?.observation) {
-      return;
-    }
-    if (
-      event.key !== "ArrowRight" &&
-      event.key !== "ArrowLeft" &&
-      event.key !== "ArrowUp" &&
-      event.key !== "ArrowDown"
-    ) {
       return;
     }
     let observation = this.observationPopup?.observation;
@@ -451,7 +441,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     if (index < 0) {
       return;
     }
-    if (event.key === "ArrowRight") {
+    if (change === 1) {
       index += 1;
       while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
         index += 1;
@@ -460,7 +450,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       if (observation) {
         this.onObservationClick(observation, false, 0);
       }
-    } else if (event.key === "ArrowLeft") {
+    } else if (change === -1) {
       index -= 1;
       while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
         index -= 1;
@@ -468,14 +458,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       observation = observations[index];
       if (observation) {
         this.onObservationClick(observation, false, 0);
-      }
-    } else if (observation?.$externalImgs && event.key === "ArrowUp") {
-      if (this.observationPopup.imgIndex > 0) {
-        this.observationPopup.imgIndex -= 1;
-      }
-    } else if (observation?.$externalImgs && event.key === "ArrowDown") {
-      if (observation?.$externalImgs.length > this.observationPopup.imgIndex + 1) {
-        this.observationPopup.imgIndex += 1;
       }
     }
   }

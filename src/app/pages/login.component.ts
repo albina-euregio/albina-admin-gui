@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, TemplateRef, viewChild, inject } from "@angular/core";
+import { Component, OnInit, TemplateRef, viewChild, inject } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { Router } from "@angular/router";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
@@ -90,12 +90,5 @@ export class LoginComponent implements OnInit {
   errorModalConfirm(): void {
     this.errorModalRef.hide();
     this.loading = false;
-  }
-
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.keyCode === 13 && !this.loading) {
-      this.login();
-    }
   }
 }

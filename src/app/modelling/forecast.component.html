@@ -125,8 +125,20 @@
 
     <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
       &mdash; Tipp:
-      <kbd (click)="changeRun('previous')">←</kbd>,
-      <kbd (click)="changeRun('next')">→</kbd>
+      <kbd (click)="changeRun('previous')" ngxMousetrapKey="left">←</kbd>
+      <kbd (click)="changeRun('next')" ngxMousetrapKey="right">→</kbd>
+      <kbd
+        *ngIf="showObservationConfigurations"
+        (click)="changeRun('previous', 'observationConfiguration'); setObservationConfiguration()"
+        ngxMousetrapKey="up"
+        >↑</kbd
+      >
+      <kbd
+        *ngIf="showObservationConfigurations"
+        (click)="changeRun('next', 'observationConfiguration'); setObservationConfiguration()"
+        ngxMousetrapKey="down"
+        >↓</kbd
+      >
       zum Blättern
     </div>
     <button type="button" class="btn-close" aria-label="Close" (click)="modalService.hide()"></button>

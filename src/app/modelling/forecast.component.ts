@@ -3,7 +3,6 @@ import {
   AfterViewInit,
   ElementRef,
   OnDestroy,
-  HostListener,
   AfterContentInit,
   TemplateRef,
   viewChild,
@@ -30,6 +29,7 @@ import {
 } from "./sources";
 import type { ModellingRouteData } from "./routes";
 import "bootstrap";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;
@@ -40,7 +40,7 @@ export interface MultiselectDropdownData {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule],
+  imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
@@ -318,7 +318,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     }
   }
 
-  changeRun(type: "next" | "previous", changeType = "") {
+  changeRun(type: "next" | "previous", changeType: "" | "observationConfiguration" = "") {
     if (changeType === "observationConfiguration") {
       const configurations = [...this.observationConfigurations];
       const index = configurations.indexOf(this.observationConfiguration);
@@ -356,24 +356,6 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
         const newIndex = index === 0 ? points.length - 1 : index - 1;
         this.selectedModelPoint = points[newIndex];
       }
-    }
-  }
-
-  @HostListener("document:keydown", ["$event"])
-  handleKeyBoardEvent(event: KeyboardEvent) {
-    if (!this.selectedModelPoint) {
-      return;
-    }
-
-    if (event.key === "ArrowRight") this.changeRun("next");
-    if (event.key === "ArrowLeft") this.changeRun("previous");
-
-    if (event.key === "ArrowUp" && this.showObservationConfigurations) {
-      this.changeRun("previous", "observationConfiguration");
-      this.setObservationConfiguration();
-    } else if (event.key === "ArrowDown" && this.showObservationConfigurations) {
-      this.changeRun("next", "observationConfiguration");
-      this.setObservationConfiguration();
     }
   }
 

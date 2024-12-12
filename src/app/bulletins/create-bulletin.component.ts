@@ -1653,16 +1653,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.router.navigate(["/bulletins"]);
   }
 
-  @HostListener("document:keydown", ["$event"])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.keyCode === 27 && this.editRegions) {
-      this.discardBulletin(event, this.activeBulletin);
-    } else if (event.keyCode === 27 && (this.copyService.isCopyTextcat() || this.copyService.isCopyBulletin())) {
-      this.copyService.resetCopyTextcat();
-      this.copyService.resetCopyBulletin();
-    }
-  }
-
   openLoadingErrorModal(template: TemplateRef<any>) {
     this.loadingErrorModalRef = this.modalService.show(template, this.config);
   }

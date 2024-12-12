@@ -612,7 +612,12 @@
           <i class="ph ph-map-trifold"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
         </div>
         <div class="floating-action__actions btn-toolbar">
-          <button type="reset" class="btn btn-bare" (click)="discardBulletin($event, activeBulletin)">
+          <button
+            type="reset"
+            class="btn btn-bare"
+            (click)="discardBulletin($event, activeBulletin)"
+            ngxMousetrapKey="esc"
+          >
             <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
           </button>
           <button type="button" class="btn btn-primary" (click)="saveBulletin($event)" ngxMousetrapKey="enter">
