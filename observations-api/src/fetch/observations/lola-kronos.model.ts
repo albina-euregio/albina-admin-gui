@@ -177,12 +177,12 @@ export interface Avalanche {
 }
 
 export interface SnowStabilityTest {
-  type: string;
+  testCategory: string;
+  testResult: string;
   number: number | null;
   position: number | null;
   comment: string;
   snowStability: SnowStability;
-  isKBTTest: boolean;
   KBBTOverlayingLayer: null | string;
   KBBTFractureSurface: string | null;
   KBBTImpactHardness: string | null;
@@ -445,7 +445,7 @@ export function convertLoLaToGeneric(
       imageCountString(obs.images) +
       ((obs as LolaSnowProfile).snowStabilityTest ?? [])
         .flatMap((t) => [
-          `☲${t.type}`,
+          `☲${t.testCategory}`,
           isFinite(t.number) && isFinite(t.position) ? `${t.number}@${t.position}cm` : "",
           t.comment ?? "",
         ])
