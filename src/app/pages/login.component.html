@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/no-autofocus -->
 <div class="app flex-row align-items-center" [style]="getStyle()">
   <div class="container">
     <div class="row justify-content-center">
@@ -16,6 +17,7 @@
                     autocomplete="username"
                     class="form-control"
                     name="username"
+                    autofocus
                     placeholder="{{ 'login.placeholder.username' | translate }}"
                     [(ngModel)]="username"
                   />
