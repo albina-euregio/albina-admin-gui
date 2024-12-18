@@ -350,14 +350,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   hasForecast(variant: DangerSourceVariantModel): boolean {
-    if (
+    return (
       variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
       this.internVariantsList.some((v) => variant.forecastDangerSourceVariantId === v.id)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   }
 
   compareForecast(event: Event, variant: DangerSourceVariantModel) {

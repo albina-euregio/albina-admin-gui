@@ -768,13 +768,10 @@ export class BulletinsService {
   }
 
   isLocked(bulletinId: string) {
-    if (
+    return (
       this.lockedBulletins.has(bulletinId) &&
       this.lockedBulletins.get(bulletinId).getUserEmail() !== this.authenticationService.getEmail()
-    ) {
-      return true;
-    }
-    return false;
+    );
   }
 
   lockBulletin(date: [Date, Date], bulletinId: string) {

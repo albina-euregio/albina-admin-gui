@@ -90,10 +90,6 @@ export class SettingsComponent {
   }
 
   isAdmin() {
-    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin);
   }
 }
