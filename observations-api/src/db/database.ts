@@ -96,7 +96,7 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
     EXTERNAL_URL: o.$externalURL ?? null,
     EXTERNAL_IMG: Array.isArray(o.$externalImgs) ? o.$externalImgs.join("\n") : null,
     STABILITY: o.stability ?? null,
-    ASPECTS: Array.isArray(o.aspect) ? o.aspect.join(",") : o.aspect ?? null,
+    ASPECTS: Array.isArray(o.aspect) ? o.aspect.join(",") : (o.aspect ?? null),
     AUTHOR_NAME: o.authorName ?? null,
     OBS_CONTENT: o.content ?? null,
     OBS_DATA: o.$data ? JSON.stringify(o.$data) : null,
@@ -167,10 +167,10 @@ export async function selectObservations(
       aspect: (row.ASPECTS?.split(",")?.[0] as Aspect) ?? undefined,
       authorName: row.AUTHOR_NAME ?? undefined,
       content: row.OBS_CONTENT ?? undefined,
-      $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : row.OBS_DATA ?? undefined,
+      $data: /^{.*}$/.test(row.OBS_DATA) ? JSON.parse(row.OBS_DATA) : (row.OBS_DATA ?? undefined),
       $extraDialogRows: /^\[.*\]$/.test(row.EXTRA_DIALOG_ROWS)
         ? JSON.parse(row.EXTRA_DIALOG_ROWS)
-        : row.EXTRA_DIALOG_ROWS ?? undefined,
+        : (row.EXTRA_DIALOG_ROWS ?? undefined),
       elevation: row.ELEVATION ?? undefined,
       elevationLowerBound: row.ELEVATION_LOWER_BOUND ?? undefined,
       elevationUpperBound: row.ELEVATION_UPPER_BOUND ?? undefined,
