@@ -200,8 +200,8 @@
     "status": {
       "submittedInfo": "Will be published at 5PM",
       "resubmittedInfo": "Will be published at 8AM",
-      "publishedInfo" : "Has been published",
-      "noPublicationInfo" : "Will NOT be published automatically",
+      "publishedInfo": "Has been published",
+      "noPublicationInfo": "Will NOT be published automatically",
       "loadingPreview": "Creating PDF preview ...",
       "loading": "Loading bulletin ...",
       "loadMoreBulletins": "Load {{count}} more bulletins",
@@ -363,11 +363,11 @@
         "favourableSituation": "Favourable situation",
         "cancel": "Cancel"
       },
-      "removeDaytimeDependencyDialog" : {
+      "removeDaytimeDependencyDialog": {
         "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancel"
       },
-      "strategicMindsetDialog" : {
+      "strategicMindsetDialog": {
         "title": "Strategic Mindsets",
         "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
         "description": {
@@ -420,11 +420,11 @@
           "spring_diurnal": "Spring Diurnal"
         }
       },
-      "decisionTree" : {
+      "decisionTree": {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
-        "decisionTree" : "Decision tree",
-        "feedback" : "Feedback",
+        "decisionTree": "Decision tree",
+        "feedback": "Feedback",
         "save": "Save",
         "discard": "Discard"
       }
@@ -440,8 +440,8 @@
           "AT-06": "Styria",
           "AT-07": "Tyrol",
           "AT-08": "Vorarlberg",
-          "CH" : "Switzerland",
-          "DE-BY" : "Bavaria",
+          "CH": "Switzerland",
+          "DE-BY": "Bavaria",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "South Tyrol",
@@ -1182,6 +1182,8 @@
     "weatherStations": {
       "tooltips": {
         "globalRadiation": "Global radiation",
+        "newSnow": "New snow",
+        "snowLine": "Snow line",
         "snowHeight": "Snow height",
         "snowDifference24h": "Snow difference 24h",
         "snowDifference48h": "Snow difference 48h",

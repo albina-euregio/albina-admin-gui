@@ -25,12 +25,6 @@ import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaService } from "./app/modelling/qfa";
-import {
-  AlpsolutProfileService,
-  MeteogramSourceService,
-  MultimodelSourceService,
-  ObservedProfileSourceService,
-} from "./app/modelling/sources";
 import { GeocodingService } from "./app/observations/geocoding.service";
 import { ObservationFilterService } from "./app/observations/observation-filter.service";
 import { ObservationMarkerObserverService } from "./app/observations/observation-marker-observer.service";
@@ -126,7 +120,6 @@ bootstrapApplication(AppComponent, {
       }),
     },
     AlbinaObservationsService,
-    AlpsolutProfileService,
     AuthenticationService,
     AuthGuard,
     BaseMapService,
@@ -151,14 +144,11 @@ bootstrapApplication(AppComponent, {
     LocalStorageService,
     MapService,
     MediaFileService,
-    MeteogramSourceService,
-    MultimodelSourceService,
     ObservationFilterService,
     ObservationMarkerService,
     ObservationMarkerObserverService,
     ObservationMarkerWeatherStationService,
     ObservationMarkerWebcamService,
-    ObservedProfileSourceService,
     ParamService,
     provideEchartsCore({ echarts }),
     QfaService,

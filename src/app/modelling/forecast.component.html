@@ -3,7 +3,7 @@
     <div class="layout-left">
       <div class="layout-global">
         <div class="global-bar-scroll">
-          <div class="global-bar global-bar-left">
+          <div class="global-bar global-bar-left flex-wrap">
             <div class="global-bar-item global-bar-item-source">
               <div class="dropdown">
                 <button
@@ -65,10 +65,44 @@
                 <i *ngIf="loading" class="ph ph-circle-notch"></i>
               </button>
             </div>
+
             <span *ngFor="let source of allSources" class="global-bar-item">
-              &mdash;
-              <span [style]="{ color: source.fillColor }">●</span>
-              {{ source.name }}
+              <label class="form-check-label text-nowrap">
+                <input
+                  [(ngModel)]="selectedSources[source.id]"
+                  [ngModelOptions]="{ standalone: true }"
+                  (change)="onSourcesDropdownSelect()"
+                  type="checkbox"
+                  class="form-check-input"
+                />
+                <span [style]="{ color: source.fillColor }">●</span>
+                {{ source.name }}
+              </label>
+            </span>
+
+            <span *ngFor="let source of zamgMeteoSourceService.maps" class="global-bar-item">
+              <label class="form-check-label text-nowrap">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="zamgMeteoSourceService"
+                  [(ngModel)]="selectedSources[source.label]"
+                  (change)="
+                    selectedSources[source.label]
+                      ? source.addImageOverlay(mapService.map)
+                      : mapService.map.removeLayer(source.imageOverlay)
+                  "
+                />
+                {{ source.label }}
+              </label>
+              {{ " " }}
+              <span *ngIf="selectedSources[source.label]" class="text-bg-light">
+                <kbd (click)="source.change(-1)" ngxMousetrapKey="left">←</kbd>
+                {{ " " }}
+                {{ source.date | date: "medium" : undefined : translateService.currentLang }}
+                {{ " " }}
+                <kbd (click)="source.change(+1)" ngxMousetrapKey="right">→</kbd>
+              </span>
             </span>
           </div>
         </div>
