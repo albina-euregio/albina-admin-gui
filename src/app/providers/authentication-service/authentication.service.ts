@@ -265,16 +265,12 @@ export class AuthenticationService {
     return this.activeRegion?.id;
   }
 
-  public setActiveRegion(region: RegionConfiguration) {
+  public setActiveRegion(region: RegionConfiguration | string) {
     if (!this.currentAuthor) {
       return;
     }
-    if (
-      this.currentAuthor
-        .getRegions()
-        .map((region) => region.id)
-        .includes(region.id)
-    ) {
+    region = this.currentAuthor.getRegions().find((r) => r.id === (typeof region === "string" ? region : region.id));
+    if (region) {
       this.activeRegion = region;
       this.localStorageService.setActiveRegion(this.activeRegion);
     } else {
