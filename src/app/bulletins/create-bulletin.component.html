@@ -37,8 +37,8 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="changeDate(bulletinsService.getNextDate())"
-            *ngIf="bulletinsService.getNextDate()"
+            (click)="changeDate(bulletinsService.getPreviousDate())"
+            *ngIf="bulletinsService.getPreviousDate()"
             [ngxMousetrapKey]="['ctrl+left', 'command+left']"
           >
             <i class="ph-bold ph-caret-left"></i>
@@ -46,8 +46,8 @@
           <button
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="changeDate(bulletinsService.getPreviousDate())"
-            *ngIf="bulletinsService.getPreviousDate()"
+            (click)="changeDate(bulletinsService.getNextDate())"
+            *ngIf="bulletinsService.getNextDate()"
             [ngxMousetrapKey]="['ctrl+right', 'command+right']"
           >
             <i class="ph-bold ph-caret-right"></i>
