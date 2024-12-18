@@ -169,7 +169,8 @@ export class ObservationEditorComponent implements AfterViewInit {
         observation.authorName = "Leitstelle Tirol";
       }
 
-      const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
+      const match = content.match(/Einsatzcode:\s*(.*)\n/);
+      const code = match ? match[1] : "";
       if (codes[code]) observation.personInvolvement = codes[code];
 
       if (!observation.locationName && content.includes("Einsatzort")) {
