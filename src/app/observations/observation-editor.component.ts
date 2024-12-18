@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, ElementRef, viewChild, input, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { Feature, Point } from "geojson";
@@ -12,7 +12,13 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
-import { GenericObservation, ImportantObservation, PersonInvolvement } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+  PersonInvolvement,
+} from "./models/generic-observation.model";
 import { xor } from "lodash";
 
 @Component({
@@ -20,6 +26,7 @@ import { xor } from "lodash";
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     TranslateModule,
     TypeaheadModule,
     AspectsComponent,
@@ -43,6 +50,8 @@ export class ObservationEditorComponent implements AfterViewInit {
   importantObservations = Object.values(ImportantObservation);
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);
   personInvolvementValues = Object.values(PersonInvolvement);
+  observationTypeValues = Object.values(ObservationType);
+  ObservationSource = ObservationSource;
   xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation().locationName),
@@ -67,6 +76,17 @@ export class ObservationEditorComponent implements AfterViewInit {
 
   copyLatLng() {
     navigator.clipboard.writeText(`${this.observation().latitude}, ${this.observation().longitude}`);
+  }
+
+  setObservationType() {
+    const observation = this.observation();
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      if (observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown) {
+        observation.$type = ObservationType.Avalanche;
+      } else {
+        observation.$type = ObservationType.SimpleObservation;
+      }
+    }
   }
 
   ngAfterViewInit() {
@@ -149,7 +169,8 @@ export class ObservationEditorComponent implements AfterViewInit {
         observation.authorName = "Leitstelle Tirol";
       }
 
-      const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
+      const match = content.match(/Einsatzcode:\s*(.*)\n/);
+      const code = match ? match[1] : "";
       if (codes[code]) observation.personInvolvement = codes[code];
 
       if (!observation.locationName && content.includes("Einsatzort")) {

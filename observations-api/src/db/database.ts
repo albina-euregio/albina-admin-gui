@@ -15,7 +15,7 @@ import {
 } from "../generic-observation";
 import { augmentElevation } from "./elevation";
 
-type GenericObservationTable = {
+interface GenericObservationTable {
   REGION_ID: string;
   EVENT_DATE: Date;
   ASPECTS: string;
@@ -40,7 +40,9 @@ type GenericObservationTable = {
   LOCATION_NAME: string;
   OBS_CONTENT: string;
   PERSON_INVOLVEMENT: string;
-};
+  DELETED: 0 | 1;
+  ALLOW_EDIT: 0 | 1;
+}
 
 export async function createConnection(): Promise<mysql.Connection> {
   return await mysql.createConnection({
@@ -58,6 +60,14 @@ export async function augmentAndInsertObservation(
   existing: GenericObservation[] = [],
 ) {
   const ex = findExistingObservation(existing, o);
+  if (ex?.$allowEdit) {
+    console.log("Skipping observation since it is in edit mode", o.$id, o.$source);
+    return;
+  }
+  if (ex?.$deleted) {
+    console.log("Skipping observation since it is deleted", o.$id, o.$source);
+    return;
+  }
   if (!ex || o.latitude !== ex.latitude || o.longitude !== ex.longitude) {
     augmentRegion(o);
     await augmentElevation(o);
@@ -71,6 +81,8 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
   const data: GenericObservationTable = {
     ID: o.$id,
     SOURCE: o.$source,
+    ALLOW_EDIT: o.$allowEdit ?? false,
+    DELETED: o.$deleted ?? false,
     OBS_TYPE: o.$type ?? null,
     EXTERNAL_URL: o.$externalURL ?? null,
     EXTERNAL_IMG: Array.isArray(o.$externalImgs) ? o.$externalImgs.join("\n") : null,
@@ -116,7 +128,7 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
 export async function deleteObservation(connection: mysql.Connection, o: GenericObservation) {
   if (!o || !o.$id) return;
   console.log("Deleting observation", o.$id, o.$source);
-  const sql = "DELETE FROM generic_observations WHERE ID = ?";
+  const sql = "UPDATE generic_observations SET deleted = 1 WHERE ID = ?";
   try {
     return await connection.execute(sql, [o.$id]);
   } catch (err) {
@@ -130,13 +142,15 @@ export async function selectObservations(
   startDate: Date,
   endDate: Date,
 ): Promise<GenericObservation[]> {
-  const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ?";
+  const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ? AND deleted = 0";
   const values = [startDate.toISOString(), endDate.toISOString()];
   const [rows] = await connection.query(sql, values);
   return (rows as unknown as GenericObservationTable[]).map(
     (row): GenericObservation => ({
       $id: row.ID,
       $source: row.SOURCE as ObservationSource | ForecastSource,
+      $allowEdit: row.ALLOW_EDIT === 1,
+      $deleted: row.DELETED === 1,
       $type: (row.OBS_TYPE as ObservationType) ?? undefined,
       $externalURL: row.EXTERNAL_URL ?? undefined,
       $externalImgs: row.EXTERNAL_IMG ? row.EXTERNAL_IMG.split("\n") : undefined,

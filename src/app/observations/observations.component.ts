@@ -291,12 +291,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const observation = {
       $source: ObservationSource.AvalancheWarningService,
       $type: ObservationType.SimpleObservation,
+      $allowEdit: true,
     } satisfies GenericObservation;
     this.observationEditor.observation = observation;
     this.showObservationEditor();
   }
 
   editObservation(observation: GenericObservation) {
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      observation.$allowEdit = true; // observations created by AWS are always editable
+    }
     this.observationEditor.observation = observation;
     this.showObservationEditor();
   }
@@ -314,11 +318,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   async saveObservation() {
     const { observation } = this.observationEditor;
-    if (observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown) {
-      observation.$type = ObservationType.Avalanche;
-    } else {
-      observation.$type = ObservationType.SimpleObservation;
-    }
     try {
       this.observationEditor.saving = true;
       await this.observationsService.postObservation(observation).toPromise();

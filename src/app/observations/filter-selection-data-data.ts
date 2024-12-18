@@ -172,6 +172,12 @@ export function observationFilters(t: (message: string) => string): FilterSelect
           label: "m",
           legend: t("importantObservation.VeryLightNewSnow"),
         },
+        {
+          value: ImportantObservation.ForBlog,
+          color: "#f781bf",
+          label: "BLOG",
+          legend: t("importantObservation.ForBlog"),
+        },
       ],
     }),
     new FilterSelectionData<GenericObservation>({
