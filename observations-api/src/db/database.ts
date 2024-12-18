@@ -40,8 +40,8 @@ interface GenericObservationTable {
   LOCATION_NAME: string;
   OBS_CONTENT: string;
   PERSON_INVOLVEMENT: string;
-  DELETED: boolean;
-  ALLOW_EDIT: boolean;
+  DELETED: 0 | 1;
+  ALLOW_EDIT: 0 | 1;
 }
 
 export async function createConnection(): Promise<mysql.Connection> {
@@ -51,15 +51,6 @@ export async function createConnection(): Promise<mysql.Connection> {
     user: "ais",
     password: "MD>5:X*n%)1V",
     database: "albina_dev",
-    // typecast boolean, see https://www.bennadel.com/blog/3188-casting-bit-fields-to-booleans-using-the-node-js-mysql-driver.htm
-    typeCast: function (field, next) {
-      if (field.type === "BIT" && field.length === 1) {
-        const bytes = field.buffer();
-        return bytes[0] === 1;
-      } else {
-        return next();
-      }
-    },
   });
 }
 
@@ -158,8 +149,8 @@ export async function selectObservations(
     (row): GenericObservation => ({
       $id: row.ID,
       $source: row.SOURCE as ObservationSource | ForecastSource,
-      $allowEdit: row.ALLOW_EDIT,
-      $deleted: row.DELETED,
+      $allowEdit: row.ALLOW_EDIT === 1,
+      $deleted: row.DELETED === 1,
       $type: (row.OBS_TYPE as ObservationType) ?? undefined,
       $externalURL: row.EXTERNAL_URL ?? undefined,
       $externalImgs: row.EXTERNAL_IMG ? row.EXTERNAL_IMG.split("\n") : undefined,
