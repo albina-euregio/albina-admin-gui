@@ -89,7 +89,7 @@ function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>):
       `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/48-72/${feature.properties.plot}.png`,
       `https://wiski.tirol.gv.at/lawine/grafiken/800/wind/72-168/${feature.properties.plot}.png`,
     ],
-    $id: feature.properties["LWD-Nummer"],
+    $id: feature.properties["LWD-Nummer"] || String(feature.id),
     $source: ObservationSource.AvalancheWarningService,
     $type: ObservationType.TimeSeries,
     aspect: undefined,
