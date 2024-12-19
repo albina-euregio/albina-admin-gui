@@ -44,12 +44,13 @@ export async function getAwsWeatherStations(
 async function fetchSMET(
   stations: GenericObservation<FeatureProperties>[],
 ): Promise<Record<GenericObservation["$id"], string>> {
-  const data = await Promise.all(
-    stations.map(async (station) => {
-      if (!station?.$id) {
-        return;
-      }
-      const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
+  const data: [GenericObservation["$id"], string][] = [];
+  for (const station of stations) {
+    if (!station?.$id) {
+      return;
+    }
+    const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
+    try {
       const response = await fetch(url);
       if (!response.ok) {
         console.warn("Fetching", url, response.statusText);
@@ -71,9 +72,11 @@ async function fetchSMET(
       if (!smet) {
         return;
       }
-      return [station?.$id, smet] satisfies [GenericObservation["$id"], string];
-    }),
-  );
+      data.push([station?.$id, smet]);
+    } catch (e) {
+      console.warn(`Fetching ${station.locationName} from ${url} failed!`, e);
+    }
+  }
   return Object.fromEntries(data.filter((d) => Array.isArray(d)));
 }
 
