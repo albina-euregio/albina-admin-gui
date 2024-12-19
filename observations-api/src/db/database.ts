@@ -46,11 +46,11 @@ interface GenericObservationTable {
 
 export async function createConnection(): Promise<mysql.Connection> {
   return await mysql.createConnection({
-    host: "127.0.0.1",
-    port: 3306,
-    user: "ais",
-    password: "MD>5:X*n%)1V",
-    database: "albina_dev",
+    host: process.env.MYSQL_HOST || "127.0.0.1",
+    port: process.env.MYSQL_PORT ? +process.env.MYSQL_PORT : 3306,
+    user: process.env.MYSQL_USER || "observations-api",
+    password: process.env.MYSQL_PASSWORD || "EopheekeiNg1hoomo",
+    database: process.env.MYSQL_DATABASE || "albina_dev",
   });
 }
 

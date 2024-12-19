@@ -32,3 +32,10 @@ CREATE TABLE `generic_observations` (
 --ALTER TABLE generic_observations MODIFY COLUMN DELETED BOOL DEFAULT false NULL COMMENT 'Observations marked as deleted will no longer be returned in the list';
 --ALTER TABLE generic_observations MODIFY COLUMN ALLOW_EDIT BOOL DEFAULT false NULL COMMENT 'Allows modifying observations fetched from external sources';
 --ALTER TABLE generic_observations MODIFY COLUMN IMPORTANT_OBSERVATION set('SnowLine','SurfaceHoar','Graupel','StabilityTest','IceFormation','VeryLightNewSnow','ForBlog') DEFAULT NULL COMMENT 'Important observations';
+
+-- CREATE USER 'observations-api'@'%' IDENTIFIED BY 'EopheekeiNg1hoomo';
+-- GRANT alter ON albina_dev.generic_observations TO 'observations-api'@'%';
+-- GRANT delete ON albina_dev.generic_observations TO 'observations-api'@'%';
+-- GRANT insert ON albina_dev.generic_observations TO 'observations-api'@'%';
+-- GRANT select ON albina_dev.generic_observations TO 'observations-api'@'%';
+-- GRANT update ON albina_dev.generic_observations TO 'observations-api'@'%';

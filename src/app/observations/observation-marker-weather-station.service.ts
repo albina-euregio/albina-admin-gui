@@ -1,9 +1,10 @@
-import { Injectable, inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Marker } from "leaflet";
-import { degreeToAspect, GenericObservation, WeatherStationParameter } from "./models/generic-observation.model";
+import { degreeToAspect, GenericObservation } from "./models/generic-observation.model";
 import { Aspect } from "../enums/enums";
 import { makeIcon } from "./make-icon";
 import { ObservationMarkerService } from "./observation-marker.service";
+import type { FeatureProperties } from "../../../observations-api/src/fetch/weather-stations";
 
 const snowHeightThresholds = [0, 1, 10, 25, 50, 100, 200, 300, 1000];
 const elevationColors = {
@@ -130,8 +131,27 @@ const aspectColors = {
   [Aspect.NW]: "#113570",
 };
 
+export enum WeatherStationParameter {
+  GlobalRadiation = "GlobalRadiation",
+  SnowHeight = "SnowHeight",
+  SnowDifference24h = "SnowDifference24h",
+  SnowDifference48h = "SnowDifference48h",
+  SnowDifference72h = "SnowDifference72h",
+  AirTemperature = "AirTemperature",
+  AirTemperatureMax = "AirTemperatureMax",
+  AirTemperatureMin = "AirTemperatureMin",
+  SurfaceTemperature = "SurfaceTemperature",
+  SurfaceHoar = "SurfaceHoar",
+  SurfaceHoarCalc = "SurfaceHoarCalc",
+  DewPoint = "DewPoint",
+  RelativeHumidity = "RelativeHumidity",
+  WindDirection = "WindDirection",
+  WindSpeed = "WindSpeed",
+  WindGust = "WindGust",
+}
+
 @Injectable()
-export class ObservationMarkerWeatherStationService<T extends Partial<GenericObservation>> {
+export class ObservationMarkerWeatherStationService<T extends Partial<GenericObservation<FeatureProperties>>> {
   private observationMarkerService = inject<ObservationMarkerService<T>>(ObservationMarkerService);
 
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
@@ -157,46 +177,88 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     }
   }
 
-  toMarkerColor(observation: T): string {
+  toValue(observation: T): number {
+    const data: FeatureProperties = observation.$data;
+    const statistics = data.statistics;
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
-        return this.globalRadiationColor(observation.$data.GS_O);
+        return statistics?.ISWR?.average;
       case WeatherStationParameter.SnowHeight:
-        return this.snowHeightColor(observation.$data.HS);
+        return statistics?.HS?.average;
       case WeatherStationParameter.SnowDifference24h:
-        return this.snowDifferenceColor(observation.$data.HSD24);
+        return NaN;
       case WeatherStationParameter.SnowDifference48h:
-        return this.snowDifferenceColor(observation.$data.HSD48);
+        return NaN;
       case WeatherStationParameter.SnowDifference72h:
-        return this.snowDifferenceColor(observation.$data.HSD72);
+        return NaN;
       case WeatherStationParameter.AirTemperature:
-        return this.temperatureColor(observation.$data.LT);
+        return statistics?.TA?.average;
       case WeatherStationParameter.AirTemperatureMax:
-        return this.temperatureColor(observation.$data.LT_MAX);
+        return statistics?.TA?.max;
       case WeatherStationParameter.AirTemperatureMin:
-        return this.temperatureColor(observation.$data.LT_MIN);
+        return statistics?.TA?.min;
       case WeatherStationParameter.SurfaceTemperature:
-        return this.temperatureColor(observation.$data.OFT);
+        return statistics?.TSS?.average;
       case WeatherStationParameter.SurfaceHoar:
-        return this.surfaceHoarColor(this.getSurfaceHoar(observation.$data));
+        return this.getSurfaceHoar(data);
       case WeatherStationParameter.SurfaceHoarCalc:
-        return this.surfaceHoarColor(this.calcSurfaceHoarProbability(observation.$data));
+        return this.calcSurfaceHoarProbability(data);
       case WeatherStationParameter.DewPoint:
-        return this.dewPointColor(observation.$data.TD);
+        return statistics?.TD?.average;
       case WeatherStationParameter.RelativeHumidity:
-        return this.relativeHumidityColor(observation.$data.RH);
+        return statistics?.RH?.average;
       case WeatherStationParameter.WindSpeed:
-        return this.windColor(observation.$data.WG);
+        return statistics?.VW?.average;
       case WeatherStationParameter.WindDirection:
-        return observation.$data.WR ? aspectColors[degreeToAspect(observation.$data.WR)] : "white";
+        return statistics?.DW?.median;
       case WeatherStationParameter.WindGust:
-        return this.windColor(observation.$data.WG_BOE);
+        return statistics?.VW_MAX?.max;
+      default:
+        return NaN;
+    }
+  }
+
+  toMarkerColor(observation: T): string {
+    const value = this.toValue(observation);
+    switch (this.weatherStationLabel) {
+      case WeatherStationParameter.GlobalRadiation:
+        return this.globalRadiationColor(value);
+      case WeatherStationParameter.SnowHeight:
+        return this.snowHeightColor(value);
+      case WeatherStationParameter.SnowDifference24h:
+        return this.snowDifferenceColor(value);
+      case WeatherStationParameter.SnowDifference48h:
+        return this.snowDifferenceColor(value);
+      case WeatherStationParameter.SnowDifference72h:
+        return this.snowDifferenceColor(value);
+      case WeatherStationParameter.AirTemperature:
+        return this.temperatureColor(value);
+      case WeatherStationParameter.AirTemperatureMax:
+        return this.temperatureColor(value);
+      case WeatherStationParameter.AirTemperatureMin:
+        return this.temperatureColor(value);
+      case WeatherStationParameter.SurfaceTemperature:
+        return this.temperatureColor(value);
+      case WeatherStationParameter.SurfaceHoar:
+        return this.surfaceHoarColor(value);
+      case WeatherStationParameter.SurfaceHoarCalc:
+        return this.surfaceHoarColor(value);
+      case WeatherStationParameter.DewPoint:
+        return this.dewPointColor(value);
+      case WeatherStationParameter.RelativeHumidity:
+        return this.relativeHumidityColor(value);
+      case WeatherStationParameter.WindSpeed:
+        return this.windColor(value);
+      case WeatherStationParameter.WindDirection:
+        return value ? aspectColors[degreeToAspect(value)] : "white";
+      case WeatherStationParameter.WindGust:
+        return this.windColor(value);
       default:
         return "white";
     }
   }
 
-  private getSurfaceHoar(data) {
+  private getSurfaceHoar(data: T["$data"]): number {
     const tempDiff = data.TD - data.OFT;
     if (data.OFT < 0 && tempDiff > 0) {
       return tempDiff;
@@ -206,7 +268,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
   }
 
   // Lehning et. al. 2002
-  private calcSurfaceHoarProbability(data) {
+  private calcSurfaceHoarProbability(data: T["$data"]): number {
     const grainSize = 1; // assumption
     //z0 0.5 to 2.4 mm for snow surfaces.
     const z0 = (0.003 + grainSize / 5) / 1000; //Lehning 2000, for grainSize = 1 mm only 0,203
@@ -302,37 +364,11 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
   }
 
   private getLabel(observation: T) {
-    switch (this.weatherStationLabel) {
-      case WeatherStationParameter.GlobalRadiation:
-        return observation.$data.GS_O ? Math.round(observation.$data.GS_O) : "";
-      case WeatherStationParameter.SnowHeight:
-        return observation.$data.HS ? Math.round(observation.$data.HS) : "";
-      case WeatherStationParameter.SnowDifference24h:
-        return observation.$data.HSD24 ? Math.round(observation.$data.HSD24) : "";
-      case WeatherStationParameter.SnowDifference48h:
-        return observation.$data.HSD48 ? Math.round(observation.$data.HSD48) : "";
-      case WeatherStationParameter.SnowDifference72h:
-        return observation.$data.HSD72 ? Math.round(observation.$data.HSD72) : "";
-      case WeatherStationParameter.AirTemperature:
-        return observation.$data.LT ? Math.round(observation.$data.LT) : "";
-      case WeatherStationParameter.AirTemperatureMax:
-        return observation.$data.LT_MAX ? Math.round(observation.$data.LT_MAX) : "";
-      case WeatherStationParameter.AirTemperatureMin:
-        return observation.$data.LT_MIN ? Math.round(observation.$data.LT_MIN) : "";
-      case WeatherStationParameter.SurfaceTemperature:
-        return observation.$data.OFT ? Math.round(observation.$data.OFT) : "";
-      case WeatherStationParameter.DewPoint:
-        return observation.$data.TD ? Math.round(observation.$data.TD) : "";
-      case WeatherStationParameter.RelativeHumidity:
-        return observation.$data.RH ? Math.round(observation.$data.RH) : "";
-      case WeatherStationParameter.WindDirection:
-        return observation.$data.WR ? degreeToAspect(observation.$data.WR) : "";
-      case WeatherStationParameter.WindSpeed:
-        return observation.$data.WG ? Math.round(observation.$data.WG) : "";
-      case WeatherStationParameter.WindGust:
-        return observation.$data.WG_BOE ? Math.round(observation.$data.WG_BOE) : "";
-      default:
-        return "";
+    const value = this.toValue(observation);
+    if (this.weatherStationLabel === WeatherStationParameter.WindDirection) {
+      return value ? degreeToAspect(value) : "";
+    } else {
+      return value ? Math.round(value) : "";
     }
   }
 }

@@ -479,7 +479,10 @@ export function convertLoLaToGeneric(
       (obs as LolaSimpleObservation).snowSurface?.includes("iceFormation")
         ? ImportantObservation.IceFormation
         : undefined,
-      (obs as LolaSimpleObservation).stabilityTests?.length > 0 ? ImportantObservation.StabilityTest : undefined,
+      (obs as LolaSimpleObservation).stabilityTests?.length > 0 ||
+      (obs as LolaSnowProfile).snowStabilityTest?.length > 0
+        ? ImportantObservation.StabilityTest
+        : undefined,
     ].filter((o) => !!o),
   };
 }
