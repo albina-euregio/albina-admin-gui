@@ -46,7 +46,7 @@ async function fetchSMET(
 ): Promise<Record<GenericObservation["$id"], string>> {
   const data: [GenericObservation["$id"], string][] = [];
   for (const station of stations) {
-    if (!station?.$id) {
+    if (!station?.$id || !process.env.ALBINA_SMET_API) {
       return;
     }
     const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
