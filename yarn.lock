@@ -4195,6 +4195,7 @@ __metadata:
     prettier: "npm:^3.4.2"
     protomaps-leaflet: "npm:^4.0.1"
     rxjs: "npm:7.8.1"
+    simple-statistics: "npm:^7.8.7"
     split.js: "npm:^1.6.5"
     typescript: "npm:5.6.3"
     typescript-eslint: "npm:^8.17.0"
@@ -9382,6 +9383,13 @@ __metadata:
     "@sigstore/tuf": "npm:^3.0.0"
     "@sigstore/verify": "npm:^2.0.0"
   checksum: 10c0/9f9fa8419d07cb4ebb4fbe324e8a68023f851827629a4906d2ffa59b51f17551f514d80aa541c2d2b9918340a1c42cfda2e1ba0ac65a2f9768e8437c520beecd
+  languageName: node
+  linkType: hard
+
+"simple-statistics@npm:^7.8.7":
+  version: 7.8.7
+  resolution: "simple-statistics@npm:7.8.7"
+  checksum: 10c0/9745896653e518aa5a1d0671d8b72109038c5ed4f7b83120cde0ed916aff6f57bce87398c8fc1779a6cde296af5cd4b9e7c949b7cc4aef89a0d7d874fa9039b3
   languageName: node
   linkType: hard
 
