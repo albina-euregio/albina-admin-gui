@@ -1,6 +1,7 @@
 import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { fetchJSON } from "../util/fetchJSON";
+import "./DecompressionStream-polyfill";
 
 let lastFetch = 0;
 let cache: Promise<Record<GenericObservation["$id"], string>> = undefined;
