@@ -333,6 +333,17 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Returns the main date of the danger source when it was created. This is one day off the creation date due to the validity from 5PM until 5PM
+   * @param creationDatetime Creation datetime of the danger source
+   * @returns Main date of the danger source
+   */
+  getMainDateString(creationDatetime?: Date): Date {
+    const result = new Date(creationDatetime);
+    result.setDate(result.getDate() + 1);
+    return result;
+  }
+
   onShowAfternoonMapChange(checked) {
     this.showAfternoonMap = checked;
 

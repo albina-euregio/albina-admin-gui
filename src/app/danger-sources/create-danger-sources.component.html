@@ -248,7 +248,9 @@
           {{ dangerSource.title }}
         </h5>
         <div class="region-thumb__author font-s text-secondary" role="button">
-          {{ dangerSource.creationDate | date: "mediumDate" : undefined : translateService.currentLang }}
+          {{
+            getMainDateString(dangerSource.creationDate) | date: "mediumDate" : undefined : translateService.currentLang
+          }}
           {{ getStatusString(dangerSource) }}
         </div>
       </div>
