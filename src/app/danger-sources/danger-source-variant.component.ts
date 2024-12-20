@@ -118,6 +118,7 @@ export class DangerSourceVariantComponent implements OnChanges {
   public isAccordionAvalancheOpen: boolean;
   public isAccordionMatrixOpen: boolean;
   public isAccordionCharacteristicsOpen: boolean;
+  public isAccordionCommentOpen: boolean;
 
   public config = {
     animated: false,
@@ -233,6 +234,9 @@ export class DangerSourceVariantComponent implements OnChanges {
         break;
       case "characteristics":
         this.isAccordionCharacteristicsOpen = event;
+        break;
+      case "comment":
+        this.isAccordionCommentOpen = event;
         break;
       default:
         break;

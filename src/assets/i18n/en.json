@@ -112,7 +112,8 @@
       "title": {
         "avalanche": "Avalanche",
         "matrix": "Matrix",
-        "characteristics": "Characteristics"
+        "characteristics": "Characteristics",
+        "comment": "Comment"
       },
       "label": {
         "glidingSnowActivity": "Gliding snow activity",

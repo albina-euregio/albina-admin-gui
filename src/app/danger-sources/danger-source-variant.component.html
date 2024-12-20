@@ -2210,6 +2210,29 @@
           ></app-matrix-parameter>
         </div>
       </accordion-group>
+      <accordion-group
+        class="accordion-group"
+        [isOpen]="isAccordionCommentOpen"
+        (isOpenChange)="accordionChanged($event, 'comment')"
+      >
+        <div accordion-heading class="accordion-header accordion-header--with-buttons">
+          <h2 class="accordion-header__title">
+            <i *ngIf="!isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-right"></i>
+            <i *ngIf="isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-down"></i>
+            {{ "dangerSources.create.title.comment" | translate }}
+          </h2>
+        </div>
+        <div class="form-group row">
+          <textarea
+            id="textarea-input"
+            class="form-control"
+            rows="4"
+            [disabled]="disabled()"
+            [(ngModel)]="variant().comment"
+            (change)="updateVariantOnServer()"
+          ></textarea>
+        </div>
+      </accordion-group>
     </accordion>
   </main>
 </div>
