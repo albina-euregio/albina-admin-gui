@@ -1057,9 +1057,9 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "decreasing with height",
+    "decreasing": "softer below",
     "steady": "uniform",
-    "increasing": "increasing with height"
+    "increasing": "softer above"
   },
   "terrainType": {
     "gullies": "gullies",

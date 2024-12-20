@@ -200,8 +200,8 @@
     "status": {
       "submittedInfo": "Verrà pubblicato alle 17:00",
       "resubmittedInfo": "Verrà pubblicato alle 08:00",
-      "publishedInfo" : "È stato pubblicato",
-      "noPublicationInfo" : "NON verrà pubblicato automaticamente",
+      "publishedInfo": "È stato pubblicato",
+      "noPublicationInfo": "NON verrà pubblicato automaticamente",
       "loadingPreview": "Creare un'anteprima in PDF ...",
       "loading": "Carica bollettino ...",
       "loadMoreBulletins": "Carica {{count}} più bollettini",
@@ -363,11 +363,11 @@
         "favourableSituation": "Situazione favorevole",
         "cancel": "Cancella"
       },
-      "removeDaytimeDependencyDialog" : {
+      "removeDaytimeDependencyDialog": {
         "message": "Quali problemi valanghivi vuoi mantenere?",
         "cancel": "Cancella"
       },
-      "strategicMindsetDialog" : {
+      "strategicMindsetDialog": {
         "title": "Strategic Mindsets",
         "introduction": "Gli “Strategic Mindsets” sono intesi come espressione del nostro atteggiamento mentale nei confronti della situazione valanghiva e del suo sviluppo nella regione corrispondente. Non dovrebbero derivare direttamente dalla valutazione del pericolo, ma piuttosto essere compresi e utilizzati come un'impressione intuitiva della situazione generale. I “Strategic Mindsets” sono quindi principalmente uno strumento di comunicazione. Utilizzando i mindset e le definizioni associate, noi previsori possiamo scambiare in modo rapido ed efficiente informazioni sullo sviluppo della situazione di pericolo e trovare un linguaggio comune per la comunicazione.",
         "description": {
@@ -402,29 +402,29 @@
             "assessment": "Inizio stagione.",
             "stepping_out": "Un raffreddamento porta a una diminuzione del pericolo di valanghe di neve bagnata dopo una fase di tempo caldo e umido.",
             "status_quo": "Problema persistente di lastroni da vento con temperature fredde, neve a debole coesione e vento.",
-            "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
-            "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
-            "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
-            "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
-            "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
+            "stepping_back": "Nevicate abbondanti portano a un aumento della situazione di pericolo.",
+            "entrenchment": "Problema critico di strati deboli persistenti con potenziale per valanghe pericolosamente grandi. La situazione si sta stabilizzando solo molto lentamente e richiede molta prudenza.",
+            "free_ride": "Pericolo di valanghe debole, assenza di strati deboli persistenti, tutti i pendii sono già stati tracciati.",
+            "high_alert": "Grado di pericolo 4 o superiore a causa di grandi quantità di neve fresca e/o strati deboli problematici e persistenti. ",
+            "spring_diurnal": "Situazione primaverile con tempo secco e alta pressione e temperature moderate con un manto nevoso vecchio per lo più stabile."
           }
         },
         "strategicMindset": {
-          "assessment": "High Uncertainty",
-          "stepping_out": "Improving",
-          "status_quo": "Status Quo",
-          "stepping_back": "Deteriorating",
-          "entrenchment": "Persistent Unstable",
-          "free_ride": "Favorable",
-          "high_alert": "High Alert",
-          "spring_diurnal": "Spring Diurnal"
+          "assessment": "Incertezza elevata",
+          "stepping_out": "Miglioramento",
+          "status_quo": "Status quo",
+          "stepping_back": "Decelerazione",
+          "entrenchment": "Persistente instabile",
+          "free_ride": "Favorevole",
+          "high_alert": "Massima allerta",
+          "spring_diurnal": "Situazione primaverile"
         }
       },
-      "decisionTree" : {
+      "decisionTree": {
         "filepath": "./assets/img/decision_tree-it.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
-        "decisionTree" : "Albero decisionale",
-        "feedback" : "Feedback",
+        "decisionTree": "Albero decisionale",
+        "feedback": "Feedback",
         "save": "Salva",
         "discard": "Scarta"
       }
@@ -440,8 +440,8 @@
           "AT-06": "Stiria",
           "AT-07": "Tirolo",
           "AT-08": "Vorarlberg",
-          "CH" : "Svizzera",
-          "DE-BY" : "Baviera",
+          "CH": "Svizzera",
+          "DE-BY": "Baviera",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "Alto Adige",
@@ -460,7 +460,7 @@
       "publishBulletinsDialog": {
         "message": "Vuoi pubblicare il bollettino valanghe?",
         "missingDangerRating": "Grado di pericolo non definito",
-        "missingRegion": "Regioni non valutate",
+        "missingRegion": "  Meteo-nivo zone non valutate",
         "duplicateRegion": "Meteo-nivo zone valutate più volte",
         "missingAvActivityHighlights": "Manca il titolo situazione di pericolo",
         "missingAvActivityComment": "Manca la valutazione pericolo valanghe",
@@ -513,8 +513,8 @@
         "important": "IMPORTANTE",
         "missingFile": "Nessun file selezionato!",
         "uploadError": "Upload fallito!",
-        "accept": "Inviare",
-        "reject": "Cancellare"
+        "accept": "Invia",
+        "reject": "Cancella"
       },
       "publishBulletinsErrorDialog": {
         "message": "Errore pubblicando il bollettino valanghe!",
@@ -625,15 +625,15 @@
           "createSimpleHtml": "Crea HTML semplici",
           "sendTelegramMessages": "Invia messaggi via Telegram",
           "sendPushNotifications": "Invia notifiche push",
-          "pdfColor": "PDF in colore",
-          "emailColor": "Email in colore",
+          "pdfColor": "PDF a colori",
+          "emailColor": "Email a colori",
           "pdfMapYAmPm": "Y per mappa PDF (am/pm)",
           "pdfMapYFd": "Y per mappa PDF (fd)",
-          "pdfMapWidthAmPm": "Larghezza della mappa per PDF (am/pm)",
-          "pdfMapWidthFd": "Larghezza della mappa per PDF (fd)",
+          "pdfMapWidthAmPm": "Larghezza mappa per PDF (am/pm)",
+          "pdfMapWidthFd": "Larghezza mappa per PDF (fd)",
           "pdfMapHeight": "Altezza mappa per PDF",
           "pdfFooterLogo": "Logo per piè di pagina PDF",
-          "pdfFooterLogoColorPath": "Logo per piè di pagina PDF (colore)",
+          "pdfFooterLogoColorPath": "Logo per piè di pagina PDF (a colori)",
           "pdfFooterLogoBwPath": "Logo per piè di pagina PDF (bianco/nero)",
           "mapXmax": "Mappa X massimo",
           "mapXmin": "Mappa X minimo",
@@ -641,29 +641,29 @@
           "mapYmin": "Mappa Y minimo",
           "simpleHtmlTemplateName": "Template HTML semplice",
           "geoDataDirectory": "Cartella geodati",
-          "mapLogoColorPath": "Logo per mappa (colore)",
+          "mapLogoColorPath": "Logo per mappa (a colori)",
           "mapLogoBwPath": "Logo per mappa (bianco/nero)",
           "mapLogoPosition": "Posizione del logo nella mappa",
           "mapCenterLat": "Posizione centrale della mappa (lat)",
           "mapCenterLng": "Posizione centrale della mappa (long)",
-          "imageColorbarColorPath": "Barra colori (colore)",
+          "imageColorbarColorPath": "Barra colori (a colori)",
           "imageColorbarBwPath": "Barra colori (bianco/nero)"
         },
         "components": {
           "title": "Componenti",
-          "enableDangerSources": "Enable danger sources",
-          "enableObservations": "Enable observations",
-          "enableModelling": "Enable modelling",
-          "enableWeatherbox": "Enable weather box"
+          "enableDangerSources": "Attiva fonti di pericolo",
+          "enableObservations": "Attiva osservazioni",
+          "enableModelling": "Attiva modellazione",
+          "enableWeatherbox": "Attiva box meteo"
         },
         "configuration": {
-          "title": "Configuration",
+          "title": "Configurazione",
           "showMatrix": "Mostra matrice",
           "enableMediaFile": "Attiva file media",
-          "enableStrategicMindset": "Enable strategic mindset",
-          "enableStressLevel": "Enable stress level",
+          "enableStrategicMindset": "Attiva mindset strategico",
+          "enableStressLevel": "Attiva livello di stress",
           "enableAvalancheProblemCornices": "Attivare problema tipico valanghivo CORNICI",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Attivare problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Attiva problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE"
         }
       },
       "success": "Configurazione salvata con successo",
@@ -743,7 +743,7 @@
       "title": "Osservazioni",
       "newObservation": "Nuova osservazione",
       "exportObservations": "Esporta osservazioni",
-      "toggleFilterBar": "Show/hide filter bar",
+      "toggleFilterBar": "Visualizza/nascondi barra dei filtri",
       "button": {
         "submit": "Scarica"
       },
@@ -752,18 +752,18 @@
         "observer": "Osservatore"
       },
       "selectRegion": {
-        "placeholder": "Regione",
+        "placeholder": "Meteo-nivo zona",
         "selectionLabel": "{0} meteo-nivo zona/e selezionata/e"
       },
       "selectSources": {
         "placeholder": "origine dati",
-        "selectionLabel": "{0} source(s) selected"
+        "selectionLabel": "{0} origine/i selezionato/i"
       },
       "charts": {
-        "charts": "Charts",
-        "nan": "Without specification",
-        "classify": "Classify",
-        "label": "Label",
+        "charts": "Diagrammi",
+        "nan": "Senza specificazione",
+        "classify": "Classifica",
+        "label": "Denominazione",
         "invert": "Invert",
         "reset": "Reset",
         "aspect": {
@@ -773,19 +773,19 @@
           "caption": "Quota"
         },
         "stability": {
-          "caption": "Stability"
+          "caption": "Stabilità"
         },
         "observationType": {
-          "caption": "Observation Type"
+          "caption": "Tipo di osservazione"
         },
         "importantObservation": {
-          "caption": "Important"
+          "caption": "Importante"
         },
         "avalancheProblem": {
-          "caption": "Problema tipico valanghivo"
+          "caption": "Problema valanghivo"
         },
         "dangerPattern": {
-          "caption": "Danger Pattern"
+          "caption": "Situazione tipo"
         },
         "days": {
           "caption": "Giorno"
@@ -811,7 +811,7 @@
         "error": "{{prefix}}Non è stato possibile inviare Email!"
       },
       "telegram": {
-        "tooltip": "Pubblicazione via Telegram channel",
+        "tooltip": "Pubblicazione via canale Telegram",
         "success": "{{prefix}}Telegram inviato con successo",
         "error": "{{prefix}}Non è stato possibile inviare i messaggi Telegram!"
       },
@@ -868,7 +868,7 @@
     "label": {
       "dateRange": "Periodo",
       "extended": "Esteso",
-      "duplicates": "Doppiete"
+      "duplicates": "Doppioni"
     }
   },
 
@@ -884,7 +884,7 @@
     "newSnow": "Neve fresca",
     "new_snow": "Neve fresca",
     "windSlab": "Neve ventata",
-    "wind_slab": "Neve ventata",
+    "wind_slab": "Lastroni da vento",
     "persistentWeakLayers": "Strati deboli persistenti",
     "persistent_weak_layers": "Strati deboli persistenti",
     "wetSnow": "Neve bagnata",
@@ -892,8 +892,8 @@
     "glidingSnow": "Valanghe di slittamento",
     "gliding_snow": "Valanghe di slittamento",
     "cornices": "Cornice",
-    "noDistinctAvalancheProblem": "No distinct avalanche problem",
-    "no_distinct_avalanche_problem": "No distinct avalanche problem",
+    "noDistinctAvalancheProblem": "Nessun problema valanghivo evidente",
+    "no_distinct_avalanche_problem": "Nessun problema valanghivo evidente",
     "favourableSituation": "Situazione favorevole",
     "favourable_situation": "Situazione favorevole"
   },
@@ -910,34 +910,35 @@
     "dp10": "st.10: situazione primaverile"
   },
   "strategicMindset": {
-    "title": "Strategic Mindset",
-    "assessment": "High Uncertainty",
-    "stepping_out": "Improving",
-    "status_quo": "Status Quo",
-    "stepping_back": "Deteriorating",
-    "entrenchment": "Persistent Unstable",
-    "free_ride": "Favorable",
-    "high_alert": "High Alert",
-    "spring_diurnal": "Spring Diurnal"
+    "title": "Mondset strategico",
+    "assessment": "Elevata incertezza",
+    "stepping_out": "Miglioramento",
+    "status_quo": "Status quo",
+    "stepping_back": "Decelerazione",
+    "entrenchment": "Persistente instabile",
+    "free_ride": "Favorevole",
+    "high_alert": "Massima allerta",
+    "spring_diurnal": "Situazione primaverile"
   },
   "observationType": {
-    "TimeSeries": "Time series",
-    "Incident": "Incident",
-    "Profile": "Snow profile",
-    "Closure": "Closure",
-    "Blasting": "Blasting",
+    "TimeSeries": "Serie cronologica",
+    "Incident": "Incidente",
+    "Profile": "Profilo stratigrafico",
+    "Closure": "Chiusura",
+    "Blasting": "Brillamento",
     "Avalanche": "valanga",
-    "Evaluation": "Evaluation",
-    "SimpleObservation": "Simple observation",
+    "Evaluation": "Valutazione",
+    "SimpleObservation": "Osservazione semplice",
     "Webcam": "Webcam"
   },
   "importantObservation": {
-    "SnowLine": "Snow line",
-    "SurfaceHoar": "Surface hoar",
-    "Graupel": "Graupel",
-    "StabilityTest": "Stability test",
-    "IceFormation": "Ice formation",
-    "VeryLightNewSnow": "Very light new snow"
+    "ForBlog": "For blog",
+    "SnowLine": "Limite delle nevicate",
+    "SurfaceHoar": "Brina di superficie",
+    "Graupel": "Neve pallottolare",
+    "StabilityTest": "Test di stabilità",
+    "IceFormation": "Formazione di ghiaccio",
+    "VeryLightNewSnow": "Neve fresca leggerissima"
   },
   "aspect": {
     "N": "N",
@@ -950,7 +951,7 @@
     "NW": "NO"
   },
   "role": {
-    "SUPERADMIN": "Super Administrator",
+    "SUPERADMIN": "Super Amministratore",
     "ADMIN": "Amministratore",
     "FORECASTER": "Previsore",
     "FOREMAN": "Caposquadra",
@@ -962,7 +963,7 @@
     "increasing": " Pericolo valanghe in aumento"
   },
   "snowpackStability": {
-    "unknown": "unknown",
+    "unknown": "sconosciuto",
     "good": "buona",
     "fair": "discreta",
     "poor": "scarsa",
@@ -992,9 +993,9 @@
     "high": "forte"
   },
   "wetness": {
-    "dry": "dry",
-    "moist": "moist",
-    "wet": "wet"
+    "dry": "asciutta",
+    "moist": "umida",
+    "wet": "bagnata"
   },
   "characteristic": {
     "low": "debole",
@@ -1003,25 +1004,25 @@
     "very_high": "molto forte"
   },
   "thickness": {
-    "thin": "thin",
-    "thick": "thick"
+    "thin": "sottile",
+    "thick": "spesso"
   },
   "snowpackPosition": {
-    "upper": "upper",
-    "middle": "middle",
-    "lower": "lower",
-    "ground": "ground"
+    "upper": "superiore",
+    "middle": "centrale",
+    "lower": "inferiore",
+    "ground": "suolo"
   },
   "creationProcess": {
-    "radiation_recrystallization": "radiation",
-    "diurnal_recrystallization": "diurnal",
-    "melt_layer_recrystallization": "melt layer"
+    "radiation_recrystallization": "radiazione",
+    "diurnal_recrystallization": "diurno",
+    "melt_layer_recrystallization": "crosta da fusione"
   },
   "recognizability": {
-    "very_easy": "very easy",
-    "easy": "easy",
-    "hard": "hard",
-    "very_hard": "very hard"
+    "very_easy": "molto facile",
+    "easy": "facile",
+    "hard": "duro",
+    "very_hard": "molto duro"
   },
   "distribution": {
     "isolated": "isolato",
@@ -1029,23 +1030,23 @@
     "widespread": "diffuso"
   },
   "probability": {
-    "likely": "Crosta sopra lo strato debole?",
-    "possible": "possible",
-    "unlikely": "unlikely"
+    "likely": "probabile",
+    "possible": "possibile",
+    "unlikely": "poco probabile"
   },
   "detailedDaytime": {
-    "evening": "evening",
-    "first_night_half": "first night half",
-    "second_night_half": "second night half",
-    "morning": "morning",
-    "forenoon": "forenoon",
-    "afternoon": "afternoon"
+    "evening": "sera",
+    "first_night_half": "prima metà della notte",
+    "second_night_half": "seconda metà della notte",
+    "morning": "primo mattino",
+    "forenoon": "mattina",
+    "afternoon": "pomeriggio"
   },
   "slopeGradient": {
-    "moderately_steep": "moderately steep",
-    "steep": "steep",
-    "very_steep": "very steep",
-    "extremely_steep": "extremely steep"
+    "moderately_steep": "moderatamente ripido",
+    "steep": "ripido",
+    "very_steep": "molto ripido",
+    "extremely_steep": "estremamente ripido"
   },
   "handHardness": {
     "fist": "F",
@@ -1056,22 +1057,22 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "decreasing with height",
-    "steady": "uniform",
-    "increasing": "increasing with height"
+    "decreasing": "softer below",
+    "steady": "uniforme",
+    "increasing": "softer above"
   },
   "terrainType": {
-    "gullies": "gullies",
-    "bowls": "bowls",
-    "pass_areas": "pass areas",
-    "ridge_lines": "ridge lines"
+    "gullies": "canaloni",
+    "bowls": "conche",
+    "pass_areas": "zone ai passi",
+    "ridge_lines": "alle creste"
   },
   "dangerSign": {
-    "shooting_cracks": "shooting cracks",
-    "whumpfing": "whumpfing"
+    "shooting_cracks": "crepe",
+    "whumpfing": "rumori \"whumpf\""
   },
   "changeRegionDialog": {
-    "message": "Do you want to change the region?",
+    "message": "Vuoi cambiare la meteo-nivo zona?",
     "accept": "Sì",
     "reject": "No"
   },
@@ -1116,50 +1117,53 @@
   "grainShape": {
     "PP": {
       "code": "PP",
-      "class": "Precipitation Particles"
+      "class": "Neve fresca"
     },
     "PPgp": {
       "code": "PPgp",
-      "class": "Graupel"
+      "class": "Neve pallottolare"
     },
     "DF": {
       "code": "DF",
-      "class": "Decomposing and Fragmented precipitation particles"
+      "class": "Cristalli feltrati"
     },
     "RG": {
       "code": "RG",
-      "class": "Rounded Grains"
+      "class": "Grani arrotondati"
     },
     "FC": {
       "code": "FC",
-      "class": "Faceted Crystals"
+      "class": "Cristalli sfaccettati"
     },
     "DH": {
       "code": "DH",
-      "class": "Depth Hoar"
+      "class": "Brina di profondità"
     },
     "SH": {
       "code": "SH",
-      "class": "Surface Hoar"
+      "class": "Brina di superficie"
     },
     "MF": {
       "code": "MF",
-      "class": "Melt Forms"
+      "class": "Forme da fusione"
     },
     "MFcr": {
       "code": "MFcr",
-      "class": "Melt-freeze crust"
+      "class": "Crosta da fusione e rigelo"
     },
     "IF": {
       "code": "IF",
-      "class": "Ice Formations"
+      "class": "Formazioni di ghiaccio"
     }
   },
   "button": {
-    "yes": "yes",
+    "yes": "si",
     "no": "no"
   },
   "observations": {
+    "allowEdit": "Edit external observation",
+    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
+    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
     "aspect": "Esposizione",
     "authorName": "Nome dell'autore",
     "avalancheLength": "Lunghezza della valanga",
@@ -1170,29 +1174,31 @@
     "search": "Cerca",
     "count": "# osservazioni",
     "layers": {
-      "observers": "Observers",
-      "weatherStations": "Weather stations",
+      "observers": "Osservatori",
+      "weatherStations": "Stazioni nivometeorologiche automatiche",
       "webcams": "Webcam",
       "observations": "Osservazioni"
     },
     "weatherStations": {
       "tooltips": {
-        "globalRadiation": "Global radiation",
+        "globalRadiation": "Radiazione globale",
+        "newSnow": "Neve fresca",
+        "snowLine": "Limite delle nevicate",
         "snowHeight": "altezza neve",
-        "snowDifference24h": "Snow difference 24h",
-        "snowDifference48h": "Snow difference 48h",
-        "snowDifference72h": "Snow difference 72h",
-        "airTemperature": "Air temperature",
-        "airTemperatureMax": "Air temperature Max",
-        "airTemperatureMin": "Air temperature Min",
-        "surfaceTemperature": "Surface temperature",
-        "surfaceHoar": "Potential surface hoar formation",
-        "surfaceHoarCalc": "Potential surface hoar formation (Lehning et. al.)",
-        "dewPoint": "Dew point temperature",
-        "relativeHumidity": "Relative humidity",
-        "windDirection": "Wind direction",
-        "windSpeed": "Wind speed",
-        "windGust": "Wind gust"
+        "snowDifference24h": "Differenza altezza neve 24h",
+        "snowDifference48h": "Differenza altezza neve 48h",
+        "snowDifference72h": "Differenza altezza neve 72h",
+        "airTemperature": "Temperatura dell'aria",
+        "airTemperatureMax": "Temperatura dell'aria max.",
+        "airTemperatureMin": "Temperatura dell'aria min.",
+        "surfaceTemperature": "Temperatura superficiale",
+        "surfaceHoar": "Formazione potenziale di brina di superficie",
+        "surfaceHoarCalc": "Formazione potenziale di brina di superficie (Lehning et. al.)",
+        "dewPoint": "Temperatura di rugiada",
+        "relativeHumidity": "Umidità relativa",
+        "windDirection": "Direzione del vento",
+        "windSpeed": "Velocità del vento",
+        "windGust": "Raffica"
       }
     },
     "button": {
@@ -1201,15 +1207,15 @@
       "delete": "Cancellare l'osservazione",
       "deleteConfirm": "Cancellare l'osservazione?",
       "discard": "Scarta",
-      "copyDate": "Copy event date"
+      "copyDate": "Copia data evento"
     },
     "comment": "Commento",
     "content": "Contenuto",
     "dangerRating": "Grado pericolo valanghe",
     "elevation": "Quota",
-    "elevationRange": "Elevation range",
-    "elevationLowerBound": "Elevation lower bound",
-    "elevationUpperBound": "Elevation upper bound",
+    "elevationRange": "Fascia altitudinale",
+    "elevationLowerBound": "Limite inferiore quota",
+    "elevationUpperBound": "Limite superiore quota",
     "eventDate": "Data dell'evento",
     "eventType": "Tipologia dell'evento",
     "eventTypes": {
@@ -1223,13 +1229,15 @@
       "PERSON_UNKNOWN": "Evento (sconosciuto)",
       "TRAFFIC": "Traffico"
     },
+    "externalURL": "External URL (e.g. to photo database)",
     "fractureDepth": "Spessore del lastrone",
     "hasCoordinates": "Contiene coordinate",
     "incline": "Pendenza",
     "latitude": "Latitudine",
     "locationName": "Località",
     "longitude": "Longitudine",
-    "personInvolvement": "Person involvement",
+    "observationType": "Observation type",
+    "personInvolvement": "Coinvolgimento di persone",
     "reportDate": "Data del report",
     "showTable": "Table",
     "withoutCoordinates": "Osservazioni senza coordinate:",
@@ -1252,7 +1260,7 @@
     "Dead": "Evento con persone coinvolte (vittime)",
     "Injured": "Evento con persone coinvolte (feriti)",
     "No": "Evento senza coinvolgimento persone",
-    "Uninjured": "Evento che coinvolge persone (non ferite)",
+    "Uninjured": "Evento con coinvolgimento di persone (non ferite)",
     "Unknown": "Evento (sconosciuto)"
   },
   "units": {
@@ -1262,39 +1270,39 @@
   },
   "qfa": {
     "day": "Giorno",
-    "time": "Time",
+    "time": "Ora",
     "back": " Indietro",
     "parameters": {
-      "DUST": "sahara dust",
-      "N": "total cloud cover in /8",
-      "Nh": "high cloud cover in /8",
-      "Nm": "medium high cloud cover in /8",
-      "Nl": "low cloud cover in /8",
-      "N-CU": "cumulus cloud cover in /8",
-      "AUSL.T": "trigger temperature",
-      "SHW-IX": "Showalter-Index",
-      "WX -CUF": "significant weather: NIL (none), RASH (rain), TS (thunder storm)",
-      "RR": "total precipitation [mm]",
-      "RR-str": "stratiform precipitation",
-      "CONV": "convective precipitation [mm]",
-      "SN": "precipitation in form of snow [mm]",
-      "SN--RA": "snowline [m]",
-      "QAO ": "{{value}} hPa eq. mean wind, direction and strength, [°] and [m/s]",
-      "QAN": "mean wind on the ground, direction and strength, [°] and [m/s]",
-      "QANmax": "max. wind (gusts) on the ground [m/s]",
-      "T ": "{{value}} hPa eq. temperature [°C]",
-      "T m": "temperature on {{value}}m [°C]",
-      "T 2m": "temperature on 2m [°C]",
-      "Tk 2m": "temperature on 2m [°K]",
-      "T GND": "ground temperature",
-      "Max-ADI": "maximum mixing temperature [°C]",
-      "Min Max": "min./max. temperature in the last 24h",
-      "FROST": "zero degree line [m]",
-      "W cm": "500 hPa eq. vertical wind [cm/s]",
-      "W --": "700 hPa eq. vertical wind [cm/s]",
-      "W s": "{{value}} hPa eq. vertical wind [cm/s]",
-      "H ": "{{value}} hPa geopotential height [m]",
-      "RF ": "{{value}} hPa eq. relative moisture [%]"
+      "DUST": "polvere sahariana",
+      "N": "nuvolosità totale in /8",
+      "Nh": "nuvolosità alta in /8",
+      "Nm": "nuvolosità media in /8",
+      "Nl": "nuvolosità bassa in /8",
+      "N-CU": "copertura con nubi cumuliforme in /8",
+      "AUSL.T": "temperatura trigger",
+      "SHW-IX": "Indice Showalter",
+      "WX -CUF": "tempo significativo: NIL (nulla), RASH (pioggia), TS (temporale)",
+      "RR": "precipitazioni totali [mm]",
+      "RR-str": "precipitazioni stratiformi",
+      "CONV": "precipitazioni convettive [mm]",
+      "SN": "precipitazioni sotto forma di neve [mm]",
+      "SN--RA": "limite delle nevicate [m]",
+      "QAO ": "{{value}} hPa eq. vento medio, direzione e forza del vento, [°] e [m/s]",
+      "QAN": "vento medio al suolo, direzione e forza, [°] e [m/s]",
+      "QANmax": "vento max. (raffiche) al suolo [m/s]",
+      "T ": "{{value}} hPa eq. temperatura [°C]",
+      "T m": "temperatura a {{value}}m [°C]",
+      "T 2m": "temperatura a 2m [°C]",
+      "Tk 2m": "temperatura a 2m [°K]",
+      "T GND": "temperatura al suolo",
+      "Max-ADI": "temperatura massima di miscelazione [°C]",
+      "Min Max": "temperatura min./max. nelle ultime 24h",
+      "FROST": "limite degli zero gradi [m]",
+      "W cm": "500 hPa eq. vento verticale [cm/s]",
+      "W --": "700 hPa eq. vento verticale [cm/s]",
+      "W s": "{{value}} hPa eq. vento verticale [cm/s]",
+      "H ": "{{value}} hPa quota geopotenziale [m]",
+      "RF ": "{{value}} hPa eq. umidità relativa [%]"
     }
   }
 }

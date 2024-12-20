@@ -200,8 +200,8 @@
     "status": {
       "submittedInfo": "Será publicado a las 5PM",
       "resubmittedInfo": "Será publicado a las 8AM",
-      "publishedInfo" : "Ha sido publicado",
-      "noPublicationInfo" : "NO será publicado automàticamente",
+      "publishedInfo": "Ha sido publicado",
+      "noPublicationInfo": "NO será publicado automàticamente",
       "loadingPreview": "Creando vista previa en PDF ...",
       "loading": "Cargando boletín ...",
       "loadMoreBulletins": "Load {{count}} more bulletins",
@@ -363,11 +363,11 @@
         "favourableSituation": "Situación favorable",
         "cancel": "Cancelar"
       },
-      "removeDaytimeDependencyDialog" : {
+      "removeDaytimeDependencyDialog": {
         "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancelar"
       },
-      "strategicMindsetDialog" : {
+      "strategicMindsetDialog": {
         "title": "Strategic Mindsets",
         "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
         "description": {
@@ -420,11 +420,11 @@
           "spring_diurnal": "Spring Diurnal"
         }
       },
-      "decisionTree" : {
+      "decisionTree": {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
-        "decisionTree" : "Árbol de decisión",
-        "feedback" : "Comentarios",
+        "decisionTree": "Árbol de decisión",
+        "feedback": "Comentarios",
         "save": "Guardar",
         "discard": "Descartar"
       }
@@ -440,8 +440,8 @@
           "AT-06": "Estiria",
           "AT-07": "Tirol",
           "AT-08": "Vorarlberg",
-          "CH" : "Suiza",
-          "DE-BY" : "Baviera",
+          "CH": "Suiza",
+          "DE-BY": "Baviera",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "Sud Tirol",
@@ -932,6 +932,7 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
+    "ForBlog": "For blog",
     "SnowLine": "Límite de nieve",
     "SurfaceHoar": "Escarcha de superfície",
     "Graupel": "Nieve granulada",
@@ -1056,9 +1057,9 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "decreasing with height",
+    "decreasing": "softer below",
     "steady": "uniform",
-    "increasing": "increasing with height"
+    "increasing": "softer above"
   },
   "terrainType": {
     "gullies": "gullies",
@@ -1160,6 +1161,9 @@
     "no": "no"
   },
   "observations": {
+    "allowEdit": "Edit external observation",
+    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
+    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
     "aspect": "Orientación",
     "authorName": "Nombre del autor",
     "avalancheLength": "Longitud de alud",
@@ -1178,6 +1182,8 @@
     "weatherStations": {
       "tooltips": {
         "globalRadiation": "Global radiation",
+        "newSnow": "Nieve reciente",
+        "snowLine": "Límite de nieve",
         "snowHeight": "Snow height",
         "snowDifference24h": "Snow difference 24h",
         "snowDifference48h": "Snow difference 48h",
@@ -1223,12 +1229,14 @@
       "PERSON_UNKNOWN": "Evento (desconocido)",
       "TRAFFIC": "Tránsito"
     },
+    "externalURL": "External URL (e.g. to photo database)",
     "fractureDepth": "Profundiad de cicatriz",
     "hasCoordinates": "Tiene coordenadas",
     "incline": "Inclinación",
     "latitude": "Laltitud",
     "locationName": "Localización",
     "longitude": "Longitud",
+    "observationType": "Observation type",
     "personInvolvement": "Person involvement",
     "reportDate": "Fecha del informe",
     "showTable": "Tabla",

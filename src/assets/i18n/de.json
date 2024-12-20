@@ -200,8 +200,8 @@
     "status": {
       "submittedInfo": "Wird um 17 Uhr publiziert",
       "resubmittedInfo": "Wird um 8 Uhr publiziert",
-      "publishedInfo" : "Wurde publiziert",
-      "noPublicationInfo" : "Wird NICHT automatisch publiziert",
+      "publishedInfo": "Wurde publiziert",
+      "noPublicationInfo": "Wird NICHT automatisch publiziert",
       "loadingPreview": "Erzeuge PDF Vorschau ...",
       "loading": "Bulletin lädt ...",
       "loadMoreBulletins": "{{count}} weitere Bulletins laden",
@@ -363,11 +363,11 @@
         "favourableSituation": "Günstige Situation",
         "cancel": "Abbrechen"
       },
-      "removeDaytimeDependencyDialog" : {
+      "removeDaytimeDependencyDialog": {
         "message": "Welche Lawinenprobleme möchtest du behalten?",
         "cancel": "Abbrechen"
       },
-      "strategicMindsetDialog" : {
+      "strategicMindsetDialog": {
         "title": "Strategisches Mindset",
         "introduction": "Mit den „Strategic Mindsets“ soll unsere mentale Einstellung im Hinblick auf die Lawinensituation bzw. dessen Entwicklung in der entsprechenden Warnregion zum Ausdruck gebracht werden. Sie soll keine direkte Ableitung aus der Gefahrenbeurteilung darstellen, sondern vielmehr als intuitiver Eindruck der Gesamtsituation verstanden und verwendet werden. In erster Linie handelt es sich bei den „Strategic Mindsets“ also über ein Kommunikationsinstrument. Über die Mindsets und damit verbundenen Definitionen können wir Prognostikerinnen uns schnell und effizient über die Entwicklung der Gefahrensituation austauschen und eine gemeinsame Sprache in der Kommunikation finden. ",
         "description": {
@@ -420,11 +420,11 @@
           "spring_diurnal": "Frühjahrssituation"
         }
       },
-      "decisionTree" : {
+      "decisionTree": {
         "filepath": "./assets/img/decision_tree-de.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/de/",
-        "decisionTree" : "Entscheidungsbaum",
-        "feedback" : "Feedback",
+        "decisionTree": "Entscheidungsbaum",
+        "feedback": "Feedback",
         "save": "Speichern",
         "discard": "Verwerfen"
       }
@@ -440,8 +440,8 @@
           "AT-06": "Steiermark",
           "AT-07": "Tirol",
           "AT-08": "Vorarlberg",
-          "CH" : "Schweiz",
-          "DE-BY" : "Bayern",
+          "CH": "Schweiz",
+          "DE-BY": "Bayern",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "Südtirol",
@@ -932,6 +932,7 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
+    "ForBlog": "Für den Blog",
     "SnowLine": "Schneefallgrenze",
     "SurfaceHoar": "Oberflächenreif",
     "Graupel": "Graupel",
@@ -1026,7 +1027,7 @@
   "distribution": {
     "isolated": "vereinzelt",
     "specific": "eingrenzbar",
-    "widespread": "weitverbreited"
+    "widespread": "weitverbreitet"
   },
   "probability": {
     "likely": "wahrscheinlich",
@@ -1056,9 +1057,9 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "Weicher an der Oberfläche",
+    "decreasing": "unten weicher",
     "steady": "gleichmäßig",
-    "increasing": "Zunahme mit der Tiefe"
+    "increasing": "oben weicher"
   },
   "terrainType": {
     "gullies": "Rinnen",
@@ -1160,6 +1161,9 @@
     "no": "nein"
   },
   "observations": {
+    "allowEdit": "Externe Beobachtung bearbeiten",
+    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
+    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
     "aspect": "Exposition",
     "authorName": "Autor Name",
     "avalancheLength": "Lawinenlänge",
@@ -1178,6 +1182,8 @@
     "weatherStations": {
       "tooltips": {
         "globalRadiation": "Globalstrahlung",
+        "newSnow": "Neuschnee",
+        "snowLine": "Schneefallgrenze",
         "snowHeight": "Schneehöhe",
         "snowDifference24h": "Schneehöhendifferenz 24h",
         "snowDifference48h": "Schneehöhendifferenz 48h",
@@ -1223,12 +1229,14 @@
       "PERSON_UNKNOWN": "Ereignis (unbekannt)",
       "TRAFFIC": "Verkehr"
     },
+    "externalURL": "Externe URL (z.B. in Bilder-Datenbank)",
     "fractureDepth": "Anrisshöhe",
     "hasCoordinates": "Koordinaten vorhanden",
     "incline": "Hangneigung",
     "latitude": "Breitengrad",
     "locationName": "Ort",
     "longitude": "Längengrad",
+    "observationType": "Beobachtungstyp",
     "personInvolvement": "Personenbeteiligung",
     "reportDate": "Meldedatum",
     "showTable": "Tabelle",

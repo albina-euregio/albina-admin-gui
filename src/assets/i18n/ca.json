@@ -200,8 +200,8 @@
     "status": {
       "submittedInfo": "Serà publicat a les 5PM",
       "resubmittedInfo": "Serà publicat a les 8AM",
-      "publishedInfo" : "Ha estat publicat",
-      "noPublicationInfo" : "NO serà publicat automàticament",
+      "publishedInfo": "Ha estat publicat",
+      "noPublicationInfo": "NO serà publicat automàticament",
       "loadingPreview": "S'està creant la previsualització de PDF ...",
       "loading": "Butlletí carregant-se ...",
       "loadMoreBulletins": "Load {{count}} more bulletins",
@@ -363,11 +363,11 @@
         "favourableSituation": "Situació favorable",
         "cancel": "Cancel·lar"
       },
-      "removeDaytimeDependencyDialog" : {
+      "removeDaytimeDependencyDialog": {
         "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancel·lar"
       },
-      "strategicMindsetDialog" : {
+      "strategicMindsetDialog": {
         "title": "Strategic Mindsets",
         "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
         "description": {
@@ -420,11 +420,11 @@
           "spring_diurnal": "Spring Diurnal"
         }
       },
-      "decisionTree" : {
+      "decisionTree": {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
-        "decisionTree" : "Arbre de decisions",
-        "feedback" : "Comentaris",
+        "decisionTree": "Arbre de decisions",
+        "feedback": "Comentaris",
         "save": "Desar",
         "discard": "Descarta"
       }
@@ -440,8 +440,8 @@
           "AT-06": "Styria",
           "AT-07": "Tirol",
           "AT-08": "Vorarlberg",
-          "CH" : "Suïssa",
-          "DE-BY" : "Bavària",
+          "CH": "Suïssa",
+          "DE-BY": "Bavària",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "Tirol del Sud",
@@ -932,6 +932,7 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
+    "ForBlog": "For blog",
     "SnowLine": "Límit de neu",
     "SurfaceHoar": "Gebre de superfície",
     "Graupel": "Neu granulada",
@@ -1056,9 +1057,9 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "decreasing with height",
+    "decreasing": "softer below",
     "steady": "uniform",
-    "increasing": "increasing with height"
+    "increasing": "softer above"
   },
   "terrainType": {
     "gullies": "gullies",
@@ -1160,6 +1161,9 @@
     "no": "no"
   },
   "observations": {
+    "allowEdit": "Edit external observation",
+    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
+    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
     "aspect": "Orientació",
     "authorName": "Nom de l'autor",
     "avalancheLength": "Longitud d'allau",
@@ -1178,6 +1182,8 @@
     "weatherStations": {
       "tooltips": {
         "globalRadiation": "Global radiation",
+        "newSnow": "Neu recent",
+        "snowLine": "Límit de neu",
         "snowHeight": "Snow height",
         "snowDifference24h": "Snow difference 24h",
         "snowDifference48h": "Snow difference 48h",
@@ -1223,12 +1229,14 @@
       "PERSON_UNKNOWN": "Esdeveniment (desconegut)",
       "TRAFFIC": "Trànsit"
     },
+    "externalURL": "External URL (e.g. to photo database)",
     "fractureDepth": "Profunditat cicatriu",
     "hasCoordinates": "Té coordenades",
     "incline": "Pendent",
     "latitude": "Laltitud",
     "locationName": "Localitat",
     "longitude": "Longitud",
+    "observationType": "Observation type",
     "personInvolvement": "Person involvement",
     "reportDate": "Data de l'informe",
     "showTable": "Taula",
