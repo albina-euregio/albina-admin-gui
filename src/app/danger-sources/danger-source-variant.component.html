@@ -305,6 +305,17 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.FC) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)"
+              data-toggle="tooltip"
+              [title]="translateService.instant('grainShape.FC.class')"
+            >
+              <span>{{ "grainShape.FC.code" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
               [ngClass]="isSlabGrainShape(grainShapeEnum.MF) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)"
               data-toggle="tooltip"
