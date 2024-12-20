@@ -150,9 +150,32 @@
         "dangerSigns": "Gefahrenzeichen",
         "aspects": "Expositionen"
       },
-      "editDangerSourceDialog": {
+      "editVariantDialog": {
         "save": "Speichern",
         "cancel": "Abbrechen"
+      },
+      "deleteVariantDialog": {
+        "message": "Willst du diese Variante löschen?",
+        "accept": "Ja",
+        "reject": "Nein"
+      },
+      "noRegionDialog": {
+        "message": "Zumindest eine Kleinstregion muss deine sein.",
+        "accept": "Ok"
+      },
+      "discardDialog": {
+        "message": "Willst du die Änderungen verwerfen?",
+        "accept": "Ja",
+        "reject": "Nein"
+      },
+      "saveErrorDialog": {
+        "message": "Beim Speichern der Gefahrenquellen ist ein Fehler aufgetreten!",
+        "accept": "Ok"
+      },
+      "loadDialog": {
+        "message": "Willst du alle Gefahrenquellen Varianten vom Vortrag laden?",
+        "accept": "Ja",
+        "reject": "Nein"
       }
     }
   },

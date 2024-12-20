@@ -150,9 +150,32 @@
         "dangerSigns": "Danger signs",
         "aspects": "Orientacions"
       },
-      "editDangerSourceDialog": {
+      "editVariantDialog": {
         "save": "Sauvar",
         "cancel": "Anullar"
+      },
+      "deleteVariantDialog": {
+        "message": "Do you want to delete this variant?",
+        "accept": "Òc",
+        "reject": "Non"
+      },
+      "noRegionDialog": {
+        "message": "At least one micro-region has to be yours.",
+        "accept": "D'acòrd"
+      },
+      "discardDialog": {
+        "message": "Vòs escartar es cambiaments?",
+        "accept": "Òc",
+        "reject": "Non"
+      },
+      "saveErrorDialog": {
+        "message": "There was an error saving the danger sources!",
+        "accept": "D'acòrd"
+      },
+      "loadDialog": {
+        "message": "Do you want to load all danger source variants from the day before?",
+        "accept": "Òc",
+        "reject": "Non"
       }
     }
   },
