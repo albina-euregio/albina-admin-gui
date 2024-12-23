@@ -398,7 +398,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   exportObservations() {
-    const collection: GeoJSON.FeatureCollection = toGeoJSON(this.data.observations.all);
+    const collection: GeoJSON.FeatureCollection = toGeoJSON(this.data.observations.filtered);
     const json = JSON.stringify(collection, undefined, 2);
     const blob = new Blob([json], { type: "application/geo+json" });
     saveAs(blob, "observations.geojson");
