@@ -112,7 +112,8 @@
       "title": {
         "avalanche": "Alud",
         "matrix": "Matriz",
-        "characteristics": "Características"
+        "characteristics": "Características",
+        "comment": "Comentario"
       },
       "label": {
         "glidingSnowActivity": "Gliding snow activity",
@@ -927,7 +928,7 @@
     "dp4": "pp.4: frío sobre cálido / cálido sobre frío",
     "dp5": "pp.5: nevada reciente después de un largo periodo cálido",
     "dp6": "pp.6: frío, nieve suelta y viento",
-    "dp7": "pp.7: zonas de poca nieve rodeadas de zonas con mayor espesor de nieve",
+    "dp7": "dp.7: shallow snow next to deep snow",
     "dp8": "pp.8: escarcha de superfície enterrada",
     "dp9": "pp.9: nieve redonda enterrada",
     "dp10": "pp.10: escenario de primavera"

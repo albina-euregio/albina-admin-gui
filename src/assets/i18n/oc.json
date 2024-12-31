@@ -112,7 +112,8 @@
       "title": {
         "avalanche": "Lauet",
         "matrix": "Mairitz",
-        "characteristics": "Caracteristiques"
+        "characteristics": "Caracteristiques",
+        "comment": "Comentari"
       },
       "label": {
         "glidingSnowActivity": "Gliding snow activity",
@@ -927,7 +928,7 @@
     "dp4": "pp.4: heired dempús de caud / caud dempús de heired",
     "dp5": "pp.5: nheuades dempús d’un long periòde de heired",
     "dp6": "pp.6: nhèu heireda, sense coesion e vent",
-    "dp7": "pp.7: zònes praubes de nhèu as environs rics en nhèu",
+    "dp7": "dp.7: shallow snow next to deep snow",
     "dp8": "pp.8: geladiua de superfícia enterrada",
     "dp9": "pp.9: graupel enterrat",
     "dp10": "pp.10: scenari de primauera"

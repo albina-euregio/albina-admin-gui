@@ -112,7 +112,8 @@
       "title": {
         "avalanche": "Lawine",
         "matrix": "Matrix",
-        "characteristics": "Merkmale"
+        "characteristics": "Merkmale",
+        "comment": "Kommentar"
       },
       "label": {
         "glidingSnowActivity": "Gleitschneeaktivität",
@@ -927,7 +928,7 @@
     "dp4": "gm.4: kalt auf warm / warm auf kalt",
     "dp5": "gm.5: schnee nach langer kälteperiode",
     "dp6": "gm.6: lockerer schnee und wind",
-    "dp7": "gm.7: schneearm neben schneereich",
+    "dp7": "dp.7: shallow snow next to deep snow",
     "dp8": "gm.8: eingeschneiter oberflächenreif",
     "dp9": "gm.9: eingeschneiter graupel",
     "dp10": "gm.10: frühjahrssituation"
@@ -1186,7 +1187,7 @@
   "observations": {
     "allowEdit": "Externe Beobachtung bearbeiten",
     "allowEditTooltip": "This will prevent overwrites from {{ value }}",
-    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
+    "editIconTooltip": "Exercice",
     "aspect": "Exposition",
     "authorName": "Autor Name",
     "avalancheLength": "Lawinenlänge",

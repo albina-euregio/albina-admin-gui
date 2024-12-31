@@ -112,7 +112,8 @@
       "title": {
         "avalanche": "valanga",
         "matrix": "Matrice",
-        "characteristics": "Caratteristiche"
+        "characteristics": "Caratteristiche",
+        "comment": "Commento"
       },
       "label": {
         "glidingSnowActivity": "attività di slittamento",
@@ -155,7 +156,7 @@
         "cancel": "Cancella"
       },
       "deleteVariantDialog": {
-        "message": "Do you want to delete this variant?",
+        "message": "Vuoi cancellare questa variante?",
         "accept": "Sì",
         "reject": "No"
       },
@@ -927,7 +928,7 @@
     "dp4": "st.4: freddo su caldo / caldo su freddo",
     "dp5": "st.5: neve dopo un lungo periodo di freddo",
     "dp6": "st.6: neve fresca fredda a debole coesione e vento",
-    "dp7": "st.7: zone con poca neve durante inverni ricchi di neve",
+    "dp7": "st.7: passaggio da poca a molta neve",
     "dp8": "st.8: brina di superficie sepolta",
     "dp9": "st.9: neve pallottolare coperta da neve fresca",
     "dp10": "st.10: situazione primaverile"

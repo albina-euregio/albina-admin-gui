@@ -112,7 +112,8 @@
       "title": {
         "avalanche": "Allau",
         "matrix": "Matriu",
-        "characteristics": "Característiques"
+        "characteristics": "Característiques",
+        "comment": "Comentari"
       },
       "label": {
         "glidingSnowActivity": "Gliding snow activity",
@@ -927,7 +928,7 @@
     "dp4": "pp.4: fred després de temperat / temperat després de fred",
     "dp5": "pp.5: nevada després d'un llarg període fred",
     "dp6": "pp.6: neu freda i solta i vent",
-    "dp7": "pp.7: zones de mantell prim en un entorn de mantell gruixut",
+    "dp7": "dp.7: shallow snow next to deep snow",
     "dp8": "pp.8: gebre enterrat",
     "dp9": "pp.9: neu rodona enterrada",
     "dp10": "pp.10: escenari de primavera"
