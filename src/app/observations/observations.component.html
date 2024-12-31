@@ -231,32 +231,14 @@
         >
           <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
         </div>
-        <!--
         <div
           class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference24h'"
-          (click)="selectParameter('SnowDifference24h')"
-          title="{{ 'observations.weatherStations.tooltips.snowDifference24h' | translate }}"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference'"
+          (click)="selectParameter('SnowDifference')"
+          title="{{ 'observations.weatherStations.tooltips.snowDifference' | translate }}"
         >
-          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
+          <i class="ph ph-trend-up" aria-hidden="true"></i>
         </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference48h'"
-          (click)="selectParameter('SnowDifference48h')"
-          title="{{ 'observations.weatherStations.tooltips.snowDifference48h' | translate }}"
-        >
-          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference72h'"
-          (click)="selectParameter('SnowDifference72h')"
-          title="{{ 'observations.weatherStations.tooltips.snowDifference72h' | translate }}"
-        >
-          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
-        </div>
-        -->
         <div
           class="obs-button"
           [class.is-active]="markerWeatherStationService.weatherStationLabel === 'AirTemperature'"

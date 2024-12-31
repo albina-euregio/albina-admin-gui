@@ -134,9 +134,7 @@ const aspectColors = {
 export enum WeatherStationParameter {
   GlobalRadiation = "GlobalRadiation",
   SnowHeight = "SnowHeight",
-  SnowDifference24h = "SnowDifference24h",
-  SnowDifference48h = "SnowDifference48h",
-  SnowDifference72h = "SnowDifference72h",
+  SnowDifference = "SnowDifference",
   AirTemperature = "AirTemperature",
   AirTemperatureMax = "AirTemperatureMax",
   AirTemperatureMin = "AirTemperatureMin",
@@ -185,12 +183,8 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         return statistics?.ISWR?.average;
       case WeatherStationParameter.SnowHeight:
         return statistics?.HS?.average;
-      case WeatherStationParameter.SnowDifference24h:
-        return NaN;
-      case WeatherStationParameter.SnowDifference48h:
-        return NaN;
-      case WeatherStationParameter.SnowDifference72h:
-        return NaN;
+      case WeatherStationParameter.SnowDifference:
+        return statistics?.HS?.delta;
       case WeatherStationParameter.AirTemperature:
         return statistics?.TA?.average;
       case WeatherStationParameter.AirTemperatureMax:
@@ -225,11 +219,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         return this.globalRadiationColor(value);
       case WeatherStationParameter.SnowHeight:
         return this.snowHeightColor(value);
-      case WeatherStationParameter.SnowDifference24h:
-        return this.snowDifferenceColor(value);
-      case WeatherStationParameter.SnowDifference48h:
-        return this.snowDifferenceColor(value);
-      case WeatherStationParameter.SnowDifference72h:
+      case WeatherStationParameter.SnowDifference:
         return this.snowDifferenceColor(value);
       case WeatherStationParameter.AirTemperature:
         return this.temperatureColor(value);

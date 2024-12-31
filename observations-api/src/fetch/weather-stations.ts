@@ -191,6 +191,7 @@ type Data = Partial<
       median: number;
       max: number;
       sum: number;
+      delta: number;
     }
   >
 >;
@@ -238,6 +239,7 @@ export function parseSMET(smet: string, startDate: Date, endDate: Date): Data {
       median: values.length ? median(values) : NaN,
       max: values.length ? max(values) : NaN,
       sum: values.length ? sum(values) : NaN,
+      delta: values.length ? values.at(-1) - values.at(0) : NaN,
     }))
     .slice(1);
   return Object.fromEntries(statistics.map((s) => [s.parameter, s]));
