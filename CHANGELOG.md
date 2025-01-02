@@ -2,6 +2,49 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.3] - 2024-12-17
+
+### Bulletins
+
+- Change region by clicking on the region name in the overview table
+- Fix a bug where audio files could not be uploaded from mobile devices
+- Switch previous/next date buttons in the editing view for bulletins
+
+## [7.1.2] - 2024-12-16
+
+### Observations
+
+- The search field is now displayed in the toolbar for both the table and map view.
+- externalURL as editable component for observations
+- Bugfix: Lola-kronos stability test category
+- Bugfix: Display observations where region is absent
+
+### Stress Level
+
+- Show stress level graph only for members of the same region
+
+### Keyboard Shortcuts
+
+- Improve keyboard shortcuts for bulletins and add shortcut creating new observations
+
+### Miscellaneous
+
+- Update to ngx-bootstrap 19.0.0
+- Update eaws-regions to v7.0.5
+
+## [7.1.1] - 2024-12-10
+
+### Bulletins
+
+- Simplify dangerPattern editing
+- LoadExternalBulletins according to latest validity.
+  This allows bulletins from e.g. AINEVA to be correctly loaded, even though they do not use the 5pm validity.
+
+### Observations
+
+- Categorize new observations as 'Avalanche'
+- Automatically parse Leitstelle Tirol codes for PersonInvolvement
+
 ## [7.1.0] - 2024-12-08
 
 ### Bulletins
