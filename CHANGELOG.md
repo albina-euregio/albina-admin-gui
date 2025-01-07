@@ -7,7 +7,7 @@
 ### Bulletins
 
 - Change region by clicking on the region name in the overview table
-- Fix a bug where audio files could not be uploaded from mobile devices
+- Fix a bug where audio files could not be uploaded from mobile devices (file type filter)
 - Switch previous/next date buttons in the editing view for bulletins
 
 ## [7.1.2] - 2024-12-16
@@ -36,13 +36,13 @@
 
 ### Bulletins
 
-- Simplify dangerPattern editing
+- Simplify save operation for dangerPattern
 - LoadExternalBulletins according to latest validity.
   This allows bulletins from e.g. AINEVA to be correctly loaded, even though they do not use the 5pm validity.
 
 ### Observations
 
-- Categorize new observations as 'Avalanche'
+- Categorize new observations as 'Avalanche' based on PersonInvolvement
 - Automatically parse Leitstelle Tirol codes for PersonInvolvement
 
 ## [7.1.0] - 2024-12-08
