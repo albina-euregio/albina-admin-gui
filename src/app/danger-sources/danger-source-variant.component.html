@@ -212,6 +212,7 @@
               name="snow-height-lower-limit-input"
               [disabled]="disabled()"
               [(ngModel)]="variant().snowHeightLowerLimit"
+              (change)="updateVariantOnServer()"
             />
             <span class="input-group-text">cm</span>
             <label class="form-label mx-3" for="snowHeightLabel"> - </label>
@@ -225,6 +226,7 @@
               name="snow-height-upper-limit-input"
               [disabled]="disabled()"
               [(ngModel)]="variant().snowHeightUpperLimit"
+              (change)="updateVariantOnServer()"
             />
             <span class="input-group-text">cm</span>
           </div>
@@ -367,6 +369,7 @@
               name="slab-thickness-lower-limit-input"
               [disabled]="disabled()"
               [(ngModel)]="variant().slabThicknessLowerLimit"
+              (change)="updateVariantOnServer()"
             />
             <span class="input-group-text">cm</span>
             <label class="form-label mx-3" for="slabThicknessLabel"> - </label>
@@ -380,6 +383,7 @@
               name="slab-thickness-upper-limit-input"
               [disabled]="disabled()"
               [(ngModel)]="variant().slabThicknessUpperLimit"
+              (change)="updateVariantOnServer()"
             />
             <span class="input-group-text">cm</span>
           </div>
@@ -909,6 +913,7 @@
               name="weak-layer-grain-size-lower-limit-input"
               [disabled]="disabled()"
               [(ngModel)]="variant().weakLayerGrainSizeLowerLimit"
+              (change)="updateVariantOnServer()"
             />
             <span class="input-group-text">cm</span>
             <label class="form-label mx-3" for="weakLayerGrainSizeLabel"> - </label>
@@ -922,6 +927,7 @@
               name="weak-layer-grain-size-upper-limit-input"
               [disabled]="disabled()"
               [(ngModel)]="variant().weakLayerGrainSizeUpperLimit"
+              (change)="updateVariantOnServer()"
             />
             <span class="input-group-text">cm</span>
           </div>
