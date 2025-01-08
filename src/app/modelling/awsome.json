@@ -69,6 +69,7 @@
       ]
     },
     {
+      "default": "label",
       "type": "Elevation",
       "label": "Elevation",
       "key": "elevation",
@@ -141,6 +142,7 @@
       ]
     },
     {
+      "default": "classify",
       "chartRichLabel": "label",
       "chartType": "bar",
       "label": "Punstable",

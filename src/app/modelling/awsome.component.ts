@@ -88,10 +88,15 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.date = this.config.date;
     this.sources = this.config.sources;
 
-    this.filterService.filterSelectionData = (this.config.filters as FilterSelectionSpec<FeatureProperties>[]).map(
-      (f) => new FilterSelectionData(f),
+    const spec = this.config.filters as FilterSelectionSpec<FeatureProperties>[];
+    this.filterService.filterSelectionData = spec.map((f) => new FilterSelectionData(f));
+
+    this.markerService.markerClassify = this.filterService.filterSelectionData.find(
+      (f) => f.type === spec.find((f) => f.default === "classify")?.type,
     );
-    this.markerService.markerClassify = this.filterService.filterSelectionData.at(-1);
+    this.markerService.markerLabel = this.filterService.filterSelectionData.find(
+      (f) => f.type === spec.find((f) => f.default === "label")?.type,
+    );
     await this.loadSources();
   }
 

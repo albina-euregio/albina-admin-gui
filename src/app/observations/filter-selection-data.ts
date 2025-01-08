@@ -25,6 +25,7 @@ export interface FilterSelectionValue {
 }
 
 export interface FilterSelectionSpec<T> {
+  default?: "label" | "classify";
   type: string; // id
   label: string; // caption
   key: keyof T; // how to extract data

@@ -140,6 +140,10 @@
     },
     "FilterSelectionSpec": {
       "properties": {
+        "default": {
+          "enum": ["label", "classify"],
+          "type": "string"
+        },
         "chartRichLabel": {
           "enum": ["highlight", "label", "symbol", "grainShape"],
           "type": "string",
