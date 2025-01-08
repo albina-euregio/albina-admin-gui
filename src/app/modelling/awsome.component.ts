@@ -80,6 +80,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   sources: AwsomeSource[];
   mapLayer = new LayerGroup();
   hazardChart: EChartsOption | undefined;
+  loading: boolean;
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
@@ -108,6 +109,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.observations.length = 0;
     this.applyLocalFilter();
 
+    this.loading = true;
     this.observations = (
       await Promise.all(
         this.sources.flatMap(
@@ -116,6 +118,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ),
       )
     ).flat();
+    this.loading = false;
 
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>

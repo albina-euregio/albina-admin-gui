@@ -14,6 +14,12 @@
                   data-bs-auto-close="outside"
                 >
                   {{ "admin.observations.selectSources.placeholder" | translate }}
+                  <div
+                    class="spinner-grow spinner-grow-sm text-success"
+                    [ngClass]="{ 'opacity-0': !loading }"
+                    role="status"
+                    title="Loading"
+                  ></div>
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll">
                   <div *ngFor="let source of sources" class="form-check">
