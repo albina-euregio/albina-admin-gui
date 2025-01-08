@@ -166,9 +166,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
   }
 
-  switchDate(direction: -1 | 1) {
+  async switchDate(direction: -1 | 1) {
     this.date = this.nextDate(direction);
-    this.loadSources();
+    await this.loadSources();
   }
 
   applyLocalFilter() {
