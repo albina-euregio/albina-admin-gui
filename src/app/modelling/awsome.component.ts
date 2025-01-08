@@ -105,7 +105,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.applyLocalFilter();
 
     this.observations = (
-      await Promise.all(this.sources.flatMap(async (source) => await this.loadSource(source)))
+      await Promise.all(
+        this.sources.flatMap(
+          async (source) =>
+            await this.loadSource(source).catch((err) => console.warn("Failed to load source", source, err)),
+        ),
+      )
     ).flat();
 
     this.filterService.filterSelectionData.forEach((filter) =>
