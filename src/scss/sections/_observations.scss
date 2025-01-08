@@ -1,5 +1,6 @@
 $header-nav-height: 60px;
-$observations-height: calc(100vh - $header-nav-height);
+$observations-full-height: 100vh;
+$observations-height: calc($observations-full-height - $header-nav-height);
 
 @font-face {
   font-family: snowsymbolsiacs;
@@ -18,6 +19,10 @@ $observations-height: calc(100vh - $header-nav-height);
   bottom: 0;
   left: 0;
   right: 0;
+  height: $observations-full-height;
+  max-height: $observations-full-height;
+}
+nav ~ .app-body .layout-outer {
   height: $observations-height;
   max-height: $observations-height;
 }
