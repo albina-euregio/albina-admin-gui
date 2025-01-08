@@ -2,6 +2,27 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.4] - 2025-01-08
+
+### Observations
+
+- Allow to edit/augment any observation
+- Add category forBlog to observations
+- Implement weather station aggregation
+- Export filtered observations
+
+### Forecasts
+
+- Add weather map image overlays
+
+### 🐛 Bug Fixes
+
+- Observation charts on mobile
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to leaflet-control-geocoder 3.0.1
+
 ## [7.1.3] - 2024-12-17
 
 ### Bulletins
