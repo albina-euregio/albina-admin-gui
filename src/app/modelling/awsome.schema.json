@@ -9,6 +9,14 @@
       "format": "date",
       "description": "Initial date/time when opening the dashboard"
     },
+    "dateMin": {
+      "type": "string",
+      "format": "date"
+    },
+    "dateMax": {
+      "type": "string",
+      "format": "date"
+    },
     "dateStepSeconds": {
       "type": "number",
       "description": "Seconds between two models runs"

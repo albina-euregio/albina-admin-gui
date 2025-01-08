@@ -39,12 +39,22 @@
                   [step]="config.dateStepSeconds"
                   class="form-control"
                   [(ngModel)]="date"
+                  [min]="config.dateMin"
+                  [max]="config.dateMax"
                   (ngModelChange)="loadSources()"
                 />
-                <button class="btn btn-outline-secondary" (click)="switchDate(-1)">
+                <button
+                  class="btn btn-outline-secondary"
+                  (click)="switchDate(-1)"
+                  [disabled]="config.dateMin && nextDate(-1) < config.dateMin"
+                >
                   <i class="ph ph-caret-double-left"></i>
                 </button>
-                <button class="btn btn-outline-secondary" (click)="switchDate(+1)">
+                <button
+                  class="btn btn-outline-secondary"
+                  (click)="switchDate(+1)"
+                  [disabled]="config.dateMax && nextDate(+1) > config.dateMax"
+                >
                   <i class="ph ph-caret-double-right"></i>
                 </button>
               </div>

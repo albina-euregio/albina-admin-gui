@@ -33,6 +33,8 @@ export interface AwsomeSource {
 
 interface Awsome {
   date: string;
+  dateMin: string;
+  dateMax: string;
   dateStepSeconds: number;
   sources: AwsomeSource[];
   filters: FilterSelectionSpec<FeatureProperties>[];
@@ -148,10 +150,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
   }
 
-  switchDate(direction: -1 | 1) {
+  nextDate(direction: -1 | 1) {
     const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
     const date = new Date(Date.parse(this.date) + direction * dateStepSeconds * 1000);
-    this.date = formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
+    return formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
+  }
+
+  switchDate(direction: -1 | 1) {
+    this.date = this.nextDate(direction);
     this.loadSources();
   }
 
