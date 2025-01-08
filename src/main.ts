@@ -55,7 +55,7 @@ import routes from "./app/routes";
 import { environment } from "./environments/environment";
 import * as echarts from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { BarChart, LineChart } from "echarts/charts";
+import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
   GridComponent,
@@ -75,6 +75,7 @@ echarts.use([
   LegendComponent,
   LineChart,
   PolarComponent,
+  ScatterChart,
   SingleAxisComponent,
   TitleComponent,
   TooltipComponent,

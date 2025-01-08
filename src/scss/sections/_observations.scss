@@ -362,6 +362,9 @@ $observations-height: calc(100vh - $header-nav-height);
   .chart-container {
     width: 220px;
   }
+  .chart-container.w3 {
+    width: 660px;
+  }
 }
 
 .chart {

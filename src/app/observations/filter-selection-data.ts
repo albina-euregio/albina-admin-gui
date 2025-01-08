@@ -112,7 +112,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     }
   }
 
-  getValue(observation: T): ValueType {
+  getValue(observation: T, key = this.key): ValueType {
     if (this.key === "elevation") {
       const o = observation as GenericObservation;
       if (typeof o.elevationLowerBound === "number" && typeof o.elevationUpperBound === "number") {
@@ -124,7 +124,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
         return values;
       }
     }
-    return get(observation, this.key) as ValueType;
+    return get(observation, key) as ValueType;
   }
 
   getValues(observation: T) {

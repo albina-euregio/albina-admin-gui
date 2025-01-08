@@ -14,6 +14,8 @@ import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { LayerGroup } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { NgxEchartsDirective } from "ngx-echarts";
+import type { EChartsCoreOption as EChartsOption } from "echarts/types/dist/core";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
     GenericObservation,
@@ -53,6 +55,7 @@ type DetailsTabLabel = string;
     TabsModule,
     TranslateModule,
     NgxMousetrapDirective,
+    NgxEchartsDirective,
   ],
   templateUrl: "awsome.component.html",
 })
@@ -76,6 +79,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
   mapLayer = new LayerGroup();
+  hazardChart: EChartsOption | undefined;
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
@@ -188,6 +192,29 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         this.filterService.isSelected(o),
       ),
     );
+
+    const markerClassify = this.markerService.markerClassify;
+    if (markerClassify) {
+      const data = this.localObservations.map((o) => [
+        // snp_characteristics.Punstable.depth
+        markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".depth")),
+        // snp_characteristics.Punstable.value
+        markerClassify.getValue(o, markerClassify.key),
+      ]);
+      this.hazardChart = {
+        xAxis: { name: "Depth" },
+        yAxis: { name: markerClassify.label },
+        series: [
+          {
+            type: "scatter",
+            data,
+            symbolSize: 3,
+          },
+        ],
+      };
+    } else {
+      this.hazardChart = undefined;
+    }
   }
 
   private onObservationClick(observation: FeatureProperties) {
