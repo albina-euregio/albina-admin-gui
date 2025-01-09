@@ -2,6 +2,12 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.5] - 2025-01-09
+
+### 🐛 Bug Fixes
+
+- Remove css before and after for global-bar-scroll
+
 ## [7.1.4] - 2025-01-08
 
 ### Observations
