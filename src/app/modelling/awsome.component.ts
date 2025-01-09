@@ -228,7 +228,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         : []);
     this.selectedObservation = observation;
     this.selectedObservationDetails = detailsTemplates.map(({ label, template }) => ({
-      label,
+      label: this.markerService.formatTemplate(label, observation),
       html: this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(template, observation)),
     }));
     this.selectedObservationActiveTabs[observation.$source] ??= this.selectedObservationDetails[0]?.label;
