@@ -170,26 +170,6 @@ nav ~ .app-body .layout-outer {
   display: none;
 }
 
-.global-bar-scroll:before,
-.global-bar-scroll:after {
-  z-index: 15;
-  position: absolute;
-  top: 0;
-  content: "";
-  height: calc(55px - 1px);
-  width: 20px;
-}
-
-.global-bar-scroll:before {
-  left: 0;
-  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0));
-}
-
-.global-bar-scroll:after {
-  right: 0;
-  background: linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0));
-}
-
 .global-bar {
   display: flex;
   flex-wrap: nowrap;
