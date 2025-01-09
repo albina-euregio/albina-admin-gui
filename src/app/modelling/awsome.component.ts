@@ -115,8 +115,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.observations = (
       await Promise.all(
         this.sources.flatMap(
-          async (source) =>
-            await this.loadSource(source).catch((err) => console.warn("Failed to load source", source, err)),
+          async (source): Promise<FeatureProperties[]> =>
+            await this.loadSource(source).catch((err) => {
+              console.warn("Failed to load source", source, err);
+              return [];
+            }),
         ),
       )
     ).flat();
@@ -130,7 +133,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.applyLocalFilter();
   }
 
-  private async loadSource(source: AwsomeSource) {
+  private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {
     // replace 2023-11-12_06-00-00 with current date
     const date = this.date.replace(/T/, "_").replace(/:/g, "-");
     const url =
@@ -144,7 +147,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       : ["east", "flat", "north", "south", "west"];
 
     const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(url);
-    return features.flatMap((feature: FeatureProperties) => {
+    return features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>) => {
       feature.properties.$source = source.name as any;
       feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
       feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
