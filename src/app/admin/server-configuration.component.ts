@@ -37,6 +37,7 @@ export class ServerConfigurationComponent {
     json["pdfDirectory"] = this.config().pdfDirectory;
     json["htmlDirectory"] = this.config().htmlDirectory;
     json["serverImagesUrl"] = this.config().serverImagesUrl;
+    json["dangerLevelElevationDependency"] = this.config().dangerLevelElevationDependency;
     json["mapsPath"] = this.config().mapsPath;
     json["mediaPath"] = this.config().mediaPath;
     json["mapProductionUrl"] = this.config().mapProductionUrl;

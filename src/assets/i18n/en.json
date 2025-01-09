@@ -613,6 +613,7 @@
         "pdfDirectory": "Directory for PDF",
         "htmlDirectory": "Directory for HTML",
         "serverImagesUrl": "Path to server images",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
         "mapsPath": "Path to maps",
         "mediaPath": "Path to media files",
         "mapProductionUrl": "URL for map production",
