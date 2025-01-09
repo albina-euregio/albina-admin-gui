@@ -16,6 +16,7 @@ import { LayerGroup } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { NgxEchartsDirective } from "ngx-echarts";
 import type { EChartsCoreOption as EChartsOption } from "echarts/types/dist/core";
+import type { ScatterSeriesOption } from "echarts/charts";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
     GenericObservation,
@@ -200,9 +201,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (markerClassify) {
       const data = this.localObservations.map((o) => [
         // snp_characteristics.Punstable.depth
-        markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".depth")),
+        markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".depth")) as number,
         // snp_characteristics.Punstable.value
-        markerClassify.getValue(o, markerClassify.key),
+        markerClassify.getValue(o, markerClassify.key) as number,
       ]);
       this.hazardChart = {
         xAxis: { name: "Depth" },
@@ -212,7 +213,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
             type: "scatter",
             data,
             symbolSize: 3,
-          },
+          } satisfies ScatterSeriesOption,
         ],
       };
     } else {
