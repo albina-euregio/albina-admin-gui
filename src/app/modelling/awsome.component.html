@@ -128,7 +128,12 @@
               (handleChange)="applyLocalFilter()"
             />
             <div *ngIf="hazardChart" class="chart-container w3">
-              <div echarts [options]="hazardChart"></div>
+              <div
+                echarts
+                (chartMouseOver)="chartMouseOver($event)"
+                (chartMouseOut)="chartMouseOut()"
+                [options]="hazardChart"
+              ></div>
             </div>
           </div>
         </div>

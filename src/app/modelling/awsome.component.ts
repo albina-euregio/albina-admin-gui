@@ -15,7 +15,7 @@ import { TabsModule } from "ngx-bootstrap/tabs";
 import { LayerGroup } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { NgxEchartsDirective } from "ngx-echarts";
-import type { EChartsCoreOption as EChartsOption } from "echarts/types/dist/core";
+import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 
 type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
@@ -80,6 +80,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
   mapLayer = new LayerGroup();
+  mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
   loading: boolean;
 
@@ -165,6 +166,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   async ngAfterViewInit() {
     await this.mapService.initMaps(this.mapDiv().nativeElement);
     this.mapLayer.addTo(this.mapService.map);
+    this.mapLayerHighlight.addTo(this.mapService.map);
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
   }
 
@@ -204,6 +206,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".depth")) as number,
         // snp_characteristics.Punstable.value
         markerClassify.getValue(o, markerClassify.key) as number,
+        // $event.data[2] as FeatureProperties
+        o as unknown as number,
       ]);
       this.hazardChart = {
         xAxis: { name: "Depth" },
@@ -212,13 +216,26 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           {
             type: "scatter",
             data,
-            symbolSize: 3,
+            symbolSize: 5,
           } satisfies ScatterSeriesOption,
         ],
       };
     } else {
       this.hazardChart = undefined;
     }
+  }
+
+  chartMouseOver($event: ECElementEvent) {
+    this.mapLayerHighlight.clearLayers();
+    const observation = $event.data[2] as FeatureProperties;
+    const marker = this.markerService.createMarker(observation, true);
+    marker.options.zIndexOffset = 42_000;
+    marker.addTo(this.mapLayerHighlight);
+    marker.toggleTooltip();
+  }
+
+  chartMouseOut() {
+    this.mapLayerHighlight.clearLayers();
   }
 
   private onObservationClick(observation: FeatureProperties) {
