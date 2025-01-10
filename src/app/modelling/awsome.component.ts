@@ -18,10 +18,10 @@ import { NgxEchartsDirective } from "ngx-echarts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 
-type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
-    GenericObservation,
-    "$source" | "latitude" | "longitude" | "elevation"
-  >;
+export type FeatureProperties = GeoJSON.Feature["properties"] & {
+  $sourceObject?: AwsomeSource;
+  region_id: string;
+} & Pick<GenericObservation, "$source" | "latitude" | "longitude" | "elevation">;
 
 export interface AwsomeSource {
   name: string;
@@ -170,6 +170,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.mapService.initMaps(this.mapDiv().nativeElement);
     this.mapLayer.addTo(this.mapService.map);
     this.mapLayerHighlight.addTo(this.mapService.map);
+    this.mapService.map.on("click", () => {
+      this.filterService.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+      this.applyLocalFilter();
+    });
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
   }
 
