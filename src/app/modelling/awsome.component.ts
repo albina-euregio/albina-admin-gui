@@ -24,6 +24,7 @@ export type FeatureProperties = GeoJSON.Feature["properties"] & {
 } & Pick<GenericObservation, "$source" | "latitude" | "longitude" | "elevation">;
 
 export interface AwsomeSource {
+  $abort: AbortController | undefined;
   name: string;
   url: string;
   tooltipTemplate: string;
@@ -146,7 +147,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
 
-    const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(url);
+    source.$abort?.abort();
+    source.$abort = new AbortController();
+    const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(url, { signal: source.$abort.signal });
     return features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>) => {
       feature.properties.$source = source.name as any;
       feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
@@ -275,13 +278,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return window.matchMedia("(max-width: 768px)").matches;
   }
 
-  private async fetchJSON<T>(input: RequestInfo | URL): Promise<T> {
+  private async fetchJSON<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
     if (typeof input === "string" && !input.includes("?")) {
       input = `${input}?_=${Date.now()}`;
     }
     // FIXME const headers = { "Cache-Control": "no-cache" };
     // FIXME CORS Access-Control-Request-Headers: cache-control
-    const res = await fetch(input);
+    const res = await fetch(input, init);
     const text = (await res.text()).replace(/\bNaN\b/g, "null");
     return JSON.parse(text);
   }
