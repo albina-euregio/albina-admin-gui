@@ -29,6 +29,7 @@ import { DangerSourceVariantComponent } from "./danger-source-variant.component"
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { Subscription } from "rxjs";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",
@@ -245,8 +246,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.pendingDangerSources?.unsubscribe();
     this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources(this.dangerSourcesService.getActiveDate(), this.authenticationService.getInternalRegions())
-      .subscribe(
-        (dangerSources) => {
+      .subscribe({
+        next(dangerSources) {
           this.loadInternalDangerSourcesError = false;
           this.pendingDangerSourcesVariants?.unsubscribe();
           this.pendingDangerSourcesVariants = this.dangerSourcesService
@@ -254,8 +255,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
               this.dangerSourcesService.getActiveDate(),
               this.authenticationService.getInternalRegions(),
             )
-            .subscribe(
-              (variants) => {
+            .subscribe({
+              next(variants) {
                 this.loadInternalVariantsError = false;
 
                 if (
@@ -270,19 +271,19 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                 }
                 this.loading = false;
               },
-              (error) => {
-                console.error("Variants could not be loaded!");
+              error(error) {
+                console.error("Variants could not be loaded!", error);
                 this.loading = false;
                 this.loadInternalVariantsError = true;
               },
-            );
+            });
         },
-        (error) => {
-          console.error("Danger sources could not be loaded!");
+        error(error) {
+          console.error("Danger sources could not be loaded!", error);
           this.loading = false;
           this.loadInternalDangerSourcesError = true;
         },
-      );
+      });
   }
 
   ngOnDestroy() {
