@@ -21,7 +21,7 @@ export async function getAwsWeatherStations(
   const geojson: GeoJSON.FeatureCollection<GeoJSON.Point, FeatureProperties> = await fetchJSON(url);
   const stations = geojson.features.map((feature) => mapFeature(feature));
 
-  if (Date.now() - lastFetch > 60e3) {
+  if (Date.now() - lastFetch > 300e3) {
     cache = fetchSMET(stations);
     lastFetch = Date.now();
   }
