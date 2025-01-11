@@ -237,15 +237,19 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  private pendingDangerSources: Subscription;
+  private pendingDangerSourcesVariants: Subscription;
   public loadDangerSourcesFromServer(type: DangerSourceVariantType) {
     console.log("Load danger sources");
     this.internVariantsList = new Array<DangerSourceVariantModel>();
-    this.dangerSourcesService
+    this.pendingDangerSources?.unsubscribe();
+    this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources(this.dangerSourcesService.getActiveDate(), this.authenticationService.getInternalRegions())
       .subscribe(
         (dangerSources) => {
           this.loadInternalDangerSourcesError = false;
-          this.dangerSourcesService
+          this.pendingDangerSourcesVariants?.unsubscribe();
+          this.pendingDangerSourcesVariants = this.dangerSourcesService
             .loadDangerSourceVariants(
               this.dangerSourcesService.getActiveDate(),
               this.authenticationService.getInternalRegions(),
