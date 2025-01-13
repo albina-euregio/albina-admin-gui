@@ -1,6 +1,6 @@
-import { Injectable, SecurityContext, inject } from "@angular/core";
+import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -18,7 +18,7 @@ export class AuthenticationService {
   private constantsService = inject(ConstantsService);
   private sanitizer = inject(DomSanitizer);
 
-  private currentAuthor: AuthorModel;
+  currentAuthor: AuthorModel;
   private internalRegions: RegionConfiguration[];
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
@@ -52,12 +52,7 @@ export class AuthenticationService {
   public login(username: string, password: string): Observable<boolean> {
     const url = this.constantsService.getServerUrl() + "authentication";
     const body = JSON.stringify({ username, password });
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-    });
-    const options = { headers: headers };
-
-    return this.http.post<AuthenticationResponse>(url, body, options).pipe(
+    return this.http.post<AuthenticationResponse>(url, body).pipe(
       map((data) => {
         if (data.access_token) {
           this.setCurrentAuthor(data);
@@ -92,9 +87,7 @@ export class AuthenticationService {
 
   private loadInternalRegions(): void {
     const url = this.constantsService.getServerUrl() + "regions";
-    const options = { headers: this.newAuthHeader() };
-
-    this.http.get<RegionConfiguration[]>(url, options).subscribe((regions) => this.setInternalRegions(regions));
+    this.http.get<RegionConfiguration[]>(url).subscribe((regions) => this.setInternalRegions(regions));
   }
 
   private setInternalRegions(regions: RegionConfiguration[]) {
@@ -104,9 +97,7 @@ export class AuthenticationService {
 
   private externalServerLogins() {
     const url = this.constantsService.getServerUrl() + "server/external";
-    const options = { headers: this.newAuthHeader() };
-
-    this.http.get<ServerConfiguration[]>(url, options).subscribe(
+    this.http.get<ServerConfiguration[]>(url).subscribe(
       (data) => {
         for (const entry of data) {
           this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
@@ -132,12 +123,7 @@ export class AuthenticationService {
   public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
     const url = apiUrl + "authentication";
     const body = JSON.stringify({ username, password });
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-    });
-    const options = { headers: headers };
-
-    return this.http.post<AuthenticationResponse>(url, body, options).pipe(
+    return this.http.post<AuthenticationResponse>(url, body).pipe(
       map((data) => {
         if (data.access_token) {
           this.addExternalServer(data, apiUrl, name, username, password);
@@ -202,32 +188,6 @@ export class AuthenticationService {
 
   public getEmail(): string {
     return this.currentAuthor?.email;
-  }
-
-  public newAuthHeader(mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + this.currentAuthor?.accessToken;
-    return new HttpHeaders({
-      "Content-Type": mime,
-      Accept: mime,
-      Authorization: authHeader,
-    });
-  }
-
-  public newFileAuthHeader(mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + this.currentAuthor?.accessToken;
-    return new HttpHeaders({
-      Accept: mime,
-      Authorization: authHeader,
-    });
-  }
-
-  public newExternalServerAuthHeader(externalAuthor: ServerModel, mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + externalAuthor.accessToken;
-    return new HttpHeaders({
-      "Content-Type": mime,
-      Accept: mime,
-      Authorization: authHeader,
-    });
   }
 
   public getUserImage() {
