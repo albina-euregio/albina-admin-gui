@@ -9,6 +9,9 @@ export type ValueType = number | string | Date | number[] | string[];
 
 export interface FilterSelectionValue {
   value: string;
+  /**
+   * An interval given as array of [lower bound, upper bound] where the lower bound is inclusive and the upper bound is exclusive
+   */
   numericRange?: [number, number];
   color: string; // icon color
   label: string; // icon label
@@ -139,7 +142,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
 
   static testFilterSelection(f: FilterSelectionValue, v: Exclude<ValueType, string[]>): boolean {
     return (
-      (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v <= f.numericRange[1]) ||
+      (Array.isArray(f.numericRange) && typeof v === "number" && f.numericRange[0] <= v && v < f.numericRange[1]) ||
       (v instanceof Date && f.value === FilterSelectionData.getISODateString(v)) ||
       f.value === v
     );
