@@ -50,6 +50,7 @@ import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -415,7 +416,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
         (error) => {
-          console.error("Bulletins could not be loaded!");
+          if (error instanceof HttpErrorResponse && error.status === 304) {
+            console.info("Skipping internal bulletin update for", this.internBulletinsListEtag);
+          } else {
+            console.error("Bulletins could not be loaded!", error);
+          }
           this.loading = false;
           this.loadInternalBulletinsError = true;
         },
