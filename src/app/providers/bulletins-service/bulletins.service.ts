@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable, of, Subject } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { Observable, of, Subject, throwError } from "rxjs";
+import { catchError, map, switchMap } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
@@ -313,9 +313,18 @@ export class BulletinsService {
         ])
         .toString();
     const headers = etag ? new HttpHeaders({ "If-None-Match": etag }) : undefined;
-    return this.http
-      .get<BulletinModelAsJSON[]>(url, { headers, observe: "response" })
-      .pipe(map((response) => ({ bulletins: response.body, etag: response.headers.get("ETag") })));
+
+    return this.http.get<BulletinModelAsJSON[]>(url, { headers, observe: "response" }).pipe(
+      map((response) => {
+        return { bulletins: response.body, etag: response.headers.get("ETag") };
+      }),
+      catchError((error) => {
+        if (error.status === 304) {
+          return of({ bulletins: null, etag: etag });
+        }
+        return throwError(() => error);
+      }),
+    );
   }
 
   loadExternalBulletins([date0]: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
