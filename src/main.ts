@@ -2,7 +2,7 @@ import * as sentry from "@sentry/angular";
 
 import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import localeCa from "@angular/common/locales/ca";
 import localeDe from "@angular/common/locales/de";
 import { default as localeEn, default as localeOc } from "@angular/common/locales/en";
@@ -33,7 +33,7 @@ import { ObservationMarkerWebcamService } from "./app/observations/observation-m
 import { ObservationMarkerService } from "./app/observations/observation-marker.service";
 import { AlbinaObservationsService } from "./app/observations/observations.service";
 import { AuthenticationService } from "./app/providers/authentication-service/authentication.service";
-import { HttpHeadersInterceptor } from "./app/providers/authentication-service/http-headers";
+import { httpHeaders } from "./app/providers/authentication-service/http-headers";
 import { BlogService } from "./app/providers/blog-service/blog.service";
 import { BulletinsService } from "./app/providers/bulletins-service/bulletins.service";
 import { ConfigurationService } from "./app/providers/configuration-service/configuration.service";
@@ -97,7 +97,6 @@ if (environment.sentryDSN) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: HttpHeadersInterceptor, multi: true },
     provideRouter(routes),
     importProvidersFrom(
       BrowserModule,
@@ -163,7 +162,7 @@ bootstrapApplication(AppComponent, {
     WsBulletinService,
     WsRegionService,
     WsUpdateService,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([httpHeaders])),
     provideAnimations(),
   ],
 });
