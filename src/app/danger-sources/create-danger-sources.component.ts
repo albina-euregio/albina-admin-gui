@@ -247,7 +247,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources(this.dangerSourcesService.getActiveDate(), this.authenticationService.getInternalRegions())
       .subscribe({
-        next(dangerSources) {
+        next: (dangerSources) => {
           this.loadInternalDangerSourcesError = false;
           this.pendingDangerSourcesVariants?.unsubscribe();
           this.pendingDangerSourcesVariants = this.dangerSourcesService
@@ -256,7 +256,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
               this.authenticationService.getInternalRegions(),
             )
             .subscribe({
-              next(variants) {
+              next: (variants) => {
                 this.loadInternalVariantsError = false;
 
                 if (
@@ -271,14 +271,14 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                 }
                 this.loading = false;
               },
-              error(error) {
+              error: (error) => {
                 console.error("Variants could not be loaded!", error);
                 this.loading = false;
                 this.loadInternalVariantsError = true;
               },
             });
         },
-        error(error) {
+        error: (error) => {
           console.error("Danger sources could not be loaded!", error);
           this.loading = false;
           this.loadInternalDangerSourcesError = true;
