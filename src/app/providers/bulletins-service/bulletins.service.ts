@@ -16,6 +16,11 @@ import { TranslateService } from "@ngx-translate/core";
 
 class TrainingModeError extends Error {}
 
+interface AccordionChangeEvent {
+  isOpen: boolean;
+  groupName: string;
+}
+
 @Injectable()
 export class BulletinsService {
   http = inject(HttpClient);
@@ -39,6 +44,9 @@ export class BulletinsService {
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
 
   public dates: [Date, Date][];
+
+  private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
+  accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
 
   init({ days } = { days: 10 }) {
     this.dates = [];
@@ -820,5 +828,9 @@ export class BulletinsService {
           : stress0 <= 100
             ? "ph-smiley-x-eyes"
             : "ph-circle-dashed";
+  }
+
+  emitAccordionChanged(event: AccordionChangeEvent) {
+    this.accordionChangedSubject.next(event);
   }
 }
