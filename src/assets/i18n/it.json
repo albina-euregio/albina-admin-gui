@@ -170,11 +170,11 @@
         "reject": "No"
       },
       "saveErrorDialog": {
-        "message": "There was an error saving the danger sources!",
+        "message": "Si è verificato un errore nel salvataggio delle origini di pericolo!",
         "accept": "Ok"
       },
       "loadDialog": {
-        "message": "Do you want to load all danger source variants from the day before?",
+        "message": "Vuoi caricare tutte le varianti di origine del pericolo del giorno precedente?",
         "accept": "Sì",
         "reject": "No"
       }
@@ -586,7 +586,7 @@
         "accept": "Ok"
       },
       "publishAllDialog": {
-        "message": "Vuoi pubblicare tutte le regioni?",
+        "message": "Vuoi pubblicare tutte le meteo-nivo zone?",
         "accept": "Sí",
         "reject": "No"
       }
@@ -597,7 +597,7 @@
     "timestamp": "Momento del training"
   },
   "admin": {
-    "loadingStatistics": "Creando CSV ...",
+    "loadingStatistics": "Creazione CSV ...",
     "server-configuration": {
       "title": "dServer",
       "button": {
@@ -608,7 +608,7 @@
         "name": "Nome",
         "username": "Nome utente",
         "password": "Password",
-        "publishAt5PM": "Publica alle 17:00",
+        "publishAt5PM": "Pubblica alle 17:00",
         "publishAt8AM": "Publica alle 08:00",
         "pdfDirectory": "Cartella per PDF",
         "htmlDirectory": "Cartella per HTML",
@@ -707,7 +707,7 @@
         "name": "Nome",
         "email": "Email",
         "organization": "Organizzazione",
-        "regions": "Regioni",
+        "regions": "Meteo-nivo zone",
         "roles": "Ruoli"
       },
       "deleteUserModalDialog": {
@@ -744,7 +744,7 @@
           "required": "Inserire un nome"
         },
         "email": {
-          "required": "Inserire un indirizzo Email",
+          "required": "Inserire un indirizzo email",
           "invalid": "L'indirizzo Email non è valido"
         },
         "password": {
@@ -755,8 +755,8 @@
       },
       "button": {
         "create": "Crea utente",
-        "update": "Aggiornare utente",
-        "cancel": "Cancellare"
+        "update": "Aggiorna utente",
+        "cancel": "Cancella"
       }
     },
     "observations": {
@@ -825,14 +825,14 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Invia Email, Telegram e Push",
+        "tooltip": "Invia email, Telegram e Push",
         "success": "{{prefix}}Email, Telegram e Push inviati con successo!",
-        "error": "{{prefix}}Non è stato possibile inviare Email, Telegram e Push!"
+        "error": "{{prefix}}Non è stato possibile inviare email, Telegram e Push!"
       },
       "email": {
-        "tooltip": "Inviare Email",
+        "tooltip": "Invia email",
         "success": "{{prefix}}Email inviato con successo!",
-        "error": "{{prefix}}Non è stato possibile inviare Email!"
+        "error": "{{prefix}}Non è stato possibile inviare email!"
       },
       "telegram": {
         "tooltip": "Pubblicazione via canale Telegram",
@@ -907,7 +907,7 @@
   "avalancheProblem": {
     "newSnow": "Neve fresca",
     "new_snow": "Neve fresca",
-    "windSlab": "Neve ventata",
+    "windSlab": "Lastroni da vento",
     "wind_slab": "Lastroni da vento",
     "persistentWeakLayers": "Strati deboli persistenti",
     "persistent_weak_layers": "Strati deboli persistenti",
@@ -915,7 +915,7 @@
     "wet_snow": "Neve bagnata",
     "glidingSnow": "Valanghe di slittamento",
     "gliding_snow": "Valanghe di slittamento",
-    "cornices": "Cornice",
+    "cornices": "Cornici",
     "noDistinctAvalancheProblem": "Nessun problema valanghivo evidente",
     "no_distinct_avalanche_problem": "Nessun problema valanghivo evidente",
     "favourableSituation": "Situazione favorevole",
@@ -923,14 +923,14 @@
   },
   "dangerPattern": {
     "dp1": "st.1: strato debole persistente basale",
-    "dp2": "st.2: valanga di slittamento",
-    "dp3": "st.3: pioggia",
+    "dp2": "st.2: neve di slittamento",
+    "dp3": "st.3: pioggia su neve",
     "dp4": "st.4: freddo su caldo / caldo su freddo",
     "dp5": "st.5: neve dopo un lungo periodo di freddo",
-    "dp6": "st.6: neve fresca fredda a debole coesione e vento",
+    "dp6": "st.6: neve a debole coesione e vento",
     "dp7": "st.7: passaggio da poca a molta neve",
     "dp8": "st.8: brina di superficie sepolta",
-    "dp9": "st.9: neve pallottolare coperta da neve fresca",
+    "dp9": "st.9: neve pallottolare sepolta",
     "dp10": "st.10: situazione primaverile"
   },
   "strategicMindset": {
@@ -956,7 +956,7 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
-    "ForBlog": "For blog",
+    "ForBlog": "Per il blog",
     "SnowLine": "Limite delle nevicate",
     "SurfaceHoar": "Brina di superficie",
     "Graupel": "Neve pallottolare",
@@ -982,7 +982,7 @@
     "OBSERVER": "Osservatore"
   },
   "tendency": {
-    "decreasing": " Pericolo valanghe in diminuazione",
+    "decreasing": " Pericolo valanghe in diminuizione",
     "steady": " Pericolo valanghe stabile",
     "increasing": " Pericolo valanghe in aumento"
   },
@@ -1081,9 +1081,9 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "softer below",
+    "decreasing": "al di sotto più morbido",
     "steady": "uniforme",
-    "increasing": "softer above"
+    "increasing": "al di sopra più morbido"
   },
   "terrainType": {
     "gullies": "canaloni",
@@ -1103,12 +1103,12 @@
   "zamg": {
     "table": "Tabella",
     "map": "Mappa",
-    "region": "Regione",
+    "region": "Meteo-nivo zona",
     "newSnow": "Neve fresca"
   },
   "snowpack": {
     "plotType": {
-      "LWC_stratigraphy": "Neve bagnata: contenuto in acqua liquido",
+      "LWC_stratigraphy": "Neve bagnata: contenuto in acqua",
       "wet_snow_instability": "Neve bagnata: Instabilità neve bagnata",
       "Sk38_stratigraphy": "strati deboli persistenti: Indice stabilità SK38",
       "stratigraphy": "strati deboli persistenti: stratigrafia"
@@ -1119,7 +1119,7 @@
       "south": "Versante sud"
     },
     "meteo": {
-      "new_snow_plot_3day": "Neve fresca (3g)",
+      "new_snow_plot_3day": "Neve fresca (3gg)",
       "new_snow_plot_7day": "Neve fresca (7g)",
       "new_snow_plot_1month": "Neve fresca (31g)",
       "new_snow_plot_season": "Neve fresca (stagione)",
@@ -1185,14 +1185,14 @@
     "no": "no"
   },
   "observations": {
-    "allowEdit": "Edit external observation",
-    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
-    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
+    "allowEdit": "Modifica osservazione esterna",
+    "allowEditTooltip": "Questo impedisce la sovrascrittura di {{ value }}",
+    "editIconTooltip": "Osservazione modificata - non viene aggiornato {{ value }}",
     "aspect": "Esposizione",
     "authorName": "Nome dell'autore",
     "avalancheLength": "Lunghezza della valanga",
-    "avalancheProblem": "Problema tipico valanghivo",
-    "avalancheSize": "Dimension della valanga",
+    "avalancheProblem": "Problema valanghivo",
+    "avalancheSize": "Dimensione della valanga",
     "avalancheType": "Tipologia della valanga",
     "avalancheWidth": "Larghezza della valanga",
     "search": "Cerca",
@@ -1226,10 +1226,10 @@
       }
     },
     "button": {
-      "add": "Aggiungere osservazione",
-      "save": "Salvare l'osservazione",
-      "delete": "Cancellare l'osservazione",
-      "deleteConfirm": "Cancellare l'osservazione?",
+      "add": "Aggiungi osservazione",
+      "save": "Salva l'osservazione",
+      "delete": "Cancella l'osservazione",
+      "deleteConfirm": "Cancella l'osservazione?",
       "discard": "Scarta",
       "copyDate": "Copia data evento"
     },
@@ -1253,17 +1253,17 @@
       "PERSON_UNKNOWN": "Evento (sconosciuto)",
       "TRAFFIC": "Traffico"
     },
-    "externalURL": "External URL (e.g. to photo database)",
+    "externalURL": "URL esterna (es. al database delle foto)",
     "fractureDepth": "Spessore del lastrone",
     "hasCoordinates": "Contiene coordinate",
     "incline": "Pendenza",
     "latitude": "Latitudine",
     "locationName": "Località",
     "longitude": "Longitudine",
-    "observationType": "Observation type",
+    "observationType": "Tipo di osservazione",
     "personInvolvement": "Coinvolgimento di persone",
     "reportDate": "Data del report",
-    "showTable": "Table",
+    "showTable": "Tabella",
     "withoutCoordinates": "Osservazioni senza coordinate:",
     "sidebar": {
       "filter": {

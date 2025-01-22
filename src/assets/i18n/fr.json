@@ -77,9 +77,9 @@
       "loadVariantsError": "Impossible d'éditer ce type de source."
     },
     "variantStatus": {
-      "active": "actif",
+      "active": "actives",
       "dormant": "dormant",
-      "inactive": "inactif"
+      "inactive": "inactives"
     },
     "tooltip": {
       "read": "Lire sources de danger",
@@ -132,7 +132,7 @@
         "weakLayerPersistent": "Persistance de la couche fragile",
         "weakLayerThickness": "Épaisseur de la couche fragile",
         "weakLayerStrength": "Résistance de la couche fragile",
-        "weakLayerWet": "Humidité de la couche fragile",
+        "weakLayerWet": "La couche fragile, est-elle mouillée ?",
         "weakLayerCrustAbove": "Croûte sur la couche fragile",
         "weakLayerCrustBelow": "Croûte sous la couche fragile",
         "weakLayerPosition": "Position de la couche fragile",
@@ -922,16 +922,16 @@
     "favourable_situation": "Situation favorable"
   },
   "dangerPattern": {
-    "dp1": "md.1: sous-couche fragile persistante",
-    "dp2": "md.2: neige glissante",
-    "dp3": "md.3: pluie",
-    "dp4": "md.4: froid suivant chaud / chaud suivant froid",
-    "dp5": "md.5: chute de neige après une longue période de froid",
-    "dp6": "md.6: froid, neige légère et vent",
-    "dp7": "dp.7: shallow snow next to deep snow",
-    "dp8": "md.8: givre de surface enneigé",
-    "dp9": "md.9: neige roulée enneigé",
-    "dp10": "md.10: situation de printemps"
+    "dp1": "mr.1 : sous-couche fragile persistante",
+    "dp2": "mr.2 : neige glissante",
+    "dp3": "mr.3 : pluie",
+    "dp4": "mr.4 : froid suivant chaud / chaud suivant froid",
+    "dp5": "mr.5 : chute de neige après une longue période de froid",
+    "dp6": "mr.6 : neige meuble et vent",
+    "dp7": "mr.7 : enneigement faible à coté d'enneigement abondant",
+    "dp8": "mr.8 : givre de surface recouvert de neige",
+    "dp9": "mr.9 : neige roulée recouverte de neige",
+    "dp10": "mr.10 : situation de printemps"
   },
   "strategicMindset": {
     "title": "État d'esprit stratégique",
@@ -987,11 +987,11 @@
     "increasing": "Le danger d'avalanche augmente"
   },
   "snowpackStability": {
-    "unknown": "inconnu",
-    "good": "bon",
-    "fair": "moyen",
-    "poor": "mauvais",
-    "very_poor": "très mauvais"
+    "unknown": "inconnue",
+    "good": "bonne",
+    "fair": "moyenne",
+    "poor": "mauvaise",
+    "very_poor": "très mauvaise"
   },
   "frequency": {
     "none": "(pratiquement) pas",
@@ -1067,10 +1067,10 @@
     "afternoon": "après-midi"
   },
   "slopeGradient": {
-    "moderately_steep": "modérément raide",
-    "steep": "raide",
-    "very_steep": "très raide",
-    "extremely_steep": "extrêmement raide"
+    "moderately_steep": "modérément raides",
+    "steep": "raides",
+    "very_steep": "très raides",
+    "extremely_steep": "extrêmement raides"
   },
   "handHardness": {
     "fist": "F",
@@ -1304,7 +1304,7 @@
       "Nl": "faible couverture nuageuse en /8",
       "N-CU": "couverture de cumulus en /8",
       "AUSL.T": "Température de déclenchement",
-      "SHW-IX": "Afficher alter-Index",
+      "SHW-IX": "Index Showalter",
       "WX -CUF": "temps significatif : NIL (rien), RASH (pluie), TS (orage)",
       "RR": "pluviométrie totale [mm]",
       "RR-str": "précipitations stratiformes",
