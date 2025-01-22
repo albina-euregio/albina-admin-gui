@@ -1717,10 +1717,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eaws/micro-regions@npm:^7.0.5":
-  version: 7.0.5
-  resolution: "@eaws/micro-regions@npm:7.0.5::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions%2F-%2F%40eaws%2Fmicro-regions-7.0.5.tgz"
-  checksum: 10c0/eecea9c67e869ade0c363285953398bd503339ac3ee846595fdd9a8aee3568681cce3da13dcfa3e2a8b37a05fee34560650d48cf85ce80ff189920a0005b7db5
+"@eaws/micro-regions@npm:^7.0.6":
+  version: 7.0.6
+  resolution: "@eaws/micro-regions@npm:7.0.6::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions%2F-%2F%40eaws%2Fmicro-regions-7.0.6.tgz"
+  checksum: 10c0/80ecdd68f3440611ac7f923ba60b8efd4c3a58b77532d7580158bc084cbb0165771de1eb48489dddeada838fe3644187b9b114b3eec732d52e1d9c3f7dbcc858
   languageName: node
   linkType: hard
 
@@ -4163,7 +4163,7 @@ __metadata:
     "@angular/router": "npm:^19.0.3"
     "@angular/upgrade": "npm:^19.0.3"
     "@auth0/angular-jwt": "npm:^5.2.0"
-    "@eaws/micro-regions": "npm:^7.0.5"
+    "@eaws/micro-regions": "npm:^7.0.6"
     "@eslint/js": "npm:^9.16.0"
     "@ngx-translate/core": "npm:^16.0.3"
     "@phosphor-icons/web": "npm:^2.1.1"
