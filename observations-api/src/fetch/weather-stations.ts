@@ -3,9 +3,6 @@ import { type GenericObservation, ObservationSource, ObservationType } from "../
 import { fetchJSON } from "../util/fetchJSON";
 import "./DecompressionStream-polyfill";
 
-let lastFetch = 0;
-let cache: Promise<Record<GenericObservation["$id"], string>> = undefined;
-
 export async function getAwsWeatherStations(
   startDate: Date,
   endDate: Date,
@@ -20,13 +17,7 @@ export async function getAwsWeatherStations(
 
   const geojson: GeoJSON.FeatureCollection<GeoJSON.Point, FeatureProperties> = await fetchJSON(url);
   const stations = geojson.features.map((feature) => mapFeature(feature));
-
-  if (Date.now() - lastFetch > 300e3) {
-    cache = fetchSMET(stations);
-    lastFetch = Date.now();
-  }
-
-  const smetData = await cache;
+  const smetData = await fetchSMET(stations);
 
   for (const station of stations) {
     if (!station?.$id) {
@@ -48,14 +39,14 @@ async function fetchSMET(
   const data: [GenericObservation["$id"], string][] = [];
   for (const station of stations) {
     if (!station?.$id || !process.env.ALBINA_SMET_API) {
-      return;
+      continue;
     }
-    const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
+    const url = process.env.ALBINA_SMET_API.replace("{station}", station.$id);
     try {
       const response = await fetch(url);
       if (!response.ok) {
         console.warn("Fetching", url, response.statusText);
-        return;
+        continue;
       } else {
         console.log("Fetching", url, response.statusText, response.headers.get("Content-Length"));
       }
@@ -71,7 +62,7 @@ async function fetchSMET(
         smet = await response.text();
       }
       if (!smet) {
-        return;
+        continue;
       }
       data.push([station?.$id, smet]);
     } catch (e) {
