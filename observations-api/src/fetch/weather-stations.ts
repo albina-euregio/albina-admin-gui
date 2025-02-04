@@ -1,7 +1,6 @@
 import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
-import { fetchJSON } from "../util/fetchJSON";
-import "./DecompressionStream-polyfill";
+import { fetchJSON, fetchText } from "../util/fetchJSON";
 
 export async function getAwsWeatherStations(
   startDate: Date,
@@ -43,24 +42,7 @@ async function fetchSMET(
     }
     const url = process.env.ALBINA_SMET_API.replace("{station}", station.$id);
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.warn("Fetching", url, response.statusText);
-        continue;
-      } else {
-        console.log("Fetching", url, response.statusText, response.headers.get("Content-Length"));
-      }
-      let smet: string;
-      if (
-        response.headers.get("Content-Encoding") === "gzip" ||
-        response.headers.get("Content-Type") === "application/x-gzip"
-      ) {
-        const stream = (await response.blob()).stream().pipeThrough(new DecompressionStream("gzip"));
-        const blob = await new Response(stream).blob();
-        smet = await blob.text();
-      } else {
-        smet = await response.text();
-      }
+      const smet = await fetchText(url);
       if (!smet) {
         continue;
       }
