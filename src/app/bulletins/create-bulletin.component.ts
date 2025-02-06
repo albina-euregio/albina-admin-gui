@@ -420,9 +420,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             console.info("Skipping internal bulletin update for", this.internBulletinsListEtag);
           } else {
             console.error("Bulletins could not be loaded!", error);
+            this.loadInternalBulletinsError = true;
           }
           this.loading = false;
-          this.loadInternalBulletinsError = true;
         },
       );
   }
