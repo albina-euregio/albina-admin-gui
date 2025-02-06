@@ -73,6 +73,7 @@ export interface ServerConfiguration {
   mediaPath: string;
   mapProductionUrl: string;
   serverImagesUrl: string;
+  dangerLevelElevationDependency: boolean;
   isNew: boolean;
 }
 
