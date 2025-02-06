@@ -483,7 +483,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showPublicationHappensAt5PM(date: [Date, Date]) {
     return (
-      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted &&
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
       !this.bulletinsService.hasBeenPublished5PM(date)
     );
   }
@@ -492,8 +493,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return (
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
         this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
-      !this.bulletinsService.hasBeenPublished8AM(date) &&
-      !this.showPublicationHappensAt5PM(date)
+      this.bulletinsService.hasBeenPublished5PM(date) &&
+      !this.bulletinsService.hasBeenPublished8AM(date)
     );
   }
 
@@ -1998,7 +1999,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   createUpdate(event: Event) {
     event.stopPropagation();
-    this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
+    switch (this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate())) {
+      case this.bulletinStatus.republished:
+      case this.bulletinStatus.resubmitted:
+      case this.bulletinStatus.published:
+      case this.bulletinStatus.missing:
+        this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
+        break;
+      case this.bulletinStatus.submitted:
+        this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.draft);
+        break;
+      default:
+        break;
+    }
     this.bulletinsService.setIsEditable(true);
     this.save();
   }
