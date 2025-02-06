@@ -51,6 +51,19 @@
     </tr>
     <tr *ngIf="!externalServer()">
       <td>
+        <label class="col-form-label">{{
+          "admin.server-configuration.table.dangerLevelElevationDependency" | translate
+        }}</label>
+      </td>
+      <td>
+        <label class="switch switch-primary">
+          <input type="checkbox" class="switch-input" [(ngModel)]="config().dangerLevelElevationDependency" />
+          <span class="switch-slider"></span>
+        </label>
+      </td>
+    </tr>
+    <tr *ngIf="!externalServer()">
+      <td>
         <label class="col-form-label">{{ "admin.server-configuration.table.pdfDirectory" | translate }}</label>
       </td>
       <td>
@@ -89,19 +102,6 @@
           placeholder=""
           [(ngModel)]="config().serverImagesUrl"
         />
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{
-          "admin.server-configuration.table.dangerLevelElevationDependency" | translate
-        }}</label>
-      </td>
-      <td>
-        <label class="switch switch-primary">
-          <input type="checkbox" class="switch-input" [(ngModel)]="config().dangerLevelElevationDependency" />
-          <span class="switch-slider"></span>
-        </label>
       </td>
     </tr>
     <tr *ngIf="!externalServer()">
