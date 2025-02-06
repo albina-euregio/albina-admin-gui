@@ -29,7 +29,7 @@ import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
 import { CommonModule } from "@angular/common";
-import { type Observable } from "rxjs";
+import { type Observable, type Subscription } from "rxjs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
@@ -56,7 +56,7 @@ export interface MultiselectDropdownData {
 }
 
 class ObservationData {
-  loading = false;
+  loading: Subscription | undefined = undefined;
   show = false;
   all = [] as GenericObservation[];
   filtered = [] as GenericObservation[];
@@ -83,13 +83,19 @@ class ObservationData {
   }
 
   async loadFrom(observable: Observable<GenericObservation>, observationSearch: string) {
-    this.loading = true;
     this.layer.clearLayers();
     this.all = [];
-    await observable.forEach((observation) => this.forEachObservation(observation)).catch((e) => console.error(e));
+    this.loading?.unsubscribe();
+    await new Promise<undefined>((resolve) => {
+      this.loading = observable.subscribe({
+        next: (observation) => this.forEachObservation(observation),
+        complete: () => resolve(undefined),
+        error: (e) => console.error(e),
+      });
+    });
     this.applyLocalFilter(observationSearch);
     this.all.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
-    this.loading = false;
+    this.loading = undefined;
   }
 
   forEachObservation(observation: GenericObservation) {

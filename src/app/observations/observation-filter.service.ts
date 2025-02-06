@@ -3,7 +3,8 @@ import { GenericObservation, ObservationSource } from "./models/generic-observat
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
-import { FilterSelectionData, ValueType } from "./filter-selection-data";
+import type { FilterSelectionData } from "./filter-selection-data";
+import type { FeatureProperties } from "../modelling/awsome.component";
 
 @Injectable()
 export class ObservationFilterService<
@@ -91,7 +92,7 @@ export class ObservationFilterService<
     return (
       this.inObservationSources(observation.$source) &&
       this.inMapBounds(observation.latitude, observation.longitude) &&
-      this.inRegions(observation.region) &&
+      this.inRegions(observation.region ?? (observation as unknown as FeatureProperties).region_id) &&
       (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation.eventDate) : true) &&
       this.filterSelectionData.every((filter) => filter.isIncluded("selected", filter.getValue(observation)))
     );

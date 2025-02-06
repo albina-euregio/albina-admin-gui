@@ -1,10 +1,6 @@
 import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
-import { fetchJSON } from "../util/fetchJSON";
-import "./DecompressionStream-polyfill";
-
-let lastFetch = 0;
-let cache: Promise<Record<GenericObservation["$id"], string>> = undefined;
+import { fetchJSON, fetchText } from "../util/fetchJSON";
 
 export async function getAwsWeatherStations(
   startDate: Date,
@@ -20,13 +16,7 @@ export async function getAwsWeatherStations(
 
   const geojson: GeoJSON.FeatureCollection<GeoJSON.Point, FeatureProperties> = await fetchJSON(url);
   const stations = geojson.features.map((feature) => mapFeature(feature));
-
-  if (Date.now() - lastFetch > 60e3) {
-    cache = fetchSMET(stations);
-    lastFetch = Date.now();
-  }
-
-  const smetData = await cache;
+  const smetData = await fetchSMET(stations);
 
   for (const station of stations) {
     if (!station?.$id) {
@@ -48,30 +38,13 @@ async function fetchSMET(
   const data: [GenericObservation["$id"], string][] = [];
   for (const station of stations) {
     if (!station?.$id || !process.env.ALBINA_SMET_API) {
-      return;
+      continue;
     }
-    const url = new URL(`${station.$id}.smet.gz`, process.env.ALBINA_SMET_API).toJSON();
+    const url = process.env.ALBINA_SMET_API.replace("{station}", station.$id);
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.warn("Fetching", url, response.statusText);
-        return;
-      } else {
-        console.log("Fetching", url, response.statusText, response.headers.get("Content-Length"));
-      }
-      let smet: string;
-      if (
-        response.headers.get("Content-Encoding") === "gzip" ||
-        response.headers.get("Content-Type") === "application/x-gzip"
-      ) {
-        const stream = (await response.blob()).stream().pipeThrough(new DecompressionStream("gzip"));
-        const blob = await new Response(stream).blob();
-        smet = await blob.text();
-      } else {
-        smet = await response.text();
-      }
+      const smet = await fetchText(url);
       if (!smet) {
-        return;
+        continue;
       }
       data.push([station?.$id, smet]);
     } catch (e) {

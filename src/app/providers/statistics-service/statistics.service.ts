@@ -1,5 +1,5 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -30,8 +30,7 @@ export class StatisticsService {
           ["duplicates", duplicates],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader("text/csv");
-
-    return this.http.get(url, { headers: headers, responseType: "blob" });
+    const headers = new HttpHeaders({ Accept: "text/csv" });
+    return this.http.get(url, { headers, responseType: "blob" });
   }
 }

@@ -80,6 +80,7 @@
           "description": "Legend string shown in the chart"
         },
         "numericRange": {
+          "description": "An interval given as array of [lower bound, upper bound] where the lower bound is inclusive and the upper bound is exclusive",
           "items": {
             "type": "number"
           },

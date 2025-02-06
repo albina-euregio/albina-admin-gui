@@ -50,6 +50,7 @@ import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -415,9 +416,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
         (error) => {
-          console.error("Bulletins could not be loaded!");
+          if (error instanceof HttpErrorResponse && error.status === 304) {
+            console.info("Skipping internal bulletin update for", this.internBulletinsListEtag);
+          } else {
+            console.error("Bulletins could not be loaded!", error);
+            this.loadInternalBulletinsError = true;
+          }
           this.loading = false;
-          this.loadInternalBulletinsError = true;
         },
       );
   }
@@ -478,7 +483,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   showPublicationHappensAt5PM(date: [Date, Date]) {
     return (
-      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted &&
+      (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
+        this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
       !this.bulletinsService.hasBeenPublished5PM(date)
     );
   }
@@ -487,8 +493,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return (
       (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.submitted ||
         this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) &&
-      !this.bulletinsService.hasBeenPublished8AM(date) &&
-      !this.showPublicationHappensAt5PM(date)
+      this.bulletinsService.hasBeenPublished5PM(date) &&
+      !this.bulletinsService.hasBeenPublished8AM(date)
     );
   }
 
@@ -1993,7 +1999,19 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   createUpdate(event: Event) {
     event.stopPropagation();
-    this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
+    switch (this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate())) {
+      case this.bulletinStatus.republished:
+      case this.bulletinStatus.resubmitted:
+      case this.bulletinStatus.published:
+      case this.bulletinStatus.missing:
+        this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
+        break;
+      case this.bulletinStatus.submitted:
+        this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.draft);
+        break;
+      default:
+        break;
+    }
     this.bulletinsService.setIsEditable(true);
     this.save();
   }

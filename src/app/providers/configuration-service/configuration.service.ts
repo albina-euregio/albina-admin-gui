@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { Observable } from "rxjs";
@@ -90,61 +90,45 @@ export class ConfigurationService {
 
   public loadLocalServerConfiguration(): Observable<ServerConfiguration> {
     const url = this.constantsService.getServerUrl() + "server";
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<ServerConfiguration>(url, options);
+    return this.http.get<ServerConfiguration>(url);
   }
 
   public loadExternalServerConfigurations(): Observable<ServerConfiguration[]> {
     const url = this.constantsService.getServerUrl() + "server/external";
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<ServerConfiguration[]>(url, options);
+    return this.http.get<ServerConfiguration[]>(url);
   }
 
   public updateServerConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "server";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.put(url, body, options);
+    return this.http.put(url, body);
   }
 
   public createServerConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "server";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.post(url, body, options);
+    return this.http.post(url, body);
   }
 
   public loadRegionConfiguration(region): Observable<RegionConfiguration> {
     const url = this.constantsService.getServerUrl() + "regions/region?region=" + region;
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<RegionConfiguration>(url, options);
+    return this.http.get<RegionConfiguration>(url);
   }
 
   public loadRegionConfigurations(): Observable<RegionConfiguration[]> {
     const url = this.constantsService.getServerUrl() + "regions";
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<RegionConfiguration[]>(url, options);
+    return this.http.get<RegionConfiguration[]>(url);
   }
 
   public updateRegionConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "regions";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.put(url, body, options);
+    return this.http.put(url, body);
   }
 
   public createRegionConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "regions";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.post(url, body, options);
+    return this.http.post(url, body);
   }
 }

@@ -1,5 +1,5 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -14,113 +14,80 @@ export class UserService {
   public changePassword(oldPassword: string, newPassword: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/change";
     const body = JSON.stringify({ oldPassword, newPassword });
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.put<Response>(url, body, options);
+    return this.http.put<Response>(url, body);
   }
 
   public resetPassword(userId: string, newPassword: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/" + userId + "/reset";
     const body = JSON.stringify({ newPassword });
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.put<Response>(url, body, options);
+    return this.http.put<Response>(url, body);
   }
 
   public checkPassword(password: string): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/check";
     const body = JSON.stringify({ password });
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.put<Response>(url, body, options);
+    return this.http.put<Response>(url, body);
   }
 
   public createUser(user): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/create";
     const body = JSON.stringify(user.toJson());
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.post<Response>(url, body, options);
+    return this.http.post<Response>(url, body);
   }
 
   public updateUser(user): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/" + user.email;
     const body = JSON.stringify(user.toJson());
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.put<Response>(url, body, options);
+    return this.http.put<Response>(url, body);
   }
 
   public updateOwnUser(user): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user";
     const body = JSON.stringify(user.toJson());
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.put<Response>(url, body, options);
+    return this.http.put<Response>(url, body);
   }
 
   public getUsers(): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user";
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.get<Response>(url, options);
+    return this.http.get<Response>(url);
   }
 
   public getRoles(): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/roles";
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.get<Response>(url, options);
+    return this.http.get<Response>(url);
   }
 
   public getRegions(): Observable<string[]> {
     const url = this.constantsService.getServerUrl() + "user/regions";
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.get<string[]>(url, options);
+    return this.http.get<string[]>(url);
   }
 
   public deleteUser(userId): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/" + userId;
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers: headers };
-
-    return this.http.delete<Response>(url, options);
+    return this.http.delete<Response>(url);
   }
 
   public postStressLevel(stressLevel: StressLevel): Observable<StressLevel> {
     const url = this.constantsService.getServerUrl() + "user/stress-level";
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.post<StressLevel>(url, stressLevel, { headers });
+    return this.http.post<StressLevel>(url, stressLevel);
   }
 
   public getStressLevels(date: [Date, Date]): Observable<StressLevel[]> {
     const url = this.constantsService.getServerUrl() + "user/stress-level";
-    const headers = this.authenticationService.newAuthHeader();
     const params = {
       startDate: date[0].toISOString(),
       endDate: date[1].toISOString(),
     };
-    return this.http.get<StressLevel[]>(url, { headers, params });
+    return this.http.get<StressLevel[]>(url, { params });
   }
 
   public getTeamStressLevels(date: [Date, Date]): Observable<Record<string, StressLevel[]>> {
     const url = this.constantsService.getServerUrl() + "user/stress-level/team";
-    const headers = this.authenticationService.newAuthHeader();
     const params = {
       region: this.authenticationService.getActiveRegionId(),
       startDate: date[0].toISOString(),
       endDate: date[1].toISOString(),
     };
-    return this.http.get<Record<string, StressLevel[]>>(url, { headers, params });
+    return this.http.get<Record<string, StressLevel[]>>(url, { params });
   }
 }

@@ -31,7 +31,8 @@ export async function getElevation(lat: number, lng: number): Promise<number> {
     name: "hoehenservice",
   } satisfies VoibosRequest;
   const url = `${API}?${new URLSearchParams(params)}`;
-  const json: VoibosResponse = await fetchJSON(url);
+  const signal = AbortSignal.timeout(2000); // timeout after 2s
+  const json: VoibosResponse = await fetchJSON(url, { signal });
   if (json.abfragestatus !== "erfolgreich") return;
   return Math.round(json.hoeheDTM);
 }

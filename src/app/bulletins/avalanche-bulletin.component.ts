@@ -1,4 +1,4 @@
-import { Component, TemplateRef, HostListener, input, output, viewChild, inject } from "@angular/core";
+import { Component, OnInit, TemplateRef, HostListener, input, output, viewChild, inject } from "@angular/core";
 
 import { environment } from "../../environments/environment";
 
@@ -47,7 +47,7 @@ import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-des
     NgxMousetrapDirective,
   ],
 })
-export class AvalancheBulletinComponent {
+export class AvalancheBulletinComponent implements OnInit {
   bulletinsService = inject(BulletinsService);
   private sanitizer = inject(DomSanitizer);
   authenticationService = inject(AuthenticationService);
@@ -101,6 +101,30 @@ export class AvalancheBulletinComponent {
     keyboard: true,
     class: "modal-md",
   };
+
+  ngOnInit() {
+    this.bulletinsService.accordionChanged$.subscribe(({ isOpen, groupName }) => {
+      switch (groupName) {
+        case "dangerRating":
+          this.isAccordionDangerRatingOpen = isOpen;
+          break;
+        case "avalancheProblem":
+          this.isAccordionAvalancheProblemOpen = isOpen;
+          break;
+        case "dangerDescription":
+          this.isAccordionDangerDescriptionOpen = isOpen;
+          break;
+        case "snowpackStructure":
+          this.isAccordionSnowpackStructureOpen = isOpen;
+          break;
+        case "tendency":
+          this.isAccordionTendencyOpen = isOpen;
+          break;
+        default:
+          break;
+      }
+    });
+  }
 
   updateBulletinOnServer() {
     this.updateBulletinOnServerEvent.emit(this.bulletin());
@@ -162,26 +186,8 @@ export class AvalancheBulletinComponent {
     );
   }
 
-  accordionChanged(event: boolean, groupName: string) {
-    switch (groupName) {
-      case "dangerRating":
-        this.isAccordionDangerRatingOpen = event;
-        break;
-      case "avalancheProblem":
-        this.isAccordionAvalancheProblemOpen = event;
-        break;
-      case "dangerDescription":
-        this.isAccordionDangerDescriptionOpen = event;
-        break;
-      case "snowpackStructure":
-        this.isAccordionSnowpackStructureOpen = event;
-        break;
-      case "tendency":
-        this.isAccordionTendencyOpen = event;
-        break;
-      default:
-        break;
-    }
+  accordionChanged(isOpen: boolean, groupName: string) {
+    this.bulletinsService.emitAccordionChanged({ isOpen, groupName });
   }
 
   acceptSuggestions(event: Event) {
