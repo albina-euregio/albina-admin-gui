@@ -20,7 +20,6 @@
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey invisible"
             (click)="toggleNextBulletin()"
-            *ngIf="bulletinsService.getNextDate()"
             [ngxMousetrapKey]="['alt+down']"
           >
             <i class="ph-bold ph-caret-down"></i>
@@ -29,7 +28,6 @@
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey invisible"
             (click)="togglePreviousBulletin()"
-            *ngIf="bulletinsService.getPreviousDate()"
             [ngxMousetrapKey]="['alt+up']"
           >
             <i class="ph-bold ph-caret-up"></i>
