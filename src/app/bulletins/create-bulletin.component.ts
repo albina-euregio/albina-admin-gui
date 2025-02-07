@@ -775,27 +775,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           bulletin.getSavedRegions().includes(clickedRegion) ||
           bulletin.getPublishedRegions().includes(clickedRegion)
         ) {
-          if (this.activeBulletin === bulletin) {
-            this.deselectBulletin();
-            hit = true;
-            break;
-          } else {
-            this.selectBulletin(bulletin);
-            hit = true;
-            break;
-          }
+          hit = true;
+          this.toggleBulletin(bulletin);
         }
       }
       if (!hit) {
         for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
           if (bulletin.getSuggestedRegions().includes(clickedRegion)) {
-            if (this.activeBulletin === bulletin) {
-              this.deselectBulletin();
-              break;
-            } else {
-              this.selectBulletin(bulletin);
-              break;
-            }
+            this.toggleBulletin(bulletin);
+            break;
           }
         }
       }
