@@ -2,6 +2,28 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.6] - 2025-02-10
+
+### 🚀 Features
+
+- Sync accordion for compared bulletins
+- Add Klausberg webcams via it-wms.com
+- Document deployment of observation-api
+- Add server config for elevation dependent danger level
+
+### 🐛 Bug Fixes
+
+- Do not show loading error for HTTP 304 not modified
+- Set correct status and publication infos text
+- Unsubscribe from pending requests
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to Astro 5.1.5
+- Update eaws-regions to v7.0.6
+- Update to angular 19.1.3
+- Update ngx-slider to v19
+
 ## [7.1.5] - 2025-01-09
 
 ### 🐛 Bug Fixes
