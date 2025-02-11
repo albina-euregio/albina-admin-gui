@@ -1127,19 +1127,56 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
     ...kronos.lolaSnowProfile.map((obs) =>
       convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail-by-token/lolaSnowProfile/"),
     ),
-    ...kronos.lolaRainBoundary.map((obs) =>
-      convertLoLaToGeneric(
-        obs,
-        ObservationType.SimpleObservation,
-        urlPrefix + "detail-by-token/lolaRainBoundary/",
-        "elevation",
+    ...kronos.lolaRainBoundary.map(
+      (obs) =>
+        convertLoLaToGeneric(
+          obs,
+          ObservationType.SimpleObservation,
+          urlPrefix + "detail-by-token/lolaRainBoundary/",
+          "elevation",
+        ),
+      ...kronos.lolaSnowStabilityTest.map((obs) =>
+        convertLoLaToGeneric(obs, ObservationType.Profile, urlPrefix + "detail-by-token/lolaSnowStabilityTest/"),
+      ),
+      ...kronos.lolaEarlyObservation.map((obs) =>
+        convertLoLaToGeneric(
+          obs,
+          ObservationType.SimpleObservation,
+          urlPrefix + "detail-by-token/lolaEarlyObservation/",
+        ),
+      ),
+      ...kronos.laDokSimpleObservations.map((obs) =>
+        convertLoLaToGeneric(
+          obs,
+          ObservationType.SimpleObservation,
+          urlPrefix + "detail-by-token/laDokSimpleObservations/",
+        ),
+      ),
+      ...kronos.laDokDetailedObservations.map((obs) =>
+        convertLoLaToGeneric(obs, ObservationType.Evaluation, urlPrefix + "detail-by-token/laDokDetailedObservations/"),
+      ),
+      ...kronos.laDokCommissionObservation.map((obs) =>
+        convertLoLaToGeneric(
+          obs,
+          ObservationType.Evaluation,
+          urlPrefix + "detail-by-token/laDokCommissionObservation/",
+        ),
       ),
     ),
   ];
 }
 
 export function convertLoLaToGeneric(
-  obs: LolaSimpleObservation | LolaAvalancheEvent | LolaSnowProfile | LolaEvaluation | LolaRainBoundary,
+  obs:
+    | LolaSimpleObservation
+    | LolaAvalancheEvent
+    | LolaSnowProfile
+    | LolaEvaluation
+    | LolaRainBoundary
+    | LolaSnowStabilityTest
+    | LolaEarlyObservation
+    | LaDokSimpleObservation
+    | LaDokObservation,
   $type: ObservationType,
   urlPrefix: string,
   snowLine?: "snowLine" | "elevation",
@@ -1148,7 +1185,17 @@ export function convertLoLaToGeneric(
     $id: obs.uuId,
     $data: obs,
     $externalURL: urlPrefix.includes("lolaFiles/pdf/serve")
-      ? `${urlPrefix}${obs.pdfName}`
+      ? `${urlPrefix}${
+          (
+            obs as
+              | LolaSimpleObservation
+              | LolaAvalancheEvent
+              | LolaSnowProfile
+              | LolaEvaluation
+              | LolaRainBoundary
+              | LolaSnowStabilityTest
+          ).pdfName
+        }`
       : `${urlPrefix}${obs.uuId}/${process.env.ALBINA_LOLA_KRONOS_API_TOKEN}`,
     $source:
       Array.isArray(obs.entities) && obs.entities.every((e) => e.entityName === "SNOBS")
@@ -1185,7 +1232,15 @@ export function convertLoLaToGeneric(
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
     latitude: obs.position?.lat,
-    locationName: obs.placeDescription,
+    locationName: (
+      obs as
+        | LolaSimpleObservation
+        | LolaAvalancheEvent
+        | LolaSnowProfile
+        | LolaEvaluation
+        | LolaRainBoundary
+        | LolaSnowStabilityTest
+    ).placeDescription,
     longitude: obs.position?.lng,
     avalancheProblems: getAvalancheProblems(obs as LolaEvaluation | LolaAvalancheEvent),
     dangerPatterns: (obs as LolaEvaluation).dangerPatterns?.map((dp) => getDangerPattern(dp)) || [],
