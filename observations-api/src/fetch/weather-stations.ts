@@ -16,42 +16,47 @@ export async function getAwsWeatherStations(
 
   const geojson: GeoJSON.FeatureCollection<GeoJSON.Point, FeatureProperties> = await fetchJSON(url);
   const stations = geojson.features.map((feature) => mapFeature(feature));
-  const smetData = await fetchSMET(stations);
-
+  const smetData = await StationValues.fetchSMET(stations);
   for (const station of stations) {
-    if (!station?.$id) {
-      continue;
-    }
-    const smet = smetData[station.$id];
-    if (!smet) {
-      continue;
-    }
-    station.$data.statistics = parseSMET(smet, startDate, endDate);
+    station.$data.statistics = smetData?.statistics(startDate, endDate, station);
   }
 
   return stations;
 }
 
-async function fetchSMET(
-  stations: GenericObservation<FeatureProperties>[],
-): Promise<Record<GenericObservation["$id"], string>> {
-  const data: [GenericObservation["$id"], string][] = [];
-  for (const station of stations) {
-    if (!station?.$id || !process.env.ALBINA_SMET_API) {
-      continue;
+class StationValues {
+  constructor(private data: Record<GenericObservation["$id"], string>) {}
+
+  statistics(startDate: Date, endDate: Date, station: GenericObservation<FeatureProperties>): Data | undefined {
+    if (!station?.$id) {
+      return;
     }
-    const url = process.env.ALBINA_SMET_API.replace("{station}", station.$id);
-    try {
-      const smet = await fetchText(url);
-      if (!smet) {
+    const smet = this.data[station.$id];
+    if (!smet) {
+      return;
+    }
+    return parseSMET(smet, startDate, endDate);
+  }
+
+  static async fetchSMET(stations: GenericObservation<FeatureProperties>[]): Promise<StationValues> {
+    const data: [GenericObservation["$id"], string][] = [];
+    for (const station of stations) {
+      if (!station?.$id || !process.env.ALBINA_SMET_API) {
         continue;
       }
-      data.push([station?.$id, smet]);
-    } catch (e) {
-      console.warn(`Fetching ${station.locationName} from ${url} failed!`, e);
+      const url = process.env.ALBINA_SMET_API.replace("{station}", station.$id);
+      try {
+        const smet = await fetchText(url);
+        if (!smet) {
+          continue;
+        }
+        data.push([station?.$id, smet]);
+      } catch (e) {
+        console.warn(`Fetching ${station.locationName} from ${url} failed!`, e);
+      }
     }
+    return new StationValues(Object.fromEntries(data.filter((d) => Array.isArray(d))));
   }
-  return Object.fromEntries(data.filter((d) => Array.isArray(d)));
 }
 
 function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>): GenericObservation<FeatureProperties> {
