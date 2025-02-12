@@ -367,8 +367,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observationEditor.messages.push(error.message);
   }
 
-  selectParameter(parameter0: keyof typeof WeatherStationParameter) {
-    const parameter = WeatherStationParameter[parameter0];
+  selectParameter(parameter: WeatherStationParameter) {
     if (this.markerWeatherStationService.weatherStationLabel === parameter) {
       this.markerWeatherStationService.weatherStationLabel = undefined;
     } else {

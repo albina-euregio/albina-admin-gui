@@ -154,6 +154,79 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
 
+  readonly allParameters: { parameter: WeatherStationParameter; labelKey: string; icon: string }[] = [
+    {
+      parameter: WeatherStationParameter.SnowHeight,
+      labelKey: "observations.weatherStations.tooltips.snowHeight",
+      icon: "ph ph-arrows-vertical",
+    },
+    {
+      parameter: WeatherStationParameter.SnowDifference,
+      labelKey: "observations.weatherStations.tooltips.snowDifference",
+      icon: "ph ph-trend-up",
+    },
+    {
+      parameter: WeatherStationParameter.AirTemperature,
+      labelKey: "observations.weatherStations.tooltips.airTemperature",
+      icon: "ph ph-thermometer-simple",
+    },
+    {
+      parameter: WeatherStationParameter.AirTemperatureMax,
+      labelKey: "observations.weatherStations.tooltips.airTemperatureMax",
+      icon: "ph ph-thermometer-simple",
+    },
+    {
+      parameter: WeatherStationParameter.AirTemperatureMin,
+      labelKey: "observations.weatherStations.tooltips.airTemperatureMin",
+      icon: "ph ph-thermometer-simple",
+    },
+    {
+      parameter: WeatherStationParameter.SurfaceTemperature,
+      labelKey: "observations.weatherStations.tooltips.surfaceTemperature",
+      icon: "ph ph-thermometer-cold",
+    },
+    {
+      parameter: WeatherStationParameter.DewPoint,
+      labelKey: "observations.weatherStations.tooltips.dewPoint",
+      icon: "ph ph-thermometer-hot",
+    },
+    {
+      parameter: WeatherStationParameter.SurfaceHoar,
+      labelKey: "observations.weatherStations.tooltips.surfaceHoar",
+      icon: "ph ph-caret-down",
+    },
+    {
+      parameter: WeatherStationParameter.SurfaceHoarCalc,
+      labelKey: "observations.weatherStations.tooltips.surfaceHoarCalc",
+      icon: "ph ph-caret-line-down",
+    },
+    {
+      parameter: WeatherStationParameter.WindSpeed,
+      labelKey: "observations.weatherStations.tooltips.windSpeed",
+      icon: "ph ph-wind",
+    },
+    {
+      parameter: WeatherStationParameter.WindGust,
+      labelKey: "observations.weatherStations.tooltips.windGust",
+      icon: "ph ph-tornado",
+    },
+    {
+      parameter: WeatherStationParameter.WindDirection,
+      labelKey: "observations.weatherStations.tooltips.windDirection",
+      icon: "ph ph-arrow-up-right",
+    },
+    {
+      parameter: WeatherStationParameter.RelativeHumidity,
+      labelKey: "observations.weatherStations.tooltips.relativeHumidity",
+      icon: "ph ph-drop",
+    },
+    {
+      parameter: WeatherStationParameter.GlobalRadiation,
+      labelKey: "observations.weatherStations.tooltips.globalRadiation",
+      icon: "ph ph-sun",
+    },
+  ];
+
   createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {
       const filterSelectionValue = isHighlighted ? this.observationMarkerService.highlighted : undefined;
