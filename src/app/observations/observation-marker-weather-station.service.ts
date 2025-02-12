@@ -214,6 +214,9 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
   toMarkerColor(observation: T): string {
     const value = this.toValue(observation);
+    if (typeof value !== "number" || !isFinite(value)) {
+      return "white";
+    }
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
         return this.globalRadiationColor(value);
@@ -280,85 +283,53 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
   }
 
   private snowHeightColor(snowHeight: number) {
-    if (snowHeight) {
-      const index = isFinite(snowHeight) ? snowHeightThresholds.findIndex((e) => e >= snowHeight) : -1;
-      return index >= 0 ? elevationColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = snowHeightThresholds.findIndex((e) => e >= snowHeight);
+    return index >= 0 ? elevationColors[index] : "white";
   }
 
   private snowDifferenceColor(snowDifference: number) {
-    if (snowDifference) {
-      const index = isFinite(snowDifference) ? snowDifferenceThresholds.findIndex((e) => e >= snowDifference) : -1;
-      return index >= 0 ? snowDifferenceColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = snowDifferenceThresholds.findIndex((e) => e >= snowDifference);
+    return index >= 0 ? snowDifferenceColors[index] : "white";
   }
 
   private temperatureColor(temperature: number) {
-    if (temperature) {
-      const index = isFinite(temperature) ? temperatureThresholds.findIndex((e) => e >= temperature) : -1;
-      return index >= 0 ? temperatureColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = temperatureThresholds.findIndex((e) => e >= temperature);
+    return index >= 0 ? temperatureColors[index] : "white";
   }
 
   private surfaceHoarColor(surfaceHoar: number) {
-    if (surfaceHoar) {
-      const index = isFinite(surfaceHoar) ? surfaceHoarThresholds.findIndex((e) => e >= surfaceHoar) : -1;
-      return index >= 0 ? surfaceHoarColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = surfaceHoarThresholds.findIndex((e) => e >= surfaceHoar);
+    return index >= 0 ? surfaceHoarColors[index] : "white";
   }
 
   private dewPointColor(dewPoint: number) {
-    if (dewPoint) {
-      const index = isFinite(dewPoint) ? dewPointThresholds.findIndex((e) => e >= dewPoint) : -1;
-      return index >= 0 ? dewPointColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = dewPointThresholds.findIndex((e) => e >= dewPoint);
+    return index >= 0 ? dewPointColors[index] : "white";
   }
 
   private relativeHumidityColor(relativeHumidity: number) {
-    if (relativeHumidity) {
-      const index = isFinite(relativeHumidity)
-        ? relativeHumidityThresholds.findIndex((e) => e >= relativeHumidity)
-        : -1;
-      return index >= 0 ? relativeHumidityColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = relativeHumidityThresholds.findIndex((e) => e >= relativeHumidity);
+    return index >= 0 ? relativeHumidityColors[index] : "white";
   }
 
   private windColor(wind: number) {
-    if (wind) {
-      const index = isFinite(wind) ? windThresholds.findIndex((e) => e >= wind) : -1;
-      return index >= 0 ? windColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = windThresholds.findIndex((e) => e >= wind);
+    return index >= 0 ? windColors[index] : "white";
   }
 
   private globalRadiationColor(globalRadiation: number) {
-    if (globalRadiation) {
-      const index = isFinite(globalRadiation) ? globalRadiationThresholds.findIndex((e) => e >= globalRadiation) : -1;
-      return index >= 0 ? windColors[index] : "white";
-    } else {
-      return "white";
-    }
+    const index = globalRadiationThresholds.findIndex((e) => e >= globalRadiation);
+    return index >= 0 ? windColors[index] : "white";
   }
 
   private getLabel(observation: T) {
     const value = this.toValue(observation);
-    if (this.weatherStationLabel === WeatherStationParameter.WindDirection) {
-      return value ? degreeToAspect(value) : "";
+    if (typeof value !== "number" || !isFinite(value)) {
+      return "";
+    } else if (this.weatherStationLabel === WeatherStationParameter.WindDirection) {
+      return degreeToAspect(value);
     } else {
-      return value ? Math.round(value) : "";
+      return Math.round(value);
     }
   }
 }
