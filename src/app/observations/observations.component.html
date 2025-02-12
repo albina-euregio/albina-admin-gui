@@ -226,11 +226,11 @@
         <div
           *ngFor="let parameter of markerWeatherStationService.allParameters"
           class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === parameter.parameter"
-          (click)="selectParameter(parameter.parameter)"
-          title="{{ parameter.labelKey | translate }}"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === parameter"
+          (click)="selectParameter(parameter)"
+          title="{{ markerWeatherStationService.toLabelKey(parameter) | translate }}"
         >
-          <i [class]="parameter.icon" aria-hidden="true"></i>
+          <i [class]="markerWeatherStationService.toIcon(parameter)" aria-hidden="true"></i>
         </div>
       </div>
       <!-- /parameter-switch -->

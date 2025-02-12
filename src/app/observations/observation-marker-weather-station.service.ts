@@ -154,78 +154,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
 
   public weatherStationLabel: WeatherStationParameter | undefined = undefined;
 
-  readonly allParameters: { parameter: WeatherStationParameter; labelKey: string; icon: string }[] = [
-    {
-      parameter: WeatherStationParameter.SnowHeight,
-      labelKey: "observations.weatherStations.tooltips.snowHeight",
-      icon: "ph ph-arrows-vertical",
-    },
-    {
-      parameter: WeatherStationParameter.SnowDifference,
-      labelKey: "observations.weatherStations.tooltips.snowDifference",
-      icon: "ph ph-trend-up",
-    },
-    {
-      parameter: WeatherStationParameter.AirTemperature,
-      labelKey: "observations.weatherStations.tooltips.airTemperature",
-      icon: "ph ph-thermometer-simple",
-    },
-    {
-      parameter: WeatherStationParameter.AirTemperatureMax,
-      labelKey: "observations.weatherStations.tooltips.airTemperatureMax",
-      icon: "ph ph-thermometer-simple",
-    },
-    {
-      parameter: WeatherStationParameter.AirTemperatureMin,
-      labelKey: "observations.weatherStations.tooltips.airTemperatureMin",
-      icon: "ph ph-thermometer-simple",
-    },
-    {
-      parameter: WeatherStationParameter.SurfaceTemperature,
-      labelKey: "observations.weatherStations.tooltips.surfaceTemperature",
-      icon: "ph ph-thermometer-cold",
-    },
-    {
-      parameter: WeatherStationParameter.DewPoint,
-      labelKey: "observations.weatherStations.tooltips.dewPoint",
-      icon: "ph ph-thermometer-hot",
-    },
-    {
-      parameter: WeatherStationParameter.SurfaceHoar,
-      labelKey: "observations.weatherStations.tooltips.surfaceHoar",
-      icon: "ph ph-caret-down",
-    },
-    {
-      parameter: WeatherStationParameter.SurfaceHoarCalc,
-      labelKey: "observations.weatherStations.tooltips.surfaceHoarCalc",
-      icon: "ph ph-caret-line-down",
-    },
-    {
-      parameter: WeatherStationParameter.WindSpeed,
-      labelKey: "observations.weatherStations.tooltips.windSpeed",
-      icon: "ph ph-wind",
-    },
-    {
-      parameter: WeatherStationParameter.WindGust,
-      labelKey: "observations.weatherStations.tooltips.windGust",
-      icon: "ph ph-tornado",
-    },
-    {
-      parameter: WeatherStationParameter.WindDirection,
-      labelKey: "observations.weatherStations.tooltips.windDirection",
-      icon: "ph ph-arrow-up-right",
-    },
-    {
-      parameter: WeatherStationParameter.RelativeHumidity,
-      labelKey: "observations.weatherStations.tooltips.relativeHumidity",
-      icon: "ph ph-drop",
-    },
-    {
-      parameter: WeatherStationParameter.GlobalRadiation,
-      labelKey: "observations.weatherStations.tooltips.globalRadiation",
-      icon: "ph ph-sun",
-    },
-  ];
+  readonly allParameters: WeatherStationParameter[] = Object.values(WeatherStationParameter);
 
   createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {
@@ -245,6 +174,72 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     } catch (e) {
       console.error(e);
       throw e;
+    }
+  }
+
+  toLabelKey(parameter: WeatherStationParameter): `observations.weatherStations.tooltips.${string}` {
+    switch (parameter) {
+      case WeatherStationParameter.SnowHeight:
+        return "observations.weatherStations.tooltips.snowHeight";
+      case WeatherStationParameter.SnowDifference:
+        return "observations.weatherStations.tooltips.snowDifference";
+      case WeatherStationParameter.AirTemperature:
+        return "observations.weatherStations.tooltips.airTemperature";
+      case WeatherStationParameter.AirTemperatureMax:
+        return "observations.weatherStations.tooltips.airTemperatureMax";
+      case WeatherStationParameter.AirTemperatureMin:
+        return "observations.weatherStations.tooltips.airTemperatureMin";
+      case WeatherStationParameter.SurfaceTemperature:
+        return "observations.weatherStations.tooltips.surfaceTemperature";
+      case WeatherStationParameter.DewPoint:
+        return "observations.weatherStations.tooltips.dewPoint";
+      case WeatherStationParameter.SurfaceHoar:
+        return "observations.weatherStations.tooltips.surfaceHoar";
+      case WeatherStationParameter.SurfaceHoarCalc:
+        return "observations.weatherStations.tooltips.surfaceHoarCalc";
+      case WeatherStationParameter.WindSpeed:
+        return "observations.weatherStations.tooltips.windSpeed";
+      case WeatherStationParameter.WindGust:
+        return "observations.weatherStations.tooltips.windGust";
+      case WeatherStationParameter.WindDirection:
+        return "observations.weatherStations.tooltips.windDirection";
+      case WeatherStationParameter.RelativeHumidity:
+        return "observations.weatherStations.tooltips.relativeHumidity";
+      case WeatherStationParameter.GlobalRadiation:
+        return "observations.weatherStations.tooltips.globalRadiation";
+    }
+  }
+
+  toIcon(parameter: WeatherStationParameter): `ph ph-${string}` {
+    switch (parameter) {
+      case WeatherStationParameter.SnowHeight:
+        return "ph ph-arrows-vertical";
+      case WeatherStationParameter.SnowDifference:
+        return "ph ph-trend-up";
+      case WeatherStationParameter.AirTemperature:
+        return "ph ph-thermometer-simple";
+      case WeatherStationParameter.AirTemperatureMax:
+        return "ph ph-thermometer-simple";
+      case WeatherStationParameter.AirTemperatureMin:
+        return "ph ph-thermometer-simple";
+      case WeatherStationParameter.SurfaceTemperature:
+        return "ph ph-thermometer-cold";
+      case WeatherStationParameter.DewPoint:
+        return "ph ph-thermometer-hot";
+      case WeatherStationParameter.SurfaceHoar:
+        return "ph ph-caret-down";
+      case WeatherStationParameter.SurfaceHoarCalc:
+        return "ph ph-caret-line-down";
+      case WeatherStationParameter.WindSpeed:
+        return "ph ph-wind";
+      case WeatherStationParameter.WindGust:
+        return "ph ph-tornado";
+      case WeatherStationParameter.WindDirection:
+        return "ph ph-arrow-up-right";
+      case WeatherStationParameter.RelativeHumidity:
+        return "ph ph-drop";
+      case WeatherStationParameter.GlobalRadiation:
+        return "ph ph-sun";
     }
   }
 
