@@ -1497,6 +1497,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.addInternalBulletins(data);
         this.loadInternalBulletinsError = false;
         this.loading = false;
+        this.updateBulletinStatusEdit();
         console.log("Bulletin created on server.");
       },
       (error) => {
@@ -1528,6 +1529,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (checkErrors) {
           this.updateSaveErrors();
         }
+        this.updateBulletinStatusEdit();
         console.log("Bulletin updated on server.");
       },
       (error) => {
@@ -1632,6 +1634,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.saveBulletins(result, this.bulletinsService.getActiveDate()).subscribe(
       () => {
         console.log("Bulletins saved on server.");
+        this.updateBulletinStatusEdit();
         this.autoSaving = false;
       },
       () => {
@@ -1640,6 +1643,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.openSaveErrorModal(this.saveErrorTemplate());
       },
     );
+  }
+
+  updateBulletinStatusEdit() {
+    let newStatus;
+
+    if (this.bulletinsService.hasBeenPublished5PM(this.bulletinsService.getActiveDate())) {
+      newStatus = this.bulletinStatus.updated;
+    } else {
+      newStatus = this.bulletinStatus.draft;
+    }
+
+    this.bulletinsService.statusMap
+      .get(this.authenticationService.getActiveRegionId())
+      .set(this.bulletinsService.getActiveDate()[0].getTime(), newStatus);
   }
 
   goBack() {
@@ -1987,19 +2004,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   createUpdate(event: Event) {
     event.stopPropagation();
-    switch (this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate())) {
-      case this.bulletinStatus.republished:
-      case this.bulletinStatus.resubmitted:
-      case this.bulletinStatus.published:
-      case this.bulletinStatus.missing:
-        this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.updated);
-        break;
-      case this.bulletinStatus.submitted:
-        this.bulletinsService.setUserRegionStatus(this.bulletinsService.getActiveDate(), Enums.BulletinStatus.draft);
-        break;
-      default:
-        break;
-    }
+    this.updateBulletinStatusEdit();
     this.bulletinsService.setIsEditable(true);
     this.save();
   }
