@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, ElementRef, viewChild, input, inject } from "@angular/core";
-import { FormsModule, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { Feature, Point } from "geojson";
@@ -20,6 +20,10 @@ import {
   PersonInvolvement,
 } from "./models/generic-observation.model";
 import { xor } from "lodash";
+import type {
+  LolaRainBoundaryElevationTolerance,
+  LolaRainBoundaryElevationPeriod,
+} from "../../../observations-api/src/fetch/observations/lola-kronos.model";
 
 @Component({
   standalone: true,
@@ -52,6 +56,8 @@ export class ObservationEditorComponent implements AfterViewInit {
   personInvolvementValues = Object.values(PersonInvolvement);
   observationTypeValues = Object.values(ObservationType);
   ObservationSource = ObservationSource;
+  elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
+  elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
   xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation().locationName),
@@ -87,6 +93,10 @@ export class ObservationEditorComponent implements AfterViewInit {
         observation.$type = ObservationType.SimpleObservation;
       }
     }
+  }
+
+  get isDrySnowFallLevel(): boolean {
+    return this.observation().$type === ObservationType.DrySnowfallLevel;
   }
 
   ngAfterViewInit() {

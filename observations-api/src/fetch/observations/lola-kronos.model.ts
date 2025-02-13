@@ -1119,7 +1119,7 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
       .map((obs) =>
         convertLoLaToGeneric(
           obs,
-          ObservationType.SimpleObservation,
+          ObservationType.DrySnowfallLevel,
           urlPrefix + "detail-by-token/lolaSimpleObservation/",
           "snowLine",
         ),
@@ -1130,7 +1130,7 @@ export function convertLoLaKronos(kronos: LolaKronosApi, urlPrefix: string): Gen
     ...kronos.lolaRainBoundary.map((obs) =>
       convertLoLaToGeneric(
         obs,
-        ObservationType.SimpleObservation,
+        ObservationType.DrySnowfallLevel,
         urlPrefix + "detail-by-token/lolaRainBoundary/",
         "elevation",
       ),
@@ -1218,8 +1218,8 @@ export function convertLoLaToGeneric(
       snowLine === "snowLine"
         ? (obs as LolaSimpleObservation).snowLine
         : snowLine === "elevation"
-        ? (obs as LolaRainBoundary).elevation
-        : (obs as LolaSnowProfile).altitude,
+          ? (obs as LolaRainBoundary).elevation
+          : (obs as LolaSnowProfile).altitude,
     eventDate: new Date(obs.time),
     reportDate: new Date(obs.storedInDb),
     latitude: obs.position?.lat,
@@ -1237,8 +1237,6 @@ export function convertLoLaToGeneric(
     dangerPatterns: (obs as LolaEvaluation).dangerPatterns?.map((dp) => getDangerPattern(dp)) || [],
     region: obs.position?.adsRegion?.loc_name || (obs as LolaEvaluation | LolaAvalancheEvent).regionName,
     importantObservations: [
-      snowLine === "snowLine" && (obs as LolaSimpleObservation).snowLine ? ImportantObservation.SnowLine : undefined,
-      snowLine === "elevation" && (obs as LolaRainBoundary).elevation ? ImportantObservation.SnowLine : undefined,
       (obs as LolaSimpleObservation).snowSurface?.includes("surfaceHoar")
         ? ImportantObservation.SurfaceHoar
         : undefined,

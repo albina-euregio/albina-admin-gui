@@ -785,6 +785,7 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) selected"
       },
+    
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
@@ -947,6 +948,7 @@
     "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
     "TimeSeries": "Time series",
     "Incident": "Incident",
     "Profile": "Snow profile",
@@ -959,14 +961,22 @@
   },
   "importantObservation": {
     "ForBlog": "For blog",
-    "SnowLine": "Snow line",
     "SurfaceHoar": "Surface hoar",
     "Graupel": "Graupel",
     "StabilityTest": "Stability test",
     "IceFormation": "Ice formation",
     "VeryLightNewSnow": "Very light new snow"
   },
-  "aspect": {
+  "elevationTolerance": {
+    "exact": "exact",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
+  },  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1199,6 +1209,8 @@
     "avalancheWidth": "Avalanche width",
     "search": "Search",
     "count": "# observations:",
+    "elevationTolerance": "Accuracy of elevation data",
+    "elevationPeriod": "Elevation time period",
     "layers": {
       "observers": "Observers",
       "weatherStations": "Weather stations",

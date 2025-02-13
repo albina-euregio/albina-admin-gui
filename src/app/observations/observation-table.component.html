@@ -64,6 +64,9 @@
           <span *ngIf="importantObservationTexts[importantObservation]" style="font-family: snowsymbolsiacs">
             {{ importantObservationTexts[importantObservation] }}
           </span>
+          <span *ngIf="importantObservationTexts[observation.$type]" style="font-family: snowsymbolsiacs">
+            {{ importantObservationTexts[observation.$type] }}
+          </span>
           <span *ngIf="!importantObservationTexts[importantObservation]">
             {{ formatImportantObservation(importantObservation) }}
           </span>

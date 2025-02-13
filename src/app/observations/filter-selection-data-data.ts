@@ -137,12 +137,6 @@ export function observationFilters(t: (message: string) => string): FilterSelect
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
         {
-          value: ImportantObservation.SnowLine,
-          color: "#e41a1c",
-          label: "S",
-          legend: t("importantObservation.SnowLine"),
-        },
-        {
           value: ImportantObservation.SurfaceHoar,
           color: "#377eb8",
           label: "g",

@@ -303,6 +303,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       $source: ObservationSource.AvalancheWarningService,
       $type: ObservationType.SimpleObservation,
       $allowEdit: true,
+      $data: {},
     } satisfies GenericObservation;
     this.observationEditor.observation = observation;
     this.showObservationEditor();

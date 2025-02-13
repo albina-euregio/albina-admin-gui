@@ -1,7 +1,6 @@
 import { fetchJSON } from "../../util/fetchJSON";
 import {
   type GenericObservation,
-  ImportantObservation,
   ObservationSource,
   ObservationType,
 } from "../../generic-observation";
@@ -33,8 +32,8 @@ export async function* fetchSnowLineCalculations(
     const json: GeoJSON.FeatureCollection<GeoJSON.Point, Properties> = await fetchJSON(url);
     for (const feature of json.features) {
       yield {
-        $type: ObservationType.SimpleObservation,
-        $source: ObservationSource.SnowLine,
+        $type: ObservationType.DrySnowfallLevel,
+        $source: ObservationSource.AvalancheWarningService,
         $id: date + "-" + feature.properties.station_number,
         $data: feature.properties,
         eventDate: endDate,
@@ -44,7 +43,6 @@ export async function* fetchSnowLineCalculations(
         latitude: feature.geometry.coordinates[1],
         longitude: feature.geometry.coordinates[0],
         elevation: feature.properties.snowfall_limit,
-        importantObservations: [ImportantObservation.SnowLine],
       } satisfies GenericObservation;
     }
   } catch (err) {
