@@ -1207,6 +1207,7 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
         "globalRadiation": "Global radiation",
         "newSnow": "New snow",
         "snowLine": "Snow line",

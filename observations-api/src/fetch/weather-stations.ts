@@ -1,6 +1,7 @@
 import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { fetchJSON, fetchText } from "../util/fetchJSON";
+import { fetchSnowLineCalculations } from "./observations/snow_line";
 
 export async function getAwsWeatherStations(
   startDate: Date,
@@ -19,6 +20,21 @@ export async function getAwsWeatherStations(
   const smetData = await StationValues.fetchSMET(stations);
   for (const station of stations) {
     station.$data.statistics = smetData?.statistics(startDate, endDate, station);
+  }
+
+  const snowLines = await Array.fromAsync(fetchSnowLineCalculations(startDate, endDate));
+  for (const station of stations) {
+    const snowLine = snowLines.find((o) => o.locationName === station.locationName);
+    if (!snowLine) continue;
+    station.$externalImgs.unshift(...snowLine.$externalImgs);
+    const $data: FeatureProperties = station.$data;
+    $data.statistics ??= {};
+    $data.statistics.SnowLine = {
+      parameter: "SnowLine",
+      unit: "m",
+      max: snowLine.elevation,
+      plot: snowLine.$externalImgs?.[0],
+    };
   }
 
   return stations;
@@ -134,6 +150,7 @@ export interface FeatureProperties {
 // PSUM Precipitation accumulation, in mm, summed over the last timestep
 // HS Height Snow, in m
 type ParameterType =
+  | "SnowLine"
   | "P"
   | "TA"
   | "TD"
@@ -159,9 +176,9 @@ const UNIT_MAPPING: Record<string, { to: string; convert: (v: number) => number 
 
 type Data = Partial<
   Record<
-    ParameterType,
+    Exclude<ParameterType, "SnowLine">,
     {
-      parameter: ParameterType;
+      parameter: Exclude<ParameterType, "SnowLine">;
       unit: string;
       count: number;
       min: number;
@@ -171,7 +188,16 @@ type Data = Partial<
       sum: number;
       delta: number;
     }
-  >
+  > &
+    Record<
+      "SnowLine",
+      {
+        parameter: "SnowLine";
+        unit: "m";
+        max: number;
+        plot: string;
+      }
+    >
 >;
 
 export function parseSMET(smet: string, startDate: Date, endDate: Date): Data {

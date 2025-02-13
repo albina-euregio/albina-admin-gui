@@ -35,6 +35,23 @@ const snowDifferenceColors = {
   "11": "#CC0CE8",
 };
 
+const drySnowfallLevelThresholds = [0, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2500, 2700];
+const drySnowfallLevelColors = {
+  "0": "#9f80ff",
+  "1": "#784cff",
+  "2": "#0f5abe",
+  "3": "#1380ff",
+  "4": "#19cdff",
+  "5": "#8fffff",
+  "6": "#b0ffbc",
+  "7": "#ffff73",
+  "8": "#ffbe7d",
+  "9": "#ff9b41",
+  "10": "#ff5a41",
+  "11": "#ff1e23",
+  "12": "#fa3c96",
+};
+
 const temperatureThresholds = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 100];
 const temperatureColors = {
   "0": "#9f80ff",
@@ -146,6 +163,7 @@ export enum WeatherStationParameter {
   WindDirection = "WindDirection",
   WindSpeed = "WindSpeed",
   WindGust = "WindGust",
+  DrySnowfallLevel = "DrySnowfallLevel",
 }
 
 @Injectable()
@@ -207,6 +225,8 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         return "observations.weatherStations.tooltips.relativeHumidity";
       case WeatherStationParameter.GlobalRadiation:
         return "observations.weatherStations.tooltips.globalRadiation";
+      case WeatherStationParameter.DrySnowfallLevel:
+        return "observations.weatherStations.tooltips.drySnowfallLevel";
     }
   }
 
@@ -240,6 +260,8 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         return "ph ph-drop";
       case WeatherStationParameter.GlobalRadiation:
         return "ph ph-sun";
+      case WeatherStationParameter.DrySnowfallLevel:
+        return "ph ph-drop-half";
     }
   }
 
@@ -275,6 +297,8 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         return statistics?.DW?.median;
       case WeatherStationParameter.WindGust:
         return statistics?.VW_MAX?.max;
+      case WeatherStationParameter.DrySnowfallLevel:
+        return statistics?.SnowLine?.max;
       default:
         return NaN;
     }
@@ -314,6 +338,8 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         return value ? aspectColors[degreeToAspect(value)] : "white";
       case WeatherStationParameter.WindGust:
         return this.windColor(value);
+      case WeatherStationParameter.DrySnowfallLevel:
+        return this.drySnowfallLevelColor(value);
       default:
         return "white";
     }
@@ -360,6 +386,11 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     return index >= 0 ? snowDifferenceColors[index] : "white";
   }
 
+  private drySnowfallLevelColor(value: number) {
+    const index = drySnowfallLevelThresholds.findIndex((e) => e >= value);
+    return index >= 0 ? drySnowfallLevelColors[index] : "white";
+  }
+
   private temperatureColor(temperature: number) {
     const index = temperatureThresholds.findIndex((e) => e >= temperature);
     return index >= 0 ? temperatureColors[index] : "white";
@@ -396,6 +427,8 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
       return "";
     } else if (this.weatherStationLabel === WeatherStationParameter.WindDirection) {
       return degreeToAspect(value);
+    } else if (this.weatherStationLabel === WeatherStationParameter.DrySnowfallLevel) {
+      return Math.round(value / 100);
     } else {
       return Math.round(value);
     }
