@@ -10,12 +10,13 @@ import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { NgIf, NgFor } from "@angular/common";
 import { DangerRatingComponent } from "./danger-rating.component";
 import { FormsModule } from "@angular/forms";
+import { SliderComponent, SliderOptions } from "./slider.component";
 
 @Component({
   selector: "app-matrix-parameter",
   templateUrl: "matrix-parameter.component.html",
   standalone: true,
-  imports: [NgxSliderModule, NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule],
+  imports: [NgxSliderModule, NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule, SliderComponent],
 })
 export class MatrixParameterComponent implements OnInit {
   constantsService = inject(ConstantsService);
@@ -36,7 +37,7 @@ export class MatrixParameterComponent implements OnInit {
     return this.count() + (this.afternoon() ? "_pm_" : "_am_") + key;
   }
 
-  snowpackStabilityOptions = {
+  snowpackStabilityOptions: SliderOptions = {
     floor: 25,
     ceil: 100,
     ticks: [25, 37, 50, 62, 75, 87, 100],
@@ -71,6 +72,7 @@ export class MatrixParameterComponent implements OnInit {
       return "lightgrey";
     },
     onValueChange: (value: number) => {
+      this.matrixInformation().snowpackStabilityValue = value;
       switch (true) {
         case value < 25:
           this.setSnowpackStability(Enums.SnowpackStability.good);

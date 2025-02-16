@@ -1,34 +1,12 @@
 <!-- Snowpack stability slider -->
-<div class="form-group">
-  <label class="form-label" for="snowpackStabilityValues">{{ "matrix.label.snowpackStability" | translate }}</label>
-  <input
-    name="snowpackStabilityValue"
-    class="form-range"
-    type="range"
-    [min]="snowpackStabilityOptions.floor"
-    [max]="snowpackStabilityOptions.ceil"
-    [disabled]="disabled()"
-    [(ngModel)]="matrixInformation().snowpackStabilityValue"
-    (ngModelChange)="snowpackStabilityOptions.onValueChange(matrixInformation().snowpackStabilityValue)"
-    [style.--form-range-thumb-bg]="
-      snowpackStabilityOptions.getSelectionBarColor(matrixInformation().snowpackStabilityValue)
-    "
-    list="snowpackStabilityValues"
-  />
-  <datalist class="labels" id="snowpackStabilityValues">
-    <option
-      *ngFor="let tick of snowpackStabilityOptions.ticks"
-      [value]="tick"
-      [label]="snowpackStabilityOptions.getLegend(tick)"
-      (click)="matrixInformation().snowpackStabilityValue = tick"
-      [class.fw-bold]="
-        snowpackStabilityOptions.getSelectionBarColor(tick) ===
-        snowpackStabilityOptions.getSelectionBarColor(matrixInformation().snowpackStabilityValue)
-      "
-    ></option>
-  </datalist>
-</div>
-<!-- End of Snowpack stabiliy slider -->
+<app-slider
+  [label]="translateService.instant('matrix.label.snowpackStability')"
+  [disabled]="disabled()"
+  [sliderValue]="matrixInformation().snowpackStabilityValue"
+  (sliderValueChange)="snowpackStabilityOptions.onValueChange($event)"
+  [sliderOptions]="snowpackStabilityOptions"
+/>
+
 <!-- Frequency slider -->
 <div class="form-group">
   <label class="form-label" for="textarea-input">{{ "matrix.label.frequency" | translate }}</label>
