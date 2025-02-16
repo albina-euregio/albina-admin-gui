@@ -1,6 +1,5 @@
 import * as sentry from "@sentry/angular";
 
-import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import localeCa from "@angular/common/locales/ca";
@@ -100,7 +99,6 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     importProvidersFrom(
       BrowserModule,
-      NgxSliderModule,
       BsDropdownModule.forRoot(),
       CollapseModule.forRoot(),
       TabsModule.forRoot(),
