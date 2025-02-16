@@ -1,3 +1,19 @@
+input.form-range[type="range"] ~ datalist {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+input.form-range[type="range"] ~ datalist > option[label] {
+  cursor: pointer;
+  font-size: smaller;
+  max-width: 100px !important;
+  padding: 0;
+  text-align: center;
+  white-space: nowrap !important;
+  width: 25%;
+}
+
 .ngx-slider {
   margin: $space-3 0 $space-6 0 !important;
 }

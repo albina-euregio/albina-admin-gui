@@ -1,4 +1,4 @@
-import { OnChanges, Component, input, output, inject, OnInit } from "@angular/core";
+import { Component, input, output, inject, OnInit } from "@angular/core";
 import { MatrixInformationModel } from "app/models/matrix-information.model";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -17,7 +17,7 @@ import { FormsModule } from "@angular/forms";
   standalone: true,
   imports: [NgxSliderModule, NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule],
 })
-export class MatrixParameterComponent implements OnChanges, OnInit {
+export class MatrixParameterComponent implements OnInit {
   constantsService = inject(ConstantsService);
   translateService = inject(TranslateService);
 
@@ -36,12 +36,10 @@ export class MatrixParameterComponent implements OnChanges, OnInit {
     return this.count() + (this.afternoon() ? "_pm_" : "_am_") + key;
   }
 
-  snowpackStabilityOptions: Options = {
+  snowpackStabilityOptions = {
     floor: 25,
     ceil: 100,
-    showTicksValues: false,
-    showTicks: true,
-    showSelectionBar: true,
+    ticks: [25, 37, 50, 62, 75, 87, 100],
     getLegend: (value: number): string => {
       switch (value) {
         case 37:
@@ -72,23 +70,22 @@ export class MatrixParameterComponent implements OnChanges, OnInit {
       }
       return "lightgrey";
     },
-    getPointerColor: (value: number): string => {
-      if (value < 0) {
-        return "grey";
+    onValueChange: (value: number) => {
+      switch (true) {
+        case value < 25:
+          this.setSnowpackStability(Enums.SnowpackStability.good);
+          break;
+        case value < 50:
+          this.setSnowpackStability(Enums.SnowpackStability.fair);
+          break;
+        case value < 75:
+          this.setSnowpackStability(Enums.SnowpackStability.poor);
+          break;
+        default:
+          this.setSnowpackStability(Enums.SnowpackStability.very_poor);
+          break;
       }
-      if (value < 25) {
-        return "green";
-      }
-      if (value < 50) {
-        return "yellow";
-      }
-      if (value < 75) {
-        return "orange";
-      }
-      if (value >= 75) {
-        return "red";
-      }
-      return "grey";
+      this.changeMatrixEvent.emit();
     },
   };
 
@@ -218,30 +215,6 @@ export class MatrixParameterComponent implements OnChanges, OnInit {
     if (!this.isDangerRating(this.getDangerRating(this.matrixInformation()))) {
       this.dangerRatingEnabled = true;
     }
-  }
-
-  ngOnChanges(): void {
-    this.snowpackStabilityOptions = Object.assign({}, this.snowpackStabilityOptions, { disabled: this.disabled() });
-    this.frequencyOptions = Object.assign({}, this.frequencyOptions, { disabled: this.disabled() });
-    this.avalancheSizeOptions = Object.assign({}, this.avalancheSizeOptions, { disabled: this.disabled() });
-  }
-
-  onSnowpackStabilityValueChange(changeContext: ChangeContext): void {
-    switch (true) {
-      case changeContext.value < 25:
-        this.setSnowpackStability(Enums.SnowpackStability.good);
-        break;
-      case changeContext.value < 50:
-        this.setSnowpackStability(Enums.SnowpackStability.fair);
-        break;
-      case changeContext.value < 75:
-        this.setSnowpackStability(Enums.SnowpackStability.poor);
-        break;
-      default:
-        this.setSnowpackStability(Enums.SnowpackStability.very_poor);
-        break;
-    }
-    this.changeMatrixEvent.emit();
   }
 
   onFrequencyValueChange(changeContext: ChangeContext): void {
