@@ -3,10 +3,8 @@ import { MatrixInformationModel } from "app/models/matrix-information.model";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
-import type { ChangeContext, Options } from "@angular-slider/ngx-slider";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import type { DangerSourceVariantModel } from "../danger-sources/models/danger-source-variant.model";
-import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { NgIf, NgFor } from "@angular/common";
 import { DangerRatingComponent } from "./danger-rating.component";
 import { FormsModule } from "@angular/forms";
@@ -16,7 +14,7 @@ import { SliderComponent, SliderOptions } from "./slider.component";
   selector: "app-matrix-parameter",
   templateUrl: "matrix-parameter.component.html",
   standalone: true,
-  imports: [NgxSliderModule, NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule, SliderComponent],
+  imports: [NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule, SliderComponent],
 })
 export class MatrixParameterComponent implements OnInit {
   constantsService = inject(ConstantsService);
@@ -145,12 +143,10 @@ export class MatrixParameterComponent implements OnInit {
     },
   };
 
-  avalancheSizeOptions: Options = {
+  avalancheSizeOptions: SliderOptions = {
     floor: 0,
     ceil: 100,
-    showTicksValues: false,
-    showTicks: true,
-    showSelectionBar: true,
+    ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
     getLegend: (value: number): string => {
       switch (value) {
         case 10:
@@ -188,26 +184,26 @@ export class MatrixParameterComponent implements OnInit {
       }
       return "lightgrey";
     },
-    getPointerColor: (value: number): string => {
-      if (value < 0) {
-        return "grey";
+    onValueChange: (value: number) => {
+      this.matrixInformation().avalancheSizeValue = value;
+      switch (true) {
+        case value < 20:
+          this.setAvalancheSize(Enums.AvalancheSize.small);
+          break;
+        case value < 40:
+          this.setAvalancheSize(Enums.AvalancheSize.medium);
+          break;
+        case value < 60:
+          this.setAvalancheSize(Enums.AvalancheSize.large);
+          break;
+        case value < 80:
+          this.setAvalancheSize(Enums.AvalancheSize.very_large);
+          break;
+        default:
+          this.setAvalancheSize(Enums.AvalancheSize.extreme);
+          break;
       }
-      if (value < 20) {
-        return "green";
-      }
-      if (value < 40) {
-        return "yellow";
-      }
-      if (value < 60) {
-        return "orange";
-      }
-      if (value < 80) {
-        return "red";
-      }
-      if (value >= 80) {
-        return "black";
-      }
-      return "grey";
+      this.changeMatrixEvent.emit();
     },
   };
 
@@ -215,27 +211,6 @@ export class MatrixParameterComponent implements OnInit {
     if (!this.isDangerRating(this.getDangerRating(this.matrixInformation()))) {
       this.dangerRatingEnabled = true;
     }
-  }
-
-  onAvalancheSizeValueChange(changeContext: ChangeContext): void {
-    switch (true) {
-      case changeContext.value < 20:
-        this.setAvalancheSize(Enums.AvalancheSize.small);
-        break;
-      case changeContext.value < 40:
-        this.setAvalancheSize(Enums.AvalancheSize.medium);
-        break;
-      case changeContext.value < 60:
-        this.setAvalancheSize(Enums.AvalancheSize.large);
-        break;
-      case changeContext.value < 80:
-        this.setAvalancheSize(Enums.AvalancheSize.very_large);
-        break;
-      default:
-        this.setAvalancheSize(Enums.AvalancheSize.extreme);
-        break;
-    }
-    this.changeMatrixEvent.emit();
   }
 
   setSnowpackStability(snowpackStability: Enums.SnowpackStability) {

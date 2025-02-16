@@ -17,16 +17,13 @@
 />
 
 <!-- Avalanche size slider -->
-<div class="form-group">
-  <label class="form-label" for="textarea-input">{{ "matrix.label.avalancheSize" | translate }}</label>
-  <ngx-slider
-    class="avalanche-size-slider"
-    [(value)]="matrixInformation().avalancheSizeValue"
-    [options]="avalancheSizeOptions"
-    (userChange)="onAvalancheSizeValueChange($event)"
-  ></ngx-slider>
-</div>
-<!-- End of avalanche size slider-->
+<app-slider
+  [label]="translateService.instant('matrix.label.avalancheSize')"
+  [disabled]="disabled()"
+  [sliderValue]="matrixInformation().avalancheSizeValue"
+  (sliderValueChange)="avalancheSizeOptions.onValueChange($event)"
+  [sliderOptions]="avalancheSizeOptions"
+/>
 
 <div class="form-group">
   <label class="form-label" for="textarea-input">{{ "matrix.label.dangerRating" | translate }}</label>
