@@ -91,12 +91,10 @@ export class MatrixParameterComponent implements OnInit {
     },
   };
 
-  frequencyOptions: Options = {
+  frequencyOptions: SliderOptions = {
     floor: 25,
     ceil: 100,
-    showTicksValues: false,
-    showTicks: true,
-    showSelectionBar: true,
+    ticks: [25, 37, 50, 62, 75, 87, 100],
     getLegend: (value: number): string => {
       switch (value) {
         case 37:
@@ -127,23 +125,23 @@ export class MatrixParameterComponent implements OnInit {
       }
       return "lightgrey";
     },
-    getPointerColor: (value: number): string => {
-      if (value < 0) {
-        return "grey";
+    onValueChange: (value: number) => {
+      this.matrixInformation().frequencyValue = value;
+      switch (true) {
+        case value < 25:
+          this.setFrequency(Enums.Frequency.none);
+          break;
+        case value < 50:
+          this.setFrequency(Enums.Frequency.few);
+          break;
+        case value < 75:
+          this.setFrequency(Enums.Frequency.some);
+          break;
+        default:
+          this.setFrequency(Enums.Frequency.many);
+          break;
       }
-      if (value < 25) {
-        return "green";
-      }
-      if (value < 50) {
-        return "yellow";
-      }
-      if (value < 75) {
-        return "orange";
-      }
-      if (value >= 75) {
-        return "red";
-      }
-      return "grey";
+      this.changeMatrixEvent.emit();
     },
   };
 
@@ -217,24 +215,6 @@ export class MatrixParameterComponent implements OnInit {
     if (!this.isDangerRating(this.getDangerRating(this.matrixInformation()))) {
       this.dangerRatingEnabled = true;
     }
-  }
-
-  onFrequencyValueChange(changeContext: ChangeContext): void {
-    switch (true) {
-      case changeContext.value < 25:
-        this.setFrequency(Enums.Frequency.none);
-        break;
-      case changeContext.value < 50:
-        this.setFrequency(Enums.Frequency.few);
-        break;
-      case changeContext.value < 75:
-        this.setFrequency(Enums.Frequency.some);
-        break;
-      default:
-        this.setFrequency(Enums.Frequency.many);
-        break;
-    }
-    this.changeMatrixEvent.emit();
   }
 
   onAvalancheSizeValueChange(changeContext: ChangeContext): void {

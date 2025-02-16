@@ -8,16 +8,14 @@
 />
 
 <!-- Frequency slider -->
-<div class="form-group">
-  <label class="form-label" for="textarea-input">{{ "matrix.label.frequency" | translate }}</label>
-  <ngx-slider
-    class="frequency-slider"
-    [(value)]="matrixInformation().frequencyValue"
-    [options]="frequencyOptions"
-    (userChange)="onFrequencyValueChange($event)"
-  ></ngx-slider>
-</div>
-<!-- End of frequency slider -->
+<app-slider
+  [label]="translateService.instant('matrix.label.frequency')"
+  [disabled]="disabled()"
+  [sliderValue]="matrixInformation().frequencyValue"
+  (sliderValueChange)="frequencyOptions.onValueChange($event)"
+  [sliderOptions]="frequencyOptions"
+/>
+
 <!-- Avalanche size slider -->
 <div class="form-group">
   <label class="form-label" for="textarea-input">{{ "matrix.label.avalancheSize" | translate }}</label>
