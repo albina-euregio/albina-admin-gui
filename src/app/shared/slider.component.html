@@ -10,9 +10,9 @@
     [ngModel]="sliderValue()"
     (ngModelChange)="sliderValueChange.emit($event)"
     [style.--form-range-thumb-bg]="sliderOptions().getSelectionBarColor(sliderValue())"
-    [list]="idList()"
+    list="datalist"
   />
-  <datalist class="labels" [id]="idList()">
+  <datalist id="datalist">
     <option
       *ngFor="let tick of sliderOptions().ticks"
       [value]="tick"

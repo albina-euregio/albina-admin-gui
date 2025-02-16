@@ -22,7 +22,6 @@ export interface SliderOptions {
 })
 export class SliderComponent {
   id = input(`app-slider-${uniqueId++}`);
-  idList = input(`app-slider-list-${uniqueId++}`);
   label = input<string>();
   disabled = input<boolean>();
   sliderOptions = input<SliderOptions>();
