@@ -185,17 +185,14 @@
         <hr class="solid" />
 
         <!-- GLIDE SNOW AVALANCHES -->
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.glidingSnowActivity" | translate
-          }}</label>
-          <ngx-slider
-            class="gliding-snow-activity-slider"
-            [(value)]="variant().glidingSnowActivityValue"
-            [options]="glidingSnowActivityOptions"
-            (userChange)="onGlidingSnowActivityValueChange($event)"
-          ></ngx-slider>
-        </div>
+        <app-slider
+          *ngIf="isAvalancheType(avalancheTypeEnum.glide)"
+          [label]="translateService.instant('dangerSources.create.label.glidingSnowActivity')"
+          [disabled]="disabled()"
+          [sliderValue]="variant().glidingSnowActivityValue"
+          (sliderValueChange)="glidingSnowActivityOptions.onValueChange($event)"
+          [sliderOptions]="glidingSnowActivityOptions"
+        />
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
           <label class="form-label me-3" for="textarea-input">{{

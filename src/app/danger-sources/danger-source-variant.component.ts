@@ -33,13 +33,13 @@ import {
   Wetness,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
-import { ChangeContext, Options, NgxSliderModule } from "@angular-slider/ngx-slider";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { NgIf, NgFor, NgClass, DatePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { AspectsComponent } from "../shared/aspects.component";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
+import { SliderComponent, SliderOptions } from "../shared/slider.component";
 
 @Component({
   selector: "app-danger-source-variant",
@@ -52,7 +52,7 @@ import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
     NgFor,
     AccordionModule,
     NgClass,
-    NgxSliderModule,
+    SliderComponent,
     AspectsComponent,
     MatrixParameterComponent,
     DatePipe,
@@ -126,12 +126,10 @@ export class DangerSourceVariantComponent implements OnChanges {
     class: "modal-md",
   };
 
-  glidingSnowActivityOptions: Options = {
+  glidingSnowActivityOptions: SliderOptions = {
     floor: 0,
     ceil: 100,
-    showTicksValues: false,
-    showTicks: true,
-    showSelectionBar: true,
+    ticks: [0, 16, 33, 49, 65, 82, 100],
     getLegend: (value: number): string => {
       switch (value) {
         case 16:
@@ -147,8 +145,20 @@ export class DangerSourceVariantComponent implements OnChanges {
     getSelectionBarColor: (value: number): string => {
       return "lightgrey";
     },
-    getPointerColor: (value: number): string => {
-      return "grey";
+    onValueChange: (value: number) => {
+      this.variant().glidingSnowActivityValue = value;
+      switch (true) {
+        case value < 33:
+          this.variant().glidingSnowActivity = GlidingSnowActivity.low;
+          break;
+        case value < 66:
+          this.variant().glidingSnowActivity = GlidingSnowActivity.medium;
+          break;
+        default:
+          this.variant().glidingSnowActivity = GlidingSnowActivity.high;
+          break;
+      }
+      this.updateVariantOnServer();
     },
   };
 
@@ -669,20 +679,5 @@ export class DangerSourceVariantComponent implements OnChanges {
       this.useElevationLow = true;
       this.isElevationLowEditing = true;
     }
-  }
-
-  onGlidingSnowActivityValueChange(changeContext: ChangeContext): void {
-    switch (true) {
-      case changeContext.value < 33:
-        this.variant().glidingSnowActivity = GlidingSnowActivity.low;
-        break;
-      case changeContext.value < 66:
-        this.variant().glidingSnowActivity = GlidingSnowActivity.medium;
-        break;
-      default:
-        this.variant().glidingSnowActivity = GlidingSnowActivity.high;
-        break;
-    }
-    this.updateVariantOnServer();
   }
 }
