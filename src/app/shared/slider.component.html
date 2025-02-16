@@ -16,6 +16,7 @@
     <option
       *ngFor="let tick of sliderOptions().ticks"
       [value]="tick"
+      [disabled]="disabled()"
       [label]="sliderOptions().getLegend(tick)"
       (click)="sliderValueChange.emit(tick)"
       [class.fw-bold]="

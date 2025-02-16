@@ -13,3 +13,6 @@ input.form-range[type="range"] ~ datalist > option[label] {
   white-space: nowrap !important;
   width: 25%;
 }
+input.form-range[type="range"] ~ datalist > option[disabled] {
+  pointer-events: none;
+}
