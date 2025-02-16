@@ -11,9 +11,13 @@ export const httpHeaders: HttpInterceptorFn = (req, next) => {
   const constantsService = inject(ConstantsService);
 
   const setHeaders: Record<string, string> = {};
-  setHeaders["Accept"] ??= "application/json";
+  if (!req.headers.has("Accept")) {
+    setHeaders["Accept"] = "application/json";
+  }
   if (req.method === "POST" || req.method === "PUT") {
-    setHeaders["Content-Type"] ??= "application/json";
+    if (!req.headers.has("Content-Type")) {
+      setHeaders["Content-Type"] = "application/json";
+    }
   }
   if (authenticationService.isUserLoggedIn() && req.url.startsWith(constantsService.getServerUrl())) {
     setHeaders["Authorization"] = "Bearer " + authenticationService.currentAuthor?.accessToken;
