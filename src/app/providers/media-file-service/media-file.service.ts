@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -27,7 +27,6 @@ export class MediaFileService {
     formData.append("file", file);
     formData.append("text", text);
 
-    const headers = new HttpHeaders({ "Content-Type": "multipart/form-data" });
-    return this.http.post(url, formData, { headers });
+    return this.http.post(url, formData, {});
   }
 }

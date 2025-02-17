@@ -15,7 +15,9 @@ export const httpHeaders: HttpInterceptorFn = (req, next) => {
     setHeaders["Accept"] = "application/json";
   }
   if (req.method === "POST" || req.method === "PUT") {
-    if (!req.headers.has("Content-Type")) {
+    if (req.body instanceof FormData) {
+      // `Content-Type: multipart/form-data; boundary=...` is added automatically
+    } else if (!req.headers.has("Content-Type")) {
       setHeaders["Content-Type"] = "application/json";
     }
   }
