@@ -1,9 +1,5 @@
 import { fetchJSON } from "../../util/fetchJSON";
-import {
-  type GenericObservation,
-  ObservationSource,
-  ObservationType,
-} from "../../generic-observation";
+import { type GenericObservation, ObservationSource, ObservationType } from "../../generic-observation";
 
 const API = "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson";
 const WEB = "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}";
@@ -26,33 +22,31 @@ export async function* fetchSnowLineCalculations(
   startDate: Date,
   endDate: Date,
 ): AsyncGenerator<GenericObservation, void, unknown> {
-  try {
+  while (+endDate > +startDate) {
     const date = formatDate(endDate);
     const url = API.replace("{{date}}", date);
-    const json: GeoJSON.FeatureCollection<GeoJSON.Point, Properties> = await fetchJSON(url);
-    for (const feature of json.features) {
-      yield {
-        $type: ObservationType.DrySnowfallLevel,
-        $source: ObservationSource.AvalancheWarningService,
-        $id: date + "-" + feature.properties.station_number,
-        $data: feature.properties,
-        eventDate: endDate,
-        reportDate: endDate,
-        locationName: feature.properties.station_name,
-        $externalImgs: [WEB.replace("{{date}}", date).replace("{{plot}}", feature.properties.plot_name)],
-        latitude: feature.geometry.coordinates[1],
-        longitude: feature.geometry.coordinates[0],
-        elevation: feature.properties.snowfall_limit,
-      } satisfies GenericObservation;
+    try {
+      const json: GeoJSON.FeatureCollection<GeoJSON.Point, Properties> = await fetchJSON(url);
+      for (const feature of json.features) {
+        yield {
+          $type: ObservationType.DrySnowfallLevel,
+          $source: ObservationSource.AvalancheWarningService,
+          $id: date + "-" + feature.properties.station_number,
+          $data: feature.properties,
+          eventDate: endDate,
+          reportDate: endDate,
+          locationName: feature.properties.station_name,
+          $externalImgs: [WEB.replace("{{date}}", date).replace("{{plot}}", feature.properties.plot_name)],
+          latitude: feature.geometry.coordinates[1],
+          longitude: feature.geometry.coordinates[0],
+          elevation: feature.properties.snowfall_limit,
+        } satisfies GenericObservation;
+      }
+    } catch (err) {
+      console.log(`Failed to fetch ${url}`, err);
     }
-  } catch (err) {
-    if (+endDate > +startDate) {
-      const dayBefore = new Date(endDate);
-      dayBefore.setDate(dayBefore.getDate() - 1);
-      yield* fetchSnowLineCalculations(startDate, dayBefore);
-    } else {
-      throw err;
-    }
+    endDate = new Date(endDate);
+    endDate.setDate(endDate.getDate() - 1);
   }
 }
 

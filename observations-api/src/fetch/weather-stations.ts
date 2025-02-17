@@ -22,19 +22,21 @@ export async function getAwsWeatherStations(
     station.$data.statistics = smetData?.statistics(startDate, endDate, station);
   }
 
-  const snowLines = await Array.fromAsync(fetchSnowLineCalculations(startDate, endDate));
+  const snowLinesByStation = Object.groupBy(
+    await Array.fromAsync(fetchSnowLineCalculations(startDate, endDate)),
+    (o) => o.locationName,
+  );
   for (const station of stations) {
-    const snowLine = snowLines.find((o) => o.locationName === station.locationName);
-    if (!snowLine) continue;
-    station.$externalImgs.unshift(...snowLine.$externalImgs);
+    const snowLines = snowLinesByStation[station.locationName];
+    if (!snowLines?.length) continue;
+    station.$externalImgs.unshift(...snowLines[0].$externalImgs);
     const $data: FeatureProperties = station.$data;
     $data.statistics ??= {};
-    $data.statistics.SnowLine = {
-      parameter: "SnowLine",
-      unit: "m",
-      max: snowLine.elevation,
-      plot: snowLine.$externalImgs?.[0],
-    };
+    $data.statistics.SnowLine = buildStatistics(
+      "SnowLine",
+      "m",
+      snowLines.map((o) => o.elevation),
+    );
   }
 
   return stations;
@@ -174,31 +176,19 @@ const UNIT_MAPPING: Record<string, { to: string; convert: (v: number) => number 
   "m/s": { to: "km/h", convert: (v) => v * 3.6 },
 };
 
-type Data = Partial<
-  Record<
-    Exclude<ParameterType, "SnowLine">,
-    {
-      parameter: Exclude<ParameterType, "SnowLine">;
-      unit: string;
-      count: number;
-      min: number;
-      average: number;
-      median: number;
-      max: number;
-      sum: number;
-      delta: number;
-    }
-  > &
-    Record<
-      "SnowLine",
-      {
-        parameter: "SnowLine";
-        unit: "m";
-        max: number;
-        plot: string;
-      }
-    >
->;
+interface Statistics {
+  parameter: ParameterType;
+  unit: string;
+  count: number;
+  min: number;
+  average: number;
+  median: number;
+  max: number;
+  sum: number;
+  delta: number;
+}
+
+type Data = Partial<Record<ParameterType, Statistics>>;
 
 export function parseSMET(smet: string, startDate: Date, endDate: Date): Data {
   // https://code.wsl.ch/snow-models/meteoio/-/blob/master/doc/SMET_specifications.pdf
@@ -234,17 +224,21 @@ export function parseSMET(smet: string, startDate: Date, endDate: Date): Data {
     });
   });
   const statistics = values
-    .map((values, i) => ({
-      parameter: fields[i],
-      unit: units.map((u) => UNIT_MAPPING[u]?.to ?? u)[i],
-      count: values.length,
-      min: values.length ? min(values) : NaN,
-      average: values.length ? average(values) : NaN,
-      median: values.length ? median(values) : NaN,
-      max: values.length ? max(values) : NaN,
-      sum: values.length ? sum(values) : NaN,
-      delta: values.length ? values.at(-1) - values.at(0) : NaN,
-    }))
+    .map((values, i) => buildStatistics(fields[i], units.map((u) => UNIT_MAPPING[u]?.to ?? u)[i], values))
     .slice(1);
   return Object.fromEntries(statistics.map((s) => [s.parameter, s]));
+}
+
+function buildStatistics(parameter: ParameterType, unit: string, values: number[]): Statistics {
+  return {
+    parameter,
+    unit,
+    count: values.length,
+    min: values.length ? min(values) : NaN,
+    average: values.length ? average(values) : NaN,
+    median: values.length ? median(values) : NaN,
+    max: values.length ? max(values) : NaN,
+    sum: values.length ? sum(values) : NaN,
+    delta: values.length ? values.at(-1) - values.at(0) : NaN,
+  };
 }
