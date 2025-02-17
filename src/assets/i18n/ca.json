@@ -239,6 +239,7 @@
         "edit": "Editar micro-regions",
         "copy": "Copiar regió",
         "delete": "Esborrar regió",
+        "compare": "Compare region",
         "undo": "Undo last change in region",
         "redo": "Redo change in region",
         "createRegion": "Crear regió",
@@ -613,6 +614,7 @@
         "pdfDirectory": "Directori per PDF",
         "htmlDirectory": "Directori per HTML",
         "serverImagesUrl": "Adreça de les imatges del servidor",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
         "mapsPath": "Adreça dels mapes",
         "mediaPath": "Ruta dels fitxers multimèdia",
         "mapProductionUrl": "URL per la producció dels mapes",
@@ -783,6 +785,7 @@
         "placeholder": "Fonts",
         "selectionLabel": "{0} source(s) selected"
       },
+    
       "charts": {
         "charts": "Gràfics",
         "nan": "Sense especificar",
@@ -945,6 +948,7 @@
     "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
     "TimeSeries": "Sèrie temporal",
     "Incident": "Incident",
     "Profile": "Perfil de neu",
@@ -957,14 +961,22 @@
   },
   "importantObservation": {
     "ForBlog": "For blog",
-    "SnowLine": "Límit de neu",
     "SurfaceHoar": "Gebre de superfície",
     "Graupel": "Neu granulada",
     "StabilityTest": "Test d'estabilitat",
     "IceFormation": "Formació de gel",
     "VeryLightNewSnow": "Neu recent molt lleugera"
   },
-  "aspect": {
+  "elevationTolerance": {
+    "exact": "exact",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
+  },  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1197,6 +1209,8 @@
     "avalancheWidth": "Amplada d'allau",
     "search": "Cerca",
     "count": "# observacions:",
+    "elevationTolerance": "Accuracy of elevation data",
+    "elevationPeriod": "Elevation time period",
     "layers": {
       "observers": "Observers",
       "weatherStations": "Weather stations",
@@ -1205,13 +1219,12 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
         "globalRadiation": "Global radiation",
         "newSnow": "Neu recent",
         "snowLine": "Límit de neu",
         "snowHeight": "Snow height",
-        "snowDifference24h": "Snow difference 24h",
-        "snowDifference48h": "Snow difference 48h",
-        "snowDifference72h": "Snow difference 72h",
+        "snowDifference": "Snow difference",
         "airTemperature": "Air temperature",
         "airTemperatureMax": "Air temperature Max",
         "airTemperatureMin": "Air temperature Min",

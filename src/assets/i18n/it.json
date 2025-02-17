@@ -78,7 +78,7 @@
     },
     "variantStatus": {
       "active": "attivo",
-      "dormant": "muto",
+      "dormant": "quiescente",
       "inactive": "inattivo"
     },
     "tooltip": {
@@ -239,6 +239,7 @@
         "edit": "Modifica le micro-zone",
         "copy": "Copia meteo-nivo zona",
         "delete": "Elimina regione",
+        "compare": "Compare region",
         "undo": "Annulla l'ultima modifica apportata alla meteo-nivo zona",
         "redo": "Ripeti l'ultima modifica nella meteo-nivo zona",
         "createRegion": "Crea meteo-nivo zona",
@@ -613,6 +614,7 @@
         "pdfDirectory": "Cartella per PDF",
         "htmlDirectory": "Cartella per HTML",
         "serverImagesUrl": "Path alle immagini sul server",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
         "mapsPath": "Path alle mappe",
         "mediaPath": "Path ai file media",
         "mapProductionUrl": "URL per la produzione di mappe",
@@ -783,6 +785,7 @@
         "placeholder": "origine dati",
         "selectionLabel": "{0} origine/i selezionato/i"
       },
+    
       "charts": {
         "charts": "Diagrammi",
         "nan": "Senza specificazione",
@@ -945,6 +948,7 @@
     "spring_diurnal": "Situazione primaverile"
   },
   "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
     "TimeSeries": "Serie cronologica",
     "Incident": "Incidente",
     "Profile": "Profilo stratigrafico",
@@ -957,14 +961,22 @@
   },
   "importantObservation": {
     "ForBlog": "Per il blog",
-    "SnowLine": "Limite delle nevicate",
     "SurfaceHoar": "Brina di superficie",
     "Graupel": "Neve pallottolare",
     "StabilityTest": "Test di stabilità",
     "IceFormation": "Formazione di ghiaccio",
     "VeryLightNewSnow": "Neve fresca leggerissima"
   },
-  "aspect": {
+  "elevationTolerance": {
+    "exact": "exact",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
+  },  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1197,6 +1209,8 @@
     "avalancheWidth": "Larghezza della valanga",
     "search": "Cerca",
     "count": "# osservazioni",
+    "elevationTolerance": "Accuracy of elevation data",
+    "elevationPeriod": "Elevation time period",
     "layers": {
       "observers": "Osservatori",
       "weatherStations": "Stazioni nivometeorologiche automatiche",
@@ -1205,13 +1219,12 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
         "globalRadiation": "Radiazione globale",
         "newSnow": "Neve fresca",
         "snowLine": "Limite delle nevicate",
         "snowHeight": "altezza neve",
-        "snowDifference24h": "Differenza altezza neve 24h",
-        "snowDifference48h": "Differenza altezza neve 48h",
-        "snowDifference72h": "Differenza altezza neve 72h",
+        "snowDifference": "Snow difference",
         "airTemperature": "Temperatura dell'aria",
         "airTemperatureMax": "Temperatura dell'aria max.",
         "airTemperatureMin": "Temperatura dell'aria min.",

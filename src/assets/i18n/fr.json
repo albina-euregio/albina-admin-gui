@@ -77,9 +77,9 @@
       "loadVariantsError": "Impossible d'éditer ce type de source."
     },
     "variantStatus": {
-      "active": "actives",
-      "dormant": "dormant",
-      "inactive": "inactives"
+      "active": "active",
+      "dormant": "endormie",
+      "inactive": "inactive"
     },
     "tooltip": {
       "read": "Lire sources de danger",
@@ -239,6 +239,7 @@
         "edit": "Éditer les microrégions",
         "copy": "Copier la région de prévision",
         "delete": "Effacer la région de prévision",
+        "compare": "Compare region",
         "undo": "Annuler dernière modification dans région de prévision",
         "redo": "Rétablir dernière modification dans région de prévision",
         "createRegion": "Créer région de prévision",
@@ -613,6 +614,7 @@
         "pdfDirectory": "Répertoire pour PDF",
         "htmlDirectory": "Répertoire pour HTML",
         "serverImagesUrl": "Chemin vers les images du serveur",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
         "mapsPath": "Chemin vers les cartes",
         "mediaPath": "Chemin vers les fichiers média",
         "mapProductionUrl": "URL pour la production des cartes",
@@ -783,6 +785,7 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) sélectionnée(s)"
       },
+    
       "charts": {
         "charts": "Diagramme",
         "nan": "Pas d'informations",
@@ -945,6 +948,7 @@
     "spring_diurnal": "Situation de printemps"
   },
   "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
     "TimeSeries": "Série chronologique",
     "Incident": "Incident",
     "Profile": "Profil de neige",
@@ -957,14 +961,22 @@
   },
   "importantObservation": {
     "ForBlog": "Pour le blog",
-    "SnowLine": "Limite de l'enneigement",
     "SurfaceHoar": "Givre de surface",
     "Graupel": "Neige roulée",
     "StabilityTest": "Test de stabilité",
     "IceFormation": "Formation de glace",
     "VeryLightNewSnow": "Neige fraîche très légère"
   },
-  "aspect": {
+  "elevationTolerance": {
+    "exact": "exact",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
+  },  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1197,6 +1209,8 @@
     "avalancheWidth": "Largeur d'avalanche",
     "search": "Rechercher",
     "count": "# observations :",
+    "elevationTolerance": "Accuracy of elevation data",
+    "elevationPeriod": "Elevation time period",
     "layers": {
       "observers": "Observateurs",
       "weatherStations": "Stations météo ",
@@ -1205,13 +1219,12 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
         "globalRadiation": "Rayonnement global",
         "newSnow": "Neige fraîche",
         "snowLine": "Limite de l'enneigement",
         "snowHeight": "Hauteur de neige",
-        "snowDifference24h": "Différence de hauteur de neige 24h",
-        "snowDifference48h": "Différence de hauteur de neige 48h",
-        "snowDifference72h": "Différence de hauteur de neige 72h",
+        "snowDifference": "Snow difference",
         "airTemperature": "Température de l'air",
         "airTemperatureMax": "Température maximale de l'air",
         "airTemperatureMin": "Température minimale de l'air",
