@@ -2,6 +2,7 @@ import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { fetchJSON, fetchText } from "../util/fetchJSON";
 import { fetchSnowLineCalculations } from "./observations/snow_line";
+import groupBy from "lodash/groupBy";
 
 export async function getAwsWeatherStations(
   startDate: Date,
@@ -22,7 +23,7 @@ export async function getAwsWeatherStations(
     station.$data.statistics = smetData?.statistics(startDate, endDate, station);
   }
 
-  const snowLinesByStation = Object.groupBy(
+  const snowLinesByStation = groupBy(
     await Array.fromAsync(fetchSnowLineCalculations(startDate, endDate)),
     (o) => o.locationName,
   );
