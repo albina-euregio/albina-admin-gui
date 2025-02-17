@@ -1,6 +1,6 @@
 import { Component, input, output, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { GenericObservation, ImportantObservation, ObservationSource } from "./models/generic-observation.model";
+import { GenericObservation, ImportantObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService } from "./observation-marker.service";
@@ -22,7 +22,7 @@ export class ObservationTableComponent {
   ObservationSource = ObservationSource;
   showObservationsWithoutCoordinates = false;
   importantObservationTexts = {
-    [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
+    [ObservationType.DrySnowfallLevel]: grainShapes.IFrc.key,
     [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
     [ImportantObservation.Graupel]: grainShapes.PPgp.key,
     [ImportantObservation.StabilityTest]: grainShapes.PPnd.key,

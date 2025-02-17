@@ -239,6 +239,7 @@
         "edit": "Kleinstregionen editieren",
         "copy": "Region kopieren",
         "delete": "Region löschen",
+        "compare": "Region vergleichen",
         "undo": "Letzte Änderung in der Warnregion rückgängig machen",
         "redo": "Letzte Änderung in der Warnregion wiederherstellen",
         "createRegion": "Neue Region",
@@ -613,6 +614,7 @@
         "pdfDirectory": "Ordner für PDF",
         "htmlDirectory": "Ordner für HTML",
         "serverImagesUrl": "Pfad zu Bildern am Server",
+        "dangerLevelElevationDependency": "Höhenabhängigkeit der Gefahrenstufe",
         "mapsPath": "Pfad zu Karten",
         "mediaPath": "Pfad zu Mediendateien",
         "mapProductionUrl": "URL zur Kartenproduktion",
@@ -783,6 +785,7 @@
         "placeholder": "Quellen",
         "selectionLabel": "{0} Quelle(n) ausgewählt"
       },
+    
       "charts": {
         "charts": "Diagramme",
         "nan": "Ohne Angabe",
@@ -945,6 +948,7 @@
     "spring_diurnal": "Frühjahrssituation"
   },
   "observationType": {
+    "DrySnowfallLevel": "Trockene Schneefallgrenze",
     "TimeSeries": "Zeitreihe",
     "Incident": "Ereignis",
     "Profile": "Schneeprofil",
@@ -957,14 +961,22 @@
   },
   "importantObservation": {
     "ForBlog": "Für den Blog",
-    "SnowLine": "Schneefallgrenze",
     "SurfaceHoar": "Oberflächenreif",
     "Graupel": "Graupel",
     "StabilityTest": "Stabilitätstest",
     "IceFormation": "Eisbildung",
     "VeryLightNewSnow": "Sehr leichter Neuschnee"
   },
-  "aspect": {
+  "elevationTolerance": {
+    "exact": "exakt",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Trockene Schneefallgrenze des gesamten Niederschlagsereignisses",
+    "observationPeriod": "Trockene Schneefallgrenze zum Beobachtungszeitpunkt"
+  },  "aspect": {
     "N": "N",
     "NE": "NO",
     "E": "O",
@@ -1197,6 +1209,8 @@
     "avalancheWidth": "Lawinenbreite",
     "search": "Suchen",
     "count": "# Beobachtungen:",
+    "elevationTolerance": "Genauigkeit der Höhenangabe",
+    "elevationPeriod": "Zeitraum der Beobachtung",
     "layers": {
       "observers": "Beobachter",
       "weatherStations": "Wetterstationen",
@@ -1205,13 +1219,12 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Trockene Schneefallgrenze",
         "globalRadiation": "Globalstrahlung",
         "newSnow": "Neuschnee",
         "snowLine": "Schneefallgrenze",
         "snowHeight": "Schneehöhe",
-        "snowDifference24h": "Schneehöhendifferenz 24h",
-        "snowDifference48h": "Schneehöhendifferenz 48h",
-        "snowDifference72h": "Schneehöhendifferenz 72h",
+        "snowDifference": "Schneehöhendifferenz",
         "airTemperature": "Lufttemperatur",
         "airTemperatureMax": "Maximale Lufttemperatur",
         "airTemperatureMin": "Minimale Lufttemperatur",

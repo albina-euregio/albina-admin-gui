@@ -2,7 +2,6 @@ import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../.
 import { z } from "zod";
 
 export enum ImportantObservation {
-  SnowLine = "SnowLine",
   SurfaceHoar = "SurfaceHoar",
   Graupel = "Graupel",
   StabilityTest = "StabilityTest",
@@ -23,7 +22,6 @@ export enum ObservationSource {
   Panomax = "Panomax",
   RasBzIt = "RasBzIt",
   PanoCloud = "PanoCloud",
-  SnowLine = "SnowLine",
 }
 
 export enum ForecastSource {
@@ -43,6 +41,7 @@ export enum ObservationType {
   Profile = "Profile",
   TimeSeries = "TimeSeries",
   Webcam = "Webcam",
+  DrySnowfallLevel = "DrySnowfallLevel",
 }
 
 export enum PersonInvolvement {

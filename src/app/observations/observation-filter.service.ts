@@ -93,7 +93,6 @@ export class ObservationFilterService<
       this.inObservationSources(observation.$source) &&
       this.inMapBounds(observation.latitude, observation.longitude) &&
       this.inRegions(observation.region ?? (observation as unknown as FeatureProperties).region_id) &&
-      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation.eventDate) : true) &&
       this.filterSelectionData.every((filter) => filter.isIncluded("selected", filter.getValue(observation)))
     );
   }

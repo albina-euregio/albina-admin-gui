@@ -42,8 +42,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
           "#898989",
           radius ?? 40,
           filterSelectionValue?.color ?? "white",
-          filterSelectionValue?.borderColor ??
-            (observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000"),
+          filterSelectionValue?.borderColor ?? "#000",
           filterSelectionValue?.labelColor ?? "#000",
           filterSelectionValue?.labelFontSize ?? 12,
           this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,

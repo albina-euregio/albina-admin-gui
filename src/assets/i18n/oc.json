@@ -239,6 +239,7 @@
         "edit": "Editar micro-regions",
         "copy": "Copiar region",
         "delete": "Esborrar region",
+        "compare": "Compare region",
         "undo": "Undo last change in region",
         "redo": "Redo change in region",
         "createRegion": "Crear region",
@@ -613,6 +614,7 @@
         "pdfDirectory": "Directòri entà PDF",
         "htmlDirectory": "Directòri entà HTML",
         "serverImagesUrl": "Rota as imatges deth servidor",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
         "mapsPath": "Rota as mapes",
         "mediaPath": "Rota des fichèrs multimèdia",
         "mapProductionUrl": "URL entara produccion de mapes",
@@ -783,6 +785,7 @@
         "placeholder": "Hònts",
         "selectionLabel": "{0} source(s) selected"
       },
+    
       "charts": {
         "charts": "Grafiques",
         "nan": "Sense especificacion",
@@ -945,6 +948,7 @@
     "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
     "TimeSeries": "Series temporaus",
     "Incident": "Incident",
     "Profile": "Perfil de nhèu",
@@ -957,14 +961,22 @@
   },
   "importantObservation": {
     "ForBlog": "For blog",
-    "SnowLine": "Limit de nhèu",
     "SurfaceHoar": "Gibra de superfícia",
     "Graupel": "Nhèu redona",
     "StabilityTest": "Test d'estabilitat",
     "IceFormation": "Formacion de gèu",
     "VeryLightNewSnow": "Nhèu recenta molt leugèra"
   },
-  "aspect": {
+  "elevationTolerance": {
+    "exact": "exact",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
+  },  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1197,6 +1209,8 @@
     "avalancheWidth": "Amplada de lauet",
     "search": "Cercar",
     "count": "# observacions:",
+    "elevationTolerance": "Accuracy of elevation data",
+    "elevationPeriod": "Elevation time period",
     "layers": {
       "observers": "Observers",
       "weatherStations": "Weather stations",
@@ -1205,13 +1219,12 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
         "globalRadiation": "Global radiation",
         "newSnow": "Nhèu recenta",
         "snowLine": "Limit de nhèu",
         "snowHeight": "Snow height",
-        "snowDifference24h": "Snow difference 24h",
-        "snowDifference48h": "Snow difference 48h",
-        "snowDifference72h": "Snow difference 72h",
+        "snowDifference": "Snow difference",
         "airTemperature": "Air temperature",
         "airTemperatureMax": "Air temperature Max",
         "airTemperatureMin": "Air temperature Min",
