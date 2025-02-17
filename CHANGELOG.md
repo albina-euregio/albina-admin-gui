@@ -2,6 +2,16 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.8] - 2025-02-17
+
+### Observations
+
+- Dry snowfall level as weather-station parameter (max between startDate and endDate)
+
+### 🐛 Bug Fixes
+
+- Add X-Client-Version header to HTTP requests (only for our server; fixes CORS problems for external servers)
+
 ## [7.1.7] - 2025-02-17
 
 ### Bulletins
