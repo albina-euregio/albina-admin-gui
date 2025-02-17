@@ -126,6 +126,12 @@ export function observationFilters(t: (message: string) => string): FilterSelect
           label: "⌇",
           legend: t("observationType.Profile"),
         },
+        {
+          value: ObservationType.DrySnowfallLevel,
+          color: "#a65628",
+          label: "💧",
+          legend: t("observationType.DrySnowfallLevel"),
+        },
       ],
     }),
     new FilterSelectionData<GenericObservation>({
