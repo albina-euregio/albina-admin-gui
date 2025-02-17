@@ -23,8 +23,8 @@ export const httpHeaders: HttpInterceptorFn = (req, next) => {
   }
   if (authenticationService.isUserLoggedIn() && req.url.startsWith(constantsService.getServerUrl())) {
     setHeaders["Authorization"] = "Bearer " + authenticationService.currentAuthor?.accessToken;
+    setHeaders["X-Client-Version"] = constantsService.release;
   }
-  setHeaders["X-Client-Version"] = constantsService.release;
   req = req.clone({ setHeaders });
   return next(req);
 };
