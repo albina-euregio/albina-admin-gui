@@ -2,6 +2,27 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.7] - 2025-02-17
+
+### Bulletins
+
+- Show if danger rating was overridden
+
+### Observations
+
+- Add DrySnowfallLevel as observation type
+- Show calculated DrySnowfallLevel as weather stations parameter
+
+### 🐛 Bug Fixes
+
+- Set correct status for bulletins
+- Fix HTTP 415 error while upload of media file
+
+### 🚜 Refactor
+
+- Replace ngx-slider with range
+- Add X-Client-Version header to HTTP requests
+
 ## [7.1.6] - 2025-02-10
 
 ### 🚀 Features
