@@ -1318,6 +1318,26 @@
             >
               <span>{{ "creationProcess.melt_layer_recrystallization" | translate }}</span>
             </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isWeakLayerCreation(creationProcessEnum.surface_hoar_formation) ? 'btn-dark' : 'btn-outline-secondary'
+              "
+              (click)="
+                setWeakLayerCreation(
+                  $event,
+                  isWeakLayerCreation(creationProcessEnum.surface_hoar_formation)
+                    ? undefined
+                    : creationProcessEnum.surface_hoar_formation
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'creationProcess.surface_hoar_formation' | translate }}"
+            >
+              <span>{{ "creationProcess.surface_hoar_formation" | translate }}</span>
+            </button>
           </div>
         </div>
 

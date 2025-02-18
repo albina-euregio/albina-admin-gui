@@ -135,6 +135,7 @@ export enum CreationProcess {
   radiation_recrystallization = "radiation_recrystallization",
   diurnal_recrystallization = "diurnal_recrystallization",
   melt_layer_recrystallization = "melt_layer_recrystallization",
+  surface_hoar_formation = "surface_hoar_formation",
 }
 
 export enum Recognizability {

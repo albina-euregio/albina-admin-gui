@@ -1053,7 +1053,8 @@
   "creationProcess": {
     "radiation_recrystallization": "radiation",
     "diurnal_recrystallization": "diurnal",
-    "melt_layer_recrystallization": "melt layer"
+    "melt_layer_recrystallization": "melt layer",
+    "surface_hoar_formation": "surface hoar"
   },
   "recognizability": {
     "very_easy": "very easy",
