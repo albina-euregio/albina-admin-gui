@@ -785,7 +785,7 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) selected"
       },
-    
+
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
@@ -976,7 +976,8 @@
   "elevationPeriod": {
     "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
     "observationPeriod": "Dry snowfall boundary at the time of observation"
-  },  "aspect": {
+  },
+  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1105,7 +1106,8 @@
   },
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
-    "whumpfing": "whumpfing"
+    "whumpfing": "whumpfing",
+    "fresh_avalanches": "fresh avalanches"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",

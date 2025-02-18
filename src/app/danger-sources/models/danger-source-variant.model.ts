@@ -39,6 +39,7 @@ export enum Probability {
 export enum DangerSign {
   shooting_cracks = "shooting_cracks",
   whumpfing = "whumpfing",
+  fresh_avalanches = "fresh_avalanches",
 }
 
 export enum GlidingSnowActivity {

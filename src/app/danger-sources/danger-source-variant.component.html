@@ -2088,6 +2088,17 @@
             >
               <span>{{ "dangerSign.whumpfing" | translate }}</span>
             </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isDangerSign(dangerSignEnum.fresh_avalanches) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerSign($event, dangerSignEnum.fresh_avalanches)"
+              data-toggle="tooltip"
+              title="{{ 'dangerSign.fresh_avalanches' | translate }}"
+            >
+              <span>{{ "dangerSign.fresh_avalanches" | translate }}</span>
+            </button>
           </div>
         </div>
       </accordion-group>
