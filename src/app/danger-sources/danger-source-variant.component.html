@@ -1558,6 +1558,127 @@
             >
               <span>{{ "terrainType.ridge_lines" | translate }}</span>
             </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.adjacent_to_ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.adjacent_to_ridge_lines)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.adjacent_to_ridge_lines' | translate }}"
+            >
+              <span>{{ "terrainType.adjacent_to_ridge_lines" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.distant_from_ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.distant_from_ridge_lines)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.distant_from_ridge_lines' | translate }}"
+            >
+              <span>{{ "terrainType.distant_from_ridge_lines" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.slope_discontinuities) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.slope_discontinuities)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.slope_discontinuities' | translate }}"
+            >
+              <span>{{ "terrainType.slope_discontinuities" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.convex_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.convex_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.convex_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.convex_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.concave_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.concave_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.concave_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.concave_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.depressions) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.depressions)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.depressions' | translate }}"
+            >
+              <span>{{ "terrainType.depressions" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.couloirs) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.couloirs)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.couloirs' | translate }}"
+            >
+              <span>{{ "terrainType.couloirs" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.steep_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.steep_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.steep_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.steep_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.very_steep_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.very_steep_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.very_steep_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.very_steep_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.open_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.open_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.open_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.open_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.forest) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.forest)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.forest' | translate }}"
+            >
+              <span>{{ "terrainType.forest" | translate }}</span>
+            </button>
           </div>
         </div>
 

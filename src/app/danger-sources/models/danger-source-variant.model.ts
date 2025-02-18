@@ -150,6 +150,17 @@ export enum TerrainType {
   bowls = "bowls",
   pass_areas = "pass_areas",
   ridge_lines = "ridge_lines",
+  adjacent_to_ridge_lines = "adjacent_to_ridge_lines",
+  distant_from_ridge_lines = "distant_from_ridge_lines",
+  slope_discontinuities = "slope_discontinuities",
+  convex_terrain = "convex_terrain",
+  concave_terrain = "concave_terrain",
+  depressions = "depressions",
+  couloirs = "couloirs",
+  steep_terrain = "steep_terrain",
+  very_steep_terrain = "very_steep_terrain",
+  open_terrain = "open_terrain",
+  forest = "forest",
 }
 
 export enum Wetness {

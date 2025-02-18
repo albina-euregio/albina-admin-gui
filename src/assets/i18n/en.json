@@ -1103,7 +1103,18 @@
     "gullies": "gullies",
     "bowls": "bowls",
     "pass_areas": "pass areas",
-    "ridge_lines": "ridge lines"
+    "ridge_lines": "ridge lines",
+    "adjacent_to_ridge_lines": "adjacent to ridge lines",
+    "distant_from_ridge_lines": "distant from ridge lines",
+    "slope_discontinuities": "slope discontinuities",
+    "convex_terrain": "convex terrain",
+    "concave_terrain": "concave terrain",
+    "depressions": "depressions",
+    "couloirs": "couloirs",
+    "steep_terrain": "steep terrain",
+    "very_steep_terrain": "very steep terrain",
+    "open_terrain": "open terrain",
+    "forest": "forest"
   },
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
