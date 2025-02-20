@@ -397,7 +397,6 @@
       [disabled]="
         !observationEditor.observation?.$allowEdit ||
         observationEditor.saving ||
-        !observationEditor.observation?.reportDate ||
         !observationEditor.observation?.eventDate
       "
       (click)="saveObservation()"
