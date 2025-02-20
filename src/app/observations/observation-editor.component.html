@@ -40,21 +40,21 @@
   </div>
 
   <div class="col-12 col-md-3">
-    <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
+    <label for="observationType">{{ "observations.observationType" | translate }}</label>
     <select
-      id="snowpackStability"
-      [(ngModel)]="observation().stability"
+      id="observationType"
+      [(ngModel)]="observation().$type"
       class="form-select"
       [disabled]="!observation().$allowEdit"
     >
       <option [ngValue]="undefined"></option>
-      <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
-        {{ "snowpackStability." + stability | translate }}
+      <option *ngFor="let type of observationTypeValues" [value]="type">
+        {{ "observationType." + type | translate }}
       </option>
     </select>
   </div>
 
-  <div class="col-12 col-md-3">
+  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-3">
     <label for="personInvolvement">{{ "observations.personInvolvement" | translate }}</label>
     <select
       id="personInvolvement"
@@ -70,17 +70,17 @@
     </select>
   </div>
 
-  <div class="col-12 col-md-3">
-    <label for="observationType">{{ "observations.observationType" | translate }}</label>
+  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-3">
+    <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
     <select
-      id="observationType"
-      [(ngModel)]="observation().$type"
+      id="snowpackStability"
+      [(ngModel)]="observation().stability"
       class="form-select"
       [disabled]="!observation().$allowEdit"
     >
       <option [ngValue]="undefined"></option>
-      <option *ngFor="let type of observationTypeValues" [value]="type">
-        {{ "observationType." + type | translate }}
+      <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
+        {{ "snowpackStability." + stability | translate }}
       </option>
     </select>
   </div>
