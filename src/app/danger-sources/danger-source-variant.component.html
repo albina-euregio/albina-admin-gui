@@ -230,6 +230,27 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
+          <label class="form-label me-3" for="textarea-input">{{
+            "dangerSources.create.label.snowHeightAverage" | translate
+          }}</label>
+          <div class="input-group align-items-baseline">
+            <input
+              step="1"
+              min="0"
+              id="inputSnowHeightAverage"
+              class="form-control"
+              size="14"
+              type="number"
+              name="snow-height-average-input"
+              [disabled]="disabled()"
+              [(ngModel)]="variant().snowHeightAverage"
+              (change)="updateVariantOnServer()"
+            />
+            <span class="input-group-text">cm</span>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
           <label class="form-label" for="zeroDegreeIsothermCheckbox">{{
             "dangerSources.create.label.zeroDegreeIsotherm" | translate
           }}</label>
@@ -1116,27 +1137,49 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustAbove !== undefined && variant().weakLayerCrustAbove === true
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustAbove(
+                  $event,
+                  isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? undefined : weakLayerCrustEnum.yes
+                )
               "
-              (click)="setWeakLayerCrustAbove(true)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.yes' | translate }}"
             >
-              <span>{{ "button.yes" | translate }}</span>
+              <span>{{ "weakLayerCrust.yes" | translate }}</span>
             </button>
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustAbove !== undefined && variant().weakLayerCrustAbove === false
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustAbove(
+                  $event,
+                  isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? undefined : weakLayerCrustEnum.partly
+                )
               "
-              (click)="setWeakLayerCrustAbove(false)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.partly' | translate }}"
             >
-              <span>{{ "button.no" | translate }}</span>
+              <span>{{ "weakLayerCrust.partly" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustAbove(
+                  $event,
+                  isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? undefined : weakLayerCrustEnum.no
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.no' | translate }}"
+            >
+              <span>{{ "weakLayerCrust.no" | translate }}</span>
             </button>
           </div>
         </div>
@@ -1150,27 +1193,49 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustBelow !== undefined && variant().weakLayerCrustBelow === true
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustBelow(
+                  $event,
+                  isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? undefined : weakLayerCrustEnum.yes
+                )
               "
-              (click)="setWeakLayerCrustBelow(true)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.yes' | translate }}"
             >
-              <span>{{ "button.yes" | translate }}</span>
+              <span>{{ "weakLayerCrust.yes" | translate }}</span>
             </button>
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustBelow !== undefined && variant().weakLayerCrustBelow === false
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustBelow(
+                  $event,
+                  isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? undefined : weakLayerCrustEnum.partly
+                )
               "
-              (click)="setWeakLayerCrustBelow(false)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.partly' | translate }}"
             >
-              <span>{{ "button.no" | translate }}</span>
+              <span>{{ "weakLayerCrust.partly" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustBelow(
+                  $event,
+                  isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? undefined : weakLayerCrustEnum.no
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.no' | translate }}"
+            >
+              <span>{{ "weakLayerCrust.no" | translate }}</span>
             </button>
           </div>
         </div>
@@ -1317,6 +1382,26 @@
               title="{{ 'creationProcess.melt_layer_recrystallization' | translate }}"
             >
               <span>{{ "creationProcess.melt_layer_recrystallization" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isWeakLayerCreation(creationProcessEnum.surface_hoar_formation) ? 'btn-dark' : 'btn-outline-secondary'
+              "
+              (click)="
+                setWeakLayerCreation(
+                  $event,
+                  isWeakLayerCreation(creationProcessEnum.surface_hoar_formation)
+                    ? undefined
+                    : creationProcessEnum.surface_hoar_formation
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'creationProcess.surface_hoar_formation' | translate }}"
+            >
+              <span>{{ "creationProcess.surface_hoar_formation" | translate }}</span>
             </button>
           </div>
         </div>
@@ -1537,6 +1622,127 @@
               title="{{ 'terrainType.ridge_lines' | translate }}"
             >
               <span>{{ "terrainType.ridge_lines" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.adjacent_to_ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.adjacent_to_ridge_lines)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.adjacent_to_ridge_lines' | translate }}"
+            >
+              <span>{{ "terrainType.adjacent_to_ridge_lines" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.distant_from_ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.distant_from_ridge_lines)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.distant_from_ridge_lines' | translate }}"
+            >
+              <span>{{ "terrainType.distant_from_ridge_lines" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.slope_discontinuities) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.slope_discontinuities)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.slope_discontinuities' | translate }}"
+            >
+              <span>{{ "terrainType.slope_discontinuities" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.convex_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.convex_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.convex_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.convex_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.concave_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.concave_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.concave_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.concave_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.depressions) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.depressions)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.depressions' | translate }}"
+            >
+              <span>{{ "terrainType.depressions" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.couloirs) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.couloirs)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.couloirs' | translate }}"
+            >
+              <span>{{ "terrainType.couloirs" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.steep_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.steep_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.steep_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.steep_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.very_steep_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.very_steep_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.very_steep_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.very_steep_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.open_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.open_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.open_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.open_terrain" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.forest) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.forest)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.forest' | translate }}"
+            >
+              <span>{{ "terrainType.forest" | translate }}</span>
             </button>
           </div>
         </div>
@@ -2087,6 +2293,17 @@
               title="{{ 'dangerSign.whumpfing' | translate }}"
             >
               <span>{{ "dangerSign.whumpfing" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isDangerSign(dangerSignEnum.fresh_avalanches) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="setDangerSign($event, dangerSignEnum.fresh_avalanches)"
+              data-toggle="tooltip"
+              title="{{ 'dangerSign.fresh_avalanches' | translate }}"
+            >
+              <span>{{ "dangerSign.fresh_avalanches" | translate }}</span>
             </button>
           </div>
         </div>

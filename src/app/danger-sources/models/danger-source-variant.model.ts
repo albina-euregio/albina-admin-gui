@@ -39,6 +39,7 @@ export enum Probability {
 export enum DangerSign {
   shooting_cracks = "shooting_cracks",
   whumpfing = "whumpfing",
+  fresh_avalanches = "fresh_avalanches",
 }
 
 export enum GlidingSnowActivity {
@@ -130,10 +131,17 @@ export enum SnowpackPosition {
   ground = "ground",
 }
 
+export enum WeakLayerCrust {
+  yes = "yes",
+  partly = "partly",
+  no = "no",
+}
+
 export enum CreationProcess {
   radiation_recrystallization = "radiation_recrystallization",
   diurnal_recrystallization = "diurnal_recrystallization",
   melt_layer_recrystallization = "melt_layer_recrystallization",
+  surface_hoar_formation = "surface_hoar_formation",
 }
 
 export enum Recognizability {
@@ -148,6 +156,17 @@ export enum TerrainType {
   bowls = "bowls",
   pass_areas = "pass_areas",
   ridge_lines = "ridge_lines",
+  adjacent_to_ridge_lines = "adjacent_to_ridge_lines",
+  distant_from_ridge_lines = "distant_from_ridge_lines",
+  slope_discontinuities = "slope_discontinuities",
+  convex_terrain = "convex_terrain",
+  concave_terrain = "concave_terrain",
+  depressions = "depressions",
+  couloirs = "couloirs",
+  steep_terrain = "steep_terrain",
+  very_steep_terrain = "very_steep_terrain",
+  open_terrain = "open_terrain",
+  forest = "forest",
 }
 
 export enum Wetness {
@@ -194,6 +213,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   glidingSnowActivityValue: number | undefined;
   snowHeightUpperLimit: number | undefined;
   snowHeightLowerLimit: number | undefined;
+  snowHeightAverage: number | undefined;
   zeroDegreeIsotherm: boolean | undefined;
 
   /** --------------- */
@@ -214,8 +234,8 @@ export class DangerSourceVariantModel implements PolygonObject {
   weakLayerThickness: Thickness;
   weakLayerStrength: Characteristic;
   weakLayerWet: boolean | undefined;
-  weakLayerCrustAbove: boolean | undefined;
-  weakLayerCrustBelow: boolean | undefined;
+  weakLayerCrustAbove: WeakLayerCrust;
+  weakLayerCrustBelow: WeakLayerCrust;
   weakLayerPosition: SnowpackPosition;
   weakLayerCreation: CreationProcess;
   weakLayerDistribution: Distribution;
@@ -264,6 +284,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.glidingSnowActivityValue = json.glidingSnowActivityValue;
     variant.snowHeightUpperLimit = json.snowHeightUpperLimit;
     variant.snowHeightLowerLimit = json.snowHeightLowerLimit;
+    variant.snowHeightAverage = json.snowHeightAverage;
     variant.zeroDegreeIsotherm = json.zeroDegreeIsotherm;
     variant.slabGrainShape = json.slabGrainShape;
     variant.slabThicknessUpperLimit = json.slabThicknessUpperLimit;
@@ -330,6 +351,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.glidingSnowActivityValue = variant.glidingSnowActivityValue;
       this.snowHeightUpperLimit = variant.snowHeightUpperLimit;
       this.snowHeightLowerLimit = variant.snowHeightLowerLimit;
+      this.snowHeightAverage = variant.snowHeightAverage;
       this.zeroDegreeIsotherm = variant.zeroDegreeIsotherm;
       this.slabGrainShape = variant.slabGrainShape;
       this.slabThicknessUpperLimit = variant.slabThicknessUpperLimit;

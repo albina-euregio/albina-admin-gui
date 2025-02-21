@@ -118,6 +118,7 @@
       "label": {
         "glidingSnowActivity": "Gliding snow activity",
         "snowHeight": "Snow height",
+        "snowHeightAverage": "Average snow height",
         "zeroDegreeIsotherm": "0°C isotherm",
         "looseSnowMoisture": "Loose snow moisture",
         "looseSnowGrainShape": "Loose snow grain shape",
@@ -785,7 +786,7 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) selected"
       },
-    
+
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
@@ -976,7 +977,8 @@
   "elevationPeriod": {
     "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
     "observationPeriod": "Dry snowfall boundary at the time of observation"
-  },  "aspect": {
+  },
+  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1049,10 +1051,16 @@
     "lower": "lower",
     "ground": "ground"
   },
+  "weakLayerCrust": {
+    "no": "no",
+    "partly": "partly",
+    "yes": "yes"
+  },
   "creationProcess": {
     "radiation_recrystallization": "radiation",
     "diurnal_recrystallization": "diurnal",
-    "melt_layer_recrystallization": "melt layer"
+    "melt_layer_recrystallization": "melt layer",
+    "surface_hoar_formation": "surface hoar"
   },
   "recognizability": {
     "very_easy": "very easy",
@@ -1101,11 +1109,23 @@
     "gullies": "gullies",
     "bowls": "bowls",
     "pass_areas": "pass areas",
-    "ridge_lines": "ridge lines"
+    "ridge_lines": "ridge lines",
+    "adjacent_to_ridge_lines": "adjacent to ridge lines",
+    "distant_from_ridge_lines": "distant from ridge lines",
+    "slope_discontinuities": "slope discontinuities",
+    "convex_terrain": "convex terrain",
+    "concave_terrain": "concave terrain",
+    "depressions": "depressions",
+    "couloirs": "couloirs",
+    "steep_terrain": "steep terrain",
+    "very_steep_terrain": "very steep terrain",
+    "open_terrain": "open terrain",
+    "forest": "forest"
   },
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
-    "whumpfing": "whumpfing"
+    "whumpfing": "whumpfing",
+    "fresh_avalanches": "fresh avalanches"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",
