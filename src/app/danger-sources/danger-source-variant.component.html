@@ -1682,28 +1682,6 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.depressions) ? 'btn-dark' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.depressions)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.depressions' | translate }}"
-            >
-              <span>{{ "terrainType.depressions" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.couloirs) ? 'btn-dark' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.couloirs)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.couloirs' | translate }}"
-            >
-              <span>{{ "terrainType.couloirs" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.steep_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.steep_terrain)"
               data-toggle="tooltip"

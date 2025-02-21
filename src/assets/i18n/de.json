@@ -1115,8 +1115,6 @@
     "slope_discontinuities": "Geländekanten",
     "convex_terrain": "Konvexes Gelände",
     "concave_terrain": "Konkaves Gelände",
-    "depressions": "Mulden",
-    "couloirs": "Rinnen",
     "steep_terrain": "Steiles Gelände",
     "very_steep_terrain": "Sehr steiles Gelände",
     "open_terrain": "Offenes Gelände",

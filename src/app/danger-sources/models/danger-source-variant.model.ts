@@ -161,8 +161,6 @@ export enum TerrainType {
   slope_discontinuities = "slope_discontinuities",
   convex_terrain = "convex_terrain",
   concave_terrain = "concave_terrain",
-  depressions = "depressions",
-  couloirs = "couloirs",
   steep_terrain = "steep_terrain",
   very_steep_terrain = "very_steep_terrain",
   open_terrain = "open_terrain",

@@ -1115,8 +1115,6 @@
     "slope_discontinuities": "slope discontinuities",
     "convex_terrain": "convex terrain",
     "concave_terrain": "concave terrain",
-    "depressions": "depressions",
-    "couloirs": "couloirs",
     "steep_terrain": "steep terrain",
     "very_steep_terrain": "very steep terrain",
     "open_terrain": "open terrain",
