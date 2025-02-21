@@ -131,6 +131,12 @@ export enum SnowpackPosition {
   ground = "ground",
 }
 
+export enum WeakLayerCrust {
+  yes = "yes",
+  partly = "partly",
+  no = "no",
+}
+
 export enum CreationProcess {
   radiation_recrystallization = "radiation_recrystallization",
   diurnal_recrystallization = "diurnal_recrystallization",
@@ -227,8 +233,8 @@ export class DangerSourceVariantModel implements PolygonObject {
   weakLayerThickness: Thickness;
   weakLayerStrength: Characteristic;
   weakLayerWet: boolean | undefined;
-  weakLayerCrustAbove: boolean | undefined;
-  weakLayerCrustBelow: boolean | undefined;
+  weakLayerCrustAbove: WeakLayerCrust;
+  weakLayerCrustBelow: WeakLayerCrust;
   weakLayerPosition: SnowpackPosition;
   weakLayerCreation: CreationProcess;
   weakLayerDistribution: Distribution;

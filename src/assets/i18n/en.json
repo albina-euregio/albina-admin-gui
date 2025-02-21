@@ -1050,6 +1050,11 @@
     "lower": "lower",
     "ground": "ground"
   },
+  "weakLayerCrust": {
+    "no": "no",
+    "partly": "partly",
+    "yes": "yes"
+  },
   "creationProcess": {
     "radiation_recrystallization": "radiation",
     "diurnal_recrystallization": "diurnal",

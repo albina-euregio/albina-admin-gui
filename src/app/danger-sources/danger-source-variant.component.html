@@ -1116,27 +1116,49 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustAbove !== undefined && variant().weakLayerCrustAbove === true
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustAbove(
+                  $event,
+                  isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? undefined : weakLayerCrustEnum.yes
+                )
               "
-              (click)="setWeakLayerCrustAbove(true)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.yes' | translate }}"
             >
-              <span>{{ "button.yes" | translate }}</span>
+              <span>{{ "weakLayerCrust.yes" | translate }}</span>
             </button>
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustAbove !== undefined && variant().weakLayerCrustAbove === false
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustAbove(
+                  $event,
+                  isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? undefined : weakLayerCrustEnum.partly
+                )
               "
-              (click)="setWeakLayerCrustAbove(false)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.partly' | translate }}"
             >
-              <span>{{ "button.no" | translate }}</span>
+              <span>{{ "weakLayerCrust.partly" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustAbove(
+                  $event,
+                  isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? undefined : weakLayerCrustEnum.no
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.no' | translate }}"
+            >
+              <span>{{ "weakLayerCrust.no" | translate }}</span>
             </button>
           </div>
         </div>
@@ -1150,27 +1172,49 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustBelow !== undefined && variant().weakLayerCrustBelow === true
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustBelow(
+                  $event,
+                  isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? undefined : weakLayerCrustEnum.yes
+                )
               "
-              (click)="setWeakLayerCrustBelow(true)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.yes' | translate }}"
             >
-              <span>{{ "button.yes" | translate }}</span>
+              <span>{{ "weakLayerCrust.yes" | translate }}</span>
             </button>
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerCrustBelow !== undefined && variant().weakLayerCrustBelow === false
-                  ? 'btn-dark'
-                  : 'btn-outline-secondary'
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustBelow(
+                  $event,
+                  isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? undefined : weakLayerCrustEnum.partly
+                )
               "
-              (click)="setWeakLayerCrustBelow(false)"
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.partly' | translate }}"
             >
-              <span>{{ "button.no" | translate }}</span>
+              <span>{{ "weakLayerCrust.partly" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setWeakLayerCrustBelow(
+                  $event,
+                  isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? undefined : weakLayerCrustEnum.no
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'weakLayerCrust.no' | translate }}"
+            >
+              <span>{{ "weakLayerCrust.no" | translate }}</span>
             </button>
           </div>
         </div>

@@ -30,6 +30,7 @@ import {
   SnowpackPosition,
   TerrainType,
   Thickness,
+  WeakLayerCrust,
   Wetness,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
@@ -92,6 +93,7 @@ export class DangerSourceVariantComponent implements OnChanges {
   thicknessEnum = Thickness;
   characteristicEnum = Characteristic;
   snowpackPositionEnum = SnowpackPosition;
+  weakLayerCrustEnum = WeakLayerCrust;
   creationProcessEnum = CreationProcess;
   distributionEnum = Distribution;
   recognizabilityEnum = Recognizability;
@@ -293,23 +295,23 @@ export class DangerSourceVariantComponent implements OnChanges {
     this.updateVariantOnServer();
   }
 
-  setWeakLayerCrustAbove(weakLayerCrustAbove: boolean) {
-    const variant = this.variant();
-    if (variant?.weakLayerCrustAbove === weakLayerCrustAbove) {
-      variant.weakLayerCrustAbove = undefined;
-    } else {
-      variant.weakLayerCrustAbove = weakLayerCrustAbove;
-    }
+  isWeakLayerCrustAbove(weakLayerCrustAbove: WeakLayerCrust) {
+    return this.variant()?.weakLayerCrustAbove === weakLayerCrustAbove;
+  }
+
+  setWeakLayerCrustAbove(event: Event, weakLayerCrustAbove: WeakLayerCrust) {
+    event.stopPropagation();
+    this.variant().weakLayerCrustAbove = weakLayerCrustAbove;
     this.updateVariantOnServer();
   }
 
-  setWeakLayerCrustBelow(weakLayerCrustBelow: boolean) {
-    const variant = this.variant();
-    if (variant?.weakLayerCrustBelow === weakLayerCrustBelow) {
-      variant.weakLayerCrustBelow = undefined;
-    } else {
-      variant.weakLayerCrustBelow = weakLayerCrustBelow;
-    }
+  isWeakLayerCrustBelow(weakLayerCrustBelow: WeakLayerCrust) {
+    return this.variant()?.weakLayerCrustBelow === weakLayerCrustBelow;
+  }
+
+  setWeakLayerCrustBelow(event: Event, weakLayerCrustBelow: WeakLayerCrust) {
+    event.stopPropagation();
+    this.variant().weakLayerCrustBelow = weakLayerCrustBelow;
     this.updateVariantOnServer();
   }
 
