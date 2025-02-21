@@ -118,6 +118,7 @@
       "label": {
         "glidingSnowActivity": "Gleitschneeaktivität",
         "snowHeight": "Schneehöhe",
+        "snowHeightAverage": "Durchschnittliche Schneehöhe",
         "zeroDegreeIsotherm": "0°C isotherm",
         "looseSnowMoisture": "Feuchte des Lockerschnees",
         "looseSnowGrainShape": "Kornform des Lockerschnees",
@@ -785,7 +786,7 @@
         "placeholder": "Quellen",
         "selectionLabel": "{0} Quelle(n) ausgewählt"
       },
-    
+
       "charts": {
         "charts": "Diagramme",
         "nan": "Ohne Angabe",
@@ -976,7 +977,8 @@
   "elevationPeriod": {
     "duringPrecipitationEvent": "Trockene Schneefallgrenze des gesamten Niederschlagsereignisses",
     "observationPeriod": "Trockene Schneefallgrenze zum Beobachtungszeitpunkt"
-  },  "aspect": {
+  },
+  "aspect": {
     "N": "N",
     "NE": "NO",
     "E": "O",
@@ -1049,10 +1051,16 @@
     "lower": "unten",
     "ground": "Boden"
   },
+  "weakLayerCrust": {
+    "no": "nein",
+    "partly": "teilweise",
+    "yes": "ja"
+  },
   "creationProcess": {
     "radiation_recrystallization": "Radiation recrystallization",
     "diurnal_recrystallization": "Diurnal recrystallization",
-    "melt_layer_recrystallization": "Melt-layer recrystallization"
+    "melt_layer_recrystallization": "Melt-layer recrystallization",
+    "surface_hoar_formation": "Oberflächenreif"
   },
   "recognizability": {
     "very_easy": "sehr leicht",
@@ -1101,11 +1109,23 @@
     "gullies": "Rinnen",
     "bowls": "Mulden",
     "pass_areas": "Passlagen",
-    "ridge_lines": "Kammlagen"
+    "ridge_lines": "Kammlagen",
+    "adjacent_to_ridge_lines": "kammnah",
+    "distant_from_ridge_lines": "kammfern",
+    "slope_discontinuities": "Geländekanten",
+    "convex_terrain": "Konvexes Gelände",
+    "concave_terrain": "Konkaves Gelände",
+    "depressions": "Mulden",
+    "couloirs": "Rinnen",
+    "steep_terrain": "Steiles Gelände",
+    "very_steep_terrain": "Sehr steiles Gelände",
+    "open_terrain": "Offenes Gelände",
+    "forest": "Wald"
   },
   "dangerSign": {
     "shooting_cracks": "Rissbildung",
-    "whumpfing": "Setzungsgeräusche"
+    "whumpfing": "Setzungsgeräusche",
+    "fresh_avalanches": "Frische Lawinen"
   },
   "changeRegionDialog": {
     "message": "Möchtest du die Region ändern?",
