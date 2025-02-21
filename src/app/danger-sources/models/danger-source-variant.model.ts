@@ -284,6 +284,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.glidingSnowActivityValue = json.glidingSnowActivityValue;
     variant.snowHeightUpperLimit = json.snowHeightUpperLimit;
     variant.snowHeightLowerLimit = json.snowHeightLowerLimit;
+    variant.snowHeightAverage = json.snowHeightAverage;
     variant.zeroDegreeIsotherm = json.zeroDegreeIsotherm;
     variant.slabGrainShape = json.slabGrainShape;
     variant.slabThicknessUpperLimit = json.slabThicknessUpperLimit;
@@ -350,6 +351,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.glidingSnowActivityValue = variant.glidingSnowActivityValue;
       this.snowHeightUpperLimit = variant.snowHeightUpperLimit;
       this.snowHeightLowerLimit = variant.snowHeightLowerLimit;
+      this.snowHeightAverage = variant.snowHeightAverage;
       this.zeroDegreeIsotherm = variant.zeroDegreeIsotherm;
       this.slabGrainShape = variant.slabGrainShape;
       this.slabThicknessUpperLimit = variant.slabThicknessUpperLimit;
