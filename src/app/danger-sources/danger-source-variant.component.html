@@ -230,6 +230,27 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
+          <label class="form-label me-3" for="textarea-input">{{
+            "dangerSources.create.label.snowHeightAverage" | translate
+          }}</label>
+          <div class="input-group align-items-baseline">
+            <input
+              step="1"
+              min="0"
+              id="inputSnowHeightAverage"
+              class="form-control"
+              size="14"
+              type="number"
+              name="snow-height-average-input"
+              [disabled]="disabled()"
+              [(ngModel)]="variant().snowHeightAverage"
+              (change)="updateVariantOnServer()"
+            />
+            <span class="input-group-text">cm</span>
+          </div>
+        </div>
+
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
           <label class="form-label" for="zeroDegreeIsothermCheckbox">{{
             "dangerSources.create.label.zeroDegreeIsotherm" | translate
           }}</label>

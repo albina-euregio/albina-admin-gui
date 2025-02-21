@@ -213,6 +213,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   glidingSnowActivityValue: number | undefined;
   snowHeightUpperLimit: number | undefined;
   snowHeightLowerLimit: number | undefined;
+  snowHeightAverage: number | undefined;
   zeroDegreeIsotherm: boolean | undefined;
 
   /** --------------- */
