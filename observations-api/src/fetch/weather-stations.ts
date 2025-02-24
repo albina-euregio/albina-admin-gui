@@ -23,19 +23,19 @@ export async function getAwsWeatherStations(
   }
 
   const snowLinesByStation = groupBy(
-    await Array.fromAsync(fetchSnowLineCalculations(startDate, endDate)),
-    (o) => o.locationName,
+    Array.from(await fetchSnowLineCalculations(startDate, endDate)),
+    (o) => o.station_name,
   );
   for (const station of stations) {
     const snowLines = snowLinesByStation[station.locationName];
     if (!snowLines?.length) continue;
-    station.$externalImgs.unshift(...snowLines[0].$externalImgs);
+    station.$externalImgs.unshift(...snowLines[0].plot_name);
     const $data: FeatureProperties = station.$data;
     $data.statistics ??= {};
     $data.statistics.SnowLine = buildStatistics(
       "SnowLine",
       "m",
-      snowLines.map((o) => o.elevation),
+      snowLines.map((o) => o.snowfall_limit),
     );
   }
 
@@ -243,45 +243,32 @@ function buildStatistics(parameter: ParameterType, unit: string, values: number[
   };
 }
 
+interface SnowLineProperties {
+  station_number: string;
+  station_name: string;
+  subregion: string;
+  region: string;
+  extended_region: string;
+  snowfall_limit: number;
+  plot_name: string;
+}
+
 /**
  * Calculated snow fall levels from weather stations
  * https://gitlab.com/lwd.met/lwd-internal-projects/snow-fall-level-calculator
  */
-export async function* fetchSnowLineCalculations(
-  startDate: Date,
-  endDate: Date,
-): AsyncGenerator<GenericObservation, void, unknown> {
+export async function fetchSnowLineCalculations(startDate: Date, endDate: Date): Promise<SnowLineProperties[]> {
   const API = "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson";
   const WEB = "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}";
-  interface Properties {
-    station_number: string;
-    station_name: string;
-    subregion: string;
-    region: string;
-    extended_region: string;
-    snowfall_limit: number;
-    plot_name: string;
-  }
   while (+endDate > +startDate) {
     const date = endDate.toISOString().slice(0, "2006-01-02".length);
     const url = API.replace("{{date}}", date);
     try {
-      const json: GeoJSON.FeatureCollection<GeoJSON.Point, Properties> = await fetchJSON(url);
-      for (const feature of json.features) {
-        yield {
-          $type: ObservationType.DrySnowfallLevel,
-          $source: ObservationSource.AvalancheWarningService,
-          $id: date + "-" + feature.properties.station_number,
-          $data: feature.properties,
-          eventDate: endDate,
-          reportDate: endDate,
-          locationName: feature.properties.station_name,
-          $externalImgs: [WEB.replace("{{date}}", date).replace("{{plot}}", feature.properties.plot_name)],
-          latitude: feature.geometry.coordinates[1],
-          longitude: feature.geometry.coordinates[0],
-          elevation: feature.properties.snowfall_limit,
-        } satisfies GenericObservation;
-      }
+      const json: GeoJSON.FeatureCollection<GeoJSON.Point, SnowLineProperties> = await fetchJSON(url);
+      return json.features.map((f) => ({
+        ...f.properties,
+        plot_name: WEB.replace("{{date}}", date).replace("{{plot}}", f.properties.plot_name),
+      }));
     } catch (err) {
       console.log(`Failed to fetch ${url}`, err);
     }
