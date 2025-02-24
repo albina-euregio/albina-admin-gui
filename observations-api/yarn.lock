@@ -99,15 +99,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@astrojs/node@npm:^9.0.2":
-  version: 9.0.2
-  resolution: "@astrojs/node@npm:9.0.2"
+"@astrojs/node@npm:^9.1.1":
+  version: 9.1.1
+  resolution: "@astrojs/node@npm:9.1.1"
   dependencies:
+    "@astrojs/internal-helpers": "npm:0.5.1"
     send: "npm:^1.1.0"
     server-destroy: "npm:^1.0.1"
   peerDependencies:
-    astro: ^5.0.0
-  checksum: 10c0/124614535c8760ed573c334d5574f714dd56feb361ef7b0630819953eea99db7b3f1644ae20b4ea2bedc5b897ade225d4b773a765d298fcac633d1697b9749fc
+    astro: ^5.3.0
+  checksum: 10c0/70fdf21029da7101682ce9ad081075b5b03012417a73d219974f1deaad9511f4de415ef3674ebd5942da29fa94144f5047d87a56877952546fd8428ea805f06f
   languageName: node
   linkType: hard
 
@@ -1211,9 +1212,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro@npm:5.2.5":
-  version: 5.2.5
-  resolution: "astro@npm:5.2.5"
+"astro@npm:5.3.1":
+  version: 5.3.1
+  resolution: "astro@npm:5.3.1"
   dependencies:
     "@astrojs/compiler": "npm:^2.10.3"
     "@astrojs/internal-helpers": "npm:0.5.1"
@@ -1240,7 +1241,6 @@ __metadata:
     es-module-lexer: "npm:^1.6.0"
     esbuild: "npm:^0.24.2"
     estree-walker: "npm:^3.0.3"
-    fast-glob: "npm:^3.3.3"
     flattie: "npm:^1.1.1"
     github-slugger: "npm:^2.0.0"
     html-escaper: "npm:3.0.3"
@@ -1249,11 +1249,11 @@ __metadata:
     kleur: "npm:^4.1.5"
     magic-string: "npm:^0.30.17"
     magicast: "npm:^0.3.5"
-    micromatch: "npm:^4.0.8"
     mrmime: "npm:^2.0.0"
     neotraverse: "npm:^0.6.18"
     p-limit: "npm:^6.2.0"
     p-queue: "npm:^8.1.0"
+    picomatch: "npm:^4.0.2"
     preferred-pm: "npm:^4.1.1"
     prompts: "npm:^2.4.2"
     rehype: "npm:^13.0.2"
@@ -1261,6 +1261,7 @@ __metadata:
     sharp: "npm:^0.33.3"
     shiki: "npm:^1.29.2"
     tinyexec: "npm:^0.3.2"
+    tinyglobby: "npm:^0.2.12"
     tsconfck: "npm:^3.1.4"
     ultrahtml: "npm:^1.5.3"
     unist-util-visit: "npm:^5.0.0"
@@ -1280,7 +1281,7 @@ __metadata:
       optional: true
   bin:
     astro: astro.js
-  checksum: 10c0/181b77188c03bdfa62b7a2ced3bb0b6d93ac6794d8b9e02e340bcec2c40d4ad126010268d2614a9f439e644b791d570a264d02bbca325a3648af087452c2f67b
+  checksum: 10c0/3592ae255cd7b0a402617ae3c06da5e72033b911c577409531be10371fab1871f156581fae6aa132dc796d0a7f1d0e9a50e14065d45e3e66cbd08666811677bb
   languageName: node
   linkType: hard
 
@@ -1976,7 +1977,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.12, fast-glob@npm:^3.3.3":
+"fast-glob@npm:^3.2.12":
   version: 3.3.3
   resolution: "fast-glob@npm:3.3.3"
   dependencies:
@@ -2002,6 +2003,18 @@ __metadata:
   dependencies:
     reusify: "npm:^1.0.4"
   checksum: 10c0/1095f16cea45fb3beff558bb3afa74ca7a9250f5a670b65db7ed585f92b4b48381445cd328b3d87323da81e43232b5d5978a8201bde84e0cd514310f1ea6da34
+  languageName: node
+  linkType: hard
+
+"fdir@npm:^6.4.3":
+  version: 6.4.3
+  resolution: "fdir@npm:6.4.3"
+  peerDependencies:
+    picomatch: ^3 || ^4
+  peerDependenciesMeta:
+    picomatch:
+      optional: true
+  checksum: 10c0/d13c10120e9625adf21d8d80481586200759928c19405a816b77dd28eaeb80e7c59c5def3e2941508045eb06d34eb47fad865ccc8bf98e6ab988bb0ed160fb6f
   languageName: node
   linkType: hard
 
@@ -3506,10 +3519,10 @@ __metadata:
   resolution: "observations-api@workspace:."
   dependencies:
     "@astrojs/check": "npm:^0.9.4"
-    "@astrojs/node": "npm:^9.0.2"
+    "@astrojs/node": "npm:^9.1.1"
     "@types/geojson": "npm:^7946.0.16"
     "@types/which-polygon": "npm:^2.2.5"
-    astro: "npm:5.2.5"
+    astro: "npm:5.3.1"
     mysql2: "npm:^3.12.0"
     simple-statistics: "npm:^7.8.7"
     which-polygon: "npm:^2.2.1"
@@ -4505,6 +4518,16 @@ __metadata:
   version: 0.3.2
   resolution: "tinyexec@npm:0.3.2"
   checksum: 10c0/3efbf791a911be0bf0821eab37a3445c2ba07acc1522b1fa84ae1e55f10425076f1290f680286345ed919549ad67527d07281f1c19d584df3b74326909eb1f90
+  languageName: node
+  linkType: hard
+
+"tinyglobby@npm:^0.2.12":
+  version: 0.2.12
+  resolution: "tinyglobby@npm:0.2.12"
+  dependencies:
+    fdir: "npm:^6.4.3"
+    picomatch: "npm:^4.0.2"
+  checksum: 10c0/7c9be4fd3625630e262dcb19015302aad3b4ba7fc620f269313e688f2161ea8724d6cb4444baab5ef2826eb6bed72647b169a33ec8eea37501832a2526ff540f
   languageName: node
   linkType: hard
 
