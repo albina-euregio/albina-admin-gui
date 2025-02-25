@@ -167,6 +167,52 @@
           "tooltipTemplate": {
             "type": "string",
             "description": "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature."
+          },
+          "imageOverlays": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Identifier shown in map layer control"
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "imageBounds": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "description": "Image bounds such as [[40.712,-74.227],[40.774,-74.125]]"
+                },
+                "opacity": {
+                  "type": "number",
+                  "description": "The opacity of the image overlay."
+                },
+                "zIndex": {
+                  "type": "number",
+                  "description": "The explicit zIndex of the overlay layer."
+                },
+                "className": {
+                  "type": "string",
+                  "default": "",
+                  "description": "A custom class name to assign to the image. Empty by default."
+                }
+              },
+              "required": ["name", "imageUrl", "imageBounds"],
+              "additionalProperties": false
+            },
+            "description": "Image overlays to be shown on the map."
           }
         },
         "additionalProperties": false

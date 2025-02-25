@@ -14,7 +14,7 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { LayerGroup } from "leaflet";
+import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { NgxEchartsDirective } from "ngx-echarts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
@@ -67,6 +67,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
+  mapLayerControl = new Control.Layers();
   mapLayer = new LayerGroup();
   mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
@@ -98,6 +99,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async loadSources() {
+    this.mapLayerControl.remove();
+    this.mapLayerControl = new Control.Layers();
     this.observations.length = 0;
     this.applyLocalFilter();
 
@@ -114,6 +117,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       )
     ).flat();
     this.loading = false;
+
+    if (this.sources.some((s) => s.imageOverlays?.length)) {
+      this.mapLayerControl.addTo(this.mapService.map);
+    }
 
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
@@ -135,6 +142,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const aspects = Array.isArray(aspectFilter?.values)
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
+
+    source.imageOverlays?.forEach((overlay) => {
+      const layer = new ImageOverlay(overlay.imageUrl, overlay.imageBounds as LatLngBoundsLiteral, overlay);
+      this.mapLayerControl.addOverlay(layer, overlay.name);
+    });
 
     source.$loading?.unsubscribe();
     return new Promise((resolve) => {

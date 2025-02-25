@@ -24,6 +24,32 @@ export const AwsomeSourceSchema = z.object({
     .describe(
       "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
     ),
+  imageOverlays: z
+    .object({
+      name: z.string().describe("Identifier shown in map layer control"),
+      imageUrl: z.string().url(),
+      imageBounds: z
+        .number()
+        .array()
+        .min(2)
+        .max(2)
+        .array()
+        .min(2)
+        .max(2)
+        .describe(
+          "Image bounds such as " +
+            JSON.stringify([
+              [40.712, -74.227],
+              [40.774, -74.125],
+            ]),
+        ),
+      opacity: z.number().optional().describe("The opacity of the image overlay."),
+      zIndex: z.number().optional().describe("The explicit zIndex of the overlay layer."),
+      className: z.string().default("").describe("A custom class name to assign to the image. Empty by default."),
+    })
+    .array()
+    .optional()
+    .describe("Image overlays to be shown on the map."),
 });
 export type AwsomeSource = z.infer<typeof AwsomeSourceSchema>;
 
