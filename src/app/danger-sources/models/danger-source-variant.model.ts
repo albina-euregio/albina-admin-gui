@@ -1,4 +1,4 @@
-import { Aspect, AvalancheType, DangerRating, RegionStatus, Tendency } from "../../enums/enums";
+import { Aspect, AvalancheProblem, AvalancheType, DangerRating, RegionStatus, Tendency } from "../../enums/enums";
 import { MatrixInformationModel } from "../../models/matrix-information.model";
 import { DangerSourceModel } from "./danger-source.model";
 import { PolygonObject } from "./polygon-object.model";
@@ -418,4 +418,67 @@ export class DangerSourceVariantModel implements PolygonObject {
   }
 
   updateDangerRating() {}
+
+  getAvalancheProblem(): AvalancheProblem {
+    switch (this.avalancheType) {
+      case AvalancheType.slab:
+        switch (this.slabGrainShape) {
+          case GrainShape.PP:
+          case GrainShape.DF:
+          case GrainShape.RG:
+          case GrainShape.FC:
+            if (this.weakLayerPersistent) {
+              switch (this.dangerSpotRecognizability) {
+                case Recognizability.very_easy:
+                case Recognizability.easy:
+                  return AvalancheProblem.wind_slab;
+                case Recognizability.hard:
+                case Recognizability.very_hard:
+                  return AvalancheProblem.persistent_weak_layers;
+                default:
+                  return undefined;
+              }
+            } else {
+              switch (this.dangerSpotRecognizability) {
+                case Recognizability.very_easy:
+                case Recognizability.easy:
+                  return AvalancheProblem.wind_slab;
+                case Recognizability.hard:
+                case Recognizability.very_hard:
+                  return AvalancheProblem.new_snow;
+                default:
+                  return undefined;
+              }
+            }
+          case GrainShape.MF:
+            return AvalancheProblem.wet_snow;
+          case GrainShape.MFcr:
+            if (this.weakLayerPersistent) {
+              return AvalancheProblem.persistent_weak_layers;
+            } else {
+              return AvalancheProblem.wet_snow;
+            }
+          default:
+            return undefined;
+        }
+      case AvalancheType.loose:
+        switch (this.looseSnowGrainShape) {
+          case GrainShape.PP:
+          case GrainShape.DF:
+            return AvalancheProblem.new_snow;
+          case GrainShape.MF:
+            return AvalancheProblem.wet_snow;
+          case GrainShape.FC:
+          case GrainShape.DH:
+          case GrainShape.SH:
+            return undefined;
+          default:
+            return undefined;
+        }
+      case AvalancheType.glide:
+        return AvalancheProblem.gliding_snow;
+      default:
+        return undefined;
+    }
+  }
 }

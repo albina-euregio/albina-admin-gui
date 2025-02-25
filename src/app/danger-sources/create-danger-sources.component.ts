@@ -27,9 +27,10 @@ import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.compo
 import { NgIf, NgFor, NgTemplateOutlet, DatePipe } from "@angular/common";
 import { DangerSourceVariantComponent } from "./danger-source-variant.component";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { Subscription } from "rxjs";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { AspectsComponent } from "../shared/aspects.component";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",
@@ -40,10 +41,11 @@ import { Subscription } from "rxjs";
     NgTemplateOutlet,
     DangerSourceVariantComponent,
     BsDropdownModule,
-    DangerRatingIconComponent,
     DatePipe,
     TranslateModule,
     NgxMousetrapDirective,
+    AvalancheProblemIconsComponent,
+    AspectsComponent,
   ],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
@@ -1040,5 +1042,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   getRegionNames(bulletin: BulletinModel): string {
     const regionNames = bulletin.savedRegions.map((regionCode) => this.regionsService.getRegionName(regionCode));
     return regionNames.join(", ");
+  }
+
+  getDangerRatingColor(variant: DangerSourceVariantModel): string {
+    return this.constantsService.getDangerRatingColor(variant.eawsMatrixInformation.getDangerRating()) + " !important";
   }
 }

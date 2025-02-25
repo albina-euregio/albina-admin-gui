@@ -333,7 +333,11 @@
   <div (click)="toggleVariant(variant)" class="region-thumb" [class.region-thumb--active]="variant === activeVariant">
     <div class="region-thumb__details">
       <p>
-        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.active)" class="badge bg-secondary">
+        <span
+          *ngIf="isDangerSourceVariantStatus(variant, variantStatus.active)"
+          class="badge bg-secondary"
+          [style.background-color]="getDangerRatingColor(variant)"
+        >
           {{ "dangerSources.variantStatus.active" | translate }}
         </span>
         <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.dormant)" class="badge bg-gray">
@@ -354,11 +358,17 @@
       </p>
 
       <div class="region-thumb__avalanche-info">
-        <app-danger-rating-icon
-          [hasElevationDependency]="false"
-          [dangerRatingAbove]="variant.eawsMatrixInformation.dangerRating"
-          [dangerRatingBelow]="variant.eawsMatrixInformation.dangerRating"
-        ></app-danger-rating-icon>
+        <!-- Avalanche Problem -->
+        <app-avalanche-problem-icons
+          [value]="variant.getAvalancheProblem()"
+          class="avalanche-problem-preview__problem-icon"
+        />
+        <!-- Avalanche Problem -->
+        <!-- Avalanche Type -->
+        <!-- Avalanche Type -->
+        <!-- Aspects -->
+        <app-aspects [(aspects)]="variant.aspects" [disabled]="true" [size]="32"></app-aspects>
+        <!-- Aspects -->
         <!-- Elevations -->
         <span class="badge text-bg-light" *ngIf="variant.treelineHigh || variant.elevationHigh">
           <i class="ph ph-arrows-out-line-vertical icon-sm"></i>

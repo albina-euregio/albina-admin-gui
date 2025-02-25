@@ -1765,19 +1765,6 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.RG) ? 'btn-dark' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.RG.class')"
-            >
-              <span>{{ "grainShape.RG.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
               [ngClass]="isLooseSnowGrainShape(grainShapeEnum.FC) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
@@ -1817,17 +1804,14 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.PPgp) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.MF) ? 'btn-dark' : 'btn-outline-secondary'"
               (click)="
-                setLooseSnowGrainShape(
-                  $event,
-                  isLooseSnowGrainShape(grainShapeEnum.PPgp) ? undefined : grainShapeEnum.PPgp
-                )
+                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)
               "
               data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.PPgp.class')"
+              [title]="translateService.instant('grainShape.MF.class')"
             >
-              <span>{{ "grainShape.PPgp.code" | translate }}</span>
+              <span>{{ "grainShape.MF.code" | translate }}</span>
             </button>
           </div>
         </div>
