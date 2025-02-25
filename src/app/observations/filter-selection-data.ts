@@ -1,42 +1,13 @@
 import { castArray, get } from "lodash";
 import type { GenericObservation } from "./models/generic-observation.model";
+import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
+export type { FilterSelectionSpec, FilterSelectionValue };
 
 export type ChartType = "bar" | "rose";
 
 export type Dataset = (string | number)[][];
 
 export type ValueType = number | string | Date | number[] | string[];
-
-export interface FilterSelectionValue {
-  value: string;
-  /**
-   * An interval given as array of [lower bound, upper bound] where the lower bound is inclusive and the upper bound is exclusive
-   */
-  numericRange?: [number, number];
-  color: string; // icon color
-  label: string; // icon label
-  legend: string; // long text for chart legend
-  // optional
-  borderColor?: string;
-  labelColor?: string;
-  labelFontSize?: number;
-  opacity?: number;
-  radius?: number;
-  radiusByZoom?: number[];
-  weight?: number;
-  zIndexOffset?: number;
-}
-
-export interface FilterSelectionSpec<T> {
-  default?: "label" | "classify";
-  type: string; // id
-  label: string; // caption
-  key: keyof T; // how to extract data
-  chartType: ChartType;
-  chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
-  values: FilterSelectionValue[];
-  selectedValues?: string[];
-}
 
 export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   readonly type: string;
