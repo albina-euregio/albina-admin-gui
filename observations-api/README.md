@@ -57,6 +57,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
+Environment=ALBINA_ALPSOLUT_API_TOKEN=
 Environment=ALBINA_LOLA_KRONOS_API_TOKEN=
 Environment=ALBINA_LWDKIP_PASSWORD=
 Environment=ALBINA_LWDKIP_USERNAME=

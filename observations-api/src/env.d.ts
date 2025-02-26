@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 namespace NodeJS {
   interface ProcessEnv {
+    ALBINA_ALPSOLUT_API_TOKEN: string;
     ALBINA_LOLA_KRONOS_API_TOKEN: string;
     ALBINA_LWDKIP_PASSWORD: string;
     ALBINA_LWDKIP_USERNAME: string;
