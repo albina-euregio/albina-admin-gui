@@ -23,7 +23,7 @@ export async function getAwsWeatherStations(
   }
 
   const snowLinesByStation = groupBy(
-    Array.from(await fetchSnowLineCalculations(startDate, endDate)),
+    await Array.fromAsync(fetchSnowLineCalculations(startDate, endDate)),
     (o) => o.station_name,
   );
   for (const station of stations) {
@@ -257,7 +257,10 @@ interface SnowLineProperties {
  * Calculated snow fall levels from weather stations
  * https://gitlab.com/lwd.met/lwd-internal-projects/snow-fall-level-calculator
  */
-export async function fetchSnowLineCalculations(startDate: Date, endDate: Date): Promise<SnowLineProperties[]> {
+export async function* fetchSnowLineCalculations(
+  startDate: Date,
+  endDate: Date,
+): AsyncGenerator<SnowLineProperties, void, unknown> {
   const API = "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson";
   const WEB = "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}";
   while (+endDate > +startDate) {
@@ -265,10 +268,12 @@ export async function fetchSnowLineCalculations(startDate: Date, endDate: Date):
     const url = API.replace("{{date}}", date);
     try {
       const json: GeoJSON.FeatureCollection<GeoJSON.Point, SnowLineProperties> = await fetchJSON(url);
-      return json.features.map((f) => ({
-        ...f.properties,
-        plot_name: WEB.replace("{{date}}", date).replace("{{plot}}", f.properties.plot_name),
-      }));
+      for (const f of json.features) {
+        yield {
+          ...f.properties,
+          plot_name: WEB.replace("{{date}}", date).replace("{{plot}}", f.properties.plot_name),
+        };
+      }
     } catch (err) {
       console.log(`Failed to fetch ${url}`, err);
     }
