@@ -219,6 +219,7 @@
       "preview": "Preview bulletin (PDF)",
       "check": "Check bulletin",
       "info": "Show publication status",
+      "loadSuggestionFromDangerSources": "Load suggestion",
       "publishAll": "Publish all regions",
       "mediaFile": "Upload media file"
     },

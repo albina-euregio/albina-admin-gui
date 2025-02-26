@@ -481,4 +481,28 @@ export class DangerSourceVariantModel implements PolygonObject {
         return undefined;
     }
   }
+
+  compareTo(other: DangerSourceVariantModel): number {
+    if (this.eawsMatrixInformation.dangerRating < other.eawsMatrixInformation.dangerRating) {
+      return -1;
+    } else if (this.eawsMatrixInformation.dangerRating > other.eawsMatrixInformation.dangerRating) {
+      return 1;
+    } else {
+      if (this.eawsMatrixInformation.snowpackStabilityValue < other.eawsMatrixInformation.snowpackStabilityValue) {
+        return -1;
+      } else if (
+        this.eawsMatrixInformation.snowpackStabilityValue > other.eawsMatrixInformation.snowpackStabilityValue
+      ) {
+        return 1;
+      } else {
+        if (this.eawsMatrixInformation.avalancheSizeValue < other.eawsMatrixInformation.avalancheSizeValue) {
+          return -1;
+        } else if (this.eawsMatrixInformation.avalancheSizeValue > other.eawsMatrixInformation.avalancheSizeValue) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+  }
 }

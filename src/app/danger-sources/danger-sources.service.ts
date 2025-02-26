@@ -65,6 +65,14 @@ export class DangerSourcesService {
     );
   }
 
+  hasDangerSourceVariants(date: [Date, Date]) {
+    if (this.analysisStatusMap.get(date[0].getTime()) || this.forecastStatusMap.get(date[0].getTime())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
@@ -159,7 +167,7 @@ export class DangerSourcesService {
       "danger-sources?" +
       this.constantsService
         .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["date", date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : ""],
           ["regions", regions],
         ])
         .toString();
@@ -191,6 +199,7 @@ export class DangerSourcesService {
           ])
           .toString();
     } else {
+      debugger;
       url =
         this.constantsService.getServerUrl() +
         "danger-sources/edit?" +

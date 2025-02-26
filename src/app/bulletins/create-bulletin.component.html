@@ -378,6 +378,22 @@
                 </button>
               </li>
 
+              <!-- load suggestion from danger sources  -->
+              <li>
+                <button
+                  *ngIf="showLoadSuggestionFromDangerSourcesButton()"
+                  [disabled]="editRegions || loading"
+                  type="button"
+                  class="dropdown-item"
+                  (click)="loadSuggestionFromDangerSources()"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.tooltip.loadSuggestionFromDangerSources' | translate }}"
+                >
+                  <i class="ph-bold ph-magic-wand icon-md"></i>
+                  {{ "bulletins.tooltip.loadSuggestionFromDangerSources" | translate }}
+                </button>
+              </li>
+
               <li>
                 <hr class="dropdown-divider" />
               </li>
