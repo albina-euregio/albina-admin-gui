@@ -1,6 +1,7 @@
 import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { fetchJSON, fetchText } from "../util/fetchJSON";
+import orderBy from "lodash/orderBy";
 import groupBy from "lodash/groupBy";
 
 export async function getAwsWeatherStations(
@@ -36,7 +37,7 @@ export async function getAwsWeatherStations(
     $data.statistics.SnowLine.$externalImgs = snowLines[0]?.$externalImgs;
   }
 
-  return stations;
+  return orderBy(stations, (s) => [s.region, s.locationName]);
 }
 
 class StationValues {
