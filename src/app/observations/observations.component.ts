@@ -49,6 +49,7 @@ import { ObservationMarkerObserverService } from "./observation-marker-observer.
 import Split from "split.js";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import orderBy from "lodash/orderBy";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -411,15 +412,24 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   applyLocalFilter() {
+    this.data.weatherStations.all = orderBy(this.data.weatherStations.all, (s) => [
+      // make sure that changeObservation (or ←/→) selects a sensible previous/next station
+      this.$externalImgs(s),
+      s.region,
+      s.locationName,
+    ]);
     Object.values(this.data).forEach((data) => data.applyLocalFilter(this.observationSearch));
   }
 
-  onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
-    const $externalImgs =
-      observation.$source === ObservationSource.AvalancheWarningService &&
+  private $externalImgs(observation: GenericObservation) {
+    return observation.$source === ObservationSource.AvalancheWarningService &&
       observation.$type === ObservationType.TimeSeries
-        ? (this.markerWeatherStationService.toStatistics(observation)?.$externalImgs ?? observation.$externalImgs)
-        : observation.$externalImgs;
+      ? (this.markerWeatherStationService.toStatistics(observation)?.$externalImgs ?? observation.$externalImgs)
+      : observation.$externalImgs;
+  }
+
+  onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
+    const $externalImgs = this.$externalImgs(observation);
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe, imgUrls: undefined, imgIndex };
@@ -458,7 +468,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     if (change === 1) {
       index += 1;
-      while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
+      const $externalImgs = this.$externalImgs(observation);
+      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
         index += 1;
       }
       observation = observations[index];
@@ -467,7 +478,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       }
     } else if (change === -1) {
       index -= 1;
-      while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
+      const $externalImgs = this.$externalImgs(observation);
+      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
         index -= 1;
       }
       observation = observations[index];
