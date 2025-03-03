@@ -263,7 +263,7 @@ export async function* fetchSnowLineCalculations(
 ): AsyncGenerator<SnowLineProperties, void, unknown> {
   let endDateImages: Date | undefined = undefined;
   while (+endDate > +startDate) {
-    const date = endDate.toISOString().slice(0, "2006-01-02".length);
+    const date = getISODateString(endDate);
     const url = `https://static.avalanche.report/snow-fall-level-calculator/geojson/${date}.geojson`;
     try {
       const json: GeoJSON.FeatureCollection<GeoJSON.Point, SnowLineProperties> = await fetchJSON(url);
