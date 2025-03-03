@@ -415,11 +415,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
+    const $externalImgs =
+      observation.$source === ObservationSource.AvalancheWarningService &&
+      observation.$type === ObservationType.TimeSeries
+        ? (this.markerWeatherStationService.toStatistics(observation)?.$externalImgs ?? observation.$externalImgs)
+        : observation.$externalImgs;
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe, imgUrls: undefined, imgIndex };
-    } else if (observation.$externalImgs) {
-      const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
+    } else if ($externalImgs) {
+      const imgUrls = $externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
       this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls, imgIndex };
     } else {
       const table: ObservationTableRow[] = [
