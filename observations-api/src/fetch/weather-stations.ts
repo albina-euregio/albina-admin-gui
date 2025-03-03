@@ -33,7 +33,7 @@ export async function getAwsWeatherStations(
       "m",
       snowLines.map((o) => o.snowfall_limit),
     );
-    $data.statistics.SnowLine.$externalImgs = getSnowLineCalculationsImages(endDate, snowLines[0]);
+    $data.statistics.SnowLine.$externalImgs = snowLines[0]?.$externalImgs;
   }
 
   return stations;
@@ -249,6 +249,7 @@ interface SnowLineProperties {
   extended_region: string;
   snowfall_limit: number;
   plot_name: string;
+  $externalImgs?: string[];
 }
 
 /**
@@ -259,13 +260,18 @@ export async function* fetchSnowLineCalculations(
   startDate: Date,
   endDate: Date,
 ): AsyncGenerator<SnowLineProperties, void, unknown> {
+  let endDateImages: Date | undefined = undefined;
   while (+endDate > +startDate) {
     const date = endDate.toISOString().slice(0, "2006-01-02".length);
     const url = `https://static.avalanche.report/snow-fall-level-calculator/geojson/${date}.geojson`;
     try {
       const json: GeoJSON.FeatureCollection<GeoJSON.Point, SnowLineProperties> = await fetchJSON(url);
+      endDateImages ??= new Date(endDate);
       for (const f of json.features) {
-        yield f.properties;
+        yield {
+          ...f.properties,
+          $externalImgs: getSnowLineCalculationsImages(endDateImages, f.properties),
+        };
       }
     } catch (err) {
       console.log(`Failed to fetch ${url}`, err);
