@@ -29,7 +29,7 @@ export async function getAwsWeatherStations(
   for (const station of stations) {
     const snowLines = snowLinesByStation[station.locationName];
     if (!snowLines?.length) continue;
-    station.$externalImgs.unshift(...snowLines[0].plot_name);
+    station.$externalImgs.unshift(snowLines[0].plot_name);
     const $data: FeatureProperties = station.$data;
     $data.statistics ??= {};
     $data.statistics.SnowLine = buildStatistics(
