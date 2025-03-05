@@ -88,6 +88,7 @@
           aria-haspopup="true"
           aria-expanded="false"
           dropdownToggle
+          ngxMousetrapKey="l"
         >
           {{ translateService.currentLang }}
         </a>
@@ -95,8 +96,13 @@
           <li>
             <h6 class="dropdown-header">{{ "menu.language" | translate }}</h6>
           </li>
-          <li *ngFor="let lang of translateService.langs">
-            <a class="dropdown-item" (click)="localStorageService.setLanguage(lang)" role="button">
+          <li *ngFor="let lang of translateService.langs; let i = index">
+            <a
+              class="dropdown-item"
+              (click)="localStorageService.setLanguage(lang)"
+              role="button"
+              [ngxMousetrapKey]="i !== undefined ? [i + 1 + ''] : []"
+            >
               {{ "menu." + lang | translate }}
               <i *ngIf="translateService.currentLang === lang" class="ph ph-check"></i>
             </a>
