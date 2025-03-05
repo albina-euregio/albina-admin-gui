@@ -617,38 +617,41 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
               const dangerSourceVariant = DangerSourceVariantModel.createFromJson(
                 dangerSourceVariants.find((variant) => variant.id === dangerSourceVariantId),
               );
-              const avalancheProblem = new AvalancheProblemModel();
-              avalancheProblem.setAspects(dangerSourceVariant.aspects);
-              if (dangerSourceVariant.treelineHigh) {
-                avalancheProblem.setTreelineHigh(dangerSourceVariant.treelineHigh);
-              } else {
-                avalancheProblem.setElevationHigh(dangerSourceVariant.elevationHigh);
+              // create avalanche problem only if danger rating > 1
+              if (dangerSourceVariant.eawsMatrixInformation.dangerRating != Enums.DangerRating.low) {
+                const avalancheProblem = new AvalancheProblemModel();
+                avalancheProblem.setAspects(dangerSourceVariant.aspects);
+                if (dangerSourceVariant.treelineHigh) {
+                  avalancheProblem.setTreelineHigh(dangerSourceVariant.treelineHigh);
+                } else {
+                  avalancheProblem.setElevationHigh(dangerSourceVariant.elevationHigh);
+                }
+                if (dangerSourceVariant.treelineLow) {
+                  avalancheProblem.setTreelineLow(dangerSourceVariant.treelineLow);
+                } else {
+                  avalancheProblem.setElevationLow(dangerSourceVariant.elevationLow);
+                }
+                avalancheProblem.setAvalancheProblem(dangerSourceVariant.getAvalancheProblem());
+                avalancheProblem.setAvalancheType(Enums.AvalancheType[dangerSourceVariant.avalancheType]);
+                avalancheProblem.setMatrixInformation(dangerSourceVariant.eawsMatrixInformation);
+                switch (index) {
+                  case 1:
+                    daytimeDescription.setAvalancheProblem1(avalancheProblem);
+                    break;
+                  case 2:
+                    daytimeDescription.setAvalancheProblem2(avalancheProblem);
+                    break;
+                  case 3:
+                    daytimeDescription.setAvalancheProblem3(avalancheProblem);
+                    break;
+                  case 4:
+                    daytimeDescription.setAvalancheProblem4(avalancheProblem);
+                    break;
+                  default:
+                    break;
+                }
+                index = index + 1;
               }
-              if (dangerSourceVariant.treelineLow) {
-                avalancheProblem.setTreelineLow(dangerSourceVariant.treelineLow);
-              } else {
-                avalancheProblem.setElevationLow(dangerSourceVariant.elevationLow);
-              }
-              avalancheProblem.setAvalancheType(dangerSourceVariant.avalancheType);
-              avalancheProblem.setAvalancheProblem(dangerSourceVariant.getAvalancheProblem());
-              avalancheProblem.setMatrixInformation(dangerSourceVariant.eawsMatrixInformation);
-              switch (index) {
-                case 1:
-                  daytimeDescription.setAvalancheProblem1(avalancheProblem);
-                  break;
-                case 2:
-                  daytimeDescription.setAvalancheProblem2(avalancheProblem);
-                  break;
-                case 3:
-                  daytimeDescription.setAvalancheProblem3(avalancheProblem);
-                  break;
-                case 4:
-                  daytimeDescription.setAvalancheProblem4(avalancheProblem);
-                  break;
-                default:
-                  break;
-              }
-              index = index + 1;
             }
             daytimeDescription.updateDangerRating();
             bulletin.setForenoon(daytimeDescription);
