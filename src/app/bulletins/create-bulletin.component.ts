@@ -55,6 +55,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import {
   DangerSourceVariantModel,
   DangerSourceVariantType,
+  Daytime,
 } from "app/danger-sources/models/danger-source-variant.model";
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
@@ -611,8 +612,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
 
             // create avalanche problem for each danger source variant
-            const daytimeDescription = new BulletinDaytimeDescriptionModel();
-            let index = 1;
+            const amDaytimeDescription = new BulletinDaytimeDescriptionModel();
+            const pmDaytimeDescription = new BulletinDaytimeDescriptionModel();
+            let amIndex = 1;
+            let pmIndex = 1;
+            let hasDaytimeDependency = false;
             for (const dangerSourceVariantId of dangerSourceVariantIds.split("|")) {
               const dangerSourceVariant = DangerSourceVariantModel.createFromJson(
                 dangerSourceVariants.find((variant) => variant.id === dangerSourceVariantId),
@@ -634,27 +638,36 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
                 avalancheProblem.setAvalancheProblem(dangerSourceVariant.getAvalancheProblem());
                 avalancheProblem.setAvalancheType(Enums.AvalancheType[dangerSourceVariant.avalancheType]);
                 avalancheProblem.setMatrixInformation(dangerSourceVariant.eawsMatrixInformation);
-                switch (index) {
-                  case 1:
-                    daytimeDescription.setAvalancheProblem1(avalancheProblem);
-                    break;
-                  case 2:
-                    daytimeDescription.setAvalancheProblem2(avalancheProblem);
-                    break;
-                  case 3:
-                    daytimeDescription.setAvalancheProblem3(avalancheProblem);
-                    break;
-                  case 4:
-                    daytimeDescription.setAvalancheProblem4(avalancheProblem);
-                    break;
-                  default:
-                    break;
+
+                if (dangerSourceVariant.hasDaytimeDependency) {
+                  hasDaytimeDependency = true;
+                  if (dangerSourceVariant.dangerPeak === Daytime.afternoon) {
+                    this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
+                    pmIndex = pmIndex + 1;
+                  } else {
+                    this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
+                    amIndex = amIndex + 1;
+                  }
+                } else {
+                  this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
+                  amIndex = amIndex + 1;
+                  this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
+                  pmIndex = pmIndex + 1;
                 }
-                index = index + 1;
               }
+
+              // TODO add texts from danger source variant
             }
-            daytimeDescription.updateDangerRating();
-            bulletin.setForenoon(daytimeDescription);
+
+            amDaytimeDescription.updateDangerRating();
+            bulletin.setForenoon(amDaytimeDescription);
+
+            if (hasDaytimeDependency) {
+              bulletin.setHasDaytimeDependency(true);
+              pmDaytimeDescription.updateDangerRating();
+              bulletin.setAfternoon(pmDaytimeDescription);
+            }
+
             bulletins.push(bulletin);
           }
 
@@ -679,6 +692,31 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
       });
+  }
+
+  private addAvalancheProblem(
+    avalancheProblem: AvalancheProblemModel,
+    daytimeDescription: BulletinDaytimeDescriptionModel,
+    index: number,
+  ) {
+    if (index < 3) {
+      switch (index) {
+        case 1:
+          daytimeDescription.setAvalancheProblem1(avalancheProblem);
+          break;
+        case 2:
+          daytimeDescription.setAvalancheProblem2(avalancheProblem);
+          break;
+        case 3:
+          daytimeDescription.setAvalancheProblem3(avalancheProblem);
+          break;
+        case 4:
+          daytimeDescription.setAvalancheProblem4(avalancheProblem);
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   publishAll() {
