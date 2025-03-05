@@ -1389,7 +1389,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem2.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem2.getDangerRating() ||
           bulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
@@ -1404,7 +1404,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem3.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem3.getDangerRating() ||
           bulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
@@ -1419,7 +1419,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem4.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem4.getDangerRating() ||
           bulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
@@ -1434,7 +1434,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
           !bulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem5.getAvalancheType() ||
           !bulletin.forenoon.avalancheProblem5.getDangerRating() ||
           bulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
@@ -1466,7 +1466,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem2.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem2.getDangerRating() ||
           bulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
@@ -1481,7 +1481,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem3.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem3.getDangerRating() ||
           bulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
@@ -1496,7 +1496,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem4.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem4.getDangerRating() ||
           bulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
@@ -1511,7 +1511,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.forenoon.avalancheProblem5.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem5.getDangerRating() ||
           bulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
