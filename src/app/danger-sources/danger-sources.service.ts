@@ -65,12 +65,20 @@ export class DangerSourcesService {
     );
   }
 
-  hasDangerSourceVariants(date: [Date, Date]) {
-    if (this.analysisStatusMap.get(date[0].getTime()) || this.forecastStatusMap.get(date[0].getTime())) {
-      return true;
-    } else {
-      return false;
-    }
+  hasDangerSourceVariants(date: [Date, Date]): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      this.getStatus(this.authenticationService.getActiveRegionId(), date, date).subscribe({
+        next: (data) => {
+          observer.next(data[0].forecast || data[0].analysis);
+          observer.complete();
+        },
+        error: () => {
+          console.error("Danger source variants status could not be loaded!");
+          observer.next(false);
+          observer.complete();
+        },
+      });
+    });
   }
 
   getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
@@ -199,7 +207,6 @@ export class DangerSourcesService {
           ])
           .toString();
     } else {
-      debugger;
       url =
         this.constantsService.getServerUrl() +
         "danger-sources/edit?" +

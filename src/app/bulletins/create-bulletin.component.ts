@@ -535,7 +535,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       .loadDangerSourceVariants(this.bulletinsService.getActiveDate(), this.authenticationService.getInternalRegions())
       .subscribe({
         next: async (variants) => {
-          let dangerSourceVariants = variants;
+          let dangerSourceVariants: DangerSourceVariantModel[] = variants;
           if (variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)) {
             dangerSourceVariants = variants.filter(
               (variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
@@ -543,12 +543,34 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
 
           // sort variants by relevance
-          const sortedDangerSourceVariants = dangerSourceVariants.sort((a, b) => a.compareTo(b));
+          const sortedDangerSourceVariants = dangerSourceVariants.sort((a, b) => {
+            if (a.eawsMatrixInformation.dangerRating < b.eawsMatrixInformation.dangerRating) {
+              return -1;
+            } else if (a.eawsMatrixInformation.dangerRating > b.eawsMatrixInformation.dangerRating) {
+              return 1;
+            } else {
+              if (a.eawsMatrixInformation.snowpackStabilityValue < b.eawsMatrixInformation.snowpackStabilityValue) {
+                return -1;
+              } else if (
+                a.eawsMatrixInformation.snowpackStabilityValue > b.eawsMatrixInformation.snowpackStabilityValue
+              ) {
+                return 1;
+              } else {
+                if (a.eawsMatrixInformation.avalancheSizeValue < b.eawsMatrixInformation.avalancheSizeValue) {
+                  return -1;
+                } else if (a.eawsMatrixInformation.avalancheSizeValue > b.eawsMatrixInformation.avalancheSizeValue) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              }
+            }
+          });
 
           // map micro regions to danger source variants
           const microRegionDangerSourceVariants = new Map<string, DangerSourceVariantModel[]>(); // microRegionId -> dangerSourceVariantId[]
           for (const dangerSourceVariant of sortedDangerSourceVariants) {
-            for (const microRegionId of dangerSourceVariant.getAllRegions()) {
+            for (const microRegionId of dangerSourceVariant.regions) {
               if (microRegionDangerSourceVariants.has(microRegionId)) {
                 microRegionDangerSourceVariants.get(microRegionId).push(dangerSourceVariant);
               } else {
@@ -569,7 +591,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             const key = dangerSourceVariantIds
               .map((variant) => variant.id)
               .sort()
-              .join("-");
+              .join("|");
             if (aggregatedRegions.has(key)) {
               aggregatedRegions.get(key).push(microRegionId);
             } else {
@@ -586,16 +608,27 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             bulletin.setValidFrom(this.bulletinsService.getActiveDate()[0]);
             bulletin.setValidUntil(this.bulletinsService.getActiveDate()[1]);
             bulletin.setAuthor(this.authenticationService.currentAuthor);
+            bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
 
             // create avalanche problem for each danger source variant
             const daytimeDescription = new BulletinDaytimeDescriptionModel();
             let index = 1;
-            for (const dangerSourceVariantId of dangerSourceVariantIds.split("-")) {
-              const dangerSourceVariant = dangerSourceVariants.find((variant) => variant.id === dangerSourceVariantId);
+            for (const dangerSourceVariantId of dangerSourceVariantIds.split("|")) {
+              const dangerSourceVariant = DangerSourceVariantModel.createFromJson(
+                dangerSourceVariants.find((variant) => variant.id === dangerSourceVariantId),
+              );
               const avalancheProblem = new AvalancheProblemModel();
               avalancheProblem.setAspects(dangerSourceVariant.aspects);
-              avalancheProblem.setElevationHigh(dangerSourceVariant.elevationHigh);
-              avalancheProblem.setElevationLow(dangerSourceVariant.elevationLow);
+              if (dangerSourceVariant.treelineHigh) {
+                avalancheProblem.setTreelineHigh(dangerSourceVariant.treelineHigh);
+              } else {
+                avalancheProblem.setElevationHigh(dangerSourceVariant.elevationHigh);
+              }
+              if (dangerSourceVariant.treelineLow) {
+                avalancheProblem.setTreelineLow(dangerSourceVariant.treelineLow);
+              } else {
+                avalancheProblem.setElevationLow(dangerSourceVariant.elevationLow);
+              }
               avalancheProblem.setAvalancheType(dangerSourceVariant.avalancheType);
               avalancheProblem.setAvalancheProblem(dangerSourceVariant.getAvalancheProblem());
               avalancheProblem.setMatrixInformation(dangerSourceVariant.eawsMatrixInformation);
@@ -615,9 +648,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
                 default:
                   break;
               }
-              index = index++;
+              index = index + 1;
             }
+            daytimeDescription.updateDangerRating();
             bulletin.setForenoon(daytimeDescription);
+            bulletins.push(bulletin);
           }
 
           // save bulletins
