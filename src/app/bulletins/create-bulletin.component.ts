@@ -543,23 +543,26 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
 
           // sort variants by relevance
-          const sortedDangerSourceVariants = dangerSourceVariants.sort((a, b) => {
-            if (a.eawsMatrixInformation.dangerRating < b.eawsMatrixInformation.dangerRating) {
-              return -1;
-            } else if (a.eawsMatrixInformation.dangerRating > b.eawsMatrixInformation.dangerRating) {
+          dangerSourceVariants.sort((a, b) => {
+            if (
+              Enums.WarnLevel[a.eawsMatrixInformation.dangerRating] <
+              Enums.WarnLevel[b.eawsMatrixInformation.dangerRating]
+            ) {
               return 1;
+            } else if (a.eawsMatrixInformation.dangerRating > b.eawsMatrixInformation.dangerRating) {
+              return -1;
             } else {
               if (a.eawsMatrixInformation.snowpackStabilityValue < b.eawsMatrixInformation.snowpackStabilityValue) {
-                return -1;
+                return 1;
               } else if (
                 a.eawsMatrixInformation.snowpackStabilityValue > b.eawsMatrixInformation.snowpackStabilityValue
               ) {
-                return 1;
+                return -1;
               } else {
                 if (a.eawsMatrixInformation.avalancheSizeValue < b.eawsMatrixInformation.avalancheSizeValue) {
-                  return -1;
-                } else if (a.eawsMatrixInformation.avalancheSizeValue > b.eawsMatrixInformation.avalancheSizeValue) {
                   return 1;
+                } else if (a.eawsMatrixInformation.avalancheSizeValue > b.eawsMatrixInformation.avalancheSizeValue) {
+                  return -1;
                 } else {
                   return 0;
                 }
@@ -569,7 +572,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
           // map micro regions to danger source variants
           const microRegionDangerSourceVariants = new Map<string, DangerSourceVariantModel[]>(); // microRegionId -> dangerSourceVariantId[]
-          for (const dangerSourceVariant of sortedDangerSourceVariants) {
+          for (const dangerSourceVariant of dangerSourceVariants) {
             for (const microRegionId of dangerSourceVariant.regions) {
               if (microRegionDangerSourceVariants.has(microRegionId)) {
                 microRegionDangerSourceVariants.get(microRegionId).push(dangerSourceVariant);
@@ -588,10 +591,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           const aggregatedRegions = new Map<string, string[]>(); // dangerSourceVariantId -> microRegionId[]
 
           for (const [microRegionId, dangerSourceVariantIds] of microRegionDangerSourceVariants) {
-            const key = dangerSourceVariantIds
-              .map((variant) => variant.id)
-              .sort()
-              .join("|");
+            const key = dangerSourceVariantIds.map((variant) => variant.id).join("|");
             if (aggregatedRegions.has(key)) {
               aggregatedRegions.get(key).push(microRegionId);
             } else {
