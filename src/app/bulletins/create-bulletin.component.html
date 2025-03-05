@@ -394,6 +394,22 @@
                 </button>
               </li>
 
+              <!-- delete all warning regions  -->
+              <li>
+                <button
+                  *ngIf="showDeleteAllWarningRegionsButton()"
+                  [disabled]="editRegions || loading"
+                  type="button"
+                  class="dropdown-item"
+                  (click)="deleteAllWarningRegions()"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.tooltip.deleteAllWarningRegions' | translate }}"
+                >
+                  <i class="ph-bold ph-trash icon-md"></i>
+                  {{ "bulletins.tooltip.deleteAllWarningRegions" | translate }}
+                </button>
+              </li>
+
               <li>
                 <hr class="dropdown-divider" />
               </li>
@@ -862,6 +878,25 @@
     </button>
     <button type="button" class="btn btn-default" (click)="loadModalDecline($event)">
       {{ "bulletins.create.loadDialog.reject" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #deleteAllWarningRegionsTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.deleteAllWarningRegionsDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="deleteAllWarningRegionsModalConfirm($event)"
+      ngxMousetrapKey="enter"
+    >
+      {{ "bulletins.create.deleteAllWarningRegionsDialog.accept" | translate }}
+    </button>
+    <button type="button" class="btn btn-default" (click)="deleteAllWarningRegionsModalDecline($event)">
+      {{ "bulletins.create.deleteAllWarningRegionsDialog.reject" | translate }}
     </button>
   </div>
 </ng-template>

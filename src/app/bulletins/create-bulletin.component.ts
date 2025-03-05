@@ -142,6 +142,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public loadModalRef: BsModalRef;
   readonly loadTemplate = viewChild<TemplateRef<any>>("loadTemplate");
 
+  public deleteAllWarningRegionsModalRef: BsModalRef;
+  readonly deleteAllWarningRegionsTemplate = viewChild<TemplateRef<any>>("deleteAllWarningRegionsTemplate");
+
   public deleteAggregatedRegionModalRef: BsModalRef;
   readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<any>>("deleteAggregatedRegionTemplate");
 
@@ -794,6 +797,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     );
   }
 
+  showDeleteAllWarningRegionsButton() {
+    return (
+      !this.bulletinsService.getIsReadOnly() &&
+      !this.publishing &&
+      !this.submitting &&
+      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
+    );
+  }
+
   showPublishAllButton() {
     return (
       !this.bulletinsService.getIsReadOnly() &&
@@ -1050,6 +1063,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   loadBulletinsFromYesterday() {
     this.openLoadModal(this.loadTemplate());
+  }
+
+  deleteAllWarningRegions() {
+    this.openDeleteAllWarningRegionsModal(this.deleteAllWarningRegionsTemplate());
   }
 
   // create a copy of every bulletin (with new id)
@@ -1950,6 +1967,27 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   loadModalDecline(event: Event): void {
     (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
     this.loadModalRef.hide();
+  }
+
+  openDeleteAllWarningRegionsModal(template: TemplateRef<any>) {
+    this.deleteAllWarningRegionsModalRef = this.modalService.show(template, this.config);
+  }
+
+  deleteAllWarningRegionsModalConfirm(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+    this.deleteAllWarningRegionsModalRef.hide();
+
+    // delete own regions
+    for (const bulletin of this.internBulletinsList) {
+      if (bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+        this.delBulletin(bulletin);
+      }
+    }
+  }
+
+  deleteAllWarningRegionsModalDecline(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+    this.deleteAllWarningRegionsModalRef.hide();
   }
 
   openDeleteAggregatedRegionModal(template: TemplateRef<any>) {

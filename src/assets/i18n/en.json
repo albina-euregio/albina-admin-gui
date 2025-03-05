@@ -220,6 +220,7 @@
       "check": "Check bulletin",
       "info": "Show publication status",
       "loadSuggestionFromDangerSources": "Load suggestion",
+      "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Publish all regions",
       "mediaFile": "Upload media file"
     },
@@ -352,6 +353,11 @@
       },
       "loadDialog": {
         "message": "Do you want to load the bulletins from the day before?",
+        "accept": "Yes",
+        "reject": "No"
+      },
+      "deleteAllWarningRegionsDialog": {
+        "message": "Do you want to delete all warning regions?",
         "accept": "Yes",
         "reject": "No"
       },
