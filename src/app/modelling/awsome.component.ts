@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, viewChild, inject } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { CommonModule, formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
-import type { Subscription } from "rxjs";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { ObservationFilterService } from "../observations/observation-filter.service";
@@ -15,37 +14,21 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { LayerGroup } from "leaflet";
+import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { NgxEchartsDirective } from "ngx-echarts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type { ScatterSeriesOption } from "echarts/charts";
+import { AwsomeConfigSchema } from "./awsome.config";
+import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
+import type { Subscription } from "rxjs";
+
+type AwsomeSource = AwsomeSource0 & { $loading?: Subscription };
 
 export type FeatureProperties = GeoJSON.Feature["properties"] & {
   $sourceObject?: AwsomeSource;
   region_id: string;
 } & Pick<GenericObservation, "$source" | "latitude" | "longitude" | "elevation">;
-
-export interface AwsomeSource {
-  $loading: Subscription | undefined;
-  name: string;
-  url: string;
-  tooltipTemplate: string;
-  /**
-   * @deprecated
-   */
-  detailsTemplate: string;
-  detailsTemplates: { label: DetailsTabLabel; template: string }[];
-}
-
-interface Awsome {
-  date: string;
-  dateMin: string;
-  dateMax: string;
-  dateStepSeconds: number;
-  sources: AwsomeSource[];
-  filters: FilterSelectionSpec<FeatureProperties>[];
-}
 
 type DetailsTabLabel = string;
 
@@ -74,7 +57,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   // https://gitlab.com/avalanche-warning
   configURL = "https://models.avalanche.report/dashboard/awsome.json";
-  config: Awsome = {} as Awsome;
+  config: AwsomeConfig = {} as AwsomeConfig;
   date = "";
   layout: "map" | "chart" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
@@ -84,6 +67,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
+  mapLayerControl = new Control.Layers();
   mapLayer = new LayerGroup();
   mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
@@ -96,7 +80,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       if (!configURL) return;
       this.configURL = configURL;
     });
-    this.config = await this.fetchJSON<Awsome>(this.configURL).toPromise();
+    this.config = await this.fetchJSON(this.configURL)
+      .toPromise()
+      .then((c) => AwsomeConfigSchema.parseAsync(c));
     this.date = this.config.date;
     this.sources = this.config.sources;
 
@@ -113,6 +99,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async loadSources() {
+    this.mapLayerControl.remove();
+    this.mapLayerControl = new Control.Layers();
     this.observations.length = 0;
     this.applyLocalFilter();
 
@@ -129,6 +117,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       )
     ).flat();
     this.loading = false;
+
+    if (this.sources.some((s) => s.imageOverlays?.length)) {
+      this.mapLayerControl.addTo(this.mapService.map);
+    }
 
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
@@ -150,6 +142,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const aspects = Array.isArray(aspectFilter?.values)
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
+
+    source.imageOverlays?.forEach((overlay) => {
+      const layer = new ImageOverlay(overlay.imageUrl, overlay.imageBounds as LatLngBoundsLiteral, overlay);
+      this.mapLayerControl.addOverlay(layer, overlay.name);
+    });
 
     source.$loading?.unsubscribe();
     return new Promise((resolve) => {
@@ -257,13 +254,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private onObservationClick(observation: FeatureProperties) {
-    const detailsTemplates =
-      observation.$sourceObject.detailsTemplates ??
-      (observation.$sourceObject.detailsTemplate
-        ? [{ label: "Details", template: observation.$sourceObject.detailsTemplate }]
-        : []);
     this.selectedObservation = observation;
-    this.selectedObservationDetails = detailsTemplates.map(({ label, template }) => ({
+    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => ({
       label: this.markerService.formatTemplate(label, observation),
       html: this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(template, observation)),
     }));

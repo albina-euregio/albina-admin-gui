@@ -320,16 +320,13 @@
       <kbd (click)="changeObservation(-1)" ngxMousetrapKey="left">←</kbd>
       <kbd (click)="changeObservation(+1)" ngxMousetrapKey="right">→</kbd>
       <kbd
-        *ngIf="observationPopup?.observation?.$externalImgs && observationPopup.imgIndex > 0"
+        *ngIf="observationPopup?.imgUrls?.length && observationPopup.imgIndex > 0"
         (click)="observationPopup.imgIndex = observationPopup.imgIndex - 1"
         ngxMousetrapKey="up"
         >↑</kbd
       >
       <kbd
-        *ngIf="
-          observationPopup?.observation?.$externalImgs &&
-          observationPopup?.observation?.$externalImgs.length > observationPopup.imgIndex + 1
-        "
+        *ngIf="observationPopup?.imgUrls?.length > observationPopup.imgIndex + 1"
         (click)="observationPopup.imgIndex = observationPopup.imgIndex + 1"
         ngxMousetrapKey="down"
         >↓</kbd

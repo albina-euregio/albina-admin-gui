@@ -265,40 +265,74 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     }
   }
 
-  toValue(observation: T): number {
+  toStatistics(observation: T): FeatureProperties["statistics"][keyof FeatureProperties["statistics"]] {
     const data: FeatureProperties = observation.$data;
     const statistics = data.statistics;
     switch (this.weatherStationLabel) {
       case WeatherStationParameter.GlobalRadiation:
-        return statistics?.ISWR?.average;
+        return statistics?.ISWR;
       case WeatherStationParameter.SnowHeight:
-        return statistics?.HS?.average;
+        return statistics?.HS;
       case WeatherStationParameter.SnowDifference:
-        return statistics?.HS?.delta;
+        return statistics?.HS;
       case WeatherStationParameter.AirTemperature:
-        return statistics?.TA?.average;
+        return statistics?.TA;
       case WeatherStationParameter.AirTemperatureMax:
-        return statistics?.TA?.max;
+        return statistics?.TA;
       case WeatherStationParameter.AirTemperatureMin:
-        return statistics?.TA?.min;
+        return statistics?.TA;
       case WeatherStationParameter.SurfaceTemperature:
-        return statistics?.TSS?.average;
+        return statistics?.TSS;
+      case WeatherStationParameter.DewPoint:
+        return statistics?.TD;
+      case WeatherStationParameter.RelativeHumidity:
+        return statistics?.RH;
+      case WeatherStationParameter.WindSpeed:
+        return statistics?.VW;
+      case WeatherStationParameter.WindDirection:
+        return statistics?.DW;
+      case WeatherStationParameter.WindGust:
+        return statistics?.VW_MAX;
+      case WeatherStationParameter.DrySnowfallLevel:
+        return statistics?.SnowLine;
+      default:
+        return undefined;
+    }
+  }
+
+  toValue(observation: T): number {
+    const data: FeatureProperties = observation.$data;
+    switch (this.weatherStationLabel) {
+      case WeatherStationParameter.GlobalRadiation:
+        return this.toStatistics(observation)?.average;
+      case WeatherStationParameter.SnowHeight:
+        return this.toStatistics(observation)?.average;
+      case WeatherStationParameter.SnowDifference:
+        return this.toStatistics(observation)?.delta;
+      case WeatherStationParameter.AirTemperature:
+        return this.toStatistics(observation)?.average;
+      case WeatherStationParameter.AirTemperatureMax:
+        return this.toStatistics(observation)?.max;
+      case WeatherStationParameter.AirTemperatureMin:
+        return this.toStatistics(observation)?.min;
+      case WeatherStationParameter.SurfaceTemperature:
+        return this.toStatistics(observation)?.average;
       case WeatherStationParameter.SurfaceHoar:
         return this.getSurfaceHoar(data);
       case WeatherStationParameter.SurfaceHoarCalc:
         return this.calcSurfaceHoarProbability(data);
       case WeatherStationParameter.DewPoint:
-        return statistics?.TD?.average;
+        return this.toStatistics(observation)?.average;
       case WeatherStationParameter.RelativeHumidity:
-        return statistics?.RH?.average;
+        return this.toStatistics(observation)?.average;
       case WeatherStationParameter.WindSpeed:
-        return statistics?.VW?.average;
+        return this.toStatistics(observation)?.average;
       case WeatherStationParameter.WindDirection:
-        return statistics?.DW?.median;
+        return this.toStatistics(observation)?.median;
       case WeatherStationParameter.WindGust:
-        return statistics?.VW_MAX?.max;
+        return this.toStatistics(observation)?.max;
       case WeatherStationParameter.DrySnowfallLevel:
-        return statistics?.SnowLine?.max;
+        return this.toStatistics(observation)?.max;
       default:
         return NaN;
     }

@@ -1,6 +1,7 @@
 import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { fetchJSON, fetchText } from "../util/fetchJSON";
+import orderBy from "lodash/orderBy";
 import groupBy from "lodash/groupBy";
 
 export async function getAwsWeatherStations(
@@ -9,10 +10,7 @@ export async function getAwsWeatherStations(
 ): Promise<GenericObservation<FeatureProperties>[]> {
   let url = "https://static.avalanche.report/weather_stations/stations.geojson";
   if (endDate instanceof Date) {
-    const yyyy = endDate.getFullYear();
-    const mm = (endDate.getMonth() + 1).toString().padStart(2, "0");
-    const dd = endDate.getDate().toString().padStart(2, "0");
-    url = `https://static.avalanche.report/weather_stations/${yyyy}-${mm}-${dd}_00-00_stations.geojson`;
+    url = `https://static.avalanche.report/weather_stations/${getISODateString(endDate)}_00-00_stations.geojson`;
   }
 
   const geojson: GeoJSON.FeatureCollection<GeoJSON.Point, FeatureProperties> = await fetchJSON(url);
@@ -23,13 +21,12 @@ export async function getAwsWeatherStations(
   }
 
   const snowLinesByStation = groupBy(
-    Array.from(await fetchSnowLineCalculations(startDate, endDate)),
+    await Array.fromAsync(fetchSnowLineCalculations(startDate, endDate)),
     (o) => o.station_name,
   );
   for (const station of stations) {
     const snowLines = snowLinesByStation[station.locationName];
     if (!snowLines?.length) continue;
-    station.$externalImgs.unshift(...snowLines[0].plot_name);
     const $data: FeatureProperties = station.$data;
     $data.statistics ??= {};
     $data.statistics.SnowLine = buildStatistics(
@@ -37,9 +34,10 @@ export async function getAwsWeatherStations(
       "m",
       snowLines.map((o) => o.snowfall_limit),
     );
+    $data.statistics.SnowLine.$externalImgs = snowLines[0]?.$externalImgs;
   }
 
-  return stations;
+  return orderBy(stations, (s) => [s.region, s.locationName]);
 }
 
 class StationValues {
@@ -186,6 +184,7 @@ interface Statistics {
   max: number;
   sum: number;
   delta: number;
+  $externalImgs?: string[];
 }
 
 type Data = Partial<Record<ParameterType, Statistics>>;
@@ -251,28 +250,53 @@ interface SnowLineProperties {
   extended_region: string;
   snowfall_limit: number;
   plot_name: string;
+  $externalImgs?: string[];
 }
 
 /**
  * Calculated snow fall levels from weather stations
  * https://gitlab.com/lwd.met/lwd-internal-projects/snow-fall-level-calculator
  */
-export async function fetchSnowLineCalculations(startDate: Date, endDate: Date): Promise<SnowLineProperties[]> {
-  const API = "https://static.avalanche.report/snow-fall-level-calculator/geojson/{{date}}.geojson";
-  const WEB = "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/{{date}}/{{plot}}";
+export async function* fetchSnowLineCalculations(
+  startDate: Date,
+  endDate: Date,
+): AsyncGenerator<SnowLineProperties, void, unknown> {
+  let endDateImages: Date | undefined = undefined;
   while (+endDate > +startDate) {
-    const date = endDate.toISOString().slice(0, "2006-01-02".length);
-    const url = API.replace("{{date}}", date);
+    const date = getISODateString(endDate);
+    const url = `https://static.avalanche.report/snow-fall-level-calculator/geojson/${date}.geojson`;
     try {
       const json: GeoJSON.FeatureCollection<GeoJSON.Point, SnowLineProperties> = await fetchJSON(url);
-      return json.features.map((f) => ({
-        ...f.properties,
-        plot_name: WEB.replace("{{date}}", date).replace("{{plot}}", f.properties.plot_name),
-      }));
+      endDateImages ??= new Date(endDate);
+      for (const f of json.features) {
+        yield {
+          ...f.properties,
+          $externalImgs: getSnowLineCalculationsImages(endDateImages, f.properties),
+        };
+      }
     } catch (err) {
       console.log(`Failed to fetch ${url}`, err);
     }
     endDate = new Date(endDate);
     endDate.setDate(endDate.getDate() - 1);
+  }
+}
+
+function getSnowLineCalculationsImages(endDate: Date, { plot_name }: SnowLineProperties): string[] {
+  return new Array(17).fill("").map((_, i) => {
+    const d = new Date(endDate);
+    d.setDate(d.getDate() - i * 3);
+    const date = getISODateString(d);
+    return `https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/${date}/${plot_name}`;
+  });
+}
+
+function getISODateString(date: Date) {
+  // like Date.toISOString(), but not using UTC
+  // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` as const;
+
+  function pad(number: number) {
+    return number < 10 ? (`${0}${number}` as unknown as number) : number;
   }
 }

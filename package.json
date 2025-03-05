@@ -68,7 +68,8 @@
     "simple-statistics": "^7.8.7",
     "split.js": "^1.6.5",
     "which-polygon": "^2.2.1",
-    "zod": "^3.22.4",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.3",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {

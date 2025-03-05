@@ -2,6 +2,35 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.9] - 2025-03-03
+
+### Bulletins
+
+- Fix load from yesterday when a cross-border region is present
+
+### AWSOME Dashboard
+
+- Image overlays
+- Parse awsome.config using zod
+
+### Observations
+
+- Improve Dry snowfall level as weather-station parameter
+- Dialog: make report date not mandatory
+
+### 🐛 Bug Fixes
+
+### Danger Sources
+
+- Add aspects and avalanche problem to list view
+- Add average snow height for gliding snow
+- Add danger sign fresh avalanches
+- Add enum for crusts
+- Add surface hoar formation process
+- Add terrain types
+- Align buttons for terrain features
+- Count only analyzed variants if analysis is available
+
 ## [7.1.8] - 2025-02-17
 
 ### Observations

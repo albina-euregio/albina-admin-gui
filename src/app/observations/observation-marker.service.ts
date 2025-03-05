@@ -5,7 +5,7 @@ import { GenericObservation, ObservationSource } from "./models/generic-observat
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
-import type { AwsomeSource } from "../modelling/awsome.component";
+import type { AwsomeSource } from "../modelling/awsome.config";
 import { castArray, get as _get } from "lodash";
 
 const zIndex: Record<SnowpackStability, number> = {
