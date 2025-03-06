@@ -28,6 +28,7 @@ import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
+import { DangerSourcesService } from "../danger-sources/danger-sources.service";
 
 // modals
 import { ModalSubmitComponent } from "./modal-submit.component";
@@ -51,6 +52,14 @@ import { DangerRatingIconComponent } from "../shared/danger-rating-icon.componen
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { HttpErrorResponse } from "@angular/common/http";
+import {
+  DangerSourceVariantModel,
+  DangerSourceVariantStatus,
+  DangerSourceVariantType,
+  Daytime,
+} from "app/danger-sources/models/danger-source-variant.model";
+import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
+import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -74,6 +83,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private activeRoute = inject(ActivatedRoute);
   bulletinsService = inject(BulletinsService);
+  dangerSourcesService = inject(DangerSourcesService);
   authenticationService = inject(AuthenticationService);
   translateService = inject(TranslateService);
   localStorageService = inject(LocalStorageService);
@@ -132,6 +142,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   public loadModalRef: BsModalRef;
   readonly loadTemplate = viewChild<TemplateRef<any>>("loadTemplate");
+
+  public deleteAllWarningRegionsModalRef: BsModalRef;
+  readonly deleteAllWarningRegionsTemplate = viewChild<TemplateRef<any>>("deleteAllWarningRegionsTemplate");
 
   public deleteAggregatedRegionModalRef: BsModalRef;
   readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<any>>("deleteAggregatedRegionTemplate");
@@ -521,6 +534,208 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
   }
 
+  loadSuggestionFromDangerSources() {
+    this.loading = true;
+    this.dangerSourcesService
+      .loadDangerSourceVariants(this.bulletinsService.getActiveDate(), this.authenticationService.getInternalRegions())
+      .subscribe({
+        next: async (variants) => {
+          let dangerSourceVariants: DangerSourceVariantModel[] = variants;
+
+          // filter only analysis variants with status active
+          if (variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)) {
+            dangerSourceVariants = variants.filter(
+              (variant) =>
+                variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
+                variant.dangerSourceVariantStatus === "active",
+            );
+          }
+
+          // filter only danger source variants with status active
+          dangerSourceVariants = dangerSourceVariants.filter(
+            (variant) => variant.dangerSourceVariantStatus === DangerSourceVariantStatus.active,
+          );
+
+          // sort variants by relevance
+          dangerSourceVariants.sort((a, b) => {
+            if (
+              Enums.WarnLevel[a.eawsMatrixInformation.dangerRating] <
+              Enums.WarnLevel[b.eawsMatrixInformation.dangerRating]
+            ) {
+              return 1;
+            } else if (a.eawsMatrixInformation.dangerRating > b.eawsMatrixInformation.dangerRating) {
+              return -1;
+            } else {
+              if (a.eawsMatrixInformation.snowpackStabilityValue < b.eawsMatrixInformation.snowpackStabilityValue) {
+                return 1;
+              } else if (
+                a.eawsMatrixInformation.snowpackStabilityValue > b.eawsMatrixInformation.snowpackStabilityValue
+              ) {
+                return -1;
+              } else {
+                if (a.eawsMatrixInformation.avalancheSizeValue < b.eawsMatrixInformation.avalancheSizeValue) {
+                  return 1;
+                } else if (a.eawsMatrixInformation.avalancheSizeValue > b.eawsMatrixInformation.avalancheSizeValue) {
+                  return -1;
+                } else {
+                  return 0;
+                }
+              }
+            }
+          });
+
+          // map micro regions to danger source variants
+          const microRegionDangerSourceVariants = new Map<string, DangerSourceVariantModel[]>(); // microRegionId -> dangerSourceVariantId[]
+          for (const dangerSourceVariant of dangerSourceVariants) {
+            for (const microRegionId of dangerSourceVariant.regions) {
+              if (microRegionDangerSourceVariants.has(microRegionId)) {
+                microRegionDangerSourceVariants.get(microRegionId).push(dangerSourceVariant);
+              } else {
+                microRegionDangerSourceVariants.set(microRegionId, [dangerSourceVariant]);
+              }
+            }
+          }
+
+          // keep only 4 variants per micro region
+          for (const [microRegionId, dangerSourceVariantIds] of microRegionDangerSourceVariants) {
+            microRegionDangerSourceVariants.set(microRegionId, dangerSourceVariantIds.slice(0, 4));
+          }
+
+          // aggregate micro regions with same danger source variants
+          const aggregatedRegions = new Map<string, string[]>(); // dangerSourceVariantId -> microRegionId[]
+
+          for (const [microRegionId, dangerSourceVariantIds] of microRegionDangerSourceVariants) {
+            const key = dangerSourceVariantIds.map((variant) => variant.id).join("|");
+            if (aggregatedRegions.has(key)) {
+              aggregatedRegions.get(key).push(microRegionId);
+            } else {
+              aggregatedRegions.set(key, [microRegionId]);
+            }
+          }
+
+          // create bulletin for each aggregated region
+          const bulletins = new Array<BulletinModel>();
+          for (const [dangerSourceVariantIds, microRegionIds] of aggregatedRegions) {
+            const bulletin = new BulletinModel();
+            // set bulletin properties
+            bulletin.setSavedRegions(microRegionIds);
+            bulletin.setValidFrom(this.bulletinsService.getActiveDate()[0]);
+            bulletin.setValidUntil(this.bulletinsService.getActiveDate()[1]);
+            bulletin.setAuthor(this.authenticationService.currentAuthor);
+            bulletin.setOwnerRegion(this.authenticationService.getActiveRegionId());
+
+            // create avalanche problem for each danger source variant
+            const amDaytimeDescription = new BulletinDaytimeDescriptionModel();
+            const pmDaytimeDescription = new BulletinDaytimeDescriptionModel();
+            let amIndex = 1;
+            let pmIndex = 1;
+            let hasDaytimeDependency = false;
+            for (const dangerSourceVariantId of dangerSourceVariantIds.split("|")) {
+              const dangerSourceVariant = DangerSourceVariantModel.createFromJson(
+                dangerSourceVariants.find((variant) => variant.id === dangerSourceVariantId),
+              );
+              // create avalanche problem only if danger rating > 1
+              if (dangerSourceVariant.eawsMatrixInformation.dangerRating != Enums.DangerRating.low) {
+                const avalancheProblem = new AvalancheProblemModel();
+                avalancheProblem.setAspects(dangerSourceVariant.aspects);
+                if (dangerSourceVariant.treelineHigh) {
+                  avalancheProblem.setTreelineHigh(dangerSourceVariant.treelineHigh);
+                } else {
+                  avalancheProblem.setElevationHigh(dangerSourceVariant.elevationHigh);
+                }
+                if (dangerSourceVariant.treelineLow) {
+                  avalancheProblem.setTreelineLow(dangerSourceVariant.treelineLow);
+                } else {
+                  avalancheProblem.setElevationLow(dangerSourceVariant.elevationLow);
+                }
+                avalancheProblem.setAvalancheProblem(dangerSourceVariant.getAvalancheProblem());
+                avalancheProblem.setAvalancheType(Enums.AvalancheType[dangerSourceVariant.avalancheType]);
+                avalancheProblem.setMatrixInformation(dangerSourceVariant.eawsMatrixInformation);
+
+                if (dangerSourceVariant.hasDaytimeDependency) {
+                  hasDaytimeDependency = true;
+                  if (dangerSourceVariant.dangerPeak === Daytime.afternoon) {
+                    this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
+                    pmIndex = pmIndex + 1;
+                  } else {
+                    this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
+                    amIndex = amIndex + 1;
+                  }
+                } else {
+                  this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
+                  amIndex = amIndex + 1;
+                  this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
+                  pmIndex = pmIndex + 1;
+                }
+              }
+
+              // TODO add texts from danger source variant
+            }
+
+            amDaytimeDescription.updateDangerRating();
+            bulletin.setForenoon(amDaytimeDescription);
+
+            if (hasDaytimeDependency) {
+              bulletin.setHasDaytimeDependency(true);
+              pmDaytimeDescription.updateDangerRating();
+              bulletin.setAfternoon(pmDaytimeDescription);
+            }
+
+            bulletins.push(bulletin);
+
+            this.addInternalBulletin(bulletin);
+          }
+
+          this.updateInternalBulletins();
+
+          // save bulletins
+          this.bulletinsService.saveBulletins(bulletins, this.bulletinsService.getActiveDate()).subscribe(
+            () => {
+              console.log("Bulletins saved on server.");
+              this.updateBulletinStatusEdit();
+              this.autoSaving = false;
+            },
+            () => {
+              this.autoSaving = false;
+              console.error("Bulletins could not be saved on server!");
+              this.openSaveErrorModal(this.saveErrorTemplate());
+            },
+          );
+
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error("Danger source variants could not be loaded!", error);
+          this.loading = false;
+        },
+      });
+  }
+
+  private addAvalancheProblem(
+    avalancheProblem: AvalancheProblemModel,
+    daytimeDescription: BulletinDaytimeDescriptionModel,
+    index: number,
+  ) {
+    if (index < 3) {
+      switch (index) {
+        case 1:
+          daytimeDescription.setAvalancheProblem1(avalancheProblem);
+          break;
+        case 2:
+          daytimeDescription.setAvalancheProblem2(avalancheProblem);
+          break;
+        case 3:
+          daytimeDescription.setAvalancheProblem3(avalancheProblem);
+          break;
+        case 4:
+          daytimeDescription.setAvalancheProblem4(avalancheProblem);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   publishAll() {
     this.publishing = true;
     this.openPublishAllModal();
@@ -581,6 +796,28 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         console.error("Bulletins could not be checked!");
         this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate());
       },
+    );
+  }
+
+  showLoadSuggestionFromDangerSourcesButton() {
+    return (
+      !this.bulletinsService.getIsReadOnly() &&
+      !this.publishing &&
+      !this.submitting &&
+      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman)) &&
+      this.authenticationService.getActiveRegion()?.enableDangerSources &&
+      this.dangerSourcesService.hasDangerSourceVariants(this.bulletinsService.getActiveDate())
+    );
+  }
+
+  showDeleteAllWarningRegionsButton() {
+    return (
+      !this.bulletinsService.getIsReadOnly() &&
+      !this.publishing &&
+      !this.submitting &&
+      (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
+        this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
     );
   }
 
@@ -840,6 +1077,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   loadBulletinsFromYesterday() {
     this.openLoadModal(this.loadTemplate());
+  }
+
+  deleteAllWarningRegions() {
+    this.openDeleteAllWarningRegionsModal(this.deleteAllWarningRegionsTemplate());
   }
 
   // create a copy of every bulletin (with new id)
@@ -1279,7 +1520,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
+          !bulletin.afternoon.avalancheProblem1.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem1.getDangerRating() ||
           bulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
@@ -1294,7 +1535,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem2.getAvalancheType() ||
+          !bulletin.afternoon.avalancheProblem2.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem2.getDangerRating() ||
           bulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
@@ -1309,7 +1550,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem3.getAvalancheType() ||
+          !bulletin.afternoon.avalancheProblem3.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem3.getDangerRating() ||
           bulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
@@ -1324,7 +1565,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem4.getAvalancheType() ||
+          !bulletin.afternoon.avalancheProblem4.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem4.getDangerRating() ||
           bulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
@@ -1339,7 +1580,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (
           bulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
           !bulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem5.getAvalancheType() ||
+          !bulletin.afternoon.avalancheProblem5.getAvalancheType() ||
           !bulletin.afternoon.avalancheProblem5.getDangerRating() ||
           bulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
           !bulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
@@ -1740,6 +1981,27 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   loadModalDecline(event: Event): void {
     (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
     this.loadModalRef.hide();
+  }
+
+  openDeleteAllWarningRegionsModal(template: TemplateRef<any>) {
+    this.deleteAllWarningRegionsModalRef = this.modalService.show(template, this.config);
+  }
+
+  deleteAllWarningRegionsModalConfirm(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+    this.deleteAllWarningRegionsModalRef.hide();
+
+    // delete own regions
+    for (const bulletin of this.internBulletinsList) {
+      if (bulletin.getOwnerRegion().startsWith(this.authenticationService.getActiveRegionId())) {
+        this.delBulletin(bulletin);
+      }
+    }
+  }
+
+  deleteAllWarningRegionsModalDecline(event: Event): void {
+    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+    this.deleteAllWarningRegionsModalRef.hide();
   }
 
   openDeleteAggregatedRegionModal(template: TemplateRef<any>) {

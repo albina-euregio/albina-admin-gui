@@ -335,7 +335,11 @@ export class BulletinDaytimeDescriptionModel {
         } else {
           boundaryBulletin = this.elevation;
         }
-        if (boundaryAvalancheProblem === undefined || boundaryAvalancheProblem > boundaryBulletin) {
+        if (
+          boundaryAvalancheProblem === undefined ||
+          boundaryAvalancheProblem === null ||
+          boundaryAvalancheProblem > boundaryBulletin
+        ) {
           return avalancheProblem.getDangerRating();
         }
       }

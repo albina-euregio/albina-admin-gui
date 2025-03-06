@@ -20,6 +20,8 @@ import {
   DangerSourceVariantModel,
   DangerSourceVariantStatus,
   DangerSourceVariantType,
+  Daytime,
+  Probability,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
@@ -224,6 +226,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   toggleVariantsSidebar() {
     this.isVariantsSidebarVisible = !this.isVariantsSidebarVisible;
+  }
+
+  isNaturalReleaseLikely(variant: DangerSourceVariantModel): boolean {
+    return variant.naturalRelease === Probability.likely;
   }
 
   updateVariantScroll(scrollId: string, event): void {
@@ -657,7 +663,15 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private updateInternalVariantsOnMap(type: DangerSourceVariantType) {
     for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
       if (this.internVariantsList[i].dangerSourceVariantType === type) {
-        this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+        if (this.internVariantsList[i].hasDaytimeDependency) {
+          if (this.internVariantsList[i].dangerPeak !== Daytime.afternoon) {
+            this.mapService.updateAggregatedRegionAM(this.internVariantsList[i]);
+          } else {
+            this.mapService.updateAggregatedRegionPM(this.internVariantsList[i]);
+          }
+        } else {
+          this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+        }
       }
     }
   }
@@ -1046,5 +1060,16 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   getDangerRatingColor(variant: DangerSourceVariantModel): string {
     return this.constantsService.getDangerRatingColor(variant.eawsMatrixInformation.getDangerRating()) + " !important";
+  }
+
+  getFontColor(variant: DangerSourceVariantModel): string {
+    if (
+      variant.eawsMatrixInformation.getDangerRating() === Enums.DangerRating.moderate ||
+      variant.eawsMatrixInformation.getDangerRating() === Enums.DangerRating.low
+    ) {
+      return "black";
+    } else {
+      return "white";
+    }
   }
 }

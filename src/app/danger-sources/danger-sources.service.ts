@@ -65,6 +65,22 @@ export class DangerSourcesService {
     );
   }
 
+  hasDangerSourceVariants(date: [Date, Date]): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      this.getStatus(this.authenticationService.getActiveRegionId(), date, date).subscribe({
+        next: (data) => {
+          observer.next(data[0].forecast || data[0].analysis);
+          observer.complete();
+        },
+        error: () => {
+          console.error("Danger source variants status could not be loaded!");
+          observer.next(false);
+          observer.complete();
+        },
+      });
+    });
+  }
+
   getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
@@ -159,7 +175,7 @@ export class DangerSourcesService {
       "danger-sources?" +
       this.constantsService
         .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["date", date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : ""],
           ["regions", regions],
         ])
         .toString();

@@ -140,7 +140,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)
               "
@@ -155,7 +155,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
               "
@@ -170,7 +170,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
               "
@@ -261,7 +261,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === true
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setZeroDegreeIsotherm(true)"
@@ -274,7 +274,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === false
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setZeroDegreeIsotherm(false)"
@@ -294,7 +294,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.PP) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.PP.class')"
@@ -305,7 +305,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.DF) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.DF.class')"
@@ -316,7 +316,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.RG) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.RG) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.RG.class')"
@@ -327,7 +327,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.FC) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.FC.class')"
@@ -338,7 +338,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.MF) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.MF) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.MF.class')"
@@ -349,7 +349,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.IF) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.IF) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.IF) ? undefined : grainShapeEnum.IF)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.IF.class')"
@@ -360,7 +360,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.MFcr) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabGrainShape(grainShapeEnum.MFcr) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MFcr) ? undefined : grainShapeEnum.MFcr)
               "
@@ -417,7 +417,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessLowerLimit(
                     $event,
@@ -434,7 +436,9 @@
                 class="btn btn-sm"
                 [disabled]="disabled()"
                 [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers) ? 'btn-dark' : 'btn-outline-secondary'
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers)
+                    ? 'btn-secondary'
+                    : 'btn-outline-secondary'
                 "
                 (click)="
                   setSlabHandHardnessLowerLimit(
@@ -454,7 +458,7 @@
                 class="btn btn-sm"
                 [disabled]="disabled()"
                 [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger) ? 'btn-dark' : 'btn-outline-secondary'
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger) ? 'btn-secondary' : 'btn-outline-secondary'
                 "
                 (click)="
                   setSlabHandHardnessLowerLimit(
@@ -471,7 +475,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessLowerLimit(
                     $event,
@@ -487,7 +493,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessLowerLimit(
                     $event,
@@ -503,7 +511,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessLowerLimit(
                     $event,
@@ -522,7 +532,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessUpperLimit(
                     $event,
@@ -539,7 +551,9 @@
                 class="btn btn-sm"
                 [disabled]="disabled()"
                 [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers) ? 'btn-dark' : 'btn-outline-secondary'
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers)
+                    ? 'btn-secondary'
+                    : 'btn-outline-secondary'
                 "
                 (click)="
                   setSlabHandHardnessUpperLimit(
@@ -559,7 +573,7 @@
                 class="btn btn-sm"
                 [disabled]="disabled()"
                 [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger) ? 'btn-dark' : 'btn-outline-secondary'
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger) ? 'btn-secondary' : 'btn-outline-secondary'
                 "
                 (click)="
                   setSlabHandHardnessUpperLimit(
@@ -576,7 +590,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessUpperLimit(
                     $event,
@@ -592,7 +608,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessUpperLimit(
                     $event,
@@ -608,7 +626,9 @@
                 type="reset"
                 class="btn btn-sm"
                 [disabled]="disabled()"
-                [ngClass]="isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? 'btn-dark' : 'btn-outline-secondary'"
+                [ngClass]="
+                  isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? 'btn-secondary' : 'btn-outline-secondary'
+                "
                 (click)="
                   setSlabHandHardnessUpperLimit(
                     $event,
@@ -633,7 +653,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabHardnessProfile(tendencyEnum.increasing) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabHardnessProfile(tendencyEnum.increasing) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlabHardnessProfile(
                   $event,
@@ -649,7 +669,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabHardnessProfile(tendencyEnum.steady) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabHardnessProfile(tendencyEnum.steady) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlabHardnessProfile(
                   $event,
@@ -665,7 +685,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabHardnessProfile(tendencyEnum.decreasing) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabHardnessProfile(tendencyEnum.decreasing) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlabHardnessProfile(
                   $event,
@@ -689,7 +709,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabEnergyTransferPotential(characteristicEnum.low) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isSlabEnergyTransferPotential(characteristicEnum.low) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="
                 setSlabEnergyTransferPotential(
                   $event,
@@ -706,7 +728,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                isSlabEnergyTransferPotential(characteristicEnum.medium) ? 'btn-dark' : 'btn-outline-secondary'
+                isSlabEnergyTransferPotential(characteristicEnum.medium) ? 'btn-secondary' : 'btn-outline-secondary'
               "
               (click)="
                 setSlabEnergyTransferPotential(
@@ -723,7 +745,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabEnergyTransferPotential(characteristicEnum.high) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isSlabEnergyTransferPotential(characteristicEnum.high) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="
                 setSlabEnergyTransferPotential(
                   $event,
@@ -740,7 +764,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                isSlabEnergyTransferPotential(characteristicEnum.very_high) ? 'btn-dark' : 'btn-outline-secondary'
+                isSlabEnergyTransferPotential(characteristicEnum.very_high) ? 'btn-secondary' : 'btn-outline-secondary'
               "
               (click)="
                 setSlabEnergyTransferPotential(
@@ -765,7 +789,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabDistribution(distributionEnum.isolated) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabDistribution(distributionEnum.isolated) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlabDistribution(
                   $event,
@@ -781,7 +805,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabDistribution(distributionEnum.specific) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabDistribution(distributionEnum.specific) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlabDistribution(
                   $event,
@@ -797,7 +821,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlabDistribution(distributionEnum.widespread) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlabDistribution(distributionEnum.widespread) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlabDistribution(
                   $event,
@@ -823,7 +847,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PP) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)
               "
@@ -836,7 +860,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DF) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)
               "
@@ -849,7 +873,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.RG) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.RG) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)
               "
@@ -862,7 +886,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.FC) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
               "
@@ -875,7 +899,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DH) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DH) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.DH) ? undefined : grainShapeEnum.DH)
               "
@@ -888,7 +912,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.SH) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.SH) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.SH) ? undefined : grainShapeEnum.SH)
               "
@@ -901,7 +925,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PPgp) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PPgp) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerGrainShape(
                   $event,
@@ -933,7 +957,7 @@
               [(ngModel)]="variant().weakLayerGrainSizeLowerLimit"
               (change)="updateVariantOnServer()"
             />
-            <span class="input-group-text">cm</span>
+            <span class="input-group-text">mm</span>
             <label class="form-label mx-3" for="weakLayerGrainSizeLabel"> - </label>
             <input
               step="0.25"
@@ -947,7 +971,7 @@
               [(ngModel)]="variant().weakLayerGrainSizeUpperLimit"
               (change)="updateVariantOnServer()"
             />
-            <span class="input-group-text">cm</span>
+            <span class="input-group-text">mm</span>
           </div>
         </div>
 
@@ -962,7 +986,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().weakLayerPersistent !== undefined && variant().weakLayerPersistent === true
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setWeakLayerPersistent(true)"
@@ -975,7 +999,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().weakLayerPersistent !== undefined && variant().weakLayerPersistent === false
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setWeakLayerPersistent(false)"
@@ -994,7 +1018,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerThickness(thicknessEnum.thin) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerThickness(thicknessEnum.thin) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerThickness($event, isWeakLayerThickness(thicknessEnum.thin) ? undefined : thicknessEnum.thin)
               "
@@ -1007,7 +1031,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerThickness(thicknessEnum.thick) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerThickness(thicknessEnum.thick) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerThickness(
                   $event,
@@ -1031,7 +1055,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.low) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.low) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerStrength(
                   $event,
@@ -1047,7 +1071,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.medium) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.medium) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerStrength(
                   $event,
@@ -1063,7 +1087,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.high) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.high) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerStrength(
                   $event,
@@ -1079,7 +1103,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.very_high) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerStrength(characteristicEnum.very_high) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerStrength(
                   $event,
@@ -1105,7 +1129,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().weakLayerWet !== undefined && variant().weakLayerWet === true
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setWeakLayerWet(true)"
@@ -1118,7 +1142,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().weakLayerWet !== undefined && variant().weakLayerWet === false
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setWeakLayerWet(false)"
@@ -1137,7 +1161,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerCrustAbove(
                   $event,
@@ -1153,7 +1177,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerCrustAbove(
                   $event,
@@ -1169,7 +1193,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerCrustAbove(
                   $event,
@@ -1193,7 +1217,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerCrustBelow(
                   $event,
@@ -1209,7 +1233,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerCrustBelow(
                   $event,
@@ -1225,7 +1249,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerCrustBelow(
                   $event,
@@ -1249,7 +1273,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.ground) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.ground) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerPosition(
                   $event,
@@ -1265,7 +1289,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.lower) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.lower) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerPosition(
                   $event,
@@ -1281,7 +1305,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.middle) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.middle) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerPosition(
                   $event,
@@ -1297,7 +1321,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.upper) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.upper) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerPosition(
                   $event,
@@ -1323,7 +1347,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 isWeakLayerCreation(creationProcessEnum.radiation_recrystallization)
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="
@@ -1345,7 +1369,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 isWeakLayerCreation(creationProcessEnum.diurnal_recrystallization)
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="
@@ -1367,7 +1391,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 isWeakLayerCreation(creationProcessEnum.melt_layer_recrystallization)
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="
@@ -1388,7 +1412,9 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                isWeakLayerCreation(creationProcessEnum.surface_hoar_formation) ? 'btn-dark' : 'btn-outline-secondary'
+                isWeakLayerCreation(creationProcessEnum.surface_hoar_formation)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
               "
               (click)="
                 setWeakLayerCreation(
@@ -1415,7 +1441,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerDistribution(distributionEnum.isolated) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerDistribution(distributionEnum.isolated) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerDistribution(
                   $event,
@@ -1431,7 +1457,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerDistribution(distributionEnum.specific) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isWeakLayerDistribution(distributionEnum.specific) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setWeakLayerDistribution(
                   $event,
@@ -1447,7 +1473,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isWeakLayerDistribution(distributionEnum.widespread) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isWeakLayerDistribution(distributionEnum.widespread) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="
                 setWeakLayerDistribution(
                   $event,
@@ -1474,7 +1502,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                isDangerSpotRecognizability(recognizabilityEnum.very_easy) ? 'btn-dark' : 'btn-outline-secondary'
+                isDangerSpotRecognizability(recognizabilityEnum.very_easy) ? 'btn-secondary' : 'btn-outline-secondary'
               "
               (click)="
                 setDangerSpotRecognizability(
@@ -1491,7 +1519,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerSpotRecognizability(recognizabilityEnum.easy) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isDangerSpotRecognizability(recognizabilityEnum.easy) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="
                 setDangerSpotRecognizability(
                   $event,
@@ -1507,7 +1537,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerSpotRecognizability(recognizabilityEnum.hard) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isDangerSpotRecognizability(recognizabilityEnum.hard) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="
                 setDangerSpotRecognizability(
                   $event,
@@ -1524,7 +1556,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                isDangerSpotRecognizability(recognizabilityEnum.very_hard) ? 'btn-dark' : 'btn-outline-secondary'
+                isDangerSpotRecognizability(recognizabilityEnum.very_hard) ? 'btn-secondary' : 'btn-outline-secondary'
               "
               (click)="
                 setDangerSpotRecognizability(
@@ -1551,7 +1583,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().remoteTriggering !== undefined && variant().remoteTriggering === true
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setRemoteTriggering(true)"
@@ -1564,7 +1596,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().remoteTriggering !== undefined && variant().remoteTriggering === false
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setRemoteTriggering(false)"
@@ -1583,7 +1615,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.gullies) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.gullies) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.gullies)"
               data-toggle="tooltip"
               title="{{ 'terrainType.gullies' | translate }}"
@@ -1594,7 +1626,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.bowls) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.bowls) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.bowls)"
               data-toggle="tooltip"
               title="{{ 'terrainType.bowls' | translate }}"
@@ -1605,7 +1637,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.pass_areas) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.pass_areas) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.pass_areas)"
               data-toggle="tooltip"
               title="{{ 'terrainType.pass_areas' | translate }}"
@@ -1616,7 +1648,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.ridge_lines) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.ridge_lines)"
               data-toggle="tooltip"
               title="{{ 'terrainType.ridge_lines' | translate }}"
@@ -1627,7 +1659,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.adjacent_to_ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.adjacent_to_ridge_lines) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="setTerrainType($event, terrainTypeEnum.adjacent_to_ridge_lines)"
               data-toggle="tooltip"
               title="{{ 'terrainType.adjacent_to_ridge_lines' | translate }}"
@@ -1640,7 +1674,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.distant_from_ridge_lines) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.distant_from_ridge_lines) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="setTerrainType($event, terrainTypeEnum.distant_from_ridge_lines)"
               data-toggle="tooltip"
               title="{{ 'terrainType.distant_from_ridge_lines' | translate }}"
@@ -1651,7 +1687,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.slope_discontinuities) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.slope_discontinuities) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="setTerrainType($event, terrainTypeEnum.slope_discontinuities)"
               data-toggle="tooltip"
               title="{{ 'terrainType.slope_discontinuities' | translate }}"
@@ -1662,7 +1700,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.convex_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.convex_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.convex_terrain)"
               data-toggle="tooltip"
               title="{{ 'terrainType.convex_terrain' | translate }}"
@@ -1673,7 +1711,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.concave_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.concave_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.concave_terrain)"
               data-toggle="tooltip"
               title="{{ 'terrainType.concave_terrain' | translate }}"
@@ -1684,7 +1722,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.steep_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.steep_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.steep_terrain)"
               data-toggle="tooltip"
               title="{{ 'terrainType.steep_terrain' | translate }}"
@@ -1697,7 +1735,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.very_steep_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.very_steep_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.very_steep_terrain)"
               data-toggle="tooltip"
               title="{{ 'terrainType.very_steep_terrain' | translate }}"
@@ -1708,7 +1746,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.open_terrain) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.open_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.open_terrain)"
               data-toggle="tooltip"
               title="{{ 'terrainType.open_terrain' | translate }}"
@@ -1719,7 +1757,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.forest) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isTerrainType(terrainTypeEnum.forest) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.forest)"
               data-toggle="tooltip"
               title="{{ 'terrainType.forest' | translate }}"
@@ -1739,7 +1777,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.PP) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)
               "
@@ -1752,7 +1790,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DF) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)
               "
@@ -1765,7 +1803,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.FC) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
               "
@@ -1778,7 +1816,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DH) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DH) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.DH) ? undefined : grainShapeEnum.DH)
               "
@@ -1791,7 +1829,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.SH) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.SH) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.SH) ? undefined : grainShapeEnum.SH)
               "
@@ -1804,7 +1842,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.MF) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.MF) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)
               "
@@ -1825,7 +1863,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowMoisture(wetnessEnum.dry) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowMoisture(wetnessEnum.dry) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.dry) ? undefined : wetnessEnum.dry)"
               data-toggle="tooltip"
               title="{{ 'wetness.dry' | translate }}"
@@ -1836,7 +1874,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowMoisture(wetnessEnum.moist) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowMoisture(wetnessEnum.moist) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.moist) ? undefined : wetnessEnum.moist)
               "
@@ -1849,7 +1887,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isLooseSnowMoisture(wetnessEnum.wet) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isLooseSnowMoisture(wetnessEnum.wet) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.wet) ? undefined : wetnessEnum.wet)"
               data-toggle="tooltip"
               title="{{ 'wetness.wet' | translate }}"
@@ -1884,7 +1922,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().hasDaytimeDependency !== undefined && variant().hasDaytimeDependency === true
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setHasDaytimeDependency(true)"
@@ -1897,7 +1935,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().hasDaytimeDependency !== undefined && variant().hasDaytimeDependency === false
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setHasDaytimeDependency(false)"
@@ -1918,7 +1956,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().dangerIncreaseWithElevation !== undefined && variant().dangerIncreaseWithElevation === true
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setDangerIncreaseWithElevation(true)"
@@ -1931,7 +1969,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().dangerIncreaseWithElevation !== undefined && variant().dangerIncreaseWithElevation === false
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setDangerIncreaseWithElevation(false)"
@@ -1950,7 +1988,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.N) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isHighestDangerAspect(aspectEnum.N) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.N) ? undefined : aspectEnum.N)"
               data-toggle="tooltip"
               title="{{ 'aspect.N' | translate }}"
@@ -1961,7 +1999,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.E) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isHighestDangerAspect(aspectEnum.E) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.E) ? undefined : aspectEnum.E)"
               data-toggle="tooltip"
               title="{{ 'aspect.E' | translate }}"
@@ -1972,7 +2010,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.S) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isHighestDangerAspect(aspectEnum.S) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.S) ? undefined : aspectEnum.S)"
               data-toggle="tooltip"
               title="{{ 'aspect.S' | translate }}"
@@ -1983,7 +2021,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.W) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isHighestDangerAspect(aspectEnum.W) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.W) ? undefined : aspectEnum.W)"
               data-toggle="tooltip"
               title="{{ 'aspect.W' | translate }}"
@@ -2002,7 +2040,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.evening) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerPeak(daytimeEnum.evening) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.evening) ? undefined : daytimeEnum.evening)"
               data-toggle="tooltip"
               title="{{ 'detailedDaytime.evening' | translate }}"
@@ -2013,7 +2051,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.first_night_half) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerPeak(daytimeEnum.first_night_half) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setDangerPeak(
                   $event,
@@ -2029,7 +2067,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.second_night_half) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerPeak(daytimeEnum.second_night_half) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setDangerPeak(
                   $event,
@@ -2045,7 +2083,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.morning) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerPeak(daytimeEnum.morning) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.morning) ? undefined : daytimeEnum.morning)"
               data-toggle="tooltip"
               title="{{ 'detailedDaytime.morning' | translate }}"
@@ -2056,7 +2094,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.forenoon) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerPeak(daytimeEnum.forenoon) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.forenoon) ? undefined : daytimeEnum.forenoon)"
               data-toggle="tooltip"
               title="{{ 'detailedDaytime.forenoon' | translate }}"
@@ -2067,7 +2105,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.afternoon) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerPeak(daytimeEnum.afternoon) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.afternoon) ? undefined : daytimeEnum.afternoon)"
               data-toggle="tooltip"
               title="{{ 'detailedDaytime.afternoon' | translate }}"
@@ -2086,7 +2124,9 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlopeGradient(slopeGradientEnum.moderately_steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="
+                isSlopeGradient(slopeGradientEnum.moderately_steep) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
               (click)="
                 setSlopeGradient(
                   $event,
@@ -2102,7 +2142,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlopeGradient(slopeGradientEnum.steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlopeGradient(slopeGradientEnum.steep) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlopeGradient($event, isSlopeGradient(slopeGradientEnum.steep) ? undefined : slopeGradientEnum.steep)
               "
@@ -2115,7 +2155,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlopeGradient(slopeGradientEnum.very_steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlopeGradient(slopeGradientEnum.very_steep) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlopeGradient(
                   $event,
@@ -2131,7 +2171,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isSlopeGradient(slopeGradientEnum.extremely_steep) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isSlopeGradient(slopeGradientEnum.extremely_steep) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setSlopeGradient(
                   $event,
@@ -2157,7 +2197,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().runoutIntoGreen !== undefined && variant().runoutIntoGreen === true
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setRunoutIntoGreen(true)"
@@ -2170,7 +2210,7 @@
               [disabled]="disabled()"
               [ngClass]="
                 variant().runoutIntoGreen !== undefined && variant().runoutIntoGreen === false
-                  ? 'btn-dark'
+                  ? 'btn-secondary'
                   : 'btn-outline-secondary'
               "
               (click)="setRunoutIntoGreen(false)"
@@ -2189,7 +2229,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isNaturalRelease(probabilityEnum.likely) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isNaturalRelease(probabilityEnum.likely) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setNaturalRelease($event, isNaturalRelease(probabilityEnum.likely) ? undefined : probabilityEnum.likely)
               "
@@ -2202,7 +2242,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isNaturalRelease(probabilityEnum.possible) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isNaturalRelease(probabilityEnum.possible) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setNaturalRelease(
                   $event,
@@ -2218,7 +2258,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isNaturalRelease(probabilityEnum.unlikely) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isNaturalRelease(probabilityEnum.unlikely) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
                 setNaturalRelease(
                   $event,
@@ -2242,7 +2282,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerSign(dangerSignEnum.shooting_cracks) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerSign(dangerSignEnum.shooting_cracks) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerSign($event, dangerSignEnum.shooting_cracks)"
               data-toggle="tooltip"
               title="{{ 'dangerSign.shooting_cracks' | translate }}"
@@ -2253,7 +2293,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerSign(dangerSignEnum.whumpfing) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerSign(dangerSignEnum.whumpfing) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerSign($event, dangerSignEnum.whumpfing)"
               data-toggle="tooltip"
               title="{{ 'dangerSign.whumpfing' | translate }}"
@@ -2264,7 +2304,7 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isDangerSign(dangerSignEnum.fresh_avalanches) ? 'btn-dark' : 'btn-outline-secondary'"
+              [ngClass]="isDangerSign(dangerSignEnum.fresh_avalanches) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerSign($event, dangerSignEnum.fresh_avalanches)"
               data-toggle="tooltip"
               title="{{ 'dangerSign.fresh_avalanches' | translate }}"
@@ -2335,7 +2375,7 @@
                   [disabled]="disabled() || !useElevationHigh"
                   type="reset"
                   class="btn btn-icon"
-                  [ngClass]="localTreelineHigh ? 'btn-dark' : 'btn-outline-secondary'"
+                  [ngClass]="localTreelineHigh ? 'btn-secondary' : 'btn-outline-secondary'"
                   (click)="treelineHighClicked($event)"
                   data-toggle="tooltip"
                   title="{{ 'elevation.treeline' | translate }}"
@@ -2379,7 +2419,7 @@
                   [disabled]="disabled() || !useElevationLow"
                   type="reset"
                   class="btn btn-icon"
-                  [ngClass]="localTreelineLow ? 'btn-dark' : 'btn-outline-secondary'"
+                  [ngClass]="localTreelineLow ? 'btn-secondary' : 'btn-outline-secondary'"
                   (click)="treelineLowClicked($event)"
                   data-toggle="tooltip"
                   title="{{ 'elevation.treeline' | translate }}"

@@ -57,14 +57,14 @@ export class ConstantsService {
   public lineWeight = 0.5;
   public lineOpacity = 0.3;
 
-  public fillOpacityOwnSelected = 0.8;
+  public fillOpacityOwnSelected = 0.9;
   public fillOpacityOwnDeselected = 0.6;
-  public fillOpacityOwnSelectedSuggested = 0.8;
+  public fillOpacityOwnSelectedSuggested = 0.9;
   public fillOpacityOwnDeselectedSuggested = 0.6;
 
-  public fillOpacityForeignSelected = 0.8;
+  public fillOpacityForeignSelected = 0.9;
   public fillOpacityForeignDeselected = 0.3;
-  public fillOpacityForeignSelectedSuggested = 0.8;
+  public fillOpacityForeignSelectedSuggested = 0.9;
   public fillOpacityForeignDeselectedSuggested = 0.3;
 
   public fillOpacityEditSelection = 0.4;

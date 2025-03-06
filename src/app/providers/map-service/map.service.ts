@@ -263,6 +263,14 @@ export class MapService {
     this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
   }
 
+  updateAggregatedRegionAM(mapObject: PolygonObject) {
+    this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
+  }
+
+  updateAggregatedRegionPM(mapObject: PolygonObject) {
+    this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+  }
+
   activeMapObject: PolygonObject;
 
   selectAggregatedRegion(mapObject: PolygonObject) {
