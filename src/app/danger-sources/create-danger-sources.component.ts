@@ -20,6 +20,7 @@ import {
   DangerSourceVariantModel,
   DangerSourceVariantStatus,
   DangerSourceVariantType,
+  Daytime,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
@@ -657,7 +658,15 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private updateInternalVariantsOnMap(type: DangerSourceVariantType) {
     for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
       if (this.internVariantsList[i].dangerSourceVariantType === type) {
-        this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+        if (this.internVariantsList[i].hasDaytimeDependency) {
+          if (this.internVariantsList[i].dangerPeak !== Daytime.afternoon) {
+            this.mapService.updateAggregatedRegionAM(this.internVariantsList[i]);
+          } else {
+            this.mapService.updateAggregatedRegionPM(this.internVariantsList[i]);
+          }
+        } else {
+          this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+        }
       }
     }
   }

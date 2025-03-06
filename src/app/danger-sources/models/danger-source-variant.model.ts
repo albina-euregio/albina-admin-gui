@@ -402,19 +402,79 @@ export class DangerSourceVariantModel implements PolygonObject {
   }
 
   getForenoonDangerRatingAbove(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid below
+    /*
+    if (!(this.treelineLow || this.elevationLow) && (this.treelineHigh || this.elevationHigh)) {
+      return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return this.eawsMatrixInformation.dangerRating;
+      } else {
+        return DangerRating.low;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   getAfternoonDangerRatingAbove(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid below
+    /*
+    if (!(this.treelineLow || this.elevationLow) && (this.treelineHigh || this.elevationHigh)) {
+        return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return DangerRating.low;
+      } else {
+        return this.eawsMatrixInformation.dangerRating;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   getForenoonDangerRatingBelow(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid above
+    /*
+    if (!(this.treelineHigh || this.elevationHigh) && (this.treelineLow || this.elevationLow)) {
+      return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return this.eawsMatrixInformation.dangerRating;
+      } else {
+        return DangerRating.low;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   getAfternoonDangerRatingBelow(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid above
+    /*
+    if (!(this.treelineHigh || this.elevationHigh) && (this.treelineLow || this.elevationLow)) {
+      return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return DangerRating.low;
+      } else {
+        return this.eawsMatrixInformation.dangerRating;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   updateDangerRating() {}
