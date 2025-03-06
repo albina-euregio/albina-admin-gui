@@ -54,6 +54,7 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   DangerSourceVariantModel,
+  DangerSourceVariantStatus,
   DangerSourceVariantType,
   Daytime,
 } from "app/danger-sources/models/danger-source-variant.model";
@@ -540,11 +541,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       .subscribe({
         next: async (variants) => {
           let dangerSourceVariants: DangerSourceVariantModel[] = variants;
+
+          // filter only analysis variants with status active
           if (variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)) {
             dangerSourceVariants = variants.filter(
-              (variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
+              (variant) =>
+                variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
+                variant.dangerSourceVariantStatus === "active",
             );
           }
+
+          // filter only danger source variants with status active
+          dangerSourceVariants = dangerSourceVariants.filter(
+            (variant) => variant.dangerSourceVariantStatus === DangerSourceVariantStatus.active,
+          );
 
           // sort variants by relevance
           dangerSourceVariants.sort((a, b) => {
