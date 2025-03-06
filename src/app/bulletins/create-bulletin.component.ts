@@ -682,7 +682,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             }
 
             bulletins.push(bulletin);
+
+            this.addInternalBulletin(bulletin);
           }
+
+          this.updateInternalBulletins();
 
           // save bulletins
           this.bulletinsService.saveBulletins(bulletins, this.bulletinsService.getActiveDate()).subscribe(
