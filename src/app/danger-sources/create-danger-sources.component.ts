@@ -21,6 +21,7 @@ import {
   DangerSourceVariantStatus,
   DangerSourceVariantType,
   Daytime,
+  Probability,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
@@ -225,6 +226,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   toggleVariantsSidebar() {
     this.isVariantsSidebarVisible = !this.isVariantsSidebarVisible;
+  }
+
+  isNaturalReleaseLikely(variant: DangerSourceVariantModel): boolean {
+    return variant.naturalRelease === Probability.likely;
   }
 
   updateVariantScroll(scrollId: string, event): void {

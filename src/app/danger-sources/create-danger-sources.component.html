@@ -344,6 +344,16 @@
           [style.color]="getFontColor(variant)"
         >
           {{ "dangerSources.variantStatus.active" | translate }}
+          <!-- Natural Avalanches -->
+          <span *ngIf="isNaturalReleaseLikely(variant)">
+            <i class="ph-bold ph-warning-circle icon-md"></i>
+          </span>
+          <!-- Natural Avalanches -->
+          <!-- Remote Triggering -->
+          <span *ngIf="variant.remoteTriggering">
+            <i class="ph-bold ph-trend-up icon-md"></i>
+          </span>
+          <!-- Remote Triggering -->
         </span>
         <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.dormant)" class="badge bg-gray">
           {{ "dangerSources.variantStatus.dormant" | translate }}
