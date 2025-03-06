@@ -1056,4 +1056,15 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   getDangerRatingColor(variant: DangerSourceVariantModel): string {
     return this.constantsService.getDangerRatingColor(variant.eawsMatrixInformation.getDangerRating()) + " !important";
   }
+
+  getFontColor(variant: DangerSourceVariantModel): string {
+    if (
+      variant.eawsMatrixInformation.getDangerRating() === Enums.DangerRating.moderate ||
+      variant.eawsMatrixInformation.getDangerRating() === Enums.DangerRating.low
+    ) {
+      return "black";
+    } else {
+      return "white";
+    }
+  }
 }

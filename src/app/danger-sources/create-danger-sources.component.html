@@ -341,6 +341,7 @@
           *ngIf="isDangerSourceVariantStatus(variant, variantStatus.active)"
           class="badge bg-secondary"
           [style.background-color]="getDangerRatingColor(variant)"
+          [style.color]="getFontColor(variant)"
         >
           {{ "dangerSources.variantStatus.active" | translate }}
         </span>
