@@ -118,6 +118,7 @@
       "label": {
         "glidingSnowActivity": "attività di slittamento",
         "snowHeight": "altezza neve",
+        "snowHeightAverage": "Average snow height",
         "zeroDegreeIsotherm": "Isoterma a 0°C",
         "looseSnowMoisture": "Umidità neve a debole coesione",
         "looseSnowGrainShape": "Tipologia grano neve a debole coesione",
@@ -218,6 +219,8 @@
       "preview": "Anteprima del bollettino valanghe (PDF)",
       "check": "Controlla bollettino valanghe",
       "info": "Mostra lo stato pubblicazione",
+      "loadSuggestionFromDangerSources": "Load suggestion",
+      "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Pubblica tutte le meteo-nivo zone",
       "mediaFile": "Carica file media"
     },
@@ -351,6 +354,11 @@
       "loadDialog": {
         "message": "Vuoi caricare il bollettino valanghe del giorno precedente?",
         "accept": "Sí",
+        "reject": "No"
+      },
+      "deleteAllWarningRegionsDialog": {
+        "message": "Do you want to delete all warning regions?",
+        "accept": "Sì",
         "reject": "No"
       },
       "loadAutoSaveDialog": {
@@ -785,7 +793,7 @@
         "placeholder": "origine dati",
         "selectionLabel": "{0} origine/i selezionato/i"
       },
-    
+
       "charts": {
         "charts": "Diagrammi",
         "nan": "Senza specificazione",
@@ -976,7 +984,8 @@
   "elevationPeriod": {
     "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
     "observationPeriod": "Dry snowfall boundary at the time of observation"
-  },  "aspect": {
+  },
+  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1049,10 +1058,16 @@
     "lower": "inferiore",
     "ground": "suolo"
   },
+  "weakLayerCrust": {
+    "no": "no",
+    "partly": "partly",
+    "yes": "si"
+  },
   "creationProcess": {
     "radiation_recrystallization": "radiazione",
     "diurnal_recrystallization": "diurno",
-    "melt_layer_recrystallization": "crosta da fusione"
+    "melt_layer_recrystallization": "crosta da fusione",
+    "surface_hoar_formation": "surface hoar"
   },
   "recognizability": {
     "very_easy": "molto facile",
@@ -1101,11 +1116,21 @@
     "gullies": "canaloni",
     "bowls": "conche",
     "pass_areas": "zone ai passi",
-    "ridge_lines": "alle creste"
+    "ridge_lines": "alle creste",
+    "adjacent_to_ridge_lines": "adjacent to ridge lines",
+    "distant_from_ridge_lines": "distant from ridge lines",
+    "slope_discontinuities": "slope discontinuities",
+    "convex_terrain": "convex terrain",
+    "concave_terrain": "concave terrain",
+    "steep_terrain": "steep terrain",
+    "very_steep_terrain": "very steep terrain",
+    "open_terrain": "open terrain",
+    "forest": "forest"
   },
   "dangerSign": {
     "shooting_cracks": "crepe",
-    "whumpfing": "rumori \"whumpf\""
+    "whumpfing": "rumori \"whumpf\"",
+    "fresh_avalanches": "fresh avalanches"
   },
   "changeRegionDialog": {
     "message": "Vuoi cambiare la meteo-nivo zona?",

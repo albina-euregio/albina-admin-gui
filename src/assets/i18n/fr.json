@@ -118,6 +118,7 @@
       "label": {
         "glidingSnowActivity": "Activité de neige glissante",
         "snowHeight": "Hauteur de neige",
+        "snowHeightAverage": "Average snow height",
         "zeroDegreeIsotherm": "Isotherme 0 °C",
         "looseSnowMoisture": "Humidité de la neige meuble",
         "looseSnowGrainShape": "Forme des grains de neige meuble",
@@ -218,6 +219,8 @@
       "preview": "Aperçu du bulletin (PDF)",
       "check": "Vérifier le bulletin",
       "info": "Afficher l'état de la publication",
+      "loadSuggestionFromDangerSources": "Load suggestion",
+      "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Publier toutes les régions de prévision",
       "mediaFile": "Télécharger un fichier média"
     },
@@ -350,6 +353,11 @@
       },
       "loadDialog": {
         "message": "Télécharger les bulletins de la veille ?",
+        "accept": "Oui",
+        "reject": "Non"
+      },
+      "deleteAllWarningRegionsDialog": {
+        "message": "Do you want to delete all warning regions?",
         "accept": "Oui",
         "reject": "Non"
       },
@@ -785,7 +793,7 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) sélectionnée(s)"
       },
-    
+
       "charts": {
         "charts": "Diagramme",
         "nan": "Pas d'informations",
@@ -976,7 +984,8 @@
   "elevationPeriod": {
     "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
     "observationPeriod": "Dry snowfall boundary at the time of observation"
-  },  "aspect": {
+  },
+  "aspect": {
     "N": "N",
     "NE": "NE",
     "E": "E",
@@ -1049,10 +1058,16 @@
     "lower": "en-dessous",
     "ground": "sol"
   },
+  "weakLayerCrust": {
+    "no": "non",
+    "partly": "partly",
+    "yes": "oui"
+  },
   "creationProcess": {
     "radiation_recrystallization": "rayonnement",
     "diurnal_recrystallization": "Croûte de regel",
-    "melt_layer_recrystallization": "couche de fonte"
+    "melt_layer_recrystallization": "couche de fonte",
+    "surface_hoar_formation": "surface hoar"
   },
   "recognizability": {
     "very_easy": "très facile",
@@ -1101,11 +1116,21 @@
     "gullies": "couloirs",
     "bowls": "creux",
     "pass_areas": "zones de col",
-    "ridge_lines": "lignes de crête"
+    "ridge_lines": "lignes de crête",
+    "adjacent_to_ridge_lines": "adjacent to ridge lines",
+    "distant_from_ridge_lines": "distant from ridge lines",
+    "slope_discontinuities": "slope discontinuities",
+    "convex_terrain": "convex terrain",
+    "concave_terrain": "concave terrain",
+    "steep_terrain": "steep terrain",
+    "very_steep_terrain": "very steep terrain",
+    "open_terrain": "open terrain",
+    "forest": "forest"
   },
   "dangerSign": {
     "shooting_cracks": "fissures",
-    "whumpfing": "bruit d'effondrement"
+    "whumpfing": "bruit d'effondrement",
+    "fresh_avalanches": "fresh avalanches"
   },
   "changeRegionDialog": {
     "message": "Voulez-vous changer de région de prévision ?",
