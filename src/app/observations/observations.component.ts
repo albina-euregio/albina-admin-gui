@@ -225,6 +225,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   constructor() {
     this.filter.filterSelectionData = observationFilters((message) => this.translateService.instant(message));
     this.filter.parseActivatedRoute();
+    if (!this.filter.startDate || !this.filter.endDate) {
+      this.filter.days = 7;
+    }
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
   }
 
@@ -261,12 +264,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const map = await this.mapService.initMaps(this.mapDiv().nativeElement);
 
     this.data.observations.toggle(this.map);
-    if (!this.filter.startDate || !this.filter.endDate) {
-      this.filter.days = 7;
-    }
     this.loadObservationsAndWeatherStations();
     this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
-    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
     this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
 
     map.on("click", () => {

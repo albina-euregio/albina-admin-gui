@@ -26,6 +26,7 @@ export class ObservationFilterService<
     const newStartDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
     newStartDate.setDate(newStartDate.getDate() - (days - 1));
     newStartDate.setHours(0, 0, 0, 0);
+    if (!isTrainingEnabled) newEndDate.setHours(23, 59, 59, 0);
     this.dateRange = [newStartDate, newEndDate];
   }
 
@@ -33,29 +34,39 @@ export class ObservationFilterService<
     if (!this.startDate || !this.endDate) {
       return;
     }
+    // bsDaterangepicker overwrites the time for endDate with the time from startDate when selecting a new date range.
+    // To keep the time from the previous selection, we extract it from the query params.
+    const oldEndDate = this.parseQueryParams(this.activatedRoute.snapshot.queryParams)[1];
+    if (
+      oldEndDate &&
+      this.constantsService.getISODateString(oldEndDate) !== this.constantsService.getISODateString(this.endDate)
+    ) {
+      this.endDate.setHours(oldEndDate.getHours(), oldEndDate.getMinutes(), oldEndDate.getSeconds());
+    }
+
     this.filterSelectionData.find((filter) => filter.key === "eventDate").setDateRange(this.startDate, this.endDate);
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {
-        startDate: this.constantsService.getISODateString(this.startDate),
-        endDate: this.constantsService.getISODateString(this.endDate),
+        startDate: this.constantsService.getISODateTimeString(this.startDate),
+        endDate: this.constantsService.getISODateTimeString(this.endDate),
       },
       queryParamsHandling: "merge",
     });
   }
 
-  get dateRangeMaxDate(): Date | undefined {
+  get dateRangeMaxDate(): Date {
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
-    return isTrainingEnabled ? new Date(trainingTimestamp) : undefined;
+    return isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
   }
 
   parseActivatedRoute() {
-    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
+    this.activatedRoute.queryParams.subscribe((params) => (this.dateRange = this.parseQueryParams(params)));
   }
 
-  private parseQueryParams({ startDate, endDate }: Params) {
+  private parseQueryParams({ startDate, endDate }: Params): Date[] {
     if (typeof startDate !== "string" || !startDate || typeof endDate !== "string" || !endDate) {
-      return;
+      return [];
     }
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
     // When the time zone offset is absent, date-only forms are interpreted as a UTC time and date-time forms are interpreted as a local time.
@@ -65,7 +76,7 @@ export class ObservationFilterService<
     if (!endDate.includes("T")) {
       endDate += "T23:59:59";
     }
-    this.dateRange = [new Date(startDate), new Date(endDate)];
+    return [new Date(startDate), new Date(endDate)];
   }
 
   get startDate(): Date {
@@ -106,19 +117,6 @@ export class ObservationFilterService<
 
   inDateRange(eventDate: Date): boolean {
     return this.startDate <= eventDate && eventDate <= this.endDate;
-  }
-
-  isLastDayInDateRange(eventDate: Date): boolean {
-    const selectedData: string[] = Array.from(
-      this.filterSelectionData.find((filter) => filter.key === "eventDate").selected,
-    )
-      .filter((element) => element !== "nan")
-      .sort();
-    if (selectedData.length < 1) {
-      return eventDate.getDate() === this.endDate.getDate();
-    } else {
-      return selectedData.indexOf(this.constantsService.getISODateString(eventDate)) === selectedData.length - 1;
-    }
   }
 
   inMapBounds(latitude?: number, longitude?: number): boolean {

@@ -160,11 +160,16 @@ export class ConstantsService {
   getISODateString(date: Date) {
     // like Date.toISOString(), but not using UTC
     // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` as const;
+    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}` as const;
+  }
 
-    function pad(number: number) {
-      return number < 10 ? (`${0}${number}` as unknown as number) : number;
-    }
+  getISODateTimeString(date: Date) {
+    // like Date.toISOString(), but not using UTC
+    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}T${this.pad(date.getHours())}:${this.pad(date.getMinutes())}` as const;
+  }
+
+  private pad(number: number) {
+    return number < 10 ? (`${0}${number}` as unknown as number) : number;
   }
 
   createSearchParams(params: [string, any][]): URLSearchParams {

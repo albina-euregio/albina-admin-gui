@@ -78,8 +78,8 @@
                 class="form-control d-inline-block"
                 #drp="bsDaterangepicker"
                 bsDaterangepicker
-                [(bsValue)]="filter.dateRange"
-                (bsValueChange)="this.loadObservationsAndWeatherStations()"
+                [(ngModel)]="filter.dateRange"
+                (ngModelChange)="this.loadObservationsAndWeatherStations()"
                 [bsConfig]="{ withTimepicker: true }"
                 [maxDate]="filter.dateRangeMaxDate"
               />
