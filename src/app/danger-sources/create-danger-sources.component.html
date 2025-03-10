@@ -459,7 +459,7 @@
     <p>{{ "bulletins.create.loadingErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="loadingErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="loadingErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.loadingErrorDialog.accept" | translate }}
     </button>
   </div>
@@ -470,10 +470,10 @@
     <p>{{ "dangerSources.create.loadDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="loadModalConfirm($event)">
+    <button type="button" class="btn btn-primary" (click)="loadModalConfirm($event)" ngxMousetrapKey="enter">
       {{ "dangerSources.create.loadDialog.accept" | translate }}
     </button>
-    <button type="button" class="btn btn-default" (click)="loadModalDecline($event)">
+    <button type="button" class="btn btn-default" (click)="loadModalDecline($event)" ngxMousetrapKey="esc">
       {{ "dangerSources.create.loadDialog.reject" | translate }}
     </button>
   </div>
@@ -484,10 +484,15 @@
     <p>{{ "dangerSources.create.deleteVariantDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="deleteAggregatedRegionModalConfirm()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="deleteAggregatedRegionModalConfirm()"
+      ngxMousetrapKey="enter"
+    >
       {{ "dangerSources.create.deleteVariantDialog.accept" | translate }}
     </button>
-    <button type="button" class="btn btn-default" (click)="deleteAggregatedRegionModalDecline()">
+    <button type="button" class="btn btn-default" (click)="deleteAggregatedRegionModalDecline()" ngxMousetrapKey="esc">
       {{ "dangerSources.create.deleteVariantDialog.reject" | translate }}
     </button>
   </div>
@@ -498,7 +503,7 @@
     <p>{{ "bulletins.create.noRegionDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="noRegionModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="noRegionModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.create.noRegionDialog.accept" | translate }}
     </button>
   </div>
@@ -509,10 +514,10 @@
     <p>{{ "dangerSources.create.discardDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="discardModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="discardModalConfirm()" ngxMousetrapKey="enter">
       {{ "dangerSources.create.discardDialog.accept" | translate }}
     </button>
-    <button type="button" class="btn btn-default" (click)="discardModalDecline()">
+    <button type="button" class="btn btn-default" (click)="discardModalDecline()" ngxMousetrapKey="esc">
       {{ "dangerSources.create.discardDialog.reject" | translate }}
     </button>
   </div>
@@ -523,7 +528,7 @@
     <p>{{ "dangerSources.create.saveErrorDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="saveErrorModalConfirm()">
+    <button type="button" class="btn btn-primary" (click)="saveErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "dangerSources.create.saveErrorDialog.accept" | translate }}
     </button>
   </div>
