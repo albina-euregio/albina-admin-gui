@@ -421,6 +421,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private $externalImgs(observation: GenericObservation) {
+    if (!observation) return undefined;
     return observation.$source === ObservationSource.AvalancheWarningService &&
       observation.$type === ObservationType.TimeSeries
       ? (this.markerWeatherStationService.toStatistics(observation)?.$externalImgs ?? observation.$externalImgs)
