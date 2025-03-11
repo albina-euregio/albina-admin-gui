@@ -291,5 +291,13 @@ export function observationFilters(t: (message: string) => string): FilterSelect
         },
       ],
     }),
+    new FilterSelectionData<GenericObservation>({
+      type: "DangerSource",
+      label: t("admin.observations.charts.dangerSource.caption"),
+      key: "dangerSource",
+      chartType: "bar",
+      chartRichLabel: "label",
+      values: [],
+    }),
   ];
 }

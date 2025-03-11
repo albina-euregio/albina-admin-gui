@@ -822,6 +822,9 @@
         "dangerPattern": {
           "caption": "Danger Pattern"
         },
+        "dangerSource": {
+          "caption": "Danger Source"
+        },
         "days": {
           "caption": "Day"
         }
