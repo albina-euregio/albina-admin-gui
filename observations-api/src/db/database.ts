@@ -35,6 +35,7 @@ interface GenericObservationTable {
   ELEVATION_UPPER_BOUND: number;
   ID: string;
   DANGER_PATTERNS: string;
+  DANGER_SOURCE: string;
   OBS_DATA: string;
   LATITUDE: number;
   LOCATION_NAME: string;
@@ -102,6 +103,7 @@ export async function insertObservation(connection: mysql.Connection, o: Generic
     REPORT_DATE: o.reportDate ?? null,
     AVALANCHE_PROBLEMS: o.avalancheProblems?.join(",") ?? null,
     DANGER_PATTERNS: o.dangerPatterns?.join(",") ?? null,
+    DANGER_SOURCE: o.dangerSource ?? null,
     IMPORTANT_OBSERVATION: o.importantObservations?.join(",") ?? null,
     EXTRA_DIALOG_ROWS: o.$extraDialogRows ? JSON.stringify(o.$extraDialogRows) : null,
     PERSON_INVOLVEMENT: o.personInvolvement ?? null,
@@ -173,6 +175,7 @@ export async function selectObservations(
       reportDate: row.REPORT_DATE ?? undefined,
       avalancheProblems: (row.AVALANCHE_PROBLEMS || undefined)?.split(",") as AvalancheProblem[],
       dangerPatterns: (row.DANGER_PATTERNS || undefined)?.split(",") as DangerPattern[],
+      dangerSource: row.DANGER_SOURCE ?? undefined,
       importantObservations: (row.IMPORTANT_OBSERVATION || undefined)?.split(",") as ImportantObservation[],
       personInvolvement: (row.PERSON_INVOLVEMENT as PersonInvolvement) ?? undefined,
     }),

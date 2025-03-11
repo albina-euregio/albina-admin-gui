@@ -822,6 +822,9 @@
         "dangerPattern": {
           "caption": "Danger Pattern"
         },
+        "dangerSource": {
+          "caption": "Danger Source"
+        },
         "days": {
           "caption": "Day"
         }
@@ -1274,6 +1277,7 @@
     "comment": "Comment",
     "content": "Content",
     "dangerRating": "Danger rating",
+    "dangerSource": "Danger source",
     "elevation": "Elevation",
     "elevationRange": "Elevation range",
     "elevationLowerBound": "Elevation lower bound",

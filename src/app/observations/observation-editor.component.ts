@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, viewChild, input, inject } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, viewChild, input, inject, signal } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
 import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
-import { Observable, Observer, map, of, switchMap } from "rxjs";
+import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
 import * as Enums from "../enums/enums";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { AspectsComponent } from "../shared/aspects.component";
@@ -24,6 +24,9 @@ import type {
   LolaRainBoundaryElevationTolerance,
   LolaRainBoundaryElevationPeriod,
 } from "../../../observations-api/src/fetch/observations/lola-kronos.model";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
+import orderBy from "lodash/orderBy";
 
 @Component({
   standalone: true,
@@ -43,12 +46,16 @@ export class ObservationEditorComponent implements AfterViewInit {
   private geocodingService = inject(GeocodingService);
   private coordinateDataService = inject(CoordinateDataService);
   private authenticationService = inject(AuthenticationService);
+  private dangerSourcesService = inject(DangerSourcesService);
+  readonly translateService = inject(TranslateService);
 
   readonly observation = input<GenericObservation>(undefined);
   readonly eventDateDate = viewChild<ElementRef<HTMLInputElement>>("eventDateDate");
   readonly eventDateTime = viewChild<ElementRef<HTMLInputElement>>("eventDateTime");
   readonly reportDateDate = viewChild<ElementRef<HTMLInputElement>>("reportDateDate");
   readonly reportDateTime = viewChild<ElementRef<HTMLInputElement>>("reportDateTime");
+  readonly dangerSources = signal<DangerSourceModel[]>([]);
+  private pendingDangerSources: Subscription;
   avalancheProblems: Enums.AvalancheProblem[] = this.authenticationService.getActiveRegionAvalancheProblems();
   dangerPatterns = Object.values(Enums.DangerPattern);
   importantObservations = Object.values(ImportantObservation);
@@ -110,6 +117,15 @@ export class ObservationEditorComponent implements AfterViewInit {
       nativeElement.valueAsDate = this.reportDate;
       nativeElement.onchange = (e) => this.handleDateEvent(e, "reportDate");
     }
+    this.loadDangerSources();
+  }
+
+  private loadDangerSources() {
+    const date = isFinite(+this.eventDate) ? this.eventDate : new Date();
+    this.pendingDangerSources?.unsubscribe();
+    this.pendingDangerSources = this.dangerSourcesService
+      .loadDangerSources([date, date], [this.authenticationService.getActiveRegionId()])
+      .subscribe((dangerSources) => this.dangerSources.set(orderBy(dangerSources, (s) => s.creationDate)));
   }
 
   get eventDate(): Date {
@@ -127,6 +143,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     this[`${key}Time`]().nativeElement.valueAsDate = date;
     date = isFinite(+date) ? fromUTC(date) : undefined;
     this.observation()[key] = date;
+    this.loadDangerSources();
   }
 
   handleDateEvent(event: Event, key: "eventDate" | "reportDate") {
@@ -145,6 +162,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     } else {
       this.observation()[key] = date;
     }
+    this.loadDangerSources();
   }
 
   selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {

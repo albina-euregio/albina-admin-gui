@@ -28,7 +28,7 @@ import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { CommonModule } from "@angular/common";
+import { CommonModule, formatDate } from "@angular/common";
 import { type Observable, type Subscription } from "rxjs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ObservationChartComponent } from "./observation-chart.component";
@@ -39,6 +39,7 @@ import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { FilterSelectionValue } from "./filter-selection-config";
 import { observationFilters } from "./filter-selection-data-data";
 import {
   ObservationMarkerWeatherStationService,
@@ -50,6 +51,7 @@ import Split from "split.js";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import orderBy from "lodash/orderBy";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -161,6 +163,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   protected observationsService = inject(AlbinaObservationsService);
   private sanitizer = inject(DomSanitizer);
   private regionsService = inject(RegionsService);
+  private dangerSourcesService = inject(DangerSourcesService);
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
 
@@ -229,6 +232,22 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.days = 7;
     }
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
+    this.loadDangerSources();
+  }
+
+  private loadDangerSources() {
+    this.dangerSourcesService.loadDangerSources([new Date(), new Date()], ["AT-07"]).subscribe((dangerSources) => {
+      const filter = this.filter.filterSelectionData.find((filter) => filter.key === "dangerSource");
+      if (!filter) return;
+      const values: FilterSelectionValue[] = orderBy(dangerSources, (s) => s.creationDate).map((s) => ({
+        value: s.id,
+        color: "#000000",
+        label: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
+        legend: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
+      }));
+      filter.values.length = 0;
+      filter.values.push(...values);
+    });
   }
 
   async ngAfterContentInit() {
