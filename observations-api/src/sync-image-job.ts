@@ -17,7 +17,7 @@ main();
 export async function main() {
   const connection = await createConnection();
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - 7);
+  startDate.setDate(startDate.getDate() - 8);
   const endDate = new Date();
   try {
     const observations = await selectObservations(connection, startDate, endDate);
@@ -39,9 +39,12 @@ export async function main() {
         const url = "https://www.lola-kronos.info/api/lolaImages/image/servePDF/" + image.fileName;
         console.log(`Fetching image from ${url}`);
         const response = await fetch(url);
-        console.log(`Fetching image from ${url} yields ${response.status} ${response.statusText}`);
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
+        console.log(
+          `Fetching image from ${url} yields ${response.status} ${response.statusText} (${arrayBuffer.byteLength} bytes)`,
+        );
+        if (!response.ok) continue;
         const fileContent = buffer.toString("base64");
         const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
         const metadata = {
@@ -61,6 +64,7 @@ export async function main() {
         console.log(`Posting image to ${request.url}`);
         const response2 = await fetch(request);
         console.log(`Posting image to ${request.url} yields ${response2.status} ${response2.statusText}`);
+        if (!response2.ok) continue;
         const success: {
           result: "OK";
           msg: string;
@@ -71,8 +75,8 @@ export async function main() {
         if (success.result !== "OK") continue;
         console.log(`Adding external image ${success.url_original}`);
         observation.$externalImgs ??= [];
-        observation.$externalImgs.push(success.url_original);
-        insertObservation(connection, observation);
+        observation.$externalImgs.push(success.url_original + "?objid=" + success.objid);
+        await insertObservation(connection, observation);
       }
     }
   } finally {
