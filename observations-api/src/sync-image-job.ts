@@ -1,4 +1,4 @@
-import { createConnection, selectObservations } from "./db/database";
+import { createConnection, insertObservation, selectObservations } from "./db/database";
 import type {
   LaDokObservation,
   LaDokSimpleObservation,
@@ -12,15 +12,9 @@ import type {
 } from "./fetch/observations/lola-kronos.model";
 import { ObservationSource } from "./generic-observation";
 
-function blobToBase64(blob: Blob): Promise<string> {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.readAsDataURL(blob);
-  });
-}
+main();
 
-export async function sync() {
+export async function main() {
   const connection = await createConnection();
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 7);
@@ -40,12 +34,15 @@ export async function sync() {
         | LolaEarlyObservation
         | LaDokSimpleObservation
         | LaDokObservation;
+      if (!data.images?.length) continue;
       for (const image of data.images) {
         const url = "https://www.lola-kronos.info/api/lolaImages/image/servePDF/" + image.fileName;
         console.log(`Fetching image from ${url}`);
         const response = await fetch(url);
-        const blob = await response.blob();
-        const fileContent = await blobToBase64(blob);
+        console.log(`Fetching image from ${url} yields ${response.status} ${response.statusText}`);
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const fileContent = buffer.toString("base64");
         const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
         const metadata = {
           name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
@@ -64,6 +61,18 @@ export async function sync() {
         console.log(`Posting image to ${request.url}`);
         const response2 = await fetch(request);
         console.log(`Posting image to ${request.url} yields ${response2.status} ${response2.statusText}`);
+        const success: {
+          result: "OK";
+          msg: string;
+          objid: number;
+          url_original: string;
+          url_1200_watermark: string;
+        } = await response2.json();
+        if (success.result !== "OK") continue;
+        console.log(`Adding external image ${success.url_original}`);
+        observation.$externalImgs ??= [];
+        observation.$externalImgs.push(success.url_original);
+        insertObservation(connection, observation);
       }
     }
   } finally {
