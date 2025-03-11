@@ -141,6 +141,7 @@ export const genericObservationSchema = z.object({
   longitude: z.number().optional().nullable().describe("Location longitude (WGS 84)"),
   region: z.string().optional().nullable().describe("Micro-region code (computed from latitude/longitude)"),
   reportDate: z.coerce.date().optional().nullable().describe("Date when the observation has been reported"),
+  dangerSource: z.string().uuid().optional().nullable().describe("Danger source UUID"),
   avalancheProblems: z
     .array(z.nativeEnum(AvalancheProblem))
     .optional()
