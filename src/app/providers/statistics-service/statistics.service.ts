@@ -10,7 +10,7 @@ export class StatisticsService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
-  getStatisticsCsv(
+  getBulletinStatisticsCsv(
     startDate: Date,
     endDate: Date,
     lang: string,
@@ -28,6 +28,20 @@ export class StatisticsService {
           ["lang", lang],
           ["extended", extended],
           ["duplicates", duplicates],
+        ])
+        .toString();
+    const headers = new HttpHeaders({ Accept: "text/csv" });
+    return this.http.get(url, { headers, responseType: "blob" });
+  }
+
+  getDangerSourceStatisticsCsv(startDate: Date, endDate: Date): Observable<Blob> {
+    const url =
+      this.constantsService.getServerUrl() +
+      "statistics/danger-sources?" +
+      this.constantsService
+        .createSearchParams([
+          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
+          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
         ])
         .toString();
     const headers = new HttpHeaders({ Accept: "text/csv" });

@@ -900,6 +900,8 @@
   },
   "statistics": {
     "title": "Statistics",
+    "bulletins": "Avalanche Bulletins",
+    "dangerSources": "Danger Sources",
     "button": {
       "submit": "Download"
     },

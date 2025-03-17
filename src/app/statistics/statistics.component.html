@@ -1,46 +1,97 @@
-<div class="card">
-  <form #statisticsForm="ngForm">
-    <div class="card-body">
-      <div class="form-group row">
-        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.dateRange" | translate }}</label>
-        <div class="col-sm-10">
-          <input
-            type="text"
-            name="daterange"
-            [(ngModel)]="bsRangeValue"
-            placeholder=""
-            class="form-control"
-            bsDaterangepicker
-          />
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.extended" | translate }}</label>
-        <div class="col-sm-10">
-          <label class="switch switch-primary">
-            <input name="extended" type="checkbox" class="switch-input" [(ngModel)]="extended" />
-            <span class="switch-slider"></span>
-          </label>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="inputName" class="col-sm-2 col-form-label">{{ "statistics.label.duplicates" | translate }}</label>
-        <div class="col-sm-10">
-          <label class="switch switch-primary">
-            <input name="duplicates" type="checkbox" class="switch-input" [(ngModel)]="duplicates" />
-            <span class="switch-slider"></span>
-          </label>
-        </div>
+<div class="animated fadeIn">
+  <!--/.row-->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <tabset>
+          <tab heading="{{ 'statistics.bulletins' | translate }}">
+            <div class="card">
+              <form #statisticsForm="ngForm">
+                <div class="card-body">
+                  <div class="form-group row">
+                    <label for="inputName" class="col-sm-2 col-form-label">{{
+                      "statistics.label.dateRange" | translate
+                    }}</label>
+                    <div class="col-sm-10">
+                      <input
+                        type="text"
+                        name="daterange"
+                        [(ngModel)]="bsRangeValueBulletin"
+                        placeholder=""
+                        class="form-control"
+                        bsDaterangepicker
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputName" class="col-sm-2 col-form-label">{{
+                      "statistics.label.extended" | translate
+                    }}</label>
+                    <div class="col-sm-10">
+                      <label class="switch switch-primary">
+                        <input name="extended" type="checkbox" class="switch-input" [(ngModel)]="extended" />
+                        <span class="switch-slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputName" class="col-sm-2 col-form-label">{{
+                      "statistics.label.duplicates" | translate
+                    }}</label>
+                    <div class="col-sm-10">
+                      <label class="switch switch-primary">
+                        <input name="duplicates" type="checkbox" class="switch-input" [(ngModel)]="duplicates" />
+                        <span class="switch-slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- Footer -->
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getBulletinStatistics($event)">
+                    {{ "statistics.button.submit" | translate }}
+                  </button>
+                  <div *ngIf="loadingStatistics" class="spinner-border" role="status">
+                    <span class="visually-hidden">{{ "admin.loadingStatistics" | translate }}</span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </tab>
+          <tab heading="{{ 'statistics.dangerSources' | translate }}">
+            <div class="card">
+              <form #dangerSourcesStatisticsForm="ngForm">
+                <div class="card-body">
+                  <div class="form-group row">
+                    <label for="inputName" class="col-sm-2 col-form-label">{{
+                      "statistics.label.dateRange" | translate
+                    }}</label>
+                    <div class="col-sm-10">
+                      <input
+                        type="text"
+                        name="daterange"
+                        [(ngModel)]="bsRangeValueDangerSource"
+                        placeholder=""
+                        class="form-control"
+                        bsDaterangepicker
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- Footer -->
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getDangerSourceStatistics($event)">
+                    {{ "statistics.button.submit" | translate }}
+                  </button>
+                  <div *ngIf="loadingStatistics" class="spinner-border" role="status">
+                    <span class="visually-hidden">{{ "admin.loadingStatistics" | translate }}</span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </tab>
+        </tabset>
       </div>
     </div>
-    <!-- Footer -->
-    <div class="card-footer">
-      <button type="submit" class="btn btn-sm btn-primary px-3" (click)="getStatistics($event)">
-        {{ "statistics.button.submit" | translate }}
-      </button>
-      <div *ngIf="loadingStatistics" class="spinner-border" role="status">
-        <span class="visually-hidden">{{ "admin.loadingStatistics" | translate }}</span>
-      </div>
-    </div>
-  </form>
+  </div>
 </div>

@@ -6,12 +6,13 @@ import { FormsModule } from "@angular/forms";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { NgIf } from "@angular/common";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TabsModule } from "ngx-bootstrap/tabs";
 
 @Component({
   templateUrl: "statistics.component.html",
   selector: "app-statistics",
   standalone: true,
-  imports: [FormsModule, BsDatepickerModule, NgIf, TranslateModule],
+  imports: [FormsModule, BsDatepickerModule, NgIf, TranslateModule, TabsModule],
 })
 export class StatisticsComponent {
   statisticsService = inject(StatisticsService);
@@ -19,19 +20,21 @@ export class StatisticsComponent {
   constantsService = inject(ConstantsService);
 
   public loadingStatistics = false;
-  public bsRangeValue: Date[];
+  public bsRangeValueBulletin: Date[];
   public duplicates: boolean;
   public extended: boolean;
 
-  getStatistics(event) {
+  public bsRangeValueDangerSource: Date[];
+
+  getBulletinStatistics(event) {
     event.stopPropagation();
-    if (this.bsRangeValue) {
+    if (this.bsRangeValueBulletin) {
       this.loadingStatistics = true;
       //document.getElementById("overlay").style.display = "block";
       this.statisticsService
-        .getStatisticsCsv(
-          this.bsRangeValue[0],
-          this.bsRangeValue[1],
+        .getBulletinStatisticsCsv(
+          this.bsRangeValueBulletin[0],
+          this.bsRangeValueBulletin[1],
           this.translateService.currentLang,
           this.extended,
           this.duplicates,
@@ -39,8 +42,8 @@ export class StatisticsComponent {
         .subscribe((blob) => {
           this.loadingStatistics = false;
           //document.getElementById("overlay").style.display = "none";
-          const startDate = this.constantsService.getISODateString(this.bsRangeValue[0]);
-          const endDate = this.constantsService.getISODateString(this.bsRangeValue[1]);
+          const startDate = this.constantsService.getISODateString(this.bsRangeValueBulletin[0]);
+          const endDate = this.constantsService.getISODateString(this.bsRangeValueBulletin[1]);
           let filename = "statistic_" + startDate + "_" + endDate;
           if (this.extended || this.duplicates) {
             filename = filename + "_";
@@ -53,7 +56,27 @@ export class StatisticsComponent {
           }
           filename = filename + "_" + this.translateService.currentLang + ".csv";
           saveAs(blob, filename);
-          console.log("Statistics loaded.");
+          console.log("Bulletin statistics loaded.");
+        });
+    }
+  }
+
+  getDangerSourceStatistics(event) {
+    event.stopPropagation();
+    if (this.bsRangeValueDangerSource) {
+      this.loadingStatistics = true;
+      //document.getElementById("overlay").style.display = "block";
+      this.statisticsService
+        .getDangerSourceStatisticsCsv(this.bsRangeValueDangerSource[0], this.bsRangeValueDangerSource[1])
+        .subscribe((blob) => {
+          this.loadingStatistics = false;
+          //document.getElementById("overlay").style.display = "none";
+          const startDate = this.constantsService.getISODateString(this.bsRangeValueDangerSource[0]);
+          const endDate = this.constantsService.getISODateString(this.bsRangeValueDangerSource[1]);
+          let filename = "danger_source_statistic_" + startDate + "_" + endDate;
+          filename = filename + ".csv";
+          saveAs(blob, filename);
+          console.log("Danger source statistics loaded.");
         });
     }
   }
