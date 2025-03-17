@@ -74,8 +74,9 @@ export async function main() {
         } = await response2.json();
         if (success.result !== "OK") continue;
         console.log(`Adding external image ${success.url_original}`);
+        const externalImg = success.url_1200_watermark ?? success.url_original;
         observation.$externalImgs ??= [];
-        observation.$externalImgs.push(success.url_original + "?objid=" + success.objid);
+        observation.$externalImgs.push(externalImg + "?objid=" + success.objid);
         await insertObservation(connection, observation);
       }
     }
