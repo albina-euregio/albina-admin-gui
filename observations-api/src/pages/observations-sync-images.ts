@@ -11,10 +11,20 @@ import type {
   LolaSnowStabilityTest,
 } from "../fetch/observations/lola-kronos.model.ts";
 import { ObservationSource } from "../generic-observation.ts";
+import type { APIRoute } from "astro";
 
-main();
+export const POST: APIRoute = async ({ request }) => {
+  if (
+    !process.env.LOKANDO_API_SYNC_TOKEN ||
+    process.env.LOKANDO_API_SYNC_TOKEN !== request.headers.get("X-Lokando-Sync-Token")
+  ) {
+    return new Response("", { status: 403, statusText: "Forbidden" });
+  }
+  await sync();
+  return new Response("", { status: 204, statusText: "No Content" });
+};
 
-export async function main() {
+export async function sync() {
   const connection = await createConnection();
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 8);

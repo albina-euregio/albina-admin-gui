@@ -10,6 +10,7 @@ namespace NodeJS {
     ALBINA_SMET_API: string;
     ALBINA_WIKISNOW_API: string;
     LOKANDO_API_KEY: string;
+    LOKANDO_API_SYNC_TOKEN: string;
     LOKANDO_API: string;
     MYSQL_HOST: string;
     MYSQL_PORT: string;
