@@ -1,4 +1,4 @@
-import { createConnection, insertObservation, selectObservations } from "./db/database";
+import { createConnection, insertObservation, selectObservations } from "../db/database.ts";
 import type {
   LaDokObservation,
   LaDokSimpleObservation,
@@ -9,8 +9,8 @@ import type {
   LolaSimpleObservation,
   LolaSnowProfile,
   LolaSnowStabilityTest,
-} from "./fetch/observations/lola-kronos.model";
-import { ObservationSource } from "./generic-observation";
+} from "../fetch/observations/lola-kronos.model.ts";
+import { ObservationSource } from "../generic-observation.ts";
 
 main();
 
