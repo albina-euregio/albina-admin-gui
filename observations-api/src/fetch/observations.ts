@@ -1,4 +1,4 @@
-import { augmentAndInsertObservation, createConnection, selectObservations } from "../db/database";
+import { ObservationDatabaseConnection } from "../db/database";
 import { type GenericObservation } from "../generic-observation";
 import { fetchLawisIncidents } from "./observations/lawis_incident";
 import { fetchLawisProfiles } from "./observations/lawis_profile";
@@ -7,10 +7,10 @@ import { fetchLwdKip } from "./observations/lwdkip";
 import { fetchWikiSnow } from "./observations/wikisnow";
 
 export async function fetchAndInsert(startDate: Date, endDate: Date) {
-  const connection = await createConnection();
-  const existing = await selectObservations(connection, startDate, endDate);
+  const connection = await ObservationDatabaseConnection.createConnection();
+  const existing = await connection.selectObservations(startDate, endDate);
   for await (const obs of fetchAll(startDate, endDate, existing)) {
-    await augmentAndInsertObservation(connection, obs, existing);
+    await connection.augmentAndInsertObservation(obs, existing);
   }
   connection.destroy();
 }

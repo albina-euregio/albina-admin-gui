@@ -1,4 +1,4 @@
-import { createConnection, insertObservation, selectObservations } from "../db/database.ts";
+import { ObservationDatabaseConnection } from "../db/database.ts";
 import type {
   LaDokObservation,
   LaDokSimpleObservation,
@@ -12,7 +12,6 @@ import type {
 } from "../fetch/observations/lola-kronos.model.ts";
 import { type GenericObservation, ObservationSource } from "../generic-observation.ts";
 import type { APIRoute } from "astro";
-import * as mysql from "mysql2/promise";
 
 export const POST: APIRoute = async ({ request }) => {
   if (
@@ -30,12 +29,12 @@ export const POST: APIRoute = async ({ request }) => {
 };
 
 export async function syncLoLa() {
-  const connection = await createConnection();
+  const connection = await ObservationDatabaseConnection.createConnection();
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 8);
   const endDate = new Date();
   try {
-    const observations = await selectObservations(connection, startDate, endDate);
+    const observations = await connection.selectObservations(startDate, endDate);
     for (const observation of observations) {
       if (observation.$source !== ObservationSource.LoLaKronos) continue;
       if (observation.$externalImgs?.length) continue;
@@ -68,7 +67,7 @@ export async function syncLoLa() {
   }
 }
 
-async function syncImage(image: Buffer, observation: GenericObservation, connection: mysql.Connection) {
+async function syncImage(image: Buffer, observation: GenericObservation, connection: ObservationDatabaseConnection) {
   const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
   const metadata = JSON.stringify({
     name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
@@ -105,5 +104,5 @@ async function syncImage(image: Buffer, observation: GenericObservation, connect
   const externalImg = success.url_1200_watermark ?? success.url_original;
   observation.$externalImgs ??= [];
   observation.$externalImgs.push(externalImg + "?objid=" + success.objid);
-  await insertObservation(connection, observation);
+  await connection.insertObservation(observation);
 }
