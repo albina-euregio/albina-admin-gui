@@ -10,8 +10,9 @@ import type {
   LolaSnowProfile,
   LolaSnowStabilityTest,
 } from "../fetch/observations/lola-kronos.model.ts";
-import { ObservationSource } from "../generic-observation.ts";
+import { type GenericObservation, ObservationSource } from "../generic-observation.ts";
 import type { APIRoute } from "astro";
+import * as mysql from "mysql2/promise";
 
 export const POST: APIRoute = async ({ request }) => {
   if (
@@ -24,11 +25,11 @@ export const POST: APIRoute = async ({ request }) => {
     });
     return new Response("", { status: 403, statusText: "Forbidden" });
   }
-  await sync();
+  await syncLoLa();
   return new Response("", { status: 204, statusText: "No Content" });
 };
 
-export async function sync() {
+export async function syncLoLa() {
   const connection = await createConnection();
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 8);
@@ -59,42 +60,46 @@ export async function sync() {
           `Fetching image from ${url} yields ${response.status} ${response.statusText} (${arrayBuffer.byteLength} bytes)`,
         );
         if (!response.ok) continue;
-        const fileContent = buffer.toString("base64");
-        const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
-        const metadata = {
-          name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
-          location: observation.locationName,
-          creator: observation.authorName,
-          dateevent: eventDate, //FIXE no UTC?
-        };
-        const body = new FormData();
-        body.set("metadata", JSON.stringify(metadata));
-        body.set("filecontent", fileContent);
-        const request = new Request(process.env.LOKANDO_API, {
-          method: "POST",
-          headers: { "Api-Key": process.env.LOKANDO_API_KEY },
-          body,
-        });
-        console.log(`Posting image to ${request.url}`);
-        const response2 = await fetch(request);
-        console.log(`Posting image to ${request.url} yields ${response2.status} ${response2.statusText}`);
-        if (!response2.ok) continue;
-        const success: {
-          result: "OK";
-          msg: string;
-          objid: number;
-          url_original: string;
-          url_1200_watermark: string;
-        } = await response2.json();
-        if (success.result !== "OK") continue;
-        console.log(`Adding external image ${success.url_original}`);
-        const externalImg = success.url_1200_watermark ?? success.url_original;
-        observation.$externalImgs ??= [];
-        observation.$externalImgs.push(externalImg + "?objid=" + success.objid);
-        await insertObservation(connection, observation);
+        await syncImage(buffer, observation, connection);
       }
     }
   } finally {
     connection.destroy();
   }
+}
+
+async function syncImage(image: Buffer, observation: GenericObservation, connection: mysql.Connection) {
+  const fileContent = image.toString("base64");
+  const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
+  const metadata = {
+    name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
+    location: observation.locationName,
+    creator: observation.authorName,
+    dateevent: eventDate, //FIXE no UTC?
+  };
+  const body = new FormData();
+  body.set("metadata", JSON.stringify(metadata));
+  body.set("filecontent", fileContent);
+  const request = new Request(process.env.LOKANDO_API, {
+    method: "POST",
+    headers: { "Api-Key": process.env.LOKANDO_API_KEY },
+    body,
+  });
+  console.log(`Posting image to ${request.url}`);
+  const response2 = await fetch(request);
+  console.log(`Posting image to ${request.url} yields ${response2.status} ${response2.statusText}`);
+  if (!response2.ok) return;
+  const success: {
+    result: "OK";
+    msg: string;
+    objid: number;
+    url_original: string;
+    url_1200_watermark: string;
+  } = await response2.json();
+  if (success.result !== "OK") return;
+  console.log(`Adding external image ${success.url_original}`);
+  const externalImg = success.url_1200_watermark ?? success.url_original;
+  observation.$externalImgs ??= [];
+  observation.$externalImgs.push(externalImg + "?objid=" + success.objid);
+  await insertObservation(connection, observation);
 }
