@@ -69,34 +69,38 @@ export async function syncLoLa() {
 }
 
 async function syncImage(image: Buffer, observation: GenericObservation, connection: mysql.Connection) {
-  const fileContent = image.toString("base64");
   const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
-  const metadata = {
+  const metadata = JSON.stringify({
     name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
     location: observation.locationName,
     creator: observation.authorName,
     dateevent: eventDate, //FIXE no UTC?
-  };
+  });
   const body = new FormData();
-  body.set("metadata", JSON.stringify(metadata));
-  body.set("filecontent", fileContent);
+  body.set("metadata", metadata);
+  body.set("filecontent", image.toString("base64"));
   const request = new Request(process.env.LOKANDO_API, {
     method: "POST",
     headers: { "Api-Key": process.env.LOKANDO_API_KEY },
     body,
   });
   console.log(`Posting image to ${request.url}`);
-  const response2 = await fetch(request);
-  console.log(`Posting image to ${request.url} yields ${response2.status} ${response2.statusText}`);
-  if (!response2.ok) return;
+  const response = await fetch(request);
+  console.log(`Posting image to ${request.url}`, metadata, request, response);
+  if (!response.ok) {
+    return;
+  }
   const success: {
     result: "OK";
     msg: string;
     objid: number;
     url_original: string;
     url_1200_watermark: string;
-  } = await response2.json();
-  if (success.result !== "OK") return;
+  } = await response.json();
+  if (success.result !== "OK") {
+    console.warn(`Failed posting image to ${request.url}`, response.headers, success);
+    return;
+  }
   console.log(`Adding external image ${success.url_original}`);
   const externalImg = success.url_1200_watermark ?? success.url_original;
   observation.$externalImgs ??= [];
