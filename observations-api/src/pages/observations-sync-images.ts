@@ -59,7 +59,12 @@ export async function syncLoLa() {
           `Fetching image from ${url} yields ${response.status} ${response.statusText} (${arrayBuffer.byteLength} bytes)`,
         );
         if (!response.ok) continue;
-        await syncImage(buffer, observation, connection);
+        const externalImg = await syncImage(buffer, observation);
+        if (!externalImg) continue;
+        console.log(`Adding external image ${externalImg}`);
+        observation.$externalImgs ??= [];
+        observation.$externalImgs.push(externalImg);
+        await connection.insertObservation(observation);
       }
     }
   } finally {
@@ -67,7 +72,7 @@ export async function syncLoLa() {
   }
 }
 
-async function syncImage(image: Buffer, observation: GenericObservation, connection: ObservationDatabaseConnection) {
+async function syncImage(image: Buffer, observation: GenericObservation) {
   const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
   const metadata = JSON.stringify({
     name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
@@ -100,9 +105,6 @@ async function syncImage(image: Buffer, observation: GenericObservation, connect
     console.warn(`Failed posting image to ${request.url}`, response.headers, success);
     return;
   }
-  console.log(`Adding external image ${success.url_original}`);
   const externalImg = success.url_1200_watermark ?? success.url_original;
-  observation.$externalImgs ??= [];
-  observation.$externalImgs.push(externalImg + "?objid=" + success.objid);
-  await connection.insertObservation(observation);
+  return externalImg + "?objid=" + success.objid;
 }
