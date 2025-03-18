@@ -18,6 +18,10 @@ export const POST: APIRoute = async ({ request }) => {
     !process.env.LOKANDO_API_SYNC_TOKEN ||
     process.env.LOKANDO_API_SYNC_TOKEN !== request.headers.get("X-Lokando-Sync-Token")
   ) {
+    console.warn("Invalid sync token", {
+      t1: process.env.LOKANDO_API_SYNC_TOKEN,
+      t2: request.headers.get("X-Lokando-Sync-Token"),
+    });
     return new Response("", { status: 403, statusText: "Forbidden" });
   }
   await sync();
