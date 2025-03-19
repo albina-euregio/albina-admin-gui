@@ -60,6 +60,7 @@ import {
 } from "app/danger-sources/models/danger-source-variant.model";
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
+import { LangTexts } from "app/models/text.model";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -1467,7 +1468,24 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return true;
     }
 
+    const checkTexts = (texts: LangTexts[]) => texts.some((text) => this.checkTextcatTranslations(text));
+
+    if (
+      checkTexts([
+        bulletin.avActivityHighlights$,
+        bulletin.avActivityComment$,
+        bulletin.snowpackStructureHighlights$,
+        bulletin.snowpackStructureComment$,
+      ])
+    ) {
+      return true;
+    }
+
     return false;
+  }
+
+  private checkTextcatTranslations(text: LangTexts) {
+    return Object.values(text).some((t) => t.startsWith("⚠ Error:"));
   }
 
   private checkAvalancheProblem(avalancheProblem: AvalancheProblemModel) {
