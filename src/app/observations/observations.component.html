@@ -80,7 +80,7 @@
                 bsDaterangepicker
                 [(ngModel)]="filter.dateRange"
                 (ngModelChange)="this.loadObservationsAndWeatherStations()"
-                [bsConfig]="{ withTimepicker: true }"
+                [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true }"
                 [maxDate]="filter.dateRangeMaxDate"
               />
             </div>

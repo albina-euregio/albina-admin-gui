@@ -36,10 +36,13 @@ export class ObservationFilterService<
     }
     // bsDaterangepicker overwrites the time for endDate with the time from startDate when selecting a new date range.
     // To keep the time from the previous selection, we extract it from the query params.
+    const oldStartDate = this.parseQueryParams(this.activatedRoute.snapshot.queryParams)[0];
     const oldEndDate = this.parseQueryParams(this.activatedRoute.snapshot.queryParams)[1];
     if (
-      oldEndDate &&
-      this.constantsService.getISODateString(oldEndDate) !== this.constantsService.getISODateString(this.endDate)
+      (oldEndDate &&
+        this.constantsService.getISODateString(oldEndDate) !== this.constantsService.getISODateString(this.endDate)) ||
+      (oldStartDate &&
+        this.constantsService.getISODateString(oldStartDate) !== this.constantsService.getISODateString(this.startDate))
     ) {
       this.endDate.setHours(oldEndDate.getHours(), oldEndDate.getMinutes(), oldEndDate.getSeconds());
     }
