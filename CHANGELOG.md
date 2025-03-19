@@ -2,6 +2,35 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.10] - 2025-03-18
+
+### 🐛 Bug Fixes
+
+- Fix typo in method to check avalanche problems for completeness
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to angular 19.2.1
+- Update eaws-regions to v7.0.7
+
+### Bulletins
+
+- Allow to delete all bulletins of one day at once
+
+### Observations
+
+- Add filter for danger sources
+- Allow to connect observation to danger source
+- Allow to show old plots for dry snowfall level with arrow keys
+
+### Danger Sources
+
+- Add statistics download
+- Improve visualization of variants in list view
+- Add keyboard shortcuts
+- Create bulletins from danger sources
+- Show danger ratings on AM and PM map
+
 ## [7.1.9] - 2025-03-03
 
 ### Bulletins
