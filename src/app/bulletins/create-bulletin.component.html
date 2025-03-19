@@ -701,7 +701,7 @@
       <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.getAuthor().getName() }}</p>
 
       <div
-        *ngIf="checkAvalancheProblem(bulletin)"
+        *ngIf="checkBulletin(bulletin)"
         class="region-thumb__avalanche-info text-danger"
         title="{{ 'bulletins.create.tooltip.incompleteAvalancheProblem' | translate }}"
       >
@@ -711,7 +711,7 @@
         }}</span>
       </div>
 
-      <div *ngIf="!checkAvalancheProblem(bulletin)" class="region-thumb__avalanche-info">
+      <div *ngIf="!checkBulletin(bulletin)" class="region-thumb__avalanche-info">
         <app-danger-rating-icon
           [hasElevationDependency]="bulletin.forenoon.hasElevationDependency"
           [dangerRatingAbove]="bulletin.forenoon.dangerRatingAbove"

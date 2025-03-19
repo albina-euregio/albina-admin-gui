@@ -1428,7 +1428,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         bulletin
           .getSavedAndPublishedRegions()
           .some((region) => region.startsWith(this.authenticationService.getActiveRegionId())) &&
-        this.checkAvalancheProblem(bulletin)
+        this.checkBulletin(bulletin)
       ) {
         error = true;
       }
@@ -1437,162 +1437,54 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return error;
   }
 
-  protected checkAvalancheProblem(bulletin: BulletinModel) {
-    if (bulletin.forenoon) {
-      if (bulletin.forenoon.avalancheProblem1) {
-        if (
-          bulletin.forenoon.avalancheProblem1.getAspects().length <= 0 ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem1.getAvalancheType() ||
-          !bulletin.forenoon.avalancheProblem1.getDangerRating() ||
-          bulletin.forenoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.forenoon.avalancheProblem1.getMatrixInformation() ||
-          !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
-          !bulletin.forenoon.avalancheProblem1.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.forenoon.avalancheProblem2) {
-        if (
-          bulletin.forenoon.avalancheProblem2.getAspects().length <= 0 ||
-          !bulletin.forenoon.avalancheProblem2.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem2.getAvalancheType() ||
-          !bulletin.forenoon.avalancheProblem2.getDangerRating() ||
-          bulletin.forenoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.forenoon.avalancheProblem2.getMatrixInformation() ||
-          !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
-          !bulletin.forenoon.avalancheProblem2.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.forenoon.avalancheProblem3) {
-        if (
-          bulletin.forenoon.avalancheProblem3.getAspects().length <= 0 ||
-          !bulletin.forenoon.avalancheProblem3.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem3.getAvalancheType() ||
-          !bulletin.forenoon.avalancheProblem3.getDangerRating() ||
-          bulletin.forenoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.forenoon.avalancheProblem3.getMatrixInformation() ||
-          !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
-          !bulletin.forenoon.avalancheProblem3.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.forenoon.avalancheProblem4) {
-        if (
-          bulletin.forenoon.avalancheProblem4.getAspects().length <= 0 ||
-          !bulletin.forenoon.avalancheProblem4.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem4.getAvalancheType() ||
-          !bulletin.forenoon.avalancheProblem4.getDangerRating() ||
-          bulletin.forenoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.forenoon.avalancheProblem4.getMatrixInformation() ||
-          !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
-          !bulletin.forenoon.avalancheProblem4.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.forenoon.avalancheProblem5) {
-        if (
-          bulletin.forenoon.avalancheProblem5.getAspects().length <= 0 ||
-          !bulletin.forenoon.avalancheProblem5.getAvalancheProblem() ||
-          !bulletin.forenoon.avalancheProblem5.getAvalancheType() ||
-          !bulletin.forenoon.avalancheProblem5.getDangerRating() ||
-          bulletin.forenoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.forenoon.avalancheProblem5.getMatrixInformation() ||
-          !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
-          !bulletin.forenoon.avalancheProblem5.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
+  protected checkBulletin(bulletin: BulletinModel) {
+    const checkProblems = (problems: AvalancheProblemModel[]) =>
+      problems.some((problem) => this.checkAvalancheProblem(problem));
+
+    if (
+      bulletin.forenoon &&
+      checkProblems([
+        bulletin.forenoon.avalancheProblem1,
+        bulletin.forenoon.avalancheProblem2,
+        bulletin.forenoon.avalancheProblem3,
+        bulletin.forenoon.avalancheProblem4,
+        bulletin.forenoon.avalancheProblem5,
+      ])
+    ) {
+      return true;
     }
-    if (bulletin.afternoon) {
-      if (bulletin.afternoon.avalancheProblem1) {
-        if (
-          bulletin.afternoon.avalancheProblem1.getAspects().length <= 0 ||
-          !bulletin.afternoon.avalancheProblem1.getAvalancheProblem() ||
-          !bulletin.afternoon.avalancheProblem1.getAvalancheType() ||
-          !bulletin.afternoon.avalancheProblem1.getDangerRating() ||
-          bulletin.afternoon.avalancheProblem1.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.afternoon.avalancheProblem1.getMatrixInformation() ||
-          !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getFrequency() ||
-          !bulletin.afternoon.avalancheProblem1.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.afternoon.avalancheProblem2) {
-        if (
-          bulletin.afternoon.avalancheProblem2.getAspects().length <= 0 ||
-          !bulletin.afternoon.avalancheProblem2.getAvalancheProblem() ||
-          !bulletin.afternoon.avalancheProblem2.getAvalancheType() ||
-          !bulletin.afternoon.avalancheProblem2.getDangerRating() ||
-          bulletin.afternoon.avalancheProblem2.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.afternoon.avalancheProblem2.getMatrixInformation() ||
-          !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getFrequency() ||
-          !bulletin.afternoon.avalancheProblem2.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.afternoon.avalancheProblem3) {
-        if (
-          bulletin.afternoon.avalancheProblem3.getAspects().length <= 0 ||
-          !bulletin.afternoon.avalancheProblem3.getAvalancheProblem() ||
-          !bulletin.afternoon.avalancheProblem3.getAvalancheType() ||
-          !bulletin.afternoon.avalancheProblem3.getDangerRating() ||
-          bulletin.afternoon.avalancheProblem3.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.afternoon.avalancheProblem3.getMatrixInformation() ||
-          !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getFrequency() ||
-          !bulletin.afternoon.avalancheProblem3.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.afternoon.avalancheProblem4) {
-        if (
-          bulletin.afternoon.avalancheProblem4.getAspects().length <= 0 ||
-          !bulletin.afternoon.avalancheProblem4.getAvalancheProblem() ||
-          !bulletin.afternoon.avalancheProblem4.getAvalancheType() ||
-          !bulletin.afternoon.avalancheProblem4.getDangerRating() ||
-          bulletin.afternoon.avalancheProblem4.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.afternoon.avalancheProblem4.getMatrixInformation() ||
-          !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getFrequency() ||
-          !bulletin.afternoon.avalancheProblem4.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
-      if (bulletin.afternoon.avalancheProblem5) {
-        if (
-          bulletin.afternoon.avalancheProblem5.getAspects().length <= 0 ||
-          !bulletin.afternoon.avalancheProblem5.getAvalancheProblem() ||
-          !bulletin.afternoon.avalancheProblem5.getAvalancheType() ||
-          !bulletin.afternoon.avalancheProblem5.getDangerRating() ||
-          bulletin.afternoon.avalancheProblem5.getDangerRating() == Enums.DangerRating.missing ||
-          !bulletin.afternoon.avalancheProblem5.getMatrixInformation() ||
-          !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getSnowpackStability() ||
-          !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getFrequency() ||
-          !bulletin.afternoon.avalancheProblem5.getMatrixInformation().getAvalancheSize()
-        ) {
-          return true;
-        }
-      }
+
+    if (
+      bulletin.afternoon &&
+      checkProblems([
+        bulletin.afternoon.avalancheProblem1,
+        bulletin.afternoon.avalancheProblem2,
+        bulletin.afternoon.avalancheProblem3,
+        bulletin.afternoon.avalancheProblem4,
+        bulletin.afternoon.avalancheProblem5,
+      ])
+    ) {
+      return true;
     }
+
     return false;
+  }
+
+  private checkAvalancheProblem(avalancheProblem: AvalancheProblemModel) {
+    if (!avalancheProblem) {
+      return false;
+    }
+    return (
+      avalancheProblem.getAspects().length <= 0 ||
+      !avalancheProblem.getAvalancheProblem() ||
+      !avalancheProblem.getAvalancheType() ||
+      !avalancheProblem.getDangerRating() ||
+      avalancheProblem.getDangerRating() == Enums.DangerRating.missing ||
+      !avalancheProblem.getMatrixInformation() ||
+      !avalancheProblem.getMatrixInformation().getSnowpackStability() ||
+      !avalancheProblem.getMatrixInformation().getFrequency() ||
+      !avalancheProblem.getMatrixInformation().getAvalancheSize()
+    );
   }
 
   deleteBulletin(event: Event, bulletin: BulletinModel) {
