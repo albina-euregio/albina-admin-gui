@@ -355,6 +355,16 @@ export class DangerSourceVariantComponent implements OnChanges {
     this.updateVariantOnServer();
   }
 
+  setPenetrateDeepLayers(penetrateDeepLayers: boolean) {
+    const variant = this.variant();
+    if (variant?.penetrateDeepLayers === penetrateDeepLayers) {
+      variant.penetrateDeepLayers = undefined;
+    } else {
+      variant.penetrateDeepLayers = penetrateDeepLayers;
+    }
+    this.updateVariantOnServer();
+  }
+
   isLooseSnowMoisture(wetness: Wetness) {
     return this.variant()?.looseSnowMoisture === wetness;
   }

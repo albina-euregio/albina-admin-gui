@@ -210,6 +210,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   dangerPeak: Daytime;
   slopeGradient: SlopeGradient;
   runoutIntoGreen: boolean | undefined;
+  penetrateDeepLayers: boolean | undefined;
   naturalRelease: Probability;
   dangerSigns: DangerSign[];
   eawsMatrixInformation: MatrixInformationModel;
@@ -286,6 +287,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.dangerPeak = json.dangerPeak;
     variant.slopeGradient = json.slopeGradient;
     variant.runoutIntoGreen = json.runoutIntoGreen;
+    variant.penetrateDeepLayers = json.penetrateDeepLayers;
     variant.naturalRelease = json.naturalRelease;
     variant.dangerSigns = json.dangerSigns;
     variant.eawsMatrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
@@ -354,6 +356,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.dangerPeak = variant.dangerPeak;
       this.slopeGradient = variant.slopeGradient;
       this.runoutIntoGreen = variant.runoutIntoGreen;
+      this.penetrateDeepLayers = variant.penetrateDeepLayers;
       this.naturalRelease = variant.naturalRelease;
       this.dangerSigns = variant.dangerSigns;
       this.eawsMatrixInformation = new MatrixInformationModel(variant.eawsMatrixInformation);
