@@ -1502,7 +1502,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private checkTextcatTranslations(text: LangTexts) {
-    return Object.values(text).some((t) => t.startsWith("⚠ Error:"));
+    return Object.values(text).some((t) => t && t.startsWith("⚠ Error:"));
   }
 
   private checkAvalancheProblem(avalancheProblem: AvalancheProblemModel) {
