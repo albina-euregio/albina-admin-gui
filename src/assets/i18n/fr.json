@@ -144,6 +144,7 @@
         "hasDaytimeDependency": "Selon le moment de la journée",
         "dangerIncreaseWithElevation": "Augmentation du danger avec l'altitude",
         "runoutIntoGreen": "Zone de dépôt hors neige",
+        "penetrateDeepLayers": "Penetrate deep layers",
         "highestDangerAspect": "Risque le plus élevé",
         "dangerPeak": "Pic de danger",
         "slopeGradient": "Pente",
@@ -822,6 +823,9 @@
         "dangerPattern": {
           "caption": "Modèle de risques"
         },
+        "dangerSource": {
+          "caption": "Danger Source"
+        },
         "days": {
           "caption": "Jour"
         }
@@ -897,6 +901,8 @@
   },
   "statistics": {
     "title": "Statistiques",
+    "bulletins": "Avalanche Bulletins",
+    "dangerSources": "Sources de danger",
     "button": {
       "submit": "Télécharger"
     },
@@ -1113,19 +1119,28 @@
     "increasing": "plus meuble au-dessus"
   },
   "terrainType": {
-    "gullies": "couloirs",
-    "bowls": "creux",
+    "gullies_and_bowls": "gullies and bowls",
+    "adjacent_to_ridgelines": "adjacent to ridgelines",
+    "distant_from_ridgelines": "distant from ridgelines",
+    "in_the_vicinity_of_peaks": "in the vicinity of peaks",
     "pass_areas": "zones de col",
-    "ridge_lines": "lignes de crête",
-    "adjacent_to_ridge_lines": "adjacent to ridge lines",
-    "distant_from_ridge_lines": "distant from ridge lines",
-    "slope_discontinuities": "slope discontinuities",
-    "convex_terrain": "convex terrain",
-    "concave_terrain": "concave terrain",
-    "steep_terrain": "steep terrain",
-    "very_steep_terrain": "very steep terrain",
-    "open_terrain": "open terrain",
-    "forest": "forest"
+    "shady_slopes": "shady slopes",
+    "sunny_slopes": "sunny slopes",
+    "grassy_slopes": "grassy slopes",
+    "cut_slopes": "cut slopes",
+    "wind_loaded_slopes": "wind loaded slopes",
+    "base_of_rock_walls": "base of rock walls",
+    "behind_abrupt_changes_in_the_terrain": "behind abrupt changes in the terrain",
+    "transitions_into_gullies_and_bowls": "transitions into gullies and bowls",
+    "areas_where_the_snow_cover_is_rather_shallow": "areas where the snow cover is rather shallow",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "transitions from a shallow to a deep snowpack",
+    "highly_frequented_off_piste_terrain": "highly frequented off piste terrain",
+    "little_used_backcountry_terrain": "little used backcountry terrain",
+    "places_that_are_protected_from_the_wind": "places that are protected from the wind",
+    "regions_exposed_to_the_foehn_wind": "regions exposed to the foehn wind",
+    "regions_with_a_lot_of_snow": "regions with a lot of snow",
+    "regions_exposed_to_precipitation": "regions exposed to precipitation",
+    "regions_exposed_to_heavier_precipitation": "regions exposed to heavier precipitation"
   },
   "dangerSign": {
     "shooting_cracks": "fissures",
@@ -1274,6 +1289,7 @@
     "comment": "Commentaire",
     "content": "Contenu",
     "dangerRating": "Indice de risques",
+    "dangerSource": "Danger source",
     "elevation": "Altitude",
     "elevationRange": "Plage d'altitude",
     "elevationLowerBound": "Limite inférieure",
