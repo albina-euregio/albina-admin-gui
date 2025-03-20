@@ -69,7 +69,7 @@ export class ConstantsService {
 
   public fillOpacityEditSelection = 0.4;
 
-  public textcatLineBreak = '[{"curlyName":"Zeilenumbruch01","line":0}]';
+  public textcatLineBreak = '{"curlyName":"Zeilenumbruch01","line":0}';
 
   public avActivityCommentTextcat: Record<
     Exclude<Enums.AvalancheProblem, "cornices" | "no_distinct_avalanche_problem">,

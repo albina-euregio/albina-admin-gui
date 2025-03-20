@@ -674,10 +674,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
               if (dangerSourceVariant.textcat) {
                 bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
                   ? bulletin.avActivityCommentTextcat +
+                    "," +
                     this.constantsService.textcatLineBreak +
+                    "," +
                     this.constantsService.textcatLineBreak +
+                    "," +
                     dangerSourceVariant.textcat
-                  : dangerSourceVariant.textcat;
+                  : "[" + dangerSourceVariant.textcat;
               }
               bulletin.avActivityComment$ = {
                 en: "⚠ Error: Missing translation",
@@ -690,6 +693,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
               };
             }
 
+            bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
+              ? bulletin.avActivityCommentTextcat + "]"
+              : undefined;
+
             amDaytimeDescription.updateDangerRating();
             bulletin.setForenoon(amDaytimeDescription);
 
@@ -700,7 +707,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             }
 
             bulletins.push(bulletin);
-            debugger;
             this.addInternalBulletin(bulletin);
           }
 
