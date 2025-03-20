@@ -144,6 +144,7 @@
         "hasDaytimeDependency": "Daytime dependency",
         "dangerIncreaseWithElevation": "Danger increase with elevation",
         "runoutIntoGreen": "Runout into green",
+        "penetrateDeepLayers": "Penetrate deep layers",
         "highestDangerAspect": "Highest danger aspect",
         "dangerPeak": "Danger peak",
         "slopeGradient": "Slope gradient",
