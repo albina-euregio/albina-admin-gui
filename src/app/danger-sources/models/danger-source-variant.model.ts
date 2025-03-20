@@ -176,6 +176,7 @@ export enum Wetness {
 export class DangerSourceVariantModel implements PolygonObject {
   id: string;
   comment: string;
+  textcat: string;
 
   originalDangerSourceVariantId: string;
   forecastDangerSourceVariantId: string;
@@ -252,6 +253,7 @@ export class DangerSourceVariantModel implements PolygonObject {
 
     variant.id = json.id;
     variant.comment = json.comment;
+    variant.textcat = json.textcat;
     variant.originalDangerSourceVariantId = json.originalDangerSourceVariantId;
     variant.forecastDangerSourceVariantId = json.forecastDangerSourceVariantId;
     variant.dangerSource = DangerSourceModel.createFromJson(json.dangerSource);
@@ -321,6 +323,7 @@ export class DangerSourceVariantModel implements PolygonObject {
         this.originalDangerSourceVariantId = variant.id;
       }
       this.comment = variant.comment;
+      this.textcat = variant.textcat;
       this.dangerSource = DangerSourceModel.createFromJson(variant.dangerSource);
       this.creationDate = new Date(variant.creationDate);
       this.updateDate = new Date(variant.updateDate);
