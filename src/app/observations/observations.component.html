@@ -136,18 +136,6 @@
                 <i class="ph ph-trend-up"></i>
               </button>
             </div>
-
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                class="btn btn-bare"
-                (click)="this.layoutFilters = !this.layoutFilters"
-                title="{{ 'admin.observations.toggleFilterBar' | translate }}"
-              >
-                <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
-                <i *ngIf="!layoutFilters" class="ph ph-caret-left"></i>
-              </button>
-            </div>
           </div>
           <!-- /global-bar-right -->
         </div>
@@ -181,6 +169,15 @@
 
       <!-- !layout-map -->
       <div class="layout-map">
+        <!-- Filter Sidebar toggle icon -->
+        <button
+          type="button"
+          class="create-bulletin__sidebar-close-on-map"
+          (click)="this.layoutFilters = !this.layoutFilters"
+          title="{{ 'admin.observations.toggleFilterBar' | translate }}"
+        >
+          <i class="ph ph-sidebar"></i>
+        </button>
         <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
       </div>
       <!-- /layout-map -->
