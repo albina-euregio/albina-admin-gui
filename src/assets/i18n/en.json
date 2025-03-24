@@ -776,7 +776,8 @@
       "filters": "Filters",
       "title": "Observations",
       "newObservation": "New observation",
-      "exportObservations": "Export observations",
+      "exportObservations": "Export observations (GeoJSON)",
+      "exportStatistics": "Export statistics (CSV)",
       "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Download"

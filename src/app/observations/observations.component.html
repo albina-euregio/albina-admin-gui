@@ -115,26 +115,29 @@
               </button>
             </div>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                (click)="exportObservations()"
-                class="btn btn-bare"
-                title="{{ 'admin.observations.exportObservations' | translate }}"
-              >
-                <i class="ph ph-download-simple"></i>
+            <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
+              <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle ngxMousetrapKey="o">
+                <i class="ph-bold ph-dots-three-outline-vertical"></i>
               </button>
-            </div>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                (click)="observationsService.getStatistics()"
-                class="btn btn-bare"
-                title="{{ 'menu.statistics' | translate }}"
-              >
-                <i class="ph ph-trend-up"></i>
-              </button>
+              <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
+                <!-- map above / map aside -->
+                <li>
+                  <button class="dropdown-item" (click)="exportObservations(); dropdown.hide()" ngxMousetrapKey="e">
+                    <i class="ph ph-download-simple"></i>
+                    <span>{{ "admin.observations.exportObservations" | translate }}</span>
+                  </button>
+
+                  <button
+                    class="dropdown-item"
+                    (click)="observationsService.getStatistics(); dropdown.hide()"
+                    ngxMousetrapKey="s"
+                  >
+                    <i class="ph ph-trend-up"></i>
+                    <span>{{ "admin.observations.exportStatistics" | translate }}</span>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
           <!-- /global-bar-right -->

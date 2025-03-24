@@ -7,6 +7,7 @@ import {
   TemplateRef,
   viewChild,
   inject,
+  ViewChild,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -52,6 +53,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import orderBy from "lodash/orderBy";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -138,6 +140,7 @@ class ObservationData {
   imports: [
     ObservationChartComponent,
     BsDatepickerModule,
+    BsDropdownModule,
     CommonModule,
     FormsModule,
     ObservationEditorComponent,
@@ -170,6 +173,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
   public observationSearch = "";
+
+  @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
   public readonly data = {
     observations: new ObservationData(
