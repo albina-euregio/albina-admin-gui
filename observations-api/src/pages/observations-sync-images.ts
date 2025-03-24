@@ -78,6 +78,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
     location: observation.locationName,
     creator: observation.authorName,
+    copyright: observation.authorName,
     dateevent: eventDate, //FIXE no UTC?
     fname_orig: observation.$id + ".jpg",
   });
