@@ -73,6 +73,16 @@ export async function syncLoLa() {
 }
 
 async function syncImage(image: Buffer, observation: GenericObservation) {
+  const data = observation.$data as
+    | LolaSimpleObservation
+    | LolaAvalancheEvent
+    | LolaSnowProfile
+    | LolaEvaluation
+    | LolaRainBoundary
+    | LolaSnowStabilityTest
+    | LolaEarlyObservation
+    | LaDokSimpleObservation
+    | LaDokObservation;
   const eventDate = new Date(observation.eventDate).toISOString().slice(0, "2025-03-08".length);
   const metadata = JSON.stringify({
     name: `${eventDate} ${observation.locationName} [${observation.authorName}]`,
@@ -81,6 +91,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     copyright: observation.authorName,
     dateevent: eventDate, //FIXE no UTC?
     fname_orig: observation.$id + ".jpg",
+    description: data.comment ?? "",
   });
   const body = new FormData();
   body.set("metadata", metadata);
