@@ -175,7 +175,7 @@ export function observationFilters(t: (message: string) => string): FilterSelect
         {
           value: ImportantObservation.ForBlog,
           color: "#f781bf",
-          label: "BLOG",
+          label: "l",
           legend: t("importantObservation.ForBlog"),
         },
       ],

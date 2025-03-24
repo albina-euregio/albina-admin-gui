@@ -1,6 +1,11 @@
 import { Component, input, output, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { GenericObservation, ImportantObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+} from "./models/generic-observation.model";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService } from "./observation-marker.service";
@@ -28,6 +33,7 @@ export class ObservationTableComponent {
     [ImportantObservation.StabilityTest]: grainShapes.PPnd.key,
     [ImportantObservation.IceFormation]: grainShapes.IF.key,
     [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
+    [ImportantObservation.ForBlog]: grainShapes.PPpl.key,
   };
 
   get sortedObservations(): GenericObservation[] {
