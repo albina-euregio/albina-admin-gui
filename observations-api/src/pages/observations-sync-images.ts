@@ -79,6 +79,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     location: observation.locationName,
     creator: observation.authorName,
     dateevent: eventDate, //FIXE no UTC?
+    fname_orig: observation.$id + ".jpg",
   });
   const body = new FormData();
   body.set("metadata", metadata);
