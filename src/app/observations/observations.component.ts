@@ -52,6 +52,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import orderBy from "lodash/orderBy";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -164,6 +165,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private sanitizer = inject(DomSanitizer);
   private regionsService = inject(RegionsService);
   private dangerSourcesService = inject(DangerSourcesService);
+  private authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
 
@@ -236,9 +238,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private loadDangerSources() {
+    const filter = this.filter.filterSelectionData.find((filter) => filter.key === "dangerSource");
+    if (!filter) return;
+    if (!this.authenticationService.getActiveRegion()?.enableDangerSources) {
+      this.filter.filterSelectionData = this.filter.filterSelectionData.filter((f) => f !== filter);
+      return;
+    }
     this.dangerSourcesService.loadDangerSources([new Date(), new Date()], ["AT-07"]).subscribe((dangerSources) => {
-      const filter = this.filter.filterSelectionData.find((filter) => filter.key === "dangerSource");
-      if (!filter) return;
       const values: FilterSelectionValue[] = orderBy(dangerSources, (s) => s.creationDate).map((s) => ({
         value: s.id,
         color: "#000000",
