@@ -5,10 +5,11 @@ import { TranslateModule } from "@ngx-translate/core";
 import type { FotoWebcamEU } from "../../../observations-api/src/fetch/webcams/foto-webcam.model";
 import type { PanomaxThumbnailResponse } from "../../../observations-api/src/fetch/webcams/panomax.model";
 import { GenericObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, NgxMousetrapDirective],
   selector: "app-observation-gallery",
   templateUrl: "observation-gallery.component.html",
 })
@@ -16,6 +17,14 @@ export class ObservationGalleryComponent {
   readonly observations = input<GenericObservation[]>([]);
   readonly observationClick = output<GenericObservation>();
   public webcamDate: string;
+
+  constructor() {
+    const now = new Date();
+    const minutes = now.getMinutes();
+    now.setMinutes(Math.floor(minutes / 10) * 10, 0, 0);
+    now.setSeconds(0, 0);
+    this.webcamDate = formatDate(now, "yyyy-MM-dd'T'HH:mm:ss", "en-US");
+  }
 
   get sortedObservations(): GenericObservation[] {
     return (this.observations() || [])
@@ -55,5 +64,34 @@ export class ObservationGalleryComponent {
       img = img.replace(/20\d\d\/\d\d\/\d\d.*/, date);
     }
     o.$externalImgs = [img];
+  }
+
+  public minusOneHour() {
+    const newDate = new Date(this.webcamDate);
+    newDate.setMinutes(0, 0, 0);
+    this.webcamDate = formatDate(newDate.getTime() - 1000 * 60 * 60, "yyyy-MM-dd'T'HH:mm:ss", "en-US");
+  }
+
+  public minusTenMinutes() {
+    const newDate = new Date(this.webcamDate);
+    this.webcamDate = formatDate(newDate.getTime() - 1000 * 60 * 10, "yyyy-MM-dd'T'HH:mm:ss", "en-US");
+  }
+
+  public plusOneHour() {
+    const newDate = new Date(this.webcamDate);
+    const newDateNumber = newDate.setMinutes(0, 0, 0) + 1000 * 60 * 60;
+    if (newDateNumber > Date.now()) {
+      return;
+    }
+    this.webcamDate = formatDate(newDateNumber, "yyyy-MM-dd'T'HH:mm:ss", "en-US");
+  }
+
+  public plusTenMinutes() {
+    const newDate = new Date(this.webcamDate);
+    const newDateNumber = newDate.getTime() + 1000 * 60 * 10;
+    if (newDateNumber > Date.now()) {
+      return;
+    }
+    this.webcamDate = formatDate(newDateNumber, "yyyy-MM-dd'T'HH:mm:ss", "en-US");
   }
 }

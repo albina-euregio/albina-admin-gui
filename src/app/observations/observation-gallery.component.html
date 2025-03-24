@@ -1,6 +1,48 @@
 <div class="container">
-  <div class="row">
-    <input type="datetime-local" [step]="3600" class="form-control" [(ngModel)]="webcamDate" />
+  <div class="row row-cols-5 g-2 justify-content-center align-items-center" style="margin-bottom: 1rem">
+    <div style="width: auto">
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-bare--grey"
+        (click)="minusOneHour()"
+        title="{{ 'observations.webcams.tooltips.minusOneHour' | translate }}"
+        [ngxMousetrapKey]="['shift+left']"
+      >
+        <i class="ph-bold ph-caret-double-left"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-bare--grey"
+        (click)="minusTenMinutes()"
+        title="{{ 'observations.webcams.tooltips.minusTenMinutes' | translate }}"
+        [ngxMousetrapKey]="['ctrl+left', 'command+left']"
+      >
+        <i class="ph-bold ph-caret-left"></i>
+      </button>
+    </div>
+    <div style="width: auto">
+      <input type="datetime-local" [step]="3600" class="form-control mx-2" [(ngModel)]="webcamDate" />
+    </div>
+    <div style="width: auto">
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-bare--grey"
+        (click)="plusTenMinutes()"
+        title="{{ 'observations.webcams.tooltips.plusTenMinutes' | translate }}"
+        [ngxMousetrapKey]="['ctrl+right', 'command+right']"
+      >
+        <i class="ph-bold ph-caret-right"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-bare--grey"
+        (click)="plusOneHour()"
+        title="{{ 'observations.webcams.tooltips.plusOneHour' | translate }}"
+        [ngxMousetrapKey]="['shift+right', 'command+right']"
+      >
+        <i class="ph-bold ph-caret-double-right"></i>
+      </button>
+    </div>
   </div>
   <div class="row row-cols-2 g-2">
     <div *ngFor="let observation of sortedObservations">

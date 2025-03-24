@@ -1268,6 +1268,14 @@
         "windGust": "Wind gust"
       }
     },
+    "webcams": {
+      "tooltips": {
+        "minusTenMinutes": "10min back",
+        "minusOneHour": "1h back",
+        "plusTenMinutes": "10min forward",
+        "plusOneHour": "1h forward"
+      }
+    },
     "button": {
       "add": "Add observation",
       "save": "Save observation",
