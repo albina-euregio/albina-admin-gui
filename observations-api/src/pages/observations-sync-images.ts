@@ -1,3 +1,5 @@
+import type { APIRoute } from "astro";
+import child_process from "node:child_process";
 import { ObservationDatabaseConnection } from "../db/database.ts";
 import type {
   LaDokObservation,
@@ -11,7 +13,6 @@ import type {
   LolaSnowStabilityTest,
 } from "../fetch/observations/lola-kronos.model.ts";
 import { type GenericObservation, ObservationSource } from "../generic-observation.ts";
-import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request }) => {
   if (
@@ -51,14 +52,14 @@ export async function syncLoLa() {
       if (!data.images?.length) continue;
       for (const image of data.images) {
         const url = "https://www.lola-kronos.info/api/lolaImages/image/servePDF/" + image.fileName;
-        console.log(`Fetching image from ${url}`);
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        console.log(
-          `Fetching image from ${url} yields ${response.status} ${response.statusText} (${arrayBuffer.byteLength} bytes)`,
-        );
-        if (!response.ok) continue;
+        let buffer: Buffer;
+        try {
+          buffer = child_process.execFileSync("curl", ["--fail", "--show-error", "--silent", url]);
+          console.log(`Fetching image from ${url} yields ${buffer.length} bytes`);
+        } catch (e: unknown) {
+          console.log(`Failed fetching image from ${url} using curl`, e);
+          continue;
+        }
         const externalImg = await syncImage(buffer, observation);
         if (!externalImg) continue;
         console.log(`Adding external image ${externalImg}`);
@@ -93,29 +94,38 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     fname_orig: observation.$id + ".jpg",
     description: data.comment ?? "",
   });
-  const body = new FormData();
-  body.set("metadata", metadata);
-  body.set("filecontent", image.toString("base64"));
-  const request = new Request(process.env.LOKANDO_API, {
-    method: "POST",
-    headers: { "Api-Key": process.env.LOKANDO_API_KEY },
-    body,
-  });
-  console.log(`Posting image to ${request.url}`);
-  const response = await fetch(request);
-  console.log(`Posting image to ${request.url}`, metadata, request, response);
-  if (!response.ok) {
-    return;
-  }
-  const success: {
+  const args = [
+    "--fail",
+    "--show-error",
+    "--silent",
+    process.env.LOKANDO_API,
+    "--header",
+    `Api-Key:${process.env.LOKANDO_API_KEY}`,
+    "--header",
+    "User-Agent:albina-admin-gui observations-sync-images",
+    "--form",
+    `metadata=${metadata}`,
+    "--form",
+    `filecontent=${image.toString("base64")}`,
+  ];
+
+  let success: {
     result: "OK";
     msg: string;
     objid: number;
     url_original: string;
     url_1200_watermark: string;
-  } = await response.json();
-  if (success.result !== "OK") {
-    console.warn(`Failed posting image to ${request.url}`, response.headers, success);
+  };
+  try {
+    console.log("Posting image using curl", metadata);
+    const response = child_process.execFileSync("curl", args, { encoding: "utf-8" });
+    success = JSON.parse(response);
+    if (success.result !== "OK") {
+      throw new Error(response);
+    }
+  } catch (e: unknown) {
+    const args0 = args.map((a) => (a.startsWith("filecontent=") ? "filecontent=..." : a));
+    console.warn(`Failed posting image using curl ${args0}`, e);
     return;
   }
   const externalImg = success.url_1200_watermark ?? success.url_original;
