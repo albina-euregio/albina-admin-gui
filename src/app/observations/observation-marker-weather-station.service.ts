@@ -88,30 +88,34 @@ const dewPointColors = {
   "14": "#67000d",
 };
 
-const relativeHumidityThresholds = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 150];
+const relativeHumidityThresholds = [0.0, 0.2, 0.4, 0.6, 0.8, 1];
 const relativeHumidityColors = {
   "0": "#fff",
-  "1": "#ced1d8",
-  "2": "#9ca4b1",
-  "3": "#648594",
-  "4": "#4499c0",
-  "5": "#1cafe2",
-  "6": "#1cc3ef",
-  "7": "#76cfc9",
-  "8": "#c4dd99",
-  "9": "#f0de70",
-  "10": "#f9c442",
-  "11": "#fbad0b",
-  "12": "#ff8b00",
-  "13": "#fc6d04",
-  "14": "#ff4802",
-  "15": "#dc3000",
-  "16": "#b31901",
-  "17": "#8a0007",
+  "1": "#f7fbff",
+  "2": "#deebf7",
+  "3": "#9ecae1",
+  "4": "#4292c6",
+  "5": "#08306b",
 };
 
 const surfaceHoarThresholds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 100];
 const surfaceHoarColors = {
+  "0": "#fff",
+  "1": "#f7fbff",
+  "2": "#deebf7",
+  "3": "#c6dbef",
+  "4": "#9ecae1",
+  "5": "#6baed6",
+  "6": "#4292c6",
+  "7": "#2171b5",
+  "8": "#08519c",
+  "9": "#08306b",
+};
+
+const surfaceHoarCalculationThresholds = [
+  0, 100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000,
+];
+const surfaceHoarCalculationColors = {
   "0": "#fff",
   "1": "#f7fbff",
   "2": "#deebf7",
@@ -361,7 +365,7 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
       case WeatherStationParameter.SurfaceHoar:
         return this.surfaceHoarColor(value);
       case WeatherStationParameter.SurfaceHoarCalc:
-        return this.surfaceHoarColor(value);
+        return this.surfaceHoarCalculationColor(value);
       case WeatherStationParameter.DewPoint:
         return this.dewPointColor(value);
       case WeatherStationParameter.RelativeHumidity:
@@ -435,6 +439,11 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
     return index >= 0 ? surfaceHoarColors[index] : "white";
   }
 
+  private surfaceHoarCalculationColor(surfaceHoarCalculation: number) {
+    const index = surfaceHoarCalculationThresholds.findIndex((e) => e >= surfaceHoarCalculation);
+    return index >= 0 ? surfaceHoarCalculationColors[index] : "white";
+  }
+
   private dewPointColor(dewPoint: number) {
     const index = dewPointThresholds.findIndex((e) => e >= dewPoint);
     return index >= 0 ? dewPointColors[index] : "white";
@@ -463,6 +472,10 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
       return degreeToAspect(value);
     } else if (this.weatherStationLabel === WeatherStationParameter.DrySnowfallLevel) {
       return Math.round(value / 100);
+    } else if (this.weatherStationLabel === WeatherStationParameter.RelativeHumidity) {
+      return Math.round(parseFloat(value.toFixed(2)) * 100);
+    } else if (this.weatherStationLabel === WeatherStationParameter.SurfaceHoarCalc) {
+      return Math.round(value / 100000);
     } else {
       return Math.round(value);
     }

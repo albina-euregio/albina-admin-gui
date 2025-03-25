@@ -345,7 +345,7 @@ export class MapService {
   updateEditSelection() {
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       if (entry.feature.properties.selected) {
-        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.5 });
+        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.2 });
       } else {
         entry.setStyle({ fillColor: "#000000", fillOpacity: 0.0 });
       }

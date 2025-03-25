@@ -3,13 +3,13 @@
   <!-- !layout-inner -->
   <div class="layout-inner split">
     <!-- !layout-left -->
-    <div class="layout-left">
+    <div class="layout-left" style="min-width: 500px">
       <!-- !layout-global -->
       <div class="layout-global">
         <!-- !global-bar -->
         <div class="global-bar-scroll">
           <!-- !global-bar-left -->
-          <div class="global-bar global-bar-left">
+          <div class="global-bar global-bar-left" style="width: 100%">
             <div class="global-bar-item global-bar-item-load">
               <button type="button" class="btn btn-bare" (click)="loadObservationsAndWeatherStations()">
                 <i *ngIf="!this.data.observations.loading" class="ph ph-arrows-clockwise"></i>
@@ -17,7 +17,7 @@
               </button>
             </div>
 
-            <div class="global-bar-item global-bar-item-source">
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-source">
               <div class="dropdown">
                 <button
                   type="button"
@@ -45,7 +45,36 @@
               </div>
             </div>
 
-            <div class="global-bar-item global-bar-item-region">
+            <div class="global-bar-item global-bar-item-region" style="width: 0">
+              <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
+                <i class="ph ph-number-circle-zero"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('AT-07')"
+                [ngxMousetrapKey]="['r 1']"
+              >
+                <i class="ph ph-number-circle-one"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-BZ')"
+                [ngxMousetrapKey]="['r 2']"
+              >
+                <i class="ph ph-number-circle-two"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-TN')"
+                [ngxMousetrapKey]="['r 3']"
+              >
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+            </div>
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-region">
               <div class="dropdown">
                 <button
                   type="button"
@@ -73,7 +102,7 @@
               </div>
             </div>
 
-            <div class="global-bar-item global-bar-item-calendar">
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-calendar">
               <input
                 class="form-control d-inline-block"
                 #drp="bsDaterangepicker"
@@ -84,13 +113,9 @@
                 [maxDate]="filter.dateRangeMaxDate"
               />
             </div>
-          </div>
-          <div class="global-bar-item">
-            <div class="input-group">
-              <span class="input-group-text">
-                <i class="ph ph-magnifying-glass"></i>
-              </span>
+            <div *ngIf="showSearchInput" class="input-group" style="width: 100%">
               <input
+                id="observationSearchInput"
                 type="text"
                 [(ngModel)]="observationSearch"
                 (change)="this.applyLocalFilter()"
@@ -104,6 +129,11 @@
           <!-- !global-bar-right -->
           <div class="global-bar global-bar-right">
             <div class="global-bar-item global-bar-item-add">
+              <button type="button" class="btn btn-bare" (click)="toggleSearchInput()" ngxMousetrapKey="shift+f">
+                <i class="ph ph-magnifying-glass"></i>
+              </button>
+            </div>
+            <div class="global-bar-item global-bar-item-add">
               <button
                 type="button"
                 (click)="newObservation()"
@@ -115,38 +145,39 @@
               </button>
             </div>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                (click)="exportObservations()"
-                class="btn btn-bare"
-                title="{{ 'admin.observations.exportObservations' | translate }}"
-              >
-                <i class="ph ph-download-simple"></i>
+            <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
+              <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle ngxMousetrapKey="o">
+                <i class="ph-bold ph-dots-three-outline-vertical"></i>
               </button>
-            </div>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                (click)="observationsService.getStatistics()"
-                class="btn btn-bare"
-                title="{{ 'menu.statistics' | translate }}"
-              >
-                <i class="ph ph-trend-up"></i>
-              </button>
-            </div>
+              <ul *bsDropdownMenu class="dropdown-menu dropdown-menu-right create-bulletin__region-dropdown">
+                <li>
+                  <button class="dropdown-item" (click)="this.layoutFilters = !this.layoutFilters; dropdown.hide()">
+                    <i class="ph ph-sidebar"></i>
+                    <span>{{ "admin.observations.toggleFilterBar" | translate }}</span>
+                  </button>
+                </li>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                class="btn btn-bare"
-                (click)="this.layoutFilters = !this.layoutFilters"
-                title="{{ 'admin.observations.toggleFilterBar' | translate }}"
-              >
-                <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
-                <i *ngIf="!layoutFilters" class="ph ph-caret-left"></i>
-              </button>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+
+                <li>
+                  <button class="dropdown-item" (click)="exportObservations(); dropdown.hide()" ngxMousetrapKey="e">
+                    <i class="ph ph-download-simple"></i>
+                    <span>{{ "admin.observations.exportObservations" | translate }}</span>
+                  </button>
+
+                  <button
+                    class="dropdown-item"
+                    (click)="observationsService.getStatistics(); dropdown.hide()"
+                    ngxMousetrapKey="s"
+                  >
+                    <i class="ph ph-trend-up"></i>
+                    <span>{{ "admin.observations.exportStatistics" | translate }}</span>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
           <!-- /global-bar-right -->
@@ -181,6 +212,16 @@
 
       <!-- !layout-map -->
       <div class="layout-map">
+        <!-- Filter Sidebar toggle icon -->
+        <button
+          type="button"
+          class="create-bulletin__sidebar-close-on-map"
+          (click)="this.layoutFilters = !this.layoutFilters"
+          title="{{ 'admin.observations.toggleFilterBar' | translate }}"
+          ngxMousetrapKey="s"
+        >
+          <i class="ph ph-sidebar"></i>
+        </button>
         <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
       </div>
       <!-- /layout-map -->
@@ -192,6 +233,7 @@
           [class.is-active]="this.data.observations.show"
           (click)="this.data.observations.toggle(this.map)"
           title="{{ 'observations.layers.observations' | translate }}"
+          ngxMousetrapKey="1"
         >
           <i class="ph ph-circle" aria-hidden="true"></i>
         </div>
@@ -200,6 +242,7 @@
           [class.is-active]="this.data.webcams.show"
           (click)="this.data.webcams.toggle(this.map)"
           title="{{ 'observations.layers.webcams' | translate }}"
+          ngxMousetrapKey="2"
         >
           <i class="ph ph-webcam" aria-hidden="true"></i>
         </div>
@@ -208,6 +251,7 @@
           [class.is-active]="this.data.observers.show"
           (click)="this.data.observers.toggle(this.map)"
           title="{{ 'observations.layers.observers' | translate }}"
+          ngxMousetrapKey="3"
         >
           <i class="ph ph-eye" aria-hidden="true"></i>
         </div>
@@ -216,6 +260,7 @@
           [class.is-active]="this.data.weatherStations.show"
           (click)="this.data.weatherStations.toggle(this.map)"
           title="{{ 'observations.layers.weatherStations' | translate }}"
+          ngxMousetrapKey="4"
         >
           <i class="ph ph-chart-line" aria-hidden="true"></i>
         </div>
@@ -223,6 +268,22 @@
 
       <!-- !parameter-switch -->
       <div *ngIf="this.data.weatherStations.show && layout === 'map'" class="parameter-switch">
+        <button
+          type="button"
+          class="obs-button invisible"
+          (click)="togglePreviousWeatherStationParameter()"
+          [ngxMousetrapKey]="['alt+up']"
+        >
+          <i class="ph-bold ph-caret-up"></i>
+        </button>
+        <button
+          type="button"
+          class="obs-button invisible"
+          (click)="toggleNextWeatherStationParameter()"
+          [ngxMousetrapKey]="['alt+down']"
+        >
+          <i class="ph-bold ph-caret-down"></i>
+        </button>
         <div
           *ngFor="let parameter of markerWeatherStationService.allParameters"
           class="obs-button"
@@ -278,25 +339,40 @@
 
     <!-- !layout-switch -->
     <div class="layout-switch">
-      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
+      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button" ngxMousetrapKey="v m">
         <span class="button-icon ph ph-map-trifold"></span>
         <span class="button-text">
           {{ "admin.observations.map" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'table'" (click)="layout = 'table'" class="layout-switch-table obs-button">
+      <div
+        *ngIf="layout !== 'table'"
+        (click)="layout = 'table'"
+        class="layout-switch-table obs-button"
+        ngxMousetrapKey="v t"
+      >
         <span class="button-icon ph ph-list"></span>
         <span class="button-text">
           {{ "admin.observations.table" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
+      <div
+        *ngIf="layout !== 'chart'"
+        (click)="layout = 'chart'"
+        class="layout-switch-charts obs-button"
+        ngxMousetrapKey="v c"
+      >
         <span class="button-icon ph ph-chart-line"></span>
         <span class="button-text">
           {{ "admin.observations.charts.charts" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'gallery'" (click)="layout = 'gallery'" class="layout-switch-gallery obs-button">
+      <div
+        *ngIf="layout !== 'gallery'"
+        (click)="layout = 'gallery'"
+        class="layout-switch-gallery obs-button"
+        ngxMousetrapKey="v g"
+      >
         <span class="button-icon ph ph-images"></span>
         <span class="button-text">
           {{ "admin.observations.gallery" | translate }}

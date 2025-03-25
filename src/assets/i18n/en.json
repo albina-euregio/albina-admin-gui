@@ -777,7 +777,8 @@
       "filters": "Filters",
       "title": "Observations",
       "newObservation": "New observation",
-      "exportObservations": "Export observations",
+      "exportObservations": "Export observations (GeoJSON)",
+      "exportStatistics": "Export statistics (CSV)",
       "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Download"
@@ -1276,6 +1277,14 @@
         "windDirection": "Wind direction",
         "windSpeed": "Wind speed",
         "windGust": "Wind gust"
+      }
+    },
+    "webcams": {
+      "tooltips": {
+        "minusTenMinutes": "10min back",
+        "minusOneHour": "1h back",
+        "plusTenMinutes": "10min forward",
+        "plusOneHour": "1h forward"
       }
     },
     "button": {

@@ -7,6 +7,8 @@ import {
   TemplateRef,
   viewChild,
   inject,
+  ViewChild,
+  HostListener,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -52,6 +54,8 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import orderBy from "lodash/orderBy";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -138,6 +142,7 @@ class ObservationData {
   imports: [
     ObservationChartComponent,
     BsDatepickerModule,
+    BsDropdownModule,
     CommonModule,
     FormsModule,
     ObservationEditorComponent,
@@ -164,12 +169,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private sanitizer = inject(DomSanitizer);
   private regionsService = inject(RegionsService);
   private dangerSourcesService = inject(DangerSourcesService);
+  private authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
 
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
   public observationSearch = "";
+  public showSearchInput = false;
+
+  @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
   public readonly data = {
     observations: new ObservationData(
@@ -236,9 +245,13 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private loadDangerSources() {
+    const filter = this.filter.filterSelectionData.find((filter) => filter.key === "dangerSource");
+    if (!filter) return;
+    if (!this.authenticationService.getActiveRegion()?.enableDangerSources) {
+      this.filter.filterSelectionData = this.filter.filterSelectionData.filter((f) => f !== filter);
+      return;
+    }
     this.dangerSourcesService.loadDangerSources([new Date(), new Date()], ["AT-07"]).subscribe((dangerSources) => {
-      const filter = this.filter.filterSelectionData.find((filter) => filter.key === "dangerSource");
-      if (!filter) return;
       const values: FilterSelectionValue[] = orderBy(dangerSources, (s) => s.creationDate).map((s) => ({
         value: s.id,
         color: "#000000",
@@ -315,6 +328,60 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   onSourcesDropdownSelect() {
     this.applyLocalFilter();
+  }
+
+  toggleNextWeatherStationParameter() {
+    if (!this.markerWeatherStationService.weatherStationLabel) {
+      this.selectParameter(WeatherStationParameter.GlobalRadiation);
+    } else {
+      const parameters = Object.values(WeatherStationParameter);
+      const currentIndex = parameters.indexOf(this.markerWeatherStationService.weatherStationLabel);
+      const nextIndex = (currentIndex + 1) % parameters.length;
+      this.selectParameter(parameters[nextIndex]);
+    }
+  }
+
+  togglePreviousWeatherStationParameter() {
+    if (!this.markerWeatherStationService.weatherStationLabel) {
+      this.selectParameter(WeatherStationParameter.DrySnowfallLevel);
+    } else {
+      const parameters = Object.values(WeatherStationParameter);
+      const currentIndex = parameters.indexOf(this.markerWeatherStationService.weatherStationLabel);
+      const nextIndex = currentIndex == 0 ? parameters.length - 1 : (currentIndex - 1) % parameters.length;
+      this.selectParameter(parameters[nextIndex]);
+    }
+  }
+
+  selectRegion(region: string) {
+    this.filter.regions = {};
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.filter.regions[r.id] = true;
+        }
+      });
+    }
+    this.mapService.clickRegion(this.filter.regions);
+    this.applyLocalFilter();
+  }
+
+  toggleSearchInput() {
+    this.showSearchInput = !this.showSearchInput;
+    if (this.showSearchInput) {
+      setTimeout(() => {
+        const searchInput = document.getElementById("observationSearchInput") as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 0);
+    }
+  }
+
+  @HostListener("document:keydown.escape", ["$event"])
+  handleEscapeKey(event: KeyboardEvent) {
+    if (this.showSearchInput) {
+      this.toggleSearchInput();
+    }
   }
 
   newObservation() {
