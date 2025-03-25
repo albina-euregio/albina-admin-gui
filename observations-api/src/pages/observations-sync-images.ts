@@ -121,7 +121,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     url_1200_watermark: string;
   };
   try {
-    await fs.writeFile(file, image.toString("base64"));
+    await fs.writeFile(file, image.toString("base64"), { encoding: "utf-8" });
     console.log("Posting image using curl", metadata);
     const response = child_process.execFileSync("curl", args, { encoding: "utf-8" });
     success = JSON.parse(response);
