@@ -121,7 +121,17 @@
               </button>
 
               <ul *bsDropdownMenu class="dropdown-menu dropdown-menu-right create-bulletin__region-dropdown">
-                <!-- map above / map aside -->
+                <li>
+                  <button class="dropdown-item" (click)="this.layoutFilters = !this.layoutFilters; dropdown.hide()">
+                    <i class="ph ph-sidebar"></i>
+                    <span>{{ "admin.observations.toggleFilterBar" | translate }}</span>
+                  </button>
+                </li>
+
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+
                 <li>
                   <button class="dropdown-item" (click)="exportObservations(); dropdown.hide()" ngxMousetrapKey="e">
                     <i class="ph ph-download-simple"></i>
