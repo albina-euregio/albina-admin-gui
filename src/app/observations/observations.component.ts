@@ -355,6 +355,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         }
       });
     }
+    this.mapService.clickRegion(this.filter.regions);
     this.applyLocalFilter();
   }
 
