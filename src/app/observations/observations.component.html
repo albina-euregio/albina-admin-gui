@@ -203,6 +203,7 @@
           [class.is-active]="this.data.observations.show"
           (click)="this.data.observations.toggle(this.map)"
           title="{{ 'observations.layers.observations' | translate }}"
+          ngxMousetrapKey="1"
         >
           <i class="ph ph-circle" aria-hidden="true"></i>
         </div>
@@ -211,6 +212,7 @@
           [class.is-active]="this.data.webcams.show"
           (click)="this.data.webcams.toggle(this.map)"
           title="{{ 'observations.layers.webcams' | translate }}"
+          ngxMousetrapKey="2"
         >
           <i class="ph ph-webcam" aria-hidden="true"></i>
         </div>
@@ -219,6 +221,7 @@
           [class.is-active]="this.data.observers.show"
           (click)="this.data.observers.toggle(this.map)"
           title="{{ 'observations.layers.observers' | translate }}"
+          ngxMousetrapKey="3"
         >
           <i class="ph ph-eye" aria-hidden="true"></i>
         </div>
@@ -227,6 +230,7 @@
           [class.is-active]="this.data.weatherStations.show"
           (click)="this.data.weatherStations.toggle(this.map)"
           title="{{ 'observations.layers.weatherStations' | translate }}"
+          ngxMousetrapKey="4"
         >
           <i class="ph ph-chart-line" aria-hidden="true"></i>
         </div>
