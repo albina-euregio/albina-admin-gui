@@ -110,7 +110,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     "--form",
     `metadata=${metadata}`,
     "--form",
-    `filecontent=@${file}`,
+    `filecontent=<${file}`,
   ];
 
   let success: {
