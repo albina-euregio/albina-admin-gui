@@ -1,5 +1,8 @@
 import type { APIRoute } from "astro";
 import child_process from "node:child_process";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { ObservationDatabaseConnection } from "../db/database.ts";
 import type {
   LaDokObservation,
@@ -94,6 +97,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     fname_orig: observation.$id + ".jpg",
     description: data.comment ?? "",
   });
+  const file = path.join(os.tmpdir(), crypto.randomUUID());
   const args = [
     "--fail",
     "--show-error",
@@ -106,7 +110,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     "--form",
     `metadata=${metadata}`,
     "--form",
-    `filecontent=${image.toString("base64")}`,
+    `filecontent=@${file}`,
   ];
 
   let success: {
@@ -117,6 +121,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     url_1200_watermark: string;
   };
   try {
+    await fs.writeFile(file, image.toString("base64"));
     console.log("Posting image using curl", metadata);
     const response = child_process.execFileSync("curl", args, { encoding: "utf-8" });
     success = JSON.parse(response);
@@ -127,6 +132,8 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     const args0 = args.map((a) => (a.startsWith("filecontent=") ? "filecontent=..." : a));
     console.warn(`Failed posting image using curl ${args0}`, e);
     return;
+  } finally {
+    await fs.unlink(file);
   }
   const externalImg = success.url_1200_watermark ?? success.url_original;
   return externalImg + "?objid=" + success.objid;
