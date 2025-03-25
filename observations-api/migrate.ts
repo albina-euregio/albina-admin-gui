@@ -1,5 +1,5 @@
 import { type Observation, convertObservationToGeneric } from "../src/app/observations/models/observation.model";
-import { createConnection, insertObservation } from "./src/db/database";
+import { ObservationDatabaseConnection } from "./src/db/database";
 
 async function migrate() {
   const headers = {
@@ -11,12 +11,12 @@ async function migrate() {
   );
   const observations: Observation[] = await response.json();
 
-  const connection = await createConnection();
+  const connection = await ObservationDatabaseConnection.createConnection();
   for await (const obs of observations) {
     try {
       const generic = convertObservationToGeneric(obs);
       console.log(generic);
-      await insertObservation(connection, generic);
+      await connection.insertObservation(generic);
     } catch (e) {
       console.error(e);
     }

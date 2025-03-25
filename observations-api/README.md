@@ -68,6 +68,8 @@ Environment=MYSQL_PORT=
 Environment=MYSQL_USER=
 Environment=MYSQL_PASSWORD=
 Environment=MYSQL_DATABASE=
+Environment=LOKANDO_API=
+Environment=LOKANDO_API_KEY=
 Environment=PORT=3000
 ExecStartPre=/usr/bin/yarn install
 ExecStart=/usr/bin/node dist/server/entry.mjs
