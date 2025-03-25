@@ -344,6 +344,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
+  selectRegion(region: string) {
+    this.filter.regions = {};
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.filter.regions[r.id] = true;
+        }
+      });
+    }
+    this.applyLocalFilter();
+  }
+
   newObservation() {
     const observation = {
       $source: ObservationSource.AvalancheWarningService,

@@ -46,6 +46,32 @@
             </div>
 
             <div class="global-bar-item global-bar-item-region">
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('')"
+                [ngxMousetrapKey]="['r 0']"
+              ></button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('AT-07')"
+                [ngxMousetrapKey]="['r 1']"
+              ></button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-BZ')"
+                [ngxMousetrapKey]="['r 2']"
+              ></button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-TN')"
+                [ngxMousetrapKey]="['r 3']"
+              ></button>
+            </div>
+            <div class="global-bar-item global-bar-item-region">
               <div class="dropdown">
                 <button
                   type="button"
