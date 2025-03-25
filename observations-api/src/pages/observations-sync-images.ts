@@ -129,8 +129,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
       throw new Error(response);
     }
   } catch (e: unknown) {
-    const args0 = args.map((a) => (a.startsWith("filecontent=") ? "filecontent=..." : a));
-    console.warn(`Failed posting image using curl ${args0}`, e);
+    console.warn(`Failed posting image using curl ${args}`, e);
     return;
   } finally {
     await fs.unlink(file);
