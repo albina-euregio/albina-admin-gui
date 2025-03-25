@@ -144,6 +144,7 @@
         "hasDaytimeDependency": "Tageszeitliche Abhängigkeit",
         "dangerIncreaseWithElevation": "Zunahme der Gefahr mit der Höhe",
         "runoutIntoGreen": "Auslauf bis ins Grüne",
+        "penetrateDeepLayers": "Durchreißen in tiefe Schichten",
         "highestDangerAspect": "Exposition der höchsten Gefahr",
         "dangerPeak": "Gefahrenspitze",
         "slopeGradient": "Hangneigung",
@@ -822,6 +823,9 @@
         "dangerPattern": {
           "caption": "Gefahrenmuster"
         },
+        "dangerSource": {
+          "caption": "Gefahrenquelle"
+        },
         "days": {
           "caption": "Kalendertag"
         }
@@ -897,6 +901,8 @@
   },
   "statistics": {
     "title": "Statistik",
+    "bulletins": "Lawinenbulletins",
+    "dangerSources": "Gefahrenquellen",
     "button": {
       "submit": "Herunterladen"
     },
@@ -1113,19 +1119,28 @@
     "increasing": "oben weicher"
   },
   "terrainType": {
-    "gullies": "Rinnen",
-    "bowls": "Mulden",
+    "gullies_and_bowls": "Rinnen und Mulden",
+    "adjacent_to_ridgelines": "Kammlagen",
+    "distant_from_ridgelines": "kammfern",
+    "in_the_vicinity_of_peaks": "Gipfellagen",
     "pass_areas": "Passlagen",
-    "ridge_lines": "Kammlagen",
-    "adjacent_to_ridge_lines": "kammnah",
-    "distant_from_ridge_lines": "kammfern",
-    "slope_discontinuities": "Geländekanten",
-    "convex_terrain": "Konvexes Gelände",
-    "concave_terrain": "Konkaves Gelände",
-    "steep_terrain": "Steiles Gelände",
-    "very_steep_terrain": "Sehr steiles Gelände",
-    "open_terrain": "Offenes Gelände",
-    "forest": "Wald"
+    "shady_slopes": "Schattenhänge",
+    "sunny_slopes": "Sonnenhänge",
+    "grassy_slopes": "Grashänge",
+    "cut_slopes": "Böschungen",
+    "wind_loaded_slopes": "Triebschneehänge",
+    "base_of_rock_walls": "Felswandfüße",
+    "behind_abrupt_changes_in_the_terrain": "hinter Geländekanten",
+    "transitions_into_gullies_and_bowls": "Übergänge in Rinnen und Mulden",
+    "areas_where_the_snow_cover_is_rather_shallow": "eher schneearme Stellen",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "Übergänge von wenig zu viel Schnee",
+    "highly_frequented_off_piste_terrain": "häufig befahrenes Variantengelände",
+    "little_used_backcountry_terrain": "selten befahrenes Gelände",
+    "places_that_are_protected_from_the_wind": "windgeschützte Lagen",
+    "regions_exposed_to_the_foehn_wind": "Föhngebiete",
+    "regions_with_a_lot_of_snow": "schneereiche Gebiete",
+    "regions_exposed_to_precipitation": "Niederschlagsgebiete",
+    "regions_exposed_to_heavier_precipitation": "Hauptniederschlagsgebiete"
   },
   "dangerSign": {
     "shooting_cracks": "Rissbildung",
@@ -1274,6 +1289,7 @@
     "comment": "Kommentar",
     "content": "Inhalt",
     "dangerRating": "Gefahrenstufe",
+    "dangerSource": "Gefahrenquellen",
     "elevation": "Seehöhe",
     "elevationRange": "Höhenband",
     "elevationLowerBound": "Untere Höhengrenze",
