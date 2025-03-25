@@ -288,25 +288,40 @@
 
     <!-- !layout-switch -->
     <div class="layout-switch">
-      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
+      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button" ngxMousetrapKey="v m">
         <span class="button-icon ph ph-map-trifold"></span>
         <span class="button-text">
           {{ "admin.observations.map" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'table'" (click)="layout = 'table'" class="layout-switch-table obs-button">
+      <div
+        *ngIf="layout !== 'table'"
+        (click)="layout = 'table'"
+        class="layout-switch-table obs-button"
+        ngxMousetrapKey="v t"
+      >
         <span class="button-icon ph ph-list"></span>
         <span class="button-text">
           {{ "admin.observations.table" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
+      <div
+        *ngIf="layout !== 'chart'"
+        (click)="layout = 'chart'"
+        class="layout-switch-charts obs-button"
+        ngxMousetrapKey="v c"
+      >
         <span class="button-icon ph ph-chart-line"></span>
         <span class="button-text">
           {{ "admin.observations.charts.charts" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'gallery'" (click)="layout = 'gallery'" class="layout-switch-gallery obs-button">
+      <div
+        *ngIf="layout !== 'gallery'"
+        (click)="layout = 'gallery'"
+        class="layout-switch-gallery obs-button"
+        ngxMousetrapKey="v g"
+      >
         <span class="button-icon ph ph-images"></span>
         <span class="button-text">
           {{ "admin.observations.gallery" | translate }}
