@@ -99,7 +99,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
   });
   const file = path.join(os.tmpdir(), crypto.randomUUID());
   const args = [
-    "--fail",
+    "--fail-with-body",
     "--show-error",
     "--silent",
     process.env.LOKANDO_API,
