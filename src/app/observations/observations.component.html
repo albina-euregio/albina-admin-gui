@@ -9,7 +9,7 @@
         <!-- !global-bar -->
         <div class="global-bar-scroll">
           <!-- !global-bar-left -->
-          <div class="global-bar global-bar-left">
+          <div class="global-bar global-bar-left" style="width: 100%">
             <div class="global-bar-item global-bar-item-load">
               <button type="button" class="btn btn-bare" (click)="loadObservationsAndWeatherStations()">
                 <i *ngIf="!this.data.observations.loading" class="ph ph-arrows-clockwise"></i>
@@ -17,7 +17,7 @@
               </button>
             </div>
 
-            <div class="global-bar-item global-bar-item-source">
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-source">
               <div class="dropdown">
                 <button
                   type="button"
@@ -45,33 +45,36 @@
               </div>
             </div>
 
-            <div class="global-bar-item global-bar-item-region">
-              <button
-                type="button"
-                class="obs-button invisible"
-                (click)="selectRegion('')"
-                [ngxMousetrapKey]="['r 0']"
-              ></button>
+            <div class="global-bar-item global-bar-item-region" style="width: 0">
+              <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
+                <i class="ph ph-number-circle-zero"></i>
+              </button>
               <button
                 type="button"
                 class="obs-button invisible"
                 (click)="selectRegion('AT-07')"
                 [ngxMousetrapKey]="['r 1']"
-              ></button>
+              >
+                <i class="ph ph-number-circle-one"></i>
+              </button>
               <button
                 type="button"
                 class="obs-button invisible"
                 (click)="selectRegion('IT-32-BZ')"
                 [ngxMousetrapKey]="['r 2']"
-              ></button>
+              >
+                <i class="ph ph-number-circle-two"></i>
+              </button>
               <button
                 type="button"
                 class="obs-button invisible"
                 (click)="selectRegion('IT-32-TN')"
                 [ngxMousetrapKey]="['r 3']"
-              ></button>
+              >
+                <i class="ph ph-number-circle-three"></i>
+              </button>
             </div>
-            <div class="global-bar-item global-bar-item-region">
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-region">
               <div class="dropdown">
                 <button
                   type="button"
@@ -99,7 +102,7 @@
               </div>
             </div>
 
-            <div class="global-bar-item global-bar-item-calendar">
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-calendar">
               <input
                 class="form-control d-inline-block"
                 #drp="bsDaterangepicker"
@@ -110,13 +113,9 @@
                 [maxDate]="filter.dateRangeMaxDate"
               />
             </div>
-          </div>
-          <div class="global-bar-item">
-            <div class="input-group">
-              <span class="input-group-text">
-                <i class="ph ph-magnifying-glass"></i>
-              </span>
+            <div *ngIf="showSearchInput" class="input-group" style="width: 100%">
               <input
+                id="observationSearchInput"
                 type="text"
                 [(ngModel)]="observationSearch"
                 (change)="this.applyLocalFilter()"
@@ -129,6 +128,11 @@
 
           <!-- !global-bar-right -->
           <div class="global-bar global-bar-right">
+            <div class="global-bar-item global-bar-item-add">
+              <button type="button" class="btn btn-bare" (click)="toggleSearchInput()" ngxMousetrapKey="shift+f">
+                <i class="ph ph-magnifying-glass"></i>
+              </button>
+            </div>
             <div class="global-bar-item global-bar-item-add">
               <button
                 type="button"

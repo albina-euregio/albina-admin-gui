@@ -8,6 +8,7 @@ import {
   viewChild,
   inject,
   ViewChild,
+  HostListener,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -173,6 +174,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
   public observationSearch = "";
+  public showSearchInput = false;
 
   @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
@@ -354,6 +356,25 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       });
     }
     this.applyLocalFilter();
+  }
+
+  toggleSearchInput() {
+    this.showSearchInput = !this.showSearchInput;
+    if (this.showSearchInput) {
+      setTimeout(() => {
+        const searchInput = document.getElementById("observationSearchInput") as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 0);
+    }
+  }
+
+  @HostListener("document:keydown.escape", ["$event"])
+  handleEscapeKey(event: KeyboardEvent) {
+    if (this.showSearchInput) {
+      this.toggleSearchInput();
+    }
   }
 
   newObservation() {
