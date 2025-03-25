@@ -238,6 +238,22 @@
 
       <!-- !parameter-switch -->
       <div *ngIf="this.data.weatherStations.show && layout === 'map'" class="parameter-switch">
+        <button
+          type="button"
+          class="obs-button invisible"
+          (click)="togglePreviousWeatherStationParameter()"
+          [ngxMousetrapKey]="['shift+up']"
+        >
+          <i class="ph-bold ph-caret-up"></i>
+        </button>
+        <button
+          type="button"
+          class="obs-button invisible"
+          (click)="toggleNextWeatherStationParameter()"
+          [ngxMousetrapKey]="['shift+down']"
+        >
+          <i class="ph-bold ph-caret-down"></i>
+        </button>
         <div
           *ngFor="let parameter of markerWeatherStationService.allParameters"
           class="obs-button"

@@ -322,6 +322,28 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.applyLocalFilter();
   }
 
+  toggleNextWeatherStationParameter() {
+    if (!this.markerWeatherStationService.weatherStationLabel) {
+      this.selectParameter(WeatherStationParameter.GlobalRadiation);
+    } else {
+      const parameters = Object.values(WeatherStationParameter);
+      const currentIndex = parameters.indexOf(this.markerWeatherStationService.weatherStationLabel);
+      const nextIndex = (currentIndex + 1) % parameters.length;
+      this.selectParameter(parameters[nextIndex]);
+    }
+  }
+
+  togglePreviousWeatherStationParameter() {
+    if (!this.markerWeatherStationService.weatherStationLabel) {
+      this.selectParameter(WeatherStationParameter.DrySnowfallLevel);
+    } else {
+      const parameters = Object.values(WeatherStationParameter);
+      const currentIndex = parameters.indexOf(this.markerWeatherStationService.weatherStationLabel);
+      const nextIndex = currentIndex == 0 ? parameters.length - 1 : (currentIndex - 1) % parameters.length;
+      this.selectParameter(parameters[nextIndex]);
+    }
+  }
+
   newObservation() {
     const observation = {
       $source: ObservationSource.AvalancheWarningService,
