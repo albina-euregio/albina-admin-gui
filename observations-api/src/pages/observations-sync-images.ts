@@ -121,6 +121,8 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
     url_1200_watermark: string;
   };
   try {
+    const base64 = image.toString("base64");
+    console.log(`Writing ${base64.length} bytes to ${file}`);
     await fs.writeFile(file, image.toString("base64"), { encoding: "utf-8" });
     console.log("Posting image using curl", metadata);
     const response = child_process.execFileSync("curl", args, { encoding: "utf-8" });
@@ -129,7 +131,7 @@ async function syncImage(image: Buffer, observation: GenericObservation) {
       throw new Error(response);
     }
   } catch (e: unknown) {
-    console.warn(`Failed posting image using curl ${args}`, e);
+    console.warn("Failed posting image using curl", e);
     return;
   } finally {
     await fs.unlink(file);
