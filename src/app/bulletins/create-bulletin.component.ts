@@ -670,8 +670,32 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
                 }
               }
 
-              // TODO add texts from danger source variant
+              // add texts from danger source variant
+              if (dangerSourceVariant.textcat) {
+                bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
+                  ? bulletin.avActivityCommentTextcat +
+                    "," +
+                    this.constantsService.textcatLineBreak +
+                    "," +
+                    this.constantsService.textcatLineBreak +
+                    "," +
+                    dangerSourceVariant.textcat
+                  : "[" + dangerSourceVariant.textcat;
+              }
+              bulletin.avActivityComment$ = {
+                en: "⚠ Error: Missing translation",
+                de: "⚠ Error: Missing translation",
+                it: "⚠ Error: Missing translation",
+                fr: "⚠ Error: Missing translation",
+                es: "⚠ Error: Missing translation",
+                ca: "⚠ Error: Missing translation",
+                oc: "⚠ Error: Missing translation",
+              };
             }
+
+            bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
+              ? bulletin.avActivityCommentTextcat + "]"
+              : undefined;
 
             amDaytimeDescription.updateDangerRating();
             bulletin.setForenoon(amDaytimeDescription);
@@ -683,7 +707,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             }
 
             bulletins.push(bulletin);
-
             this.addInternalBulletin(bulletin);
           }
 

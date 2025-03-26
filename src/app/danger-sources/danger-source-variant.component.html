@@ -1615,24 +1615,60 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.gullies) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.gullies)"
+              [ngClass]="isTerrainType(terrainTypeEnum.gullies_and_bowls) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.gullies_and_bowls)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.gullies' | translate }}"
+              title="{{ 'terrainType.gullies_and_bowls' | translate }}"
             >
-              <span>{{ "terrainType.gullies" | translate }}</span>
+              <span>{{ "terrainType.gullies_and_bowls" | translate }}</span>
             </button>
+          </div>
+          <div class="btn-group">
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.bowls) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.bowls)"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.adjacent_to_ridgelines) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.adjacent_to_ridgelines)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.bowls' | translate }}"
+              title="{{ 'terrainType.adjacent_to_ridgelines' | translate }}"
             >
-              <span>{{ "terrainType.bowls" | translate }}</span>
+              <span>{{ "terrainType.adjacent_to_ridgelines" | translate }}</span>
             </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.distant_from_ridgelines) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.distant_from_ridgelines)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.distant_from_ridgelines' | translate }}"
+            >
+              <span>{{ "terrainType.distant_from_ridgelines" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.in_the_vicinity_of_peaks) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.in_the_vicinity_of_peaks)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.in_the_vicinity_of_peaks' | translate }}"
+            >
+              <span>{{ "terrainType.in_the_vicinity_of_peaks" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
             <button
               type="reset"
               class="btn btn-sm"
@@ -1644,29 +1680,83 @@
             >
               <span>{{ "terrainType.pass_areas" | translate }}</span>
             </button>
+          </div>
+          <div class="btn-group">
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.ridge_lines) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.ridge_lines)"
+              [ngClass]="isTerrainType(terrainTypeEnum.shady_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.shady_slopes)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.ridge_lines' | translate }}"
+              title="{{ 'terrainType.shady_slopes' | translate }}"
             >
-              <span>{{ "terrainType.ridge_lines" | translate }}</span>
+              <span>{{ "terrainType.shady_slopes" | translate }}</span>
             </button>
+          </div>
+          <div class="btn-group">
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.adjacent_to_ridge_lines) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.adjacent_to_ridge_lines)"
+              [ngClass]="isTerrainType(terrainTypeEnum.sunny_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.sunny_slopes)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.adjacent_to_ridge_lines' | translate }}"
+              title="{{ 'terrainType.sunny_slopes' | translate }}"
             >
-              <span>{{ "terrainType.adjacent_to_ridge_lines" | translate }}</span>
+              <span>{{ "terrainType.sunny_slopes" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.grassy_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.grassy_slopes)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.grassy_slopes' | translate }}"
+            >
+              <span>{{ "terrainType.grassy_slopes" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.cut_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.cut_slopes)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.cut_slopes' | translate }}"
+            >
+              <span>{{ "terrainType.cut_slopes" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.wind_loaded_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.wind_loaded_slopes)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.wind_loaded_slopes' | translate }}"
+            >
+              <span>{{ "terrainType.wind_loaded_slopes" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isTerrainType(terrainTypeEnum.base_of_rock_walls) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setTerrainType($event, terrainTypeEnum.base_of_rock_walls)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.base_of_rock_walls' | translate }}"
+            >
+              <span>{{ "terrainType.base_of_rock_walls" | translate }}</span>
             </button>
           </div>
           <div class="btn-group">
@@ -1675,59 +1765,15 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="
-                isTerrainType(terrainTypeEnum.distant_from_ridge_lines) ? 'btn-secondary' : 'btn-outline-secondary'
+                isTerrainType(terrainTypeEnum.behind_abrupt_changes_in_the_terrain)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
               "
-              (click)="setTerrainType($event, terrainTypeEnum.distant_from_ridge_lines)"
+              (click)="setTerrainType($event, terrainTypeEnum.behind_abrupt_changes_in_the_terrain)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.distant_from_ridge_lines' | translate }}"
+              title="{{ 'terrainType.behind_abrupt_changes_in_the_terrain' | translate }}"
             >
-              <span>{{ "terrainType.distant_from_ridge_lines" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.slope_discontinuities) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.slope_discontinuities)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.slope_discontinuities' | translate }}"
-            >
-              <span>{{ "terrainType.slope_discontinuities" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.convex_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.convex_terrain)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.convex_terrain' | translate }}"
-            >
-              <span>{{ "terrainType.convex_terrain" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.concave_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.concave_terrain)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.concave_terrain' | translate }}"
-            >
-              <span>{{ "terrainType.concave_terrain" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.steep_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.steep_terrain)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.steep_terrain' | translate }}"
-            >
-              <span>{{ "terrainType.steep_terrain" | translate }}</span>
+              <span>{{ "terrainType.behind_abrupt_changes_in_the_terrain" | translate }}</span>
             </button>
           </div>
           <div class="btn-group">
@@ -1735,34 +1781,167 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.very_steep_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.very_steep_terrain)"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.areas_where_the_snow_cover_is_rather_shallow)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.areas_where_the_snow_cover_is_rather_shallow)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.very_steep_terrain' | translate }}"
+              title="{{ 'terrainType.areas_where_the_snow_cover_is_rather_shallow' | translate }}"
             >
-              <span>{{ "terrainType.very_steep_terrain" | translate }}</span>
+              <span>{{ "terrainType.areas_where_the_snow_cover_is_rather_shallow" | translate }}</span>
             </button>
+          </div>
+          <div class="btn-group">
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.open_terrain) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.open_terrain)"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.transitions_into_gullies_and_bowls)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.transitions_into_gullies_and_bowls)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.open_terrain' | translate }}"
+              title="{{ 'terrainType.transitions_into_gullies_and_bowls' | translate }}"
             >
-              <span>{{ "terrainType.open_terrain" | translate }}</span>
+              <span>{{ "terrainType.transitions_into_gullies_and_bowls" | translate }}</span>
             </button>
+          </div>
+          <div class="btn-group">
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.forest) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.forest)"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.transitions_from_a_shallow_to_a_deep_snowpack)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.transitions_from_a_shallow_to_a_deep_snowpack)"
               data-toggle="tooltip"
-              title="{{ 'terrainType.forest' | translate }}"
+              title="{{ 'terrainType.transitions_from_a_shallow_to_a_deep_snowpack' | translate }}"
             >
-              <span>{{ "terrainType.forest" | translate }}</span>
+              <span>{{ "terrainType.transitions_from_a_shallow_to_a_deep_snowpack" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.highly_frequented_off_piste_terrain)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.highly_frequented_off_piste_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.highly_frequented_off_piste_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.highly_frequented_off_piste_terrain" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.little_used_backcountry_terrain)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.little_used_backcountry_terrain)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.little_used_backcountry_terrain' | translate }}"
+            >
+              <span>{{ "terrainType.little_used_backcountry_terrain" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.places_that_are_protected_from_the_wind)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.places_that_are_protected_from_the_wind)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.places_that_are_protected_from_the_wind' | translate }}"
+            >
+              <span>{{ "terrainType.places_that_are_protected_from_the_wind" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.regions_exposed_to_the_foehn_wind)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.regions_exposed_to_the_foehn_wind)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.regions_exposed_to_the_foehn_wind' | translate }}"
+            >
+              <span>{{ "terrainType.regions_exposed_to_the_foehn_wind" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.regions_with_a_lot_of_snow) ? 'btn-secondary' : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.regions_with_a_lot_of_snow)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.regions_with_a_lot_of_snow' | translate }}"
+            >
+              <span>{{ "terrainType.regions_with_a_lot_of_snow" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.regions_exposed_to_precipitation)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.regions_exposed_to_precipitation)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.regions_exposed_to_precipitation' | translate }}"
+            >
+              <span>{{ "terrainType.regions_exposed_to_precipitation" | translate }}</span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                isTerrainType(terrainTypeEnum.regions_exposed_to_heavier_precipitation)
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setTerrainType($event, terrainTypeEnum.regions_exposed_to_heavier_precipitation)"
+              data-toggle="tooltip"
+              title="{{ 'terrainType.regions_exposed_to_heavier_precipitation' | translate }}"
+            >
+              <span>{{ "terrainType.regions_exposed_to_heavier_precipitation" | translate }}</span>
             </button>
           </div>
         </div>
@@ -2214,6 +2393,40 @@
                   : 'btn-outline-secondary'
               "
               (click)="setRunoutIntoGreen(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="form-label" for="runoutIntoGreenCheckbox">{{
+            "dangerSources.create.label.penetrateDeepLayers" | translate
+          }}</label>
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === true
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setPenetrateDeepLayers(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === false
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setPenetrateDeepLayers(false)"
             >
               <span>{{ "button.no" | translate }}</span>
             </button>

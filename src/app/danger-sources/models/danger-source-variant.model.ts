@@ -152,19 +152,28 @@ export enum Recognizability {
 }
 
 export enum TerrainType {
-  gullies = "gullies",
-  bowls = "bowls",
+  gullies_and_bowls = "gullies_and_bowls",
+  adjacent_to_ridgelines = "adjacent_to_ridgelines",
+  distant_from_ridgelines = "distant_from_ridgelines",
+  in_the_vicinity_of_peaks = "in_the_vicinity_of_peaks",
   pass_areas = "pass_areas",
-  ridge_lines = "ridge_lines",
-  adjacent_to_ridge_lines = "adjacent_to_ridge_lines",
-  distant_from_ridge_lines = "distant_from_ridge_lines",
-  slope_discontinuities = "slope_discontinuities",
-  convex_terrain = "convex_terrain",
-  concave_terrain = "concave_terrain",
-  steep_terrain = "steep_terrain",
-  very_steep_terrain = "very_steep_terrain",
-  open_terrain = "open_terrain",
-  forest = "forest",
+  shady_slopes = "shady_slopes",
+  sunny_slopes = "sunny_slopes",
+  grassy_slopes = "grassy_slopes",
+  cut_slopes = "cut_slopes",
+  wind_loaded_slopes = "wind_loaded_slopes",
+  base_of_rock_walls = "base_of_rock_walls",
+  behind_abrupt_changes_in_the_terrain = "behind_abrupt_changes_in_the_terrain",
+  transitions_into_gullies_and_bowls = "transitions_into_gullies_and_bowls",
+  areas_where_the_snow_cover_is_rather_shallow = "areas_where_the_snow_cover_is_rather_shallow",
+  transitions_from_a_shallow_to_a_deep_snowpack = "transitions_from_a_shallow_to_a_deep_snowpack",
+  highly_frequented_off_piste_terrain = "highly_frequented_off_piste_terrain",
+  little_used_backcountry_terrain = "little_used_backcountry_terrain",
+  places_that_are_protected_from_the_wind = "places_that_are_protected_from_the_wind",
+  regions_exposed_to_the_foehn_wind = "regions_exposed_to_the_foehn_wind",
+  regions_with_a_lot_of_snow = "regions_with_a_lot_of_snow",
+  regions_exposed_to_precipitation = "regions_exposed_to_precipitation",
+  regions_exposed_to_heavier_precipitation = "regions_exposed_to_heavier_precipitation",
 }
 
 export enum Wetness {
@@ -176,6 +185,7 @@ export enum Wetness {
 export class DangerSourceVariantModel implements PolygonObject {
   id: string;
   comment: string;
+  textcat: string;
 
   originalDangerSourceVariantId: string;
   forecastDangerSourceVariantId: string;
@@ -200,6 +210,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   dangerPeak: Daytime;
   slopeGradient: SlopeGradient;
   runoutIntoGreen: boolean | undefined;
+  penetrateDeepLayers: boolean | undefined;
   naturalRelease: Probability;
   dangerSigns: DangerSign[];
   eawsMatrixInformation: MatrixInformationModel;
@@ -252,6 +263,7 @@ export class DangerSourceVariantModel implements PolygonObject {
 
     variant.id = json.id;
     variant.comment = json.comment;
+    variant.textcat = json.textcat;
     variant.originalDangerSourceVariantId = json.originalDangerSourceVariantId;
     variant.forecastDangerSourceVariantId = json.forecastDangerSourceVariantId;
     variant.dangerSource = DangerSourceModel.createFromJson(json.dangerSource);
@@ -275,6 +287,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.dangerPeak = json.dangerPeak;
     variant.slopeGradient = json.slopeGradient;
     variant.runoutIntoGreen = json.runoutIntoGreen;
+    variant.penetrateDeepLayers = json.penetrateDeepLayers;
     variant.naturalRelease = json.naturalRelease;
     variant.dangerSigns = json.dangerSigns;
     variant.eawsMatrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
@@ -321,6 +334,7 @@ export class DangerSourceVariantModel implements PolygonObject {
         this.originalDangerSourceVariantId = variant.id;
       }
       this.comment = variant.comment;
+      this.textcat = variant.textcat;
       this.dangerSource = DangerSourceModel.createFromJson(variant.dangerSource);
       this.creationDate = new Date(variant.creationDate);
       this.updateDate = new Date(variant.updateDate);
@@ -342,6 +356,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.dangerPeak = variant.dangerPeak;
       this.slopeGradient = variant.slopeGradient;
       this.runoutIntoGreen = variant.runoutIntoGreen;
+      this.penetrateDeepLayers = variant.penetrateDeepLayers;
       this.naturalRelease = variant.naturalRelease;
       this.dangerSigns = variant.dangerSigns;
       this.eawsMatrixInformation = new MatrixInformationModel(variant.eawsMatrixInformation);
