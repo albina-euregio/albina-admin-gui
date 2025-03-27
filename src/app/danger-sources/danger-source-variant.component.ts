@@ -315,13 +315,13 @@ export class DangerSourceVariantComponent implements OnChanges {
     this.updateVariantOnServer();
   }
 
-  setRemoteTriggering(remoteTriggering: boolean) {
-    const variant = this.variant();
-    if (variant?.remoteTriggering === remoteTriggering) {
-      variant.remoteTriggering = undefined;
-    } else {
-      variant.remoteTriggering = remoteTriggering;
-    }
+  isRemoteTriggering(remoteTriggering: Probability) {
+    return this.variant()?.remoteTriggering === remoteTriggering;
+  }
+
+  setRemoteTriggering(event: Event, remoteTriggering: Probability) {
+    event.stopPropagation();
+    this.variant().remoteTriggering = remoteTriggering;
     this.updateVariantOnServer();
   }
 
