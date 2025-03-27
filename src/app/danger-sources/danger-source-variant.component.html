@@ -1581,27 +1581,49 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().remoteTriggering !== undefined && variant().remoteTriggering === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
+              [ngClass]="isRemoteTriggering(probabilityEnum.likely) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="
+                setRemoteTriggering(
+                  $event,
+                  isRemoteTriggering(probabilityEnum.likely) ? undefined : probabilityEnum.likely
+                )
               "
-              (click)="setRemoteTriggering(true)"
+              data-toggle="tooltip"
+              title="{{ 'probability.likely' | translate }}"
             >
-              <span>{{ "button.yes" | translate }}</span>
+              <span>{{ "probability.likely" | translate }}</span>
             </button>
             <button
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="
-                variant().remoteTriggering !== undefined && variant().remoteTriggering === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
+              [ngClass]="isRemoteTriggering(probabilityEnum.possible) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="
+                setRemoteTriggering(
+                  $event,
+                  isRemoteTriggering(probabilityEnum.possible) ? undefined : probabilityEnum.possible
+                )
               "
-              (click)="setRemoteTriggering(false)"
+              data-toggle="tooltip"
+              title="{{ 'probability.possible' | translate }}"
             >
-              <span>{{ "button.no" | translate }}</span>
+              <span>{{ "probability.possible" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isRemoteTriggering(probabilityEnum.unlikely) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="
+                setRemoteTriggering(
+                  $event,
+                  isRemoteTriggering(probabilityEnum.unlikely) ? undefined : probabilityEnum.unlikely
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'probability.unlikely' | translate }}"
+            >
+              <span>{{ "probability.unlikely" | translate }}</span>
             </button>
           </div>
         </div>

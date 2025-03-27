@@ -249,7 +249,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   weakLayerCreation: CreationProcess;
   weakLayerDistribution: Distribution;
   dangerSpotRecognizability: Recognizability;
-  remoteTriggering: boolean | undefined;
+  remoteTriggering: Probability;
   terrainTypes: TerrainType[];
 
   /** --------------------- */
