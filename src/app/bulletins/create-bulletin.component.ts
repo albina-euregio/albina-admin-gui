@@ -195,7 +195,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   readonly mediaFileTemplate = viewChild<TemplateRef<any>>("mediaFileTemplate");
 
   public publishAllModalRef: BsModalRef;
-  readonly publishAllTemplate = viewChild<TemplateRef<any>>("publishAllTemplate");
 
   public checkBulletinsModalRef: BsModalRef;
   readonly checkBulletinsTemplate = viewChild<TemplateRef<any>>("checkBulletinsTemplate");
@@ -760,9 +759,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  publishAll() {
+  publishAll(change: boolean) {
     this.publishing = true;
-    this.openPublishAllModal();
+    this.openPublishAllModal(change);
   }
 
   check(event: Event, date: [Date, Date]) {
@@ -928,8 +927,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publicationStatusModalRef.hide();
   }
 
-  openPublishAllModal() {
+  openPublishAllModal(change: boolean) {
     const initialState = {
+      text: change
+        ? this.translateService.instant("bulletins.table.publishAllDialog.changeMessage")
+        : this.translateService.instant("bulletins.table.publishAllDialog.message"),
+      change: change,
       component: this,
     };
     this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
@@ -939,9 +942,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
   }
 
-  publishAllModalConfirm(): void {
+  publishAllModalConfirm(change: boolean): void {
     this.publishAllModalRef.hide();
-    this.bulletinsService.publishAllBulletins(this.bulletinsService.getActiveDate()).subscribe(
+    this.bulletinsService.publishAllBulletins(this.bulletinsService.getActiveDate(), change).subscribe(
       (data) => {
         console.log("All bulletins published.");
         this.publishing = false;
@@ -2291,7 +2294,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             }
           }
 
-          this.openPublishBulletinsModal(this.publishBulletinsTemplate(), message, date, change);
+          this.openPublishBulletinsModal(message, date, change);
         },
         (error) => {
           console.error("Bulletins could not be checked!");
@@ -2303,7 +2306,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPublishBulletinsModal(template: TemplateRef<any>, message: string, date: [Date, Date], change: boolean) {
+  openPublishBulletinsModal(message: string, date: [Date, Date], change: boolean) {
     const initialState = {
       text: message,
       date: date,

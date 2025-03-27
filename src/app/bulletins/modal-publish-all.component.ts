@@ -12,10 +12,12 @@ import { TranslateModule } from "@ngx-translate/core";
 export class ModalPublishAllComponent {
   bsModalRef = inject(BsModalRef);
 
+  text: string;
+  change: boolean;
   component: CreateBulletinComponent;
 
   publishAllModalConfirm(): void {
-    this.component.publishAllModalConfirm();
+    this.component.publishAllModalConfirm(this.change);
   }
 
   publishAllModalDecline(): void {

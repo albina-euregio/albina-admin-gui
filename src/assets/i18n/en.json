@@ -223,6 +223,7 @@
       "loadSuggestionFromDangerSources": "Load suggestion",
       "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Publish all regions",
+      "publishAllNoMessages": "Publish all regions (no messages)",
       "mediaFile": "Upload media file"
     },
     "status": {
@@ -597,6 +598,7 @@
       },
       "publishAllDialog": {
         "message": "Do you want to publish all regions?",
+        "changeMessage": "Do you want to publish all regions? (no messages)",
         "accept": "Yes",
         "reject": "No"
       }

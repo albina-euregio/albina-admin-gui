@@ -522,7 +522,7 @@ export class BulletinsService {
     return this.http.post<void>(url, body);
   }
 
-  publishAllBulletins(date: [Date, Date]) {
+  publishAllBulletins(date: [Date, Date], change: boolean) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
@@ -530,7 +530,10 @@ export class BulletinsService {
       this.constantsService.getServerUrl() +
       "bulletins/publish/all?" +
       this.constantsService
-        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["change", change],
+        ])
         .toString();
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);
