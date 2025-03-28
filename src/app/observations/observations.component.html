@@ -325,7 +325,7 @@
               *ngFor="let filterSelection of filter.filterSelectionData"
               class="chart-container"
               [filterSelection]="filterSelection"
-              (handleChange)="applyLocalFilter()"
+              (handleChange)="applyLocalFilter(filterSelection.key !== 'elevation')"
             />
           </div>
           <!-- /toolset-charts -->
