@@ -21,7 +21,6 @@ import {
   ObservationSource,
   ObservationTableRow,
   ObservationType,
-  PersonInvolvement,
   toGeoJSON,
 } from "./models/generic-observation.model";
 import { saveAs } from "file-saver";
@@ -71,7 +70,7 @@ class ObservationData {
 
   constructor(
     private onObservationClick: (observation: GenericObservation, doShow?: boolean) => void,
-    private filter: ObservationFilterService<any> | undefined,
+    private filter: ObservationFilterService<GenericObservation> | undefined,
     private markerService: {
       createMarker(observation: GenericObservation, isHighlighted?: boolean): Marker | undefined;
     },
@@ -119,7 +118,7 @@ class ObservationData {
   applyLocalFilter(observationSearch: string) {
     this.layer.clearLayers();
     this.filtered = this.all
-      .filter((o) => this.filter.isHighlighted(o) || this.filter.isSelected(o))
+      .filter((o) => !this.filter || this.filter.isHighlighted(o) || this.filter.isSelected(o))
       .filter(
         (o) =>
           !observationSearch ||
@@ -129,7 +128,7 @@ class ObservationData {
       );
     this.filtered.forEach((observation) => {
       this.markerService
-        .createMarker(observation, this.filter.isHighlighted(observation))
+        .createMarker(observation, this.filter?.isHighlighted(observation))
         ?.on("click", () => this.onObservationClick(observation))
         ?.addTo(this.layer);
     });
@@ -327,7 +326,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   onSourcesDropdownSelect() {
-    this.applyLocalFilter();
+    this.applyLocalFilter(true);
   }
 
   toggleNextWeatherStationParameter() {
@@ -496,14 +495,19 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     saveAs(blob, "observations.geojson");
   }
 
-  applyLocalFilter() {
+  applyLocalFilter(applyOnlyToObservations = false) {
     this.data.weatherStations.all = orderBy(this.data.weatherStations.all, (s) => [
       // make sure that changeObservation (or ←/→) selects a sensible previous/next station
       this.$externalImgs(s),
       s.region,
       s.locationName,
     ]);
-    Object.values(this.data).forEach((data) => data.applyLocalFilter(this.observationSearch));
+    // only apply filter to observations
+    if (applyOnlyToObservations) {
+      this.data.observations.applyLocalFilter(this.observationSearch);
+    } else {
+      Object.values(this.data).forEach((data) => data.applyLocalFilter(this.observationSearch));
+    }
   }
 
   private $externalImgs(observation: GenericObservation) {
