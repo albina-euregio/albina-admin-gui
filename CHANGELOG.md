@@ -2,6 +2,38 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.11] - 2025-04-09
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to echarts 5.6.0
+- Sort list of users alphabetically by name
+
+### Bulletins
+
+- Check bulletins for complete translations
+- Allow to publish all regions without messages (admin)
+
+### Observations
+
+- Calc surface hoar probability for weather stations
+- Add shortcuts to navigate through time for webcams
+- Show smaller thumbnails of webcams, adopt to screen width
+- Detect changes in daterange
+- Improve color and label for relative humidity
+- Add shortcuts for observations page
+- Toggle filter sidebar with button in map
+- Add button to show/hide sidebar in menu
+- Move download buttons in dropdown menu
+- Apply filter only to observations
+- Style search field
+
+### Danger Sources
+
+- Add danger source to filter on observation page if danger sources are enabled for the region
+- Create avActivityComment texts from danger source variants
+- Expand and improve danger source variant parameters
+
 ## [7.1.10] - 2025-03-18
 
 ### 🐛 Bug Fixes
