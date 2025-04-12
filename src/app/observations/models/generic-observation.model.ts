@@ -121,15 +121,13 @@ export const genericObservationSchema = z.object({
   $externalURL: z.string().optional().nullable().describe("External URL to display as iframe"),
   $externalImgs: z.array(z.string()).optional().nullable().describe("External image to display as img"),
   stability: z
-    .nativeEnum(SnowpackStability)
+    .enum(SnowpackStability)
     .optional()
     .nullable()
     .describe("Snowpack stability that can be inferred from this observation"),
-  $source: z
-    .union([z.nativeEnum(ObservationSource), z.nativeEnum(ForecastSource)])
-    .describe("Source of this observation"),
-  $type: z.nativeEnum(ObservationType).describe("Type of this observation"),
-  aspect: z.nativeEnum(Aspect).optional().nullable().describe("Aspect corresponding with this observation"),
+  $source: z.union([z.enum(ObservationSource), z.enum(ForecastSource)]).describe("Source of this observation"),
+  $type: z.enum(ObservationType).describe("Type of this observation"),
+  aspect: z.enum(Aspect).optional().nullable().describe("Aspect corresponding with this observation"),
   authorName: z.string().optional().nullable().describe("Name of the author"),
   content: z.string().optional().nullable().describe("Free-text content"),
   elevation: z.number().optional().nullable().describe("Elevation in meters"),
@@ -143,21 +141,17 @@ export const genericObservationSchema = z.object({
   reportDate: z.coerce.date().optional().nullable().describe("Date when the observation has been reported"),
   dangerSource: z.string().uuid().optional().nullable().describe("Danger source UUID"),
   avalancheProblems: z
-    .array(z.nativeEnum(AvalancheProblem))
+    .array(z.enum(AvalancheProblem))
     .optional()
     .nullable()
     .describe("Avalanche problem corresponding with this observation"),
   dangerPatterns: z
-    .array(z.nativeEnum(DangerPattern))
+    .array(z.enum(DangerPattern))
     .optional()
     .nullable()
     .describe("Danger pattern corresponding with this observation"),
-  importantObservations: z
-    .array(z.nativeEnum(ImportantObservation))
-    .optional()
-    .nullable()
-    .describe("Important observations"),
-  personInvolvement: z.nativeEnum(PersonInvolvement).optional().nullable().describe("Person involvement"),
+  importantObservations: z.array(z.enum(ImportantObservation)).optional().nullable().describe("Important observations"),
+  personInvolvement: z.enum(PersonInvolvement).optional().nullable().describe("Person involvement"),
 });
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });

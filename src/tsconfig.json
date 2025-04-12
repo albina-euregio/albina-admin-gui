@@ -5,6 +5,7 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "lib": ["es2020", "dom", "ESNext.Array"],
+    "skipLibCheck": true,
     "mapRoot": "./",
     "module": "es2020",
     "moduleResolution": "node",
