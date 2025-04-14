@@ -1,3 +1,6 @@
 {
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
   "extends": "astro/tsconfigs/base"
 }
