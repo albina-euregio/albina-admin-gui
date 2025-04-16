@@ -100,7 +100,7 @@ export class AuthenticationService {
     this.http.get<ServerConfiguration[]>(url).subscribe(
       (data) => {
         for (const entry of data) {
-          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
+          this.externalServerLogin(entry).subscribe(
             (data) => {
               if (data === true) {
                 console.debug("[" + entry.name + "] Logged in!");
@@ -120,12 +120,12 @@ export class AuthenticationService {
     );
   }
 
-  public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
-    if (username.startsWith("https://")) {
+  public externalServerLogin(server: ServerConfiguration): Observable<boolean> {
+    if (server.userName.startsWith("https://")) {
       const body = new URLSearchParams();
-      const url = new URL(username);
+      const url = new URL(server.userName);
       url.searchParams.forEach((value, key) => body.append(key, value));
-      const [key, value] = password.split("=", 2);
+      const [key, value] = server.password.split("=", 2);
       body.append(key, value);
       url.search = "";
       const tokenURL = `https://corsproxy.io/?url=${url}`;
@@ -133,7 +133,7 @@ export class AuthenticationService {
       return this.http.post<{ access_token: string }>(tokenURL, body.toString(), { headers }).pipe(
         map((data) => {
           if (data.access_token) {
-            this.addExternalServer(data, apiUrl, name, username, password);
+            this.addExternalServer(server, data);
             return true;
           } else {
             return false;
@@ -141,12 +141,12 @@ export class AuthenticationService {
         }),
       );
     }
-    const url = apiUrl + "authentication";
-    const body = JSON.stringify({ username, password });
+    const url = server.apiUrl + "authentication";
+    const body = JSON.stringify({ username: server.userName, password: server.password });
     return this.http.post<AuthenticationResponse>(url, body).pipe(
       map((data) => {
         if (data.access_token) {
-          this.addExternalServer(data, apiUrl, name, username, password);
+          this.addExternalServer(server, data);
           return true;
         } else {
           return false;
@@ -155,19 +155,13 @@ export class AuthenticationService {
     );
   }
 
-  private addExternalServer(
-    json: Partial<AuthenticationResponse>,
-    apiUrl: string,
-    serverName: string,
-    username: string,
-    password: string,
-  ) {
+  private addExternalServer(server0: ServerConfiguration, json: Partial<AuthenticationResponse>) {
     if (!json) {
       return;
     }
     const server = ServerModel.createFromJson(json);
-    server.setApiUrl(apiUrl);
-    server.setName(serverName);
+    server.setApiUrl(server0.apiUrl);
+    server.setName(server0.name);
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
   }
