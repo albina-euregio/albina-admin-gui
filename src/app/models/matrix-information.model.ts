@@ -26,7 +26,7 @@ export class MatrixInformationModel {
 
   constructor(matrixInformation?: MatrixInformationModel) {
     if (!matrixInformation) {
-      this.setDangerRating(Enums.DangerRating.missing);
+      this.dangerRating = Enums.DangerRating.missing;
       this.dangerRatingModificator = undefined;
       this.avalancheSize = undefined;
       this.snowpackStability = undefined;
@@ -35,7 +35,7 @@ export class MatrixInformationModel {
       this.snowpackStabilityValue = undefined;
       this.frequencyValue = undefined;
     } else {
-      this.setDangerRating(matrixInformation.dangerRating);
+      this.dangerRating = matrixInformation.dangerRating;
       this.dangerRatingModificator = matrixInformation.dangerRatingModificator;
       this.avalancheSize = matrixInformation.avalancheSize;
       this.snowpackStability = matrixInformation.snowpackStability;
@@ -44,70 +44,6 @@ export class MatrixInformationModel {
       this.snowpackStabilityValue = matrixInformation.snowpackStabilityValue;
       this.frequencyValue = matrixInformation.frequencyValue;
     }
-  }
-
-  getDangerRating(): Enums.DangerRating {
-    return this.dangerRating;
-  }
-
-  setDangerRating(dangerRating: Enums.DangerRating) {
-    this.dangerRating = dangerRating;
-  }
-
-  getDangerRatingModificator(): Enums.DangerRatingModificator {
-    return this.dangerRatingModificator;
-  }
-
-  setDangerRatingModificator(dangerRatingModificator: Enums.DangerRatingModificator) {
-    this.dangerRatingModificator = dangerRatingModificator;
-  }
-
-  getAvalancheSize(): Enums.AvalancheSize {
-    return this.avalancheSize;
-  }
-
-  setAvalancheSize(avalancheSize: Enums.AvalancheSize) {
-    this.avalancheSize = avalancheSize;
-  }
-
-  getSnowpackStability(): Enums.SnowpackStability {
-    return this.snowpackStability;
-  }
-
-  setSnowpackStability(snowpackStability: Enums.SnowpackStability) {
-    this.snowpackStability = snowpackStability;
-  }
-
-  getFrequency(): Enums.Frequency {
-    return this.frequency;
-  }
-
-  setFrequency(frequency: Enums.Frequency) {
-    this.frequency = frequency;
-  }
-
-  getAvalancheSizeValue(): number {
-    return this.avalancheSizeValue;
-  }
-
-  setAvalancheSizeValue(avalancheSizeValue) {
-    this.avalancheSizeValue = avalancheSizeValue;
-  }
-
-  getSnowpackStabilityValue(): number {
-    return this.snowpackStabilityValue;
-  }
-
-  setSnowpackStabilityValue(snowpackStabilityValue) {
-    this.snowpackStabilityValue = snowpackStabilityValue;
-  }
-
-  getFrequencyValue(): number {
-    return this.frequencyValue;
-  }
-
-  setFrequencyValue(frequencyValue) {
-    this.frequencyValue = frequencyValue;
   }
 
   toJson() {

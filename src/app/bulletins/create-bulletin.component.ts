@@ -1519,9 +1519,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       !avalancheProblem.getDangerRating() ||
       avalancheProblem.getDangerRating() == Enums.DangerRating.missing ||
       !avalancheProblem.matrixInformation ||
-      !avalancheProblem.matrixInformation.getSnowpackStability() ||
-      !avalancheProblem.matrixInformation.getFrequency() ||
-      !avalancheProblem.matrixInformation.getAvalancheSize()
+      !avalancheProblem.matrixInformation.snowpackStability ||
+      !avalancheProblem.matrixInformation.frequency ||
+      !avalancheProblem.matrixInformation.avalancheSize
     );
   }
 

@@ -106,7 +106,7 @@ export class AvalancheProblemModel {
   }
 
   getDangerRating() {
-    return this.matrixInformation.getDangerRating();
+    return this.matrixInformation.dangerRating;
   }
 
   hasElevationHigh() {

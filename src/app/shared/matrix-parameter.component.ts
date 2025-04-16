@@ -1,11 +1,11 @@
-import { Component, input, output, inject, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, output } from "@angular/core";
 import { MatrixInformationModel } from "app/models/matrix-information.model";
 import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import * as Enums from "../enums/enums";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { DangerSourceVariantModel } from "../danger-sources/models/danger-source-variant.model";
-import { NgIf, NgFor } from "@angular/common";
+import { NgFor, NgIf } from "@angular/common";
 import { DangerRatingComponent } from "./danger-rating.component";
 import { FormsModule } from "@angular/forms";
 import { SliderComponent, SliderOptions } from "./slider.component";
@@ -217,7 +217,7 @@ export class MatrixParameterComponent implements OnInit {
     this.dangerRatingEnabled = false;
     const matrixInformation = this.matrixInformation();
     matrixInformation.dangerRatingModificator = undefined;
-    matrixInformation.setSnowpackStability(snowpackStability);
+    matrixInformation.snowpackStability = snowpackStability;
     this.updateDangerRating();
   }
 
@@ -225,7 +225,7 @@ export class MatrixParameterComponent implements OnInit {
     this.dangerRatingEnabled = false;
     const matrixInformation = this.matrixInformation();
     matrixInformation.dangerRatingModificator = undefined;
-    matrixInformation.setFrequency(frequency);
+    matrixInformation.frequency = frequency;
     this.updateDangerRating();
   }
 
@@ -233,7 +233,7 @@ export class MatrixParameterComponent implements OnInit {
     this.dangerRatingEnabled = false;
     const matrixInformation = this.matrixInformation();
     matrixInformation.dangerRatingModificator = undefined;
-    matrixInformation.setAvalancheSize(avalancheSize);
+    matrixInformation.avalancheSize = avalancheSize;
     this.updateDangerRating();
   }
 
@@ -243,7 +243,7 @@ export class MatrixParameterComponent implements OnInit {
 
   setDangerRating(event: Event, dangerRating: Enums.DangerRating) {
     event.stopPropagation();
-    this.matrixInformation().setDangerRating(dangerRating);
+    this.matrixInformation().dangerRating = dangerRating;
     this.bulletinDaytimeDescription().updateDangerRating();
   }
 
@@ -269,16 +269,16 @@ export class MatrixParameterComponent implements OnInit {
 
   private updateDangerRating() {
     const matrixInformation = this.matrixInformation();
-    matrixInformation.setDangerRating(this.getDangerRating(this.matrixInformation()));
+    matrixInformation.dangerRating = this.getDangerRating(this.matrixInformation());
     this.bulletinDaytimeDescription().updateDangerRating();
   }
 
   private getDangerRating(matrixInformation: MatrixInformationModel): Enums.DangerRating {
-    switch (matrixInformation.getSnowpackStability()) {
+    switch (matrixInformation.snowpackStability) {
       case Enums.SnowpackStability.very_poor:
-        switch (matrixInformation.getFrequency()) {
+        switch (matrixInformation.frequency) {
           case Enums.Frequency.many:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.very_high;
               case Enums.AvalancheSize.very_large:
@@ -293,7 +293,7 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.missing;
             }
           case Enums.Frequency.some:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.very_high;
               case Enums.AvalancheSize.very_large:
@@ -308,7 +308,7 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.missing;
             }
           case Enums.Frequency.few:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.high;
               case Enums.AvalancheSize.very_large:
@@ -326,9 +326,9 @@ export class MatrixParameterComponent implements OnInit {
             return Enums.DangerRating.missing;
         }
       case Enums.SnowpackStability.poor:
-        switch (matrixInformation.getFrequency()) {
+        switch (matrixInformation.frequency) {
           case Enums.Frequency.many:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.very_high;
               case Enums.AvalancheSize.very_large:
@@ -343,7 +343,7 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.missing;
             }
           case Enums.Frequency.some:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.high;
               case Enums.AvalancheSize.very_large:
@@ -358,7 +358,7 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.missing;
             }
           case Enums.Frequency.few:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.considerable;
               case Enums.AvalancheSize.very_large:
@@ -376,9 +376,9 @@ export class MatrixParameterComponent implements OnInit {
             return Enums.DangerRating.missing;
         }
       case Enums.SnowpackStability.fair:
-        switch (matrixInformation.getFrequency()) {
+        switch (matrixInformation.frequency) {
           case Enums.Frequency.many:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.high;
               case Enums.AvalancheSize.very_large:
@@ -393,7 +393,7 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.missing;
             }
           case Enums.Frequency.some:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.considerable;
               case Enums.AvalancheSize.very_large:
@@ -408,7 +408,7 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.missing;
             }
           case Enums.Frequency.few:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.considerable;
               case Enums.AvalancheSize.very_large:
@@ -423,7 +423,7 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.missing;
             }
           case Enums.Frequency.none:
-            switch (matrixInformation.getAvalancheSize()) {
+            switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
                 return Enums.DangerRating.low;
               case Enums.AvalancheSize.very_large:
@@ -453,7 +453,7 @@ export class MatrixParameterComponent implements OnInit {
 
   setDangerRatingModificator(event: Event, modificator: Enums.DangerRatingModificator) {
     event.stopPropagation();
-    this.matrixInformation().setDangerRatingModificator(modificator);
+    this.matrixInformation().dangerRatingModificator = modificator;
     this.changeMatrixEvent.emit();
   }
 }
