@@ -203,7 +203,7 @@ function toDaytimeDescription(b: Bulletin, exclude: ValidTimePeriod): BulletinDa
       ({
         aspects: p.aspects,
         avalancheProblem: p.problemType,
-        matrixInformation: {
+        eawsMatrixInformation: {
           avalancheSize: Object.values(Enums.AvalancheSize)[p.avalancheSize - 1],
           frequency: p.frequency,
           snowpackStability: p.snowpackStability,
