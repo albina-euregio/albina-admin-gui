@@ -18,10 +18,10 @@ export class AuthorModel {
   ) {
     const author = new AuthorModel();
 
-    author.setName(json.name);
-    author.setEmail(json.email);
-    author.setPhone(json.phone);
-    author.setOrganization(json.organization);
+    author.name = json.name;
+    author.email = json.email;
+    author.phone = json.phone;
+    author.organization = json.organization;
     const jsonRoles = json.roles;
     const roles = new Array<string>();
     for (const i in jsonRoles) {
@@ -29,8 +29,8 @@ export class AuthorModel {
         roles.push(jsonRoles[i]);
       }
     }
-    author.setRoles(roles);
-    author.setImage(json.image);
+    author.roles = roles;
+    author.image = json.image;
     const jsonRegions = json.regions;
     const regions = new Array<RegionConfiguration>();
     for (const i in jsonRegions) {
@@ -38,12 +38,12 @@ export class AuthorModel {
         regions.push(jsonRegions[i]);
       }
     }
-    author.setRegions(regions);
+    author.regions = regions;
 
-    author.setAccessToken(json.accessToken ?? json.access_token);
-    author.setRefreshToken(json.refreshToken ?? json.refresh_token);
-    author.setApiUrl(json.apiUrl ?? json.api_url);
-    author.setLanguageCode(json.languageCode);
+    author.accessToken = json.accessToken ?? json.access_token;
+    author.refreshToken = json.refreshToken ?? json.refresh_token;
+    author.apiUrl = json.apiUrl ?? json.api_url;
+    author.languageCode = json.languageCode;
 
     return author;
   }
@@ -60,98 +60,6 @@ export class AuthorModel {
     this.regions = undefined;
     this.apiUrl = undefined;
     this.languageCode = undefined;
-  }
-
-  getAccessToken() {
-    return this.accessToken;
-  }
-
-  setAccessToken(accessToken) {
-    this.accessToken = accessToken;
-  }
-
-  getRefreshToken() {
-    return this.refreshToken;
-  }
-
-  setRefreshToken(refreshToken) {
-    this.refreshToken = refreshToken;
-  }
-
-  getName() {
-    return this.name;
-  }
-
-  setName(name) {
-    this.name = name;
-  }
-
-  getEmail() {
-    return this.email;
-  }
-
-  setEmail(email) {
-    this.email = email;
-  }
-
-  getPhone() {
-    return this.phone;
-  }
-
-  setPhone(phone) {
-    this.phone = phone;
-  }
-
-  getOrganization() {
-    return this.organization;
-  }
-
-  setOrganization(organization) {
-    this.organization = organization;
-  }
-
-  getRoles(): string[] {
-    return this.roles;
-  }
-
-  setRoles(roles: string[]) {
-    this.roles = roles;
-  }
-
-  hasRole(role: string) {
-    return this.roles.includes(role);
-  }
-
-  getImage() {
-    return this.image;
-  }
-
-  setImage(image) {
-    this.image = image;
-  }
-
-  getRegions(): RegionConfiguration[] {
-    return this.regions;
-  }
-
-  setRegions(regions: RegionConfiguration[]) {
-    this.regions = regions;
-  }
-
-  getApiUrl(): string {
-    return this.apiUrl;
-  }
-
-  setApiUrl(apiUrl: string) {
-    this.apiUrl = apiUrl;
-  }
-
-  getLanguageCode(): string {
-    return this.languageCode;
-  }
-
-  setLanguageCode(languageCode: string) {
-    this.languageCode = languageCode;
   }
 
   toJson() {

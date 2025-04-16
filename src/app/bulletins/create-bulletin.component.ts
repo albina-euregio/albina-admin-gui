@@ -1117,7 +1117,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.additionalAuthors = new Array<string>();
-      bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+      bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
       // reset regions
@@ -1332,7 +1332,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     }
     bulletin.suggestedRegions = suggested;
-    bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+    bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
 
     this.updateBulletinOnServer(bulletin);
   }
@@ -1359,7 +1359,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     } else {
       bulletin = new BulletinModel();
       bulletin.author = this.authenticationService.getCurrentAuthor();
-      bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+      bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
     }
 
@@ -1375,7 +1375,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     newBulletin.suggestedRegions = new Array<string>();
 
     newBulletin.author = this.authenticationService.getCurrentAuthor();
-    newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+    newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
     newBulletin.ownerRegion = this.authenticationService.getActiveRegionId();
     this.copyService.setCopyBulletin(true);
     this.copyService.setBulletin(newBulletin);

@@ -201,7 +201,7 @@ export class AvalancheBulletinComponent implements OnInit {
       }
     }
     this.bulletin().suggestedRegions = suggested;
-    this.bulletin().addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
+    this.bulletin().addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
 
     this.updateBulletinOnServer();
   }
