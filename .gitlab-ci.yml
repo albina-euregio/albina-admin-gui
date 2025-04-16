@@ -148,15 +148,12 @@ build:docker:
     name: docker
 
 build:observations-api:
-  stage: build
-  image:
-    name: oven/bun:latest
+  extends: .build
   script:
-    - bun --version
-    - bun install --no-save --ignore-scripts
     - cd observations-api/
-    - bun install --no-save --ignore-scripts
-    - bun run build
+    - corepack enable
+    - yarn install --immutable
+    - yarn build
   environment:
     name: observations-api
   artifacts:
