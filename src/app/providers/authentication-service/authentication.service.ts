@@ -122,16 +122,10 @@ export class AuthenticationService {
 
   public externalServerLogin(server: ServerConfiguration): Observable<boolean> {
     if (server.userName.startsWith("https://")) {
-      const body = new URLSearchParams();
-      const url = new URL(server.userName);
-      url.searchParams.forEach((value, key) => body.append(key, value));
-      const [key, value] = server.password.split("=", 2);
-      body.append(key, value);
-      url.search = "";
-      const tokenURL = `https://corsproxy.io/?url=${url}`;
+      const tokenURL = `https://corsproxy.io/?url=${server.userName}`;
       const headers = { "Content-Type": "application/x-www-form-urlencoded" };
       return this.http
-        .post<{ access_token: string }>(tokenURL, body.toString(), { headers })
+        .post<{ access_token: string }>(tokenURL, server.password, { headers })
         .pipe(map((data) => this.addExternalServer(server, data)));
     }
     const url = server.apiUrl + "authentication";
@@ -155,7 +149,9 @@ export class AuthenticationService {
     if (!json) {
       return;
     }
-    for (const server of json) this.externalServers.push(ServerModel.createFromJson(server));
+    for (const server of json) {
+      this.externalServers.push(ServerModel.createFromJson(server));
+    }
   }
 
   public checkExternalServerLogin() {
