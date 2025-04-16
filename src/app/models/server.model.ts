@@ -14,7 +14,7 @@ export class ServerModel {
     author.setName(json.name);
     author.setEmail(json.email);
     author.setRoles(json.roles);
-    author.setRegions(json.regions.map((r) => (typeof r === "string" ? r : r.id)));
+    author.setRegions((json.regions ?? []).map((r) => (typeof r === "string" ? r : r.id)));
     author.setAccessToken((json as ServerModel).accessToken ?? (json as AuthenticationResponse).access_token);
     author.setRefreshToken((json as ServerModel).refreshToken ?? (json as AuthenticationResponse).refresh_token);
     author.setApiUrl((json as ServerModel).apiUrl ?? (json as AuthenticationResponse).api_url);

@@ -109,18 +109,38 @@ export class AuthenticationService {
               }
             },
             (error) => {
-              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body));
+              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body), error);
             },
           );
         }
       },
       (error) => {
-        console.error("External server instances could not be loaded: " + JSON.stringify(error._body));
+        console.error("External server instances could not be loaded: " + JSON.stringify(error._body), error);
       },
     );
   }
 
   public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
+    if (username.startsWith("https://")) {
+      const body = new URLSearchParams();
+      const url = new URL(username);
+      url.searchParams.forEach((value, key) => body.append(key, value));
+      const [key, value] = password.split("=", 2);
+      body.append(key, value);
+      url.search = "";
+      const tokenURL = `https://corsproxy.io/?url=${url}`;
+      const headers = { "Content-Type": "application/x-www-form-urlencoded" };
+      return this.http.post<{ access_token: string }>(tokenURL, body.toString(), { headers }).pipe(
+        map((data) => {
+          if (data.access_token) {
+            this.addExternalServer(data, apiUrl, name, username, password);
+            return true;
+          } else {
+            return false;
+          }
+        }),
+      );
+    }
     const url = apiUrl + "authentication";
     const body = JSON.stringify({ username, password });
     return this.http.post<AuthenticationResponse>(url, body).pipe(
