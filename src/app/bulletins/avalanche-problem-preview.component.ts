@@ -65,19 +65,19 @@ export class AvalancheProblemPreviewComponent {
 
   getElevationLowString() {
     const avalancheProblem = this.avalancheProblem();
-    if (avalancheProblem && avalancheProblem.getTreelineLow()) {
+    if (avalancheProblem && avalancheProblem.treelineLow) {
       return this.translateService.instant("bulletins.create.tooltip.treeline");
     } else if (avalancheProblem) {
-      return avalancheProblem.getElevationLow() + "m";
+      return avalancheProblem.elevationLow + "m";
     }
   }
 
   getElevationHighString() {
     const avalancheProblem = this.avalancheProblem();
-    if (avalancheProblem && avalancheProblem.getTreelineHigh()) {
+    if (avalancheProblem && avalancheProblem.treelineHigh) {
       return this.translateService.instant("bulletins.create.tooltip.treeline");
     } else if (avalancheProblem) {
-      return avalancheProblem.getElevationHigh() + "m";
+      return avalancheProblem.elevationHigh + "m";
     }
   }
 

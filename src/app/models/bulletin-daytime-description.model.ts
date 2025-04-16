@@ -191,8 +191,8 @@ export class BulletinDaytimeDescriptionModel {
         if (this.avalancheProblem1.elevationLow > 0 || this.avalancheProblem1.treelineLow) {
           // band
           if (
-            this.avalancheProblem1.getDangerRatingDirection() &&
-            this.avalancheProblem1.getDangerRatingDirection().toString() === Enums.DangerRatingDirection.down
+            this.avalancheProblem1.dangerRatingDirection &&
+            this.avalancheProblem1.dangerRatingDirection.toString() === Enums.DangerRatingDirection.down
           ) {
             if (this.avalancheProblem1.treelineHigh) {
               this.treeline = true;
@@ -205,8 +205,8 @@ export class BulletinDaytimeDescriptionModel {
             this.dangerRatingBelow = this.avalancheProblem1.getDangerRating();
             this.dangerRatingAbove = this.getSecondDangerRating(false);
           } else if (
-            this.avalancheProblem1.getDangerRatingDirection() &&
-            this.avalancheProblem1.getDangerRatingDirection().toString() === Enums.DangerRatingDirection.up
+            this.avalancheProblem1.dangerRatingDirection &&
+            this.avalancheProblem1.dangerRatingDirection.toString() === Enums.DangerRatingDirection.up
           ) {
             if (this.avalancheProblem1.treelineLow) {
               this.treeline = true;

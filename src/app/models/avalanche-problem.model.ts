@@ -27,14 +27,14 @@ export class AvalancheProblemModel {
         aspects.push(jsonAspects[i].toUpperCase());
       }
     }
-    avalancheProblem.setAspects(aspects);
+    avalancheProblem.aspects = aspects;
     avalancheProblem.elevationHigh = json.elevationHigh;
     avalancheProblem.treelineHigh = json.treelineHigh;
     avalancheProblem.elevationLow = json.elevationLow;
     avalancheProblem.treelineLow = json.treelineLow;
 
     if (json.dangerRatingDirection) {
-      avalancheProblem.setDangerRatingDirection(json.dangerRatingDirection);
+      avalancheProblem.dangerRatingDirection = json.dangerRatingDirection;
     }
 
     if (json.eawsMatrixInformation) {
@@ -42,7 +42,7 @@ export class AvalancheProblemModel {
     }
 
     if (json.terrainFeatureTextcat) {
-      avalancheProblem.setTerrainFeatureTextcat(json.terrainFeatureTextcat);
+      avalancheProblem.terrainFeatureTextcat = json.terrainFeatureTextcat;
     }
     const jsonTerrainFeature = json.terrainFeature;
     const terrainFeature = new Array<TextModel>();
@@ -51,7 +51,7 @@ export class AvalancheProblemModel {
         terrainFeature.push(TextModel.createFromJson(jsonTerrainFeature[i]));
       }
     }
-    avalancheProblem.setTerrainFeature(terrainFeature);
+    avalancheProblem.terrainFeature = terrainFeature;
 
     return avalancheProblem;
   }
@@ -69,17 +69,17 @@ export class AvalancheProblemModel {
       this.terrainFeatureTextcat = undefined;
       this.terrainFeature = new Array<TextModel>();
     } else {
-      this.setAvalancheProblem(avalancheProblem.getAvalancheProblem());
-      this.setAvalancheType(avalancheProblem.getAvalancheType());
+      this.setAvalancheProblem(avalancheProblem.avalancheProblem);
+      this.avalancheType = avalancheProblem.avalancheType;
       for (const aspect of avalancheProblem.aspects) {
         this.aspects.push(aspect);
       }
-      this.elevationHigh = avalancheProblem.getElevationHigh();
-      this.treelineHigh = avalancheProblem.getTreelineHigh();
-      this.elevationLow = avalancheProblem.getElevationLow();
-      this.treelineLow = avalancheProblem.getTreelineLow();
-      this.dangerRatingDirection = avalancheProblem.getDangerRatingDirection();
-      this.matrixInformation = new MatrixInformationModel(avalancheProblem.getMatrixInformation());
+      this.elevationHigh = avalancheProblem.elevationHigh;
+      this.treelineHigh = avalancheProblem.treelineHigh;
+      this.elevationLow = avalancheProblem.elevationLow;
+      this.treelineLow = avalancheProblem.treelineLow;
+      this.dangerRatingDirection = avalancheProblem.dangerRatingDirection;
+      this.matrixInformation = new MatrixInformationModel(avalancheProblem.matrixInformation);
       this.terrainFeatureTextcat = avalancheProblem.terrainFeatureTextcat;
       const array = new Array<TextModel>();
       for (const entry of avalancheProblem.terrainFeature) {
@@ -89,129 +89,20 @@ export class AvalancheProblemModel {
     }
   }
 
-  getAvalancheProblem(): Enums.AvalancheProblem {
-    return this.avalancheProblem;
-  }
-
   setAvalancheProblem(avalancheProblem: Enums.AvalancheProblem) {
     this.avalancheProblem = avalancheProblem;
     this.avalancheType = undefined;
     switch (this.avalancheProblem) {
       case "wind_slab":
       case "persistent_weak_layers":
-        this.setAvalancheType(Enums.AvalancheType.slab);
+        this.avalancheType = Enums.AvalancheType.slab;
         break;
       case "gliding_snow":
-        this.setAvalancheType(Enums.AvalancheType.glide);
+        this.avalancheType = Enums.AvalancheType.glide;
         break;
       default:
         break;
     }
-  }
-
-  getAvalancheType(): Enums.AvalancheType {
-    return this.avalancheType;
-  }
-
-  setAvalancheType(avalancheType: Enums.AvalancheType) {
-    this.avalancheType = avalancheType;
-  }
-
-  getAspects() {
-    return this.aspects;
-  }
-
-  setAspects(aspects) {
-    this.aspects = aspects;
-  }
-
-  getElevationHigh() {
-    return this.elevationHigh;
-  }
-
-  setElevationHigh(elevationHigh: number) {
-    this.elevationHigh = elevationHigh;
-  }
-
-  getTreelineHigh() {
-    return this.treelineHigh;
-  }
-
-  setTreelineHigh(treeline: boolean) {
-    this.treelineHigh = treeline;
-  }
-
-  getElevationLow() {
-    return this.elevationLow;
-  }
-
-  setElevationLow(elevationLow: number) {
-    this.elevationLow = elevationLow;
-  }
-
-  getTreelineLow() {
-    return this.treelineLow;
-  }
-
-  setTreelineLow(treeline: boolean) {
-    this.treelineLow = treeline;
-  }
-
-  getDangerRatingDirection() {
-    return this.dangerRatingDirection;
-  }
-
-  setDangerRatingDirection(dangerRatingDirection: Enums.DangerRatingDirection) {
-    this.dangerRatingDirection = dangerRatingDirection;
-  }
-
-  getMatrixInformation() {
-    return this.matrixInformation;
-  }
-
-  setMatrixInformation(matrixInformation) {
-    this.matrixInformation = matrixInformation;
-  }
-
-  getTerrainFeatureTextcat(): string {
-    return this.terrainFeatureTextcat;
-  }
-
-  setTerrainFeatureTextcat(terrainFeatureTextcat: string) {
-    this.terrainFeatureTextcat = terrainFeatureTextcat;
-  }
-
-  getTerrainFeature(): TextModel[] {
-    return this.terrainFeature;
-  }
-
-  getTerrainFeatureIn(language: string): string {
-    for (let i = this.terrainFeature.length - 1; i >= 0; i--) {
-      if (this.terrainFeature[i].getLanguageCode() === language) {
-        return this.terrainFeature[i].getText();
-      }
-    }
-  }
-
-  getTerrainFeatureInString(language: string): string {
-    return this.getTerrainFeatureIn(language);
-  }
-
-  setTerrainFeature(terrainFeature: TextModel[]) {
-    this.terrainFeature = terrainFeature;
-  }
-
-  setTerrainFeatureIn(text: string, language: string) {
-    for (let i = this.terrainFeature.length - 1; i >= 0; i--) {
-      if (this.terrainFeature[i].getLanguageCode() === language) {
-        this.terrainFeature[i].setText(text);
-        return;
-      }
-    }
-    const model = new TextModel();
-    model.setLanguageCode(language);
-    model.setText(text);
-    this.terrainFeature.push(model);
   }
 
   getDangerRating() {
@@ -219,15 +110,11 @@ export class AvalancheProblemModel {
   }
 
   hasElevationHigh() {
-    return this.getTreelineHigh() || (this.getElevationHigh() && this.getElevationHigh() !== undefined);
+    return this.treelineHigh || this.elevationHigh;
   }
 
   hasElevationLow() {
-    return this.getTreelineLow() || (this.getElevationLow() && this.getElevationLow() !== undefined);
-  }
-
-  isDangerRating(dangerRating) {
-    return this.getDangerRating() === dangerRating;
+    return this.treelineLow || this.elevationLow;
   }
 
   toJson() {

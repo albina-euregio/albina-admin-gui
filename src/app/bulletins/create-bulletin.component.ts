@@ -634,20 +634,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
               // create avalanche problem only if danger rating > 1
               if (dangerSourceVariant.eawsMatrixInformation.dangerRating != Enums.DangerRating.low) {
                 const avalancheProblem = new AvalancheProblemModel();
-                avalancheProblem.setAspects(dangerSourceVariant.aspects);
+                avalancheProblem.aspects = dangerSourceVariant.aspects;
                 if (dangerSourceVariant.treelineHigh) {
-                  avalancheProblem.setTreelineHigh(dangerSourceVariant.treelineHigh);
+                  avalancheProblem.treelineHigh = dangerSourceVariant.treelineHigh;
                 } else {
-                  avalancheProblem.setElevationHigh(dangerSourceVariant.elevationHigh);
+                  avalancheProblem.elevationHigh = dangerSourceVariant.elevationHigh;
                 }
                 if (dangerSourceVariant.treelineLow) {
-                  avalancheProblem.setTreelineLow(dangerSourceVariant.treelineLow);
+                  avalancheProblem.treelineLow = dangerSourceVariant.treelineLow;
                 } else {
-                  avalancheProblem.setElevationLow(dangerSourceVariant.elevationLow);
+                  avalancheProblem.elevationLow = dangerSourceVariant.elevationLow;
                 }
                 avalancheProblem.setAvalancheProblem(dangerSourceVariant.getAvalancheProblem());
-                avalancheProblem.setAvalancheType(Enums.AvalancheType[dangerSourceVariant.avalancheType]);
-                avalancheProblem.setMatrixInformation(dangerSourceVariant.eawsMatrixInformation);
+                avalancheProblem.avalancheType = Enums.AvalancheType[dangerSourceVariant.avalancheType];
+                avalancheProblem.matrixInformation = dangerSourceVariant.eawsMatrixInformation;
 
                 if (dangerSourceVariant.hasDaytimeDependency) {
                   hasDaytimeDependency = true;
@@ -1513,15 +1513,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return false;
     }
     return (
-      avalancheProblem.getAspects().length <= 0 ||
-      !avalancheProblem.getAvalancheProblem() ||
-      !avalancheProblem.getAvalancheType() ||
+      avalancheProblem.aspects.length <= 0 ||
+      !avalancheProblem.avalancheProblem ||
+      !avalancheProblem.avalancheType ||
       !avalancheProblem.getDangerRating() ||
       avalancheProblem.getDangerRating() == Enums.DangerRating.missing ||
-      !avalancheProblem.getMatrixInformation() ||
-      !avalancheProblem.getMatrixInformation().getSnowpackStability() ||
-      !avalancheProblem.getMatrixInformation().getFrequency() ||
-      !avalancheProblem.getMatrixInformation().getAvalancheSize()
+      !avalancheProblem.matrixInformation ||
+      !avalancheProblem.matrixInformation.getSnowpackStability() ||
+      !avalancheProblem.matrixInformation.getFrequency() ||
+      !avalancheProblem.matrixInformation.getAvalancheSize()
     );
   }
 
