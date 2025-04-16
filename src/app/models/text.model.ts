@@ -13,32 +13,14 @@ export class TextModel implements TextModelAsJSON {
 
   static createFromJson(json) {
     const text = new TextModel();
-
-    text.setLanguageCode(json.languageCode);
-    text.setText(json.text);
-
+    text.languageCode = json.languageCode;
+    text.text = json.text;
     return text;
   }
 
   constructor() {
     this.languageCode = undefined;
     this.text = undefined;
-  }
-
-  getLanguageCode(): string {
-    return this.languageCode;
-  }
-
-  setLanguageCode(languageCode: string) {
-    this.languageCode = languageCode;
-  }
-
-  getText(): string {
-    return this.text;
-  }
-
-  setText(text: string) {
-    this.text = text;
   }
 
   toJson() {
@@ -55,7 +37,7 @@ export class TextModel implements TextModelAsJSON {
   }
 
   static toLangTexts(models: TextModel[]): LangTexts {
-    return Object.fromEntries(models.map((t) => [t.getLanguageCode(), t.getText()])) as LangTexts;
+    return Object.fromEntries(models.map((t) => [t.languageCode, t.text])) as LangTexts;
   }
 }
 
