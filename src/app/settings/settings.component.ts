@@ -30,12 +30,12 @@ export class SettingsComponent {
 
   showUpdateDialog() {
     const user = new UserModel();
-    user.setEmail(this.authenticationService.getCurrentAuthor().email);
-    user.setName(this.authenticationService.getCurrentAuthor().name);
-    user.setOrganization(this.authenticationService.getCurrentAuthor().organization);
-    user.setImage(this.authenticationService.getCurrentAuthor().image);
-    user.setRoles(this.authenticationService.getCurrentAuthor().roles);
-    user.setRegions(this.authenticationService.getCurrentAuthor().regions.map((region) => region.id));
+    user.email = this.authenticationService.getCurrentAuthor().email;
+    user.name = this.authenticationService.getCurrentAuthor().name;
+    user.organization = this.authenticationService.getCurrentAuthor().organization;
+    user.image = this.authenticationService.getCurrentAuthor().image;
+    user.roles = this.authenticationService.getCurrentAuthor().roles;
+    user.regions = this.authenticationService.getCurrentAuthor().regions.map((region) => region.id);
 
     const dialogRef = this.modalService.show(UpdateUserComponent, {
       class: "modal-xl",

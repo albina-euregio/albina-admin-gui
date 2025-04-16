@@ -1,5 +1,5 @@
-import { Component, AfterContentInit, inject } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { AfterContentInit, Component, inject } from "@angular/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
@@ -9,7 +9,7 @@ import { AuthenticationService } from "app/providers/authentication-service/auth
 import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { FormsModule } from "@angular/forms";
-import { NgIf, NgFor } from "@angular/common";
+import { NgFor, NgIf } from "@angular/common";
 
 type Result =
   | "" // cancel
@@ -131,13 +131,13 @@ export class UpdateUserComponent implements AfterContentInit {
     this.updateUserLoading = true;
 
     const user = new UserModel();
-    user.setImage(this.activeImage);
-    user.setName(this.activeName);
-    user.setEmail(this.activeEmail);
-    user.setOrganization(this.activeOrganization);
-    user.setPassword(this.activePassword);
-    user.setRoles([...new Set(this.activeRoles)]);
-    user.setRegions(this.activeRegions);
+    user.image = this.activeImage;
+    user.name = this.activeName;
+    user.email = this.activeEmail;
+    user.organization = this.activeOrganization;
+    user.password = this.activePassword;
+    user.roles = [...new Set(this.activeRoles)];
+    user.regions = this.activeRegions;
 
     this.userService.createUser(user).subscribe(
       (data) => {
@@ -164,13 +164,13 @@ export class UpdateUserComponent implements AfterContentInit {
     this.updateUserLoading = true;
 
     const user = new UserModel();
-    user.setImage(this.activeImage);
-    user.setName(this.activeName);
-    user.setEmail(this.activeEmail);
-    user.setOrganization(this.activeOrganization);
-    user.setRoles([...new Set(this.activeRoles)]);
-    user.setRegions(this.activeRegions);
-    user.setLanguageCode(this.activeLanguageCode);
+    user.image = this.activeImage;
+    user.name = this.activeName;
+    user.email = this.activeEmail;
+    user.organization = this.activeOrganization;
+    user.roles = [...new Set(this.activeRoles)];
+    user.regions = this.activeRegions;
+    user.languageCode = this.activeLanguageCode;
 
     if (this.isAdmin) {
       this.userService.updateUser(user).subscribe(
