@@ -1,48 +1,14 @@
 import * as z from "zod";
-import { BulletinModelAsJSON } from "./bulletin.model";
-import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
+import type { AvalancheProblemModel } from "./avalanche-problem.model";
+import type { BulletinModelAsJSON } from "./bulletin.model";
+import type { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
 import * as Enums from "../enums/enums";
 
 export const CustomDataSchema = z.optional(z.any());
 export type CustomData = z.infer<typeof CustomDataSchema>;
 
-export const AspectSchema = z.enum(["E", "N", "n/a", "NE", "NW", "S", "SE", "SW", "W"]);
-export type Aspect = z.infer<typeof AspectSchema>;
-
-export const DangerRatingValueSchema = z.enum([
-  "considerable",
-  "high",
-  "low",
-  "moderate",
-  "no_rating",
-  "no_snow",
-  "very_high",
-]);
-export type DangerRatingValue = z.infer<typeof DangerRatingValueSchema>;
-
-export const ExpectedAvalancheFrequencySchema = z.enum(["few", "many", "none", "some"]);
-export type ExpectedAvalancheFrequency = z.infer<typeof ExpectedAvalancheFrequencySchema>;
-
-export const AvalancheProblemTypeSchema = z.enum([
-  "cornices",
-  "favourable_situation",
-  "gliding_snow",
-  "new_snow",
-  "no_distinct_avalanche_problem",
-  "persistent_weak_layers",
-  "wet_snow",
-  "wind_slab",
-]);
-export type AvalancheProblemType = z.infer<typeof AvalancheProblemTypeSchema>;
-
-export const ExpectedSnowpackStabilitySchema = z.enum(["fair", "good", "poor", "very_poor"]);
-export type ExpectedSnowpackStability = z.infer<typeof ExpectedSnowpackStabilitySchema>;
-
-export const ValidTimePeriodSchema = z.enum(["all_day", "earlier", "later"]);
+const ValidTimePeriodSchema = z.enum(["all_day", "earlier", "later"]);
 export type ValidTimePeriod = z.infer<typeof ValidTimePeriodSchema>;
-
-export const TendencyTypeSchema = z.enum(["decreasing", "increasing", "steady"]);
-export type TendencyType = z.infer<typeof TendencyTypeSchema>;
 
 export const TextsSchema = z.object({
   comment: z.optional(z.string()),
@@ -76,10 +42,10 @@ export const MetaDataSchema = z.object({
 export type MetaData = z.infer<typeof MetaDataSchema>;
 
 export const DangerRatingSchema = z.object({
-  aspects: z.optional(z.array(AspectSchema)),
+  aspects: z.optional(z.array(z.enum(Enums.Aspect))),
   customData: CustomDataSchema,
   elevation: z.optional(ElevationBoundaryOrBandSchema),
-  mainValue: DangerRatingValueSchema,
+  mainValue: z.enum(Enums.DangerRating),
   metaData: z.optional(MetaDataSchema),
   validTimePeriod: z.optional(ValidTimePeriodSchema),
 });
@@ -115,22 +81,22 @@ export const TendencySchema = z.object({
   highlights: z.optional(z.string()),
   customData: CustomDataSchema,
   metaData: z.optional(MetaDataSchema),
-  tendencyType: z.optional(TendencyTypeSchema),
+  tendencyType: z.optional(z.enum(["decreasing", "increasing", "steady"])),
   validTime: z.optional(ValidTimeSchema),
 });
 export type Tendency = z.infer<typeof TendencySchema>;
 
 export const AvalancheProblemSchema = z.object({
-  aspects: z.optional(z.array(AspectSchema)),
+  aspects: z.optional(z.array(z.enum(Enums.Aspect))),
   avalancheSize: z.optional(z.number()),
   comment: z.optional(z.string()),
   customData: CustomDataSchema,
-  dangerRatingValue: z.optional(DangerRatingValueSchema),
+  dangerRatingValue: z.optional(z.enum(Enums.DangerRating)),
   elevation: z.optional(ElevationBoundaryOrBandSchema),
-  frequency: z.optional(ExpectedAvalancheFrequencySchema),
+  frequency: z.optional(z.enum(Enums.Frequency)),
   metaData: z.optional(MetaDataSchema),
-  problemType: AvalancheProblemTypeSchema,
-  snowpackStability: z.optional(ExpectedSnowpackStabilitySchema),
+  problemType: z.enum(Enums.AvalancheProblem),
+  snowpackStability: z.optional(z.enum(Enums.SnowpackStability)),
   validTimePeriod: z.optional(ValidTimePeriodSchema),
 });
 export type AvalancheProblem = z.infer<typeof AvalancheProblemSchema>;
@@ -178,7 +144,6 @@ export function toAlbinaBulletin(b: Bulletin): BulletinModelAsJSON {
   return {
     id: b.bulletinID,
     author: {} as any,
-    // ownerRegion,
     publicationDate: b.publicationTime,
     validity: {
       from: b.validTime.startTime,
@@ -188,24 +153,9 @@ export function toAlbinaBulletin(b: Bulletin): BulletinModelAsJSON {
     savedRegions: [],
     publishedRegions: b.regions.map((r) => r.regionID),
     strategicMindset: undefined,
-    forenoon: {
-      // dangerRatingAbove,
-      // terrainFeatureAboveTextcat,
-      // terrainFeatureAbove,
-      // dangerRatingBelow,
-      // terrainFeatureBelowTextcat,
-      // terrainFeatureBelow,
-      // hasElevationDependency,
-      // elevation,
-      // treeline,
-      // avalancheProblem1,
-      // avalancheProblem2,
-      // avalancheProblem3,
-      // avalancheProblem4,
-      // avalancheProblem5,
-    } satisfies Partial<BulletinDaytimeDescriptionModel> as any,
-    hasDaytimeDependency: false,
-    afternoon: undefined,
+    forenoon: toDaytimeDescription(b, "later"),
+    afternoon: toDaytimeDescription(b, "earlier"),
+    hasDaytimeDependency: b.dangerRatings?.some((p) => p.validTimePeriod === "later"),
     highlights: [
       {
         languageCode: b.lang,
@@ -243,7 +193,57 @@ export function toAlbinaBulletin(b: Bulletin): BulletinModelAsJSON {
       },
     ],
     tendency: Enums.Tendency[b.tendency?.[0]?.tendencyType],
-    // dangerPattern1: undefined,
-    // dangerPattern2: undefined,
-  } satisfies Partial<BulletinModelAsJSON> as any;
+  } satisfies Partial<BulletinModelAsJSON> as BulletinModelAsJSON;
+}
+
+function toDaytimeDescription(b: Bulletin, exclude: ValidTimePeriod): BulletinDaytimeDescriptionModel {
+  const problems = (b.avalancheProblems ?? []).filter((p) => p.validTimePeriod !== exclude);
+  const problemModels = problems.map(
+    (p) =>
+      ({
+        aspects: p.aspects,
+        avalancheProblem: p.problemType,
+        matrixInformation: {
+          avalancheSize: Object.values(Enums.AvalancheSize)[p.avalancheSize - 1],
+          frequency: p.frequency,
+          snowpackStability: p.snowpackStability,
+          dangerRating: p.dangerRatingValue,
+        },
+      }) as Partial<AvalancheProblemModel> as AvalancheProblemModel,
+  );
+  const dangerRatings = (b.dangerRatings ?? []).filter((r) => r.validTimePeriod !== exclude);
+  const dangerRatingsBounds = dangerRatings
+    .flatMap((r) => [r.elevation?.lowerBound, r.elevation?.upperBound])
+    .filter(Boolean);
+  return {
+    dangerRatingAbove:
+      dangerRatings
+        .filter((r) => !r.elevation?.lowerBound)
+        .map((r) => r.mainValue)
+        .find((r) => r) ??
+      problems
+        .filter((p) => !p.elevation?.lowerBound)
+        .map((p) => p.dangerRatingValue)
+        .find((p) => false),
+    dangerRatingBelow:
+      dangerRatings
+        .filter((r) => !r.elevation?.upperBound)
+        .map((r) => r.mainValue)
+        .find((r) => r) ??
+      problems
+        .filter((p) => !p.elevation?.upperBound)
+        .map((p) => p.dangerRatingValue)
+        .find((p) => false),
+    avalancheProblem1: problemModels.pop(),
+    avalancheProblem2: problemModels.pop(),
+    avalancheProblem3: problemModels.pop(),
+    avalancheProblem4: problemModels.pop(),
+    avalancheProblem5: problemModels.pop(),
+    hasElevationDependency: dangerRatingsBounds.length > 0,
+    elevation: dangerRatingsBounds
+      .filter((r) => /\d+/.test(r))
+      .map((r) => +r)
+      .find((r) => r),
+    treeline: dangerRatingsBounds.includes("treeline"),
+  } satisfies Partial<BulletinDaytimeDescriptionModel> as BulletinDaytimeDescriptionModel;
 }
