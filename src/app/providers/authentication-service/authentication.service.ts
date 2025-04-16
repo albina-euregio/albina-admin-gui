@@ -247,9 +247,9 @@ export class AuthenticationService {
   }
 
   public isCurrentUserInRole(role: string): boolean {
-    const roles = this.currentAuthor?.getRoles?.();
+    const roles = this.currentAuthor?.getRoles?.() ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
-    if (roles?.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
+    if (roles.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
       const updatedRoles = roles.map((r) =>
         r === this.constantsService.roleObserver ? this.constantsService.roleForecaster : r,
       );
