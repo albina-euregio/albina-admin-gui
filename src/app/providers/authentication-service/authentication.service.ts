@@ -130,40 +130,25 @@ export class AuthenticationService {
       url.search = "";
       const tokenURL = `https://corsproxy.io/?url=${url}`;
       const headers = { "Content-Type": "application/x-www-form-urlencoded" };
-      return this.http.post<{ access_token: string }>(tokenURL, body.toString(), { headers }).pipe(
-        map((data) => {
-          if (data.access_token) {
-            this.addExternalServer(server, data);
-            return true;
-          } else {
-            return false;
-          }
-        }),
-      );
+      return this.http
+        .post<{ access_token: string }>(tokenURL, body.toString(), { headers })
+        .pipe(map((data) => this.addExternalServer(server, data)));
     }
     const url = server.apiUrl + "authentication";
     const body = JSON.stringify({ username: server.userName, password: server.password });
-    return this.http.post<AuthenticationResponse>(url, body).pipe(
-      map((data) => {
-        if (data.access_token) {
-          this.addExternalServer(server, data);
-          return true;
-        } else {
-          return false;
-        }
-      }),
-    );
+    return this.http.post<AuthenticationResponse>(url, body).pipe(map((data) => this.addExternalServer(server, data)));
   }
 
-  private addExternalServer(server0: ServerConfiguration, json: Partial<AuthenticationResponse>) {
-    if (!json) {
-      return;
+  private addExternalServer(server0: ServerConfiguration, json: Partial<AuthenticationResponse>): boolean {
+    if (!json.access_token) {
+      return false;
     }
     const server = ServerModel.createFromJson(json);
     server.setApiUrl(server0.apiUrl);
     server.setName(server0.name);
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
+    return true;
   }
 
   private setExternalServers(json: Partial<ServerModel>[]) {
