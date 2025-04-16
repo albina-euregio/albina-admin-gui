@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, HostListener, input, output, viewChild, inject } from "@angular/core";
+import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
 
 import { environment } from "../../environments/environment";
 
@@ -19,10 +19,10 @@ import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import * as Enums from "../enums/enums";
 import { LangTexts } from "../models/text.model";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { NgIf, NgFor, DatePipe } from "@angular/common";
+import { DatePipe, NgFor, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
@@ -231,30 +231,30 @@ export class AvalancheBulletinComponent implements OnInit {
       if (value) {
         bulletin.setHasDaytimeDependency(value);
 
-        bulletin.afternoon.setDangerRatingAbove(bulletin.forenoon.getDangerRatingAbove());
-        const avalancheProblem1 = bulletin.forenoon.getAvalancheProblem1();
+        bulletin.afternoon.dangerRatingAbove = bulletin.forenoon.dangerRatingAbove;
+        const avalancheProblem1 = bulletin.forenoon.avalancheProblem1;
         if (avalancheProblem1) {
-          bulletin.afternoon.setAvalancheProblem1(new AvalancheProblemModel(avalancheProblem1));
+          bulletin.afternoon.avalancheProblem1 = new AvalancheProblemModel(avalancheProblem1);
         }
-        const avalancheProblem2 = bulletin.forenoon.getAvalancheProblem2();
+        const avalancheProblem2 = bulletin.forenoon.avalancheProblem2;
         if (avalancheProblem2) {
-          bulletin.afternoon.setAvalancheProblem2(new AvalancheProblemModel(avalancheProblem2));
+          bulletin.afternoon.avalancheProblem2 = new AvalancheProblemModel(avalancheProblem2);
         }
-        const avalancheProblem3 = bulletin.forenoon.getAvalancheProblem3();
+        const avalancheProblem3 = bulletin.forenoon.avalancheProblem3;
         if (avalancheProblem3) {
-          bulletin.afternoon.setAvalancheProblem3(new AvalancheProblemModel(avalancheProblem3));
+          bulletin.afternoon.avalancheProblem3 = new AvalancheProblemModel(avalancheProblem3);
         }
-        const avalancheProblem4 = bulletin.forenoon.getAvalancheProblem4();
+        const avalancheProblem4 = bulletin.forenoon.avalancheProblem4;
         if (avalancheProblem4) {
-          bulletin.afternoon.setAvalancheProblem4(new AvalancheProblemModel(avalancheProblem4));
+          bulletin.afternoon.avalancheProblem4 = new AvalancheProblemModel(avalancheProblem4);
         }
-        const avalancheProblem5 = bulletin.forenoon.getAvalancheProblem5();
+        const avalancheProblem5 = bulletin.forenoon.avalancheProblem5;
         if (avalancheProblem5) {
-          bulletin.afternoon.setAvalancheProblem5(new AvalancheProblemModel(avalancheProblem5));
+          bulletin.afternoon.avalancheProblem5 = new AvalancheProblemModel(avalancheProblem5);
         }
         if (bulletin.forenoon.hasElevationDependency) {
-          bulletin.afternoon.setHasElevationDependency(true);
-          bulletin.afternoon.setDangerRatingBelow(bulletin.forenoon.getDangerRatingBelow());
+          bulletin.afternoon.hasElevationDependency = true;
+          bulletin.afternoon.dangerRatingBelow = bulletin.forenoon.dangerRatingBelow;
         }
         bulletin.getForenoon().updateDangerRating();
         bulletin.getAfternoon().updateDangerRating();
@@ -379,23 +379,23 @@ export class AvalancheBulletinComponent implements OnInit {
     const bulletin = this.bulletin();
     if (!earlier) {
       const bulletin = this.bulletin();
-      this.bulletin().forenoon.setDangerRatingAbove(bulletin.afternoon.getDangerRatingAbove());
-      bulletin.forenoon.setAvalancheProblem1(bulletin.afternoon.getAvalancheProblem1());
-      bulletin.forenoon.setAvalancheProblem2(bulletin.afternoon.getAvalancheProblem2());
-      bulletin.forenoon.setAvalancheProblem3(bulletin.afternoon.getAvalancheProblem3());
-      bulletin.forenoon.setAvalancheProblem4(bulletin.afternoon.getAvalancheProblem4());
-      bulletin.forenoon.setAvalancheProblem5(bulletin.afternoon.getAvalancheProblem5());
-      bulletin.forenoon.setHasElevationDependency(bulletin.afternoon.getHasElevationDependency());
-      bulletin.forenoon.setDangerRatingBelow(bulletin.afternoon.getDangerRatingBelow());
+      this.bulletin().forenoon.dangerRatingAbove = bulletin.afternoon.dangerRatingAbove;
+      bulletin.forenoon.avalancheProblem1 = bulletin.afternoon.avalancheProblem1;
+      bulletin.forenoon.avalancheProblem2 = bulletin.afternoon.avalancheProblem2;
+      bulletin.forenoon.avalancheProblem3 = bulletin.afternoon.avalancheProblem3;
+      bulletin.forenoon.avalancheProblem4 = bulletin.afternoon.avalancheProblem4;
+      bulletin.forenoon.avalancheProblem5 = bulletin.afternoon.avalancheProblem5;
+      bulletin.forenoon.hasElevationDependency = bulletin.afternoon.hasElevationDependency;
+      bulletin.forenoon.dangerRatingBelow = bulletin.afternoon.dangerRatingBelow;
     }
-    bulletin.afternoon.setDangerRatingAbove(Enums.DangerRating.missing);
-    bulletin.afternoon.setAvalancheProblem1(undefined);
-    bulletin.afternoon.setAvalancheProblem2(undefined);
-    bulletin.afternoon.setAvalancheProblem3(undefined);
-    bulletin.afternoon.setAvalancheProblem4(undefined);
-    bulletin.afternoon.setAvalancheProblem5(undefined);
-    bulletin.afternoon.setHasElevationDependency(false);
-    bulletin.afternoon.setDangerRatingBelow(Enums.DangerRating.missing);
+    bulletin.afternoon.dangerRatingAbove = Enums.DangerRating.missing;
+    bulletin.afternoon.avalancheProblem1 = undefined;
+    bulletin.afternoon.avalancheProblem2 = undefined;
+    bulletin.afternoon.avalancheProblem3 = undefined;
+    bulletin.afternoon.avalancheProblem4 = undefined;
+    bulletin.afternoon.avalancheProblem5 = undefined;
+    bulletin.afternoon.hasElevationDependency = false;
+    bulletin.afternoon.dangerRatingBelow = Enums.DangerRating.missing;
 
     bulletin.getForenoon().updateDangerRating();
     bulletin.getAfternoon().updateDangerRating();

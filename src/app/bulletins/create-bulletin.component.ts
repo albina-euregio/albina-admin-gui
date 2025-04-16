@@ -1,19 +1,19 @@
 import {
   Component,
-  HostListener,
   ElementRef,
-  TemplateRef,
+  HostListener,
+  inject,
   OnDestroy,
   OnInit,
+  TemplateRef,
   viewChild,
-  inject,
   ViewChild,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { forkJoin, map, Observable, of, Subject, takeUntil, tap, timer } from "rxjs";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal";
+// For iframe
+import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, timer } from "rxjs";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
 import { debounce } from "lodash";
 
@@ -21,7 +21,7 @@ import { debounce } from "lodash";
 import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
 
 // services
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
@@ -38,14 +38,11 @@ import { ModalPublishAllComponent } from "./modal-publish-all.component";
 import { ModalMediaFileComponent } from "./modal-media-file.component";
 import { ModalCheckComponent } from "./modal-check.component";
 
-// For iframe
-import { Subscription } from "rxjs";
-
 import * as Enums from "../enums/enums";
 import { ServerModel } from "app/models/server.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
-import { NgIf, NgFor, NgTemplateOutlet, DatePipe, KeyValuePipe } from "@angular/common";
+import { DatePipe, KeyValuePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
 import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
@@ -742,16 +739,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (index < 3) {
       switch (index) {
         case 1:
-          daytimeDescription.setAvalancheProblem1(avalancheProblem);
+          daytimeDescription.avalancheProblem1 = avalancheProblem;
           break;
         case 2:
-          daytimeDescription.setAvalancheProblem2(avalancheProblem);
+          daytimeDescription.avalancheProblem2 = avalancheProblem;
           break;
         case 3:
-          daytimeDescription.setAvalancheProblem3(avalancheProblem);
+          daytimeDescription.avalancheProblem3 = avalancheProblem;
           break;
         case 4:
-          daytimeDescription.setAvalancheProblem4(avalancheProblem);
+          daytimeDescription.avalancheProblem4 = avalancheProblem;
           break;
         default:
           break;
