@@ -2,7 +2,12 @@ export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"
 
 export type LangTexts = Record<(typeof LANGUAGES)[number], string>;
 
-export class TextModel {
+export interface TextModelAsJSON {
+  languageCode: string;
+  text: string;
+}
+
+export class TextModel implements TextModelAsJSON {
   public languageCode: string;
   public text: string;
 

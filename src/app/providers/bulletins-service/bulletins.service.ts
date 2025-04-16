@@ -8,6 +8,8 @@ import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
+import { Bulletins } from "../../models/CAAMLv6";
+import { BulletinDaytimeDescriptionModel } from "../../models/bulletin-daytime-description.model";
 import * as Enums from "../../enums/enums";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { DateIsoString } from "app/models/stress-level.model";
@@ -331,6 +333,86 @@ export class BulletinsService {
       return of([]);
     }
     const headers = new HttpHeaders({ Authorization: "Bearer " + server.accessToken });
+    if (server.apiUrl.includes("/api/bulletin-preview/caaml/")) {
+      return this.http.get<Bulletins>(server.apiUrl, { headers }).pipe(
+        map((data) =>
+          data.bulletins.map(
+            (b) =>
+              ({
+                id: b.bulletinID,
+                author: {} as any,
+                // ownerRegion,
+                publicationDate: b.publicationTime,
+                validity: {
+                  from: b.validTime.startTime,
+                  until: b.validTime.endTime,
+                },
+                suggestedRegions: [],
+                savedRegions: [],
+                publishedRegions: b.regions.map((r) => r.regionID),
+                strategicMindset: undefined,
+                forenoon: {
+                  // dangerRatingAbove,
+                  // terrainFeatureAboveTextcat,
+                  // terrainFeatureAbove,
+                  // dangerRatingBelow,
+                  // terrainFeatureBelowTextcat,
+                  // terrainFeatureBelow,
+                  // hasElevationDependency,
+                  // elevation,
+                  // treeline,
+                  // avalancheProblem1,
+                  // avalancheProblem2,
+                  // avalancheProblem3,
+                  // avalancheProblem4,
+                  // avalancheProblem5,
+                } satisfies Partial<BulletinDaytimeDescriptionModel> as any,
+                hasDaytimeDependency: false,
+                afternoon: undefined,
+                highlights: [
+                  {
+                    languageCode: b.lang,
+                    text: b.highlights,
+                  },
+                ],
+                avActivityHighlights: [
+                  {
+                    languageCode: b.lang,
+                    text: b.avalancheActivity?.highlights,
+                  },
+                ],
+                avActivityComment: [
+                  {
+                    languageCode: b.lang,
+                    text: b.avalancheActivity?.comment,
+                  },
+                ],
+                snowpackStructureHighlights: [
+                  {
+                    languageCode: b.lang,
+                    text: b.snowpackStructure?.highlights,
+                  },
+                ],
+                snowpackStructureComment: [
+                  {
+                    languageCode: b.lang,
+                    text: b.snowpackStructure?.comment,
+                  },
+                ],
+                tendencyComment: [
+                  {
+                    languageCode: b.lang,
+                    text: b.tendency?.[0]?.comment,
+                  },
+                ],
+                tendency: Enums.Tendency[b.tendency?.[0]?.tendencyType],
+                // dangerPattern1: undefined,
+                // dangerPattern2: undefined,
+              }) satisfies Partial<BulletinModelAsJSON> as any,
+          ),
+        ),
+      );
+    }
     return this.http.get<{ date: string }>(server.apiUrl + "bulletins/latest", { headers }).pipe(
       switchMap((latest) => {
         const date = new Date(date0);
