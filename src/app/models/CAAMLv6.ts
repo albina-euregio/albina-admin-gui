@@ -1,4 +1,7 @@
 import * as z from "zod";
+import { BulletinModelAsJSON } from "./bulletin.model";
+import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
+import * as Enums from "../enums/enums";
 
 export const CustomDataSchema = z.optional(z.any());
 export type CustomData = z.infer<typeof CustomDataSchema>;
@@ -170,3 +173,77 @@ export const BulletinsSchema = z.object({
   metaData: z.optional(MetaDataSchema),
 });
 export type Bulletins = z.infer<typeof BulletinsSchema>;
+
+export function toAlbinaBulletin(b: Bulletin): BulletinModelAsJSON {
+  return {
+    id: b.bulletinID,
+    author: {} as any,
+    // ownerRegion,
+    publicationDate: b.publicationTime,
+    validity: {
+      from: b.validTime.startTime,
+      until: b.validTime.endTime,
+    },
+    suggestedRegions: [],
+    savedRegions: [],
+    publishedRegions: b.regions.map((r) => r.regionID),
+    strategicMindset: undefined,
+    forenoon: {
+      // dangerRatingAbove,
+      // terrainFeatureAboveTextcat,
+      // terrainFeatureAbove,
+      // dangerRatingBelow,
+      // terrainFeatureBelowTextcat,
+      // terrainFeatureBelow,
+      // hasElevationDependency,
+      // elevation,
+      // treeline,
+      // avalancheProblem1,
+      // avalancheProblem2,
+      // avalancheProblem3,
+      // avalancheProblem4,
+      // avalancheProblem5,
+    } satisfies Partial<BulletinDaytimeDescriptionModel> as any,
+    hasDaytimeDependency: false,
+    afternoon: undefined,
+    highlights: [
+      {
+        languageCode: b.lang,
+        text: b.highlights,
+      },
+    ],
+    avActivityHighlights: [
+      {
+        languageCode: b.lang,
+        text: b.avalancheActivity?.highlights,
+      },
+    ],
+    avActivityComment: [
+      {
+        languageCode: b.lang,
+        text: b.avalancheActivity?.comment,
+      },
+    ],
+    snowpackStructureHighlights: [
+      {
+        languageCode: b.lang,
+        text: b.snowpackStructure?.highlights,
+      },
+    ],
+    snowpackStructureComment: [
+      {
+        languageCode: b.lang,
+        text: b.snowpackStructure?.comment,
+      },
+    ],
+    tendencyComment: [
+      {
+        languageCode: b.lang,
+        text: b.tendency?.[0]?.comment,
+      },
+    ],
+    tendency: Enums.Tendency[b.tendency?.[0]?.tendencyType],
+    // dangerPattern1: undefined,
+    // dangerPattern2: undefined,
+  } satisfies Partial<BulletinModelAsJSON> as any;
+}
