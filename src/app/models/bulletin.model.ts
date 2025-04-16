@@ -67,8 +67,8 @@ export class BulletinModel implements PolygonObject {
   static createFromJson(json: BulletinModelAsJSON | any) {
     const bulletin = new BulletinModel();
 
-    bulletin.setId(json.id);
-    bulletin.setAuthor(AuthorModel.createFromJson(json.author));
+    bulletin.id = json.id;
+    bulletin.author = AuthorModel.createFromJson(json.author);
     const jsonAdditionalAuthors = json.additionalAuthors;
     const additionalAuthors = new Array<string>();
     for (const i in jsonAdditionalAuthors) {
@@ -76,18 +76,18 @@ export class BulletinModel implements PolygonObject {
         additionalAuthors.push(jsonAdditionalAuthors[i]);
       }
     }
-    bulletin.setAdditionalAuthors(additionalAuthors);
+    bulletin.additionalAuthors = additionalAuthors;
 
     if (json.ownerRegion) {
-      bulletin.setOwnerRegion(json.ownerRegion);
+      bulletin.ownerRegion = json.ownerRegion;
     }
 
     if (json.publicationDate) {
-      bulletin.setPublicationDate(new Date(json.publicationDate));
+      bulletin.publicationDate = new Date(json.publicationDate);
     }
 
-    bulletin.setValidFrom(new Date(json.validity.from));
-    bulletin.setValidUntil(new Date(json.validity.until));
+    bulletin.validFrom = new Date(json.validity.from);
+    bulletin.validUntil = new Date(json.validity.until);
 
     const jsonSuggestedRegions = json.suggestedRegions;
     const suggestedRegions = new Array<string>();
@@ -96,7 +96,7 @@ export class BulletinModel implements PolygonObject {
         suggestedRegions.push(jsonSuggestedRegions[i]);
       }
     }
-    bulletin.setSuggestedRegions(suggestedRegions);
+    bulletin.suggestedRegions = suggestedRegions;
 
     const jsonSavedRegions = json.savedRegions;
     const savedRegions = new Array<string>();
@@ -105,7 +105,7 @@ export class BulletinModel implements PolygonObject {
         savedRegions.push(jsonSavedRegions[i]);
       }
     }
-    bulletin.setSavedRegions(savedRegions);
+    bulletin.savedRegions = savedRegions;
 
     const jsonPublishedRegions = json.publishedRegions;
     const publishedRegions = new Array<string>();
@@ -114,15 +114,15 @@ export class BulletinModel implements PolygonObject {
         publishedRegions.push(jsonPublishedRegions[i]);
       }
     }
-    bulletin.setPublishedRegions(publishedRegions);
+    bulletin.publishedRegions = publishedRegions;
 
-    bulletin.setHasDaytimeDependency(json.hasDaytimeDependency);
+    bulletin.hasDaytimeDependency = json.hasDaytimeDependency;
 
     if (json.forenoon) {
-      bulletin.setForenoon(BulletinDaytimeDescriptionModel.createFromJson(json.forenoon));
+      bulletin.forenoon = BulletinDaytimeDescriptionModel.createFromJson(json.forenoon);
     }
     if (json.afternoon) {
-      bulletin.setAfternoon(BulletinDaytimeDescriptionModel.createFromJson(json.afternoon));
+      bulletin.afternoon = BulletinDaytimeDescriptionModel.createFromJson(json.afternoon);
     }
 
     if (json.highlightsTextcat) {
@@ -301,114 +301,10 @@ export class BulletinModel implements PolygonObject {
     }
   }
 
-  getId(): string {
-    return this.id;
-  }
-
-  setId(id: string) {
-    this.id = id;
-  }
-
-  getAuthor(): AuthorModel {
-    return this.author;
-  }
-
-  setAuthor(author: AuthorModel) {
-    this.author = author;
-  }
-
-  getAdditionalAuthors(): string[] {
-    return this.additionalAuthors;
-  }
-
-  setAdditionalAuthors(additionalAuthors: string[]) {
-    this.additionalAuthors = additionalAuthors;
-  }
-
   addAdditionalAuthor(author: string) {
     if (!this.additionalAuthors.includes(author)) {
       this.additionalAuthors.push(author);
     }
-  }
-
-  getOwnerRegion() {
-    return this.ownerRegion;
-  }
-
-  setOwnerRegion(ownerRegion: string) {
-    this.ownerRegion = ownerRegion;
-  }
-
-  getPublicationDate() {
-    return this.publicationDate;
-  }
-
-  setPublicationDate(publicationDate: Date) {
-    this.publicationDate = publicationDate;
-  }
-
-  getValidFrom(): Date {
-    return this.validFrom;
-  }
-
-  setValidFrom(validFrom: Date) {
-    this.validFrom = validFrom;
-  }
-
-  getValidUntil(): Date {
-    return this.validUntil;
-  }
-
-  setValidUntil(validUntil: Date) {
-    this.validUntil = validUntil;
-  }
-
-  getSuggestedRegions(): string[] {
-    return this.suggestedRegions;
-  }
-
-  setSuggestedRegions(suggestedRegions: string[]) {
-    this.suggestedRegions = suggestedRegions;
-  }
-
-  getSavedRegions(): string[] {
-    return this.savedRegions;
-  }
-
-  setSavedRegions(savedRegions: string[]) {
-    this.savedRegions = savedRegions;
-  }
-
-  getPublishedRegions(): string[] {
-    return this.publishedRegions;
-  }
-
-  setPublishedRegions(publishedRegions: string[]) {
-    this.publishedRegions = publishedRegions;
-  }
-
-  getHasDaytimeDependency() {
-    return this.hasDaytimeDependency;
-  }
-
-  setHasDaytimeDependency(hasDaytimeDependency: boolean) {
-    this.hasDaytimeDependency = hasDaytimeDependency;
-  }
-
-  getForenoon(): BulletinDaytimeDescriptionModel {
-    return this.forenoon;
-  }
-
-  setForenoon(forenoon: BulletinDaytimeDescriptionModel) {
-    this.forenoon = forenoon;
-  }
-
-  getAfternoon(): BulletinDaytimeDescriptionModel {
-    return this.afternoon;
-  }
-
-  setAfternoon(afternoon: BulletinDaytimeDescriptionModel) {
-    this.afternoon = afternoon;
   }
 
   getForenoonDangerRatingAbove(): Enums.DangerRating {
@@ -450,11 +346,11 @@ export class BulletinModel implements PolygonObject {
   }
 
   getSavedAndPublishedRegions() {
-    return this.getPublishedRegions().concat(this.getSavedRegions());
+    return this.publishedRegions.concat(this.savedRegions);
   }
 
   getAllRegions(): string[] {
-    return this.getPublishedRegions().concat(this.getSavedRegions()).concat(this.getSuggestedRegions());
+    return this.publishedRegions.concat(this.savedRegions).concat(this.suggestedRegions);
   }
 
   toJson(): BulletinModelAsJSON {
@@ -615,11 +511,11 @@ export class BulletinModel implements PolygonObject {
   public getRegionsByStatus(type?: RegionStatus): string[] {
     switch (type) {
       case RegionStatus.suggested:
-        return this.getSuggestedRegions();
+        return this.suggestedRegions;
       case RegionStatus.saved:
-        return this.getSavedRegions();
+        return this.savedRegions;
       case RegionStatus.published:
-        return this.getPublishedRegions();
+        return this.publishedRegions;
       default:
         return this.getAllRegions();
     }

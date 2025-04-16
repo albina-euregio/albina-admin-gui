@@ -157,7 +157,7 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 
   isInternal(): boolean {
-    const ownerRegion = this.bulletin().getOwnerRegion();
+    const ownerRegion = this.bulletin().ownerRegion;
     return ownerRegion && this.authenticationService.isInternalRegion(ownerRegion);
   }
 
@@ -193,14 +193,14 @@ export class AvalancheBulletinComponent implements OnInit {
   acceptSuggestions(event: Event) {
     event.stopPropagation();
     const suggested = new Array<string>();
-    for (const region of this.bulletin().getSuggestedRegions()) {
+    for (const region of this.bulletin().suggestedRegions) {
       if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-        this.bulletin().getSavedRegions().push(region);
+        this.bulletin().savedRegions.push(region);
       } else {
         suggested.push(region);
       }
     }
-    this.bulletin().setSuggestedRegions(suggested);
+    this.bulletin().suggestedRegions = suggested;
     this.bulletin().addAdditionalAuthor(this.authenticationService.getCurrentAuthor().getName());
 
     this.updateBulletinOnServer();
@@ -209,18 +209,18 @@ export class AvalancheBulletinComponent implements OnInit {
   rejectSuggestions(event: Event) {
     event.stopPropagation();
     const suggested = new Array<string>();
-    for (const region of this.bulletin().getSuggestedRegions()) {
+    for (const region of this.bulletin().suggestedRegions) {
       if (!region.startsWith(this.authenticationService.getActiveRegionId())) {
         suggested.push(region);
       }
     }
-    this.bulletin().setSuggestedRegions(suggested);
+    this.bulletin().suggestedRegions = suggested;
 
     this.updateBulletinOnServer();
   }
 
   isCreator(bulletin: BulletinModel): boolean {
-    const ownerRegion = bulletin.getOwnerRegion();
+    const ownerRegion = bulletin.ownerRegion;
     return ownerRegion !== undefined && ownerRegion?.startsWith(this.authenticationService.getActiveRegionId());
   }
 
@@ -229,7 +229,7 @@ export class AvalancheBulletinComponent implements OnInit {
     const bulletin = this.bulletin();
     if (this.bulletinsService.getIsEditable() && this.isCreator(bulletin)) {
       if (value) {
-        bulletin.setHasDaytimeDependency(value);
+        bulletin.hasDaytimeDependency = value;
 
         bulletin.afternoon.dangerRatingAbove = bulletin.forenoon.dangerRatingAbove;
         const avalancheProblem1 = bulletin.forenoon.avalancheProblem1;
@@ -256,8 +256,8 @@ export class AvalancheBulletinComponent implements OnInit {
           bulletin.afternoon.hasElevationDependency = true;
           bulletin.afternoon.dangerRatingBelow = bulletin.forenoon.dangerRatingBelow;
         }
-        bulletin.getForenoon().updateDangerRating();
-        bulletin.getAfternoon().updateDangerRating();
+        bulletin.forenoon.updateDangerRating();
+        bulletin.afternoon.updateDangerRating();
 
         this.updateBulletinOnServer();
       } else {
@@ -267,7 +267,7 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 
   hasSuggestions(bulletin: BulletinModel): boolean {
-    for (const region of bulletin.getSuggestedRegions()) {
+    for (const region of bulletin.suggestedRegions) {
       if (region.startsWith(this.authenticationService.getActiveRegionId())) {
         return true;
       }
@@ -374,7 +374,7 @@ export class AvalancheBulletinComponent implements OnInit {
   removeDaytimeDependencyModalConfirm(event, earlier: boolean): void {
     event.stopPropagation();
     this.removeDaytimeDependencyModalRef.hide();
-    this.bulletin().setHasDaytimeDependency(false);
+    this.bulletin().hasDaytimeDependency = false;
 
     const bulletin = this.bulletin();
     if (!earlier) {
@@ -397,8 +397,8 @@ export class AvalancheBulletinComponent implements OnInit {
     bulletin.afternoon.hasElevationDependency = false;
     bulletin.afternoon.dangerRatingBelow = Enums.DangerRating.missing;
 
-    bulletin.getForenoon().updateDangerRating();
-    bulletin.getAfternoon().updateDangerRating();
+    bulletin.forenoon.updateDangerRating();
+    bulletin.afternoon.updateDangerRating();
 
     this.updateBulletinOnServer();
   }

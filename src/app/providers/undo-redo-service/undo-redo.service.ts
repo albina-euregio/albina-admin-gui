@@ -33,25 +33,25 @@ export class UndoRedoService {
   }
 
   pushToUndoStack(bulletin: BulletinModel) {
-    this.redoStack[bulletin.getId()] = [];
-    this.undoStack[bulletin.getId()] ??= [];
+    this.redoStack[bulletin.id] = [];
+    this.undoStack[bulletin.id] ??= [];
     // cap undo stack at 100 entries
-    if (this.undoStack[bulletin.getId()].length >= 100) {
-      this.undoStack[bulletin.getId()].shift();
+    if (this.undoStack[bulletin.id].length >= 100) {
+      this.undoStack[bulletin.id].shift();
     }
-    this.undoStack[bulletin.getId()].push(JSON.stringify(bulletin.toJson()));
+    this.undoStack[bulletin.id].push(JSON.stringify(bulletin.toJson()));
     console.info(
-      "undo stack size: " + this.undoStack[bulletin.getId()].length,
-      "redo stack size: " + this.redoStack[bulletin.getId()].length,
+      "undo stack size: " + this.undoStack[bulletin.id].length,
+      "redo stack size: " + this.redoStack[bulletin.id].length,
     );
   }
 
   initUndoRedoStacksFromServer(bulletin: BulletinModel) {
-    this.undoStack[bulletin.getId()] ??= [];
-    this.redoStack[bulletin.getId()] ??= [];
+    this.undoStack[bulletin.id] ??= [];
+    this.redoStack[bulletin.id] ??= [];
     // If the user did not perform any actions of their own, and the state changes on the server, the undo stack should be re-initialized with the state from the server.
     // On the other hand: if the undo stack has length <= 1 because the user is in the middle of some undo/redo, the stacks should not be overwritten.
-    if (this.undoStack[bulletin.getId()].length <= 1 && this.redoStack[bulletin.getId()].length === 0) {
+    if (this.undoStack[bulletin.id].length <= 1 && this.redoStack[bulletin.id].length === 0) {
       this.pushToUndoStack(bulletin);
     }
   }

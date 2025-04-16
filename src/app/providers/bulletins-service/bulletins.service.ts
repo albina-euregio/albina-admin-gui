@@ -442,7 +442,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
-      bulletin.getId() +
+      bulletin.id +
       "?" +
       this.constantsService
         .createSearchParams([
@@ -465,7 +465,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
-      bulletin.getId() +
+      bulletin.id +
       "?" +
       this.constantsService
         .createSearchParams([
