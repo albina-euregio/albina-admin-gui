@@ -138,8 +138,8 @@ export class AuthenticationService {
       return false;
     }
     const server = ServerModel.createFromJson(json);
-    server.setApiUrl(server0.apiUrl);
-    server.setName(server0.name);
+    server.apiUrl = server0.apiUrl;
+    server.name = server0.name;
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
     return true;
@@ -274,7 +274,7 @@ export class AuthenticationService {
       return false;
     }
     for (const externalServer of this.externalServers) {
-      if (externalServer.getRegions().includes(region)) return true;
+      if (externalServer.regions.includes(region)) return true;
     }
     return false;
   }

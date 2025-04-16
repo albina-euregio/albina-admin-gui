@@ -448,7 +448,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.addExternalBulletins(server, data);
           },
           (error) => {
-            console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!", error);
+            console.error("Bulletins from " + server.apiUrl + " could not be loaded!", error);
             this.loadExternalBulletinsError = true;
           },
         ),
@@ -1190,8 +1190,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
 
     this.externRegionsMap.set(server, bulletinsList);
-    if (!this.showExternRegionsMap.has(server.getApiUrl())) {
-      this.showExternRegionsMap.set(server.getApiUrl(), false);
+    if (!this.showExternRegionsMap.has(server.apiUrl)) {
+      this.showExternRegionsMap.set(server.apiUrl, false);
     }
 
     if (this.activeBulletin) {
