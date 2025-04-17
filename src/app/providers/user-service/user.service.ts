@@ -1,10 +1,10 @@
 import { inject, Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { map, Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { StressLevel } from "../../models/stress-level.model";
-import { UserModel } from "../../models/user.model";
+import { UserModel, UserSchema } from "../../models/user.model";
 
 @Injectable()
 export class UserService {
@@ -50,7 +50,7 @@ export class UserService {
 
   public getUsers(): Observable<UserModel[]> {
     const url = this.constantsService.getServerUrl() + "user";
-    return this.http.get<UserModel[]>(url);
+    return this.http.get(url).pipe(map((json) => UserSchema.array().parse(json)));
   }
 
   public getRoles(): Observable<string[]> {

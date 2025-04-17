@@ -1,6 +1,6 @@
 import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
 import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
-import { AuthorModel } from "./author.model";
+import { AuthorModel, AuthorSchema } from "./author.model";
 import * as Enums from "../enums/enums";
 import { RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
@@ -68,7 +68,7 @@ export class BulletinModel implements PolygonObject {
     const bulletin = new BulletinModel();
 
     bulletin.id = json.id;
-    bulletin.author = json.author as AuthorModel;
+    bulletin.author = AuthorSchema.partial().parse(json.author);
     const jsonAdditionalAuthors = json.additionalAuthors;
     const additionalAuthors = new Array<string>();
     for (const i in jsonAdditionalAuthors) {

@@ -3,7 +3,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
-import { UserModel } from "../models/user.model";
+import { UserModel, UserSchema } from "../models/user.model";
 
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
@@ -130,7 +130,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public createUser() {
     this.updateUserLoading = true;
 
-    const user: UserModel = {
+    const user: UserModel = UserSchema.parse({
       image: this.activeImage,
       name: this.activeName,
       email: this.activeEmail,
@@ -138,7 +138,7 @@ export class UpdateUserComponent implements AfterContentInit {
       password: this.activePassword,
       roles: [...new Set(this.activeRoles)],
       regions: this.activeRegions,
-    };
+    });
 
     this.userService.createUser(user).subscribe(
       (data) => {
@@ -164,7 +164,7 @@ export class UpdateUserComponent implements AfterContentInit {
   public updateUser() {
     this.updateUserLoading = true;
 
-    const user: UserModel = {
+    const user: UserModel = UserSchema.parse({
       image: this.activeImage,
       name: this.activeName,
       email: this.activeEmail,
@@ -172,7 +172,7 @@ export class UpdateUserComponent implements AfterContentInit {
       roles: [...new Set(this.activeRoles)],
       regions: this.activeRegions,
       languageCode: this.activeLanguageCode,
-    };
+    });
 
     if (this.isAdmin) {
       this.userService.updateUser(user).subscribe(

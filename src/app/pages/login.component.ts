@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
         }
       },
       (error) => {
-        console.error("[" + this.username + "] Login failed: " + JSON.stringify(error._body));
+        console.error("[" + this.username + "] Login failed: " + JSON.stringify(error._body), error);
         this.openErrorModal(this.errorTemplate());
       },
     );

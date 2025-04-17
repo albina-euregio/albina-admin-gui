@@ -5,12 +5,13 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { AuthorModel } from "../../models/author.model";
+import { AuthorModel, AuthorSchema } from "../../models/author.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import * as Enums from "../../enums/enums";
 import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
+import { z } from "zod";
 
 @Injectable()
 export class AuthenticationService {
@@ -53,27 +54,31 @@ export class AuthenticationService {
   public login(username: string, password: string): Observable<boolean> {
     const url = this.constantsService.getServerUrl() + "authentication";
     const body = JSON.stringify({ username, password });
-    return this.http.post<AuthenticationResponse>(url, body).pipe(
-      map((data) => {
-        if (data.access_token) {
-          this.setCurrentAuthor({
+    return this.http.post(url, body).pipe(
+      map((json) => {
+        const data = AuthenticationResponseSchema.parse(json, { reportInput: true });
+        if (!data.access_token) {
+          return false;
+        }
+        const author: AuthorModel = AuthorSchema.parse(
+          {
             ...data,
             organization: "",
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             apiUrl: data.api_url,
-          });
-          const authorRegions = this.getCurrentAuthorRegions();
-          const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
-          this.setActiveRegion(
-            authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
-          );
-          this.loadInternalRegions();
-          this.externalServerLogins();
-          return true;
-        } else {
-          return false;
-        }
+          },
+          { reportInput: true },
+        );
+        this.setCurrentAuthor(author);
+        const authorRegions = this.getCurrentAuthorRegions();
+        const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
+        this.setActiveRegion(
+          authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
+        );
+        this.loadInternalRegions();
+        this.externalServerLogins();
+        return true;
       }),
     );
   }
@@ -137,10 +142,15 @@ export class AuthenticationService {
     }
     const url = server.apiUrl + "authentication";
     const body = JSON.stringify({ username: server.userName, password: server.password });
-    return this.http.post<AuthenticationResponse>(url, body).pipe(map((data) => this.addExternalServer(server, data)));
+    return this.http.post(url, body).pipe(
+      map((json) => {
+        const data = AuthenticationResponseSchema.parse(json);
+        return this.addExternalServer(server, data);
+      }),
+    );
   }
 
-  private addExternalServer(server0: ServerConfiguration, json: Partial<AuthenticationResponse>): boolean {
+  private addExternalServer(server0: ServerConfiguration, json: z.infer<typeof AuthenticationResponseSchema>): boolean {
     if (!json.access_token) {
       return false;
     }
@@ -183,7 +193,7 @@ export class AuthenticationService {
     if (!json) {
       return;
     }
-    this.currentAuthor = json as AuthorModel;
+    this.currentAuthor = AuthorSchema.partial().parse(json);
     this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
@@ -251,7 +261,7 @@ export class AuthenticationService {
     return this.activeRegion?.mapCenterLng ?? 11.44;
   }
 
-  public isCurrentUserInRole(role: string): boolean {
+  public isCurrentUserInRole(role: Enums.UserRole): boolean {
     const roles = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
     if (roles.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
@@ -290,12 +300,12 @@ export class AuthenticationService {
   }
 }
 
-export interface AuthenticationResponse {
-  email: string;
-  name: string;
-  roles: string[];
-  regions: RegionConfiguration[];
-  access_token: string;
-  refresh_token: string;
-  api_url: string;
-}
+export const AuthenticationResponseSchema = z.object({
+  email: z.string(),
+  name: z.string(),
+  roles: z.enum(Enums.UserRole).array(),
+  regions: RegionConfigurationSchema.array(),
+  access_token: z.string(),
+  refresh_token: z.string().optional(),
+  api_url: z.string().optional(),
+});

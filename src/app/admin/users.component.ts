@@ -48,7 +48,7 @@ export class UsersComponent implements AfterContentInit {
         this.users = Array.isArray(data) ? data.sort((a, b) => a.name.localeCompare(b.name)) : [];
       },
       (error) => {
-        console.error("Users could not be loaded!");
+        console.error("Users could not be loaded!", error);
       },
     );
   }
@@ -142,7 +142,7 @@ export class UsersComponent implements AfterContentInit {
           });
         },
         (error) => {
-          console.error("Users could not be deleted!");
+          console.error("Users could not be deleted!", error);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",
