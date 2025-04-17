@@ -3,7 +3,12 @@ import { HttpClient } from "@angular/common/http";
 import { map, Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
-import { StressLevel } from "../../models/stress-level.model";
+import {
+  StressLevel,
+  StressLevelSchema,
+  TeamStressLevels,
+  TeamStressLevelsSchema,
+} from "../../models/stress-level.model";
 import { UserModel, UserSchema } from "../../models/user.model";
 
 @Injectable()
@@ -79,16 +84,16 @@ export class UserService {
       startDate: date[0].toISOString(),
       endDate: date[1].toISOString(),
     };
-    return this.http.get<StressLevel[]>(url, { params });
+    return this.http.get(url, { params }).pipe(map((json) => StressLevelSchema.array().parse(json)));
   }
 
-  public getTeamStressLevels(date: [Date, Date]): Observable<Record<string, StressLevel[]>> {
+  public getTeamStressLevels(date: [Date, Date]): Observable<TeamStressLevels> {
     const url = this.constantsService.getServerUrl() + "user/stress-level/team";
     const params = {
       region: this.authenticationService.getActiveRegionId(),
       startDate: date[0].toISOString(),
       endDate: date[1].toISOString(),
     };
-    return this.http.get<Record<string, StressLevel[]>>(url, { params });
+    return this.http.get(url, { params }).pipe(map((json) => TeamStressLevelsSchema.parse(json)));
   }
 }
