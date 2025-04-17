@@ -2,11 +2,12 @@ import { Component, AfterContentInit, inject } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
+import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { NgIf, NgFor } from "@angular/common";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { RegionConfigurationComponent } from "./region-configuration.component";
 import { TranslateModule } from "@ngx-translate/core";
+import { RegionConfiguration } from "../models/region-configuration.model";
 
 @Component({
   templateUrl: "regions-configuration.component.html",

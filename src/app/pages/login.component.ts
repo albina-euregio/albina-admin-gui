@@ -5,10 +5,11 @@ import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { environment } from "../../environments/environment";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { ConfigurationService, ServerConfiguration } from "app/providers/configuration-service/configuration.service";
+import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
+import { ServerConfiguration } from "../models/server-configuration.model";
 
 @Component({
   templateUrl: "login.component.html",

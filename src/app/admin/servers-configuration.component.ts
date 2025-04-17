@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
+import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { NgIf, NgFor } from "@angular/common";
 import { ServerConfigurationComponent } from "./server-configuration.component";
 import { TranslateModule } from "@ngx-translate/core";
+import { ServerConfiguration } from "../models/server-configuration.model";
 
 @Component({
   templateUrl: "servers-configuration.component.html",

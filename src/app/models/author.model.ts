@@ -1,4 +1,4 @@
-import { RegionConfiguration } from "app/providers/configuration-service/configuration.service";
+import { RegionConfiguration } from "./region-configuration.model";
 
 export interface AuthorModel {
   accessToken: string;

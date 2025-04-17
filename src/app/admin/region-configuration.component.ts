@@ -1,11 +1,12 @@
 import { Component, input, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { ConfigurationService, RegionConfiguration } from "../providers/configuration-service/configuration.service";
+import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
 import { NgFor, NgIf } from "@angular/common";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { FormsModule } from "@angular/forms";
+import { RegionConfiguration } from "../models/region-configuration.model";
 
 @Component({
   templateUrl: "region-configuration.component.html",
