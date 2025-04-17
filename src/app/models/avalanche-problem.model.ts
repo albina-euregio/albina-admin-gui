@@ -38,7 +38,7 @@ export class AvalancheProblemModel {
     }
 
     if (json.eawsMatrixInformation) {
-      avalancheProblem.matrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
+      avalancheProblem.matrixInformation = json.eawsMatrixInformation as MatrixInformationModel;
     }
 
     if (json.terrainFeatureTextcat) {
@@ -60,7 +60,7 @@ export class AvalancheProblemModel {
       this.treelineHigh = false;
       this.treelineLow = false;
       this.dangerRatingDirection = undefined;
-      this.matrixInformation = new MatrixInformationModel();
+      this.matrixInformation = {} as MatrixInformationModel;
       this.terrainFeatureTextcat = undefined;
       this.terrainFeature = new Array<TextModel>();
     } else {
@@ -74,7 +74,7 @@ export class AvalancheProblemModel {
       this.elevationLow = avalancheProblem.elevationLow;
       this.treelineLow = avalancheProblem.treelineLow;
       this.dangerRatingDirection = avalancheProblem.dangerRatingDirection;
-      this.matrixInformation = new MatrixInformationModel(avalancheProblem.matrixInformation);
+      this.matrixInformation = avalancheProblem.matrixInformation as MatrixInformationModel;
       this.terrainFeatureTextcat = avalancheProblem.terrainFeatureTextcat;
       this.terrainFeature = avalancheProblem.terrainFeature;
     }
@@ -138,7 +138,7 @@ export class AvalancheProblemModel {
       json["dangerRatingDirection"] = this.dangerRatingDirection;
     }
     if (this.matrixInformation) {
-      json["eawsMatrixInformation"] = this.matrixInformation.toJson();
+      json["eawsMatrixInformation"] = this.matrixInformation;
     }
     if (this.terrainFeatureTextcat) {
       json["terrainFeatureTextcat"] = this.terrainFeatureTextcat;

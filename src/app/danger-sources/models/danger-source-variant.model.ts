@@ -290,7 +290,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.penetrateDeepLayers = json.penetrateDeepLayers;
     variant.naturalRelease = json.naturalRelease;
     variant.dangerSigns = json.dangerSigns;
-    variant.eawsMatrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
+    variant.eawsMatrixInformation = json.eawsMatrixInformation as MatrixInformationModel;
     variant.glidingSnowActivity = json.glidingSnowActivity;
     variant.glidingSnowActivityValue = json.glidingSnowActivityValue;
     variant.snowHeightUpperLimit = json.snowHeightUpperLimit;
@@ -359,7 +359,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.penetrateDeepLayers = variant.penetrateDeepLayers;
       this.naturalRelease = variant.naturalRelease;
       this.dangerSigns = variant.dangerSigns;
-      this.eawsMatrixInformation = new MatrixInformationModel(variant.eawsMatrixInformation);
+      this.eawsMatrixInformation = variant.eawsMatrixInformation as MatrixInformationModel;
       this.glidingSnowActivity = variant.glidingSnowActivity;
       this.glidingSnowActivityValue = variant.glidingSnowActivityValue;
       this.snowHeightUpperLimit = variant.snowHeightUpperLimit;
@@ -399,7 +399,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.hasDaytimeDependency = false;
       this.aspects = new Array<Aspect>();
       this.dangerSigns = new Array<DangerSign>();
-      this.eawsMatrixInformation = new MatrixInformationModel();
+      this.eawsMatrixInformation = {} as MatrixInformationModel;
       this.terrainTypes = new Array<TerrainType>();
     }
   }
