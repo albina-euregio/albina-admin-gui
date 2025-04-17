@@ -68,7 +68,7 @@ export class BulletinModel implements PolygonObject {
     const bulletin = new BulletinModel();
 
     bulletin.id = json.id;
-    bulletin.author = AuthorModel.createFromJson(json.author);
+    bulletin.author = json.author as AuthorModel;
     const jsonAdditionalAuthors = json.additionalAuthors;
     const additionalAuthors = new Array<string>();
     for (const i in jsonAdditionalAuthors) {
@@ -360,7 +360,7 @@ export class BulletinModel implements PolygonObject {
       json["id"] = this.id;
     }
     if (this.author) {
-      json["author"] = this.author.toJson();
+      json["author"] = this.author;
     }
     if (this.additionalAuthors && this.additionalAuthors.length > 0) {
       const additionalAuthors = [];

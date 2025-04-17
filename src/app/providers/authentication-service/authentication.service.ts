@@ -55,7 +55,13 @@ export class AuthenticationService {
     return this.http.post<AuthenticationResponse>(url, body).pipe(
       map((data) => {
         if (data.access_token) {
-          this.setCurrentAuthor(data);
+          this.setCurrentAuthor({
+            ...data,
+            organization: "",
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            apiUrl: data.api_url,
+          });
           const authorRegions = this.getCurrentAuthorRegions();
           const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
           this.setActiveRegion(
@@ -172,11 +178,11 @@ export class AuthenticationService {
     return this.currentAuthor;
   }
 
-  private setCurrentAuthor(json: Partial<AuthorModel>) {
+  private setCurrentAuthor(json: AuthorModel) {
     if (!json) {
       return;
     }
-    this.currentAuthor = AuthorModel.createFromJson(json);
+    this.currentAuthor = json as AuthorModel;
     this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
