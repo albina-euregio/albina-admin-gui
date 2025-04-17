@@ -2,6 +2,17 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.12] - 2025-04-17
+
+### Bulletins
+
+- Fetch bulletins for SLF
+
+### ⚙️ Miscellaneous Tasks
+
+- Upgrade to zod 4.0.0-beta
+- Upgrade to Yarn 4.9.1
+
 ## [7.1.11] - 2025-04-09
 
 ### ⚙️ Miscellaneous Tasks
