@@ -1,5 +1,5 @@
 import * as Enums from "../enums/enums";
-import { MatrixInformationModel } from "./matrix-information.model";
+import { MatrixInformationModel, MatrixInformationSchema } from "./matrix-information.model";
 import { TextModel } from "./text.model";
 
 export class AvalancheProblemModel {
@@ -38,7 +38,7 @@ export class AvalancheProblemModel {
     }
 
     if (json.eawsMatrixInformation) {
-      avalancheProblem.matrixInformation = json.eawsMatrixInformation as MatrixInformationModel;
+      avalancheProblem.matrixInformation = MatrixInformationSchema.parse(json.eawsMatrixInformation);
     }
 
     if (json.terrainFeatureTextcat) {
@@ -60,7 +60,7 @@ export class AvalancheProblemModel {
       this.treelineHigh = false;
       this.treelineLow = false;
       this.dangerRatingDirection = undefined;
-      this.matrixInformation = {} as MatrixInformationModel;
+      this.matrixInformation = MatrixInformationSchema.parse({});
       this.terrainFeatureTextcat = undefined;
       this.terrainFeature = new Array<TextModel>();
     } else {
@@ -74,7 +74,7 @@ export class AvalancheProblemModel {
       this.elevationLow = avalancheProblem.elevationLow;
       this.treelineLow = avalancheProblem.treelineLow;
       this.dangerRatingDirection = avalancheProblem.dangerRatingDirection;
-      this.matrixInformation = avalancheProblem.matrixInformation as MatrixInformationModel;
+      this.matrixInformation = MatrixInformationSchema.parse(avalancheProblem.matrixInformation);
       this.terrainFeatureTextcat = avalancheProblem.terrainFeatureTextcat;
       this.terrainFeature = avalancheProblem.terrainFeature;
     }
