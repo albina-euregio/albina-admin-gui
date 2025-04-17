@@ -122,7 +122,7 @@ export class AuthenticationService {
 
   public externalServerLogin(server: ServerConfiguration): Observable<boolean> {
     if (server.userName.startsWith("https://")) {
-      const tokenURL = `https://corsproxy.io/?url=${server.userName}`;
+      const tokenURL = server.userName;
       const headers = { "Content-Type": "application/x-www-form-urlencoded" };
       return this.http
         .post<{ access_token: string }>(tokenURL, server.password, { headers })
