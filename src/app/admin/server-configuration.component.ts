@@ -43,7 +43,7 @@ export class ServerConfigurationComponent {
     json["mediaPath"] = this.config().mediaPath;
     json["mapProductionUrl"] = this.config().mapProductionUrl;
 
-    if (!this.config().isNew) {
+    if (!this.config().$isNew) {
       this.configurationService.updateServerConfiguration(json).subscribe(
         (data) => {
           this.saveConfigurationLoading = false;

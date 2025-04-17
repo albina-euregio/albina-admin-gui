@@ -90,10 +90,6 @@ registerLocaleData(localeEs, "es");
 registerLocaleData(localeCa, "ca");
 registerLocaleData(localeOc, "oc");
 
-if (environment.sentryDSN) {
-  sentry.init({ dsn: environment.sentryDSN });
-}
-
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
@@ -111,13 +107,6 @@ bootstrapApplication(AppComponent, {
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy,
-    },
-    {
-      provide: ErrorHandler,
-      useValue: sentry.createErrorHandler({
-        logErrors: true,
-        showDialog: true,
-      }),
     },
     AlbinaObservationsService,
     AuthenticationService,

@@ -2,9 +2,14 @@ import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { RegionConfiguration } from "../../models/region-configuration.model";
-import { ServerConfiguration } from "../../models/server-configuration.model";
+import {
+  ServerConfiguration,
+  ServerConfigurationSchema,
+  ServerConfigurationVersion,
+  ServerConfigurationVersionSchema,
+} from "../../models/server-configuration.model";
 
 @Injectable()
 export class ConfigurationService {
@@ -12,19 +17,19 @@ export class ConfigurationService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
-  public loadPublicLocalServerConfiguration(): Observable<ServerConfiguration & { version: string }> {
+  public loadPublicLocalServerConfiguration(): Observable<ServerConfigurationVersion> {
     const url = this.constantsService.getServerUrl() + "server/info";
-    return this.http.get<ServerConfiguration & { version: string }>(url);
+    return this.http.get(url).pipe(map((json) => ServerConfigurationVersionSchema.parse(json)));
   }
 
   public loadLocalServerConfiguration(): Observable<ServerConfiguration> {
     const url = this.constantsService.getServerUrl() + "server";
-    return this.http.get<ServerConfiguration>(url);
+    return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.parse(json)));
   }
 
   public loadExternalServerConfigurations(): Observable<ServerConfiguration[]> {
     const url = this.constantsService.getServerUrl() + "server/external";
-    return this.http.get<ServerConfiguration[]>(url);
+    return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.array().parse(json)));
   }
 
   public updateServerConfiguration(json) {

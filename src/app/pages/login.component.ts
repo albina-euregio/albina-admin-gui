@@ -9,7 +9,7 @@ import { ConfigurationService } from "app/providers/configuration-service/config
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
-import { ServerConfiguration } from "../models/server-configuration.model";
+import { ServerConfiguration, ServerConfigurationVersion } from "../models/server-configuration.model";
 
 @Component({
   templateUrl: "login.component.html",
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     keyboard: true,
     class: "modal-sm",
   };
-  serverInfo: ServerConfiguration & { version: string };
+  serverInfo: ServerConfigurationVersion;
 
   ngOnInit() {
     // reset login status
