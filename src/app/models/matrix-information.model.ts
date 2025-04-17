@@ -3,11 +3,11 @@ import { z } from "zod";
 
 export const MatrixInformationSchema = z
   .object({
-    dangerRating: z.enum(Enums.DangerRating),
-    dangerRatingModificator: z.enum(Enums.DangerRatingModificator),
-    avalancheSize: z.enum(Enums.AvalancheSize),
-    snowpackStability: z.enum(Enums.SnowpackStability),
-    frequency: z.enum(Enums.Frequency),
+    dangerRating: z.enum(Enums.DangerRating).nullable(),
+    dangerRatingModificator: z.enum(Enums.DangerRatingModificator).nullable(),
+    avalancheSize: z.enum(Enums.AvalancheSize).nullable(),
+    snowpackStability: z.enum(Enums.SnowpackStability).nullable(),
+    frequency: z.enum(Enums.Frequency).nullable(),
     avalancheSizeValue: z.number(),
     snowpackStabilityValue: z.number(),
     frequencyValue: z.number(),
