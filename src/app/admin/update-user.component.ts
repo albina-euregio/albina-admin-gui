@@ -130,14 +130,15 @@ export class UpdateUserComponent implements AfterContentInit {
   public createUser() {
     this.updateUserLoading = true;
 
-    const user = new UserModel();
-    user.image = this.activeImage;
-    user.name = this.activeName;
-    user.email = this.activeEmail;
-    user.organization = this.activeOrganization;
-    user.password = this.activePassword;
-    user.roles = [...new Set(this.activeRoles)];
-    user.regions = this.activeRegions;
+    const user: UserModel = {
+      image: this.activeImage,
+      name: this.activeName,
+      email: this.activeEmail,
+      organization: this.activeOrganization,
+      password: this.activePassword,
+      roles: [...new Set(this.activeRoles)],
+      regions: this.activeRegions,
+    };
 
     this.userService.createUser(user).subscribe(
       (data) => {
@@ -163,14 +164,15 @@ export class UpdateUserComponent implements AfterContentInit {
   public updateUser() {
     this.updateUserLoading = true;
 
-    const user = new UserModel();
-    user.image = this.activeImage;
-    user.name = this.activeName;
-    user.email = this.activeEmail;
-    user.organization = this.activeOrganization;
-    user.roles = [...new Set(this.activeRoles)];
-    user.regions = this.activeRegions;
-    user.languageCode = this.activeLanguageCode;
+    const user: UserModel = {
+      image: this.activeImage,
+      name: this.activeName,
+      email: this.activeEmail,
+      organization: this.activeOrganization,
+      roles: [...new Set(this.activeRoles)],
+      regions: this.activeRegions,
+      languageCode: this.activeLanguageCode,
+    };
 
     if (this.isAdmin) {
       this.userService.updateUser(user).subscribe(

@@ -29,13 +29,15 @@ export class SettingsComponent {
   public alerts: any[] = [];
 
   showUpdateDialog() {
-    const user = new UserModel();
-    user.email = this.authenticationService.getCurrentAuthor().email;
-    user.name = this.authenticationService.getCurrentAuthor().name;
-    user.organization = this.authenticationService.getCurrentAuthor().organization;
-    user.image = this.authenticationService.getCurrentAuthor().image;
-    user.roles = this.authenticationService.getCurrentAuthor().roles;
-    user.regions = this.authenticationService.getCurrentAuthor().regions.map((region) => region.id);
+    const author = this.authenticationService.getCurrentAuthor();
+    const user: UserModel = {
+      email: author.email,
+      name: author.name,
+      organization: author.organization,
+      image: author.image,
+      roles: author.roles,
+      regions: author.regions.map((region) => region.id),
+    };
 
     const dialogRef = this.modalService.show(UpdateUserComponent, {
       class: "modal-xl",

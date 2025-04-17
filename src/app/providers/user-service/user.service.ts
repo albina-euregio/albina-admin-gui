@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { StressLevel } from "../../models/stress-level.model";
+import { UserModel } from "../../models/user.model";
 
 @Injectable()
 export class UserService {
@@ -29,32 +30,32 @@ export class UserService {
     return this.http.put<Response>(url, body);
   }
 
-  public createUser(user): Observable<Response> {
+  public createUser(user: UserModel): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/create";
-    const body = JSON.stringify(user.toJson());
+    const body = JSON.stringify(user);
     return this.http.post<Response>(url, body);
   }
 
-  public updateUser(user): Observable<Response> {
+  public updateUser(user: UserModel): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/" + user.email;
-    const body = JSON.stringify(user.toJson());
+    const body = JSON.stringify(user);
     return this.http.put<Response>(url, body);
   }
 
-  public updateOwnUser(user): Observable<Response> {
+  public updateOwnUser(user: UserModel): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user";
-    const body = JSON.stringify(user.toJson());
+    const body = JSON.stringify(user);
     return this.http.put<Response>(url, body);
   }
 
-  public getUsers(): Observable<Response> {
+  public getUsers(): Observable<UserModel[]> {
     const url = this.constantsService.getServerUrl() + "user";
-    return this.http.get<Response>(url);
+    return this.http.get<UserModel[]>(url);
   }
 
-  public getRoles(): Observable<Response> {
+  public getRoles(): Observable<string[]> {
     const url = this.constantsService.getServerUrl() + "user/roles";
-    return this.http.get<Response>(url);
+    return this.http.get<string[]>(url);
   }
 
   public getRegions(): Observable<string[]> {
@@ -62,7 +63,7 @@ export class UserService {
     return this.http.get<string[]>(url);
   }
 
-  public deleteUser(userId): Observable<Response> {
+  public deleteUser(userId: UserModel["email"]): Observable<Response> {
     const url = this.constantsService.getServerUrl() + "user/" + userId;
     return this.http.delete<Response>(url);
   }
