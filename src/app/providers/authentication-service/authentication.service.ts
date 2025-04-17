@@ -137,20 +137,23 @@ export class AuthenticationService {
     if (!json.access_token) {
       return false;
     }
-    const server = ServerModel.createFromJson(json);
-    server.apiUrl = server0.apiUrl;
-    server.name = server0.name;
+    const server: ServerModel = {
+      ...server0,
+      regions: json.regions?.map((r) => r.id),
+      accessToken: json.access_token,
+      refreshToken: json.refresh_token,
+    };
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
     return true;
   }
 
-  private setExternalServers(json: Partial<ServerModel>[]) {
+  private setExternalServers(json: ServerModel[]) {
     if (!json) {
       return;
     }
     for (const server of json) {
-      this.externalServers.push(ServerModel.createFromJson(server));
+      this.externalServers.push(server);
     }
   }
 
