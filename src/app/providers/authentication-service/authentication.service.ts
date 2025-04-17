@@ -6,7 +6,7 @@ import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { AuthorModel } from "../../models/author.model";
-import { ServerModel } from "../../models/server.model";
+import { ServerModel, ServerSchema } from "../../models/server.model";
 import { RegionConfiguration, ServerConfiguration } from "../configuration-service/configuration.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import * as Enums from "../../enums/enums";
@@ -143,12 +143,12 @@ export class AuthenticationService {
     if (!json.access_token) {
       return false;
     }
-    const server: ServerModel = {
+    const server = ServerSchema.parse({
       ...server0,
       regions: json.regions?.map((r) => r.id),
       accessToken: json.access_token,
       refreshToken: json.refresh_token,
-    };
+    });
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
     return true;
