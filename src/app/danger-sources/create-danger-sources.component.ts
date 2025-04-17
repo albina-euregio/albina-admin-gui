@@ -1,14 +1,13 @@
-import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild, inject } from "@angular/core";
+import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 // models
 import { BulletinModel } from "../models/bulletin.model";
 
 // services
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -26,7 +25,7 @@ import {
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
 import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
-import { NgIf, NgFor, NgTemplateOutlet, DatePipe } from "@angular/common";
+import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
 import { DangerSourceVariantComponent } from "./danger-source-variant.component";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
@@ -1059,13 +1058,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   getDangerRatingColor(variant: DangerSourceVariantModel): string {
-    return this.constantsService.getDangerRatingColor(variant.eawsMatrixInformation.getDangerRating()) + " !important";
+    return this.constantsService.getDangerRatingColor(variant.eawsMatrixInformation.dangerRating) + " !important";
   }
 
   getFontColor(variant: DangerSourceVariantModel): string {
     if (
-      variant.eawsMatrixInformation.getDangerRating() === Enums.DangerRating.moderate ||
-      variant.eawsMatrixInformation.getDangerRating() === Enums.DangerRating.low
+      variant.eawsMatrixInformation.dangerRating === Enums.DangerRating.moderate ||
+      variant.eawsMatrixInformation.dangerRating === Enums.DangerRating.low
     ) {
       return "black";
     } else {

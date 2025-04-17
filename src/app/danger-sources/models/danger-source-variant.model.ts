@@ -1,5 +1,5 @@
 import { Aspect, AvalancheProblem, AvalancheType, DangerRating, RegionStatus, Tendency } from "../../enums/enums";
-import { MatrixInformationModel } from "../../models/matrix-information.model";
+import { MatrixInformationModel, MatrixInformationSchema } from "../../models/matrix-information.model";
 import { DangerSourceModel } from "./danger-source.model";
 import { PolygonObject } from "./polygon-object.model";
 
@@ -290,7 +290,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.penetrateDeepLayers = json.penetrateDeepLayers;
     variant.naturalRelease = json.naturalRelease;
     variant.dangerSigns = json.dangerSigns;
-    variant.eawsMatrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
+    variant.eawsMatrixInformation = MatrixInformationSchema.parse(json.eawsMatrixInformation);
     variant.glidingSnowActivity = json.glidingSnowActivity;
     variant.glidingSnowActivityValue = json.glidingSnowActivityValue;
     variant.snowHeightUpperLimit = json.snowHeightUpperLimit;
@@ -359,7 +359,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.penetrateDeepLayers = variant.penetrateDeepLayers;
       this.naturalRelease = variant.naturalRelease;
       this.dangerSigns = variant.dangerSigns;
-      this.eawsMatrixInformation = new MatrixInformationModel(variant.eawsMatrixInformation);
+      this.eawsMatrixInformation = MatrixInformationSchema.parse(variant.eawsMatrixInformation);
       this.glidingSnowActivity = variant.glidingSnowActivity;
       this.glidingSnowActivityValue = variant.glidingSnowActivityValue;
       this.snowHeightUpperLimit = variant.snowHeightUpperLimit;
@@ -399,7 +399,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.hasDaytimeDependency = false;
       this.aspects = new Array<Aspect>();
       this.dangerSigns = new Array<DangerSign>();
-      this.eawsMatrixInformation = new MatrixInformationModel();
+      this.eawsMatrixInformation = MatrixInformationSchema.parse({});
       this.terrainTypes = new Array<TerrainType>();
     }
   }

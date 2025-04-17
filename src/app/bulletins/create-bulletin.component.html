@@ -713,7 +713,7 @@
           + {{ bulletin.getSavedAndPublishedRegions().length - 1 }}
         </span>
       </h6>
-      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.getAuthor().getName() }}</p>
+      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.author.name }}</p>
 
       <div
         *ngIf="checkBulletin(bulletin)"
@@ -838,7 +838,7 @@
 
       <button
         *ngIf="
-          bulletinsService.isLocked(bulletin?.getId()) ||
+          bulletinsService.isLocked(bulletin?.id) ||
           (bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin))
         "
         [disabled]="loading || editRegions"

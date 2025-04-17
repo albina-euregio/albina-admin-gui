@@ -1,13 +1,13 @@
-import { Component, OnChanges, input, output, inject } from "@angular/core";
+import { Component, inject, input, OnChanges, output } from "@angular/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import * as Enums from "../enums/enums";
 import { BulletinModel } from "app/models/bulletin.model";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
-import { NgIf, NgFor, NgClass } from "@angular/common";
+import { NgClass, NgFor, NgIf } from "@angular/common";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { AspectsComponent } from "../shared/aspects.component";
 import { FormsModule } from "@angular/forms";
@@ -65,17 +65,15 @@ export class AvalancheProblemDetailComponent implements OnChanges {
     this.avalancheProblems = this.authenticationService.getActiveRegionAvalancheProblems();
     if (!this.isElevationHighEditing) {
       const avalancheProblemModel = this.avalancheProblemModel();
-      this.useElevationHigh =
-        avalancheProblemModel.getTreelineHigh() || avalancheProblemModel.getElevationHigh() !== undefined;
-      this.localElevationHigh = this.avalancheProblemModel().getElevationHigh();
-      this.localTreelineHigh = this.avalancheProblemModel().getTreelineHigh();
+      this.useElevationHigh = avalancheProblemModel.treelineHigh || avalancheProblemModel.elevationHigh !== undefined;
+      this.localElevationHigh = this.avalancheProblemModel().elevationHigh;
+      this.localTreelineHigh = this.avalancheProblemModel().treelineHigh;
     }
     if (!this.isElevationLowEditing) {
       const avalancheProblemModel = this.avalancheProblemModel();
-      this.useElevationLow =
-        avalancheProblemModel.getTreelineLow() || avalancheProblemModel.getElevationLow() !== undefined;
-      this.localElevationLow = this.avalancheProblemModel().getElevationLow();
-      this.localTreelineLow = this.avalancheProblemModel().getTreelineLow();
+      this.useElevationLow = avalancheProblemModel.treelineLow || avalancheProblemModel.elevationLow !== undefined;
+      this.localElevationLow = this.avalancheProblemModel().elevationLow;
+      this.localTreelineLow = this.avalancheProblemModel().treelineLow;
     }
   }
 
@@ -144,7 +142,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       this.localTreelineHigh = false;
     } else {
       avalancheProblemModel.treelineHigh = true;
-      avalancheProblemModel.setElevationHigh(undefined);
+      avalancheProblemModel.elevationHigh = undefined;
       this.localElevationHigh = "";
       this.localTreelineHigh = true;
       this.isElevationHighEditing = false;
@@ -163,7 +161,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
       avalancheProblemModel.treelineLow = false;
     } else {
       avalancheProblemModel.treelineLow = true;
-      avalancheProblemModel.setElevationLow(undefined);
+      avalancheProblemModel.elevationLow = undefined;
       this.localElevationLow = "";
       this.localTreelineLow = true;
       this.isElevationLowEditing = false;
@@ -205,23 +203,23 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   }
 
   isDangerRatingDirection(dir: Enums.DangerRatingDirection) {
-    return this.avalancheProblemModel()?.getDangerRatingDirection() === dir;
+    return this.avalancheProblemModel().dangerRatingDirection === dir;
   }
 
   setDangerRatingDirection(event: Event, dir: Enums.DangerRatingDirection) {
     event.stopPropagation();
-    this.avalancheProblemModel().setDangerRatingDirection(dir);
+    this.avalancheProblemModel().dangerRatingDirection = dir;
     this.bulletinDaytimeDescription().updateDangerRating();
     this.changeAvalancheProblemDetailEvent.emit();
   }
 
   isAvalancheType(type: Enums.AvalancheType) {
-    return this.avalancheProblemModel()?.getAvalancheType() === type;
+    return this.avalancheProblemModel().avalancheType === type;
   }
 
   setAvalancheType(event: Event, type: Enums.AvalancheType) {
     event.stopPropagation();
-    this.avalancheProblemModel().setAvalancheType(type);
+    this.avalancheProblemModel().avalancheType = type;
     this.changeAvalancheProblemDetailEvent.emit();
   }
 

@@ -6,7 +6,7 @@ import { LocalStorageService } from "../providers/local-storage-service/local-st
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
 import { UpdateUserComponent } from "app/admin/update-user.component";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
-import { UserModel } from "app/models/user.model";
+import { UserModel, UserSchema } from "app/models/user.model";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { NgFor } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -29,13 +29,15 @@ export class SettingsComponent {
   public alerts: any[] = [];
 
   showUpdateDialog() {
-    const user = new UserModel();
-    user.setEmail(this.authenticationService.getCurrentAuthor().email);
-    user.setName(this.authenticationService.getCurrentAuthor().name);
-    user.setOrganization(this.authenticationService.getCurrentAuthor().organization);
-    user.setImage(this.authenticationService.getCurrentAuthor().image);
-    user.setRoles(this.authenticationService.getCurrentAuthor().roles);
-    user.setRegions(this.authenticationService.getCurrentAuthor().regions.map((region) => region.id));
+    const author = this.authenticationService.getCurrentAuthor();
+    const user: UserModel = UserSchema.parse({
+      email: author.email,
+      name: author.name,
+      organization: author.organization,
+      image: author.image,
+      roles: author.roles,
+      regions: author.regions.map((region) => region.id),
+    });
 
     const dialogRef = this.modalService.show(UpdateUserComponent, {
       class: "modal-xl",

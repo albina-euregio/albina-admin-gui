@@ -5,11 +5,13 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { AuthorModel } from "../../models/author.model";
-import { ServerModel } from "../../models/server.model";
-import { RegionConfiguration, ServerConfiguration } from "../configuration-service/configuration.service";
+import { AuthorModel, AuthorSchema } from "../../models/author.model";
+import { ServerModel, ServerSchema } from "../../models/server.model";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import * as Enums from "../../enums/enums";
+import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
+import { ServerConfiguration } from "../../models/server-configuration.model";
+import { z } from "zod";
 
 @Injectable()
 export class AuthenticationService {
@@ -52,21 +54,31 @@ export class AuthenticationService {
   public login(username: string, password: string): Observable<boolean> {
     const url = this.constantsService.getServerUrl() + "authentication";
     const body = JSON.stringify({ username, password });
-    return this.http.post<AuthenticationResponse>(url, body).pipe(
-      map((data) => {
-        if (data.access_token) {
-          this.setCurrentAuthor(data);
-          const authorRegions = this.getCurrentAuthorRegions();
-          const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
-          this.setActiveRegion(
-            authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
-          );
-          this.loadInternalRegions();
-          this.externalServerLogins();
-          return true;
-        } else {
+    return this.http.post(url, body).pipe(
+      map((json) => {
+        const data = AuthenticationResponseSchema.parse(json, { reportInput: true });
+        if (!data.access_token) {
           return false;
         }
+        const author: AuthorModel = AuthorSchema.parse(
+          {
+            ...data,
+            organization: "",
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            apiUrl: data.api_url,
+          },
+          { reportInput: true },
+        );
+        this.setCurrentAuthor(author);
+        const authorRegions = this.getCurrentAuthorRegions();
+        const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
+        this.setActiveRegion(
+          authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
+        );
+        this.loadInternalRegions();
+        this.externalServerLogins();
+        return true;
       }),
     );
   }
@@ -91,7 +103,7 @@ export class AuthenticationService {
   }
 
   private setInternalRegions(regions: RegionConfiguration[]) {
-    this.internalRegions = regions;
+    this.internalRegions = RegionConfigurationSchema.array().parse(regions);
     this.localStorageService.setInternalRegions(this.internalRegions);
   }
 
@@ -130,27 +142,35 @@ export class AuthenticationService {
     }
     const url = server.apiUrl + "authentication";
     const body = JSON.stringify({ username: server.userName, password: server.password });
-    return this.http.post<AuthenticationResponse>(url, body).pipe(map((data) => this.addExternalServer(server, data)));
+    return this.http.post(url, body).pipe(
+      map((json) => {
+        const data = AuthenticationResponseSchema.parse(json);
+        return this.addExternalServer(server, data);
+      }),
+    );
   }
 
-  private addExternalServer(server0: ServerConfiguration, json: Partial<AuthenticationResponse>): boolean {
+  private addExternalServer(server0: ServerConfiguration, json: z.infer<typeof AuthenticationResponseSchema>): boolean {
     if (!json.access_token) {
       return false;
     }
-    const server = ServerModel.createFromJson(json);
-    server.setApiUrl(server0.apiUrl);
-    server.setName(server0.name);
+    const server = ServerSchema.parse({
+      ...server0,
+      regions: json.regions?.map((r) => r.id),
+      accessToken: json.access_token,
+      refreshToken: json.refresh_token,
+    });
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
     return true;
   }
 
-  private setExternalServers(json: Partial<ServerModel>[]) {
+  private setExternalServers(json: ServerModel[]) {
     if (!json) {
       return;
     }
     for (const server of json) {
-      this.externalServers.push(ServerModel.createFromJson(server));
+      this.externalServers.push(server);
     }
   }
 
@@ -169,11 +189,11 @@ export class AuthenticationService {
     return this.currentAuthor;
   }
 
-  private setCurrentAuthor(json: Partial<AuthorModel>) {
+  private setCurrentAuthor(json: AuthorModel) {
     if (!json) {
       return;
     }
-    this.currentAuthor = AuthorModel.createFromJson(json);
+    this.currentAuthor = AuthorSchema.partial().parse(json);
     this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
@@ -224,7 +244,7 @@ export class AuthenticationService {
     if (!this.currentAuthor) {
       return;
     }
-    region = this.currentAuthor.getRegions().find((r) => r.id === (typeof region === "string" ? region : region.id));
+    region = this.currentAuthor.regions.find((r) => r.id === (typeof region === "string" ? region : region.id));
     if (region) {
       this.activeRegion = region;
       this.localStorageService.setActiveRegion(this.activeRegion);
@@ -241,8 +261,8 @@ export class AuthenticationService {
     return this.activeRegion?.mapCenterLng ?? 11.44;
   }
 
-  public isCurrentUserInRole(role: string): boolean {
-    const roles = this.currentAuthor?.getRoles?.() ?? [];
+  public isCurrentUserInRole(role: Enums.UserRole): boolean {
+    const roles = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
     if (roles.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
       const updatedRoles = roles.map((r) =>
@@ -254,7 +274,7 @@ export class AuthenticationService {
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {
-    return this.currentAuthor?.getRegions() || [];
+    return this.currentAuthor?.regions || [];
   }
 
   public getInternalRegions(): string[] {
@@ -274,18 +294,18 @@ export class AuthenticationService {
       return false;
     }
     for (const externalServer of this.externalServers) {
-      if (externalServer.getRegions().includes(region)) return true;
+      if (externalServer.regions.includes(region)) return true;
     }
     return false;
   }
 }
 
-export interface AuthenticationResponse {
-  email: string;
-  name: string;
-  roles: string[];
-  regions: RegionConfiguration[];
-  access_token: string;
-  refresh_token: string;
-  api_url: string;
-}
+export const AuthenticationResponseSchema = z.object({
+  email: z.string(),
+  name: z.string(),
+  roles: z.enum(Enums.UserRole).array(),
+  regions: RegionConfigurationSchema.array(),
+  access_token: z.string(),
+  refresh_token: z.string().optional(),
+  api_url: z.string().optional(),
+});

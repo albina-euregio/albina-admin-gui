@@ -1,10 +1,11 @@
 import { Component, input, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { ConfigurationService, ServerConfiguration } from "../providers/configuration-service/configuration.service";
+import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import * as Enums from "../enums/enums";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
 import { NgFor, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { ServerConfiguration } from "../models/server-configuration.model";
 
 @Component({
   templateUrl: "server-configuration.component.html",
@@ -42,7 +43,7 @@ export class ServerConfigurationComponent {
     json["mediaPath"] = this.config().mediaPath;
     json["mapProductionUrl"] = this.config().mapProductionUrl;
 
-    if (!this.config().isNew) {
+    if (!this.config().$isNew) {
       this.configurationService.updateServerConfiguration(json).subscribe(
         (data) => {
           this.saveConfigurationLoading = false;

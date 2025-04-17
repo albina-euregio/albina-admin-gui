@@ -29,10 +29,10 @@ export class ConstantsService {
   public codeFriuliVeneziaGiulia = "IT-36";
   public codeMarche = "IT-57";
 
-  public roleAdmin = "ADMIN";
-  public roleForecaster = "FORECASTER";
-  public roleForeman = "FOREMAN";
-  public roleObserver = "OBSERVER";
+  public roleAdmin = Enums.UserRole.ADMIN;
+  public roleForecaster = Enums.UserRole.FORECASTER;
+  public roleForeman = Enums.UserRole.FOREMAN;
+  public roleObserver = Enums.UserRole.OBSERVER;
 
   // danger rating (color)
   public colorDangerRatingLow = "#CCFF66";

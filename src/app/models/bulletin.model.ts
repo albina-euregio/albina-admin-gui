@@ -1,6 +1,6 @@
 import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
-import { convertLangTextsToJSON, LangTexts, TextModel, TextModelAsJSON } from "./text.model";
-import { AuthorModel } from "./author.model";
+import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
+import { AuthorModel, AuthorSchema } from "./author.model";
 import * as Enums from "../enums/enums";
 import { RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
@@ -8,12 +8,12 @@ import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
 export type BulletinModelAsJSON = BulletinModel & {
   validity: { from: Date; until: Date };
-  highlights: TextModelAsJSON[];
-  avActivityHighlights: TextModelAsJSON[];
-  avActivityComment: TextModelAsJSON[];
-  snowpackStructureHighlights: TextModelAsJSON[];
-  snowpackStructureComment: TextModelAsJSON[];
-  tendencyComment: TextModelAsJSON[];
+  highlights: TextModel[];
+  avActivityHighlights: TextModel[];
+  avActivityComment: TextModel[];
+  snowpackStructureHighlights: TextModel[];
+  snowpackStructureComment: TextModel[];
+  tendencyComment: TextModel[];
 };
 
 export class BulletinModel implements PolygonObject {
@@ -67,8 +67,8 @@ export class BulletinModel implements PolygonObject {
   static createFromJson(json: BulletinModelAsJSON | any) {
     const bulletin = new BulletinModel();
 
-    bulletin.setId(json.id);
-    bulletin.setAuthor(AuthorModel.createFromJson(json.author));
+    bulletin.id = json.id;
+    bulletin.author = AuthorSchema.partial().parse(json.author);
     const jsonAdditionalAuthors = json.additionalAuthors;
     const additionalAuthors = new Array<string>();
     for (const i in jsonAdditionalAuthors) {
@@ -76,18 +76,18 @@ export class BulletinModel implements PolygonObject {
         additionalAuthors.push(jsonAdditionalAuthors[i]);
       }
     }
-    bulletin.setAdditionalAuthors(additionalAuthors);
+    bulletin.additionalAuthors = additionalAuthors;
 
     if (json.ownerRegion) {
-      bulletin.setOwnerRegion(json.ownerRegion);
+      bulletin.ownerRegion = json.ownerRegion;
     }
 
     if (json.publicationDate) {
-      bulletin.setPublicationDate(new Date(json.publicationDate));
+      bulletin.publicationDate = new Date(json.publicationDate);
     }
 
-    bulletin.setValidFrom(new Date(json.validity.from));
-    bulletin.setValidUntil(new Date(json.validity.until));
+    bulletin.validFrom = new Date(json.validity.from);
+    bulletin.validUntil = new Date(json.validity.until);
 
     const jsonSuggestedRegions = json.suggestedRegions;
     const suggestedRegions = new Array<string>();
@@ -96,7 +96,7 @@ export class BulletinModel implements PolygonObject {
         suggestedRegions.push(jsonSuggestedRegions[i]);
       }
     }
-    bulletin.setSuggestedRegions(suggestedRegions);
+    bulletin.suggestedRegions = suggestedRegions;
 
     const jsonSavedRegions = json.savedRegions;
     const savedRegions = new Array<string>();
@@ -105,7 +105,7 @@ export class BulletinModel implements PolygonObject {
         savedRegions.push(jsonSavedRegions[i]);
       }
     }
-    bulletin.setSavedRegions(savedRegions);
+    bulletin.savedRegions = savedRegions;
 
     const jsonPublishedRegions = json.publishedRegions;
     const publishedRegions = new Array<string>();
@@ -114,40 +114,30 @@ export class BulletinModel implements PolygonObject {
         publishedRegions.push(jsonPublishedRegions[i]);
       }
     }
-    bulletin.setPublishedRegions(publishedRegions);
+    bulletin.publishedRegions = publishedRegions;
 
-    bulletin.setHasDaytimeDependency(json.hasDaytimeDependency);
+    bulletin.hasDaytimeDependency = json.hasDaytimeDependency;
 
     if (json.forenoon) {
-      bulletin.setForenoon(BulletinDaytimeDescriptionModel.createFromJson(json.forenoon));
+      bulletin.forenoon = BulletinDaytimeDescriptionModel.createFromJson(json.forenoon);
     }
     if (json.afternoon) {
-      bulletin.setAfternoon(BulletinDaytimeDescriptionModel.createFromJson(json.afternoon));
+      bulletin.afternoon = BulletinDaytimeDescriptionModel.createFromJson(json.afternoon);
     }
 
     if (json.highlightsTextcat) {
       bulletin.highlightsTextcat = json.highlightsTextcat;
     }
-    const jsonHighlights = json.highlights;
-    const highlights = new Array<TextModel>();
-    for (const i in jsonHighlights) {
-      if (jsonHighlights[i] !== null) {
-        highlights.push(TextModel.createFromJson(jsonHighlights[i]));
-      }
+    if (json.highlights) {
+      bulletin.highlights$ = toLangTexts(json.highlights);
     }
-    bulletin.highlights$ = TextModel.toLangTexts(highlights);
 
     if (json.avActivityHighlightsTextcat) {
       bulletin.avActivityHighlightsTextcat = json.avActivityHighlightsTextcat;
     }
-    const jsonAvActivityHighlights = json.avActivityHighlights;
-    const avActivityHighlights = new Array<TextModel>();
-    for (const i in jsonAvActivityHighlights) {
-      if (jsonAvActivityHighlights[i] !== null) {
-        avActivityHighlights.push(TextModel.createFromJson(jsonAvActivityHighlights[i]));
-      }
+    if (json.avActivityHighlights) {
+      bulletin.avActivityHighlights$ = toLangTexts(json.avActivityHighlights);
     }
-    bulletin.avActivityHighlights$ = TextModel.toLangTexts(avActivityHighlights);
     if (json.avActivityHighlightsNotes) {
       bulletin.avActivityHighlightsNotes = json.avActivityHighlightsNotes;
     }
@@ -155,14 +145,9 @@ export class BulletinModel implements PolygonObject {
     if (json.avActivityCommentTextcat) {
       bulletin.avActivityCommentTextcat = json.avActivityCommentTextcat;
     }
-    const jsonAvActivityComment = json.avActivityComment;
-    const avActivityComment = new Array<TextModel>();
-    for (const i in jsonAvActivityComment) {
-      if (jsonAvActivityComment[i] !== null) {
-        avActivityComment.push(TextModel.createFromJson(jsonAvActivityComment[i]));
-      }
+    if (json.avActivityComment) {
+      bulletin.avActivityComment$ = toLangTexts(json.avActivityComment);
     }
-    bulletin.avActivityComment$ = TextModel.toLangTexts(avActivityComment);
     if (json.avActivityCommentNotes) {
       bulletin.avActivityCommentNotes = json.avActivityCommentNotes;
     }
@@ -170,14 +155,9 @@ export class BulletinModel implements PolygonObject {
     if (json.snowpackStructureHighlightsTextcat) {
       bulletin.snowpackStructureHighlightsTextcat = json.snowpackStructureHighlightsTextcat;
     }
-    const jsonSnowpackStructureHighlight = json.snowpackStructureHighlights;
-    const snowpackStructureHighlights = new Array<TextModel>();
-    for (const i in jsonSnowpackStructureHighlight) {
-      if (jsonSnowpackStructureHighlight[i] !== null) {
-        snowpackStructureHighlights.push(TextModel.createFromJson(jsonSnowpackStructureHighlight[i]));
-      }
+    if (json.snowpackStructureHighlights) {
+      bulletin.snowpackStructureHighlights$ = toLangTexts(json.snowpackStructureHighlights);
     }
-    bulletin.snowpackStructureHighlights$ = TextModel.toLangTexts(snowpackStructureHighlights);
     if (json.snowpackStructureHighlightsNotes) {
       bulletin.snowpackStructureHighlightsNotes = json.SnowpackStructureHighlightsNotes;
     }
@@ -185,14 +165,9 @@ export class BulletinModel implements PolygonObject {
     if (json.snowpackStructureCommentTextcat) {
       bulletin.snowpackStructureCommentTextcat = json.snowpackStructureCommentTextcat;
     }
-    const jsonSnowpackStructureComment = json.snowpackStructureComment;
-    const snowpackStructureComment = new Array<TextModel>();
-    for (const i in jsonSnowpackStructureComment) {
-      if (jsonSnowpackStructureComment[i] !== null) {
-        snowpackStructureComment.push(TextModel.createFromJson(jsonSnowpackStructureComment[i]));
-      }
+    if (json.snowpackStructureComment) {
+      bulletin.snowpackStructureComment$ = toLangTexts(json.snowpackStructureComment);
     }
-    bulletin.snowpackStructureComment$ = TextModel.toLangTexts(snowpackStructureComment);
     if (json.snowpackStructureCommentNotes) {
       bulletin.snowpackStructureCommentNotes = json.snowpackStructureCommentNotes;
     }
@@ -200,14 +175,9 @@ export class BulletinModel implements PolygonObject {
     if (json.tendencyCommentTextcat) {
       bulletin.tendencyCommentTextcat = json.tendencyCommentTextcat;
     }
-    const jsonTendencyComment = json.tendencyComment;
-    const tendencyComment = new Array<TextModel>();
-    for (const i in jsonTendencyComment) {
-      if (jsonTendencyComment[i] !== null) {
-        tendencyComment.push(TextModel.createFromJson(jsonTendencyComment[i]));
-      }
+    if (json.tendencyComment) {
+      bulletin.tendencyComment$ = toLangTexts(json.tendencyComment);
     }
-    bulletin.tendencyComment$ = TextModel.toLangTexts(tendencyComment);
     if (json.tendencyCommentNotes) {
       bulletin.tendencyCommentNotes = json.tendencyCommentNotes;
     }
@@ -301,114 +271,10 @@ export class BulletinModel implements PolygonObject {
     }
   }
 
-  getId(): string {
-    return this.id;
-  }
-
-  setId(id: string) {
-    this.id = id;
-  }
-
-  getAuthor(): AuthorModel {
-    return this.author;
-  }
-
-  setAuthor(author: AuthorModel) {
-    this.author = author;
-  }
-
-  getAdditionalAuthors(): string[] {
-    return this.additionalAuthors;
-  }
-
-  setAdditionalAuthors(additionalAuthors: string[]) {
-    this.additionalAuthors = additionalAuthors;
-  }
-
   addAdditionalAuthor(author: string) {
     if (!this.additionalAuthors.includes(author)) {
       this.additionalAuthors.push(author);
     }
-  }
-
-  getOwnerRegion() {
-    return this.ownerRegion;
-  }
-
-  setOwnerRegion(ownerRegion: string) {
-    this.ownerRegion = ownerRegion;
-  }
-
-  getPublicationDate() {
-    return this.publicationDate;
-  }
-
-  setPublicationDate(publicationDate: Date) {
-    this.publicationDate = publicationDate;
-  }
-
-  getValidFrom(): Date {
-    return this.validFrom;
-  }
-
-  setValidFrom(validFrom: Date) {
-    this.validFrom = validFrom;
-  }
-
-  getValidUntil(): Date {
-    return this.validUntil;
-  }
-
-  setValidUntil(validUntil: Date) {
-    this.validUntil = validUntil;
-  }
-
-  getSuggestedRegions(): string[] {
-    return this.suggestedRegions;
-  }
-
-  setSuggestedRegions(suggestedRegions: string[]) {
-    this.suggestedRegions = suggestedRegions;
-  }
-
-  getSavedRegions(): string[] {
-    return this.savedRegions;
-  }
-
-  setSavedRegions(savedRegions: string[]) {
-    this.savedRegions = savedRegions;
-  }
-
-  getPublishedRegions(): string[] {
-    return this.publishedRegions;
-  }
-
-  setPublishedRegions(publishedRegions: string[]) {
-    this.publishedRegions = publishedRegions;
-  }
-
-  getHasDaytimeDependency() {
-    return this.hasDaytimeDependency;
-  }
-
-  setHasDaytimeDependency(hasDaytimeDependency: boolean) {
-    this.hasDaytimeDependency = hasDaytimeDependency;
-  }
-
-  getForenoon(): BulletinDaytimeDescriptionModel {
-    return this.forenoon;
-  }
-
-  setForenoon(forenoon: BulletinDaytimeDescriptionModel) {
-    this.forenoon = forenoon;
-  }
-
-  getAfternoon(): BulletinDaytimeDescriptionModel {
-    return this.afternoon;
-  }
-
-  setAfternoon(afternoon: BulletinDaytimeDescriptionModel) {
-    this.afternoon = afternoon;
   }
 
   getForenoonDangerRatingAbove(): Enums.DangerRating {
@@ -450,11 +316,11 @@ export class BulletinModel implements PolygonObject {
   }
 
   getSavedAndPublishedRegions() {
-    return this.getPublishedRegions().concat(this.getSavedRegions());
+    return this.publishedRegions.concat(this.savedRegions);
   }
 
   getAllRegions(): string[] {
-    return this.getPublishedRegions().concat(this.getSavedRegions()).concat(this.getSuggestedRegions());
+    return this.publishedRegions.concat(this.savedRegions).concat(this.suggestedRegions);
   }
 
   toJson(): BulletinModelAsJSON {
@@ -464,7 +330,7 @@ export class BulletinModel implements PolygonObject {
       json["id"] = this.id;
     }
     if (this.author) {
-      json["author"] = this.author.toJson();
+      json["author"] = this.author;
     }
     if (this.additionalAuthors && this.additionalAuthors.length > 0) {
       const additionalAuthors = [];
@@ -615,11 +481,11 @@ export class BulletinModel implements PolygonObject {
   public getRegionsByStatus(type?: RegionStatus): string[] {
     switch (type) {
       case RegionStatus.suggested:
-        return this.getSuggestedRegions();
+        return this.suggestedRegions;
       case RegionStatus.saved:
-        return this.getSavedRegions();
+        return this.savedRegions;
       case RegionStatus.published:
-        return this.getPublishedRegions();
+        return this.publishedRegions;
       default:
         return this.getAllRegions();
     }

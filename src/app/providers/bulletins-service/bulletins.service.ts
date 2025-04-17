@@ -11,7 +11,7 @@ import { ServerModel } from "../../models/server.model";
 import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
 import * as Enums from "../../enums/enums";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
-import { DateIsoString } from "app/models/stress-level.model";
+import { StressLevel } from "app/models/stress-level.model";
 import { UserService } from "../user-service/user.service";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -40,7 +40,7 @@ export class BulletinsService {
   public lockedBulletins: Map<string, BulletinLockModel>;
   public bulletinLocks: Subject<BulletinLockModel>;
 
-  public stress: Record<DateIsoString, number> = {};
+  public stress: Record<StressLevel["date"], StressLevel["stressLevel"]> = {};
 
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
 
@@ -442,7 +442,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
-      bulletin.getId() +
+      bulletin.id +
       "?" +
       this.constantsService
         .createSearchParams([
@@ -465,7 +465,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
-      bulletin.getId() +
+      bulletin.id +
       "?" +
       this.constantsService
         .createSearchParams([
@@ -813,7 +813,7 @@ export class BulletinsService {
     }
   }
 
-  getStressLevelColor(date: DateIsoString) {
+  getStressLevelColor(date: StressLevel["date"]) {
     const stress0 = this.stress[date];
     return !stress0
       ? this.constantsService.colorDangerRatingMissing
@@ -826,7 +826,7 @@ export class BulletinsService {
             : this.constantsService.colorDangerRatingHigh;
   }
 
-  getStressLevelIcon(date: DateIsoString) {
+  getStressLevelIcon(date: StressLevel["date"]) {
     const stress0 = this.stress[date];
     return stress0 < 25
       ? "ph-smiley"
