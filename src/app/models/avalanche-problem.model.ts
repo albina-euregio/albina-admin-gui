@@ -44,14 +44,9 @@ export class AvalancheProblemModel {
     if (json.terrainFeatureTextcat) {
       avalancheProblem.terrainFeatureTextcat = json.terrainFeatureTextcat;
     }
-    const jsonTerrainFeature = json.terrainFeature;
-    const terrainFeature = new Array<TextModel>();
-    for (const i in jsonTerrainFeature) {
-      if (jsonTerrainFeature[i] !== null) {
-        terrainFeature.push(TextModel.createFromJson(jsonTerrainFeature[i]));
-      }
+    if (json.terrainFeature) {
+      avalancheProblem.terrainFeature = json.terrainFeature;
     }
-    avalancheProblem.terrainFeature = terrainFeature;
 
     return avalancheProblem;
   }
@@ -81,11 +76,7 @@ export class AvalancheProblemModel {
       this.dangerRatingDirection = avalancheProblem.dangerRatingDirection;
       this.matrixInformation = new MatrixInformationModel(avalancheProblem.matrixInformation);
       this.terrainFeatureTextcat = avalancheProblem.terrainFeatureTextcat;
-      const array = new Array<TextModel>();
-      for (const entry of avalancheProblem.terrainFeature) {
-        array.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.terrainFeature = array;
+      this.terrainFeature = avalancheProblem.terrainFeature;
     }
   }
 
@@ -153,11 +144,7 @@ export class AvalancheProblemModel {
       json["terrainFeatureTextcat"] = this.terrainFeatureTextcat;
     }
     if (this.terrainFeature && this.terrainFeature.length > 0) {
-      const terrainFeature = [];
-      for (let i = 0; i <= this.terrainFeature.length - 1; i++) {
-        terrainFeature.push(this.terrainFeature[i].toJson());
-      }
-      json["terrainFeature"] = terrainFeature;
+      json["terrainFeature"] = this.terrainFeature;
     }
 
     return json;
@@ -197,11 +184,7 @@ export class AvalancheProblemModel {
       json["terrainFeatureTextcat"] = this.terrainFeatureTextcat;
     }
     if (this.terrainFeature && this.terrainFeature.length > 0) {
-      const terrainFeature = [];
-      for (let i = 0; i <= this.terrainFeature.length - 1; i++) {
-        terrainFeature.push(this.terrainFeature[i].toJson());
-      }
-      json["terrainFeature"] = terrainFeature;
+      json["terrainFeature"] = this.terrainFeature;
     }
 
     return json;

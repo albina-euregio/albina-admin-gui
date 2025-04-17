@@ -1,5 +1,5 @@
 import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
-import { convertLangTextsToJSON, LangTexts, TextModel, TextModelAsJSON } from "./text.model";
+import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
 import { AuthorModel } from "./author.model";
 import * as Enums from "../enums/enums";
 import { RegionStatus } from "../enums/enums";
@@ -8,12 +8,12 @@ import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
 export type BulletinModelAsJSON = BulletinModel & {
   validity: { from: Date; until: Date };
-  highlights: TextModelAsJSON[];
-  avActivityHighlights: TextModelAsJSON[];
-  avActivityComment: TextModelAsJSON[];
-  snowpackStructureHighlights: TextModelAsJSON[];
-  snowpackStructureComment: TextModelAsJSON[];
-  tendencyComment: TextModelAsJSON[];
+  highlights: TextModel[];
+  avActivityHighlights: TextModel[];
+  avActivityComment: TextModel[];
+  snowpackStructureHighlights: TextModel[];
+  snowpackStructureComment: TextModel[];
+  tendencyComment: TextModel[];
 };
 
 export class BulletinModel implements PolygonObject {
@@ -128,26 +128,16 @@ export class BulletinModel implements PolygonObject {
     if (json.highlightsTextcat) {
       bulletin.highlightsTextcat = json.highlightsTextcat;
     }
-    const jsonHighlights = json.highlights;
-    const highlights = new Array<TextModel>();
-    for (const i in jsonHighlights) {
-      if (jsonHighlights[i] !== null) {
-        highlights.push(TextModel.createFromJson(jsonHighlights[i]));
-      }
+    if (json.highlights) {
+      bulletin.highlights$ = toLangTexts(json.highlights);
     }
-    bulletin.highlights$ = TextModel.toLangTexts(highlights);
 
     if (json.avActivityHighlightsTextcat) {
       bulletin.avActivityHighlightsTextcat = json.avActivityHighlightsTextcat;
     }
-    const jsonAvActivityHighlights = json.avActivityHighlights;
-    const avActivityHighlights = new Array<TextModel>();
-    for (const i in jsonAvActivityHighlights) {
-      if (jsonAvActivityHighlights[i] !== null) {
-        avActivityHighlights.push(TextModel.createFromJson(jsonAvActivityHighlights[i]));
-      }
+    if (json.avActivityHighlights) {
+      bulletin.avActivityHighlights$ = toLangTexts(json.avActivityHighlights);
     }
-    bulletin.avActivityHighlights$ = TextModel.toLangTexts(avActivityHighlights);
     if (json.avActivityHighlightsNotes) {
       bulletin.avActivityHighlightsNotes = json.avActivityHighlightsNotes;
     }
@@ -155,14 +145,9 @@ export class BulletinModel implements PolygonObject {
     if (json.avActivityCommentTextcat) {
       bulletin.avActivityCommentTextcat = json.avActivityCommentTextcat;
     }
-    const jsonAvActivityComment = json.avActivityComment;
-    const avActivityComment = new Array<TextModel>();
-    for (const i in jsonAvActivityComment) {
-      if (jsonAvActivityComment[i] !== null) {
-        avActivityComment.push(TextModel.createFromJson(jsonAvActivityComment[i]));
-      }
+    if (json.avActivityComment) {
+      bulletin.avActivityComment$ = toLangTexts(json.avActivityComment);
     }
-    bulletin.avActivityComment$ = TextModel.toLangTexts(avActivityComment);
     if (json.avActivityCommentNotes) {
       bulletin.avActivityCommentNotes = json.avActivityCommentNotes;
     }
@@ -170,14 +155,9 @@ export class BulletinModel implements PolygonObject {
     if (json.snowpackStructureHighlightsTextcat) {
       bulletin.snowpackStructureHighlightsTextcat = json.snowpackStructureHighlightsTextcat;
     }
-    const jsonSnowpackStructureHighlight = json.snowpackStructureHighlights;
-    const snowpackStructureHighlights = new Array<TextModel>();
-    for (const i in jsonSnowpackStructureHighlight) {
-      if (jsonSnowpackStructureHighlight[i] !== null) {
-        snowpackStructureHighlights.push(TextModel.createFromJson(jsonSnowpackStructureHighlight[i]));
-      }
+    if (json.snowpackStructureHighlights) {
+      bulletin.snowpackStructureHighlights$ = toLangTexts(json.snowpackStructureHighlights);
     }
-    bulletin.snowpackStructureHighlights$ = TextModel.toLangTexts(snowpackStructureHighlights);
     if (json.snowpackStructureHighlightsNotes) {
       bulletin.snowpackStructureHighlightsNotes = json.SnowpackStructureHighlightsNotes;
     }
@@ -185,14 +165,9 @@ export class BulletinModel implements PolygonObject {
     if (json.snowpackStructureCommentTextcat) {
       bulletin.snowpackStructureCommentTextcat = json.snowpackStructureCommentTextcat;
     }
-    const jsonSnowpackStructureComment = json.snowpackStructureComment;
-    const snowpackStructureComment = new Array<TextModel>();
-    for (const i in jsonSnowpackStructureComment) {
-      if (jsonSnowpackStructureComment[i] !== null) {
-        snowpackStructureComment.push(TextModel.createFromJson(jsonSnowpackStructureComment[i]));
-      }
+    if (json.snowpackStructureComment) {
+      bulletin.snowpackStructureComment$ = toLangTexts(json.snowpackStructureComment);
     }
-    bulletin.snowpackStructureComment$ = TextModel.toLangTexts(snowpackStructureComment);
     if (json.snowpackStructureCommentNotes) {
       bulletin.snowpackStructureCommentNotes = json.snowpackStructureCommentNotes;
     }
@@ -200,14 +175,9 @@ export class BulletinModel implements PolygonObject {
     if (json.tendencyCommentTextcat) {
       bulletin.tendencyCommentTextcat = json.tendencyCommentTextcat;
     }
-    const jsonTendencyComment = json.tendencyComment;
-    const tendencyComment = new Array<TextModel>();
-    for (const i in jsonTendencyComment) {
-      if (jsonTendencyComment[i] !== null) {
-        tendencyComment.push(TextModel.createFromJson(jsonTendencyComment[i]));
-      }
+    if (json.tendencyComment) {
+      bulletin.tendencyComment$ = toLangTexts(json.tendencyComment);
     }
-    bulletin.tendencyComment$ = TextModel.toLangTexts(tendencyComment);
     if (json.tendencyCommentNotes) {
       bulletin.tendencyCommentNotes = json.tendencyCommentNotes;
     }

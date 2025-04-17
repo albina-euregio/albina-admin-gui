@@ -31,28 +31,18 @@ export class BulletinDaytimeDescriptionModel {
     if (json.terrainFeatureAboveTextcat) {
       bulletinDaytimeDescription.terrainFeatureAboveTextcat = json.terrainFeatureAboveTextcat;
     }
-    const jsonTerrainFeatureAbove = json.terrainFeatureAbove;
-    const terrainFeatureAbove = new Array<TextModel>();
-    for (const i in jsonTerrainFeatureAbove) {
-      if (jsonTerrainFeatureAbove[i] !== null) {
-        terrainFeatureAbove.push(TextModel.createFromJson(jsonTerrainFeatureAbove[i]));
-      }
+    if (json.terrainFeatureAbove) {
+      bulletinDaytimeDescription.terrainFeatureAbove = json.terrainFeatureAbove;
     }
-    bulletinDaytimeDescription.terrainFeatureAbove = terrainFeatureAbove;
 
     bulletinDaytimeDescription.dangerRatingBelow = json.dangerRatingBelow;
 
     if (json.terrainFeatureBelowTextcat) {
       bulletinDaytimeDescription.terrainFeatureBelowTextcat = json.terrainFeatureBelowTextcat;
     }
-    const jsonTerrainFeatureBelow = json.terrainFeatureBelow;
-    const terrainFeatureBelow = new Array<TextModel>();
-    for (const i in jsonTerrainFeatureBelow) {
-      if (jsonTerrainFeatureBelow[i] !== null) {
-        terrainFeatureBelow.push(TextModel.createFromJson(jsonTerrainFeatureBelow[i]));
-      }
+    if (json.terrainFeatureBelow) {
+      bulletinDaytimeDescription.terrainFeatureBelow = json.terrainFeatureBelow;
     }
-    bulletinDaytimeDescription.terrainFeatureBelow = terrainFeatureBelow;
 
     if (json.avalancheProblem1) {
       bulletinDaytimeDescription.avalancheProblem1 = AvalancheProblemModel.createFromJson(json.avalancheProblem1);
@@ -94,18 +84,10 @@ export class BulletinDaytimeDescriptionModel {
     } else {
       this.dangerRatingAbove = bulletinDaytimeDescription.dangerRatingAbove;
       this.terrainFeatureAboveTextcat = bulletinDaytimeDescription.terrainFeatureAboveTextcat;
-      const arrayAbove = new Array<TextModel>();
-      for (const entry of bulletinDaytimeDescription.terrainFeatureAbove) {
-        arrayAbove.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.terrainFeatureAbove = arrayAbove;
+      this.terrainFeatureAbove = bulletinDaytimeDescription.terrainFeatureAbove;
       this.dangerRatingBelow = bulletinDaytimeDescription.dangerRatingBelow;
       this.terrainFeatureBelowTextcat = bulletinDaytimeDescription.terrainFeatureBelowTextcat;
-      const arrayBelow = new Array<TextModel>();
-      for (const entry of bulletinDaytimeDescription.terrainFeatureBelow) {
-        arrayBelow.push(TextModel.createFromJson(entry.toJson()));
-      }
-      this.terrainFeatureBelow = arrayBelow;
+      this.terrainFeatureBelow = bulletinDaytimeDescription.terrainFeatureBelow;
       if (bulletinDaytimeDescription.avalancheProblem1 !== undefined) {
         this.avalancheProblem1 = new AvalancheProblemModel(bulletinDaytimeDescription.avalancheProblem1);
       }
@@ -277,11 +259,7 @@ export class BulletinDaytimeDescriptionModel {
       json["terrainFeatureAboveTextcat"] = this.terrainFeatureAboveTextcat;
     }
     if (this.terrainFeatureAbove && this.terrainFeatureAbove.length > 0) {
-      const terrainFeature = [];
-      for (let i = 0; i <= this.terrainFeatureAbove.length - 1; i++) {
-        terrainFeature.push(this.terrainFeatureAbove[i].toJson());
-      }
-      json["terrainFeatureAbove"] = terrainFeature;
+      json["terrainFeatureAbove"] = this.terrainFeatureAbove;
     }
     if (this.hasElevationDependency && this.dangerRatingBelow) {
       json["dangerRatingBelow"] = this.dangerRatingBelow;
@@ -290,11 +268,7 @@ export class BulletinDaytimeDescriptionModel {
       json["terrainFeatureBelowTextcat"] = this.terrainFeatureBelowTextcat;
     }
     if (this.hasElevationDependency && this.terrainFeatureBelow && this.terrainFeatureBelow.length > 0) {
-      const terrainFeature = [];
-      for (let i = 0; i <= this.terrainFeatureBelow.length - 1; i++) {
-        terrainFeature.push(this.terrainFeatureBelow[i].toJson());
-      }
-      json["terrainFeatureBelow"] = terrainFeature;
+      json["terrainFeatureBelow"] = this.terrainFeatureBelow;
     }
 
     if (this.avalancheProblem1) {
