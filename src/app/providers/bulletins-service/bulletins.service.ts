@@ -8,6 +8,7 @@ import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
+import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
 import * as Enums from "../../enums/enums";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { DateIsoString } from "app/models/stress-level.model";
@@ -331,6 +332,11 @@ export class BulletinsService {
       return of([]);
     }
     const headers = new HttpHeaders({ Authorization: "Bearer " + server.accessToken });
+    if (server.apiUrl.includes("/api/bulletin-preview/caaml/")) {
+      return this.http
+        .get<Bulletins>(server.apiUrl, { headers })
+        .pipe(map((data) => data.bulletins.map((b) => toAlbinaBulletin(b))));
+    }
     return this.http.get<{ date: string }>(server.apiUrl + "bulletins/latest", { headers }).pipe(
       switchMap((latest) => {
         const date = new Date(date0);

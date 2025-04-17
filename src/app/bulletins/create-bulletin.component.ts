@@ -450,8 +450,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.loadExternalBulletinsError = false;
             this.addExternalBulletins(server, data);
           },
-          () => {
-            console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!");
+          (error) => {
+            console.error("Bulletins from " + server.getApiUrl() + " could not be loaded!", error);
             this.loadExternalBulletinsError = true;
           },
         ),

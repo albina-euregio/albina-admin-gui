@@ -1,13 +1,20 @@
 import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
-import { convertLangTextsToJSON, LangTexts, TextModel } from "./text.model";
+import { convertLangTextsToJSON, LangTexts, TextModel, TextModelAsJSON } from "./text.model";
 import { AuthorModel } from "./author.model";
 import * as Enums from "../enums/enums";
 import { RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
-const secret = Symbol();
-export type BulletinModelAsJSON = BulletinModel & typeof secret; // somewhat
+export type BulletinModelAsJSON = BulletinModel & {
+  validity: { from: Date; until: Date };
+  highlights: TextModelAsJSON[];
+  avActivityHighlights: TextModelAsJSON[];
+  avActivityComment: TextModelAsJSON[];
+  snowpackStructureHighlights: TextModelAsJSON[];
+  snowpackStructureComment: TextModelAsJSON[];
+  tendencyComment: TextModelAsJSON[];
+};
 
 export class BulletinModel implements PolygonObject {
   public id: string;

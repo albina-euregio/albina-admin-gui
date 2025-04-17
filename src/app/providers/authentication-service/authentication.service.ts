@@ -100,7 +100,7 @@ export class AuthenticationService {
     this.http.get<ServerConfiguration[]>(url).subscribe(
       (data) => {
         for (const entry of data) {
-          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
+          this.externalServerLogin(entry).subscribe(
             (data) => {
               if (data === true) {
                 console.debug("[" + entry.name + "] Logged in!");
@@ -109,54 +109,49 @@ export class AuthenticationService {
               }
             },
             (error) => {
-              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body));
+              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body), error);
             },
           );
         }
       },
       (error) => {
-        console.error("External server instances could not be loaded: " + JSON.stringify(error._body));
+        console.error("External server instances could not be loaded: " + JSON.stringify(error._body), error);
       },
     );
   }
 
-  public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
-    const url = apiUrl + "authentication";
-    const body = JSON.stringify({ username, password });
-    return this.http.post<AuthenticationResponse>(url, body).pipe(
-      map((data) => {
-        if (data.access_token) {
-          this.addExternalServer(data, apiUrl, name, username, password);
-          return true;
-        } else {
-          return false;
-        }
-      }),
-    );
+  public externalServerLogin(server: ServerConfiguration): Observable<boolean> {
+    if (server.userName.startsWith("https://")) {
+      const tokenURL = server.userName;
+      const headers = { "Content-Type": "application/x-www-form-urlencoded" };
+      return this.http
+        .post<{ access_token: string }>(tokenURL, server.password, { headers })
+        .pipe(map((data) => this.addExternalServer(server, data)));
+    }
+    const url = server.apiUrl + "authentication";
+    const body = JSON.stringify({ username: server.userName, password: server.password });
+    return this.http.post<AuthenticationResponse>(url, body).pipe(map((data) => this.addExternalServer(server, data)));
   }
 
-  private addExternalServer(
-    json: Partial<AuthenticationResponse>,
-    apiUrl: string,
-    serverName: string,
-    username: string,
-    password: string,
-  ) {
-    if (!json) {
-      return;
+  private addExternalServer(server0: ServerConfiguration, json: Partial<AuthenticationResponse>): boolean {
+    if (!json.access_token) {
+      return false;
     }
     const server = ServerModel.createFromJson(json);
-    server.setApiUrl(apiUrl);
-    server.setName(serverName);
+    server.setApiUrl(server0.apiUrl);
+    server.setName(server0.name);
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
+    return true;
   }
 
   private setExternalServers(json: Partial<ServerModel>[]) {
     if (!json) {
       return;
     }
-    for (const server of json) this.externalServers.push(ServerModel.createFromJson(server));
+    for (const server of json) {
+      this.externalServers.push(ServerModel.createFromJson(server));
+    }
   }
 
   public checkExternalServerLogin() {
