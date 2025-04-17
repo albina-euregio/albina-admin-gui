@@ -171,7 +171,12 @@ export function toAlbinaBulletin(b: Bulletin): BulletinModelAsJSON {
     avActivityComment: [
       {
         languageCode: b.lang,
-        text: b.avalancheActivity?.comment,
+        text:
+          b.avalancheActivity?.comment ??
+          b.avalancheProblems
+            ?.map((p) => p.comment)
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .join("\n\n"),
       },
     ],
     snowpackStructureHighlights: [
@@ -216,24 +221,14 @@ function toDaytimeDescription(b: Bulletin, exclude: ValidTimePeriod): BulletinDa
     .flatMap((r) => [r.elevation?.lowerBound, r.elevation?.upperBound])
     .filter(Boolean);
   return {
-    dangerRatingAbove:
-      dangerRatings
-        .filter((r) => !r.elevation?.lowerBound)
-        .map((r) => r.mainValue)
-        .find((r) => r) ??
-      problems
-        .filter((p) => !p.elevation?.lowerBound)
-        .map((p) => p.dangerRatingValue)
-        .find((p) => false),
-    dangerRatingBelow:
-      dangerRatings
-        .filter((r) => !r.elevation?.upperBound)
-        .map((r) => r.mainValue)
-        .find((r) => r) ??
-      problems
-        .filter((p) => !p.elevation?.upperBound)
-        .map((p) => p.dangerRatingValue)
-        .find((p) => false),
+    dangerRatingAbove: dangerRatings
+      .filter((r) => !r.elevation?.lowerBound)
+      .map((r) => r.mainValue)
+      .find((r) => r),
+    dangerRatingBelow: dangerRatings
+      .filter((r) => !r.elevation?.upperBound)
+      .map((r) => r.mainValue)
+      .find((r) => r),
     avalancheProblem1: problemModels.pop(),
     avalancheProblem2: problemModels.pop(),
     avalancheProblem3: problemModels.pop(),
