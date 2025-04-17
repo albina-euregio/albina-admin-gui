@@ -9,7 +9,7 @@ import { AuthorModel } from "../../models/author.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import * as Enums from "../../enums/enums";
-import { RegionConfiguration } from "../../models/region-configuration.model";
+import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
 
 @Injectable()
@@ -98,7 +98,7 @@ export class AuthenticationService {
   }
 
   private setInternalRegions(regions: RegionConfiguration[]) {
-    this.internalRegions = regions;
+    this.internalRegions = RegionConfigurationSchema.array().parse(regions);
     this.localStorageService.setInternalRegions(this.internalRegions);
   }
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ServerConfigurationSchema = z.object({
-  id: z.string(),
+  id: z.any(),
   name: z.string(),
   apiUrl: z.string(),
   userName: z.string(),
