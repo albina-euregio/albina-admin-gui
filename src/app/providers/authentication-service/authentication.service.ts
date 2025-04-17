@@ -242,7 +242,7 @@ export class AuthenticationService {
   }
 
   public isCurrentUserInRole(role: string): boolean {
-    const roles = this.currentAuthor.roles ?? [];
+    const roles = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
     if (roles.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
       const updatedRoles = roles.map((r) =>
@@ -254,7 +254,7 @@ export class AuthenticationService {
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {
-    return this.currentAuthor.regions || [];
+    return this.currentAuthor?.regions || [];
   }
 
   public getInternalRegions(): string[] {
