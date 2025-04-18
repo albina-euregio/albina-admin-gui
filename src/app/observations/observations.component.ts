@@ -351,12 +351,28 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
+  getSubregions(region: string) {
+    return this.allRegions.filter((r) => r.id.startsWith(region) && r.id !== region);
+  }
+
   selectRegion(region: string) {
     this.filter.regions = {};
     if (region) {
       this.allRegions.forEach((r) => {
         if (r.id.startsWith(region)) {
           this.filter.regions[r.id] = true;
+        }
+      });
+    }
+    this.mapService.clickRegion(this.filter.regions);
+    this.applyLocalFilter();
+  }
+
+  toggleRegion(event, region: string) {
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.filter.regions[r.id] = event.target.checked;
         }
       });
     }
