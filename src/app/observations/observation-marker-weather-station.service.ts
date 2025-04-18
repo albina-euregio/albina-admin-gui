@@ -35,7 +35,9 @@ const snowDifferenceColors = {
   "11": "#CC0CE8",
 };
 
-const drySnowfallLevelThresholds = [0, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2500, 2700];
+const drySnowfallLevelThresholds = [
+  0, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 4000,
+];
 const drySnowfallLevelColors = {
   "0": "#9f80ff",
   "1": "#784cff",
@@ -46,10 +48,13 @@ const drySnowfallLevelColors = {
   "6": "#b0ffbc",
   "7": "#ffff73",
   "8": "#ffbe7d",
-  "9": "#ff9b41",
-  "10": "#ff5a41",
-  "11": "#ff1e23",
-  "12": "#fa3c96",
+  "9": "#fc9272",
+  "10": "#fb6a4a",
+  "11": "#ef3b2c",
+  "12": "#cb181d",
+  "13": "#a50f15",
+  "14": "#67000d",
+  "15": "#330000",
 };
 
 const temperatureThresholds = [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 100];
