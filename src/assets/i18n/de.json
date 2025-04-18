@@ -1120,7 +1120,7 @@
   },
   "terrainType": {
     "gullies_and_bowls": "Rinnen und Mulden",
-    "adjacent_to_ridgelines": "Kammlagen",
+    "adjacent_to_ridgelines": "kammnah",
     "distant_from_ridgelines": "kammfern",
     "in_the_vicinity_of_peaks": "Gipfellagen",
     "pass_areas": "Passlagen",
