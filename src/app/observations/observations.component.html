@@ -102,6 +102,29 @@
               </div>
             </div>
 
+            <div class="global-bar-item global-bar-item-calendar" style="width: 0">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(1)" [ngxMousetrapKey]="['d 1']">
+                <i class="ph ph-number-circle-zero"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(2)" [ngxMousetrapKey]="['d 2']">
+                <i class="ph ph-number-circle-one"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(3)" [ngxMousetrapKey]="['d 3']">
+                <i class="ph ph-number-circle-two"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(4)" [ngxMousetrapKey]="['d 4']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(5)" [ngxMousetrapKey]="['d 5']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(6)" [ngxMousetrapKey]="['d 6']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(7)" [ngxMousetrapKey]="['d 7']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+            </div>
             <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-calendar">
               <input
                 class="form-control d-inline-block"

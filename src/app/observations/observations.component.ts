@@ -364,6 +364,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.applyLocalFilter();
   }
 
+  setDateRange(days: number) {
+    this.filter.days = days;
+    this.loadObservationsAndWeatherStations();
+  }
+
   toggleSearchInput() {
     this.showSearchInput = !this.showSearchInput;
     if (this.showSearchInput) {
