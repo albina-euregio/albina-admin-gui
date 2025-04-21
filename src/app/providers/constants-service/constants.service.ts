@@ -67,7 +67,7 @@ export class ConstantsService {
   public fillOpacityForeignSelectedSuggested = 0.9;
   public fillOpacityForeignDeselectedSuggested = 0.3;
 
-  public fillOpacityEditSelection = 0.4;
+  public fillOpacityEditSelection = 0.2;
 
   public textcatLineBreak = '{"curlyName":"Zeilenumbruch01","line":0}';
 
