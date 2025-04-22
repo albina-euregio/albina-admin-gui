@@ -327,14 +327,15 @@ export class BulletinsService {
       .pipe(map((response) => ({ bulletins: response.body, etag: response.headers.get("ETag") })));
   }
 
-  loadExternalBulletins([date0]: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
+  loadExternalBulletins([date0, date1]: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
       return of([]);
     }
     const headers = new HttpHeaders({ Authorization: "Bearer " + server.accessToken });
     if (server.apiUrl.includes("/api/bulletin-preview/caaml/")) {
+      const params = { activeAt: new Date(+date0 / 2 + +date1 / 2).toISOString() };
       return this.http
-        .get<Bulletins>(server.apiUrl, { headers })
+        .get<Bulletins>(server.apiUrl, { headers, params })
         .pipe(map((data) => data.bulletins.map((b) => toAlbinaBulletin(b))));
     }
     return this.http.get<{ date: string }>(server.apiUrl + "bulletins/latest", { headers }).pipe(
