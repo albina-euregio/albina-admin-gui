@@ -24,7 +24,7 @@ import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.confi
 import type { Subscription } from "rxjs";
 import { Temporal } from "temporal-polyfill";
 
-type AwsomeSource = AwsomeSource0 & { $loading?: Subscription };
+type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 
 export type FeatureProperties = GeoJSON.Feature["properties"] & {
   $sourceObject?: AwsomeSource;
@@ -72,7 +72,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   mapLayer = new LayerGroup();
   mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
-  loading: boolean;
+  loadingState: "loading" | "error" | undefined;
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
@@ -106,19 +106,28 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.observations.length = 0;
     this.applyLocalFilter();
 
-    this.loading = true;
+    this.loadingState = "loading";
     this.observations = (
       await Promise.all(
-        this.sources.flatMap(
-          async (source): Promise<FeatureProperties[]> =>
-            await this.loadSource(source).catch((err) => {
-              console.warn("Failed to load source", source, err);
-              return [];
-            }),
-        ),
+        this.sources.flatMap(async (source): Promise<FeatureProperties[]> => {
+          try {
+            source.$error = undefined;
+            return await this.loadSource(source);
+          } catch (err) {
+            source.$error = err;
+            this.loadingState = "error";
+            console.warn("Failed to load source", source, err);
+            return [];
+          } finally {
+            source.$loading?.unsubscribe();
+            source.$loading = undefined;
+          }
+        }),
       )
     ).flat();
-    this.loading = false;
+    if (this.loadingState === "loading") {
+      this.loadingState = undefined;
+    }
 
     if (this.sources.some((s) => s.imageOverlays?.length)) {
       this.mapLayerControl.addTo(this.mapService.map);
@@ -151,28 +160,30 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     });
 
     source.$loading?.unsubscribe();
-    return new Promise((resolve) => {
-      source.$loading = this.fetchJSON<GeoJSON.FeatureCollection>(url).subscribe(({ features }) => {
-        resolve(
-          features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
-            feature.properties.$source = source.name as any;
-            feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
-            feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
-            feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
-            feature.properties.$sourceObject = source;
-            if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
-              return aspects
-                .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
-                .map((aspect) => ({
-                  ...feature.properties,
-                  aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
-                  snp_characteristics: feature.properties.snp_characteristics[aspect],
-                }));
-            }
-            return [feature.properties];
-          }),
-        );
-      });
+    return new Promise((next, error) => {
+      source.$loading = this.fetchJSON<GeoJSON.FeatureCollection>(url)
+        .pipe(
+          map(({ features }): FeatureProperties[] =>
+            features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
+              feature.properties.$source = source.name as any;
+              feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
+              feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
+              feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
+              feature.properties.$sourceObject = source;
+              if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
+                return aspects
+                  .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
+                  .map((aspect) => ({
+                    ...feature.properties,
+                    aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
+                    snp_characteristics: feature.properties.snp_characteristics[aspect],
+                  }));
+              }
+              return [feature.properties];
+            }),
+          ),
+        )
+        .subscribe({ next, error });
     });
   }
 

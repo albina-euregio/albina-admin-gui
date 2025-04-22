@@ -16,7 +16,11 @@
                   {{ "admin.observations.selectSources.placeholder" | translate }}
                   <div
                     class="spinner-grow spinner-grow-sm text-success"
-                    [ngClass]="{ 'opacity-0': !loading }"
+                    [ngClass]="{
+                      'opacity-0': !loadingState,
+                      'text-success': loadingState === 'loading',
+                      'text-danger': loadingState === 'error',
+                    }"
                     role="status"
                     title="Loading"
                   ></div>
@@ -32,6 +36,18 @@
                         class="form-check-input"
                       />
                       {{ source.name }}
+                      <div
+                        *ngIf="source.$error"
+                        class="spinner-grow spinner-grow-sm text-danger"
+                        role="alert"
+                        [title]="source.$error | json"
+                      ></div>
+                      <div
+                        *ngIf="source.$loading"
+                        class="spinner-grow spinner-grow-sm text-success"
+                        role="status"
+                        title="Loading"
+                      ></div>
                     </label>
                   </div>
                 </form>
