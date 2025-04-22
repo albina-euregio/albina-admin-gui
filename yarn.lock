@@ -3936,10 +3936,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zod/core@npm:0.4.6":
-  version: 0.4.6
-  resolution: "@zod/core@npm:0.4.6"
-  checksum: 10c0/ec05ca94deec69d7c4b7314f4674fa5703d88f8eb2c6d68347cf6ba8c4b24885774d5d3a574be07b2ae667fb81db3b4a874647a61d71b4449e784f75e39fa1a8
+"@zod/core@npm:0.8.1":
+  version: 0.8.1
+  resolution: "@zod/core@npm:0.8.1"
+  checksum: 10c0/5e47af49ecfca5ea4480b7c8d5a8c500366df3b24f0096a4ee7f8e1cb81fa4d7d911f27c8cf0536182a3ff775ffa29e807024b235209ea6610413ee400abcbbd
   languageName: node
   linkType: hard
 
@@ -4127,7 +4127,7 @@ __metadata:
     typescript: "npm:5.6.3"
     typescript-eslint: "npm:^8.17.0"
     which-polygon: "npm:^2.2.1"
-    zod: "npm:^4.0.0-beta.20250412T085909"
+    zod: "npm:^4.0.0-beta.20250420T053007"
     zone.js: "npm:~0.15.0"
   languageName: unknown
   linkType: soft
@@ -10503,12 +10503,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^4.0.0-beta.20250412T085909":
-  version: 4.0.0-beta.20250412T085909
-  resolution: "zod@npm:4.0.0-beta.20250412T085909"
+"zod@npm:^4.0.0-beta.20250420T053007":
+  version: 4.0.0-beta.20250420T053007
+  resolution: "zod@npm:4.0.0-beta.20250420T053007"
   dependencies:
-    "@zod/core": "npm:0.4.6"
-  checksum: 10c0/96cc16f816490d8e6166761b33098be5b004fa1d03f06f08a515ce139f83bb88e796ebe7c90dac0608b588d1ee7a2190d2ae551501f6d091340a92fe8047c8da
+    "@zod/core": "npm:0.8.1"
+  checksum: 10c0/eabd2dc773b5fb171456fe74f0b1da83c1d0b261a297cf20a67a95783884f8755a888961472e0711ed175a4fd0d5c450e4315d7c8402c04a5e4cecfc8bb6d9f1
   languageName: node
   linkType: hard
 
