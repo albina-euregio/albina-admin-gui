@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CommonModule, formatDate } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
@@ -22,6 +22,7 @@ import type { ScatterSeriesOption } from "echarts/charts";
 import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
 import type { Subscription } from "rxjs";
+import { Temporal } from "temporal-polyfill";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription };
 
@@ -187,8 +188,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   nextDate(direction: -1 | 1) {
     const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
-    const date = new Date(Date.parse(this.date) + direction * dateStepSeconds * 1000);
-    return formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
+    return Temporal.PlainDateTime.from(this.date)
+      .add({ seconds: direction * dateStepSeconds })
+      .toString();
   }
 
   async switchDate(direction: -1 | 1) {
