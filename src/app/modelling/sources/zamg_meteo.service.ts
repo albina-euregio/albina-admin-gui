@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ImageOverlay } from "leaflet";
 import L from "leaflet";
+import { Temporal } from "temporal-polyfill";
 
 function legend(label: string, color: string) {
   return `<i style="color:${color}">■</i> ${label}`;
@@ -162,9 +163,9 @@ export class ZamgMeteoSourceService {
 class MapLink {
   href: string;
   label: string;
-  date?: Date;
-  dateMin?: number | Date;
-  dateMax?: number | Date;
+  date?: Temporal.Instant;
+  dateMin?: number | Temporal.Instant;
+  dateMax?: number | Temporal.Instant;
   dateHref?: string;
   dateForceHour?: string;
   dateOffsetHour?: number;
@@ -191,11 +192,11 @@ class MapLink {
     );
   }
 
-  change(change: 1 | -1 | Date) {
+  change(change: 1 | -1 | Temporal.Instant) {
     if (!this.date || !this.dateStepHour) {
       return this;
     }
-    this.date = change instanceof Date ? change : new Date(+this.date + change * this.dateStepHour * 3600 * 1000);
+    this.date = change instanceof Temporal.Instant ? change : this.date.add({ hours: change * this.dateStepHour });
     this.imageOverlay.setUrl(this.linkHref);
   }
 
@@ -207,34 +208,31 @@ class MapLink {
     this.dateHref = undefined;
     if (!response.ok) return;
     let dateString = await response.text();
+    dateString = dateString.trim(); // trim "\n"
     if (this.dateForceHour) {
       dateString = dateString.replace(/T\d\d:\d\d/, `T${this.dateForceHour}`);
     }
-    const parsedDate = Date.parse(dateString.trim());
-    this.date = new Date(parsedDate + (this.dateOffsetHour ?? 0) * 3600 * 1000);
+    const parsedDate = Temporal.Instant.from(dateString);
+    this.date = parsedDate.add({ hours: this.dateOffsetHour ?? 0 });
     if (typeof this.dateMin === "number") {
-      this.dateMin = new Date(parsedDate + this.dateMin * 3600 * 1000);
+      this.dateMin = parsedDate.add({ hours: this.dateMin });
     }
     if (typeof this.dateMax === "number") {
-      this.dateMax = new Date(parsedDate + this.dateMax * 3600 * 1000);
+      this.dateMax = parsedDate.add({ hours: this.dateMax });
     }
     this.imageOverlay.setUrl(this.linkHref);
   }
 
+  get epochMilliseconds(): number {
+    return this.date?.epochMilliseconds;
+  }
+
   get linkHref(): string {
-    const isoString = this.date?.toISOString() ?? "";
+    const isoString = this.date?.toString() ?? "";
     return this.href
       .replace("{{date}}", isoString.replace("T", "_").replace(":", "-").substring(0, "2006-01-02_15-04".length))
       .replace("{{date0}}", isoString.slice(0, "2006-01-02".length))
-      .replace("{{year}}", String(this.date?.getFullYear()));
-  }
-
-  get isMapDateMin(): boolean {
-    return Boolean(this.date && this.dateMin && +this.date <= +this.dateMin);
-  }
-
-  get isMapDateMax(): boolean {
-    return Boolean(this.date && this.dateMax && +this.date >= +this.dateMax);
+      .replace("{{year}}", isoString.slice(0, "2006".length));
   }
 
   async addImageOverlay(map: L.Map | L.LayerGroup) {
