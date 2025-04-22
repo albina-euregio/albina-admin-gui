@@ -86,7 +86,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   public allSources: MultiselectDropdownData[] = [];
 
-  public allRegions: RegionProperties[];
+  public allRegions: RegionProperties[] = [];
   private regionalMarkers = {};
 
   private swipeCoord?: [number, number];

@@ -220,7 +220,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     imgUrls: SafeResourceUrl[];
     imgIndex: number;
   };
-  public allRegions: RegionProperties[];
+  public allRegions: RegionProperties[] = [];
   public allSources: MultiselectDropdownData[];
   public observationEditor: {
     observation: GenericObservation;
