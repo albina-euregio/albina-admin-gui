@@ -321,34 +321,22 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
         Math.abs(direction[0]) > Math.abs(direction[1] * 3)
       ) {
         // Horizontal enough
-        const swipe = direction[0] < 0 ? "next" : "previous";
+        const swipe = direction[0] < 0 ? +1 : -1;
         // Do whatever you want with swipe
         this.changeRun(swipe);
       }
     }
   }
 
-  changeRun(type: "next" | "previous", changeType: "" | "observationConfiguration" = "") {
+  changeRun(type: -1 | 1, changeType: "" | "observationConfiguration" = "") {
     if (changeType === "observationConfiguration") {
       const configurations = [...this.observationConfigurations];
       const index = configurations.indexOf(this.observationConfiguration);
-      if (type === "next") {
-        const newIndex = index + 1 < configurations.length - 1 ? index + 1 : 0;
-        this.observationConfiguration = configurations[newIndex];
-      } else if (type === "previous") {
-        const newIndex = index === 0 ? configurations.length - 1 : index - 1;
-        this.observationConfiguration = configurations[newIndex];
-      }
+      this.observationConfiguration = configurations.at((index + type) % configurations.length);
     } else if (this.selectedModelType === "qfa") {
       const filenames = this.files[this.selectedCity].map((file) => file.filename);
       const index = filenames.indexOf(this.qfa.file.filename);
-      if (type === "next") {
-        const newIndex = index + 1 < filenames.length - 1 ? index + 1 : 0;
-        this.setQfa(filenames[newIndex], 0);
-      } else if (type === "previous") {
-        const newIndex = index === 0 ? filenames.length - 1 : index - 1;
-        this.setQfa(filenames[newIndex], 0);
-      }
+      this.setQfa(filenames.at((index + type) % filenames.length), 0);
     } else if (this.selectedModelPoint) {
       let points = this.dropDownOptions[this.selectedModelType];
       if (this.showObservationConfigurations && this.observationConfiguration) {
@@ -359,13 +347,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       const index = points.findIndex(
         (p) => p.region === this.selectedModelPoint.region && p.locationName === this.selectedModelPoint.locationName,
       );
-      if (type === "next") {
-        const newIndex = index + 1 < points.length - 1 ? index + 1 : 0;
-        this.selectedModelPoint = points[newIndex];
-      } else if (type === "previous") {
-        const newIndex = index === 0 ? points.length - 1 : index - 1;
-        this.selectedModelPoint = points[newIndex];
-      }
+      this.selectedModelPoint = points.at((index + type) % points.length);
     }
   }
 

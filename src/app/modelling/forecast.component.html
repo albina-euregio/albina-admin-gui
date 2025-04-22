@@ -159,17 +159,17 @@
 
     <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
       &mdash; Tipp:
-      <kbd (click)="changeRun('previous')" ngxMousetrapKey="left">←</kbd>
-      <kbd (click)="changeRun('next')" ngxMousetrapKey="right">→</kbd>
+      <kbd (click)="changeRun(-1)" ngxMousetrapKey="left">←</kbd>
+      <kbd (click)="changeRun(+1)" ngxMousetrapKey="right">→</kbd>
       <kbd
         *ngIf="showObservationConfigurations"
-        (click)="changeRun('previous', 'observationConfiguration'); setObservationConfiguration()"
+        (click)="changeRun(-1, 'observationConfiguration'); setObservationConfiguration()"
         ngxMousetrapKey="up"
         >↑</kbd
       >
       <kbd
         *ngIf="showObservationConfigurations"
-        (click)="changeRun('next', 'observationConfiguration'); setObservationConfiguration()"
+        (click)="changeRun(+1, 'observationConfiguration'); setObservationConfiguration()"
         ngxMousetrapKey="down"
         >↓</kbd
       >
