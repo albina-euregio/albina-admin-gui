@@ -5,6 +5,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import type { FilterSelectionData } from "./filter-selection-data";
 import type { FeatureProperties } from "../modelling/awsome.component";
+import { LatLngBounds } from "leaflet";
 
 @Injectable()
 export class ObservationFilterService<
@@ -19,6 +20,8 @@ export class ObservationFilterService<
   public regions = {} as Record<string, boolean>;
   public observationSources = {} as Record<ObservationSource, boolean>;
   public filterSelectionData: FilterSelectionData<T>[] = [];
+  // 45.0 < latitude && latitude < 48.0 && 9.0 < longitude && longitude < 13.5;
+  public mapBounds: LatLngBounds | undefined = new LatLngBounds({ lat: 45.0, lng: 9.0 }, { lat: 48.0, lng: 13.5 });
 
   set days(days: number) {
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
@@ -123,10 +126,10 @@ export class ObservationFilterService<
   }
 
   inMapBounds(latitude?: number, longitude?: number): boolean {
-    if (!latitude || !longitude) {
+    if (!this.mapBounds || !latitude || !longitude) {
       return true;
     }
-    return 45.0 < latitude && latitude < 48.0 && 9.0 < longitude && longitude < 13.5;
+    return this.mapBounds.contains({ lat: latitude, lng: longitude });
   }
 
   inRegions(region: string): boolean {

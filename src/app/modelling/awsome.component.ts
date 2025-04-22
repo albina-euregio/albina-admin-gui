@@ -14,7 +14,7 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup } from "leaflet";
+import { Control, ImageOverlay, LatLngBounds, LatLngBoundsLiteral, LayerGroup } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { NgxEchartsDirective } from "ngx-echarts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
@@ -89,6 +89,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
     const spec = this.config.filters as FilterSelectionSpec<FeatureProperties>[];
     this.filterService.filterSelectionData = spec.map((f) => new FilterSelectionData(f));
+    this.filterService.mapBounds = undefined;
 
     this.markerService.markerClassify = this.filterService.filterSelectionData.find(
       (f) => f.type === spec.find((f) => f.default === "classify")?.type,
