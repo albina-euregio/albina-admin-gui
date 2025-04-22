@@ -9,6 +9,7 @@ $border-color: darkgrey;
 .table-entry > div > span {
   flex: 1;
   text-align: center;
+  padding: 0 5px;
 }
 
 .text-center {
@@ -33,6 +34,7 @@ $border-color: darkgrey;
   border-collapse: separate;
   border-right: 1px solid black;
   border-left: 1px solid black;
+  width: fit-content;
 }
 
 .table td,

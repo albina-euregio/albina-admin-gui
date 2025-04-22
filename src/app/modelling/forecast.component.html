@@ -178,7 +178,12 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modalService.hide()"></button>
   </div>
 
-  <div class="modal-body" (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
+  <div
+    class="modal-body"
+    (touchstart)="swipe($event, 'start')"
+    (touchend)="swipe($event, 'end')"
+    style="align-self: center"
+  >
     <div *ngIf="selectedModelPoint && !observationPopupIframe">
       <img *ngIf="selectedModelPoint" [src]="selectedModelPoint.$externalURL" class="img-fluid" />
     </div>
@@ -206,7 +211,7 @@
         <tr>
           <th>{{ "qfa.day" | translate }}</th>
           <th *ngFor="let date of qfa.dates" class="text-center">
-            <span>
+            <span style="background-color: #60afff; padding: 0">
               {{ date }}
             </span>
           </th>
@@ -214,11 +219,11 @@
         <tr>
           <th>{{ "qfa.time" | translate }}</th>
           <th *ngFor="let _ of qfa.dates" class="table-entry">
-            <div>
-              <span>00</span>
-              <span>06</span>
-              <span>12</span>
-              <span>18</span>
+            <div style="padding: 0">
+              <span style="background-color: #60afff">00</span>
+              <span style="background-color: #60afff">06</span>
+              <span style="background-color: #60afff">12</span>
+              <span style="background-color: #60afff">18</span>
             </div>
           </th>
         </tr>
