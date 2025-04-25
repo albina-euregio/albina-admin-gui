@@ -280,7 +280,36 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     }
   }
 
+  getSubregions(region: string) {
+    return this.allRegions.filter((r) => r.id.startsWith(region) && r.id !== region);
+  }
+
   onRegionsDropdownSelect() {
+    this.mapService.clickRegion(this.selectedRegions);
+    this.applyFilter();
+  }
+
+  selectRegion(region: string) {
+    this.selectedRegions = {};
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.selectedRegions[r.id] = true;
+        }
+      });
+    }
+    this.mapService.clickRegion(this.selectedRegions);
+    this.applyFilter();
+  }
+
+  toggleRegion(event, region: string) {
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.selectedRegions[r.id] = event.target.checked;
+        }
+      });
+    }
     this.mapService.clickRegion(this.selectedRegions);
     this.applyFilter();
   }

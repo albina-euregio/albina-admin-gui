@@ -32,6 +32,35 @@
               </div>
             </div>
 
+            <div class="global-bar-item global-bar-item-region" style="width: 0; height: 0">
+              <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
+                <i class="ph ph-number-circle-zero"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('AT-07')"
+                [ngxMousetrapKey]="['r 1']"
+              >
+                <i class="ph ph-number-circle-one"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-BZ')"
+                [ngxMousetrapKey]="['r 2']"
+              >
+                <i class="ph ph-number-circle-two"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-TN')"
+                [ngxMousetrapKey]="['r 3']"
+              >
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+            </div>
             <div class="global-bar-item global-bar-item-region">
               <div class="dropdown">
                 <button
@@ -44,17 +73,31 @@
                   {{ "admin.observations.selectRegion.placeholder" | translate }}
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
-                  <div *ngFor="let region of allRegions" class="form-check">
+                  <div *ngFor="let superRegion of ['AT-07', 'IT-32-BZ', 'IT-32-TN']" class="form-check">
                     <label class="form-check-label text-nowrap">
                       <input
-                        [(ngModel)]="selectedRegions[region.id]"
+                        [(ngModel)]="selectedRegions[superRegion]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="onRegionsDropdownSelect()"
+                        (change)="toggleRegion($event, superRegion)"
                         type="checkbox"
                         class="form-check-input"
                       />
-                      {{ region.name }}
+                      {{ "bulletins.table.title.status." + superRegion | translate }}
                     </label>
+                    <div class="ms-3">
+                      <div *ngFor="let region of getSubregions(superRegion)" class="form-check">
+                        <label class="form-check-label text-nowrap">
+                          <input
+                            [(ngModel)]="selectedRegions[region.id]"
+                            [ngModelOptions]="{ standalone: true }"
+                            (change)="onRegionsDropdownSelect()"
+                            type="checkbox"
+                            class="form-check-input"
+                          />
+                          {{ region.name }}
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
