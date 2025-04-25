@@ -68,29 +68,6 @@ export class AlbinaObservationsService {
     const url = environment.apiBaseUrl + "../api_ext/observations";
     await this.http.delete(url, { body }).toPromise();
   }
-
-  getStatistics() {
-    if (!this.filter.startDate || !this.filter.endDate) {
-      return;
-    }
-    const url =
-      this.constantsService.getServerUrl() +
-      "observations/export?" +
-      this.constantsService
-        .createSearchParams([
-          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(this.filter.startDate)],
-          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(this.filter.endDate)],
-        ])
-        .toString();
-    const headers = new HttpHeaders({ Accept: "text/csv" });
-    this.http.get(url, { headers, responseType: "blob" }).subscribe((blob) => {
-      const startDate = this.constantsService.getISODateString(this.filter.startDate);
-      const endDate = this.constantsService.getISODateString(this.filter.endDate);
-      const filename = `observations_${startDate}_${endDate}.csv`;
-      saveAs(blob, filename);
-      console.log("Observations loaded.");
-    });
-  }
 }
 
 function getISOString(date: Date) {

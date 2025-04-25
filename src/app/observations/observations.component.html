@@ -205,11 +205,7 @@
                     <span>{{ "admin.observations.exportObservations" | translate }}</span>
                   </button>
 
-                  <button
-                    class="dropdown-item"
-                    (click)="observationsService.getStatistics(); dropdown.hide()"
-                    ngxMousetrapKey="s"
-                  >
+                  <button class="dropdown-item" (click)="exportStatistics(); dropdown.hide()" ngxMousetrapKey="s">
                     <i class="ph ph-trend-up"></i>
                     <span>{{ "admin.observations.exportStatistics" | translate }}</span>
                   </button>

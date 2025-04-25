@@ -106,6 +106,54 @@ export function toGeoJSON(observations: GenericObservation[]) {
   return collection;
 }
 
+export function toCSV(observations: GenericObservation[]) {
+  const csvDelimiter = ";";
+  const csvLineBreak = "\n";
+
+  // Sort observations by event date
+  observations.sort((a, b) => (a.eventDate?.getTime() || 0) - (b.eventDate?.getTime() || 0));
+
+  let csvContent = "";
+
+  // Add header
+  csvContent +=
+    [
+      "EventDate",
+      "EventTime",
+      "EventType",
+      "ReportDate",
+      "AuthorName",
+      "LocationName",
+      "Latitude",
+      "Longitude",
+      "Elevation",
+      "Aspect",
+      "Region",
+      "Content",
+    ].join(csvDelimiter) + csvLineBreak;
+
+  // Add rows
+  for (const observation of observations) {
+    csvContent +=
+      [
+        observation.eventDate?.toISOString().split("T")[0] || "",
+        observation.eventDate?.toISOString().split("T")[1]?.split(".")[0] || "",
+        observation.$type || "",
+        observation.reportDate?.toISOString() || "",
+        observation.authorName || "",
+        observation.locationName || "",
+        observation.latitude || "",
+        observation.longitude || "",
+        observation.elevation || "",
+        observation.aspect || "",
+        observation.region || "",
+        observation.content?.replace(/;/g, ",").replace(/\n/g, ", ") || "",
+      ].join(csvDelimiter) + csvLineBreak;
+  }
+
+  return csvContent;
+}
+
 export function degreeToAspect(degree: number): Aspect {
   const aspects = Object.values(Aspect);
   const n = (Math.round((degree * 8) / 360) + 8) % 8;

@@ -22,6 +22,7 @@ import {
   ObservationTableRow,
   ObservationType,
   toGeoJSON,
+  toCSV,
 } from "./models/generic-observation.model";
 import { saveAs } from "file-saver";
 import { ObservationGalleryComponent } from "./observation-gallery.component";
@@ -514,6 +515,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const json = JSON.stringify(collection, undefined, 2);
     const blob = new Blob([json], { type: "application/geo+json" });
     saveAs(blob, "observations.geojson");
+  }
+
+  exportStatistics() {
+    const csvContent = toCSV(this.data.observations.filtered);
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const startDate = this.filter.startDate
+      ? formatDate(this.filter.startDate, "yyyy-MM-dd", this.translateService.currentLang)
+      : "";
+    const endDate = this.filter.endDate
+      ? formatDate(this.filter.endDate, "yyyy-MM-dd", this.translateService.currentLang)
+      : "";
+    saveAs(blob, `observations_${startDate}_to_${endDate}.csv`);
   }
 
   applyLocalFilter(applyOnlyToObservations = false) {
