@@ -2,6 +2,32 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.13] - 2025-04-25
+
+### 🐛 Bug Fixes
+
+- CurrentAuthor is undefined
+- Allow null for enum types of matrix information
+- Remove latitude/longitude bounds filter in AWSOME dashboard
+- Continue if one source fails to load in AWSOME dashboard
+- Fetch bulletins from SLF for correct date
+- Fix CSV export for observations
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to zod 4.0.0-beta.20250420T053007
+
+### 🚜 Refactor
+
+- Use zod
+- Use Temporal
+
+### Observations
+
+- Add shortcuts to select the last 1 to 7 days
+- Add multi-level dropdown for region selection
+- Shrink and center QFA table
+
 ## [7.1.12] - 2025-04-17
 
 ### Bulletins
