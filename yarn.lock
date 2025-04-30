@@ -2925,6 +2925,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@protomaps/basemaps@npm:^5.0.0":
+  version: 5.3.0
+  resolution: "@protomaps/basemaps@npm:5.3.0"
+  checksum: 10c0/23edc517ebee224e0c7d585e6897bd55486ba3914cb1ac41904860f71b524f11f54de5698e2c9dcc8bee63c3f8638c9de3be1be783711a0f43eeaa4299f6dece
+  languageName: node
+  linkType: hard
+
 "@rollup/rollup-android-arm-eabi@npm:4.34.8":
   version: 4.34.8
   resolution: "@rollup/rollup-android-arm-eabi@npm:4.34.8"
@@ -3562,10 +3569,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/rbush@npm:*":
-  version: 3.0.3
-  resolution: "@types/rbush@npm:3.0.3"
-  checksum: 10c0/a0c2425eb9cb43f442ef48d9d0221c006e0f7303c35f97d443c9832e7c824572b7206a68f9ffe486ba0789cc19600732c3412729211f0c1a5058e7b3f0fd937d
+"@types/rbush@npm:*, @types/rbush@npm:^3.0.0":
+  version: 3.0.4
+  resolution: "@types/rbush@npm:3.0.4"
+  checksum: 10c0/430f60878b46feb68b2a50ddac684844ed895d73ada8932c421a2b8ef56cca8b9211109250d00a760a1f7a5c4ec6fb05992d1b235f3d48b5ba8528ec517c3861
   languageName: node
   linkType: hard
 
@@ -4119,7 +4126,7 @@ __metadata:
     ngx-echarts: "npm:^19.0.0"
     ngx-image-compress: "npm:^18.1.5"
     prettier: "npm:^3.4.2"
-    protomaps-leaflet: "npm:^4.0.1"
+    protomaps-leaflet: "npm:^5.0.0"
     rxjs: "npm:7.8.1"
     simple-statistics: "npm:^7.8.7"
     split.js: "npm:^1.6.5"
@@ -8476,19 +8483,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protomaps-leaflet@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "protomaps-leaflet@npm:4.0.1"
+"protomaps-leaflet@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "protomaps-leaflet@npm:5.0.0"
   dependencies:
     "@mapbox/point-geometry": "npm:^1.1.0"
     "@mapbox/vector-tile": "npm:^2.0.2"
+    "@protomaps/basemaps": "npm:^5.0.0"
     "@types/css-font-loading-module": "npm:^0.0.7"
+    "@types/rbush": "npm:^3.0.0"
     color2k: "npm:^2.0.3"
     pbf: "npm:^4.0.1"
     pmtiles: "npm:^3.0.7"
     potpack: "npm:^1.0.2"
     rbush: "npm:^3.0.1"
-  checksum: 10c0/33b89c6a99f8132431fbf90e3d7347a43d174f84b610d90f211bcce37bb786386e2baf1ad730ad0faba812436b39aae7ba1d88552f3d709a4e04b99e26442199
+  checksum: 10c0/3b62f5c9f74c6d3cef058e2947dd172837257fde8875337d0988c647cdef7f47b4c46a17681116d5325dbd072d91a4b889a74c93009df1de7f780f15b9e67e86
   languageName: node
   linkType: hard
 
