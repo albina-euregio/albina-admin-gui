@@ -94,10 +94,9 @@ export class MatrixParameterComponent implements OnInit {
     let avalancheType: Enums.AvalancheType | undefined;
 
     // DangerSourceVariantModel: avalancheType is a direct property
-    if ("avalancheType" in desc) {
+    if (desc && "avalancheType" in desc) {
       avalancheType = desc.avalancheType;
-    } else {
-      // BulletinDaytimeDescriptionModel: avalancheProblemN
+    } else if (desc) {
       let problem;
       switch (this.count()) {
         case 1:
@@ -119,6 +118,8 @@ export class MatrixParameterComponent implements OnInit {
           return 25;
       }
       avalancheType = problem?.avalancheType;
+    } else {
+      return 25;
     }
 
     if (avalancheType === Enums.AvalancheType.glide) {
@@ -189,10 +190,9 @@ export class MatrixParameterComponent implements OnInit {
     let avalancheType: Enums.AvalancheType | undefined;
 
     // DangerSourceVariantModel: avalancheType is a direct property
-    if ("avalancheType" in desc) {
+    if (desc && "avalancheType" in desc) {
       avalancheType = desc.avalancheType;
-    } else {
-      // BulletinDaytimeDescriptionModel: avalancheProblemN
+    } else if (desc) {
       let problem;
       switch (this.count()) {
         case 1:
@@ -214,6 +214,8 @@ export class MatrixParameterComponent implements OnInit {
           return 25;
       }
       avalancheType = problem?.avalancheType;
+    } else {
+      return 25;
     }
 
     if (avalancheType === Enums.AvalancheType.glide) {
