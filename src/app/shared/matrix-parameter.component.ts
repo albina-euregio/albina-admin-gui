@@ -36,7 +36,7 @@ export class MatrixParameterComponent implements OnInit {
   }
 
   snowpackStabilityOptions: SliderOptions = {
-    floor: this.getSnowpackStabilityFloorValue(),
+    floor: 25,
     ceil: 100,
     ticks: [25, 37, 50, 62, 75, 87, 100],
     getLegend: (value: number): string => {
@@ -89,50 +89,9 @@ export class MatrixParameterComponent implements OnInit {
     },
   };
 
-  private getSnowpackStabilityFloorValue(): number {
-    const desc = this.bulletinDaytimeDescription();
-    let avalancheType: Enums.AvalancheType | undefined;
-
-    // DangerSourceVariantModel: avalancheType is a direct property
-    if ("avalancheType" in desc) {
-      avalancheType = desc.avalancheType;
-    } else {
-      // BulletinDaytimeDescriptionModel: avalancheProblemN
-      let problem;
-      switch (this.count()) {
-        case 1:
-          problem = desc.avalancheProblem1;
-          break;
-        case 2:
-          problem = desc.avalancheProblem2;
-          break;
-        case 3:
-          problem = desc.avalancheProblem3;
-          break;
-        case 4:
-          problem = desc.avalancheProblem4;
-          break;
-        case 5:
-          problem = desc.avalancheProblem5;
-          break;
-        default:
-          return 25;
-      }
-      avalancheType = problem?.avalancheType;
-    }
-
-    if (avalancheType === Enums.AvalancheType.glide) {
-      return 75;
-    } else if (avalancheType === Enums.AvalancheType.loose) {
-      return 50;
-    } else {
-      return 25;
-    }
-  }
-
   frequencyOptions: SliderOptions = {
     floor: 25,
-    ceil: this.getFrequencyCeilValue(),
+    ceil: 100,
     ticks: [25, 37, 50, 62, 75, 87, 100],
     getLegend: (value: number): string => {
       switch (value) {
@@ -183,47 +142,6 @@ export class MatrixParameterComponent implements OnInit {
       this.changeMatrixEvent.emit();
     },
   };
-
-  private getFrequencyCeilValue(): number {
-    const desc = this.bulletinDaytimeDescription();
-    let avalancheType: Enums.AvalancheType | undefined;
-
-    // DangerSourceVariantModel: avalancheType is a direct property
-    if ("avalancheType" in desc) {
-      avalancheType = desc.avalancheType;
-    } else {
-      // BulletinDaytimeDescriptionModel: avalancheProblemN
-      let problem;
-      switch (this.count()) {
-        case 1:
-          problem = desc.avalancheProblem1;
-          break;
-        case 2:
-          problem = desc.avalancheProblem2;
-          break;
-        case 3:
-          problem = desc.avalancheProblem3;
-          break;
-        case 4:
-          problem = desc.avalancheProblem4;
-          break;
-        case 5:
-          problem = desc.avalancheProblem5;
-          break;
-        default:
-          return 25;
-      }
-      avalancheType = problem?.avalancheType;
-    }
-
-    if (avalancheType === Enums.AvalancheType.glide) {
-      return 75;
-    } else if (avalancheType === Enums.AvalancheType.loose) {
-      return 75;
-    } else {
-      return 100;
-    }
-  }
 
   avalancheSizeOptions: SliderOptions = {
     floor: 0,
