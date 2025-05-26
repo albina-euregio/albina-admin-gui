@@ -207,7 +207,7 @@ export class MapService {
     return new TileLayer("https://static.avalanche.report/tms/{z}/{x}/{y}.webp", {
       tms: false,
       attribution:
-        "© <a href='sonny.4lima.de'>Sonny</a>, CC BY 4.0 | © <a href='https://www.eea.europa.eu/en/datahub/datahubitem-view/d08852bc-7b5f-4835-a776-08362e2fbf4b'>EU-DEM</a>, CC BY 4.0 | © avalanche.report, CC BY 4.0",
+        "© <a href='https://sonny.4lima.de/'>Sonny</a>, CC BY 4.0 | © <a href='https://www.eea.europa.eu/en/datahub/datahubitem-view/d08852bc-7b5f-4835-a776-08362e2fbf4b'>EU-DEM</a>, CC BY 4.0 | © avalanche.report, CC BY 4.0",
       ...options,
     });
   }
@@ -260,6 +260,14 @@ export class MapService {
   // does not touch any other micro-region
   updateAggregatedRegion(mapObject: PolygonObject) {
     this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
+    this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+  }
+
+  updateAggregatedRegionAM(mapObject: PolygonObject) {
+    this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
+  }
+
+  updateAggregatedRegionPM(mapObject: PolygonObject) {
     this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
   }
 
@@ -337,7 +345,7 @@ export class MapService {
   updateEditSelection() {
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       if (entry.feature.properties.selected) {
-        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.5 });
+        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.2 });
       } else {
         entry.setStyle({ fillColor: "#000000", fillOpacity: 0.0 });
       }

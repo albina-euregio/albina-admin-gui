@@ -1,17 +1,16 @@
-import { augmentAndInsertObservation, createConnection, selectObservations } from "../db/database";
+import { ObservationDatabaseConnection } from "../db/database";
 import { type GenericObservation } from "../generic-observation";
 import { fetchLawisIncidents } from "./observations/lawis_incident";
 import { fetchLawisProfiles } from "./observations/lawis_profile";
 import { fetchLolaKronos } from "./observations/lola-kronos";
 import { fetchLwdKip } from "./observations/lwdkip";
-import { fetchSnowLineCalculations } from "./observations/snow_line";
 import { fetchWikiSnow } from "./observations/wikisnow";
 
 export async function fetchAndInsert(startDate: Date, endDate: Date) {
-  const connection = await createConnection();
-  const existing = await selectObservations(connection, startDate, endDate);
+  const connection = await ObservationDatabaseConnection.createConnection();
+  const existing = await connection.selectObservations(startDate, endDate);
   for await (const obs of fetchAll(startDate, endDate, existing)) {
-    await augmentAndInsertObservation(connection, obs, existing);
+    await connection.augmentAndInsertObservation(obs, existing);
   }
   connection.destroy();
 }
@@ -45,10 +44,5 @@ async function* fetchAll(
     yield* fetchWikiSnow(startDate, endDate);
   } catch (e) {
     console.warn("Failed to fetch wikisnow", e);
-  }
-  try {
-    yield* fetchSnowLineCalculations(startDate, endDate);
-  } catch (e) {
-    console.warn("Failed to fetch snowline calculations", e);
   }
 }

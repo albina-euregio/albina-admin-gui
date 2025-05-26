@@ -1,80 +1,15 @@
-import { Injectable, inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
-import { Observable } from "rxjs";
-
-export interface RegionConfiguration {
-  id: string;
-  microRegions: number;
-  subRegions: string[];
-  superRegions: string[];
-  neighborRegions: string[];
-  publishBulletins: boolean;
-  publishBlogs: boolean;
-  createCaamlV5: boolean;
-  createCaamlV6: boolean;
-  createJson: boolean;
-  createMaps: boolean;
-  createPdf: boolean;
-  sendEmails: boolean;
-  createSimpleHtml: boolean;
-  sendTelegramMessages: boolean;
-  sendPushNotifications: boolean;
-  enableMediaFile: boolean;
-  enableAvalancheProblemCornices: boolean;
-  enableAvalancheProblemNoDistinctAvalancheProblem: boolean;
-  enableDangerSources: boolean;
-  enableObservations: boolean;
-  enableModelling: boolean;
-  enableWeatherbox: boolean;
-  enableStrategicMindset: boolean;
-  enableStressLevel: boolean;
-  showMatrix: boolean;
-  serverInstance: ServerConfiguration;
-  pdfColor: string;
-  emailColor: string;
-  pdfMapYAmPm: number;
-  pdfMapYFd: number;
-  pdfMapWidthAmPm: number;
-  pdfMapWidthFd: number;
-  pdfMapHeight: number;
-  pdfFooterLogo: boolean;
-  pdfFooterLogoColorPath: string;
-  pdfFooterLogoBwPath: string;
-  mapXmax: number;
-  mapXmin: number;
-  mapYmax: number;
-  mapYmin: number;
-  simpleHtmlTemplateName: string;
-  geoDataDirectory: string;
-  mapLogoColorPath: string;
-  mapLogoBwPath: string;
-  mapLogoPosition: string;
-  mapCenterLat: number;
-  mapCenterLng: number;
-  imageColorbarColorPath: string;
-  imageColorbarBwPath: string;
-  isNew: boolean;
-}
-
-export interface ServerConfiguration {
-  id: string;
-  name: string;
-  apiUrl: string;
-  userName: string;
-  password: string;
-  externalServer: boolean;
-  publishAt5PM: boolean;
-  publishAt8AM: boolean;
-  pdfDirectory: string;
-  htmlDirectory: string;
-  mapsPath: string;
-  mediaPath: string;
-  mapProductionUrl: string;
-  serverImagesUrl: string;
-  isNew: boolean;
-}
+import { map, Observable } from "rxjs";
+import { RegionConfiguration } from "../../models/region-configuration.model";
+import {
+  ServerConfiguration,
+  ServerConfigurationSchema,
+  ServerConfigurationVersion,
+  ServerConfigurationVersionSchema,
+} from "../../models/server-configuration.model";
 
 @Injectable()
 export class ConfigurationService {
@@ -82,68 +17,52 @@ export class ConfigurationService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
-  public loadPublicLocalServerConfiguration(): Observable<ServerConfiguration & { version: string }> {
+  public loadPublicLocalServerConfiguration(): Observable<ServerConfigurationVersion> {
     const url = this.constantsService.getServerUrl() + "server/info";
-    return this.http.get<ServerConfiguration & { version: string }>(url);
+    return this.http.get(url).pipe(map((json) => ServerConfigurationVersionSchema.parse(json)));
   }
 
   public loadLocalServerConfiguration(): Observable<ServerConfiguration> {
     const url = this.constantsService.getServerUrl() + "server";
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<ServerConfiguration>(url, options);
+    return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.parse(json)));
   }
 
   public loadExternalServerConfigurations(): Observable<ServerConfiguration[]> {
     const url = this.constantsService.getServerUrl() + "server/external";
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<ServerConfiguration[]>(url, options);
+    return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.array().parse(json)));
   }
 
   public updateServerConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "server";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.put(url, body, options);
+    return this.http.put(url, body);
   }
 
   public createServerConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "server";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.post(url, body, options);
+    return this.http.post(url, body);
   }
 
   public loadRegionConfiguration(region): Observable<RegionConfiguration> {
     const url = this.constantsService.getServerUrl() + "regions/region?region=" + region;
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<RegionConfiguration>(url, options);
+    return this.http.get<RegionConfiguration>(url);
   }
 
   public loadRegionConfigurations(): Observable<RegionConfiguration[]> {
     const url = this.constantsService.getServerUrl() + "regions";
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.get<RegionConfiguration[]>(url, options);
+    return this.http.get<RegionConfiguration[]>(url);
   }
 
   public updateRegionConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "regions";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.put(url, body, options);
+    return this.http.put(url, body);
   }
 
   public createRegionConfiguration(json) {
     const url = this.constantsService.getServerUrl() + "regions";
     const body = JSON.stringify(json);
-    const options = { headers: this.authenticationService.newAuthHeader() };
-
-    return this.http.post(url, body, options);
+    return this.http.post(url, body);
   }
 }

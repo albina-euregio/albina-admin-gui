@@ -23,6 +23,7 @@ export function loadRegions() {
     import("@eaws/micro-regions/IT-34_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-36_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-57_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/CH_micro-regions.geojson.json"),
     import("@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json"),
     import("@eaws/micro-regions/SK_micro-regions.geojson.json"),
     import("@eaws/micro-regions/PL-12_micro-regions.geojson.json"),

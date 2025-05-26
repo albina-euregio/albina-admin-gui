@@ -14,6 +14,16 @@
                   data-bs-auto-close="outside"
                 >
                   {{ "admin.observations.selectSources.placeholder" | translate }}
+                  <div
+                    class="spinner-grow spinner-grow-sm text-success"
+                    [ngClass]="{
+                      'opacity-0': !loadingState,
+                      'text-success': loadingState === 'loading',
+                      'text-danger': loadingState === 'error',
+                    }"
+                    role="status"
+                    title="Loading"
+                  ></div>
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll">
                   <div *ngFor="let source of sources" class="form-check">
@@ -26,6 +36,18 @@
                         class="form-check-input"
                       />
                       {{ source.name }}
+                      <div
+                        *ngIf="source.$error"
+                        class="spinner-grow spinner-grow-sm text-danger"
+                        role="alert"
+                        [title]="source.$error | json"
+                      ></div>
+                      <div
+                        *ngIf="source.$loading"
+                        class="spinner-grow spinner-grow-sm text-success"
+                        role="status"
+                        title="Loading"
+                      ></div>
                     </label>
                   </div>
                 </form>
@@ -39,15 +61,36 @@
                   [step]="config.dateStepSeconds"
                   class="form-control"
                   [(ngModel)]="date"
+                  [min]="config.dateMin"
+                  [max]="config.dateMax"
                   (ngModelChange)="loadSources()"
                 />
-                <button class="btn btn-outline-secondary" (click)="switchDate(-1)">
+                <button
+                  class="btn btn-outline-secondary"
+                  (click)="switchDate(-1)"
+                  [disabled]="config.dateMin && nextDate(-1) < config.dateMin"
+                >
                   <i class="ph ph-caret-double-left"></i>
                 </button>
-                <button class="btn btn-outline-secondary" (click)="switchDate(+1)">
+                <button
+                  class="btn btn-outline-secondary"
+                  (click)="switchDate(+1)"
+                  [disabled]="config.dateMax && nextDate(+1) > config.dateMax"
+                >
                   <i class="ph ph-caret-double-right"></i>
                 </button>
               </div>
+            </div>
+
+            <div class="global-bar-item">
+              <a
+                href="https://gitlab.com/groups/avalanche-warning/-/wikis/home"
+                class="btn"
+                title="Help"
+                target="_blank"
+              >
+                <i class="ph ph-question-mark"></i>
+              </a>
             </div>
           </div>
         </div>
@@ -105,6 +148,14 @@
               [filterSelection]="filterSelection"
               (handleChange)="applyLocalFilter()"
             />
+            <div *ngIf="hazardChart" class="chart-container w3">
+              <div
+                echarts
+                (chartMouseOver)="chartMouseOver($event)"
+                (chartMouseOut)="chartMouseOut()"
+                [options]="hazardChart"
+              ></div>
+            </div>
           </div>
         </div>
       </div>

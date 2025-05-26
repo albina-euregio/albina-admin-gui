@@ -9,7 +9,7 @@
     </div>
     <accordion>
       <!-- Local server -->
-      <accordion-group *ngIf="localServerConfiguration">
+      <accordion-group *ngIf="localServerConfiguration" class="my-3">
         <div accordion-heading class="clearfix">
           <strong>{{ localServerConfiguration.name }}</strong>
         </div>
@@ -19,7 +19,7 @@
         ></app-server-configuration>
       </accordion-group>
       <!-- External servers -->
-      <accordion-group *ngFor="let config of externalServerConfigurations">
+      <accordion-group *ngFor="let config of externalServerConfigurations" class="my-3">
         <div accordion-heading class="clearfix">
           <strong>{{ config.name }}</strong>
         </div>

@@ -3,21 +3,21 @@
   <!-- !layout-inner -->
   <div class="layout-inner split">
     <!-- !layout-left -->
-    <div class="layout-left">
+    <div class="layout-left" style="min-width: 500px">
       <!-- !layout-global -->
       <div class="layout-global">
         <!-- !global-bar -->
         <div class="global-bar-scroll">
           <!-- !global-bar-left -->
-          <div class="global-bar global-bar-left">
+          <div class="global-bar global-bar-left" style="width: 100%">
             <div class="global-bar-item global-bar-item-load">
-              <button type="button" class="btn btn-bare" (click)="loadObservations()">
+              <button type="button" class="btn btn-bare" (click)="loadObservationsAndWeatherStations()">
                 <i *ngIf="!this.data.observations.loading" class="ph ph-arrows-clockwise"></i>
                 <i *ngIf="this.data.observations.loading" class="ph ph-circle-notch"></i>
               </button>
             </div>
 
-            <div class="global-bar-item global-bar-item-source">
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-source">
               <div class="dropdown">
                 <button
                   type="button"
@@ -45,7 +45,36 @@
               </div>
             </div>
 
-            <div class="global-bar-item global-bar-item-region">
+            <div class="global-bar-item global-bar-item-region" style="width: 0">
+              <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
+                <i class="ph ph-number-circle-zero"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('AT-07')"
+                [ngxMousetrapKey]="['r 1']"
+              >
+                <i class="ph ph-number-circle-one"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-BZ')"
+                [ngxMousetrapKey]="['r 2']"
+              >
+                <i class="ph ph-number-circle-two"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-TN')"
+                [ngxMousetrapKey]="['r 3']"
+              >
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+            </div>
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-region">
               <div class="dropdown">
                 <button
                   type="button"
@@ -57,40 +86,73 @@
                   {{ "admin.observations.selectRegion.placeholder" | translate }}
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
-                  <div *ngFor="let region of allRegions" class="form-check">
+                  <div *ngFor="let superRegion of ['AT-07', 'IT-32-BZ', 'IT-32-TN']" class="form-check">
                     <label class="form-check-label text-nowrap">
                       <input
-                        [(ngModel)]="filter.regions[region.id]"
+                        [(ngModel)]="filter.regions[superRegion]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="onRegionsDropdownSelect()"
+                        (change)="toggleRegion($event, superRegion)"
                         type="checkbox"
                         class="form-check-input"
                       />
-                      {{ region.name }}
+                      {{ "bulletins.table.title.status." + superRegion | translate }}
                     </label>
+                    <div class="ms-3">
+                      <div *ngFor="let region of getSubregions(superRegion)" class="form-check">
+                        <label class="form-check-label text-nowrap">
+                          <input
+                            [(ngModel)]="filter.regions[region.id]"
+                            [ngModelOptions]="{ standalone: true }"
+                            (change)="onRegionsDropdownSelect()"
+                            type="checkbox"
+                            class="form-check-input"
+                          />
+                          {{ region.name }}
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
             </div>
 
-            <div class="global-bar-item global-bar-item-calendar">
+            <div class="global-bar-item global-bar-item-calendar" style="width: 0">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(1)" [ngxMousetrapKey]="['d 1']">
+                <i class="ph ph-number-circle-zero"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(2)" [ngxMousetrapKey]="['d 2']">
+                <i class="ph ph-number-circle-one"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(3)" [ngxMousetrapKey]="['d 3']">
+                <i class="ph ph-number-circle-two"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(4)" [ngxMousetrapKey]="['d 4']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(5)" [ngxMousetrapKey]="['d 5']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(6)" [ngxMousetrapKey]="['d 6']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+              <button type="button" class="obs-button invisible" (click)="setDateRange(7)" [ngxMousetrapKey]="['d 7']">
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+            </div>
+            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-calendar">
               <input
                 class="form-control d-inline-block"
                 #drp="bsDaterangepicker"
                 bsDaterangepicker
                 [(ngModel)]="filter.dateRange"
-                (ngModelChange)="this.loadObservations()"
-                [bsConfig]="{ withTimepicker: true }"
+                (ngModelChange)="this.loadObservationsAndWeatherStations()"
+                [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true }"
                 [maxDate]="filter.dateRangeMaxDate"
               />
             </div>
-          </div>
-          <div class="global-bar-item">
-            <div class="input-group">
-              <span class="input-group-text">
-                <i class="ph ph-magnifying-glass"></i>
-              </span>
+            <div *ngIf="showSearchInput" class="input-group" style="width: 100%">
               <input
+                id="observationSearchInput"
                 type="text"
                 [(ngModel)]="observationSearch"
                 (change)="this.applyLocalFilter()"
@@ -104,6 +166,11 @@
           <!-- !global-bar-right -->
           <div class="global-bar global-bar-right">
             <div class="global-bar-item global-bar-item-add">
+              <button type="button" class="btn btn-bare" (click)="toggleSearchInput()" ngxMousetrapKey="shift+f">
+                <i class="ph ph-magnifying-glass"></i>
+              </button>
+            </div>
+            <div class="global-bar-item global-bar-item-add">
               <button
                 type="button"
                 (click)="newObservation()"
@@ -115,38 +182,35 @@
               </button>
             </div>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                (click)="exportObservations()"
-                class="btn btn-bare"
-                title="{{ 'admin.observations.exportObservations' | translate }}"
-              >
-                <i class="ph ph-download-simple"></i>
+            <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
+              <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle ngxMousetrapKey="o">
+                <i class="ph-bold ph-dots-three-outline-vertical"></i>
               </button>
-            </div>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                (click)="observationsService.getStatistics()"
-                class="btn btn-bare"
-                title="{{ 'menu.statistics' | translate }}"
-              >
-                <i class="ph ph-trend-up"></i>
-              </button>
-            </div>
+              <ul *bsDropdownMenu class="dropdown-menu dropdown-menu-right create-bulletin__region-dropdown">
+                <li>
+                  <button class="dropdown-item" (click)="this.layoutFilters = !this.layoutFilters; dropdown.hide()">
+                    <i class="ph ph-sidebar"></i>
+                    <span>{{ "admin.observations.toggleFilterBar" | translate }}</span>
+                  </button>
+                </li>
 
-            <div class="global-bar-item global-bar-item-load">
-              <button
-                type="button"
-                class="btn btn-bare"
-                (click)="this.layoutFilters = !this.layoutFilters"
-                title="{{ 'admin.observations.toggleFilterBar' | translate }}"
-              >
-                <i *ngIf="layoutFilters" class="ph ph-caret-right"></i>
-                <i *ngIf="!layoutFilters" class="ph ph-caret-left"></i>
-              </button>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+
+                <li>
+                  <button class="dropdown-item" (click)="exportObservations(); dropdown.hide()" ngxMousetrapKey="e">
+                    <i class="ph ph-download-simple"></i>
+                    <span>{{ "admin.observations.exportObservations" | translate }}</span>
+                  </button>
+
+                  <button class="dropdown-item" (click)="exportStatistics(); dropdown.hide()" ngxMousetrapKey="s">
+                    <i class="ph ph-trend-up"></i>
+                    <span>{{ "admin.observations.exportStatistics" | translate }}</span>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
           <!-- /global-bar-right -->
@@ -181,6 +245,16 @@
 
       <!-- !layout-map -->
       <div class="layout-map">
+        <!-- Filter Sidebar toggle icon -->
+        <button
+          type="button"
+          class="create-bulletin__sidebar-close-on-map"
+          (click)="this.layoutFilters = !this.layoutFilters"
+          title="{{ 'admin.observations.toggleFilterBar' | translate }}"
+          ngxMousetrapKey="s"
+        >
+          <i class="ph ph-sidebar"></i>
+        </button>
         <div class="section-map observations-map" id="observationsMap" #observationsMap></div>
       </div>
       <!-- /layout-map -->
@@ -192,6 +266,7 @@
           [class.is-active]="this.data.observations.show"
           (click)="this.data.observations.toggle(this.map)"
           title="{{ 'observations.layers.observations' | translate }}"
+          ngxMousetrapKey="1"
         >
           <i class="ph ph-circle" aria-hidden="true"></i>
         </div>
@@ -200,6 +275,7 @@
           [class.is-active]="this.data.webcams.show"
           (click)="this.data.webcams.toggle(this.map)"
           title="{{ 'observations.layers.webcams' | translate }}"
+          ngxMousetrapKey="2"
         >
           <i class="ph ph-webcam" aria-hidden="true"></i>
         </div>
@@ -208,6 +284,7 @@
           [class.is-active]="this.data.observers.show"
           (click)="this.data.observers.toggle(this.map)"
           title="{{ 'observations.layers.observers' | translate }}"
+          ngxMousetrapKey="3"
         >
           <i class="ph ph-eye" aria-hidden="true"></i>
         </div>
@@ -216,6 +293,7 @@
           [class.is-active]="this.data.weatherStations.show"
           (click)="this.data.weatherStations.toggle(this.map)"
           title="{{ 'observations.layers.weatherStations' | translate }}"
+          ngxMousetrapKey="4"
         >
           <i class="ph ph-chart-line" aria-hidden="true"></i>
         </div>
@@ -223,137 +301,30 @@
 
       <!-- !parameter-switch -->
       <div *ngIf="this.data.weatherStations.show && layout === 'map'" class="parameter-switch">
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowHeight'"
-          (click)="selectParameter('SnowHeight')"
-          title="{{ 'observations.weatherStations.tooltips.snowHeight' | translate }}"
+        <button
+          type="button"
+          class="obs-button invisible"
+          (click)="togglePreviousWeatherStationParameter()"
+          [ngxMousetrapKey]="['alt+up']"
         >
-          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
-        </div>
-        <!--
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference24h'"
-          (click)="selectParameter('SnowDifference24h')"
-          title="{{ 'observations.weatherStations.tooltips.snowDifference24h' | translate }}"
+          <i class="ph-bold ph-caret-up"></i>
+        </button>
+        <button
+          type="button"
+          class="obs-button invisible"
+          (click)="toggleNextWeatherStationParameter()"
+          [ngxMousetrapKey]="['alt+down']"
         >
-          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
-        </div>
+          <i class="ph-bold ph-caret-down"></i>
+        </button>
         <div
+          *ngFor="let parameter of markerWeatherStationService.allParameters"
           class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference48h'"
-          (click)="selectParameter('SnowDifference48h')"
-          title="{{ 'observations.weatherStations.tooltips.snowDifference48h' | translate }}"
+          [class.is-active]="markerWeatherStationService.weatherStationLabel === parameter"
+          (click)="selectParameter(parameter)"
+          title="{{ markerWeatherStationService.toLabelKey(parameter) | translate }}"
         >
-          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SnowDifference72h'"
-          (click)="selectParameter('SnowDifference72h')"
-          title="{{ 'observations.weatherStations.tooltips.snowDifference72h' | translate }}"
-        >
-          <i class="ph ph-arrows-vertical" aria-hidden="true"></i>
-        </div>
-        -->
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'AirTemperature'"
-          (click)="selectParameter('AirTemperature')"
-          title="{{ 'observations.weatherStations.tooltips.airTemperature' | translate }}"
-        >
-          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
-        </div>
-        <!--
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'AirTemperatureMax'"
-          (click)="selectParameter('AirTemperatureMax')"
-          title="{{ 'observations.weatherStations.tooltips.airTemperatureMax' | translate }}"
-        >
-          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'AirTemperatureMin'"
-          (click)="selectParameter('AirTemperatureMin')"
-          title="{{ 'observations.weatherStations.tooltips.airTemperatureMin' | translate }}"
-        >
-          <i class="ph ph-thermometer-simple" aria-hidden="true"></i>
-        </div>
-        -->
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SurfaceTemperature'"
-          (click)="selectParameter('SurfaceTemperature')"
-          title="{{ 'observations.weatherStations.tooltips.surfaceTemperature' | translate }}"
-        >
-          <i class="ph ph-thermometer-cold" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'DewPoint'"
-          (click)="selectParameter('DewPoint')"
-          title="{{ 'observations.weatherStations.tooltips.dewPoint' | translate }}"
-        >
-          <i class="ph ph-thermometer-hot" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SurfaceHoar'"
-          (click)="selectParameter('SurfaceHoar')"
-          title="{{ 'observations.weatherStations.tooltips.surfaceHoar' | translate }}"
-        >
-          <i class="ph ph-caret-down" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'SurfaceHoarCalc'"
-          (click)="selectParameter('SurfaceHoarCalc')"
-          title="{{ 'observations.weatherStations.tooltips.surfaceHoarCalc' | translate }}"
-        >
-          <i class="ph ph-caret-line-down" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'WindSpeed'"
-          (click)="selectParameter('WindSpeed')"
-          title="{{ 'observations.weatherStations.tooltips.windSpeed' | translate }}"
-        >
-          <i class="ph ph-wind" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'WindGust'"
-          (click)="selectParameter('WindGust')"
-          title="{{ 'observations.weatherStations.tooltips.windGust' | translate }}"
-        >
-          <i class="ph ph-tornado" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'WindDirection'"
-          (click)="selectParameter('WindDirection')"
-          title="{{ 'observations.weatherStations.tooltips.windDirection' | translate }}"
-        >
-          <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'RelativeHumidity'"
-          (click)="selectParameter('RelativeHumidity')"
-          title="{{ 'observations.weatherStations.tooltips.relativeHumidity' | translate }}"
-        >
-          <i class="ph ph-drop" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === 'GlobalRadiation'"
-          (click)="selectParameter('GlobalRadiation')"
-          title="{{ 'observations.weatherStations.tooltips.globalRadiation' | translate }}"
-        >
-          <i class="ph ph-sun" aria-hidden="true"></i>
+          <i [class]="markerWeatherStationService.toIcon(parameter)" aria-hidden="true"></i>
         </div>
       </div>
       <!-- /parameter-switch -->
@@ -387,7 +358,7 @@
               *ngFor="let filterSelection of filter.filterSelectionData"
               class="chart-container"
               [filterSelection]="filterSelection"
-              (handleChange)="applyLocalFilter()"
+              (handleChange)="applyLocalFilter(filterSelection.key !== 'elevation')"
             />
           </div>
           <!-- /toolset-charts -->
@@ -401,27 +372,42 @@
 
     <!-- !layout-switch -->
     <div class="layout-switch">
-      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
+      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button" ngxMousetrapKey="v m">
         <span class="button-icon ph ph-map-trifold"></span>
-        <span class="button-text">
+        <span class="button-text d-none d-lg-inline">
           {{ "admin.observations.map" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'table'" (click)="layout = 'table'" class="layout-switch-table obs-button">
+      <div
+        *ngIf="layout !== 'table'"
+        (click)="layout = 'table'"
+        class="layout-switch-table obs-button"
+        ngxMousetrapKey="v t"
+      >
         <span class="button-icon ph ph-list"></span>
-        <span class="button-text">
+        <span class="button-text d-none d-lg-inline">
           {{ "admin.observations.table" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
+      <div
+        *ngIf="layout !== 'chart'"
+        (click)="layout = 'chart'"
+        class="layout-switch-charts obs-button"
+        ngxMousetrapKey="v c"
+      >
         <span class="button-icon ph ph-chart-line"></span>
-        <span class="button-text">
+        <span class="button-text d-none d-lg-inline">
           {{ "admin.observations.charts.charts" | translate }}
         </span>
       </div>
-      <div *ngIf="layout !== 'gallery'" (click)="layout = 'gallery'" class="layout-switch-gallery obs-button">
+      <div
+        *ngIf="layout !== 'gallery'"
+        (click)="layout = 'gallery'"
+        class="layout-switch-gallery obs-button"
+        ngxMousetrapKey="v g"
+      >
         <span class="button-icon ph ph-images"></span>
-        <span class="button-text">
+        <span class="button-text d-none d-lg-inline">
           {{ "admin.observations.gallery" | translate }}
         </span>
       </div>
@@ -435,27 +421,21 @@
 <ng-template #observationPopupTemplate>
   <div class="modal-header">
     <div class="modal-title w-50">
-      <span
-        [style]="{ color: markerService.toMarkerColor(observationPopup?.observation) }"
-        [title]="observationPopup?.observation?.$source"
-        >█</span
-      >
+      {{ observationPopup?.observation?.$source }}
+      <span [style]="{ color: markerService.toMarkerColor(observationPopup?.observation) }">█</span>
       {{ observationPopup?.observation?.locationName }}
     </div>
     <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
       <kbd (click)="changeObservation(-1)" ngxMousetrapKey="left">←</kbd>
       <kbd (click)="changeObservation(+1)" ngxMousetrapKey="right">→</kbd>
       <kbd
-        *ngIf="observationPopup?.observation?.$externalImgs && observationPopup.imgIndex > 0"
+        *ngIf="observationPopup?.imgUrls?.length && observationPopup.imgIndex > 0"
         (click)="observationPopup.imgIndex = observationPopup.imgIndex - 1"
         ngxMousetrapKey="up"
         >↑</kbd
       >
       <kbd
-        *ngIf="
-          observationPopup?.observation?.$externalImgs &&
-          observationPopup?.observation?.$externalImgs.length > observationPopup.imgIndex + 1
-        "
+        *ngIf="observationPopup?.imgUrls?.length > observationPopup.imgIndex + 1"
         (click)="observationPopup.imgIndex = observationPopup.imgIndex + 1"
         ngxMousetrapKey="down"
         >↓</kbd
@@ -506,7 +486,11 @@
 
 <ng-template #observationEditorTemplate>
   <div class="modal-header">
-    <span class="modal-title">{{ observationEditor.observation?.locationName }}</span>
+    <span class="modal-title">
+      {{ observationEditor.observation?.$source }}
+      <span [style]="{ color: markerService.toMarkerColor(observationPopup?.observation) }">█</span>
+      {{ observationEditor.observation?.locationName }}
+    </span>
     <button type="button" class="btn-close" aria-label="Close" (click)="hideObservationEditor()"></button>
   </div>
   <div class="modal-body">
@@ -517,8 +501,8 @@
     <button
       type="button"
       [disabled]="
+        !observationEditor.observation?.$allowEdit ||
         observationEditor.saving ||
-        !observationEditor.observation?.reportDate ||
         !observationEditor.observation?.eventDate
       "
       (click)="saveObservation()"
@@ -530,7 +514,9 @@
     </button>
     <button
       type="button"
-      [disabled]="observationEditor.saving || !observationEditor.observation?.$id"
+      [disabled]="
+        !observationEditor.observation?.$allowEdit || observationEditor.saving || !observationEditor.observation?.$id
+      "
       (click)="deleteObservation()"
       class="btn btn-sm btn-danger"
     >

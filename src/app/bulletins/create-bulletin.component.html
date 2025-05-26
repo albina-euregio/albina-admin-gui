@@ -20,7 +20,6 @@
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey invisible"
             (click)="toggleNextBulletin()"
-            *ngIf="bulletinsService.getNextDate()"
             [ngxMousetrapKey]="['alt+down']"
           >
             <i class="ph-bold ph-caret-down"></i>
@@ -29,7 +28,6 @@
             type="button"
             class="btn btn-icon btn-sm btn-bare--grey invisible"
             (click)="togglePreviousBulletin()"
-            *ngIf="bulletinsService.getPreviousDate()"
             [ngxMousetrapKey]="['alt+up']"
           >
             <i class="ph-bold ph-caret-up"></i>
@@ -373,10 +371,44 @@
                   (click)="openMediaFileModal(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
-                  ngxMousetrapKey="u m"
+                  ngxMousetrapKey="m"
                 >
                   <i class="ph-bold ph-microphone icon-md"></i>
                   {{ "bulletins.tooltip.mediaFile" | translate }}
+                </button>
+              </li>
+
+              <!-- load suggestion from danger sources  -->
+              <li>
+                <button
+                  *ngIf="showLoadSuggestionFromDangerSourcesButton()"
+                  [disabled]="editRegions || loading"
+                  type="button"
+                  class="dropdown-item"
+                  (click)="loadSuggestionFromDangerSources()"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.tooltip.loadSuggestionFromDangerSources' | translate }}"
+                  ngxMousetrapKey="d"
+                >
+                  <i class="ph-bold ph-magic-wand icon-md"></i>
+                  {{ "bulletins.tooltip.loadSuggestionFromDangerSources" | translate }}
+                </button>
+              </li>
+
+              <!-- delete all warning regions  -->
+              <li>
+                <button
+                  *ngIf="showDeleteAllWarningRegionsButton()"
+                  [disabled]="editRegions || loading"
+                  type="button"
+                  class="dropdown-item"
+                  (click)="deleteAllWarningRegions()"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.tooltip.deleteAllWarningRegions' | translate }}"
+                  ngxMousetrapKey="del"
+                >
+                  <i class="ph-bold ph-trash icon-md"></i>
+                  {{ "bulletins.tooltip.deleteAllWarningRegions" | translate }}
                 </button>
               </li>
 
@@ -394,7 +426,7 @@
                   (click)="jsonBulletinUploader.click(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
-                  ngxMousetrapKey="u j"
+                  ngxMousetrapKey="j u"
                 >
                   <i class="ph-bold ph-upload-simple icon-md"></i>
                   {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
@@ -411,7 +443,7 @@
                   (click)="downloadJsonBulletin(); dropdown.hide()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.create.tooltip.downloadJsonBulletin' | translate }}"
-                  ngxMousetrapKey="d j"
+                  ngxMousetrapKey="j d"
                 >
                   <i class="ph-bold ph-download-simple icon-md"></i>
                   {{ "bulletins.create.tooltip.downloadJsonBulletin" | translate }}
@@ -432,6 +464,7 @@
                   (click)="showPublicationInfo()"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.info' | translate }}"
+                  ngxMousetrapKey="s"
                 >
                   <i class="ph-bold ph-info icon-md"></i>
                   {{ "bulletins.tooltip.info" | translate }}
@@ -446,12 +479,28 @@
                   [disabled]="editRegions || loading"
                   type="button"
                   class="dropdown-item"
-                  (click)="publishAll()"
+                  (click)="publishAll(false)"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.tooltip.publishAll' | translate }}"
+                  ngxMousetrapKey="p"
                 >
                   <i class="ph-bold ph-warning icon-md"></i>
                   {{ "bulletins.tooltip.publishAll" | translate }}
+                </button>
+              </li>
+              <li>
+                <button
+                  *ngIf="showPublishAllButton()"
+                  [disabled]="editRegions || loading"
+                  type="button"
+                  class="dropdown-item"
+                  (click)="publishAll(true)"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.tooltip.publishAllNoMessages' | translate }}"
+                  ngxMousetrapKey="p"
+                >
+                  <i class="ph-bold ph-warning icon-md"></i>
+                  {{ "bulletins.tooltip.publishAllNoMessages" | translate }}
                 </button>
               </li>
 
@@ -650,7 +699,7 @@
 <ng-template #bulletinTemplate let-bulletin="bulletin" let-key="key">
   <div
     (click)="toggleBulletin(bulletin)"
-    [ngxMousetrapKey]="key !== undefined ? ['ctrl+' + key, 'command+' + key] : []"
+    [ngxMousetrapKey]="key !== undefined ? ['shift+' + key] : []"
     class="region-thumb"
     [class.region-thumb--active]="bulletin === activeBulletin"
   >
@@ -664,10 +713,10 @@
           + {{ bulletin.getSavedAndPublishedRegions().length - 1 }}
         </span>
       </h6>
-      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.getAuthor().getName() }}</p>
+      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.author.name }}</p>
 
       <div
-        *ngIf="checkAvalancheProblem(bulletin)"
+        *ngIf="checkBulletin(bulletin)"
         class="region-thumb__avalanche-info text-danger"
         title="{{ 'bulletins.create.tooltip.incompleteAvalancheProblem' | translate }}"
       >
@@ -677,7 +726,7 @@
         }}</span>
       </div>
 
-      <div *ngIf="!checkAvalancheProblem(bulletin)" class="region-thumb__avalanche-info">
+      <div *ngIf="!checkBulletin(bulletin)" class="region-thumb__avalanche-info">
         <app-danger-rating-icon
           [hasElevationDependency]="bulletin.forenoon.hasElevationDependency"
           [dangerRatingAbove]="bulletin.forenoon.dangerRatingAbove"
@@ -789,7 +838,7 @@
 
       <button
         *ngIf="
-          bulletinsService.isLocked(bulletin?.getId()) ||
+          bulletinsService.isLocked(bulletin?.id) ||
           (bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin))
         "
         [disabled]="loading || editRegions"
@@ -808,6 +857,7 @@
         type="button"
         class="btn btn-bare btn-sm btn-icon"
         (click)="compareBulletin($event, bulletin)"
+        title="{{ 'bulletins.create.tooltip.compare' | translate }}"
       >
         <i class="ph ph-square-half"></i>
       </button>
@@ -847,6 +897,25 @@
     </button>
     <button type="button" class="btn btn-default" (click)="loadModalDecline($event)">
       {{ "bulletins.create.loadDialog.reject" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #deleteAllWarningRegionsTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.deleteAllWarningRegionsDialog.message" | translate }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="deleteAllWarningRegionsModalConfirm($event)"
+      ngxMousetrapKey="enter"
+    >
+      {{ "bulletins.create.deleteAllWarningRegionsDialog.accept" | translate }}
+    </button>
+    <button type="button" class="btn btn-default" (click)="deleteAllWarningRegionsModalDecline($event)">
+      {{ "bulletins.create.deleteAllWarningRegionsDialog.reject" | translate }}
     </button>
   </div>
 </ng-template>
@@ -1079,17 +1148,6 @@
 <ng-template #checkBulletinsErrorTemplate>
   <div class="modal-body text-center">
     <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">
-      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #publishAllTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.publishAllDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">

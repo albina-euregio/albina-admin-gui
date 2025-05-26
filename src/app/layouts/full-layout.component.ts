@@ -3,7 +3,6 @@ import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { RegionConfiguration } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
@@ -14,6 +13,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { NgIf, NgFor } from "@angular/common";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { RegionConfiguration } from "../models/region-configuration.model";
 
 @Component({
   selector: "app-dashboard",

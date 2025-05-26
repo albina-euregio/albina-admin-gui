@@ -3,7 +3,9 @@ import { GenericObservation, ObservationSource } from "./models/generic-observat
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
-import { FilterSelectionData, ValueType } from "./filter-selection-data";
+import type { FilterSelectionData } from "./filter-selection-data";
+import type { FeatureProperties } from "../modelling/awsome.component";
+import { LatLngBounds } from "leaflet";
 
 @Injectable()
 export class ObservationFilterService<
@@ -18,6 +20,8 @@ export class ObservationFilterService<
   public regions = {} as Record<string, boolean>;
   public observationSources = {} as Record<ObservationSource, boolean>;
   public filterSelectionData: FilterSelectionData<T>[] = [];
+  // 45.0 < latitude && latitude < 48.0 && 9.0 < longitude && longitude < 13.5;
+  public mapBounds: LatLngBounds | undefined = new LatLngBounds({ lat: 45.0, lng: 9.0 }, { lat: 48.0, lng: 13.5 });
 
   set days(days: number) {
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
@@ -25,6 +29,7 @@ export class ObservationFilterService<
     const newStartDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
     newStartDate.setDate(newStartDate.getDate() - (days - 1));
     newStartDate.setHours(0, 0, 0, 0);
+    if (!isTrainingEnabled) newEndDate.setHours(23, 59, 59, 0);
     this.dateRange = [newStartDate, newEndDate];
   }
 
@@ -32,29 +37,42 @@ export class ObservationFilterService<
     if (!this.startDate || !this.endDate) {
       return;
     }
+    // bsDaterangepicker overwrites the time for endDate with the time from startDate when selecting a new date range.
+    // To keep the time from the previous selection, we extract it from the query params.
+    const oldStartDate = this.parseQueryParams(this.activatedRoute.snapshot.queryParams)[0];
+    const oldEndDate = this.parseQueryParams(this.activatedRoute.snapshot.queryParams)[1];
+    if (
+      (oldEndDate &&
+        this.constantsService.getISODateString(oldEndDate) !== this.constantsService.getISODateString(this.endDate)) ||
+      (oldStartDate &&
+        this.constantsService.getISODateString(oldStartDate) !== this.constantsService.getISODateString(this.startDate))
+    ) {
+      this.endDate.setHours(oldEndDate.getHours(), oldEndDate.getMinutes(), oldEndDate.getSeconds());
+    }
+
     this.filterSelectionData.find((filter) => filter.key === "eventDate").setDateRange(this.startDate, this.endDate);
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
       queryParams: {
-        startDate: this.constantsService.getISODateString(this.startDate),
-        endDate: this.constantsService.getISODateString(this.endDate),
+        startDate: this.constantsService.getISODateTimeString(this.startDate),
+        endDate: this.constantsService.getISODateTimeString(this.endDate),
       },
       queryParamsHandling: "merge",
     });
   }
 
-  get dateRangeMaxDate(): Date | undefined {
+  get dateRangeMaxDate(): Date {
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
-    return isTrainingEnabled ? new Date(trainingTimestamp) : undefined;
+    return isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
   }
 
   parseActivatedRoute() {
-    this.activatedRoute.queryParams.subscribe((params) => this.parseQueryParams(params));
+    this.activatedRoute.queryParams.subscribe((params) => (this.dateRange = this.parseQueryParams(params)));
   }
 
-  private parseQueryParams({ startDate, endDate }: Params) {
+  private parseQueryParams({ startDate, endDate }: Params): Date[] {
     if (typeof startDate !== "string" || !startDate || typeof endDate !== "string" || !endDate) {
-      return;
+      return [];
     }
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
     // When the time zone offset is absent, date-only forms are interpreted as a UTC time and date-time forms are interpreted as a local time.
@@ -64,7 +82,7 @@ export class ObservationFilterService<
     if (!endDate.includes("T")) {
       endDate += "T23:59:59";
     }
-    this.dateRange = [new Date(startDate), new Date(endDate)];
+    return [new Date(startDate), new Date(endDate)];
   }
 
   get startDate(): Date {
@@ -91,8 +109,7 @@ export class ObservationFilterService<
     return (
       this.inObservationSources(observation.$source) &&
       this.inMapBounds(observation.latitude, observation.longitude) &&
-      this.inRegions(observation.region) &&
-      (observation.$source === ObservationSource.SnowLine ? this.isLastDayInDateRange(observation.eventDate) : true) &&
+      this.inRegions(observation.region ?? (observation as unknown as FeatureProperties).region_id) &&
       this.filterSelectionData.every((filter) => filter.isIncluded("selected", filter.getValue(observation)))
     );
   }
@@ -108,24 +125,11 @@ export class ObservationFilterService<
     return this.startDate <= eventDate && eventDate <= this.endDate;
   }
 
-  isLastDayInDateRange(eventDate: Date): boolean {
-    const selectedData: string[] = Array.from(
-      this.filterSelectionData.find((filter) => filter.key === "eventDate").selected,
-    )
-      .filter((element) => element !== "nan")
-      .sort();
-    if (selectedData.length < 1) {
-      return eventDate.getDate() === this.endDate.getDate();
-    } else {
-      return selectedData.indexOf(this.constantsService.getISODateString(eventDate)) === selectedData.length - 1;
-    }
-  }
-
   inMapBounds(latitude?: number, longitude?: number): boolean {
-    if (!latitude || !longitude) {
+    if (!this.mapBounds || !latitude || !longitude) {
       return true;
     }
-    return 45.0 < latitude && latitude < 48.0 && 9.0 < longitude && longitude < 13.5;
+    return this.mapBounds.contains({ lat: latitude, lng: longitude });
   }
 
   inRegions(region: string): boolean {

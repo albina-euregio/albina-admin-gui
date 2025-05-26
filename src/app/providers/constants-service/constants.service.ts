@@ -29,10 +29,10 @@ export class ConstantsService {
   public codeFriuliVeneziaGiulia = "IT-36";
   public codeMarche = "IT-57";
 
-  public roleAdmin = "ADMIN";
-  public roleForecaster = "FORECASTER";
-  public roleForeman = "FOREMAN";
-  public roleObserver = "OBSERVER";
+  public roleAdmin = Enums.UserRole.ADMIN;
+  public roleForecaster = Enums.UserRole.FORECASTER;
+  public roleForeman = Enums.UserRole.FOREMAN;
+  public roleObserver = Enums.UserRole.OBSERVER;
 
   // danger rating (color)
   public colorDangerRatingLow = "#CCFF66";
@@ -57,17 +57,19 @@ export class ConstantsService {
   public lineWeight = 0.5;
   public lineOpacity = 0.3;
 
-  public fillOpacityOwnSelected = 0.8;
+  public fillOpacityOwnSelected = 0.9;
   public fillOpacityOwnDeselected = 0.6;
-  public fillOpacityOwnSelectedSuggested = 0.8;
+  public fillOpacityOwnSelectedSuggested = 0.9;
   public fillOpacityOwnDeselectedSuggested = 0.6;
 
-  public fillOpacityForeignSelected = 0.8;
+  public fillOpacityForeignSelected = 0.9;
   public fillOpacityForeignDeselected = 0.3;
-  public fillOpacityForeignSelectedSuggested = 0.8;
+  public fillOpacityForeignSelectedSuggested = 0.9;
   public fillOpacityForeignDeselectedSuggested = 0.3;
 
-  public fillOpacityEditSelection = 0.4;
+  public fillOpacityEditSelection = 0.2;
+
+  public textcatLineBreak = '{"curlyName":"Zeilenumbruch01","line":0}';
 
   public avActivityCommentTextcat: Record<
     Exclude<Enums.AvalancheProblem, "cornices" | "no_distinct_avalanche_problem">,
@@ -160,11 +162,16 @@ export class ConstantsService {
   getISODateString(date: Date) {
     // like Date.toISOString(), but not using UTC
     // Angular is too slow - formatDate(date, "yyyy-MM-dd", "en-US");
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` as const;
+    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}` as const;
+  }
 
-    function pad(number: number) {
-      return number < 10 ? (`${0}${number}` as unknown as number) : number;
-    }
+  getISODateTimeString(date: Date) {
+    // like Date.toISOString(), but not using UTC
+    return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}T${this.pad(date.getHours())}:${this.pad(date.getMinutes())}` as const;
+  }
+
+  private pad(number: number) {
+    return number < 10 ? (`${0}${number}` as unknown as number) : number;
   }
 
   createSearchParams(params: [string, any][]): URLSearchParams {

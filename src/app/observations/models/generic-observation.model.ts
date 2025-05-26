@@ -2,31 +2,12 @@ import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../.
 import { z } from "zod";
 
 export enum ImportantObservation {
-  SnowLine = "SnowLine",
   SurfaceHoar = "SurfaceHoar",
   Graupel = "Graupel",
   StabilityTest = "StabilityTest",
   IceFormation = "IceFormation",
   VeryLightNewSnow = "VeryLightNewSnow",
-}
-
-export enum WeatherStationParameter {
-  GlobalRadiation = "GlobalRadiation",
-  SnowHeight = "SnowHeight",
-  SnowDifference24h = "SnowDifference24h",
-  SnowDifference48h = "SnowDifference48h",
-  SnowDifference72h = "SnowDifference72h",
-  AirTemperature = "AirTemperature",
-  AirTemperatureMax = "AirTemperatureMax",
-  AirTemperatureMin = "AirTemperatureMin",
-  SurfaceTemperature = "SurfaceTemperature",
-  SurfaceHoar = "SurfaceHoar",
-  SurfaceHoarCalc = "SurfaceHoarCalc",
-  DewPoint = "DewPoint",
-  RelativeHumidity = "RelativeHumidity",
-  WindDirection = "WindDirection",
-  WindSpeed = "WindSpeed",
-  WindGust = "WindGust",
+  ForBlog = "ForBlog",
 }
 
 export enum ObservationSource {
@@ -41,7 +22,6 @@ export enum ObservationSource {
   Panomax = "Panomax",
   RasBzIt = "RasBzIt",
   PanoCloud = "PanoCloud",
-  SnowLine = "SnowLine",
 }
 
 export enum ForecastSource {
@@ -61,6 +41,7 @@ export enum ObservationType {
   Profile = "Profile",
   TimeSeries = "TimeSeries",
   Webcam = "Webcam",
+  DrySnowfallLevel = "DrySnowfallLevel",
 }
 
 export enum PersonInvolvement {
@@ -125,6 +106,54 @@ export function toGeoJSON(observations: GenericObservation[]) {
   return collection;
 }
 
+export function toCSV(observations: GenericObservation[]) {
+  const csvDelimiter = ";";
+  const csvLineBreak = "\n";
+
+  // Sort observations by event date
+  observations.sort((a, b) => (a.eventDate?.getTime() || 0) - (b.eventDate?.getTime() || 0));
+
+  let csvContent = "";
+
+  // Add header
+  csvContent +=
+    [
+      "EventDate",
+      "EventTime",
+      "EventType",
+      "ReportDate",
+      "AuthorName",
+      "LocationName",
+      "Latitude",
+      "Longitude",
+      "Elevation",
+      "Aspect",
+      "Region",
+      "Content",
+    ].join(csvDelimiter) + csvLineBreak;
+
+  // Add rows
+  for (const observation of observations) {
+    csvContent +=
+      [
+        observation.eventDate?.toISOString().split("T")[0] || "",
+        observation.eventDate?.toISOString().split("T")[1]?.split(".")[0] || "",
+        observation.$type || "",
+        observation.reportDate?.toISOString() || "",
+        observation.authorName || "",
+        observation.locationName || "",
+        observation.latitude || "",
+        observation.longitude || "",
+        observation.elevation || "",
+        observation.aspect || "",
+        observation.region || "",
+        observation.content?.replace(/;/g, ",").replace(/\n/g, ", ") || "",
+      ].join(csvDelimiter) + csvLineBreak;
+  }
+
+  return csvContent;
+}
+
 export function degreeToAspect(degree: number): Aspect {
   const aspects = Object.values(Aspect);
   const n = (Math.round((degree * 8) / 360) + 8) % 8;
@@ -135,18 +164,18 @@ export function degreeToAspect(degree: number): Aspect {
 export const genericObservationSchema = z.object({
   $data: z.any().describe("Additional data (e.g. original data stored when fetching from external API)"),
   $id: z.string().optional().nullable().describe("External ID of this observations"),
+  $allowEdit: z.boolean().default(false),
+  $deleted: z.boolean().default(false),
   $externalURL: z.string().optional().nullable().describe("External URL to display as iframe"),
   $externalImgs: z.array(z.string()).optional().nullable().describe("External image to display as img"),
   stability: z
-    .nativeEnum(SnowpackStability)
+    .enum(SnowpackStability)
     .optional()
     .nullable()
     .describe("Snowpack stability that can be inferred from this observation"),
-  $source: z
-    .union([z.nativeEnum(ObservationSource), z.nativeEnum(ForecastSource)])
-    .describe("Source of this observation"),
-  $type: z.nativeEnum(ObservationType).describe("Type of this observation"),
-  aspect: z.nativeEnum(Aspect).optional().nullable().describe("Aspect corresponding with this observation"),
+  $source: z.union([z.enum(ObservationSource), z.enum(ForecastSource)]).describe("Source of this observation"),
+  $type: z.enum(ObservationType).describe("Type of this observation"),
+  aspect: z.enum(Aspect).optional().nullable().describe("Aspect corresponding with this observation"),
   authorName: z.string().optional().nullable().describe("Name of the author"),
   content: z.string().optional().nullable().describe("Free-text content"),
   elevation: z.number().optional().nullable().describe("Elevation in meters"),
@@ -158,22 +187,19 @@ export const genericObservationSchema = z.object({
   longitude: z.number().optional().nullable().describe("Location longitude (WGS 84)"),
   region: z.string().optional().nullable().describe("Micro-region code (computed from latitude/longitude)"),
   reportDate: z.coerce.date().optional().nullable().describe("Date when the observation has been reported"),
+  dangerSource: z.string().uuid().optional().nullable().describe("Danger source UUID"),
   avalancheProblems: z
-    .array(z.nativeEnum(AvalancheProblem))
+    .array(z.enum(AvalancheProblem))
     .optional()
     .nullable()
     .describe("Avalanche problem corresponding with this observation"),
   dangerPatterns: z
-    .array(z.nativeEnum(DangerPattern))
+    .array(z.enum(DangerPattern))
     .optional()
     .nullable()
     .describe("Danger pattern corresponding with this observation"),
-  importantObservations: z
-    .array(z.nativeEnum(ImportantObservation))
-    .optional()
-    .nullable()
-    .describe("Important observations"),
-  personInvolvement: z.nativeEnum(PersonInvolvement).optional().nullable().describe("Person involvement"),
+  importantObservations: z.array(z.enum(ImportantObservation)).optional().nullable().describe("Important observations"),
+  personInvolvement: z.enum(PersonInvolvement).optional().nullable().describe("Person involvement"),
 });
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });

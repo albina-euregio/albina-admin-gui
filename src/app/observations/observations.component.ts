@@ -7,6 +7,8 @@ import {
   TemplateRef,
   viewChild,
   inject,
+  ViewChild,
+  HostListener,
 } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -19,9 +21,8 @@ import {
   ObservationSource,
   ObservationTableRow,
   ObservationType,
-  PersonInvolvement,
   toGeoJSON,
-  WeatherStationParameter,
+  toCSV,
 } from "./models/generic-observation.model";
 import { saveAs } from "file-saver";
 import { ObservationGalleryComponent } from "./observation-gallery.component";
@@ -29,8 +30,8 @@ import { ObservationTableComponent } from "./observation-table.component";
 import { ObservationEditorComponent } from "./observation-editor.component";
 import { ObservationFilterService } from "./observation-filter.service";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { CommonModule } from "@angular/common";
-import { type Observable } from "rxjs";
+import { CommonModule, formatDate } from "@angular/common";
+import { type Observable, type Subscription } from "rxjs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ObservationChartComponent } from "./observation-chart.component";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
@@ -40,13 +41,21 @@ import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { FilterSelectionValue } from "./filter-selection-config";
 import { observationFilters } from "./filter-selection-data-data";
-import { ObservationMarkerWeatherStationService } from "./observation-marker-weather-station.service";
+import {
+  ObservationMarkerWeatherStationService,
+  WeatherStationParameter,
+} from "./observation-marker-weather-station.service";
 import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
 import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
 import Split from "split.js";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import orderBy from "lodash/orderBy";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 
 export interface MultiselectDropdownData {
   id: string;
@@ -54,7 +63,7 @@ export interface MultiselectDropdownData {
 }
 
 class ObservationData {
-  loading = false;
+  loading: Subscription | undefined = undefined;
   show = false;
   all = [] as GenericObservation[];
   filtered = [] as GenericObservation[];
@@ -62,7 +71,7 @@ class ObservationData {
 
   constructor(
     private onObservationClick: (observation: GenericObservation, doShow?: boolean) => void,
-    private filter: ObservationFilterService<any> | undefined,
+    private filter: ObservationFilterService<GenericObservation> | undefined,
     private markerService: {
       createMarker(observation: GenericObservation, isHighlighted?: boolean): Marker | undefined;
     },
@@ -81,13 +90,19 @@ class ObservationData {
   }
 
   async loadFrom(observable: Observable<GenericObservation>, observationSearch: string) {
-    this.loading = true;
     this.layer.clearLayers();
     this.all = [];
-    await observable.forEach((observation) => this.forEachObservation(observation)).catch((e) => console.error(e));
+    this.loading?.unsubscribe();
+    await new Promise<undefined>((resolve) => {
+      this.loading = observable.subscribe({
+        next: (observation) => this.forEachObservation(observation),
+        complete: () => resolve(undefined),
+        error: (e) => console.error(e),
+      });
+    });
     this.applyLocalFilter(observationSearch);
     this.all.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
-    this.loading = false;
+    this.loading = undefined;
   }
 
   forEachObservation(observation: GenericObservation) {
@@ -104,7 +119,7 @@ class ObservationData {
   applyLocalFilter(observationSearch: string) {
     this.layer.clearLayers();
     this.filtered = this.all
-      .filter((o) => this.filter.isHighlighted(o) || this.filter.isSelected(o))
+      .filter((o) => !this.filter || this.filter.isHighlighted(o) || this.filter.isSelected(o))
       .filter(
         (o) =>
           !observationSearch ||
@@ -114,7 +129,7 @@ class ObservationData {
       );
     this.filtered.forEach((observation) => {
       this.markerService
-        .createMarker(observation, this.filter.isHighlighted(observation))
+        .createMarker(observation, this.filter?.isHighlighted(observation))
         ?.on("click", () => this.onObservationClick(observation))
         ?.addTo(this.layer);
     });
@@ -127,6 +142,7 @@ class ObservationData {
   imports: [
     ObservationChartComponent,
     BsDatepickerModule,
+    BsDropdownModule,
     CommonModule,
     FormsModule,
     ObservationEditorComponent,
@@ -152,12 +168,17 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   protected observationsService = inject(AlbinaObservationsService);
   private sanitizer = inject(DomSanitizer);
   private regionsService = inject(RegionsService);
+  private dangerSourcesService = inject(DangerSourcesService);
+  private authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
 
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
   public observationSearch = "";
+  public showSearchInput = false;
+
+  @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
   public readonly data = {
     observations: new ObservationData(
@@ -200,7 +221,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     imgUrls: SafeResourceUrl[];
     imgIndex: number;
   };
-  public allRegions: RegionProperties[];
+  public allRegions: RegionProperties[] = [];
   public allSources: MultiselectDropdownData[];
   public observationEditor: {
     observation: GenericObservation;
@@ -216,7 +237,30 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   constructor() {
     this.filter.filterSelectionData = observationFilters((message) => this.translateService.instant(message));
     this.filter.parseActivatedRoute();
+    if (!this.filter.startDate || !this.filter.endDate) {
+      this.filter.days = 7;
+    }
     this.markerService.markerClassify = this.filter.filterSelectionData.find((filter) => filter.key === "stability");
+    this.loadDangerSources();
+  }
+
+  private loadDangerSources() {
+    const filter = this.filter.filterSelectionData.find((filter) => filter.key === "dangerSource");
+    if (!filter) return;
+    if (!this.authenticationService.getActiveRegion()?.enableDangerSources) {
+      this.filter.filterSelectionData = this.filter.filterSelectionData.filter((f) => f !== filter);
+      return;
+    }
+    this.dangerSourcesService.loadDangerSources([new Date(), new Date()], ["AT-07"]).subscribe((dangerSources) => {
+      const values: FilterSelectionValue[] = orderBy(dangerSources, (s) => s.creationDate).map((s) => ({
+        value: s.id,
+        color: "#000000",
+        label: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
+        legend: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
+      }));
+      filter.values.length = 0;
+      filter.values.push(...values);
+    });
   }
 
   async ngAfterContentInit() {
@@ -237,24 +281,23 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   async ngAfterViewInit() {
     await this.initMap();
-    Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
+    if (window.matchMedia("(min-width: 769px)").matches) {
+      Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
+    }
   }
 
-  loadObservations() {
+  async loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
-    return this.data.observations.loadFrom(this.observationsService.getGenericObservations(), this.observationSearch);
+    this.data.observations.loadFrom(this.observationsService.getGenericObservations(), this.observationSearch);
+    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
   }
 
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv().nativeElement);
 
     this.data.observations.toggle(this.map);
-    if (!this.filter.startDate || !this.filter.endDate) {
-      this.filter.days = 7;
-    }
-    this.loadObservations();
+    this.loadObservationsAndWeatherStations();
     this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
-    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
     this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
 
     map.on("click", () => {
@@ -284,19 +327,99 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   onSourcesDropdownSelect() {
+    this.applyLocalFilter(true);
+  }
+
+  toggleNextWeatherStationParameter() {
+    if (!this.markerWeatherStationService.weatherStationLabel) {
+      this.selectParameter(WeatherStationParameter.GlobalRadiation);
+    } else {
+      const parameters = Object.values(WeatherStationParameter);
+      const currentIndex = parameters.indexOf(this.markerWeatherStationService.weatherStationLabel);
+      const nextIndex = (currentIndex + 1) % parameters.length;
+      this.selectParameter(parameters[nextIndex]);
+    }
+  }
+
+  togglePreviousWeatherStationParameter() {
+    if (!this.markerWeatherStationService.weatherStationLabel) {
+      this.selectParameter(WeatherStationParameter.DrySnowfallLevel);
+    } else {
+      const parameters = Object.values(WeatherStationParameter);
+      const currentIndex = parameters.indexOf(this.markerWeatherStationService.weatherStationLabel);
+      const nextIndex = currentIndex == 0 ? parameters.length - 1 : (currentIndex - 1) % parameters.length;
+      this.selectParameter(parameters[nextIndex]);
+    }
+  }
+
+  getSubregions(region: string) {
+    return this.allRegions.filter((r) => r.id.startsWith(region) && r.id !== region);
+  }
+
+  selectRegion(region: string) {
+    this.filter.regions = {};
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.filter.regions[r.id] = true;
+        }
+      });
+    }
+    this.mapService.clickRegion(this.filter.regions);
     this.applyLocalFilter();
+  }
+
+  toggleRegion(event, region: string) {
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.filter.regions[r.id] = event.target.checked;
+        }
+      });
+    }
+    this.mapService.clickRegion(this.filter.regions);
+    this.applyLocalFilter();
+  }
+
+  setDateRange(days: number) {
+    this.filter.days = days;
+    this.loadObservationsAndWeatherStations();
+  }
+
+  toggleSearchInput() {
+    this.showSearchInput = !this.showSearchInput;
+    if (this.showSearchInput) {
+      setTimeout(() => {
+        const searchInput = document.getElementById("observationSearchInput") as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }, 0);
+    }
+  }
+
+  @HostListener("document:keydown.escape", ["$event"])
+  handleEscapeKey(event: KeyboardEvent) {
+    if (this.showSearchInput) {
+      this.toggleSearchInput();
+    }
   }
 
   newObservation() {
     const observation = {
       $source: ObservationSource.AvalancheWarningService,
       $type: ObservationType.SimpleObservation,
+      $allowEdit: true,
+      $data: {},
     } satisfies GenericObservation;
     this.observationEditor.observation = observation;
     this.showObservationEditor();
   }
 
   editObservation(observation: GenericObservation) {
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      observation.$allowEdit = true; // observations created by AWS are always editable
+    }
     this.observationEditor.observation = observation;
     this.showObservationEditor();
   }
@@ -314,15 +437,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   async saveObservation() {
     const { observation } = this.observationEditor;
-    if (observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown) {
-      observation.$type = ObservationType.Avalanche;
-    } else {
-      observation.$type = ObservationType.SimpleObservation;
-    }
     try {
       this.observationEditor.saving = true;
       await this.observationsService.postObservation(observation).toPromise();
-      this.loadObservations();
+      this.loadObservationsAndWeatherStations();
       this.hideObservationEditor();
     } catch (error) {
       this.reportError(error);
@@ -339,7 +457,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     try {
       this.observationEditor.saving = true;
       await this.observationsService.deleteObservation(observation);
-      this.loadObservations();
+      this.loadObservationsAndWeatherStations();
       this.hideObservationEditor();
     } catch (error) {
       this.reportError(error);
@@ -357,8 +475,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.observationEditor.messages.push(error.message);
   }
 
-  selectParameter(parameter0: keyof typeof WeatherStationParameter) {
-    const parameter = WeatherStationParameter[parameter0];
+  selectParameter(parameter: WeatherStationParameter) {
     if (this.markerWeatherStationService.weatherStationLabel === parameter) {
       this.markerWeatherStationService.weatherStationLabel = undefined;
     } else {
@@ -394,22 +511,54 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   exportObservations() {
-    const collection: GeoJSON.FeatureCollection = toGeoJSON(this.data.observations.all);
+    const collection: GeoJSON.FeatureCollection = toGeoJSON(this.data.observations.filtered);
     const json = JSON.stringify(collection, undefined, 2);
     const blob = new Blob([json], { type: "application/geo+json" });
     saveAs(blob, "observations.geojson");
   }
 
-  applyLocalFilter() {
-    Object.values(this.data).forEach((data) => data.applyLocalFilter(this.observationSearch));
+  exportStatistics() {
+    const csvContent = toCSV(this.data.observations.filtered);
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const startDate = this.filter.startDate
+      ? formatDate(this.filter.startDate, "yyyy-MM-dd", this.translateService.currentLang)
+      : "";
+    const endDate = this.filter.endDate
+      ? formatDate(this.filter.endDate, "yyyy-MM-dd", this.translateService.currentLang)
+      : "";
+    saveAs(blob, `observations_${startDate}_to_${endDate}.csv`);
+  }
+
+  applyLocalFilter(applyOnlyToObservations = false) {
+    this.data.weatherStations.all = orderBy(this.data.weatherStations.all, (s) => [
+      // make sure that changeObservation (or ←/→) selects a sensible previous/next station
+      this.$externalImgs(s),
+      s.region,
+      s.locationName,
+    ]);
+    // only apply filter to observations
+    if (applyOnlyToObservations) {
+      this.data.observations.applyLocalFilter(this.observationSearch);
+    } else {
+      Object.values(this.data).forEach((data) => data.applyLocalFilter(this.observationSearch));
+    }
+  }
+
+  private $externalImgs(observation: GenericObservation) {
+    if (!observation) return undefined;
+    return observation.$source === ObservationSource.AvalancheWarningService &&
+      observation.$type === ObservationType.TimeSeries
+      ? (this.markerWeatherStationService.toStatistics(observation)?.$externalImgs ?? observation.$externalImgs)
+      : observation.$externalImgs;
   }
 
   onObservationClick(observation: GenericObservation, doShow = true, imgIndex = 0): void {
+    const $externalImgs = this.$externalImgs(observation);
     if (observation.$externalURL) {
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe, imgUrls: undefined, imgIndex };
-    } else if (observation.$externalImgs) {
-      const imgUrls = observation.$externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
+    } else if ($externalImgs) {
+      const imgUrls = $externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
       this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls, imgIndex };
     } else {
       const table: ObservationTableRow[] = [
@@ -443,7 +592,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     if (change === 1) {
       index += 1;
-      while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
+      const $externalImgs = this.$externalImgs(observation);
+      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
         index += 1;
       }
       observation = observations[index];
@@ -452,7 +602,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       }
     } else if (change === -1) {
       index -= 1;
-      while (observation?.$externalImgs && observation.$externalImgs?.[0] === observations[index].$externalImgs?.[0]) {
+      const $externalImgs = this.$externalImgs(observation);
+      while ($externalImgs && $externalImgs?.[0] === this.$externalImgs(observations[index])?.[0]) {
         index -= 1;
       }
       observation = observations[index];

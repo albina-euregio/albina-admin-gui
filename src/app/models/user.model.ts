@@ -1,130 +1,21 @@
-export class UserModel {
-  public name: string;
-  public email: string;
-  public organization: string;
-  public image: string;
-  public password: string;
-  public roles: string[];
-  public regions: string[];
-  public languageCode: string;
+import * as Enums from "../enums/enums";
+import { z } from "zod";
 
-  constructor() {
-    this.name = undefined;
-    this.email = undefined;
-    this.organization = undefined;
-    this.roles = [];
-    this.image = undefined;
-    this.regions = [];
-    this.password = undefined;
-    this.languageCode = undefined;
-  }
+export const UserSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  organization: z.string().optional(),
+  image: z.string().optional(),
+  password: z.string().optional(),
+  roles: z
+    .enum(Enums.UserRole)
+    .array()
+    .default(() => []),
+  regions: z
+    .string()
+    .array()
+    .default(() => []),
+  languageCode: z.string().optional(),
+});
 
-  getName() {
-    return this.name;
-  }
-
-  setName(name) {
-    this.name = name;
-  }
-
-  getEmail() {
-    return this.email;
-  }
-
-  setEmail(email) {
-    this.email = email;
-  }
-
-  getOrganization() {
-    return this.organization;
-  }
-
-  setOrganization(organization) {
-    this.organization = organization;
-  }
-
-  getRoles(): string[] {
-    return this.roles;
-  }
-
-  setRoles(roles: string[]) {
-    this.roles = roles;
-  }
-
-  addRole(role: string) {
-    if (role !== undefined && role.length > 0) {
-      this.roles.push(role);
-    }
-  }
-
-  getImage() {
-    return this.image;
-  }
-
-  setImage(image) {
-    this.image = image;
-  }
-
-  getRegions(): string[] {
-    return this.regions;
-  }
-
-  setRegions(regions: string[]) {
-    this.regions = regions;
-  }
-
-  getPassword() {
-    return this.image;
-  }
-
-  setPassword(password) {
-    this.password = password;
-  }
-
-  getLanguageCode() {
-    return this.languageCode;
-  }
-
-  setLanguageCode(languageCode) {
-    this.languageCode = languageCode;
-  }
-
-  toJson() {
-    const json = Object();
-
-    if (this.image) {
-      json["image"] = this.image;
-    }
-    if (this.name) {
-      json["name"] = this.name;
-    }
-    if (this.email) {
-      json["email"] = this.email;
-    }
-    if (this.password) {
-      json["password"] = this.password;
-    }
-    if (this.organization) {
-      json["organization"] = this.organization;
-    }
-    if (this.regions && this.regions.length > 0) {
-      const regions = [];
-      for (let i = 0; i <= this.regions.length - 1; i++) {
-        regions.push(this.regions[i]);
-      }
-      json["regions"] = regions;
-    }
-    if (this.roles && this.roles.length > 0) {
-      const roles = [];
-      for (let i = 0; i <= this.roles.length - 1; i++) {
-        roles.push(this.roles[i]);
-      }
-      json["roles"] = roles;
-    }
-    if (this.languageCode) {
-      json["languageCode"] = this.languageCode;
-    }
-
-    return json;
-  }
-}
+export type UserModel = z.infer<typeof UserSchema>;

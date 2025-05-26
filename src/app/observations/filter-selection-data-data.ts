@@ -126,6 +126,12 @@ export function observationFilters(t: (message: string) => string): FilterSelect
           label: "⌇",
           legend: t("observationType.Profile"),
         },
+        {
+          value: ObservationType.DrySnowfallLevel,
+          color: "#a65628",
+          label: "💧",
+          legend: t("observationType.DrySnowfallLevel"),
+        },
       ],
     }),
     new FilterSelectionData<GenericObservation>({
@@ -136,12 +142,6 @@ export function observationFilters(t: (message: string) => string): FilterSelect
       chartRichLabel: "grainShape",
       values: [
         // https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=9
-        {
-          value: ImportantObservation.SnowLine,
-          color: "#e41a1c",
-          label: "S",
-          legend: t("importantObservation.SnowLine"),
-        },
         {
           value: ImportantObservation.SurfaceHoar,
           color: "#377eb8",
@@ -171,6 +171,12 @@ export function observationFilters(t: (message: string) => string): FilterSelect
           color: "#ffff33",
           label: "m",
           legend: t("importantObservation.VeryLightNewSnow"),
+        },
+        {
+          value: ImportantObservation.ForBlog,
+          color: "#f781bf",
+          label: "l",
+          legend: t("importantObservation.ForBlog"),
         },
       ],
     }),
@@ -284,6 +290,14 @@ export function observationFilters(t: (message: string) => string): FilterSelect
           legend: t("dangerPattern.dp10"),
         },
       ],
+    }),
+    new FilterSelectionData<GenericObservation>({
+      type: "DangerSource",
+      label: t("admin.observations.charts.dangerSource.caption"),
+      key: "dangerSource",
+      chartType: "bar",
+      chartRichLabel: "label",
+      values: [],
     }),
   ];
 }

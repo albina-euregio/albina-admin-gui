@@ -8,7 +8,7 @@
       </div>
     </div>
     <accordion *ngIf="configurationPropertiesLoaded">
-      <accordion-group *ngFor="let config of regionConfigurations">
+      <accordion-group *ngFor="let config of regionConfigurations" class="my-3">
         <div accordion-heading class="clearfix">
           <strong>{{ regionsService.getRegionName(config.id) }}</strong> ({{ config.id }})
         </div>

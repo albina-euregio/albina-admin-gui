@@ -2,56 +2,13 @@ export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"
 
 export type LangTexts = Record<(typeof LANGUAGES)[number], string>;
 
-export class TextModel {
-  public languageCode: string;
-  public text: string;
+export interface TextModel {
+  languageCode: string;
+  text: string;
+}
 
-  static createFromJson(json) {
-    const text = new TextModel();
-
-    text.setLanguageCode(json.languageCode);
-    text.setText(json.text);
-
-    return text;
-  }
-
-  constructor() {
-    this.languageCode = undefined;
-    this.text = undefined;
-  }
-
-  getLanguageCode(): string {
-    return this.languageCode;
-  }
-
-  setLanguageCode(languageCode: string) {
-    this.languageCode = languageCode;
-  }
-
-  getText(): string {
-    return this.text;
-  }
-
-  setText(text: string) {
-    this.text = text;
-  }
-
-  toJson() {
-    const json = Object();
-
-    if (this.languageCode) {
-      json["languageCode"] = this.languageCode;
-    }
-    if (this.text) {
-      json["text"] = this.text;
-    }
-
-    return json;
-  }
-
-  static toLangTexts(models: TextModel[]): LangTexts {
-    return Object.fromEntries(models.map((t) => [t.getLanguageCode(), t.getText()])) as LangTexts;
-  }
+export function toLangTexts(models: TextModel[]): LangTexts {
+  return Object.fromEntries(models.map((t) => [t.languageCode, t.text])) as LangTexts;
 }
 
 export function concatenateLangTexts(t1: LangTexts, t2: LangTexts): LangTexts {

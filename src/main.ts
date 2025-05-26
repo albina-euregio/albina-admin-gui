@@ -1,8 +1,7 @@
 import * as sentry from "@sentry/angular";
 
-import { NgxSliderModule } from "@angular-slider/ngx-slider";
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import localeCa from "@angular/common/locales/ca";
 import localeDe from "@angular/common/locales/de";
 import { default as localeEn, default as localeOc } from "@angular/common/locales/en";
@@ -25,12 +24,6 @@ import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
 import { GetDustParamService, GetFilenamesService, ParamService, QfaService } from "./app/modelling/qfa";
-import {
-  AlpsolutProfileService,
-  MeteogramSourceService,
-  MultimodelSourceService,
-  ObservedProfileSourceService,
-} from "./app/modelling/sources";
 import { GeocodingService } from "./app/observations/geocoding.service";
 import { ObservationFilterService } from "./app/observations/observation-filter.service";
 import { ObservationMarkerObserverService } from "./app/observations/observation-marker-observer.service";
@@ -39,6 +32,7 @@ import { ObservationMarkerWebcamService } from "./app/observations/observation-m
 import { ObservationMarkerService } from "./app/observations/observation-marker.service";
 import { AlbinaObservationsService } from "./app/observations/observations.service";
 import { AuthenticationService } from "./app/providers/authentication-service/authentication.service";
+import { httpHeaders } from "./app/providers/authentication-service/http-headers";
 import { BlogService } from "./app/providers/blog-service/blog.service";
 import { BulletinsService } from "./app/providers/bulletins-service/bulletins.service";
 import { ConfigurationService } from "./app/providers/configuration-service/configuration.service";
@@ -61,7 +55,7 @@ import routes from "./app/routes";
 import { environment } from "./environments/environment";
 import * as echarts from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
-import { BarChart, LineChart } from "echarts/charts";
+import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
   GridComponent,
@@ -81,6 +75,7 @@ echarts.use([
   LegendComponent,
   LineChart,
   PolarComponent,
+  ScatterChart,
   SingleAxisComponent,
   TitleComponent,
   TooltipComponent,
@@ -95,16 +90,11 @@ registerLocaleData(localeEs, "es");
 registerLocaleData(localeCa, "ca");
 registerLocaleData(localeOc, "oc");
 
-if (environment.sentryDSN) {
-  sentry.init({ dsn: environment.sentryDSN });
-}
-
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     importProvidersFrom(
       BrowserModule,
-      NgxSliderModule,
       BsDropdownModule.forRoot(),
       CollapseModule.forRoot(),
       TabsModule.forRoot(),
@@ -118,15 +108,7 @@ bootstrapApplication(AppComponent, {
       provide: LocationStrategy,
       useClass: HashLocationStrategy,
     },
-    {
-      provide: ErrorHandler,
-      useValue: sentry.createErrorHandler({
-        logErrors: true,
-        showDialog: true,
-      }),
-    },
     AlbinaObservationsService,
-    AlpsolutProfileService,
     AuthenticationService,
     AuthGuard,
     BaseMapService,
@@ -151,14 +133,11 @@ bootstrapApplication(AppComponent, {
     LocalStorageService,
     MapService,
     MediaFileService,
-    MeteogramSourceService,
-    MultimodelSourceService,
     ObservationFilterService,
     ObservationMarkerService,
     ObservationMarkerObserverService,
     ObservationMarkerWeatherStationService,
     ObservationMarkerWebcamService,
-    ObservedProfileSourceService,
     ParamService,
     provideEchartsCore({ echarts }),
     QfaService,
@@ -170,7 +149,7 @@ bootstrapApplication(AppComponent, {
     WsBulletinService,
     WsRegionService,
     WsUpdateService,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([httpHeaders])),
     provideAnimations(),
   ],
 });

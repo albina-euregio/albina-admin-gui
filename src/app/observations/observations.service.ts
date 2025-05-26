@@ -1,5 +1,5 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { GenericObservation } from "./models/generic-observation.model";
@@ -38,8 +38,7 @@ export class AlbinaObservationsService {
   }
 
   private getGenericObservations0(url: string, params = {}): Observable<GenericObservation> {
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<GenericObservation[]>(url, { headers, params }).pipe(
+    return this.http.get<GenericObservation[]>(url, { params }).pipe(
       mergeAll(),
       map((o) => ({
         ...o,
@@ -52,9 +51,7 @@ export class AlbinaObservationsService {
   postObservation(observation: GenericObservation): Observable<GenericObservation> {
     const body = this.serializeObservation(observation);
     const url = environment.apiBaseUrl + "../api_ext/observations";
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers };
-    return this.http.post<GenericObservation>(url, body, options);
+    return this.http.post<GenericObservation>(url, body);
   }
 
   private serializeObservation(observation: GenericObservation) {
@@ -69,32 +66,7 @@ export class AlbinaObservationsService {
   async deleteObservation(observation: GenericObservation): Promise<void> {
     const body = this.serializeObservation(observation);
     const url = environment.apiBaseUrl + "../api_ext/observations";
-    const headers = this.authenticationService.newAuthHeader();
-    const options = { headers, body };
-    await this.http.delete(url, options).toPromise();
-  }
-
-  getStatistics() {
-    if (!this.filter.startDate || !this.filter.endDate) {
-      return;
-    }
-    const url =
-      this.constantsService.getServerUrl() +
-      "observations/export?" +
-      this.constantsService
-        .createSearchParams([
-          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(this.filter.startDate)],
-          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(this.filter.endDate)],
-        ])
-        .toString();
-    const headers = this.authenticationService.newAuthHeader("text/csv");
-    this.http.get(url, { headers: headers, responseType: "blob" }).subscribe((blob) => {
-      const startDate = this.constantsService.getISODateString(this.filter.startDate);
-      const endDate = this.constantsService.getISODateString(this.filter.endDate);
-      const filename = `observations_${startDate}_${endDate}.csv`;
-      saveAs(blob, filename);
-      console.log("Observations loaded.");
-    });
+    await this.http.delete(url, { body }).toPromise();
   }
 }
 

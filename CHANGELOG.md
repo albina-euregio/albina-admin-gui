@@ -2,6 +2,256 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [7.1.13] - 2025-04-25
+
+### 🐛 Bug Fixes
+
+- CurrentAuthor is undefined
+- Allow null for enum types of matrix information
+- Remove latitude/longitude bounds filter in AWSOME dashboard
+- Continue if one source fails to load in AWSOME dashboard
+- Fetch bulletins from SLF for correct date
+- Fix CSV export for observations
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to zod 4.0.0-beta.20250420T053007
+
+### 🚜 Refactor
+
+- Use zod
+- Use Temporal
+
+### Observations
+
+- Add shortcuts to select the last 1 to 7 days
+- Add multi-level dropdown for region selection
+- Shrink and center QFA table
+
+## [7.1.12] - 2025-04-17
+
+### Bulletins
+
+- Fetch bulletins for SLF
+
+### ⚙️ Miscellaneous Tasks
+
+- Upgrade to zod 4.0.0-beta
+- Upgrade to Yarn 4.9.1
+
+## [7.1.11] - 2025-04-09
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to echarts 5.6.0
+- Sort list of users alphabetically by name
+
+### Bulletins
+
+- Check bulletins for complete translations
+- Allow to publish all regions without messages (admin)
+
+### Observations
+
+- Calc surface hoar probability for weather stations
+- Add shortcuts to navigate through time for webcams
+- Show smaller thumbnails of webcams, adopt to screen width
+- Detect changes in daterange
+- Improve color and label for relative humidity
+- Add shortcuts for observations page
+- Toggle filter sidebar with button in map
+- Add button to show/hide sidebar in menu
+- Move download buttons in dropdown menu
+- Apply filter only to observations
+- Style search field
+
+### Danger Sources
+
+- Add danger source to filter on observation page if danger sources are enabled for the region
+- Create avActivityComment texts from danger source variants
+- Expand and improve danger source variant parameters
+
+## [7.1.10] - 2025-03-18
+
+### 🐛 Bug Fixes
+
+- Fix typo in method to check avalanche problems for completeness
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to angular 19.2.1
+- Update eaws-regions to v7.0.7
+
+### Bulletins
+
+- Allow to delete all bulletins of one day at once
+
+### Observations
+
+- Add filter for danger sources
+- Allow to connect observation to danger source
+- Allow to show old plots for dry snowfall level with arrow keys
+
+### Danger Sources
+
+- Add statistics download
+- Improve visualization of variants in list view
+- Add keyboard shortcuts
+- Create bulletins from danger sources
+- Show danger ratings on AM and PM map
+
+## [7.1.9] - 2025-03-03
+
+### Bulletins
+
+- Fix load from yesterday when a cross-border region is present
+
+### AWSOME Dashboard
+
+- Image overlays
+- Parse awsome.config using zod
+
+### Observations
+
+- Improve Dry snowfall level as weather-station parameter
+- Dialog: make report date not mandatory
+
+### 🐛 Bug Fixes
+
+### Danger Sources
+
+- Add aspects and avalanche problem to list view
+- Add average snow height for gliding snow
+- Add danger sign fresh avalanches
+- Add enum for crusts
+- Add surface hoar formation process
+- Add terrain types
+- Align buttons for terrain features
+- Count only analyzed variants if analysis is available
+
+## [7.1.8] - 2025-02-17
+
+### Observations
+
+- Dry snowfall level as weather-station parameter (max between startDate and endDate)
+
+### 🐛 Bug Fixes
+
+- Add X-Client-Version header to HTTP requests (only for our server; fixes CORS problems for external servers)
+
+## [7.1.7] - 2025-02-17
+
+### Bulletins
+
+- Show if danger rating was overridden
+
+### Observations
+
+- Add DrySnowfallLevel as observation type
+- Show calculated DrySnowfallLevel as weather stations parameter
+
+### 🐛 Bug Fixes
+
+- Set correct status for bulletins
+- Fix HTTP 415 error while upload of media file
+
+### 🚜 Refactor
+
+- Replace ngx-slider with range
+- Add X-Client-Version header to HTTP requests
+
+## [7.1.6] - 2025-02-10
+
+### 🚀 Features
+
+- Sync accordion for compared bulletins
+- Add Klausberg webcams via it-wms.com
+- Document deployment of observation-api
+- Add server config for elevation dependent danger level
+
+### 🐛 Bug Fixes
+
+- Do not show loading error for HTTP 304 not modified
+- Set correct status and publication infos text
+- Unsubscribe from pending requests
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to Astro 5.1.5
+- Update eaws-regions to v7.0.6
+- Update to angular 19.1.3
+- Update ngx-slider to v19
+
+## [7.1.5] - 2025-01-09
+
+### 🐛 Bug Fixes
+
+- Remove css before and after for global-bar-scroll
+
+## [7.1.4] - 2025-01-08
+
+### Observations
+
+- Allow to edit/augment any observation
+- Add category forBlog to observations
+- Implement weather station aggregation
+- Export filtered observations
+
+### Forecasts
+
+- Add weather map image overlays
+
+### 🐛 Bug Fixes
+
+- Observation charts on mobile
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to leaflet-control-geocoder 3.0.1
+
+## [7.1.3] - 2024-12-17
+
+### Bulletins
+
+- Change region by clicking on the region name in the overview table
+- Fix a bug where audio files could not be uploaded from mobile devices (file type filter)
+- Switch previous/next date buttons in the editing view for bulletins
+
+## [7.1.2] - 2024-12-16
+
+### Observations
+
+- The search field is now displayed in the toolbar for both the table and map view.
+- externalURL as editable component for observations
+- Bugfix: Lola-kronos stability test category
+- Bugfix: Display observations where region is absent
+
+### Stress Level
+
+- Show stress level graph only for members of the same region
+
+### Keyboard Shortcuts
+
+- Improve keyboard shortcuts for bulletins and add shortcut creating new observations
+
+### Miscellaneous
+
+- Update to ngx-bootstrap 19.0.0
+- Update eaws-regions to v7.0.5
+
+## [7.1.1] - 2024-12-10
+
+### Bulletins
+
+- Simplify save operation for dangerPattern
+- LoadExternalBulletins according to latest validity.
+  This allows bulletins from e.g. AINEVA to be correctly loaded, even though they do not use the 5pm validity.
+
+### Observations
+
+- Categorize new observations as 'Avalanche' based on PersonInvolvement
+- Automatically parse Leitstelle Tirol codes for PersonInvolvement
+
 ## [7.1.0] - 2024-12-08
 
 ### Bulletins

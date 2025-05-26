@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -65,6 +65,22 @@ export class DangerSourcesService {
     );
   }
 
+  hasDangerSourceVariants(date: [Date, Date]): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      this.getStatus(this.authenticationService.getActiveRegionId(), date, date).subscribe({
+        next: (data) => {
+          observer.next(data[0].forecast || data[0].analysis);
+          observer.complete();
+        },
+        error: () => {
+          console.error("Danger source variants status could not be loaded!");
+          observer.next(false);
+          observer.complete();
+        },
+      });
+    });
+  }
+
   getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
     const url =
       this.constantsService.getServerUrl() +
@@ -76,8 +92,7 @@ export class DangerSourcesService {
           ["region", region],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get(url, { headers });
+    return this.http.get(url);
   }
 
   getActiveDate(): [Date, Date] {
@@ -160,19 +175,17 @@ export class DangerSourcesService {
       "danger-sources?" +
       this.constantsService
         .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["date", date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : ""],
           ["regions", regions],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<DangerSourceModel[]>(url, { headers });
+    return this.http.get<DangerSourceModel[]>(url);
   }
 
   updateDangerSource(dangerSource: DangerSourceModel) {
     const url = this.constantsService.getServerUrl() + "danger-sources/" + dangerSource.id;
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSource);
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 
   loadDangerSourceVariants(
@@ -204,8 +217,7 @@ export class DangerSourcesService {
           ])
           .toString();
     }
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<DangerSourceVariantModel[]>(url, { headers });
+    return this.http.get<DangerSourceVariantModel[]>(url);
   }
 
   createDangerSourceVariant(
@@ -221,9 +233,8 @@ export class DangerSourcesService {
           ["region", this.authenticationService.getActiveRegionId()],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSourceVariant);
-    return this.http.put<DangerSourceVariantModel[]>(url, body, { headers });
+    return this.http.put<DangerSourceVariantModel[]>(url, body);
   }
 
   updateDangerSourceVariant(
@@ -240,9 +251,8 @@ export class DangerSourcesService {
         ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
         ["region", this.authenticationService.getActiveRegionId()],
       ]);
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(dangerSourceVariant);
-    return this.http.post<DangerSourceVariantModel[]>(url, body, { headers });
+    return this.http.post<DangerSourceVariantModel[]>(url, body);
   }
 
   deleteDangerSourceVariant(
@@ -261,8 +271,7 @@ export class DangerSourcesService {
           ["region", this.authenticationService.getActiveRegionId()],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.delete<DangerSourceVariantModel[]>(url, { headers });
+    return this.http.delete<DangerSourceVariantModel[]>(url);
   }
 
   saveVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
@@ -275,8 +284,7 @@ export class DangerSourcesService {
           ["region", this.authenticationService.getActiveRegionId()],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(variants);
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 }

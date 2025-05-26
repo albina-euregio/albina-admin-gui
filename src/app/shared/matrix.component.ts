@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnChanges, SimpleChange, input, viewChild, inject } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, inject, input, OnChanges, SimpleChange, viewChild } from "@angular/core";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -93,18 +93,18 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   private selectCell(cell) {
-    this.matrixInformation().setDangerRating(this.getDangerRating(cell));
-    this.matrixInformation().setAvalancheSize(this.getAvalancheSize(cell));
-    this.matrixInformation().setSnowpackStability(this.getSnowpackStability(cell));
-    this.matrixInformation().setFrequency(this.getFrequency(cell));
+    this.matrixInformation().dangerRating = this.getDangerRating(cell);
+    this.matrixInformation().avalancheSize = this.getAvalancheSize(cell);
+    this.matrixInformation().snowpackStability = this.getSnowpackStability(cell);
+    this.matrixInformation().frequency = this.getFrequency(cell);
     this.setCellStyleActive(cell);
   }
 
   private deselectCell(cell) {
-    this.matrixInformation().setDangerRating(this.getDangerRating(Enums.DangerRating.missing));
-    this.matrixInformation().setAvalancheSize(undefined);
-    this.matrixInformation().setSnowpackStability(undefined);
-    this.matrixInformation().setFrequency(undefined);
+    this.matrixInformation().dangerRating = this.getDangerRating(Enums.DangerRating.missing);
+    this.matrixInformation().avalancheSize = undefined;
+    this.matrixInformation().snowpackStability = undefined;
+    this.matrixInformation().frequency = undefined;
     this.setCellStyleInactive(cell);
   }
 
@@ -399,7 +399,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     let frequencyFactor = 0;
     let avalancheSizeFactor = 0;
 
-    switch (matrixInformation.getSnowpackStability()) {
+    switch (matrixInformation.snowpackStability) {
       case Enums.SnowpackStability.very_poor:
         snowpackStabilityFactor = 0;
         break;
@@ -415,7 +415,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         return "0";
     }
 
-    switch (matrixInformation.getFrequency()) {
+    switch (matrixInformation.frequency) {
       case Enums.Frequency.many:
         frequencyFactor = 0;
         break;
@@ -431,7 +431,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         return "0";
     }
 
-    switch (matrixInformation.getAvalancheSize()) {
+    switch (matrixInformation.avalancheSize) {
       case Enums.AvalancheSize.extreme:
         avalancheSizeFactor = 1;
         break;

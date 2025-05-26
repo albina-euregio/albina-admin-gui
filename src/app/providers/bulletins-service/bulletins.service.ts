@@ -1,5 +1,5 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -8,13 +8,19 @@ import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
+import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
 import * as Enums from "../../enums/enums";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
-import { DateIsoString } from "app/models/stress-level.model";
+import { StressLevel } from "app/models/stress-level.model";
 import { UserService } from "../user-service/user.service";
 import { TranslateService } from "@ngx-translate/core";
 
 class TrainingModeError extends Error {}
+
+interface AccordionChangeEvent {
+  isOpen: boolean;
+  groupName: string;
+}
 
 @Injectable()
 export class BulletinsService {
@@ -34,11 +40,14 @@ export class BulletinsService {
   public lockedBulletins: Map<string, BulletinLockModel>;
   public bulletinLocks: Subject<BulletinLockModel>;
 
-  public stress: Record<DateIsoString, number> = {};
+  public stress: Record<StressLevel["date"], StressLevel["stressLevel"]> = {};
 
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
 
   public dates: [Date, Date][];
+
+  private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
+  accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
 
   init({ days } = { days: 10 }) {
     this.dates = [];
@@ -241,7 +250,7 @@ export class BulletinsService {
           ["lang", this.translateService.currentLang],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader("application/pdf");
+    const headers = new HttpHeaders({ Accept: "application/pdf" });
     return this.http.post(url, body, { headers, responseType: "blob" });
   }
 
@@ -270,8 +279,7 @@ export class BulletinsService {
           ["region", region],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get<any>(url, { headers });
+    return this.http.get<any>(url);
   }
 
   getPublicationStatus(region: string, date: [Date, Date]) {
@@ -284,8 +292,7 @@ export class BulletinsService {
           ["region", region],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get(url, { headers });
+    return this.http.get(url);
   }
 
   loadBulletins(
@@ -314,18 +321,23 @@ export class BulletinsService {
           ["regions", regions],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    if (etag) headers.set("If-None-Match", etag);
+    const headers = etag ? new HttpHeaders({ "If-None-Match": etag }) : undefined;
     return this.http
       .get<BulletinModelAsJSON[]>(url, { headers, observe: "response" })
       .pipe(map((response) => ({ bulletins: response.body, etag: response.headers.get("ETag") })));
   }
 
-  loadExternalBulletins([date0]: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
+  loadExternalBulletins([date0, date1]: [Date, Date], server: ServerModel): Observable<BulletinModelAsJSON[]> {
     if (this.localStorageService.isTrainingEnabled) {
       return of([]);
     }
-    const headers = this.authenticationService.newExternalServerAuthHeader(server);
+    const headers = new HttpHeaders({ Authorization: "Bearer " + server.accessToken });
+    if (server.apiUrl.includes("/api/bulletin-preview/caaml/")) {
+      const params = { activeAt: new Date(+date0 / 2 + +date1 / 2).toISOString() };
+      return this.http
+        .get<Bulletins>(server.apiUrl, { headers, params })
+        .pipe(map((data) => data.bulletins.map((b) => toAlbinaBulletin(b))));
+    }
     return this.http.get<{ date: string }>(server.apiUrl + "bulletins/latest", { headers }).pipe(
       switchMap((latest) => {
         const date = new Date(date0);
@@ -359,7 +371,7 @@ export class BulletinsService {
           ["lang", this.translateService.currentLang],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader("application/xml");
+    const headers = new HttpHeaders({ Accept: "application/xml" });
     return this.http.get(url, { headers, responseType: "text" });
   }
 
@@ -373,8 +385,7 @@ export class BulletinsService {
       this.constantsService
         .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get(url, { headers });
+    return this.http.get(url);
   }
 
   saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
@@ -392,13 +403,12 @@ export class BulletinsService {
           ["region", this.authenticationService.getActiveRegionId()],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const jsonBulletins = [];
     for (let i = bulletins.length - 1; i >= 0; i--) {
       jsonBulletins.push(bulletins[i].toJson());
     }
     const body = JSON.stringify(jsonBulletins);
-    return this.http.post<BulletinModelAsJSON[]>(url, body, { headers });
+    return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
 
   createBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
@@ -418,9 +428,8 @@ export class BulletinsService {
           ["region", this.authenticationService.getActiveRegionId()],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(bulletin.toJson());
-    return this.http.put<BulletinModelAsJSON[]>(url, body, { headers });
+    return this.http.put<BulletinModelAsJSON[]>(url, body);
   }
 
   updateBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
@@ -434,7 +443,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
-      bulletin.getId() +
+      bulletin.id +
       "?" +
       this.constantsService
         .createSearchParams([
@@ -442,9 +451,8 @@ export class BulletinsService {
           ["region", this.authenticationService.getActiveRegionId()],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify(bulletin.toJson());
-    return this.http.post<BulletinModelAsJSON[]>(url, body, { headers });
+    return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
 
   deleteBulletin(bulletin: BulletinModel, date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
@@ -458,7 +466,7 @@ export class BulletinsService {
     const url =
       this.constantsService.getServerUrl() +
       "bulletins/" +
-      bulletin.getId() +
+      bulletin.id +
       "?" +
       this.constantsService
         .createSearchParams([
@@ -466,8 +474,7 @@ export class BulletinsService {
           ["region", this.authenticationService.getActiveRegionId()],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.delete<BulletinModelAsJSON[]>(url, { headers });
+    return this.http.delete<BulletinModelAsJSON[]>(url);
   }
 
   submitBulletins(date: [Date, Date], region: string) {
@@ -483,9 +490,8 @@ export class BulletinsService {
           ["region", region],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post<void>(url, body, { headers });
+    return this.http.post<void>(url, body);
   }
 
   publishBulletins(date: [Date, Date], region: string) {
@@ -501,9 +507,8 @@ export class BulletinsService {
           ["region", region],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post<void>(url, body, { headers });
+    return this.http.post<void>(url, body);
   }
 
   changeBulletins(date: [Date, Date], region: string) {
@@ -519,13 +524,12 @@ export class BulletinsService {
           ["region", region],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const jsonBulletins = [];
     const body = JSON.stringify(jsonBulletins);
-    return this.http.post<void>(url, body, { headers });
+    return this.http.post<void>(url, body);
   }
 
-  publishAllBulletins(date: [Date, Date]) {
+  publishAllBulletins(date: [Date, Date], change: boolean) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
@@ -533,11 +537,13 @@ export class BulletinsService {
       this.constantsService.getServerUrl() +
       "bulletins/publish/all?" +
       this.constantsService
-        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
+        .createSearchParams([
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+          ["change", change],
+        ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post<void>(url, body, { headers });
+    return this.http.post<void>(url, body);
   }
 
   sendEmail(date: [Date, Date], region: string, language: string) {
@@ -567,9 +573,8 @@ export class BulletinsService {
           ])
           .toString();
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 
   sendTestEmail(date: [Date, Date], region: string, language: string) {
@@ -599,9 +604,8 @@ export class BulletinsService {
           ])
           .toString();
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 
   triggerTelegramChannel(date: [Date, Date], region: string, language: string) {
@@ -631,9 +635,8 @@ export class BulletinsService {
           ])
           .toString();
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 
   triggerTestTelegramChannel(date: [Date, Date], region: string, language: string) {
@@ -663,9 +666,8 @@ export class BulletinsService {
           ])
           .toString();
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 
   triggerPushNotifications(date: [Date, Date], region: string, language: string) {
@@ -695,9 +697,8 @@ export class BulletinsService {
           ])
           .toString();
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 
   triggerTestPushNotifications(date: [Date, Date], region: string, language: string) {
@@ -727,9 +728,8 @@ export class BulletinsService {
           ])
           .toString();
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    return this.http.post(url, body, { headers });
+    return this.http.post(url, body);
   }
 
   checkBulletins(date: [Date, Date], region: string) {
@@ -745,15 +745,13 @@ export class BulletinsService {
           ["region", region],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader();
-    return this.http.get(url, { headers });
+    return this.http.get(url);
   }
 
   loadLockedBulletins() {
     this.lockedBulletins.clear();
     const url = this.constantsService.getServerUrl() + "bulletins/locked";
-    const headers = this.authenticationService.newAuthHeader();
-    this.http.get(url, { headers }).subscribe(
+    this.http.get(url).subscribe(
       (data) => {
         for (const response of data as any) {
           const data = JSON.parse(response.data);
@@ -768,13 +766,10 @@ export class BulletinsService {
   }
 
   isLocked(bulletinId: string) {
-    if (
+    return (
       this.lockedBulletins.has(bulletinId) &&
       this.lockedBulletins.get(bulletinId).getUserEmail() !== this.authenticationService.getEmail()
-    ) {
-      return true;
-    }
-    return false;
+    );
   }
 
   lockBulletin(date: [Date, Date], bulletinId: string) {
@@ -819,7 +814,7 @@ export class BulletinsService {
     }
   }
 
-  getStressLevelColor(date: DateIsoString) {
+  getStressLevelColor(date: StressLevel["date"]) {
     const stress0 = this.stress[date];
     return !stress0
       ? this.constantsService.colorDangerRatingMissing
@@ -832,7 +827,7 @@ export class BulletinsService {
             : this.constantsService.colorDangerRatingHigh;
   }
 
-  getStressLevelIcon(date: DateIsoString) {
+  getStressLevelIcon(date: StressLevel["date"]) {
     const stress0 = this.stress[date];
     return stress0 < 25
       ? "ph-smiley"
@@ -843,5 +838,9 @@ export class BulletinsService {
           : stress0 <= 100
             ? "ph-smiley-x-eyes"
             : "ph-circle-dashed";
+  }
+
+  emitAccordionChanged(event: AccordionChangeEvent) {
+    this.accordionChangedSubject.next(event);
   }
 }

@@ -26,6 +26,7 @@ import {
   MeteogramSourceService,
   MultimodelSourceService,
   ObservedProfileSourceService,
+  ZamgMeteoSourceService,
 } from "./sources";
 import type { ModellingRouteData } from "./routes";
 import "bootstrap";
@@ -41,6 +42,13 @@ export interface MultiselectDropdownData {
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, KeyValuePipe, KeyValuePipe, TranslateModule, NgxMousetrapDirective],
+  providers: [
+    AlpsolutProfileService,
+    MeteogramSourceService,
+    MultimodelSourceService,
+    ObservedProfileSourceService,
+    ZamgMeteoSourceService,
+  ],
   templateUrl: "./forecast.component.html",
   styleUrls: ["./qfa/qfa.component.scss", "./qfa/qfa.table.scss", "./qfa/qfa.params.scss"],
 })
@@ -52,9 +60,10 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private meteogramSource = inject(MeteogramSourceService);
   private observedProfileSource = inject(ObservedProfileSourceService);
   private alpsolutProfileSource = inject(AlpsolutProfileService);
+  zamgMeteoSourceService = inject(ZamgMeteoSourceService);
   private qfaService = inject(QfaService);
   paramService = inject(ParamService);
-  private translateService = inject(TranslateService);
+  translateService = inject(TranslateService);
   modalService = inject(BsModalService);
 
   readonly mapLayer = new LayerGroup();
@@ -77,7 +86,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   public allSources: MultiselectDropdownData[] = [];
 
-  public allRegions: RegionProperties[];
+  public allRegions: RegionProperties[] = [];
   private regionalMarkers = {};
 
   private swipeCoord?: [number, number];
@@ -146,6 +155,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
               },
             ]
           : [];
+    this.selectedSources = Object.fromEntries(this.allSources.map((s) => [s.id, true]));
 
     this.modelPoints = [];
     this.loading = true;
@@ -270,7 +280,36 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     }
   }
 
+  getSubregions(region: string) {
+    return this.allRegions.filter((r) => r.id.startsWith(region) && r.id !== region);
+  }
+
   onRegionsDropdownSelect() {
+    this.mapService.clickRegion(this.selectedRegions);
+    this.applyFilter();
+  }
+
+  selectRegion(region: string) {
+    this.selectedRegions = {};
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.selectedRegions[r.id] = true;
+        }
+      });
+    }
+    this.mapService.clickRegion(this.selectedRegions);
+    this.applyFilter();
+  }
+
+  toggleRegion(event, region: string) {
+    if (region) {
+      this.allRegions.forEach((r) => {
+        if (r.id.startsWith(region)) {
+          this.selectedRegions[r.id] = event.target.checked;
+        }
+      });
+    }
     this.mapService.clickRegion(this.selectedRegions);
     this.applyFilter();
   }
@@ -311,34 +350,22 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
         Math.abs(direction[0]) > Math.abs(direction[1] * 3)
       ) {
         // Horizontal enough
-        const swipe = direction[0] < 0 ? "next" : "previous";
+        const swipe = direction[0] < 0 ? +1 : -1;
         // Do whatever you want with swipe
         this.changeRun(swipe);
       }
     }
   }
 
-  changeRun(type: "next" | "previous", changeType: "" | "observationConfiguration" = "") {
+  changeRun(type: -1 | 1, changeType: "" | "observationConfiguration" = "") {
     if (changeType === "observationConfiguration") {
       const configurations = [...this.observationConfigurations];
       const index = configurations.indexOf(this.observationConfiguration);
-      if (type === "next") {
-        const newIndex = index + 1 < configurations.length - 1 ? index + 1 : 0;
-        this.observationConfiguration = configurations[newIndex];
-      } else if (type === "previous") {
-        const newIndex = index === 0 ? configurations.length - 1 : index - 1;
-        this.observationConfiguration = configurations[newIndex];
-      }
+      this.observationConfiguration = configurations.at((index + type) % configurations.length);
     } else if (this.selectedModelType === "qfa") {
       const filenames = this.files[this.selectedCity].map((file) => file.filename);
       const index = filenames.indexOf(this.qfa.file.filename);
-      if (type === "next") {
-        const newIndex = index + 1 < filenames.length - 1 ? index + 1 : 0;
-        this.setQfa(filenames[newIndex], 0);
-      } else if (type === "previous") {
-        const newIndex = index === 0 ? filenames.length - 1 : index - 1;
-        this.setQfa(filenames[newIndex], 0);
-      }
+      this.setQfa(filenames.at((index + type) % filenames.length), 0);
     } else if (this.selectedModelPoint) {
       let points = this.dropDownOptions[this.selectedModelType];
       if (this.showObservationConfigurations && this.observationConfiguration) {
@@ -349,13 +376,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       const index = points.findIndex(
         (p) => p.region === this.selectedModelPoint.region && p.locationName === this.selectedModelPoint.locationName,
       );
-      if (type === "next") {
-        const newIndex = index + 1 < points.length - 1 ? index + 1 : 0;
-        this.selectedModelPoint = points[newIndex];
-      } else if (type === "previous") {
-        const newIndex = index === 0 ? points.length - 1 : index - 1;
-        this.selectedModelPoint = points[newIndex];
-      }
+      this.selectedModelPoint = points.at((index + type) % points.length);
     }
   }
 

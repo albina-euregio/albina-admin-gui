@@ -112,11 +112,13 @@
       "title": {
         "avalanche": "Allau",
         "matrix": "Matriu",
-        "characteristics": "Característiques"
+        "characteristics": "Característiques",
+        "comment": "Comentari"
       },
       "label": {
         "glidingSnowActivity": "Gliding snow activity",
         "snowHeight": "Snow height",
+        "snowHeightAverage": "Average snow height",
         "zeroDegreeIsotherm": "0°C isotherm",
         "looseSnowMoisture": "Loose snow moisture",
         "looseSnowGrainShape": "Loose snow grain shape",
@@ -150,9 +152,32 @@
         "dangerSigns": "Danger signs",
         "aspects": "Orientacions"
       },
-      "editDangerSourceDialog": {
+      "editVariantDialog": {
         "save": "Desar",
         "cancel": "Cancel·lar"
+      },
+      "deleteVariantDialog": {
+        "message": "Do you want to delete this variant?",
+        "accept": "Si",
+        "reject": "No"
+      },
+      "noRegionDialog": {
+        "message": "At least one micro-region has to be yours.",
+        "accept": "D'acord"
+      },
+      "discardDialog": {
+        "message": "Vols descartar els canvis?",
+        "accept": "Si",
+        "reject": "No"
+      },
+      "saveErrorDialog": {
+        "message": "There was an error saving the danger sources!",
+        "accept": "D'acord"
+      },
+      "loadDialog": {
+        "message": "Do you want to load all danger source variants from the day before?",
+        "accept": "Si",
+        "reject": "No"
       }
     }
   },
@@ -194,14 +219,16 @@
       "preview": "Previsualitzar el butlletí (PDF)",
       "check": "Comprovar el butlletí",
       "info": "Mostrar l'estat de publicació",
+      "loadSuggestionFromDangerSources": "Load suggestion",
+      "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Publicar totes les regions",
       "mediaFile": "Carregar un fitxer multimèdia"
     },
     "status": {
       "submittedInfo": "Serà publicat a les 5PM",
       "resubmittedInfo": "Serà publicat a les 8AM",
-      "publishedInfo" : "Ha estat publicat",
-      "noPublicationInfo" : "NO serà publicat automàticament",
+      "publishedInfo": "Ha estat publicat",
+      "noPublicationInfo": "NO serà publicat automàticament",
       "loadingPreview": "S'està creant la previsualització de PDF ...",
       "loading": "Butlletí carregant-se ...",
       "loadMoreBulletins": "Load {{count}} more bulletins",
@@ -215,6 +242,7 @@
         "edit": "Editar micro-regions",
         "copy": "Copiar regió",
         "delete": "Esborrar regió",
+        "compare": "Compare region",
         "undo": "Undo last change in region",
         "redo": "Redo change in region",
         "createRegion": "Crear regió",
@@ -328,6 +356,11 @@
         "accept": "Si",
         "reject": "No"
       },
+      "deleteAllWarningRegionsDialog": {
+        "message": "Do you want to delete all warning regions?",
+        "accept": "Si",
+        "reject": "No"
+      },
       "loadAutoSaveDialog": {
         "message": "Vols carregar els butlletins guardats automàticament?",
         "accept": "Si",
@@ -363,11 +396,11 @@
         "favourableSituation": "Situació favorable",
         "cancel": "Cancel·lar"
       },
-      "removeDaytimeDependencyDialog" : {
+      "removeDaytimeDependencyDialog": {
         "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancel·lar"
       },
-      "strategicMindsetDialog" : {
+      "strategicMindsetDialog": {
         "title": "Strategic Mindsets",
         "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
         "description": {
@@ -420,11 +453,11 @@
           "spring_diurnal": "Spring Diurnal"
         }
       },
-      "decisionTree" : {
+      "decisionTree": {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
-        "decisionTree" : "Arbre de decisions",
-        "feedback" : "Comentaris",
+        "decisionTree": "Arbre de decisions",
+        "feedback": "Comentaris",
         "save": "Desar",
         "discard": "Descarta"
       }
@@ -440,8 +473,8 @@
           "AT-06": "Styria",
           "AT-07": "Tirol",
           "AT-08": "Vorarlberg",
-          "CH" : "Suïssa",
-          "DE-BY" : "Bavària",
+          "CH": "Suïssa",
+          "DE-BY": "Bavària",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "Tirol del Sud",
@@ -589,6 +622,7 @@
         "pdfDirectory": "Directori per PDF",
         "htmlDirectory": "Directori per HTML",
         "serverImagesUrl": "Adreça de les imatges del servidor",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
         "mapsPath": "Adreça dels mapes",
         "mediaPath": "Ruta dels fitxers multimèdia",
         "mapProductionUrl": "URL per la producció dels mapes",
@@ -759,6 +793,7 @@
         "placeholder": "Fonts",
         "selectionLabel": "{0} source(s) selected"
       },
+
       "charts": {
         "charts": "Gràfics",
         "nan": "Sense especificar",
@@ -904,7 +939,7 @@
     "dp4": "pp.4: fred després de temperat / temperat després de fred",
     "dp5": "pp.5: nevada després d'un llarg període fred",
     "dp6": "pp.6: neu freda i solta i vent",
-    "dp7": "pp.7: zones de mantell prim en un entorn de mantell gruixut",
+    "dp7": "dp.7: shallow snow next to deep snow",
     "dp8": "pp.8: gebre enterrat",
     "dp9": "pp.9: neu rodona enterrada",
     "dp10": "pp.10: escenari de primavera"
@@ -921,6 +956,7 @@
     "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
     "TimeSeries": "Sèrie temporal",
     "Incident": "Incident",
     "Profile": "Perfil de neu",
@@ -932,12 +968,22 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
-    "SnowLine": "Límit de neu",
+    "ForBlog": "For blog",
     "SurfaceHoar": "Gebre de superfície",
     "Graupel": "Neu granulada",
     "StabilityTest": "Test d'estabilitat",
     "IceFormation": "Formació de gel",
     "VeryLightNewSnow": "Neu recent molt lleugera"
+  },
+  "elevationTolerance": {
+    "exact": "exact",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
   },
   "aspect": {
     "N": "N",
@@ -1012,10 +1058,16 @@
     "lower": "lower",
     "ground": "ground"
   },
+  "weakLayerCrust": {
+    "no": "no",
+    "partly": "partly",
+    "yes": "yes"
+  },
   "creationProcess": {
     "radiation_recrystallization": "radiació",
     "diurnal_recrystallization": "diurnal",
-    "melt_layer_recrystallization": "melt layer"
+    "melt_layer_recrystallization": "melt layer",
+    "surface_hoar_formation": "surface hoar"
   },
   "recognizability": {
     "very_easy": "very easy",
@@ -1056,19 +1108,29 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "decreasing with height",
+    "decreasing": "softer below",
     "steady": "uniform",
-    "increasing": "increasing with height"
+    "increasing": "softer above"
   },
   "terrainType": {
     "gullies": "gullies",
     "bowls": "bowls",
     "pass_areas": "pass areas",
-    "ridge_lines": "ridge lines"
+    "ridge_lines": "ridge lines",
+    "adjacent_to_ridge_lines": "adjacent to ridge lines",
+    "distant_from_ridge_lines": "distant from ridge lines",
+    "slope_discontinuities": "slope discontinuities",
+    "convex_terrain": "convex terrain",
+    "concave_terrain": "concave terrain",
+    "steep_terrain": "steep terrain",
+    "very_steep_terrain": "very steep terrain",
+    "open_terrain": "open terrain",
+    "forest": "forest"
   },
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
-    "whumpfing": "whumpfing"
+    "whumpfing": "whumpfing",
+    "fresh_avalanches": "fresh avalanches"
   },
   "changeRegionDialog": {
     "message": "Vols canviar de regió?",
@@ -1160,6 +1222,9 @@
     "no": "no"
   },
   "observations": {
+    "allowEdit": "Edit external observation",
+    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
+    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
     "aspect": "Orientació",
     "authorName": "Nom de l'autor",
     "avalancheLength": "Longitud d'allau",
@@ -1169,6 +1234,8 @@
     "avalancheWidth": "Amplada d'allau",
     "search": "Cerca",
     "count": "# observacions:",
+    "elevationTolerance": "Accuracy of elevation data",
+    "elevationPeriod": "Elevation time period",
     "layers": {
       "observers": "Observers",
       "weatherStations": "Weather stations",
@@ -1177,11 +1244,12 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
         "globalRadiation": "Global radiation",
+        "newSnow": "Neu recent",
+        "snowLine": "Límit de neu",
         "snowHeight": "Snow height",
-        "snowDifference24h": "Snow difference 24h",
-        "snowDifference48h": "Snow difference 48h",
-        "snowDifference72h": "Snow difference 72h",
+        "snowDifference": "Snow difference",
         "airTemperature": "Air temperature",
         "airTemperatureMax": "Air temperature Max",
         "airTemperatureMin": "Air temperature Min",
@@ -1223,12 +1291,14 @@
       "PERSON_UNKNOWN": "Esdeveniment (desconegut)",
       "TRAFFIC": "Trànsit"
     },
+    "externalURL": "External URL (e.g. to photo database)",
     "fractureDepth": "Profunditat cicatriu",
     "hasCoordinates": "Té coordenades",
     "incline": "Pendent",
     "latitude": "Laltitud",
     "locationName": "Localitat",
     "longitude": "Longitud",
+    "observationType": "Observation type",
     "personInvolvement": "Person involvement",
     "reportDate": "Data de l'informe",
     "showTable": "Taula",

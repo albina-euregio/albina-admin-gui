@@ -1,15 +1,17 @@
-import { Injectable, SecurityContext, inject } from "@angular/core";
+import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { ConstantsService } from "../constants-service/constants.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { AuthorModel } from "../../models/author.model";
-import { ServerModel } from "../../models/server.model";
-import { RegionConfiguration, ServerConfiguration } from "../configuration-service/configuration.service";
+import { AuthorModel, AuthorSchema } from "../../models/author.model";
+import { ServerModel, ServerSchema } from "../../models/server.model";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import * as Enums from "../../enums/enums";
+import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
+import { ServerConfiguration } from "../../models/server-configuration.model";
+import { z } from "zod";
 
 @Injectable()
 export class AuthenticationService {
@@ -18,7 +20,7 @@ export class AuthenticationService {
   private constantsService = inject(ConstantsService);
   private sanitizer = inject(DomSanitizer);
 
-  private currentAuthor: AuthorModel;
+  currentAuthor: AuthorModel;
   private internalRegions: RegionConfiguration[];
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
@@ -52,26 +54,31 @@ export class AuthenticationService {
   public login(username: string, password: string): Observable<boolean> {
     const url = this.constantsService.getServerUrl() + "authentication";
     const body = JSON.stringify({ username, password });
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-    });
-    const options = { headers: headers };
-
-    return this.http.post<AuthenticationResponse>(url, body, options).pipe(
-      map((data) => {
-        if (data.access_token) {
-          this.setCurrentAuthor(data);
-          const authorRegions = this.getCurrentAuthorRegions();
-          const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
-          this.setActiveRegion(
-            authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
-          );
-          this.loadInternalRegions();
-          this.externalServerLogins();
-          return true;
-        } else {
+    return this.http.post(url, body).pipe(
+      map((json) => {
+        const data = AuthenticationResponseSchema.parse(json, { reportInput: true });
+        if (!data.access_token) {
           return false;
         }
+        const author: AuthorModel = AuthorSchema.parse(
+          {
+            ...data,
+            organization: "",
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            apiUrl: data.api_url,
+          },
+          { reportInput: true },
+        );
+        this.setCurrentAuthor(author);
+        const authorRegions = this.getCurrentAuthorRegions();
+        const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
+        this.setActiveRegion(
+          authorRegions.find((r) => r.id === activeRegionFromLocalStorage?.id) ?? authorRegions?.[0],
+        );
+        this.loadInternalRegions();
+        this.externalServerLogins();
+        return true;
       }),
     );
   }
@@ -92,24 +99,20 @@ export class AuthenticationService {
 
   private loadInternalRegions(): void {
     const url = this.constantsService.getServerUrl() + "regions";
-    const options = { headers: this.newAuthHeader() };
-
-    this.http.get<RegionConfiguration[]>(url, options).subscribe((regions) => this.setInternalRegions(regions));
+    this.http.get<RegionConfiguration[]>(url).subscribe((regions) => this.setInternalRegions(regions));
   }
 
   private setInternalRegions(regions: RegionConfiguration[]) {
-    this.internalRegions = regions;
+    this.internalRegions = RegionConfigurationSchema.array().parse(regions);
     this.localStorageService.setInternalRegions(this.internalRegions);
   }
 
   private externalServerLogins() {
     const url = this.constantsService.getServerUrl() + "server/external";
-    const options = { headers: this.newAuthHeader() };
-
-    this.http.get<ServerConfiguration[]>(url, options).subscribe(
+    this.http.get<ServerConfiguration[]>(url).subscribe(
       (data) => {
         for (const entry of data) {
-          this.externalServerLogin(entry.apiUrl, entry.userName, entry.password, entry.name).subscribe(
+          this.externalServerLogin(entry).subscribe(
             (data) => {
               if (data === true) {
                 console.debug("[" + entry.name + "] Logged in!");
@@ -118,59 +121,57 @@ export class AuthenticationService {
               }
             },
             (error) => {
-              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body));
+              console.error("[" + entry.name + "] Login failed: " + JSON.stringify(error._body), error);
             },
           );
         }
       },
       (error) => {
-        console.error("External server instances could not be loaded: " + JSON.stringify(error._body));
+        console.error("External server instances could not be loaded: " + JSON.stringify(error._body), error);
       },
     );
   }
 
-  public externalServerLogin(apiUrl: string, username: string, password: string, name: string): Observable<boolean> {
-    const url = apiUrl + "authentication";
-    const body = JSON.stringify({ username, password });
-    const headers = new HttpHeaders({
-      "Content-Type": "application/json",
-    });
-    const options = { headers: headers };
-
-    return this.http.post<AuthenticationResponse>(url, body, options).pipe(
-      map((data) => {
-        if (data.access_token) {
-          this.addExternalServer(data, apiUrl, name, username, password);
-          return true;
-        } else {
-          return false;
-        }
+  public externalServerLogin(server: ServerConfiguration): Observable<boolean> {
+    if (server.userName.startsWith("https://")) {
+      const tokenURL = server.userName;
+      const headers = { "Content-Type": "application/x-www-form-urlencoded" };
+      return this.http
+        .post<{ access_token: string }>(tokenURL, server.password, { headers })
+        .pipe(map((data) => this.addExternalServer(server, data)));
+    }
+    const url = server.apiUrl + "authentication";
+    const body = JSON.stringify({ username: server.userName, password: server.password });
+    return this.http.post(url, body).pipe(
+      map((json) => {
+        const data = AuthenticationResponseSchema.parse(json);
+        return this.addExternalServer(server, data);
       }),
     );
   }
 
-  private addExternalServer(
-    json: Partial<AuthenticationResponse>,
-    apiUrl: string,
-    serverName: string,
-    username: string,
-    password: string,
-  ) {
-    if (!json) {
-      return;
+  private addExternalServer(server0: ServerConfiguration, json: z.infer<typeof AuthenticationResponseSchema>): boolean {
+    if (!json.access_token) {
+      return false;
     }
-    const server = ServerModel.createFromJson(json);
-    server.setApiUrl(apiUrl);
-    server.setName(serverName);
+    const server = ServerSchema.parse({
+      ...server0,
+      regions: json.regions?.map((r) => r.id),
+      accessToken: json.access_token,
+      refreshToken: json.refresh_token,
+    });
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
+    return true;
   }
 
-  private setExternalServers(json: Partial<ServerModel>[]) {
+  private setExternalServers(json: ServerModel[]) {
     if (!json) {
       return;
     }
-    for (const server of json) this.externalServers.push(ServerModel.createFromJson(server));
+    for (const server of json) {
+      this.externalServers.push(server);
+    }
   }
 
   public checkExternalServerLogin() {
@@ -188,11 +189,11 @@ export class AuthenticationService {
     return this.currentAuthor;
   }
 
-  private setCurrentAuthor(json: Partial<AuthorModel>) {
+  private setCurrentAuthor(json: AuthorModel) {
     if (!json) {
       return;
     }
-    this.currentAuthor = AuthorModel.createFromJson(json);
+    this.currentAuthor = AuthorSchema.partial().parse(json);
     this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
@@ -202,32 +203,6 @@ export class AuthenticationService {
 
   public getEmail(): string {
     return this.currentAuthor?.email;
-  }
-
-  public newAuthHeader(mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + this.currentAuthor?.accessToken;
-    return new HttpHeaders({
-      "Content-Type": mime,
-      Accept: mime,
-      Authorization: authHeader,
-    });
-  }
-
-  public newFileAuthHeader(mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + this.currentAuthor?.accessToken;
-    return new HttpHeaders({
-      Accept: mime,
-      Authorization: authHeader,
-    });
-  }
-
-  public newExternalServerAuthHeader(externalAuthor: ServerModel, mime = "application/json"): HttpHeaders {
-    const authHeader = "Bearer " + externalAuthor.accessToken;
-    return new HttpHeaders({
-      "Content-Type": mime,
-      Accept: mime,
-      Authorization: authHeader,
-    });
   }
 
   public getUserImage() {
@@ -265,16 +240,12 @@ export class AuthenticationService {
     return this.activeRegion?.id;
   }
 
-  public setActiveRegion(region: RegionConfiguration) {
+  public setActiveRegion(region: RegionConfiguration | string) {
     if (!this.currentAuthor) {
       return;
     }
-    if (
-      this.currentAuthor
-        .getRegions()
-        .map((region) => region.id)
-        .includes(region.id)
-    ) {
+    region = this.currentAuthor.regions.find((r) => r.id === (typeof region === "string" ? region : region.id));
+    if (region) {
       this.activeRegion = region;
       this.localStorageService.setActiveRegion(this.activeRegion);
     } else {
@@ -290,10 +261,10 @@ export class AuthenticationService {
     return this.activeRegion?.mapCenterLng ?? 11.44;
   }
 
-  public isCurrentUserInRole(role: string): boolean {
-    const roles = this.currentAuthor?.getRoles?.();
+  public isCurrentUserInRole(role: Enums.UserRole): boolean {
+    const roles = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
-    if (roles?.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
+    if (roles.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
       const updatedRoles = roles.map((r) =>
         r === this.constantsService.roleObserver ? this.constantsService.roleForecaster : r,
       );
@@ -303,7 +274,7 @@ export class AuthenticationService {
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {
-    return this.currentAuthor?.getRegions() || [];
+    return this.currentAuthor?.regions || [];
   }
 
   public getInternalRegions(): string[] {
@@ -323,18 +294,18 @@ export class AuthenticationService {
       return false;
     }
     for (const externalServer of this.externalServers) {
-      if (externalServer.getRegions().includes(region)) return true;
+      if (externalServer.regions.includes(region)) return true;
     }
     return false;
   }
 }
 
-export interface AuthenticationResponse {
-  email: string;
-  name: string;
-  roles: string[];
-  regions: RegionConfiguration[];
-  access_token: string;
-  refresh_token: string;
-  api_url: string;
-}
+export const AuthenticationResponseSchema = z.object({
+  email: z.string(),
+  name: z.string(),
+  roles: z.enum(Enums.UserRole).array(),
+  regions: RegionConfigurationSchema.array(),
+  access_token: z.string(),
+  refresh_token: z.string().optional(),
+  api_url: z.string().optional(),
+});

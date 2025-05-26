@@ -1,5 +1,5 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -17,11 +17,8 @@ export class BlogService {
     } else {
       url = this.constantsService.getServerUrl() + "blogs/publish/latest?&region=" + region + "&lang=" + language;
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    const options = { headers: headers };
-
-    return this.http.post<Response>(url, body, options);
+    return this.http.post<Response>(url, body);
   }
 
   sendLatestBlogPostEmail(region: string, language: string, test: boolean): Observable<Response> {
@@ -36,11 +33,8 @@ export class BlogService {
     } else {
       url = this.constantsService.getServerUrl() + "blogs/publish/latest/email?&region=" + region + "&lang=" + language;
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    const options = { headers: headers };
-
-    return this.http.post<Response>(url, body, options);
+    return this.http.post<Response>(url, body);
   }
 
   sendLatestBlogPostTelegram(region: string, language: string, test: boolean): Observable<Response> {
@@ -56,11 +50,8 @@ export class BlogService {
       url =
         this.constantsService.getServerUrl() + "blogs/publish/latest/telegram?&region=" + region + "&lang=" + language;
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    const options = { headers: headers };
-
-    return this.http.post<Response>(url, body, options);
+    return this.http.post<Response>(url, body);
   }
 
   sendLatestBlogPostPush(region: string, language: string, test: boolean): Observable<Response> {
@@ -71,10 +62,7 @@ export class BlogService {
     } else {
       url = this.constantsService.getServerUrl() + "blogs/publish/latest/push?&region=" + region + "&lang=" + language;
     }
-    const headers = this.authenticationService.newAuthHeader();
     const body = JSON.stringify("");
-    const options = { headers: headers };
-
-    return this.http.post<Response>(url, body, options);
+    return this.http.post<Response>(url, body);
   }
 }

@@ -106,22 +106,18 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   }
 
   showCopyButton(date: [Date, Date]) {
-    if (
+    return (
       this.authenticationService.getActiveRegionId() !== undefined &&
       this.bulletinsService.getUserRegionStatus(date) &&
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.missing &&
       !this.copying &&
       (this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster) ||
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleForeman))
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   }
 
   showPasteButton(date: [Date, Date]) {
-    if (
+    return (
       this.authenticationService.getActiveRegionId() !== undefined &&
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.published &&
       this.bulletinsService.getUserRegionStatus(date) !== this.bulletinStatus.republished &&
@@ -130,11 +126,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
       this.copying &&
       this.bulletinsService.getCopyDate() !== date &&
       !this.bulletinsService.hasBeenPublished5PM(date)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   }
 
   isOwnRegion(region) {

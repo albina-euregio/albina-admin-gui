@@ -1,7 +1,11 @@
-import { Component, TemplateRef, ViewChild, input, output, inject } from "@angular/core";
+import { Component, input, output, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { isAvalancheWarningServiceObservation } from "./models/observation.model";
-import { GenericObservation, ImportantObservation } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+} from "./models/generic-observation.model";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ObservationMarkerService } from "./observation-marker.service";
@@ -20,14 +24,16 @@ export class ObservationTableComponent {
   readonly observations = input<GenericObservation[]>([]);
   readonly observationClick = output<GenericObservation>();
   readonly editObservationEvent = output<GenericObservation>();
+  ObservationSource = ObservationSource;
   showObservationsWithoutCoordinates = false;
   importantObservationTexts = {
-    [ImportantObservation.SnowLine]: grainShapes.IFrc.key,
+    [ObservationType.DrySnowfallLevel]: grainShapes.IFrc.key,
     [ImportantObservation.SurfaceHoar]: grainShapes.SH.key,
     [ImportantObservation.Graupel]: grainShapes.PPgp.key,
     [ImportantObservation.StabilityTest]: grainShapes.PPnd.key,
     [ImportantObservation.IceFormation]: grainShapes.IF.key,
     [ImportantObservation.VeryLightNewSnow]: grainShapes.PPsd.key,
+    [ImportantObservation.ForBlog]: grainShapes.PPpl.key,
   };
 
   get sortedObservations(): GenericObservation[] {
@@ -36,15 +42,6 @@ export class ObservationTableComponent {
 
   isShowObservation(observation: GenericObservation): boolean {
     return !this.showObservationsWithoutCoordinates || !(observation.latitude && observation.longitude);
-  }
-
-  onClick(observation: GenericObservation) {
-    if (isAvalancheWarningServiceObservation(observation)) {
-      // FIXME? this.observationsService.getObservation(observation.id).toPromise()
-      this.editObservationEvent.emit(observation);
-    } else {
-      this.observationClick.emit(observation);
-    }
   }
 
   getTableRowStyle(observation: GenericObservation): Partial<CSSStyleDeclaration> {

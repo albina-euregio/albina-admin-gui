@@ -10,8 +10,14 @@
         >
           <i class="ph ph-brain"></i> {{ "login.stressLevel" | translate }}
         </th>
-        <th>{{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}</th>
-        <th class="" *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">
+        <th role="button" (click)="bulletinsService.loadStatus()">
+          {{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}
+        </th>
+        <th
+          *ngFor="let region of authenticationService.getActiveRegion().neighborRegions"
+          role="button"
+          (click)="authenticationService.setActiveRegion(region); bulletinsService.loadStatus()"
+        >
           {{ "bulletins.table.title.status." + region | translate }}
         </th>
       </tr>

@@ -1,12 +1,13 @@
 import type { APIRoute } from "astro";
 import {
+  type GenericObservation,
   genericObservationSchema,
   genericObservationWithIdSchema,
-  type GenericObservation,
   type RawGenericObservation,
 } from "../../../src/app/observations/models/generic-observation.model";
-import { augmentAndInsertObservation, createConnection, deleteObservation, selectObservations } from "../db/database";
+import { ObservationDatabaseConnection } from "../db/database";
 import { fetchAndInsert } from "../fetch/observations";
+import { newDate } from "../util/newDate.ts";
 
 let lastFetch = 0;
 
@@ -25,19 +26,12 @@ export async function serveObservations(url: URL): Promise<GenericObservation[]>
     lastFetch = Date.now();
   }
 
-  const connection = await createConnection();
+  const connection = await ObservationDatabaseConnection.createConnection();
   try {
-    return await selectObservations(connection, startDate, endDate);
+    return await connection.selectObservations(startDate, endDate);
   } finally {
     connection.destroy();
   }
-}
-
-function newDate(delta: { days: number }): Date {
-  const date = new Date();
-  date.setSeconds(0, 0);
-  date.setDate(date.getDate() + delta.days);
-  return date;
 }
 
 export const GET: APIRoute = async ({ url }) => {
@@ -63,9 +57,9 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(String(e), { status: 400 });
   }
   try {
-    const connection = await createConnection();
+    const connection = await ObservationDatabaseConnection.createConnection();
     try {
-      await augmentAndInsertObservation(connection, observation);
+      await connection.augmentAndInsertObservation(observation);
     } finally {
       connection.destroy();
     }
@@ -93,9 +87,9 @@ export const DELETE: APIRoute = async ({ request }) => {
     return new Response(String(e), { status: 400 });
   }
   try {
-    const connection = await createConnection();
+    const connection = await ObservationDatabaseConnection.createConnection();
     try {
-      await deleteObservation(connection, observation);
+      await connection.deleteObservation(observation);
     } finally {
       connection.destroy();
     }

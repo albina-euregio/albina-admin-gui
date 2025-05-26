@@ -1,5 +1,6 @@
 $header-nav-height: 60px;
-$observations-height: calc(100vh - $header-nav-height);
+$observations-full-height: 100vh;
+$observations-height: calc($observations-full-height - $header-nav-height);
 
 @font-face {
   font-family: snowsymbolsiacs;
@@ -18,6 +19,10 @@ $observations-height: calc(100vh - $header-nav-height);
   bottom: 0;
   left: 0;
   right: 0;
+  height: $observations-full-height;
+  max-height: $observations-full-height;
+}
+nav ~ .app-body .layout-outer {
   height: $observations-height;
   max-height: $observations-height;
 }
@@ -106,6 +111,7 @@ $observations-height: calc(100vh - $header-nav-height);
 }
 
 .layout-switch > .obs-button {
+  height: 33px;
   padding: 0.25em 0.5em;
   background-color: #fff;
   border: 1px solid #e6eef2;
@@ -163,26 +169,6 @@ $observations-height: calc(100vh - $header-nav-height);
 
 .global-bar-scroll::-webkit-scrollbar {
   display: none;
-}
-
-.global-bar-scroll:before,
-.global-bar-scroll:after {
-  z-index: 15;
-  position: absolute;
-  top: 0;
-  content: "";
-  height: calc(55px - 1px);
-  width: 20px;
-}
-
-.global-bar-scroll:before {
-  left: 0;
-  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0));
-}
-
-.global-bar-scroll:after {
-  right: 0;
-  background: linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0));
 }
 
 .global-bar {
@@ -303,8 +289,8 @@ $observations-height: calc(100vh - $header-nav-height);
   height: calc(100vh - 110px);
 }
 
-.layout-map .leaflet-pane {
-  mix-blend-mode: normal;
+.mix-blend-mode-multiply {
+  mix-blend-mode: multiply;
 }
 
 @media screen and (max-width: 768px) {
@@ -361,6 +347,9 @@ $observations-height: calc(100vh - $header-nav-height);
 @media screen and (min-width: 769px) {
   .chart-container {
     width: 220px;
+  }
+  .chart-container.w3 {
+    width: 660px;
   }
 }
 

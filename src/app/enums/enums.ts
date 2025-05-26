@@ -126,3 +126,11 @@ export enum DangerRatingDirection {
   up = "up",
   down = "down",
 }
+
+export enum UserRole {
+  SUPERADMIN = "SUPERADMIN",
+  ADMIN = "ADMIN",
+  FORECASTER = "FORECASTER",
+  FOREMAN = "FOREMAN",
+  OBSERVER = "OBSERVER",
+}

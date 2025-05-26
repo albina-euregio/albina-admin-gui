@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, viewChild, inject } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CommonModule, formatDate } from "@angular/common";
+import { CommonModule } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
+import { map } from "rxjs/operators";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { ObservationFilterService } from "../observations/observation-filter.service";
@@ -12,31 +14,22 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { LayerGroup } from "leaflet";
+import { Control, ImageOverlay, LatLngBounds, LatLngBoundsLiteral, LayerGroup } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { NgxEchartsDirective } from "ngx-echarts";
+import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
+import type { ScatterSeriesOption } from "echarts/charts";
+import { AwsomeConfigSchema } from "./awsome.config";
+import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
+import type { Subscription } from "rxjs";
+import { Temporal } from "temporal-polyfill";
 
-type FeatureProperties = GeoJSON.Feature["properties"] & { $sourceObject?: AwsomeSource } & Pick<
-    GenericObservation,
-    "$source" | "latitude" | "longitude" | "elevation"
-  >;
+type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 
-export interface AwsomeSource {
-  name: string;
-  url: string;
-  tooltipTemplate: string;
-  /**
-   * @deprecated
-   */
-  detailsTemplate: string;
-  detailsTemplates: { label: DetailsTabLabel; template: string }[];
-}
-
-interface Awsome {
-  date: string;
-  dateStepSeconds: number;
-  sources: AwsomeSource[];
-  filters: FilterSelectionSpec<FeatureProperties>[];
-}
+export type FeatureProperties = GeoJSON.Feature["properties"] & {
+  $sourceObject?: AwsomeSource;
+  region_id: string;
+} & Pick<GenericObservation, "$source" | "latitude" | "longitude" | "elevation">;
 
 type DetailsTabLabel = string;
 
@@ -51,6 +44,7 @@ type DetailsTabLabel = string;
     TabsModule,
     TranslateModule,
     NgxMousetrapDirective,
+    NgxEchartsDirective,
   ],
   templateUrl: "awsome.component.html",
 })
@@ -60,10 +54,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   mapService = inject(BaseMapService);
   markerService = inject<ObservationMarkerService<FeatureProperties>>(ObservationMarkerService);
   private sanitizer = inject(DomSanitizer);
+  private httpClient = inject(HttpClient);
 
   // https://gitlab.com/avalanche-warning
   configURL = "https://models.avalanche.report/dashboard/awsome.json";
-  config: Awsome = {} as Awsome;
+  config: AwsomeConfig = {} as AwsomeConfig;
   date = "";
   layout: "map" | "chart" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
@@ -73,7 +68,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
+  mapLayerControl = new Control.Layers();
   mapLayer = new LayerGroup();
+  mapLayerHighlight = new LayerGroup();
+  hazardChart: EChartsOption | undefined;
+  loadingState: "loading" | "error" | undefined;
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
@@ -82,24 +81,57 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       if (!configURL) return;
       this.configURL = configURL;
     });
-    this.config = await this.fetchJSON<Awsome>(this.configURL);
+    this.config = await this.fetchJSON(this.configURL)
+      .toPromise()
+      .then((c) => AwsomeConfigSchema.parseAsync(c));
     this.date = this.config.date;
     this.sources = this.config.sources;
 
-    this.filterService.filterSelectionData = (this.config.filters as FilterSelectionSpec<FeatureProperties>[]).map(
-      (f) => new FilterSelectionData(f),
+    const spec = this.config.filters as FilterSelectionSpec<FeatureProperties>[];
+    this.filterService.filterSelectionData = spec.map((f) => new FilterSelectionData(f));
+    this.filterService.mapBounds = undefined;
+
+    this.markerService.markerClassify = this.filterService.filterSelectionData.find(
+      (f) => f.type === spec.find((f) => f.default === "classify")?.type,
     );
-    this.markerService.markerClassify = this.filterService.filterSelectionData.at(-1);
+    this.markerService.markerLabel = this.filterService.filterSelectionData.find(
+      (f) => f.type === spec.find((f) => f.default === "label")?.type,
+    );
     await this.loadSources();
   }
 
   async loadSources() {
+    this.mapLayerControl.remove();
+    this.mapLayerControl = new Control.Layers();
     this.observations.length = 0;
     this.applyLocalFilter();
 
+    this.loadingState = "loading";
     this.observations = (
-      await Promise.all(this.sources.flatMap(async (source) => await this.loadSource(source)))
+      await Promise.all(
+        this.sources.flatMap(async (source): Promise<FeatureProperties[]> => {
+          try {
+            source.$error = undefined;
+            return await this.loadSource(source);
+          } catch (err) {
+            source.$error = err;
+            this.loadingState = "error";
+            console.warn("Failed to load source", source, err);
+            return [];
+          } finally {
+            source.$loading?.unsubscribe();
+            source.$loading = undefined;
+          }
+        }),
+      )
     ).flat();
+    if (this.loadingState === "loading") {
+      this.loadingState = undefined;
+    }
+
+    if (this.sources.some((s) => s.imageOverlays?.length)) {
+      this.mapLayerControl.addTo(this.mapService.map);
+    }
 
     this.filterService.filterSelectionData.forEach((filter) =>
       filter.buildChartsData(this.markerService.markerClassify, this.observations, (o) =>
@@ -109,7 +141,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.applyLocalFilter();
   }
 
-  private async loadSource(source: AwsomeSource) {
+  private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {
     // replace 2023-11-12_06-00-00 with current date
     const date = this.date.replace(/T/, "_").replace(/:/g, "-");
     const url =
@@ -122,37 +154,60 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
 
-    const { features } = await this.fetchJSON<GeoJSON.FeatureCollection>(url);
-    return features.flatMap((feature: FeatureProperties) => {
-      feature.properties.$source = source.name as any;
-      feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
-      feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
-      feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
-      feature.properties.$sourceObject = source;
-      if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
-        return aspects
-          .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
-          .map((aspect) => ({
-            ...feature.properties,
-            aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
-            snp_characteristics: feature.properties.snp_characteristics[aspect],
-          }));
-      }
-      return [feature.properties];
+    source.imageOverlays?.forEach((overlay) => {
+      const layer = new ImageOverlay(overlay.imageUrl, overlay.imageBounds as LatLngBoundsLiteral, overlay);
+      this.mapLayerControl.addOverlay(layer, overlay.name);
+    });
+
+    source.$loading?.unsubscribe();
+    return new Promise((next, error) => {
+      source.$loading = this.fetchJSON<GeoJSON.FeatureCollection>(url)
+        .pipe(
+          map(({ features }): FeatureProperties[] =>
+            features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
+              feature.properties.$source = source.name as any;
+              feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
+              feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
+              feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
+              feature.properties.$sourceObject = source;
+              if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
+                return aspects
+                  .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
+                  .map((aspect) => ({
+                    ...feature.properties,
+                    aspect: ["__hidden__", aspect], // __hidden__ as first element does not generate a gray marker segment via makeIcon
+                    snp_characteristics: feature.properties.snp_characteristics[aspect],
+                  }));
+              }
+              return [feature.properties];
+            }),
+          ),
+        )
+        .subscribe({ next, error });
     });
   }
 
   async ngAfterViewInit() {
     await this.mapService.initMaps(this.mapDiv().nativeElement);
     this.mapLayer.addTo(this.mapService.map);
+    this.mapLayerHighlight.addTo(this.mapService.map);
+    this.mapService.map.on("click", () => {
+      this.filterService.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+      this.applyLocalFilter();
+    });
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
   }
 
-  switchDate(direction: -1 | 1) {
+  nextDate(direction: -1 | 1) {
     const dateStepSeconds = this.config.dateStepSeconds ?? 3600;
-    const date = new Date(Date.parse(this.date) + direction * dateStepSeconds * 1000);
-    this.date = formatDate(date, "yyyy-MM-ddTHH:mm:ss", "en-US");
-    this.loadSources();
+    return Temporal.PlainDateTime.from(this.date)
+      .add({ seconds: direction * dateStepSeconds })
+      .toString();
+  }
+
+  async switchDate(direction: -1 | 1) {
+    this.date = this.nextDate(direction);
+    await this.loadSources();
   }
 
   applyLocalFilter() {
@@ -172,17 +227,50 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         this.filterService.isSelected(o),
       ),
     );
+
+    const markerClassify = this.markerService.markerClassify;
+    if (markerClassify) {
+      const data = this.localObservations.map((o) => [
+        // snp_characteristics.Punstable.depth
+        markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".depth")) as number,
+        // snp_characteristics.Punstable.value
+        markerClassify.getValue(o, markerClassify.key) as number,
+        // $event.data[2] as FeatureProperties
+        o as unknown as number,
+      ]);
+      this.hazardChart = {
+        xAxis: { name: "Depth" },
+        yAxis: { name: markerClassify.label },
+        series: [
+          {
+            type: "scatter",
+            data,
+            symbolSize: 5,
+          } satisfies ScatterSeriesOption,
+        ],
+      };
+    } else {
+      this.hazardChart = undefined;
+    }
+  }
+
+  chartMouseOver($event: ECElementEvent) {
+    this.mapLayerHighlight.clearLayers();
+    const observation = $event.data[2] as FeatureProperties;
+    const marker = this.markerService.createMarker(observation, true);
+    marker.options.zIndexOffset = 42_000;
+    marker.addTo(this.mapLayerHighlight);
+    marker.toggleTooltip();
+  }
+
+  chartMouseOut() {
+    this.mapLayerHighlight.clearLayers();
   }
 
   private onObservationClick(observation: FeatureProperties) {
-    const detailsTemplates =
-      observation.$sourceObject.detailsTemplates ??
-      (observation.$sourceObject.detailsTemplate
-        ? [{ label: "Details", template: observation.$sourceObject.detailsTemplate }]
-        : []);
     this.selectedObservation = observation;
-    this.selectedObservationDetails = detailsTemplates.map(({ label, template }) => ({
-      label,
+    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => ({
+      label: this.markerService.formatTemplate(label, observation),
       html: this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(template, observation)),
     }));
     this.selectedObservationActiveTabs[observation.$source] ??= this.selectedObservationDetails[0]?.label;
@@ -204,14 +292,15 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return window.matchMedia("(max-width: 768px)").matches;
   }
 
-  private async fetchJSON<T>(input: RequestInfo | URL): Promise<T> {
-    if (typeof input === "string" && !input.includes("?")) {
-      input = `${input}?_=${Date.now()}`;
+  private fetchJSON<T>(url: string) {
+    if (typeof url === "string" && !url.includes("?")) {
+      url = `${url}?_=${Date.now()}`;
     }
     // FIXME const headers = { "Cache-Control": "no-cache" };
     // FIXME CORS Access-Control-Request-Headers: cache-control
-    const res = await fetch(input);
-    const text = (await res.text()).replace(/\bNaN\b/g, "null");
-    return JSON.parse(text);
+    return this.httpClient.get(url, { responseType: "text" }).pipe(
+      map((text) => text.replace(/\bNaN\b/g, "null")),
+      map((text) => JSON.parse(text) as T),
+    );
   }
 }

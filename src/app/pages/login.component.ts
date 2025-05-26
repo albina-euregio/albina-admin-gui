@@ -5,10 +5,11 @@ import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { environment } from "../../environments/environment";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { ConfigurationService, ServerConfiguration } from "app/providers/configuration-service/configuration.service";
+import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
+import { ServerConfiguration, ServerConfigurationVersion } from "../models/server-configuration.model";
 
 @Component({
   templateUrl: "login.component.html",
@@ -36,7 +37,7 @@ export class LoginComponent implements OnInit {
     keyboard: true,
     class: "modal-sm",
   };
-  serverInfo: ServerConfiguration & { version: string };
+  serverInfo: ServerConfigurationVersion;
 
   ngOnInit() {
     // reset login status
@@ -74,7 +75,7 @@ export class LoginComponent implements OnInit {
         }
       },
       (error) => {
-        console.error("[" + this.username + "] Login failed: " + JSON.stringify(error._body));
+        console.error("[" + this.username + "] Login failed: " + JSON.stringify(error._body), error);
         this.openErrorModal(this.errorTemplate());
       },
     );

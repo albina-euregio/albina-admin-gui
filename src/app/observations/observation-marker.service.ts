@@ -5,7 +5,7 @@ import { GenericObservation, ObservationSource } from "./models/generic-observat
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
-import type { AwsomeSource } from "../modelling/awsome.component";
+import type { AwsomeSource } from "../modelling/awsome.config";
 import { castArray, get as _get } from "lodash";
 
 const zIndex: Record<SnowpackStability, number> = {
@@ -42,8 +42,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
           "#898989",
           radius ?? 40,
           filterSelectionValue?.color ?? "white",
-          filterSelectionValue?.borderColor ??
-            (observation?.$source === ObservationSource.SnowLine ? "#777777" : "#000"),
+          filterSelectionValue?.borderColor ?? "#000",
           filterSelectionValue?.labelColor ?? "#000",
           filterSelectionValue?.labelFontSize ?? 12,
           this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,

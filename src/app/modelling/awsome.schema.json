@@ -1,17 +1,139 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://admin.avalanche.report/schemas/awsome-source",
   "type": "object",
-  "required": ["date", "dateStepSeconds", "sources", "filters"],
   "properties": {
     "date": {
-      "type": "string",
-      "format": "date",
-      "description": "Initial date/time when opening the dashboard"
+      "description": "Initial date/time when opening the dashboard",
+      "type": "string"
+    },
+    "dateMax": {
+      "type": "string"
+    },
+    "dateMin": {
+      "type": "string"
     },
     "dateStepSeconds": {
-      "type": "number",
-      "description": "Seconds between two models runs"
+      "description": "Seconds between two models runs",
+      "type": "number"
+    },
+    "filters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "chartRichLabel": {
+            "enum": ["grainShape", "highlight", "label", "symbol"]
+          },
+          "chartType": {
+            "enum": ["bar", "rose"]
+          },
+          "default": {
+            "enum": ["classify", "label"]
+          },
+          "key": {
+            "description": "Key name defining how to obtain the value from a GeoJSON Feature representing this filter, such as `path.to.variable.in.json`, evaluated relative to the `properties` of a GeoJSON Feature.",
+            "type": "string"
+          },
+          "label": {
+            "description": "Label text shown in the chart",
+            "type": "string"
+          },
+          "selectedValues": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "description": "Identifier for this filter",
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "borderColor": {
+                  "type": "string"
+                },
+                "color": {
+                  "description": "Fill color",
+                  "type": "string"
+                },
+                "label": {
+                  "description": "Label string shown inside the marker",
+                  "type": "string"
+                },
+                "labelColor": {
+                  "description": "Label color",
+                  "type": "string",
+                  "default": "#000"
+                },
+                "labelFontSize": {
+                  "description": "Label font size, in pt",
+                  "type": "number",
+                  "default": 12
+                },
+                "legend": {
+                  "description": "Legend string shown in the chart",
+                  "type": "string"
+                },
+                "numericRange": {
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "opacity": {
+                  "description": "Marker opacity",
+                  "type": "number",
+                  "default": 1
+                },
+                "radius": {
+                  "description": "Radius of the circle marker, in pixels",
+                  "type": "number",
+                  "default": 40
+                },
+                "radiusByZoom": {
+                  "minItems": 19,
+                  "maxItems": 19,
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "value": {
+                  "type": "string"
+                },
+                "weight": {
+                  "description": "Stroke width, in pixels",
+                  "type": "number",
+                  "default": 0
+                },
+                "zIndexOffset": {
+                  "description": "The explicit zIndex of this marker",
+                  "type": "number",
+                  "default": 0
+                }
+              },
+              "required": [
+                "color",
+                "label",
+                "labelColor",
+                "labelFontSize",
+                "legend",
+                "opacity",
+                "radius",
+                "value",
+                "weight",
+                "zIndexOffset"
+              ]
+            }
+          }
+        },
+        "required": ["chartRichLabel", "chartType", "key", "label", "type", "values"]
+      }
     },
     "sources": {
       "type": "array",
@@ -19,156 +141,78 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "description": "Identifier shown in source multiselect"
+            "type": "string"
           },
           "url": {
             "type": "string",
-            "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."
-          },
-          "tooltipTemplate": {
-            "type": "string",
-            "description": "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature."
+            "format": "uri"
           },
           "detailsTemplates": {
+            "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "label": { "type": "string" },
-                "template": { "type": "string" }
-              }
+                "label": {
+                  "type": "string"
+                },
+                "template": {
+                  "type": "string"
+                }
+              },
+              "required": []
             },
-            "description": "Templates for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature."
+            "default": []
           },
-          "detailsTemplate": {
-            "type": "string",
-            "deprecationMessage": "Use detailsTemplates instead!",
-            "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature."
+          "tooltipTemplate": {
+            "type": "string"
+          },
+          "imageOverlays": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "Identifier shown in map layer control",
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "imageBounds": {
+                  "description": "Image bounds such as [[40.712,-74.227],[40.774,-74.125]]",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "type": "array",
+                  "items": {
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "zIndex": {
+                  "type": "number"
+                },
+                "className": {
+                  "description": "A custom class name to assign to the image. Empty by default.",
+                  "type": "string",
+                  "default": ""
+                }
+              },
+              "required": ["name", "imageUrl", "imageBounds", "className"]
+            }
           }
-        }
-      }
-    },
-    "filters": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/FilterSelectionSpec"
+        },
+        "required": ["detailsTemplates"]
       }
     }
   },
-  "definitions": {
-    "FilterSelectionValue": {
-      "properties": {
-        "color": {
-          "type": "string",
-          "description": "Fill color"
-        },
-        "label": {
-          "type": "string",
-          "description": "Label string shown inside the marker"
-        },
-        "legend": {
-          "type": "string",
-          "description": "Legend string shown in the chart"
-        },
-        "numericRange": {
-          "items": {
-            "type": "number"
-          },
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
-        },
-        "value": {
-          "type": "string"
-        },
-        "borderColor": {
-          "type": "string",
-          "description": "Stroke color",
-          "default": "#000"
-        },
-        "labelColor": {
-          "type": "string",
-          "description": "Label color",
-          "default": "#000"
-        },
-        "labelFontSize": {
-          "type": "number",
-          "description": "Label font size, in pt",
-          "default": 12
-        },
-        "opacity": {
-          "type": "number",
-          "description": "Marker opacity",
-          "default": 1
-        },
-        "radius": {
-          "type": "number",
-          "description": "Radius of the circle marker, in pixels",
-          "default": 40
-        },
-        "radiusByZoom": {
-          "items": {
-            "type": "number"
-          },
-          "maxItems": 19,
-          "minItems": 19,
-          "type": "array",
-          "description": "Radius of the circle marker, as array indexed by the map zoom level"
-        },
-        "weight": {
-          "type": "number",
-          "description": "Stroke width, in pixels",
-          "default": 0
-        },
-        "zIndexOffset": {
-          "type": "number",
-          "description": "The explicit zIndex of this marker",
-          "default": 0
-        }
-      },
-      "required": ["value", "color", "label", "legend"],
-      "type": "object"
-    },
-    "FilterSelectionSpec": {
-      "properties": {
-        "chartRichLabel": {
-          "enum": ["highlight", "label", "symbol", "grainShape"],
-          "type": "string",
-          "default": "symbol"
-        },
-        "chartType": {
-          "enum": ["bar", "rose"],
-          "type": "string"
-        },
-        "key": {
-          "type": "string",
-          "description": "Key name defining how to obtain the value from a GeoJSON Feature representing this filter, such as `path.to.variable.in.json`, evaluated relative to the `properties` of a GeoJSON Feature."
-        },
-        "label": {
-          "type": "string",
-          "description": "Label text shown in the chart"
-        },
-        "type": {
-          "type": "string",
-          "description": "Identifier for this filter"
-        },
-        "values": {
-          "items": {
-            "$ref": "#/definitions/FilterSelectionValue"
-          },
-          "type": "array"
-        },
-        "selectedValues": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "description": "Initially selected values, use 'nan' for features w/o specification"
-        }
-      },
-      "required": ["type", "label", "key", "chartType", "chartRichLabel", "values"],
-      "type": "object"
-    }
-  }
+  "required": ["date", "dateStepSeconds", "filters", "sources"]
 }

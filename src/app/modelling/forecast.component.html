@@ -3,7 +3,7 @@
     <div class="layout-left">
       <div class="layout-global">
         <div class="global-bar-scroll">
-          <div class="global-bar global-bar-left">
+          <div class="global-bar global-bar-left flex-wrap">
             <div class="global-bar-item global-bar-item-source">
               <div class="dropdown">
                 <button
@@ -32,6 +32,35 @@
               </div>
             </div>
 
+            <div class="global-bar-item global-bar-item-region" style="width: 0; height: 0">
+              <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
+                <i class="ph ph-number-circle-zero"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('AT-07')"
+                [ngxMousetrapKey]="['r 1']"
+              >
+                <i class="ph ph-number-circle-one"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-BZ')"
+                [ngxMousetrapKey]="['r 2']"
+              >
+                <i class="ph ph-number-circle-two"></i>
+              </button>
+              <button
+                type="button"
+                class="obs-button invisible"
+                (click)="selectRegion('IT-32-TN')"
+                [ngxMousetrapKey]="['r 3']"
+              >
+                <i class="ph ph-number-circle-three"></i>
+              </button>
+            </div>
             <div class="global-bar-item global-bar-item-region">
               <div class="dropdown">
                 <button
@@ -44,17 +73,31 @@
                   {{ "admin.observations.selectRegion.placeholder" | translate }}
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
-                  <div *ngFor="let region of allRegions" class="form-check">
+                  <div *ngFor="let superRegion of ['AT-07', 'IT-32-BZ', 'IT-32-TN']" class="form-check">
                     <label class="form-check-label text-nowrap">
                       <input
-                        [(ngModel)]="selectedRegions[region.id]"
+                        [(ngModel)]="selectedRegions[superRegion]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="onRegionsDropdownSelect()"
+                        (change)="toggleRegion($event, superRegion)"
                         type="checkbox"
                         class="form-check-input"
                       />
-                      {{ region.name }}
+                      {{ "bulletins.table.title.status." + superRegion | translate }}
                     </label>
+                    <div class="ms-3">
+                      <div *ngFor="let region of getSubregions(superRegion)" class="form-check">
+                        <label class="form-check-label text-nowrap">
+                          <input
+                            [(ngModel)]="selectedRegions[region.id]"
+                            [ngModelOptions]="{ standalone: true }"
+                            (change)="onRegionsDropdownSelect()"
+                            type="checkbox"
+                            class="form-check-input"
+                          />
+                          {{ region.name }}
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -65,10 +108,44 @@
                 <i *ngIf="loading" class="ph ph-circle-notch"></i>
               </button>
             </div>
+
             <span *ngFor="let source of allSources" class="global-bar-item">
-              &mdash;
-              <span [style]="{ color: source.fillColor }">●</span>
-              {{ source.name }}
+              <label class="form-check-label text-nowrap">
+                <input
+                  [(ngModel)]="selectedSources[source.id]"
+                  [ngModelOptions]="{ standalone: true }"
+                  (change)="onSourcesDropdownSelect()"
+                  type="checkbox"
+                  class="form-check-input"
+                />
+                <span [style]="{ color: source.fillColor }">●</span>
+                {{ source.name }}
+              </label>
+            </span>
+
+            <span *ngFor="let source of zamgMeteoSourceService.maps" class="global-bar-item">
+              <label class="form-check-label text-nowrap">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  name="zamgMeteoSourceService"
+                  [(ngModel)]="selectedSources[source.label]"
+                  (change)="
+                    selectedSources[source.label]
+                      ? source.addImageOverlay(mapService.map)
+                      : mapService.map.removeLayer(source.imageOverlay)
+                  "
+                />
+                {{ source.label }}
+              </label>
+              {{ " " }}
+              <span *ngIf="selectedSources[source.label]" class="text-bg-light">
+                <kbd (click)="source.change(-1)" ngxMousetrapKey="left">←</kbd>
+                {{ " " }}
+                {{ source.epochMilliseconds | date: "medium" : undefined : translateService.currentLang }}
+                {{ " " }}
+                <kbd (click)="source.change(+1)" ngxMousetrapKey="right">→</kbd>
+              </span>
             </span>
           </div>
         </div>
@@ -125,17 +202,17 @@
 
     <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
       &mdash; Tipp:
-      <kbd (click)="changeRun('previous')" ngxMousetrapKey="left">←</kbd>
-      <kbd (click)="changeRun('next')" ngxMousetrapKey="right">→</kbd>
+      <kbd (click)="changeRun(-1)" ngxMousetrapKey="left">←</kbd>
+      <kbd (click)="changeRun(+1)" ngxMousetrapKey="right">→</kbd>
       <kbd
         *ngIf="showObservationConfigurations"
-        (click)="changeRun('previous', 'observationConfiguration'); setObservationConfiguration()"
+        (click)="changeRun(-1, 'observationConfiguration'); setObservationConfiguration()"
         ngxMousetrapKey="up"
         >↑</kbd
       >
       <kbd
         *ngIf="showObservationConfigurations"
-        (click)="changeRun('next', 'observationConfiguration'); setObservationConfiguration()"
+        (click)="changeRun(+1, 'observationConfiguration'); setObservationConfiguration()"
         ngxMousetrapKey="down"
         >↓</kbd
       >
@@ -144,7 +221,12 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modalService.hide()"></button>
   </div>
 
-  <div class="modal-body" (touchstart)="swipe($event, 'start')" (touchend)="swipe($event, 'end')">
+  <div
+    class="modal-body"
+    (touchstart)="swipe($event, 'start')"
+    (touchend)="swipe($event, 'end')"
+    style="align-self: center"
+  >
     <div *ngIf="selectedModelPoint && !observationPopupIframe">
       <img *ngIf="selectedModelPoint" [src]="selectedModelPoint.$externalURL" class="img-fluid" />
     </div>
@@ -172,7 +254,7 @@
         <tr>
           <th>{{ "qfa.day" | translate }}</th>
           <th *ngFor="let date of qfa.dates" class="text-center">
-            <span>
+            <span style="background-color: #60afff; padding: 0">
               {{ date }}
             </span>
           </th>
@@ -180,11 +262,11 @@
         <tr>
           <th>{{ "qfa.time" | translate }}</th>
           <th *ngFor="let _ of qfa.dates" class="table-entry">
-            <div>
-              <span>00</span>
-              <span>06</span>
-              <span>12</span>
-              <span>18</span>
+            <div style="padding: 0">
+              <span style="background-color: #60afff">00</span>
+              <span style="background-color: #60afff">06</span>
+              <span style="background-color: #60afff">12</span>
+              <span style="background-color: #60afff">18</span>
             </div>
           </th>
         </tr>

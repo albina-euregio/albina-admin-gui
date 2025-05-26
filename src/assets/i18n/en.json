@@ -112,11 +112,13 @@
       "title": {
         "avalanche": "Avalanche",
         "matrix": "Matrix",
-        "characteristics": "Characteristics"
+        "characteristics": "Characteristics",
+        "comment": "Comment"
       },
       "label": {
         "glidingSnowActivity": "Gliding snow activity",
         "snowHeight": "Snow height",
+        "snowHeightAverage": "Average snow height",
         "zeroDegreeIsotherm": "0°C isotherm",
         "looseSnowMoisture": "Loose snow moisture",
         "looseSnowGrainShape": "Loose snow grain shape",
@@ -142,6 +144,7 @@
         "hasDaytimeDependency": "Daytime dependency",
         "dangerIncreaseWithElevation": "Danger increase with elevation",
         "runoutIntoGreen": "Runout into green",
+        "penetrateDeepLayers": "Penetrate deep layers",
         "highestDangerAspect": "Highest danger aspect",
         "dangerPeak": "Danger peak",
         "slopeGradient": "Slope gradient",
@@ -150,9 +153,32 @@
         "dangerSigns": "Danger signs",
         "aspects": "Aspects"
       },
-      "editDangerSourceDialog": {
+      "editVariantDialog": {
         "save": "Save",
         "cancel": "Cancel"
+      },
+      "deleteVariantDialog": {
+        "message": "Do you want to delete this variant?",
+        "accept": "Yes",
+        "reject": "No"
+      },
+      "noRegionDialog": {
+        "message": "At least one micro-region has to be yours.",
+        "accept": "Ok"
+      },
+      "discardDialog": {
+        "message": "Do you want to discard the changes?",
+        "accept": "Yes",
+        "reject": "No"
+      },
+      "saveErrorDialog": {
+        "message": "There was an error saving the danger sources!",
+        "accept": "Ok"
+      },
+      "loadDialog": {
+        "message": "Do you want to load all danger source variants from the day before?",
+        "accept": "Yes",
+        "reject": "No"
       }
     }
   },
@@ -194,14 +220,17 @@
       "preview": "Preview bulletin (PDF)",
       "check": "Check bulletin",
       "info": "Show publication status",
+      "loadSuggestionFromDangerSources": "Load suggestion",
+      "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Publish all regions",
+      "publishAllNoMessages": "Publish all regions (no messages)",
       "mediaFile": "Upload media file"
     },
     "status": {
       "submittedInfo": "Will be published at 5PM",
       "resubmittedInfo": "Will be published at 8AM",
-      "publishedInfo" : "Has been published",
-      "noPublicationInfo" : "Will NOT be published automatically",
+      "publishedInfo": "Has been published",
+      "noPublicationInfo": "Will NOT be published automatically",
       "loadingPreview": "Creating PDF preview ...",
       "loading": "Loading bulletin ...",
       "loadMoreBulletins": "Load {{count}} more bulletins",
@@ -215,6 +244,7 @@
         "edit": "Edit micro regions",
         "copy": "Copy region",
         "delete": "Delete region",
+        "compare": "Compare region",
         "undo": "Undo last change in region",
         "redo": "Redo change in region",
         "createRegion": "Create region",
@@ -328,6 +358,11 @@
         "accept": "Yes",
         "reject": "No"
       },
+      "deleteAllWarningRegionsDialog": {
+        "message": "Do you want to delete all warning regions?",
+        "accept": "Yes",
+        "reject": "No"
+      },
       "loadAutoSaveDialog": {
         "message": "Do you want to load the automatically saved bulletins?",
         "accept": "Yes",
@@ -363,11 +398,11 @@
         "favourableSituation": "Favourable situation",
         "cancel": "Cancel"
       },
-      "removeDaytimeDependencyDialog" : {
+      "removeDaytimeDependencyDialog": {
         "message": "Which avalanche problems do you want to keep?",
         "cancel": "Cancel"
       },
-      "strategicMindsetDialog" : {
+      "strategicMindsetDialog": {
         "title": "Strategic Mindsets",
         "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
         "description": {
@@ -420,11 +455,11 @@
           "spring_diurnal": "Spring Diurnal"
         }
       },
-      "decisionTree" : {
+      "decisionTree": {
         "filepath": "./assets/img/decision_tree-en.svg",
         "feedbackURL": "https://admin.avalanche.report/umfrage-entscheidungsbaum/en/",
-        "decisionTree" : "Decision tree",
-        "feedback" : "Feedback",
+        "decisionTree": "Decision tree",
+        "feedback": "Feedback",
         "save": "Save",
         "discard": "Discard"
       }
@@ -440,8 +475,8 @@
           "AT-06": "Styria",
           "AT-07": "Tyrol",
           "AT-08": "Vorarlberg",
-          "CH" : "Switzerland",
-          "DE-BY" : "Bavaria",
+          "CH": "Switzerland",
+          "DE-BY": "Bavaria",
           "GEOSPHERE": "GEOSPHERE",
           "IT-32-TN": "Trentino",
           "IT-32-BZ": "South Tyrol",
@@ -563,6 +598,7 @@
       },
       "publishAllDialog": {
         "message": "Do you want to publish all regions?",
+        "changeMessage": "Do you want to publish all regions? (no messages)",
         "accept": "Yes",
         "reject": "No"
       }
@@ -589,6 +625,7 @@
         "pdfDirectory": "Directory for PDF",
         "htmlDirectory": "Directory for HTML",
         "serverImagesUrl": "Path to server images",
+        "dangerLevelElevationDependency": "Elevation dependency of danger level",
         "mapsPath": "Path to maps",
         "mediaPath": "Path to media files",
         "mapProductionUrl": "URL for map production",
@@ -742,7 +779,8 @@
       "filters": "Filters",
       "title": "Observations",
       "newObservation": "New observation",
-      "exportObservations": "Export observations",
+      "exportObservations": "Export observations (GeoJSON)",
+      "exportStatistics": "Export statistics (CSV)",
       "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Download"
@@ -759,6 +797,7 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) selected"
       },
+
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
@@ -786,6 +825,9 @@
         },
         "dangerPattern": {
           "caption": "Danger Pattern"
+        },
+        "dangerSource": {
+          "caption": "Danger Source"
         },
         "days": {
           "caption": "Day"
@@ -862,6 +904,8 @@
   },
   "statistics": {
     "title": "Statistics",
+    "bulletins": "Avalanche Bulletins",
+    "dangerSources": "Danger Sources",
     "button": {
       "submit": "Download"
     },
@@ -904,7 +948,7 @@
     "dp4": "dp.4: cold following warm / warm following cold",
     "dp5": "dp.5: snowfall after a long period of cold",
     "dp6": "dp.6: cold, loose snow and wind",
-    "dp7": "dp.7: snow-poor zones in snow-rich surrounding",
+    "dp7": "dp.7: shallow snow next to deep snow",
     "dp8": "dp.8: buried surface hoar",
     "dp9": "dp.9: buried graupel",
     "dp10": "dp.10: springtime scenario"
@@ -921,6 +965,7 @@
     "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
+    "DrySnowfallLevel": "Dry snowfall level",
     "TimeSeries": "Time series",
     "Incident": "Incident",
     "Profile": "Snow profile",
@@ -932,12 +977,22 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
-    "SnowLine": "Snow line",
+    "ForBlog": "For blog",
     "SurfaceHoar": "Surface hoar",
     "Graupel": "Graupel",
     "StabilityTest": "Stability test",
     "IceFormation": "Ice formation",
     "VeryLightNewSnow": "Very light new snow"
+  },
+  "elevationTolerance": {
+    "exact": "exact",
+    "50m": "±50m",
+    "100m": "±100m",
+    "200": "±200m"
+  },
+  "elevationPeriod": {
+    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
+    "observationPeriod": "Dry snowfall boundary at the time of observation"
   },
   "aspect": {
     "N": "N",
@@ -1012,10 +1067,16 @@
     "lower": "lower",
     "ground": "ground"
   },
+  "weakLayerCrust": {
+    "no": "no",
+    "partly": "partly",
+    "yes": "yes"
+  },
   "creationProcess": {
     "radiation_recrystallization": "radiation",
     "diurnal_recrystallization": "diurnal",
-    "melt_layer_recrystallization": "melt layer"
+    "melt_layer_recrystallization": "melt layer",
+    "surface_hoar_formation": "surface hoar"
   },
   "recognizability": {
     "very_easy": "very easy",
@@ -1056,19 +1117,38 @@
     "ice": "I"
   },
   "hardnessTendency": {
-    "decreasing": "decreasing with height",
+    "decreasing": "softer below",
     "steady": "uniform",
-    "increasing": "increasing with height"
+    "increasing": "softer above"
   },
   "terrainType": {
-    "gullies": "gullies",
-    "bowls": "bowls",
+    "gullies_and_bowls": "gullies and bowls",
+    "adjacent_to_ridgelines": "adjacent to ridgelines",
+    "distant_from_ridgelines": "distant from ridgelines",
+    "in_the_vicinity_of_peaks": "in the vicinity of peaks",
     "pass_areas": "pass areas",
-    "ridge_lines": "ridge lines"
+    "shady_slopes": "shady slopes",
+    "sunny_slopes": "sunny slopes",
+    "grassy_slopes": "grassy slopes",
+    "cut_slopes": "cut slopes",
+    "wind_loaded_slopes": "wind loaded slopes",
+    "base_of_rock_walls": "base of rock walls",
+    "behind_abrupt_changes_in_the_terrain": "behind abrupt changes in the terrain",
+    "transitions_into_gullies_and_bowls": "transitions into gullies and bowls",
+    "areas_where_the_snow_cover_is_rather_shallow": "areas where the snow cover is rather shallow",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "transitions from a shallow to a deep snowpack",
+    "highly_frequented_off_piste_terrain": "highly frequented off piste terrain",
+    "little_used_backcountry_terrain": "little used backcountry terrain",
+    "places_that_are_protected_from_the_wind": "places that are protected from the wind",
+    "regions_exposed_to_the_foehn_wind": "regions exposed to the foehn wind",
+    "regions_with_a_lot_of_snow": "regions with a lot of snow",
+    "regions_exposed_to_precipitation": "regions exposed to precipitation",
+    "regions_exposed_to_heavier_precipitation": "regions exposed to heavier precipitation"
   },
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
-    "whumpfing": "whumpfing"
+    "whumpfing": "whumpfing",
+    "fresh_avalanches": "fresh avalanches"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",
@@ -1160,6 +1240,9 @@
     "no": "no"
   },
   "observations": {
+    "allowEdit": "Edit external observation",
+    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
+    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
     "aspect": "Aspect",
     "authorName": "Author name",
     "avalancheLength": "Avalanche length",
@@ -1169,6 +1252,8 @@
     "avalancheWidth": "Avalanche width",
     "search": "Search",
     "count": "# observations:",
+    "elevationTolerance": "Accuracy of elevation data",
+    "elevationPeriod": "Elevation time period",
     "layers": {
       "observers": "Observers",
       "weatherStations": "Weather stations",
@@ -1177,11 +1262,12 @@
     },
     "weatherStations": {
       "tooltips": {
+        "drySnowfallLevel": "Dry snowfall level",
         "globalRadiation": "Global radiation",
+        "newSnow": "New snow",
+        "snowLine": "Snow line",
         "snowHeight": "Snow height",
-        "snowDifference24h": "Snow difference 24h",
-        "snowDifference48h": "Snow difference 48h",
-        "snowDifference72h": "Snow difference 72h",
+        "snowDifference": "Snow difference",
         "airTemperature": "Air temperature",
         "airTemperatureMax": "Air temperature Max",
         "airTemperatureMin": "Air temperature Min",
@@ -1195,6 +1281,14 @@
         "windGust": "Wind gust"
       }
     },
+    "webcams": {
+      "tooltips": {
+        "minusTenMinutes": "10min back",
+        "minusOneHour": "1h back",
+        "plusTenMinutes": "10min forward",
+        "plusOneHour": "1h forward"
+      }
+    },
     "button": {
       "add": "Add observation",
       "save": "Save observation",
@@ -1206,6 +1300,7 @@
     "comment": "Comment",
     "content": "Content",
     "dangerRating": "Danger rating",
+    "dangerSource": "Danger source",
     "elevation": "Elevation",
     "elevationRange": "Elevation range",
     "elevationLowerBound": "Elevation lower bound",
@@ -1230,6 +1325,7 @@
     "latitude": "Latitude",
     "locationName": "Location",
     "longitude": "Longitude",
+    "observationType": "Observation type",
     "personInvolvement": "Person involvement",
     "reportDate": "Report date",
     "showTable": "Table",

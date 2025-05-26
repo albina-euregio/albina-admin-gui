@@ -1,5 +1,5 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
@@ -10,7 +10,7 @@ export class StatisticsService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
-  getStatisticsCsv(
+  getBulletinStatisticsCsv(
     startDate: Date,
     endDate: Date,
     lang: string,
@@ -30,8 +30,21 @@ export class StatisticsService {
           ["duplicates", duplicates],
         ])
         .toString();
-    const headers = this.authenticationService.newAuthHeader("text/csv");
+    const headers = new HttpHeaders({ Accept: "text/csv" });
+    return this.http.get(url, { headers, responseType: "blob" });
+  }
 
-    return this.http.get(url, { headers: headers, responseType: "blob" });
+  getDangerSourceStatisticsCsv(startDate: Date, endDate: Date): Observable<Blob> {
+    const url =
+      this.constantsService.getServerUrl() +
+      "statistics/danger-sources?" +
+      this.constantsService
+        .createSearchParams([
+          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
+          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
+        ])
+        .toString();
+    const headers = new HttpHeaders({ Accept: "text/csv" });
+    return this.http.get(url, { headers, responseType: "blob" });
   }
 }

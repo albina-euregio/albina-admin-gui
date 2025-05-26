@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { flatMap, last, map } from "rxjs/operators";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
@@ -35,7 +35,7 @@ export class AlpsolutProfileService {
     ];
     return this.http
       .get(this.TOKEN_URL, {
-        headers: this.authenticationService.newAuthHeader(),
+        headers: new HttpHeaders({ Accept: "text/plain" }),
         observe: "response",
         responseType: "text",
       })

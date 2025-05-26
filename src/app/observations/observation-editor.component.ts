@@ -1,25 +1,39 @@
 import { CommonModule } from "@angular/common";
-import { AfterViewInit, Component, ElementRef, viewChild, input, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { AfterViewInit, Component, ElementRef, viewChild, input, inject, signal } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
 import { TypeaheadMatch, TypeaheadModule } from "ngx-bootstrap/typeahead";
-import { Observable, Observer, map, of, switchMap } from "rxjs";
+import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
 import * as Enums from "../enums/enums";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
-import { GenericObservation, ImportantObservation, PersonInvolvement } from "./models/generic-observation.model";
+import {
+  GenericObservation,
+  ImportantObservation,
+  ObservationSource,
+  ObservationType,
+  PersonInvolvement,
+} from "./models/generic-observation.model";
 import { xor } from "lodash";
+import type {
+  LolaRainBoundaryElevationTolerance,
+  LolaRainBoundaryElevationPeriod,
+} from "../../../observations-api/src/fetch/observations/lola-kronos.model";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
+import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
+import orderBy from "lodash/orderBy";
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     TranslateModule,
     TypeaheadModule,
     AspectsComponent,
@@ -32,17 +46,25 @@ export class ObservationEditorComponent implements AfterViewInit {
   private geocodingService = inject(GeocodingService);
   private coordinateDataService = inject(CoordinateDataService);
   private authenticationService = inject(AuthenticationService);
+  private dangerSourcesService = inject(DangerSourcesService);
+  readonly translateService = inject(TranslateService);
 
   readonly observation = input<GenericObservation>(undefined);
   readonly eventDateDate = viewChild<ElementRef<HTMLInputElement>>("eventDateDate");
   readonly eventDateTime = viewChild<ElementRef<HTMLInputElement>>("eventDateTime");
   readonly reportDateDate = viewChild<ElementRef<HTMLInputElement>>("reportDateDate");
   readonly reportDateTime = viewChild<ElementRef<HTMLInputElement>>("reportDateTime");
+  readonly dangerSources = signal<DangerSourceModel[]>([]);
+  private pendingDangerSources: Subscription;
   avalancheProblems: Enums.AvalancheProblem[] = this.authenticationService.getActiveRegionAvalancheProblems();
   dangerPatterns = Object.values(Enums.DangerPattern);
   importantObservations = Object.values(ImportantObservation);
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);
   personInvolvementValues = Object.values(PersonInvolvement);
+  observationTypeValues = Object.values(ObservationType);
+  ObservationSource = ObservationSource;
+  elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
+  elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];
   xor = xor;
   locationSuggestions$ = new Observable((observer: Observer<string | undefined>) =>
     observer.next(this.observation().locationName),
@@ -69,6 +91,21 @@ export class ObservationEditorComponent implements AfterViewInit {
     navigator.clipboard.writeText(`${this.observation().latitude}, ${this.observation().longitude}`);
   }
 
+  setObservationType() {
+    const observation = this.observation();
+    if (observation.$source === ObservationSource.AvalancheWarningService) {
+      if (observation.personInvolvement !== undefined && observation.personInvolvement !== PersonInvolvement.Unknown) {
+        observation.$type = ObservationType.Avalanche;
+      } else {
+        observation.$type = ObservationType.SimpleObservation;
+      }
+    }
+  }
+
+  get isDrySnowFallLevel(): boolean {
+    return this.observation().$type === ObservationType.DrySnowfallLevel;
+  }
+
   ngAfterViewInit() {
     // Use ElementRef to achieve a one-way binding between observation.eventDate and the two input fields.
     // To allow for modifying an existing observation, initially the observation.eventDate is written to the two input fields.
@@ -80,6 +117,15 @@ export class ObservationEditorComponent implements AfterViewInit {
       nativeElement.valueAsDate = this.reportDate;
       nativeElement.onchange = (e) => this.handleDateEvent(e, "reportDate");
     }
+    this.loadDangerSources();
+  }
+
+  private loadDangerSources() {
+    const date = isFinite(+this.eventDate) ? this.eventDate : new Date();
+    this.pendingDangerSources?.unsubscribe();
+    this.pendingDangerSources = this.dangerSourcesService
+      .loadDangerSources([date, date], [this.authenticationService.getActiveRegionId()])
+      .subscribe((dangerSources) => this.dangerSources.set(orderBy(dangerSources, (s) => s.creationDate)));
   }
 
   get eventDate(): Date {
@@ -97,6 +143,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     this[`${key}Time`]().nativeElement.valueAsDate = date;
     date = isFinite(+date) ? fromUTC(date) : undefined;
     this.observation()[key] = date;
+    this.loadDangerSources();
   }
 
   handleDateEvent(event: Event, key: "eventDate" | "reportDate") {
@@ -115,6 +162,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     } else {
       this.observation()[key] = date;
     }
+    this.loadDangerSources();
   }
 
   selectLocation(match: TypeaheadMatch<Feature<Point, GeocodingProperties>>): void {
@@ -149,7 +197,8 @@ export class ObservationEditorComponent implements AfterViewInit {
         observation.authorName = "Leitstelle Tirol";
       }
 
-      const code = content.match(/Einsatzcode:\s*(.*)\n/)[1];
+      const match = content.match(/Einsatzcode:\s*(.*)\n/);
+      const code = match ? match[1] : "";
       if (codes[code]) observation.personInvolvement = codes[code];
 
       if (!observation.locationName && content.includes("Einsatzort")) {

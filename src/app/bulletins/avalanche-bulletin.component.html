@@ -13,7 +13,7 @@
       </button>
     </div>
     <div class="region-form__title">
-      <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(bulletin().getOwnerRegion()) }}</h6>
+      <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(bulletin().ownerRegion) }}</h6>
       <h2 class="font-l">
         <span *ngIf="bulletin().getSavedAndPublishedRegions().length > 0">{{
           regionsService.getRegionName(bulletin().getSavedAndPublishedRegions()[0].toString())
@@ -24,7 +24,7 @@
       </h2>
 
       <div class="user-avatar region-form__author">
-        <span class="user-avatar__name">{{ bulletin().getAuthor().getName() }}</span>
+        <span class="user-avatar__name">{{ bulletin().author.name }}</span>
       </div>
     </div>
   </header>
@@ -47,7 +47,7 @@
     </select>
   </div>
 
-  <div *ngIf="bulletinsService.isLocked(bulletin().getId())" class="region-form__banner banner banner-warning-strong">
+  <div *ngIf="bulletinsService.isLocked(bulletin().id)" class="region-form__banner banner banner-warning-strong">
     <p class="banner__text">
       <i class="ph ph-lock"></i>
       {{ "bulletins.create.regionLocked" | translate }}
@@ -55,7 +55,7 @@
   </div>
 
   <div
-    *ngIf="!bulletinsService.isLocked(bulletin().getId()) && bulletinsService.getIsEditable() && isCreator(bulletin())"
+    *ngIf="!bulletinsService.isLocked(bulletin().id) && bulletinsService.getIsEditable() && isCreator(bulletin())"
     class="region-form__banner banner banner-info"
   >
     <p class="banner__text">
@@ -113,7 +113,7 @@
       <button
         *ngIf="!editRegions"
         (click)="undoRedoEvent.emit('undo')"
-        [disabled]="!undoRedoService.isEnabled('undo', bulletin().getId())"
+        [disabled]="!undoRedoService.isEnabled('undo', bulletin().id)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.undo' | translate }}"
         type="button"
@@ -125,7 +125,7 @@
       <button
         *ngIf="!editRegions"
         (click)="undoRedoEvent.emit('redo')"
-        [disabled]="!undoRedoService.isEnabled('redo', bulletin().getId())"
+        [disabled]="!undoRedoService.isEnabled('redo', bulletin().id)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.redo' | translate }}"
         type="button"
@@ -138,7 +138,7 @@
   </div>
 
   <div
-    *ngIf="!bulletinsService.isLocked(bulletin().getId()) && !isCreator(bulletin()) && hasSuggestions(bulletin())"
+    *ngIf="!bulletinsService.isLocked(bulletin().id) && !isCreator(bulletin()) && hasSuggestions(bulletin())"
     class="region-form__banner banner banner-warning-strong"
   >
     <p class="banner__text">
@@ -167,7 +167,7 @@
 
   <div
     *ngIf="
-      !bulletinsService.isLocked(bulletin().getId()) &&
+      !bulletinsService.isLocked(bulletin().id) &&
       (!bulletinsService.getIsEditable() ||
         (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())))
     "

@@ -1,5 +1,5 @@
-import { Aspect, AvalancheType, DangerRating, RegionStatus, Tendency } from "../../enums/enums";
-import { MatrixInformationModel } from "../../models/matrix-information.model";
+import { Aspect, AvalancheProblem, AvalancheType, DangerRating, RegionStatus, Tendency } from "../../enums/enums";
+import { MatrixInformationModel, MatrixInformationSchema } from "../../models/matrix-information.model";
 import { DangerSourceModel } from "./danger-source.model";
 import { PolygonObject } from "./polygon-object.model";
 
@@ -39,6 +39,7 @@ export enum Probability {
 export enum DangerSign {
   shooting_cracks = "shooting_cracks",
   whumpfing = "whumpfing",
+  fresh_avalanches = "fresh_avalanches",
 }
 
 export enum GlidingSnowActivity {
@@ -130,10 +131,17 @@ export enum SnowpackPosition {
   ground = "ground",
 }
 
+export enum WeakLayerCrust {
+  yes = "yes",
+  partly = "partly",
+  no = "no",
+}
+
 export enum CreationProcess {
   radiation_recrystallization = "radiation_recrystallization",
   diurnal_recrystallization = "diurnal_recrystallization",
   melt_layer_recrystallization = "melt_layer_recrystallization",
+  surface_hoar_formation = "surface_hoar_formation",
 }
 
 export enum Recognizability {
@@ -144,10 +152,28 @@ export enum Recognizability {
 }
 
 export enum TerrainType {
-  gullies = "gullies",
-  bowls = "bowls",
+  gullies_and_bowls = "gullies_and_bowls",
+  adjacent_to_ridgelines = "adjacent_to_ridgelines",
+  distant_from_ridgelines = "distant_from_ridgelines",
+  in_the_vicinity_of_peaks = "in_the_vicinity_of_peaks",
   pass_areas = "pass_areas",
-  ridge_lines = "ridge_lines",
+  shady_slopes = "shady_slopes",
+  sunny_slopes = "sunny_slopes",
+  grassy_slopes = "grassy_slopes",
+  cut_slopes = "cut_slopes",
+  wind_loaded_slopes = "wind_loaded_slopes",
+  base_of_rock_walls = "base_of_rock_walls",
+  behind_abrupt_changes_in_the_terrain = "behind_abrupt_changes_in_the_terrain",
+  transitions_into_gullies_and_bowls = "transitions_into_gullies_and_bowls",
+  areas_where_the_snow_cover_is_rather_shallow = "areas_where_the_snow_cover_is_rather_shallow",
+  transitions_from_a_shallow_to_a_deep_snowpack = "transitions_from_a_shallow_to_a_deep_snowpack",
+  highly_frequented_off_piste_terrain = "highly_frequented_off_piste_terrain",
+  little_used_backcountry_terrain = "little_used_backcountry_terrain",
+  places_that_are_protected_from_the_wind = "places_that_are_protected_from_the_wind",
+  regions_exposed_to_the_foehn_wind = "regions_exposed_to_the_foehn_wind",
+  regions_with_a_lot_of_snow = "regions_with_a_lot_of_snow",
+  regions_exposed_to_precipitation = "regions_exposed_to_precipitation",
+  regions_exposed_to_heavier_precipitation = "regions_exposed_to_heavier_precipitation",
 }
 
 export enum Wetness {
@@ -158,6 +184,8 @@ export enum Wetness {
 
 export class DangerSourceVariantModel implements PolygonObject {
   id: string;
+  comment: string;
+  textcat: string;
 
   originalDangerSourceVariantId: string;
   forecastDangerSourceVariantId: string;
@@ -182,6 +210,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   dangerPeak: Daytime;
   slopeGradient: SlopeGradient;
   runoutIntoGreen: boolean | undefined;
+  penetrateDeepLayers: boolean | undefined;
   naturalRelease: Probability;
   dangerSigns: DangerSign[];
   eawsMatrixInformation: MatrixInformationModel;
@@ -193,6 +222,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   glidingSnowActivityValue: number | undefined;
   snowHeightUpperLimit: number | undefined;
   snowHeightLowerLimit: number | undefined;
+  snowHeightAverage: number | undefined;
   zeroDegreeIsotherm: boolean | undefined;
 
   /** --------------- */
@@ -213,13 +243,13 @@ export class DangerSourceVariantModel implements PolygonObject {
   weakLayerThickness: Thickness;
   weakLayerStrength: Characteristic;
   weakLayerWet: boolean | undefined;
-  weakLayerCrustAbove: boolean | undefined;
-  weakLayerCrustBelow: boolean | undefined;
+  weakLayerCrustAbove: WeakLayerCrust;
+  weakLayerCrustBelow: WeakLayerCrust;
   weakLayerPosition: SnowpackPosition;
   weakLayerCreation: CreationProcess;
   weakLayerDistribution: Distribution;
   dangerSpotRecognizability: Recognizability;
-  remoteTriggering: boolean | undefined;
+  remoteTriggering: Probability;
   terrainTypes: TerrainType[];
 
   /** --------------------- */
@@ -232,6 +262,8 @@ export class DangerSourceVariantModel implements PolygonObject {
     const variant = new DangerSourceVariantModel();
 
     variant.id = json.id;
+    variant.comment = json.comment;
+    variant.textcat = json.textcat;
     variant.originalDangerSourceVariantId = json.originalDangerSourceVariantId;
     variant.forecastDangerSourceVariantId = json.forecastDangerSourceVariantId;
     variant.dangerSource = DangerSourceModel.createFromJson(json.dangerSource);
@@ -255,13 +287,15 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.dangerPeak = json.dangerPeak;
     variant.slopeGradient = json.slopeGradient;
     variant.runoutIntoGreen = json.runoutIntoGreen;
+    variant.penetrateDeepLayers = json.penetrateDeepLayers;
     variant.naturalRelease = json.naturalRelease;
     variant.dangerSigns = json.dangerSigns;
-    variant.eawsMatrixInformation = MatrixInformationModel.createFromJson(json.eawsMatrixInformation);
+    variant.eawsMatrixInformation = MatrixInformationSchema.parse(json.eawsMatrixInformation);
     variant.glidingSnowActivity = json.glidingSnowActivity;
     variant.glidingSnowActivityValue = json.glidingSnowActivityValue;
     variant.snowHeightUpperLimit = json.snowHeightUpperLimit;
     variant.snowHeightLowerLimit = json.snowHeightLowerLimit;
+    variant.snowHeightAverage = json.snowHeightAverage;
     variant.zeroDegreeIsotherm = json.zeroDegreeIsotherm;
     variant.slabGrainShape = json.slabGrainShape;
     variant.slabThicknessUpperLimit = json.slabThicknessUpperLimit;
@@ -299,6 +333,8 @@ export class DangerSourceVariantModel implements PolygonObject {
       } else if (variant.id) {
         this.originalDangerSourceVariantId = variant.id;
       }
+      this.comment = variant.comment;
+      this.textcat = variant.textcat;
       this.dangerSource = DangerSourceModel.createFromJson(variant.dangerSource);
       this.creationDate = new Date(variant.creationDate);
       this.updateDate = new Date(variant.updateDate);
@@ -320,13 +356,15 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.dangerPeak = variant.dangerPeak;
       this.slopeGradient = variant.slopeGradient;
       this.runoutIntoGreen = variant.runoutIntoGreen;
+      this.penetrateDeepLayers = variant.penetrateDeepLayers;
       this.naturalRelease = variant.naturalRelease;
       this.dangerSigns = variant.dangerSigns;
-      this.eawsMatrixInformation = new MatrixInformationModel(variant.eawsMatrixInformation);
+      this.eawsMatrixInformation = MatrixInformationSchema.parse(variant.eawsMatrixInformation);
       this.glidingSnowActivity = variant.glidingSnowActivity;
       this.glidingSnowActivityValue = variant.glidingSnowActivityValue;
       this.snowHeightUpperLimit = variant.snowHeightUpperLimit;
       this.snowHeightLowerLimit = variant.snowHeightLowerLimit;
+      this.snowHeightAverage = variant.snowHeightAverage;
       this.zeroDegreeIsotherm = variant.zeroDegreeIsotherm;
       this.slabGrainShape = variant.slabGrainShape;
       this.slabThicknessUpperLimit = variant.slabThicknessUpperLimit;
@@ -361,7 +399,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.hasDaytimeDependency = false;
       this.aspects = new Array<Aspect>();
       this.dangerSigns = new Array<DangerSign>();
-      this.eawsMatrixInformation = new MatrixInformationModel();
+      this.eawsMatrixInformation = MatrixInformationSchema.parse({});
       this.terrainTypes = new Array<TerrainType>();
     }
   }
@@ -379,20 +417,167 @@ export class DangerSourceVariantModel implements PolygonObject {
   }
 
   getForenoonDangerRatingAbove(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid below
+    /*
+    if (!(this.treelineLow || this.elevationLow) && (this.treelineHigh || this.elevationHigh)) {
+      return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return this.eawsMatrixInformation.dangerRating;
+      } else {
+        return DangerRating.low;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   getAfternoonDangerRatingAbove(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid below
+    /*
+    if (!(this.treelineLow || this.elevationLow) && (this.treelineHigh || this.elevationHigh)) {
+        return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return DangerRating.low;
+      } else {
+        return this.eawsMatrixInformation.dangerRating;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   getForenoonDangerRatingBelow(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid above
+    /*
+    if (!(this.treelineHigh || this.elevationHigh) && (this.treelineLow || this.elevationLow)) {
+      return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return this.eawsMatrixInformation.dangerRating;
+      } else {
+        return DangerRating.low;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   getAfternoonDangerRatingBelow(): DangerRating {
-    return this.eawsMatrixInformation.dangerRating;
+    // only valid above
+    /*
+    if (!(this.treelineHigh || this.elevationHigh) && (this.treelineLow || this.elevationLow)) {
+      return undefined;
+    }
+    */
+
+    if (this.hasDaytimeDependency) {
+      if (this.dangerPeak !== Daytime.afternoon) {
+        return DangerRating.low;
+      } else {
+        return this.eawsMatrixInformation.dangerRating;
+      }
+    } else {
+      return this.eawsMatrixInformation.dangerRating;
+    }
   }
 
   updateDangerRating() {}
+
+  getAvalancheProblem(): AvalancheProblem {
+    switch (this.avalancheType) {
+      case AvalancheType.slab:
+        switch (this.slabGrainShape) {
+          case GrainShape.PP:
+          case GrainShape.DF:
+          case GrainShape.RG:
+          case GrainShape.FC:
+            if (this.weakLayerPersistent) {
+              switch (this.dangerSpotRecognizability) {
+                case Recognizability.very_easy:
+                case Recognizability.easy:
+                  return AvalancheProblem.wind_slab;
+                case Recognizability.hard:
+                case Recognizability.very_hard:
+                  return AvalancheProblem.persistent_weak_layers;
+                default:
+                  return undefined;
+              }
+            } else {
+              switch (this.dangerSpotRecognizability) {
+                case Recognizability.very_easy:
+                case Recognizability.easy:
+                  return AvalancheProblem.wind_slab;
+                case Recognizability.hard:
+                case Recognizability.very_hard:
+                  return AvalancheProblem.new_snow;
+                default:
+                  return undefined;
+              }
+            }
+          case GrainShape.MF:
+            return AvalancheProblem.wet_snow;
+          case GrainShape.MFcr:
+            if (this.weakLayerPersistent) {
+              return AvalancheProblem.persistent_weak_layers;
+            } else {
+              return AvalancheProblem.wet_snow;
+            }
+          default:
+            return undefined;
+        }
+      case AvalancheType.loose:
+        switch (this.looseSnowGrainShape) {
+          case GrainShape.PP:
+          case GrainShape.DF:
+            return AvalancheProblem.new_snow;
+          case GrainShape.MF:
+            return AvalancheProblem.wet_snow;
+          case GrainShape.FC:
+          case GrainShape.DH:
+          case GrainShape.SH:
+            return undefined;
+          default:
+            return undefined;
+        }
+      case AvalancheType.glide:
+        return AvalancheProblem.gliding_snow;
+      default:
+        return undefined;
+    }
+  }
+
+  compareTo(other: DangerSourceVariantModel): number {
+    if (this.eawsMatrixInformation.dangerRating < other.eawsMatrixInformation.dangerRating) {
+      return -1;
+    } else if (this.eawsMatrixInformation.dangerRating > other.eawsMatrixInformation.dangerRating) {
+      return 1;
+    } else {
+      if (this.eawsMatrixInformation.snowpackStabilityValue < other.eawsMatrixInformation.snowpackStabilityValue) {
+        return -1;
+      } else if (
+        this.eawsMatrixInformation.snowpackStabilityValue > other.eawsMatrixInformation.snowpackStabilityValue
+      ) {
+        return 1;
+      } else {
+        if (this.eawsMatrixInformation.avalancheSizeValue < other.eawsMatrixInformation.avalancheSizeValue) {
+          return -1;
+        } else if (this.eawsMatrixInformation.avalancheSizeValue > other.eawsMatrixInformation.avalancheSizeValue) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+  }
 }

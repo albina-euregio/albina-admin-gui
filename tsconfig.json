@@ -3,7 +3,7 @@
     "baseUrl": "",
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": ["es2020", "dom"],
+    "lib": ["es2020", "dom", "ESNext.Array"],
     "module": "es2020",
     "moduleResolution": "node",
     "outDir": "dist/out-tsc",

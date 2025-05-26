@@ -1,14 +1,13 @@
-import { Component, HostListener, ElementRef, TemplateRef, OnDestroy, OnInit, viewChild, inject } from "@angular/core";
+import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 // models
 import { BulletinModel } from "../models/bulletin.model";
 
 // services
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -20,15 +19,19 @@ import {
   DangerSourceVariantModel,
   DangerSourceVariantStatus,
   DangerSourceVariantType,
+  Daytime,
+  Probability,
 } from "./models/danger-source-variant.model";
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
 import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
-import { NgIf, NgFor, NgTemplateOutlet, DatePipe } from "@angular/common";
+import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
 import { DangerSourceVariantComponent } from "./danger-source-variant.component";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { Subscription } from "rxjs";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { AspectsComponent } from "../shared/aspects.component";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",
@@ -39,10 +42,11 @@ import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
     NgTemplateOutlet,
     DangerSourceVariantComponent,
     BsDropdownModule,
-    DangerRatingIconComponent,
     DatePipe,
     TranslateModule,
     NgxMousetrapDirective,
+    AvalancheProblemIconsComponent,
+    AspectsComponent,
   ],
 })
 export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
@@ -223,6 +227,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.isVariantsSidebarVisible = !this.isVariantsSidebarVisible;
   }
 
+  isNaturalReleaseLikely(variant: DangerSourceVariantModel): boolean {
+    return variant.naturalRelease === Probability.likely;
+  }
+
   updateVariantScroll(scrollId: string, event): void {
     event.preventDefault();
     event.stopPropagation();
@@ -237,21 +245,25 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  private pendingDangerSources: Subscription;
+  private pendingDangerSourcesVariants: Subscription;
   public loadDangerSourcesFromServer(type: DangerSourceVariantType) {
     console.log("Load danger sources");
     this.internVariantsList = new Array<DangerSourceVariantModel>();
-    this.dangerSourcesService
+    this.pendingDangerSources?.unsubscribe();
+    this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources(this.dangerSourcesService.getActiveDate(), this.authenticationService.getInternalRegions())
-      .subscribe(
-        (dangerSources) => {
+      .subscribe({
+        next: (dangerSources) => {
           this.loadInternalDangerSourcesError = false;
-          this.dangerSourcesService
+          this.pendingDangerSourcesVariants?.unsubscribe();
+          this.pendingDangerSourcesVariants = this.dangerSourcesService
             .loadDangerSourceVariants(
               this.dangerSourcesService.getActiveDate(),
               this.authenticationService.getInternalRegions(),
             )
-            .subscribe(
-              (variants) => {
+            .subscribe({
+              next: (variants) => {
                 this.loadInternalVariantsError = false;
 
                 if (
@@ -266,19 +278,19 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                 }
                 this.loading = false;
               },
-              (error) => {
-                console.error("Variants could not be loaded!");
+              error: (error) => {
+                console.error("Variants could not be loaded!", error);
                 this.loading = false;
                 this.loadInternalVariantsError = true;
               },
-            );
+            });
         },
-        (error) => {
-          console.error("Danger sources could not be loaded!");
+        error: (error) => {
+          console.error("Danger sources could not be loaded!", error);
           this.loading = false;
           this.loadInternalDangerSourcesError = true;
         },
-      );
+      });
   }
 
   ngOnDestroy() {
@@ -333,6 +345,17 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Returns the main date of the danger source when it was created. This is one day off the creation date due to the validity from 5PM until 5PM
+   * @param creationDatetime Creation datetime of the danger source
+   * @returns Main date of the danger source
+   */
+  getMainDateString(creationDatetime?: Date): Date {
+    const result = new Date(creationDatetime);
+    result.setDate(result.getDate() + 1);
+    return result;
+  }
+
   onShowAfternoonMapChange(checked) {
     this.showAfternoonMap = checked;
 
@@ -350,14 +373,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   hasForecast(variant: DangerSourceVariantModel): boolean {
-    if (
+    return (
       variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
       this.internVariantsList.some((v) => variant.forecastDangerSourceVariantId === v.id)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   }
 
   compareForecast(event: Event, variant: DangerSourceVariantModel) {
@@ -643,7 +662,15 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private updateInternalVariantsOnMap(type: DangerSourceVariantType) {
     for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
       if (this.internVariantsList[i].dangerSourceVariantType === type) {
-        this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+        if (this.internVariantsList[i].hasDaytimeDependency) {
+          if (this.internVariantsList[i].dangerPeak !== Daytime.afternoon) {
+            this.mapService.updateAggregatedRegionAM(this.internVariantsList[i]);
+          } else {
+            this.mapService.updateAggregatedRegionPM(this.internVariantsList[i]);
+          }
+        } else {
+          this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+        }
       }
     }
   }
@@ -706,9 +733,23 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   getVariantCountByStatus(dangerSource: DangerSourceModel, status: DangerSourceVariantStatus): number {
-    return this.internVariantsList.filter(
-      (variant) => variant.dangerSource.id === dangerSource.id && variant.dangerSourceVariantStatus === status,
-    ).length;
+    if (
+      this.internVariantsList.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)
+    ) {
+      return this.internVariantsList.filter(
+        (variant) =>
+          variant.dangerSource.id === dangerSource.id &&
+          variant.dangerSourceVariantStatus === status &&
+          variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
+      ).length;
+    } else {
+      return this.internVariantsList.filter(
+        (variant) =>
+          variant.dangerSource.id === dangerSource.id &&
+          variant.dangerSourceVariantStatus === status &&
+          variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
+      ).length;
+    }
   }
 
   openEditDangerSourceModal(dangerSource: DangerSourceModel) {
@@ -1014,5 +1055,20 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   getRegionNames(bulletin: BulletinModel): string {
     const regionNames = bulletin.savedRegions.map((regionCode) => this.regionsService.getRegionName(regionCode));
     return regionNames.join(", ");
+  }
+
+  getDangerRatingColor(variant: DangerSourceVariantModel): string {
+    return this.constantsService.getDangerRatingColor(variant.eawsMatrixInformation.dangerRating) + " !important";
+  }
+
+  getFontColor(variant: DangerSourceVariantModel): string {
+    if (
+      variant.eawsMatrixInformation.dangerRating === Enums.DangerRating.moderate ||
+      variant.eawsMatrixInformation.dangerRating === Enums.DangerRating.low
+    ) {
+      return "black";
+    } else {
+      return "white";
+    }
   }
 }
