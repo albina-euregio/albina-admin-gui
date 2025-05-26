@@ -1,19 +1,23 @@
 import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BlogService } from "../providers/blog-service/blog.service";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
-import { NgFor } from "@angular/common";
+import { NgFor, NgIf } from "@angular/common";
+import { ConstantsService } from "app/providers/constants-service/constants.service";
 
 @Component({
   templateUrl: "blog.component.html",
   selector: "app-blog",
   standalone: true,
-  imports: [NgFor, AlertModule, TranslateModule],
+  imports: [NgFor, NgIf, AlertModule, TranslateModule],
 })
 export class BlogComponent {
   blogService = inject(BlogService);
   regionsService = inject(RegionsService);
+  authenticationService = inject(AuthenticationService);
+  constantsService = inject(ConstantsService);
   translateService = inject(TranslateService);
 
   public alerts: any[] = [];
