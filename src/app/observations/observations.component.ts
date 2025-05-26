@@ -169,7 +169,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private sanitizer = inject(DomSanitizer);
   private regionsService = inject(RegionsService);
   private dangerSourcesService = inject(DangerSourcesService);
-  private authenticationService = inject(AuthenticationService);
+  authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
 
@@ -251,16 +251,18 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       this.filter.filterSelectionData = this.filter.filterSelectionData.filter((f) => f !== filter);
       return;
     }
-    this.dangerSourcesService.loadDangerSources([new Date(), new Date()], ["AT-07"]).subscribe((dangerSources) => {
-      const values: FilterSelectionValue[] = orderBy(dangerSources, (s) => s.creationDate).map((s) => ({
-        value: s.id,
-        color: "#000000",
-        label: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
-        legend: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
-      }));
-      filter.values.length = 0;
-      filter.values.push(...values);
-    });
+    this.dangerSourcesService
+      .loadDangerSources([new Date(), new Date()], [this.authenticationService.getActiveRegionId()])
+      .subscribe((dangerSources) => {
+        const values: FilterSelectionValue[] = orderBy(dangerSources, (s) => s.creationDate).map((s) => ({
+          value: s.id,
+          color: "#000000",
+          label: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
+          legend: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
+        }));
+        filter.values.length = 0;
+        filter.values.push(...values);
+      });
   }
 
   async ngAfterContentInit() {
