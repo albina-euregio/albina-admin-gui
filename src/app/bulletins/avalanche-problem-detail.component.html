@@ -248,6 +248,7 @@
       [count]="count()"
       [afternoon]="afternoon()"
       (changeMatrixEvent)="changeMatrix()"
+      [avalancheType]="avalancheProblemModel().avalancheType"
     ></app-matrix-parameter>
   </div>
   <div *ngIf="authenticationService.getActiveRegion().showMatrix" class="form-group">
