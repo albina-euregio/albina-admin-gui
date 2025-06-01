@@ -98,7 +98,7 @@ function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>):
     latitude: feature.geometry.coordinates[1],
     longitude: feature.geometry.coordinates[0],
     region: feature.properties["LWD-Region"]?.split(" ")?.[0] || "",
-  } satisfies GenericObservation;
+  } as GenericObservation;
 }
 
 export interface FeatureProperties {

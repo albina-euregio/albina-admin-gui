@@ -41,7 +41,7 @@ import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { augmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
-import { FilterSelectionValue } from "./filter-selection-config";
+import { FilterSelectionValue, FilterSelectionValueSchema } from "./filter-selection-config";
 import { observationFilters } from "./filter-selection-data-data";
 import {
   ObservationMarkerWeatherStationService,
@@ -411,7 +411,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       $type: ObservationType.SimpleObservation,
       $allowEdit: true,
       $data: {},
-    } satisfies GenericObservation;
+    } as GenericObservation;
     this.observationEditor.observation = observation;
     this.showObservationEditor();
   }
