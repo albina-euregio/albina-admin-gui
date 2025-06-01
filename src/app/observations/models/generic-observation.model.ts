@@ -1,5 +1,5 @@
 import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../../enums/enums";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export enum ImportantObservation {
   SurfaceHoar = "SurfaceHoar",

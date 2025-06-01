@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/v4";
 import type { AvalancheProblemModel } from "./avalanche-problem.model";
 import type { BulletinModelAsJSON } from "./bulletin.model";
 import type { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";

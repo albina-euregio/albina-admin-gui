@@ -1,5 +1,5 @@
 import { ServerConfigurationSchema } from "./server-configuration.model";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const RegionConfigurationSchema = z
   .object({

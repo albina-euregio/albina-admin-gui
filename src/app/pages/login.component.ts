@@ -9,7 +9,7 @@ import { ConfigurationService } from "app/providers/configuration-service/config
 import { FormsModule } from "@angular/forms";
 import { NgIf, NgFor } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
-import { ServerConfiguration, ServerConfigurationVersion } from "../models/server-configuration.model";
+import { ServerConfigurationVersion } from "../models/server-configuration.model";
 
 @Component({
   templateUrl: "login.component.html",

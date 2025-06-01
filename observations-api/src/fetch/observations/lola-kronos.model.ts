@@ -1249,7 +1249,7 @@ export function convertLoLaToGeneric(
         : undefined,
       (obs as LolaSnowProfile).snowStabilityTest?.length > 0 ? ImportantObservation.StabilityTest : undefined,
     ].filter((o) => !!o),
-  };
+  } as GenericObservation;
 }
 
 function getAvalancheProblems(data: LolaEvaluation | LolaAvalancheEvent): AvalancheProblem[] {

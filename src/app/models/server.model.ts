@@ -1,5 +1,5 @@
 import * as Enums from "../enums/enums";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const ServerSchema = z.object({
   apiUrl: z.string(),
