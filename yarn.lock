@@ -2700,9 +2700,9 @@ __metadata:
     file-saver: "npm:^2.0.5"
     git-cliff: "npm:^2.7.0"
     husky: "npm:^9.1.7"
-    leaflet: "npm:^1.9.4"
-    leaflet-control-geocoder: "npm:^3.0.1"
-    leaflet.sync: "npm:0.2.4"
+    leaflet: "npm:2.0.0-alpha"
+    leaflet-control-geocoder: "npm:^3.2.0"
+    leaflet.sync: "patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch"
     lint-staged: "npm:^15.2.10"
     lodash: "npm:^4.17.21"
     mousetrap: "npm:^1.6.5"
@@ -4408,17 +4408,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet-control-geocoder@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "leaflet-control-geocoder@npm:3.0.1"
+"leaflet-control-geocoder@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "leaflet-control-geocoder@npm:3.2.0"
   dependencies:
     open-location-code: "npm:^1.0.3"
   peerDependencies:
-    leaflet: ^1.6.0
+    leaflet: ^1.6.0 || ^2.0.0
   dependenciesMeta:
     open-location-code:
       optional: true
-  checksum: 10c0/2487d2e03762bbcf3e7b10f2fd43c92bdccf27c62a713657b04d34fad86081124b8e53f20007dc7ba815e7fb53f25f46ce43a70928c7fe55bc58e64cd2142706
+  checksum: 10c0/da85af31f8e5bb2760739b1830c847d50cd5c1833b461f0fabe6e39be8a07d351ccdd7b1fb4da1c6550b3f86eabeb5a411f445659cd9260bd1060c8d536f747e
   languageName: node
   linkType: hard
 
@@ -4429,10 +4429,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet@npm:^1.9.4":
-  version: 1.9.4
-  resolution: "leaflet@npm:1.9.4"
-  checksum: 10c0/f639441dbb7eb9ae3fcd29ffd7d3508f6c6106892441634b0232fafb9ffb1588b05a8244ec7085de2c98b5ed703894df246898477836cfd0ce5b96d4717b5ca1
+"leaflet.sync@patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch":
+  version: 0.2.4
+  resolution: "leaflet.sync@patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch::version=0.2.4&hash=95bc63"
+  checksum: 10c0/f993063605d2df40f6cdf7bec7f3c6e36a48efe9dd6dbae7b34d47494435d0cfd4eb25ed3492ce4c21a4372a56eaace56b4471d5aab9328d21e75e50c8a7f1ef
+  languageName: node
+  linkType: hard
+
+"leaflet@npm:2.0.0-alpha":
+  version: 2.0.0-alpha
+  resolution: "leaflet@npm:2.0.0-alpha"
+  checksum: 10c0/38c1c39a3ee919a3392df067b55bab45b5e66cdac6d49d142ac4c04f8fbc8730228fa0408cc4ffe48128f5a2366c4a69d9713d2b5cfcbcc9ea4d2ac5593fb36c
   languageName: node
   linkType: hard
 

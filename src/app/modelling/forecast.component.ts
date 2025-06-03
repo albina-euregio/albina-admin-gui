@@ -11,7 +11,7 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { ParamService, QfaResult, QfaService } from "./qfa";
-import { CircleMarker, LatLngLiteral, LayerGroup } from "leaflet";
+import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import { augmentRegion } from "app/providers/regions-service/augmentRegion";
@@ -262,7 +262,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     this.mapService.removeMaps();
   }
 
-  getModelPointOptions(type: ForecastSource): L.CircleMarkerOptions {
+  getModelPointOptions(type: ForecastSource): CircleMarkerOptions {
     return {
       pane: "markerPane",
       radius: 8,

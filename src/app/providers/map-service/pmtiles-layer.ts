@@ -1,6 +1,6 @@
 // x@ts-nocheck
 
-import * as L from "leaflet";
+import { Coords, DomUtil, DoneCallback, GridLayer, GridLayerOptions, PathOptions } from "leaflet";
 import type { PMTiles } from "pmtiles";
 import Point from "@mapbox/point-geometry";
 import {
@@ -22,7 +22,7 @@ type KeyedHtmlCanvasElement = HTMLCanvasElement & { key: string };
 export class BlendModePolygonSymbolizer implements PaintSymbolizer {
   constructor(
     private blendMode: GlobalCompositeOperation,
-    private styleFunction: (f: Feature) => L.PathOptions,
+    private styleFunction: (f: Feature) => PathOptions,
   ) {}
 
   before(ctx: CanvasRenderingContext2D, z: number): void {}
@@ -55,7 +55,7 @@ export class BlendModePolygonSymbolizer implements PaintSymbolizer {
   }
 }
 
-interface LeafletLayerOptions extends L.GridLayerOptions {
+interface LeafletLayerOptions extends GridLayerOptions {
   attribution?: string;
   debug?: string;
   lang?: string;
@@ -71,7 +71,7 @@ interface LeafletLayerOptions extends L.GridLayerOptions {
   backgroundColor?: string;
 }
 
-export class PmLeafletLayer extends L.GridLayer {
+export class PmLeafletLayer extends GridLayer {
   backgroundColor: string | undefined;
   labelers: Labelers;
   labelRules: Record<string, LabelRule>;
@@ -115,7 +115,7 @@ export class PmLeafletLayer extends L.GridLayer {
     this.lang = options.lang;
   }
 
-  public async renderTile(coords: L.Coords, element: KeyedHtmlCanvasElement, key: string, done = () => {}) {
+  public async renderTile(coords: Coords, element: KeyedHtmlCanvasElement, key: string, done = () => {}) {
     this.lastRequestedZ = coords.z;
 
     const promises = [] as { key: string; promise: Promise<PreparedTile> }[];
@@ -246,8 +246,8 @@ export class PmLeafletLayer extends L.GridLayer {
     }
   }
 
-  public createTile(coords: L.Coords, showTile: L.DoneCallback) {
-    const element = L.DomUtil.create("canvas", "leaflet-tile") as KeyedHtmlCanvasElement;
+  public createTile(coords: Coords, showTile: DoneCallback) {
+    const element = DomUtil.create("canvas", "leaflet-tile") as KeyedHtmlCanvasElement;
     element.lang = this.lang;
 
     const key = this._tileCoordsToKey(coords);
@@ -267,9 +267,9 @@ export class PmLeafletLayer extends L.GridLayer {
     }
     (tile.el as any).removed = true;
     (tile.el as KeyedHtmlCanvasElement).key = undefined;
-    L.DomUtil.removeClass(tile.el as KeyedHtmlCanvasElement, "leaflet-tile-loaded");
+    (tile.el as KeyedHtmlCanvasElement).classList.remove("leaflet-tile-loaded");
     (tile.el as KeyedHtmlCanvasElement).width = (tile.el as KeyedHtmlCanvasElement).height = 0;
-    L.DomUtil.remove(tile.el as KeyedHtmlCanvasElement);
+    (tile.el as KeyedHtmlCanvasElement).remove();
     delete this._tiles[key];
     this.fire("tileunload", {
       tile: tile.el,
