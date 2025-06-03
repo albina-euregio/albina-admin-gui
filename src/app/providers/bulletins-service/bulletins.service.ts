@@ -577,37 +577,6 @@ export class BulletinsService {
     return this.http.post(url, body);
   }
 
-  sendTestEmail(date: [Date, Date], region: string, language: string) {
-    if (this.localStorageService.isTrainingEnabled) {
-      throw new TrainingModeError();
-    }
-    let url: string;
-    if (language) {
-      url =
-        this.constantsService.getServerUrl() +
-        "bulletins/publish/email/test?" +
-        this.constantsService
-          .createSearchParams([
-            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-            ["region", region],
-            ["lang", language],
-          ])
-          .toString();
-    } else {
-      url =
-        this.constantsService.getServerUrl() +
-        "bulletins/publish/email/test?" +
-        this.constantsService
-          .createSearchParams([
-            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-            ["region", region],
-          ])
-          .toString();
-    }
-    const body = JSON.stringify("");
-    return this.http.post(url, body);
-  }
-
   triggerTelegramChannel(date: [Date, Date], region: string, language: string) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
@@ -639,37 +608,6 @@ export class BulletinsService {
     return this.http.post(url, body);
   }
 
-  triggerTestTelegramChannel(date: [Date, Date], region: string, language: string) {
-    if (this.localStorageService.isTrainingEnabled) {
-      throw new TrainingModeError();
-    }
-    let url: string;
-    if (language) {
-      url =
-        this.constantsService.getServerUrl() +
-        "bulletins/publish/telegram/test?" +
-        this.constantsService
-          .createSearchParams([
-            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-            ["region", region],
-            ["lang", language],
-          ])
-          .toString();
-    } else {
-      url =
-        this.constantsService.getServerUrl() +
-        "bulletins/publish/telegram/test?" +
-        this.constantsService
-          .createSearchParams([
-            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-            ["region", region],
-          ])
-          .toString();
-    }
-    const body = JSON.stringify("");
-    return this.http.post(url, body);
-  }
-
   triggerPushNotifications(date: [Date, Date], region: string, language: string) {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
@@ -690,37 +628,6 @@ export class BulletinsService {
       url =
         this.constantsService.getServerUrl() +
         "bulletins/publish/push?" +
-        this.constantsService
-          .createSearchParams([
-            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-            ["region", region],
-          ])
-          .toString();
-    }
-    const body = JSON.stringify("");
-    return this.http.post(url, body);
-  }
-
-  triggerTestPushNotifications(date: [Date, Date], region: string, language: string) {
-    if (this.localStorageService.isTrainingEnabled) {
-      throw new TrainingModeError();
-    }
-    let url: string;
-    if (language) {
-      url =
-        this.constantsService.getServerUrl() +
-        "bulletins/publish/push/test?" +
-        this.constantsService
-          .createSearchParams([
-            ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-            ["region", region],
-            ["lang", language],
-          ])
-          .toString();
-    } else {
-      url =
-        this.constantsService.getServerUrl() +
-        "bulletins/publish/push/test?" +
         this.constantsService
           .createSearchParams([
             ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
