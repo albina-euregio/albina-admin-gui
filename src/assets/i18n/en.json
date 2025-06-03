@@ -843,24 +843,29 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Send Emails, Telegram and Push",
-        "success": "{{prefix}}Email, Telegram and Push successfully sent!",
-        "error": "{{prefix}}Email, Telegram and Push could not be sent!"
+        "tooltip": "Send Emails, Telegram, WhatsApp and Push",
+        "success": "Email, Telegram, Whatsapp and Push successfully sent!",
+        "error": "Email, Telegram, WhatsApp and Push could not be sent!"
       },
       "email": {
         "tooltip": "Send Emails",
-        "success": "{{prefix}}Email successfully sent!",
-        "error": "{{prefix}}Email could not be sent!"
+        "success": "Email successfully sent!",
+        "error": "Email could not be sent!"
       },
       "telegram": {
         "tooltip": "Send via Telegram Channel",
-        "success": "{{prefix}}Telegram successfully sent!",
-        "error": "{{prefix}}Telegram could not be sent!"
+        "success": "Telegram successfully sent!",
+        "error": "Telegram could not be sent!"
+      },
+      "whatsapp": {
+        "tooltip": "Send via WhatsApp Channel",
+        "success": "WhatsApp successfully sent!",
+        "error": "WhatsApp could not be sent!"
       },
       "push": {
         "tooltip": "Send via Push Notifications",
-        "success": "{{prefix}}Push successfully sent!",
-        "error": "{{prefix}}Push could not be sent!"
+        "success": "Push successfully sent!",
+        "error": "Push could not be sent!"
       }
     }
   },

@@ -1,9 +1,17 @@
 import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { BlogService } from "../providers/blog-service/blog.service";
+import { BlogService, PublicationChannel } from "../providers/blog-service/blog.service";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
 import { NgFor } from "@angular/common";
+
+interface PublicationInformation {
+  publicationChannel: PublicationChannel;
+  debugMsg: string;
+  debugErrorMsg: string;
+  successMsg: string;
+  errorMsg: string;
+}
 
 @Component({
   templateUrl: "blog.component.html",
@@ -18,104 +26,70 @@ export class BlogComponent {
 
   public alerts: any[] = [];
 
-  sendLatestBlogPost(event, region, language, test) {
-    event.stopPropagation();
-    const prefix = test ? "[TEST] " : "";
-    this.blogService.sendLatestBlogPost(region, language, test).subscribe(
-      (data) => {
-        console.debug("Email, telegram and push sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "success",
-          msg: this.translateService.instant("admin.blog.all.success", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-      (error) => {
-        console.error("Email, telegram and push could not be sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "danger",
-          msg: this.translateService.instant("admin.blog.all.error", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-    );
-  }
+  sendAll: PublicationInformation = {
+    publicationChannel: PublicationChannel.All,
+    debugMsg: "Email, telegram, whatsapp and push sent!",
+    debugErrorMsg: "Email, telegram, whatsapp and push could not be sent!",
+    successMsg: this.translateService.instant("admin.blog.all.success"),
+    errorMsg: this.translateService.instant("admin.blog.all.error"),
+  };
 
-  sendLatestBlogPostEmail(event, region, language, test) {
-    event.stopPropagation();
-    const prefix = test ? "[TEST] " : "";
-    this.blogService.sendLatestBlogPostEmail(region, language, test).subscribe(
-      (data) => {
-        console.debug("Email sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "success",
-          msg: this.translateService.instant("admin.blog.email.success", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-      (error) => {
-        console.error("Email could not be sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "danger",
-          msg: this.translateService.instant("admin.blog.email.error", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-    );
-  }
+  sendEmail: PublicationInformation = {
+    publicationChannel: PublicationChannel.Email,
+    debugMsg: "Email sent!",
+    successMsg: this.translateService.instant("admin.blog.email.success"),
+    debugErrorMsg: "Email could not be sent!",
+    errorMsg: this.translateService.instant("admin.blog.email.error"),
+  };
 
-  sendLatestBlogPostTelegram(event, region, language, test) {
-    event.stopPropagation();
-    const prefix = test ? "[TEST] " : "";
-    this.blogService.sendLatestBlogPostTelegram(region, language, test).subscribe(
-      (data) => {
-        console.debug("Telegram sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "success",
-          msg: this.translateService.instant("admin.blog.telegram.success", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-      (error) => {
-        console.error("Telegram could not be sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "danger",
-          msg: this.translateService.instant("admin.blog.telegram.error", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-    );
-  }
+  sendTelegram: PublicationInformation = {
+    publicationChannel: PublicationChannel.Telegram,
+    debugMsg: "Telegram sent!",
+    debugErrorMsg: "Telegram could not be sent!",
+    successMsg: this.translateService.instant("admin.blog.telegram.success"),
+    errorMsg: this.translateService.instant("admin.blog.telegram.error"),
+  };
 
-  sendLatestBlogPostPush(event, region, language, test) {
+  sendWhatsapp: PublicationInformation = {
+    publicationChannel: PublicationChannel.WhatsApp,
+    debugMsg: "WhatsApp sent!",
+    debugErrorMsg: "WhatsApp could not be sent!",
+    successMsg: this.translateService.instant("admin.blog.whatsapp.success"),
+    errorMsg: this.translateService.instant("admin.blog.whatsapp.error"),
+  };
+
+  sendPush: PublicationInformation = {
+    publicationChannel: PublicationChannel.Push,
+    debugMsg: "Push sent!",
+    debugErrorMsg: "Push could not be sent!",
+    successMsg: this.translateService.instant("admin.blog.push.success"),
+    errorMsg: this.translateService.instant("admin.blog.push.error"),
+  };
+
+  sendLatestBlogPost(event, region, language, publicationInformation: PublicationInformation) {
     event.stopPropagation();
-    const prefix = test ? "[TEST] " : "";
-    this.blogService.sendLatestBlogPostPush(region, language, test).subscribe(
-      (data) => {
-        console.debug("Push sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "success",
-          msg: this.translateService.instant("admin.blog.push.success", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-      (error) => {
-        console.error("Push could not be sent!");
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "danger",
-          msg: this.translateService.instant("admin.blog.push.error", { prefix: prefix }),
-          timeout: 5000,
-        });
-      },
-    );
+    this.blogService
+      .sendLatestBlogPostToChannel(region, language, publicationInformation.publicationChannel)
+      .subscribe({
+        next: () => {
+          console.debug(publicationInformation.debugMsg);
+          window.scrollTo(0, 0);
+          this.alerts.push({
+            type: "success",
+            msg: publicationInformation.successMsg,
+            timeout: 5000,
+          });
+        },
+        error: () => {
+          console.error(publicationInformation.debugErrorMsg);
+          window.scrollTo(0, 0);
+          this.alerts.push({
+            type: "danger",
+            msg: publicationInformation.errorMsg,
+            timeout: 5000,
+          });
+        },
+      });
   }
 
   onClosed(dismissedAlert: AlertComponent): void {
