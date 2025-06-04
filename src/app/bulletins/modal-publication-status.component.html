@@ -41,7 +41,7 @@
                 <button
                   type="button"
                   class="btn btn-secondary btn-sm"
-                  (click)="sendEmail($event, language)"
+                  (click)="triggerPublicationChannel($event, language, emailPublication)"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.table.publicationStatusDialog.email.tooltip' | translate }}"
                 >
@@ -59,7 +59,7 @@
                 <button
                   type="button"
                   class="btn btn-secondary btn-sm"
-                  (click)="triggerTelegramChannel($event, language)"
+                  (click)="triggerPublicationChannel($event, language, telegramPublication)"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.table.publicationStatusDialog.telegram.tooltip' | translate }}"
                 >
@@ -77,7 +77,7 @@
                 <button
                   type="button"
                   class="btn btn-secondary btn-sm"
-                  (click)="triggerPushNotifications($event, language)"
+                  (click)="triggerPublicationChannel($event, language, pushPublication)"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.table.publicationStatusDialog.push.tooltip' | translate }}"
                 >

@@ -526,20 +526,20 @@
         "email": {
           "label": "Emails",
           "tooltip": "Send Emails",
-          "success": "{{prefix}}Emails successfully sent!",
-          "error": "{{prefix}}Emails could not be sent!"
+          "success": "Emails successfully sent!",
+          "error": "Emails could not be sent!"
         },
         "telegram": {
           "label": "Telegram Messages",
           "tooltip": "Send Telegram Messages",
-          "success": "{{prefix}}Telegram Messages successfully sent!",
-          "error": "{{prefix}}Telegram Messages could not be sent!"
+          "success": "Telegram Messages successfully sent!",
+          "error": "Telegram Messages could not be sent!"
         },
         "push": {
           "label": "Push Notifications",
           "tooltip": "Send Push Notifications",
-          "success": "{{prefix}}Push Notifications successfully sent!",
-          "error": "{{prefix}}Push Notifications could not be sent!"
+          "success": "Push Notifications successfully sent!",
+          "error": "Push Notifications could not be sent!"
         },
         "accept": "Ok"
       },

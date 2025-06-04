@@ -72,7 +72,7 @@ export class BlogComponent {
       .sendLatestBlogPostToChannel(region, language, publicationInformation.publicationChannel)
       .subscribe({
         next: () => {
-          console.debug(publicationInformation.debugMsg);
+          console.info(publicationInformation.debugMsg);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "success",

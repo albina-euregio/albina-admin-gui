@@ -8,6 +8,14 @@ import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { NgFor, DatePipe } from "@angular/common";
 
+interface PublicationInformation {
+  publicationChannel: PublicationChannel;
+  debugMsg: string;
+  debugErrorMsg: string;
+  successMsg: string;
+  errorMsg: string;
+}
+
 @Component({
   selector: "app-modal-publication-status",
   templateUrl: "modal-publication-status.component.html",
@@ -29,126 +37,63 @@ export class ModalPublicationStatusComponent {
 
   public alerts: any[] = [];
 
+  emailPublication: PublicationInformation = {
+    publicationChannel: PublicationChannel.Email,
+    debugMsg: "Emails sent for %s in %s",
+    debugErrorMsg: "Emails could not be sent for %s in %s!",
+    successMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.success"),
+    errorMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.error"),
+  };
+
+  telegramPublication: PublicationInformation = {
+    publicationChannel: PublicationChannel.Telegram,
+    debugMsg: "Telegram channel triggered for %s in %s",
+    debugErrorMsg: "Telegram channel could not be triggered for %s in %s!",
+    successMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.telegram.success"),
+    errorMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.telegram.error"),
+  };
+
+  pushPublication: PublicationInformation = {
+    publicationChannel: PublicationChannel.Push,
+    debugMsg: "Push notifications triggered for %s in %s",
+    debugErrorMsg: "Push notifications could not be triggered for %s in %s!",
+    successMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.push.success"),
+    errorMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.push.error"),
+  };
+
   publicationStatusModalConfirm(): void {
     this.component.publicationStatusModalConfirm();
   }
 
-  sendEmail(event, language) {
+  triggerPublicationChannel(event, language, publicationInformation: PublicationInformation) {
     event.stopPropagation();
     this.bulletinsService
       .triggerPublicationChannel(
         this.date,
         this.authenticationService.getActiveRegionId(),
         language,
-        PublicationChannel.Email,
+        publicationInformation.publicationChannel,
       )
-      .subscribe(
-        (data) => {
-          console.info("Emails sent for %s in %s", this.authenticationService.getActiveRegionId(), language);
+      .subscribe({
+        next: () => {
+          console.info(publicationInformation.debugMsg, this.authenticationService.getActiveRegionId(), language);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "success",
-            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.success", { prefix: "" }),
+            msg: publicationInformation.successMsg,
             timeout: 5000,
           });
         },
-        (error) => {
-          console.error(
-            "Emails could not be sent for %s in %s!",
-            this.authenticationService.getActiveRegionId(),
-            language,
-          );
+        error: () => {
+          console.error(publicationInformation.debugErrorMsg, this.authenticationService.getActiveRegionId(), language);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",
-            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.error", { prefix: "" }),
+            msg: publicationInformation.errorMsg,
             timeout: 5000,
           });
         },
-      );
-  }
-
-  triggerTelegramChannel(event, language) {
-    event.stopPropagation();
-    this.bulletinsService
-      .triggerPublicationChannel(
-        this.date,
-        this.authenticationService.getActiveRegionId(),
-        language,
-        PublicationChannel.Telegram,
-      )
-      .subscribe(
-        (data) => {
-          console.info(
-            "Telegram channel triggered for %s in %s",
-            this.authenticationService.getActiveRegionId(),
-            language,
-          );
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "success",
-            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.telegram.success", {
-              prefix: "",
-            }),
-            timeout: 5000,
-          });
-        },
-        (error) => {
-          console.error(
-            "Telegram channel could not be triggered for %s in %s!",
-            this.authenticationService.getActiveRegionId(),
-            language,
-          );
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "danger",
-            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.telegram.error", {
-              prefix: "",
-            }),
-            timeout: 5000,
-          });
-        },
-      );
-  }
-
-  triggerPushNotifications(event, language) {
-    event.stopPropagation();
-
-    this.bulletinsService
-      .triggerPublicationChannel(
-        this.date,
-        this.authenticationService.getActiveRegionId(),
-        language,
-        PublicationChannel.Push,
-      )
-      .subscribe(
-        (data) => {
-          console.info(
-            "Push notifications triggered for %s in %s",
-            this.authenticationService.getActiveRegionId(),
-            language,
-          );
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "success",
-            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.push.success", { prefix: "" }),
-            timeout: 5000,
-          });
-        },
-        (error) => {
-          console.error(
-            "Push notifications could not be triggered for %s in %s!",
-            this.authenticationService.getActiveRegionId(),
-            language,
-          );
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "danger",
-            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.push.error", { prefix: "" }),
-            timeout: 5000,
-          });
-        },
-      );
+      });
   }
 
   onClosed(dismissedAlert: AlertComponent): void {
