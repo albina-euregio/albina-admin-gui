@@ -52,7 +52,7 @@ import { ObservationMarkerObserverService } from "./observation-marker-observer.
 import Split from "split.js";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import orderBy from "lodash/orderBy";
+import { orderBy } from "es-toolkit";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
@@ -252,7 +252,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     this.dangerSourcesService.loadDangerSources([new Date(), new Date()], ["AT-07"]).subscribe((dangerSources) => {
-      const values: FilterSelectionValue[] = orderBy(dangerSources, (s) => s.creationDate).map((s) => ({
+      const values: FilterSelectionValue[] = orderBy(dangerSources, [(s) => s.creationDate], ["asc"]).map((s) => ({
         value: s.id,
         color: "#000000",
         label: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
@@ -530,12 +530,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   applyLocalFilter(applyOnlyToObservations = false) {
-    this.data.weatherStations.all = orderBy(this.data.weatherStations.all, (s) => [
-      // make sure that changeObservation (or ←/→) selects a sensible previous/next station
-      this.$externalImgs(s),
-      s.region,
-      s.locationName,
-    ]);
+    this.data.weatherStations.all = orderBy(
+      this.data.weatherStations.all,
+      [
+        // make sure that changeObservation (or ←/→) selects a sensible previous/next station
+        (s) => this.$externalImgs(s)?.[0],
+        (s) => s.region,
+        (s) => s.locationName,
+      ],
+      ["asc", "asc", "asc"],
+    );
     // only apply filter to observations
     if (applyOnlyToObservations) {
       this.data.observations.applyLocalFilter(this.observationSearch);

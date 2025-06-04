@@ -2696,6 +2696,7 @@ __metadata:
     angular-eslint: "npm:^19.6.0"
     bootstrap: "npm:^5.3.3"
     echarts: "npm:^5.6.0"
+    es-toolkit: "npm:^1.38.0"
     eslint: "npm:^9.28.0"
     file-saver: "npm:^2.0.5"
     git-cliff: "npm:^2.7.0"
@@ -2704,7 +2705,6 @@ __metadata:
     leaflet-control-geocoder: "npm:^3.2.0"
     leaflet.sync: "patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch"
     lint-staged: "npm:^15.2.10"
-    lodash: "npm:^4.17.21"
     mousetrap: "npm:^1.6.5"
     ngx-bootstrap: "npm:19.0.2"
     ngx-echarts: "npm:^19.0.0"
@@ -3372,6 +3372,18 @@ __metadata:
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
   checksum: 10c0/b642f7b4dd4a376e954947550a3065a9ece6733ab8e51ad80db727aaae0817c2e99b02a97a3d6cecc648a97848305e728289cf312d09af395403a90c9d4d8a66
+  languageName: node
+  linkType: hard
+
+"es-toolkit@npm:^1.38.0":
+  version: 1.38.0
+  resolution: "es-toolkit@npm:1.38.0"
+  dependenciesMeta:
+    "@trivago/prettier-plugin-sort-imports@4.3.0":
+      unplugged: true
+    prettier-plugin-sort-re-exports@0.0.1:
+      unplugged: true
+  checksum: 10c0/1bffc2d8dbe8db45969cf6674a674bdf9d40d803c923b01645b8a433f43f9304b1d369b6cde2a6ef3889a5aa71ddc741bf8e4103b4d4b48a366e04b4b3d30519
   languageName: node
   linkType: hard
 
@@ -4577,13 +4589,6 @@ __metadata:
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: 10c0/402fa16a1edd7538de5b5903a90228aa48eb5533986ba7fa26606a49db2572bf414ff73a2c9f5d5fd36b31c46a5d5c7e1527749c07cbcf965ccff5fbdf32c506
-  languageName: node
-  linkType: hard
-
-"lodash@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "lodash@npm:4.17.21"
-  checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
   languageName: node
   linkType: hard
 

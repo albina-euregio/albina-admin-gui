@@ -6,7 +6,7 @@ import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
 import type { AwsomeSource } from "../modelling/awsome.config";
-import { castArray, get as _get } from "lodash";
+import { castArray, get as _get } from "es-toolkit/compat";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
