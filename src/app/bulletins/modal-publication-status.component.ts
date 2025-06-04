@@ -2,7 +2,7 @@ import { Component, inject } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { BulletinsService, PublicationChannel } from "../providers/bulletins-service/bulletins.service";
 import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { CreateBulletinComponent } from "./create-bulletin.component";
@@ -25,44 +25,58 @@ export class ModalPublicationStatusComponent {
   date: [Date, Date];
   component: CreateBulletinComponent;
 
+  languages = ["all", "de", "it", "en"];
+
   public alerts: any[] = [];
 
   publicationStatusModalConfirm(): void {
     this.component.publicationStatusModalConfirm();
   }
 
-  sendEmail(event, language = "") {
-    event.stopPropagation();
-    this.bulletinsService.sendEmail(this.date, this.authenticationService.getActiveRegionId(), language).subscribe(
-      (data) => {
-        console.info("Emails sent for %s in %s", this.authenticationService.getActiveRegionId(), language);
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "success",
-          msg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.success", { prefix: "" }),
-          timeout: 5000,
-        });
-      },
-      (error) => {
-        console.error(
-          "Emails could not be sent for %s in %s!",
-          this.authenticationService.getActiveRegionId(),
-          language,
-        );
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "danger",
-          msg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.error", { prefix: "" }),
-          timeout: 5000,
-        });
-      },
-    );
-  }
-
-  triggerTelegramChannel(event, language = "") {
+  sendEmail(event, language) {
     event.stopPropagation();
     this.bulletinsService
-      .triggerTelegramChannel(this.date, this.authenticationService.getActiveRegionId(), language)
+      .triggerPublicationChannel(
+        this.date,
+        this.authenticationService.getActiveRegionId(),
+        language,
+        PublicationChannel.Email,
+      )
+      .subscribe(
+        (data) => {
+          console.info("Emails sent for %s in %s", this.authenticationService.getActiveRegionId(), language);
+          window.scrollTo(0, 0);
+          this.alerts.push({
+            type: "success",
+            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.success", { prefix: "" }),
+            timeout: 5000,
+          });
+        },
+        (error) => {
+          console.error(
+            "Emails could not be sent for %s in %s!",
+            this.authenticationService.getActiveRegionId(),
+            language,
+          );
+          window.scrollTo(0, 0);
+          this.alerts.push({
+            type: "danger",
+            msg: this.translateService.instant("bulletins.table.publicationStatusDialog.email.error", { prefix: "" }),
+            timeout: 5000,
+          });
+        },
+      );
+  }
+
+  triggerTelegramChannel(event, language) {
+    event.stopPropagation();
+    this.bulletinsService
+      .triggerPublicationChannel(
+        this.date,
+        this.authenticationService.getActiveRegionId(),
+        language,
+        PublicationChannel.Telegram,
+      )
       .subscribe(
         (data) => {
           console.info(
@@ -97,11 +111,16 @@ export class ModalPublicationStatusComponent {
       );
   }
 
-  triggerPushNotifications(event, language = "") {
+  triggerPushNotifications(event, language) {
     event.stopPropagation();
 
     this.bulletinsService
-      .triggerPushNotifications(this.date, this.authenticationService.getActiveRegionId(), language)
+      .triggerPublicationChannel(
+        this.date,
+        this.authenticationService.getActiveRegionId(),
+        language,
+        PublicationChannel.Push,
+      )
       .subscribe(
         (data) => {
           console.info(

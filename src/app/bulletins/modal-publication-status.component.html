@@ -25,10 +25,9 @@
           <thead>
             <tr>
               <th>{{ "bulletins.table.publicationStatusDialog.title.task" | translate }}</th>
-              <th>{{ "bulletins.table.publicationStatusDialog.title.language.all" | translate }}</th>
-              <th>{{ "bulletins.table.publicationStatusDialog.title.language.de" | translate }}</th>
-              <th>{{ "bulletins.table.publicationStatusDialog.title.language.it" | translate }}</th>
-              <th>{{ "bulletins.table.publicationStatusDialog.title.language.en" | translate }}</th>
+              <th *ngFor="let language of languages">
+                {{ "bulletins.table.publicationStatusDialog.title.language." + language | translate }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -38,44 +37,11 @@
                   "bulletins.table.publicationStatusDialog.email.label" | translate
                 }}</label>
               </td>
-              <td>
+              <td *ngFor="let language of languages">
                 <button
                   type="button"
                   class="btn btn-secondary btn-sm"
-                  (click)="sendEmail($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.email.tooltip' | translate }}"
-                >
-                  <i class="ph ph-envelope-simple"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="sendEmail($event, 'de')"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.email.tooltip' | translate }}"
-                >
-                  <i class="ph ph-envelope-simple"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="sendEmail($event, 'it')"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.email.tooltip' | translate }}"
-                >
-                  <i class="ph ph-envelope-simple"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="sendEmail($event, 'en')"
+                  (click)="sendEmail($event, language)"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.table.publicationStatusDialog.email.tooltip' | translate }}"
                 >
@@ -89,44 +55,11 @@
                   "bulletins.table.publicationStatusDialog.telegram.label" | translate
                 }}</label>
               </td>
-              <td>
+              <td *ngFor="let language of languages">
                 <button
                   type="button"
                   class="btn btn-secondary btn-sm"
-                  (click)="triggerTelegramChannel($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.telegram.tooltip' | translate }}"
-                >
-                  <i class="ph ph-telegram-logo"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="triggerTelegramChannel($event, 'de')"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.telegram.tooltip' | translate }}"
-                >
-                  <i class="ph ph-telegram-logo"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="triggerTelegramChannel($event, 'it')"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.telegram.tooltip' | translate }}"
-                >
-                  <i class="ph ph-telegram-logo"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="triggerTelegramChannel($event, 'en')"
+                  (click)="triggerTelegramChannel($event, language)"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.table.publicationStatusDialog.telegram.tooltip' | translate }}"
                 >
@@ -140,44 +73,11 @@
                   "bulletins.table.publicationStatusDialog.push.label" | translate
                 }}</label>
               </td>
-              <td>
+              <td *ngFor="let language of languages">
                 <button
                   type="button"
                   class="btn btn-secondary btn-sm"
-                  (click)="triggerPushNotifications($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.push.tooltip' | translate }}"
-                >
-                  <i class="ph ph-bell"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="triggerPushNotifications($event, 'de')"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.push.tooltip' | translate }}"
-                >
-                  <i class="ph ph-bell"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="triggerPushNotifications($event, 'it')"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.table.publicationStatusDialog.push.tooltip' | translate }}"
-                >
-                  <i class="ph ph-bell"></i>
-                </button>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="triggerPushNotifications($event, 'en')"
+                  (click)="triggerPushNotifications($event, language)"
                   data-toggle="tooltip"
                   title="{{ 'bulletins.table.publicationStatusDialog.push.tooltip' | translate }}"
                 >
