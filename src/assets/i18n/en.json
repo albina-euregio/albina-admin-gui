@@ -535,6 +535,12 @@
           "success": "Telegram Messages successfully sent!",
           "error": "Telegram Messages could not be sent!"
         },
+        "whatsapp": {
+          "label": "WhatsApp Messages",
+          "tooltip": "Send WhatsApp Messages",
+          "success": "WhatsApp Messages successfully sent!",
+          "error": "WhatsApp Messages could not be sent!"
+        },
         "push": {
           "label": "Push Notifications",
           "tooltip": "Send Push Notifications",

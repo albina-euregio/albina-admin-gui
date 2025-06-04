@@ -25,6 +25,7 @@ interface AccordionChangeEvent {
 export enum PublicationChannel {
   Email = "email",
   Telegram = "telegram",
+  WhatsApp = "whatsapp",
   Push = "push",
 }
 

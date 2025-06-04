@@ -53,6 +53,14 @@ export class ModalPublicationStatusComponent {
     errorMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.telegram.error"),
   };
 
+  whatsAppPublication: PublicationInformation = {
+    publicationChannel: PublicationChannel.WhatsApp,
+    debugMsg: "WhatsApp channel triggered for %s in %s",
+    debugErrorMsg: "WhatsApp channel could not be triggered for %s in %s!",
+    successMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.whatsapp.success"),
+    errorMsg: this.translateService.instant("bulletins.table.publicationStatusDialog.whatsapp.error"),
+  };
+
   pushPublication: PublicationInformation = {
     publicationChannel: PublicationChannel.Push,
     debugMsg: "Push notifications triggered for %s in %s",
