@@ -667,6 +667,7 @@
           "sendEmails": "Send emails",
           "createSimpleHtml": "Create simple HTML",
           "sendTelegramMessages": "Send telegram messages",
+          "sendWhatsAppMessages": "Send WhatsApp messages",
           "sendPushNotifications": "Send push notifications",
           "pdfColor": "PDF color",
           "emailColor": "Email color",

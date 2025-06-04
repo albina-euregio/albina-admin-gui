@@ -46,6 +46,7 @@ export class RegionConfigurationComponent {
     json["createSimpleHtml"] = config.createSimpleHtml;
     json["sendEmails"] = config.sendEmails;
     json["sendTelegramMessages"] = config.sendTelegramMessages;
+    json["sendWhatsAppMessages"] = config.sendWhatsAppMessages;
     json["sendPushNotifications"] = config.sendPushNotifications;
     json["enableMediaFile"] = config.enableMediaFile;
     json["enableDangerSources"] = config.enableDangerSources;
