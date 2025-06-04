@@ -18,6 +18,7 @@ export const RegionConfigurationSchema = z
     sendEmails: z.boolean(),
     createSimpleHtml: z.boolean(),
     sendTelegramMessages: z.boolean(),
+    sendWhatsAppMessages: z.boolean(),
     sendPushNotifications: z.boolean(),
     enableMediaFile: z.boolean(),
     enableAvalancheProblemCornices: z.boolean(),
