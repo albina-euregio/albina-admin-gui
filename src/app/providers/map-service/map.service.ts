@@ -409,9 +409,7 @@ export class MapService {
         l.setStyle({
           weight: 3,
         });
-        if (!Browser.ie && !Browser.opera12 && !Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
       mouseout(e) {
         (
@@ -421,9 +419,7 @@ export class MapService {
         l.setStyle({
           weight: 1,
         });
-        if (!Browser.ie && !Browser.opera12 && !Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
     });
   }
@@ -441,9 +437,7 @@ export class MapService {
         l.setStyle({
           weight: 3,
         });
-        if (!Browser.ie && !Browser.opera12 && !Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
       mouseout(e) {
         (
@@ -453,9 +447,7 @@ export class MapService {
         l.setStyle({
           weight: 1,
         });
-        if (!Browser.ie && Browser.opera12 && !Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
     });
   }
