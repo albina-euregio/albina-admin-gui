@@ -59,3 +59,20 @@ export const RegionConfigurationSchema = z
   .partial();
 
 export type RegionConfiguration = z.infer<typeof RegionConfigurationSchema>;
+
+export function getRegionCoatOfArms(region: RegionConfiguration): string | undefined {
+  switch (region.id) {
+    case "AT-02":
+      return "https://upload.wikimedia.org/wikipedia/commons/2/25/Carinthia_Arms.svg";
+    case "AT-07":
+      return "https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg";
+    case "IT-32-BZ":
+      return "https://upload.wikimedia.org/wikipedia/commons/5/59/Suedtirol_CoA.svg";
+    case "IT-32-TN":
+      return "https://upload.wikimedia.org/wikipedia/commons/2/24/Trentino_CoA.svg";
+    case "ES-CT-L":
+      return "https://upload.wikimedia.org/wikipedia/commons/8/88/Coat_of_Arms_of_the_Val_d%27Aran.svg";
+    default:
+      return;
+  }
+}
