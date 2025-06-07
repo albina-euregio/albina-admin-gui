@@ -2,7 +2,7 @@ import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.
 import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
 import { AuthorModel, AuthorSchema } from "./author.model";
 import * as Enums from "../enums/enums";
-import { RegionStatus } from "../enums/enums";
+import { DangerRating, RegionStatus } from "../enums/enums";
 import { formatDate } from "@angular/common";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
@@ -282,8 +282,11 @@ export class BulletinModel implements PolygonObject {
   }
 
   getAfternoonDangerRatingAbove(): Enums.DangerRating {
-    const test: any = this.afternoon.dangerRatingAbove;
-    if (this.hasDaytimeDependency && this.afternoon && this.afternoon.dangerRatingAbove && test !== "missing") {
+    if (
+      this.hasDaytimeDependency &&
+      this.afternoon?.dangerRatingAbove &&
+      this.afternoon?.dangerRatingAbove !== DangerRating.missing
+    ) {
       return this.afternoon.dangerRatingAbove;
     } else {
       return this.forenoon.dangerRatingAbove;
@@ -294,15 +297,14 @@ export class BulletinModel implements PolygonObject {
     if (this.forenoon.hasElevationDependency) {
       return this.forenoon.dangerRatingBelow;
     } else {
-      return this.getForenoonDangerRatingAbove();
+      return this.forenoon.dangerRatingAbove;
     }
   }
 
   getAfternoonDangerRatingBelow(): Enums.DangerRating {
     if (this.hasDaytimeDependency) {
       if (this.afternoon.hasElevationDependency) {
-        const test: any = this.afternoon.dangerRatingBelow;
-        if (this.afternoon && this.afternoon.dangerRatingBelow && test !== "missing") {
+        if (this.afternoon?.dangerRatingBelow && this.afternoon?.dangerRatingBelow !== DangerRating.missing) {
           return this.afternoon.dangerRatingBelow;
         } else {
           return this.forenoon.dangerRatingBelow;
@@ -313,6 +315,23 @@ export class BulletinModel implements PolygonObject {
     } else {
       return this.getForenoonDangerRatingBelow();
     }
+  }
+
+  getForenoonElevation(): number {
+    if (!this.forenoon.hasElevationDependency) {
+      return Infinity;
+    }
+    return this.forenoon.treeline ? 2000 : this.forenoon.elevation;
+  }
+
+  getAfternoonElevation(): number {
+    if (!this.hasDaytimeDependency) {
+      return this.getForenoonElevation();
+    }
+    if (!this.afternoon.hasElevationDependency) {
+      return Infinity;
+    }
+    return this.afternoon.treeline ? 2000 : this.afternoon.elevation;
   }
 
   getSavedAndPublishedRegions() {
