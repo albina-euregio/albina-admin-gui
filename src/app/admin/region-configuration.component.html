@@ -641,6 +641,19 @@
           <tr *ngIf="config().createMaps">
             <td>
               <label class="col-form-label">{{
+                "admin.region-configuration.table.publication.sendWhatsAppMessages" | translate
+              }}</label>
+            </td>
+            <td>
+              <label class="switch switch-primary">
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendWhatsAppMessages" />
+                <span class="switch-slider"></span>
+              </label>
+            </td>
+          </tr>
+          <tr *ngIf="config().createMaps">
+            <td>
+              <label class="col-form-label">{{
                 "admin.region-configuration.table.publication.sendPushNotifications" | translate
               }}</label>
             </td>

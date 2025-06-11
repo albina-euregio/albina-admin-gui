@@ -1,8 +1,8 @@
 import type { Aspect } from "../enums/enums";
 import { Icon } from "leaflet";
-import { escape, memoize } from "lodash";
+import { escape, memoize } from "es-toolkit";
 
-export const makeIcon = memoize(icon0, (...args) => args.join("-"));
+export const makeIcon = memoize(icon0, { getCacheKey: (...args) => args.join("-") });
 
 const snowsymbolsiacs = `
     <defs><style type="text/css">

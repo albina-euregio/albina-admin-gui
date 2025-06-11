@@ -27,7 +27,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm me-3"
-              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'de', sendAll)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.all.tooltip' | translate }}"
             >
@@ -36,7 +36,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostEmail($event, constantsService.codeTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'de', sendEmail)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.email.tooltip' | translate }}"
             >
@@ -45,7 +45,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostTelegram($event, constantsService.codeTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'de', sendTelegram)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.telegram.tooltip' | translate }}"
             >
@@ -54,7 +54,16 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostPush($event, constantsService.codeTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'de', sendWhatsapp)"
+              data-toggle="tooltip"
+              title="{{ 'admin.blog.whatsapp.tooltip' | translate }}"
+            >
+              <i class="ph ph-whatsapp-logo"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'de', sendPush)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.push.tooltip' | translate }}"
             >
@@ -65,7 +74,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm me-3"
-              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'it', sendAll)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.all.tooltip' | translate }}"
             >
@@ -74,7 +83,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostEmail($event, constantsService.codeTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'it', sendEmail)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.email.tooltip' | translate }}"
             >
@@ -83,7 +92,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostTelegram($event, constantsService.codeTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'it', sendTelegram)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.telegram.tooltip' | translate }}"
             >
@@ -92,7 +101,16 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostPush($event, constantsService.codeTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'it', sendWhatsapp)"
+              data-toggle="tooltip"
+              title="{{ 'admin.blog.whatsapp.tooltip' | translate }}"
+            >
+              <i class="ph ph-whatsapp-logo"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'it', sendPush)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.push.tooltip' | translate }}"
             >
@@ -103,7 +121,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm me-3"
-              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'en', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'en', sendAll)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.all.tooltip' | translate }}"
             >
@@ -112,7 +130,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostEmail($event, constantsService.codeTyrol, 'en', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'en', sendEmail)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.email.tooltip' | translate }}"
             >
@@ -121,7 +139,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostTelegram($event, constantsService.codeTyrol, 'en', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'en', sendTelegram)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.telegram.tooltip' | translate }}"
             >
@@ -130,7 +148,16 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostPush($event, constantsService.codeTyrol, 'en', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'en', sendWhatsapp)"
+              data-toggle="tooltip"
+              title="{{ 'admin.blog.whatsapp.tooltip' | translate }}"
+            >
+              <i class="ph ph-whatsapp-logo"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              (click)="sendLatestBlogPost($event, constantsService.codeTyrol, 'en', sendPush)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.push.tooltip' | translate }}"
             >
@@ -146,7 +173,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm me-3"
-              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'de', sendAll)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.all.tooltip' | translate }}"
             >
@@ -155,7 +182,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostEmail($event, constantsService.codeSouthTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'de', sendEmail)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.email.tooltip' | translate }}"
             >
@@ -164,7 +191,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostTelegram($event, constantsService.codeSouthTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'de', sendTelegram)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.telegram.tooltip' | translate }}"
             >
@@ -173,7 +200,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostPush($event, constantsService.codeSouthTyrol, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'de', sendPush)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.push.tooltip' | translate }}"
             >
@@ -184,7 +211,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm me-3"
-              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'it', sendAll)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.all.tooltip' | translate }}"
             >
@@ -193,7 +220,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostEmail($event, constantsService.codeSouthTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'it', sendEmail)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.email.tooltip' | translate }}"
             >
@@ -202,7 +229,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostTelegram($event, constantsService.codeSouthTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'it', sendTelegram)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.telegram.tooltip' | translate }}"
             >
@@ -211,7 +238,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostPush($event, constantsService.codeSouthTyrol, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeSouthTyrol, 'it', sendPush)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.push.tooltip' | translate }}"
             >
@@ -229,7 +256,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm me-3"
-              (click)="sendLatestBlogPost($event, constantsService.codeTrentino, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTrentino, 'it', sendAll)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.all.tooltip' | translate }}"
             >
@@ -238,7 +265,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostEmail($event, constantsService.codeTrentino, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTrentino, 'it', sendEmail)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.email.tooltip' | translate }}"
             >
@@ -247,7 +274,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostTelegram($event, constantsService.codeTrentino, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTrentino, 'it', sendTelegram)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.telegram.tooltip' | translate }}"
             >
@@ -256,7 +283,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostPush($event, constantsService.codeTrentino, 'it', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeTrentino, 'it', sendPush)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.push.tooltip' | translate }}"
             >
@@ -273,7 +300,7 @@
             <button
               type="button"
               class="btn btn-primary btn-sm me-3"
-              (click)="sendLatestBlogPost($event, constantsService.codeCarinthia, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeCarinthia, 'de', sendAll)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.all.tooltip' | translate }}"
             >
@@ -282,7 +309,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostEmail($event, constantsService.codeCarinthia, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeCarinthia, 'de', sendEmail)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.email.tooltip' | translate }}"
             >
@@ -291,7 +318,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostTelegram($event, constantsService.codeCarinthia, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeCarinthia, 'de', sendTelegram)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.telegram.tooltip' | translate }}"
             >
@@ -300,7 +327,7 @@
             <button
               type="button"
               class="btn btn-secondary btn-sm"
-              (click)="sendLatestBlogPostPush($event, constantsService.codeCarinthia, 'de', isTest)"
+              (click)="sendLatestBlogPost($event, constantsService.codeCarinthia, 'de', sendPush)"
               data-toggle="tooltip"
               title="{{ 'admin.blog.push.tooltip' | translate }}"
             >

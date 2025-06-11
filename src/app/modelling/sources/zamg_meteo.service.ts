@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { ImageOverlay } from "leaflet";
-import L from "leaflet";
+import { ImageOverlay, type LayerGroup, type Map } from "leaflet";
 import { Temporal } from "temporal-polyfill";
 
 function legend(label: string, color: string) {
@@ -171,7 +170,7 @@ class MapLink {
   dateOffsetHour?: number;
   dateStepHour?: number;
   attribution?: string;
-  imageOverlay: L.ImageOverlay;
+  imageOverlay: ImageOverlay;
   selected: boolean;
 
   constructor(data: Partial<MapLink>) {
@@ -235,7 +234,7 @@ class MapLink {
       .replace("{{year}}", isoString.slice(0, "2006".length));
   }
 
-  async addImageOverlay(map: L.Map | L.LayerGroup) {
+  async addImageOverlay(map: Map | LayerGroup) {
     await this.fetchDate();
     this.imageOverlay.addTo(map);
   }

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/v4";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import * as prettier from "prettier";

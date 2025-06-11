@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const ServerConfigurationSchema = z
   .object({
@@ -20,7 +20,7 @@ export const ServerConfigurationSchema = z
     $isNew: z.boolean().optional(),
   })
   .partial();
-export const ServerConfigurationVersionSchema = ServerConfigurationSchema.extend(z.object({ version: z.string() }));
+export const ServerConfigurationVersionSchema = ServerConfigurationSchema.extend({ version: z.string() });
 
 export type ServerConfiguration = z.infer<typeof ServerConfigurationSchema>;
 export type ServerConfigurationVersion = z.infer<typeof ServerConfigurationVersionSchema>;

@@ -47,7 +47,7 @@ export function convertFotoWebcamEU(webcam: FotoWebcamEU): GenericObservation<Fo
   } as GenericObservation<FotoWebcamEU>;
 }
 
-export function addLolaCadsData(cam: GenericObservation<FotoWebcamEU>, lolaCadsData: any): GenericObservation<any> {
+export function addLolaCadsData(cam: GenericObservation<FotoWebcamEU>, lolaCadsData: any): GenericObservation {
   if (lolaCadsData.length === 0) return cam;
   return {
     $data: cam,
@@ -63,5 +63,5 @@ export function addLolaCadsData(cam: GenericObservation<FotoWebcamEU>, lolaCadsD
     locationName: cam.locationName,
     region: cam.region,
     aspect: cam.aspect,
-  };
+  } as GenericObservation;
 }

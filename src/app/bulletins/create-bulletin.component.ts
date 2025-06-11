@@ -15,7 +15,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, timer } from "rxjs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { saveAs } from "file-saver";
-import { debounce } from "lodash";
+import { debounce } from "es-toolkit";
 
 // models
 import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";

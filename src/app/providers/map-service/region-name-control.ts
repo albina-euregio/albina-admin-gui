@@ -1,8 +1,8 @@
-import L from "leaflet";
+import { Control, DomUtil } from "leaflet";
 
-export const RegionNameControl = L.Control.extend({
+export const RegionNameControl = Control.extend({
   onAdd() {
-    this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
+    this._div = DomUtil.create("div", "info"); // create a div with a class "info"
     this.update();
     return this._div;
   },

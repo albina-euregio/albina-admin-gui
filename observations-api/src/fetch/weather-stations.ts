@@ -1,8 +1,7 @@
 import { average, max, median, min, sum } from "simple-statistics";
 import { type GenericObservation, ObservationSource, ObservationType } from "../generic-observation";
 import { fetchJSON, fetchText } from "../util/fetchJSON";
-import orderBy from "lodash/orderBy";
-import groupBy from "lodash/groupBy";
+import { orderBy, groupBy } from "es-toolkit";
 
 export async function getAwsWeatherStations(
   startDate: Date,
@@ -37,7 +36,7 @@ export async function getAwsWeatherStations(
     $data.statistics.SnowLine.$externalImgs = snowLines[0]?.$externalImgs;
   }
 
-  return orderBy(stations, (s) => [s.region, s.locationName]);
+  return orderBy(stations, [(s) => s.region, (s) => s.locationName], ["asc", "asc"]);
 }
 
 class StationValues {
@@ -98,7 +97,7 @@ function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>):
     latitude: feature.geometry.coordinates[1],
     longitude: feature.geometry.coordinates[0],
     region: feature.properties["LWD-Region"]?.split(" ")?.[0] || "",
-  } satisfies GenericObservation;
+  } as GenericObservation;
 }
 
 export interface FeatureProperties {

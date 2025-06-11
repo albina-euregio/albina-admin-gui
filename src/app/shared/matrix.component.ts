@@ -426,7 +426,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
         frequencyFactor = 2;
         break;
       case Enums.Frequency.none:
-        return "0";
+        return "46";
       default:
         return "0";
     }

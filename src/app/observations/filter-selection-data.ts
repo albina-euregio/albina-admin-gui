@@ -1,4 +1,4 @@
-import { castArray, get } from "lodash";
+import { castArray, get } from "es-toolkit/compat";
 import type { GenericObservation } from "./models/generic-observation.model";
 import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
 export type { FilterSelectionSpec, FilterSelectionValue };
