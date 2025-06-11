@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { Observable, from, map } from "rxjs";
 import { RegionsService } from "app/providers/regions-service/regions.service";
 import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
-import { geoJSON } from "leaflet";
+import { GeoJSON } from "leaflet";
 import { formatDate } from "@angular/common";
 
 @Injectable()
@@ -16,7 +16,7 @@ export class MeteogramSourceService {
           .filter((f) => /AT-07/.test(f.properties.id))
           .sort((f1, f2) => f1.properties.id.localeCompare(f2.properties.id))
           .map((f): GenericObservation => {
-            const center = geoJSON(f).getBounds().getCenter();
+            const center = new GeoJSON(f).getBounds().getCenter();
             const file = f.properties.id.replace(/AT-07-/, "");
             const date = formatDate(Date.now(), "yyyy-MM-dd", "en-US");
             const $externalURL = `https://static.avalanche.report/zamg_ibk/${date}_meteogramm_R-${file}.png`;

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/v4";
 import { FilterSelectionSpecSchema } from "../observations/filter-selection-config";
 
 export const AwsomeSourceSchema = z.object({

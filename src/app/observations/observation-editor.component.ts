@@ -19,14 +19,13 @@ import {
   ObservationType,
   PersonInvolvement,
 } from "./models/generic-observation.model";
-import { xor } from "lodash";
+import { orderBy, xor } from "es-toolkit";
 import type {
   LolaRainBoundaryElevationTolerance,
   LolaRainBoundaryElevationPeriod,
 } from "../../../observations-api/src/fetch/observations/lola-kronos.model";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
-import orderBy from "lodash/orderBy";
 
 @Component({
   standalone: true,
@@ -125,7 +124,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     this.pendingDangerSources?.unsubscribe();
     this.pendingDangerSources = this.dangerSourcesService
       .loadDangerSources([date, date], [this.authenticationService.getActiveRegionId()])
-      .subscribe((dangerSources) => this.dangerSources.set(orderBy(dangerSources, (s) => s.creationDate)));
+      .subscribe((dangerSources) => this.dangerSources.set(orderBy(dangerSources, [(s) => s.creationDate], ["asc"])));
   }
 
   get eventDate(): Date {

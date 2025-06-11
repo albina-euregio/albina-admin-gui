@@ -11,7 +11,7 @@ import { LocalStorageService } from "../local-storage-service/local-storage.serv
 import * as Enums from "../../enums/enums";
 import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 @Injectable()
 export class AuthenticationService {
@@ -150,15 +150,18 @@ export class AuthenticationService {
     );
   }
 
-  private addExternalServer(server0: ServerConfiguration, json: z.infer<typeof AuthenticationResponseSchema>): boolean {
+  private addExternalServer(
+    server0: ServerConfiguration,
+    json: AuthenticationResponse | { access_token: string },
+  ): boolean {
     if (!json.access_token) {
       return false;
     }
     const server = ServerSchema.parse({
       ...server0,
-      regions: json.regions?.map((r) => r.id),
+      regions: (json as AuthenticationResponse).regions?.map((r) => r.id),
       accessToken: json.access_token,
-      refreshToken: json.refresh_token,
+      refreshToken: (json as AuthenticationResponse).refresh_token,
     });
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
@@ -193,7 +196,7 @@ export class AuthenticationService {
     if (!json) {
       return;
     }
-    this.currentAuthor = AuthorSchema.partial().parse(json);
+    this.currentAuthor = AuthorSchema.partial().parse(json) as unknown as AuthorModel;
     this.localStorageService.setCurrentAuthor(this.currentAuthor);
   }
 
@@ -309,3 +312,4 @@ export const AuthenticationResponseSchema = z.object({
   refresh_token: z.string().optional(),
   api_url: z.string().optional(),
 });
+type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;

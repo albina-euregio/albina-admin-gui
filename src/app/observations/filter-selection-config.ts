@@ -1,11 +1,11 @@
-import * as z from "zod";
+import * as z from "zod/v4";
 
 export const FilterSelectionValueSchema = z.object({
   borderColor: z.string().optional().describe("Stroke color"),
   color: z.string().describe("Fill color"),
   label: z.string().describe("Label string shown inside the marker"),
-  labelColor: z.string().default("#000").describe("Label color"),
-  labelFontSize: z.number().default(12).describe("Label font size, in pt"),
+  labelColor: z.string().default("#000").optional().describe("Label color"),
+  labelFontSize: z.number().default(12).optional().describe("Label font size, in pt"),
   legend: z.string().describe("Legend string shown in the chart"),
   numericRange: z
     .array(z.number())
@@ -15,8 +15,8 @@ export const FilterSelectionValueSchema = z.object({
     .describe(
       "An interval given as array of [lower bound, upper bound] where the lower bound is inclusive and the upper bound is exclusive",
     ),
-  opacity: z.number().default(1).describe("Marker opacity"),
-  radius: z.number().default(40).describe("Radius of the circle marker, in pixels"),
+  opacity: z.number().default(1).optional().describe("Marker opacity"),
+  radius: z.number().default(40).optional().describe("Radius of the circle marker, in pixels"),
   radiusByZoom: z
     .array(z.number())
     .min(19)
@@ -24,8 +24,8 @@ export const FilterSelectionValueSchema = z.object({
     .optional()
     .describe("Radius of the circle marker, as array indexed by the map zoom level"),
   value: z.string(),
-  weight: z.number().default(0).describe("Stroke width, in pixels"),
-  zIndexOffset: z.number().default(0).describe("The explicit zIndex of this marker"),
+  weight: z.number().default(0).optional().describe("Stroke width, in pixels"),
+  zIndexOffset: z.number().default(0).optional().describe("The explicit zIndex of this marker"),
 });
 export type FilterSelectionValue = z.infer<typeof FilterSelectionValueSchema>;
 

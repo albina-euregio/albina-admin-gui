@@ -13,7 +13,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { NgIf, NgFor } from "@angular/common";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { RegionConfiguration } from "../models/region-configuration.model";
+import { getRegionCoatOfArms, RegionConfiguration } from "../models/region-configuration.model";
 
 @Component({
   selector: "app-dashboard",
@@ -40,6 +40,7 @@ export class FullLayoutComponent {
   localStorageService = inject(LocalStorageService);
   private modalService = inject(BsModalService);
   private sanitizer = inject(DomSanitizer);
+  getRegionCoatOfArms = getRegionCoatOfArms;
 
   public isSidebarOpen = false;
 

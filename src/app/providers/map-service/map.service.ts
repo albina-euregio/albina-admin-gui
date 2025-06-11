@@ -1,6 +1,17 @@
 import { Injectable, inject } from "@angular/core";
-import * as L from "leaflet";
-import { Browser, GeoJSON, Map, TileLayer, TileLayerOptions } from "leaflet";
+import {
+  Browser,
+  Control,
+  GeoJSON,
+  LatLng,
+  Layer,
+  Map,
+  MapOptions,
+  Path,
+  PathOptions,
+  TileLayer,
+  TileLayerOptions,
+} from "leaflet";
 import "leaflet.sync";
 import { BulletinModel } from "../../models/bulletin.model";
 import { RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
@@ -17,7 +28,7 @@ import { PolygonObject } from "../../danger-sources/models/polygon-object.model"
 
 declare module "leaflet" {
   interface Map {
-    sync(other: L.Map): void;
+    sync(other: Map): void;
   }
 
   interface GeoJSON<P = any> {
@@ -42,8 +53,8 @@ export class MapService {
 
   public map: Map;
   public afternoonMap: Map;
-  private amControl: L.Control;
-  private pmControl: L.Control;
+  private amControl: Control;
+  private pmControl: Control;
 
   protected baseMaps: Record<string, TileLayer>;
   protected afternoonBaseMaps: Record<string, TileLayer>;
@@ -142,7 +153,7 @@ export class MapService {
 
     // Disable dragging on mobile devices
     this.map.whenReady(() => {
-      if (L.Browser.mobile) {
+      if (Browser.mobile) {
         this.map.dragging.disable();
       }
     });
@@ -167,7 +178,7 @@ export class MapService {
 
     // Disable dragging on mobile devices
     this.afternoonMap.whenReady(() => {
-      if (L.Browser.mobile) {
+      if (Browser.mobile) {
         this.afternoonMap.dragging.disable();
       }
     });
@@ -183,12 +194,12 @@ export class MapService {
     this.amControl.remove();
   }
 
-  getMapInitOptions(): L.MapOptions {
-    const options: L.MapOptions = {
+  getMapInitOptions(): MapOptions {
+    const options: MapOptions = {
       doubleClickZoom: false,
       scrollWheelZoom: false,
       touchZoom: true,
-      center: L.latLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
+      center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
       zoom: 8,
       minZoom: 6,
       maxZoom: 10,
@@ -364,7 +375,7 @@ export class MapService {
     return result;
   }
 
-  private onEachFeature(editSelection: L.GeoJSON, feature: GeoJSON.Feature, layer: L.Layer) {
+  private onEachFeature(editSelection: GeoJSON, feature: GeoJSON.Feature, layer: Layer) {
     const regionsService = this.regionsService;
     const updateEditSelection = () => this.updateEditSelection();
     layer.on({
@@ -394,30 +405,26 @@ export class MapService {
         (
           (e.originalEvent.currentTarget as HTMLElement).children[1].childNodes[1] as HTMLElement
         ).children[0].innerHTML = e.target.feature.properties.name;
-        const l = e.target;
+        const l = e.target as Path;
         l.setStyle({
           weight: 3,
         });
-        if (!L.Browser.ie && !L.Browser.opera12 && !L.Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
       mouseout(e) {
         (
           (e.originalEvent.currentTarget as HTMLElement).children[1].childNodes[1] as HTMLElement
         ).children[0].innerHTML = " ";
-        const l = e.target;
+        const l = e.target as Path;
         l.setStyle({
           weight: 1,
         });
-        if (!L.Browser.ie && !L.Browser.opera12 && !L.Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
     });
   }
 
-  protected onEachAggregatedRegionsFeatureAM(feature: GeoJSON.Feature, layer: L.Layer) {
+  protected onEachAggregatedRegionsFeatureAM(feature: GeoJSON.Feature, layer: Layer) {
     layer.on({
       click() {
         feature.properties.selected = true;
@@ -426,30 +433,26 @@ export class MapService {
         (
           (e.originalEvent.currentTarget as HTMLElement).children[1].childNodes[1] as HTMLElement
         ).children[0].innerHTML = e.target.feature.properties.name;
-        const l = e.target;
+        const l = e.target as Path;
         l.setStyle({
           weight: 3,
         });
-        if (!Browser.ie && !Browser.opera12 && !Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
       mouseout(e) {
         (
           (e.originalEvent.currentTarget as HTMLElement).children[1].childNodes[1] as HTMLElement
         ).children[0].innerHTML = " ";
-        const l = e.target;
+        const l = e.target as Path;
         l.setStyle({
           weight: 1,
         });
-        if (!Browser.ie && Browser.opera12 && !Browser.edge) {
-          l.bringToFront();
-        }
+        l.bringToFront();
       },
     });
   }
 
-  private onEachAggregatedRegionsFeaturePM(feature: GeoJSON.Feature, layer: L.Layer) {
+  private onEachAggregatedRegionsFeaturePM(feature: GeoJSON.Feature, layer: Layer) {
     layer.on({
       click() {
         feature.properties.selected = true;
@@ -457,14 +460,14 @@ export class MapService {
     });
   }
 
-  private getAggregatedRegionBaseStyle(): L.PathOptions {
+  private getAggregatedRegionBaseStyle(): PathOptions {
     return {
       opacity: 0.0,
       fillOpacity: 0.0,
     };
   }
 
-  private getRegionStyle(): L.PathOptions {
+  private getRegionStyle(): PathOptions {
     return {
       weight: this.constantsService.lineWeight,
       opacity: this.constantsService.lineOpacity,
@@ -473,21 +476,21 @@ export class MapService {
     };
   }
 
-  private getActiveSelectionBaseStyle(): L.PathOptions {
+  private getActiveSelectionBaseStyle(): PathOptions {
     return {
       opacity: 0.0,
       fillOpacity: 0.0,
     };
   }
 
-  private getEditSelectionBaseStyle(): L.PathOptions {
+  private getEditSelectionBaseStyle(): PathOptions {
     return {
       opacity: 0.0,
       fillOpacity: 0.0,
     };
   }
 
-  private getEditSelectionStyle(): L.PathOptions {
+  private getEditSelectionStyle(): PathOptions {
     return {
       fillColor: this.constantsService.colorActiveSelection,
       weight: this.constantsService.lineWeight,
@@ -501,7 +504,7 @@ export class MapService {
     region: string,
     dangerRating: Enums.DangerRating,
     status: Enums.RegionStatus,
-  ): L.PathOptions {
+  ): PathOptions {
     let fillOpacity = this.constantsService.fillOpacityOwnSelected;
     const fillColor = this.constantsService.getDangerRatingColor(dangerRating);
 
@@ -537,7 +540,7 @@ export class MapService {
     region: string,
     dangerRating: Enums.DangerRating,
     status: Enums.RegionStatus,
-  ): L.PathOptions {
+  ): PathOptions {
     let fillOpacity = this.constantsService.fillOpacityOwnDeselected;
 
     // own area

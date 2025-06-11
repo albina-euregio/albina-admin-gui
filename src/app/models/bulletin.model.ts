@@ -68,7 +68,7 @@ export class BulletinModel implements PolygonObject {
     const bulletin = new BulletinModel();
 
     bulletin.id = json.id;
-    bulletin.author = AuthorSchema.partial().parse(json.author);
+    bulletin.author = AuthorSchema.partial().parse(json.author) as unknown as AuthorModel;
     const jsonAdditionalAuthors = json.additionalAuthors;
     const additionalAuthors = new Array<string>();
     for (const i in jsonAdditionalAuthors) {

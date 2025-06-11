@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Canvas, Icon, LatLng, Map, Marker, MarkerOptions } from "leaflet";
-import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
+import { Icon, LatLng, Map, Marker, MarkerOptions } from "leaflet";
+import { GenericObservation } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
 import type { AwsomeSource } from "../modelling/awsome.config";
-import { castArray, get as _get } from "lodash";
+import { castArray, get as _get } from "es-toolkit/compat";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,
@@ -24,12 +24,6 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     weight: 1,
     labelColor: "#fff",
   } as FilterSelectionValue;
-
-  // This is very important! Use a canvas otherwise the chart is too heavy for the browser when
-  // the number of points is too high
-  public myRenderer = new Canvas({
-    padding: 0.5,
-  });
 
   createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {
@@ -51,7 +45,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       const icon = makeIcon0(filterSelectionValue?.radius);
       const marker = this.createMarkerForIcon(observation, icon, filterSelectionValue);
       if (Array.isArray(filterSelectionValue?.radiusByZoom)) {
-        marker.on("add", (e) => {
+        marker.on("add", () => {
           const map = (marker as any)._map as Map;
           if (map instanceof Map) {
             const setIcon0 = () => {
