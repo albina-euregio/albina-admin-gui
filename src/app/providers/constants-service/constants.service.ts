@@ -16,6 +16,7 @@ export class ConstantsService {
 
   // region (ISO-3166)
   public codeSwitzerland = "CH";
+  public codeCarinthia = "AT-02";
   public codeTyrol = "AT-07";
   public codeSouthTyrol = "IT-32-BZ";
   public codeTrentino = "IT-32-TN";

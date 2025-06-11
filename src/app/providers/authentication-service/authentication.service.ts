@@ -277,11 +277,18 @@ export class AuthenticationService {
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {
-    return this.currentAuthor?.regions || [];
+    return this.currentAuthor?.regions.sort((a, b) => a.id.localeCompare(b.id)) || [];
   }
 
   public getInternalRegions(): string[] {
-    return this.internalRegions.map((r) => r.id);
+    return this.internalRegions.map((r) => r.id).sort((a, b) => a.localeCompare(b));
+  }
+
+  public getInternalRegionsWithoutSuperRegions(): string[] {
+    return this.internalRegions
+      .filter((r) => r.subRegions && r.subRegions.length === 0)
+      .map((r) => r.id)
+      .sort((a, b) => a.localeCompare(b));
   }
 
   public getExternalServers(): ServerModel[] {

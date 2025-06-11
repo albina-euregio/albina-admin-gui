@@ -10,6 +10,7 @@ import {
 } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { ParamService, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -56,6 +57,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   private route = inject(ActivatedRoute);
   private regionsService = inject(RegionsService);
   mapService = inject(BaseMapService);
+  authenticationService = inject(AuthenticationService);
   private multimodelSource = inject(MultimodelSourceService);
   private meteogramSource = inject(MeteogramSourceService);
   private observedProfileSource = inject(ObservedProfileSourceService);
