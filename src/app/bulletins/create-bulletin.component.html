@@ -324,6 +324,20 @@
                 </button>
               </li>
 
+              <!-- show / hide external warning regions -->
+              <li>
+                <button
+                  class="dropdown-item"
+                  (click)="toggleShowExternalRegions(); dropdown.hide()"
+                  ngxMousetrapKey="h"
+                >
+                  <i *ngIf="showExternRegions" class="ph icon-md ph-eye-slash"></i>
+                  <i *ngIf="!showExternRegions" class="ph icon-md ph-eye"></i>
+                  <span *ngIf="showExternRegions">{{ "bulletins.create.hideExternalRegions" | translate }}</span>
+                  <span *ngIf="!showExternRegions">{{ "bulletins.create.showExternalRegions" | translate }}</span>
+                </button>
+              </li>
+
               <!-- load bulletin from yesterday -->
               <li>
                 <button
@@ -571,7 +585,7 @@
       <ng-container *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue; let i = index">
         <header
           class="create-bulletin__region-divider foreign"
-          (click)="toggleShowExternalRegions(externalRegion.key.apiUrl)"
+          (click)="toggleShowExternalRegionsList(externalRegion.key.apiUrl)"
           ngxMousetrapKey="f {{ i + 1 }}"
         >
           <h5 class="font-s-medium">{{ externalRegion.key.name }} ({{ externalRegion.value.length }})</h5>
