@@ -697,7 +697,8 @@
           "enableStrategicMindset": "Enable strategic mindset",
           "enableStressLevel": "Enable stress level",
           "enableAvalancheProblemCornices": "Abilitar eth problèma de lauegi CORNISES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Abilitar eth problèma de lauegi CAP PROBLÈMA DE LAUEGI EVIDENT"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Abilitar eth problèma de lauegi CAP PROBLÈMA DE LAUEGI EVIDENT",
+          "enableEditableFields": "Editable textfields in bulletin"
         }
       },
       "success": "Configuracion sauvada corrèctaments",
