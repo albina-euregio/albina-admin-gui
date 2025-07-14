@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ImageOverlay, type LayerGroup, type Map } from "leaflet";
 import { Temporal } from "temporal-polyfill";
@@ -9,7 +9,7 @@ function legend(label: string, color: string) {
 
 @Injectable()
 export class ZamgMeteoSourceService {
-  constructor(private translateService: TranslateService) {}
+  private translateService = inject(TranslateService);
 
   maps = Object.freeze([
     ...[6, 12, 24, 48, 72].map(
