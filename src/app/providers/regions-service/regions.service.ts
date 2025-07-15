@@ -86,4 +86,5 @@ export interface RegionProperties {
 
 export interface RegionWithElevationProperties extends RegionProperties {
   elevation: "high" | "low" | "low_high";
+  threshold?: number;
 }

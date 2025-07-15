@@ -304,7 +304,15 @@ export class MapService {
             const properties = f.props as unknown as SelectableRegionProperties;
             if (!filterFeature({ properties } as unknown as GeoJSON.Feature)) return undefined;
             if (properties.id !== region) return undefined;
-            const isAbove = properties.elevation === "high" || properties.elevation === "low_high";
+            let isAbove = properties.elevation === "high" || properties.elevation === "low_high";
+            if (properties.elevation === "high" && mapObject instanceof BulletinModel) {
+              const elevation =
+                map !== this.afternoonMap ? mapObject.getForenoonElevation() : mapObject.getAfternoonElevation();
+              if (isFinite(elevation) && elevation > properties.threshold) {
+                // take "low" when lowerBound exceeds region threshold
+                isAbove = false;
+              }
+            }
             const dangerRating = isAbove
               ? map !== this.afternoonMap
                 ? mapObject.getForenoonDangerRatingAbove()
