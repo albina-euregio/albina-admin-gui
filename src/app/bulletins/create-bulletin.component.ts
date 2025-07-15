@@ -116,6 +116,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private internBulletinsListEtag: string;
   public externRegionsMap: Map<ServerModel, BulletinModel[]>;
   public showExternRegionsMap: Map<string, boolean>;
+  public showExternRegions: boolean;
 
   public showStatusOfAllRegions = false;
 
@@ -223,6 +224,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.internBulletinsList = new Array<BulletinModel>();
     this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
     this.showExternRegionsMap = new Map<string, boolean>();
+    this.showExternRegions = false;
     // this.preventClick = false;
     // this.timer = 0;
 
@@ -259,6 +261,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.internBulletinsList = new Array<BulletinModel>();
     this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
     this.showExternRegionsMap = new Map<string, boolean>();
+    this.showExternRegions = false;
 
     this.editRegions = false;
     this.showAfternoonMap = false;
@@ -272,8 +275,24 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return this.showExternRegionsMap.get(key);
   }
 
-  toggleShowExternalRegions(apiUrl: string) {
+  toggleShowExternalRegionsList(apiUrl: string) {
     this.showExternRegionsMap.set(apiUrl, !this.showExternRegionsMap.get(apiUrl));
+  }
+
+  toggleShowExternalRegions() {
+    this.showExternRegions = !this.showExternRegions;
+    if (this.showExternRegions) {
+      this.externRegionsMap.forEach((bulletins) => {
+        bulletins.forEach((bulletin) => {
+          this.mapService.updateAggregatedRegion(bulletin);
+        });
+      });
+    } else {
+      this.mapService.resetAggregatedRegions();
+      this.internBulletinsList.forEach((bulletin) => {
+        this.mapService.updateAggregatedRegion(bulletin);
+      });
+    }
   }
 
   hasExternalRegions() {
@@ -1175,7 +1194,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         if (this.activeBulletin && this.activeBulletin.id === bulletin.id) {
           this.activeBulletin = bulletin;
         }
-        this.mapService.updateAggregatedRegion(bulletin);
+        if (this.showExternRegions) {
+          this.mapService.updateAggregatedRegion(bulletin);
+        }
       }
     }
 

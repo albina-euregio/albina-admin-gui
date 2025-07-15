@@ -36,30 +36,19 @@
               <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
                 <i class="ph ph-number-circle-zero"></i>
               </button>
-              <button
-                type="button"
-                class="obs-button invisible"
-                (click)="selectRegion('AT-07')"
-                [ngxMousetrapKey]="['r 1']"
+              <span
+                *ngFor="let region of authenticationService.getInternalRegionsWithoutSuperRegions(); let i = index"
+                class="global-bar-item"
               >
-                <i class="ph ph-number-circle-one"></i>
-              </button>
-              <button
-                type="button"
-                class="obs-button invisible"
-                (click)="selectRegion('IT-32-BZ')"
-                [ngxMousetrapKey]="['r 2']"
-              >
-                <i class="ph ph-number-circle-two"></i>
-              </button>
-              <button
-                type="button"
-                class="obs-button invisible"
-                (click)="selectRegion('IT-32-TN')"
-                [ngxMousetrapKey]="['r 3']"
-              >
-                <i class="ph ph-number-circle-three"></i>
-              </button>
+                <button
+                  type="button"
+                  class="obs-button invisible"
+                  (click)="selectRegion(region)"
+                  [ngxMousetrapKey]="['r ' + (i + 1)]"
+                >
+                  <i class="ph ph-number-circle-one"></i>
+                </button>
+              </span>
             </div>
             <div class="global-bar-item global-bar-item-region">
               <div class="dropdown">
@@ -73,28 +62,31 @@
                   {{ "admin.observations.selectRegion.placeholder" | translate }}
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
-                  <div *ngFor="let superRegion of ['AT-07', 'IT-32-BZ', 'IT-32-TN']" class="form-check">
+                  <div
+                    *ngFor="let region of authenticationService.getInternalRegionsWithoutSuperRegions()"
+                    class="form-check"
+                  >
                     <label class="form-check-label text-nowrap">
                       <input
-                        [(ngModel)]="selectedRegions[superRegion]"
+                        [(ngModel)]="selectedRegions[region]"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="toggleRegion($event, superRegion)"
+                        (change)="toggleRegion($event, region)"
                         type="checkbox"
                         class="form-check-input"
                       />
-                      {{ "bulletins.table.title.status." + superRegion | translate }}
+                      {{ "bulletins.table.title.status." + region | translate }}
                     </label>
                     <div class="ms-3">
-                      <div *ngFor="let region of getSubregions(superRegion)" class="form-check">
+                      <div *ngFor="let microRegion of getSubregions(region)" class="form-check">
                         <label class="form-check-label text-nowrap">
                           <input
-                            [(ngModel)]="selectedRegions[region.id]"
+                            [(ngModel)]="selectedRegions[microRegion.id]"
                             [ngModelOptions]="{ standalone: true }"
                             (change)="onRegionsDropdownSelect()"
                             type="checkbox"
                             class="form-check-input"
                           />
-                          {{ region.name }}
+                          {{ microRegion.name }}
                         </label>
                       </div>
                     </div>

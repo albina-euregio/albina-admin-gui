@@ -202,11 +202,13 @@ export class MatrixParameterComponent implements OnInit {
       case Enums.AvalancheType.loose:
       case Enums.AvalancheType.glide:
         return {
-          floor: 25,
+          floor: 0,
           ceil: 75,
-          ticks: [25, 37, 50, 62, 75],
+          ticks: [0, 12, 25, 37, 50, 62, 75],
           getLegend: (value: number): string => {
             switch (value) {
+              case 12:
+                return this.translateService.instant("frequency.none");
               case 37:
                 return this.translateService.instant("frequency.few");
               case 62:
@@ -256,11 +258,13 @@ export class MatrixParameterComponent implements OnInit {
         };
       default:
         return {
-          floor: 25,
+          floor: 0,
           ceil: 100,
-          ticks: [25, 37, 50, 62, 75, 87, 100],
+          ticks: [0, 12, 25, 37, 50, 62, 75, 87, 100],
           getLegend: (value: number): string => {
             switch (value) {
+              case 12:
+                return this.translateService.instant("frequency.none");
               case 37:
                 return this.translateService.instant("frequency.few");
               case 62:
@@ -495,6 +499,17 @@ export class MatrixParameterComponent implements OnInit {
               default:
                 return Enums.DangerRating.missing;
             }
+          case Enums.Frequency.none:
+            switch (matrixInformation.avalancheSize) {
+              case Enums.AvalancheSize.extreme:
+              case Enums.AvalancheSize.very_large:
+              case Enums.AvalancheSize.large:
+              case Enums.AvalancheSize.medium:
+              case Enums.AvalancheSize.small:
+                return Enums.DangerRating.low;
+              default:
+                return Enums.DangerRating.missing;
+            }
           default:
             return Enums.DangerRating.missing;
         }
@@ -540,6 +555,17 @@ export class MatrixParameterComponent implements OnInit {
                 return Enums.DangerRating.moderate;
               case Enums.AvalancheSize.medium:
                 return Enums.DangerRating.moderate;
+              case Enums.AvalancheSize.small:
+                return Enums.DangerRating.low;
+              default:
+                return Enums.DangerRating.missing;
+            }
+          case Enums.Frequency.none:
+            switch (matrixInformation.avalancheSize) {
+              case Enums.AvalancheSize.extreme:
+              case Enums.AvalancheSize.very_large:
+              case Enums.AvalancheSize.large:
+              case Enums.AvalancheSize.medium:
               case Enums.AvalancheSize.small:
                 return Enums.DangerRating.low;
               default:
@@ -598,13 +624,9 @@ export class MatrixParameterComponent implements OnInit {
           case Enums.Frequency.none:
             switch (matrixInformation.avalancheSize) {
               case Enums.AvalancheSize.extreme:
-                return Enums.DangerRating.low;
               case Enums.AvalancheSize.very_large:
-                return Enums.DangerRating.low;
               case Enums.AvalancheSize.large:
-                return Enums.DangerRating.low;
               case Enums.AvalancheSize.medium:
-                return Enums.DangerRating.low;
               case Enums.AvalancheSize.small:
                 return Enums.DangerRating.low;
               default:

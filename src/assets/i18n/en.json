@@ -303,6 +303,8 @@
       "changeDangerRatingElevation": "Extend the danger level",
       "mapTop": "Map above",
       "mapLeft": "Map aside",
+      "showExternalRegions": "Show external regions",
+      "hideExternalRegions": "Hide external regions",
       "showNotes": "Show notes",
       "hideNotes": "Hide notes",
       "incompleteAvalancheProblem": "Incomplete",
