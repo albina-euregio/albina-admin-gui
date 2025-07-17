@@ -31,6 +31,7 @@ export class BulletinTextComponent {
   readonly bulletin = input<BulletinModel>(undefined);
   readonly showDialog = output<TextcatLegacyIn>();
   readonly updateBulletinOnServer = output();
+  readonly enableEditableFields = this.authenticationService.getActiveRegion().enableEditableFields;
   showTranslations = false;
   showNotes = false;
   modalRef: BsModalRef;
