@@ -256,6 +256,10 @@ export class AuthenticationService {
     }
   }
 
+  public getInternalRegion(region: string): RegionConfiguration | undefined {
+    return this.internalRegions.find((r) => r?.id === region);
+  }
+
   public getUserLat() {
     return this.activeRegion?.mapCenterLat ?? 47.1;
   }
