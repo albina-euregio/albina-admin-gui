@@ -57,7 +57,7 @@ import {
 } from "app/danger-sources/models/danger-source-variant.model";
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
-import { LangTexts } from "app/models/text.model";
+import { emptyLangTexts, LangTexts } from "app/models/text.model";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -1390,6 +1390,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   copyBulletin(bulletin: BulletinModel) {
     const newBulletin = new BulletinModel(bulletin);
+    // authenticationService.getInternalRegion(bulletin.ownerRegion).enableEditableFields
+    console.log("Copying bulletin", bulletin);
     newBulletin.additionalAuthors = new Array<string>();
     newBulletin.savedRegions = new Array<string>();
     newBulletin.publishedRegions = new Array<string>();
@@ -1398,6 +1400,26 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     newBulletin.author = this.authenticationService.getCurrentAuthor();
     newBulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
     newBulletin.ownerRegion = this.authenticationService.getActiveRegionId();
+
+    // if bulletin without textcats is copied to region with textcat, clear texts
+    if (!this.authenticationService.getActiveRegion().enableEditableFields) {
+      if (!bulletin.avActivityCommentTextcat) {
+        newBulletin.avActivityComment$ = emptyLangTexts();
+      }
+      if (!bulletin.avActivityHighlightsTextcat) {
+        newBulletin.avActivityHighlights$ = emptyLangTexts();
+      }
+      if (!bulletin.snowpackStructureCommentTextcat) {
+        newBulletin.snowpackStructureComment$ = emptyLangTexts();
+      }
+      if (!bulletin.snowpackStructureHighlightsTextcat) {
+        newBulletin.snowpackStructureHighlights$ = emptyLangTexts();
+      }
+      if (!bulletin.tendencyCommentTextcat) {
+        newBulletin.tendencyComment$ = emptyLangTexts();
+      }
+    }
+
     this.copyService.setCopyBulletin(true);
     this.copyService.setBulletin(newBulletin);
   }
