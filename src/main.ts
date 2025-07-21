@@ -1,7 +1,7 @@
 import * as sentry from "@sentry/angular";
 
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
-import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
 import localeCa from "@angular/common/locales/ca";
 import localeDe from "@angular/common/locales/de";
 import { default as localeEn, default as localeOc } from "@angular/common/locales/en";
@@ -149,7 +149,7 @@ bootstrapApplication(AppComponent, {
     WsBulletinService,
     WsRegionService,
     WsUpdateService,
-    provideHttpClient(withInterceptors([httpHeaders])),
+    provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
     provideAnimations(),
   ],
 });
