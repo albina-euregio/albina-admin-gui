@@ -1,9 +1,9 @@
 import type { Aspect } from "../enums/enums";
 import { Icon } from "leaflet";
-import { escape, memoize } from "es-toolkit";
+import { escape } from "es-toolkit";
+import { memoize } from "es-toolkit/compat";
 
-const isFirefox = typeof navigator !== "undefined" && /firefox/i.test(navigator.userAgent);
-export const makeIcon = isFirefox ? icon0 : memoize(icon0, { getCacheKey: (...args) => args.join("-") });
+export const makeIcon = memoize(icon0, (...args) => args.join("-"));
 
 const snowsymbolsiacs = `
     <defs><style type="text/css">
