@@ -824,6 +824,19 @@
               </label>
             </td>
           </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{
+                "admin.region-configuration.table.configuration.enableGeneralHeadline" | translate
+              }}</label>
+            </td>
+            <td>
+              <label class="switch switch-primary">
+                <input type="checkbox" class="switch-input" [(ngModel)]="config().enableGeneralHeadline" />
+                <span class="switch-slider"></span>
+              </label>
+            </td>
+          </tr>
         </tbody>
       </table>
     </tab>
