@@ -274,7 +274,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       label: this.markerService.formatTemplate(label, observation),
       html: this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(template, observation)),
     }));
-    this.selectedObservationActiveTabs[observation.$source] ??= this.selectedObservationDetails[0]?.label;
+    this.selectedObservationActiveTabs[observation.$source] = (
+      this.selectedObservationDetails.find(
+        ({ label }) => label === this.selectedObservationActiveTabs[observation.$source],
+      ) ?? this.selectedObservationDetails[0]
+    ).label;
     if (this.isMobile) {
       this.layout = "chart";
     }
