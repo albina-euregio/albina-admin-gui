@@ -219,7 +219,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.localObservations.forEach((observation) => {
       this.markerService
         .createMarker(observation, this.filterService.isHighlighted(observation))
-        ?.on("click", () => this.onObservationClick(observation))
+        ?.on({
+          click: () => this.onObservationClick(observation),
+          contextmenu: () => this.onObservationRightClick(observation),
+        })
         ?.addTo(this.mapLayer);
     });
 
@@ -282,6 +285,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (this.isMobile) {
       this.layout = "chart";
     }
+  }
+
+  private onObservationRightClick(observation: FeatureProperties) {
+    this.onObservationClick(observation);
+    this.filterService.regions = { [observation.region_id]: true };
+    // TODO this.filterService.filterSelectionData set for elevation band, etc.
+    this.applyLocalFilter();
   }
 
   closeObservation() {
