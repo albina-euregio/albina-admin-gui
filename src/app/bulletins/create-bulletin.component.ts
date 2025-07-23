@@ -1390,8 +1390,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   copyBulletin(bulletin: BulletinModel) {
     const newBulletin = new BulletinModel(bulletin);
-    // authenticationService.getInternalRegion(bulletin.ownerRegion).enableEditableFields
-    console.log("Copying bulletin", bulletin);
     newBulletin.additionalAuthors = new Array<string>();
     newBulletin.savedRegions = new Array<string>();
     newBulletin.publishedRegions = new Array<string>();
