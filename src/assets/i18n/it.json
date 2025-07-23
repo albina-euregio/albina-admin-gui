@@ -698,8 +698,7 @@
           "enableStrategicMindset": "Attiva mindset strategico",
           "enableStressLevel": "Attiva livello di stress",
           "enableAvalancheProblemCornices": "Attivare problema tipico valanghivo CORNICI",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Attiva problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE",
-          "enableEditableFields": "Editable textfields in bulletin"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Attiva problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE"
         }
       },
       "success": "Configurazione salvata con successo",

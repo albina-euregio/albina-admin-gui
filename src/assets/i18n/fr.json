@@ -698,8 +698,7 @@
           "enableStrategicMindset": "Activer état d'esprit stratégique",
           "enableStressLevel": "Activer niveau de stress",
           "enableAvalancheProblemCornices": "Activer situation avalancheuse CONGÈRES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Activer situation avalancheuse PAS DE SITUATION PARTICULIÈRE",
-          "enableEditableFields": "Editable textfields in bulletin"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Activer situation avalancheuse PAS DE SITUATION PARTICULIÈRE"
         }
       },
       "success": "Configuration sauvegardée avec succès",

@@ -698,8 +698,7 @@
           "enableStrategicMindset": "Strategisches Mindset aktivieren",
           "enableStressLevel": "Stresslevel aktivieren",
           "enableAvalancheProblemCornices": "Lawinenproblem WECHTEN aktivieren",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Lawinenproblem KEIN AUSGEPRÄGTES PROBLEM aktivieren",
-          "enableEditableFields": "Textfelder im Bulletin sind bearbeitbar"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Lawinenproblem KEIN AUSGEPRÄGTES PROBLEM aktivieren"
         }
       },
       "success": "Konfiguration erfolgreich gespeichert",
