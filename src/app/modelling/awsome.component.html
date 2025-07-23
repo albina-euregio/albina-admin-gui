@@ -26,30 +26,30 @@
                   ></div>
                 </button>
                 <form class="dropdown-menu p-4 overflow-y-scroll">
-                  <div *ngFor="let source of sources" class="form-check">
-                    <label class="form-check-label text-nowrap">
-                      <input
-                        [(ngModel)]="filterService.observationSources[source.name]"
-                        [ngModelOptions]="{ standalone: true }"
-                        (change)="ngOnInit()"
-                        type="checkbox"
-                        class="form-check-input"
-                      />
-                      {{ source.name }}
-                      <div
-                        *ngIf="source.$error"
-                        class="spinner-grow spinner-grow-sm text-danger"
-                        role="alert"
-                        [title]="source.$error | json"
-                      ></div>
-                      <div
-                        *ngIf="source.$loading"
-                        class="spinner-grow spinner-grow-sm text-success"
-                        role="status"
-                        title="Loading"
-                      ></div>
-                    </label>
-                  </div>
+                  @for (source of sources; track source) {
+                    <div class="form-check">
+                      <label class="form-check-label text-nowrap">
+                        <input
+                          [(ngModel)]="filterService.observationSources[source.name]"
+                          [ngModelOptions]="{ standalone: true }"
+                          (change)="ngOnInit()"
+                          type="checkbox"
+                          class="form-check-input"
+                        />
+                        {{ source.name }}
+                        @if (source.$error) {
+                          <div
+                            class="spinner-grow spinner-grow-sm text-danger"
+                            role="alert"
+                            [title]="source.$error | json"
+                          ></div>
+                        }
+                        @if (source.$loading) {
+                          <div class="spinner-grow spinner-grow-sm text-success" role="status" title="Loading"></div>
+                        }
+                      </label>
+                    </div>
+                  }
                 </form>
               </div>
             </div>
@@ -105,63 +105,73 @@
       <div class="toolset toolset-1 overflow-scroll">
         <div class="toolset-content">
           <div class="toolset-charts">
-            <app-observation-chart
-              *ngFor="let filterSelection of filterService.filterSelectionData"
-              class="chart-container"
-              [filterSelection]="filterSelection"
-              (handleChange)="applyLocalFilter()"
-            />
+            @for (filterSelection of filterService.filterSelectionData; track filterSelection) {
+              <app-observation-chart
+                class="chart-container"
+                [filterSelection]="filterSelection"
+                (handleChange)="applyLocalFilter()"
+              />
+            }
           </div>
         </div>
       </div>
 
       <div class="toolset toolset-2 overflow-scroll">
-        <div *ngIf="selectedObservationDetails">
-          <div class="toolset-content">
-            <button
-              type="button"
-              class="btn-close float-end m-3"
-              aria-label="Close"
-              (click)="closeObservation()"
-              ngxMousetrapKey="esc"
-            ></button>
-            <tabset>
-              <tab
-                *ngFor="let tab of selectedObservationDetails"
-                [heading]="tab.label"
-                [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
-                (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
-              >
-                <div [innerHTML]="tab.html"></div>
-              </tab>
-            </tabset>
+        @if (selectedObservationDetails) {
+          <div>
+            <div class="toolset-content">
+              <button
+                type="button"
+                class="btn-close float-end m-3"
+                aria-label="Close"
+                (click)="closeObservation()"
+                ngxMousetrapKey="esc"
+              ></button>
+              <tabset>
+                @for (tab of selectedObservationDetails; track tab) {
+                  <tab
+                    [heading]="tab.label"
+                    [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
+                    (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
+                  >
+                    <div [innerHTML]="tab.html"></div>
+                  </tab>
+                }
+              </tabset>
+            </div>
           </div>
-        </div>
+        }
 
-        <div *ngIf="!selectedObservationDetails && hazardChart" class="chart-container w3">
-          <div
-            echarts
-            (chartMouseOver)="chartMouseOver($event)"
-            (chartMouseOut)="chartMouseOut()"
-            [options]="hazardChart"
-          ></div>
-        </div>
+        @if (!selectedObservationDetails && hazardChart) {
+          <div class="chart-container w3">
+            <div
+              echarts
+              (chartMouseOver)="chartMouseOver($event)"
+              (chartMouseOut)="chartMouseOut()"
+              [options]="hazardChart"
+            ></div>
+          </div>
+        }
       </div>
     </div>
 
     <div class="layout-switch">
-      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button">
-        <span class="button-icon ph ph-map-trifold"></span>
-        <span class="button-text">
-          {{ "admin.observations.map" | translate }}
-        </span>
-      </div>
-      <div *ngIf="layout !== 'chart'" (click)="layout = 'chart'" class="layout-switch-charts obs-button">
-        <span class="button-icon ph ph-chart-line"></span>
-        <span class="button-text">
-          {{ "admin.observations.charts.charts" | translate }}
-        </span>
-      </div>
+      @if (layout !== "map") {
+        <div (click)="layout = 'map'" class="layout-switch-map obs-button">
+          <span class="button-icon ph ph-map-trifold"></span>
+          <span class="button-text">
+            {{ "admin.observations.map" | translate }}
+          </span>
+        </div>
+      }
+      @if (layout !== "chart") {
+        <div (click)="layout = 'chart'" class="layout-switch-charts obs-button">
+          <span class="button-icon ph ph-chart-line"></span>
+          <span class="button-text">
+            {{ "admin.observations.charts.charts" | translate }}
+          </span>
+        </div>
+      }
     </div>
   </div>
 </div>
