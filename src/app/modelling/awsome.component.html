@@ -102,44 +102,7 @@
     </div>
 
     <div class="layout-right">
-      <div *ngIf="selectedObservationDetails">
-        <div class="toolset-header">
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            (click)="closeObservation()"
-            ngxMousetrapKey="esc"
-          ></button>
-        </div>
-        <div class="toolset-content">
-          <tabset>
-            <tab
-              *ngFor="let tab of selectedObservationDetails"
-              [heading]="tab.label"
-              [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
-              (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
-            >
-              <div [innerHTML]="tab.html"></div>
-            </tab>
-          </tabset>
-        </div>
-      </div>
-
-      <div *ngIf="!selectedObservationDetails" class="toolset">
-        <div class="toolset-header">
-          <div class="toolset-name">
-            {{ "sidebar.observations" | translate }}
-          </div>
-          <div class="toolset-keydata">
-            <div class="keydata">
-              <span class="keydata-selected">{{ localObservations.length }}</span>
-              /
-              <span class="keydata-all">{{ observations.length }}</span>
-            </div>
-          </div>
-        </div>
-
+      <div class="toolset toolset-1 overflow-scroll">
         <div class="toolset-content">
           <div class="toolset-charts">
             <app-observation-chart
@@ -148,15 +111,40 @@
               [filterSelection]="filterSelection"
               (handleChange)="applyLocalFilter()"
             />
-            <div *ngIf="hazardChart" class="chart-container w3">
-              <div
-                echarts
-                (chartMouseOver)="chartMouseOver($event)"
-                (chartMouseOut)="chartMouseOut()"
-                [options]="hazardChart"
-              ></div>
-            </div>
           </div>
+        </div>
+      </div>
+
+      <div class="toolset toolset-2 overflow-scroll">
+        <div *ngIf="selectedObservationDetails">
+          <div class="toolset-content">
+            <button
+              type="button"
+              class="btn-close float-end m-3"
+              aria-label="Close"
+              (click)="closeObservation()"
+              ngxMousetrapKey="esc"
+            ></button>
+            <tabset>
+              <tab
+                *ngFor="let tab of selectedObservationDetails"
+                [heading]="tab.label"
+                [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
+                (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
+              >
+                <div [innerHTML]="tab.html"></div>
+              </tab>
+            </tabset>
+          </div>
+        </div>
+
+        <div *ngIf="!selectedObservationDetails && hazardChart" class="chart-container w3">
+          <div
+            echarts
+            (chartMouseOver)="chartMouseOver($event)"
+            (chartMouseOut)="chartMouseOut()"
+            [options]="hazardChart"
+          ></div>
         </div>
       </div>
     </div>

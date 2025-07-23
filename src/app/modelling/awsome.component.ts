@@ -196,6 +196,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.applyLocalFilter();
     });
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
+    Split([".toolset-1", ".toolset-2"], { sizes: [33, 66], direction: "vertical" });
   }
 
   nextDate(direction: -1 | 1) {
