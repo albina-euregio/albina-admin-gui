@@ -1418,12 +1418,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       if (!bulletin.tendencyCommentTextcat) {
         newBulletin.tendencyComment$ = emptyLangTexts();
       }
-      if (
-        !bulletin.generalHeadlineCommentTextcat ||
-        !this.authenticationService.getActiveRegion().enableGeneralHeadline
-      ) {
+      if (!bulletin.generalHeadlineCommentTextcat) {
         newBulletin.generalHeadlineComment$ = emptyLangTexts();
       }
+    }
+
+    if (!this.authenticationService.getActiveRegion().enableGeneralHeadline) {
+      newBulletin.generalHeadlineComment$ = emptyLangTexts();
     }
 
     this.copyService.setCopyBulletin(true);
