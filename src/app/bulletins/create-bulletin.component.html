@@ -298,6 +298,21 @@
     </header>
     <!-- End sidebar header -->
 
+    <!-- Overall headline -->
+    <div
+      *ngIf="activeBulletin && authenticationService.getActiveRegion()?.enableGeneralHeadline"
+      class="create-bulletin__general-headline"
+    >
+      <app-bulletin-text
+        textField="generalHeadlineComment"
+        [rows]="2"
+        [bulletin]="activeBulletin"
+        [disabled]="isDisabled()"
+        (updateBulletinOnServer)="updateBulletinOnServer(activeBulletin)"
+      />
+    </div>
+    <!-- end overall headline -->
+
     <!-- List of regions -->
     <div class="create-bulletin__regions">
       <!-- Own regions -->

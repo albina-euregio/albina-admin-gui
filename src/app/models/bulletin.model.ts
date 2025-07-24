@@ -45,12 +45,14 @@ export class BulletinModel implements PolygonObject {
   public snowpackStructureHighlightsTextcat: string;
   public snowpackStructureCommentTextcat: string;
   public tendencyCommentTextcat: string;
+  public generalHeadlineCommentTextcat: string;
 
   public avActivityHighlightsNotes: string;
   public avActivityCommentNotes: string;
   public snowpackStructureHighlightsNotes: string;
   public snowpackStructureCommentNotes: string;
   public tendencyCommentNotes: string;
+  public generalHeadlineCommentNotes: string;
 
   public highlights$: LangTexts;
   public avActivityHighlights$: LangTexts;
@@ -58,6 +60,7 @@ export class BulletinModel implements PolygonObject {
   public snowpackStructureHighlights$: LangTexts;
   public snowpackStructureComment$: LangTexts;
   public tendencyComment$: LangTexts;
+  public generalHeadlineComment$: LangTexts;
 
   public tendency: Enums.Tendency;
 
@@ -186,6 +189,16 @@ export class BulletinModel implements PolygonObject {
       bulletin.tendency = json.tendency;
     }
 
+    if (json.generalHeadlineCommentTextcat) {
+      bulletin.generalHeadlineCommentTextcat = json.generalHeadlineCommentTextcat;
+    }
+    if (json.generalHeadlineComment) {
+      bulletin.generalHeadlineComment$ = toLangTexts(json.generalHeadlineComment);
+    }
+    if (json.generalHeadlineCommentNotes) {
+      bulletin.generalHeadlineCommentNotes = json.generalHeadlineCommentNotes;
+    }
+
     if (json.dangerPattern1) {
       bulletin.dangerPattern1 = json.dangerPattern1;
     }
@@ -219,11 +232,14 @@ export class BulletinModel implements PolygonObject {
       this.snowpackStructureHighlightsTextcat = bulletin.snowpackStructureHighlightsTextcat;
       this.snowpackStructureCommentTextcat = bulletin.snowpackStructureCommentTextcat;
       this.tendencyCommentTextcat = bulletin.tendencyCommentTextcat;
+      this.generalHeadlineCommentTextcat = bulletin.generalHeadlineCommentTextcat;
       this.avActivityHighlightsNotes = bulletin.avActivityHighlightsNotes;
       this.avActivityCommentNotes = bulletin.avActivityCommentNotes;
       this.snowpackStructureHighlightsNotes = bulletin.snowpackStructureHighlightsNotes;
       this.snowpackStructureCommentNotes = bulletin.snowpackStructureCommentNotes;
       this.tendencyCommentNotes = bulletin.tendencyCommentNotes;
+      this.generalHeadlineCommentTextcat = bulletin.generalHeadlineCommentTextcat;
+      this.generalHeadlineCommentNotes = bulletin.generalHeadlineCommentNotes;
 
       this.highlights$ = { ...bulletin.highlights$ };
       this.avActivityHighlights$ = { ...bulletin.avActivityHighlights$ };
@@ -231,6 +247,7 @@ export class BulletinModel implements PolygonObject {
       this.snowpackStructureHighlights$ = { ...bulletin.snowpackStructureHighlights$ };
       this.snowpackStructureComment$ = { ...bulletin.snowpackStructureComment$ };
       this.tendencyComment$ = { ...bulletin.tendencyComment$ };
+      this.generalHeadlineComment$ = { ...bulletin.generalHeadlineComment$ };
 
       this.tendency = bulletin.tendency;
       this.dangerPattern1 = bulletin.dangerPattern1;
@@ -258,11 +275,14 @@ export class BulletinModel implements PolygonObject {
       this.snowpackStructureHighlightsNotes = undefined;
       this.snowpackStructureCommentNotes = undefined;
       this.tendencyCommentNotes = undefined;
+      this.generalHeadlineCommentTextcat = undefined;
+      this.generalHeadlineCommentNotes = undefined;
       this.avActivityHighlights$ = {} as LangTexts;
       this.avActivityComment$ = {} as LangTexts;
       this.snowpackStructureHighlights$ = {} as LangTexts;
       this.snowpackStructureComment$ = {} as LangTexts;
       this.tendencyComment$ = {} as LangTexts;
+      this.generalHeadlineComment$ = {} as LangTexts;
       this.tendency = undefined;
       this.dangerPattern1 = undefined;
       this.dangerPattern2 = undefined;
@@ -434,6 +454,10 @@ export class BulletinModel implements PolygonObject {
       json["tendencyCommentTextcat"] = this.tendencyCommentTextcat;
     }
 
+    if (this.generalHeadlineCommentTextcat) {
+      json["generalHeadlineCommentTextcat"] = this.generalHeadlineCommentTextcat;
+    }
+
     if (this.avActivityHighlightsNotes) {
       json["avActivityHighlightsNotes"] = this.avActivityHighlightsNotes;
     }
@@ -452,6 +476,10 @@ export class BulletinModel implements PolygonObject {
 
     if (this.tendencyCommentNotes) {
       json["tendencyCommentNotes"] = this.tendencyCommentNotes;
+    }
+
+    if (this.generalHeadlineCommentNotes) {
+      json["generalHeadlineCommentNotes"] = this.generalHeadlineCommentNotes;
     }
 
     if (this.highlights$) {
@@ -476,6 +504,10 @@ export class BulletinModel implements PolygonObject {
 
     if (this.tendencyComment$) {
       json["tendencyComment"] = convertLangTextsToJSON(this.tendencyComment$);
+    }
+
+    if (this.generalHeadlineComment$) {
+      json["generalHeadlineComment"] = convertLangTextsToJSON(this.generalHeadlineComment$);
     }
 
     if (this.tendency) {

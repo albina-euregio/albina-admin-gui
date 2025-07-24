@@ -58,6 +58,7 @@ import {
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { emptyLangTexts, LangTexts } from "app/models/text.model";
+import { BulletinTextComponent } from "./bulletin-text.component";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -74,6 +75,7 @@ import { emptyLangTexts, LangTexts } from "app/models/text.model";
     KeyValuePipe,
     TranslateModule,
     NgxMousetrapDirective,
+    BulletinTextComponent,
   ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
@@ -1415,6 +1417,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
       if (!bulletin.tendencyCommentTextcat) {
         newBulletin.tendencyComment$ = emptyLangTexts();
+      }
+      if (
+        !bulletin.generalHeadlineCommentTextcat ||
+        !this.authenticationService.getActiveRegion().enableGeneralHeadline
+      ) {
+        newBulletin.generalHeadlineComment$ = emptyLangTexts();
       }
     }
 
