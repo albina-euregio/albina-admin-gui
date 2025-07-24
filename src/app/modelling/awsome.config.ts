@@ -4,7 +4,6 @@ import { FilterSelectionSpecSchema } from "../observations/filter-selection-conf
 export const AwsomeSourceSchema = z.object({
   name: z.string().optional().describe("Identifier shown in source multiselect"),
   url: z
-    .string()
     .url()
     .optional()
     .describe("URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."),
@@ -27,7 +26,7 @@ export const AwsomeSourceSchema = z.object({
   imageOverlays: z
     .object({
       name: z.string().describe("Identifier shown in map layer control"),
-      imageUrl: z.string().url(),
+      imageUrl: z.url(),
       imageBounds: z
         .number()
         .array()
