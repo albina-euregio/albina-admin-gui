@@ -1384,6 +1384,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
+      if (this.authenticationService.getActiveRegion().enableGeneralHeadline && this.internBulletinsList.length) {
+        bulletin.generalHeadlineCommentTextcat = this.internBulletinsList[0].generalHeadlineCommentTextcat;
+        bulletin.generalHeadlineComment$ = this.internBulletinsList[0].generalHeadlineComment$;
+        bulletin.generalHeadlineCommentNotes = this.internBulletinsList[0].generalHeadlineCommentNotes;
+      }
     }
 
     this.selectBulletin(bulletin);
