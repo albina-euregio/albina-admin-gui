@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
     "date": {
@@ -21,12 +22,15 @@
         "type": "object",
         "properties": {
           "chartRichLabel": {
+            "type": "string",
             "enum": ["grainShape", "highlight", "label", "symbol"]
           },
           "chartType": {
+            "type": "string",
             "enum": ["bar", "rose"]
           },
           "default": {
+            "type": "string",
             "enum": ["classify", "label"]
           },
           "key": {
@@ -38,6 +42,7 @@
             "type": "string"
           },
           "selectedValues": {
+            "description": "Initially selected values, use 'nan' for features w/o specification",
             "type": "array",
             "items": {
               "type": "string"
@@ -53,6 +58,7 @@
               "type": "object",
               "properties": {
                 "borderColor": {
+                  "description": "Stroke color",
                   "type": "string"
                 },
                 "color": {
@@ -65,19 +71,20 @@
                 },
                 "labelColor": {
                   "description": "Label color",
-                  "type": "string",
-                  "default": "#000"
+                  "default": "#000",
+                  "type": "string"
                 },
                 "labelFontSize": {
                   "description": "Label font size, in pt",
-                  "type": "number",
-                  "default": 12
+                  "default": 12,
+                  "type": "number"
                 },
                 "legend": {
                   "description": "Legend string shown in the chart",
                   "type": "string"
                 },
                 "numericRange": {
+                  "description": "An interval given as array of [lower bound, upper bound] where the lower bound is inclusive and the upper bound is exclusive",
                   "minItems": 2,
                   "maxItems": 2,
                   "type": "array",
@@ -87,15 +94,16 @@
                 },
                 "opacity": {
                   "description": "Marker opacity",
-                  "type": "number",
-                  "default": 1
+                  "default": 1,
+                  "type": "number"
                 },
                 "radius": {
                   "description": "Radius of the circle marker, in pixels",
-                  "type": "number",
-                  "default": 40
+                  "default": 40,
+                  "type": "number"
                 },
                 "radiusByZoom": {
+                  "description": "Radius of the circle marker, as array indexed by the map zoom level",
                   "minItems": 19,
                   "maxItems": 19,
                   "type": "array",
@@ -108,31 +116,22 @@
                 },
                 "weight": {
                   "description": "Stroke width, in pixels",
-                  "type": "number",
-                  "default": 0
+                  "default": 0,
+                  "type": "number"
                 },
                 "zIndexOffset": {
                   "description": "The explicit zIndex of this marker",
-                  "type": "number",
-                  "default": 0
+                  "default": 0,
+                  "type": "number"
                 }
               },
-              "required": [
-                "color",
-                "label",
-                "labelColor",
-                "labelFontSize",
-                "legend",
-                "opacity",
-                "radius",
-                "value",
-                "weight",
-                "zIndexOffset"
-              ]
+              "required": ["color", "label", "legend", "value"],
+              "additionalProperties": false
             }
           }
         },
-        "required": ["chartRichLabel", "chartType", "key", "label", "type", "values"]
+        "required": ["chartRichLabel", "chartType", "key", "label", "type", "values"],
+        "additionalProperties": false
       }
     },
     "sources": {
@@ -141,14 +140,17 @@
         "type": "object",
         "properties": {
           "name": {
+            "description": "Identifier shown in source multiselect",
             "type": "string"
           },
           "url": {
+            "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
             "type": "string",
             "format": "uri"
           },
           "detailsTemplates": {
             "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
+            "default": [],
             "type": "array",
             "items": {
               "type": "object",
@@ -160,14 +162,15 @@
                   "type": "string"
                 }
               },
-              "required": []
-            },
-            "default": []
+              "additionalProperties": false
+            }
           },
           "tooltipTemplate": {
+            "description": "Template for tooltip HTML. Tooltip is shown when hovering the marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
             "type": "string"
           },
           "imageOverlays": {
+            "description": "Image overlays to be shown on the map.",
             "type": "array",
             "items": {
               "type": "object",
@@ -195,24 +198,29 @@
                   }
                 },
                 "opacity": {
+                  "description": "The opacity of the image overlay.",
                   "type": "number"
                 },
                 "zIndex": {
+                  "description": "The explicit zIndex of the overlay layer.",
                   "type": "number"
                 },
                 "className": {
                   "description": "A custom class name to assign to the image. Empty by default.",
-                  "type": "string",
-                  "default": ""
+                  "default": "",
+                  "type": "string"
                 }
               },
-              "required": ["name", "imageUrl", "imageBounds", "className"]
+              "required": ["name", "imageUrl", "imageBounds", "className"],
+              "additionalProperties": false
             }
           }
         },
-        "required": ["detailsTemplates"]
+        "required": ["detailsTemplates"],
+        "additionalProperties": false
       }
     }
   },
-  "required": ["date", "dateStepSeconds", "filters", "sources"]
+  "required": ["date", "dateStepSeconds", "filters", "sources"],
+  "additionalProperties": false
 }
