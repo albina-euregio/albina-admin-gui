@@ -14,7 +14,7 @@ import {
 } from "leaflet";
 import "leaflet.sync";
 import { BulletinModel } from "../../models/bulletin.model";
-import { RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
+import { RegionProperties, RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 import * as Enums from "../../enums/enums";
@@ -25,6 +25,7 @@ import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
 import { filterFeature } from "../regions-service/filterFeature";
 import { TranslateService } from "@ngx-translate/core";
 import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
+import { FeatureCollection, MultiPolygon } from "geojson";
 
 declare module "leaflet" {
   interface Map {
@@ -80,11 +81,23 @@ export class MapService {
     );
   }
 
-  protected async initOverlayMaps(isPM = false): Promise<typeof this.overlayMaps> {
-    const [regions, activeRegion] = await Promise.all([
-      this.regionsService.getRegionsAsync(),
-      this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()),
-    ]);
+  protected async initOverlayMaps({
+    isPM,
+    regions,
+    activeRegion,
+  }: {
+    isPM?: boolean;
+    regions?: FeatureCollection<MultiPolygon, RegionProperties>;
+    activeRegion?: FeatureCollection<MultiPolygon, RegionProperties>;
+  } = {}): Promise<typeof this.overlayMaps> {
+    if (!regions || !activeRegion) {
+      const [regions0, activeRegion0] = await Promise.all([
+        this.regionsService.getRegionsAsync(),
+        this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()),
+      ]);
+      regions ??= regions0;
+      activeRegion ??= activeRegion0;
+    }
 
     const overlayMaps: typeof this.overlayMaps = {
       // overlay to show micro regions without elevation (only outlines)
@@ -131,8 +144,8 @@ export class MapService {
       AlbinaBaseMap: this.getAlbinaBaseMap(),
     };
 
-    this.overlayMaps = await this.initOverlayMaps(false);
-    this.afternoonOverlayMaps = await this.initOverlayMaps(true);
+    this.overlayMaps = await this.initOverlayMaps({ isPM: false });
+    this.afternoonOverlayMaps = await this.initOverlayMaps({ isPM: true });
 
     this.resetAll();
     this.initAmMap();

@@ -6,12 +6,12 @@ import { RegionNameControl } from "./region-name-control";
 
 @Injectable()
 export class BaseMapService extends MapService {
-  async initMaps(el: HTMLElement) {
+  async initMaps(el: HTMLElement, options?: Parameters<typeof this.initOverlayMaps>[0]) {
     this.baseMaps = {
       AlbinaBaseMap: this.getAlbinaBaseMap({ minZoom: 5, maxZoom: 12 }),
     };
 
-    this.overlayMaps = await this.initOverlayMaps();
+    this.overlayMaps = await this.initOverlayMaps(options);
 
     this.map = new Map(el, {
       attributionControl: false,

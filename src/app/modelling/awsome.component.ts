@@ -24,6 +24,8 @@ import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.confi
 import type { Subscription } from "rxjs";
 import { Temporal } from "temporal-polyfill";
 import { debounce } from "es-toolkit";
+import { FeatureCollection, MultiPolygon } from "geojson";
+import { RegionProperties } from "../providers/regions-service/regions.service";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 
@@ -59,6 +61,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   // https://gitlab.com/avalanche-warning
   configURL = "https://models.avalanche.report/dashboard/awsome.json";
+  config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
   date = "";
   layout: "map" | "chart" = "map";
@@ -82,9 +85,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       if (!configURL) return;
       this.configURL = configURL;
     });
-    this.config = await this.fetchJSON(this.configURL)
+    this.config$q = this.fetchJSON(this.configURL)
       .toPromise()
       .then((c) => AwsomeConfigSchema.parseAsync(c));
+    this.config = await this.config$q;
     this.date = this.config.date;
     this.sources = this.config.sources;
 
@@ -189,7 +193,19 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async ngAfterViewInit() {
-    await this.mapService.initMaps(this.mapDiv().nativeElement);
+    await this.config$q;
+    let regions: FeatureCollection<MultiPolygon, RegionProperties> | undefined;
+    if (this.config.regions?.url) {
+      regions = await this.fetchJSON<FeatureCollection<MultiPolygon, RegionProperties>>(
+        this.config.regions?.url,
+      ).toPromise();
+    }
+
+    await this.mapService.initMaps(this.mapDiv().nativeElement, {
+      regions: regions,
+      activeRegion: regions,
+    });
+
     this.mapLayer.addTo(this.mapService.map);
     this.mapLayerHighlight.addTo(this.mapService.map);
     this.mapService.map.on({

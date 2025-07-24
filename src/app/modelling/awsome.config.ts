@@ -59,5 +59,16 @@ export const AwsomeConfigSchema = z.object({
   dateStepSeconds: z.number().describe("Seconds between two models runs"),
   filters: z.array(FilterSelectionSpecSchema),
   sources: z.array(AwsomeSourceSchema),
+  regions: z
+    .object({
+      url: z
+        .url()
+        .describe(
+          "URL to GeoJSON FeatureCollection for micro-region polygons. " +
+            "For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json",
+        ),
+    })
+    .partial()
+    .optional(),
 });
 export type AwsomeConfig = z.infer<typeof AwsomeConfigSchema>;

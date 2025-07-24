@@ -219,6 +219,17 @@
         "required": ["detailsTemplates"],
         "additionalProperties": false
       }
+    },
+    "regions": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "URL to GeoJSON FeatureCollection for micro-region polygons. For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json",
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "required": ["date", "dateStepSeconds", "filters", "sources"],
