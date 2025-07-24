@@ -23,6 +23,7 @@ import { AwsomeConfigSchema } from "./awsome.config";
 import type { AwsomeConfig, AwsomeSource as AwsomeSource0 } from "./awsome.config";
 import type { Subscription } from "rxjs";
 import { Temporal } from "temporal-polyfill";
+import { debounce } from "es-toolkit";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 
@@ -220,6 +221,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.markerService
         .createMarker(observation, this.filterService.isHighlighted(observation))
         ?.on({
+          tooltipopen: debounce(() => this.highlightInHazardChart(observation), 500),
+          tooltipclose: debounce(() => this.highlightInHazardChart(undefined), 500),
           click: () => this.onObservationClick(observation),
           contextmenu: () => this.onObservationRightClick(observation),
         })
@@ -234,14 +237,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
     const markerClassify = this.markerService.markerClassify;
     if (markerClassify) {
-      const data = this.localObservations.map((o) => [
-        // snp_characteristics.Punstable.depth
-        markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".depth")) as number,
-        // snp_characteristics.Punstable.value
-        markerClassify.getValue(o, markerClassify.key) as number,
-        // $event.data[2] as FeatureProperties
-        o as unknown as number,
-      ]);
+      const data = this.localObservations.map((o) => this.toChartData(o));
       this.hazardChart = {
         xAxis: { name: "Depth" },
         yAxis: { name: markerClassify.label },
@@ -256,6 +252,33 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     } else {
       this.hazardChart = undefined;
     }
+  }
+
+  private toChartData(o: FeatureProperties): number[] {
+    const markerClassify = this.markerService.markerClassify;
+    return [
+      // snp_characteristics.Punstable.depth
+      markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".depth")) as number,
+      // snp_characteristics.Punstable.value
+      markerClassify.getValue(o, markerClassify.key) as number,
+      // $event.data[2] as FeatureProperties
+      o as unknown as number,
+    ];
+  }
+
+  private highlightInHazardChart(observation: FeatureProperties) {
+    this.hazardChart = {
+      ...this.hazardChart,
+      series: [
+        this.hazardChart.series[0],
+        {
+          type: "scatter",
+          data: observation ? [this.toChartData(observation)] : [],
+          symbolSize: 15,
+          color: "red",
+        },
+      ] satisfies ScatterSeriesOption[],
+    };
   }
 
   chartMouseOver($event: ECElementEvent) {
