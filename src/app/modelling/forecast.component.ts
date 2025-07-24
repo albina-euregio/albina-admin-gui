@@ -184,7 +184,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   drawMarker(point: GenericObservation) {
     const { $source, region, locationName, latitude, longitude, eventDate } = point;
-    const callback = () => {
+    const click = () => {
       if ($source === "qfa") this.setQfa(this.files[locationName][0], 0);
       this.selectedModelPoint = $source === "qfa" ? undefined : point;
       this.selectedModelType = $source as ForecastSource;
@@ -206,7 +206,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
     new CircleMarker({ lat: latitude, lng: longitude }, this.getModelPointOptions($source as ForecastSource))
       .addTo(this.mapLayer)
-      .on("click", callback)
+      .on({ click })
       .bindTooltip(tooltip);
   }
 
@@ -252,9 +252,11 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   async initMaps() {
     const map = await this.mapService.initMaps(this.observationsMap().nativeElement);
-    map.on("click", () => {
-      this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
-      this.applyFilter();
+    map.on({
+      click: () => {
+        this.selectedRegions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+        this.applyFilter();
+      },
     });
     this.mapLayer.addTo(map);
   }

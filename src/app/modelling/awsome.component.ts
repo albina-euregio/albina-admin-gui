@@ -192,9 +192,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.mapService.initMaps(this.mapDiv().nativeElement);
     this.mapLayer.addTo(this.mapService.map);
     this.mapLayerHighlight.addTo(this.mapService.map);
-    this.mapService.map.on("click", () => {
-      this.filterService.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
-      this.applyLocalFilter();
+    this.mapService.map.on({
+      click: () => {
+        this.filterService.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+        this.applyLocalFilter();
+      },
     });
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
     Split([".toolset-1", ".toolset-2"], { sizes: [33, 66], direction: "vertical" });

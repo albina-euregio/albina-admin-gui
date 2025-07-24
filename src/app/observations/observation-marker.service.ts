@@ -45,17 +45,19 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       const icon = makeIcon0(filterSelectionValue?.radius);
       const marker = this.createMarkerForIcon(observation, icon, filterSelectionValue);
       if (Array.isArray(filterSelectionValue?.radiusByZoom)) {
-        marker.on("add", () => {
-          const map = (marker as any)._map as Map;
-          if (map instanceof Map) {
-            const setIcon0 = () => {
-              const zoom = Math.round(map.getZoom());
-              const radius = filterSelectionValue.radiusByZoom[zoom];
-              marker.setIcon(makeIcon0(radius));
-            };
-            setIcon0();
-            map.on("zoomend", () => setIcon0());
-          }
+        marker.on({
+          add: () => {
+            const map = (marker as any)._map as Map;
+            if (map instanceof Map) {
+              const setIcon0 = () => {
+                const zoom = Math.round(map.getZoom());
+                const radius = filterSelectionValue.radiusByZoom[zoom];
+                marker.setIcon(makeIcon0(radius));
+              };
+              setIcon0();
+              map.on({ zoomend: () => setIcon0() });
+            }
+          },
         });
       }
       return marker;

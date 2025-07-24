@@ -130,7 +130,7 @@ class ObservationData {
     this.filtered.forEach((observation) => {
       this.markerService
         .createMarker(observation, this.filter?.isHighlighted(observation))
-        ?.on("click", () => this.onObservationClick(observation))
+        ?.on({ click: () => this.onObservationClick(observation) })
         ?.addTo(this.layer);
     });
     this.applyLocalFilter0();
@@ -302,9 +302,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
     this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
 
-    map.on("click", () => {
-      this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
-      this.applyLocalFilter();
+    map.on({
+      click: () => {
+        this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+        this.applyLocalFilter();
+      },
     });
 
     const resizeObserver = new ResizeObserver(() => {

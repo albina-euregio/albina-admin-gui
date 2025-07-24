@@ -324,8 +324,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private async initMaps() {
     await this.mapService.initAmPmMap();
-    this.mapService.map.on("click", () => this.onMapClick());
-    this.mapService.afternoonMap.on("click", () => this.onMapClick());
+    this.mapService.map.on({ click: () => this.onMapClick() });
+    this.mapService.afternoonMap.on({ click: () => this.onMapClick() });
   }
 
   private onMapClick() {
