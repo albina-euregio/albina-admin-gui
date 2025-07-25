@@ -77,12 +77,18 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
   loadingState: "loading" | "error" | undefined;
+  private createMarker:
+    | (typeof this.markerService)["createMarker"]
+    | (typeof this.markerService)["createRectangleMarker"];
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
     this.route.queryParamMap.subscribe((params) => {
       this.configURL = params.get("config") || this.configURL;
       this.date = params.get("date") || this.date;
+      this.createMarker = params.get("rectangle")
+        ? this.markerService.createRectangleMarker.bind(this.markerService)
+        : this.markerService.createMarker.bind(this.markerService);
     });
     this.config$q = this.fetchJSON(this.configURL)
       .toPromise()
@@ -235,8 +241,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       (observation) => this.filterService.isHighlighted(observation) || this.filterService.isSelected(observation),
     );
     this.localObservations.forEach((observation) => {
-      this.markerService
-        .createMarker(observation, this.filterService.isHighlighted(observation))
+      this.createMarker(observation, this.filterService.isHighlighted(observation))
         ?.on({
           tooltipopen: debounce(() => this.highlightInHazardChart(observation), 500),
           tooltipclose: debounce(() => this.highlightInHazardChart(undefined), 500),

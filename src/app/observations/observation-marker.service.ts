@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Icon, LatLng, Map, Marker, MarkerOptions } from "leaflet";
+import { Icon, LatLng, Map, Marker, MarkerOptions, Rectangle } from "leaflet";
 import { GenericObservation } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
@@ -24,6 +24,46 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     weight: 1,
     labelColor: "#fff",
   } as FilterSelectionValue;
+
+  createRectangleMarker(observation: T, isHighlighted = false): Rectangle | undefined {
+    if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) {
+      return;
+    }
+    const filterSelectionValue = isHighlighted
+      ? this.highlighted
+      : this.markerClassify?.findForObservation(observation);
+    const marker = new Rectangle(
+      [
+        [observation.latitude, observation.longitude],
+        [observation.latitude + 0.018, observation.longitude + 0.026],
+      ],
+      {
+        interactive: true,
+        pane: "markerPane",
+        color: filterSelectionValue?.borderColor,
+        fillColor: filterSelectionValue?.color,
+        opacity: filterSelectionValue?.opacity,
+        weight: filterSelectionValue?.weight,
+      },
+    );
+    marker.bindTooltip(() => this.createTooltipText(observation), {
+      opacity: 1,
+      className: "obs-tooltip",
+    });
+    marker.on({
+      tooltipopen: () =>
+        marker.setStyle({
+          color: filterSelectionValue?.borderColor ?? "#000",
+          weight: 3,
+        }),
+      tooltipclose: () =>
+        marker.setStyle({
+          color: filterSelectionValue?.borderColor,
+          weight: filterSelectionValue?.weight,
+        }),
+    });
+    return marker;
+  }
 
   createMarker(observation: T, isHighlighted = false): Marker | undefined {
     try {
