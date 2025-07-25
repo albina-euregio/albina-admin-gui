@@ -32,6 +32,9 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     const filterSelectionValue = isHighlighted
       ? this.highlighted
       : this.markerClassify?.findForObservation(observation);
+    if (!filterSelectionValue) {
+      return;
+    }
     const marker = new Rectangle(
       [
         [observation.latitude, observation.longitude],
