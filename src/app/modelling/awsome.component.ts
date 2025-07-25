@@ -81,15 +81,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
     this.route.queryParamMap.subscribe((params) => {
-      const configURL = params.get("config");
-      if (!configURL) return;
-      this.configURL = configURL;
+      this.configURL = params.get("config") || this.configURL;
+      this.date = params.get("date") || this.date;
     });
     this.config$q = this.fetchJSON(this.configURL)
       .toPromise()
       .then((c) => AwsomeConfigSchema.parseAsync(c));
     this.config = await this.config$q;
-    this.date = this.config.date;
+    this.date ||= this.config.date;
     this.sources = this.config.sources;
 
     const spec = this.config.filters as FilterSelectionSpec<FeatureProperties>[];
