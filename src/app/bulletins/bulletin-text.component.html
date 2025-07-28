@@ -80,7 +80,7 @@
           [disabled]="disabled() || !enableEditableFields"
           [ngModel]="bulletin()[bulletinTextKey][translateService.currentLang] | html"
           (ngModelChange)="enableEditableFields && (bulletin()[bulletinTextKey][translateService.currentLang] = $event)"
-          (focusout)="authenticationService.getActiveRegion().enableEditableFields && updateBulletinOnServer.emit()"
+          (focusout)="enableEditableFields && updateBulletinOnServer.emit()"
         ></textarea>
       </div>
     </div>

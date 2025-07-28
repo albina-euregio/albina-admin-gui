@@ -710,7 +710,7 @@
           "enableStressLevel": "Enable stress level",
           "enableAvalancheProblemCornices": "Enable avalanche problem CORNICES",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM",
-          "enableEditableFields": "Editable textfields in bulletin"
+          "enableEditableFields": "Editable textfields instead of textcat for bulletins"
         }
       },
       "success": "Configuration successfully saved",
