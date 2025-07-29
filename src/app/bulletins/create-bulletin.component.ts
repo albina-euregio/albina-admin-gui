@@ -1426,10 +1426,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       if (!bulletin.generalHeadlineCommentTextcat) {
         newBulletin.generalHeadlineComment$ = emptyLangTexts();
       }
+      if (!bulletin.synopsisCommentTextcat) {
+        newBulletin.synopsisComment$ = emptyLangTexts();
+      }
     }
 
     if (!this.authenticationService.getActiveRegion().enableGeneralHeadline) {
       newBulletin.generalHeadlineComment$ = emptyLangTexts();
+    }
+    if (!this.authenticationService.getActiveRegion().enableWeatherTextField) {
+      newBulletin.synopsisComment$ = emptyLangTexts();
     }
 
     this.copyService.setCopyBulletin(true);
