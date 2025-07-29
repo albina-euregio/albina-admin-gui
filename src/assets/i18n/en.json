@@ -711,7 +711,8 @@
           "enableAvalancheProblemCornices": "Enable avalanche problem CORNICES",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Enable avalanche problem NO DISTINCT AVALANCHE PROBLEM",
           "enableEditableFields": "Editable textfields instead of textcat for bulletins",
-          "enableGeneralHeadline": "Enable general overall headline for bulletins"
+          "enableGeneralHeadline": "Enable general overall headline for bulletins",
+          "enableWeatherTextField": "Enable text input for weather synopsis"
         }
       },
       "success": "Configuration successfully saved",

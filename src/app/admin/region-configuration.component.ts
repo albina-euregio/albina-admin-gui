@@ -57,6 +57,7 @@ export class RegionConfigurationComponent {
     json["enableStressLevel"] = config.enableStressLevel;
     json["enableEditableFields"] = config.enableEditableFields;
     json["enableGeneralHeadline"] = config.enableGeneralHeadline;
+    json["enableWeatherTextField"] = config.enableWeatherTextField;
     json["serverInstance"] = config.serverInstance;
     json["pdfColor"] = config.pdfColor;
     json["emailColor"] = config.emailColor;
