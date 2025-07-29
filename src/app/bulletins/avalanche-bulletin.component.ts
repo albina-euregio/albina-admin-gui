@@ -84,6 +84,7 @@ export class AvalancheBulletinComponent implements OnInit {
   public isAccordionDangerDescriptionOpen: boolean;
   public isAccordionSnowpackStructureOpen: boolean;
   public isAccordionTendencyOpen: boolean;
+  public isAccordionSynopsisOpen: boolean;
 
   public catalogOfPhrasesModalRef: BsModalRef;
   public pmUrl: SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl);
@@ -119,6 +120,9 @@ export class AvalancheBulletinComponent implements OnInit {
           break;
         case "tendency":
           this.isAccordionTendencyOpen = isOpen;
+          break;
+        case "synopsis":
+          this.isAccordionSynopsisOpen = isOpen;
           break;
         default:
           break;
@@ -432,6 +436,7 @@ export type TextcatTextfield =
   | "snowpackStructureComment"
   | "tendencyComment"
   | "generalHeadlineComment"
+  | "synopsisComment"
   | "text";
 
 // alias pmData, alias inputDef

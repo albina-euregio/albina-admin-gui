@@ -453,6 +453,40 @@
         <!-- End tendency-->
       </accordion-group>
       <!-- End tendency -->
+
+      <!-- Weather synopsis -->
+      <accordion-group
+        *ngIf="this.authenticationService.getActiveRegion().enableWeatherTextField"
+        [isOpen]="isAccordionTendencyOpen"
+        (isOpenChange)="accordionChanged($event, 'synopsis')"
+      >
+        <!-- Weather synopsis -->
+        <div accordion-heading class="accordion-header">
+          <h2 class="accordion-header__title">
+            <i *ngIf="!isAccordionTendencyOpen" class="accordion__arrow ph ph-caret-right"></i>
+            <i *ngIf="isAccordionTendencyOpen" class="accordion__arrow ph ph-caret-down"></i>
+
+            <span>
+              {{ "bulletins.create.title.synopsis" | translate }}
+            </span>
+          </h2>
+        </div>
+
+        <div class="region-form__synopsis">
+          <!-- Weather synopsis comment -->
+          <app-bulletin-text
+            textField="synopsisComment"
+            [rows]="5"
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
+            (showDialog)="showDialog($event)"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          />
+          <!-- End of tendency comment -->
+        </div>
+        <!-- End tendency-->
+      </accordion-group>
+      <!-- End tendency -->
     </accordion>
   </main>
 </div>

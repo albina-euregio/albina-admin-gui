@@ -318,6 +318,7 @@
         "snowpackStructureComment": "Description of snowpack structure",
         "dangerPatterns": "Danger patterns",
         "tendencyComment": "Description of tendency",
+        "synopsisComment": "Weather synopsis",
         "notes": "Notes"
       },
       "copyRegion": {
@@ -332,6 +333,7 @@
         "afternoon": "Afternoon",
         "snowpackStructure": "Snowpack structure",
         "tendency": "Tendency",
+        "synopsis": "Weather",
         "showTranslations": " Show translations",
         "hideTranslations": " Hide translations"
       },
