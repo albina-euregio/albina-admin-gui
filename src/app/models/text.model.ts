@@ -18,3 +18,7 @@ export function concatenateLangTexts(t1: LangTexts, t2: LangTexts): LangTexts {
 export function convertLangTextsToJSON(t: LangTexts): { languageCode: string; text: string }[] {
   return Object.entries(t).map(([languageCode, text]) => ({ languageCode, text }));
 }
+
+export function emptyLangTexts(): LangTexts {
+  return toLangTexts(LANGUAGES.map((l) => ({ languageCode: l, text: "" })));
+}
