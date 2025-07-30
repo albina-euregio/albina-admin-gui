@@ -57,10 +57,21 @@ $sidebar-border: 1px solid $gray-300;
   }
 }
 
-.create-bulletin__sidebar-header {
+.create-bulletin__sidebar-header,
+.create-bulletin__general-headline {
   padding: $sidebar-padding;
   padding-top: $sidebar-padding * 1.5;
   background: $white;
+}
+.create-bulletin__general-headline {
+  padding-top: 0;
+  .form-label,
+  .form-control {
+    font-size: 0.8rem;
+  }
+  .region-form__translation-toggle .btn span {
+    font-size: 0.7rem;
+  }
 }
 
 .create-bulletin__sidebar-close {

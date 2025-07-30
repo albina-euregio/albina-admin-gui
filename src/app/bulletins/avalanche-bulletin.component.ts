@@ -431,6 +431,7 @@ export type TextcatTextfield =
   | "snowpackStructureHighlights"
   | "snowpackStructureComment"
   | "tendencyComment"
+  | "generalHeadlineComment"
   | "text";
 
 // alias pmData, alias inputDef

@@ -30,6 +30,7 @@ export const RegionConfigurationSchema = z
     enableStrategicMindset: z.boolean(),
     enableStressLevel: z.boolean(),
     enableEditableFields: z.boolean(),
+    enableGeneralHeadline: z.boolean(),
     showMatrix: z.boolean(),
     serverInstance: ServerConfigurationSchema,
     pdfColor: z.string(),
