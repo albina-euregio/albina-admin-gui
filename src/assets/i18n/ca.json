@@ -697,7 +697,9 @@
           "enableStrategicMindset": "Enable strategic mindset",
           "enableStressLevel": "Enable stress level",
           "enableAvalancheProblemCornices": "Habilitar el problema d'allaus CORNISES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar el problema d'allaus CAP PROBLEMA D'ALLAUS EVIDENT"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar el problema d'allaus CAP PROBLEMA D'ALLAUS EVIDENT",
+          "enableEditableFields": "Editable textfields instead of textcat for bulletins",
+          "enableGeneralHeadline": "Enable general overall headline for bulletins"
         }
       },
       "success": "Configuració guardada satisfactòriament",

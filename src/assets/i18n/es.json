@@ -697,7 +697,9 @@
           "enableStrategicMindset": "Enable strategic mindset",
           "enableStressLevel": "Enable stress level",
           "enableAvalancheProblemCornices": "Habilitar problema de alud CORNISAS",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar problema de alud NINGÚN PROBLEMA DE ALUDES EVIDENTE"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar problema de alud NINGÚN PROBLEMA DE ALUDES EVIDENTE",
+          "enableEditableFields": "Editable textfields instead of textcat for bulletins",
+          "enableGeneralHeadline": "Enable general overall headline for bulletins"
         }
       },
       "success": "Configuración guardada con éxito",
