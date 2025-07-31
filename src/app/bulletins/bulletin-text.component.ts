@@ -31,13 +31,16 @@ export class BulletinTextComponent {
   readonly bulletin = input<BulletinModel>(undefined);
   readonly showDialog = output<TextcatLegacyIn>();
   readonly updateBulletinOnServer = output();
-  readonly enableEditableFields = this.authenticationService.getActiveRegion().enableEditableFields;
   showTranslations = false;
   showNotes = false;
   modalRef: BsModalRef;
 
   get translationLanguages() {
     return LANGUAGES.filter((l) => l !== this.translateService.currentLang);
+  }
+
+  get enableEditableFields(): boolean {
+    return this.authenticationService.getActiveRegion().enableEditableFields;
   }
 
   openTextcat() {
