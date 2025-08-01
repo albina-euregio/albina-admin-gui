@@ -30,7 +30,7 @@ export class BaseMapService extends MapService {
     this.resetAll();
     new Control.Attribution({ prefix: false }).addTo(this.map);
     new Control.Zoom({ position: "topleft" }).addTo(this.map);
-    new RegionNameControl().addTo(this.map);
+    this.regionNameControl = new RegionNameControl().addTo(this.map);
     return this.map;
   }
 

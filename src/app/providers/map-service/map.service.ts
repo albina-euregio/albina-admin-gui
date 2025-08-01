@@ -54,7 +54,7 @@ export class MapService {
 
   public map: Map;
   public afternoonMap: Map;
-  private regionNameControl: RegionNameControl;
+  protected regionNameControl: RegionNameControl;
   private amControl: Control;
   private pmControl: Control;
 
