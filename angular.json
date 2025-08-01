@@ -25,6 +25,9 @@
             "tsConfig": "src/tsconfig.json",
             "polyfills": ["zone.js"],
             "assets": ["src/assets"],
+            "stylePreprocessorOptions": {
+              "sass": { "silenceDeprecations": ["mixed-decls", "color-functions", "global-builtin", "import"] }
+            },
             "styles": [
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/scss/style.scss",
