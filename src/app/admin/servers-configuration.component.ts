@@ -30,7 +30,7 @@ export class ServersConfigurationComponent implements OnInit {
           this.localServerConfiguration = data;
         },
         (error) => {
-          console.error("Local server configuration could not be loaded!");
+          console.error("Local server configuration could not be loaded!", error);
         },
       );
       this.configurationService.loadExternalServerConfigurations().subscribe(
@@ -39,7 +39,7 @@ export class ServersConfigurationComponent implements OnInit {
           this.externalServerConfigurations = data;
         },
         (error) => {
-          console.error("External server configurations could not be loaded!");
+          console.error("External server configurations could not be loaded!", error);
         },
       );
     }
