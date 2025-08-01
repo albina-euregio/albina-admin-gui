@@ -32,13 +32,13 @@ export class ConfigurationService {
     return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.array().parse(json)));
   }
 
-  public updateServerConfiguration(json) {
+  public updateServerConfiguration(json: ServerConfiguration) {
     const url = this.constantsService.getServerUrl() + "server";
     const body = JSON.stringify(json);
     return this.http.put(url, body);
   }
 
-  public createServerConfiguration(json) {
+  public createServerConfiguration(json: ServerConfiguration) {
     const url = this.constantsService.getServerUrl() + "server";
     const body = JSON.stringify(json);
     return this.http.post(url, body);
