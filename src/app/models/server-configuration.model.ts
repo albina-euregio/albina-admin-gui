@@ -10,14 +10,14 @@ export const ServerConfigurationSchema = z
     externalServer: z.boolean(),
     publishAt5PM: z.boolean(),
     publishAt8AM: z.boolean(),
-    pdfDirectory: z.string().optional(),
-    htmlDirectory: z.string().optional(),
-    mapsPath: z.string().optional(),
-    mediaPath: z.string().optional(),
-    mapProductionUrl: z.string().optional(),
-    serverImagesUrl: z.string().optional(),
+    pdfDirectory: z.string().nullish(),
+    htmlDirectory: z.string().nullish(),
+    mapsPath: z.string().nullish(),
+    mediaPath: z.string().nullish(),
+    mapProductionUrl: z.string().nullish(),
+    serverImagesUrl: z.string().nullish(),
     dangerLevelElevationDependency: z.boolean(),
-    $isNew: z.boolean().optional(),
+    $isNew: z.boolean().nullish(),
   })
   .partial();
 export const ServerConfigurationVersionSchema = ServerConfigurationSchema.extend({ version: z.string() });
