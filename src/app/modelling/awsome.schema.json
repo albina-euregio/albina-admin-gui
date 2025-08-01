@@ -97,6 +97,11 @@
                   "default": 1,
                   "type": "number"
                 },
+                "fillOpacity": {
+                  "description": "Polygon fill opacity",
+                  "default": 0.8,
+                  "type": "number"
+                },
                 "radius": {
                   "description": "Radius of the circle marker, in pixels",
                   "default": 40,

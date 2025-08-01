@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { formatDate } from "@angular/common";
-import { Icon, LatLng, Map, Marker, MarkerOptions, Rectangle } from "leaflet";
+import { Icon, LatLng, Map, Marker, MarkerOptions, Polygon, PolylineOptions, Rectangle, GeoJSON } from "leaflet";
 import { GenericObservation } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
@@ -25,7 +25,11 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     labelColor: "#fff",
   } as FilterSelectionValue;
 
-  createRectangleMarker(observation: T, isHighlighted = false): Rectangle | undefined {
+  createPolygonMarker(
+    observation: T,
+    isHighlighted = false,
+    geometry: GeoJSON.Polygon,
+  ): Rectangle | Polygon | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) {
       return;
     }
@@ -35,20 +39,16 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     if (!filterSelectionValue) {
       return;
     }
-    const marker = new Rectangle(
-      [
-        [observation.latitude, observation.longitude],
-        [observation.latitude + 0.018, observation.longitude + 0.026],
-      ],
-      {
-        interactive: true,
-        pane: "markerPane",
-        color: filterSelectionValue?.borderColor,
-        fillColor: filterSelectionValue?.color,
-        opacity: filterSelectionValue?.opacity,
-        weight: filterSelectionValue?.weight,
-      },
-    );
+    const options: PolylineOptions = {
+      interactive: true,
+      pane: "markerPane",
+      color: filterSelectionValue?.borderColor,
+      fillColor: filterSelectionValue?.color,
+      fillOpacity: filterSelectionValue?.fillOpacity,
+      opacity: filterSelectionValue?.opacity,
+      weight: filterSelectionValue?.weight,
+    };
+    const marker = GeoJSON.geometryToLayer({ geometry, type: "Feature", properties: {} }, options) as Polygon;
     marker.bindTooltip(() => this.createTooltipText(observation), {
       opacity: 1,
       className: "obs-tooltip",

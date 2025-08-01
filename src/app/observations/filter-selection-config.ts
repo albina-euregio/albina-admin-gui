@@ -16,6 +16,7 @@ export const FilterSelectionValueSchema = z.object({
       "An interval given as array of [lower bound, upper bound] where the lower bound is inclusive and the upper bound is exclusive",
     ),
   opacity: z.number().default(1).optional().describe("Marker opacity"),
+  fillOpacity: z.number().default(0.8).optional().describe("Polygon fill opacity"),
   radius: z.number().default(40).optional().describe("Radius of the circle marker, in pixels"),
   radiusByZoom: z
     .array(z.number())

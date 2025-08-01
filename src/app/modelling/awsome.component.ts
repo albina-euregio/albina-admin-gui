@@ -9,12 +9,12 @@ import { ObservationFilterService } from "../observations/observation-filter.ser
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { ObservationMarkerService } from "../observations/observation-marker.service";
-import type { GenericObservation } from "../observations/models/generic-observation.model";
+import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import Split from "split.js";
 import { TabsModule } from "ngx-bootstrap/tabs";
-import { Control, ImageOverlay, LatLngBounds, LatLngBoundsLiteral, LayerGroup } from "leaflet";
+import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { NgxEchartsDirective } from "ngx-echarts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
@@ -31,6 +31,7 @@ type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown 
 
 export type FeatureProperties = GeoJSON.Feature["properties"] & {
   $sourceObject?: AwsomeSource;
+  $geometry: GeoJSON.Geometry;
   region_id: string;
 } & Pick<GenericObservation, "$source" | "latitude" | "longitude" | "elevation">;
 
@@ -77,18 +78,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
   loadingState: "loading" | "error" | undefined;
-  private createMarker:
-    | (typeof this.markerService)["createMarker"]
-    | (typeof this.markerService)["createRectangleMarker"];
 
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
     this.route.queryParamMap.subscribe((params) => {
       this.configURL = params.get("config") || this.configURL;
       this.date = params.get("date") || this.date;
-      this.createMarker = params.get("rectangle")
-        ? this.markerService.createRectangleMarker.bind(this.markerService)
-        : this.markerService.createMarker.bind(this.markerService);
     });
     this.config$q = this.fetchJSON(this.configURL)
       .toPromise()
@@ -175,7 +170,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         .pipe(
           map(({ features }): FeatureProperties[] =>
             features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
-              feature.properties.$source = source.name as any;
+              feature.properties.$source = source.name as unknown as ObservationSource;
+              feature.properties.$sourceObject = source;
+              feature.properties.$geometry = feature.geometry;
               if (feature.geometry.type === "Point") {
                 feature.properties.longitude ??= feature.geometry.coordinates[0];
                 feature.properties.latitude ??= feature.geometry.coordinates[1];
@@ -185,7 +182,6 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
                 feature.properties.latitude ??= feature.geometry.coordinates[0][0][1];
                 feature.properties.elevation ??= feature.geometry.coordinates[0][0][2];
               }
-              feature.properties.$sourceObject = source;
               if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
                 return aspects
                   .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
@@ -247,7 +243,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       (observation) => this.filterService.isHighlighted(observation) || this.filterService.isSelected(observation),
     );
     this.localObservations.forEach((observation) => {
-      this.createMarker(observation, this.filterService.isHighlighted(observation))
+      const isHighlighted = this.filterService.isHighlighted(observation);
+      const marker =
+        observation.$geometry.type === "Polygon"
+          ? this.markerService.createPolygonMarker(observation, isHighlighted, observation.$geometry)
+          : this.markerService.createMarker(observation, isHighlighted);
+      marker
         ?.on({
           tooltipopen: debounce(() => this.highlightInHazardChart(observation), 500),
           tooltipclose: debounce(() => this.highlightInHazardChart(undefined), 500),
@@ -313,7 +314,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.mapLayerHighlight.clearLayers();
     const observation = $event.data[2] as FeatureProperties;
     const marker = this.markerService.createMarker(observation, true);
-    marker.options.zIndexOffset = 42_000;
+    (marker.options as MarkerOptions).zIndexOffset = 42_000;
     marker.addTo(this.mapLayerHighlight);
     marker.toggleTooltip();
   }
