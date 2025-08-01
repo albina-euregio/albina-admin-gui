@@ -87,6 +87,7 @@ deploy:development:
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
     - when: manual
+      allow_failure: true
 
 build:beta:
   extends: .envsubst
@@ -109,6 +110,7 @@ deploy:beta:
   rules:
     - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
     - when: manual
+      allow_failure: true
 
 build:production:
   extends: .envsubst
@@ -131,6 +133,7 @@ deploy:production:
   rules:
     - if: "$CI_COMMIT_TAG"
       when: manual
+      allow_failure: true
 
 build:aran:
   extends: .envsubst
@@ -171,3 +174,4 @@ deploy:observations-api:
     - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose observations-api/ $SFTP_SERVER
   rules:
     - when: manual
+      allow_failure: true
