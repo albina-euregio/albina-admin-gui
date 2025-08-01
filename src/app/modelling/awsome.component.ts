@@ -176,9 +176,15 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           map(({ features }): FeatureProperties[] =>
             features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
               feature.properties.$source = source.name as any;
-              feature.properties.longitude ??= (feature.geometry as GeoJSON.Point).coordinates[0];
-              feature.properties.latitude ??= (feature.geometry as GeoJSON.Point).coordinates[1];
-              feature.properties.elevation ??= (feature.geometry as GeoJSON.Point).coordinates[2];
+              if (feature.geometry.type === "Point") {
+                feature.properties.longitude ??= feature.geometry.coordinates[0];
+                feature.properties.latitude ??= feature.geometry.coordinates[1];
+                feature.properties.elevation ??= feature.geometry.coordinates[2];
+              } else if (feature.geometry.type === "Polygon") {
+                feature.properties.longitude ??= feature.geometry.coordinates[0][0][0];
+                feature.properties.latitude ??= feature.geometry.coordinates[0][0][1];
+                feature.properties.elevation ??= feature.geometry.coordinates[0][0][2];
+              }
               feature.properties.$sourceObject = source;
               if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
                 return aspects
