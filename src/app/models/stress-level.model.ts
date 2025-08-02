@@ -4,7 +4,7 @@ const DateIsoString = z.iso.date();
 
 export const StressLevelSchema = z.object({
   stressLevel: z.number(),
-  date: DateIsoString.nullish(),
+  date: DateIsoString.optional(),
 });
 
 export const TeamStressLevelsSchema = z.record(z.string().brand("user"), StressLevelSchema.array());

@@ -316,7 +316,7 @@ export const AuthenticationResponseSchema = z.object({
   roles: z.enum(Enums.UserRole).array(),
   regions: RegionConfigurationSchema.array(),
   access_token: z.string(),
-  refresh_token: z.string().nullish(),
-  api_url: z.string().nullish(),
+  refresh_token: z.string().optional(),
+  api_url: z.string().optional(),
 });
 type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;
