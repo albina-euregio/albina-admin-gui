@@ -492,7 +492,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return (
       this.loading ||
       !this.bulletinsService.getIsEditable() ||
-      this.bulletinsService.isLocked(this.activeBulletin.id) ||
       this.editRegions ||
       !this.isCreator(this.activeBulletin) ||
       this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)
