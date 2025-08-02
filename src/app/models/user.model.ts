@@ -4,9 +4,9 @@ import { z } from "zod/v4";
 export const UserSchema = z.object({
   name: z.string(),
   email: z.string(),
-  organization: z.string().optional(),
-  image: z.string().optional(),
-  password: z.string().optional(),
+  organization: z.string().nullish(),
+  image: z.string().nullish(),
+  password: z.string().nullish(),
   roles: z
     .enum(Enums.UserRole)
     .array()
@@ -15,7 +15,7 @@ export const UserSchema = z.object({
     .string()
     .array()
     .default(() => []),
-  languageCode: z.string().optional(),
+  languageCode: z.string().nullish(),
 });
 
 export type UserModel = z.infer<typeof UserSchema>;
