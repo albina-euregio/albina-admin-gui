@@ -4,9 +4,9 @@ export const ServerConfigurationSchema = z
   .object({
     id: z.any(),
     name: z.string(),
-    apiUrl: z.string(),
-    userName: z.string(),
-    password: z.string(),
+    apiUrl: z.string().nullish(),
+    userName: z.string().nullish(),
+    password: z.string().nullish(),
     externalServer: z.boolean(),
     publishAt5PM: z.boolean(),
     publishAt8AM: z.boolean(),
