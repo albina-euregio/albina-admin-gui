@@ -46,6 +46,7 @@ export class BulletinModel implements PolygonObject {
   public snowpackStructureCommentTextcat: string;
   public tendencyCommentTextcat: string;
   public generalHeadlineCommentTextcat: string;
+  public synopsisCommentTextcat: string;
 
   public avActivityHighlightsNotes: string;
   public avActivityCommentNotes: string;
@@ -61,6 +62,7 @@ export class BulletinModel implements PolygonObject {
   public snowpackStructureComment$: LangTexts;
   public tendencyComment$: LangTexts;
   public generalHeadlineComment$: LangTexts;
+  public synopsisComment$: LangTexts;
 
   public tendency: Enums.Tendency;
 
@@ -199,6 +201,13 @@ export class BulletinModel implements PolygonObject {
       bulletin.generalHeadlineCommentNotes = json.generalHeadlineCommentNotes;
     }
 
+    if (json.synopsisCommentTextcat) {
+      bulletin.synopsisCommentTextcat = json.synopsisCommentTextcat;
+    }
+    if (json.synopsisComment) {
+      bulletin.synopsisComment$ = toLangTexts(json.synopsisComment);
+    }
+
     if (json.dangerPattern1) {
       bulletin.dangerPattern1 = json.dangerPattern1;
     }
@@ -233,6 +242,7 @@ export class BulletinModel implements PolygonObject {
       this.snowpackStructureCommentTextcat = bulletin.snowpackStructureCommentTextcat;
       this.tendencyCommentTextcat = bulletin.tendencyCommentTextcat;
       this.generalHeadlineCommentTextcat = bulletin.generalHeadlineCommentTextcat;
+      this.synopsisCommentTextcat = bulletin.synopsisCommentTextcat;
       this.avActivityHighlightsNotes = bulletin.avActivityHighlightsNotes;
       this.avActivityCommentNotes = bulletin.avActivityCommentNotes;
       this.snowpackStructureHighlightsNotes = bulletin.snowpackStructureHighlightsNotes;
@@ -248,6 +258,7 @@ export class BulletinModel implements PolygonObject {
       this.snowpackStructureComment$ = { ...bulletin.snowpackStructureComment$ };
       this.tendencyComment$ = { ...bulletin.tendencyComment$ };
       this.generalHeadlineComment$ = { ...bulletin.generalHeadlineComment$ };
+      this.synopsisComment$ = { ...bulletin.synopsisComment$ };
 
       this.tendency = bulletin.tendency;
       this.dangerPattern1 = bulletin.dangerPattern1;
@@ -277,12 +288,14 @@ export class BulletinModel implements PolygonObject {
       this.tendencyCommentNotes = undefined;
       this.generalHeadlineCommentTextcat = undefined;
       this.generalHeadlineCommentNotes = undefined;
+      this.synopsisCommentTextcat = undefined;
       this.avActivityHighlights$ = {} as LangTexts;
       this.avActivityComment$ = {} as LangTexts;
       this.snowpackStructureHighlights$ = {} as LangTexts;
       this.snowpackStructureComment$ = {} as LangTexts;
       this.tendencyComment$ = {} as LangTexts;
       this.generalHeadlineComment$ = {} as LangTexts;
+      this.synopsisComment$ = {} as LangTexts;
       this.tendency = undefined;
       this.dangerPattern1 = undefined;
       this.dangerPattern2 = undefined;
@@ -458,6 +471,10 @@ export class BulletinModel implements PolygonObject {
       json["generalHeadlineCommentTextcat"] = this.generalHeadlineCommentTextcat;
     }
 
+    if (this.synopsisCommentTextcat) {
+      json["synopsisCommentTextcat"] = this.synopsisCommentTextcat;
+    }
+
     if (this.avActivityHighlightsNotes) {
       json["avActivityHighlightsNotes"] = this.avActivityHighlightsNotes;
     }
@@ -508,6 +525,10 @@ export class BulletinModel implements PolygonObject {
 
     if (this.generalHeadlineComment$) {
       json["generalHeadlineComment"] = convertLangTextsToJSON(this.generalHeadlineComment$);
+    }
+
+    if (this.synopsisComment$) {
+      json["synopsisComment"] = convertLangTextsToJSON(this.synopsisComment$);
     }
 
     if (this.tendency) {
