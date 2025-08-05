@@ -1577,15 +1577,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ngx-translate/core@npm:^16.0.4":
-  version: 16.0.4
-  resolution: "@ngx-translate/core@npm:16.0.4"
+"@ngx-translate/core@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "@ngx-translate/core@npm:17.0.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
     "@angular/common": ">=16"
     "@angular/core": ">=16"
-  checksum: 10c0/b84839745d04f9f8a0964cc1eeadb54ff77508675dd1e42f2b9b6dd6ccca91177c7905ac2909de90807cd3883ae1967c293b3313592cb76ba566a6c233313e3b
+  checksum: 10c0/c1f51c788c76081c5e13d7b504fe2e9a868d965e2f67d60b45260104f45096984f2a21bab62136754f51b70d41a01f30dced6f8518393a8d1f910ab7082923e3
   languageName: node
   linkType: hard
 
@@ -2693,7 +2693,7 @@ __metadata:
     "@eaws/micro-regions": "npm:^7.0.7"
     "@eaws/micro-regions_names": "npm:^7.0.7"
     "@eslint/js": "npm:^9.31.0"
-    "@ngx-translate/core": "npm:^16.0.4"
+    "@ngx-translate/core": "npm:^17.0.0"
     "@phosphor-icons/web": "npm:^2.1.1"
     "@popperjs/core": "npm:^2.11.8"
     "@sentry/angular": "npm:^9.4.0"
