@@ -2705,7 +2705,7 @@ __metadata:
     "@types/node": "npm:^20.0.0"
     "@types/which-polygon": "npm:^2.2.3"
     angular-eslint: "npm:^20.1.1"
-    bootstrap: "npm:^5.3.3"
+    bootstrap: "npm:^5.3.7"
     echarts: "npm:^5.6.0"
     es-toolkit: "npm:^1.38.0"
     eslint: "npm:^9.31.0"
@@ -2871,12 +2871,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap@npm:^5.3.3":
-  version: 5.3.3
-  resolution: "bootstrap@npm:5.3.3"
+"bootstrap@npm:^5.3.7":
+  version: 5.3.7
+  resolution: "bootstrap@npm:5.3.7"
   peerDependencies:
     "@popperjs/core": ^2.11.8
-  checksum: 10c0/bb68ca7b763977b9cce40cb5b8c676ae19a716d2f5d15009fa7bdbcec9dea426968e3cb748fbed7592fbf10edd7c749aea841c2920996a7c1aa5e0a6e2d4c2ad
+  checksum: 10c0/019f0d683aec843b9fc0592ae78560cfe286bc8e31e706d40d8c15d390dcca7ab2ffa193a489a74f65ed5596800b9b79da867545ce3bbafca945b630fe0055af
   languageName: node
   linkType: hard
 
