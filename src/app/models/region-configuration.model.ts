@@ -8,6 +8,8 @@ export const RegionConfigurationSchema = z
     subRegions: z.array(z.string()),
     superRegions: z.array(z.string()),
     neighborRegions: z.array(z.string()),
+    enabledLanguages: z.array(z.string()),
+    ttsLanguages: z.array(z.string()),
     publishBulletins: z.boolean(),
     publishBlogs: z.boolean(),
     createCaamlV5: z.boolean(),

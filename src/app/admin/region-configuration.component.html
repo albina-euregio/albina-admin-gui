@@ -103,6 +103,52 @@
           <tr>
             <td>
               <label class="col-form-label">{{
+                "admin.region-configuration.table.publication.enabledLanguages" | translate
+              }}</label>
+            </td>
+            <td class="align-middle">
+              <div class="d-flex gap-2">
+                <div *ngFor="let language of languages">
+                  <label>
+                    <input
+                      #checkbox
+                      type="checkbox"
+                      [value]="language"
+                      [checked]="config().enabledLanguages.includes(language)"
+                      (change)="toggleLanguage(language, checkbox.checked)"
+                    />
+                    {{ language }}
+                  </label>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{
+                "admin.region-configuration.table.publication.ttsLanguages" | translate
+              }}</label>
+            </td>
+            <td class="align-middle">
+              <div class="d-flex gap-2">
+                <div *ngFor="let language of languages">
+                  <label>
+                    <input
+                      #checkbox
+                      type="checkbox"
+                      [value]="language"
+                      [checked]="config().ttsLanguages.includes(language)"
+                      (change)="toggleTTSLanguage(language, checkbox.checked)"
+                    />
+                    {{ language }}
+                  </label>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{
                 "admin.region-configuration.table.publication.publishBlogs" | translate
               }}</label>
             </td>

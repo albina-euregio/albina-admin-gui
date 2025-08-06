@@ -7,6 +7,7 @@ import { NgFor, NgIf } from "@angular/common";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { FormsModule } from "@angular/forms";
 import { RegionConfiguration } from "../models/region-configuration.model";
+import { LANGUAGES } from "../models/text.model";
 
 @Component({
   templateUrl: "region-configuration.component.html",
@@ -20,10 +21,27 @@ export class RegionConfigurationComponent {
   authenticationService = inject(AuthenticationService);
 
   readonly config = input<RegionConfiguration>(undefined);
+  readonly languages = LANGUAGES;
 
   public saveConfigurationLoading = false;
 
   public alerts: any[] = [];
+
+  toggleLanguage(language: string, checked: boolean) {
+    if (checked) {
+      this.config().enabledLanguages.push(language);
+    } else {
+      this.config().enabledLanguages = this.config().enabledLanguages.filter((l) => l !== language);
+    }
+  }
+
+  toggleTTSLanguage(language: string, checked: boolean) {
+    if (checked) {
+      this.config().ttsLanguages.push(language);
+    } else {
+      this.config().ttsLanguages = this.config().ttsLanguages.filter((l) => l !== language);
+    }
+  }
 
   public save() {
     this.saveConfigurationLoading = true;
@@ -36,6 +54,8 @@ export class RegionConfigurationComponent {
     json["superRegions"] = config.superRegions;
     json["neighborRegions"] = config.neighborRegions;
     json["showMatrix"] = config.showMatrix;
+    json["enabledLanguages"] = config.enabledLanguages;
+    json["ttsLanguages"] = config.ttsLanguages;
     json["publishBulletins"] = config.publishBulletins;
     json["publishBlogs"] = config.publishBlogs;
     json["createCaamlV5"] = config.createCaamlV5;

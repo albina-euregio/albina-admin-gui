@@ -695,7 +695,9 @@
           "mapCenterLat": "Center position of map (lat)",
           "mapCenterLng": "Center position of map (long)",
           "imageColorbarColorPath": "Colorbar (color)",
-          "imageColorbarBwPath": "Colorbar (b/w)"
+          "imageColorbarBwPath": "Colorbar (b/w)",
+          "enabledLanguages": "Enabled languages",
+          "ttsLanguages": "Text-to-speech languages"
         },
         "components": {
           "title": "Components",
