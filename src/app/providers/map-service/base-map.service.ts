@@ -19,7 +19,7 @@ export class BaseMapService extends MapService {
       zoomControl: false,
       doubleClickZoom: true,
       scrollWheelZoom: true,
-      touchZoom: true,
+      // pinchZoom: Browser.touch,
       center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
       zoom: 8,
       minZoom: 4,

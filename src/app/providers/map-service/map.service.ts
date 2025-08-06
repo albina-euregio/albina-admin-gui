@@ -213,7 +213,7 @@ export class MapService {
     const options: MapOptions = {
       doubleClickZoom: false,
       scrollWheelZoom: false,
-      touchZoom: true,
+      // pinchZoom: Browser.touch,
       center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
       zoom: 8,
       minZoom: 6,
