@@ -163,43 +163,43 @@ export function degreeToAspect(degree: number): Aspect {
 // https://transform.tools/typescript-to-zod
 export const genericObservationSchema = z.object({
   $data: z.any().describe("Additional data (e.g. original data stored when fetching from external API)"),
-  $id: z.string().optional().nullable().describe("External ID of this observations"),
+  $id: z.string().nullish().nullable().describe("External ID of this observations"),
   $allowEdit: z.boolean().default(false),
   $deleted: z.boolean().default(false),
-  $externalURL: z.string().optional().nullable().describe("External URL to display as iframe"),
-  $externalImgs: z.array(z.string()).optional().nullable().describe("External image to display as img"),
+  $externalURL: z.string().nullish().nullable().describe("External URL to display as iframe"),
+  $externalImgs: z.array(z.string()).nullish().nullable().describe("External image to display as img"),
   stability: z
     .enum(SnowpackStability)
-    .optional()
+    .nullish()
     .nullable()
     .describe("Snowpack stability that can be inferred from this observation"),
   $source: z.union([z.enum(ObservationSource), z.enum(ForecastSource)]).describe("Source of this observation"),
   $type: z.enum(ObservationType).describe("Type of this observation"),
-  aspect: z.enum(Aspect).optional().nullable().describe("Aspect corresponding with this observation"),
-  authorName: z.string().optional().nullable().describe("Name of the author"),
-  content: z.string().optional().nullable().describe("Free-text content"),
-  elevation: z.number().optional().nullable().describe("Elevation in meters"),
-  elevationLowerBound: z.number().optional().nullable().describe("Lower bound of elevation in meters"),
-  elevationUpperBound: z.number().optional().nullable().describe("Upper bound of elevation in meters"),
+  aspect: z.enum(Aspect).nullish().nullable().describe("Aspect corresponding with this observation"),
+  authorName: z.string().nullish().nullable().describe("Name of the author"),
+  content: z.string().nullish().nullable().describe("Free-text content"),
+  elevation: z.number().nullish().nullable().describe("Elevation in meters"),
+  elevationLowerBound: z.number().nullish().nullable().describe("Lower bound of elevation in meters"),
+  elevationUpperBound: z.number().nullish().nullable().describe("Upper bound of elevation in meters"),
   eventDate: z.coerce.date().describe("Date when the event occurred"),
-  locationName: z.string().optional().nullable().describe("Location name"),
-  latitude: z.number().optional().nullable().describe("Location latitude (WGS 84)"),
-  longitude: z.number().optional().nullable().describe("Location longitude (WGS 84)"),
-  region: z.string().optional().nullable().describe("Micro-region code (computed from latitude/longitude)"),
-  reportDate: z.coerce.date().optional().nullable().describe("Date when the observation has been reported"),
-  dangerSource: z.string().uuid().optional().nullable().describe("Danger source UUID"),
+  locationName: z.string().nullish().nullable().describe("Location name"),
+  latitude: z.number().nullish().nullable().describe("Location latitude (WGS 84)"),
+  longitude: z.number().nullish().nullable().describe("Location longitude (WGS 84)"),
+  region: z.string().nullish().nullable().describe("Micro-region code (computed from latitude/longitude)"),
+  reportDate: z.coerce.date().nullish().nullable().describe("Date when the observation has been reported"),
+  dangerSource: z.string().uuid().nullish().nullable().describe("Danger source UUID"),
   avalancheProblems: z
     .array(z.enum(AvalancheProblem))
-    .optional()
+    .nullish()
     .nullable()
     .describe("Avalanche problem corresponding with this observation"),
   dangerPatterns: z
     .array(z.enum(DangerPattern))
-    .optional()
+    .nullish()
     .nullable()
     .describe("Danger pattern corresponding with this observation"),
-  importantObservations: z.array(z.enum(ImportantObservation)).optional().nullable().describe("Important observations"),
-  personInvolvement: z.enum(PersonInvolvement).optional().nullable().describe("Person involvement"),
+  importantObservations: z.array(z.enum(ImportantObservation)).nullish().nullable().describe("Important observations"),
+  personInvolvement: z.enum(PersonInvolvement).nullish().nullable().describe("Person involvement"),
 });
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });
