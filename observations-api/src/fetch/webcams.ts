@@ -51,7 +51,7 @@ async function* fetchPanomax(): AsyncGenerator<GenericObservation, void, unknown
   const url = "https://api.panomax.com/1.0/maps/panomaxweb";
   const data: PanomaxCamResponse = await fetchJSON(url);
   for (const webcam of Object.values(data.instances)) {
-    if (!(await getRegionForLatLng(webcam.cam))) continue;
+    if (!getRegionForLatLng(webcam.cam)) continue;
     const thumb: PanomaxThumbnailResponse = await fetchJSON(
       `https://api.panomax.com/1.0/instances/${webcam.id}/thumbnail`,
     );
