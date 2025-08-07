@@ -309,6 +309,7 @@
       "hideNotes": "Hide notes",
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
+        "generalHeadlineComment": "General overall headline",
         "importantObservations": "Important observations",
         "avalancheProblems": "Avalanche problem",
         "aspects": "Aspects",
