@@ -1,7 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
-import { ConstantsService } from "../constants-service/constants.service";
 import aggregatedRegions from "../../../assets/aggregated_regions.json";
 import { default as regionsNamesDe } from "@eaws/micro-regions_names/de.json";
 import { default as regionsNamesIt } from "@eaws/micro-regions_names/it.json";
@@ -10,12 +9,11 @@ import { default as regionsNamesFr } from "@eaws/micro-regions_names/fr.json";
 import { default as regionsNamesEs } from "@eaws/micro-regions_names/es.json";
 import { default as regionsNamesCa } from "@eaws/micro-regions_names/ca.json";
 import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
-import { loadRegions, loadRegionsAran, loadRegionsEuregio } from "./regions-loader.mjs";
+import { loadRegions, loadRegionsEuregio } from "./regions-loader.mjs";
 
 @Injectable()
 export class RegionsService {
   private translateService = inject(TranslateService);
-  private constantsService = inject(ConstantsService);
 
   // Level 1 regions: parts of provinces
   getLevel1Regions(id: string): string[] {
@@ -29,19 +27,6 @@ export class RegionsService {
 
   getRegionsAsync(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
     return loadRegions().then((r) => this.translateNames(r));
-  }
-
-  async getActiveRegion(activeRegionCode: string): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
-    switch (activeRegionCode) {
-      case this.constantsService.codeAran:
-        return loadRegionsAran();
-      case this.constantsService.codeTyrol:
-      case this.constantsService.codeSouthTyrol:
-      case this.constantsService.codeTrentino:
-        return loadRegionsEuregio();
-      default:
-        return this.getRegionsAsync();
-    }
   }
 
   async getRegionsEuregio(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {

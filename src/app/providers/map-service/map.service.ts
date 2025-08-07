@@ -90,12 +90,11 @@ export class MapService {
     activeRegion?: FeatureCollection<MultiPolygon, RegionProperties>;
   } = {}): Promise<typeof this.overlayMaps> {
     if (!regions || !activeRegion) {
-      const [regions0, activeRegion0] = await Promise.all([
-        this.regionsService.getRegionsAsync(),
-        this.regionsService.getActiveRegion(this.authenticationService.getActiveRegionId()),
-      ]);
-      regions ??= regions0;
-      activeRegion ??= activeRegion0;
+      regions ??= await this.regionsService.getRegionsAsync();
+      activeRegion ??= {
+        type: "FeatureCollection",
+        features: regions.features.filter((f) => this.authenticationService.isInternalRegion(f.properties.id)),
+      };
     }
 
     const overlayMaps: typeof this.overlayMaps = {

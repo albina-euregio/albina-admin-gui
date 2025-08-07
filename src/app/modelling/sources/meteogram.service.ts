@@ -10,7 +10,7 @@ export class MeteogramSourceService {
   private regionsService = inject(RegionsService);
 
   getZamgMeteograms(): Observable<GenericObservation[]> {
-    return from(this.regionsService.getActiveRegion("AT-07")).pipe(
+    return from(this.regionsService.getRegionsAsync()).pipe(
       map((collection) =>
         collection.features
           .filter((f) => /AT-07/.test(f.properties.id))
