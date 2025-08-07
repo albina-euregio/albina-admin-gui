@@ -38,7 +38,7 @@ import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { FormsModule } from "@angular/forms";
 import { AlbinaObservationsService } from "./observations.service";
 import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
-import { augmentRegion } from "../providers/regions-service/augmentRegion";
+import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
 import "bootstrap";
 import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
 import { FilterSelectionValue, FilterSelectionValueSchema } from "./filter-selection-config";
@@ -90,6 +90,7 @@ class ObservationData {
   }
 
   async loadFrom(observable: Observable<GenericObservation>, observationSearch: string) {
+    await initAugmentRegion();
     this.layer.clearLayers();
     this.all = [];
     this.loading?.unsubscribe();

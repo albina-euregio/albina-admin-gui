@@ -1,5 +1,5 @@
 import * as mysql from "mysql2/promise";
-import { augmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
+import { augmentRegion, initAugmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
 import {
   findExistingObservation,
   type Aspect,
@@ -69,6 +69,7 @@ export class ObservationDatabaseConnection {
       return;
     }
     if (!ex || o.latitude !== ex.latitude || o.longitude !== ex.longitude) {
+      await initAugmentRegion();
       augmentRegion(o);
       await augmentElevation(o);
     }
