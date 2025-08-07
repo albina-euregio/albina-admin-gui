@@ -11,6 +11,7 @@ import { default as regionsNamesCa } from "@eaws/micro-regions_names/ca.json";
 import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
 import { loadRegions } from "./regions-loader.mjs";
 import { AuthenticationService } from "../authentication-service/authentication.service";
+import "./mergeFeatureCollections";
 
 @Injectable()
 export class RegionsService {
