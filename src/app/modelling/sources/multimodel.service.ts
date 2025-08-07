@@ -1,9 +1,9 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { from, Observable } from "rxjs";
+import { last, map, mergeMap } from "rxjs/operators";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { augmentRegion } from "app/providers/regions-service/augmentRegion";
+import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate } from "@angular/common";
 
@@ -46,32 +46,37 @@ export class MultimodelSourceService {
       now.setDate(now.getDate() - 1);
     }
     const date = formatDate(now, "yyyy-MM-dd", "en-US");
-    return this.http.get(this.URL + "snowgridmultimodel_stationlist.txt", { responseType: "text" }).pipe(
-      map((response) => this.parseCSV<MultimodelPointCsv>(response.toString().replace(/^#\s*/, ""))),
-      map((points) =>
-        points
-          .map((row: MultimodelPointCsv): GenericObservation => {
-            const id = row.statnr;
-            return augmentRegion({
-              $source: "multimodel",
-              $data: row,
-              $id: id,
-              region: row.code,
-              $extraDialogRows: [
-                ...["HN", "HS"].map((type) => ({
-                  label: `ECMWF ${type}`,
-                  url: `${this.URL}eps_ecmwf/${date}-00UTC_snowgrid_ECMWF_EPS_${id}_${type}.png`,
-                })),
-                ...["HN", "HS"].map((type) => ({
-                  label: `CLAEF ${type}`,
-                  url: `${this.URL}eps_claef/${date}-00UTC_snowgrid_C-LAEF_EPS_${id}_${type}.png`,
-                })),
-              ],
-              latitude: parseFloat(row.lat),
-              longitude: parseFloat(row.lon),
-            } as GenericObservation);
-          })
-          .sort((p1, p2) => p1.region.localeCompare(p2.region)),
+    return from(initAugmentRegion()).pipe(
+      last(),
+      mergeMap(() =>
+        this.http.get(this.URL + "snowgridmultimodel_stationlist.txt", { responseType: "text" }).pipe(
+          map((response) => this.parseCSV<MultimodelPointCsv>(response.toString().replace(/^#\s*/, ""))),
+          map((points) =>
+            points
+              .map((row: MultimodelPointCsv): GenericObservation => {
+                const id = row.statnr;
+                return augmentRegion({
+                  $source: "multimodel",
+                  $data: row,
+                  $id: id,
+                  region: row.code,
+                  $extraDialogRows: [
+                    ...["HN", "HS"].map((type) => ({
+                      label: `ECMWF ${type}`,
+                      url: `${this.URL}eps_ecmwf/${date}-00UTC_snowgrid_ECMWF_EPS_${id}_${type}.png`,
+                    })),
+                    ...["HN", "HS"].map((type) => ({
+                      label: `CLAEF ${type}`,
+                      url: `${this.URL}eps_claef/${date}-00UTC_snowgrid_C-LAEF_EPS_${id}_${type}.png`,
+                    })),
+                  ],
+                  latitude: parseFloat(row.lat),
+                  longitude: parseFloat(row.lon),
+                } as GenericObservation);
+              })
+              .sort((p1, p2) => p1.region.localeCompare(p2.region)),
+          ),
+        ),
       ),
     );
   }

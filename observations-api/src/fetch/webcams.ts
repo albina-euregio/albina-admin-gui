@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { getRegionForLatLng } from "../../../src/app/providers/regions-service/augmentRegion";
+import { initAugmentRegion, getRegionForLatLng } from "../../../src/app/providers/regions-service/augmentRegion";
 import { fetchJSON } from "../util/fetchJSON";
 import type { GenericObservation } from "../generic-observation";
 import { convertFotoWebcamEU, type FotoWebcamEUResponse } from "./webcams/foto-webcam.model";
@@ -48,6 +48,7 @@ async function* fetchFotoWebcamsEU(): AsyncGenerator<GenericObservation, void, u
 }
 
 async function* fetchPanomax(): AsyncGenerator<GenericObservation, void, unknown> {
+  await initAugmentRegion();
   const url = "https://api.panomax.com/1.0/maps/panomaxweb";
   const data: PanomaxCamResponse = await fetchJSON(url);
   for (const webcam of Object.values(data.instances)) {

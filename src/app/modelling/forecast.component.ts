@@ -15,7 +15,7 @@ import { ParamService, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
-import { augmentRegion } from "app/providers/regions-service/augmentRegion";
+import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
 import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
 import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
 import { BsModalService } from "ngx-bootstrap/modal";
@@ -161,7 +161,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
     this.modelPoints = [];
     this.loading = true;
-    this.loadAll();
+    await this.loadAll();
     if (modelling === "geosphere") {
       await this.loadQfa();
     }
@@ -210,7 +210,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       .bindTooltip(tooltip);
   }
 
-  loadAll() {
+  async loadAll() {
+    await initAugmentRegion();
     this.observationConfigurations.clear();
     this.allSources.forEach((source) => {
       if (typeof source.loader !== "function") return;

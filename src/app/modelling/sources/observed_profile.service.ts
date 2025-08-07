@@ -1,8 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { catchError, map } from "rxjs/operators";
-import { augmentRegion } from "app/providers/regions-service/augmentRegion";
+import { from, Observable } from "rxjs";
+import { catchError, flatMap, last, map, mergeMap } from "rxjs/operators";
+import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
 
 export interface AvalancheWarningServiceObservedProfiles {
@@ -26,12 +26,17 @@ export class ObservedProfileSourceService {
    * https://gitlab.com/avalanche-warning
    */
   getObservedProfiles(): Observable<GenericObservation[]> {
-    return this.http.get<AvalancheWarningServiceObservedProfiles[]>(this.URL).pipe(
-      map((profiles) => profiles.map((profile) => augmentRegion(toPoint(profile)))),
-      catchError((e) => {
-        console.error("Failed to read observed_profiles from " + this.URL, e);
-        return [];
-      }),
+    return from(initAugmentRegion()).pipe(
+      last(),
+      mergeMap(() =>
+        this.http.get<AvalancheWarningServiceObservedProfiles[]>(this.URL).pipe(
+          map((profiles) => profiles.map((profile) => augmentRegion(toPoint(profile)))),
+          catchError((e) => {
+            console.error("Failed to read observed_profiles from " + this.URL, e);
+            return [];
+          }),
+        ),
+      ),
     );
 
     function toPoint(profile: AvalancheWarningServiceObservedProfiles): GenericObservation {
