@@ -91,10 +91,7 @@ export class MapService {
   } = {}): Promise<typeof this.overlayMaps> {
     if (!regions || !internalRegions) {
       regions ??= await this.regionsService.getRegionsAsync();
-      internalRegions ??= {
-        type: "FeatureCollection",
-        features: regions.features.filter((f) => this.authenticationService.isInternalRegion(f.properties.id)),
-      };
+      internalRegions ??= await this.regionsService.getInternalServerRegionsAsync();
     }
 
     const overlayMaps: typeof this.overlayMaps = {

@@ -105,7 +105,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
   files = {};
 
   async ngAfterContentInit() {
-    this.allRegions = (await this.regionsService.getRegionsEuregio()).features
+    this.allRegions = (await this.regionsService.getInternalServerRegionsAsync()).features
       .map((f) => f.properties)
       .sort((r1, r2) => r1.id.localeCompare(r2.id));
     this.allRegions.forEach((region) => {
