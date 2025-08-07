@@ -216,8 +216,8 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
       if (typeof source.loader !== "function") return;
       source.loader().subscribe((points) => {
         this.dropDownOptions[source.id] = points;
-        points.forEach((point) => {
-          augmentRegion(point);
+        points.forEach(async (point) => {
+          await augmentRegion(point);
           const configuration = (point as AlpsolutObservation)?.$data?.configuration;
           if (configuration) {
             this.observationConfigurations.add(configuration);
@@ -243,7 +243,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
         longitude: ll.lng,
         locationName: cityName,
       } as GenericObservation;
-      augmentRegion(point);
+      await augmentRegion(point);
       this.drawMarker(point);
       this.modelPoints.push(point);
     }

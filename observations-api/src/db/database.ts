@@ -69,7 +69,7 @@ export class ObservationDatabaseConnection {
       return;
     }
     if (!ex || o.latitude !== ex.latitude || o.longitude !== ex.longitude) {
-      augmentRegion(o);
+      await augmentRegion(o);
       await augmentElevation(o);
     }
     return await this.insertObservation(o);
