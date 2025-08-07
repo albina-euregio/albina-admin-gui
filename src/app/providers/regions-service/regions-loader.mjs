@@ -30,28 +30,6 @@ export function loadRegions() {
   ));
 }
 
-let $regionsAran = undefined;
-
-/**
- * @returns {Promise<import("geojson").FeatureCollection[]>}
- */
-export function loadRegionsAran() {
-  return ($regionsAran ??= loadAndMerge(import("@eaws/micro-regions/ES-CT-L_micro-regions.geojson.json")));
-}
-
-let $regionsEuregio = undefined;
-
-/**
- * @returns {Promise<import("geojson").FeatureCollection[]>}
- */
-export function loadRegionsEuregio() {
-  return ($regionsEuregio ??= loadAndMerge(
-    import("@eaws/micro-regions/AT-07_micro-regions.geojson.json"),
-    import("@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json"),
-    import("@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json"),
-  ));
-}
-
 /**
  * @param {Promise<import("geojson").FeatureCollection>} imports
  * @returns {Promise<import("geojson").FeatureCollection>}
