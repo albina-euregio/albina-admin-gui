@@ -223,6 +223,7 @@
       "loadSuggestionFromDangerSources": "Load suggestion",
       "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Pubblica tutte le meteo-nivo zone",
+      "publishAllNoMessages": "Publish all regions (no messages)",
       "mediaFile": "Carica file media"
     },
     "status": {
@@ -302,10 +303,13 @@
       "changeDangerRatingElevation": "Estendi il pericolo valanghe",
       "mapTop": "Mappa in alto",
       "mapLeft": "Mappa a lato",
+      "showExternalRegions": "Show external regions",
+      "hideExternalRegions": "Hide external regions",
       "showNotes": "Mostra gli appunti",
       "hideNotes": "Nascondi gli appunti",
       "incompleteAvalancheProblem": "Incompleto",
       "label": {
+        "generalHeadlineComment": "General overall headline",
         "importantObservations": "Osservazioni importanti",
         "avalancheProblems": "Problema valanghivo",
         "aspects": "Esposizione",
@@ -315,6 +319,7 @@
         "snowpackStructureComment": "Descrizione struttura manto nevoso",
         "dangerPatterns": "Situazioni tipo",
         "tendencyComment": "Descrizione della tendenza",
+        "synopsisComment": "Weather synopsis",
         "notes": "Commenti"
       },
       "copyRegion": {
@@ -329,6 +334,7 @@
         "afternoon": "Pomeriggio",
         "snowpackStructure": "Struttura manto nevoso",
         "tendency": "Tendenza",
+        "synopsis": "Meteo",
         "showTranslations": " Mostra traduzione",
         "hideTranslations": " Nascondi traduzione"
       },
@@ -525,20 +531,26 @@
         "email": {
           "label": "Email",
           "tooltip": "Inviare Email",
-          "success": "{{prefix}}Email inviati con successo!",
-          "error": "{{prefix}}Non è stato possibile inviare le Email!"
+          "success": "Emails successfully sent!",
+          "error": "Emails could not be sent!"
         },
         "telegram": {
           "label": "Messagio Telegram",
           "tooltip": "Invia messaggio via Telegram",
-          "success": "{{prefix}}Messaggi via Telegram inviati con successo!",
-          "error": "{{prefix}}Messaggi di Telegram non possono essere inviati!"
+          "success": "Telegram Messages successfully sent!",
+          "error": "Telegram Messages could not be sent!"
+        },
+        "whatsapp": {
+          "label": "WhatsApp Messages",
+          "tooltip": "Send WhatsApp Messages",
+          "success": "WhatsApp Messages successfully sent!",
+          "error": "WhatsApp Messages could not be sent!"
         },
         "push": {
           "label": "Notifica push",
           "tooltip": "Invia notifica push",
-          "success": "{{prefix}}Notifiche push inviate con successo!",
-          "error": "{{prefix}}Non è stato possibile inviare le notifiche push!"
+          "success": "Push Notifications successfully sent!",
+          "error": "Push Notifications could not be sent!"
         },
         "accept": "Ok"
       },
@@ -597,6 +609,7 @@
       },
       "publishAllDialog": {
         "message": "Vuoi pubblicare tutte le meteo-nivo zone?",
+        "changeMessage": "Do you want to publish all regions? (no messages)",
         "accept": "Sí",
         "reject": "No"
       }
@@ -659,6 +672,7 @@
           "sendEmails": "Invia email",
           "createSimpleHtml": "Crea HTML semplici",
           "sendTelegramMessages": "Invia messaggi via Telegram",
+          "sendWhatsAppMessages": "Send WhatsApp messages",
           "sendPushNotifications": "Invia notifiche push",
           "pdfColor": "PDF a colori",
           "emailColor": "Email a colori",
@@ -682,7 +696,9 @@
           "mapCenterLat": "Posizione centrale della mappa (lat)",
           "mapCenterLng": "Posizione centrale della mappa (long)",
           "imageColorbarColorPath": "Barra colori (a colori)",
-          "imageColorbarBwPath": "Barra colori (bianco/nero)"
+          "imageColorbarBwPath": "Barra colori (bianco/nero)",
+          "enabledLanguages": "Enabled languages",
+          "ttsLanguages": "Text-to-speech languages"
         },
         "components": {
           "title": "Componenti",
@@ -700,7 +716,8 @@
           "enableAvalancheProblemCornices": "Attivare problema tipico valanghivo CORNICI",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Attiva problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE",
           "enableEditableFields": "Editable textfields instead of textcat for bulletins",
-          "enableGeneralHeadline": "Enable general overall headline for bulletins"
+          "enableGeneralHeadline": "Enable general overall headline for bulletins",
+          "enableWeatherTextField": "Enable text input for weather synopsis"
         }
       },
       "success": "Configurazione salvata con successo",
@@ -779,7 +796,8 @@
       "filters": "Filtri",
       "title": "Osservazioni",
       "newObservation": "Nuova osservazione",
-      "exportObservations": "Esporta osservazioni",
+      "exportObservations": "Export observations (GeoJSON)",
+      "exportStatistics": "Export statistics (CSV)",
       "toggleFilterBar": "Visualizza/nascondi barra dei filtri",
       "button": {
         "submit": "Scarica"
@@ -842,24 +860,29 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Invia email, Telegram e Push",
-        "success": "{{prefix}}Email, Telegram e Push inviati con successo!",
-        "error": "{{prefix}}Non è stato possibile inviare email, Telegram e Push!"
+        "tooltip": "Send Emails, Telegram, WhatsApp and Push",
+        "success": "Email, Telegram, Whatsapp and Push successfully sent!",
+        "error": "Email, Telegram, WhatsApp and Push could not be sent!"
       },
       "email": {
         "tooltip": "Invia email",
-        "success": "{{prefix}}Email inviato con successo!",
-        "error": "{{prefix}}Non è stato possibile inviare email!"
+        "success": "Email successfully sent!",
+        "error": "Email could not be sent!"
       },
       "telegram": {
         "tooltip": "Pubblicazione via canale Telegram",
-        "success": "{{prefix}}Telegram inviato con successo",
-        "error": "{{prefix}}Non è stato possibile inviare i messaggi Telegram!"
+        "success": "Telegram successfully sent!",
+        "error": "Telegram could not be sent!"
+      },
+      "whatsapp": {
+        "tooltip": "Send via WhatsApp Channel",
+        "success": "WhatsApp successfully sent!",
+        "error": "WhatsApp could not be sent!"
       },
       "push": {
         "tooltip": "Invia tramite notifiche push",
-        "success": "{{prefix}}Push inviato con successo",
-        "error": "{{prefix}}Non è stato possibile inviare notifiche Push"
+        "success": "Push successfully sent!",
+        "error": "Push could not be sent!"
       }
     }
   },
@@ -1278,6 +1301,14 @@
         "windDirection": "Direzione del vento",
         "windSpeed": "Velocità del vento",
         "windGust": "Raffica"
+      }
+    },
+    "webcams": {
+      "tooltips": {
+        "minusTenMinutes": "10min back",
+        "minusOneHour": "1h back",
+        "plusTenMinutes": "10min forward",
+        "plusOneHour": "1h forward"
       }
     },
     "button": {

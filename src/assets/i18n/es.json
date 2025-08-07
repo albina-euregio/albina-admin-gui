@@ -144,6 +144,7 @@
         "hasDaytimeDependency": "Dependencia diurna",
         "dangerIncreaseWithElevation": "Danger increase with elevation",
         "runoutIntoGreen": "Runout into green",
+        "penetrateDeepLayers": "Penetrate deep layers",
         "highestDangerAspect": "Highest danger aspect",
         "dangerPeak": "Danger peak",
         "slopeGradient": "Gradiente de pendiente",
@@ -222,6 +223,7 @@
       "loadSuggestionFromDangerSources": "Load suggestion",
       "deleteAllWarningRegions": "Delete all warning regions",
       "publishAll": "Publicar todas las regiones",
+      "publishAllNoMessages": "Publish all regions (no messages)",
       "mediaFile": "Subir archivo multimedia"
     },
     "status": {
@@ -301,10 +303,13 @@
       "changeDangerRatingElevation": "Extender el peligro de aludes",
       "mapTop": "Mapa arriba",
       "mapLeft": "Mapa al lado",
+      "showExternalRegions": "Show external regions",
+      "hideExternalRegions": "Hide external regions",
       "showNotes": "Mostrar notas",
       "hideNotes": "Ocultar notas",
       "incompleteAvalancheProblem": "Incomplete",
       "label": {
+        "generalHeadlineComment": "General overall headline",
         "importantObservations": "Important observations",
         "avalancheProblems": "Problema de aludes",
         "aspects": "Orientaciones",
@@ -314,6 +319,7 @@
         "snowpackStructureComment": "Descripción de la estructura del manto",
         "dangerPatterns": "Patrón de peligro",
         "tendencyComment": "Descripción de la tendencia",
+        "synopsisComment": "Weather synopsis",
         "notes": "Notas"
       },
       "copyRegion": {
@@ -328,6 +334,7 @@
         "afternoon": "Tarde",
         "snowpackStructure": "Estructura del manto",
         "tendency": "Tendencia",
+        "synopsis": "Mterorología",
         "showTranslations": "Mostrar traducciones",
         "hideTranslations": "Ocultar traducciones"
       },
@@ -524,20 +531,26 @@
         "email": {
           "label": "Correos electrónicos",
           "tooltip": "Enviar correos electrónicos",
-          "success": "{{prefix}}¡Correos electrónicos enviados con éxito!",
-          "error": "{{prefix}}¡No se pudieron enviar los correos electrónicos!"
+          "success": "Emails successfully sent!",
+          "error": "Emails could not be sent!"
         },
         "telegram": {
           "label": "Mensajes de Telegram",
           "tooltip": "Enviar mensajes de Telegram",
-          "success": "{{prefix}}¡Mensajes de Telegram enviados con éxito!",
-          "error": "{{prefix}}¡No se pudieron enviar los mensajes de Telegram!"
+          "success": "Telegram Messages successfully sent!",
+          "error": "Telegram Messages could not be sent!"
+        },
+        "whatsapp": {
+          "label": "WhatsApp Messages",
+          "tooltip": "Send WhatsApp Messages",
+          "success": "WhatsApp Messages successfully sent!",
+          "error": "WhatsApp Messages could not be sent!"
         },
         "push": {
           "label": "Notificaciones push",
           "tooltip": "Enviar notificaciones push",
-          "success": "{{prefix}}¡Notificaciones push enviadas con éxito!",
-          "error": "{{prefix}}¡No se pudieron enviar notificaciones push!"
+          "success": "Push Notifications successfully sent!",
+          "error": "Push Notifications could not be sent!"
         },
         "accept": "De acuerdo"
       },
@@ -596,6 +609,7 @@
       },
       "publishAllDialog": {
         "message": "¿Quieres publicar todas las regiones?",
+        "changeMessage": "Do you want to publish all regions? (no messages)",
         "accept": "Si",
         "reject": "No"
       }
@@ -658,6 +672,7 @@
           "sendEmails": "Enviar correos",
           "createSimpleHtml": "Crear HTML simple",
           "sendTelegramMessages": "Enviar mensajes de telegram",
+          "sendWhatsAppMessages": "Send WhatsApp messages",
           "sendPushNotifications": "Enviar notificaciones push",
           "pdfColor": "PDF color",
           "emailColor": "E-mail color",
@@ -681,7 +696,9 @@
           "mapCenterLat": "Centrar posición del mapa (latitud)",
           "mapCenterLng": "Centrar posición del mapa (longitud)",
           "imageColorbarColorPath": "Barra de colores (color)",
-          "imageColorbarBwPath": "Barra de colores (b/w)"
+          "imageColorbarBwPath": "Barra de colores (b/w)",
+          "enabledLanguages": "Enabled languages",
+          "ttsLanguages": "Text-to-speech languages"
         },
         "components": {
           "title": "Components",
@@ -699,7 +716,8 @@
           "enableAvalancheProblemCornices": "Habilitar problema de alud CORNISAS",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar problema de alud NINGÚN PROBLEMA DE ALUDES EVIDENTE",
           "enableEditableFields": "Editable textfields instead of textcat for bulletins",
-          "enableGeneralHeadline": "Enable general overall headline for bulletins"
+          "enableGeneralHeadline": "Enable general overall headline for bulletins",
+          "enableWeatherTextField": "Enable text input for weather synopsis"
         }
       },
       "success": "Configuración guardada con éxito",
@@ -778,7 +796,8 @@
       "filters": "Flitros",
       "title": "Observaciones",
       "newObservation": "New observation",
-      "exportObservations": "Export observations",
+      "exportObservations": "Export observations (GeoJSON)",
+      "exportStatistics": "Export statistics (CSV)",
       "toggleFilterBar": "Show/hide filter bar",
       "button": {
         "submit": "Descargar"
@@ -824,6 +843,9 @@
         "dangerPattern": {
           "caption": "Patrón de peligro"
         },
+        "dangerSource": {
+          "caption": "Danger Source"
+        },
         "days": {
           "caption": "Día"
         }
@@ -838,24 +860,29 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Enviar correos electrónicos, Telegram y Push",
-        "success": "{{prefix}}¡Correos electrónicos, Telegram y Push enviados con éxito!",
-        "error": "{{prefix}}¡No se pudo enviar el correo electrónico, Telegram y Push!"
+        "tooltip": "Send Emails, Telegram, WhatsApp and Push",
+        "success": "Email, Telegram, Whatsapp and Push successfully sent!",
+        "error": "Email, Telegram, WhatsApp and Push could not be sent!"
       },
       "email": {
         "tooltip": "Enviar correos electrónicos",
-        "success": "{{prefix}}Correo electrónico enviado con éxito!",
-        "error": "{{prefix}}¡El correo electrónico no pudo ser enviado!"
+        "success": "Email successfully sent!",
+        "error": "Email could not be sent!"
       },
       "telegram": {
         "tooltip": "Enviar a través del canal de Telegram",
-        "success": "{{prefix}}¡Telegram enviado con éxito!",
-        "error": "{{prefix}}¡No se pudo enviar el Telegram!"
+        "success": "Telegram successfully sent!",
+        "error": "Telegram could not be sent!"
+      },
+      "whatsapp": {
+        "tooltip": "Send via WhatsApp Channel",
+        "success": "WhatsApp successfully sent!",
+        "error": "WhatsApp could not be sent!"
       },
       "push": {
         "tooltip": "Enviar a través de notificaciones push",
-        "success": "{{prefix}}¡Push enviado con éxito!",
-        "error": "{{prefix}}¡No se pudo enviar el push!"
+        "success": "Push successfully sent!",
+        "error": "Push could not be sent!"
       }
     }
   },
@@ -899,6 +926,8 @@
   },
   "statistics": {
     "title": "Estadisticas",
+    "bulletins": "Avalanche Bulletins",
+    "dangerSources": "Danger Sources",
     "button": {
       "submit": "Descargar"
     },
@@ -1115,19 +1144,28 @@
     "increasing": "softer above"
   },
   "terrainType": {
-    "gullies": "gullies",
-    "bowls": "bowls",
+    "gullies_and_bowls": "gullies and bowls",
+    "adjacent_to_ridgelines": "adjacent to ridgelines",
+    "distant_from_ridgelines": "distant from ridgelines",
+    "in_the_vicinity_of_peaks": "in the vicinity of peaks",
     "pass_areas": "pass areas",
-    "ridge_lines": "ridge lines",
-    "adjacent_to_ridge_lines": "adjacent to ridge lines",
-    "distant_from_ridge_lines": "distant from ridge lines",
-    "slope_discontinuities": "slope discontinuities",
-    "convex_terrain": "convex terrain",
-    "concave_terrain": "concave terrain",
-    "steep_terrain": "steep terrain",
-    "very_steep_terrain": "very steep terrain",
-    "open_terrain": "open terrain",
-    "forest": "forest"
+    "shady_slopes": "shady slopes",
+    "sunny_slopes": "sunny slopes",
+    "grassy_slopes": "grassy slopes",
+    "cut_slopes": "cut slopes",
+    "wind_loaded_slopes": "wind loaded slopes",
+    "base_of_rock_walls": "base of rock walls",
+    "behind_abrupt_changes_in_the_terrain": "behind abrupt changes in the terrain",
+    "transitions_into_gullies_and_bowls": "transitions into gullies and bowls",
+    "areas_where_the_snow_cover_is_rather_shallow": "areas where the snow cover is rather shallow",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "transitions from a shallow to a deep snowpack",
+    "highly_frequented_off_piste_terrain": "highly frequented off piste terrain",
+    "little_used_backcountry_terrain": "little used backcountry terrain",
+    "places_that_are_protected_from_the_wind": "places that are protected from the wind",
+    "regions_exposed_to_the_foehn_wind": "regions exposed to the foehn wind",
+    "regions_with_a_lot_of_snow": "regions with a lot of snow",
+    "regions_exposed_to_precipitation": "regions exposed to precipitation",
+    "regions_exposed_to_heavier_precipitation": "regions exposed to heavier precipitation"
   },
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
@@ -1265,6 +1303,14 @@
         "windGust": "Wind gust"
       }
     },
+    "webcams": {
+      "tooltips": {
+        "minusTenMinutes": "10min back",
+        "minusOneHour": "1h back",
+        "plusTenMinutes": "10min forward",
+        "plusOneHour": "1h forward"
+      }
+    },
     "button": {
       "add": "Añadir observación",
       "save": "Guardar observación",
@@ -1276,6 +1322,7 @@
     "comment": "Comentario",
     "content": "Contenido",
     "dangerRating": "Clasificación del peligro",
+    "dangerSource": "Danger source",
     "elevation": "Altitud",
     "elevationRange": "Elevation range",
     "elevationLowerBound": "Elevation lower bound",
