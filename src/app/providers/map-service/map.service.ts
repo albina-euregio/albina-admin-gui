@@ -84,14 +84,14 @@ export class MapService {
 
   protected async initOverlayMaps({
     regions,
-    activeRegion,
+    internalRegions,
   }: {
     regions?: FeatureCollection<MultiPolygon, RegionProperties>;
-    activeRegion?: FeatureCollection<MultiPolygon, RegionProperties>;
+    internalRegions?: FeatureCollection<MultiPolygon, RegionProperties>;
   } = {}): Promise<typeof this.overlayMaps> {
-    if (!regions || !activeRegion) {
+    if (!regions || !internalRegions) {
       regions ??= await this.regionsService.getRegionsAsync();
-      activeRegion ??= {
+      internalRegions ??= {
         type: "FeatureCollection",
         features: regions.features.filter((f) => this.authenticationService.isInternalRegion(f.properties.id)),
       };
@@ -121,7 +121,7 @@ export class MapService {
       this.handleClick(overlayMaps.editSelection, feature, layer);
       this.highlightAndShowName(layer);
     };
-    overlayMaps.editSelection.addData(activeRegion);
+    overlayMaps.editSelection.addData(internalRegions);
     return overlayMaps;
   }
 

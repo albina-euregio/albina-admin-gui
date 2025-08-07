@@ -210,7 +210,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
     await this.mapService.initMaps(this.mapDiv().nativeElement, {
       regions: regions,
-      activeRegion: regions,
+      internalRegions: regions,
     });
 
     this.mapLayer.addTo(this.mapService.map);
