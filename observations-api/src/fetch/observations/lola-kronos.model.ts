@@ -42,7 +42,7 @@ export interface LaDokObservation {
   comment: string;
   commissionId: number;
   commissionMeasureComment: string;
-  commissionMeasures: any[];
+  commissionMeasures: unknown[];
   commissionName: string;
   createdAt: Date;
   dangerSigns: string[];
@@ -107,7 +107,7 @@ export interface AvalancheActivity {
 export interface LolaAvalancheProblem {
   isActive: boolean;
   avalancheProblem: string;
-  avalancheTypes: any[];
+  avalancheTypes: unknown[];
   exposition: string[];
   increaseDuringDay: boolean;
   sizeOfTheProblem: number;
@@ -196,7 +196,7 @@ export interface LaDokCommissionObservationWeather {
   clouds: string;
   windSpeed: string;
   windDirection: string[];
-  windSigns: any[];
+  windSigns: unknown[];
   weatherTrend24h: string;
   snowHeight: number | null;
   freshSnow24H: number | null;
@@ -246,10 +246,10 @@ export interface LolaAction {
   _id: string;
   uuId: string;
   __v: number;
-  actionTypes: any[];
-  actions: any[];
+  actionTypes: unknown[];
+  actions: unknown[];
   agreedBy: Edited[];
-  agreedByFurtherPersons: any[];
+  agreedByFurtherPersons: unknown[];
   comment: string;
   createdAt: Date;
   customActions: CustomAction[];
@@ -260,7 +260,7 @@ export interface LolaAction {
   entities: Entity[];
   firstName: string;
   forwardDecisionTo: string[];
-  forwardDecisionToAdditional: any[];
+  forwardDecisionToAdditional: unknown[];
   images: Image[];
   lastName: string;
   lolaApplication: string;
@@ -273,7 +273,7 @@ export interface LolaAction {
   reason: string;
   regionId: string;
   regionName: string;
-  regions: any[];
+  regions: unknown[];
   scope: string;
   serverStatus: string;
   storedInApp: Date;
@@ -312,7 +312,7 @@ export interface LolaAvalancheEvent {
   altitude: number | null;
   aspects: Aspect[];
   avalancheEventTime: string;
-  avalancheProblem: any[];
+  avalancheProblem: unknown[];
   avalancheRelease: string;
   avalancheSize: string;
   avalancheType: string;
@@ -357,7 +357,7 @@ export interface LolaAvalancheEvent {
   readByUser: string[];
   regionId: string;
   regionName: string;
-  regions: any[];
+  regions: unknown[];
   rhbRegionId: string;
   rhbRegionName: string;
   serverStatus: string;
@@ -416,7 +416,7 @@ export interface LolaCommissionEvaluation {
   infraLocationType: string;
   infraProtectionAvailable: boolean;
   infraProtectionComment: string;
-  infraProtectionMeasures: any[];
+  infraProtectionMeasures: unknown[];
   infraRouteSectionFrom: string;
   infraRouteSectionId: string;
   infraRouteSectionTo: string;
@@ -425,7 +425,7 @@ export interface LolaCommissionEvaluation {
   loadCapacity: string;
   lolaApplication: string;
   looseSnowAvalanche: Avalanche;
-  measures: any[];
+  measures: unknown[];
   measuresComment: string;
   observationScope: string;
   observationScopeAspects: Aspect[];
@@ -446,7 +446,7 @@ export interface LolaCommissionEvaluation {
   radiationForecast: string;
   regionId: string;
   regionName: string;
-  regions: any[];
+  regions: unknown[];
   rhbRegionId: string;
   rhbRegionName: string;
   serverStatus: string;
@@ -540,12 +540,12 @@ export interface LolaCommissionEvaluationWeather {
   temperatureRange: string;
   temperatureTendency24h: string;
   precipitationType: string;
-  precipitationTypes: any[];
+  precipitationTypes: unknown[];
   precipitationIntense: string;
   clouds: string;
   windDirection: string[];
   windSignsAge: string;
-  windSigns: any[];
+  windSigns: unknown[];
   windDirectionChanging: boolean;
   freshWindDriftedSnow: boolean;
   windSpeed: string;
@@ -557,7 +557,7 @@ export interface LolaCommissionEvaluationWeather {
   freshSnow72H: string;
   freshSnowForecast24H: string;
   windSpeedForecast24H: string;
-  windDirectionForecast24H: any[];
+  windDirectionForecast24H: unknown[];
   temperatureCurve24h: string;
   snowfallLine: number | null;
   windDriftedSnowAmout24h: string;
@@ -677,7 +677,7 @@ export interface LolaEvaluation {
   infraLocationType: string;
   infraProtectionAvailable: boolean;
   infraProtectionComment: string;
-  infraProtectionMeasures: any[];
+  infraProtectionMeasures: unknown[];
   infraRouteSectionFrom: string;
   infraRouteSectionId: string;
   infraRouteSectionTo: string;
@@ -686,7 +686,7 @@ export interface LolaEvaluation {
   loadCapacity: string;
   lolaApplication: string;
   looseSnowAvalanche: Avalanche;
-  measures: any[];
+  measures: unknown[];
   measuresComment: string;
   observationScope: string;
   observationScopeAspects: Aspect[];
@@ -707,7 +707,7 @@ export interface LolaEvaluation {
   radiationForecast: string;
   regionId: string;
   regionName: string;
-  regions: any[];
+  regions: unknown[];
   rhbRegionId: string;
   rhbRegionName: string;
   serverStatus: string;
@@ -826,9 +826,9 @@ export interface LolaRissk {
   missionCompletedUserId: string;
   missions: string[];
   modeOfTransport: string[];
-  modeOfTransportOther: any[];
+  modeOfTransportOther: unknown[];
   moreDangerExisting: boolean;
-  moreDangers: any[];
+  moreDangers: unknown[];
   moreDangersProblemComment: string;
   moreDangersRiskValue: number;
   name: string;
@@ -841,7 +841,7 @@ export interface LolaRissk {
   protectionGoal: string;
   regionId: string;
   regionName: string;
-  regions: any[];
+  regions: unknown[];
   restrictionsCheck: boolean;
   returnTime: Date;
   serverStatus: string;
@@ -885,7 +885,7 @@ export interface AvalancheReport {
 }
 
 export interface LolaSimpleObservation {
-  readByUser: any[];
+  readByUser: unknown[];
   _id: string;
   uuId: string;
   __v: number;
@@ -911,12 +911,12 @@ export interface LolaSimpleObservation {
   processStatus: string;
   regionId: string;
   regionName: string;
-  regions: any[];
+  regions: unknown[];
   rhbRegionId: string;
   rhbRegionName: string;
   serverStatus: string;
   snowLine: number | null;
-  snowStabilityTests: any[];
+  snowStabilityTests: unknown[];
   snowSurface: string[];
   storedInDb: Date;
   time: Date;
@@ -969,7 +969,7 @@ export interface LolaSnowProfile {
   readByUser: string[];
   regionId: string;
   regionName: string;
-  regions: any[];
+  regions: unknown[];
   rhbRegionId: string;
   rhbRegionName: string;
   safetyAvalancheId: string;

@@ -6,12 +6,16 @@ import { GetFilenamesService } from "./filenames.service";
 import { GetDustParamService } from "./dust.service";
 import { ParamService } from "./param.service";
 
+export interface QfaFilename {
+  filename: string;
+}
+
 export interface QfaResult {
   data: types.data;
   date: string;
   dates: string[];
   parameters: string[];
-  file: any;
+  file: QfaFilename;
 }
 
 @Injectable()
@@ -62,7 +66,7 @@ export class QfaService {
     return this.files;
   }
 
-  async getRun(file, startDay: number, first: boolean): Promise<QfaResult> {
+  async getRun(file: QfaFilename, startDay: number, first: boolean): Promise<QfaResult> {
     const days = `0${startDay}0${startDay + 2}`;
     const filename = file.filename.replace(/\d{4}\.txt/g, `${days}.txt`);
     const run = new QfaFile(this.http);

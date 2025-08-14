@@ -3,9 +3,10 @@ import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BlogService, PublicationChannel } from "../providers/blog-service/blog.service";
-import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { NgFor } from "@angular/common";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { Alert } from "app/models/Alert";
 
 interface PublicationInformation {
   publicationChannel: PublicationChannel;
@@ -28,7 +29,7 @@ export class BlogComponent {
   constantsService = inject(ConstantsService);
   translateService = inject(TranslateService);
 
-  public alerts: any[] = [];
+  public alerts: Alert[] = [];
 
   sendAll: PublicationInformation = {
     publicationChannel: PublicationChannel.All,
@@ -96,7 +97,7 @@ export class BlogComponent {
       });
   }
 
-  onClosed(dismissedAlert: AlertComponent): void {
+  onClosed(dismissedAlert: Alert): void {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 }

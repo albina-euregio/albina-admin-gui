@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, inject } from "@angular/core";
+import { Component, OnDestroy, OnInit, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BulletinUpdateModel } from "../models/bulletin-update.model";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -67,7 +67,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
     this.updates = this.wsUpdateService
       .connect(this.constantsService.getServerWsUrl() + "../update/" + this.authenticationService.getUsername())
       .pipe(
-        map((response: any): BulletinUpdateModel => {
+        map((response): BulletinUpdateModel => {
           const data = JSON.parse(response.data);
           const bulletinUpdate = BulletinUpdateModel.createFromJson(data);
           console.debug(

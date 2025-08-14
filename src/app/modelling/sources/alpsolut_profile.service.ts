@@ -116,7 +116,7 @@ interface DataSet {
   forecastModel?: string;
   forecastStartsAfter?: string;
   timestamps: string[];
-  values: any;
+  values: unknown;
 }
 
 enum Aspect {
