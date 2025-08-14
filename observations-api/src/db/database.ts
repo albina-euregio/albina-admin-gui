@@ -1,4 +1,3 @@
-import * as mysql from "mysql2/promise";
 import { augmentRegion, initAugmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
 import {
   findExistingObservation,
@@ -14,6 +13,7 @@ import {
   type SnowpackStability,
 } from "../generic-observation";
 import { augmentElevation } from "./elevation";
+import * as mysql from "mysql2/promise";
 
 interface GenericObservationTable {
   REGION_ID: string;

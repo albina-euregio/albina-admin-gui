@@ -1,7 +1,7 @@
 import type { Aspect } from "../enums/enums";
-import { Icon } from "leaflet";
 import { escape } from "es-toolkit";
 import { memoize } from "es-toolkit/compat";
+import { Icon } from "leaflet";
 
 export const makeIcon = memoize(icon0, (...args) => args.join("-"));
 

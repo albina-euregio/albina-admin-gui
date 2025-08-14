@@ -1,7 +1,7 @@
-import { Routes } from "@angular/router";
 import { AuthGuard } from "./guards/auth.guard";
 import { FullLayoutComponent } from "./layouts/full-layout.component";
 import { SimpleLayoutComponent } from "./layouts/simple-layout.component";
+import { Routes } from "@angular/router";
 
 export default [
   {

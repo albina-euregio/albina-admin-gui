@@ -1,5 +1,4 @@
 import * as types from "./qfa-types";
-
 import { HttpClient } from "@angular/common/http";
 
 export class QfaFile implements types.QFA {

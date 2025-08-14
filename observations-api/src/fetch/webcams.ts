@@ -1,11 +1,11 @@
-import { readFile } from "node:fs/promises";
 import { initAugmentRegion, getRegionForLatLng } from "../../../src/app/providers/regions-service/augmentRegion";
-import { fetchJSON } from "../util/fetchJSON";
 import type { GenericObservation } from "../generic-observation";
+import { fetchJSON } from "../util/fetchJSON";
 import { convertFotoWebcamEU, type FotoWebcamEUResponse } from "./webcams/foto-webcam.model";
 import { convertPanoCloudWebcam, webcams as panoCloudWebcams } from "./webcams/panocloud-webcam.modes";
 import { convertPanomax, type PanomaxCamResponse, type PanomaxThumbnailResponse } from "./webcams/panomax.model";
 import { convertRasWebcam, webcams as rasWebcams } from "./webcams/ras-webcam.model";
+import { readFile } from "node:fs/promises";
 
 export async function fetchWebcamsPromise(): Promise<GenericObservation[]> {
   const webcams = [] as GenericObservation[];

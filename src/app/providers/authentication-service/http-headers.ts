@@ -1,7 +1,7 @@
+import { ConstantsService } from "../constants-service/constants.service";
+import { AuthenticationService } from "./authentication.service";
 import { HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { AuthenticationService } from "./authentication.service";
-import { ConstantsService } from "../constants-service/constants.service";
 
 /**
  * Add Authorization header to requests towards server URL if the user is logged in.

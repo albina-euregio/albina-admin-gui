@@ -1,5 +1,5 @@
-import { readFile } from "fs/promises";
 import "./DecompressionStream-polyfill";
+import { readFile } from "fs/promises";
 
 export async function fetchText(url: RequestInfo, options?: RequestInit): Promise<string> {
   if (typeof url === "string" && url.startsWith("file://")) {

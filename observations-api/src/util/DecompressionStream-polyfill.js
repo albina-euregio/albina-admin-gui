@@ -1,6 +1,5 @@
 // @bun
 // https://github.com/oven-sh/bun/issues/1723#issuecomment-1774174194
-
 /*! MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 import zlib from "node:zlib";
 

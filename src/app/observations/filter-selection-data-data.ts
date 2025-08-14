@@ -1,5 +1,5 @@
-import { FilterSelectionData } from "./filter-selection-data";
 import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { FilterSelectionData } from "./filter-selection-data";
 import { GenericObservation, ImportantObservation, ObservationType } from "./models/generic-observation.model";
 
 export function observationFilters(t: (message: string) => string): FilterSelectionData<GenericObservation>[] {

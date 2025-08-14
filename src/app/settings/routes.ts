@@ -1,6 +1,6 @@
-import { Routes } from "@angular/router";
 import { AuthGuard } from "../guards/auth.guard";
 import { SettingsComponent } from "./settings.component";
+import { Routes } from "@angular/router";
 
 export default [
   {

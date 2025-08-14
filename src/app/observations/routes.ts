@@ -1,8 +1,6 @@
-import { Routes } from "@angular/router";
-
-import { ObservationsComponent } from "./observations.component";
-
 import { AuthGuard } from "../guards/auth.guard";
+import { ObservationsComponent } from "./observations.component";
+import { Routes } from "@angular/router";
 
 export default [
   {

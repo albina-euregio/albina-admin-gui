@@ -1,5 +1,5 @@
-import { RegionStatus, DangerRating } from "app/enums/enums";
 import { PolygonObject } from "./polygon-object.model";
+import { RegionStatus, DangerRating } from "app/enums/enums";
 
 export class DangerSourceModel implements PolygonObject {
   id: string;

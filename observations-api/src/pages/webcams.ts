@@ -1,6 +1,6 @@
-import type { APIRoute } from "astro";
 import type { GenericObservation } from "../../../src/app/observations/models/generic-observation.model";
 import { fetchWebcamsPromise } from "../fetch/webcams";
+import type { APIRoute } from "astro";
 
 let lastFetch = 0;
 let webcams: Promise<GenericObservation[]>;

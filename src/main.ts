@@ -1,25 +1,3 @@
-import * as sentry from "@sentry/angular";
-
-import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
-import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
-import localeCa from "@angular/common/locales/ca";
-import localeDe from "@angular/common/locales/de";
-import { default as localeEn, default as localeOc } from "@angular/common/locales/en";
-import localeEs from "@angular/common/locales/es";
-import localeFr from "@angular/common/locales/fr";
-import localeIt from "@angular/common/locales/it";
-import { ErrorHandler, importProvidersFrom } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideRouter } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { CollapseModule } from "ngx-bootstrap/collapse";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { ModalModule } from "ngx-bootstrap/modal";
-import { TabsModule } from "ngx-bootstrap/tabs";
-import { provideEchartsCore } from "ngx-echarts";
 import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
@@ -53,8 +31,21 @@ import { WsRegionService } from "./app/providers/ws-region-service/ws-region.ser
 import { WsUpdateService } from "./app/providers/ws-update-service/ws-update.service";
 import routes from "./app/routes";
 import { environment } from "./environments/environment";
-import * as echarts from "echarts/core";
-import { CanvasRenderer } from "echarts/renderers";
+import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
+import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
+import localeCa from "@angular/common/locales/ca";
+import localeDe from "@angular/common/locales/de";
+import { default as localeEn, default as localeOc } from "@angular/common/locales/en";
+import localeEs from "@angular/common/locales/es";
+import localeFr from "@angular/common/locales/fr";
+import localeIt from "@angular/common/locales/it";
+import { ErrorHandler, importProvidersFrom } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideRouter } from "@angular/router";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import * as sentry from "@sentry/angular";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
@@ -66,6 +57,14 @@ import {
   TooltipComponent,
   TransformComponent,
 } from "echarts/components";
+import * as echarts from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { AlertModule } from "ngx-bootstrap/alert";
+import { CollapseModule } from "ngx-bootstrap/collapse";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ModalModule } from "ngx-bootstrap/modal";
+import { TabsModule } from "ngx-bootstrap/tabs";
+import { provideEchartsCore } from "ngx-echarts";
 
 echarts.use([
   BarChart,

@@ -1,8 +1,8 @@
-import * as z from "zod/v4";
+import { AwsomeConfigSchema } from "./src/app/modelling/awsome.config";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import * as prettier from "prettier";
-import { AwsomeConfigSchema } from "./src/app/modelling/awsome.config";
+import * as z from "zod/v4";
 
 main();
 

@@ -1,6 +1,6 @@
+import { loadRegions } from "./regions-loader.mjs";
 import type MicroRegions from "@eaws/micro-regions/AT-07_micro-regions.geojson.json";
 import whichPolygon from "which-polygon";
-import { loadRegions } from "./regions-loader.mjs";
 
 type Properties = (typeof MicroRegions)["features"][number]["properties"];
 

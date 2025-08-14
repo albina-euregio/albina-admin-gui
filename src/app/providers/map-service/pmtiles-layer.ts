@@ -1,8 +1,7 @@
 // x@ts-nocheck
-
+import Point from "@mapbox/point-geometry";
 import { Coords, DomUtil, DoneCallback, GridLayer, GridLayerOptions, PathOptions } from "leaflet";
 import type { PMTiles } from "pmtiles";
-import Point from "@mapbox/point-geometry";
 import {
   type Feature,
   Labelers,

@@ -1,5 +1,5 @@
-import { fetchJSON } from "../../util/fetchJSON";
 import { type GenericObservation, findExistingObservation } from "../../generic-observation";
+import { fetchJSON } from "../../util/fetchJSON";
 import { type Incident, type IncidentDetails, toLawisIncident, toLawisIncidentDetails } from "./lawis.model";
 
 const API = "https://lawis.at/lawis_api/public/incident";

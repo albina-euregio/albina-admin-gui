@@ -1,8 +1,8 @@
-import * as z from "zod/v4";
-import type { AvalancheProblemModel } from "./avalanche-problem.model";
-import type { BulletinModelAsJSON } from "./bulletin.model";
-import type { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
 import * as Enums from "../enums/enums";
+import type { AvalancheProblemModel } from "./avalanche-problem.model";
+import type { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
+import type { BulletinModelAsJSON } from "./bulletin.model";
+import * as z from "zod/v4";
 
 export const CustomDataSchema = z.optional(z.any());
 export type CustomData = z.infer<typeof CustomDataSchema>;

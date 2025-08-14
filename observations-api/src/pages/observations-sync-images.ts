@@ -1,8 +1,3 @@
-import type { APIRoute } from "astro";
-import child_process from "node:child_process";
-import fs from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
 import { ObservationDatabaseConnection } from "../db/database.ts";
 import type {
   LaDokObservation,
@@ -16,6 +11,11 @@ import type {
   LolaSnowStabilityTest,
 } from "../fetch/observations/lola-kronos.model.ts";
 import { type GenericObservation, ObservationSource } from "../generic-observation.ts";
+import type { APIRoute } from "astro";
+import child_process from "node:child_process";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 
 export const POST: APIRoute = async ({ request }) => {
   if (

@@ -1,6 +1,7 @@
-import { castArray, get } from "es-toolkit/compat";
-import type { GenericObservation } from "./models/generic-observation.model";
 import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
+import type { GenericObservation } from "./models/generic-observation.model";
+import { castArray, get } from "es-toolkit/compat";
+
 export type { FilterSelectionSpec, FilterSelectionValue };
 
 export type ChartType = "bar" | "rose";

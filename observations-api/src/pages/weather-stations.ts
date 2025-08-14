@@ -1,6 +1,6 @@
-import type { APIRoute } from "astro";
 import { getAwsWeatherStations } from "../fetch/weather-stations";
 import { newDate } from "../util/newDate.ts";
+import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ url }) => {
   const startDate =

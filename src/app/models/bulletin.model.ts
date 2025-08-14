@@ -1,8 +1,8 @@
-import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
-import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
-import { AuthorModel, AuthorSchema } from "./author.model";
 import * as Enums from "../enums/enums";
 import { DangerRating, RegionStatus } from "../enums/enums";
+import { AuthorModel, AuthorSchema } from "./author.model";
+import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
+import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
 import { formatDate } from "@angular/common";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
