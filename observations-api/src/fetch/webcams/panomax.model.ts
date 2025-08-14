@@ -10,7 +10,7 @@ export interface PanomaxCam {
   iconUrl: string;
   mapMarkerGravity: string;
   nightVision: boolean;
-  types?: any[];
+  types?: unknown[];
   elevation?: number;
   tourCam?: boolean;
   country?: string;
@@ -38,11 +38,11 @@ export interface PanomaxThumbnailResponse {
   zeroDirection: number;
   viewAngle: number;
   initialDirection: number;
-  clipping: any;
+  clipping: unknown;
   logo: string;
   images: Record<DateString, Record<"default" | "h572" | "optimized" | "reduced" | "small" | "thumb", string>>;
   instance: PanomaxInstance;
-  culture: any;
+  culture: unknown;
   country: string;
   position: {
     latitude: number;
@@ -59,11 +59,11 @@ export interface PanomaxCamResponse {
   maxLatitude: number;
   minLongitude: number;
   maxLongitude: number;
-  otherInstances: any[];
-  instanceLogos: any[];
-  hotSpots: any[];
-  categories: any[];
-  sources: any[];
+  otherInstances: unknown[];
+  instanceLogos: unknown[];
+  hotSpots: unknown[];
+  categories: unknown[];
+  sources: unknown[];
   clusteringZoomLevel: number;
   refreshInterval: number;
   instances: {

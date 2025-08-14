@@ -2,12 +2,13 @@ import { Component, input, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { NgFor, NgIf } from "@angular/common";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { FormsModule } from "@angular/forms";
 import { RegionConfiguration } from "../models/region-configuration.model";
 import { LANGUAGES } from "../models/text.model";
+import { Alert } from "app/models/Alert";
 
 @Component({
   templateUrl: "region-configuration.component.html",
@@ -25,7 +26,7 @@ export class RegionConfigurationComponent {
 
   public saveConfigurationLoading = false;
 
-  public alerts: any[] = [];
+  public alerts: Alert[] = [];
 
   toggleLanguage(language: string, checked: boolean) {
     if (checked) {
@@ -152,7 +153,7 @@ export class RegionConfigurationComponent {
     }
   }
 
-  onClosed(dismissedAlert: AlertComponent): void {
+  onClosed(dismissedAlert: Alert): void {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 }

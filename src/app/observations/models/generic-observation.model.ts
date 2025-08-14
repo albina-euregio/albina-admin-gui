@@ -80,7 +80,7 @@ export function toAspect(aspect: number | string | undefined): Aspect | undefine
   }
 }
 
-export function imageCountString(images: any[] | undefined) {
+export function imageCountString(images: unknown[] | undefined) {
   return images?.length ? ` 📷 ${images.length}` : "";
 }
 

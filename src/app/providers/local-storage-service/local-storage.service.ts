@@ -102,7 +102,7 @@ export class LocalStorageService {
   }
 
   setTrainingBulletins(date: [Date, Date], bulletins: BulletinModelAsJSON[]): void {
-    if (bulletins.some((b: any) => b instanceof BulletinModel)) {
+    if (bulletins.some((b) => b instanceof BulletinModel)) {
       throw new Error("Provide bulletins as JSON via BulletinModel.toJson!");
     }
     return this.set("trainingBulletins_" + date[0].toISOString(), bulletins);

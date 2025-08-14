@@ -220,7 +220,7 @@ export interface LawinenabgangProperties {
   NOTIZEN?: string;
   NEIGUNG?: number;
   EXPOSITION: number;
-  SHAPE?: any;
+  SHAPE?: unknown;
 }
 
 export function convertLwdKipLawinenabgang(

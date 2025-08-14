@@ -10,6 +10,7 @@ import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { FormsModule } from "@angular/forms";
 import { NgFor, NgIf } from "@angular/common";
+import { Alert } from "app/models/Alert";
 
 type Result =
   | "" // cancel
@@ -38,8 +39,8 @@ export class UpdateUserComponent implements AfterContentInit {
   public isAdmin: boolean;
 
   public user: UserModel;
-  public alerts: any[] = [];
-  public roles: any;
+  public alerts: Alert[] = [];
+  public roles: string[];
   public regions: string[];
 
   public activeImage: string;
@@ -48,8 +49,8 @@ export class UpdateUserComponent implements AfterContentInit {
   public activePassword: string;
   public activePassword2: string;
   public activeOrganization: string;
-  public activeRoles: any[] = [];
-  public activeRegions: any[] = [];
+  public activeRoles: string[] = [];
+  public activeRegions: string[] = [];
   public activeLanguageCode: string;
 
   public result: Result;

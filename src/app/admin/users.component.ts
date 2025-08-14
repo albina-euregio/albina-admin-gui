@@ -1,7 +1,7 @@
 import { AfterContentInit, Component, viewChild, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { UserService } from "../providers/user-service/user.service";
 import { TemplateRef } from "@angular/core";
@@ -11,6 +11,7 @@ import { ChangePasswordComponent } from "./change-password.component";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
 import { UserModel } from "../models/user.model";
 import { NgFor, NgIf } from "@angular/common";
+import { Alert } from "app/models/Alert";
 
 @Component({
   templateUrl: "users.component.html",
@@ -25,8 +26,8 @@ export class UsersComponent implements AfterContentInit {
   private modalService = inject(BsModalService);
   configurationService = inject(ConfigurationService);
 
-  public alerts: any[] = [];
-  public users: any;
+  public alerts: Alert[] = [];
+  public users: UserModel[];
 
   public deleteUserModalRef: BsModalRef;
   readonly deleteUserTemplate = viewChild<TemplateRef<any>>("deleteUserTemplate");
@@ -36,7 +37,7 @@ export class UsersComponent implements AfterContentInit {
     keyboard: true,
     class: "modal-sm",
   };
-  activeUser: any;
+  activeUser: UserModel;
 
   ngAfterContentInit() {
     this.updateUsers();
@@ -53,7 +54,7 @@ export class UsersComponent implements AfterContentInit {
     );
   }
 
-  onClosed(dismissedAlert: AlertComponent): void {
+  onClosed(dismissedAlert: Alert): void {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 

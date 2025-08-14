@@ -3,10 +3,11 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { BulletinsService, PublicationChannel } from "../providers/bulletins-service/bulletins.service";
-import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { NgFor, DatePipe } from "@angular/common";
+import { Alert } from "app/models/Alert";
 
 interface PublicationInformation {
   publicationChannel: PublicationChannel;
@@ -35,7 +36,7 @@ export class ModalPublicationStatusComponent {
 
   languages = ["all", "de", "it", "en"];
 
-  public alerts: any[] = [];
+  public alerts: Alert[] = [];
 
   emailPublication: PublicationInformation = {
     publicationChannel: PublicationChannel.Email,
@@ -104,7 +105,7 @@ export class ModalPublicationStatusComponent {
       });
   }
 
-  onClosed(dismissedAlert: AlertComponent): void {
+  onClosed(dismissedAlert: Alert): void {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 }

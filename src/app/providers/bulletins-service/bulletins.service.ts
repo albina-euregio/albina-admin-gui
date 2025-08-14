@@ -131,7 +131,7 @@ export class BulletinsService {
     this.bulletinLocks = this.wsBulletinService
       .connect(this.constantsService.getServerWsUrl() + "../bulletin/" + this.authenticationService.getUsername())
       .pipe(
-        map((response: any): BulletinLockModel => {
+        map((response): BulletinLockModel => {
           const data = JSON.parse(response.data);
           const bulletinLock = BulletinLockModel.createFromJson(data);
           if (bulletinLock.getLock()) {

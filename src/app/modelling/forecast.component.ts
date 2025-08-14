@@ -11,7 +11,7 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { ParamService, QfaResult, QfaService } from "./qfa";
+import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
 import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
@@ -323,7 +323,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     this.applyFilter();
   }
 
-  async setQfa(file, startDay = 0) {
+  async setQfa(file: QfaFilename | string, startDay = 0) {
     this.qfaStartDay = startDay;
     const fileMap = typeof file === "string" ? { filename: file } : file;
     const city = fileMap.filename.split("_")[3];

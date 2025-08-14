@@ -368,7 +368,7 @@ export class ObservationChartComponent<T> implements OnInit {
     this.pressTimer = null;
   }
 
-  onMouseDown(event: any) {
+  onMouseDown(event: ECElementEvent) {
     this.pressTimer = window.setTimeout(() => {
       this.resetTimeout();
       this.filterSelection().toggleFilterValue("highlighted", event.data[0]);

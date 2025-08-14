@@ -3,13 +3,14 @@ import { TranslateModule } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
-import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { UpdateUserComponent } from "app/admin/update-user.component";
 import { ChangePasswordComponent } from "app/admin/change-password.component";
 import { UserModel, UserSchema } from "app/models/user.model";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { NgFor } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { Alert } from "../models/Alert";
 
 @Component({
   templateUrl: "settings.component.html",
@@ -26,7 +27,7 @@ export class SettingsComponent {
   public newPassword1: string;
   public newPassword2: string;
 
-  public alerts: any[] = [];
+  public alerts: Alert[] = [];
 
   showUpdateDialog() {
     const author = this.authenticationService.getCurrentAuthor();
@@ -87,7 +88,7 @@ export class SettingsComponent {
     this.showChangePasswordDialog();
   }
 
-  onClosed(dismissedAlert: AlertComponent): void {
+  onClosed(dismissedAlert: Alert): void {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 

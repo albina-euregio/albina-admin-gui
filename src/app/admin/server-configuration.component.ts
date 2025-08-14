@@ -1,10 +1,11 @@
 import { Component, inject, input } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { NgFor, NgIf } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ServerConfiguration } from "../models/server-configuration.model";
+import { Alert } from "app/models/Alert";
 
 @Component({
   templateUrl: "server-configuration.component.html",
@@ -21,7 +22,7 @@ export class ServerConfigurationComponent {
 
   public saveConfigurationLoading = false;
 
-  public alerts: any[] = [];
+  public alerts: Alert[] = [];
 
   public save() {
     this.saveConfigurationLoading = true;
@@ -75,7 +76,7 @@ export class ServerConfigurationComponent {
     }
   }
 
-  onClosed(dismissedAlert: AlertComponent): void {
+  onClosed(dismissedAlert: Alert): void {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 }

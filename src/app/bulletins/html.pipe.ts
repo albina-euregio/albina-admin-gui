@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from "@angular/core";
   standalone: true,
 })
 export class HtmlPipe implements PipeTransform {
-  transform(text: any): any {
+  transform(text: string): string {
     if (text) {
       return text.replace(/<br\/>/g, "\n");
     } else {

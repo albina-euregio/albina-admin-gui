@@ -228,12 +228,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     observation: GenericObservation;
     saving: boolean;
     modalRef: BsModalRef;
-    messages: any[];
+    messages: string[];
   } = { observation: undefined, saving: false, modalRef: undefined, messages: [] };
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   readonly observationTableComponent = viewChild<ObservationTableComponent>("observationTable");
-  readonly observationPopupTemplate = viewChild<TemplateRef<any>>("observationPopupTemplate");
-  readonly observationEditorTemplate = viewChild<TemplateRef<any>>("observationEditorTemplate");
+  readonly observationPopupTemplate = viewChild<TemplateRef<unknown>>("observationPopupTemplate");
+  readonly observationEditorTemplate = viewChild<TemplateRef<unknown>>("observationEditorTemplate");
 
   constructor() {
     this.filter.filterSelectionData = observationFilters((message) => this.translateService.instant(message));

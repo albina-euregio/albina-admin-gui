@@ -42,7 +42,7 @@ export interface ProfileDetails {
   };
   comments: string;
   location: Location;
-  weather: any;
+  weather: unknown;
   profile: ProfilePart[];
   temperatures: Temperature[];
   stability_tests: StabilityTest[];
@@ -154,14 +154,14 @@ export interface IncidentDetails {
 }
 
 export interface Involved {
-  dead: any;
-  injured: any;
-  uninjured: any;
-  sweeped: any;
-  buried_partial: any;
-  buried_total: any;
-  equipment: any;
-  ascent_descent: any;
+  dead: unknown;
+  injured: unknown;
+  uninjured: unknown;
+  sweeped: unknown;
+  buried_partial: unknown;
+  buried_total: unknown;
+  equipment: unknown;
+  ascent_descent: unknown;
 }
 
 export interface Avalanche {

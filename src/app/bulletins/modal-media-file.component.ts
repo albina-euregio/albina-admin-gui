@@ -3,12 +3,13 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { AlertComponent, AlertModule } from "ngx-bootstrap/alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { MediaFileService } from "app/providers/media-file-service/media-file.service";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { NgFor, NgIf, DatePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { Alert } from "app/models/Alert";
 
 @Component({
   selector: "app-modal-media-file",
@@ -30,7 +31,7 @@ export class ModalMediaFileComponent {
   text;
   important;
 
-  public alerts: any[] = [];
+  public alerts: Alert[] = [];
 
   mediaFileModalConfirm(): void {
     this.uploadFile();
@@ -76,7 +77,7 @@ export class ModalMediaFileComponent {
     );
   }
 
-  onClosed(dismissedAlert: AlertComponent): void {
+  onClosed(dismissedAlert: Alert): void {
     this.alerts = this.alerts.filter((alert) => alert !== dismissedAlert);
   }
 }
