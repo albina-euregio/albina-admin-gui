@@ -21,7 +21,7 @@ export class AuthenticationService {
   private sanitizer = inject(DomSanitizer);
 
   private authentication: AuthenticationResponse;
-  private internalRegions: RegionConfiguration[];
+  private internalRegions: RegionConfiguration[] = [];
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
