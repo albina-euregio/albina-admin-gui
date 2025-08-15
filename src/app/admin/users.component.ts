@@ -29,7 +29,7 @@ export class UsersComponent implements AfterContentInit {
   public users: UserModel[];
 
   public deleteUserModalRef: BsModalRef;
-  readonly deleteUserTemplate = viewChild<TemplateRef<any>>("deleteUserTemplate");
+  readonly deleteUserTemplate = viewChild<TemplateRef<unknown>>("deleteUserTemplate");
 
   public config = {
     animated: false,
@@ -122,7 +122,7 @@ export class UsersComponent implements AfterContentInit {
     this.openDeleteUserModal(this.deleteUserTemplate());
   }
 
-  openDeleteUserModal(template: TemplateRef<any>) {
+  openDeleteUserModal(template: TemplateRef<unknown>) {
     this.deleteUserModalRef = this.modalService.show(template, this.config);
   }
 

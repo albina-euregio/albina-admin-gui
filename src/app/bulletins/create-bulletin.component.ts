@@ -131,71 +131,71 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   readonly scrollComparedBulletin = viewChild<ElementRef>("scrollComparedBulletin");
 
   public loadingErrorModalRef: BsModalRef;
-  readonly loadingErrorTemplate = viewChild<TemplateRef<any>>("loadingErrorTemplate");
+  readonly loadingErrorTemplate = viewChild<TemplateRef<unknown>>("loadingErrorTemplate");
 
   public loadingJsonFileErrorModalRef: BsModalRef;
-  readonly loadingJsonFileErrorTemplate = viewChild<TemplateRef<any>>("loadingJsonFileErrorTemplate");
+  readonly loadingJsonFileErrorTemplate = viewChild<TemplateRef<unknown>>("loadingJsonFileErrorTemplate");
 
   public loadModalRef: BsModalRef;
-  readonly loadTemplate = viewChild<TemplateRef<any>>("loadTemplate");
+  readonly loadTemplate = viewChild<TemplateRef<unknown>>("loadTemplate");
 
   public deleteAllWarningRegionsModalRef: BsModalRef;
-  readonly deleteAllWarningRegionsTemplate = viewChild<TemplateRef<any>>("deleteAllWarningRegionsTemplate");
+  readonly deleteAllWarningRegionsTemplate = viewChild<TemplateRef<unknown>>("deleteAllWarningRegionsTemplate");
 
   public deleteAggregatedRegionModalRef: BsModalRef;
-  readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<any>>("deleteAggregatedRegionTemplate");
+  readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<unknown>>("deleteAggregatedRegionTemplate");
 
   public noRegionModalRef: BsModalRef;
-  readonly noRegionTemplate = viewChild<TemplateRef<any>>("noRegionTemplate");
+  readonly noRegionTemplate = viewChild<TemplateRef<unknown>>("noRegionTemplate");
 
   public discardModalRef: BsModalRef;
-  readonly discardTemplate = viewChild<TemplateRef<any>>("discardTemplate");
+  readonly discardTemplate = viewChild<TemplateRef<unknown>>("discardTemplate");
 
   public saveErrorModalRef: BsModalRef;
-  readonly saveErrorTemplate = viewChild<TemplateRef<any>>("saveErrorTemplate");
+  readonly saveErrorTemplate = viewChild<TemplateRef<unknown>>("saveErrorTemplate");
 
   public changeErrorModalRef: BsModalRef;
-  readonly changeErrorTemplate = viewChild<TemplateRef<any>>("changeErrorTemplate");
+  readonly changeErrorTemplate = viewChild<TemplateRef<unknown>>("changeErrorTemplate");
 
   public avalancheProblemErrorModalRef: BsModalRef;
-  readonly avalancheProblemErrorTemplate = viewChild<TemplateRef<any>>("avalancheProblemErrorTemplate");
+  readonly avalancheProblemErrorTemplate = viewChild<TemplateRef<unknown>>("avalancheProblemErrorTemplate");
 
   public copyRegionModalRef: BsModalRef;
-  readonly copyRegionTemplate = viewChild<TemplateRef<any>>("copyRegionTemplate");
+  readonly copyRegionTemplate = viewChild<TemplateRef<unknown>>("copyRegionTemplate");
 
   public submitBulletinsModalRef: BsModalRef;
-  readonly submitBulletinsTemplate = viewChild<TemplateRef<any>>("submitBulletinsTemplate");
+  readonly submitBulletinsTemplate = viewChild<TemplateRef<unknown>>("submitBulletinsTemplate");
 
   public submitBulletinsDuplicateRegionModalRef: BsModalRef;
-  readonly submitBulletinsDuplicateRegionTemplate = viewChild<TemplateRef<any>>(
+  readonly submitBulletinsDuplicateRegionTemplate = viewChild<TemplateRef<unknown>>(
     "submitBulletinsDuplicateRegionTemplate",
   );
 
   public submitBulletinsErrorModalRef: BsModalRef;
-  readonly submitBulletinsErrorTemplate = viewChild<TemplateRef<any>>("submitBulletinsErrorTemplate");
+  readonly submitBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("submitBulletinsErrorTemplate");
 
   public publishBulletinsModalRef: BsModalRef;
-  readonly publishBulletinsTemplate = viewChild<TemplateRef<any>>("publishBulletinsTemplate");
+  readonly publishBulletinsTemplate = viewChild<TemplateRef<unknown>>("publishBulletinsTemplate");
 
   public publishBulletinsErrorModalRef: BsModalRef;
-  readonly publishBulletinsErrorTemplate = viewChild<TemplateRef<any>>("publishBulletinsErrorTemplate");
+  readonly publishBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("publishBulletinsErrorTemplate");
 
   public previewErrorModalRef: BsModalRef;
-  readonly previewErrorTemplate = viewChild<TemplateRef<any>>("previewErrorTemplate");
+  readonly previewErrorTemplate = viewChild<TemplateRef<unknown>>("previewErrorTemplate");
 
   public publicationStatusModalRef: BsModalRef;
-  readonly publicationStatusTemplate = viewChild<TemplateRef<any>>("publicationStatusTemplate");
+  readonly publicationStatusTemplate = viewChild<TemplateRef<unknown>>("publicationStatusTemplate");
 
   public mediaFileModalRef: BsModalRef;
-  readonly mediaFileTemplate = viewChild<TemplateRef<any>>("mediaFileTemplate");
+  readonly mediaFileTemplate = viewChild<TemplateRef<unknown>>("mediaFileTemplate");
 
   public publishAllModalRef: BsModalRef;
 
   public checkBulletinsModalRef: BsModalRef;
-  readonly checkBulletinsTemplate = viewChild<TemplateRef<any>>("checkBulletinsTemplate");
+  readonly checkBulletinsTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsTemplate");
 
   public checkBulletinsErrorModalRef: BsModalRef;
-  readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<any>>("checkBulletinsErrorTemplate");
+  readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsErrorTemplate");
 
   @ViewChild(BsDropdownDirective) dropdown: BsDropdownDirective;
 
@@ -1891,7 +1891,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.router.navigate(["/bulletins"]);
   }
 
-  openLoadingErrorModal(template: TemplateRef<any>) {
+  openLoadingErrorModal(template: TemplateRef<unknown>) {
     this.loadingErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1899,7 +1899,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadingErrorModalRef.hide();
   }
 
-  openLoadingJsonFileErrorModal(template: TemplateRef<any>) {
+  openLoadingJsonFileErrorModal(template: TemplateRef<unknown>) {
     this.loadingJsonFileErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1907,7 +1907,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadingJsonFileErrorModalRef.hide();
   }
 
-  openLoadModal(template: TemplateRef<any>) {
+  openLoadModal(template: TemplateRef<unknown>) {
     this.loadModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1969,7 +1969,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loadModalRef.hide();
   }
 
-  openDeleteAllWarningRegionsModal(template: TemplateRef<any>) {
+  openDeleteAllWarningRegionsModal(template: TemplateRef<unknown>) {
     this.deleteAllWarningRegionsModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1990,7 +1990,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.deleteAllWarningRegionsModalRef.hide();
   }
 
-  openDeleteAggregatedRegionModal(template: TemplateRef<any>) {
+  openDeleteAggregatedRegionModal(template: TemplateRef<unknown>) {
     this.deleteAggregatedRegionModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2004,7 +2004,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.deleteAggregatedRegionModalRef.hide();
   }
 
-  openNoRegionModal(template: TemplateRef<any>) {
+  openNoRegionModal(template: TemplateRef<unknown>) {
     this.noRegionModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2012,7 +2012,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.noRegionModalRef.hide();
   }
 
-  openDiscardModal(template: TemplateRef<any>) {
+  openDiscardModal(template: TemplateRef<unknown>) {
     this.discardModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2057,7 +2057,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return this.bulletinsService.getActiveDate()[0].getTime() === date[0].getTime();
   }
 
-  openSaveErrorModal(template: TemplateRef<any>) {
+  openSaveErrorModal(template: TemplateRef<unknown>) {
     this.saveErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2066,7 +2066,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
-  openChangeErrorModal(template: TemplateRef<any>) {
+  openChangeErrorModal(template: TemplateRef<unknown>) {
     this.changeErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2074,7 +2074,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.changeErrorModalRef.hide();
   }
 
-  openAvalancheProblemErrorModal(template: TemplateRef<any>) {
+  openAvalancheProblemErrorModal(template: TemplateRef<unknown>) {
     this.avalancheProblemErrorModalRef = this.modalService.show(template, this.config);
     this.modalService.onHide.subscribe(() => {
       this.publishing = false;
@@ -2185,7 +2185,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  openSubmitBulletinsDuplicateRegionModal(template: TemplateRef<any>) {
+  openSubmitBulletinsDuplicateRegionModal(template: TemplateRef<unknown>) {
     this.submitBulletinsDuplicateRegionModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2194,7 +2194,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.submitting = false;
   }
 
-  openSubmitBulletinsModal(template: TemplateRef<any>, message: string, date: [Date, Date]) {
+  openSubmitBulletinsModal(template: TemplateRef<unknown>, message: string, date: [Date, Date]) {
     const initialState = {
       text: message,
       date: date,
@@ -2207,7 +2207,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     });
   }
 
-  openCheckBulletinsErrorModal(template: TemplateRef<any>) {
+  openCheckBulletinsErrorModal(template: TemplateRef<unknown>) {
     this.checkBulletinsErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2242,7 +2242,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.submitting = false;
   }
 
-  openSubmitBulletinsErrorModal(template: TemplateRef<any>) {
+  openSubmitBulletinsErrorModal(template: TemplateRef<unknown>) {
     this.submitBulletinsErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2412,7 +2412,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishing = false;
   }
 
-  openPublishBulletinsErrorModal(template: TemplateRef<any>) {
+  openPublishBulletinsErrorModal(template: TemplateRef<unknown>) {
     this.publishBulletinsErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -2421,7 +2421,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishing = false;
   }
 
-  openPreviewErrorModal(template: TemplateRef<any>) {
+  openPreviewErrorModal(template: TemplateRef<unknown>) {
     this.previewErrorModalRef = this.modalService.show(template, this.config);
   }
 

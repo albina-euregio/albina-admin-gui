@@ -47,7 +47,7 @@ export class FullLayoutComponent {
   public tmpRegion: RegionConfiguration;
 
   public changeRegionModalRef: BsModalRef;
-  readonly changeRegionTemplate = viewChild<TemplateRef<any>>("changeRegionTemplate");
+  readonly changeRegionTemplate = viewChild<TemplateRef<unknown>>("changeRegionTemplate");
 
   public config = {
     animated: false,
@@ -88,7 +88,7 @@ export class FullLayoutComponent {
     }
   }
 
-  openChangeRegionModal(template: TemplateRef<any>) {
+  openChangeRegionModal(template: TemplateRef<unknown>) {
     this.changeRegionModalRef = this.modalService.show(template, this.config);
   }
 

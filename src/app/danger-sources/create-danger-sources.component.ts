@@ -90,37 +90,37 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   readonly scrollComparedVariant = viewChild<ElementRef>("scrollComparedVariant");
 
   public loadingErrorModalRef: BsModalRef;
-  readonly loadingErrorTemplate = viewChild<TemplateRef<any>>("loadingErrorTemplate");
+  readonly loadingErrorTemplate = viewChild<TemplateRef<unknown>>("loadingErrorTemplate");
 
   public loadModalRef: BsModalRef;
-  readonly loadTemplate = viewChild<TemplateRef<any>>("loadTemplate");
+  readonly loadTemplate = viewChild<TemplateRef<unknown>>("loadTemplate");
 
   public deleteAggregatedRegionModalRef: BsModalRef;
-  readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<any>>("deleteAggregatedRegionTemplate");
+  readonly deleteAggregatedRegionTemplate = viewChild<TemplateRef<unknown>>("deleteAggregatedRegionTemplate");
 
   public noRegionModalRef: BsModalRef;
-  readonly noRegionTemplate = viewChild<TemplateRef<any>>("noRegionTemplate");
+  readonly noRegionTemplate = viewChild<TemplateRef<unknown>>("noRegionTemplate");
 
   public discardModalRef: BsModalRef;
-  readonly discardTemplate = viewChild<TemplateRef<any>>("discardTemplate");
+  readonly discardTemplate = viewChild<TemplateRef<unknown>>("discardTemplate");
 
   public saveErrorModalRef: BsModalRef;
-  readonly saveErrorTemplate = viewChild<TemplateRef<any>>("saveErrorTemplate");
+  readonly saveErrorTemplate = viewChild<TemplateRef<unknown>>("saveErrorTemplate");
 
   public changeErrorModalRef: BsModalRef;
-  readonly changeErrorTemplate = viewChild<TemplateRef<any>>("changeErrorTemplate");
+  readonly changeErrorTemplate = viewChild<TemplateRef<unknown>>("changeErrorTemplate");
 
   public avalancheProblemErrorModalRef: BsModalRef;
-  readonly avalancheProblemErrorTemplate = viewChild<TemplateRef<any>>("avalancheProblemErrorTemplate");
+  readonly avalancheProblemErrorTemplate = viewChild<TemplateRef<unknown>>("avalancheProblemErrorTemplate");
 
   public checkBulletinsModalRef: BsModalRef;
-  readonly checkBulletinsTemplate = viewChild<TemplateRef<any>>("checkBulletinsTemplate");
+  readonly checkBulletinsTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsTemplate");
 
   public checkBulletinsErrorModalRef: BsModalRef;
-  readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<any>>("checkBulletinsErrorTemplate");
+  readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsErrorTemplate");
 
   public editDangerSourceModalRef: BsModalRef;
-  readonly editDangerSourceTemplate = viewChild<TemplateRef<any>>("editDangerSourceTemplate");
+  readonly editDangerSourceTemplate = viewChild<TemplateRef<unknown>>("editDangerSourceTemplate");
 
   public config = {
     animated: false,
@@ -969,7 +969,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return variant.dangerSourceVariantStatus === status;
   }
 
-  openLoadModal(template: TemplateRef<any>) {
+  openLoadModal(template: TemplateRef<unknown>) {
     this.loadModalRef = this.modalService.show(template, this.config);
   }
 
@@ -985,7 +985,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.loadModalRef.hide();
   }
 
-  openLoadingErrorModal(template: TemplateRef<any>) {
+  openLoadingErrorModal(template: TemplateRef<unknown>) {
     this.loadingErrorModalRef = this.modalService.show(template, this.config);
   }
 
@@ -993,7 +993,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.loadingErrorModalRef.hide();
   }
 
-  openDeleteAggregatedRegionModal(template: TemplateRef<any>) {
+  openDeleteAggregatedRegionModal(template: TemplateRef<unknown>) {
     this.deleteAggregatedRegionModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1014,7 +1014,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.deleteAggregatedRegionModalRef.hide();
   }
 
-  openNoRegionModal(template: TemplateRef<any>) {
+  openNoRegionModal(template: TemplateRef<unknown>) {
     this.noRegionModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1022,7 +1022,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.noRegionModalRef.hide();
   }
 
-  openDiscardModal(template: TemplateRef<any>) {
+  openDiscardModal(template: TemplateRef<unknown>) {
     this.discardModalRef = this.modalService.show(template, this.config);
   }
 
@@ -1039,7 +1039,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return this.dangerSourcesService.getActiveDate()[0].getTime() === date[0].getTime();
   }
 
-  openSaveErrorModal(template: TemplateRef<any>) {
+  openSaveErrorModal(template: TemplateRef<unknown>) {
     this.saveErrorModalRef = this.modalService.show(template, this.config);
   }
 

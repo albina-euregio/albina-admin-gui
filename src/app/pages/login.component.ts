@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   public loading = false;
 
   public errorModalRef: BsModalRef;
-  readonly errorTemplate = viewChild<TemplateRef<any>>("errorTemplate");
+  readonly errorTemplate = viewChild<TemplateRef<unknown>>("errorTemplate");
 
   public config = {
     animated: false,
@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  openErrorModal(template: TemplateRef<any>) {
+  openErrorModal(template: TemplateRef<unknown>) {
     this.errorModalRef = this.modalService.show(template, this.config);
     this.modalService.onHide.subscribe((reason: string) => {
       this.loading = false;

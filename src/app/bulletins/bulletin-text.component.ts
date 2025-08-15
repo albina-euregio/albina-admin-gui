@@ -102,7 +102,7 @@ export class BulletinTextComponent {
     this.updateBulletinOnServer.emit();
   }
 
-  openLoadExampleTextModal(template: TemplateRef<any>) {
+  openLoadExampleTextModal(template: TemplateRef<unknown>) {
     this.modalRef = this.modalService.show(template, {
       keyboard: true,
       class: "modal-md",

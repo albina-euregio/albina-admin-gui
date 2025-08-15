@@ -286,7 +286,7 @@ export class BulletinsService {
           ["region", region],
         ])
         .toString();
-    return this.http.get<any>(url);
+    return this.http.get<{ date: string; status: keyof typeof Enums.BulletinStatus }[]>(url);
   }
 
   getPublicationStatus(region: string, date: [Date, Date]) {
@@ -363,36 +363,6 @@ export class BulletinsService {
         return this.http.get<BulletinModelAsJSON[]>(url, { headers });
       }),
     );
-  }
-
-  loadCaamlBulletins(date: [Date, Date]): Observable<any> {
-    if (this.localStorageService.isTrainingEnabled) {
-      throw new TrainingModeError();
-    }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["lang", this.translateService.currentLang],
-        ])
-        .toString();
-    const headers = new HttpHeaders({ Accept: "application/xml" });
-    return this.http.get(url, { headers, responseType: "text" });
-  }
-
-  loadJsonBulletins(date: [Date, Date]) {
-    if (this.localStorageService.isTrainingEnabled) {
-      throw new TrainingModeError();
-    }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins?" +
-      this.constantsService
-        .createSearchParams([["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])]])
-        .toString();
-    return this.http.get(url);
   }
 
   saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {

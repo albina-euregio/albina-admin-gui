@@ -100,7 +100,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
 
   readonly observationsMap = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   readonly qfaSelect = viewChild<ElementRef<HTMLSelectElement>>("qfaSelect");
-  readonly observationPopupTemplate = viewChild<TemplateRef<any>>("observationPopupTemplate");
+  readonly observationPopupTemplate = viewChild<TemplateRef<unknown>>("observationPopupTemplate");
 
   files = {};
 

@@ -84,13 +84,13 @@ export class AvalancheBulletinComponent implements OnInit {
   public catalogOfPhrasesModalRef: BsModalRef;
   public pmUrl: SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl);
   public pmData: TextcatLegacyIn | undefined;
-  readonly catalogOfPhrasesTemplate = viewChild<TemplateRef<any>>("catalogOfPhrasesTemplate");
+  readonly catalogOfPhrasesTemplate = viewChild<TemplateRef<unknown>>("catalogOfPhrasesTemplate");
 
   public removeDaytimeDependencyModalRef: BsModalRef;
-  readonly removeDaytimeDependencyTemplate = viewChild<TemplateRef<any>>("removeDaytimeDependencyTemplate");
+  readonly removeDaytimeDependencyTemplate = viewChild<TemplateRef<unknown>>("removeDaytimeDependencyTemplate");
 
   public strategicMindsetModalRef: BsModalRef;
-  readonly strategicMindsetTemplate = viewChild<TemplateRef<any>>("strategicMindsetTemplate");
+  readonly strategicMindsetTemplate = viewChild<TemplateRef<unknown>>("strategicMindsetTemplate");
 
   public config = {
     animated: false,
@@ -366,7 +366,7 @@ export class AvalancheBulletinComponent implements OnInit {
     return regionNames.join(", ");
   }
 
-  openRemoveDaytimeDependencyModal(template: TemplateRef<any>) {
+  openRemoveDaytimeDependencyModal(template: TemplateRef<unknown>) {
     this.removeDaytimeDependencyModalRef = this.modalService.show(template, this.config);
   }
 
@@ -406,7 +406,7 @@ export class AvalancheBulletinComponent implements OnInit {
     this.removeDaytimeDependencyModalRef.hide();
   }
 
-  openStrategicMindsetInfoModal(template: TemplateRef<any>) {
+  openStrategicMindsetInfoModal(template: TemplateRef<unknown>) {
     this.strategicMindsetModalRef = this.modalService.show(template, {
       animated: false,
       keyboard: true,
