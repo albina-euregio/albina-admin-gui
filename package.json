@@ -106,6 +106,10 @@
     "bracketSpacing": true,
     "endOfLine": "lf",
     "htmlWhitespaceSensitivity": "css",
+    "importOrderParserPlugins": [
+      "decorators",
+      "typescript"
+    ],
     "plugins": [
       "@trivago/prettier-plugin-sort-imports"
     ],
