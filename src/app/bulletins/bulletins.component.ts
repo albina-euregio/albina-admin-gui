@@ -65,7 +65,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
 
   private wsUpdateConnect() {
     this.updates = this.wsUpdateService
-      .connect(this.constantsService.getServerWsUrl() + "../update/" + this.authenticationService.getUsername())
+      .connect(this.constantsService.getServerWsUrl(`../update/${this.authenticationService.getUsername()}`))
       .pipe(
         map((response): BulletinUpdateModel => {
           const data = JSON.parse(response.data);
