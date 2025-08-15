@@ -1,8 +1,8 @@
+import * as Enums from "../enums/enums";
 import { Component, inject } from "@angular/core";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
-import * as Enums from "../enums/enums";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 @Component({
   selector: "app-avalanche-problem-decision-tree",

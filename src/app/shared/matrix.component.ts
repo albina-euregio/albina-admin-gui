@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, inject, input, OnChanges, SimpleChange, viewChild } from "@angular/core";
+import * as Enums from "../enums/enums";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import * as Enums from "../enums/enums";
-import { BulletinModel } from "app/models/bulletin.model";
+import { AfterViewInit, Component, ElementRef, inject, input, OnChanges, SimpleChange, viewChild } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
+import { BulletinModel } from "app/models/bulletin.model";
 
 @Component({
   selector: "app-matrix",

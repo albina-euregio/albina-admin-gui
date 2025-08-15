@@ -1,6 +1,3 @@
-import { Component, inject } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
-import { TranslateService } from "@ngx-translate/core";
 import ca from "../assets/i18n/ca.json";
 import de from "../assets/i18n/de.json";
 import en from "../assets/i18n/en.json";
@@ -10,6 +7,9 @@ import it from "../assets/i18n/it.json";
 import oc from "../assets/i18n/oc.json";
 import { environment } from "../environments/environment";
 import { LocalStorageService } from "./providers/local-storage-service/local-storage.service";
+import { Component, inject } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   // eslint-disable-next-line

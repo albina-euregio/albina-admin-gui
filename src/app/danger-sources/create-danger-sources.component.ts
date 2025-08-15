@@ -1,20 +1,16 @@
-import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-
+import * as Enums from "../enums/enums";
 // models
 import { BulletinModel } from "../models/bulletin.model";
-
-// services
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { MapService } from "../providers/map-service/map.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { MapService } from "../providers/map-service/map.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-
-import * as Enums from "../enums/enums";
-import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
+import { AspectsComponent } from "../shared/aspects.component";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { DangerSourceVariantComponent } from "./danger-source-variant.component";
+import { DangerSourcesService } from "./danger-sources.service";
+import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
 import {
   DangerSourceVariantModel,
   DangerSourceVariantStatus,
@@ -22,16 +18,16 @@ import {
   Daytime,
   Probability,
 } from "./models/danger-source-variant.model";
-import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
 import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
-import { DangerSourceVariantComponent } from "./danger-source-variant.component";
+import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+// services
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Subscription } from "rxjs";
-import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
-import { AspectsComponent } from "../shared/aspects.component";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",

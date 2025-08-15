@@ -1,22 +1,22 @@
-import { Component, OnDestroy, OnInit, inject } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import * as Enums from "../enums/enums";
 import { BulletinUpdateModel } from "../models/bulletin-update.model";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { StressLevel } from "../models/stress-level.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
+import { UserService } from "../providers/user-service/user.service";
+import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { TeamStressLevelsComponent } from "./team-stress-levels.component";
+import { formatDate, NgIf, NgFor, DatePipe } from "@angular/common";
+import { Component, OnDestroy, OnInit, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { debounceTime, Subject } from "rxjs";
 import { groupBy, map, mergeMap } from "rxjs/operators";
-import { ActivatedRoute, Router } from "@angular/router";
-import * as Enums from "../enums/enums";
-import { formatDate, NgIf, NgFor, DatePipe } from "@angular/common";
-import { UserService } from "../providers/user-service/user.service";
-import { StressLevel } from "../models/stress-level.model";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { TeamStressLevelsComponent } from "./team-stress-levels.component";
-import { FormsModule } from "@angular/forms";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 
 @Component({
   templateUrl: "bulletins.component.html",

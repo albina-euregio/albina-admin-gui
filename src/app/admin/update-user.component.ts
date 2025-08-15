@@ -1,16 +1,15 @@
-import { AfterContentInit, Component, inject } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { UserModel, UserSchema } from "../models/user.model";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
-import { UserModel, UserSchema } from "../models/user.model";
-
-import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
-import { BsModalRef } from "ngx-bootstrap/modal";
-import { FormsModule } from "@angular/forms";
 import { NgFor, NgIf } from "@angular/common";
+import { AfterContentInit, Component, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { BsModalRef } from "ngx-bootstrap/modal";
+import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
 
 type Result =
   | "" // cancel

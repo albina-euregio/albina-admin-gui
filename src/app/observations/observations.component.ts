@@ -1,3 +1,35 @@
+import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
+import { BaseMapService } from "../providers/map-service/base-map.service";
+import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
+import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { FilterSelectionValue, FilterSelectionValueSchema } from "./filter-selection-config";
+import { observationFilters } from "./filter-selection-data-data";
+import {
+  GenericObservation,
+  genericObservationSchema,
+  ImportantObservation,
+  ObservationSource,
+  ObservationTableRow,
+  ObservationType,
+  toGeoJSON,
+  toCSV,
+} from "./models/generic-observation.model";
+import { ObservationChartComponent } from "./observation-chart.component";
+import { ObservationEditorComponent } from "./observation-editor.component";
+import { ObservationFilterService } from "./observation-filter.service";
+import { ObservationGalleryComponent } from "./observation-gallery.component";
+import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
+import {
+  ObservationMarkerWeatherStationService,
+  WeatherStationParameter,
+} from "./observation-marker-weather-station.service";
+import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
+import { ObservationMarkerService } from "./observation-marker.service";
+import { ObservationTableComponent } from "./observation-table.component";
+import { AlbinaObservationsService } from "./observations.service";
+import { CommonModule, formatDate } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
 import {
   AfterContentInit,
   AfterViewInit,
@@ -10,52 +42,20 @@ import {
   ViewChild,
   HostListener,
 } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
-import { BaseMapService } from "../providers/map-service/base-map.service";
-import {
-  GenericObservation,
-  genericObservationSchema,
-  ImportantObservation,
-  ObservationSource,
-  ObservationTableRow,
-  ObservationType,
-  toGeoJSON,
-  toCSV,
-} from "./models/generic-observation.model";
-import { saveAs } from "file-saver";
-import { ObservationGalleryComponent } from "./observation-gallery.component";
-import { ObservationTableComponent } from "./observation-table.component";
-import { ObservationEditorComponent } from "./observation-editor.component";
-import { ObservationFilterService } from "./observation-filter.service";
-import { ObservationMarkerService } from "./observation-marker.service";
-import { CommonModule, formatDate } from "@angular/common";
-import { type Observable, type Subscription } from "rxjs";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { ObservationChartComponent } from "./observation-chart.component";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
-import { FormsModule } from "@angular/forms";
-import { AlbinaObservationsService } from "./observations.service";
-import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
-import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
-import "bootstrap";
-import { AvalancheProblem, DangerPattern, SnowpackStability } from "../enums/enums";
-import { FilterSelectionValue, FilterSelectionValueSchema } from "./filter-selection-config";
-import { observationFilters } from "./filter-selection-data-data";
-import {
-  ObservationMarkerWeatherStationService,
-  WeatherStationParameter,
-} from "./observation-marker-weather-station.service";
-import { ObservationMarkerWebcamService } from "./observation-marker-webcam.service";
-import { ObservationMarkerObserverService } from "./observation-marker-observer.service";
-import Split from "split.js";
-import { HttpErrorResponse } from "@angular/common/http";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { orderBy } from "es-toolkit";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
-import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import "bootstrap";
+import { orderBy } from "es-toolkit";
+import { saveAs } from "file-saver";
+import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { type Observable, type Subscription } from "rxjs";
+import Split from "split.js";
 
 export interface MultiselectDropdownData {
   id: string;

@@ -1,7 +1,7 @@
-import { Component, input, output } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
-import { FormsModule } from "@angular/forms";
 import { NgForOf } from "@angular/common";
+import { Component, input, output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
 
 let uniqueId = 0;
 

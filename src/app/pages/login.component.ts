@@ -1,15 +1,15 @@
-import { Component, OnInit, TemplateRef, viewChild, inject } from "@angular/core";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { Router } from "@angular/router";
-import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { environment } from "../../environments/environment";
-import { DomSanitizer } from "@angular/platform-browser";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
-import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
-import { FormsModule } from "@angular/forms";
-import { NgIf, NgFor } from "@angular/common";
-import { TranslateModule } from "@ngx-translate/core";
 import { ServerConfigurationVersion } from "../models/server-configuration.model";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { NgIf, NgFor } from "@angular/common";
+import { Component, OnInit, TemplateRef, viewChild, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { DomSanitizer } from "@angular/platform-browser";
+import { Router } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { ConfigurationService } from "app/providers/configuration-service/configuration.service";
+import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
   templateUrl: "login.component.html",

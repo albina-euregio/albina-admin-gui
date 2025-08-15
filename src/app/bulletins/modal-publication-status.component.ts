@@ -1,13 +1,13 @@
-import { Component, inject } from "@angular/core";
-import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
 import { BulletinsService, PublicationChannel } from "../providers/bulletins-service/bulletins.service";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { NgFor, DatePipe } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { AlertModule } from "ngx-bootstrap/alert";
+import { BsModalRef } from "ngx-bootstrap/modal";
 
 interface PublicationInformation {
   publicationChannel: PublicationChannel;

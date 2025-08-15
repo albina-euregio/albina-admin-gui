@@ -1,4 +1,17 @@
+import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
+import * as Enums from "../../enums/enums";
+import { BulletinModel } from "../../models/bulletin.model";
+import { AuthenticationService } from "../authentication-service/authentication.service";
+import { ConstantsService } from "../constants-service/constants.service";
+import { filterFeature } from "../regions-service/filterFeature";
+import { RegionProperties, RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
+import { AmPmControl } from "./am-pm-control";
+import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
+import { RegionNameControl } from "./region-name-control";
 import { Injectable, inject } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
+import * as geojson from "geojson";
+import { FeatureCollection, MultiPolygon } from "geojson";
 import {
   Browser,
   Control,
@@ -13,19 +26,6 @@ import {
   TileLayerOptions,
 } from "leaflet";
 import "leaflet.sync";
-import { BulletinModel } from "../../models/bulletin.model";
-import { RegionProperties, RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
-import { AuthenticationService } from "../authentication-service/authentication.service";
-import { ConstantsService } from "../constants-service/constants.service";
-import * as Enums from "../../enums/enums";
-import * as geojson from "geojson";
-import { RegionNameControl } from "./region-name-control";
-import { AmPmControl } from "./am-pm-control";
-import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
-import { filterFeature } from "../regions-service/filterFeature";
-import { TranslateService } from "@ngx-translate/core";
-import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
-import { FeatureCollection, MultiPolygon } from "geojson";
 
 declare module "leaflet" {
   interface Map {

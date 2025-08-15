@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { formatDate } from "@angular/common";
-import { Icon, LatLng, Map, Marker, MarkerOptions, Polygon, PolylineOptions, Rectangle, GeoJSON } from "leaflet";
-import { GenericObservation } from "./models/generic-observation.model";
 import { SnowpackStability } from "../enums/enums";
+import type { AwsomeSource } from "../modelling/awsome.config";
 import { FilterSelectionData, FilterSelectionValue } from "./filter-selection-data";
 import { makeIcon } from "./make-icon";
-import type { AwsomeSource } from "../modelling/awsome.config";
+import { GenericObservation } from "./models/generic-observation.model";
+import { formatDate } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { castArray, get as _get } from "es-toolkit/compat";
+import { Icon, LatLng, Map, Marker, MarkerOptions, Polygon, PolylineOptions, Rectangle, GeoJSON } from "leaflet";
 
 const zIndex: Record<SnowpackStability, number> = {
   [SnowpackStability.good]: 1,

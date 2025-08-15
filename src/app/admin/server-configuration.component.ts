@@ -1,11 +1,11 @@
-import { Component, inject, input } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { NgFor, NgIf } from "@angular/common";
-import { FormsModule } from "@angular/forms";
 import { ServerConfiguration } from "../models/server-configuration.model";
+import { ConfigurationService } from "../providers/configuration-service/configuration.service";
+import { NgFor, NgIf } from "@angular/common";
+import { Component, inject, input } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { AlertModule } from "ngx-bootstrap/alert";
 
 @Component({
   templateUrl: "server-configuration.component.html",

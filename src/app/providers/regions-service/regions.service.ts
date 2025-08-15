@@ -1,17 +1,17 @@
-import { Injectable, inject } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
-import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
 import aggregatedRegions from "../../../assets/aggregated_regions.json";
-import { default as regionsNamesDe } from "@eaws/micro-regions_names/de.json";
-import { default as regionsNamesIt } from "@eaws/micro-regions_names/it.json";
-import { default as regionsNamesEn } from "@eaws/micro-regions_names/en.json";
-import { default as regionsNamesFr } from "@eaws/micro-regions_names/fr.json";
-import { default as regionsNamesEs } from "@eaws/micro-regions_names/es.json";
-import { default as regionsNamesCa } from "@eaws/micro-regions_names/ca.json";
-import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
-import { loadRegions } from "./regions-loader.mjs";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import "./mergeFeatureCollections";
+import { loadRegions } from "./regions-loader.mjs";
+import { Injectable, inject } from "@angular/core";
+import { default as regionsNamesCa } from "@eaws/micro-regions_names/ca.json";
+import { default as regionsNamesDe } from "@eaws/micro-regions_names/de.json";
+import { default as regionsNamesEn } from "@eaws/micro-regions_names/en.json";
+import { default as regionsNamesEs } from "@eaws/micro-regions_names/es.json";
+import { default as regionsNamesFr } from "@eaws/micro-regions_names/fr.json";
+import { default as regionsNamesIt } from "@eaws/micro-regions_names/it.json";
+import { default as regionsNamesOc } from "@eaws/micro-regions_names/oc.json";
+import { TranslateService } from "@ngx-translate/core";
+import { FeatureCollection, MultiPolygon, Geometry } from "geojson";
 
 @Injectable()
 export class RegionsService {

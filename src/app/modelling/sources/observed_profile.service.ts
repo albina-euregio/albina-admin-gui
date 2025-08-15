@@ -1,9 +1,9 @@
-import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
+import { GenericObservation } from "app/observations/models/generic-observation.model";
+import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
 import { from, Observable } from "rxjs";
 import { catchError, flatMap, last, map, mergeMap } from "rxjs/operators";
-import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
-import { GenericObservation } from "app/observations/models/generic-observation.model";
 
 export interface AvalancheWarningServiceObservedProfiles {
   latitude: number;

@@ -1,7 +1,7 @@
-import { inject, Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { ConstantsService } from "../constants-service/constants.service";
 import { AuthenticationService } from "../authentication-service/authentication.service";
+import { ConstantsService } from "../constants-service/constants.service";
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()

@@ -1,12 +1,12 @@
-import { Component, inject } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { RegionsService } from "../providers/regions-service/regions.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BlogService, PublicationChannel } from "../providers/blog-service/blog.service";
-import { AlertModule } from "ngx-bootstrap/alert";
+import { RegionsService } from "../providers/regions-service/regions.service";
 import { NgFor } from "@angular/common";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { Component, inject } from "@angular/core";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { ConstantsService } from "app/providers/constants-service/constants.service";
+import { AlertModule } from "ngx-bootstrap/alert";
 
 interface PublicationInformation {
   publicationChannel: PublicationChannel;

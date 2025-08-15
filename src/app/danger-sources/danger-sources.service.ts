@@ -1,11 +1,11 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { ConstantsService } from "../providers/constants-service/constants.service";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { DangerSourceModel } from "./models/danger-source.model";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 import { DangerSourceVariantModel, DangerSourceVariantType } from "./models/danger-source-variant.model";
+import { DangerSourceModel } from "./models/danger-source.model";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
 import { JsonArray } from "protomaps-leaflet";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class DangerSourcesService {

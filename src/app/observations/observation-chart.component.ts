@@ -1,11 +1,11 @@
+import type { FilterSelectionData } from "./filter-selection-data";
+import { ObservationMarkerService } from "./observation-marker.service";
+import { CommonModule } from "@angular/common";
 import { Component, OnInit, output, input, inject } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import type { CallbackDataParams } from "echarts/types/dist/shared";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
-import { CommonModule } from "@angular/common";
+import type { CallbackDataParams } from "echarts/types/dist/shared";
 import { NgxEchartsDirective } from "ngx-echarts";
-import { ObservationMarkerService } from "./observation-marker.service";
-import type { FilterSelectionData } from "./filter-selection-data";
 
 @Component({
   standalone: true,

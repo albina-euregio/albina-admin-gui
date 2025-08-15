@@ -1,16 +1,16 @@
-import { Component, TemplateRef, input, output, inject } from "@angular/core";
-import { CopyService } from "../providers/copy-service/copy.service";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import type { BulletinModel } from "../models/bulletin.model";
-import type { TextcatLegacyIn, TextcatTextfield } from "./avalanche-bulletin.component";
-import { concatenateLangTexts, LangTexts, LANGUAGES } from "../models/text.model";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import * as Enums from "../enums/enums";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { NgClass, NgIf, NgFor, UpperCasePipe } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import type { BulletinModel } from "../models/bulletin.model";
+import { concatenateLangTexts, LangTexts, LANGUAGES } from "../models/text.model";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { CopyService } from "../providers/copy-service/copy.service";
+import type { TextcatLegacyIn, TextcatTextfield } from "./avalanche-bulletin.component";
 import { HtmlPipe } from "./html.pipe";
+import { NgClass, NgIf, NgFor, UpperCasePipe } from "@angular/common";
+import { Component, TemplateRef, input, output, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-bulletin-text",

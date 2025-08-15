@@ -1,9 +1,9 @@
-import { Injectable, inject } from "@angular/core";
-import { Observable, from, map } from "rxjs";
-import { RegionsService } from "app/providers/regions-service/regions.service";
-import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
-import { GeoJSON } from "leaflet";
 import { formatDate } from "@angular/common";
+import { Injectable, inject } from "@angular/core";
+import { GenericObservation, ObservationType } from "app/observations/models/generic-observation.model";
+import { RegionsService } from "app/providers/regions-service/regions.service";
+import { GeoJSON } from "leaflet";
+import { Observable, from, map } from "rxjs";
 
 @Injectable()
 export class MeteogramSourceService {

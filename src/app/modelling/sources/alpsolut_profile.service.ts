@@ -1,11 +1,11 @@
-import { Injectable, inject } from "@angular/core";
+import { environment } from "../../../environments/environment";
+import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
+import { GenericObservation } from "app/observations/models/generic-observation.model";
 import { Observable } from "rxjs";
 import { flatMap, last, map } from "rxjs/operators";
-import { GenericObservation } from "app/observations/models/generic-observation.model";
-import { DomSanitizer } from "@angular/platform-browser";
-import { AuthenticationService } from "../../providers/authentication-service/authentication.service";
-import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AlpsolutProfileService {

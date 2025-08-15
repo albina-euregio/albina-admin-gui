@@ -1,14 +1,14 @@
-import { Component, inject, input, OnInit, output } from "@angular/core";
-import { MatrixInformationModel } from "app/models/matrix-information.model";
-import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import * as Enums from "../enums/enums";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { DangerSourceVariantModel } from "../danger-sources/models/danger-source-variant.model";
-import { NgFor, NgIf } from "@angular/common";
+import * as Enums from "../enums/enums";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 import { DangerRatingComponent } from "./danger-rating.component";
-import { FormsModule } from "@angular/forms";
 import { SliderComponent, SliderOptions } from "./slider.component";
+import { NgFor, NgIf } from "@angular/common";
+import { Component, inject, input, OnInit, output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import type { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
+import { MatrixInformationModel } from "app/models/matrix-information.model";
 
 @Component({
   selector: "app-matrix-parameter",

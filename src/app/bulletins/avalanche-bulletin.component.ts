@@ -1,34 +1,29 @@
-import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
-
 import { environment } from "../../environments/environment";
-
+import * as Enums from "../enums/enums";
+import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 // models
 import { BulletinModel } from "../models/bulletin.model";
-import { AvalancheProblemModel } from "../models/avalanche-problem.model";
-
+import { LangTexts } from "../models/text.model";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 // services
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { RegionsService } from "../providers/regions-service/regions.service";
 import { CopyService } from "../providers/copy-service/copy.service";
-
-// For iframe
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-
-import * as Enums from "../enums/enums";
-import { LangTexts } from "../models/text.model";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { DatePipe, NgFor, NgIf } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-import { AccordionModule } from "ngx-bootstrap/accordion";
+import { RegionsService } from "../providers/regions-service/regions.service";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { DatePipe, NgFor, NgIf } from "@angular/common";
+import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+// For iframe
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
+import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-avalanche-bulletin",

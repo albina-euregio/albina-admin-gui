@@ -1,9 +1,9 @@
-import { Component, inject } from "@angular/core";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { UserService } from "../providers/user-service/user.service";
-import { BsModalRef } from "ngx-bootstrap/modal";
-import { FormsModule } from "@angular/forms";
 import { NgIf } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { BsModalRef } from "ngx-bootstrap/modal";
 
 type Result =
   | "" // cancel

@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
+import * as pkg from "../../../../package.json";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
-import * as pkg from "../../../../package.json";
 import { formatDate } from "@angular/common";
+import { Injectable } from "@angular/core";
 
 @Injectable()
 export class ConstantsService {

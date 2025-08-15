@@ -1,13 +1,13 @@
-import { Component, inject } from "@angular/core";
-import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { CreateDangerSourcesComponent } from "./create-danger-sources.component";
 import { DangerSourcesService } from "./danger-sources.service";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { FormsModule } from "@angular/forms";
 import { DatePipe } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-modal-edit-danger-source",

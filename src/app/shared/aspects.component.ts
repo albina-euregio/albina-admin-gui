@@ -1,5 +1,5 @@
-import { Component, input, output } from "@angular/core";
 import * as Enums from "../enums/enums";
+import { Component, input, output } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({

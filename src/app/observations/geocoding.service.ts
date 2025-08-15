@@ -1,8 +1,8 @@
-import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { Observable } from "rxjs";
 import { FeatureCollection, Point } from "geojson";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class GeocodingService {

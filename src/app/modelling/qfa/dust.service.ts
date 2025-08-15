@@ -1,5 +1,5 @@
-import { Injectable, inject } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
 
 enum Cities {
   INNSBRUCK = "innsbruck",

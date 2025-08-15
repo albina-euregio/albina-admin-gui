@@ -1,8 +1,7 @@
-import { Injectable } from "@angular/core";
-import { Control, LatLng, Map } from "leaflet";
-
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
+import { Injectable } from "@angular/core";
+import { Control, LatLng, Map } from "leaflet";
 
 @Injectable()
 export class BaseMapService extends MapService {

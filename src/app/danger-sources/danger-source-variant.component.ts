@@ -1,18 +1,12 @@
-import { Component, OnChanges, input, output, inject } from "@angular/core";
-
-import { debounceTime, Subject } from "rxjs";
-
+import * as Enums from "../enums/enums";
 // services
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-
-// For iframe
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-
-import * as Enums from "../enums/enums";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { AspectsComponent } from "../shared/aspects.component";
+import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
+import { SliderComponent, SliderOptions } from "../shared/slider.component";
+import { DangerSourcesService } from "./danger-sources.service";
 import {
   Characteristic,
   CreationProcess,
@@ -33,14 +27,16 @@ import {
   WeakLayerCrust,
   Wetness,
 } from "./models/danger-source-variant.model";
-import { DangerSourcesService } from "./danger-sources.service";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { NgIf, NgFor, NgClass, DatePipe } from "@angular/common";
+import { Component, OnChanges, input, output, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+// For iframe
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { AccordionModule } from "ngx-bootstrap/accordion";
-import { AspectsComponent } from "../shared/aspects.component";
-import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
-import { SliderComponent, SliderOptions } from "../shared/slider.component";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { debounceTime, Subject } from "rxjs";
 
 @Component({
   selector: "app-danger-source-variant",

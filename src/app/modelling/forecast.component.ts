@@ -1,3 +1,15 @@
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
+import type { ModellingRouteData } from "./routes";
+import {
+  type AlpsolutObservation,
+  AlpsolutProfileService,
+  MeteogramSourceService,
+  MultimodelSourceService,
+  ObservedProfileSourceService,
+  ZamgMeteoSourceService,
+} from "./sources";
+import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
 import {
   Component,
   AfterViewInit,
@@ -8,30 +20,18 @@ import {
   viewChild,
   inject,
 } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { BaseMapService } from "app/providers/map-service/base-map.service";
-import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
-import { ParamService, QfaFilename, QfaResult, QfaService } from "./qfa";
-import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
-import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
-import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
-import { formatDate, KeyValuePipe, CommonModule } from "@angular/common";
-import { BsModalService } from "ngx-bootstrap/modal";
 import { FormsModule } from "@angular/forms";
-import type { Observable } from "rxjs";
-import {
-  type AlpsolutObservation,
-  AlpsolutProfileService,
-  MeteogramSourceService,
-  MultimodelSourceService,
-  ObservedProfileSourceService,
-  ZamgMeteoSourceService,
-} from "./sources";
-import type { ModellingRouteData } from "./routes";
+import { ActivatedRoute } from "@angular/router";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { ForecastSource, GenericObservation } from "app/observations/models/generic-observation.model";
+import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { BaseMapService } from "app/providers/map-service/base-map.service";
+import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
+import { RegionsService, RegionProperties } from "app/providers/regions-service/regions.service";
 import "bootstrap";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { CircleMarker, CircleMarkerOptions, LatLngLiteral, LayerGroup } from "leaflet";
+import { BsModalService } from "ngx-bootstrap/modal";
+import type { Observable } from "rxjs";
 
 export interface MultiselectDropdownData {
   id: ForecastSource;

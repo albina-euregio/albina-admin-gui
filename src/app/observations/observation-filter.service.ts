@@ -1,10 +1,10 @@
-import { Injectable, inject } from "@angular/core";
-import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
-import { ActivatedRoute, Params, Router } from "@angular/router";
+import type { FeatureProperties } from "../modelling/awsome.component";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import type { FilterSelectionData } from "./filter-selection-data";
-import type { FeatureProperties } from "../modelling/awsome.component";
+import { GenericObservation, ObservationSource } from "./models/generic-observation.model";
+import { Injectable, inject } from "@angular/core";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { LatLngBounds } from "leaflet";
 
 @Injectable()

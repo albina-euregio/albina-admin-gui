@@ -1,11 +1,11 @@
-import { Injectable, inject } from "@angular/core";
+import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { from, Observable } from "rxjs";
-import { last, map, mergeMap } from "rxjs/operators";
+import { Injectable, inject } from "@angular/core";
+import { GenericObservation } from "app/observations/models/generic-observation.model";
 import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
-import { GenericObservation } from "app/observations/models/generic-observation.model";
-import { formatDate } from "@angular/common";
+import { from, Observable } from "rxjs";
+import { last, map, mergeMap } from "rxjs/operators";
 
 interface MultimodelPointCsv {
   statnr: string;

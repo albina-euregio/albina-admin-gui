@@ -1,11 +1,11 @@
-import { Component, inject } from "@angular/core";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { StatisticsService } from "../providers/statistics-service/statistics.service";
-import { saveAs } from "file-saver";
-import { FormsModule } from "@angular/forms";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { NgIf } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { saveAs } from "file-saver";
+import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { TabsModule } from "ngx-bootstrap/tabs";
 
 @Component({

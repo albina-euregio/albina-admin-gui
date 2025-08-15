@@ -1,15 +1,15 @@
-import { Component, inject } from "@angular/core";
-import { BsModalRef } from "ngx-bootstrap/modal";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { MediaFileService } from "app/providers/media-file-service/media-file.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CreateBulletinComponent } from "./create-bulletin.component";
 import { NgFor, NgIf, DatePipe } from "@angular/common";
+import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
+import { MediaFileService } from "app/providers/media-file-service/media-file.service";
+import { AlertModule } from "ngx-bootstrap/alert";
+import { BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-modal-media-file",

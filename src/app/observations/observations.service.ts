@@ -1,14 +1,14 @@
-import { inject, Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../environments/environment";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { GenericObservation } from "./models/generic-observation.model";
+import { ObservationFilterService } from "./observation-filter.service";
+import { formatDate } from "@angular/common";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { saveAs } from "file-saver";
 import { Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
-import { ObservationFilterService } from "./observation-filter.service";
-import { environment } from "../../environments/environment";
-import { formatDate } from "@angular/common";
-import { saveAs } from "file-saver";
 
 @Injectable()
 export class AlbinaObservationsService {

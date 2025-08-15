@@ -1,8 +1,3 @@
-import { inject, Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { ConstantsService } from "../constants-service/constants.service";
-import { AuthenticationService } from "../authentication-service/authentication.service";
-import { map, Observable } from "rxjs";
 import { RegionConfiguration } from "../../models/region-configuration.model";
 import {
   ServerConfiguration,
@@ -10,6 +5,11 @@ import {
   ServerConfigurationVersion,
   ServerConfigurationVersionSchema,
 } from "../../models/server-configuration.model";
+import { AuthenticationService } from "../authentication-service/authentication.service";
+import { ConstantsService } from "../constants-service/constants.service";
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { map, Observable } from "rxjs";
 
 @Injectable()
 export class ConfigurationService {

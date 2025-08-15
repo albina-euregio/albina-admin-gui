@@ -1,19 +1,19 @@
-import { inject, Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable, of, Subject } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
-import { ConstantsService } from "../constants-service/constants.service";
-import { AuthenticationService } from "../authentication-service/authentication.service";
-import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
-import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import * as Enums from "../../enums/enums";
+import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
 import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
-import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
-import * as Enums from "../../enums/enums";
+import { AuthenticationService } from "../authentication-service/authentication.service";
+import { ConstantsService } from "../constants-service/constants.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import { UserService } from "../user-service/user.service";
+import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { StressLevel } from "app/models/stress-level.model";
-import { UserService } from "../user-service/user.service";
-import { TranslateService } from "@ngx-translate/core";
+import { Observable, of, Subject } from "rxjs";
+import { map, switchMap } from "rxjs/operators";
 
 class TrainingModeError extends Error {}
 

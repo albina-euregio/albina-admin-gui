@@ -1,10 +1,10 @@
-import { Injectable, inject } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import type { AuthorModel } from "../../models/author.model";
-import type { ServerModel } from "../../models/server.model";
 import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
-import { TranslateService } from "@ngx-translate/core";
 import { RegionConfiguration } from "../../models/region-configuration.model";
+import type { ServerModel } from "../../models/server.model";
+import { Injectable, inject } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class LocalStorageService {

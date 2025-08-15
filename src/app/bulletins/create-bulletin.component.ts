@@ -1,3 +1,27 @@
+import { DangerSourcesService } from "../danger-sources/danger-sources.service";
+import * as Enums from "../enums/enums";
+// models
+import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { CopyService } from "../providers/copy-service/copy.service";
+import { MapService } from "../providers/map-service/map.service";
+import { RegionsService } from "../providers/regions-service/regions.service";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
+import { BulletinTextComponent } from "./bulletin-text.component";
+import { ModalCheckComponent } from "./modal-check.component";
+import { ModalMediaFileComponent } from "./modal-media-file.component";
+import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
+import { ModalPublishAllComponent } from "./modal-publish-all.component";
+import { ModalPublishComponent } from "./modal-publish.component";
+// modals
+import { ModalSubmitComponent } from "./modal-submit.component";
+import { DatePipe, KeyValuePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
 import {
   Component,
   ElementRef,
@@ -10,45 +34,8 @@ import {
   ViewChild,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-
-// For iframe
-import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, timer } from "rxjs";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { saveAs } from "file-saver";
-import { debounce } from "es-toolkit";
-
-// models
-import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
-
 // services
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { MapService } from "../providers/map-service/map.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { RegionsService } from "../providers/regions-service/regions.service";
-import { CopyService } from "../providers/copy-service/copy.service";
-import { DangerSourcesService } from "../danger-sources/danger-sources.service";
-
-// modals
-import { ModalSubmitComponent } from "./modal-submit.component";
-import { ModalPublishComponent } from "./modal-publish.component";
-import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
-import { ModalPublishAllComponent } from "./modal-publish-all.component";
-import { ModalMediaFileComponent } from "./modal-media-file.component";
-import { ModalCheckComponent } from "./modal-check.component";
-
-import * as Enums from "../enums/enums";
-import { ServerModel } from "app/models/server.model";
-import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
-import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
-import { DatePipe, KeyValuePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
-import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
-import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
-import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { HttpErrorResponse } from "@angular/common/http";
 import {
   DangerSourceVariantModel,
   DangerSourceVariantStatus,
@@ -57,8 +44,16 @@ import {
 } from "app/danger-sources/models/danger-source-variant.model";
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
+import { ServerModel } from "app/models/server.model";
 import { emptyLangTexts, LangTexts } from "app/models/text.model";
-import { BulletinTextComponent } from "./bulletin-text.component";
+import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
+import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
+import { debounce } from "es-toolkit";
+import { saveAs } from "file-saver";
+import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+// For iframe
+import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, timer } from "rxjs";
 
 @Component({
   templateUrl: "create-bulletin.component.html",

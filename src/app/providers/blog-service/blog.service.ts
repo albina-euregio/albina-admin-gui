@@ -1,7 +1,7 @@
-import { inject, Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
 import { ConstantsService } from "../constants-service/constants.service";
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 export enum PublicationChannel {
   Email = "email",
