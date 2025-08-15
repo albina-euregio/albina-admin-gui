@@ -1,8 +1,8 @@
 import * as Enums from "../enums/enums";
 import { DangerRating, RegionStatus } from "../enums/enums";
-import { AuthorModel, AuthorSchema } from "./author.model";
 import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
 import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
+import { UserModel, UserSchema } from "./user.model";
 import { formatDate } from "@angular/common";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 
@@ -19,7 +19,7 @@ export type BulletinModelAsJSON = BulletinModel & {
 export class BulletinModel implements PolygonObject {
   public id: string;
 
-  public author: AuthorModel;
+  public author: UserModel;
   public additionalAuthors: string[];
   public ownerRegion: string;
 
@@ -73,7 +73,7 @@ export class BulletinModel implements PolygonObject {
     const bulletin = new BulletinModel();
 
     bulletin.id = json.id;
-    bulletin.author = AuthorSchema.partial().parse(json.author) as unknown as AuthorModel;
+    bulletin.author = UserSchema.partial().parse(json.author) as unknown as UserModel;
     const jsonAdditionalAuthors = json.additionalAuthors;
     const additionalAuthors = new Array<string>();
     for (const i in jsonAdditionalAuthors) {
