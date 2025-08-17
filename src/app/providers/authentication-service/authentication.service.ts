@@ -139,7 +139,7 @@ export class AuthenticationService {
     const body = JSON.stringify({ username: server.userName, password: server.password });
     return this.http.post(url, body).pipe(
       map((json) => {
-        const data = AuthenticationResponseSchema.parse(json);
+        const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(json);
         return this.addExternalServer(server, data);
       }),
     );
@@ -307,3 +307,29 @@ export const AuthenticationResponseSchema = z.object({
   api_url: z.string().nullish(),
 });
 export type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;
+
+/**
+ * @deprecated
+ */
+export const AuthenticationResponseSchema2024 = z
+  .object({
+    email: z.string(),
+    name: z.string(),
+    roles: z.enum(Enums.UserRole).array(),
+    regions: RegionConfigurationSchema.array(),
+    access_token: z.string(),
+    refresh_token: z.string().nullish(),
+    api_url: z.string().nullish(),
+  })
+  .transform((a) =>
+    AuthenticationResponseSchema.parse({
+      user: {
+        email: a.email,
+        name: a.name,
+        roles: a.roles,
+      },
+      regions: a.regions,
+      access_token: a.access_token,
+      api_url: a.api_url,
+    }),
+  );
