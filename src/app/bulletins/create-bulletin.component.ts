@@ -634,7 +634,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             bulletin.savedRegions = microRegionIds;
             bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
             bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
-            bulletin.author = this.authenticationService.currentAuthor;
+            bulletin.author = this.authenticationService.getCurrentAuthor();
             bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
             // create avalanche problem for each danger source variant

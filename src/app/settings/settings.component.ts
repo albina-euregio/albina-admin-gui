@@ -37,7 +37,7 @@ export class SettingsComponent {
       organization: author.organization,
       image: author.image,
       roles: author.roles,
-      regions: author.regions.map((region) => region.id),
+      regions: author.regions,
     });
 
     const dialogRef = this.modalService.show(UpdateUserComponent, {

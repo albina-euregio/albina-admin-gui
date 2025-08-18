@@ -1,5 +1,4 @@
 import * as Enums from "../../enums/enums";
-import { AuthorModel, AuthorSchema } from "../../models/author.model";
 import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
@@ -9,6 +8,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import { UserModel, UserSchema } from "app/models/user.model";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { z } from "zod/v4";
@@ -20,8 +20,8 @@ export class AuthenticationService {
   private constantsService = inject(ConstantsService);
   private sanitizer = inject(DomSanitizer);
 
-  currentAuthor: AuthorModel;
-  private internalRegions: RegionConfiguration[];
+  private authentication: AuthenticationResponse;
+  private internalRegions: RegionConfiguration[] = [];
   private externalServers: ServerModel[];
   private jwtHelper: JwtHelperService;
   private activeRegion: RegionConfiguration | undefined;
@@ -29,7 +29,7 @@ export class AuthenticationService {
   constructor() {
     this.externalServers = [];
     try {
-      this.setCurrentAuthor(this.localStorageService.getCurrentAuthor());
+      this.authentication = this.localStorageService.getCurrentAuthor();
     } catch (e) {
       this.localStorageService.setCurrentAuthor(undefined);
     }
@@ -60,17 +60,8 @@ export class AuthenticationService {
         if (!data.access_token) {
           return false;
         }
-        const author: AuthorModel = AuthorSchema.parse(
-          {
-            ...data,
-            organization: "",
-            accessToken: data.access_token,
-            refreshToken: data.refresh_token,
-            apiUrl: data.api_url,
-          },
-          { reportInput: true },
-        );
-        this.setCurrentAuthor(author);
+        this.authentication = data;
+        this.localStorageService.setCurrentAuthor(data);
         const authorRegions = this.getCurrentAuthorRegions();
         const activeRegionFromLocalStorage = this.localStorageService.getActiveRegion();
         this.setActiveRegion(
@@ -83,13 +74,17 @@ export class AuthenticationService {
     );
   }
 
+  get accessToken(): string {
+    return this.authentication?.access_token;
+  }
+
   public isUserLoggedIn(): boolean {
-    return this.currentAuthor?.accessToken && !this.jwtHelper.isTokenExpired(this.currentAuthor.accessToken);
+    return this.accessToken && !this.jwtHelper.isTokenExpired(this.accessToken);
   }
 
   public logout() {
     console.debug("[" + this.currentAuthor?.name + "] Logged out!");
-    this.currentAuthor = null;
+    this.authentication = null;
     this.activeRegion = undefined;
     this.localStorageService.setCurrentAuthor(undefined);
     this.localStorageService.setInternalRegions(undefined);
@@ -144,7 +139,7 @@ export class AuthenticationService {
     const body = JSON.stringify({ username: server.userName, password: server.password });
     return this.http.post(url, body).pipe(
       map((json) => {
-        const data = AuthenticationResponseSchema.parse(json);
+        const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(json);
         return this.addExternalServer(server, data);
       }),
     );
@@ -161,7 +156,6 @@ export class AuthenticationService {
       ...server0,
       regions: (json as AuthenticationResponse).regions?.map((r) => r.id),
       accessToken: json.access_token,
-      refreshToken: (json as AuthenticationResponse).refresh_token,
     });
     this.externalServers.push(server);
     this.localStorageService.setExternalServers(this.externalServers);
@@ -188,16 +182,12 @@ export class AuthenticationService {
     }
   }
 
-  public getCurrentAuthor() {
-    return this.currentAuthor;
+  get currentAuthor(): UserModel {
+    return this.authentication?.user;
   }
 
-  private setCurrentAuthor(json: AuthorModel) {
-    if (!json) {
-      return;
-    }
-    this.currentAuthor = AuthorSchema.partial().parse(json) as unknown as AuthorModel;
-    this.localStorageService.setCurrentAuthor(this.currentAuthor);
+  public getCurrentAuthor(): UserModel {
+    return this.currentAuthor;
   }
 
   public getUsername(): string {
@@ -247,7 +237,7 @@ export class AuthenticationService {
     if (!this.currentAuthor) {
       return;
     }
-    region = this.currentAuthor.regions.find((r) => r.id === (typeof region === "string" ? region : region.id));
+    region = this.getCurrentAuthorRegions().find((r) => r.id === (typeof region === "string" ? region : region.id));
     if (region) {
       this.activeRegion = region;
       this.localStorageService.setActiveRegion(this.activeRegion);
@@ -277,7 +267,7 @@ export class AuthenticationService {
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {
-    return this.currentAuthor?.regions.sort((a, b) => a.id.localeCompare(b.id)) || [];
+    return this.authentication?.regions.sort((a, b) => a.id.localeCompare(b.id)) || [];
   }
 
   public getInternalRegions(): string[] {
@@ -311,12 +301,35 @@ export class AuthenticationService {
 }
 
 export const AuthenticationResponseSchema = z.object({
-  email: z.string(),
-  name: z.string(),
-  roles: z.enum(Enums.UserRole).array(),
+  user: UserSchema,
   regions: RegionConfigurationSchema.array(),
   access_token: z.string(),
-  refresh_token: z.string().nullish(),
   api_url: z.string().nullish(),
 });
-type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;
+export type AuthenticationResponse = z.infer<typeof AuthenticationResponseSchema>;
+
+/**
+ * @deprecated
+ */
+export const AuthenticationResponseSchema2024 = z
+  .object({
+    email: z.string(),
+    name: z.string(),
+    roles: z.enum(Enums.UserRole).array(),
+    regions: RegionConfigurationSchema.array(),
+    access_token: z.string(),
+    refresh_token: z.string().nullish(),
+    api_url: z.string().nullish(),
+  })
+  .transform((a) =>
+    AuthenticationResponseSchema.parse({
+      user: {
+        email: a.email,
+        name: a.name,
+        roles: a.roles,
+      },
+      regions: a.regions,
+      access_token: a.access_token,
+      api_url: a.api_url,
+    }),
+  );

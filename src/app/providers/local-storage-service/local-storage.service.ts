@@ -1,8 +1,8 @@
 import { environment } from "../../../environments/environment";
-import type { AuthorModel } from "../../models/author.model";
 import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
 import { RegionConfiguration } from "../../models/region-configuration.model";
 import type { ServerModel } from "../../models/server.model";
+import { AuthenticationResponse, AuthenticationResponseSchema } from "../authentication-service/authentication.service";
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -45,11 +45,11 @@ export class LocalStorageService {
     return this.set("language", language);
   }
 
-  getCurrentAuthor(): AuthorModel {
-    return this.get("currentAuthor");
+  getCurrentAuthor(): AuthenticationResponse {
+    return AuthenticationResponseSchema.parse(this.get("currentAuthor"));
   }
 
-  setCurrentAuthor(currentAuthor: AuthorModel): void {
+  setCurrentAuthor(currentAuthor: AuthenticationResponse): void {
     return this.set("currentAuthor", currentAuthor);
   }
 
