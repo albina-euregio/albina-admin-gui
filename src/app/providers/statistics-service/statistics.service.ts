@@ -17,33 +17,25 @@ export class StatisticsService {
     extended: boolean,
     duplicates: boolean,
   ): Observable<Blob> {
-    const url =
-      this.constantsService.getServerUrl() +
-      "statistics?" +
-      this.constantsService
-        .createSearchParams([
-          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
-          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
-          ["region", this.authenticationService.getActiveRegionId()],
-          ["lang", lang],
-          ["extended", extended],
-          ["duplicates", duplicates],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/statistics",
+      ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
+      ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
+      ["region", this.authenticationService.getActiveRegionId()],
+      ["lang", lang],
+      ["extended", extended],
+      ["duplicates", duplicates],
+    );
     const headers = new HttpHeaders({ Accept: "text/csv" });
     return this.http.get(url, { headers, responseType: "blob" });
   }
 
   getDangerSourceStatisticsCsv(startDate: Date, endDate: Date): Observable<Blob> {
-    const url =
-      this.constantsService.getServerUrl() +
-      "statistics/danger-sources?" +
-      this.constantsService
-        .createSearchParams([
-          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
-          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/statistics/danger-sources",
+      ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
+      ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
+    );
     const headers = new HttpHeaders({ Accept: "text/csv" });
     return this.http.get(url, { headers, responseType: "blob" });
   }

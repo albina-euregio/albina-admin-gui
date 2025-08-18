@@ -12,17 +12,13 @@ export class MediaFileService {
   private authenticationService = inject(AuthenticationService);
 
   uploadFile(date: [Date, Date], file: File, text: string, important: boolean) {
-    const url =
-      this.constantsService.getServerUrl() +
-      "media?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[1])],
-          ["region", this.authenticationService.getActiveRegionId()],
-          ["lang", this.translateService.currentLang],
-          ["important", important],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/media",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[1])],
+      ["region", this.authenticationService.getActiveRegionId()],
+      ["lang", this.translateService.currentLang],
+      ["important", important],
+    );
     const formData = new FormData();
     formData.append("file", file);
     formData.append("text", text);

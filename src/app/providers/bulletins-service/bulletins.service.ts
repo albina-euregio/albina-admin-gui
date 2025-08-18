@@ -129,7 +129,7 @@ export class BulletinsService {
 
   public wsBulletinConnect() {
     this.bulletinLocks = this.wsBulletinService
-      .connect(this.constantsService.getServerWsUrl() + "../bulletin/" + this.authenticationService.getUsername())
+      .connect(this.constantsService.getServerWsUrl(`../bulletin/${this.authenticationService.getUsername()}`))
       .pipe(
         map((response): BulletinLockModel => {
           const data = JSON.parse(response.data);
@@ -248,15 +248,11 @@ export class BulletinsService {
 
   getPreviewPdf(bulletins: BulletinModel[]): Observable<Blob> {
     const body = JSON.stringify(bulletins.map((b) => b.toJson()));
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/preview?" +
-      this.constantsService
-        .createSearchParams([
-          ["region", this.authenticationService.getActiveRegionId()],
-          ["lang", this.translateService.currentLang],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/preview",
+      ["region", this.authenticationService.getActiveRegionId()],
+      ["lang", this.translateService.currentLang],
+    );
     const headers = new HttpHeaders({ Accept: "application/pdf" });
     return this.http.post(url, body, { headers, responseType: "blob" });
   }
@@ -276,29 +272,21 @@ export class BulletinsService {
         }),
       );
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/status/internal?" +
-      this.constantsService
-        .createSearchParams([
-          ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
-          ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
-          ["region", region],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/status/internal",
+      ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
+      ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
+      ["region", region],
+    );
     return this.http.get<{ date: string; status: keyof typeof Enums.BulletinStatus }[]>(url);
   }
 
   getPublicationStatus(region: string, date: [Date, Date]) {
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/status/publication?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", region],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/status/publication",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", region],
+    );
     return this.http.get(url);
   }
 
@@ -319,15 +307,11 @@ export class BulletinsService {
     regions: string[],
     etag?: string,
   ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/edit?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["regions", regions],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/edit",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["regions", regions],
+    );
     const headers = etag ? new HttpHeaders({ "If-None-Match": etag }) : undefined;
     return this.http
       .get<BulletinModelAsJSON[]>(url, { headers, observe: "response" })
@@ -351,15 +335,11 @@ export class BulletinsService {
         if (latest.date.endsWith("T22:00:00Z") || latest.date.endsWith("T23:00:00Z")) {
           date.setHours(24, 0, 0);
         }
-        const url =
-          server.apiUrl +
-          "bulletins/edit?" +
-          this.constantsService
-            .createSearchParams([
-              ["date", this.constantsService.getISOStringWithTimezoneOffset(date)],
-              ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
-            ])
-            .toString();
+        const url = this.constantsService.getServerUrl(
+          "/bulletins/edit",
+          ["date", this.constantsService.getISOStringWithTimezoneOffset(date)],
+          ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
+        );
         return this.http.get<BulletinModelAsJSON[]>(url, { headers });
       }),
     );
@@ -371,15 +351,11 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", this.authenticationService.getActiveRegionId()],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", this.authenticationService.getActiveRegionId()],
+    );
     const jsonBulletins = [];
     for (let i = bulletins.length - 1; i >= 0; i--) {
       jsonBulletins.push(bulletins[i].toJson());
@@ -396,15 +372,11 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", this.authenticationService.getActiveRegionId()],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", this.authenticationService.getActiveRegionId()],
+    );
     const body = JSON.stringify(bulletin.toJson());
     return this.http.put<BulletinModelAsJSON[]>(url, body);
   }
@@ -417,17 +389,11 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/" +
-      bulletin.id +
-      "?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", this.authenticationService.getActiveRegionId()],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      `/bulletins/${bulletin.id}`,
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", this.authenticationService.getActiveRegionId()],
+    );
     const body = JSON.stringify(bulletin.toJson());
     return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
@@ -440,17 +406,11 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/" +
-      bulletin.id +
-      "?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", this.authenticationService.getActiveRegionId()],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      `/bulletins/${bulletin.id}`,
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", this.authenticationService.getActiveRegionId()],
+    );
     return this.http.delete<BulletinModelAsJSON[]>(url);
   }
 
@@ -458,15 +418,11 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/submit?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", region],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/submit",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", region],
+    );
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);
   }
@@ -475,15 +431,11 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/publish?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", region],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/publish",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", region],
+    );
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);
   }
@@ -492,15 +444,11 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/change?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", region],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/change",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", region],
+    );
     const jsonBulletins = [];
     const body = JSON.stringify(jsonBulletins);
     return this.http.post<void>(url, body);
@@ -510,15 +458,11 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/publish/all?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["change", change],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/publish/all",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["change", change],
+    );
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);
   }
@@ -527,15 +471,12 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const baseUrl = this.constantsService.getServerUrl() + `bulletins/publish/${channel}?`;
-    const searchParams: [string, string][] = [
+    const url = this.constantsService.getServerUrl(
+      `/bulletins/publish/${channel}`,
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", region],
-    ];
-    if (language !== "all") {
-      searchParams.push(["lang", language]);
-    }
-    const url = baseUrl + this.constantsService.createSearchParams(searchParams).toString();
+      ...(language !== "all" ? [["lang", language] as [string, string]] : []),
+    );
     const body = JSON.stringify("");
     return this.http.post(url, body);
   }
@@ -544,21 +485,17 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       // TODO check bulletins from POST JSON
     }
-    const url =
-      this.constantsService.getServerUrl() +
-      "bulletins/check?" +
-      this.constantsService
-        .createSearchParams([
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-          ["region", region],
-        ])
-        .toString();
+    const url = this.constantsService.getServerUrl(
+      "/bulletins/check",
+      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
+      ["region", region],
+    );
     return this.http.get(url);
   }
 
   loadLockedBulletins() {
     this.lockedBulletins.clear();
-    const url = this.constantsService.getServerUrl() + "bulletins/locked";
+    const url = this.constantsService.getServerUrl("/bulletins/locked");
     this.http.get(url).subscribe(
       (data) => {
         for (const response of data as any) {

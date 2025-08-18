@@ -148,12 +148,16 @@ export class ConstantsService {
     }
   }
 
-  getServerUrl() {
-    return environment.apiBaseUrl;
+  getServerUrl(endpoint: `/${string}`, ...params: [string, any][]) {
+    let url = new URL("." + endpoint, environment.apiBaseUrl).toString();
+    if (params?.length) {
+      url += "?" + this.createSearchParams(params);
+    }
+    return url;
   }
 
-  getServerWsUrl() {
-    return this.getServerUrl().replace(/^http/, "ws");
+  getServerWsUrl(endpoint: `../${string}`) {
+    return new URL(endpoint, environment.apiBaseUrl.replace(/^http/, "ws"));
   }
 
   getISOStringWithTimezoneOffset(date: Date) {
@@ -175,7 +179,7 @@ export class ConstantsService {
     return number < 10 ? (`${0}${number}` as unknown as number) : number;
   }
 
-  createSearchParams(params: [string, any][]): URLSearchParams {
+  private createSearchParams(params: [string, any][]): URLSearchParams {
     const result = new URLSearchParams();
     for (const i in params) {
       const param = params[i];
