@@ -1,6 +1,7 @@
 import * as pkg from "../../../../package.json";
 import { environment } from "../../../environments/environment";
 import * as Enums from "../../enums/enums";
+import type { ServerModel } from "../../models/server.model";
 import { formatDate } from "@angular/common";
 import { Injectable } from "@angular/core";
 
@@ -146,6 +147,14 @@ export class ConstantsService {
       default:
         return this.colorDangerRatingMissing;
     }
+  }
+
+  getExternalServerUrl(server: ServerModel, endpoint: `/${string}`, ...params: [string, any][]) {
+    let url = new URL("." + endpoint, server.apiUrl).toString();
+    if (params?.length) {
+      url += "?" + this.createSearchParams(params);
+    }
+    return url;
   }
 
   getServerUrl(endpoint: `/${string}`, ...params: [string, any][]) {

@@ -329,20 +329,23 @@ export class BulletinsService {
         .get<Bulletins>(server.apiUrl, { headers, params })
         .pipe(map((data) => data.bulletins.map((b) => toAlbinaBulletin(b))));
     }
-    return this.http.get<{ date: string }>(server.apiUrl + "bulletins/latest", { headers }).pipe(
-      switchMap((latest) => {
-        const date = new Date(date0);
-        if (latest.date.endsWith("T22:00:00Z") || latest.date.endsWith("T23:00:00Z")) {
-          date.setHours(24, 0, 0);
-        }
-        const url = this.constantsService.getServerUrl(
-          "/bulletins/edit",
-          ["date", this.constantsService.getISOStringWithTimezoneOffset(date)],
-          ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
-        );
-        return this.http.get<BulletinModelAsJSON[]>(url, { headers });
-      }),
-    );
+    return this.http
+      .get<{ date: string }>(this.constantsService.getExternalServerUrl(server, "/bulletins/latest"), { headers })
+      .pipe(
+        switchMap((latest) => {
+          const date = new Date(date0);
+          if (latest.date.endsWith("T22:00:00Z") || latest.date.endsWith("T23:00:00Z")) {
+            date.setHours(24, 0, 0);
+          }
+          const url = this.constantsService.getExternalServerUrl(
+            server,
+            "/bulletins/edit",
+            ["date", this.constantsService.getISOStringWithTimezoneOffset(date)],
+            ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
+          );
+          return this.http.get<BulletinModelAsJSON[]>(url, { headers });
+        }),
+      );
   }
 
   saveBulletins(bulletins: BulletinModel[], date: [Date, Date]): Observable<BulletinModelAsJSON[]> {
