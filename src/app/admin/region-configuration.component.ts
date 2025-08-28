@@ -29,6 +29,7 @@ export class RegionConfigurationComponent {
   public alerts: Alert[] = [];
 
   toggleLanguage(language: string, checked: boolean) {
+    this.config().enabledLanguages ??= [];
     if (checked) {
       this.config().enabledLanguages.push(language);
     } else {
@@ -37,6 +38,7 @@ export class RegionConfigurationComponent {
   }
 
   toggleTTSLanguage(language: string, checked: boolean) {
+    this.config().ttsLanguages ??= [];
     if (checked) {
       this.config().ttsLanguages.push(language);
     } else {
