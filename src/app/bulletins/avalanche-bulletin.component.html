@@ -178,6 +178,10 @@
       {{ "bulletins.create.regionNotEditable" | translate }}
     </p>
     <div class="btn-group banner__actions">
+      <!-- dummy button to keep layout -->
+      <button class="btn btn-sm btn-icon btn-outline-primary" style="visibility: hidden">
+        <i class="ph ph-map-trifold"></i>
+      </button>
       <button
         *ngIf="showEditMicroRegionsButton()"
         (click)="editMicroRegions()"
