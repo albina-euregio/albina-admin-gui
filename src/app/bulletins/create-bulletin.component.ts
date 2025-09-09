@@ -2035,6 +2035,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   eventCopyBulletin(bulletin: BulletinModel) {
     this.copyBulletin(bulletin);
     this.copyRegionModalRef = this.modalService.show(this.copyRegionTemplate(), this.config);
+    this.copyRegionModalRef.onHide.subscribe(() => {
+      if (this.copyService.isCopyBulletin()) {
+        this.copyService.resetCopyBulletin();
+      }
+    });
   }
 
   openCopyRegionModal(event, bulletin: BulletinModel) {
@@ -2054,9 +2059,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   copyRegionModalDecline(): void {
-    if (this.copyService.isCopyBulletin()) {
-      this.copyService.resetCopyBulletin();
-    }
     this.copyRegionModalRef.hide();
   }
 
