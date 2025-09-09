@@ -32,7 +32,10 @@
   <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
     <p class="region-form__mindset-text">
       {{ "strategicMindset.title" | translate }}
-      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"></i>
+      <i
+        class="ph ph-info region-form__mindset-info"
+        (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"
+      ></i>
     </p>
     <select
       [(ngModel)]="bulletin().strategicMindset"

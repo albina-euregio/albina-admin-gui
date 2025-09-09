@@ -48,6 +48,9 @@ $region-form-width: 512px;
   .region-form__mindset-text {
     margin-bottom: 0rem;
     color: $gray-600;
+    .region-form__mindset-info {
+      cursor: help;
+    }
   }
 }
 
