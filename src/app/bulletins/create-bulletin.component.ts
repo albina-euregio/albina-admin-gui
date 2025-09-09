@@ -1403,6 +1403,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     // if bulletin without textcats is copied to region with textcat, clear texts
     if (!this.authenticationService.getActiveRegion().enableEditableFields) {
+      if (!bulletin.highlightsTextcat) {
+        newBulletin.highlights$ = emptyLangTexts();
+      }
       if (!bulletin.avActivityCommentTextcat) {
         newBulletin.avActivityComment$ = emptyLangTexts();
       }
