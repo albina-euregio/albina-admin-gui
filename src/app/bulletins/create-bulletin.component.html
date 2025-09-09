@@ -884,8 +884,9 @@
         *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
         [disabled]="loading || editRegions"
         type="button"
-        class="btn btn-bare btn-sm btn-icon"
+        class="btn btn-sm btn-icon"
         [class.btn-bare--inverse]="comparedBulletin && bulletin.id === comparedBulletin.id"
+        [class.btn-bare]="!comparedBulletin || bulletin.id !== comparedBulletin.id"
         (click)="compareBulletin($event, bulletin)"
         title="{{ 'bulletins.create.tooltip.compare' | translate }}"
       >
