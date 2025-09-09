@@ -4,6 +4,7 @@ import { concatenateLangTexts, LangTexts, LANGUAGES } from "../models/text.model
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
+import { createWordDiff } from "../shared/wordDiff";
 import type { TextcatLegacyIn, TextcatTextfield } from "./avalanche-bulletin.component";
 import { HtmlPipe } from "./html.pipe";
 import { NgClass, NgIf, NgFor, UpperCasePipe } from "@angular/common";
@@ -29,11 +30,13 @@ export class BulletinTextComponent {
   readonly rows = input<number>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly bulletin = input<BulletinModel>(undefined);
+  readonly comparedBulletin = input<BulletinModel>(undefined);
   readonly showDialog = output<TextcatLegacyIn>();
   readonly updateBulletinOnServer = output();
   showTranslations = false;
   showNotes = false;
   modalRef: BsModalRef;
+  createWordDiff = createWordDiff;
 
   get translationLanguages() {
     return LANGUAGES.filter((l) => l !== this.translateService.currentLang);
@@ -119,5 +122,22 @@ export class BulletinTextComponent {
 
   loadExampleTextCancel() {
     this.modalRef.hide();
+  }
+
+  createText(): string {
+    const currentBulletin = this.bulletin();
+    const currentText = currentBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang];
+    if (currentBulletin !== null && currentBulletin !== undefined && currentText !== undefined) {
+      const comparedBulletin = this.comparedBulletin();
+      const comparedText = comparedBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang];
+      if (comparedBulletin !== null && comparedBulletin !== undefined && comparedText !== undefined) {
+        const result = createWordDiff(currentText, comparedText);
+        return result;
+      } else {
+        return currentText;
+      }
+    } else {
+      return "";
+    }
   }
 }

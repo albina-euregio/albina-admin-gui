@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $header-nav-height: 60px;
 $bulletin-height: calc(100vh - $header-nav-height);
 $compact-map-height: 300px;
@@ -388,4 +390,21 @@ app-danger-rating-icon {
     height: calc(100vh - $header-nav-height - $modal-height-sm);
     padding-top: $modal-height-sm;
   }
+}
+
+ins,
+mark {
+  padding: 0 0.1em;
+  text-decoration: none;
+}
+ins {
+  background-color: color.adjust(#00ff00, $lightness: 46%);
+}
+mark {
+  background-color: #ffff00;
+}
+
+del {
+  color: #808080;
+  background-color: color.adjust(#ff0000, $lightness: 46%);
 }

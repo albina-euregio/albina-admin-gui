@@ -73,8 +73,15 @@
           </button>
         </div>
         <!-- End of toolbar -->
+        <div
+          *ngIf="comparedBulletin()"
+          [innerHTML]="createText()"
+          class="form-control"
+          [style.height.px]="rows() * 24 + 13"
+          style="white-space: pre-wrap; overflow-y: auto; resize: vertical"
+        ></div>
         <textarea
-          *ngIf="bulletin() && bulletin()[bulletinTextKey]"
+          *ngIf="!comparedBulletin() && bulletin() && bulletin()[bulletinTextKey]"
           class="form-control"
           [rows]="rows()"
           [disabled]="disabled() || !enableEditableFields"
