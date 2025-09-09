@@ -251,7 +251,11 @@ app-avalanche-problem-preview,
 }
 
 .region-form__translation-toggle {
-  margin: $space-1 0;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  i {
+    margin-right: 0 !important;
+  }
 }
 
 .region-form__danger-patterns {

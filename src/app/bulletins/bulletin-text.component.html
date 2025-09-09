@@ -103,8 +103,8 @@
     *ngIf="showTranslations"
     (click)="showTranslations = !showTranslations"
   >
-    <i class="ph ph-caret-down"></i>
-    <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
+    <i class="ph ph-caret-down font-s text-secondary"></i>
+    <span class="font-s text-secondary">{{ "bulletins.create.title.hideTranslations" | translate }}</span>
   </button>
   <button
     class="btn btn-sm btn-bare region-form__translation-toggle"
@@ -112,8 +112,8 @@
     *ngIf="!showTranslations"
     (click)="showTranslations = !showTranslations"
   >
-    <i class="ph ph-caret-right"></i>
-    <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
+    <i class="ph ph-caret-right font-s text-secondary"></i>
+    <span class="font-s text-secondary">{{ "bulletins.create.title.showTranslations" | translate }}</span>
   </button>
 
   <!--
