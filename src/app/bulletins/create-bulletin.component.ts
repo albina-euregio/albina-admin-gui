@@ -1596,7 +1596,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   compareBulletin(event: Event, bulletin: BulletinModel) {
     event.stopPropagation();
-    this.comparedBulletin = bulletin;
+    if (this.comparedBulletin && this.comparedBulletin.id === bulletin.id) {
+      this.comparedBulletin = undefined;
+    } else {
+      this.comparedBulletin = bulletin;
+    }
   }
 
   private delBulletin(bulletin: BulletinModel) {
