@@ -55,7 +55,12 @@
   </div>
 
   <div
-    *ngIf="!bulletinsService.isLocked(bulletin().id) && bulletinsService.getIsEditable() && isCreator(bulletin())"
+    *ngIf="
+      !disabled() &&
+      !bulletinsService.isLocked(bulletin().id) &&
+      bulletinsService.getIsEditable() &&
+      isCreator(bulletin())
+    "
     class="region-form__banner banner banner-info"
   >
     <p class="banner__text">
@@ -147,7 +152,7 @@
     </p>
     <div class="btn-group banner__actions">
       <button
-        *ngIf="bulletinsService.getIsEditable()"
+        *ngIf="!disabled() && bulletinsService.getIsEditable()"
         (click)="rejectSuggestions($event)"
         type="button"
         class="btn btn-sm btn-outline-dark"
@@ -155,7 +160,7 @@
         <i class="ph ph-x"></i> <span>{{ "bulletins.create.rejectSuggestion" | translate }}</span>
       </button>
       <button
-        *ngIf="bulletinsService.getIsEditable()"
+        *ngIf="!disabled() && bulletinsService.getIsEditable()"
         (click)="acceptSuggestions($event)"
         type="button"
         class="btn btn-sm btn-dark"
@@ -169,7 +174,8 @@
     *ngIf="
       !bulletinsService.isLocked(bulletin().id) &&
       (!bulletinsService.getIsEditable() ||
-        (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())))
+        (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())) ||
+        disabled())
     "
     class="region-form__banner banner banner-warning"
   >
