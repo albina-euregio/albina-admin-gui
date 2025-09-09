@@ -231,6 +231,10 @@ app-avalanche-problem-preview,
 
 // Danger description
 
+.region-form {
+  padding-bottom: $space-4;
+}
+
 .region-form__translation-block {
   .region-form__translation-item + .region-form__translation-item {
     margin-top: $space-1;
