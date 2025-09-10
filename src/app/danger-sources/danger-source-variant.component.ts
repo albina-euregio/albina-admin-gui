@@ -4,6 +4,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { AspectsComponent } from "../shared/aspects.component";
+import { haveSameElements } from "../shared/compareArrays";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 import { SliderComponent, SliderOptions } from "../shared/slider.component";
 import { DangerSourcesService } from "./danger-sources.service";
@@ -67,6 +68,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   translateService = inject(TranslateService);
 
   readonly variant = input<DangerSourceVariantModel>(undefined);
+  readonly comparedVariant = input<DangerSourceVariantModel>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly isCompactMapLayout = input<boolean>(undefined);
   readonly isVariantsSidebarVisible = input<boolean>(undefined);
@@ -84,6 +86,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
   variantStatus: DangerSourceVariantStatus[] = Object.values(DangerSourceVariantStatus);
   public variantType = DangerSourceVariantType;
+  haveSameElements = haveSameElements;
 
   avalancheTypeEnum = Enums.AvalancheType;
   wetnessEnum = Wetness;

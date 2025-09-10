@@ -3,6 +3,7 @@
   [label]="translateService.instant('matrix.label.snowpackStability')"
   [disabled]="disabled()"
   [sliderValue]="matrixInformation().snowpackStabilityValue"
+  [comparedSliderValue]="comparedMatrixInformation()?.snowpackStabilityValue"
   (sliderValueChange)="getSnowpackStabilityOptions(avalancheType()).onValueChange($event)"
   [sliderOptions]="getSnowpackStabilityOptions(avalancheType())"
 />
@@ -12,6 +13,7 @@
   [label]="translateService.instant('matrix.label.frequency')"
   [disabled]="disabled()"
   [sliderValue]="matrixInformation().frequencyValue"
+  [comparedSliderValue]="comparedMatrixInformation()?.frequencyValue"
   (sliderValueChange)="getFrequencyOptions(avalancheType()).onValueChange($event)"
   [sliderOptions]="getFrequencyOptions(avalancheType())"
 />
@@ -21,12 +23,22 @@
   [label]="translateService.instant('matrix.label.avalancheSize')"
   [disabled]="disabled()"
   [sliderValue]="matrixInformation().avalancheSizeValue"
+  [comparedSliderValue]="comparedMatrixInformation()?.avalancheSizeValue"
   (sliderValueChange)="avalancheSizeOptions.onValueChange($event)"
   [sliderOptions]="avalancheSizeOptions"
 />
 
 <div class="form-group">
-  <label class="form-label" for="textarea-input">{{ "matrix.label.dangerRating" | translate }}</label>
+  <label
+    class="form-label"
+    [class.changed]="
+      comparedMatrixInformation() &&
+      (matrixInformation().dangerRating !== comparedMatrixInformation().dangerRating ||
+        matrixInformation().dangerRatingModificator !== comparedMatrixInformation().dangerRatingModificator)
+    "
+    for="textarea-input"
+    >{{ "matrix.label.dangerRating" | translate }}</label
+  >
 
   <div class="avalanche-problem-detail__override">
     <!-- danger rating -->

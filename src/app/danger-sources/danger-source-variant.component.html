@@ -49,7 +49,12 @@
   </header>
 
   <div class="form-group region-form__mindset">
-    <p class="region-form__mindset-text">
+    <p
+      class="region-form__mindset-text"
+      [class.changed]="
+        isComparedVariant() && variant().dangerSourceVariantStatus !== comparedVariant()?.dangerSourceVariantStatus
+      "
+    >
       {{ "dangerSources.create.variantStatus" | translate }}
     </p>
     <select
@@ -143,7 +148,12 @@
           </h2>
         </div>
         <div class="form-group row">
-          <label class="form-label" for="">{{ "avalancheType.title" | translate }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().avalancheType !== comparedVariant()?.avalancheType"
+            for=""
+            >{{ "avalancheType.title" | translate }}</label
+          >
           <div class="btn-group">
             <!-- SLAB -->
             <button
@@ -205,9 +215,16 @@
         />
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label class="form-label me-3" for="textarea-input">{{
-            "dangerSources.create.label.snowHeight" | translate
-          }}</label>
+          <label
+            class="form-label me-3"
+            [class.changed]="
+              isComparedVariant() &&
+              (variant().snowHeightLowerLimit !== comparedVariant()?.snowHeightLowerLimit ||
+                variant().snowHeightUpperLimit !== comparedVariant()?.snowHeightUpperLimit)
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.snowHeight" | translate }}</label
+          >
           <div class="input-group align-items-baseline">
             <input
               step="1"
@@ -240,9 +257,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label class="form-label me-3" for="textarea-input">{{
-            "dangerSources.create.label.snowHeightAverage" | translate
-          }}</label>
+          <label
+            class="form-label me-3"
+            [class.changed]="
+              isComparedVariant() && variant().snowHeightAverage !== comparedVariant()?.snowHeightAverage
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.snowHeightAverage" | translate }}</label
+          >
           <div class="input-group align-items-baseline">
             <input
               step="1"
@@ -261,9 +283,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label class="form-label" for="zeroDegreeIsothermCheckbox">{{
-            "dangerSources.create.label.zeroDegreeIsotherm" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().zeroDegreeIsotherm !== comparedVariant()?.zeroDegreeIsotherm
+            "
+            for="zeroDegreeIsothermCheckbox"
+            >{{ "dangerSources.create.label.zeroDegreeIsotherm" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -296,9 +323,12 @@
 
         <!-- SLAB AVALANCHES -->
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.slabGrainShape" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().slabGrainShape !== comparedVariant()?.slabGrainShape"
+            for="textarea-input"
+            >{{ "dangerSources.create.label.slabGrainShape" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -383,9 +413,16 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label pe-3" for="textarea-input">{{
-            "dangerSources.create.label.slabThickness" | translate
-          }}</label>
+          <label
+            class="form-label pe-3"
+            [class.changed]="
+              isComparedVariant() &&
+              (variant().slabThicknessLowerLimit !== comparedVariant()?.slabThicknessLowerLimit ||
+                variant().slabThicknessUpperLimit !== comparedVariant()?.slabThicknessUpperLimit)
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.slabThickness" | translate }}</label
+          >
           <div class="input-group align-items-baseline">
             <input
               step="5"
@@ -418,9 +455,16 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label pe-3" for="textarea-input">{{
-            "dangerSources.create.label.slabHandHardness" | translate
-          }}</label>
+          <label
+            class="form-label pe-3"
+            [class.changed]="
+              (isComparedVariant() &&
+                variant().slabHandHardnessLowerLimit !== comparedVariant()?.slabHandHardnessLowerLimit) ||
+              variant().slabHandHardnessUpperLimit !== comparedVariant()?.slabHandHardnessUpperLimit
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.slabHandHardness" | translate }}</label
+          >
           <div class="input-group align-items-baseline">
             <div class="btn-group flex-fill">
               <button
@@ -655,9 +699,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.slabHardnessProfile" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().slabHardnessProfile !== comparedVariant()?.slabHardnessProfile
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.slabHardnessProfile" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -711,9 +760,15 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.slabEnergyTransferPotential" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() &&
+              variant().slabEnergyTransferPotential !== comparedVariant()?.slabEnergyTransferPotential
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.slabEnergyTransferPotential" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -791,9 +846,12 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.slabDistribution" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().slabDistribution !== comparedVariant()?.slabDistribution"
+            for="textarea-input"
+            >{{ "dangerSources.create.label.slabDistribution" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -849,9 +907,14 @@
         <hr *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="solid" />
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.weakLayerGrainShape" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerGrainShape !== comparedVariant()?.weakLayerGrainShape
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.weakLayerGrainShape" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -951,9 +1014,16 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label pe-3" for="textarea-input">{{
-            "dangerSources.create.label.weakLayerGrainSize" | translate
-          }}</label>
+          <label
+            class="form-label pe-3"
+            [class.changed]="
+              isComparedVariant() &&
+              (variant().weakLayerGrainSizeLowerLimit !== comparedVariant()?.weakLayerGrainSizeLowerLimit ||
+                variant().weakLayerGrainSizeUpperLimit !== comparedVariant()?.weakLayerGrainSizeUpperLimit)
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.weakLayerGrainSize" | translate }}</label
+          >
           <div class="input-group align-items-baseline">
             <input
               step="0.25"
@@ -986,9 +1056,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="weakLayerPersistentCheckbox">{{
-            "dangerSources.create.label.weakLayerPersistent" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerPersistent !== comparedVariant()?.weakLayerPersistent
+            "
+            for="weakLayerPersistentCheckbox"
+            >{{ "dangerSources.create.label.weakLayerPersistent" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1020,9 +1095,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.weakLayerThickness" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerThickness !== comparedVariant()?.weakLayerThickness
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.weakLayerThickness" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1057,9 +1137,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.weakLayerStrength" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerStrength !== comparedVariant()?.weakLayerStrength
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.weakLayerStrength" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1129,9 +1214,12 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="weakLayerWetCheckbox">{{
-            "dangerSources.create.label.weakLayerWet" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().weakLayerWet !== comparedVariant()?.weakLayerWet"
+            for="weakLayerWetCheckbox"
+            >{{ "dangerSources.create.label.weakLayerWet" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1163,9 +1251,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="weakLayerCrustAboveCheckbox">{{
-            "dangerSources.create.label.weakLayerCrustAbove" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerCrustAbove !== comparedVariant()?.weakLayerCrustAbove
+            "
+            for="weakLayerCrustAboveCheckbox"
+            >{{ "dangerSources.create.label.weakLayerCrustAbove" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1219,9 +1312,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="weakLayerCrustBelowCheckbox">{{
-            "dangerSources.create.label.weakLayerCrustBelow" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerCrustBelow !== comparedVariant()?.weakLayerCrustBelow
+            "
+            for="weakLayerCrustBelowCheckbox"
+            >{{ "dangerSources.create.label.weakLayerCrustBelow" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1275,9 +1373,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.weakLayerPosition" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerPosition !== comparedVariant()?.weakLayerPosition
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.weakLayerPosition" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1347,9 +1450,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.weakLayerCreation" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerCreation !== comparedVariant()?.weakLayerCreation
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.weakLayerCreation" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1443,9 +1551,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.weakLayerDistribution" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().weakLayerDistribution !== comparedVariant()?.weakLayerDistribution
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.weakLayerDistribution" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1503,9 +1616,15 @@
         <hr *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="rounded" />
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.dangerSpotRecognizability" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() &&
+              variant().dangerSpotRecognizability !== comparedVariant()?.dangerSpotRecognizability
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.dangerSpotRecognizability" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1583,9 +1702,12 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="remoteTriggeringCheckbox">{{
-            "dangerSources.create.label.remoteTriggering" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().remoteTriggering !== comparedVariant()?.remoteTriggering"
+            for="remoteTriggeringCheckbox"
+            >{{ "dangerSources.create.label.remoteTriggering" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1639,9 +1761,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.terrainTypes" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && !haveSameElements(variant().terrainTypes, comparedVariant()?.terrainTypes)
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.terrainTypes" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -1980,9 +2107,14 @@
 
         <!-- LOOSE SNOW AVALANCHES -->
         <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.looseSnowGrainShape" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().looseSnowGrainShape !== comparedVariant()?.looseSnowGrainShape
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.looseSnowGrainShape" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2066,9 +2198,14 @@
         </div>
 
         <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.looseSnowMoisture" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().looseSnowMoisture !== comparedVariant()?.looseSnowMoisture
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.looseSnowMoisture" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2123,9 +2260,14 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="hasDaytimeDependencyCheckbox">{{
-            "dangerSources.create.label.hasDaytimeDependency" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().hasDaytimeDependency !== comparedVariant()?.hasDaytimeDependency
+            "
+            for="hasDaytimeDependencyCheckbox"
+            >{{ "dangerSources.create.label.hasDaytimeDependency" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2157,9 +2299,15 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="dangerIncreaseWithElevationCheckbox">{{
-            "dangerSources.create.label.dangerIncreaseWithElevation" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() &&
+              variant().dangerIncreaseWithElevation !== comparedVariant()?.dangerIncreaseWithElevation
+            "
+            for="dangerIncreaseWithElevationCheckbox"
+            >{{ "dangerSources.create.label.dangerIncreaseWithElevation" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2191,9 +2339,14 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.highestDangerAspect" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().highestDangerAspect !== comparedVariant()?.highestDangerAspect
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.highestDangerAspect" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2243,9 +2396,12 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.dangerPeak" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().dangerPeak !== comparedVariant()?.dangerPeak"
+            for="textarea-input"
+            >{{ "dangerSources.create.label.dangerPeak" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2327,9 +2483,12 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.slopeGradient" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().slopeGradient !== comparedVariant()?.slopeGradient"
+            for="textarea-input"
+            >{{ "dangerSources.create.label.slopeGradient" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2398,9 +2557,12 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="runoutIntoGreenCheckbox">{{
-            "dangerSources.create.label.runoutIntoGreen" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().runoutIntoGreen !== comparedVariant()?.runoutIntoGreen"
+            for="runoutIntoGreenCheckbox"
+            >{{ "dangerSources.create.label.runoutIntoGreen" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2432,9 +2594,14 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="runoutIntoGreenCheckbox">{{
-            "dangerSources.create.label.penetrateDeepLayers" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().penetrateDeepLayers !== comparedVariant()?.penetrateDeepLayers
+            "
+            for="runoutIntoGreenCheckbox"
+            >{{ "dangerSources.create.label.penetrateDeepLayers" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2466,9 +2633,12 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.naturalRelease" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && variant().naturalRelease !== comparedVariant()?.naturalRelease"
+            for="textarea-input"
+            >{{ "dangerSources.create.label.naturalRelease" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2519,9 +2689,14 @@
         </div>
 
         <div class="form-group row">
-          <label class="form-label" for="textarea-input">{{
-            "dangerSources.create.label.dangerSigns" | translate
-          }}</label>
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && !haveSameElements(variant().dangerSigns, comparedVariant()?.dangerSigns)
+            "
+            for="textarea-input"
+            >{{ "dangerSources.create.label.dangerSigns" | translate }}</label
+          >
           <div class="btn-group">
             <button
               type="reset"
@@ -2574,7 +2749,12 @@
         </div>
         <div class="form-group row">
           <div class="col-md-5">
-            <label class="form-label" for="">{{ "dangerSources.create.label.aspects" | translate }}</label>
+            <label
+              class="form-label"
+              [class.changed]="isComparedVariant() && !haveSameElements(variant().aspects, comparedVariant()?.aspects)"
+              for=""
+              >{{ "dangerSources.create.label.aspects" | translate }}</label
+            >
             <div>
               <app-aspects
                 [(aspects)]="variant().aspects"
@@ -2585,7 +2765,18 @@
             </div>
           </div>
           <div class="col-md-7">
-            <label class="form-label" for="">{{ "elevation.title" | translate }}</label>
+            <label
+              class="form-label"
+              [class.changed]="
+                isComparedVariant() &&
+                (variant().elevationHigh !== comparedVariant()?.elevationHigh ||
+                  variant().elevationLow !== comparedVariant()?.elevationLow ||
+                  variant().treelineHigh !== comparedVariant()?.treelineHigh ||
+                  variant().treelineLow !== comparedVariant()?.treelineLow)
+              "
+              for=""
+              >{{ "elevation.title" | translate }}</label
+            >
             <!-- Elevation (high) -->
             <div class="avalanche-problem-detail__elevation">
               <div class="avalanche-problem-detail__elevation-label form-check">
@@ -2680,6 +2871,7 @@
           <app-matrix-parameter
             [bulletinDaytimeDescription]="variant()"
             [matrixInformation]="variant().eawsMatrixInformation"
+            [comparedMatrixInformation]="comparedVariant()?.eawsMatrixInformation"
             [disabled]="disabled()"
             [count]="1"
             [afternoon]="false"
