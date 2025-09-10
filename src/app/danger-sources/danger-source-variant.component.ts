@@ -13,6 +13,7 @@ import {
   DangerSign,
   DangerSourceVariantModel,
   DangerSourceVariantStatus,
+  DangerSourceVariantType,
   Daytime,
   Distribution,
   GlidingSnowActivity,
@@ -82,6 +83,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
   variantStatus: DangerSourceVariantStatus[] = Object.values(DangerSourceVariantStatus);
+  public variantType = DangerSourceVariantType;
 
   avalancheTypeEnum = Enums.AvalancheType;
   wetnessEnum = Wetness;

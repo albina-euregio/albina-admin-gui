@@ -23,6 +23,28 @@
       <div class="user-avatar__name">
         Updated on {{ variant().updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
       </div>
+      <!-- Status -->
+      <div class="create-bulletin__status">
+        <div>
+          <span
+            *ngIf="
+              variant().forecastDangerSourceVariantId !== null &&
+              variant().forecastDangerSourceVariantId !== '' &&
+              dangerSourcesService.getDangerSourceVariantType() === variantType.analysis
+            "
+            class="badge bg-success"
+          >
+            {{ "dangerSources.status.analysis" | translate }}
+          </span>
+          <span
+            *ngIf="variant().forecastDangerSourceVariantId === null || variant().forecastDangerSourceVariantId === ''"
+            class="badge bg-primary"
+          >
+            {{ "dangerSources.status.forecast" | translate }}
+          </span>
+        </div>
+      </div>
+      <!-- End status-->
     </div>
   </header>
 
