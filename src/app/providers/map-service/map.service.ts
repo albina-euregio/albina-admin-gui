@@ -379,7 +379,7 @@ export class MapService {
   }
 
   deselectAggregatedRegion() {
-    this.selectAggregatedRegion(undefined, this.comparedMapObject);
+    this.selectAggregatedRegion(undefined, undefined);
   }
 
   editAggregatedRegion(mapObject: PolygonObject) {
@@ -473,25 +473,11 @@ export class MapService {
     });
   }
 
-  private getAggregatedRegionBaseStyle(): PathOptions {
-    return {
-      opacity: 0.0,
-      fillOpacity: 0.0,
-    };
-  }
-
   private getRegionStyle(): PathOptions {
     return {
       weight: this.constantsService.lineWeight,
       opacity: this.constantsService.lineOpacity,
       color: this.constantsService.lineColor,
-      fillOpacity: 0.0,
-    };
-  }
-
-  private getActiveSelectionBaseStyle(): PathOptions {
-    return {
-      opacity: 0.0,
       fillOpacity: 0.0,
     };
   }
