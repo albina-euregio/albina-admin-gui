@@ -30,13 +30,16 @@
   </header>
 
   <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
-    <p class="region-form__mindset-text">
+    <label
+      class="region-form__mindset-text"
+      [class.changed]="isComparedBulletin() && bulletin().strategicMindset !== comparedBulletin()?.strategicMindset"
+    >
       {{ "strategicMindset.title" | translate }}
       <i
         class="ph ph-info region-form__mindset-info"
         (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"
       ></i>
-    </p>
+    </label>
     <select
       [(ngModel)]="bulletin().strategicMindset"
       (change)="updateBulletinOnServer()"
@@ -254,6 +257,7 @@
         <app-avalanche-problem
           [bulletinModel]="bulletin()"
           [bulletinDaytimeDescription]="bulletin().forenoon"
+          [comparedBulletinDaytimeDescription]="comparedBulletin()?.forenoon"
           [afternoon]="false"
           [disabled]="disabled()"
           (changeAvalancheProblemEvent)="updateBulletinOnServer()"
@@ -290,6 +294,7 @@
         <app-avalanche-problem
           [bulletinModel]="bulletin()"
           [bulletinDaytimeDescription]="bulletin().afternoon"
+          [comparedBulletinDaytimeDescription]="comparedBulletin().afternoon"
           [afternoon]="true"
           [disabled]="disabled()"
           (changeAvalancheProblemEvent)="updateBulletinOnServer()"

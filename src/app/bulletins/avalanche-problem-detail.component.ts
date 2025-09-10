@@ -4,6 +4,7 @@ import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-desc
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { haveSameElements } from "../shared/compareArrays";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 import { MatrixComponent } from "../shared/matrix.component";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
@@ -39,6 +40,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   readonly bulletin = input<BulletinModel>(undefined);
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly avalancheProblemModel = input<AvalancheProblemModel>(undefined);
+  readonly comparedAvalancheProblemModel = input<AvalancheProblemModel>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly count = input<number>(undefined);
   readonly afternoon = input<boolean>(undefined);
@@ -60,6 +62,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   directionEnum = Enums.DangerRatingDirection;
   avalancheTypeEnum = Enums.AvalancheType;
   avalancheProblemEnum = Enums.AvalancheProblem;
+  haveSameElements = haveSameElements;
 
   ngOnChanges() {
     this.avalancheProblems = this.authenticationService.getActiveRegionAvalancheProblems();
