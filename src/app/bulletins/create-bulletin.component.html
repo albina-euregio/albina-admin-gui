@@ -669,6 +669,7 @@
     >
       <app-avalanche-bulletin
         [bulletin]="comparedBulletin"
+        [comparedBulletin]="activeBulletin"
         [disabled]="true"
         [isCompactMapLayout]="isCompactMapLayout"
         [isBulletinSidebarVisible]="isBulletinSidebarVisible"
@@ -884,8 +885,10 @@
         *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
         [disabled]="loading || editRegions"
         type="button"
-        class="btn btn-bare btn-sm btn-icon"
-        (click)="compareBulletin($event, bulletin)"
+        class="btn btn-sm btn-icon"
+        [class.btn-bare--inverse]="comparedBulletin && bulletin.id === comparedBulletin.id"
+        [class.btn-bare]="!comparedBulletin || bulletin.id !== comparedBulletin.id"
+        (click)="eventCompareBulletin($event, bulletin)"
         title="{{ 'bulletins.create.tooltip.compare' | translate }}"
       >
         <i class="ph ph-square-half"></i>

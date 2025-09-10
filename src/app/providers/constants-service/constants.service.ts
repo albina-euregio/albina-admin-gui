@@ -42,6 +42,12 @@ export class ConstantsService {
   public colorDangerRatingConsiderable = "#FF9900";
   public colorDangerRatingHigh = "#FF0000";
   public colorDangerRatingVeryHigh = "#000000";
+  // danger rating (color, muted)
+  public colorDangerRatingLowMuted = "#A0C95A";
+  public colorDangerRatingModerateMuted = "#CFCF4D";
+  public colorDangerRatingConsiderableMuted = "#C97A2B";
+  public colorDangerRatingHighMuted = "#B04A4A";
+  public colorDangerRatingVeryHighMuted = "#333333";
   // danger rating (bw)
   public colorDangerRatingLowBw = "#EFEFEF";
   public colorDangerRatingModerateBw = "#D8D8D8";
@@ -121,6 +127,26 @@ export class ConstantsService {
         return this.colorDangerRatingModerate;
       case Enums.DangerRating.low:
         return this.colorDangerRatingLow;
+      case Enums.DangerRating.no_snow:
+        return this.colorDangerRatingNoSnow;
+
+      default:
+        return this.colorDangerRatingMissing;
+    }
+  }
+
+  getDangerRatingColorMuted(dangerRating: Enums.DangerRating) {
+    switch (dangerRating) {
+      case Enums.DangerRating.very_high:
+        return this.colorDangerRatingVeryHighMuted;
+      case Enums.DangerRating.high:
+        return this.colorDangerRatingHighMuted;
+      case Enums.DangerRating.considerable:
+        return this.colorDangerRatingConsiderableMuted;
+      case Enums.DangerRating.moderate:
+        return this.colorDangerRatingModerateMuted;
+      case Enums.DangerRating.low:
+        return this.colorDangerRatingLowMuted;
       case Enums.DangerRating.no_snow:
         return this.colorDangerRatingNoSnow;
 

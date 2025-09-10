@@ -289,6 +289,7 @@ export class BulletinModel implements PolygonObject {
       this.generalHeadlineCommentTextcat = undefined;
       this.generalHeadlineCommentNotes = undefined;
       this.synopsisCommentTextcat = undefined;
+      this.highlights$ = {} as LangTexts;
       this.avActivityHighlights$ = {} as LangTexts;
       this.avActivityComment$ = {} as LangTexts;
       this.snowpackStructureHighlights$ = {} as LangTexts;

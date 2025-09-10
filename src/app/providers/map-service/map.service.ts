@@ -264,7 +264,7 @@ export class MapService {
   }
 
   resetActiveSelection() {
-    this.selectAggregatedRegion(undefined);
+    this.selectAggregatedRegion(undefined, this.comparedMapObject);
   }
 
   resetEditSelection() {
@@ -281,31 +281,62 @@ export class MapService {
   // colors all micro-regions of bulletin
   // does not touch any other micro-region
   updateAggregatedRegion(mapObject: PolygonObject) {
-    this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
-    this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+    this.updateAggregatedRegionLayer(mapObject, this.map, this.overlayMaps.aggregatedRegions, "active");
+    this.updateAggregatedRegionLayer(
+      mapObject,
+      this.afternoonMap,
+      this.afternoonOverlayMaps.aggregatedRegions,
+      "active",
+    );
   }
 
   updateAggregatedRegionAM(mapObject: PolygonObject) {
-    this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
+    this.updateAggregatedRegionLayer(mapObject, this.map, this.overlayMaps.aggregatedRegions, "active");
   }
 
   updateAggregatedRegionPM(mapObject: PolygonObject) {
-    this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+    this.updateAggregatedRegionLayer(
+      mapObject,
+      this.afternoonMap,
+      this.afternoonOverlayMaps.aggregatedRegions,
+      "active",
+    );
   }
 
   activeMapObject: PolygonObject;
+  comparedMapObject: PolygonObject;
 
-  selectAggregatedRegion(mapObject: PolygonObject) {
-    this.activeMapObject = mapObject;
+  selectAggregatedRegion(activeObject?: PolygonObject, comparedObject?: PolygonObject) {
+    this.activeMapObject = activeObject;
+    this.comparedMapObject = comparedObject;
     if (this.activeMapObject) {
-      this.selectAggregatedRegion0(mapObject, this.map, this.overlayMaps.aggregatedRegions);
-      this.selectAggregatedRegion0(mapObject, this.afternoonMap, this.afternoonOverlayMaps.aggregatedRegions);
+      this.updateAggregatedRegionLayer(activeObject, this.map, this.overlayMaps.aggregatedRegions, "active");
+      this.updateAggregatedRegionLayer(
+        activeObject,
+        this.afternoonMap,
+        this.afternoonOverlayMaps.aggregatedRegions,
+        "active",
+      );
+    }
+    if (this.comparedMapObject) {
+      this.updateAggregatedRegionLayer(comparedObject, this.map, this.overlayMaps.aggregatedRegions, "compared");
+      this.updateAggregatedRegionLayer(
+        comparedObject,
+        this.afternoonMap,
+        this.afternoonOverlayMaps.aggregatedRegions,
+        "compared",
+      );
     }
     this.overlayMaps?.aggregatedRegions?.rerenderTiles();
     this.afternoonOverlayMaps?.aggregatedRegions?.rerenderTiles();
   }
 
-  private selectAggregatedRegion0(mapObject: PolygonObject, map: Map, layer: PmLeafletLayer) {
+  private updateAggregatedRegionLayer(
+    mapObject: PolygonObject,
+    map: Map,
+    layer: PmLeafletLayer,
+    mode: "active" | "compared",
+  ) {
     for (const status of [Enums.RegionStatus.suggested, Enums.RegionStatus.saved, Enums.RegionStatus.published]) {
       for (const region of mapObject.getRegionsByStatus(status)) {
         layer.paintRules[region] = {
@@ -332,9 +363,14 @@ export class MapService {
                 ? mapObject.getForenoonDangerRatingBelow()
                 : mapObject.getAfternoonDangerRatingBelow();
             if (!dangerRating) return undefined;
-            return mapObject === this.activeMapObject
-              ? this.getActiveSelectionStyle(properties.id, dangerRating, status)
-              : this.getDangerRatingStyle(properties.id, dangerRating, status);
+
+            if (mode === "active" && mapObject === this.activeMapObject) {
+              return this.getActiveSelectionStyle(properties.id, dangerRating, status);
+            } else if (mode === "compared" && mapObject === this.comparedMapObject) {
+              return this.getComparedSelectionStyle(properties.id, dangerRating, status);
+            } else {
+              return this.getDangerRatingStyle(properties.id, dangerRating, status);
+            }
           }),
         };
       }
@@ -343,7 +379,7 @@ export class MapService {
   }
 
   deselectAggregatedRegion() {
-    this.selectAggregatedRegion(undefined);
+    this.selectAggregatedRegion(undefined, undefined);
   }
 
   editAggregatedRegion(mapObject: PolygonObject) {
@@ -437,25 +473,11 @@ export class MapService {
     });
   }
 
-  private getAggregatedRegionBaseStyle(): PathOptions {
-    return {
-      opacity: 0.0,
-      fillOpacity: 0.0,
-    };
-  }
-
   private getRegionStyle(): PathOptions {
     return {
       weight: this.constantsService.lineWeight,
       opacity: this.constantsService.lineOpacity,
       color: this.constantsService.lineColor,
-      fillOpacity: 0.0,
-    };
-  }
-
-  private getActiveSelectionBaseStyle(): PathOptions {
-    return {
-      opacity: 0.0,
       fillOpacity: 0.0,
     };
   }
@@ -484,6 +506,42 @@ export class MapService {
   ): PathOptions {
     let fillOpacity = this.constantsService.fillOpacityOwnSelected;
     const fillColor = this.constantsService.getDangerRatingColor(dangerRating);
+
+    // own area
+    if (region.startsWith(this.authenticationService.getActiveRegionId())) {
+      if (status === Enums.RegionStatus.published) {
+        fillOpacity = this.constantsService.fillOpacityOwnSelected;
+      } else if (status === Enums.RegionStatus.suggested) {
+        fillOpacity = this.constantsService.fillOpacityOwnSelectedSuggested;
+      } else if (status === Enums.RegionStatus.saved) {
+        fillOpacity = this.constantsService.fillOpacityOwnSelected;
+      }
+
+      // foreign area
+    } else {
+      if (status === Enums.RegionStatus.published) {
+        fillOpacity = this.constantsService.fillOpacityForeignSelected;
+      } else if (status === Enums.RegionStatus.suggested) {
+        fillOpacity = this.constantsService.fillOpacityForeignSelectedSuggested;
+      } else if (status === Enums.RegionStatus.saved) {
+        fillOpacity = this.constantsService.fillOpacityForeignSelected;
+      }
+    }
+
+    return {
+      opacity: 0.0,
+      fillColor: fillColor,
+      fillOpacity: fillOpacity,
+    };
+  }
+
+  private getComparedSelectionStyle(
+    region: string,
+    dangerRating: Enums.DangerRating,
+    status: Enums.RegionStatus,
+  ): PathOptions {
+    let fillOpacity = this.constantsService.fillOpacityOwnSelected;
+    const fillColor = this.constantsService.getDangerRatingColorMuted(dangerRating);
 
     // own area
     if (region.startsWith(this.authenticationService.getActiveRegionId())) {

@@ -92,6 +92,17 @@ $icon-button-size-sm: $space-6;
   }
 }
 
+.btn-bare--inverse {
+  background-color: $gray-600;
+  color: $white;
+  &:hover,
+  &.show {
+    background-color: $gray-500;
+    border-color: $gray-500;
+    color: $white;
+  }
+}
+
 .btn-bare--grey {
   @extend .btn-bare;
   color: $gray-600;

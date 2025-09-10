@@ -32,7 +32,10 @@
   <div *ngIf="authenticationService.getActiveRegion().enableStrategicMindset" class="form-group region-form__mindset">
     <p class="region-form__mindset-text">
       {{ "strategicMindset.title" | translate }}
-      <i class="ph ph-info" (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"></i>
+      <i
+        class="ph ph-info region-form__mindset-info"
+        (click)="openStrategicMindsetInfoModal(this.strategicMindsetTemplate())"
+      ></i>
     </p>
     <select
       [(ngModel)]="bulletin().strategicMindset"
@@ -55,7 +58,12 @@
   </div>
 
   <div
-    *ngIf="!bulletinsService.isLocked(bulletin().id) && bulletinsService.getIsEditable() && isCreator(bulletin())"
+    *ngIf="
+      !disabled() &&
+      !bulletinsService.isLocked(bulletin().id) &&
+      bulletinsService.getIsEditable() &&
+      isCreator(bulletin())
+    "
     class="region-form__banner banner banner-info"
   >
     <p class="banner__text">
@@ -147,7 +155,7 @@
     </p>
     <div class="btn-group banner__actions">
       <button
-        *ngIf="bulletinsService.getIsEditable()"
+        *ngIf="!disabled() && bulletinsService.getIsEditable()"
         (click)="rejectSuggestions($event)"
         type="button"
         class="btn btn-sm btn-outline-dark"
@@ -155,7 +163,7 @@
         <i class="ph ph-x"></i> <span>{{ "bulletins.create.rejectSuggestion" | translate }}</span>
       </button>
       <button
-        *ngIf="bulletinsService.getIsEditable()"
+        *ngIf="!disabled() && bulletinsService.getIsEditable()"
         (click)="acceptSuggestions($event)"
         type="button"
         class="btn btn-sm btn-dark"
@@ -169,7 +177,8 @@
     *ngIf="
       !bulletinsService.isLocked(bulletin().id) &&
       (!bulletinsService.getIsEditable() ||
-        (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())))
+        (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())) ||
+        disabled())
     "
     class="region-form__banner banner banner-warning"
   >
@@ -178,6 +187,10 @@
       {{ "bulletins.create.regionNotEditable" | translate }}
     </p>
     <div class="btn-group banner__actions">
+      <!-- dummy button to keep layout -->
+      <button class="btn btn-sm btn-icon btn-outline-primary" style="visibility: hidden">
+        <i class="ph ph-map-trifold"></i>
+      </button>
       <button
         *ngIf="showEditMicroRegionsButton()"
         (click)="editMicroRegions()"
@@ -309,6 +322,7 @@
             textField="highlights"
             [rows]="1"
             [bulletin]="bulletin()"
+            [comparedBulletin]="comparedBulletin()"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -320,6 +334,7 @@
             textField="avActivityHighlights"
             [rows]="3"
             [bulletin]="bulletin()"
+            [comparedBulletin]="comparedBulletin()"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -330,6 +345,7 @@
             textField="avActivityComment"
             [rows]="9"
             [bulletin]="bulletin()"
+            [comparedBulletin]="comparedBulletin()"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -390,6 +406,7 @@
             textField="snowpackStructureComment"
             [rows]="9"
             [bulletin]="bulletin()"
+            [comparedBulletin]="comparedBulletin()"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -444,6 +461,7 @@
             textField="tendencyComment"
             [rows]="5"
             [bulletin]="bulletin()"
+            [comparedBulletin]="comparedBulletin()"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -478,6 +496,7 @@
             textField="synopsisComment"
             [rows]="5"
             [bulletin]="bulletin()"
+            [comparedBulletin]="comparedBulletin()"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"

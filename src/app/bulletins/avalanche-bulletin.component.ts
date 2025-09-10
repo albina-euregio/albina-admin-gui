@@ -54,6 +54,7 @@ export class AvalancheBulletinComponent implements OnInit {
   undoRedoService = inject(UndoRedoService);
 
   readonly bulletin = input<BulletinModel>(undefined);
+  readonly comparedBulletin = input<BulletinModel>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly isCompactMapLayout = input<boolean>(undefined);
   readonly isBulletinSidebarVisible = input<boolean>(undefined);

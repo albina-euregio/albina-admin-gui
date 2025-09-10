@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="form-group region-form">
   <div class="row">
     <div [ngClass]="showNotes ? 'col-7' : 'col-12'">
       <label class="form-label">
@@ -73,8 +73,15 @@
           </button>
         </div>
         <!-- End of toolbar -->
+        <div
+          *ngIf="comparedBulletin()"
+          [innerHTML]="createText()"
+          class="form-control"
+          [style.height.px]="rows() * 24 + 13"
+          style="white-space: pre-wrap; overflow-y: auto; resize: vertical"
+        ></div>
         <textarea
-          *ngIf="bulletin() && bulletin()[bulletinTextKey]"
+          *ngIf="!comparedBulletin() && bulletin() && bulletin()[bulletinTextKey]"
           class="form-control"
           [rows]="rows()"
           [disabled]="disabled() || !enableEditableFields"
@@ -103,8 +110,8 @@
     *ngIf="showTranslations"
     (click)="showTranslations = !showTranslations"
   >
-    <i class="ph ph-caret-down"></i>
-    <span>{{ "bulletins.create.title.hideTranslations" | translate }}</span>
+    <i class="ph ph-caret-down font-s text-secondary"></i>
+    <span class="font-s text-secondary">{{ "bulletins.create.title.hideTranslations" | translate }}</span>
   </button>
   <button
     class="btn btn-sm btn-bare region-form__translation-toggle"
@@ -112,8 +119,8 @@
     *ngIf="!showTranslations"
     (click)="showTranslations = !showTranslations"
   >
-    <i class="ph ph-caret-right"></i>
-    <span>{{ "bulletins.create.title.showTranslations" | translate }}</span>
+    <i class="ph ph-caret-right font-s text-secondary"></i>
+    <span class="font-s text-secondary">{{ "bulletins.create.title.showTranslations" | translate }}</span>
   </button>
 
   <!--
