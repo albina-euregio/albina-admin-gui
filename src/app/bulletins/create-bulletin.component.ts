@@ -1213,7 +1213,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
 
     if (this.activeBulletin) {
-      this.mapService.selectAggregatedRegion(this.activeBulletin);
+      this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
     }
   }
 
@@ -1291,7 +1291,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (this.editRegions) {
       this.mapService.showEditSelection();
     } else if (this.activeBulletin) {
-      this.mapService.selectAggregatedRegion(this.activeBulletin);
+      this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
     }
   }
 
@@ -1470,7 +1470,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (!this.editRegions) {
       this.deselectBulletin();
       this.activeBulletin = bulletin;
-      this.mapService.selectAggregatedRegion(this.activeBulletin);
+      this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
     }
   }
 
@@ -1488,6 +1488,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   eventDeselectComparedBulletin(bulletin: BulletinModel) {
     this.comparedBulletin = undefined;
+    this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
   }
 
   preview() {
@@ -1601,6 +1602,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     } else {
       this.comparedBulletin = bulletin;
     }
+    this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
   }
 
   private delBulletin(bulletin: BulletinModel) {
@@ -1695,7 +1697,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
 
       this.mapService.discardEditSelection();
-      this.mapService.selectAggregatedRegion(this.activeBulletin);
+      this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
 
       if (isUpdate) {
         this.updateBulletinOnServer(this.activeBulletin);
@@ -1839,7 +1841,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.activeBulletin = undefined;
     } else {
       if (this.activeBulletin) {
-        this.mapService.selectAggregatedRegion(this.activeBulletin);
+        this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
       }
     }
     this.mapService.discardEditSelection();
