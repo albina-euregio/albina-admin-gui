@@ -1039,18 +1039,27 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private async initMaps() {
     await this.mapService.initAmPmMap();
-    this.mapService.map.on({ click: () => this.onMapClick() });
-    this.mapService.afternoonMap.on({ click: () => this.onMapClick() });
+    this.mapService.map.on({
+      click: (event) => this.onMapClick(event.originalEvent && event.originalEvent.ctrlKey),
+    });
+    this.mapService.afternoonMap.on({
+      click: (event) => this.onMapClick(event.originalEvent && event.originalEvent.ctrlKey),
+    });
   }
 
-  private onMapClick() {
+  private onMapClick(ctrlKey = false) {
     if (!this.showNewBulletinModal && !this.editRegions) {
       let hit = false;
       const clickedRegion = this.mapService.getClickedRegion();
       for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
         if (bulletin.savedRegions.includes(clickedRegion) || bulletin.publishedRegions.includes(clickedRegion)) {
           hit = true;
-          this.toggleBulletin(bulletin);
+          if (ctrlKey && this.activeBulletin && this.activeBulletin.id !== bulletin.id) {
+            this.compareBulletin(bulletin);
+          } else {
+            this.toggleBulletin(bulletin);
+          }
+          break;
         }
       }
       if (!hit) {
@@ -1595,14 +1604,20 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate());
   }
 
-  compareBulletin(event: Event, bulletin: BulletinModel) {
+  eventCompareBulletin(event: Event, bulletin: BulletinModel) {
     event.stopPropagation();
-    if (this.comparedBulletin && this.comparedBulletin.id === bulletin.id) {
-      this.comparedBulletin = undefined;
-    } else {
-      this.comparedBulletin = bulletin;
+    this.compareBulletin(bulletin);
+  }
+
+  compareBulletin(bulletin: BulletinModel) {
+    if (this.activeBulletin) {
+      if (this.comparedBulletin && this.comparedBulletin.id === bulletin.id) {
+        this.comparedBulletin = undefined;
+      } else {
+        this.comparedBulletin = bulletin;
+      }
+      this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
     }
-    this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
   }
 
   private delBulletin(bulletin: BulletinModel) {

@@ -888,7 +888,7 @@
         class="btn btn-sm btn-icon"
         [class.btn-bare--inverse]="comparedBulletin && bulletin.id === comparedBulletin.id"
         [class.btn-bare]="!comparedBulletin || bulletin.id !== comparedBulletin.id"
-        (click)="compareBulletin($event, bulletin)"
+        (click)="eventCompareBulletin($event, bulletin)"
         title="{{ 'bulletins.create.tooltip.compare' | translate }}"
       >
         <i class="ph ph-square-half"></i>
