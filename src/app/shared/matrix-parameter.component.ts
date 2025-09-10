@@ -22,6 +22,7 @@ export class MatrixParameterComponent implements OnInit {
 
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel | DangerSourceVariantModel>(undefined);
   readonly matrixInformation = input<MatrixInformationModel>(undefined);
+  readonly comparedMatrixInformation = input<MatrixInformationModel>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly count = input<number>(undefined);
   readonly afternoon = input<boolean>(undefined);

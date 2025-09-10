@@ -95,6 +95,12 @@ $icon-button-size-sm: $space-6;
 .btn-bare--inverse {
   background-color: $gray-600;
   color: $white;
+  &:focus,
+  &:active,
+  &:disabled {
+    color: $white;
+    background-color: $gray-600;
+  }
   &:hover,
   &.show {
     background-color: $gray-500;

@@ -26,5 +26,6 @@ export class SliderComponent {
   disabled = input<boolean>();
   sliderOptions = input<SliderOptions>();
   sliderValue = input<number>();
+  comparedSliderValue = input<number>();
   sliderValueChange = output<number>();
 }

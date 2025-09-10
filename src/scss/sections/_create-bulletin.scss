@@ -408,3 +408,7 @@ del {
   color: #808080;
   background-color: color.adjust(#ff0000, $lightness: 46%);
 }
+
+.changed {
+  background-color: $danger-subtle;
+}
