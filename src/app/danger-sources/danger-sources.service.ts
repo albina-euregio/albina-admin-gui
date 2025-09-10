@@ -2,10 +2,15 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { DangerSourceVariantModel, DangerSourceVariantType } from "./models/danger-source-variant.model";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { JsonArray } from "protomaps-leaflet";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+
+interface AccordionChangeEvent {
+  isOpen: boolean;
+  groupName: string;
+}
 
 @Injectable()
 export class DangerSourcesService {
@@ -21,6 +26,9 @@ export class DangerSourcesService {
   public analysisStatusMap: Map<number, boolean>;
 
   public dates: [Date, Date][];
+
+  private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared variants
+  accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
 
   constructor() {
     this.init();
@@ -250,5 +258,9 @@ export class DangerSourcesService {
     );
     const body = JSON.stringify(variants);
     return this.http.post(url, body);
+  }
+
+  emitAccordionChanged(event: AccordionChangeEvent) {
+    this.accordionChangedSubject.next(event);
   }
 }

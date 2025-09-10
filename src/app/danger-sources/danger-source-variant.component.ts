@@ -28,7 +28,7 @@ import {
   Wetness,
 } from "./models/danger-source-variant.model";
 import { NgIf, NgFor, NgClass, DatePipe } from "@angular/common";
-import { Component, OnChanges, input, output, inject } from "@angular/core";
+import { Component, OnChanges, input, output, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 // For iframe
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
@@ -56,7 +56,7 @@ import { debounceTime, Subject } from "rxjs";
     TranslateModule,
   ],
 })
-export class DangerSourceVariantComponent implements OnChanges {
+export class DangerSourceVariantComponent implements OnChanges, OnInit {
   dangerSourcesService = inject(DangerSourcesService);
   private sanitizer = inject(DomSanitizer);
   authenticationService = inject(AuthenticationService);
@@ -166,6 +166,27 @@ export class DangerSourceVariantComponent implements OnChanges {
       .subscribe((variant) => this.updateVariantOnServerEvent.emit(variant));
   }
 
+  ngOnInit() {
+    this.dangerSourcesService.accordionChanged$.subscribe(({ isOpen, groupName }) => {
+      switch (groupName) {
+        case "avalanche":
+          this.isAccordionAvalancheOpen = isOpen;
+          break;
+        case "matrix":
+          this.isAccordionMatrixOpen = isOpen;
+          break;
+        case "characteristics":
+          this.isAccordionCharacteristicsOpen = isOpen;
+          break;
+        case "comment":
+          this.isAccordionCommentOpen = isOpen;
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
   ngOnChanges() {
     if (!this.isElevationHighEditing) {
       const variant = this.variant();
@@ -232,23 +253,8 @@ export class DangerSourceVariantComponent implements OnChanges {
     this.toggleVariantsSidebarEvent.emit();
   }
 
-  accordionChanged(event: boolean, groupName: string) {
-    switch (groupName) {
-      case "avalanche":
-        this.isAccordionAvalancheOpen = event;
-        break;
-      case "matrix":
-        this.isAccordionMatrixOpen = event;
-        break;
-      case "characteristics":
-        this.isAccordionCharacteristicsOpen = event;
-        break;
-      case "comment":
-        this.isAccordionCommentOpen = event;
-        break;
-      default:
-        break;
-    }
+  accordionChanged(isOpen: boolean, groupName: string) {
+    this.dangerSourcesService.emitAccordionChanged({ isOpen, groupName });
   }
 
   isAvalancheType(type: Enums.AvalancheType) {
