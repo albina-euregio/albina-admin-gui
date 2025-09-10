@@ -114,7 +114,7 @@
         class="form-label"
         [class.changed]="
           comparedAvalancheProblemModel() &&
-          haveSameElements(comparedAvalancheProblemModel().aspects, avalancheProblemModel().aspects)
+          !haveSameElements(comparedAvalancheProblemModel().aspects, avalancheProblemModel().aspects)
         "
         for=""
         >{{ "bulletins.create.label.aspects" | translate }}</label
