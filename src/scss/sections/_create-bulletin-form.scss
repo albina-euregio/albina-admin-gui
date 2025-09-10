@@ -169,7 +169,6 @@ app-avalanche-problem-preview,
 // Avalanche problem detail form
 .avalanche-problem-detail__problem-icons {
   display: flex;
-  justify-content: space-between;
   flex-wrap: nowrap;
 }
 
@@ -177,9 +176,11 @@ app-avalanche-problem-preview,
   & img {
     border: 1px solid $input-border-color;
     width: 100%;
+    max-width: 100px;
+    min-width: 25px;
   }
 
-  width: 18%;
+  padding: 5px;
 
   &.is-disabled {
     opacity: 0.3;
