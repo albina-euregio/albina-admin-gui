@@ -44,7 +44,7 @@
   </div>
 
   <div
-    *ngIf="dangerSourcesService.getIsEditable() && isCreator(variant())"
+    *ngIf="!this.isComparedVariant() && dangerSourcesService.getIsEditable() && isCreator(variant())"
     class="region-form__banner banner banner-info"
   >
     <p class="banner__text">
@@ -86,7 +86,11 @@
   </div>
 
   <div
-    *ngIf="!dangerSourcesService.getIsEditable() || (dangerSourcesService.getIsEditable() && !isCreator(variant()))"
+    *ngIf="
+      this.isComparedVariant() ||
+      !dangerSourcesService.getIsEditable() ||
+      (dangerSourcesService.getIsEditable() && !isCreator(variant()))
+    "
     class="region-form__banner banner banner-warning"
   >
     <p class="banner__text">
@@ -94,25 +98,9 @@
       {{ "dangerSources.create.variantNotEditable" | translate }}
     </p>
     <div class="btn-group banner__actions">
-      <button
-        *ngIf="showEditMicroRegionsButton()"
-        (click)="editMicroRegions()"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.edit' | translate }}"
-        type="button"
-        class="btn btn-sm btn-icon btn-outline-primary"
-      >
+      <!-- dummy button to keep layout -->
+      <button class="btn btn-sm btn-icon btn-outline-primary" style="visibility: hidden">
         <i class="ph ph-map-trifold"></i>
-      </button>
-      <button
-        *ngIf="!isComparedVariant() && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
-        (click)="copyVariant()"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
-        type="button"
-        class="btn btn-sm btn-icon btn-outline-primary"
-      >
-        <i class="ph ph-copy"></i>
       </button>
     </div>
   </div>
