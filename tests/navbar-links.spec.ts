@@ -1,4 +1,4 @@
-import { login } from "./utils/auth";
+import { changeRegion, login } from "./utils";
 import { test, expect } from "@playwright/test";
 
 test("check all links in navbar", async ({ page }) => {
@@ -6,10 +6,7 @@ test("check all links in navbar", async ({ page }) => {
   await login(page);
 
   // Tyrol has all the fancy features enabled
-  await test.step("select region Tyrol", async () => {
-    await page.getByRole("button", { name: "Playwright" }).click();
-    await page.locator(".dropdown-menu").getByRole("button", { name: "Tyrol", exact: true }).click();
-  });
+  await changeRegion(page, "Tyrol");
   await test.step("Danger Sources", async () => {
     await page.getByRole("link", { name: "Danger Sources", exact: true }).click();
     await expect(page).toHaveURL(/danger-sources/);
@@ -45,9 +42,13 @@ test("check all links in navbar", async ({ page }) => {
     const linkURL = await page.getByRole("link", { name: "Wetterinformationsportal" }).getAttribute("href");
     expect(linkURL).toBe("https://portal.tirol.gv.at/at.ac.zamg.wbt-p/");
   });
+  await test.step("Avalanche.report", async () => {
+    await page.getByRole("link", { name: "Avalanche.report", exact: true }).click();
+    await expect(page).toHaveURL(/bulletins/);
+    // more details are checked in bulletins.spec
+  });
   await test.step("Carinthia only has bulletins and observations", async () => {
-    await page.getByRole("button", { name: "Playwright" }).click();
-    await page.locator(".dropdown-menu").getByRole("button", { name: "Carinthia", exact: true }).click();
+    await changeRegion(page, "Carinthia");
     await expect(page.getByRole("link", { name: "Avalanche.report", exact: true })).toBeVisible();
     await expect(page.getByRole("link", { name: "Observations", exact: true })).toBeVisible();
     await expect(page.getByRole("link", { name: "GeoSphere", exact: true })).toBeHidden();

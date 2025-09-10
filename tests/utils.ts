@@ -16,3 +16,8 @@ export async function login(page: Page) {
   await expect(page).toHaveURL("#/bulletins");
   await expect(page.getByRole("button", { name: "Stress Level" })).toBeVisible();
 }
+
+export async function changeRegion(page: Page, region: string) {
+  await page.getByRole("button", { name: "Playwright" }).click();
+  await page.locator(".dropdown-menu").getByRole("button", { name: region, exact: true }).click();
+}
