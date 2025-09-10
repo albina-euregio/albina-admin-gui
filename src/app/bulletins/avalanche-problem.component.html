@@ -2,6 +2,7 @@
   <accordion-group
     *ngIf="bulletinDaytimeDescription().avalancheProblem1"
     [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[0]"
+    (isOpenChange)="accordionChanged($event, 'avalancheProblem1')"
     #accordionAvalancheProblem1
   >
     <div accordion-heading class="avalanche-problem-preview__header">
@@ -33,6 +34,7 @@
   <accordion-group
     *ngIf="bulletinDaytimeDescription().avalancheProblem2"
     [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[1]"
+    (isOpenChange)="accordionChanged($event, 'avalancheProblem2')"
     #accordionAvalancheProblem2
   >
     <div accordion-heading class="avalanche-problem-preview__header">
@@ -64,6 +66,7 @@
   <accordion-group
     *ngIf="bulletinDaytimeDescription().avalancheProblem3"
     [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[2]"
+    (isOpenChange)="accordionChanged($event, 'avalancheProblem3')"
     #accordionAvalancheProblem3
   >
     <div accordion-heading class="avalanche-problem-preview__header">
@@ -95,6 +98,7 @@
   <accordion-group
     *ngIf="bulletinDaytimeDescription().avalancheProblem4"
     [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[3]"
+    (isOpenChange)="accordionChanged($event, 'avalancheProblem4')"
     #accordionAvalancheProblem4
   >
     <div accordion-heading class="avalanche-problem-preview__header">
@@ -126,6 +130,7 @@
   <accordion-group
     *ngIf="bulletinDaytimeDescription().avalancheProblem5"
     [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[4]"
+    (isOpenChange)="accordionChanged($event, 'avalancheProblem5')"
     #accordionAvalancheProblem5
   >
     <div accordion-heading class="avalanche-problem-preview__header">
