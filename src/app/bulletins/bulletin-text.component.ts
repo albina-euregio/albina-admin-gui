@@ -126,16 +126,11 @@ export class BulletinTextComponent {
 
   createText(): string {
     const currentBulletin = this.bulletin();
-    const currentText = currentBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang];
-    if (currentBulletin !== null && currentBulletin !== undefined && currentText !== undefined) {
+    const currentText = currentBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang] ?? "";
+    if (currentBulletin !== null && currentBulletin !== undefined) {
       const comparedBulletin = this.comparedBulletin();
-      const comparedText = comparedBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang];
-      if (comparedBulletin !== null && comparedBulletin !== undefined && comparedText !== undefined) {
-        const result = createWordDiff(currentText, comparedText);
-        return result;
-      } else {
-        return currentText;
-      }
+      const comparedText = comparedBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang] ?? "";
+      return createWordDiff(currentText, comparedText);
     } else {
       return "";
     }
