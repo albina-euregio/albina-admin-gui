@@ -377,8 +377,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   compareForecast(event: Event, variant: DangerSourceVariantModel) {
     event.stopPropagation();
-    this.selectVariant(variant);
-    this.comparedVariant = this.internVariantsList.find((v) => variant.forecastDangerSourceVariantId === v.id);
+
+    if (this.comparedVariant && this.comparedVariant.id === variant.forecastDangerSourceVariantId) {
+      this.comparedVariant = undefined;
+    } else {
+      this.selectVariant(variant);
+      this.comparedVariant = this.internVariantsList.find((v) => variant.forecastDangerSourceVariantId === v.id);
+    }
   }
 
   getVariantsOfDangerSource(dangerSourceId: string) {
@@ -797,7 +802,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   compareVariant(event: Event, variant: DangerSourceVariantModel) {
     event.stopPropagation();
-    this.comparedVariant = variant;
+    if (this.comparedVariant && this.comparedVariant.id === variant.id) {
+      this.comparedVariant = undefined;
+    } else {
+      this.comparedVariant = variant;
+    }
   }
 
   eventEditMicroRegions(variant: DangerSourceVariantModel) {
