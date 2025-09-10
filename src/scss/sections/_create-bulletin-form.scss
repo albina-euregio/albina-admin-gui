@@ -262,6 +262,7 @@ app-avalanche-problem-preview,
 }
 
 .region-form__danger-patterns {
+  padding-bottom: $space-6;
   select + select {
     margin-top: $space-1;
   }
