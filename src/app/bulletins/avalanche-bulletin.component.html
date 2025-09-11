@@ -406,6 +406,7 @@
               (change)="updateBulletinOnServer()"
               [disabled]="disabled()"
               class="form-select"
+              [class.changed]="isComparedBulletin() && bulletin().dangerPattern1 !== comparedBulletin()?.dangerPattern1"
             >
               <option [ngValue]="undefined"></option>
               <option *ngFor="let dp of dangerPattern" [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
@@ -416,6 +417,7 @@
               (change)="updateBulletinOnServer()"
               [disabled]="disabled()"
               class="form-select"
+              [class.changed]="isComparedBulletin() && bulletin().dangerPattern2 !== comparedBulletin()?.dangerPattern2"
             >
               <option [ngValue]="undefined"></option>
               <option *ngFor="let dp of dangerPattern" [value]="dp">{{ "dangerPattern." + dp | translate }}</option>

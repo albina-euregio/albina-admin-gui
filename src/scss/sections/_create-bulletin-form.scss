@@ -267,6 +267,9 @@ app-avalanche-problem-preview,
   select + select {
     margin-top: $space-1;
   }
+  select.changed {
+    background-color: $danger-subtle;
+  }
 }
 
 .region-form__tendency {
