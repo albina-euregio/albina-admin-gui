@@ -76,7 +76,8 @@ export class AvalancheBulletinComponent implements OnInit {
   public editRegions: boolean;
 
   public isAccordionDangerRatingOpen: boolean;
-  public isAccordionAvalancheProblemOpen: boolean;
+  public isAccordionAvalancheProblemForenoonOpen: boolean;
+  public isAccordionAvalancheProblemAfternoonOpen: boolean;
   public isAccordionDangerDescriptionOpen: boolean;
   public isAccordionSnowpackStructureOpen: boolean;
   public isAccordionTendencyOpen: boolean;
@@ -105,8 +106,11 @@ export class AvalancheBulletinComponent implements OnInit {
         case "dangerRating":
           this.isAccordionDangerRatingOpen = isOpen;
           break;
-        case "avalancheProblem":
-          this.isAccordionAvalancheProblemOpen = isOpen;
+        case "avalancheProblemForenoon":
+          this.isAccordionAvalancheProblemForenoonOpen = isOpen;
+          break;
+        case "avalancheProblemAfternoon":
+          this.isAccordionAvalancheProblemAfternoonOpen = isOpen;
           break;
         case "dangerDescription":
           this.isAccordionDangerDescriptionOpen = isOpen;
@@ -176,7 +180,7 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 
   hideDialog() {
-    this.catalogOfPhrasesModalRef.hide();
+    this.catalogOfPhrasesModalRef?.hide();
     this.pmData = undefined;
   }
 
@@ -298,11 +302,12 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 
   createAvalancheProblem(isAfternoon: boolean) {
-    this.isAccordionAvalancheProblemOpen = true;
     let daytime: BulletinDaytimeDescriptionModel;
     if (isAfternoon) {
+      this.isAccordionAvalancheProblemAfternoonOpen = true;
       daytime = this.bulletin().afternoon;
     } else {
+      this.isAccordionAvalancheProblemForenoonOpen = true;
       daytime = this.bulletin().forenoon;
     }
     let lastAvalancheProblem = daytime.avalancheProblem1;

@@ -227,13 +227,14 @@
       <!-- Avalanche problems -->
       <accordion-group
         class="accordion-group"
-        [isOpen]="isAccordionAvalancheProblemOpen"
-        (isOpenChange)="accordionChanged($event, 'avalancheProblem')"
+        #accordionAvalancheProblemForenoon
+        [isOpen]="isAccordionAvalancheProblemForenoonOpen"
+        (isOpenChange)="accordionChanged($event, 'avalancheProblemForenoon')"
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionAvalancheProblemOpen" class="accordion__arrow ph ph-caret-down"></i>
+            <i *ngIf="!isAccordionAvalancheProblemForenoonOpen" class="accordion__arrow ph ph-caret-right"></i>
+            <i *ngIf="isAccordionAvalancheProblemForenoonOpen" class="accordion__arrow ph ph-caret-down"></i>
             {{ "bulletins.create.title.avalancheProblem" | translate
             }}<span *ngIf="bulletin().hasDaytimeDependency"
               >&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span
@@ -256,7 +257,7 @@
         <!-- Avalanche problems panel content -->
         <app-avalanche-problem
           [bulletinModel]="bulletin()"
-          [bulletinDaytimeDescription]="bulletin().forenoon"
+          [bulletinDaytimeDescription]="bulletin()?.forenoon"
           [comparedBulletinDaytimeDescription]="comparedBulletin()?.forenoon"
           [afternoon]="false"
           [disabled]="disabled()"
@@ -267,6 +268,8 @@
       <accordion-group
         *ngIf="bulletin().hasDaytimeDependency"
         #accordionAvalancheProblemAfternoon
+        [isOpen]="isAccordionAvalancheProblemAfternoonOpen"
+        (isOpenChange)="accordionChanged($event, 'avalancheProblemAfternoon')"
         class="accordion-group"
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
@@ -293,12 +296,26 @@
         </div>
         <app-avalanche-problem
           [bulletinModel]="bulletin()"
-          [bulletinDaytimeDescription]="bulletin().afternoon"
-          [comparedBulletinDaytimeDescription]="comparedBulletin().afternoon"
+          [bulletinDaytimeDescription]="bulletin()?.afternoon"
+          [comparedBulletinDaytimeDescription]="comparedBulletin()?.afternoon"
           [afternoon]="true"
           [disabled]="disabled()"
           (changeAvalancheProblemEvent)="updateBulletinOnServer()"
         ></app-avalanche-problem>
+      </accordion-group>
+      <!-- show empty afternoon section if compared bulletin has daytime dependency but current bulletin has not -->
+      <accordion-group
+        *ngIf="comparedBulletin() && !bulletin()?.hasDaytimeDependency && comparedBulletin()?.hasDaytimeDependency"
+        #accordionAvalancheProblemAfternoon
+        class="accordion-group"
+        [isOpen]="false"
+        [isDisabled]="true"
+      >
+        <div accordion-heading class="accordion-header accordion-header--with-buttons" style="cursor: default">
+          <h2 class="accordion-header__title">
+            <i class="accordion__arrow ph ph-caret-right" style="visibility: hidden"></i>
+          </h2>
+        </div>
       </accordion-group>
       <!-- End avalanche problems -->
 
@@ -327,7 +344,7 @@
             textField="highlights"
             [rows]="1"
             [bulletin]="bulletin()"
-            [comparedBulletin]="comparedBulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -339,7 +356,7 @@
             textField="avActivityHighlights"
             [rows]="3"
             [bulletin]="bulletin()"
-            [comparedBulletin]="comparedBulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -350,7 +367,7 @@
             textField="avActivityComment"
             [rows]="9"
             [bulletin]="bulletin()"
-            [comparedBulletin]="comparedBulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -411,7 +428,7 @@
             textField="snowpackStructureComment"
             [rows]="9"
             [bulletin]="bulletin()"
-            [comparedBulletin]="comparedBulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -466,7 +483,7 @@
             textField="tendencyComment"
             [rows]="5"
             [bulletin]="bulletin()"
-            [comparedBulletin]="comparedBulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
@@ -501,7 +518,7 @@
             textField="synopsisComment"
             [rows]="5"
             [bulletin]="bulletin()"
-            [comparedBulletin]="comparedBulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
             [disabled]="disabled()"
             (showDialog)="showDialog($event)"
             (updateBulletinOnServer)="updateBulletinOnServer()"
