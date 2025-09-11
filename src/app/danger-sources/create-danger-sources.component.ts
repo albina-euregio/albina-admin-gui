@@ -656,7 +656,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     if (this.editRegions) {
       this.mapService.showEditSelection();
     } else if (this.activeVariant) {
-      this.mapService.selectAggregatedRegion(this.activeVariant);
+      this.mapService.selectAggregatedRegion(this.activeVariant, this.comparedVariant);
     }
   }
 
@@ -769,7 +769,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     if (!this.editRegions) {
       this.deselectVariant();
       this.activeVariant = variant;
-      this.mapService.selectAggregatedRegion(this.activeVariant);
+      this.mapService.selectAggregatedRegion(this.activeVariant, this.comparedVariant);
     }
   }
 
@@ -800,12 +800,19 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate());
   }
 
-  compareVariant(event: Event, variant: DangerSourceVariantModel) {
+  eventCompareVariant(event: Event, variant: DangerSourceVariantModel) {
     event.stopPropagation();
-    if (this.comparedVariant && this.comparedVariant.id === variant.id) {
-      this.comparedVariant = undefined;
-    } else {
-      this.comparedVariant = variant;
+    this.compareVariant(variant);
+  }
+
+  compareVariant(variant: DangerSourceVariantModel) {
+    if (this.activeVariant) {
+      if (this.comparedVariant && this.comparedVariant.id === variant.id) {
+        this.comparedVariant = undefined;
+      } else {
+        this.comparedVariant = variant;
+      }
+      this.mapService.selectAggregatedRegion(this.activeVariant, this.comparedVariant);
     }
   }
 
@@ -867,7 +874,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
 
       this.mapService.discardEditSelection();
-      this.mapService.selectAggregatedRegion(this.activeVariant);
+      this.mapService.selectAggregatedRegion(this.activeVariant, this.comparedVariant);
 
       if (isUpdate) {
         this.updateVariantOnServer(this.activeVariant);
@@ -963,7 +970,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       this.activeVariant = undefined;
     } else {
       if (this.activeVariant) {
-        this.mapService.selectAggregatedRegion(this.activeVariant);
+        this.mapService.selectAggregatedRegion(this.activeVariant, this.comparedVariant);
       }
     }
     this.mapService.discardEditSelection();

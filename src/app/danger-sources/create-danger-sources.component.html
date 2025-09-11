@@ -434,7 +434,7 @@
         type="button"
         class="btn btn-bare btn-sm btn-icon"
         [class.btn-bare--inverse]="comparedVariant && variant.id === comparedVariant.id"
-        (click)="compareVariant($event, variant)"
+        (click)="eventCompareVariant($event, variant)"
         data-toggle="tooltip"
         title="{{ 'dangerSources.create.tooltip.compare' | translate }}"
       >
