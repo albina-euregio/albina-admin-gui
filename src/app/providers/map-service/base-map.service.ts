@@ -8,6 +8,7 @@ export class BaseMapService extends MapService {
   async initMaps(el: HTMLElement, options?: Parameters<typeof this.initOverlayMaps>[0]) {
     this.baseMaps = {
       AlbinaBaseMap: this.getAlbinaBaseMap({ minZoom: 5, maxZoom: 12 }),
+      OpenTopoBaseMap: this.getOpenTopoBaseMap({ minZoom: 13, maxZoom: 15 }),
     };
 
     this.overlayMaps = await this.initOverlayMaps(options);
@@ -22,8 +23,8 @@ export class BaseMapService extends MapService {
       center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
       zoom: 8,
       minZoom: 4,
-      maxZoom: 17,
-      layers: [...Object.values(this.baseMaps), this.overlayMaps.regions, this.overlayMaps.editSelection],
+      maxZoom: 15,
+      layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.regions, this.overlayMaps.editSelection],
     });
 
     this.resetAll();
