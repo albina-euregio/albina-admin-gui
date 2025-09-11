@@ -213,7 +213,7 @@ export class MapService {
       center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
       zoom: 8,
       minZoom: 6,
-      maxZoom: 10,
+      maxZoom: 12,
     };
     if (this.authenticationService.getActiveRegionId() === this.constantsService.codeAran) {
       Object.assign(options, {
