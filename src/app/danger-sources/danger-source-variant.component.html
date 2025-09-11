@@ -458,9 +458,9 @@
           <label
             class="form-label pe-3"
             [class.changed]="
-              (isComparedVariant() &&
-                variant().slabHandHardnessLowerLimit !== comparedVariant()?.slabHandHardnessLowerLimit) ||
-              variant().slabHandHardnessUpperLimit !== comparedVariant()?.slabHandHardnessUpperLimit
+              isComparedVariant() &&
+              (variant().slabHandHardnessLowerLimit !== comparedVariant()?.slabHandHardnessLowerLimit ||
+                variant().slabHandHardnessUpperLimit !== comparedVariant()?.slabHandHardnessUpperLimit)
             "
             for="textarea-input"
             >{{ "dangerSources.create.label.slabHandHardness" | translate }}</label
