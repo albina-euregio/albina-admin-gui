@@ -453,12 +453,20 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   }
 
   isWeakLayerGrainShape(grainShape: GrainShape) {
-    return this.variant()?.weakLayerGrainShape === grainShape;
+    return this.variant()?.weakLayerGrainShapes.includes(grainShape);
   }
 
   setWeakLayerGrainShape(event: Event, grainShape: GrainShape) {
     event.stopPropagation();
-    this.variant().weakLayerGrainShape = grainShape;
+    const variant = this.variant();
+    if (variant?.weakLayerGrainShapes.includes(grainShape)) {
+      const index = variant?.weakLayerGrainShapes.indexOf(grainShape, 0);
+      if (index > -1) {
+        variant?.weakLayerGrainShapes.splice(index, 1);
+      }
+    } else {
+      variant?.weakLayerGrainShapes.push(grainShape);
+    }
     this.updateVariantOnServer();
   }
 
