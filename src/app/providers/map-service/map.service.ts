@@ -139,9 +139,11 @@ export class MapService {
 
     this.baseMaps = {
       AlbinaBaseMap: this.getAlbinaBaseMap(),
+      OpenTopoBaseMap: this.getOpenTopoBaseMap(),
     };
     this.afternoonBaseMaps = {
       AlbinaBaseMap: this.getAlbinaBaseMap(),
+      OpenTopoBaseMap: this.getOpenTopoBaseMap(),
     };
 
     this.overlayMaps = await this.initOverlayMaps();
@@ -169,7 +171,32 @@ export class MapService {
       }
     });
 
+    // Watch zoom changes
+    this.map.on("zoomend", () => {
+      this.updateBaseLayer();
+    });
+
     return this.map;
+  }
+
+  private updateBaseLayer(): void {
+    const zoom = this.map.getZoom();
+
+    if (zoom >= 13) {
+      if (this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
+        this.map.removeLayer(this.baseMaps.AlbinaBaseMap);
+      }
+      if (!this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
+        this.map.addLayer(this.baseMaps.OpenTopoBaseMap);
+      }
+    } else {
+      if (this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
+        this.map.removeLayer(this.baseMaps.OpenTopoBaseMap);
+      }
+      if (!this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
+        this.map.addLayer(this.baseMaps.AlbinaBaseMap);
+      }
+    }
   }
 
   private initPmMap() {
@@ -194,7 +221,32 @@ export class MapService {
       }
     });
 
+    // Watch zoom changes
+    this.afternoonMap.on("zoomend", () => {
+      this.updateAfternoonBaseLayer();
+    });
+
     return afternoonMap;
+  }
+
+  private updateAfternoonBaseLayer(): void {
+    const zoom = this.afternoonMap.getZoom();
+
+    if (zoom >= 13) {
+      if (this.afternoonMap.hasLayer(this.afternoonBaseMaps.AlbinaBaseMap)) {
+        this.afternoonMap.removeLayer(this.afternoonBaseMaps.AlbinaBaseMap);
+      }
+      if (!this.afternoonMap.hasLayer(this.afternoonBaseMaps.OpenTopoBaseMap)) {
+        this.afternoonMap.addLayer(this.afternoonBaseMaps.OpenTopoBaseMap);
+      }
+    } else {
+      if (this.afternoonMap.hasLayer(this.afternoonBaseMaps.OpenTopoBaseMap)) {
+        this.afternoonMap.removeLayer(this.afternoonBaseMaps.OpenTopoBaseMap);
+      }
+      if (!this.afternoonMap.hasLayer(this.afternoonBaseMaps.AlbinaBaseMap)) {
+        this.afternoonMap.addLayer(this.afternoonBaseMaps.AlbinaBaseMap);
+      }
+    }
   }
 
   addAMControl() {
@@ -213,8 +265,9 @@ export class MapService {
       center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
       zoom: 8,
       minZoom: 6,
-      maxZoom: 12,
+      maxZoom: 15,
     };
+
     if (this.authenticationService.getActiveRegionId() === this.constantsService.codeAran) {
       Object.assign(options, {
         zoom: 10,
@@ -231,6 +284,16 @@ export class MapService {
       attribution:
         "© <a href='https://sonny.4lima.de/'>Sonny</a>, CC BY 4.0 | © <a href='https://www.eea.europa.eu/en/datahub/datahubitem-view/d08852bc-7b5f-4835-a776-08362e2fbf4b'>EU-DEM</a>, CC BY 4.0 | © avalanche.report, CC BY 4.0",
       ...options,
+      zIndex: 0,
+    });
+  }
+
+  getOpenTopoBaseMap(options: TileLayerOptions = {}): TileLayer {
+    return new TileLayer("https://tile.opentopomap.org/{z}/{x}/{y}.png", {
+      tms: false,
+      attribution: "map data: © OpenStreetMap contributors, SRTM | map style: © OpenTopoMap (CC-BY-SA)",
+      ...options,
+      zIndex: 0,
     });
   }
 
