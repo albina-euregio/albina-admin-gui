@@ -63,12 +63,14 @@ export class MapService {
   protected overlayMaps: {
     // Micro  regions without elevation
     regions: GeoJSON<SelectableRegionProperties>;
+    regionsStrong: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
     aggregatedRegions: PmLeafletLayer;
   };
   protected afternoonOverlayMaps: {
     // Micro  regions without elevation
     regions: GeoJSON<SelectableRegionProperties>;
+    regionsStrong: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
     aggregatedRegions: PmLeafletLayer;
   };
@@ -102,6 +104,13 @@ export class MapService {
           this.highlightAndShowName(layer);
         },
         style: this.getRegionStyle(),
+      }),
+      regionsStrong: new GeoJSON(regions, {
+        onEachFeature: (feature, layer) => {
+          layer.on("click", () => (feature.properties.selected = true));
+          this.highlightAndShowName(layer);
+        },
+        style: this.getStrongRegionStyle(),
       }),
 
       // overlay to select regions (when editing an aggregated region)
@@ -173,30 +182,10 @@ export class MapService {
 
     // Watch zoom changes
     this.map.on("zoomend", () => {
-      this.updateBaseLayer();
+      this.updateMapLayers();
     });
 
     return this.map;
-  }
-
-  private updateBaseLayer(): void {
-    const zoom = this.map.getZoom();
-
-    if (zoom >= 13) {
-      if (this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
-        this.map.removeLayer(this.baseMaps.AlbinaBaseMap);
-      }
-      if (!this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
-        this.map.addLayer(this.baseMaps.OpenTopoBaseMap);
-      }
-    } else {
-      if (this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
-        this.map.removeLayer(this.baseMaps.OpenTopoBaseMap);
-      }
-      if (!this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
-        this.map.addLayer(this.baseMaps.AlbinaBaseMap);
-      }
-    }
   }
 
   private initPmMap() {
@@ -223,28 +212,72 @@ export class MapService {
 
     // Watch zoom changes
     this.afternoonMap.on("zoomend", () => {
-      this.updateAfternoonBaseLayer();
+      this.updateAfternoonMapLayers();
     });
 
     return afternoonMap;
   }
 
-  private updateAfternoonBaseLayer(): void {
+  private updateMapLayers(): void {
+    const zoom = this.map.getZoom();
+
+    if (zoom >= 13) {
+      if (this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
+        this.map.removeLayer(this.baseMaps.AlbinaBaseMap);
+      }
+      if (this.map.hasLayer(this.overlayMaps.regions)) {
+        this.map.removeLayer(this.overlayMaps.regions);
+      }
+      if (!this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
+        this.map.addLayer(this.baseMaps.OpenTopoBaseMap);
+      }
+      if (!this.map.hasLayer(this.overlayMaps.regionsStrong)) {
+        this.map.addLayer(this.overlayMaps.regionsStrong);
+      }
+    } else {
+      if (this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
+        this.map.removeLayer(this.baseMaps.OpenTopoBaseMap);
+      }
+      if (this.map.hasLayer(this.overlayMaps.regionsStrong)) {
+        this.map.removeLayer(this.overlayMaps.regionsStrong);
+      }
+      if (!this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
+        this.map.addLayer(this.baseMaps.AlbinaBaseMap);
+      }
+      if (!this.map.hasLayer(this.overlayMaps.regions)) {
+        this.map.addLayer(this.overlayMaps.regions);
+      }
+    }
+  }
+
+  private updateAfternoonMapLayers(): void {
     const zoom = this.afternoonMap.getZoom();
 
     if (zoom >= 13) {
       if (this.afternoonMap.hasLayer(this.afternoonBaseMaps.AlbinaBaseMap)) {
         this.afternoonMap.removeLayer(this.afternoonBaseMaps.AlbinaBaseMap);
       }
+      if (this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regions)) {
+        this.afternoonMap.removeLayer(this.afternoonOverlayMaps.regions);
+      }
       if (!this.afternoonMap.hasLayer(this.afternoonBaseMaps.OpenTopoBaseMap)) {
         this.afternoonMap.addLayer(this.afternoonBaseMaps.OpenTopoBaseMap);
+      }
+      if (!this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regionsStrong)) {
+        this.afternoonMap.addLayer(this.afternoonOverlayMaps.regionsStrong);
       }
     } else {
       if (this.afternoonMap.hasLayer(this.afternoonBaseMaps.OpenTopoBaseMap)) {
         this.afternoonMap.removeLayer(this.afternoonBaseMaps.OpenTopoBaseMap);
       }
+      if (this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regionsStrong)) {
+        this.afternoonMap.removeLayer(this.afternoonOverlayMaps.regionsStrong);
+      }
       if (!this.afternoonMap.hasLayer(this.afternoonBaseMaps.AlbinaBaseMap)) {
         this.afternoonMap.addLayer(this.afternoonBaseMaps.AlbinaBaseMap);
+      }
+      if (!this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regions)) {
+        this.afternoonMap.addLayer(this.afternoonOverlayMaps.regions);
       }
     }
   }
@@ -538,9 +571,18 @@ export class MapService {
 
   private getRegionStyle(): PathOptions {
     return {
-      weight: this.constantsService.lineWeight,
-      opacity: this.constantsService.lineOpacity,
-      color: this.constantsService.lineColor,
+      weight: this.constantsService.microRegionLineWeight,
+      opacity: this.constantsService.microRegionLineOpacity,
+      color: this.constantsService.microRegionLineColor,
+      fillOpacity: 0.0,
+    };
+  }
+
+  private getStrongRegionStyle(): PathOptions {
+    return {
+      weight: this.constantsService.microRegionLineWeightStrong,
+      opacity: this.constantsService.microRegionLineOpacityStrong,
+      color: this.constantsService.microRegionLineColor,
       fillOpacity: 0.0,
     };
   }
@@ -555,7 +597,7 @@ export class MapService {
   private getEditSelectionStyle(): PathOptions {
     return {
       fillColor: this.constantsService.colorActiveSelection,
-      weight: this.constantsService.lineWeight,
+      weight: this.constantsService.microRegionLineWeight,
       opacity: 1,
       color: this.constantsService.colorActiveSelection,
       fillOpacity: this.constantsService.fillOpacityEditSelection,

@@ -61,9 +61,11 @@ export class ConstantsService {
   public colorDangerRatingNoSnow = "#A0522D";
   public colorActiveSelection = "#3852A4";
 
-  public lineColor = "#000000";
-  public lineWeight = 0.5;
-  public lineOpacity = 0.3;
+  public microRegionLineColor = "#000000";
+  public microRegionLineWeight = 0.5;
+  public microRegionLineOpacity = 0.3;
+  public microRegionLineWeightStrong = 0.8;
+  public microRegionLineOpacityStrong = 0.8;
 
   public fillOpacityOwnSelected = 0.9;
   public fillOpacityOwnDeselected = 0.6;
