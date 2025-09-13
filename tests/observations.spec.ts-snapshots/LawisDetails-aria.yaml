@@ -1,0 +1,6 @@
+- dialog:
+  - document:
+    - text: Lawis █ Garnitzenberg ←→
+    - button "Close"
+    - table
+    - iframe

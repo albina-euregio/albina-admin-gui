@@ -1,0 +1,6 @@
+- dialog:
+  - document:
+    - text: Snobs █ Skigebiet Hahnenkamm ←→
+    - button "Close"
+    - table
+    - iframe

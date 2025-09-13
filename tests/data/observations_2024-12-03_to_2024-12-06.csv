@@ -1,0 +1,5 @@
+EventDate;EventTime;EventType;ReportDate;AuthorName;LocationName;Latitude;Longitude;Elevation;Aspect;Region;Content
+2024-12-04;11:58:12;Profile;2024-12-04T11:59:08.000Z;Gernot Zenkl;fert;47.34493250358361;11.97476101947646;1787;;AT-07-17-01;
+2024-12-05;09:30:00;Profile;2024-12-05T12:26:52.000Z;Florian Wechselberger;Rauhenkopf;47.221813408616;11.82079537145;2120;N;AT-07-16;LO.LA Profile, ECT P 8 @ 0 (from surface), Ganzer Block, , ECT P 11 @ 12 (from surface), Bruch
+2024-12-05;09:30:17;SimpleObservation;2024-12-05T12:11:13.000Z;Florian Wechselberger;Rauhenkopf;47.1914402;11.8596389;;;AT-07-16;VV Exp S im Laufe des Vormittags abgebaut (1500-2300m), VV Exp N konstant.  📷 1
+2024-12-05;09:30:45;Profile;2024-12-05T12:26:54.000Z;Florian Wechselberger;Rauhenkopf;47.22181340861587;11.820795371450345;2120;N;AT-07-16;Untergrund: alpiner Rasen, Stauden, nicht gefroren, EXP N: Oberflächenreif konstant, EXP S Oberflächenreif im Laufe des Vormittags aufgrund von Sonneneinstrahlung abgebaut. ☲ECT 8@0cm Ganzer Block ☲ECT 11@12cm Bruch

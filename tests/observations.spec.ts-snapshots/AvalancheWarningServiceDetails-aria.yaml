@@ -1,0 +1,26 @@
+- dialog:
+  - document:
+    - text: AvalancheWarningService █ Jöchlspitze ←→
+    - button "Close"
+    - table:
+      - row /Event date Monday, December \d+, \d+ at 8:\d+:\d+ AM GMT\+\d+:\d+/:
+        - cell "Event date"
+        - cell /Monday, December \d+, \d+ at 8:\d+:\d+ AM GMT\+\d+:\d+/
+      - row /Report date Monday, December \d+, \d+ at \d+:\d+:\d+ PM GMT\+\d+:\d+/:
+        - cell "Report date"
+        - cell /Monday, December \d+, \d+ at \d+:\d+:\d+ PM GMT\+\d+:\d+/
+      - row "Author name Thomas Lutz":
+        - cell "Author name"
+        - cell "Thomas Lutz"
+      - row "Location Jöchlspitze":
+        - cell "Location"
+        - cell "Jöchlspitze"
+      - row /Elevation \d+,\d+/:
+        - cell "Elevation"
+        - cell /\d+,\d+/
+      - row "Aspect SE":
+        - cell "Aspect"
+        - cell "SE"
+      - row "Comment Servus LWZ Team, bei der heutigen Sprengung an unserem Sprengmast bei der Jöchelspitze hatten wir einen sehr interessanten Sprengerfolg. Der ausgegebene vierer hat sich meiner Ansicht nach bestätigt. Siehe Anhang Bei Rückfragen einfach melden. Schöne Grüße Thomas Lutz LK Bach":
+        - cell "Comment"
+        - cell "Servus LWZ Team, bei der heutigen Sprengung an unserem Sprengmast bei der Jöchelspitze hatten wir einen sehr interessanten Sprengerfolg. Der ausgegebene vierer hat sich meiner Ansicht nach bestätigt. Siehe Anhang Bei Rückfragen einfach melden. Schöne Grüße Thomas Lutz LK Bach"

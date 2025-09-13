@@ -1,0 +1,41 @@
+- dialog:
+  - document:
+    - text: LwdKip █ Larchlehne ←→
+    - button "Close"
+    - table:
+      - row /Event date Tuesday, December \d+, \d+ at 7:\d+:\d+ PM GMT\+\d+:\d+/:
+        - cell "Event date"
+        - cell /Tuesday, December \d+, \d+ at 7:\d+:\d+ PM GMT\+\d+:\d+/
+      - row "Report date —":
+        - cell "Report date"
+        - cell "—"
+      - row "Author name —":
+        - cell "Author name"
+        - cell "—"
+      - row "Location Larchlehne":
+        - cell "Location"
+        - cell "Larchlehne"
+      - row "Elevation —":
+        - cell "Elevation"
+        - cell "—"
+      - row "Aspect —":
+        - cell "Aspect"
+        - cell "—"
+      - 'row "Comment Spontaner Abgang, wie beurteilt nur geringe Reichweite – Lawinengröße: mittlere Lawine – Lawinenart: Schneebrettlawine – Lawinenfeuchte: trocken"':
+        - cell "Comment"
+        - 'cell "Spontaner Abgang, wie beurteilt nur geringe Reichweite – Lawinengröße: mittlere Lawine – Lawinenart: Schneebrettlawine – Lawinenfeuchte: trocken"'
+      - row "Lawinengröße mittlere Lawine":
+        - cell "Lawinengröße"
+        - cell "mittlere Lawine"
+      - row "Lawinenart Schneebrettlawine":
+        - cell "Lawinenart"
+        - cell "Schneebrettlawine"
+      - row "Lawinenfeuchte trocken":
+        - cell "Lawinenfeuchte"
+        - cell "trocken"
+      - row "Sprengung ":
+        - cell "Sprengung"
+        - cell ""
+      - row "observations.incline":
+        - cell "observations.incline"
+        - cell

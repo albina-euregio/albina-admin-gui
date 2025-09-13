@@ -1,0 +1,6 @@
+- dialog:
+  - document:
+    - text: LoLaKronos █ Alpin Arena Schnals - Hintereis ←→
+    - button "Close"
+    - table
+    - iframe

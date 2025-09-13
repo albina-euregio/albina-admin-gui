@@ -1,0 +1,896 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          11.820795371450345,
+          47.22181340861587,
+          2120
+        ]
+      },
+      "properties": {
+        "$id": "32649745-69de-4729-accf-bfa945419340",
+        "$source": "LoLaKronos",
+        "$allowEdit": false,
+        "$deleted": false,
+        "$type": "Profile",
+        "$externalURL": "https://www.lola-kronos.info/detail-by-token/lolaSnowProfile/32649745-69de-4729-accf-bfa945419340/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlMb2FkIjp7fSwiaWF0IjoxNzI4OTAyMzAzLCJleHAiOjE3NjE4MjA3MDN9.susobw587jjZ8Vg7Rl2eA0PHtWXymr8y1_6dmR8OZn4",
+        "stability": "very_poor",
+        "aspect": "N",
+        "authorName": "Florian Wechselberger",
+        "content": "Untergrund: alpiner Rasen, Stauden, nicht gefroren\nEXP N: Oberflächenreif konstant, EXP S Oberflächenreif im Laufe des Vormittags aufgrund von Sonneneinstrahlung abgebaut. ☲ECT 8@0cm Ganzer Block ☲ECT 11@12cm Bruch",
+        "elevation": 2120,
+        "eventDate": "2024-12-05T09:30:45.000Z",
+        "latitude": 47.22181340861587,
+        "locationName": "Rauhenkopf",
+        "longitude": 11.820795371450345,
+        "region": "AT-07-16",
+        "reportDate": "2024-12-05T12:26:54.000Z",
+        "importantObservations": [
+          "StabilityTest"
+        ],
+        "regionLabel": "AT-07-16 Tuxer Alps East",
+        "_id": "67519796b0e20c5bb4fb66e4",
+        "uuId": "32649745-69de-4729-accf-bfa945419340",
+        "__v": 0,
+        "altitude": 2120,
+        "aspects": [
+          "N"
+        ],
+        "comment": "Untergrund: alpiner Rasen, Stauden, nicht gefroren\nEXP N: Oberflächenreif konstant, EXP S Oberflächenreif im Laufe des Vormittags aufgrund von Sonneneinstrahlung abgebaut. ",
+        "commissionId": "",
+        "commissionName": "",
+        "createdAt": "2024-12-05T12:07:50.709Z",
+        "deleted": false,
+        "deletedTime": null,
+        "deletedUsername": "",
+        "edited": [
+          {
+            "userId": "64ce19fc04f9e614cb485407",
+            "firstName": "Florian",
+            "lastName": "Wechselberger",
+            "username": "info@alpine-guiding.at",
+            "time": "2024-12-05T12:07:50.707Z"
+          },
+          {
+            "userId": "64ce19fc04f9e614cb485407",
+            "firstName": "Florian",
+            "lastName": "Wechselberger",
+            "username": "info@alpine-guiding.at",
+            "time": "2024-12-05T12:22:20.695Z"
+          },
+          {
+            "userId": "64ce19fc04f9e614cb485407",
+            "firstName": "Florian",
+            "lastName": "Wechselberger",
+            "username": "info@alpine-guiding.at",
+            "time": "2024-12-05T12:23:46.018Z"
+          },
+          {
+            "userId": "64ce19fc04f9e614cb485407",
+            "firstName": "Florian",
+            "lastName": "Wechselberger",
+            "username": "info@alpine-guiding.at",
+            "time": "2024-12-05T12:26:30.296Z"
+          },
+          {
+            "userId": "64ce19fc04f9e614cb485407",
+            "firstName": "Florian",
+            "lastName": "Wechselberger",
+            "username": "info@alpine-guiding.at",
+            "time": "2024-12-05T12:26:54.415Z"
+          }
+        ],
+        "entities": [
+          {
+            "entityId": "64edd52b863815ebc157dcd0",
+            "entityName": "Beobachter*in LWD Tirol",
+            "entityShortName": "",
+            "entityIcon": "noIcon"
+          }
+        ],
+        "firstName": "Florian",
+        "furtherPersons": [],
+        "images": [],
+        "infraAvalancheId": "",
+        "infraAvalancheName": "",
+        "infraRouteSectionFrom": "",
+        "infraRouteSectionId": "",
+        "infraRouteSectionTo": "",
+        "lastName": "Wechselberger",
+        "latency": "bondedSnow",
+        "loadCapacity": "loadIncapable",
+        "lolaApplication": "avaobs",
+        "lwdBayernBillable": null,
+        "lwdBayernBillingValue": -1,
+        "lwdBayernGeneratedInCockpit": false,
+        "lwdBayernGeneratedInCockpitFromUserName": "",
+        "lwdBayernMapShapeId": null,
+        "lwdBayernObservationField": null,
+        "lwdBayernPublishWeb": false,
+        "pdfGenerated": true,
+        "pdfGeneratedTime": "2024-12-05T12:27:01.816Z",
+        "pdfName": "noRegionName-2024-12-05-lolaSnowProfile-32649745-69de-4729-accf-bfa945419340.pdf",
+        "pdfToken": "",
+        "placeDescription": "Rauhenkopf",
+        "position": {
+          "lat": 47.22181340861587,
+          "lng": 11.820795371450345,
+          "adsRegion": {
+            "loc_ref": "AT-07-16",
+            "loc_name": "Östliche Tuxer Alpen",
+            "source": ""
+          }
+        },
+        "processStatus": "complete",
+        "readByUser": [],
+        "regionId": "",
+        "regionName": "",
+        "regions": [],
+        "rhbRegionId": "",
+        "rhbRegionName": "",
+        "safetyAvalancheId": "",
+        "safetyAvalancheName": "",
+        "serverStatus": "online",
+        "snowCoverComment": "Oberflächenreif ",
+        "snowLayers": [
+          {
+            "end": 31.5,
+            "start": 32,
+            "grainShape": "surfaceHoar",
+            "grainShape2": "surfaceHoar",
+            "grainSizeFrom": 2,
+            "grainSizeTo": 3,
+            "layerHeight": 23.359375,
+            "liquidWaterContent": "dry",
+            "snowHardness": "fist"
+          },
+          {
+            "end": 25,
+            "start": 31.5,
+            "grainShape": "freshSnow",
+            "grainShape2": "freshSnow",
+            "grainSizeFrom": 1,
+            "grainSizeTo": 1,
+            "layerHeight": 63.671875,
+            "liquidWaterContent": "dry",
+            "snowHardness": "fist"
+          },
+          {
+            "end": 20,
+            "start": 25,
+            "grainShape": "smallRound",
+            "grainShape2": "feltySnow",
+            "grainSizeFrom": 0.5,
+            "grainSizeTo": 1,
+            "layerHeight": 53.59375,
+            "liquidWaterContent": "dry",
+            "snowHardness": "4Fingers"
+          },
+          {
+            "end": 12,
+            "start": 20,
+            "grainShape": "smallRound",
+            "grainShape2": "feltySnow",
+            "grainSizeFrom": 0.5,
+            "grainSizeTo": 1,
+            "layerHeight": 73.75,
+            "liquidWaterContent": "dry",
+            "snowHardness": "4Fingers1Finger"
+          },
+          {
+            "end": 4,
+            "start": 12,
+            "grainShape": "smallRound",
+            "grainShape2": "angularRounded",
+            "grainSizeFrom": 0.5,
+            "grainSizeTo": 0.5,
+            "layerHeight": 73.75,
+            "liquidWaterContent": "dry",
+            "snowHardness": "1Finger"
+          },
+          {
+            "end": 0,
+            "start": 4,
+            "grainShape": "angularSnow",
+            "grainShape2": "angularRounded",
+            "grainSizeFrom": 1,
+            "grainSizeTo": 1,
+            "layerHeight": 46.875,
+            "liquidWaterContent": "littleSticky",
+            "snowHardness": "4Fingers1Finger"
+          }
+        ],
+        "snowStabilityTest": [
+          {
+            "testCategory": "ECT",
+            "testResult": "P",
+            "number": 8,
+            "position": 0,
+            "comment": "Ganzer Block",
+            "snowStability": "veryWeak",
+            "KBBTOverlayingLayer": "n/a",
+            "KBBTImpactHardness": "n/a",
+            "KBBTCrystalsSize": "n/a",
+            "KBBTWeakLayerThickness": "n/a",
+            "measureFrom": "surface"
+          },
+          {
+            "testCategory": "ECT",
+            "testResult": "P",
+            "number": 11,
+            "position": 12,
+            "comment": "Bruch",
+            "snowStability": "weak",
+            "KBBTOverlayingLayer": "n/a",
+            "KBBTImpactHardness": "n/a",
+            "KBBTCrystalsSize": "n/a",
+            "KBBTWeakLayerThickness": "n/a",
+            "measureFrom": "surface"
+          }
+        ],
+        "storedInApp": "2024-12-05T12:26:23.965Z",
+        "storedInDb": "2024-12-05T12:26:54.415Z",
+        "surfaceCharacteristic": "irregular",
+        "temperatures": [
+          {
+            "temperature": -11.4,
+            "position": 32
+          },
+          {
+            "temperature": -8.7,
+            "position": 22
+          },
+          {
+            "temperature": -4.9,
+            "position": 12
+          },
+          {
+            "temperature": -2.8,
+            "position": 5
+          },
+          {
+            "temperature": -1.5,
+            "position": 2
+          },
+          {
+            "temperature": 0,
+            "position": 0
+          }
+        ],
+        "tilt": 32,
+        "time": "2024-12-05T09:30:45.091Z",
+        "totalSnowHeight": 32,
+        "updatedAt": "2024-12-05T12:27:01.817Z",
+        "uploadedToLawis": false,
+        "uploadedToLawisID": null,
+        "uploadedToLawisTimestamp": "1970-01-01T00:00:00.000Z",
+        "userId": "64ce19fc04f9e614cb485407",
+        "username": "info@alpine-guiding.at",
+        "weakestSnowStability": "veryWeak",
+        "weather": {
+          "temperatureAir": -8.7,
+          "temperatureRange": "n/a",
+          "temperatureTendency24h": "n/a",
+          "precipitationType": "noPrecipitation",
+          "precipitationTypes": [],
+          "precipitationIntense": "n/a",
+          "clouds": "cloudless",
+          "windDirection": [],
+          "windSignsAge": "n/a",
+          "windSigns": [],
+          "windDirectionChanging": false,
+          "freshWindDriftedSnow": false,
+          "windSpeed": "calm",
+          "weatherTrend24h": "n/a",
+          "snowHeight": null,
+          "snowHeightValley": null,
+          "freshSnow24H": "n/a",
+          "freshSnow24HValue": null,
+          "freshSnow72H": "n/a",
+          "freshSnowForecast24H": "n/a",
+          "windSpeedForecast24H": "n/a",
+          "windDirectionForecast24H": [],
+          "temperatureCurve24h": "n/a",
+          "snowfallLine": null,
+          "windDriftedSnowAmout24h": "n/a"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          11.8596389,
+          47.1914402,
+          0
+        ]
+      },
+      "properties": {
+        "$id": "53276a95-7576-4725-8e11-d747c21c95dc",
+        "$source": "LoLaKronos",
+        "$allowEdit": false,
+        "$deleted": false,
+        "$type": "SimpleObservation",
+        "$externalURL": "https://www.lola-kronos.info/detail-by-token/lolaSimpleObservation/53276a95-7576-4725-8e11-d747c21c95dc/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlMb2FkIjp7fSwiaWF0IjoxNzI4OTAyMzAzLCJleHAiOjE3NjE4MjA3MDN9.susobw587jjZ8Vg7Rl2eA0PHtWXymr8y1_6dmR8OZn4",
+        "authorName": "Florian Wechselberger",
+        "content": "VV Exp S im Laufe des Vormittags abgebaut (1500-2300m)\nVV Exp N konstant.  📷 1",
+        "eventDate": "2024-12-05T09:30:17.000Z",
+        "latitude": 47.1914402,
+        "locationName": "Rauhenkopf",
+        "longitude": 11.8596389,
+        "region": "AT-07-16",
+        "reportDate": "2024-12-05T12:11:13.000Z",
+        "regionLabel": "AT-07-16 Tuxer Alps East",
+        "readByUser": [],
+        "_id": "67519861b0e20c5bb4fb6c62",
+        "uuId": "53276a95-7576-4725-8e11-d747c21c95dc",
+        "__v": 0,
+        "comment": "VV Exp S im Laufe des Vormittags abgebaut (1500-2300m)\nVV Exp N konstant. ",
+        "createdAt": "2024-12-05T12:11:13.565Z",
+        "dangerSigns": [
+          "freshWindDriftedSnow"
+        ],
+        "deleted": false,
+        "deletedTime": "1970-01-01T00:00:00.000Z",
+        "deletedUsername": "",
+        "edited": [
+          {
+            "userId": "64ce19fc04f9e614cb485407",
+            "firstName": "Florian",
+            "lastName": "Wechselberger",
+            "username": "info@alpine-guiding.at",
+            "time": "2024-12-05T12:11:13.564Z"
+          }
+        ],
+        "entities": [
+          {
+            "entityId": "64edd52b863815ebc157dcd0",
+            "entityName": "Beobachter*in LWD Tirol",
+            "entityShortName": "",
+            "entityIcon": "noIcon"
+          },
+          {
+            "entityId": "651ea4bfc7740c4fbb635188",
+            "entityName": "SNOBS",
+            "entityShortName": "",
+            "entityIcon": "noIcon"
+          }
+        ],
+        "firstName": "Florian",
+        "hasDangerSigns": true,
+        "hasSnowSurface": false,
+        "images": [
+          {
+            "imageUuid": "827c0da9-a386-4df2-b7c5-2048b0b3419b",
+            "copyRight": "",
+            "comment": "",
+            "fileName": "Beobachter-inLWDTirol-2024-12-05-lolaSimpleObservation-827c0da9-a386-4df2-b7c5-2048b0b3419b.jpg"
+          }
+        ],
+        "lastName": "Wechselberger",
+        "lolaApplication": "avaobs",
+        "pdfGenerated": true,
+        "pdfGeneratedTime": "2024-12-05T12:11:30.323Z",
+        "pdfName": "noRegionName-2024-12-05-lolaSimpleObservation-53276a95-7576-4725-8e11-d747c21c95dc.pdf",
+        "placeDescription": "Rauhenkopf",
+        "position": {
+          "lng": 11.8596389,
+          "lat": 47.1914402,
+          "adsRegion": {
+            "loc_ref": "AT-07-16",
+            "loc_name": "Östliche Tuxer Alpen",
+            "source": ""
+          }
+        },
+        "processStatus": "complete",
+        "regionId": "",
+        "regionName": "",
+        "regions": [],
+        "rhbRegionId": "",
+        "rhbRegionName": "",
+        "serverStatus": "online",
+        "snowLine": null,
+        "snowStabilityTests": [],
+        "snowSurface": [],
+        "storedInDb": "2024-12-05T12:11:13.564Z",
+        "time": "2024-12-05T09:30:17.455Z",
+        "updatedAt": "2024-12-05T12:11:30.324Z",
+        "userId": "64ce19fc04f9e614cb485407",
+        "weakestSnowStability": "n/a"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          11.82079537145,
+          47.221813408616,
+          2120
+        ]
+      },
+      "properties": {
+        "$id": "Profile-22309",
+        "$source": "Lawis",
+        "$allowEdit": false,
+        "$deleted": false,
+        "$type": "Profile",
+        "$externalURL": "https://lawis.at/lawis_api/v2_3/files/profiles/snowprofile_22309.pdf",
+        "stability": "very_poor",
+        "aspect": "N",
+        "authorName": "Florian Wechselberger",
+        "content": "LO.LA Profile\nECT P 8 @ 0 (from surface)\nGanzer Block\n\nECT P 11 @ 12 (from surface)\nBruch",
+        "elevation": 2120,
+        "eventDate": "2024-12-05T09:30:00.000Z",
+        "latitude": 47.221813408616,
+        "locationName": "Rauhenkopf",
+        "longitude": 11.82079537145,
+        "region": "AT-07-16",
+        "reportDate": "2024-12-05T12:26:52.000Z",
+        "importantObservations": [
+          "StabilityTest"
+        ],
+        "regionLabel": "AT-07-16 Tuxer Alps East",
+        "id": 22309,
+        "files": {
+          "pdf": "http://localhost/lawis_api/v2_3/files/profiles/snowprofile_22309.pdf",
+          "png": "http://localhost/lawis_api/v2_3/files/profiles/snowprofile_22309.png",
+          "thumbnail": "http://localhost/lawis_api/v2_3/files/profiles/snowprofile_22309_small.png"
+        },
+        "date": "2024-12-05T10:30:00+01:00",
+        "reported": {
+          "date": "2024-12-05T13:26:52+01:00",
+          "name": "Florian Wechselberger",
+          "email": null
+        },
+        "comments": "LO.LA Profile\nECT P 8 @ 0 (from surface)\nGanzer Block\n\nECT P 11 @ 12 (from surface)\nBruch",
+        "location": {
+          "name": "Rauhenkopf",
+          "elevation": 2120,
+          "longitude": 11.82079537145,
+          "latitude": 47.221813408616,
+          "slope_angle": 32,
+          "aspect": {
+            "id": 1,
+            "text": "N"
+          },
+          "country": {
+            "id": 1,
+            "code": "AT",
+            "text": "Österreich"
+          },
+          "region": {
+            "id": 1,
+            "text": "Tirol"
+          },
+          "subregion": {
+            "id": 174,
+            "text": "Östl. Tuxer Alpen"
+          }
+        },
+        "weather": {
+          "air_temperature": -8.7,
+          "precipitation": {
+            "type": {
+              "id": 1,
+              "text": "No precipitation"
+            }
+          },
+          "wind": {
+            "speed": {
+              "id": 1,
+              "text": "Calm (0 km/h)"
+            }
+          },
+          "skycondition": {
+            "id": 1,
+            "text": "Clear (0/8)"
+          }
+        },
+        "profile": [
+          {
+            "id": 171748,
+            "height": {
+              "min": 0,
+              "max": 4
+            },
+            "water_content": {
+              "id": 2,
+              "text": "Moist"
+            },
+            "grain": {
+              "size": {
+                "min": 1,
+                "max": 1
+              },
+              "shape1": {
+                "id": 4,
+                "text": "Faceted crystals"
+              },
+              "shape2": {
+                "id": 9,
+                "text": "Faceted, rounded"
+              }
+            },
+            "hardness": {
+              "id": 4,
+              "text": "4F-1F"
+            }
+          },
+          {
+            "id": 171749,
+            "height": {
+              "min": 4,
+              "max": 12
+            },
+            "water_content": {
+              "id": 1,
+              "text": "Dry"
+            },
+            "grain": {
+              "size": {
+                "min": 0.5,
+                "max": 0.5
+              },
+              "shape1": {
+                "id": 3,
+                "text": "Rounded grains"
+              },
+              "shape2": {
+                "id": 9,
+                "text": "Faceted, rounded"
+              }
+            },
+            "hardness": {
+              "id": 5,
+              "text": "1F"
+            }
+          },
+          {
+            "id": 171750,
+            "height": {
+              "min": 12,
+              "max": 20
+            },
+            "water_content": {
+              "id": 1,
+              "text": "Dry"
+            },
+            "grain": {
+              "size": {
+                "min": 0.5,
+                "max": 1
+              },
+              "shape1": {
+                "id": 3,
+                "text": "Rounded grains"
+              },
+              "shape2": {
+                "id": 2,
+                "text": "Decomp. / fragm."
+              }
+            },
+            "hardness": {
+              "id": 4,
+              "text": "4F-1F"
+            }
+          },
+          {
+            "id": 171751,
+            "height": {
+              "min": 20,
+              "max": 25
+            },
+            "water_content": {
+              "id": 1,
+              "text": "Dry"
+            },
+            "grain": {
+              "size": {
+                "min": 0.5,
+                "max": 1
+              },
+              "shape1": {
+                "id": 3,
+                "text": "Rounded grains"
+              },
+              "shape2": {
+                "id": 2,
+                "text": "Decomp. / fragm."
+              }
+            },
+            "hardness": {
+              "id": 3,
+              "text": "4F"
+            }
+          },
+          {
+            "id": 171752,
+            "height": {
+              "min": 25,
+              "max": 31.5
+            },
+            "water_content": {
+              "id": 1,
+              "text": "Dry"
+            },
+            "grain": {
+              "size": {
+                "min": 1,
+                "max": 1
+              },
+              "shape1": {
+                "id": 1,
+                "text": "Precip. particles"
+              },
+              "shape2": {
+                "id": 1,
+                "text": "Precip. particles"
+              }
+            },
+            "hardness": {
+              "id": 1,
+              "text": "F"
+            }
+          },
+          {
+            "id": 171753,
+            "height": {
+              "min": 31.5,
+              "max": 32
+            },
+            "water_content": {
+              "id": 1,
+              "text": "Dry"
+            },
+            "grain": {
+              "size": {
+                "min": 2,
+                "max": 3
+              },
+              "shape1": {
+                "id": 6,
+                "text": "Surface hoar"
+              },
+              "shape2": {
+                "id": 6,
+                "text": "Surface hoar"
+              }
+            },
+            "hardness": {
+              "id": 1,
+              "text": "F"
+            }
+          }
+        ],
+        "temperatures": [
+          {
+            "id": 174330,
+            "height": 0,
+            "temperature": 0
+          },
+          {
+            "id": 174331,
+            "height": 2,
+            "temperature": -1.5
+          },
+          {
+            "id": 174332,
+            "height": 5,
+            "temperature": -2.8
+          },
+          {
+            "id": 174333,
+            "height": 12,
+            "temperature": -4.9
+          },
+          {
+            "id": 174334,
+            "height": 22,
+            "temperature": -8.7
+          },
+          {
+            "id": 174335,
+            "height": 32,
+            "temperature": -11.4
+          }
+        ],
+        "stability_tests": [
+          {
+            "id": 27499,
+            "type": {
+              "id": 2,
+              "text": "ECT"
+            },
+            "height": 0,
+            "step": 8,
+            "result": {
+              "id": 109,
+              "text": "propagation (P) (whole block)"
+            }
+          },
+          {
+            "id": 27500,
+            "type": {
+              "id": 2,
+              "text": "ECT"
+            },
+            "height": 20,
+            "step": 11,
+            "result": {
+              "id": 109,
+              "text": "propagation (P) (whole block)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          11.97476101947646,
+          47.34493250358361,
+          1787
+        ]
+      },
+      "properties": {
+        "$id": "d073ade3-3d44-4d3a-91b0-63df2701de2f",
+        "$source": "LoLaKronos",
+        "$allowEdit": false,
+        "$deleted": false,
+        "$type": "Profile",
+        "$externalURL": "https://www.lola-kronos.info/detail-by-token/lolaSnowProfile/d073ade3-3d44-4d3a-91b0-63df2701de2f/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlMb2FkIjp7fSwiaWF0IjoxNzI4OTAyMzAzLCJleHAiOjE3NjE4MjA3MDN9.susobw587jjZ8Vg7Rl2eA0PHtWXymr8y1_6dmR8OZn4",
+        "authorName": "Gernot Zenkl",
+        "content": "",
+        "elevation": 1787,
+        "eventDate": "2024-12-04T11:58:12.000Z",
+        "latitude": 47.34493250358361,
+        "locationName": "fert",
+        "longitude": 11.97476101947646,
+        "region": "AT-07-17-01",
+        "reportDate": "2024-12-04T11:59:08.000Z",
+        "regionLabel": "AT-07-17-01 Kitzbühel Alps Brixental",
+        "_id": "6750440cb0e20c5bb4dff55f",
+        "uuId": "d073ade3-3d44-4d3a-91b0-63df2701de2f",
+        "__v": 0,
+        "altitude": null,
+        "aspects": [],
+        "comment": "",
+        "commissionId": "",
+        "commissionName": "",
+        "createdAt": "2024-12-04T11:59:08.646Z",
+        "deleted": false,
+        "deletedTime": null,
+        "deletedUsername": "",
+        "edited": [
+          {
+            "userId": "655b222f9d73cad50f6bb1a6",
+            "firstName": "Gernot",
+            "lastName": "Zenkl",
+            "username": "gernot.zenkl@geosphere.at",
+            "time": "2024-12-04T11:59:08.645Z"
+          }
+        ],
+        "entities": [
+          {
+            "entityId": "65607f779d73cad50f6d5a99",
+            "entityName": "BELS - Steiermark",
+            "entityShortName": "",
+            "entityIcon": "noIcon"
+          }
+        ],
+        "firstName": "Gernot",
+        "furtherPersons": [],
+        "images": [],
+        "infraAvalancheId": "",
+        "infraAvalancheName": "",
+        "infraRouteSectionFrom": "",
+        "infraRouteSectionId": "",
+        "infraRouteSectionTo": "",
+        "lastName": "Zenkl",
+        "latency": "n/a",
+        "loadCapacity": "n/a",
+        "lolaApplication": "bels",
+        "lwdBayernBillable": null,
+        "lwdBayernBillingValue": -1,
+        "lwdBayernGeneratedInCockpit": false,
+        "lwdBayernGeneratedInCockpitFromUserName": "",
+        "lwdBayernMapShapeId": null,
+        "lwdBayernObservationField": null,
+        "lwdBayernPublishWeb": false,
+        "pdfGenerated": true,
+        "pdfGeneratedTime": "2024-12-04T11:59:16.536Z",
+        "pdfName": "noRegionName-2024-12-04-lolaSnowProfile-d073ade3-3d44-4d3a-91b0-63df2701de2f.pdf",
+        "pdfToken": "",
+        "placeDescription": "fert",
+        "position": {
+          "lat": 47.34493250358361,
+          "lng": 11.97476101947646,
+          "adsRegion": {
+            "loc_ref": "AT-07-17",
+            "loc_name": "Westliche Kitzbüheler Alpen",
+            "source": ""
+          }
+        },
+        "processStatus": "complete",
+        "readByUser": [],
+        "regionId": "",
+        "regionName": "",
+        "regions": [],
+        "rhbRegionId": "",
+        "rhbRegionName": "",
+        "safetyAvalancheId": "",
+        "safetyAvalancheName": "",
+        "serverStatus": "online",
+        "snowCoverComment": "",
+        "snowLayers": [
+          {
+            "end": 50,
+            "start": 100,
+            "grainShape": "graupel",
+            "grainShape2": "smallRound",
+            "grainSizeFrom": 1.5,
+            "grainSizeTo": 1.5,
+            "layerHeight": 650,
+            "liquidWaterContent": "dry",
+            "snowHardness": "4Fingers1Finger"
+          }
+        ],
+        "snowStabilityTest": [],
+        "storedInApp": "2024-12-04T11:59:08.299Z",
+        "storedInDb": "2024-12-04T11:59:08.645Z",
+        "surfaceCharacteristic": "n/a",
+        "temperatures": [
+          {
+            "temperature": -5,
+            "position": 100
+          }
+        ],
+        "tilt": null,
+        "time": "2024-12-04T11:58:12.808Z",
+        "totalSnowHeight": 100,
+        "updatedAt": "2024-12-04T11:59:16.536Z",
+        "uploadedToLawis": false,
+        "uploadedToLawisID": null,
+        "uploadedToLawisTimestamp": "1970-01-01T00:00:00.000Z",
+        "userId": "655b222f9d73cad50f6bb1a6",
+        "username": "gernot.zenkl@geosphere.at",
+        "weakestSnowStability": "n/a",
+        "weather": {
+          "temperatureAir": null,
+          "temperatureRange": "n/a",
+          "temperatureTendency24h": "n/a",
+          "precipitationType": "n/a",
+          "precipitationTypes": [],
+          "precipitationIntense": "n/a",
+          "clouds": "n/a",
+          "windDirection": [],
+          "windSignsAge": "n/a",
+          "windSigns": [],
+          "windDirectionChanging": false,
+          "freshWindDriftedSnow": false,
+          "windSpeed": "n/a",
+          "weatherTrend24h": "n/a",
+          "snowHeight": null,
+          "snowHeightValley": null,
+          "freshSnow24H": "n/a",
+          "freshSnow24HValue": null,
+          "freshSnow72H": "n/a",
+          "freshSnowForecast24H": "n/a",
+          "windSpeedForecast24H": "n/a",
+          "windDirectionForecast24H": [],
+          "temperatureCurve24h": "n/a",
+          "snowfallLine": null,
+          "windDriftedSnowAmout24h": "n/a"
+        }
+      }
+    }
+  ]
+}
