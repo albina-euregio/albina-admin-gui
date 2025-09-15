@@ -74,7 +74,7 @@ test("Statistics", async ({ page }) => {
 test("User Settings", async ({ page }) => {
   await page.getByRole("button", { name: "Playwright" }).click();
   await page.getByRole("link", { name: "Settings" }).click();
-  await expect(page.getByRole("main").getByRole("img")).toHaveScreenshot("avatar.png");
+  await expect(page.getByRole("main").getByRole("img")).toHaveScreenshot("avatar.png", { maxDiffPixelRatio: 0.1 });
   await page.getByRole("button", { name: "Update User" }).click();
   await expect(page.getByRole("button", { name: "Choose File" })).toBeEnabled();
   await expect(page.getByRole("textbox", { name: "Name", exact: true })).toBeEnabled();

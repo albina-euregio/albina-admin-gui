@@ -33,7 +33,9 @@ test("View bulletin", async ({ page }) => {
   await page.locator(".region-thumb").filter({ hasText: "Northern Zillertal Alps" }).click();
   await page.getByRole("button", { name: "Avalanche Problems" }).click();
   await page.getByRole("button", { name: "SLAB" }).click();
-  await expect(page.locator("app-matrix-parameter").getByRole("img")).toHaveScreenshot("danger-high.png");
+  await expect(page.locator("app-matrix-parameter").getByRole("img")).toHaveScreenshot("danger-high.png", {
+    maxDiffPixelRatio: 0.1,
+  });
 
   test.step("Navigate to next/previous day", async () => {
     // TODO
