@@ -202,26 +202,81 @@ test("export observation details", async ({ page }) => {
 test("Create new observation", async ({ page }) => {
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  // TODO
+  await page.getByTitle("New observation").click();
+  await page.locator('#eventDate input[type="date"]').fill("2024-12-10");
+  await page.locator('#eventDate input[type="time"]').fill("10:13");
+  await page.getByLabel("Person involvement").selectOption("Injured");
+  await expect(page.getByLabel("Observation type")).toHaveValue("Avalanche");
+  await page.getByLabel("Snowpack Stability").selectOption("fair");
+  await page.getByRole("textbox", { name: "Location" }).fill("Zischgeles");
+  await page.getByRole("option", { name: "Zischgeles, Sankt Sigmund im" }).click();
+  await expect(page.getByRole("spinbutton", { name: "Latitude" })).toHaveValue("47.1315444");
+  await expect(page.getByRole("spinbutton", { name: "Longitude" })).toHaveValue("11.0950077");
+  await expect(page.getByRole("spinbutton", { name: " Elevation", exact: true })).toHaveValue("3003");
+  await page.getByRole("button", { name: "S", exact: true }).click({ force: true });
+  await page.getByRole("textbox", { name: "Author name" }).fill("Playwright");
+  await page.locator('#reportDate input[type="date"]').fill("2024-12-11");
+  await page.locator('#reportDate input[type="time"]').fill("08:00");
+  await page.getByRole("button", { name: "Wind slab" }).click();
+  await page.getByLabel("Danger source").selectOption("60a1e096-e0f9-4491-bee3-e358cb9bb4b1");
+  await page.getByRole("button", { name: "Gliding snow" }).click();
+  await page.getByRole("button", { name: "dp2" }).click();
+  await page.getByRole("button", { name: "For blog" }).click();
+  await page.getByRole("textbox", { name: "Content" }).fill("Playwright test");
+  await expect(page.getByRole("button", { name: "Save" })).toBeEnabled();
+  await page.locator("#eventDate").getByRole("button", { name: "" }).click();
+  await expect(page.getByRole("button", { name: "Save" })).toBeDisabled();
+  // TODO think about if/how to test sending of new observation
 });
 
 test("Webcams and Observers", async ({ page }) => {
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  // TODO
   await test.step("Gallery", async () => {
-    // TODO
+    await page.getByText("Gallery").click();
+    await page.locator('input[type="datetime-local"]').fill("2024-12-24T09:00");
+    await page.getByRole("button", { name: "Region", exact: true }).click();
+    await page.getByRole("checkbox", { name: "Karwendel Mountains West" }).check();
+    await expect(page.getByRole("button", { name: "UNI Innsbruck West" })).toHaveScreenshot("webcamUIBK.png", {
+      maxDiffPixelRatio: 0.4,
+    });
   });
-  await test.step("Map", async () => {
-    // Snapshot of Map
-    // Klick on Webcam
+  await test.step("Observer Map", async () => {
+    await page.getByText("Map", { exact: true }).click();
+    await page.getByTitle("Observations").click();
+    await page.getByTitle("Observers").click();
+    await page.getByRole("button", { name: "Marker" }).click();
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://wiski.tirol.gv.at/lawine/grafiken/800/beobachter/Nordkette.png",
+    );
+    await page.getByRole("button", { name: "Close" }).click();
+  });
+  await test.step("Webcam Map", async () => {
+    await page.getByTitle("Observers").click();
+    await page.getByTitle("Webcams").click();
+    // select region with unique webcam
+    await page.getByRole("button", { name: "Region", exact: true }).click();
+    await page.getByRole("checkbox", { name: "Lechtal Alps West" }).check();
+    await page.getByRole("checkbox", { name: "Karwendel Mountains West" }).uncheck();
+    await page.getByRole("button", { name: "Region", exact: true }).click();
+    await expect(page.locator("#observationsMap")).toHaveScreenshot("webcamMap.png", { maxDiffPixelRatio: 0.1 });
+    await page.getByRole("button", { name: "Marker" }).click();
+    await expect(page.locator("iframe")).toHaveAttribute("src", "https://www.foto-webcam.eu/webcam/st-anton/");
   });
 });
 
 test("Weather stations", async ({ page }) => {
+  await page.clock.setFixedTime(testDate);
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  // TODO
-  // select temperature, potential surface hoar, dry snowfall level
-  // map snapshot
+  await page.getByTitle("Observations").click();
+  await page.getByTitle("Weather stations").click();
+  await expect.poll(() => page.getByRole("button", { name: "Marker" }).count()).toBeGreaterThan(200);
+  await page.getByTitle("Air temperature", { exact: true }).click();
+  await expect(page.locator("#observationsMap")).toHaveScreenshot("airTemp.png", { maxDiffPixelRatio: 0.1 });
+  await page.getByTitle("Potential surface hoar formation", { exact: true }).click();
+  await expect(page.locator("#observationsMap")).toHaveScreenshot("surfaceHoar.png", { maxDiffPixelRatio: 0.1 });
+  await page.getByTitle("Dry snowfall level").click();
+  await expect(page.locator("#observationsMap")).toHaveScreenshot("drySnowfall.png", { maxDiffPixelRatio: 0.1 });
 });
