@@ -5,6 +5,7 @@
       <label
         class="form-label"
         [class.changed]="
+          isComparedBulletin() &&
           comparedAvalancheProblemModel() &&
           avalancheProblemModel().avalancheProblem !== comparedAvalancheProblemModel()?.avalancheProblem
         "
@@ -46,6 +47,7 @@
     <label
       class="form-label"
       [class.changed]="
+        isComparedBulletin() &&
         comparedAvalancheProblemModel() &&
         comparedAvalancheProblemModel().avalancheType !== avalancheProblemModel().avalancheType
       "
@@ -113,6 +115,7 @@
       <label
         class="form-label"
         [class.changed]="
+          isComparedBulletin() &&
           comparedAvalancheProblemModel() &&
           !haveSameElements(comparedAvalancheProblemModel().aspects, avalancheProblemModel().aspects)
         "
@@ -132,6 +135,7 @@
       <label
         class="form-label"
         [class.changed]="
+          isComparedBulletin() &&
           comparedAvalancheProblemModel() &&
           (avalancheProblemModel().elevationHigh !== comparedAvalancheProblemModel()?.elevationHigh ||
             avalancheProblemModel().elevationLow !== comparedAvalancheProblemModel()?.elevationLow ||
@@ -293,6 +297,7 @@
       [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
       [matrixInformation]="avalancheProblemModel().matrixInformation"
       [comparedMatrixInformation]="comparedAvalancheProblemModel()?.matrixInformation"
+      [isComparedBulletin]="isComparedBulletin()"
       [disabled]="disabled()"
       [count]="count()"
       [afternoon]="afternoon()"

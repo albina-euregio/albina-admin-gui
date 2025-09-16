@@ -27,5 +27,6 @@ export class SliderComponent {
   sliderOptions = input<SliderOptions>();
   sliderValue = input<number>();
   comparedSliderValue = input<number>();
+  isComparedBulletin = input<boolean>(false);
   sliderValueChange = output<number>();
 }
