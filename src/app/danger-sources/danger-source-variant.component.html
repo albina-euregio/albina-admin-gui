@@ -1759,6 +1759,45 @@
           </div>
         </div>
 
+        <div class="form-group row">
+          <label
+            class="form-label"
+            [class.changed]="
+              isComparedVariant() && variant().penetrateDeepLayers !== comparedVariant()?.penetrateDeepLayers
+            "
+            for="runoutIntoGreenCheckbox"
+            >{{ "dangerSources.create.label.penetrateDeepLayers" | translate }}</label
+          >
+          <div class="btn-group">
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === true
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setPenetrateDeepLayers(true)"
+            >
+              <span>{{ "button.yes" | translate }}</span>
+            </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="
+                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === false
+                  ? 'btn-secondary'
+                  : 'btn-outline-secondary'
+              "
+              (click)="setPenetrateDeepLayers(false)"
+            >
+              <span>{{ "button.no" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
         <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
           <label
             class="form-label"
@@ -2586,45 +2625,6 @@
                   : 'btn-outline-secondary'
               "
               (click)="setRunoutIntoGreen(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().penetrateDeepLayers !== comparedVariant()?.penetrateDeepLayers
-            "
-            for="runoutIntoGreenCheckbox"
-            >{{ "dangerSources.create.label.penetrateDeepLayers" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setPenetrateDeepLayers(true)"
-            >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setPenetrateDeepLayers(false)"
             >
               <span>{{ "button.no" | translate }}</span>
             </button>
