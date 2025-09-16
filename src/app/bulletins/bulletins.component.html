@@ -11,14 +11,14 @@
           <i class="ph ph-brain"></i> {{ "login.stressLevel" | translate }}
         </th>
         <th role="button" (click)="bulletinsService.loadStatus()">
-          {{ "bulletins.table.title.status." + authenticationService.getActiveRegion().id | translate }}
+          {{ regionsService.getRegionName(authenticationService.getActiveRegion().id) }}
         </th>
         <th
           *ngFor="let region of authenticationService.getActiveRegion().neighborRegions"
           role="button"
           (click)="authenticationService.setActiveRegion(region); bulletinsService.loadStatus()"
         >
-          {{ "bulletins.table.title.status." + region | translate }}
+          {{ regionsService.getRegionName(region) }}
         </th>
       </tr>
     </thead>
@@ -82,7 +82,7 @@
         </td>
         <td
           class="bulletins-table__region-status"
-          [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate"
+          [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion().id)"
         >
           <span
             *ngIf="getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined"
@@ -123,7 +123,7 @@
         <td
           class="bulletins-table__region-status"
           *ngFor="let region of authenticationService.getActiveRegion().neighborRegions"
-          [attr.data-label]="'bulletins.table.title.status.' + region | translate"
+          [attr.data-label]="regionsService.getRegionName(region)"
           [style.background-color]="bulletinsService.isLocked(date + region) ? 'rgba(255,0,0,0.2)' : ''"
         >
           <span

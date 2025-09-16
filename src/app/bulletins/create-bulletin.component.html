@@ -318,7 +318,7 @@
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
         <h5 class="font-s-bold">
-          {{ "bulletins.table.title.status." + authenticationService?.getActiveRegion().id | translate }} ({{
+          {{ regionsService.getRegionName(authenticationService.getActiveRegion().id) }} ({{
             getOwnBulletins().length
           }})
         </h5>
@@ -1052,7 +1052,7 @@
           </td>
           <td
             class="bulletins-table__region-status"
-            [attr.data-label]="'bulletins.table.title.status.' + authenticationService.getActiveRegion().id | translate"
+            [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion().id)"
           >
             <span
               *ngIf="

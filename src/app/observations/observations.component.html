@@ -87,7 +87,7 @@
                         type="checkbox"
                         class="form-check-input"
                       />
-                      {{ "bulletins.table.title.status." + region | translate }}
+                      {{ regionsService.getRegionName(region) }}
                     </label>
                     <div class="ms-3">
                       <div *ngFor="let microRegion of getSubregions(region)" class="form-check">
