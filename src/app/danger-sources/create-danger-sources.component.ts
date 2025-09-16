@@ -697,7 +697,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     const dangerSource = new DangerSourceModel();
     dangerSource.creationDate = this.dangerSourcesService.getActiveDate()[0];
     this.internDangerSourcesList.push(dangerSource);
-    this.createVariant(dangerSource);
+    this.openEditDangerSourceModal(dangerSource);
   }
 
   createVariant(dangerSource: DangerSourceModel) {
@@ -763,6 +763,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   editDangerSourceModalConfirm(): void {
     this.editDangerSourceModalRef.hide();
+    this.internDangerSourcesList.sort((a, b): number => {
+      return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
+    });
   }
 
   selectVariant(variant: DangerSourceVariantModel) {
