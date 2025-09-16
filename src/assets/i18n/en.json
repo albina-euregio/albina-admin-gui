@@ -110,7 +110,10 @@
       "createVariant": "Create new variant",
       "noDangerSources": "No danger sources",
       "title": {
-        "avalanche": "Avalanche",
+        "slab": "Slab",
+        "weakLayer": "Weak layer",
+        "loose": "Loose snow",
+        "glide": "Glide snow",
         "matrix": "Matrix",
         "characteristics": "Characteristics",
         "comment": "Comment"

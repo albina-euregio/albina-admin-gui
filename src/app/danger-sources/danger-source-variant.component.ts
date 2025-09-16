@@ -119,7 +119,10 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
 
   public editRegions: boolean;
 
-  public isAccordionAvalancheOpen: boolean;
+  public isAccordionGlideOpen: boolean;
+  public isAccordionLooseOpen: boolean;
+  public isAccordionSlabOpen: boolean;
+  public isAccordionWeakLayerOpen: boolean;
   public isAccordionMatrixOpen: boolean;
   public isAccordionCharacteristicsOpen: boolean;
   public isAccordionCommentOpen: boolean;
@@ -175,8 +178,17 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   ngOnInit() {
     this.dangerSourcesService.accordionChanged$.subscribe(({ isOpen, groupName }) => {
       switch (groupName) {
-        case "avalanche":
-          this.isAccordionAvalancheOpen = isOpen;
+        case "glide":
+          this.isAccordionGlideOpen = isOpen;
+          break;
+        case "loose":
+          this.isAccordionLooseOpen = isOpen;
+          break;
+        case "slab":
+          this.isAccordionSlabOpen = isOpen;
+          break;
+        case "weakLayer":
+          this.isAccordionWeakLayerOpen = isOpen;
           break;
         case "matrix":
           this.isAccordionMatrixOpen = isOpen;
