@@ -35,6 +35,7 @@ import { FormsModule } from "@angular/forms";
 // For iframe
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { MatrixInformationSchema } from "app/models/matrix-information.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -269,6 +270,8 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   setAvalancheType(event: Event, type: Enums.AvalancheType) {
     event.stopPropagation();
     this.variant().avalancheType = type;
+    // reset matrix parameters when changing the avalanche type
+    this.variant().eawsMatrixInformation = MatrixInformationSchema.parse({});
     this.updateVariantOnServer();
   }
 
