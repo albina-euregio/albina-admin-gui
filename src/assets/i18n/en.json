@@ -153,8 +153,16 @@
         "dangerSigns": "Danger signs",
         "aspects": "Aspects"
       },
-      "editVariantDialog": {
+      "createDangerSourceDialog": {
+        "title": "Title",
+        "description": "Description",
         "save": "Save",
+        "cancel": "Cancel"
+      },
+      "editDangerSourceDialog": {
+        "title": "Title",
+        "description": "Description",
+        "update": "Update",
         "cancel": "Cancel"
       },
       "deleteVariantDialog": {

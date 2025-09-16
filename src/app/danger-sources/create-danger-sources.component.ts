@@ -10,6 +10,7 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { DangerSourceVariantComponent } from "./danger-source-variant.component";
 import { DangerSourcesService } from "./danger-sources.service";
+import { ModalCreateDangerSourceComponent } from "./modal-create-danger-source.component";
 import { ModalEditDangerSourceComponent } from "./modal-edit-danger-source.component";
 import {
   DangerSourceVariantModel,
@@ -121,6 +122,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   public editDangerSourceModalRef: BsModalRef;
   readonly editDangerSourceTemplate = viewChild<TemplateRef<unknown>>("editDangerSourceTemplate");
+
+  public createDangerSourceModalRef: BsModalRef;
+  readonly createDangerSourceTemplate = viewChild<TemplateRef<unknown>>("createDangerSourceTemplate");
 
   public config = {
     animated: false,
@@ -694,10 +698,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   createDangerSource() {
-    const dangerSource = new DangerSourceModel();
-    dangerSource.creationDate = this.dangerSourcesService.getActiveDate()[0];
-    this.internDangerSourcesList.push(dangerSource);
-    this.openEditDangerSourceModal(dangerSource);
+    this.openCreateDangerSourceModal();
   }
 
   createVariant(dangerSource: DangerSourceModel) {
@@ -766,6 +767,26 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.internDangerSourcesList.sort((a, b): number => {
       return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
     });
+  }
+
+  openCreateDangerSourceModal() {
+    const initialState = {
+      component: this,
+    };
+
+    this.createDangerSourceModalRef = this.modalService.show(ModalCreateDangerSourceComponent, { initialState });
+  }
+
+  createDangerSourceModalConfirm(dangerSource: DangerSourceModel): void {
+    this.createDangerSourceModalRef.hide();
+    this.internDangerSourcesList.push(dangerSource);
+    this.internDangerSourcesList.sort((a, b): number => {
+      return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
+    });
+  }
+
+  createDangerSourceModalDecline(): void {
+    this.createDangerSourceModalRef.hide();
   }
 
   selectVariant(variant: DangerSourceVariantModel) {
