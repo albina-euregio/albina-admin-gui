@@ -134,6 +134,61 @@
 
   <main class="region-form__content">
     <accordion class="accordion">
+      <div class="form-group row" style="padding: 1.5rem 2rem">
+        <label
+          class="form-label"
+          [class.changed]="isComparedVariant() && variant().avalancheType !== comparedVariant()?.avalancheType"
+          for=""
+          >{{ "avalancheType.title" | translate }}</label
+        >
+        <div class="btn-group">
+          <!-- SLAB -->
+          <button
+            type="reset"
+            class="btn btn-sm"
+            [disabled]="disabled()"
+            [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-secondary' : 'btn-outline-secondary'"
+            (click)="
+              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)
+            "
+            data-toggle="tooltip"
+            title="{{ 'avalancheType.tooltip.slab' | translate }}"
+          >
+            <span>{{ "avalancheType.label.slab" | translate }}</span>
+          </button>
+
+          <!-- LOOSE -->
+          <button
+            type="reset"
+            class="btn btn-sm"
+            [disabled]="disabled()"
+            [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-secondary' : 'btn-outline-secondary'"
+            (click)="
+              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
+            "
+            data-toggle="tooltip"
+            title="{{ 'avalancheType.tooltip.loose' | translate }}"
+          >
+            <span>{{ "avalancheType.label.loose" | translate }}</span>
+          </button>
+
+          <!-- GLIDE -->
+          <button
+            type="reset"
+            class="btn btn-sm"
+            [disabled]="disabled()"
+            [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-secondary' : 'btn-outline-secondary'"
+            (click)="
+              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
+            "
+            data-toggle="tooltip"
+            title="{{ 'avalancheType.tooltip.glide' | translate }}"
+          >
+            <span>{{ "avalancheType.label.glide" | translate }}</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Avalanche -->
       <accordion-group
         class="accordion-group"
@@ -147,62 +202,6 @@
             {{ "dangerSources.create.title.avalanche" | translate }}
           </h2>
         </div>
-        <div class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().avalancheType !== comparedVariant()?.avalancheType"
-            for=""
-            >{{ "avalancheType.title" | translate }}</label
-          >
-          <div class="btn-group">
-            <!-- SLAB -->
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)
-              "
-              data-toggle="tooltip"
-              title="{{ 'avalancheType.tooltip.slab' | translate }}"
-            >
-              <span>{{ "avalancheType.label.slab" | translate }}</span>
-            </button>
-
-            <!-- LOOSE -->
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
-              "
-              data-toggle="tooltip"
-              title="{{ 'avalancheType.tooltip.loose' | translate }}"
-            >
-              <span>{{ "avalancheType.label.loose" | translate }}</span>
-            </button>
-
-            <!-- GLIDE -->
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
-              "
-              data-toggle="tooltip"
-              title="{{ 'avalancheType.tooltip.glide' | translate }}"
-            >
-              <span>{{ "avalancheType.label.glide" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <hr class="solid" />
 
         <!-- GLIDE SNOW AVALANCHES -->
         <app-slider
