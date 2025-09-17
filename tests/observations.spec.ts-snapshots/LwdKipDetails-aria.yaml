@@ -1,6 +1,8 @@
 - dialog:
   - document:
-    - text: LwdKip █ Larchlehne ←→
+    - text: LwdKip █ Larchlehne
+    - button "←"
+    - button "→"
     - button "Close"
     - table:
       - row /Event date Tuesday, December \d+, \d+ at 7:\d+:\d+ PM GMT\+\d+:\d+/:

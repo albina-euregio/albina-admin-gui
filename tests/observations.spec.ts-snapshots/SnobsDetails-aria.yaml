@@ -1,6 +1,8 @@
 - dialog:
   - document:
-    - text: Snobs █ Skigebiet Hahnenkamm ←→
+    - text: Snobs █ Skigebiet Hahnenkamm
+    - button "←"
+    - button "→"
     - button "Close"
     - table
     - iframe

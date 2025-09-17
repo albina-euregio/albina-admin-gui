@@ -39,9 +39,9 @@ test("View bulletin", async ({ page }) => {
 
   await test.step("Navigate to next/previous day", async () => {
     await page.getByRole("button", { name: "" }).click();
-    await expect(page.getByRole("button", { name: "Glockner Range + 2" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Glockner Group + 2" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Brandenberg Alps + 5" })).toBeVisible();
-    // TODO snapshot of map?
+    // TODO assert map - right now colors in the map are not rendered in the Playwright browser window
     await page.getByTitle("[ctrl+right]").click();
     await expect(page.getByRole("button", { name: "Lechtal Alps East + 2" })).toBeVisible();
     await expect(page.locator("#afternoonMap")).toBeVisible();
@@ -167,7 +167,7 @@ test("Load bulletin from the day before", async ({ page }, testInfo) => {
       "Kitzbühel Alps Wildseeloder + 2",
     ]);
   });
-  test.skip(
+  test.fixme(
     testInfo.project.name === "firefox",
     "TODO: Find out why firefox causes an error each time it runs the second load from yesterday block.",
   );

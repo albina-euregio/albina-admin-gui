@@ -1,6 +1,8 @@
 - dialog:
   - document:
-    - text: AvalancheWarningService █ Jöchlspitze ←→
+    - text: AvalancheWarningService █ Jöchlspitze
+    - button "←"
+    - button "→"
     - button "Close"
     - table:
       - row /Event date Monday, December \d+, \d+ at 8:\d+:\d+ AM GMT\+\d+:\d+/:

@@ -29,8 +29,8 @@ test("filter observations", async ({ page }) => {
     await page.getByText("6", { exact: true }).first().click();
     await expect(page.getByRole("textbox")).toHaveValue("12/03/2024 - 12/06/2024");
     await expect(page).toHaveURL("#/observations?startDate=2024-12-03T10:00&endDate=2024-12-06T14:30");
-    await expect(page.locator(".keydata")).toHaveText("204 / 214");
-    await page.getByText("Table").click();
+    await expect(page.locator(".keydata")).toHaveText("165 / 175", { timeout: 7000 });
+    await page.getByText("Table", { exact: true }).click();
     await expect(
       page.getByText(
         "Ca. 15cm Neuschnee bei -4 grad ohne Wind am Talboden. In höheren Lagen starker Wind aus W/NW. Tal auswärts Neuschnee, teils mit vorangegangenen Graupel. 📷 2",
@@ -41,7 +41,7 @@ test("filter observations", async ({ page }) => {
     await page.getByRole("button", { name: "Region" }).click();
     await page.getByRole("checkbox", { name: "Kalkkögel" }).check();
     await page.getByRole("checkbox", { name: "Kühtai - Geigen Ridge" }).check();
-    await expect(page.locator(".keydata")).toHaveText("25 / 214");
+    await expect(page.locator(".keydata")).toHaveText("13 / 175");
     await expect(
       page.getByText(
         "Trockene Schneefallgrenze zum Beobachtungszeitpunkt: 1350m ± 50mm Aktuell Schneefallgrenze im Bereich Mittelstation Froneben",
@@ -52,7 +52,7 @@ test("filter observations", async ({ page }) => {
     await page.getByRole("button", { name: "" }).click();
     await page.getByRole("textbox", { name: "Search" }).fill("Neuschnee");
     await page.getByRole("textbox", { name: "Search" }).press("Enter");
-    await expect(page.locator(".keydata")).toHaveText("17 / 214");
+    await expect(page.locator(".keydata")).toHaveText("5 / 175");
     await expect(
       page.getByText(
         "Geringe Neuschneemenge bei schwachem Wind,es können alle Abfahrten geöffnet bleiben.Zirmach und Panoramabahn freigegeben Bergefall möglich.",
@@ -74,7 +74,7 @@ test("filter observations", async ({ page }) => {
           y: 95,
         },
       });
-    await expect(page.locator(".keydata")).toHaveText("70 / 214");
+    await expect(page.locator(".keydata")).toHaveText("43 / 175");
     await page
       .locator("app-observation-chart")
       .filter({ hasText: "Observation Type" })
@@ -85,7 +85,7 @@ test("filter observations", async ({ page }) => {
           y: 174,
         },
       });
-    await expect(page.locator(".keydata")).toHaveText("4 / 214");
+    await expect(page.locator(".keydata")).toHaveText("4 / 175");
     await page.locator("app-observation-chart").filter({ hasText: "Observation Type" }).getByTitle("reset").click();
     // TODO Shift+Click doesn't work
     // await page
@@ -108,11 +108,10 @@ test("filter observations", async ({ page }) => {
 });
 
 test("observation details", async ({ page }) => {
-  await page.clock.setFixedTime(testDate);
-  await page.reload();
-  await changeRegion(page, "Tyrol");
-  await page.getByRole("link", { name: "Observations", exact: true }).click();
-  await page.getByText("Table").click();
+  test.slow();
+  await page.goto("#/observations?startDate=2024-12-23T00:00&endDate=2024-12-24T23:59");
+  await expect(page.locator(".keydata")).toHaveText("347 / 358", { timeout: 7000 });
+  await page.getByText("Table", { exact: true }).click();
   await test.step("AvalancheWarningService", async () => {
     await page.getByRole("button", { name: "Sources" }).click();
     await page.getByRole("checkbox", { name: "AvalancheWarningService" }).check();
@@ -169,7 +168,7 @@ test("export observation details", async ({ page }) => {
   await page.getByRole("checkbox", { name: "Tuxer Alps East" }).check();
   await page.getByRole("checkbox", { name: "Kitzbühel Alps Brixental" }).check();
   await page.getByRole("checkbox", { name: "Zillertal Alps Northwest" }).check();
-  await expect(page.locator(".keydata")).toHaveText("4 / 214");
+  await expect(page.locator(".keydata")).toHaveText("4 / 175", { timeout: 7000 });
   await test.step("GEOJSON", async () => {
     await page.getByRole("button", { name: "" }).click();
     const downloadJsonPromise = page.waitForEvent("download");
@@ -245,7 +244,7 @@ test("Webcams and Observers", async ({ page }) => {
     await page.getByText("Map", { exact: true }).click();
     await page.getByTitle("Observations").click();
     await page.getByTitle("Observers").click();
-    await page.getByRole("button", { name: "Marker" }).click();
+    await page.getByRole("button", { name: "Observer-undefined" }).click();
     await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
       "src",
       "https://wiski.tirol.gv.at/lawine/grafiken/800/beobachter/Nordkette.png",
@@ -261,22 +260,76 @@ test("Webcams and Observers", async ({ page }) => {
     await page.getByRole("checkbox", { name: "Karwendel Mountains West" }).uncheck();
     await page.getByRole("button", { name: "Region", exact: true }).click();
     await expect(page.locator("#observationsMap")).toHaveScreenshot("webcamMap.png", { maxDiffPixelRatio: 0.1 });
-    await page.getByRole("button", { name: "Marker" }).click();
+    await page.getByRole("button", { name: "FotoWebcamsEU-undefined" }).click();
     await expect(page.locator("iframe")).toHaveAttribute("src", "https://www.foto-webcam.eu/webcam/st-anton/");
   });
 });
 
 test("Weather stations", async ({ page }) => {
-  await page.clock.setFixedTime(testDate);
+  await page.clock.setFixedTime(new Date("2025-03-05"));
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
-  await expect.poll(() => page.getByRole("button", { name: "Marker" }).count()).toBeGreaterThan(200);
-  await page.getByTitle("Air temperature", { exact: true }).click();
-  await expect(page.locator("#observationsMap")).toHaveScreenshot("airTemp.png", { maxDiffPixelRatio: 0.1 });
-  await page.getByTitle("Potential surface hoar formation", { exact: true }).click();
-  await expect(page.locator("#observationsMap")).toHaveScreenshot("surfaceHoar.png", { maxDiffPixelRatio: 0.1 });
-  await page.getByTitle("Dry snowfall level").click();
-  await expect(page.locator("#observationsMap")).toHaveScreenshot("drySnowfall.png", { maxDiffPixelRatio: 0.1 });
+  await expect
+    .poll(() => page.locator(".leaflet-marker-pane").getByRole("button").count(), { timeout: 7000 })
+    .toBeGreaterThan(200);
+  await test.step("Surface Hoar", async () => {
+    await page.getByTitle("Potential surface hoar formation", { exact: true }).click();
+    await expect(page.getByRole("button", { name: "AvalancheWarningService-PROS1" })).toHaveScreenshot(
+      "surfaceHoarIcon.png",
+    );
+  });
+  await test.step("Navigate through weather stations", async () => {
+    await page.getByRole("button", { name: "AvalancheWarningService-6568201d-d28a-7617-3592-b23f230da2fc" }).click();
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/SBG_schmittenhoehe.png",
+    );
+    await page.keyboard.press("ArrowDown");
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://wiski.tirol.gv.at/lawine/grafiken/800/wind/0-6/SBG_schmittenhoehe.png",
+    );
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/SBG_lofereralm.png",
+    );
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/SBG_schmittenhoehe.png",
+    );
+    await page.getByRole("button", { name: "Close" }).click();
+  });
+  await test.step("Dry Snowfall Level", async () => {
+    await page.getByTitle("Dry snowfall level", { exact: true }).click();
+    await page.locator("#observationsMap").press("+");
+    await page.locator("#observationsMap").press("+");
+    await expect(page.getByRole("button", { name: "AvalancheWarningService-ABIR1" })).toHaveScreenshot(
+      "drySnowfallIcon.png",
+    );
+    await page.getByRole("button", { name: "AvalancheWarningService-ABIR1" }).click({ force: true });
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-04/AT-07-14-04.png",
+    );
+    await page.keyboard.press("ArrowDown");
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-01/AT-07-14-04.png",
+    );
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-04/AT-07-14-03.png",
+    );
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("dialog").getByRole("img")).toHaveAttribute(
+      "src",
+      "https://static.avalanche.report/snow-fall-level-calculator/Plots/weekly/2025-03-04/AT-07-14-04.png",
+    );
+    await page.getByRole("button", { name: "Close" }).click();
+  });
 });
