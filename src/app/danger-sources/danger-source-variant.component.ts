@@ -52,7 +52,6 @@ import { debounceTime, Subject } from "rxjs";
     NgFor,
     AccordionModule,
     NgClass,
-    SliderComponent,
     AspectsComponent,
     MatrixParameterComponent,
     DatePipe,
