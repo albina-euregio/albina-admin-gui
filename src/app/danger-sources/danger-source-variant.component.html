@@ -2034,6 +2034,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="isAvalancheType(avalancheTypeEnum.loose)"
               [disabled]="disabled()"
               [ngClass]="
                 isSlopeGradient(slopeGradientEnum.moderately_steep) ? 'btn-secondary' : 'btn-outline-secondary'
@@ -2052,6 +2053,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="isAvalancheType(avalancheTypeEnum.loose)"
               [disabled]="disabled()"
               [ngClass]="isSlopeGradient(slopeGradientEnum.steep) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="
@@ -2203,6 +2205,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="isDangerSign(dangerSignEnum.shooting_cracks) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerSign($event, dangerSignEnum.shooting_cracks)"
@@ -2214,6 +2217,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="isDangerSign(dangerSignEnum.whumpfing) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerSign($event, dangerSignEnum.whumpfing)"
@@ -2236,6 +2240,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.glide)"
               [disabled]="disabled()"
               [ngClass]="isDangerSign(dangerSignEnum.glide_cracks) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setDangerSign($event, dangerSignEnum.glide_cracks)"
@@ -2434,7 +2439,7 @@
           </div>
         </div>
 
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
+        <div class="form-group row">
           <label
             class="form-label"
             [class.changed]="
@@ -2447,6 +2452,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.gullies_and_bowls) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.gullies_and_bowls)"
@@ -2460,6 +2466,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.adjacent_to_ridgelines) ? 'btn-secondary' : 'btn-outline-secondary'
@@ -2475,6 +2482,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.distant_from_ridgelines) ? 'btn-secondary' : 'btn-outline-secondary'
@@ -2490,6 +2498,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.in_the_vicinity_of_peaks) ? 'btn-secondary' : 'btn-outline-secondary'
@@ -2505,6 +2514,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.pass_areas) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.pass_areas)"
@@ -2518,6 +2528,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.glide)"
               [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.grassy_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.grassy_slopes)"
@@ -2531,6 +2542,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.cut_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.cut_slopes)"
@@ -2544,6 +2556,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.wind_loaded_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.wind_loaded_slopes)"
@@ -2557,6 +2570,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.base_of_rock_walls) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.base_of_rock_walls)"
@@ -2570,6 +2584,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.behind_abrupt_changes_in_the_terrain)
@@ -2587,6 +2602,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.areas_where_the_snow_cover_is_rather_shallow)
@@ -2604,6 +2620,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.transitions_into_gullies_and_bowls)
@@ -2621,6 +2638,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.transitions_from_a_shallow_to_a_deep_snowpack)
@@ -2638,6 +2656,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.highly_frequented_off_piste_terrain)
@@ -2655,6 +2674,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="isAvalancheType(avalancheTypeEnum.glide)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.little_used_backcountry_terrain)
@@ -2672,6 +2692,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="isAvalancheType(avalancheTypeEnum.glide)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.places_that_are_protected_from_the_wind)
@@ -2689,6 +2710,7 @@
             <button
               type="reset"
               class="btn btn-sm"
+              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
               [disabled]="disabled()"
               [ngClass]="
                 isTerrainType(terrainTypeEnum.regions_exposed_to_the_foehn_wind)
