@@ -71,3 +71,14 @@ changes to CHANGELOG itself are not included in the release.
 If there have been several new releases since the last update to CHANGELOG,
 use e.g. `yarn git-cliff -p CHANGELOG.md v7.0.6..` to prepend all changes that
 happened _after_ version v7.0.6 was released.
+
+## Playwright tests
+The folder `tests/` contains several Playwright tests which are executed on each merge request and push to the master branch. 
+To test locally, you can use the VS Code extension or just type `yarn playwright test`. If you want to be sure that you have the exact same setup as the CI tests,
+use the dockerfile `Dockerfile.playwright`:
+```
+yarn dev  # local server needs to be running
+docker build -f Dockerfile.playwright -t albina-playwright .
+docker run -it --network="host" -v ./playwright-report:/home/playwright-report -v ./test-results:/home/test-results -v ./tests:/home/tests albina-playwright
+yarn playwright test --workers=1
+```
