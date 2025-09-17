@@ -2508,32 +2508,6 @@
               type="reset"
               class="btn btn-sm"
               [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.shady_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.shady_slopes)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.shady_slopes' | translate }}"
-            >
-              <span>{{ "terrainType.shady_slopes" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.sunny_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.sunny_slopes)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.sunny_slopes' | translate }}"
-            >
-              <span>{{ "terrainType.sunny_slopes" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
               [ngClass]="isTerrainType(terrainTypeEnum.grassy_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
               (click)="setTerrainType($event, terrainTypeEnum.grassy_slopes)"
               data-toggle="tooltip"
