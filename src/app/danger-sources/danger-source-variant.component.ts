@@ -35,6 +35,7 @@ import { FormsModule } from "@angular/forms";
 // For iframe
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { MatrixInformationSchema } from "app/models/matrix-information.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -51,7 +52,6 @@ import { debounceTime, Subject } from "rxjs";
     NgFor,
     AccordionModule,
     NgClass,
-    SliderComponent,
     AspectsComponent,
     MatrixParameterComponent,
     DatePipe,
@@ -118,7 +118,10 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
 
   public editRegions: boolean;
 
-  public isAccordionAvalancheOpen: boolean;
+  public isAccordionGlideOpen: boolean;
+  public isAccordionLooseOpen: boolean;
+  public isAccordionSlabOpen: boolean;
+  public isAccordionWeakLayerOpen: boolean;
   public isAccordionMatrixOpen: boolean;
   public isAccordionCharacteristicsOpen: boolean;
   public isAccordionCommentOpen: boolean;
@@ -174,8 +177,17 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   ngOnInit() {
     this.dangerSourcesService.accordionChanged$.subscribe(({ isOpen, groupName }) => {
       switch (groupName) {
-        case "avalanche":
-          this.isAccordionAvalancheOpen = isOpen;
+        case "glide":
+          this.isAccordionGlideOpen = isOpen;
+          break;
+        case "loose":
+          this.isAccordionLooseOpen = isOpen;
+          break;
+        case "slab":
+          this.isAccordionSlabOpen = isOpen;
+          break;
+        case "weakLayer":
+          this.isAccordionWeakLayerOpen = isOpen;
           break;
         case "matrix":
           this.isAccordionMatrixOpen = isOpen;
@@ -269,6 +281,8 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   setAvalancheType(event: Event, type: Enums.AvalancheType) {
     event.stopPropagation();
     this.variant().avalancheType = type;
+    // reset matrix parameters when changing the avalanche type
+    this.variant().eawsMatrixInformation = MatrixInformationSchema.parse({});
     this.updateVariantOnServer();
   }
 

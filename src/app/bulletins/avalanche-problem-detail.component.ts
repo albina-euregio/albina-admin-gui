@@ -41,6 +41,7 @@ export class AvalancheProblemDetailComponent implements OnChanges {
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly avalancheProblemModel = input<AvalancheProblemModel>(undefined);
   readonly comparedAvalancheProblemModel = input<AvalancheProblemModel>(undefined);
+  readonly isComparedBulletin = input<boolean>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly count = input<number>(undefined);
   readonly afternoon = input<boolean>(undefined);

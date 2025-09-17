@@ -19,6 +19,7 @@ export class AvalancheProblemComponent implements OnInit {
   readonly bulletinModel = input<BulletinModel>(undefined);
   readonly bulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
   readonly comparedBulletinDaytimeDescription = input<BulletinDaytimeDescriptionModel>(undefined);
+  readonly isComparedBulletin = input<boolean>(undefined);
   readonly afternoon = input<boolean>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly changeAvalancheProblemEvent = output();

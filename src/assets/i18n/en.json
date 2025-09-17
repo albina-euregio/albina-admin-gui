@@ -110,7 +110,10 @@
       "createVariant": "Create new variant",
       "noDangerSources": "No danger sources",
       "title": {
-        "avalanche": "Avalanche",
+        "slab": "Slab",
+        "weakLayer": "Weak layer",
+        "loose": "Loose snow",
+        "glide": "Glide snow",
         "matrix": "Matrix",
         "characteristics": "Characteristics",
         "comment": "Comment"
@@ -153,8 +156,16 @@
         "dangerSigns": "Danger signs",
         "aspects": "Aspects"
       },
-      "editVariantDialog": {
+      "createDangerSourceDialog": {
+        "title": "Title",
+        "description": "Description",
         "save": "Save",
+        "cancel": "Cancel"
+      },
+      "editDangerSourceDialog": {
+        "title": "Title",
+        "description": "Description",
+        "update": "Update",
         "cancel": "Cancel"
       },
       "deleteVariantDialog": {
@@ -1170,7 +1181,8 @@
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
     "whumpfing": "whumpfing",
-    "fresh_avalanches": "fresh avalanches"
+    "fresh_avalanches": "fresh avalanches",
+    "glide_cracks": "glide cracks"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",
