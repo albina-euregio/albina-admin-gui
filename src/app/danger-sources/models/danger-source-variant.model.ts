@@ -40,6 +40,7 @@ export enum DangerSign {
   shooting_cracks = "shooting_cracks",
   whumpfing = "whumpfing",
   fresh_avalanches = "fresh_avalanches",
+  glide_cracks = "glide_cracks",
 }
 
 export enum GlidingSnowActivity {

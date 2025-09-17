@@ -2233,6 +2233,17 @@
             >
               <span>{{ "dangerSign.fresh_avalanches" | translate }}</span>
             </button>
+            <button
+              type="reset"
+              class="btn btn-sm"
+              [disabled]="disabled()"
+              [ngClass]="isDangerSign(dangerSignEnum.glide_cracks) ? 'btn-secondary' : 'btn-outline-secondary'"
+              (click)="setDangerSign($event, dangerSignEnum.glide_cracks)"
+              data-toggle="tooltip"
+              title="{{ 'dangerSign.glide_cracks' | translate }}"
+            >
+              <span>{{ "dangerSign.glide_cracks" | translate }}</span>
+            </button>
           </div>
         </div>
 

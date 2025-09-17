@@ -1181,7 +1181,8 @@
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
     "whumpfing": "whumpfing",
-    "fresh_avalanches": "fresh avalanches"
+    "fresh_avalanches": "fresh avalanches",
+    "glide_cracks": "glide cracks"
   },
   "changeRegionDialog": {
     "message": "Do you want to change the region?",
