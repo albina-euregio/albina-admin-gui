@@ -221,33 +221,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         this.applyLocalFilter();
       },
     });
-    // Watch zoom changes
-    this.mapService.map.on("zoomend", () => {
-      this.updateBaseLayer();
-    });
 
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
     Split([".toolset-1", ".toolset-2"], { sizes: [33, 66], direction: "vertical" });
-  }
-
-  private updateBaseLayer(): void {
-    const zoom = this.mapService.map.getZoom();
-
-    if (zoom >= 13) {
-      if (this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getAlbinaBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getOpenTopoBaseMap());
-      }
-    } else {
-      if (this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getOpenTopoBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getAlbinaBaseMap());
-      }
-    }
   }
 
   nextDate(direction: -1 | 1) {
