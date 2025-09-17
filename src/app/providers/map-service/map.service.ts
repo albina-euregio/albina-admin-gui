@@ -126,7 +126,7 @@ export class MapService {
       });
     });
     overlayMaps.editSelection.options.onEachFeature = (feature, layer) => {
-      this.handleClick(overlayMaps.editSelection, feature, layer);
+      layer.on("click", (e) => this.handleClick(e.originalEvent, feature, overlayMaps.editSelection));
       this.highlightAndShowName(layer);
     };
     overlayMaps.editSelection.addData(internalRegions);
@@ -504,28 +504,40 @@ export class MapService {
     return result;
   }
 
-  private handleClick(editSelection: GeoJSON, feature: GeoJSON.Feature, layer: Layer) {
-    layer.on("click", (e) => {
-      const selected = !feature.properties.selected;
-      if (e.originalEvent.ctrlKey) {
-        const regions = this.regionsService.getLevel1Regions(feature.properties.id);
-        for (const entry of editSelection.getLayers()) {
-          if (regions.includes(entry.feature.properties.id)) {
-            entry.feature.properties.selected = selected;
-          }
-        }
-      } else if (e.originalEvent.altKey) {
-        const regions = this.regionsService.getLevel2Regions(feature.properties.id);
-        for (const entry of editSelection.getLayers()) {
-          if (regions.includes(entry.feature.properties.id)) {
-            entry.feature.properties.selected = selected;
-          }
-        }
-      } else {
-        feature.properties.selected = selected;
+  private handleClick(e: MouseEvent, feature: geojson.Feature, editSelection: GeoJSON) {
+    if (e.ctrlKey) {
+      this.toggleLevel1Regions(feature, editSelection);
+    } else if (e.altKey) {
+      this.toggleLevel2Regions(feature, editSelection);
+    } else {
+      this.toggleRegion(feature);
+    }
+    this.updateEditSelection();
+  }
+
+  private toggleRegion(feature: geojson.Feature) {
+    const selected = !feature.properties.selected;
+    feature.properties.selected = selected;
+  }
+
+  private toggleLevel1Regions(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+    const selected = !feature.properties.selected;
+    const regions = this.regionsService.getLevel1Regions(feature.properties.id);
+    for (const entry of editSelection.getLayers()) {
+      if (regions.includes(entry.feature.properties.id)) {
+        entry.feature.properties.selected = selected;
       }
-      this.updateEditSelection();
-    });
+    }
+  }
+
+  private toggleLevel2Regions(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+    const selected = !feature.properties.selected;
+    const regions = this.regionsService.getLevel2Regions(feature.properties.id);
+    for (const entry of editSelection.getLayers()) {
+      if (regions.includes(entry.feature.properties.id)) {
+        entry.feature.properties.selected = selected;
+      }
+    }
   }
 
   protected highlightAndShowName(layer: Layer) {
