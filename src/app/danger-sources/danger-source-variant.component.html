@@ -1839,7 +1839,7 @@
           </div>
         </div>
 
-        <div class="form-group row">
+        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
           <label
             class="form-label"
             [class.changed]="
@@ -2382,7 +2382,7 @@
         </div>
 
         <div
-          *ngIf="isAvalancheType(avalancheTypeEnum.slab) || isAvalancheType(avalancheTypeEnum.slab)"
+          *ngIf="isAvalancheType(avalancheTypeEnum.slab) || isAvalancheType(avalancheTypeEnum.loose)"
           class="form-group row"
         >
           <label
