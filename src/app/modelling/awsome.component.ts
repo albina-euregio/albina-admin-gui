@@ -211,6 +211,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.mapService.initMaps(this.mapDiv().nativeElement, {
       regions: regions,
       internalRegions: regions,
+      clickMode: "awsome",
     });
 
     this.mapLayer.addTo(this.mapService.map);

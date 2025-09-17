@@ -45,6 +45,8 @@ interface SelectableRegionProperties extends RegionWithElevationProperties {
 
 const dataSource = "eaws-regions";
 
+type ClickMode = "normal" | "awsome";
+
 @Injectable()
 export class MapService {
   protected regionsService = inject(RegionsService);
@@ -85,9 +87,11 @@ export class MapService {
   protected async initOverlayMaps({
     regions,
     internalRegions,
+    clickMode,
   }: {
     regions?: FeatureCollection<MultiPolygon, RegionProperties>;
     internalRegions?: FeatureCollection<MultiPolygon, RegionProperties>;
+    clickMode?: ClickMode;
   } = {}): Promise<typeof this.overlayMaps> {
     if (!regions || !internalRegions) {
       regions ??= await this.regionsService.getRegionsAsync();
@@ -126,7 +130,7 @@ export class MapService {
       });
     });
     overlayMaps.editSelection.options.onEachFeature = (feature, layer) => {
-      layer.on("click", (e) => this.handleClick(e.originalEvent, feature, overlayMaps.editSelection));
+      layer.on("click", (e) => this.handleClick(clickMode, e.originalEvent, feature, overlayMaps.editSelection));
       this.highlightAndShowName(layer);
     };
     overlayMaps.editSelection.addData(internalRegions);
@@ -504,8 +508,16 @@ export class MapService {
     return result;
   }
 
-  private handleClick(e: MouseEvent, feature: geojson.Feature, editSelection: GeoJSON) {
-    if (e.ctrlKey) {
+  private handleClick(clickMode: ClickMode, e: MouseEvent, feature: geojson.Feature, editSelection: GeoJSON) {
+    if (clickMode === "awsome") {
+      if (e.ctrlKey) {
+        this.toggleRegion(feature);
+      } else if (feature.properties.selected) {
+        this.selectNone(editSelection);
+      } else {
+        this.selectOnly(feature, editSelection);
+      }
+    } else if (e.ctrlKey) {
       this.toggleLevel1Regions(feature, editSelection);
     } else if (e.altKey) {
       this.toggleLevel2Regions(feature, editSelection);
@@ -518,6 +530,16 @@ export class MapService {
   private toggleRegion(feature: geojson.Feature) {
     const selected = !feature.properties.selected;
     feature.properties.selected = selected;
+  }
+
+  private selectNone(editSelection: GeoJSON) {
+    for (const entry of editSelection.getLayers()) {
+      entry.feature.properties.selected = false;
+    }
+  }
+  private selectOnly(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+    this.selectNone(editSelection);
+    feature.properties.selected = true;
   }
 
   private toggleLevel1Regions(feature: GeoJSON.Feature, editSelection: GeoJSON) {
