@@ -7,6 +7,7 @@ export const AwsomeSourceSchema = z.object({
     .url()
     .optional()
     .describe("URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."),
+  urlTimeseriesChart: z.url().optional(),
   detailsTemplates: z
     .object({
       label: z.string().optional(),

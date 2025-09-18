@@ -17,7 +17,7 @@ import { ActivatedRoute } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
-import type { XAXisOption, YAXisOption } from "echarts/types/dist/shared";
+import type { LineSeriesOption, XAXisOption, YAXisOption } from "echarts/types/dist/shared";
 import { debounce } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
@@ -27,6 +27,7 @@ import type { Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import Split from "split.js";
 import { Temporal } from "temporal-polyfill";
+import * as z from "zod/v4";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 
@@ -78,6 +79,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   mapLayer = new LayerGroup();
   mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
+  timeseriesChart: EChartsOption | undefined;
   loadingState: "loading" | "error" | undefined;
 
   async ngOnInit() {
@@ -155,7 +157,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ? source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, date)
         : source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
 
-    const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "Aspect");
+    const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "aspect");
     const aspects = Array.isArray(aspectFilter?.values)
       ? aspectFilter.values.map((v) => v.value)
       : ["east", "flat", "north", "south", "west"];
@@ -267,31 +269,45 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       ),
     );
 
-    const markerClassify = this.markerService.markerClassify;
-    if (markerClassify) {
-      const data = this.localObservations.map((o) => this.toChartData(o));
-      this.hazardChart = {
-        xAxis: {
-          name: "Depth",
-          min: this.config.depth?.chartAxisRange?.[0],
-          max: this.config.depth?.chartAxisRange?.[1],
-        } satisfies XAXisOption,
-        yAxis: {
-          name: markerClassify.label,
-          min: markerClassify.chartAxisRange?.[0],
-          max: markerClassify.chartAxisRange?.[1],
-        } satisfies YAXisOption,
-        series: [
-          {
-            type: "scatter",
-            data,
-            symbolSize: 5,
-          } satisfies ScatterSeriesOption,
-        ],
-      } satisfies EChartsOption;
-    } else {
-      this.hazardChart = undefined;
+    try {
+      this.loadHazardChart();
+    } catch (e) {
+      console.error("Failed to load hazard chart", e);
     }
+
+    try {
+      this.loadTimeseriesChart();
+    } catch (e) {
+      console.error("Failed to load timeseries chart", e);
+    }
+  }
+
+  private loadHazardChart() {
+    const markerClassify = this.markerService.markerClassify;
+    if (!markerClassify) {
+      this.hazardChart = undefined;
+      return;
+    }
+    const data = this.localObservations.map((o) => this.toChartData(o));
+    this.hazardChart = {
+      xAxis: {
+        name: "Depth",
+        min: this.config.depth?.chartAxisRange?.[0],
+        max: this.config.depth?.chartAxisRange?.[1],
+      } satisfies XAXisOption,
+      yAxis: {
+        name: markerClassify.label,
+        min: markerClassify.chartAxisRange?.[0],
+        max: markerClassify.chartAxisRange?.[1],
+      } satisfies YAXisOption,
+      series: [
+        {
+          type: "scatter",
+          data,
+          symbolSize: 5,
+        } satisfies ScatterSeriesOption,
+      ],
+    } satisfies EChartsOption;
   }
 
   private toChartData(o: FeatureProperties): number[] {
@@ -319,6 +335,80 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         },
       ] satisfies ScatterSeriesOption[],
     };
+  }
+
+  private loadTimeseriesChart() {
+    const markerClassify = this.markerService.markerClassify;
+    if (
+      markerClassify?.type !== "Punstable" &&
+      markerClassify?.type !== "ccl" &&
+      markerClassify?.type !== "lwc" &&
+      markerClassify?.type !== "sk38_rta"
+    ) {
+      this.timeseriesChart = undefined;
+      return;
+    }
+
+    const url0 = this.sources.find((s) => s.urlTimeseriesChart)?.urlTimeseriesChart;
+    if (!url0) {
+      this.timeseriesChart = undefined;
+      return;
+    }
+    const url = new URL(url0);
+    url.searchParams.set("ts", this.date.replace(/T/, "_").replace(/:/g, "-"));
+    this.filterService.filterSelectionData.forEach((f) =>
+      f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.key), v.value)),
+    );
+    this.filterService.selectedRegions.forEach((r) => url.searchParams.append("region", r));
+
+    this.fetchJSON(url.toString()).subscribe((d) => {
+      const IndexSchema = z.object({
+        depth: z.number().array(),
+        lower: z.number().array(),
+        mean: z.number().array(),
+        upper: z.number().array(),
+      });
+      const TimeseriesSchema = z.object({
+        indexes: z.object({
+          Punstable: IndexSchema,
+          ccl: IndexSchema,
+          lwc: IndexSchema,
+          sk38_rta: IndexSchema,
+        }),
+        timestamps: z.coerce.date().array(),
+      });
+      const data = TimeseriesSchema.parse(d);
+      this.timeseriesChart = {
+        xAxis: {
+          type: "time",
+          name: "Date",
+        } satisfies XAXisOption,
+        yAxis: {
+          name: markerClassify.type,
+        } satisfies YAXisOption,
+        series: [
+          {
+            type: "line",
+            data: data.timestamps.map((t, i) => [t, data.indexes[markerClassify.type].mean[i]]),
+          } satisfies LineSeriesOption,
+          {
+            type: "line",
+            data: data.timestamps.map((t, i) => [t, data.indexes[markerClassify.type].lower[i]]),
+            lineStyle: { opacity: 0 },
+            stack: "confidence-band",
+            symbol: "none",
+          } satisfies LineSeriesOption,
+          {
+            type: "line",
+            data: data.timestamps.map((t, i) => [t, data.indexes[markerClassify.type].upper[i]]),
+            lineStyle: { opacity: 0 },
+            areaStyle: { color: "#ccc" },
+            stack: "confidence-band",
+            symbol: "none",
+          } satisfies LineSeriesOption,
+        ],
+      } satisfies EChartsOption;
+    });
   }
 
   chartMouseOver($event: ECElementEvent) {

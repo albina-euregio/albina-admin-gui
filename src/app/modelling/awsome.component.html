@@ -152,6 +152,12 @@
             ></div>
           </div>
         }
+
+        @if (!selectedObservationDetails && timeseriesChart) {
+          <div class="chart-container w3">
+            <div echarts [options]="timeseriesChart"></div>
+          </div>
+        }
       </div>
     </div>
 

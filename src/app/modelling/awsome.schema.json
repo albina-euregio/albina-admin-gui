@@ -162,6 +162,10 @@
             "type": "string",
             "format": "uri"
           },
+          "urlTimeseriesChart": {
+            "type": "string",
+            "format": "uri"
+          },
           "detailsTemplates": {
             "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
             "default": [],

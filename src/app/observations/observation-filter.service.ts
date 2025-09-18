@@ -136,6 +136,10 @@ export class ObservationFilterService<
     return !Object.values(this.regions).some((v) => v) || (typeof region === "string" && this.regions[region]);
   }
 
+  get selectedRegions(): string[] {
+    return Object.keys(this.regions).filter((r) => this.regions[r]);
+  }
+
   inObservationSources($source?: GenericObservation["$source"]): boolean {
     return (
       !Object.values(this.observationSources).some((v) => v) ||
