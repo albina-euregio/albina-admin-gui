@@ -33,6 +33,13 @@ export type FilterSelectionValue = z.infer<typeof FilterSelectionValueSchema>;
 export const FilterSelectionSpecSchema = z.object({
   chartRichLabel: z.enum(["grainShape", "highlight", "label", "symbol"]),
   chartType: z.enum(["bar", "rose"]),
+  chartAxisRange: z
+    .number()
+    .array()
+    .min(2)
+    .max(2)
+    .optional()
+    .describe("Min and max value for chart range when plotting values on a parametric chart"),
   default: z.enum(["classify", "label"]).optional(),
   key: z
     .string()
