@@ -779,17 +779,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eaws/micro-regions@npm:^8.0.2":
-  version: 8.0.2
-  resolution: "@eaws/micro-regions@npm:8.0.2::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions%2F-%2F%40eaws%2Fmicro-regions-8.0.2.tgz"
-  checksum: 10c0/2c1a3a547bb72c020f042eb4172034259c170e6110f0fbbabe6516283027c764f98ce48f529f1f1853767a874bfd2b06f5817c903f5c83b150da2f16ef02077f
+"@eaws/micro-regions@npm:^8.0.3":
+  version: 8.0.3
+  resolution: "@eaws/micro-regions@npm:8.0.3::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions%2F-%2F%40eaws%2Fmicro-regions-8.0.3.tgz"
+  checksum: 10c0/63707dd84fb13ad0129f15079e7ff855cbbbe76411e223f34bbfe061b9037a8b4d4bcd36b789625d9d6f056922910602e78d0735e2818c2eb4a40c3124a8d9c5
   languageName: node
   linkType: hard
 
-"@eaws/micro-regions_names@npm:^8.0.2":
-  version: 8.0.2
-  resolution: "@eaws/micro-regions_names@npm:8.0.2::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions_names%2F-%2F%40eaws%2Fmicro-regions_names-8.0.2.tgz"
-  checksum: 10c0/66951f803b2cf5c90009531aba4f44da8d3918332451f241bc3b6ab85bd446a6603d78a8c19f0892bdbf47991c5acc528bda601ee909a3f8b6853d7ca179536a
+"@eaws/micro-regions_names@npm:^8.0.3":
+  version: 8.0.3
+  resolution: "@eaws/micro-regions_names@npm:8.0.3::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions_names%2F-%2F%40eaws%2Fmicro-regions_names-8.0.3.tgz"
+  checksum: 10c0/1c8fa60fc28dc79527c2c8cb3293df5957b2846e59fd62f88eb572cc6e4a74cd900d81cb80b53caafafaf3bd5d51656536ff5ee2022bc24c0c71ff28c3300248
   languageName: node
   linkType: hard
 
@@ -2922,8 +2922,8 @@ __metadata:
     "@angular/router": "npm:^20.2.1"
     "@angular/upgrade": "npm:^20.2.1"
     "@auth0/angular-jwt": "npm:^5.2.0"
-    "@eaws/micro-regions": "npm:^8.0.2"
-    "@eaws/micro-regions_names": "npm:^8.0.2"
+    "@eaws/micro-regions": "npm:^8.0.3"
+    "@eaws/micro-regions_names": "npm:^8.0.3"
     "@eslint/js": "npm:^9.31.0"
     "@ngx-translate/core": "npm:^17.0.0"
     "@phosphor-icons/web": "npm:^2.1.1"
