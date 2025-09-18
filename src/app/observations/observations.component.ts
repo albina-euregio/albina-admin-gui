@@ -168,7 +168,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   translateService = inject(TranslateService);
   protected observationsService = inject(AlbinaObservationsService);
   private sanitizer = inject(DomSanitizer);
-  private regionsService = inject(RegionsService);
+  regionsService = inject(RegionsService);
   private dangerSourcesService = inject(DangerSourcesService);
   authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
@@ -310,35 +310,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       },
     });
 
-    // Watch zoom changes
-    this.mapService.map.on("zoomend", () => {
-      this.updateBaseLayer();
-    });
-
     const resizeObserver = new ResizeObserver(() => {
       this.mapService.map?.invalidateSize();
     });
     resizeObserver.observe(this.mapDiv().nativeElement);
-  }
-
-  private updateBaseLayer(): void {
-    const zoom = this.mapService.map.getZoom();
-
-    if (zoom >= 13) {
-      if (this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getAlbinaBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getOpenTopoBaseMap());
-      }
-    } else {
-      if (this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getOpenTopoBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getAlbinaBaseMap());
-      }
-    }
   }
 
   get map() {

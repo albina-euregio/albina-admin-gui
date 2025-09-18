@@ -27,6 +27,26 @@ export class BaseMapService extends MapService {
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.regions, this.overlayMaps.editSelection],
     });
 
+    this.map.on("zoomend", () => {
+      const zoom = this.map.getZoom();
+
+      if (zoom >= 13) {
+        if (this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
+          this.map.removeLayer(this.baseMaps.AlbinaBaseMap);
+        }
+        if (!this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
+          this.map.addLayer(this.baseMaps.OpenTopoBaseMap);
+        }
+      } else {
+        if (this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
+          this.map.removeLayer(this.baseMaps.OpenTopoBaseMap);
+        }
+        if (!this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
+          this.map.addLayer(this.baseMaps.AlbinaBaseMap);
+        }
+      }
+    });
+
     this.resetAll();
     new Control.Attribution({ prefix: false }).addTo(this.map);
     new Control.Zoom({ position: "topleft" }).addTo(this.map);

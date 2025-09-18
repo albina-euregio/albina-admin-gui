@@ -17,6 +17,7 @@ import { ActivatedRoute } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
+import type { XAXisOption, YAXisOption } from "echarts/types/dist/shared";
 import { debounce } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
@@ -211,6 +212,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.mapService.initMaps(this.mapDiv().nativeElement, {
       regions: regions,
       internalRegions: regions,
+      clickMode: "awsome",
     });
 
     this.mapLayer.addTo(this.mapService.map);
@@ -221,33 +223,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         this.applyLocalFilter();
       },
     });
-    // Watch zoom changes
-    this.mapService.map.on("zoomend", () => {
-      this.updateBaseLayer();
-    });
 
     Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
     Split([".toolset-1", ".toolset-2"], { sizes: [33, 66], direction: "vertical" });
-  }
-
-  private updateBaseLayer(): void {
-    const zoom = this.mapService.map.getZoom();
-
-    if (zoom >= 13) {
-      if (this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getAlbinaBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getOpenTopoBaseMap());
-      }
-    } else {
-      if (this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getOpenTopoBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getAlbinaBaseMap());
-      }
-    }
   }
 
   nextDate(direction: -1 | 1) {
@@ -293,8 +271,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (markerClassify) {
       const data = this.localObservations.map((o) => this.toChartData(o));
       this.hazardChart = {
-        xAxis: { name: "Depth" },
-        yAxis: { name: markerClassify.label },
+        xAxis: {
+          name: "Depth",
+          min: this.config.depth?.chartAxisRange?.[0],
+          max: this.config.depth?.chartAxisRange?.[1],
+        } satisfies XAXisOption,
+        yAxis: {
+          name: markerClassify.label,
+          min: markerClassify.chartAxisRange?.[0],
+          max: markerClassify.chartAxisRange?.[1],
+        } satisfies YAXisOption,
         series: [
           {
             type: "scatter",
@@ -302,7 +288,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
             symbolSize: 5,
           } satisfies ScatterSeriesOption,
         ],
-      };
+      } satisfies EChartsOption;
     } else {
       this.hazardChart = undefined;
     }

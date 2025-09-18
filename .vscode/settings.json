@@ -13,12 +13,11 @@
     "snowpack.plotType.*",
     "snowpack.aspect.*",
     "snowpack.meteo.*",
-    "bulletins.table.title.status.*",
     "role.*"
   ],
   "nuxt.isNuxtApp": false,
   "[scss]": {
-    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter",
-    "editor.formatOnSave": true
-  }
+    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
+  },
+  "editor.formatOnSave": true
 }

@@ -482,22 +482,7 @@
     },
     "table": {
       "title": {
-        "date": "Date",
-        "status": {
-          "AT-02": "Carinthia",
-          "AT-03": "Lower Austria",
-          "AT-04": "Upper Austria",
-          "AT-05": "Salzburg",
-          "AT-06": "Styria",
-          "AT-07": "Tyrol",
-          "AT-08": "Vorarlberg",
-          "CH": "Switzerland",
-          "DE-BY": "Bavaria",
-          "GEOSPHERE": "GEOSPHERE",
-          "IT-32-TN": "Trentino",
-          "IT-32-BZ": "South Tyrol",
-          "ES-CT-L": "Aran"
-        }
+        "date": "Date"
       },
       "status": {
         "missing": "missing",

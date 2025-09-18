@@ -45,6 +45,8 @@ interface SelectableRegionProperties extends RegionWithElevationProperties {
 
 const dataSource = "eaws-regions";
 
+type ClickMode = "normal" | "awsome";
+
 @Injectable()
 export class MapService {
   protected regionsService = inject(RegionsService);
@@ -63,14 +65,12 @@ export class MapService {
   protected overlayMaps: {
     // Micro  regions without elevation
     regions: GeoJSON<SelectableRegionProperties>;
-    regionsStrong: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
     aggregatedRegions: PmLeafletLayer;
   };
   protected afternoonOverlayMaps: {
     // Micro  regions without elevation
     regions: GeoJSON<SelectableRegionProperties>;
-    regionsStrong: GeoJSON<SelectableRegionProperties>;
     editSelection: GeoJSON<SelectableRegionProperties>;
     aggregatedRegions: PmLeafletLayer;
   };
@@ -87,9 +87,11 @@ export class MapService {
   protected async initOverlayMaps({
     regions,
     internalRegions,
+    clickMode,
   }: {
     regions?: FeatureCollection<MultiPolygon, RegionProperties>;
     internalRegions?: FeatureCollection<MultiPolygon, RegionProperties>;
+    clickMode?: ClickMode;
   } = {}): Promise<typeof this.overlayMaps> {
     if (!regions || !internalRegions) {
       regions ??= await this.regionsService.getRegionsAsync();
@@ -105,13 +107,6 @@ export class MapService {
         },
         style: this.getRegionStyle(),
       }),
-      regionsStrong: new GeoJSON(regions, {
-        onEachFeature: (feature, layer) => {
-          layer.on("click", () => (feature.properties.selected = true));
-          this.highlightAndShowName(layer);
-        },
-        style: this.getStrongRegionStyle(),
-      }),
 
       // overlay to select regions (when editing an aggregated region)
       editSelection: new GeoJSON(regions, {
@@ -123,8 +118,19 @@ export class MapService {
         sources: { [dataSource]: { maxDataZoom: 10, url: "https://static.avalanche.report/eaws-regions.pmtiles" } },
       }),
     };
+    overlayMaps.regions.on("add", (e) => {
+      const layer = e.target as GeoJSON;
+      const map = e.target._map as L.Map;
+      let oldStrong = false;
+      map.on("zoomend", () => {
+        const isStrong = map.getZoom() >= 13;
+        if (isStrong === oldStrong) return;
+        oldStrong = isStrong;
+        layer.setStyle(isStrong ? this.getStrongRegionStyle() : this.getRegionStyle());
+      });
+    });
     overlayMaps.editSelection.options.onEachFeature = (feature, layer) => {
-      this.handleClick(overlayMaps.editSelection, feature, layer);
+      layer.on("click", (e) => this.handleClick(clickMode, e.originalEvent, feature, overlayMaps.editSelection));
       this.highlightAndShowName(layer);
     };
     overlayMaps.editSelection.addData(internalRegions);
@@ -225,27 +231,15 @@ export class MapService {
       if (this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
         this.map.removeLayer(this.baseMaps.AlbinaBaseMap);
       }
-      if (this.map.hasLayer(this.overlayMaps.regions)) {
-        this.map.removeLayer(this.overlayMaps.regions);
-      }
       if (!this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
         this.map.addLayer(this.baseMaps.OpenTopoBaseMap);
-      }
-      if (!this.map.hasLayer(this.overlayMaps.regionsStrong)) {
-        this.map.addLayer(this.overlayMaps.regionsStrong);
       }
     } else {
       if (this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
         this.map.removeLayer(this.baseMaps.OpenTopoBaseMap);
       }
-      if (this.map.hasLayer(this.overlayMaps.regionsStrong)) {
-        this.map.removeLayer(this.overlayMaps.regionsStrong);
-      }
       if (!this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
         this.map.addLayer(this.baseMaps.AlbinaBaseMap);
-      }
-      if (!this.map.hasLayer(this.overlayMaps.regions)) {
-        this.map.addLayer(this.overlayMaps.regions);
       }
     }
   }
@@ -257,27 +251,15 @@ export class MapService {
       if (this.afternoonMap.hasLayer(this.afternoonBaseMaps.AlbinaBaseMap)) {
         this.afternoonMap.removeLayer(this.afternoonBaseMaps.AlbinaBaseMap);
       }
-      if (this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regions)) {
-        this.afternoonMap.removeLayer(this.afternoonOverlayMaps.regions);
-      }
       if (!this.afternoonMap.hasLayer(this.afternoonBaseMaps.OpenTopoBaseMap)) {
         this.afternoonMap.addLayer(this.afternoonBaseMaps.OpenTopoBaseMap);
-      }
-      if (!this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regionsStrong)) {
-        this.afternoonMap.addLayer(this.afternoonOverlayMaps.regionsStrong);
       }
     } else {
       if (this.afternoonMap.hasLayer(this.afternoonBaseMaps.OpenTopoBaseMap)) {
         this.afternoonMap.removeLayer(this.afternoonBaseMaps.OpenTopoBaseMap);
       }
-      if (this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regionsStrong)) {
-        this.afternoonMap.removeLayer(this.afternoonOverlayMaps.regionsStrong);
-      }
       if (!this.afternoonMap.hasLayer(this.afternoonBaseMaps.AlbinaBaseMap)) {
         this.afternoonMap.addLayer(this.afternoonBaseMaps.AlbinaBaseMap);
-      }
-      if (!this.afternoonMap.hasLayer(this.afternoonOverlayMaps.regions)) {
-        this.afternoonMap.addLayer(this.afternoonOverlayMaps.regions);
       }
     }
   }
@@ -526,28 +508,58 @@ export class MapService {
     return result;
   }
 
-  private handleClick(editSelection: GeoJSON, feature: GeoJSON.Feature, layer: Layer) {
-    layer.on("click", (e) => {
-      const selected = !feature.properties.selected;
-      if (e.originalEvent.ctrlKey) {
-        const regions = this.regionsService.getLevel1Regions(feature.properties.id);
-        for (const entry of editSelection.getLayers()) {
-          if (regions.includes(entry.feature.properties.id)) {
-            entry.feature.properties.selected = selected;
-          }
-        }
-      } else if (e.originalEvent.altKey) {
-        const regions = this.regionsService.getLevel2Regions(feature.properties.id);
-        for (const entry of editSelection.getLayers()) {
-          if (regions.includes(entry.feature.properties.id)) {
-            entry.feature.properties.selected = selected;
-          }
-        }
+  private handleClick(clickMode: ClickMode, e: MouseEvent, feature: geojson.Feature, editSelection: GeoJSON) {
+    if (clickMode === "awsome") {
+      if (e.ctrlKey) {
+        this.toggleRegion(feature);
+      } else if (feature.properties.selected) {
+        this.selectNone(editSelection);
       } else {
-        feature.properties.selected = selected;
+        this.selectOnly(feature, editSelection);
       }
-      this.updateEditSelection();
-    });
+    } else if (e.ctrlKey) {
+      this.toggleLevel1Regions(feature, editSelection);
+    } else if (e.altKey) {
+      this.toggleLevel2Regions(feature, editSelection);
+    } else {
+      this.toggleRegion(feature);
+    }
+    this.updateEditSelection();
+  }
+
+  private toggleRegion(feature: geojson.Feature) {
+    const selected = !feature.properties.selected;
+    feature.properties.selected = selected;
+  }
+
+  private selectNone(editSelection: GeoJSON) {
+    for (const entry of editSelection.getLayers()) {
+      entry.feature.properties.selected = false;
+    }
+  }
+  private selectOnly(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+    this.selectNone(editSelection);
+    feature.properties.selected = true;
+  }
+
+  private toggleLevel1Regions(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+    const selected = !feature.properties.selected;
+    const regions = this.regionsService.getLevel1Regions(feature.properties.id);
+    for (const entry of editSelection.getLayers()) {
+      if (regions.includes(entry.feature.properties.id)) {
+        entry.feature.properties.selected = selected;
+      }
+    }
+  }
+
+  private toggleLevel2Regions(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+    const selected = !feature.properties.selected;
+    const regions = this.regionsService.getLevel2Regions(feature.properties.id);
+    for (const entry of editSelection.getLayers()) {
+      if (regions.includes(entry.feature.properties.id)) {
+        entry.feature.properties.selected = selected;
+      }
+    }
   }
 
   protected highlightAndShowName(layer: Layer) {

@@ -29,6 +29,15 @@
             "type": "string",
             "enum": ["bar", "rose"]
           },
+          "chartAxisRange": {
+            "description": "Min and max value for chart range when plotting values on a parametric chart",
+            "minItems": 2,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
           "default": {
             "type": "string",
             "enum": ["classify", "label"]
@@ -232,6 +241,21 @@
           "description": "URL to GeoJSON FeatureCollection for micro-region polygons. For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json",
           "type": "string",
           "format": "uri"
+        }
+      },
+      "additionalProperties": false
+    },
+    "depth": {
+      "type": "object",
+      "properties": {
+        "chartAxisRange": {
+          "description": "Min and max value for chart range when plotting values on a parametric chart",
+          "minItems": 2,
+          "maxItems": 2,
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
         }
       },
       "additionalProperties": false

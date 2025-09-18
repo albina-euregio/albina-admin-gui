@@ -55,7 +55,7 @@ export interface MultiselectDropdownData {
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   private route = inject(ActivatedRoute);
-  private regionsService = inject(RegionsService);
+  regionsService = inject(RegionsService);
   mapService = inject(BaseMapService);
   authenticationService = inject(AuthenticationService);
   private multimodelSource = inject(MultimodelSourceService);
@@ -268,25 +268,7 @@ export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDes
     this.mapLayer.addTo(map);
   }
 
-  private updateBaseLayer(): void {
-    const zoom = this.mapService.map.getZoom();
-
-    if (zoom >= 13) {
-      if (this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getAlbinaBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getOpenTopoBaseMap());
-      }
-    } else {
-      if (this.mapService.map.hasLayer(this.mapService.getOpenTopoBaseMap())) {
-        this.mapService.map.removeLayer(this.mapService.getOpenTopoBaseMap());
-      }
-      if (!this.mapService.map.hasLayer(this.mapService.getAlbinaBaseMap())) {
-        this.mapService.map.addLayer(this.mapService.getAlbinaBaseMap());
-      }
-    }
-  }
+  private updateBaseLayer(): void {}
 
   ngOnDestroy() {
     this.mapLayer.clearLayers();
