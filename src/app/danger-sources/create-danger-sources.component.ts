@@ -758,7 +758,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         (variant) =>
           variant.dangerSource.id === dangerSource.id &&
           variant.dangerSourceVariantStatus === status &&
-          variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
+          variant.dangerSourceVariantType === DangerSourceVariantType.forecast,
       ).length;
     }
   }
