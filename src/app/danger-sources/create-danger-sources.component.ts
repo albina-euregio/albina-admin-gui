@@ -20,7 +20,7 @@ import {
   Probability,
 } from "./models/danger-source-variant.model";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { DatePipe, NgFor, NgIf, NgClass, NgTemplateOutlet } from "@angular/common";
 import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
@@ -36,6 +36,7 @@ import { Subscription } from "rxjs";
   imports: [
     NgIf,
     NgFor,
+    NgClass,
     NgTemplateOutlet,
     DangerSourceVariantComponent,
     BsDropdownModule,
@@ -271,6 +272,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                 } else {
                   this.addInternalVariants(dangerSources, variants, type);
                 }
+                this.sortInternDangerSourcesList();
                 this.loading = false;
               },
               error: (error) => {
@@ -541,8 +543,48 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     );
   }
 
-  private addInternalDangerSources(dangerSources: DangerSourceModel[]) {
-    dangerSources.sort((a, b): number => {
+  private sortInternDangerSourcesList() {
+    const variantType = this.internVariantsList.some(
+      (variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
+    )
+      ? DangerSourceVariantType.analysis
+      : DangerSourceVariantType.forecast;
+
+    // Count variants by status for each danger source
+    const getStatusCounts = (dangerSource: DangerSourceModel) => {
+      const counts = {
+        active: 0,
+        dormant: 0,
+        inactive: 0,
+      };
+      for (const variant of this.internVariantsList) {
+        if (variant.dangerSource.id === dangerSource.id && variant.dangerSourceVariantType === variantType) {
+          if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.active) counts.active++;
+          else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.dormant) counts.dormant++;
+          else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.inactive) counts.inactive++;
+        }
+      }
+      return counts;
+    };
+
+    // Sort by status (active > dormant > inactive), then by creationDate (desc)
+    this.internDangerSourcesList.sort((a, b): number => {
+      const aCounts = getStatusCounts(a);
+      const bCounts = getStatusCounts(b);
+
+      // Compare by active count
+      if (aCounts.active !== bCounts.active) {
+        return bCounts.active - aCounts.active;
+      }
+      // Then by dormant count
+      if (aCounts.dormant !== bCounts.dormant) {
+        return bCounts.dormant - aCounts.dormant;
+      }
+      // Then by inactive count
+      if (aCounts.inactive !== bCounts.inactive) {
+        return bCounts.inactive - aCounts.inactive;
+      }
+      // If status counts are equal, sort by creationDate (desc)
       if (a.creationDate < b.creationDate) {
         return 1;
       }
@@ -551,7 +593,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
       return 0;
     });
+  }
+
+  private addInternalDangerSources(dangerSources: DangerSourceModel[]) {
     this.internDangerSourcesList = dangerSources;
+    this.sortInternDangerSourcesList();
   }
 
   /**
@@ -773,9 +819,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   editDangerSourceModalConfirm(): void {
     this.editDangerSourceModalRef.hide();
-    this.internDangerSourcesList.sort((a, b): number => {
-      return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
-    });
   }
 
   openCreateDangerSourceModal() {
@@ -789,9 +832,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   createDangerSourceModalConfirm(dangerSource: DangerSourceModel): void {
     this.createDangerSourceModalRef.hide();
     this.internDangerSourcesList.push(dangerSource);
-    this.internDangerSourcesList.sort((a, b): number => {
-      return new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
-    });
+    this.sortInternDangerSourcesList();
   }
 
   createDangerSourceModalDecline(): void {

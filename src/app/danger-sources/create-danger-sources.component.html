@@ -254,7 +254,19 @@
   <!-- List of danger sources -->
   <div class="create-bulletin__regions">
     <!-- Own danger sources -->
-    <header class="create-bulletin__region-divider foreign" (click)="toggleDangerSourceVariantsList(dangerSource.id)">
+    <header
+      class="create-bulletin__region-divider foreign"
+      (click)="toggleDangerSourceVariantsList(dangerSource.id)"
+      [ngClass]="
+        getVariantCountByStatus(dangerSource, variantStatus.active) > 0
+          ? 'danger-source__active'
+          : getVariantCountByStatus(dangerSource, variantStatus.dormant) > 0
+            ? 'danger-source__dormant'
+            : getVariantCountByStatus(dangerSource, variantStatus.inactive) > 0
+              ? 'danger-source__inactive'
+              : 'danger-source__empty'
+      "
+    >
       <div class="region-thumb__details">
         <h5 class="font-s-bold">
           {{ dangerSource.title }}
