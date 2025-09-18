@@ -17,6 +17,7 @@ import { ActivatedRoute } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
+import type { XAXisOption, YAXisOption } from "echarts/types/dist/shared";
 import { debounce } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
@@ -270,8 +271,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (markerClassify) {
       const data = this.localObservations.map((o) => this.toChartData(o));
       this.hazardChart = {
-        xAxis: { name: "Depth" },
-        yAxis: { name: markerClassify.label },
+        xAxis: {
+          name: "Depth",
+          min: this.config.depth?.chartAxisRange?.[0],
+          max: this.config.depth?.chartAxisRange?.[1],
+        } satisfies XAXisOption,
+        yAxis: {
+          name: markerClassify.label,
+          min: markerClassify.chartAxisRange?.[0],
+          max: markerClassify.chartAxisRange?.[1],
+        } satisfies YAXisOption,
         series: [
           {
             type: "scatter",
@@ -279,7 +288,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
             symbolSize: 5,
           } satisfies ScatterSeriesOption,
         ],
-      };
+      } satisfies EChartsOption;
     } else {
       this.hazardChart = undefined;
     }
