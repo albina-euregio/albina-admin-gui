@@ -70,13 +70,12 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   public showAfternoonMap: boolean;
 
-  public showForeignRegions: boolean;
-
   public activeVariant: DangerSourceVariantModel;
   public comparedVariant: DangerSourceVariantModel;
   public internVariantsList: DangerSourceVariantModel[];
   public internDangerSourcesList: DangerSourceModel[];
 
+  public showDangerSourceVariantsMap: Map<string, boolean>;
   public showStatusOfAllRegions = false;
 
   public showNewVariantModal = false;
@@ -135,11 +134,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   constructor() {
     this.loading = false;
     this.showAfternoonMap = false;
-    this.showForeignRegions = true;
     this.mapService.resetAll();
     this.internVariantsList = new Array<DangerSourceVariantModel>();
     this.internDangerSourcesList = new Array<DangerSourceModel>();
-    // this.preventClick = false;
+    this.showDangerSourceVariantsMap = new Map<string, boolean>(); // this.preventClick = false;
     // this.timer = 0;
 
     if (this.localStorageService.getCompactMapLayout()) {
@@ -171,10 +169,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
     this.editRegions = false;
     this.showAfternoonMap = false;
-  }
-
-  toggleShowForeignRegions() {
-    this.showForeignRegions = !this.showForeignRegions;
+    this.showDangerSourceVariantsMap = new Map<string, boolean>();
   }
 
   ngOnInit() {
@@ -687,6 +682,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleDangerSourceVariantsList(dangerSourceId: string) {
+    this.showDangerSourceVariantsMap.set(dangerSourceId, !this.showDangerSourceVariantsMap.get(dangerSourceId));
+  }
+
   eventCopyVariant(variant: DangerSourceVariantModel) {
     this.copyVariant(undefined, variant);
   }
@@ -708,7 +707,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.openCreateDangerSourceModal();
   }
 
-  createVariant(dangerSource: DangerSourceModel) {
+  createVariant(event: Event, dangerSource: DangerSourceModel) {
+    if (event) {
+      event.stopPropagation();
+    }
     this.showNewVariantModal = true;
     const newVariant = new DangerSourceVariantModel();
     newVariant.dangerSource = dangerSource;

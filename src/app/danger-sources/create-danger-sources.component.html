@@ -254,7 +254,7 @@
   <!-- List of danger sources -->
   <div class="create-bulletin__regions">
     <!-- Own danger sources -->
-    <header class="create-bulletin__region-divider">
+    <header class="create-bulletin__region-divider foreign" (click)="toggleDangerSourceVariantsList(dangerSource.id)">
       <div class="region-thumb__details">
         <h5 class="font-s-bold">
           {{ dangerSource.title }}
@@ -268,7 +268,12 @@
       </div>
       <div class="btn-group region-divider__actions">
         <div class="region-divider__actions-dropdown mr-1" bsDropdown container="body">
-          <button class="btn btn-sm btn-icon btn-bare--grey" type="button" bsDropdownToggle>
+          <button
+            class="btn btn-sm btn-icon btn-bare--grey"
+            type="button"
+            bsDropdownToggle
+            (click)="$event.stopPropagation()"
+          >
             <i class="ph-bold ph-dots-three-outline-vertical"></i>
           </button>
 
@@ -305,7 +310,7 @@
         <button
           [disabled]="editRegions || loading"
           *ngIf="dangerSourcesService.getIsEditable()"
-          (click)="createVariant(dangerSource)"
+          (click)="createVariant($event, dangerSource)"
           class="btn btn-sm btn-icon btn-primary"
           type="button"
           title="{{ 'dangerSources.create.createVariant' | translate }}"
@@ -316,7 +321,7 @@
     </header>
     <!-- End own danger sources header -->
     <!-- List of variants of danger source -->
-    <nav class="create-bulletin__region-list">
+    <nav *ngIf="!showDangerSourceVariantsMap.get(dangerSource.id)" class="create-bulletin__region-list">
       <!-- Show the list of variants if there are any -->
       <ng-container>
         <ng-container *ngFor="let variant of getVariantsOfDangerSource(dangerSource.id)">
