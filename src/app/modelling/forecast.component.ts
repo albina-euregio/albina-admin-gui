@@ -55,7 +55,7 @@ export interface MultiselectDropdownData {
 })
 export class ForecastComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   private route = inject(ActivatedRoute);
-  private regionsService = inject(RegionsService);
+  regionsService = inject(RegionsService);
   mapService = inject(BaseMapService);
   authenticationService = inject(AuthenticationService);
   private multimodelSource = inject(MultimodelSourceService);

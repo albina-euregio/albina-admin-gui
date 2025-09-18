@@ -13,7 +13,6 @@
     "snowpack.plotType.*",
     "snowpack.aspect.*",
     "snowpack.meteo.*",
-    "bulletins.table.title.status.*",
     "role.*"
   ],
   "nuxt.isNuxtApp": false,

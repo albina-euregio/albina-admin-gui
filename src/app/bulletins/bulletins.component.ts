@@ -5,6 +5,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
+import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
 import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
@@ -29,6 +30,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   route = inject(ActivatedRoute);
   translateService = inject(TranslateService);
   authenticationService = inject(AuthenticationService);
+  regionsService = inject(RegionsService);
   constantsService = inject(ConstantsService);
   localStorageService = inject(LocalStorageService);
   router = inject(Router);

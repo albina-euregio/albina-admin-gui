@@ -168,7 +168,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   translateService = inject(TranslateService);
   protected observationsService = inject(AlbinaObservationsService);
   private sanitizer = inject(DomSanitizer);
-  private regionsService = inject(RegionsService);
+  regionsService = inject(RegionsService);
   private dangerSourcesService = inject(DangerSourcesService);
   authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
