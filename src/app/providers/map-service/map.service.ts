@@ -440,7 +440,6 @@ export class MapService {
               : map !== this.afternoonMap
                 ? mapObject.getForenoonDangerRatingBelow()
                 : mapObject.getAfternoonDangerRatingBelow();
-            if (!dangerRating) return undefined;
 
             if (mode === "active" && mapObject === this.activeMapObject) {
               return this.getActiveSelectionStyle(properties.id, dangerRating, status);
