@@ -880,6 +880,24 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  getVariantCount(dangerSource: DangerSourceModel): number {
+    if (
+      this.internVariantsList.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)
+    ) {
+      return this.internVariantsList.filter(
+        (variant) =>
+          variant.dangerSource.id === dangerSource.id &&
+          variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
+      ).length;
+    } else {
+      return this.internVariantsList.filter(
+        (variant) =>
+          variant.dangerSource.id === dangerSource.id &&
+          variant.dangerSourceVariantType === DangerSourceVariantType.forecast,
+      ).length;
+    }
+  }
+
   openEditDangerSourceModal(dangerSource: DangerSourceModel) {
     const initialState = {
       dangerSource: dangerSource,

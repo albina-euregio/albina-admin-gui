@@ -272,10 +272,17 @@
           {{ dangerSource.title }}
         </h5>
         <div class="region-thumb__author font-s text-secondary">
-          {{
-            getMainDateString(dangerSource.creationDate) | date: "mediumDate" : undefined : translateService.currentLang
-          }}
-          {{ getStatusString(dangerSource) }}
+          <div *ngIf="getVariantCount(dangerSource) > 0" class="btn-group region-divider__actions">
+            <i *ngIf="showDangerSourceVariantsMap.get(dangerSource.id)" class="ph-bold ph-caret-right"></i>
+            <i *ngIf="!showDangerSourceVariantsMap.get(dangerSource.id)" class="ph-bold ph-caret-down"></i>
+          </div>
+          <div class="btn-group region-divider__actions">
+            {{
+              getMainDateString(dangerSource.creationDate)
+                | date: "mediumDate" : undefined : translateService.currentLang
+            }}
+            {{ getStatusString(dangerSource) }}
+          </div>
         </div>
       </div>
       <div class="btn-group region-divider__actions">
