@@ -984,8 +984,12 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   saveVariant(event: Event) {
     event.stopPropagation();
 
-    const isUpdate: boolean = this.activeVariant.regions.length !== 0; // save selected regions to active variant
-    const regions = this.mapService.getSelectedRegions();
+    // save selected regions to active variant
+    const isUpdate: boolean = this.activeVariant.regions.length !== 0;
+    // only allow regions within own area
+    const regions = this.mapService
+      .getSelectedRegions()
+      .filter((region) => region.startsWith(this.authenticationService.getActiveRegionId()));
 
     let newRegionsHit = false;
     for (const region of regions) {
