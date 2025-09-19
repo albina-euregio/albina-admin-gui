@@ -3,6 +3,7 @@ import { RegionStatus, DangerRating } from "app/enums/enums";
 
 export class DangerSourceModel implements PolygonObject {
   id: string;
+  ownerRegion: string;
   creationDate: Date;
   title: string;
   description: string;
@@ -10,6 +11,7 @@ export class DangerSourceModel implements PolygonObject {
   static createFromJson(json) {
     const dangerSource = new DangerSourceModel();
     dangerSource.id = json.id;
+    dangerSource.ownerRegion = json.ownerRegion;
     dangerSource.creationDate = json.creationDate;
     dangerSource.title = json.title;
     dangerSource.description = json.description;
@@ -19,6 +21,7 @@ export class DangerSourceModel implements PolygonObject {
 
   constructor(dangerSource?: DangerSourceModel) {
     if (dangerSource) {
+      this.ownerRegion = dangerSource.ownerRegion;
       this.creationDate = dangerSource.creationDate;
       this.title = dangerSource.title;
       this.description = dangerSource.description;
