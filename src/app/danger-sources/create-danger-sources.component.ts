@@ -911,6 +911,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     if (!this.editRegions) {
       this.deselectVariant();
       this.activeVariant = variant;
+      if (this.activeVariant.dangerSource.id !== this.activeDangerSourceOnMap.id) {
+        this.activeDangerSourceOnMap = undefined;
+      }
+      this.mapService.resetInternalAggregatedRegions();
+      this.updateInternalVariantsOnMap(this.dangerSourcesService.getDangerSourceVariantType());
       this.mapService.selectAggregatedRegion(this.activeVariant, this.comparedVariant);
     }
   }
