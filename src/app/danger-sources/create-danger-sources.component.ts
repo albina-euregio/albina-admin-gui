@@ -75,6 +75,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public comparedVariant: DangerSourceVariantModel;
   public internVariantsList: DangerSourceVariantModel[];
   public internDangerSourcesList: DangerSourceModel[];
+  public activeDangerSourceOnMap: DangerSourceModel;
 
   public showDangerSourceVariantsMap: Map<string, boolean>;
   public showStatusOfAllRegions = false;
@@ -166,6 +167,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   reset() {
     this.activeVariant = undefined;
     this.comparedVariant = undefined;
+    this.activeDangerSourceOnMap = undefined;
     this.internVariantsList = new Array<DangerSourceVariantModel>();
 
     this.editRegions = false;
@@ -494,6 +496,19 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleShowVariantsOnMap(event: Event, dangerSourceId: string) {
+    if (event) {
+      event.stopPropagation();
+    }
+    if (this.activeDangerSourceOnMap && this.activeDangerSourceOnMap.id === dangerSourceId) {
+      this.activeDangerSourceOnMap = undefined;
+    } else {
+      this.activeDangerSourceOnMap = this.internDangerSourcesList.find((ds) => ds.id === dangerSourceId);
+    }
+    this.mapService.resetInternalAggregatedRegions();
+    this.updateInternalVariantsOnMap(this.dangerSourcesService.getDangerSourceVariantType());
+  }
+
   // create a copy of every variant (with new id)
   private copyVariants(response, setForecastVariantId: boolean): DangerSourceVariantModel[] {
     const result = Array<DangerSourceVariantModel>();
@@ -763,16 +778,19 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   private updateInternalVariantsOnMap(type: DangerSourceVariantType) {
-    for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
-      if (this.internVariantsList[i].dangerSourceVariantType === type) {
-        if (this.internVariantsList[i].hasDaytimeDependency) {
-          if (this.internVariantsList[i].dangerPeak !== Daytime.afternoon) {
-            this.mapService.updateAggregatedRegionAM(this.internVariantsList[i]);
+    const variants = this.activeDangerSourceOnMap
+      ? this.internVariantsList.filter((v) => v.dangerSource.id === this.activeDangerSourceOnMap.id)
+      : this.internVariantsList;
+    for (let i = variants.length - 1; i >= 0; --i) {
+      if (variants[i].dangerSourceVariantType === type) {
+        if (variants[i].hasDaytimeDependency) {
+          if (variants[i].dangerPeak !== Daytime.afternoon) {
+            this.mapService.updateAggregatedRegionAM(variants[i]);
           } else {
-            this.mapService.updateAggregatedRegionPM(this.internVariantsList[i]);
+            this.mapService.updateAggregatedRegionPM(variants[i]);
           }
         } else {
-          this.mapService.updateAggregatedRegion(this.internVariantsList[i]);
+          this.mapService.updateAggregatedRegion(variants[i]);
         }
       }
     }

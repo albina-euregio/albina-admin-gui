@@ -100,6 +100,7 @@
       "tooltip": {
         "editDangerSource": "Edit danger source",
         "loadVariants": "Load variants from the day before",
+        "showVariantsOnMap": "Show variants on map",
         "edit": "Edit micro regions",
         "copy": "Copy variant",
         "delete": "Delete variant",

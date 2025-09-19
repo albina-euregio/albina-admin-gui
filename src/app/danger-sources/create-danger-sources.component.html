@@ -319,16 +319,30 @@
             </li>
           </ul>
         </div>
-        <button
-          [disabled]="editRegions || loading"
-          *ngIf="dangerSourcesService.getIsEditable()"
-          (click)="createVariant($event, dangerSource)"
-          class="btn btn-sm btn-icon btn-primary"
-          type="button"
-          title="{{ 'dangerSources.create.createVariant' | translate }}"
-        >
-          <i class="ph-bold ph-plus"></i>
-        </button>
+        <div style="height: 100%; padding-left: 3px">
+          <button
+            [disabled]="editRegions || loading"
+            type="button"
+            class="btn btn-sm btn-icon"
+            [class.btn-primary]="activeDangerSourceOnMap === dangerSource"
+            (click)="toggleShowVariantsOnMap($event, dangerSource.id)"
+            title="{{ 'dangerSources.create.tooltip.showVariantsOnMap' | translate }}"
+          >
+            <i class="ph-bold ph-eye icon-md"></i>
+          </button>
+        </div>
+        <div style="height: 100%; padding-left: 3px">
+          <button
+            [disabled]="editRegions || loading"
+            *ngIf="dangerSourcesService.getIsEditable()"
+            (click)="createVariant($event, dangerSource)"
+            class="btn btn-sm btn-icon btn-primary"
+            type="button"
+            title="{{ 'dangerSources.create.createVariant' | translate }}"
+          >
+            <i class="ph-bold ph-plus"></i>
+          </button>
+        </div>
       </div>
     </header>
     <!-- End own danger sources header -->
