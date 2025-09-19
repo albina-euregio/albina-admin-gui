@@ -550,7 +550,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   loadSuggestionFromDangerSources() {
     this.loading = true;
     this.dangerSourcesService
-      .loadDangerSourceVariants(this.bulletinsService.getActiveDate(), this.authenticationService.getInternalRegions())
+      .loadDangerSourceVariants(this.bulletinsService.getActiveDate(), this.authenticationService.getActiveRegionId())
       .subscribe({
         next: async (variants) => {
           let dangerSourceVariants: DangerSourceVariantModel[] = variants;
