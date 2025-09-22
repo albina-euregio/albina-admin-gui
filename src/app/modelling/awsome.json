@@ -8,6 +8,7 @@
     {
       "name": "Gridded: Tirol",
       "url": "https://models.avalanche.report/domains/tirol24/gridded-chain/geojson/2025-01-07_00-00-00.json",
+      "urlTimeseriesChart": "https://models.avalanche.report/api/hce_timeseries?domain=tirol24&days_before=7&days_after=2",
       "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>V{vstation}-{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>{snp_characteristics.lwc.value}</td></tr></table>",
       "detailsTemplates": [
         {
@@ -80,7 +81,7 @@
   ],
   "filters": [
     {
-      "type": "Aspect",
+      "type": "aspect",
       "label": "Aspect",
       "key": "aspect",
       "chartType": "rose",
@@ -120,7 +121,7 @@
       ]
     },
     {
-      "type": "Elevation",
+      "type": "elevation",
       "label": "Elevation",
       "key": "elevation",
       "chartType": "bar",
@@ -197,7 +198,7 @@
       "chartType": "bar",
       "label": "Punstable",
       "key": "snp_characteristics.Punstable.value",
-      "type": "snp_characteristics.Punstable.value",
+      "type": "Punstable",
       "default": "classify",
       "values": [
         {
@@ -228,7 +229,7 @@
       "chartType": "bar",
       "label": "SK38 (RTA > 0.8)",
       "key": "snp_characteristics.sk38_rta.value",
-      "type": "snp_characteristics.sk38_rta.value",
+      "type": "sk38_rta",
       "values": [
         {
           "numericRange": [0.0, 0.5],
@@ -265,7 +266,7 @@
       "chartType": "bar",
       "label": "Critical Cut Length",
       "key": "snp_characteristics.ccl.value",
-      "type": "snp_characteristics.ccl.value",
+      "type": "ccl",
       "values": [
         {
           "numericRange": [0.0, 0.28],
@@ -295,7 +296,7 @@
       "chartType": "bar",
       "label": "Liquid Water Content (LWC)",
       "key": "snp_characteristics.lwc.value",
-      "type": "snp_characteristics.lwc.value",
+      "type": "lwc",
       "values": [
         {
           "numericRange": [0.3, 1],

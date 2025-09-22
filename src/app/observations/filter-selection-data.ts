@@ -65,9 +65,14 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
     this[subset].add("nan");
   }
 
+  getSelectedValues(subset: "highlighted" | "selected"): FilterSelectionValue[] {
+    const selectedData = this[subset];
+    return this.values.filter((v) => selectedData.has(v.value));
+  }
+
   isIncluded(subset: "highlighted" | "selected", testData: ValueType): boolean {
     const selectedData = this[subset];
-    const filterSelectionValues = this.values.filter((v) => selectedData.has(v.value));
+    const filterSelectionValues = this.getSelectedValues(subset);
     return (
       (selectedData.has("nan") && !testData) ||
       (subset === "selected" && selectedData.size === 0) ||
