@@ -216,6 +216,20 @@ $sidebar-border: 1px solid $gray-300;
   align-items: center;
 }
 
+.danger-source__active {
+  background: $albina-blue-subtle;
+}
+.danger-source__dormant {
+  background: $gray-400;
+}
+.danger-source__inactive {
+  background: $gray-200;
+}
+.danger-source__empty {
+  background: $gray-100;
+  color: $gray-600;
+}
+
 .foreign {
   cursor: pointer;
 }

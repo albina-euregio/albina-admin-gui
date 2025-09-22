@@ -173,11 +173,11 @@ export class DangerSourcesService {
     }
   }
 
-  loadDangerSources(date: [Date, Date], regions: string[]): Observable<DangerSourceModel[]> {
+  loadDangerSources(date: [Date, Date], region: string): Observable<DangerSourceModel[]> {
     const url = this.constantsService.getServerUrl(
       "/danger-sources",
       ["date", date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : ""],
-      ["regions", regions],
+      ["region", region],
     );
     return this.http.get<DangerSourceModel[]>(url);
   }
@@ -190,7 +190,7 @@ export class DangerSourcesService {
 
   loadDangerSourceVariants(
     date: [Date, Date],
-    regions: string[],
+    region: string,
     dangerSourceId?: string,
   ): Observable<DangerSourceVariantModel[]> {
     let url;
@@ -198,13 +198,13 @@ export class DangerSourcesService {
       url = this.constantsService.getServerUrl(
         `/danger-sources/${dangerSourceId}/edit`,
         ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-        ["regions", regions],
+        ["region", region],
       );
     } else {
       url = this.constantsService.getServerUrl(
         "/danger-sources/edit",
         ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-        ["regions", regions],
+        ["region", region],
       );
     }
     return this.http.get<DangerSourceVariantModel[]>(url);

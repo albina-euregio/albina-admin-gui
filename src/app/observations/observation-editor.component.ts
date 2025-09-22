@@ -123,7 +123,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     const date = isFinite(+this.eventDate) ? this.eventDate : new Date();
     this.pendingDangerSources?.unsubscribe();
     this.pendingDangerSources = this.dangerSourcesService
-      .loadDangerSources([date, date], [this.authenticationService.getActiveRegionId()])
+      .loadDangerSources([date, date], this.authenticationService.getActiveRegionId())
       .subscribe((dangerSources) => this.dangerSources.set(orderBy(dangerSources, [(s) => s.creationDate], ["asc"])));
   }
 

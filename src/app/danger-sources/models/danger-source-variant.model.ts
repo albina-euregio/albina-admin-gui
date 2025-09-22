@@ -237,7 +237,7 @@ export class DangerSourceVariantModel implements PolygonObject {
   slabHardnessProfile: Tendency;
   slabEnergyTransferPotential: Characteristic;
   slabDistribution: Distribution;
-  weakLayerGrainShape: GrainShape;
+  weakLayerGrainShapes: GrainShape[];
   weakLayerGrainSizeUpperLimit: number | undefined;
   weakLayerGrainSizeLowerLimit: number | undefined;
   weakLayerPersistent: boolean | undefined;
@@ -306,7 +306,7 @@ export class DangerSourceVariantModel implements PolygonObject {
     variant.slabHardnessProfile = json.slabHardnessProfile;
     variant.slabEnergyTransferPotential = json.slabEnergyTransferPotential;
     variant.slabDistribution = json.slabDistribution;
-    variant.weakLayerGrainShape = json.weakLayerGrainShape;
+    variant.weakLayerGrainShapes = json.weakLayerGrainShapes;
     variant.weakLayerGrainSizeUpperLimit = json.weakLayerGrainSizeUpperLimit;
     variant.weakLayerGrainSizeLowerLimit = json.weakLayerGrainSizeLowerLimit;
     variant.weakLayerPersistent = json.weakLayerPersistent;
@@ -375,7 +375,7 @@ export class DangerSourceVariantModel implements PolygonObject {
       this.slabHardnessProfile = variant.slabHardnessProfile;
       this.slabEnergyTransferPotential = variant.slabEnergyTransferPotential;
       this.slabDistribution = variant.slabDistribution;
-      this.weakLayerGrainShape = variant.weakLayerGrainShape;
+      this.weakLayerGrainShapes = variant.weakLayerGrainShapes;
       this.weakLayerGrainSizeUpperLimit = variant.weakLayerGrainSizeUpperLimit;
       this.weakLayerGrainSizeLowerLimit = variant.weakLayerGrainSizeLowerLimit;
       this.weakLayerPersistent = variant.weakLayerPersistent;

@@ -253,7 +253,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       return;
     }
     this.dangerSourcesService
-      .loadDangerSources([new Date(), new Date()], [this.authenticationService.getActiveRegionId()])
+      .loadDangerSources([new Date(), new Date()], this.authenticationService.getActiveRegionId())
       .subscribe((dangerSources) => {
         const values: FilterSelectionValue[] = orderBy(dangerSources, [(s) => s.creationDate], ["asc"]).map((s) => ({
           value: s.id,

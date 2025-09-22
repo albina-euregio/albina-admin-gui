@@ -57,8 +57,10 @@ export class ConstantsService {
   public colorDangerRatingVeryHighBw = "#666666";
 
   public colorDangerRatingMissing = "#969696";
+  public colorDangerRatingMissingMuted = "#B0B0B0";
   // TODO use correct color
   public colorDangerRatingNoSnow = "#A0522D";
+  public colorDangerRatingNoSnowMuted = "#8B5C2D";
   public colorActiveSelection = "#3852A4";
 
   public microRegionLineColor = "#000000";
@@ -150,10 +152,10 @@ export class ConstantsService {
       case Enums.DangerRating.low:
         return this.colorDangerRatingLowMuted;
       case Enums.DangerRating.no_snow:
-        return this.colorDangerRatingNoSnow;
+        return this.colorDangerRatingNoSnowMuted;
 
       default:
-        return this.colorDangerRatingMissing;
+        return this.colorDangerRatingMissingMuted;
     }
   }
 

@@ -928,7 +928,8 @@
           <label
             class="form-label"
             [class.changed]="
-              isComparedVariant() && variant().weakLayerGrainShape !== comparedVariant()?.weakLayerGrainShape
+              isComparedVariant() &&
+              !haveSameElements(variant().weakLayerGrainShapes, comparedVariant()?.weakLayerGrainShapes)
             "
             for="textarea-input"
             >{{ "dangerSources.create.label.weakLayerGrainShape" | translate }}</label
@@ -939,9 +940,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)
-              "
+              (click)="setWeakLayerGrainShape($event, grainShapeEnum.PP)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.PP.class')"
             >
@@ -952,9 +951,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)
-              "
+              (click)="setWeakLayerGrainShape($event, grainShapeEnum.DF)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.DF.class')"
             >
@@ -965,9 +962,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="isWeakLayerGrainShape(grainShapeEnum.RG) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)
-              "
+              (click)="setWeakLayerGrainShape($event, grainShapeEnum.RG)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.RG.class')"
             >
@@ -978,9 +973,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="isWeakLayerGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
-              "
+              (click)="setWeakLayerGrainShape($event, grainShapeEnum.FC)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.FC.class')"
             >
@@ -991,9 +984,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DH) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.DH) ? undefined : grainShapeEnum.DH)
-              "
+              (click)="setWeakLayerGrainShape($event, grainShapeEnum.DH)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.DH.class')"
             >
@@ -1004,9 +995,7 @@
               class="btn btn-sm"
               [disabled]="disabled()"
               [ngClass]="isWeakLayerGrainShape(grainShapeEnum.SH) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerGrainShape($event, isWeakLayerGrainShape(grainShapeEnum.SH) ? undefined : grainShapeEnum.SH)
-              "
+              (click)="setWeakLayerGrainShape($event, grainShapeEnum.SH)"
               data-toggle="tooltip"
               [title]="translateService.instant('grainShape.SH.class')"
             >
@@ -2928,8 +2917,8 @@
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-down"></i>
+            <i *ngIf="!isAccordionCommentOpen" class="accordion__arrow ph ph-caret-right"></i>
+            <i *ngIf="isAccordionCommentOpen" class="accordion__arrow ph ph-caret-down"></i>
             {{ "dangerSources.create.title.comment" | translate }}
           </h2>
         </div>
