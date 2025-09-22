@@ -122,6 +122,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     const marker = new Marker(ll, {
       bubblingMouseEvents: false,
       icon: icon,
+      alt: `${observation.$source}-${observation.$id}`,
       opacity: filterSelectionValue?.opacity ?? 1,
       pane: "markerPane",
       zIndexOffset: filterSelectionValue?.zIndexOffset ?? zIndex[observation.stability ?? "unknown"] ?? 0,
