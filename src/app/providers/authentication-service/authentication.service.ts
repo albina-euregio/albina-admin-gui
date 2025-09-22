@@ -56,7 +56,9 @@ export class AuthenticationService {
     const body = JSON.stringify({ username, password });
     return this.http.post(url, body).pipe(
       map((json) => {
-        const data = AuthenticationResponseSchema.parse(json, { reportInput: true });
+        const data = AuthenticationResponseSchema.or(AuthenticationResponseSchema2024).parse(json, {
+          reportInput: true,
+        });
         if (!data.access_token) {
           return false;
         }
