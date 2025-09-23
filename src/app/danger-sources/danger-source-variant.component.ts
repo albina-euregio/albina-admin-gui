@@ -620,7 +620,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     this.updateVariantOnServer();
   }
 
-  updateElevationHigh(event) {
+  updateElevationHigh() {
     if (!this.localTreelineHigh) {
       const variant = this.variant();
       if (variant && this.localElevationHigh !== undefined && this.localElevationHigh !== "") {
@@ -720,5 +720,66 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
       this.useElevationLow = true;
       this.isElevationLowEditing = true;
     }
+  }
+
+  /**
+   * Compares elevationHigh, elevationLow, treelineHigh, treelineLow between variant and comparedVariant.
+   * For treelineHigh/treelineLow, null/undefined is treated as false.
+   */
+  get isElevationEqual(): boolean {
+    const v = this.variant();
+    const c = this.comparedVariant();
+    if (!v || !c) return false;
+
+    // elevationHigh
+    if (
+      !(
+        ((v.elevationHigh === null || v.elevationHigh === undefined) &&
+          (c.elevationHigh === null || c.elevationHigh === undefined)) ||
+        v.elevationHigh === c.elevationHigh
+      )
+    ) {
+      console.log("elevationHigh not equal", v.elevationHigh, c.elevationHigh);
+      return true;
+    }
+
+    // elevationLow
+    if (
+      !(
+        ((v.elevationLow === null || v.elevationLow === undefined) &&
+          (c.elevationLow === null || c.elevationLow === undefined)) ||
+        v.elevationLow === c.elevationLow
+      )
+    ) {
+      console.log("elevationLow not equal", v.elevationLow, c.elevationLow);
+      return true;
+    }
+
+    // treelineHigh
+    if (
+      !(
+        ((v.treelineHigh === null || v.treelineHigh === undefined) &&
+          (c.treelineHigh === null || c.treelineHigh === undefined)) ||
+        (v.treelineHigh && c.treelineHigh) ||
+        (!v.treelineHigh && !c.treelineHigh)
+      )
+    ) {
+      console.log("treelineHigh not equal", v.treelineHigh, c.treelineHigh);
+      return true;
+    }
+
+    // treelineLow
+    if (
+      !(
+        ((v.treelineLow === null || v.treelineLow === undefined) &&
+          (c.treelineLow === null || c.treelineLow === undefined)) ||
+        (v.treelineLow && c.treelineLow) ||
+        (!v.treelineLow && !c.treelineLow)
+      )
+    ) {
+      console.log("treelineLow not equal", v.treelineLow, c.treelineLow);
+      return true;
+    }
+    return false;
   }
 }

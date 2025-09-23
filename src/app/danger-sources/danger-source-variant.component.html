@@ -2795,18 +2795,9 @@
             </div>
           </div>
           <div class="col-md-7">
-            <label
-              class="form-label"
-              [class.changed]="
-                isComparedVariant() &&
-                (variant().elevationHigh !== comparedVariant()?.elevationHigh ||
-                  variant().elevationLow !== comparedVariant()?.elevationLow ||
-                  variant().treelineHigh !== comparedVariant()?.treelineHigh ||
-                  variant().treelineLow !== comparedVariant()?.treelineLow)
-              "
-              for=""
-              >{{ "elevation.title" | translate }}</label
-            >
+            <label class="form-label" [class.changed]="isComparedVariant() && isElevationEqual" for="">{{
+              "elevation.title" | translate
+            }}</label>
             <!-- Elevation (high) -->
             <div class="avalanche-problem-detail__elevation">
               <div class="avalanche-problem-detail__elevation-label form-check">
@@ -2833,7 +2824,7 @@
                     name="elevation-input"
                     [disabled]="disabled() || variant().treelineHigh || !useElevationHigh"
                     [(ngModel)]="localElevationHigh"
-                    (change)="updateElevationHigh($event)"
+                    (change)="updateElevationHigh()"
                   />
                   <span class="input-group-text">m</span>
                 </div>

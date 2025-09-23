@@ -132,19 +132,9 @@
       </div>
     </div>
     <div class="col-md-7">
-      <label
-        class="form-label"
-        [class.changed]="
-          isComparedBulletin() &&
-          comparedAvalancheProblemModel() &&
-          (avalancheProblemModel().elevationHigh !== comparedAvalancheProblemModel()?.elevationHigh ||
-            avalancheProblemModel().elevationLow !== comparedAvalancheProblemModel()?.elevationLow ||
-            avalancheProblemModel().treelineHigh !== comparedAvalancheProblemModel()?.treelineHigh ||
-            avalancheProblemModel().treelineLow !== comparedAvalancheProblemModel()?.treelineLow)
-        "
-        for=""
-        >{{ "elevation.title" | translate }}</label
-      >
+      <label class="form-label" [class.changed]="isComparedBulletin() && isElevationEqual" for="">{{
+        "elevation.title" | translate
+      }}</label>
       <!-- Elevation (high) -->
       <div class="avalanche-problem-detail__elevation">
         <div class="avalanche-problem-detail__elevation-label form-check">
