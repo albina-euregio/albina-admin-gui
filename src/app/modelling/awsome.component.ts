@@ -357,7 +357,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const url = new URL(url0);
     url.searchParams.set("ts", this.date.replace(/T/, "_").replace(/:/g, "-"));
     this.filterService.filterSelectionData.forEach((f) =>
-      f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.key), v.value)),
+      f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.type), v.value)),
     );
     this.filterService.selectedRegions.forEach((r) => url.searchParams.append("region", r));
 
