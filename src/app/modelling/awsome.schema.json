@@ -249,17 +249,23 @@
       },
       "additionalProperties": false
     },
-    "depth": {
+    "hazardChart": {
       "type": "object",
       "properties": {
-        "chartAxisRange": {
-          "description": "Min and max value for chart range when plotting values on a parametric chart",
-          "minItems": 2,
-          "maxItems": 2,
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
+        "size_estimate": {
+          "type": "object",
+          "properties": {
+            "chartAxisRange": {
+              "description": "Min and max value for chart range when plotting values on a parametric chart",
+              "minItems": 2,
+              "maxItems": 2,
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
