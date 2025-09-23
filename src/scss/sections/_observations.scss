@@ -32,8 +32,9 @@ nav ~ .app-body .layout-outer {
   position: relative;
   height: 100%;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
-    "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 14px;
   line-height: 1.4;
 }
@@ -301,8 +302,9 @@ nav ~ .app-body .layout-outer {
 
 .obs-tooltip {
   padding: 5px !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
-    "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5) !important;
 }
 
@@ -348,7 +350,12 @@ nav ~ .app-body .layout-outer {
   .chart-container {
     width: 220px;
   }
+  .chart-container.w2 {
+    display: inline-block;
+    width: 440px;
+  }
   .chart-container.w3 {
+    display: inline-block;
     width: 660px;
   }
 }
