@@ -71,15 +71,19 @@ export const AwsomeConfigSchema = z.object({
     })
     .partial()
     .optional(),
-  depth: z
+  hazardChart: z
     .object({
-      chartAxisRange: z
-        .number()
-        .array()
-        .min(2)
-        .max(2)
-        .optional()
-        .describe("Min and max value for chart range when plotting values on a parametric chart"),
+      size_estimate: z
+        .object({
+          chartAxisRange: z
+            .number()
+            .array()
+            .min(2)
+            .max(2)
+            .optional()
+            .describe("Min and max value for chart range when plotting values on a parametric chart"),
+        })
+        .optional(),
     })
     .optional(),
 });
