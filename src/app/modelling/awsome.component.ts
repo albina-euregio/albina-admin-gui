@@ -32,6 +32,7 @@ import * as z from "zod/v4";
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
 
 export type FeatureProperties = GeoJSON.Feature["properties"] & {
+  $date: string;
   $sourceObject?: AwsomeSource;
   $geometry: GeoJSON.Geometry;
   region_id: string;
@@ -173,6 +174,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         .pipe(
           map(({ features }): FeatureProperties[] =>
             features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
+              feature.properties.$date = date;
               feature.properties.$source = source.name as unknown as ObservationSource;
               feature.properties.$sourceObject = source;
               feature.properties.$geometry = feature.geometry;
