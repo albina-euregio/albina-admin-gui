@@ -131,7 +131,7 @@ export function convertLwdKipBeobachtung(
   let eventDate = feature.properties.BEOBDATUM;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
-    $id: `Beobachtung-${feature.id}`,
+    $id: `Beobachtung-${feature.properties.TBEOBACHTUNGSEQ}`,
     $data: feature.properties,
     $extraDialogRows: Object.keys(feature.properties)
       .map((label) =>
@@ -178,7 +178,7 @@ export function convertLwdKipSprengerfolg(
   let eventDate = feature.properties.BEOBDATUM + feature.properties.SPRENGUNGZEIT;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
-    $id: `Sprengung-${feature.id}`,
+    $id: `Sprengung-${feature.properties.TBEOBACHTUNGSEQ}`,
     $data: feature.properties,
     $extraDialogRows: [
       { label: "Sprengerfolg", value: feature.properties.SPRENGERFOLG },
@@ -221,6 +221,8 @@ export interface LawinenabgangProperties {
   NEIGUNG?: number;
   EXPOSITION: number;
   SHAPE?: unknown;
+  TBEOBACHTUNGSEQ?: number;
+  TBEOBLAWINENSTRICHSEQ?: number;
 }
 
 export function convertLwdKipLawinenabgang(
@@ -229,7 +231,7 @@ export function convertLwdKipLawinenabgang(
   let eventDate = feature.properties.BEOBDATUM + feature.properties.ZEIT;
   eventDate += 60_000 * new Date(feature.properties.BEOBDATUM).getTimezoneOffset();
   return {
-    $id: `Lawine-${feature.id}`,
+    $id: `Lawine-${feature.properties.TBEOBLAWINENSTRICHSEQ}`,
     $data: feature.properties,
     $extraDialogRows: [
       { label: "Lawinengröße", value: feature.properties.LAWINENGROESSE },
@@ -270,6 +272,7 @@ export interface SperreProperties {
   MANDANTSEQ: number;
   BEGINN: number;
   ENDE: null;
+  TBEOBACHTUNGSEQ?: number;
 }
 
 export type LwdKipSperren = GeoJSON.FeatureCollection<GeoJSON.LineString, SperreProperties>;
@@ -278,7 +281,7 @@ export function convertLwdKipSperren(
   feature: GeoJSON.Feature<GeoJSON.LineString, SperreProperties>,
 ): GenericObservation {
   return {
-    $id: `Sperre-${feature.id}`,
+    $id: `Sperre-${feature.properties.TBEOBACHTUNGSEQ}`,
     $data: feature.properties,
     $source: ObservationSource.LwdKip,
     $type: ObservationType.Closure,
