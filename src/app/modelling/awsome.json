@@ -4,11 +4,13 @@
   "dateStepSeconds": 21600,
   "dateMin": "2024-12-18T00:00:00",
   "dateMax": "2025-02-27T06:00:00",
+  "timeseriesChart": {
+    "url": "https://models.avalanche.report/api/hce_timeseries?domain=tirol24&days_before=7&days_after=2"
+  },
   "sources": [
     {
       "name": "Gridded: Tirol",
       "url": "https://models.avalanche.report/domains/tirol24/gridded-chain/geojson/2025-01-07_00-00-00.json",
-      "urlTimeseriesChart": "https://models.avalanche.report/api/hce_timeseries?domain=tirol24&days_before=7&days_after=2",
       "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>V{vstation}-{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>{snp_characteristics.lwc.value}</td></tr></table>",
       "detailsTemplates": [
         {

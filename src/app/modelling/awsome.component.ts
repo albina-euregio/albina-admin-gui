@@ -351,7 +351,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       return;
     }
 
-    const url0 = this.sources.find((s) => s.urlTimeseriesChart)?.urlTimeseriesChart;
+    const url0 = this.config.timeseriesChart?.url;
     if (!url0) {
       this.timeseriesChart = undefined;
       return;
