@@ -53,6 +53,7 @@ export const AwsomeSourceSchema = z.object({
 export type AwsomeSource = z.infer<typeof AwsomeSourceSchema>;
 
 export const AwsomeConfigSchema = z.object({
+  $schema: z.string().optional().describe("URL of JSON Schema awsome.schema.json"),
   date: z.string().describe("Initial date/time when opening the dashboard"),
   dateMax: z.string().optional(),
   dateMin: z.string().optional(),
