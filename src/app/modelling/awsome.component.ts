@@ -150,13 +150,31 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.applyLocalFilter();
   }
 
-  private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {
+  private get albinaDate() {
+    return this.date.replace(/T/, "_").replace(/:/g, "-");
+  }
+
+  private setSearchParams(url: URL): URL {
+    const date = this.albinaDate;
     // replace 2023-11-12_06-00-00 with current date
-    const date = this.date.replace(/T/, "_").replace(/:/g, "-");
-    const url =
+    url.pathname =
       date.length === "2006-01-02T03:04:05".length
-        ? source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, date)
-        : source.url.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
+        ? url.pathname.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, date)
+        : url.pathname.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
+    url.searchParams.set("ts", date);
+    this.filterService.filterSelectionData.forEach((f) =>
+      f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.type), v.value)),
+    );
+    this.filterService.selectedRegions.forEach((r) => url.searchParams.append("region", r));
+    return url;
+  }
+
+  private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {
+    const date = this.albinaDate;
+    const filterUrl = this.filterService.filterSelectionData.find(
+      (f) => f.url && f.getSelectedValues("selected").length,
+    );
+    const url = this.setSearchParams(new URL(filterUrl?.url ?? source.url)).toString();
 
     const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "aspect");
     const aspects = Array.isArray(aspectFilter?.values)
@@ -360,12 +378,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.timeseriesChart = undefined;
       return;
     }
-    const url = new URL(url0);
-    url.searchParams.set("ts", this.date.replace(/T/, "_").replace(/:/g, "-"));
-    this.filterService.filterSelectionData.forEach((f) =>
-      f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.type), v.value)),
-    );
-    this.filterService.selectedRegions.forEach((r) => url.searchParams.append("region", r));
+    const url = this.setSearchParams(new URL(url0));
 
     this.fetchJSON(url.toString()).subscribe((d) => {
       const IndexSchema = z.object({

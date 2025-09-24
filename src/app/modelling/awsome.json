@@ -1,5 +1,5 @@
 {
-  "$schema": "https://gitlab.com/albina-euregio/albina-admin-gui/-/raw/master/src/app/modelling/awsome.schema.json",
+  "$schema": "./awsome.schema.json",
   "date": "2024-12-24T12:00:00",
   "dateStepSeconds": 21600,
   "dateMin": "2024-11-01T00:00:00",
@@ -197,9 +197,10 @@
       ]
     },
     {
-      "type": "Datetag",
+      "type": "datetag",
       "label": "Datetag",
       "key": "snp_characteristics.Punstable.instabilityDrivenBy",
+      "url": "https://models.avalanche.report/api/hce_from_simplified?domain=tirol24",
       "chartType": "bar",
       "chartRichLabel": "label",
       "default": "label",

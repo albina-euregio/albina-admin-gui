@@ -17,6 +17,7 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
   readonly chartType: ChartType;
   readonly chartAxisRange?: [number, number];
   readonly chartRichLabel: "highlight" | "label" | "symbol" | "grainShape";
+  readonly url: string;
   readonly values: FilterSelectionValue[];
 
   selected = new Set<string>();

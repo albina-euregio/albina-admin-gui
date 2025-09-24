@@ -65,6 +65,11 @@
             "description": "Identifier for this filter",
             "type": "string"
           },
+          "url": {
+            "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
+            "type": "string",
+            "format": "uri"
+          },
           "values": {
             "type": "array",
             "items": {

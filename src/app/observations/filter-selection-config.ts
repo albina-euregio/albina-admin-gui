@@ -52,6 +52,10 @@ export const FilterSelectionSpecSchema = z.object({
     .optional()
     .describe("Initially selected values, use 'nan' for features w/o specification"),
   type: z.string().describe("Identifier for this filter"),
+  url: z
+    .url()
+    .optional()
+    .describe("URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."),
   values: z.array(FilterSelectionValueSchema),
 });
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
