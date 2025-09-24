@@ -199,7 +199,7 @@
     {
       "type": "datetag",
       "label": "Datetag",
-      "key": "snp_characteristics.Punstable.instabilityDrivenBy",
+      "key": "snp_characteristics.$stabilityIndex.instabilityDrivenBy",
       "url": "https://models.avalanche.report/api/hce_from_simplified?domain=tirol24",
       "chartType": "bar",
       "chartRichLabel": "label",
@@ -364,7 +364,7 @@
     {
       "type": "grainType",
       "label": "Grain type",
-      "key": "snp_characteristics.Punstable.grainType",
+      "key": "snp_characteristics.$stabilityIndex.grainType",
       "chartType": "bar",
       "chartRichLabel": "label",
       "default": "label",

@@ -33,6 +33,7 @@ type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown 
 
 export type FeatureProperties = GeoJSON.Feature["properties"] & {
   $date: string;
+  $stabilityIndex: string;
   $sourceObject?: AwsomeSource;
   $geometry: GeoJSON.Geometry;
   region_id: string;
@@ -264,6 +265,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   applyLocalFilter() {
     this.mapLayer.clearLayers();
+    const stabilityIndex = this.stabilityIndex;
+    this.observations.forEach((o) => (o.$stabilityIndex = stabilityIndex?.type));
     this.localObservations = this.observations.filter(
       (observation) => this.filterService.isHighlighted(observation) || this.filterService.isSelected(observation),
     );

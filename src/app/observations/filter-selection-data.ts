@@ -1,5 +1,6 @@
 import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
 import type { GenericObservation } from "./models/generic-observation.model";
+import { FeatureProperties } from "app/modelling/awsome.component";
 import { castArray, get } from "es-toolkit/compat";
 
 export type { FilterSelectionSpec, FilterSelectionValue };
@@ -105,6 +106,12 @@ export class FilterSelectionData<T> implements FilterSelectionSpec<T> {
         values.push(o.elevationUpperBound);
         return values;
       }
+    }
+    if (typeof key === "string" && key.includes("$stabilityIndex")) {
+      return get(
+        observation,
+        key.replace("$stabilityIndex", (observation as unknown as FeatureProperties).$stabilityIndex),
+      ) as ValueType;
     }
     return get(observation, key) as ValueType;
   }
