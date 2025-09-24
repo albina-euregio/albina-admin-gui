@@ -134,8 +134,8 @@
           <li *ngFor="let region of authenticationService.getCurrentAuthorRegions(); let i = index">
             <a class="dropdown-item" (click)="changeRegion(region)" role="button" ngxMousetrapKey="{{ i + 1 }}">
               <img
-                *ngIf="getRegionCoatOfArms(region)"
-                [src]="getRegionCoatOfArms(region)"
+                *ngIf="region.coatOfArms"
+                [src]="region.coatOfArms"
                 style="height: 24px"
                 [alt]="region.id + ' coat of arms'"
                 aria-hidden="true"

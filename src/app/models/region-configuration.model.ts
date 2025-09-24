@@ -1,12 +1,22 @@
 import { ServerConfigurationSchema } from "./server-configuration.model";
 import { z } from "zod/v4";
 
+export const LanguageConfigurationSchema = z.object({
+  lang: z.string().nullish(),
+  websiteName: z.string().nullish(),
+  warningServiceName: z.string().nullish(),
+  warningServiceEmail: z.email().nullish(),
+  url: z.string().nullish(),
+  urlWithDate: z.string().nullish(),
+});
+
 export const RegionConfigurationSchema = z.object({
   id: z.string().nullish(),
   microRegions: z.number().nullish(),
   subRegions: z.array(z.string()).nullish(),
   superRegions: z.array(z.string()).nullish(),
   neighborRegions: z.array(z.string()).nullish(),
+  languageConfigurations: z.array(LanguageConfigurationSchema),
   enabledLanguages: z.array(z.string()).nullish(),
   ttsLanguages: z.array(z.string()).nullish(),
   publishBulletins: z.boolean().nullish(),
@@ -58,24 +68,12 @@ export const RegionConfigurationSchema = z.object({
   mapCenterLng: z.number().nullish(),
   imageColorbarColorPath: z.string().nullish(),
   imageColorbarBwPath: z.string().nullish(),
+  defaultLang: z.string().nullish(),
+  logoPath: z.string().nullish(),
+  logoBwPath: z.string().nullish(),
+  coatOfArms: z.string().nullish(),
+  staticUrl: z.string().nullish(),
   isNew: z.boolean().nullish(),
 });
 
 export type RegionConfiguration = z.infer<typeof RegionConfigurationSchema>;
-
-export function getRegionCoatOfArms(region: RegionConfiguration): string | undefined {
-  switch (region.id) {
-    case "AT-02":
-      return "https://upload.wikimedia.org/wikipedia/commons/2/25/Carinthia_Arms.svg";
-    case "AT-07":
-      return "https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg";
-    case "IT-32-BZ":
-      return "https://upload.wikimedia.org/wikipedia/commons/5/59/Suedtirol_CoA.svg";
-    case "IT-32-TN":
-      return "https://upload.wikimedia.org/wikipedia/commons/2/24/Trentino_CoA.svg";
-    case "ES-CT-L":
-      return "https://upload.wikimedia.org/wikipedia/commons/8/88/Coat_of_Arms_of_the_Val_d%27Aran.svg";
-    default:
-      return;
-  }
-}

@@ -1,5 +1,5 @@
 import { environment } from "../../environments/environment";
-import { getRegionCoatOfArms, RegionConfiguration } from "../models/region-configuration.model";
+import { RegionConfiguration } from "../models/region-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -40,7 +40,6 @@ export class FullLayoutComponent {
   localStorageService = inject(LocalStorageService);
   private modalService = inject(BsModalService);
   private sanitizer = inject(DomSanitizer);
-  getRegionCoatOfArms = getRegionCoatOfArms;
 
   public isSidebarOpen = false;
 
