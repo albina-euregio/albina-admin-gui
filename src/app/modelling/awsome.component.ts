@@ -206,6 +206,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
                 feature.properties.longitude ??= feature.geometry.coordinates[0][0][0];
                 feature.properties.latitude ??= feature.geometry.coordinates[0][0][1];
                 feature.properties.elevation ??= feature.geometry.coordinates[0][0][2];
+              } else if (feature.geometry.type === "MultiPolygon") {
+                feature.properties.longitude ??= feature.geometry.coordinates[0][0][0][0];
+                feature.properties.latitude ??= feature.geometry.coordinates[0][0][0][1];
+                feature.properties.elevation ??= feature.geometry.coordinates[0][0][0][2];
               }
               if (aspects.some((aspect) => feature.properties.snp_characteristics?.[aspect])) {
                 return aspects
@@ -274,7 +278,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.localObservations.forEach((observation) => {
       const isHighlighted = this.filterService.isHighlighted(observation);
       const marker =
-        observation.$geometry.type === "Polygon"
+        observation.$geometry.type === "Polygon" || observation.$geometry.type === "MultiPolygon"
           ? this.markerService.createPolygonMarker(observation, isHighlighted, observation.$geometry)
           : this.markerService.createMarker(observation, isHighlighted);
       marker

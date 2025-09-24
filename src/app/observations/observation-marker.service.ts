@@ -28,7 +28,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
   createPolygonMarker(
     observation: T,
     isHighlighted = false,
-    geometry: GeoJSON.Polygon,
+    geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
   ): Rectangle | Polygon | undefined {
     if (!isFinite(observation.latitude) || !isFinite(observation.longitude)) {
       return;
