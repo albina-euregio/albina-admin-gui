@@ -427,7 +427,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           } satisfies LineSeriesOption,
           {
             type: "line",
-            data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].upper[i]]),
+            data: data.timestamps.map((t, i) => [
+              t,
+              data.indexes[stabilityIndex.type].upper[i] - data.indexes[stabilityIndex.type].lower[i],
+            ]),
             lineStyle: { opacity: 0 },
             areaStyle: { color: "#ccc" },
             stack: "confidence-band",
