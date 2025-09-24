@@ -815,6 +815,7 @@
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
+        "reload": "Reload",
         "classify": "Classify",
         "label": "Label",
         "invert": "Invert",

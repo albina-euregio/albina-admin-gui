@@ -22,6 +22,7 @@ export class ObservationChartComponent<T> implements OnInit {
 
   readonly filterSelection = input<FilterSelectionData<T>>(undefined);
   readonly handleChange = output();
+  readonly handleReload = output();
   public options: EChartsOption;
 
   get isActive(): boolean {
@@ -401,6 +402,10 @@ export class ObservationChartComponent<T> implements OnInit {
       this.filterSelection().invertFilter(subset);
     }
     this.handleChange.emit();
+  }
+
+  onReload() {
+    this.handleReload.emit();
   }
 
   onMarkerClassify() {

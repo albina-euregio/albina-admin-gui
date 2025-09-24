@@ -115,6 +115,7 @@
               <app-observation-chart
                 class="chart-container"
                 [filterSelection]="filterSelection"
+                (handleReload)="loadSources()"
                 (handleChange)="applyLocalFilter()"
               />
             }
