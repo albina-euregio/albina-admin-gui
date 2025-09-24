@@ -146,11 +146,11 @@
                 {{ " " }}
                 @if (selectedSources[source.label]) {
                   <span class="text-bg-light">
-                    <kbd (click)="source.change(-1)" ngxMousetrapKey="left">←</kbd>
+                    <kbd (click)="source.change(-1)" ngxMousetrapKey="left" role="button">←</kbd>
                     {{ " " }}
                     {{ source.epochMilliseconds | date: "medium" : undefined : translateService.currentLang }}
                     {{ " " }}
-                    <kbd (click)="source.change(+1)" ngxMousetrapKey="right">→</kbd>
+                    <kbd (click)="source.change(+1)" ngxMousetrapKey="right" role="button">→</kbd>
                   </span>
                 }
               </span>
@@ -219,15 +219,24 @@
 
     <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
       &mdash; Tipp:
-      <kbd (click)="changeRun(-1)" ngxMousetrapKey="left">←</kbd>
-      <kbd (click)="changeRun(+1)" ngxMousetrapKey="right">→</kbd>
+      <kbd (click)="changeRun(-1)" ngxMousetrapKey="left" role="button">←</kbd>
+      {{ " " }}
+      <kbd (click)="changeRun(+1)" ngxMousetrapKey="right" role="button">→</kbd>
       @if (showObservationConfigurations) {
-        <kbd (click)="changeRun(-1, 'observationConfiguration'); setObservationConfiguration()" ngxMousetrapKey="up"
+        {{ " " }}
+        <kbd
+          (click)="changeRun(-1, 'observationConfiguration'); setObservationConfiguration()"
+          ngxMousetrapKey="up"
+          role="button"
           >↑</kbd
         >
       }
       @if (showObservationConfigurations) {
-        <kbd (click)="changeRun(+1, 'observationConfiguration'); setObservationConfiguration()" ngxMousetrapKey="down"
+        {{ " " }}
+        <kbd
+          (click)="changeRun(+1, 'observationConfiguration'); setObservationConfiguration()"
+          ngxMousetrapKey="down"
+          role="button"
           >↓</kbd
         >
       }
