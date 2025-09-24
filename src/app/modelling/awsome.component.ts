@@ -361,14 +361,22 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     };
   }
 
-  private loadTimeseriesChart() {
+  private get stabilityIndex(): FilterSelectionData<FeatureProperties> | undefined {
     const markerClassify = this.markerService.markerClassify;
     if (
-      markerClassify?.type !== "Punstable" &&
-      markerClassify?.type !== "ccl" &&
-      markerClassify?.type !== "lwc" &&
-      markerClassify?.type !== "sk38_rta"
+      markerClassify?.type === "Punstable" ||
+      markerClassify?.type === "ccl" ||
+      markerClassify?.type === "lwc" ||
+      markerClassify?.type === "sk38_rta"
     ) {
+      return markerClassify;
+    }
+    return undefined;
+  }
+
+  private loadTimeseriesChart() {
+    const stabilityIndex = this.stabilityIndex;
+    if (!stabilityIndex) {
       this.timeseriesChart = undefined;
       return;
     }
@@ -403,23 +411,23 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           name: "Date",
         } satisfies XAXisOption,
         yAxis: {
-          name: markerClassify.type,
+          name: stabilityIndex.type,
         } satisfies YAXisOption,
         series: [
           {
             type: "line",
-            data: data.timestamps.map((t, i) => [t, data.indexes[markerClassify.type].mean[i]]),
+            data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].mean[i]]),
           } satisfies LineSeriesOption,
           {
             type: "line",
-            data: data.timestamps.map((t, i) => [t, data.indexes[markerClassify.type].lower[i]]),
+            data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].lower[i]]),
             lineStyle: { opacity: 0 },
             stack: "confidence-band",
             symbol: "none",
           } satisfies LineSeriesOption,
           {
             type: "line",
-            data: data.timestamps.map((t, i) => [t, data.indexes[markerClassify.type].upper[i]]),
+            data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].upper[i]]),
             lineStyle: { opacity: 0 },
             areaStyle: { color: "#ccc" },
             stack: "confidence-band",
