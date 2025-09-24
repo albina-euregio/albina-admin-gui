@@ -207,7 +207,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
                 feature.properties.latitude ??= feature.geometry.coordinates[0][0][1];
                 feature.properties.elevation ??= feature.geometry.coordinates[0][0][2];
               }
-              if (aspects.some((aspect) => feature.properties.snp_characteristics[aspect])) {
+              if (aspects.some((aspect) => feature.properties.snp_characteristics?.[aspect])) {
                 return aspects
                   .filter((aspect) => typeof feature.properties.snp_characteristics[aspect] === "object")
                   .map((aspect) => ({
