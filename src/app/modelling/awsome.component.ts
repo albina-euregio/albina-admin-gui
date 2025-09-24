@@ -286,6 +286,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private loadHazardChart() {
     const markerClassify = this.markerService.markerClassify;
+    const grainType = this.filterService.filterSelectionData.find((f) => f.type === "grainType");
     if (!markerClassify) {
       this.hazardChart = undefined;
       return;
@@ -305,6 +306,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       series: [
         {
           type: "scatter",
+          itemStyle: {
+            color: ({ data }) => grainType?.findForObservation(data[2] as FeatureProperties)?.color ?? "black",
+          },
           data,
           symbolSize: 5,
         } satisfies ScatterSeriesOption,
