@@ -69,6 +69,7 @@
                   class="btn btn-outline-secondary"
                   (click)="switchDate(-1)"
                   [disabled]="config.dateMin && nextDate(-1) < config.dateMin"
+                  ngxMousetrapKey="shift+left"
                 >
                   <i class="ph ph-caret-double-left"></i>
                 </button>
@@ -76,6 +77,7 @@
                   class="btn btn-outline-secondary"
                   (click)="switchDate(+1)"
                   [disabled]="config.dateMax && nextDate(+1) > config.dateMax"
+                  ngxMousetrapKey="shift+right"
                 >
                   <i class="ph ph-caret-double-right"></i>
                 </button>
@@ -83,7 +85,7 @@
             </div>
 
             <div class="global-bar-item global-bar-item-load">
-              <button type="button" class="btn btn-bare" (click)="loadSources()">
+              <button type="button" class="btn btn-bare" (click)="loadSources()" ngxMousetrapKey="shift+r">
                 <i class="ph ph-arrows-clockwise"></i>
               </button>
             </div>
@@ -94,6 +96,7 @@
                 class="btn"
                 title="Help"
                 target="_blank"
+                ngxMousetrapKey="?"
               >
                 <i class="ph ph-question-mark"></i>
               </a>
