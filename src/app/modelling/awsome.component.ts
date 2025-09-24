@@ -16,6 +16,7 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
+import type { GridComponentOption } from "echarts/components";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type { LineSeriesOption, XAXisOption, YAXisOption } from "echarts/types/dist/shared";
 import { debounce } from "es-toolkit";
@@ -324,6 +325,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         min: markerClassify.chartAxisRange?.[0],
         max: markerClassify.chartAxisRange?.[1],
       } satisfies YAXisOption,
+      grid: {
+        backgroundColor: "#eeeeee",
+        show: true,
+      } satisfies GridComponentOption,
       series: [
         {
           type: "scatter",
