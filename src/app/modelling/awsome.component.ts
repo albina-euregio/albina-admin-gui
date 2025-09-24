@@ -326,17 +326,18 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         max: markerClassify.chartAxisRange?.[1],
       } satisfies YAXisOption,
       grid: {
-        backgroundColor: "#eeeeee",
+        backgroundColor: "#f7f7f7",
         show: true,
       } satisfies GridComponentOption,
       series: [
         {
           type: "scatter",
           itemStyle: {
+            borderColor: "rgba(0, 0, 0, 0.3)",
             color: ({ data }) => grainType?.findForObservation(data[2] as FeatureProperties)?.color ?? "black",
           },
           data,
-          symbolSize: 5,
+          symbolSize: 7,
         } satisfies ScatterSeriesOption,
       ],
     } satisfies EChartsOption;
