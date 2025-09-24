@@ -418,18 +418,23 @@
       {{ observationPopup?.observation?.locationName }}
     </div>
     <div class="d-inline-block font-weight-normal w-100 text-end mx-3">
-      <kbd (click)="changeObservation(-1)" ngxMousetrapKey="left">←</kbd>
-      <kbd (click)="changeObservation(+1)" ngxMousetrapKey="right">→</kbd>
+      <kbd (click)="changeObservation(-1)" ngxMousetrapKey="left" role="button">←</kbd>
+      {{ " " }}
+      <kbd (click)="changeObservation(+1)" ngxMousetrapKey="right" role="button">→</kbd>
+      {{ " " }}
       <kbd
         *ngIf="observationPopup?.imgUrls?.length && observationPopup.imgIndex > 0"
         (click)="observationPopup.imgIndex = observationPopup.imgIndex - 1"
         ngxMousetrapKey="up"
+        role="button"
         >↑</kbd
       >
+      {{ " " }}
       <kbd
         *ngIf="observationPopup?.imgUrls?.length > observationPopup.imgIndex + 1"
         (click)="observationPopup.imgIndex = observationPopup.imgIndex + 1"
         ngxMousetrapKey="down"
+        role="button"
         >↓</kbd
       >
     </div>
