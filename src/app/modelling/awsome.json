@@ -10,6 +10,8 @@
   "sources": [
     {
       "name": "Gridded: Tirol",
+      "domain": "tirol24",
+      "toolchain": "gridded-chain",
       "url": "https://models.avalanche.report/mb25/html/tirol24/gridded-chain/qmah-geojson/2024-12-29_12-00-00.json",
       "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>V{vstation}-{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>{snp_characteristics.lwc.value}</td></tr></table>",
       "detailsTemplates": [
@@ -29,6 +31,8 @@
     },
     {
       "name": "Gridded: East Tirol",
+      "domain": "etirol24",
+      "toolchain": "gridded-chain",
       "url": "https://models.avalanche.report/mb25/html/etirol24/gridded-chain/qmah-geojson/2024-12-29_12-00-00.json",
       "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>V{vstation}-{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>{snp_characteristics.lwc.value}</td></tr></table>",
       "detailsTemplates": [
@@ -44,6 +48,8 @@
     },
     {
       "name": "Observed profiles (Euregio)",
+      "domain": "tirol24",
+      "toolchain": "snowobs-chain",
       "url": "https://models.avalanche.report/domains/tirol24/snowobs-chain/geojson/2025-01-07_00-00-00.json",
       "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>Profile:</th><th>{name}</th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>-</td></tr></table>",
       "detailsTemplates": [
@@ -185,7 +191,7 @@
       "type": "datetag",
       "label": "Datetag",
       "key": "snp_characteristics.$stabilityIndex.instabilityDrivenBy",
-      "url": "https://models.avalanche.report/api/hce_from_simplified?domain=tirol24",
+      "url": "https://models.avalanche.report/api/hce_from_simplified",
       "chartType": "bar",
       "chartRichLabel": "label",
       "default": "label",

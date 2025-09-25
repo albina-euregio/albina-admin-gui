@@ -3,6 +3,8 @@ import * as z from "zod/v4";
 
 export const AwsomeSourceSchema = z.object({
   name: z.string().optional().describe("Identifier shown in source multiselect"),
+  domain: z.string().optional().describe("Domain identifier used in AWSOME, for instance tirol24"),
+  toolchain: z.string().optional().describe("Toolchain identifier used in AWSOME, for instance gridded-chain"),
   url: z
     .url()
     .optional()

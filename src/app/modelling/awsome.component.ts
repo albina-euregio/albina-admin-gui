@@ -177,7 +177,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const filterUrl = this.filterService.filterSelectionData.find(
       (f) => f.url && f.getSelectedValues("selected").length,
     );
-    const url = this.setSearchParams(new URL(filterUrl?.url ?? source.url)).toString();
+    const url0 = new URL(filterUrl?.url ?? source.url);
+    url0.searchParams.set("domain", source.domain);
+    url0.searchParams.set("toolchain", source.toolchain);
+    const url = this.setSearchParams(url0).toString();
 
     const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "aspect");
     const aspects = Array.isArray(aspectFilter?.values)

@@ -166,6 +166,14 @@
             "description": "Identifier shown in source multiselect",
             "type": "string"
           },
+          "domain": {
+            "description": "Domain identifier used in AWSOME, for instance tirol24",
+            "type": "string"
+          },
+          "toolchain": {
+            "description": "Toolchain identifier used in AWSOME, for instance gridded-chain",
+            "type": "string"
+          },
           "url": {
             "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
             "type": "string",
