@@ -1,59 +1,44 @@
 {
   "$schema": "./awsome.schema.json",
-  "date": "2024-12-24T12:00:00",
+  "date": "2024-12-29T12:00:00",
   "dateStepSeconds": 21600,
   "dateMin": "2024-11-01T00:00:00",
   "dateMax": "2025-07-30T12:00:00",
   "timeseriesChart": {
-    "url": "https://models.avalanche.report/api/hce_timeseries?domain=tirol24,stirol24,trentino24&days_before=7&days_after=2"
+    "url": "https://models.avalanche.report/api/hce_timeseries?domain=tirol24,stirol24,trentino24&days_before=10&days_after=2"
   },
   "sources": [
     {
       "name": "Gridded: Tirol",
-      "url": "https://models.avalanche.report/mb25/html/tirol24/gridded-chain/qmah-geojson/2024-12-24_12-00-00.json",
+      "url": "https://models.avalanche.report/mb25/html/tirol24/gridded-chain/qmah-geojson/2024-12-29_12-00-00.json",
       "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>V{vstation}-{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>{snp_characteristics.lwc.value}</td></tr></table>",
       "detailsTemplates": [
         {
-          "label": "{region_name} - {band} - {aspect[1]}",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?pro=file://var/www/html/mb25/html/tirol24/gridded-chain/pro/VIR1A.pro&smet=file://var/www/html/mb25/html/tirol24/gridded-chain/pro/VIR1A.smet'></iframe></div>"
+          "label": "Dry instability",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_gridded.html?domain=tirol24&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
         },
         {
-          "label": "V{vstation}-{aspect[1]}",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=tirol24&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}'></iframe></div>"
+          "label": "Wet instability",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_gridded.html?domain=tirol24&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
         },
         {
-          "label": "Stability evolution for {region_id}, {aspect[1]}, {band}",
-          "template": "Here we could use dash/flask to visualize time series of stability indices with variance... input is micro-region, aspect, elevation_band -> put time series info in seperate json files with postprocessing<br>Here we need the possibility to plot show multiple aspects, bands, regions at the same time, but this can be achieved with a drop down based on the input json for the time series data"
+          "label": "{vstation}-{aspect[1]}",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_gridded.html?domain=tirol24&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}'></iframe></div>"
         }
       ]
     },
     {
-      "name": "Gridded: S\u00fcdtirol",
-      "url": "https://models.avalanche.report/domains/stirol24/gridded-chain/geojson/2025-01-07_00-00-00.json",
+      "name": "Gridded: East Tirol",
+      "url": "https://models.avalanche.report/mb25/html/etirol24/gridded-chain/qmah-geojson/2024-12-29_12-00-00.json",
       "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>V{vstation}-{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>{snp_characteristics.lwc.value}</td></tr></table>",
       "detailsTemplates": [
         {
-          "label": "{region_name} - {band} - {aspect[1]}",
-          "template": "<iframe scrolling='no' style='width:100%; height:700px' src='https://models.avalanche.report/domains/stirol24/gridded-chain/aggregates/hhp_{region_id}_{band}_{aspect[1]}_{date_opera}_{date}.png'></iframe>"
+          "label": "Dry instability",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_gridded.html?domain=etirol24&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
         },
         {
-          "label": "V{vstation}-{aspect[1]}",
-          "template": "<iframe scrolling='yes' style='width:100%; height:900px' src='https://models.avalanche.report/snowviz?domain=stirol24&toolchain=gridded-chain&vstation=VIR{vstation}&aspect={aspect[1]}&ts={date}{time}'></iframe>"
-        }
-      ]
-    },
-    {
-      "name": "Gridded: Trentino",
-      "url": "https://models.avalanche.report/domains/trentino24/gridded-chain/geojson/2025-01-07_00-00-00.json",
-      "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>V{vstation}-{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>{snp_characteristics.lwc.value}</td></tr></table>",
-      "detailsTemplates": [
-        {
-          "label": "{region_name} - {band} - {aspect[1]}",
-          "template": "<iframe scrolling='no' style='width:100%; height:700px' src='https://models.avalanche.report/domains/trentino24/gridded-chain/aggregates/hhp_{region_id}_{band}_{aspect[1]}_{date_opera}_{date}.png'></iframe>"
-        },
-        {
-          "label": "V{vstation}-{aspect[1]}",
-          "template": "<iframe scrolling='yes' style='width:100%; height:900px' src='https://models.avalanche.report/snowviz?domain=trentino24&toolchain=gridded-chain&vstation=VIR{vstation}&aspect={aspect[1]}&ts={date}{time}'></iframe>"
+          "label": "Wet instability",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_gridded.html?domain=etirol24&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
         }
       ]
     },
@@ -206,7 +191,7 @@
       "default": "label",
       "values": [
         {
-          "value": "new snow",
+          "value": "new_snow",
           "color": "#084594",
           "label": "New snow",
           "legend": "New snow"
