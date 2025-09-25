@@ -10,22 +10,26 @@ import { TranslateService } from "@ngx-translate/core";
 export class LocalStorageService {
   private translateService = inject(TranslateService);
 
+  key(key: string): string {
+    return environment.apiBaseUrl + "_" + key;
+  }
+
   private get<T>(key: string): T {
     try {
-      const value = localStorage.getItem(environment.apiBaseUrl + "_" + key);
+      const value = localStorage.getItem(this.key(key));
       return JSON.parse(value);
-    } catch (e) {
-      localStorage.removeItem(environment.apiBaseUrl + "_" + key);
+    } catch {
+      localStorage.removeItem(this.key(key));
       return undefined;
     }
   }
 
   private set<T>(key: string, value: T): void {
     if (value === undefined) {
-      localStorage.removeItem(environment.apiBaseUrl + "_" + key);
+      localStorage.removeItem(this.key(key));
     } else {
       localStorage.removeItem(key); // migration: remove keys without prefix
-      localStorage.setItem(environment.apiBaseUrl + "_" + key, JSON.stringify(value));
+      localStorage.setItem(this.key(key), JSON.stringify(value));
     }
   }
 
