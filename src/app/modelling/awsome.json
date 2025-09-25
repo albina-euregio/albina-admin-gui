@@ -76,6 +76,7 @@
     {
       "type": "aspect",
       "label": "Aspect",
+      "labelI18nKey": "admin.observations.charts.aspect.caption",
       "key": "aspect",
       "chartType": "rose",
       "chartRichLabel": "label",
@@ -84,38 +85,34 @@
         {
           "value": "N",
           "color": "#2f74f9",
-          "label": "N",
-          "legend": "N"
+          "label": "N"
         },
         {
           "value": "E",
           "color": "#b3b3b3",
-          "label": "E",
-          "legend": "E"
+          "label": "E"
         },
         {
           "value": "S",
           "color": "#ef6d25",
-          "label": "S",
-          "legend": "S"
+          "label": "S"
         },
         {
           "value": "W",
           "color": "#000000",
-          "label": "W",
-          "legend": "W"
+          "label": "W"
         },
         {
           "value": "F",
           "color": "#113570",
-          "label": "F",
-          "legend": "F"
+          "label": "F"
         }
       ]
     },
     {
       "type": "elevation",
       "label": "Elevation",
+      "labelI18nKey": "admin.observations.charts.elevation.caption",
       "key": "elevation",
       "chartType": "bar",
       "chartRichLabel": "label",
@@ -177,13 +174,15 @@
           "value": "above_treeline",
           "color": "#784BFF",
           "label": "above",
-          "legend": "1900 - \u221e"
+          "labelI18nKey": "elevation.high",
+          "legend": "1900 \u2013 \u221e"
         },
         {
           "value": "below_treeline",
           "color": "#035BBE",
           "label": "below",
-          "legend": "1400 - 1900"
+          "labelI18nKey": "elevation.low",
+          "legend": "1400 \u2013 1900"
         }
       ]
     },
@@ -191,7 +190,7 @@
       "type": "datetag",
       "label": "Datetag",
       "key": "snp_characteristics.$stabilityIndex.instabilityDrivenBy",
-      "url": "https://models.avalanche.report/api/hce_from_simplified",
+      "url": "https://models.avalanche.report/api/hce_from_simplified?domain=tirol24",
       "chartType": "bar",
       "chartRichLabel": "label",
       "default": "label",
@@ -199,56 +198,47 @@
         {
           "value": "new_snow",
           "color": "#084594",
-          "label": "New snow",
-          "legend": "New snow"
+          "label": "New snow"
         },
         {
           "value": "2024-12-21",
           "color": "#084594",
-          "label": "2024-12-21",
-          "legend": "2024-12-21"
+          "label": "2024-12-21"
         },
         {
           "value": "2024-12-18",
           "color": "#2171b5",
-          "label": "2024-12-18",
-          "legend": "2024-12-18"
+          "label": "2024-12-18"
         },
         {
           "value": "2024-12-14",
           "color": "#4292c6",
-          "label": "2024-12-14",
-          "legend": "2024-12-14"
+          "label": "2024-12-14"
         },
         {
           "value": "2024-12-07",
           "color": "#6baed6",
-          "label": "2024-12-07",
-          "legend": "2024-12-07"
+          "label": "2024-12-07"
         },
         {
           "value": "2024-12-02",
           "color": "#6baed6",
-          "label": "2024-12-02",
-          "legend": "2024-12-02"
+          "label": "2024-12-02"
         },
         {
           "value": "2024-11-27",
           "color": "#9ecae1",
-          "label": "2024-11-27",
-          "legend": "2024-11-27"
+          "label": "2024-11-27"
         },
         {
           "value": "2024-11-21",
           "color": "#9ecae1",
-          "label": "2024-11-21",
-          "legend": "2024-11-21"
+          "label": "2024-11-21"
         },
         {
           "value": "2024-11-19",
           "color": "#c6dbef",
-          "label": "2024-11-19",
-          "legend": "2024-11-19"
+          "label": "2024-11-19"
         }
       ]
     },
@@ -364,67 +354,67 @@
           "value": "PP",
           "color": "#ffde00",
           "label": "PP",
-          "legend": "PP"
+          "labelI18nKey": "grainShape.PP.class"
         },
         {
           "value": "DF",
           "color": "#f1f501",
           "label": "DF",
-          "legend": "DF"
+          "labelI18nKey": "grainShape.DF.class"
         },
         {
           "value": "PPgp",
           "color": "#ffff33",
           "label": "PPgp",
-          "legend": "PPgp"
+          "labelI18nKey": "grainShape.PPgp.class"
         },
         {
           "value": "SH",
           "color": "#ff0000",
           "label": "SH",
-          "legend": "SH"
+          "labelI18nKey": "grainShape.SH.class"
         },
         {
           "value": "DH",
           "color": "#0078ff",
           "label": "DH",
-          "legend": "DH"
+          "labelI18nKey": "grainShape.DH.class"
         },
         {
           "value": "FC",
           "color": "#b2edff",
           "label": "FC",
-          "legend": "FC"
+          "labelI18nKey": "grainShape.FC.class"
         },
         {
           "value": "FCxr",
           "color": "#dacef4",
           "label": "FCxr",
-          "legend": "FCxr"
+          "labelI18nKey": "grainShape.FCxr.class"
         },
         {
           "value": "RG",
           "color": "#ffccd9",
           "label": "RG",
-          "legend": "RG"
+          "labelI18nKey": "grainShape.RG.class"
         },
         {
           "value": "MF",
           "color": "#d5ebb5",
           "label": "MF",
-          "legend": "MF"
+          "labelI18nKey": "grainShape.MF.class"
         },
         {
           "value": "MFcr",
           "color": "#addd8e",
           "label": "MFcr",
-          "legend": "MFcr"
+          "labelI18nKey": "grainShape.MFcr.class"
         },
         {
           "value": "IF",
           "color": "#a3ddbb",
           "label": "IF",
-          "legend": "IF"
+          "labelI18nKey": "grainShape.IF.class"
         }
       ]
     },
@@ -440,36 +430,36 @@
         {
           "value": "1",
           "color": "#ffde00",
-          "label": "1",
-          "legend": "small",
+          "label": "small",
+          "labelI18nKey": "avalancheSize.small",
           "numericRange": [0, 1]
         },
         {
           "value": "2",
           "color": "#ffde00",
-          "label": "2",
-          "legend": "medium",
+          "label": "medium",
+          "labelI18nKey": "avalancheSize.medium",
           "numericRange": [1, 2]
         },
         {
           "value": "3",
           "color": "#ffde00",
-          "label": "3",
-          "legend": "large",
+          "label": "large",
+          "labelI18nKey": "avalancheSize.large",
           "numericRange": [2, 3]
         },
         {
           "value": "4",
           "color": "#ffde00",
-          "label": "4",
-          "legend": "very large",
+          "label": "very large",
+          "labelI18nKey": "avalancheSize.very_large",
           "numericRange": [3, 4]
         },
         {
           "value": "5",
           "color": "#ffde00",
-          "label": "5",
-          "legend": "extremely large",
+          "label": "extreme",
+          "labelI18nKey": "avalancheSize.extreme",
           "numericRange": [4, 5]
         }
       ]
