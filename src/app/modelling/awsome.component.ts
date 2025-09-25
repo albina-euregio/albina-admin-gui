@@ -18,7 +18,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { GridComponentOption } from "echarts/components";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
-import type { LineSeriesOption, XAXisOption, YAXisOption } from "echarts/types/dist/shared";
+import type { LineSeriesOption, TooltipOption, XAXisOption, YAXisOption } from "echarts/types/dist/shared";
 import { debounce } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
@@ -333,6 +333,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         backgroundColor: "#f7f7f7",
         show: true,
       } satisfies GridComponentOption,
+      tooltip: {
+        trigger: "axis",
+        showContent: false,
+        axisPointer: {
+          type: "cross",
+        },
+      } satisfies TooltipOption,
       series: [
         {
           type: "scatter",
@@ -426,12 +433,21 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         yAxis: {
           name: stabilityIndex.type,
         } satisfies YAXisOption,
+        tooltip: {
+          trigger: "axis",
+          showContent: true,
+          axisPointer: {
+            type: "cross",
+          },
+        } satisfies TooltipOption,
         series: [
           {
+            name: "mean",
             type: "line",
             data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].mean[i]]),
           } satisfies LineSeriesOption,
           {
+            name: "lower",
             type: "line",
             data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].lower[i]]),
             lineStyle: { opacity: 0 },
@@ -439,6 +455,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
             symbol: "none",
           } satisfies LineSeriesOption,
           {
+            name: "upper",
             type: "line",
             data: data.timestamps.map((t, i) => [
               t,
