@@ -134,7 +134,6 @@ export class LocalStorageService {
   }
 
   observeMapCenter(): Observable<MapCenter> {
-    console.trace(this.key("mapCenter"));
     return fromEventPattern<StorageEvent>(
       (handler) => window.addEventListener("storage", handler),
       (handler) => window.removeEventListener("storage", handler),
