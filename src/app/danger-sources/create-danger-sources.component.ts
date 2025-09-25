@@ -548,13 +548,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       return;
     }
     this.dangerSourcesService.saveVariants(variants, this.dangerSourcesService.getActiveDate()).subscribe(
-      (variants) => {
+      () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variants saved on server.");
       },
-      (error) => {
+      () => {
         console.error("Variants could not be saved on server!");
         this.openSaveErrorModal(this.saveErrorTemplate());
       },
@@ -737,7 +737,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     type: DangerSourceVariantType,
   ) {
     this.addInternalDangerSources(dangerSources);
-    let hasDaytimeDependency = false;
 
     const variants = new Array<DangerSourceVariantModel>();
     for (const v of dangerSourceVariants) {
@@ -752,29 +751,17 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             this.activeVariant = variant;
           }
           variants.push(variant);
-          if (variant.hasDaytimeDependency) {
-            hasDaytimeDependency = true;
-          }
         } else {
           // do not replace active variant
           if (this.activeVariant.id === variant.id) {
             this.activeVariant.regions = variant.regions;
             variants.push(this.activeVariant);
-            if (this.activeVariant.hasDaytimeDependency) {
-              hasDaytimeDependency = true;
-            }
           } else {
             variants.push(variant);
-            if (variant.hasDaytimeDependency) {
-              hasDaytimeDependency = true;
-            }
           }
         }
       } else {
         variants.push(variant);
-        if (variant.hasDaytimeDependency) {
-          hasDaytimeDependency = true;
-        }
       }
     }
 
@@ -982,7 +969,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.updateInternalVariantsOnMap(this.dangerSourcesService.getDangerSourceVariantType());
   }
 
-  eventDeselectComparedVariant(variant: DangerSourceVariantModel) {
+  eventDeselectComparedVariant() {
     this.comparedVariant = undefined;
   }
 
@@ -1095,13 +1082,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       variant.dangerSourceVariantType = DangerSourceVariantType.forecast;
     }
     this.dangerSourcesService.createDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
-      (variants) => {
+      () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variant created on server.");
       },
-      (error) => {
+      () => {
         this.deselectVariant();
         console.error("Variant could not be created on server!");
         this.openSaveErrorModal(this.saveErrorTemplate());
@@ -1120,7 +1107,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
     variant.updateDate = new Date();
     this.dangerSourcesService.updateDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
-      (variants) => {
+      () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.saveError.delete(variant.id);
         this.loadInternalVariantsError = false;
@@ -1130,7 +1117,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         }
         console.log("Variant updated on server.");
       },
-      (error) => {
+      () => {
         console.error("Variant could not be updated on server!");
         this.saveError.set(variant.id, variant);
       },
@@ -1139,13 +1126,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private deleteVariantOnServer(variant: DangerSourceVariantModel) {
     this.dangerSourcesService.deleteDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
-      (variants) => {
+      () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
         this.loading = false;
         console.log("Variant deleted on server.");
       },
-      (error) => {
+      () => {
         console.error("Variant could not be deleted on server!");
         this.openSaveErrorModal(this.saveErrorTemplate());
       },
