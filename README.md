@@ -52,7 +52,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Translation
 
-This project uses Transifex for its translations: https://www.transifex.com/albina-euregio/albina-admin-gui/dashboard/
+This project uses Transifex for its translations: https://app.transifex.com/albina-euregio/albina-admin-gui/dashboard/
 
 ## Update CHANGELOG (for new releases)
 
