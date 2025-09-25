@@ -3,6 +3,7 @@ import * as Enums from "../../enums/enums";
 import { BulletinModel } from "../../models/bulletin.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { filterFeature } from "../regions-service/filterFeature";
 import { RegionProperties, RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
 import { AmPmControl } from "./am-pm-control";
@@ -53,6 +54,7 @@ export class MapService {
   translateService = inject(TranslateService);
   protected authenticationService = inject(AuthenticationService);
   protected constantsService = inject(ConstantsService);
+  protected localStorageService = inject(LocalStorageService);
 
   public map: LeafletMap;
   public afternoonMap: LeafletMap;
@@ -176,6 +178,11 @@ export class MapService {
       ...this.getMapInitOptions(),
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.aggregatedRegions, this.overlayMaps.regions],
     });
+
+    this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
+    this.localStorageService
+      .observeMapCenter()
+      .subscribe((mapCenter) => this.map.setView(mapCenter, mapCenter.zoom, { reset: true } as unknown));
 
     this.regionNameControl = new RegionNameControl().addTo(this.map);
 

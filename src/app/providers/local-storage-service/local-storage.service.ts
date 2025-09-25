@@ -5,6 +5,16 @@ import type { ServerModel } from "../../models/server.model";
 import { AuthenticationResponse, AuthenticationResponseSchema } from "../authentication-service/authentication.service";
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { Map as LeafletMap } from "leaflet";
+import { filter, fromEventPattern, map, Observable } from "rxjs";
+import * as z from "zod/v4";
+
+export const MapCenterSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+  zoom: z.number(),
+});
+type MapCenter = z.infer<typeof MapCenterSchema>;
 
 @Injectable()
 export class LocalStorageService {
@@ -110,5 +120,27 @@ export class LocalStorageService {
       throw new Error("Provide bulletins as JSON via BulletinModel.toJson!");
     }
     return this.set("trainingBulletins_" + date[0].toISOString(), bulletins);
+  }
+
+  getMapCenter(): MapCenter {
+    return this.get("mapCenter");
+  }
+
+  setMapCenter(mapCenter: LeafletMap | MapCenter) {
+    this.set(
+      "mapCenter",
+      mapCenter instanceof LeafletMap ? { ...mapCenter.getCenter(), zoom: mapCenter.getZoom() } : mapCenter,
+    );
+  }
+
+  observeMapCenter(): Observable<MapCenter> {
+    console.trace(this.key("mapCenter"));
+    return fromEventPattern<StorageEvent>(
+      (handler) => window.addEventListener("storage", handler),
+      (handler) => window.removeEventListener("storage", handler),
+    ).pipe(
+      filter((event) => event.key === this.key("mapCenter")),
+      map(() => this.getMapCenter()),
+    );
   }
 }
