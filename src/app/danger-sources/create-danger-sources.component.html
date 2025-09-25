@@ -141,7 +141,7 @@
       <nav class="create-bulletin__region-list">
         <!-- Show the list of danger sources if there are any -->
         <ng-container *ngIf="internDangerSourcesList.length; else noDangerSourcesTemplate">
-          <ng-container *ngFor="let dangerSource of internDangerSourcesList">
+          <ng-container *ngFor="let dangerSource of internDangerSourcesList; trackBy: trackByDangerSourceId">
             <ng-container
               *ngTemplateOutlet="dangerSourceTemplate; context: { dangerSource: dangerSource }"
             ></ng-container>

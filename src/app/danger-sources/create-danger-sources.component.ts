@@ -168,7 +168,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.activeVariant = undefined;
     this.comparedVariant = undefined;
     this.activeDangerSourceOnMap = undefined;
-    this.internVariantsList = new Array<DangerSourceVariantModel>();
+    // this.internVariantsList = new Array<DangerSourceVariantModel>();
 
     this.editRegions = false;
     this.showAfternoonMap = false;
@@ -269,7 +269,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                   !variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)
                 ) {
                   const newVariants = this.copyVariants(variants, true);
-                  this.addInternalVariants(dangerSources, variants.concat(newVariants), type);
+                  //this.addInternalVariants(dangerSources, variants.concat(newVariants), type);
                   this.save(variants.concat(newVariants));
                 } else {
                   this.addInternalVariants(dangerSources, variants, type);
@@ -614,7 +614,25 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   private addInternalDangerSources(dangerSources: DangerSourceModel[]) {
-    this.internDangerSourcesList = dangerSources;
+    // Only mutate the array in-place, never assign a new array
+    if (!this.internDangerSourcesList) {
+      this.internDangerSourcesList = [];
+    }
+    // Remove items not in the new list
+    for (let i = this.internDangerSourcesList.length - 1; i >= 0; i--) {
+      if (!dangerSources.find((ds) => ds.id === this.internDangerSourcesList[i].id)) {
+        this.internDangerSourcesList.splice(i, 1);
+      }
+    }
+    // Update existing and add new
+    dangerSources.forEach((ds, idx) => {
+      const existing = this.internDangerSourcesList.find((item) => item.id === ds.id);
+      if (existing) {
+        Object.assign(existing, ds);
+      } else {
+        this.internDangerSourcesList.splice(idx, 0, ds);
+      }
+    });
     this.sortInternDangerSourcesList();
   }
 
@@ -760,16 +778,26 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.mapService.resetInternalAggregatedRegions();
-    this.mapService.resetActiveSelection();
-
-    if (hasDaytimeDependency && this.showAfternoonMap === false) {
-      this.onShowAfternoonMapChange(true);
-    } else if (!hasDaytimeDependency && this.showAfternoonMap === true) {
-      this.onShowAfternoonMapChange(false);
+    // In-place update of internVariantsList
+    if (!this.internVariantsList) {
+      this.internVariantsList = [];
     }
+    // Remove items not in the new list
+    for (let i = this.internVariantsList.length - 1; i >= 0; i--) {
+      if (!variants.find((v) => v.id === this.internVariantsList[i].id)) {
+        this.internVariantsList.splice(i, 1);
+      }
+    }
+    // Update existing and add new
+    variants.forEach((v, idx) => {
+      const existing = this.internVariantsList.find((item) => item.id === v.id);
+      if (existing) {
+        Object.assign(existing, v);
+      } else {
+        this.internVariantsList.splice(idx, 0, v);
+      }
+    });
 
-    variants.forEach((item) => this.internVariantsList.push(item));
     this.sortInternVariantsList();
     this.updateInternalVariantsOnMap(type);
 
@@ -1254,5 +1282,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     } else {
       return "white";
     }
+  }
+
+  trackByDangerSourceId(index: number, item: DangerSourceModel) {
+    return item.id;
   }
 }
