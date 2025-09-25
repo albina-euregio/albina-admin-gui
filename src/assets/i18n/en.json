@@ -1414,5 +1414,28 @@
       "H ": "{{value}} hPa geopotential height [m]",
       "RF ": "{{value}} hPa eq. relative moisture [%]"
     }
+  },
+  "awsome": {
+    "Aggregation band": "Aggregation band",
+    "Date": "Date",
+    "Datetag": "Datetag",
+    "Dry instability": "Dry instability",
+    "fair (<0.77)": "fair (<0.77)",
+    "fair (<1.05)": "fair (<1.05)",
+    "Grain type": "Grain type",
+    "LWC index": "LWC index",
+    "New snow": "New snow",
+    "poor (<=3)": "poor (<=3)",
+    "poor (<0.95)": "poor (<0.95)",
+    "poor (>=0.77)": "poor (>=0.77)",
+    "Punstable": "Punstable",
+    "rather stable (<0.7)": "rather stable (<0.7)",
+    "rather stable (<1)": "rather stable (<1)",
+    "rather stable (>1.05)": "rather stable (>1.05)",
+    "Size estimate": "Size estimate",
+    "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
+    "very poor (<=0.5)": "very poor (<=0.5)",
+    "very poor (>3)": "very poor (>3)",
+    "Wet instability": "Wet instability"
   }
 }

@@ -54,6 +54,10 @@
             "description": "Label text shown in the chart",
             "type": "string"
           },
+          "labelI18nKey": {
+            "description": "Key in https://gitlab.com/albina-euregio/albina-admin-gui/-/blob/master/src/assets/i18n/en.json used for i18n (internationalization)",
+            "type": "string"
+          },
           "selectedValues": {
             "description": "Initially selected values, use 'nan' for features w/o specification",
             "type": "array",
@@ -87,6 +91,10 @@
                   "description": "Label string shown inside the marker",
                   "type": "string"
                 },
+                "labelI18nKey": {
+                  "description": "Key in https://gitlab.com/albina-euregio/albina-admin-gui/-/blob/master/src/assets/i18n/en.json used for i18n (internationalization)",
+                  "type": "string"
+                },
                 "labelColor": {
                   "description": "Label color",
                   "default": "#000",
@@ -98,7 +106,7 @@
                   "type": "number"
                 },
                 "legend": {
-                  "description": "Legend string shown in the chart",
+                  "description": "Legend string shown in the chart, defaults to label",
                   "type": "string"
                 },
                 "numericRange": {
@@ -148,7 +156,7 @@
                   "type": "number"
                 }
               },
-              "required": ["color", "label", "legend", "value"],
+              "required": ["color", "label", "value"],
               "additionalProperties": false
             }
           }

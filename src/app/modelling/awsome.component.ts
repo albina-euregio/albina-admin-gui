@@ -15,7 +15,7 @@ import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from 
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { GridComponentOption } from "echarts/components";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
@@ -65,6 +65,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   markerService = inject<ObservationMarkerService<FeatureProperties>>(ObservationMarkerService);
   private sanitizer = inject(DomSanitizer);
   private httpClient = inject(HttpClient);
+  private translateService = inject(TranslateService);
 
   // https://gitlab.com/avalanche-warning
   configURL = environment.awsomeConfigUrl;
@@ -86,6 +87,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   timeseriesChart: EChartsOption | undefined;
   loadingState: "loading" | "error" | undefined;
 
+  t(key: string) {
+    let t = this.translateService.instant(`awsome.${key}`);
+    if (typeof t === "string" && t.startsWith("awsome.")) {
+      t = t.slice("awsome.".length);
+    }
+    return t;
+  }
+
   async ngOnInit() {
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
     this.route.queryParamMap.subscribe((params) => {
@@ -100,7 +109,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.sources = this.config.sources;
 
     const spec = this.config.filters as FilterSelectionSpec<FeatureProperties>[];
-    this.filterService.filterSelectionData = spec.map((f) => new FilterSelectionData(f));
+    this.filterService.filterSelectionData = spec.map((f) => {
+      f.label = f.labelI18nKey ? this.translateService.instant(f.labelI18nKey) : this.t(f.label);
+      f.values.forEach((v) => {
+        v.label = v.labelI18nKey ? this.translateService.instant(v.labelI18nKey) : this.t(v.label);
+      });
+      return new FilterSelectionData(f);
+    });
     this.filterService.mapBounds = undefined;
 
     this.markerService.markerClassify = this.filterService.filterSelectionData.find(
@@ -325,12 +340,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const data = this.localObservations.map((o) => this.toChartData(o));
     this.hazardChart = {
       xAxis: {
-        name: xType.label,
+        name: this.t(xType.label),
         min: xType?.chartAxisRange?.[0],
         max: xType?.chartAxisRange?.[1],
       } satisfies XAXisOption,
       yAxis: {
-        name: markerClassify.label,
+        name: this.t(markerClassify.label),
         min: markerClassify.chartAxisRange?.[0],
         max: markerClassify.chartAxisRange?.[1],
       } satisfies YAXisOption,
@@ -434,7 +449,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.timeseriesChart = {
         xAxis: {
           type: "time",
-          name: "Date",
+          name: this.t("Date"),
         } satisfies XAXisOption,
         yAxis: {
           name: stabilityIndex.type,

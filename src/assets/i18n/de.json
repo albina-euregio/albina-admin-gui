@@ -1415,5 +1415,19 @@
       "H ": "{{value}} hPa geopotentielle Höhe [m]",
       "RF ": "{{value}} hPa equivalente relative Feuchte [%]"
     }
+  },
+  "awsome": {
+    "Aggregation band": "Aggregation band",
+    "Aspect": "Exposition",
+    "Date": "Datum",
+    "Datetag": "Datetag",
+    "Dry instability": "Instabilität nasse Schneedecke",
+    "Grain type": "Kornform",
+    "LWC index": "LWC index",
+    "New snow": "Neuschnee",
+    "Punstable": "Punstable",
+    "Size estimate": "Lawinengrößen-Schätzung",
+    "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
+    "Wet instability": "Instabilität trockene Schneedecke"
   }
 }

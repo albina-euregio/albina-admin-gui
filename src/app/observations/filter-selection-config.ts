@@ -4,9 +4,15 @@ export const FilterSelectionValueSchema = z.object({
   borderColor: z.string().optional().describe("Stroke color"),
   color: z.string().describe("Fill color"),
   label: z.string().describe("Label string shown inside the marker"),
+  labelI18nKey: z
+    .string()
+    .optional()
+    .describe(
+      "Key in https://gitlab.com/albina-euregio/albina-admin-gui/-/blob/master/src/assets/i18n/en.json used for i18n (internationalization)",
+    ),
   labelColor: z.string().default("#000").optional().describe("Label color"),
   labelFontSize: z.number().default(12).optional().describe("Label font size, in pt"),
-  legend: z.string().describe("Legend string shown in the chart"),
+  legend: z.string().optional().describe("Legend string shown in the chart, defaults to label"),
   numericRange: z
     .array(z.number())
     .min(2)
@@ -47,6 +53,12 @@ export const FilterSelectionSpecSchema = z.object({
       "Key name defining how to obtain the value from a GeoJSON Feature representing this filter, such as `path.to.variable.in.json`, evaluated relative to the `properties` of a GeoJSON Feature.",
     ),
   label: z.string().describe("Label text shown in the chart"),
+  labelI18nKey: z
+    .string()
+    .optional()
+    .describe(
+      "Key in https://gitlab.com/albina-euregio/albina-admin-gui/-/blob/master/src/assets/i18n/en.json used for i18n (internationalization)",
+    ),
   selectedValues: z
     .array(z.string())
     .optional()

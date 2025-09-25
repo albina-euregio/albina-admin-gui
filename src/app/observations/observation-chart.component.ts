@@ -464,7 +464,8 @@ export class ObservationChartComponent<T> implements OnInit {
       value = entry.value[0];
     }
     const isSelected = filterSelectionValue.isIncluded("selected", value);
-    const result = filterSelectionValue.values.find((v) => v.value === value)?.legend || value;
+    const value0 = filterSelectionValue.values.find((v) => v.value === value);
+    const result = value0?.legend ?? value0?.label ?? value;
     const formattedResult = isSelected && this.isActive ? "{highlight|" + result + "}" : result;
 
     const filterSelection = this.markerService.markerLabel;
