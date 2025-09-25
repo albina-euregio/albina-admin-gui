@@ -73,19 +73,9 @@ export const AwsomeConfigSchema = z.object({
     .optional(),
   hazardChart: z
     .object({
-      size_estimate: z
-        .object({
-          chartAxisRange: z
-            .number()
-            .array()
-            .min(2)
-            .max(2)
-            .optional()
-            .describe("Min and max value for chart range when plotting values on a parametric chart"),
-        })
-        .optional(),
+      xType: z.string().default("size_estimate"),
     })
-    .optional(),
+    .default({ xType: "size_estimate" }),
   timeseriesChart: z
     .object({
       url: z.url().optional(),

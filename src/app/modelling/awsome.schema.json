@@ -255,24 +255,17 @@
       "additionalProperties": false
     },
     "hazardChart": {
+      "default": {
+        "xType": "size_estimate"
+      },
       "type": "object",
       "properties": {
-        "size_estimate": {
-          "type": "object",
-          "properties": {
-            "chartAxisRange": {
-              "description": "Min and max value for chart range when plotting values on a parametric chart",
-              "minItems": 2,
-              "maxItems": 2,
-              "type": "array",
-              "items": {
-                "type": "number"
-              }
-            }
-          },
-          "additionalProperties": false
+        "xType": {
+          "default": "size_estimate",
+          "type": "string"
         }
       },
+      "required": ["xType"],
       "additionalProperties": false
     },
     "timeseriesChart": {
@@ -286,6 +279,6 @@
       "additionalProperties": false
     }
   },
-  "required": ["date", "dateStepSeconds", "filters", "sources"],
+  "required": ["date", "dateStepSeconds", "filters", "sources", "hazardChart"],
   "additionalProperties": false
 }

@@ -314,6 +314,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private loadHazardChart() {
     const markerClassify = this.markerService.markerClassify;
     const grainType = this.filterService.filterSelectionData.find((f) => f.type === "grainType");
+    const xType = this.filterService.filterSelectionData.find((f) => f.type === this.config.hazardChart.xType);
     if (!markerClassify) {
       this.hazardChart = undefined;
       return;
@@ -321,9 +322,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const data = this.localObservations.map((o) => this.toChartData(o));
     this.hazardChart = {
       xAxis: {
-        name: "size_estimate",
-        min: this.config.hazardChart?.size_estimate?.chartAxisRange?.[0],
-        max: this.config.hazardChart?.size_estimate?.chartAxisRange?.[1],
+        name: xType.label,
+        min: xType?.chartAxisRange?.[0],
+        max: xType?.chartAxisRange?.[1],
       } satisfies XAXisOption,
       yAxis: {
         name: markerClassify.label,
@@ -357,11 +358,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private toChartData(o: FeatureProperties): number[] {
     const markerClassify = this.markerService.markerClassify;
+    const xType = this.filterService.filterSelectionData.find((f) => f.type === this.config.hazardChart?.xType);
     return [
       // snp_characteristics.Punstable.size_estimate
-      markerClassify.getValue(o, markerClassify.key.toString().replace(/\.value$/, ".size_estimate")) as number,
+      xType.getValue(o) as number,
       // snp_characteristics.Punstable.value
-      markerClassify.getValue(o, markerClassify.key) as number,
+      markerClassify.getValue(o) as number,
       // $event.data[2] as FeatureProperties
       o as unknown as number,
     ];

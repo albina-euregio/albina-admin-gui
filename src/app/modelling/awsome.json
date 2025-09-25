@@ -436,6 +436,52 @@
           "legend": "IF"
         }
       ]
+    },
+    {
+      "type": "size_estimate",
+      "label": "Size estimate",
+      "key": "snp_characteristics.$stabilityIndex.size_estimate",
+      "chartType": "bar",
+      "chartRichLabel": "label",
+      "default": "label",
+      "chartAxisRange": [0, 5],
+      "values": [
+        {
+          "value": "1",
+          "color": "#ffde00",
+          "label": "1",
+          "legend": "small",
+          "numericRange": [0, 1]
+        },
+        {
+          "value": "2",
+          "color": "#ffde00",
+          "label": "2",
+          "legend": "medium",
+          "numericRange": [1, 2]
+        },
+        {
+          "value": "3",
+          "color": "#ffde00",
+          "label": "3",
+          "legend": "large",
+          "numericRange": [2, 3]
+        },
+        {
+          "value": "4",
+          "color": "#ffde00",
+          "label": "4",
+          "legend": "very large",
+          "numericRange": [3, 4]
+        },
+        {
+          "value": "5",
+          "color": "#ffde00",
+          "label": "5",
+          "legend": "extremely large",
+          "numericRange": [4, 5]
+        }
+      ]
     }
   ]
 }
