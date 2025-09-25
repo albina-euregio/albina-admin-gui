@@ -1,3 +1,4 @@
+import { environment } from "../../environments/environment";
 import { FilterSelectionData, FilterSelectionSpec } from "../observations/filter-selection-data";
 import type { GenericObservation, ObservationSource } from "../observations/models/generic-observation.model";
 import { ObservationChartComponent } from "../observations/observation-chart.component";
@@ -66,7 +67,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private httpClient = inject(HttpClient);
 
   // https://gitlab.com/avalanche-warning
-  configURL = "https://models.avalanche.report/dashboard/awsome.json";
+  configURL = environment.awsomeConfigUrl;
   config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
   date = "";
