@@ -18,7 +18,7 @@ import {
   GeoJSON,
   LatLng,
   Layer,
-  Map,
+  Map as LeafletMap,
   MapOptions,
   Path,
   PathOptions,
@@ -54,8 +54,8 @@ export class MapService {
   protected authenticationService = inject(AuthenticationService);
   protected constantsService = inject(ConstantsService);
 
-  public map: Map;
-  public afternoonMap: Map;
+  public map: LeafletMap;
+  public afternoonMap: LeafletMap;
   protected regionNameControl: RegionNameControl;
   private amControl: Control;
   private pmControl: Control;
@@ -172,7 +172,7 @@ export class MapService {
   }
 
   private initAmMap() {
-    this.map = new Map("map", {
+    this.map = new LeafletMap("map", {
       ...this.getMapInitOptions(),
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.aggregatedRegions, this.overlayMaps.regions],
     });
@@ -195,7 +195,7 @@ export class MapService {
   }
 
   private initPmMap() {
-    const afternoonMap = new Map("afternoonMap", {
+    const afternoonMap = new LeafletMap("afternoonMap", {
       ...this.getMapInitOptions(),
       zoomControl: false,
       layers: [
@@ -411,7 +411,7 @@ export class MapService {
 
   private updateAggregatedRegionLayer(
     mapObject: PolygonObject,
-    map: Map,
+    map: LeafletMap,
     layer: PmLeafletLayer,
     mode: "active" | "compared",
   ) {

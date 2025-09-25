@@ -1,7 +1,7 @@
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
 import { Injectable } from "@angular/core";
-import { Control, LatLng, Map } from "leaflet";
+import { Control, LatLng, Map as LeafletMap } from "leaflet";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -13,7 +13,7 @@ export class BaseMapService extends MapService {
 
     this.overlayMaps = await this.initOverlayMaps(options);
 
-    this.map = new Map(el, {
+    this.map = new LeafletMap(el, {
       attributionControl: false,
       zoomAnimation: false,
       zoomControl: false,
