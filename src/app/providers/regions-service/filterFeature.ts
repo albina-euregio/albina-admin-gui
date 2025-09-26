@@ -1,3 +1,4 @@
+// Do not use formatDate from @angular/common here (not supported in observations-api)
 const TODAY = new Date().toISOString().slice(0, "2006-01-02".length);
 
 export function filterFeature(feature: GeoJSON.Feature, today = TODAY): boolean {
