@@ -1,10 +1,9 @@
 import { filterFeature } from "./filterFeature";
-import { formatDate } from "@angular/common";
 
 export function mergeFeatureCollections<G extends GeoJSON.Geometry, P>(
   ...collections: GeoJSON.FeatureCollection<G, P>[]
 ): GeoJSON.FeatureCollection<G, P> {
-  const today = formatDate(Date.now(), "yyyy-MM-dd", "en-US");
+  const today = new Date().toISOString().slice(0, "2006-01-02".length);
   return {
     type: "FeatureCollection",
     features: []
