@@ -516,7 +516,7 @@ export class MapService {
 
   private handleClick(clickMode: ClickMode, e: MouseEvent, feature: geojson.Feature, editSelection: GeoJSON) {
     if (clickMode === "awsome") {
-      if (e.ctrlKey) {
+      if (e.shiftKey) {
         this.toggleRegion(feature);
       } else if (feature.properties.selected) {
         this.selectNone(editSelection);

@@ -17,6 +17,7 @@ export class BaseMapService extends MapService {
       attributionControl: false,
       zoomAnimation: false,
       zoomControl: false,
+      boxZoom: false,
       doubleClickZoom: true,
       scrollWheelZoom: true,
       // pinchZoom: Browser.touch,
