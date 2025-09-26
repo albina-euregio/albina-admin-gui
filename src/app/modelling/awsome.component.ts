@@ -391,6 +391,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           symbolSize: 15,
           color: "red",
         } satisfies ScatterSeriesOption,
+        {
+          type: "scatter",
+          data: [],
+          symbol: "diamond",
+          symbolSize: 25,
+          color: "green",
+        } satisfies ScatterSeriesOption,
       ],
     } satisfies EChartsOption;
   }
@@ -483,11 +490,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         } satisfies YAXisOption,
         tooltip: {
           trigger: "axis",
-          formatter: ([mean]: CallbackDataParams[]) => `
+          formatter: ([series]: CallbackDataParams[]) => `
             <dl>
-              <dt>${stabilityIndex.type}</dt><dd>${mean.value[1]}</dd>
-              <dt>${this.t("Depth")}<dt><dd>${indexData.depth[mean.dataIndex]}</dd>
-              <dt>${this.t("Size estimate")}<dt><dd>${indexData.size_estimate[mean.dataIndex]}</dd>
+              <dt>${stabilityIndex.type}</dt><dd>${indexData.mean[series.dataIndex]}</dd>
+              <dt>${this.t("Depth")}<dt><dd>${indexData.depth[series.dataIndex]}</dd>
+              <dt>${this.t("Size estimate")}<dt><dd>${indexData.size_estimate[series.dataIndex]}</dd>
             </dl>`,
           showContent: true,
           axisPointer: {
@@ -522,12 +529,23 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           } satisfies LineSeriesOption,
         ],
       } satisfies EChartsOption;
+
+      // show diamond marker in hazard chart
+      this.hazardChart = { ...this.hazardChart };
+      const series: ScatterSeriesOption = this.hazardChart.series[2];
+      if (this.config.hazardChart.xType === "size_estimate") {
+        const i = data.timestamps.findIndex((t) => +t === Date.parse(this.date));
+        series.data = i >= 0 ? [[indexData.size_estimate[i], indexData.mean[i]]] : [];
+      } else {
+        series.data = [];
+      }
     });
   }
 
   chartMouseOver($event: ECElementEvent) {
     this.mapLayerHighlight.clearLayers();
     const observation = $event.data[2] as FeatureProperties;
+    if (!observation) return;
     const marker = this.markerService.createMarker(observation, true);
     (marker.options as MarkerOptions).zIndexOffset = 42_000;
     marker.addTo(this.mapLayerHighlight);
