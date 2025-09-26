@@ -19,7 +19,13 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { ScatterSeriesOption } from "echarts/charts";
 import type { GridComponentOption } from "echarts/components";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
-import type { LineSeriesOption, TooltipOption, XAXisOption, YAXisOption } from "echarts/types/dist/shared";
+import type {
+  LineSeriesOption,
+  MarkLineOption,
+  TooltipOption,
+  XAXisOption,
+  YAXisOption,
+} from "echarts/types/dist/shared";
 import { debounce } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import {
@@ -474,6 +480,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
             name: "mean",
             type: "line",
             data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].mean[i]]),
+            markLine: {
+              data: [{ label: { formatter: "" }, xAxis: this.date }],
+            } satisfies MarkLineOption,
           } satisfies LineSeriesOption,
           {
             name: "lower",
