@@ -101,7 +101,7 @@
               class="dropdown-item"
               (click)="localStorageService.setLanguage(lang)"
               role="button"
-              [ngxMousetrapKey]="i !== undefined ? [i + 1 + ''] : []"
+              [ngxMousetrapKey]="`${i + 1}`"
             >
               {{ "menu." + lang | translate }}
               <i *ngIf="translateService.currentLang === lang" class="ph ph-check"></i>

@@ -398,7 +398,7 @@ export class ObservationChartComponent<T> implements OnInit {
     } else {
       this.filterSelection().setFilterValue(subset, value);
     }
-    if (event.ctrlKey) {
+    if (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? event.metaKey : event.ctrlKey) {
       this.filterSelection().invertFilter(subset);
     }
     this.handleChange.emit();

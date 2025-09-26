@@ -46,7 +46,7 @@
             </div>
 
             <div class="global-bar-item global-bar-item-region" style="width: 0">
-              <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
+              <button type="button" class="obs-button invisible" (click)="selectRegion('')" ngxMousetrapKey="r 0">
                 <i class="ph ph-number-circle-zero"></i>
               </button>
               <span
@@ -57,7 +57,7 @@
                   type="button"
                   class="obs-button invisible"
                   (click)="selectRegion(region)"
-                  [ngxMousetrapKey]="['r ' + (i + 1)]"
+                  [ngxMousetrapKey]="`r ${i + 1}`"
                 >
                   <i class="ph ph-number-circle-one"></i>
                 </button>
@@ -109,25 +109,25 @@
             </div>
 
             <div class="global-bar-item global-bar-item-calendar" style="width: 0">
-              <button type="button" class="obs-button invisible" (click)="setDateRange(1)" [ngxMousetrapKey]="['d 1']">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(1)" ngxMousetrapKey="d 1">
                 <i class="ph ph-number-circle-zero"></i>
               </button>
-              <button type="button" class="obs-button invisible" (click)="setDateRange(2)" [ngxMousetrapKey]="['d 2']">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(2)" ngxMousetrapKey="d 2">
                 <i class="ph ph-number-circle-one"></i>
               </button>
-              <button type="button" class="obs-button invisible" (click)="setDateRange(3)" [ngxMousetrapKey]="['d 3']">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(3)" ngxMousetrapKey="d 3">
                 <i class="ph ph-number-circle-two"></i>
               </button>
-              <button type="button" class="obs-button invisible" (click)="setDateRange(4)" [ngxMousetrapKey]="['d 4']">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(4)" ngxMousetrapKey="d 4">
                 <i class="ph ph-number-circle-three"></i>
               </button>
-              <button type="button" class="obs-button invisible" (click)="setDateRange(5)" [ngxMousetrapKey]="['d 5']">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(5)" ngxMousetrapKey="d 5">
                 <i class="ph ph-number-circle-three"></i>
               </button>
-              <button type="button" class="obs-button invisible" (click)="setDateRange(6)" [ngxMousetrapKey]="['d 6']">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(6)" ngxMousetrapKey="d 6">
                 <i class="ph ph-number-circle-three"></i>
               </button>
-              <button type="button" class="obs-button invisible" (click)="setDateRange(7)" [ngxMousetrapKey]="['d 7']">
+              <button type="button" class="obs-button invisible" (click)="setDateRange(7)" ngxMousetrapKey="d 7">
                 <i class="ph ph-number-circle-three"></i>
               </button>
             </div>
@@ -297,7 +297,7 @@
           type="button"
           class="obs-button invisible"
           (click)="togglePreviousWeatherStationParameter()"
-          [ngxMousetrapKey]="['alt+up']"
+          ngxMousetrapKey="alt+up"
         >
           <i class="ph-bold ph-caret-up"></i>
         </button>
@@ -305,7 +305,7 @@
           type="button"
           class="obs-button invisible"
           (click)="toggleNextWeatherStationParameter()"
-          [ngxMousetrapKey]="['alt+down']"
+          ngxMousetrapKey="alt+down"
         >
           <i class="ph-bold ph-caret-down"></i>
         </button>

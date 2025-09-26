@@ -523,7 +523,7 @@ export class MapService {
       } else {
         this.selectOnly(feature, editSelection);
       }
-    } else if (e.ctrlKey) {
+    } else if (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? e.metaKey : e.ctrlKey) {
       this.toggleLevel1Regions(feature, editSelection);
     } else if (e.altKey) {
       this.toggleLevel2Regions(feature, editSelection);

@@ -6,7 +6,7 @@
         class="btn btn-icon btn-sm btn-bare--grey"
         (click)="minusOneHour()"
         title="{{ 'observations.webcams.tooltips.minusOneHour' | translate }}"
-        [ngxMousetrapKey]="['shift+left']"
+        ngxMousetrapKey="shift+left"
       >
         <i class="ph-bold ph-caret-double-left"></i>
       </button>
@@ -15,7 +15,7 @@
         class="btn btn-icon btn-sm btn-bare--grey"
         (click)="minusTenMinutes()"
         title="{{ 'observations.webcams.tooltips.minusTenMinutes' | translate }}"
-        [ngxMousetrapKey]="['ctrl+left', 'command+left']"
+        ngxMousetrapKey="mod+left"
       >
         <i class="ph-bold ph-caret-left"></i>
       </button>
@@ -29,7 +29,7 @@
         class="btn btn-icon btn-sm btn-bare--grey"
         (click)="plusTenMinutes()"
         title="{{ 'observations.webcams.tooltips.plusTenMinutes' | translate }}"
-        [ngxMousetrapKey]="['ctrl+right', 'command+right']"
+        ngxMousetrapKey="mod+right"
       >
         <i class="ph-bold ph-caret-right"></i>
       </button>
@@ -38,7 +38,7 @@
         class="btn btn-icon btn-sm btn-bare--grey"
         (click)="plusOneHour()"
         title="{{ 'observations.webcams.tooltips.plusOneHour' | translate }}"
-        [ngxMousetrapKey]="['shift+right', 'command+right']"
+        ngxMousetrapKey="shift+right"
       >
         <i class="ph-bold ph-caret-double-right"></i>
       </button>

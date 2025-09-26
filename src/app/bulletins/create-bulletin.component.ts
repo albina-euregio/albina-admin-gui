@@ -1040,21 +1040,25 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private async initMaps() {
     await this.mapService.initAmPmMap();
     this.mapService.map.on({
-      click: (event) => this.onMapClick(event.originalEvent && event.originalEvent.ctrlKey),
+      click: (event) => this.onMapClick(event.originalEvent),
     });
     this.mapService.afternoonMap.on({
-      click: (event) => this.onMapClick(event.originalEvent && event.originalEvent.ctrlKey),
+      click: (event) => this.onMapClick(event.originalEvent),
     });
   }
 
-  private onMapClick(ctrlKey = false) {
+  private onMapClick(event: MouseEvent) {
     if (!this.showNewBulletinModal && !this.editRegions) {
       let hit = false;
       const clickedRegion = this.mapService.getClickedRegion();
       for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
         if (bulletin.savedRegions.includes(clickedRegion) || bulletin.publishedRegions.includes(clickedRegion)) {
           hit = true;
-          if (ctrlKey && this.activeBulletin && this.activeBulletin.id !== bulletin.id) {
+          if (
+            (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? event.metaKey : event.ctrlKey) &&
+            this.activeBulletin &&
+            this.activeBulletin.id !== bulletin.id
+          ) {
             this.compareBulletin(bulletin);
           } else {
             this.toggleBulletin(bulletin);

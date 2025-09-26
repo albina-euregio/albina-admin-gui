@@ -35,7 +35,7 @@
             </div>
 
             <div class="global-bar-item global-bar-item-region" style="width: 0; height: 0">
-              <button type="button" class="obs-button invisible" (click)="selectRegion('')" [ngxMousetrapKey]="['r 0']">
+              <button type="button" class="obs-button invisible" (click)="selectRegion('')" ngxMousetrapKey="r 0">
                 <i class="ph ph-number-circle-zero"></i>
               </button>
               @for (
@@ -48,7 +48,7 @@
                     type="button"
                     class="obs-button invisible"
                     (click)="selectRegion(region)"
-                    [ngxMousetrapKey]="['r ' + (i + 1)]"
+                    [ngxMousetrapKey]="`r ${i + 1}`"
                   >
                     <i class="ph ph-number-circle-one"></i>
                   </button>
