@@ -552,4 +552,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       map((text) => JSON.parse(text) as T),
     );
   }
+
+  requestFullscreen($event: MouseEvent) {
+    ($event.target as HTMLElement).parentElement.parentElement.requestFullscreen();
+  }
 }

@@ -129,14 +129,25 @@
       <div class="toolset toolset-2 overflow-scroll">
         @if (selectedObservationDetails) {
           <div>
-            <div class="toolset-content">
+            <div class="toolset-content bg-white">
               <button
                 type="button"
-                class="btn-close float-end m-3"
-                aria-label="Close"
+                class="btn float-end"
+                title="Close"
                 (click)="closeObservation()"
                 ngxMousetrapKey="esc"
-              ></button>
+              >
+                <i class="ph ph-x"></i>
+              </button>
+              <button
+                type="button"
+                class="btn float-end"
+                title="Fullscreen"
+                (click)="requestFullscreen($event)"
+                ngxMousetrapKey="shift+f"
+              >
+                <i class="ph ph-corners-out"></i>
+              </button>
               <tabset>
                 @for (tab of selectedObservationDetails; track tab) {
                   <tab
