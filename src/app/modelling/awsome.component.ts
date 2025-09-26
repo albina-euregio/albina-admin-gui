@@ -358,11 +358,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         name: this.t(xType.label),
         min: xType?.chartAxisRange?.[0],
         max: xType?.chartAxisRange?.[1],
+        axisPointer: { type: "line" },
       } satisfies XAXisOption,
       yAxis: {
         name: this.t(markerClassify.label),
         min: markerClassify.chartAxisRange?.[0],
         max: markerClassify.chartAxisRange?.[1],
+        axisPointer: { type: "line" },
       } satisfies YAXisOption,
       grid: {
         backgroundColor: "#f7f7f7",
@@ -371,9 +373,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       tooltip: {
         trigger: "axis",
         showContent: false,
-        axisPointer: {
-          type: "cross",
-        },
+        axisPointer: { type: "cross" },
       } satisfies TooltipOption,
       series: [
         {
@@ -384,6 +384,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           },
           data,
           symbolSize: 7,
+        } satisfies ScatterSeriesOption,
+        {
+          type: "scatter",
+          data: [],
+          symbolSize: 15,
+          color: "red",
         } satisfies ScatterSeriesOption,
       ],
     } satisfies EChartsOption;
@@ -403,18 +409,22 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private highlightInHazardChart(observation: FeatureProperties) {
-    this.hazardChart = {
-      ...this.hazardChart,
-      series: [
-        this.hazardChart.series[0],
-        {
-          type: "scatter",
-          data: observation ? [this.toChartData(observation)] : [],
-          symbolSize: 15,
-          color: "red",
-        },
-      ] satisfies ScatterSeriesOption[],
-    };
+    this.hazardChart = { ...this.hazardChart };
+    const series: ScatterSeriesOption = this.hazardChart.series[1];
+    const xAxis: XAXisOption = this.hazardChart.xAxis;
+    const yAxis: YAXisOption = this.hazardChart.yAxis;
+    if (observation) {
+      const data = this.toChartData(observation);
+      series.data = [data];
+      xAxis.axisPointer.value = data[0];
+      xAxis.axisPointer.status = "show";
+      yAxis.axisPointer.value = data[1];
+      yAxis.axisPointer.status = "show";
+    } else {
+      series.data = [];
+      xAxis.axisPointer.value = undefined;
+      yAxis.axisPointer.value = undefined;
+    }
   }
 
   private get stabilityIndex(): FilterSelectionData<FeatureProperties> | undefined {
