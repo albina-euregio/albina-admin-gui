@@ -82,21 +82,21 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private translateService = inject(TranslateService);
 
   // https://gitlab.com/avalanche-warning
-  configURL = environment.awsomeConfigUrl;
-  config$q: Promise<AwsomeConfig>;
+  private configURL = environment.awsomeConfigUrl;
+  private config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
   date = "";
   layout: "map" | "chart" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
-  observations: FeatureProperties[] = [];
-  localObservations: FeatureProperties[] = [];
+  private observations: FeatureProperties[] = [];
+  private localObservations: FeatureProperties[] = [];
   selectedObservation: FeatureProperties | undefined = undefined;
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
-  mapLayerControl = new Control.Layers();
-  mapLayer = new LayerGroup();
-  mapLayerHighlight = new LayerGroup();
+  private mapLayerControl = new Control.Layers();
+  private mapLayer = new LayerGroup();
+  private mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
   timeseriesChart: EChartsOption | undefined;
   loadingState: "loading" | "error" | undefined;
