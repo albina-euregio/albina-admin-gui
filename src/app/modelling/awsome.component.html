@@ -155,7 +155,9 @@
                     [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
                     (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
                   >
-                    <div [innerHTML]="tab.html"></div>
+                    @if (selectedObservationActiveTabs[selectedObservation.$source] === tab.label) {
+                      <div [innerHTML]="tab.html"></div>
+                    }
                   </tab>
                 }
               </tabset>
