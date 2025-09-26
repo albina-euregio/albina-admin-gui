@@ -2963,7 +2963,7 @@ __metadata:
     typescript: "npm:5.8.3"
     typescript-eslint: "npm:^8.37.0"
     which-polygon: "npm:^2.2.1"
-    zod: "npm:^4.0.14"
+    zod: "npm:^4.1.11"
     zone.js: "npm:~0.15.1"
   languageName: unknown
   linkType: soft
@@ -7491,10 +7491,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^4.0.14":
-  version: 4.0.14
-  resolution: "zod@npm:4.0.14"
-  checksum: 10c0/ec8681050d393f3be1c2c8f30d7dd4f56bec3746855fb17288be856185a0fe65e68d1b24aec657bbf956f64c05e69332d3751eafd6c103d19385bcc46075612b
+"zod@npm:^4.1.11":
+  version: 4.1.11
+  resolution: "zod@npm:4.1.11"
+  checksum: 10c0/ce6a4c4acfbf51d7dd0f2669c82f207d62a1f00264eef608994b94eb99d86a74c99f59b0dd3e61ef82909ee136631378b709e0908f0a02a2d5c21d0c497de5db
   languageName: node
   linkType: hard
 
