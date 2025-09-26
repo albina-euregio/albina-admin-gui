@@ -20,6 +20,7 @@ import type { ScatterSeriesOption } from "echarts/charts";
 import type { GridComponentOption } from "echarts/components";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
 import type {
+  CallbackDataParams,
   LineSeriesOption,
   MarkLineOption,
   TooltipOption,
@@ -446,6 +447,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.fetchJSON(url.toString()).subscribe((d) => {
       const IndexSchema = z.object({
         depth: z.number().array(),
+        size_estimate: z.number().array(),
         lower: z.number().array(),
         mean: z.number().array(),
         upper: z.number().array(),
@@ -460,6 +462,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         timestamps: z.coerce.date().array(),
       });
       const data = TimeseriesSchema.parse(d);
+      const indexData = data.indexes[stabilityIndex.type as "Punstable" | "ccl" | "lwc" | "sk38_rta"];
       this.timeseriesChart = {
         xAxis: {
           type: "time",
@@ -470,6 +473,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         } satisfies YAXisOption,
         tooltip: {
           trigger: "axis",
+          formatter: ([mean]: CallbackDataParams[]) => `
+            <dl>
+              <dt>${stabilityIndex.type}</dt><dd>${mean.value[1]}</dd>
+              <dt>${this.t("Depth")}<dt><dd>${indexData.depth[mean.dataIndex]}</dd>
+              <dt>${this.t("Size estimate")}<dt><dd>${indexData.size_estimate[mean.dataIndex]}</dd>
+            </dl>`,
           showContent: true,
           axisPointer: {
             type: "cross",
@@ -479,7 +488,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           {
             name: "mean",
             type: "line",
-            data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].mean[i]]),
+            data: data.timestamps.map((t, i) => [t, indexData.mean[i]]),
             markLine: {
               data: [{ label: { formatter: "" }, xAxis: this.date }],
             } satisfies MarkLineOption,
@@ -487,7 +496,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           {
             name: "lower",
             type: "line",
-            data: data.timestamps.map((t, i) => [t, data.indexes[stabilityIndex.type].lower[i]]),
+            data: data.timestamps.map((t, i) => [t, indexData.lower[i]]),
             lineStyle: { opacity: 0 },
             stack: "confidence-band",
             symbol: "none",
@@ -495,10 +504,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           {
             name: "upper",
             type: "line",
-            data: data.timestamps.map((t, i) => [
-              t,
-              data.indexes[stabilityIndex.type].upper[i] - data.indexes[stabilityIndex.type].lower[i],
-            ]),
+            data: data.timestamps.map((t, i) => [t, indexData.upper[i] - indexData.lower[i]]),
             lineStyle: { opacity: 0 },
             areaStyle: { color: "#ccc" },
             stack: "confidence-band",

@@ -524,7 +524,6 @@
             "en": "EN"
           }
         },
-
         "email": {
           "label": "Emails",
           "tooltip": "Send Emails",
@@ -811,7 +810,6 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) selected"
       },
-
       "charts": {
         "charts": "Charts",
         "nan": "Without specification",
@@ -935,7 +933,6 @@
       "duplicates": "Duplicates"
     }
   },
-
   "dangerRating": {
     "noRating": "no rating",
     "low": "low",
@@ -1419,6 +1416,7 @@
     "Aggregation band": "Aggregation band",
     "Date": "Date",
     "Datetag": "Datetag",
+    "Depth": "Depth",
     "Dry instability": "Dry instability",
     "fair (<0.77)": "fair (<0.77)",
     "fair (<1.05)": "fair (<1.05)",
