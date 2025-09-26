@@ -62,7 +62,7 @@
     "leaflet-control-geocoder": "^3.3.0",
     "leaflet.sync": "patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch",
     "mousetrap": "^1.6.5",
-    "ngx-bootstrap": "20.0.0",
+    "ngx-bootstrap": "^20.0.2",
     "ngx-echarts": "^20.0.1",
     "ngx-image-compress": "^18.1.5",
     "protomaps-leaflet": "^5.0.0",

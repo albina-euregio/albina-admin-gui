@@ -2951,7 +2951,7 @@ __metadata:
     leaflet.sync: "patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch"
     lint-staged: "npm:^15.2.10"
     mousetrap: "npm:^1.6.5"
-    ngx-bootstrap: "npm:20.0.0"
+    ngx-bootstrap: "npm:^20.0.2"
     ngx-echarts: "npm:^20.0.1"
     ngx-image-compress: "npm:^18.1.5"
     prettier: "npm:^3.6.2"
@@ -5525,9 +5525,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ngx-bootstrap@npm:20.0.0":
-  version: 20.0.0
-  resolution: "ngx-bootstrap@npm:20.0.0"
+"ngx-bootstrap@npm:^20.0.2":
+  version: 20.0.2
+  resolution: "ngx-bootstrap@npm:20.0.2"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
@@ -5536,7 +5536,7 @@ __metadata:
     "@angular/core": ^20.0.2
     "@angular/forms": ^20.0.2
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 10c0/b838f55b6642017caa4c11ef2134139317ce897a4397be9f921184b94b59fe4bc4e3a5e2a93a29f5ae68ac174137a7b87c07afa06b6cbe77a360c4e771a75229
+  checksum: 10c0/e39c507338af528954a8f14f55feddf5e461eb4435e3b907b01c3721165ed2b4e9bc7d53219bb3b5d97ab3b3af4efc7f2d27a6bb6c352b215f7bd63d4749c06b
   languageName: node
   linkType: hard
 
