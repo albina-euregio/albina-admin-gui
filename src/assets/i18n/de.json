@@ -100,6 +100,7 @@
       "tooltip": {
         "editDangerSource": "Gefahrenquelle bearbeiten",
         "loadVariants": "Varianten von gestern laden",
+        "showVariantsOnMap": "Varianten auf Karte anzeigen",
         "edit": "Kleinstregionen editieren",
         "copy": "Variante kopieren",
         "delete": "Variante löschen",
@@ -110,7 +111,10 @@
       "createVariant": "Neue Variante erstellen",
       "noDangerSources": "Keine Gefahrenquellen",
       "title": {
-        "avalanche": "Lawine",
+        "slab": "Brett",
+        "weakLayer": "Schwachschicht",
+        "loose": "Lockerschnee",
+        "glide": "Gleitschnee",
         "matrix": "Matrix",
         "characteristics": "Merkmale",
         "comment": "Kommentar"
@@ -153,8 +157,16 @@
         "dangerSigns": "Gefahrenzeichen",
         "aspects": "Expositionen"
       },
-      "editVariantDialog": {
+      "createDangerSourceDialog": {
+        "title": "Titel",
+        "description": "Beschreibung",
         "save": "Speichern",
+        "cancel": "Abbrechen"
+      },
+      "editDangerSourceDialog": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "update": "Update",
         "cancel": "Abbrechen"
       },
       "deleteVariantDialog": {
@@ -471,22 +483,7 @@
     },
     "table": {
       "title": {
-        "date": "Datum",
-        "status": {
-          "AT-02": "Kärnten",
-          "AT-03": "Niederösterreich",
-          "AT-04": "Oberösterreich",
-          "AT-05": "Salzburg",
-          "AT-06": "Steiermark",
-          "AT-07": "Tirol",
-          "AT-08": "Vorarlberg",
-          "CH": "Schweiz",
-          "DE-BY": "Bayern",
-          "GEOSPHERE": "GEOSPHERE",
-          "IT-32-TN": "Trentino",
-          "IT-32-BZ": "Südtirol",
-          "ES-CT-L": "Aran"
-        }
+        "date": "Datum"
       },
       "status": {
         "missing": "fehlt",
@@ -818,6 +815,7 @@
       "charts": {
         "charts": "Diagramme",
         "nan": "Ohne Angabe",
+        "reload": "Neuladen",
         "classify": "Klassifizieren",
         "label": "Bezeichnung",
         "invert": "Invert",
@@ -1170,7 +1168,8 @@
   "dangerSign": {
     "shooting_cracks": "Rissbildung",
     "whumpfing": "Setzungsgeräusche",
-    "fresh_avalanches": "Frische Lawinen"
+    "fresh_avalanches": "Frische Lawinen",
+    "glide_cracks": "Gleitschneerisse"
   },
   "changeRegionDialog": {
     "message": "Möchtest du die Region ändern?",
@@ -1418,16 +1417,25 @@
   },
   "awsome": {
     "Aggregation band": "Aggregation band",
-    "Aspect": "Exposition",
     "Date": "Datum",
     "Datetag": "Datetag",
     "Dry instability": "Instabilität nasse Schneedecke",
+    "fair (<0.77)": "mittel (<0.77)",
+    "fair (<1.05)": "mittel (<1.05)",
     "Grain type": "Kornform",
     "LWC index": "LWC index",
     "New snow": "Neuschnee",
+    "poor (<=3)": "schlecht (<=3)",
+    "poor (<0.95)": "schlecht (<0.95)",
+    "poor (>=0.77)": "schlecht (>=0.77)",
     "Punstable": "Punstable",
+    "rather stable (<0.7)": "eher stabil (<0.7)",
+    "rather stable (<1)": "eher stabil (<1)",
+    "rather stable (>1.05)": "eher stabil (>1.05)",
     "Size estimate": "Lawinengrößen-Schätzung",
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
+    "very poor (<=0.5)": "sehr schlecht (<=0.5)",
+    "very poor (>3)": "sehr schlecht (>3)",
     "Wet instability": "Instabilität trockene Schneedecke"
   }
 }

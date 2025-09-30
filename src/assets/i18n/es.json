@@ -100,6 +100,7 @@
       "tooltip": {
         "editDangerSource": "Edit danger source",
         "loadVariants": "Load variants from the day before",
+        "showVariantsOnMap": "Show variants on map",
         "edit": "Editar micro-regiones",
         "copy": "Copy variant",
         "delete": "Delete variant",
@@ -110,7 +111,10 @@
       "createVariant": "Create new variant",
       "noDangerSources": "No danger sources",
       "title": {
-        "avalanche": "Alud",
+        "slab": "Slab",
+        "weakLayer": "Weak layer",
+        "loose": "Loose snow",
+        "glide": "Glide snow",
         "matrix": "Matriz",
         "characteristics": "Características",
         "comment": "Comentario"
@@ -153,8 +157,16 @@
         "dangerSigns": "Danger signs",
         "aspects": "Orientaciones"
       },
-      "editVariantDialog": {
+      "createDangerSourceDialog": {
+        "title": "Title",
+        "description": "Descripción",
         "save": "Guardar",
+        "cancel": "Cancelar"
+      },
+      "editDangerSourceDialog": {
+        "title": "Title",
+        "description": "Descripción",
+        "update": "Actualización",
         "cancel": "Cancelar"
       },
       "deleteVariantDialog": {
@@ -471,22 +483,7 @@
     },
     "table": {
       "title": {
-        "date": "Fecha",
-        "status": {
-          "AT-02": "Carintia",
-          "AT-03": "Baja Austria",
-          "AT-04": "Alta Austria",
-          "AT-05": "Salzburgo",
-          "AT-06": "Estiria",
-          "AT-07": "Tirol",
-          "AT-08": "Vorarlberg",
-          "CH": "Suiza",
-          "DE-BY": "Baviera",
-          "GEOSPHERE": "GEOSPHERE",
-          "IT-32-TN": "Trentino",
-          "IT-32-BZ": "Sud Tirol",
-          "ES-CT-L": "Aran"
-        }
+        "date": "Fecha"
       },
       "status": {
         "missing": "ausente",
@@ -818,6 +815,7 @@
       "charts": {
         "charts": "Mapas",
         "nan": "Sin especificación",
+        "reload": "Reload",
         "classify": "Classificar",
         "label": "Etiqueta",
         "invert": "Invertir",
@@ -1170,7 +1168,8 @@
   "dangerSign": {
     "shooting_cracks": "shooting cracks",
     "whumpfing": "whumpfing",
-    "fresh_avalanches": "fresh avalanches"
+    "fresh_avalanches": "fresh avalanches",
+    "glide_cracks": "glide cracks"
   },
   "changeRegionDialog": {
     "message": "¿Quieres cambiar la región?",
@@ -1415,5 +1414,28 @@
       "H ": "{{value}} hPa altura geopotencial [m]",
       "RF ": "{{value}} hPa eq. humedad relativa [%]"
     }
+  },
+  "awsome": {
+    "Aggregation band": "Aggregation band",
+    "Date": "Fecha",
+    "Datetag": "Datetag",
+    "Dry instability": "Dry instability",
+    "fair (<0.77)": "fair (<0.77)",
+    "fair (<1.05)": "fair (<1.05)",
+    "Grain type": "Grain type",
+    "LWC index": "LWC index",
+    "New snow": "Nieve reciente",
+    "poor (<=3)": "poor (<=3)",
+    "poor (<0.95)": "poor (<0.95)",
+    "poor (>=0.77)": "poor (>=0.77)",
+    "Punstable": "Punstable",
+    "rather stable (<0.7)": "rather stable (<0.7)",
+    "rather stable (<1)": "rather stable (<1)",
+    "rather stable (>1.05)": "rather stable (>1.05)",
+    "Size estimate": "Size estimate",
+    "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
+    "very poor (<=0.5)": "very poor (<=0.5)",
+    "very poor (>3)": "very poor (>3)",
+    "Wet instability": "Wet instability"
   }
 }
