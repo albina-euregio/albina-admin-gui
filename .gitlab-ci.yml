@@ -36,8 +36,6 @@ build:
   extends: .build
   script:
     - yarn build
-    - mv dist/browser/* dist/
-    - rmdir dist/browser/
   artifacts:
     paths:
       - dist/
