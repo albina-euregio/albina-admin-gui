@@ -71,6 +71,7 @@ build:
 build:development:
   extends: .envsubst
   variables:
+    INITIAL_URL: ""
     API_BASE_URL: "https://admin.avalanche.report/albina_dev/api/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng-dev/"
     AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"
@@ -95,6 +96,7 @@ deploy:development:
 build:beta:
   extends: .envsubst
   variables:
+    INITIAL_URL: ""
     API_BASE_URL: "https://admin.avalanche.report/albina/api/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
     AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"
@@ -119,6 +121,7 @@ deploy:beta:
 build:production:
   extends: .envsubst
   variables:
+    INITIAL_URL: ""
     API_BASE_URL: "https://admin.avalanche.report/albina/api/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
     AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"
@@ -145,6 +148,7 @@ build:aran:
   environment:
     name: aran
   variables:
+    INITIAL_URL: ""
     API_BASE_URL: "https://api.lauegi.report/api/"
     TEXTCAT_URL: "https://admin.lauegi.report/textcat-ng/"
     AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"

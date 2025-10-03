@@ -1,4 +1,5 @@
 export interface Environment {
+  initialUrl: string;
   apiBaseUrl: string;
   textcatUrl: string;
   awsomeConfigUrl: string;

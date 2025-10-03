@@ -1,6 +1,7 @@
 import type { Environment } from "./environment-type";
 
 export const environment: Environment = {
+  initialUrl: window["ENV"].INITIAL_URL,
   apiBaseUrl: window["ENV"].API_BASE_URL,
   textcatUrl: window["ENV"].TEXTCAT_URL,
   awsomeConfigUrl: window["ENV"].AWSOME_CONFIG_URL,

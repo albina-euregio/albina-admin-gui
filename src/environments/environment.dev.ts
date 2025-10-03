@@ -5,6 +5,7 @@
 import type { Environment } from "./environment-type";
 
 export const environment: Environment = {
+  initialUrl: "",
   apiBaseUrl: "https://admin.avalanche.report/albina_dev/api/",
   textcatUrl: "https://admin.avalanche.report/textcat-ng-dev/",
   awsomeConfigUrl: "https://models.avalanche.report/dashboard/awsome.json",
