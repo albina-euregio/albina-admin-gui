@@ -15,4 +15,4 @@ export const environment: Environment = {
   sentryDSN: "",
 };
 
-Object.assign(environment, (window as any).ENV);
+Object.assign(environment, globalThis.ENV);

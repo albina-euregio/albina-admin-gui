@@ -14,3 +14,5 @@ export const environment: Environment = {
   logoPath: "assets/img/admin-logo-dev.svg",
   sentryDSN: "",
 };
+
+Object.assign(environment, globalThis.ENV);
