@@ -355,6 +355,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     const data = this.localObservations.map((o) => this.toChartData(o));
     this.hazardChart = {
       xAxis: {
+        nameLocation: "center",
         name: this.t(xType.label),
         min: xType?.chartAxisRange?.[0],
         max: xType?.chartAxisRange?.[1],
@@ -483,6 +484,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.timeseriesChart = {
         xAxis: {
           type: "time",
+          nameLocation: "center",
           name: this.t("Date"),
         } satisfies XAXisOption,
         yAxis: {
