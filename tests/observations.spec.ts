@@ -11,6 +11,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("filter observations", async ({ page }) => {
+  test.slow();
   await page.clock.setFixedTime(testDate);
   await page.reload();
   await changeRegion(page, "Tyrol");
@@ -266,9 +267,11 @@ test("Webcams and Observers", async ({ page }) => {
 });
 
 test("Weather stations", async ({ page }) => {
+  test.slow();
   await page.clock.setFixedTime(new Date("2025-03-05"));
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
+  await expect(page.locator(".keydata")).toHaveText("700 / 748", { timeout: 7000 });
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
   await expect

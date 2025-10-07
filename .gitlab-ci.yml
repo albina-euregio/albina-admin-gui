@@ -211,8 +211,6 @@ playwright:dev:
   extends: .playwright
   environment:
     name: dev
-  needs:
-    - deploy:development
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - when: manual
@@ -227,3 +225,5 @@ playwright:localhost:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - when: manual
       allow_failure: true
+  script:
+    - yarn playwright test --project=chromium # especially webkit is slow -> don't run on merge requests

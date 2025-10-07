@@ -15,6 +15,7 @@ export async function login(page: Page) {
   await page.getByRole("button", { name: /login/i }).click();
   await expect(page).toHaveURL("#/bulletins");
   await expect(page.getByRole("button", { name: "Stress Level" })).toBeVisible();
+  await page.waitForTimeout(1000); // app seems to need some time to get correctly load and set regions
 }
 
 export async function changeRegion(page: Page, region: string) {

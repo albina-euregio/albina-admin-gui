@@ -17,8 +17,10 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [[process.env.CI ? "blob" : "html"], ["junit", { outputFile: "test-results/junit-results.xml" }], ["list"]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  timeout: 40000,
   use: {
     baseURL: process.env.CI_ENVIRONMENT_URL || "http://localhost:4200",
+    // baseURL: "https://admin.avalanche.report/dev/",
 
     timezoneId: "Europe/Vienna",
 

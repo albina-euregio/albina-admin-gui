@@ -79,6 +79,12 @@ use the dockerfile `Dockerfile.playwright`:
 ```
 yarn dev  # local server needs to be running
 docker build -f Dockerfile.playwright -t albina-playwright .
-docker run -it --network="host" -v ./playwright-report:/home/playwright-report -v ./test-results:/home/test-results -v ./tests:/home/tests albina-playwright
+docker run -it --network="host" -v ./:/home/ albina-playwright
 yarn playwright test --workers=1
+```
+
+To simulate the CI conditions these settings could be helpful:
+
+``` 
+docker run -it  --cpus=1 --memory=2g --network="host" -v ./:/home/  albina-playwright
 ```
