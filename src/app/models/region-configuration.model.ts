@@ -16,7 +16,7 @@ export const RegionConfigurationSchema = z.object({
   subRegions: z.array(z.string()).nullish(),
   superRegions: z.array(z.string()).nullish(),
   neighborRegions: z.array(z.string()).nullish(),
-  languageConfigurations: z.array(LanguageConfigurationSchema),
+  languageConfigurations: z.array(LanguageConfigurationSchema).default(() => []),
   enabledLanguages: z.array(z.string()).nullish(),
   ttsLanguages: z.array(z.string()).nullish(),
   publishBulletins: z.boolean().nullish(),
