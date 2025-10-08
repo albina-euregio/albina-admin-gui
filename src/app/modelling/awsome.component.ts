@@ -194,7 +194,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return this.date.replace(/T/, "_").replace(/:/g, "-");
   }
 
-  private setSearchParams(url: URL): URL {
+  private setSearchParams(url: URL, sources: AwsomeSource[]): URL {
     const date = this.albinaDate;
     // replace 2023-11-12_06-00-00 with current date
     url.pathname =
@@ -202,6 +202,13 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ? url.pathname.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, date)
         : url.pathname.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
     url.searchParams.set("ts", date);
+
+    sources.forEach((source) => {
+      if (!source.domain) return;
+      if (!source.toolchain) return;
+      url.searchParams.append("domain", source.domain);
+      url.searchParams.append("toolchain", source.toolchain);
+    });
 
     const stabilityIndex = this.stabilityIndex;
     if (stabilityIndex) {
@@ -221,9 +228,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       (f) => f.url && f.getSelectedValues("selected").length,
     );
     const url0 = new URL(filterUrl?.url ?? source.url);
-    url0.searchParams.set("domain", source.domain);
-    url0.searchParams.set("toolchain", source.toolchain);
-    const url = this.setSearchParams(url0).toString();
+    const url = this.setSearchParams(url0, [source]).toString();
 
     const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "aspect");
     const aspects = Array.isArray(aspectFilter?.values)
@@ -479,7 +484,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (!url0) {
       return;
     }
-    const url = this.setSearchParams(new URL(url0));
+    const url = this.setSearchParams(new URL(url0), this.activeSources);
 
     this.timeseriesChart$loading = this.fetchJSON(url.toString()).subscribe((d) => {
       this.timeseriesChart$loading = undefined;
