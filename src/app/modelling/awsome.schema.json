@@ -65,6 +65,10 @@
               "type": "string"
             }
           },
+          "stabilityIndex": {
+            "description": "Whether this filter represents a snowpack stability index",
+            "type": "boolean"
+          },
           "type": {
             "description": "Identifier for this filter",
             "type": "string"

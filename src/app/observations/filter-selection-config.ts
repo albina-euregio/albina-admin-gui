@@ -63,6 +63,7 @@ export const FilterSelectionSpecSchema = z.object({
     .array(z.string())
     .optional()
     .describe("Initially selected values, use 'nan' for features w/o specification"),
+  stabilityIndex: z.boolean().optional().describe("Whether this filter represents a snowpack stability index"),
   type: z.string().describe("Identifier for this filter"),
   url: z
     .url()

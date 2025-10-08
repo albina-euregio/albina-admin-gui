@@ -449,6 +449,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private get stabilityIndex(): FilterSelectionData<FeatureProperties> | undefined {
     const markerClassify = this.markerService.markerClassify;
     if (
+      markerClassify.stabilityIndex ||
       markerClassify?.type === "Punstable" ||
       markerClassify?.type === "ccl" ||
       markerClassify?.type === "lwc" ||
