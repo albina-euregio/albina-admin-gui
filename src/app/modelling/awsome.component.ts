@@ -142,6 +142,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.loadSources();
   }
 
+  get activeSources() {
+    return this.sources.filter((s) => this.filterService.inObservationSources(this.asSource(s)));
+  }
+
+  private asSource(source: AwsomeSource): ObservationSource {
+    return source.name as unknown as ObservationSource;
+  }
+
   async loadSources() {
     this.mapLayerControl.remove();
     this.mapLayerControl = new Control.Layers();
@@ -151,7 +159,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.loadingState = "loading";
     this.observations = (
       await Promise.all(
-        this.sources.flatMap(async (source): Promise<FeatureProperties[]> => {
+        this.activeSources.flatMap(async (source): Promise<FeatureProperties[]> => {
           try {
             source.$error = undefined;
             return await this.loadSource(source);
@@ -171,7 +179,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.loadingState = undefined;
     }
 
-    if (this.sources.some((s) => s.imageOverlays?.length)) {
+    if (this.activeSources.some((s) => s.imageOverlays?.length)) {
       this.mapLayerControl.addTo(this.mapService.map);
     }
 
@@ -229,7 +237,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           map(({ features }): FeatureProperties[] =>
             features.flatMap((feature: GeoJSON.Feature<GeoJSON.Geometry, FeatureProperties>): FeatureProperties[] => {
               feature.properties.$date = date;
-              feature.properties.$source = source.name as unknown as ObservationSource;
+              feature.properties.$source = this.asSource(source);
               feature.properties.$sourceObject = source;
               feature.properties.$geometry = feature.geometry;
               if (feature.geometry.type === "Point") {
