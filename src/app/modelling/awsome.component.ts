@@ -377,6 +377,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         axisPointer: { type: "line" },
       } satisfies YAXisOption,
       grid: {
+        left: 40,
+        top: 40,
+        bottom: 40,
+        right: 40,
         backgroundColor: "#f7f7f7",
         show: true,
       } satisfies GridComponentOption,
@@ -502,6 +506,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         yAxis: {
           name: stabilityIndex.type,
         } satisfies YAXisOption,
+        grid: {
+          left: 40,
+          top: 40,
+          bottom: 40,
+          right: 40,
+          backgroundColor: "#f7f7f7",
+          show: true,
+        } satisfies GridComponentOption,
         tooltip: {
           trigger: "axis",
           formatter: ([series]: CallbackDataParams[]) => `
