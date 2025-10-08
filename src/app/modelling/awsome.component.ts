@@ -477,11 +477,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.timeseriesChart$loading = this.fetchJSON(url.toString()).subscribe((d) => {
       this.timeseriesChart$loading = undefined;
       const IndexSchema = z.object({
-        depth: z.number().array(),
-        size_estimate: z.number().array(),
-        lower: z.number().array(),
-        mean: z.number().array(),
-        upper: z.number().array(),
+        depth: z.number().nullish().array(),
+        size_estimate: z.number().nullish().array(),
+        lower: z.number().nullish().array(),
+        mean: z.number().nullish().array(),
+        upper: z.number().nullish().array(),
       });
       const TimeseriesSchema = z.object({
         indexes: z.record(z.string(), IndexSchema),
