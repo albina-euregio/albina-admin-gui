@@ -597,25 +597,29 @@
 
     <!-- External regions -->
     <div *ngIf="hasExternalRegions()" class="create-bulletin__regions">
-      <ng-container *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue; let i = index">
+      <ng-container
+        *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue; trackBy: trackByApiUrl; let i = index"
+      >
         <header
           class="create-bulletin__region-divider foreign"
-          (click)="toggleShowExternalRegionsList(externalRegion.key.apiUrl)"
+          (click)="toggleShowExternalRegionsList(externalRegion.key)"
           ngxMousetrapKey="f {{ i + 1 }}"
         >
-          <h5 class="font-s-medium">{{ externalRegion.key.name }} ({{ externalRegion.value.length }})</h5>
+          <h5 class="font-s-medium">
+            {{ externalRegion.value.server.name }} ({{ externalRegion.value.bulletins.length }})
+          </h5>
           <div class="btn-group region-divider__actions">
             <div class="region-divider__actions-dropdown mr-1">
               <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
-                <i *ngIf="!showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-right"></i>
-                <i *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="ph-bold ph-caret-down"></i>
+                <i *ngIf="!showExternalRegions(externalRegion.key)" class="ph-bold ph-caret-right"></i>
+                <i *ngIf="showExternalRegions(externalRegion.key)" class="ph-bold ph-caret-down"></i>
               </button>
             </div>
           </div>
         </header>
         <!-- List of external regions -->
-        <nav *ngIf="showExternalRegions(externalRegion.key.apiUrl)" class="create-bulletin__region-list">
-          <ng-container *ngFor="let bulletin of externalRegion.value">
+        <nav *ngIf="showExternalRegions(externalRegion.key)" class="create-bulletin__region-list">
+          <ng-container *ngFor="let bulletin of externalRegion.value.bulletins">
             <ng-container
               *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: undefined }"
             ></ng-container>
