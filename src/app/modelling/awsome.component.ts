@@ -460,17 +460,16 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private loadTimeseriesChart() {
+    this.timeseriesChart = undefined;
     this.timeseriesChart$loading?.unsubscribe();
     this.timeseriesChart$loading = undefined;
     const stabilityIndex = this.stabilityIndex;
     if (!stabilityIndex) {
-      this.timeseriesChart = undefined;
       return;
     }
 
     const url0 = this.config.timeseriesChart?.url;
     if (!url0) {
-      this.timeseriesChart = undefined;
       return;
     }
     const url = this.setSearchParams(new URL(url0));
@@ -485,16 +484,14 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         upper: z.number().array(),
       });
       const TimeseriesSchema = z.object({
-        indexes: z.object({
-          Punstable: IndexSchema,
-          ccl: IndexSchema,
-          lwc: IndexSchema,
-          sk38_rta: IndexSchema,
-        }),
+        indexes: z.record(z.string(), IndexSchema),
         timestamps: z.coerce.date().array(),
       });
       const data = TimeseriesSchema.parse(d);
-      const indexData = data.indexes[stabilityIndex.type as "Punstable" | "ccl" | "lwc" | "sk38_rta"];
+      const indexData = data.indexes[stabilityIndex.type];
+      if (!indexData) {
+        return;
+      }
       this.timeseriesChart = {
         xAxis: {
           type: "time",
