@@ -88,7 +88,7 @@ export class BulletinsComponent implements OnInit, OnDestroy {
         }),
       ) as Subject<BulletinUpdateModel>;
 
-    this.updates.subscribe((msg) => {});
+    this.updates.subscribe(() => {});
   }
 
   private wsUpdateDisconnect() {

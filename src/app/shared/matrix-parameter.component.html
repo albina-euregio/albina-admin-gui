@@ -173,7 +173,7 @@
           !matrixInformation().avalancheSize
         "
         [ngModel]="dangerRatingEnabled"
-        (click)="setDangerRatingEnabled($event)"
+        (click)="setDangerRatingEnabled()"
       />
 
       <label *ngIf="!disabled()" class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{

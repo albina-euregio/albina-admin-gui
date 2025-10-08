@@ -45,7 +45,7 @@ export class ServersConfigurationComponent implements OnInit {
     }
   }
 
-  public createServer(event) {
+  public createServer() {
     const newServer = {} as ServerConfiguration;
     newServer.$isNew = true;
     newServer.externalServer = true;

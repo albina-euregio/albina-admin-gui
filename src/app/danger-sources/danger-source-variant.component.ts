@@ -1,12 +1,11 @@
 import * as Enums from "../enums/enums";
-// services
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { haveSameElements } from "../shared/compareArrays";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
-import { SliderComponent, SliderOptions } from "../shared/slider.component";
+import { SliderOptions } from "../shared/slider.component";
 import { DangerSourcesService } from "./danger-sources.service";
 import {
   Characteristic,
@@ -32,13 +31,12 @@ import {
 import { NgIf, NgFor, NgClass, DatePipe } from "@angular/common";
 import { Component, OnChanges, input, output, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-// For iframe
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { MatrixInformationSchema } from "app/models/matrix-information.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { BsModalService } from "ngx-bootstrap/modal";
 import { debounceTime, Subject } from "rxjs";
 
 @Component({
@@ -148,7 +146,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
           return "";
       }
     },
-    getSelectionBarColor: (value: number): string => {
+    getSelectionBarColor: (): string => {
       return "lightgrey";
     },
     onValueChange: (value: number) => {

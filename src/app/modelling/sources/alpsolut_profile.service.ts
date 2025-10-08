@@ -83,6 +83,7 @@ export class AlpsolutProfileService {
         date_start: dateStart.toISOString(),
         date_end: dateEnd.toISOString(),
       })}`;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [longitude, latitude, ..._] = f.geometry.coordinates;
       return {
         $source: "alpsolut_profile",

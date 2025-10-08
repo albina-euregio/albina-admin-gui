@@ -131,7 +131,7 @@ export class UsersComponent implements AfterContentInit {
     this.deleteUserModalRef.hide();
     if (this.activeUser) {
       this.userService.deleteUser(this.activeUser.email).subscribe(
-        (data) => {
+        () => {
           console.debug("User deleted!");
           this.updateUsers();
           window.scrollTo(0, 0);

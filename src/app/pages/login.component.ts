@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
 
   openErrorModal(template: TemplateRef<unknown>) {
     this.errorModalRef = this.modalService.show(template, this.config);
-    this.modalService.onHide.subscribe((reason: string) => {
+    this.modalService.onHide.subscribe(() => {
       this.loading = false;
     });
   }

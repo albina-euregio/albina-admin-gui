@@ -655,7 +655,7 @@
         (deleteBulletinEvent)="eventDeleteBulletin($event)"
         (editMicroRegionsEvent)="eventEditMicroRegions($event)"
         (copyBulletinEvent)="eventCopyBulletin($event)"
-        (deselectBulletinEvent)="eventDeselectBulletin($event)"
+        (deselectBulletinEvent)="eventDeselectBulletin()"
         (toggleBulletinSidebarEvent)="toggleBulletinSidebar()"
         (undoRedoEvent)="undoRedoActiveBulletin($event)"
       ></app-avalanche-bulletin>
@@ -675,7 +675,7 @@
         [isCompactMapLayout]="isCompactMapLayout"
         [isBulletinSidebarVisible]="isBulletinSidebarVisible"
         [isComparedBulletin]="true"
-        (deselectBulletinEvent)="eventDeselectComparedBulletin($event)"
+        (deselectBulletinEvent)="eventDeselectComparedBulletin()"
       ></app-avalanche-bulletin>
     </div>
     <!-- End Compared bulletin -->

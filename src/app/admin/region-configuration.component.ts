@@ -108,7 +108,7 @@ export class RegionConfigurationComponent {
 
     if (!config.isNew) {
       this.configurationService.updateRegionConfiguration(json).subscribe(
-        (data) => {
+        () => {
           this.saveConfigurationLoading = false;
           console.debug("Region configuration saved!");
           window.scrollTo(0, 0);
@@ -120,7 +120,7 @@ export class RegionConfigurationComponent {
         },
         (error) => {
           this.saveConfigurationLoading = false;
-          console.error("Region configuration could not be saved!");
+          console.error("Region configuration could not be saved!", error);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",
@@ -131,7 +131,7 @@ export class RegionConfigurationComponent {
       );
     } else {
       this.configurationService.createRegionConfiguration(json).subscribe(
-        (data) => {
+        () => {
           this.saveConfigurationLoading = false;
           console.debug("Region configuration saved!");
           window.scrollTo(0, 0);
@@ -143,7 +143,7 @@ export class RegionConfigurationComponent {
         },
         (error) => {
           this.saveConfigurationLoading = false;
-          console.error("Region configuration could not be saved!");
+          console.error("Region configuration could not be saved!", error);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",

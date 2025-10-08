@@ -118,7 +118,7 @@ export class GetDustParamService {
         .then((blob) => this.createImageFromBlob(blob))
         .then((image) => this.getColorFromPx(image, px.x, px.y))
         .then((rgb) => this.getDustFromColor(rgb))
-        .catch((error) => {
+        .catch(() => {
           return new Promise((resolve) => {
             resolve("-");
           });

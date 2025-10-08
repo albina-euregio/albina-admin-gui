@@ -5,7 +5,7 @@ import { map } from "rxjs/operators";
 
 interface Request {
   Koordinate: string;
-  CRS: number;
+  CRS: string;
   name: "hoehenservice";
 }
 
@@ -28,13 +28,12 @@ interface Response {
 export class ElevationService {
   private http = inject(HttpClient);
 
-  private CRS = 4326;
   private readonly url = "https://voibos.rechenraum.com/voibos/voibos";
 
   getElevation(lat: number, lng: number): Observable<number> {
-    const params = {
+    const params: Request & Record<string, string> = {
       Koordinate: `${lng},${lat}`,
-      CRS: this.CRS,
+      CRS: "4326",
       name: "hoehenservice",
     };
 

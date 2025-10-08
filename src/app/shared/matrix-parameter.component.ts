@@ -434,7 +434,7 @@ export class MatrixParameterComponent implements OnInit {
     this.changeMatrixEvent.emit();
   }
 
-  setDangerRatingEnabled(event: Event) {
+  setDangerRatingEnabled() {
     if (!this.dangerRatingEnabled) {
       this.dangerRatingEnabled = true;
       this.matrixInformation().dangerRatingModificator = undefined;

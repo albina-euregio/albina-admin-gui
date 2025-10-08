@@ -1,12 +1,9 @@
 import { environment } from "../../environments/environment";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
 import { GenericObservation } from "./models/generic-observation.model";
 import { ObservationFilterService } from "./observation-filter.service";
 import { formatDate } from "@angular/common";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { saveAs } from "file-saver";
 import { firstValueFrom, Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
 
@@ -14,8 +11,6 @@ import { map, mergeAll } from "rxjs/operators";
 export class AlbinaObservationsService {
   private http = inject(HttpClient);
   private filter = inject<ObservationFilterService<GenericObservation>>(ObservationFilterService);
-  private authenticationService = inject(AuthenticationService);
-  private constantsService = inject(ConstantsService);
 
   getGenericObservations(): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/observations";

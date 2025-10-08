@@ -508,7 +508,7 @@ export class BulletinsService {
         }
       },
       (error) => {
-        console.warn("Locked bulletins could not be loaded!");
+        console.warn("Locked bulletins could not be loaded!", error);
       },
     );
   }

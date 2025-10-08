@@ -3,7 +3,7 @@ import { BaseMapService } from "../providers/map-service/base-map.service";
 import { augmentRegion, initAugmentRegion } from "../providers/regions-service/augmentRegion";
 import { RegionProperties, RegionsService } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { FilterSelectionValue, FilterSelectionValueSchema } from "./filter-selection-config";
+import { FilterSelectionValue } from "./filter-selection-config";
 import { observationFilters } from "./filter-selection-data-data";
 import {
   GenericObservation,
@@ -404,7 +404,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   @HostListener("document:keydown.escape", ["$event"])
-  handleEscapeKey(event: KeyboardEvent) {
+  handleEscapeKey() {
     if (this.showSearchInput) {
       this.toggleSearchInput();
     }

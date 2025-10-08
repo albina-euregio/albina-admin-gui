@@ -30,7 +30,6 @@ import { WsBulletinService } from "./app/providers/ws-bulletin-service/ws-bullet
 import { WsRegionService } from "./app/providers/ws-region-service/ws-region.service";
 import { WsUpdateService } from "./app/providers/ws-update-service/ws-update.service";
 import routes from "./app/routes";
-import { environment } from "./environments/environment";
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
 import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
 import localeCa from "@angular/common/locales/ca";
@@ -39,13 +38,12 @@ import { default as localeEn, default as localeOc } from "@angular/common/locale
 import localeEs from "@angular/common/locales/es";
 import localeFr from "@angular/common/locales/fr";
 import localeIt from "@angular/common/locales/it";
-import { ErrorHandler, importProvidersFrom } from "@angular/core";
+import { importProvidersFrom } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import * as sentry from "@sentry/angular";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,

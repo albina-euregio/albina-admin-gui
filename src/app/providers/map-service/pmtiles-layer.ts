@@ -24,7 +24,7 @@ export class BlendModePolygonSymbolizer implements PaintSymbolizer {
     private styleFunction: (f: Feature) => PathOptions,
   ) {}
 
-  before(ctx: CanvasRenderingContext2D, z: number): void {}
+  before(): void {}
 
   public draw(ctx: CanvasRenderingContext2D, geom: Point[][], z: number, f: Feature) {
     const style = this.styleFunction(f);

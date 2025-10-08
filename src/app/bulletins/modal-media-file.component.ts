@@ -61,7 +61,7 @@ export class ModalMediaFileComponent {
     }
 
     this.mediaFileService.uploadFile(this.date, this.file, this.text, this.important).subscribe(
-      (data) => {
+      () => {
         console.log("Upload complete!");
         this.component.mediaFileModalConfirm();
       },

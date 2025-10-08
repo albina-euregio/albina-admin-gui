@@ -35,6 +35,7 @@ export class DangerSourceModel implements PolygonObject {
   getAllRegions(): string[] {
     throw new Error("Method not implemented.");
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getRegionsByStatus(status: RegionStatus): string[] {
     return this.getAllRegions();
   }

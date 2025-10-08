@@ -34,13 +34,13 @@ export class RegionsConfigurationComponent implements AfterContentInit {
           this.configurationPropertiesLoaded = true;
         },
         (error) => {
-          console.error("Region configurations could not be loaded!");
+          console.error("Region configurations could not be loaded!", error);
         },
       );
     }
   }
 
-  public createRegion(event) {
+  public createRegion() {
     const newRegion = {} as RegionConfiguration;
     newRegion.isNew = true;
     this.regionConfigurations.push(newRegion);

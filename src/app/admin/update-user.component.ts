@@ -73,7 +73,7 @@ export class UpdateUserComponent implements AfterContentInit {
         this.roles = data;
       },
       (error) => {
-        console.error("Roles could not be loaded!");
+        console.error("Roles could not be loaded!", error);
       },
     );
     this.userService.getRegions().subscribe(
@@ -83,7 +83,7 @@ export class UpdateUserComponent implements AfterContentInit {
         );
       },
       (error) => {
-        console.error("Regions could not be loaded!");
+        console.error("Regions could not be loaded!", error);
       },
     );
   }
@@ -100,7 +100,7 @@ export class UpdateUserComponent implements AfterContentInit {
 
     const reader = new FileReader();
     reader.readAsDataURL(files[0]);
-    reader.onload = (_event) => {
+    reader.onload = () => {
       this.activeImage = reader.result.toString();
 
       this.imageCompress
@@ -141,7 +141,7 @@ export class UpdateUserComponent implements AfterContentInit {
     });
 
     this.userService.createUser(user).subscribe(
-      (data) => {
+      () => {
         this.updateUserLoading = false;
         console.debug("User created!");
         this.closeDialog({
@@ -151,7 +151,7 @@ export class UpdateUserComponent implements AfterContentInit {
       },
       (error) => {
         this.updateUserLoading = false;
-        console.error("User could not be created!");
+        console.error("User could not be created!", error);
         window.scrollTo(0, 0);
         this.closeDialog({
           type: "danger",
@@ -176,7 +176,7 @@ export class UpdateUserComponent implements AfterContentInit {
 
     if (this.isAdmin) {
       this.userService.updateUser(user).subscribe(
-        (data) => {
+        () => {
           this.updateUserLoading = false;
           console.debug("User updated!");
           if (this.authenticationService.getCurrentAuthor().email === user.email) {
@@ -191,7 +191,7 @@ export class UpdateUserComponent implements AfterContentInit {
         },
         (error) => {
           this.updateUserLoading = false;
-          console.error("User could not be updated!");
+          console.error("User could not be updated!", error);
           this.closeDialog({
             type: "danger",
             msg: this.translateService.instant("admin.users.updateUser.error"),
@@ -200,7 +200,7 @@ export class UpdateUserComponent implements AfterContentInit {
       );
     } else {
       this.userService.updateOwnUser(user).subscribe(
-        (data) => {
+        () => {
           this.updateUserLoading = false;
           console.debug("User updated!");
           if (this.authenticationService.getCurrentAuthor().email === user.email) {
@@ -215,7 +215,7 @@ export class UpdateUserComponent implements AfterContentInit {
         },
         (error) => {
           this.updateUserLoading = false;
-          console.error("User could not be updated!");
+          console.error("User could not be updated!", error);
           this.closeDialog({
             type: "danger",
             msg: this.translateService.instant("admin.users.updateUser.error"),

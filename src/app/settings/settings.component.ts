@@ -61,7 +61,7 @@ export class SettingsComponent {
     });
   }
 
-  editUser(event) {
+  editUser() {
     this.showUpdateDialog();
   }
 
@@ -84,7 +84,7 @@ export class SettingsComponent {
     });
   }
 
-  changePassword(event) {
+  changePassword() {
     this.showChangePasswordDialog();
   }
 

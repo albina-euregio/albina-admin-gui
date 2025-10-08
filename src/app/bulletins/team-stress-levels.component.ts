@@ -1,7 +1,7 @@
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { UserService } from "../providers/user-service/user.service";
-import { Component, OnInit, input, inject } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import type { EChartsCoreOption as EChartsOption } from "echarts/core";
 import { NgxEchartsDirective } from "ngx-echarts";
 

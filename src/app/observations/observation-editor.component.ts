@@ -180,7 +180,7 @@ export class ObservationEditorComponent implements AfterViewInit {
     }, 0);
   }
 
-  parseContent($event: { clipboardData: DataTransfer }): void {
+  parseContent(): void {
     const codes = {
       "ALP-LAW-NEG": PersonInvolvement.No,
       "ALP-LAW-UNKL": PersonInvolvement.Uninjured,

@@ -829,7 +829,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.openCheckBulletinsModal(message);
       },
       (error) => {
-        console.error("Bulletins could not be checked!");
+        console.error("Bulletins could not be checked!", error);
         this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate());
       },
     );
@@ -910,7 +910,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.openPublicationStatusModal(data as any);
         },
         (error) => {
-          console.error("Publication status could not be loaded!");
+          console.error("Publication status could not be loaded!", error);
         },
       );
   }
@@ -950,7 +950,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     };
     this.publishAllModalRef = this.modalService.show(ModalPublishAllComponent, { initialState });
 
-    this.modalService.onHide.subscribe((reason: string) => {
+    this.modalService.onHide.subscribe(() => {
       this.publishing = false;
     });
   }
@@ -958,12 +958,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   publishAllModalConfirm(change: boolean): void {
     this.publishAllModalRef.hide();
     this.bulletinsService.publishAllBulletins(this.bulletinsService.getActiveDate(), change).subscribe(
-      (data) => {
+      () => {
         console.log("All bulletins published.");
         this.publishing = false;
       },
       (error) => {
-        console.error("All bulletins could not be published!");
+        console.error("All bulletins could not be published!", error);
         this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
       },
     );
@@ -1315,7 +1315,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private updateExternalBulletins() {
-    this.externRegionsMap.forEach((value: BulletinModel[], key: ServerModel) => {
+    this.externRegionsMap.forEach((value: BulletinModel[]) => {
       for (const bulletin of value) {
         this.mapService.updateAggregatedRegion(bulletin);
       }
@@ -1487,11 +1487,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  eventDeselectBulletin(bulletin: BulletinModel) {
-    this.deselectBulletin(false);
+  eventDeselectBulletin() {
+    this.deselectBulletin();
   }
 
-  deselectBulletin(del?: boolean) {
+  deselectBulletin() {
     if (!this.editRegions && this.activeBulletin !== null && this.activeBulletin !== undefined) {
       this.mapService.deselectAggregatedRegion();
       this.activeBulletin = undefined;
@@ -1499,7 +1499,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  eventDeselectComparedBulletin(bulletin: BulletinModel) {
+  eventDeselectComparedBulletin() {
     this.comparedBulletin = undefined;
     this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
   }
@@ -1625,7 +1625,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private delBulletin(bulletin: BulletinModel) {
-    this.deselectBulletin(true);
+    this.deselectBulletin();
     this.deleteBulletinOnServer(bulletin).subscribe();
   }
 
@@ -1756,7 +1756,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         console.log("Bulletin created on server.");
       },
       (error) => {
-        console.error("Bulletin could not be created on server!");
+        console.error("Bulletin could not be created on server!", error);
         this.openSaveErrorModal(this.saveErrorTemplate());
       },
     );
@@ -1788,7 +1788,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         console.log("Bulletin updated on server.");
       },
       (error) => {
-        console.error("Bulletin could not be updated on server!");
+        console.error("Bulletin could not be updated on server!", error);
         this.saveError.set(bulletin.id, bulletin);
       },
     );
@@ -1808,7 +1808,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           console.log("Bulletin deleted on server.");
         },
         error: (error) => {
-          console.error("Bulletin could not be deleted on server!");
+          console.error("Bulletin could not be deleted on server!", error);
           this.openSaveErrorModal(this.saveErrorTemplate());
         },
       }),
@@ -1975,7 +1975,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             this.updateBulletinOnServer(bulletin, false, false);
           }
         }
-        this.deselectBulletin(true);
+        this.deselectBulletin();
         const delObservables: Observable<unknown>[] = entries.map((entry) => this.deleteBulletinOnServer(entry));
         forkJoin(delObservables).subscribe({
           complete: () => {
@@ -2206,7 +2206,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          console.error("Bulletins could not be checked!");
+          console.error("Bulletins could not be checked!", error);
           this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate());
         },
       );
@@ -2232,7 +2232,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     };
     this.submitBulletinsModalRef = this.modalService.show(ModalSubmitComponent, { initialState });
 
-    this.modalService.onHide.subscribe((reason: string) => {
+    this.modalService.onHide.subscribe(() => {
       this.submitting = false;
     });
   }
@@ -2250,7 +2250,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   submitBulletinsModalConfirm(date: [Date, Date]): void {
     this.submitBulletinsModalRef.hide();
     this.bulletinsService.submitBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-      (data) => {
+      () => {
         console.log("Bulletins submitted.");
         if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated) {
           this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.resubmitted);
@@ -2261,7 +2261,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.submitting = false;
       },
       (error) => {
-        console.error("Bulletins could not be submitted!");
+        console.error("Bulletins could not be submitted!", error);
         this.openSubmitBulletinsErrorModal(this.submitBulletinsErrorTemplate());
       },
     );
@@ -2377,7 +2377,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.openPublishBulletinsModal(message, date, change);
         },
         (error) => {
-          console.error("Bulletins could not be checked!");
+          console.error("Bulletins could not be checked!", error);
           this.openCheckBulletinsErrorModal(this.checkBulletinsErrorTemplate());
         },
       );
@@ -2395,7 +2395,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     };
     this.publishBulletinsModalRef = this.modalService.show(ModalPublishComponent, { initialState });
 
-    this.modalService.onHide.subscribe((reason: string) => {
+    this.modalService.onHide.subscribe(() => {
       this.publishing = false;
     });
   }
@@ -2404,7 +2404,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.publishBulletinsModalRef.hide();
     if (change) {
       this.bulletinsService.changeBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-        (data) => {
+        () => {
           console.log("Bulletins published (no messages).");
           if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
             this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
@@ -2414,13 +2414,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.publishing = false;
         },
         (error) => {
-          console.error("Bulletins could not be published (no messages)!");
+          console.error("Bulletins could not be published (no messages)!", error);
           this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
         },
       );
     } else {
       this.bulletinsService.publishBulletins(date, this.authenticationService.getActiveRegionId()).subscribe(
-        (data) => {
+        () => {
           console.log("Bulletins published.");
           if (this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.resubmitted) {
             this.bulletinsService.setUserRegionStatus(date, Enums.BulletinStatus.republished);
@@ -2430,7 +2430,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.publishing = false;
         },
         (error) => {
-          console.error("Bulletins could not be published!");
+          console.error("Bulletins could not be published!", error);
           this.openPublishBulletinsErrorModal(this.publishBulletinsErrorTemplate());
         },
       );
@@ -2467,7 +2467,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     };
     this.checkBulletinsModalRef = this.modalService.show(ModalCheckComponent, { initialState });
 
-    this.modalService.onHide.subscribe((reason: string) => {
+    this.modalService.onHide.subscribe(() => {
       this.publishing = false;
       this.submitting = false;
     });

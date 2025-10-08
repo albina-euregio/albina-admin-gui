@@ -2,7 +2,7 @@ import * as Enums from "../enums/enums";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { AfterViewInit, Component, ElementRef, inject, input, OnChanges, SimpleChange, viewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, inject, input, OnChanges, viewChild } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
 
@@ -76,7 +76,7 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     this.initMatrix();
   }
 
-  ngOnChanges(changes: Record<string, SimpleChange>) {
+  ngOnChanges() {
     this.resetMatrix();
     this.initMatrix();
   }

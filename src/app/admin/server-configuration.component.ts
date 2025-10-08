@@ -29,7 +29,7 @@ export class ServerConfigurationComponent {
 
     if (!this.config().$isNew) {
       this.configurationService.updateServerConfiguration(this.config()).subscribe(
-        (data) => {
+        () => {
           this.saveConfigurationLoading = false;
           console.debug("Server configuration saved!");
           window.scrollTo(0, 0);
@@ -41,7 +41,7 @@ export class ServerConfigurationComponent {
         },
         (error) => {
           this.saveConfigurationLoading = false;
-          console.error("Server configuration could not be saved!");
+          console.error("Server configuration could not be saved!", error);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",
@@ -52,7 +52,7 @@ export class ServerConfigurationComponent {
       );
     } else {
       this.configurationService.createServerConfiguration(this.config()).subscribe(
-        (data) => {
+        () => {
           this.saveConfigurationLoading = false;
           console.debug("Server configuration saved!");
           window.scrollTo(0, 0);
@@ -64,7 +64,7 @@ export class ServerConfigurationComponent {
         },
         (error) => {
           this.saveConfigurationLoading = false;
-          console.error("Server configuration could not be saved!");
+          console.error("Server configuration could not be saved!", error);
           window.scrollTo(0, 0);
           this.alerts.push({
             type: "danger",

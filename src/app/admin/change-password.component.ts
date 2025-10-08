@@ -38,9 +38,9 @@ export class ChangePasswordComponent {
     this.changePasswordLoading = true;
     if (!this.isAdmin) {
       this.userService.checkPassword(this.oldPassword).subscribe(
-        (data) => {
+        () => {
           this.userService.changePassword(this.oldPassword, this.newPassword1).subscribe(
-            (data2) => {
+            () => {
               this.oldPassword = "";
               this.newPassword1 = "";
               this.newPassword2 = "";
@@ -71,7 +71,7 @@ export class ChangePasswordComponent {
       );
     } else {
       this.userService.resetPassword(this.userId, this.newPassword1).subscribe(
-        (data2) => {
+        () => {
           this.oldPassword = "";
           this.newPassword1 = "";
           this.newPassword2 = "";

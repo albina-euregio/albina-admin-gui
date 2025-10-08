@@ -30,22 +30,22 @@ export class AuthenticationService {
     this.externalServers = [];
     try {
       this.authentication = this.localStorageService.getCurrentAuthor();
-    } catch (e) {
+    } catch {
       this.localStorageService.setCurrentAuthor(undefined);
     }
     try {
       this.setActiveRegion(this.localStorageService.getActiveRegion());
-    } catch (e) {
+    } catch {
       this.localStorageService.setActiveRegion(undefined);
     }
     try {
       this.setInternalRegions(this.localStorageService.getInternalRegions());
-    } catch (e) {
+    } catch {
       this.localStorageService.setInternalRegions(undefined);
     }
     try {
       this.setExternalServers(this.localStorageService.getExternalServers());
-    } catch (e) {
+    } catch {
       this.localStorageService.setExternalServers(undefined);
     }
     this.jwtHelper = new JwtHelperService();

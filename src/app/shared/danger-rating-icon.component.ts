@@ -2,7 +2,6 @@ import * as Enums from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { NgIf } from "@angular/common";
 import { Component, input, inject } from "@angular/core";
-import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 
 @Component({
   selector: "app-danger-rating-icon",
