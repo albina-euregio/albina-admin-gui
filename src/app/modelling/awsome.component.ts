@@ -100,6 +100,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
   timeseriesChart: EChartsOption | undefined;
+  timeseriesChart$loading: Subscription;
   loadingState: "loading" | "error" | undefined;
 
   t(key: string) {
@@ -457,6 +458,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private loadTimeseriesChart() {
+    this.timeseriesChart$loading?.unsubscribe();
+    this.timeseriesChart$loading = undefined;
     const stabilityIndex = this.stabilityIndex;
     if (!stabilityIndex) {
       this.timeseriesChart = undefined;
@@ -470,7 +473,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     }
     const url = this.setSearchParams(new URL(url0));
 
-    this.fetchJSON(url.toString()).subscribe((d) => {
+    this.timeseriesChart$loading = this.fetchJSON(url.toString()).subscribe((d) => {
+      this.timeseriesChart$loading = undefined;
       const IndexSchema = z.object({
         depth: z.number().array(),
         size_estimate: z.number().array(),
