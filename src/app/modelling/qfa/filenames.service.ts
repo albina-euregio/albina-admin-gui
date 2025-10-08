@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 
 export interface CaddyListingItem {
   name: string;
@@ -38,7 +39,7 @@ export class GetFilenamesService {
 
   public getFilenames = async (baseUrl: string, city: string) => {
     this.baseUrl = baseUrl;
-    const response = await this.getHTMLResponse().toPromise();
+    const response = await firstValueFrom(this.getHTMLResponse());
     const files = response.reverse();
     // console.log(files);
     const filteredFiles = files.filter((file) => file.name.includes(city));

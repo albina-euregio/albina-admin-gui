@@ -40,7 +40,7 @@ import {
 } from "leaflet";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
-import type { Subscription } from "rxjs";
+import { firstValueFrom, type Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import Split from "split.js";
 import { Temporal } from "temporal-polyfill";
@@ -117,9 +117,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       this.configURL = params.get("config") || this.configURL;
       this.date = params.get("date") || this.date;
     });
-    this.config$q = this.fetchJSON(this.configURL)
-      .toPromise()
-      .then((c) => AwsomeConfigSchema.parseAsync(c));
+    this.config$q = firstValueFrom(this.fetchJSON(this.configURL)).then((c) => AwsomeConfigSchema.parseAsync(c));
     this.config = await this.config$q;
     this.date ||= this.config.date;
     this.sources = this.config.sources;
@@ -275,9 +273,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     await this.config$q;
     let regions: FeatureCollection<MultiPolygon, RegionProperties> | undefined;
     if (this.config.regions?.url) {
-      regions = await this.fetchJSON<FeatureCollection<MultiPolygon, RegionProperties>>(
-        this.config.regions?.url,
-      ).toPromise();
+      regions = await firstValueFrom(
+        this.fetchJSON<FeatureCollection<MultiPolygon, RegionProperties>>(this.config.regions?.url),
+      );
     }
 
     await this.mapService.initMaps(this.mapDiv().nativeElement, {

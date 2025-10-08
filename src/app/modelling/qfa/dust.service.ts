@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 
 enum Cities {
   INNSBRUCK = "innsbruck",
@@ -64,7 +65,7 @@ export class GetDustParamService {
       headers: headers,
     });
 
-    return response.toPromise();
+    return firstValueFrom(response);
   };
 
   private createImageFromBlob = (blob: Blob): Promise<HTMLImageElement> => {

@@ -7,7 +7,7 @@ import { formatDate } from "@angular/common";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { saveAs } from "file-saver";
-import { Observable } from "rxjs";
+import { firstValueFrom, Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
 
 @Injectable()
@@ -66,7 +66,7 @@ export class AlbinaObservationsService {
   async deleteObservation(observation: GenericObservation): Promise<void> {
     const body = this.serializeObservation(observation);
     const url = environment.apiBaseUrl + "../api_ext/observations";
-    await this.http.delete(url, { body }).toPromise();
+    await firstValueFrom(this.http.delete(url, { body }));
   }
 }
 

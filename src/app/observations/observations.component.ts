@@ -54,7 +54,7 @@ import { LayerGroup, Map as LeafletMap, Marker } from "leaflet";
 import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { type Observable, type Subscription } from "rxjs";
+import { firstValueFrom, type Observable, type Subscription } from "rxjs";
 import Split from "split.js";
 
 export interface MultiselectDropdownData {
@@ -444,7 +444,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const { observation } = this.observationEditor;
     try {
       this.observationEditor.saving = true;
-      await this.observationsService.postObservation(observation).toPromise();
+      await firstValueFrom(this.observationsService.postObservation(observation));
       this.loadObservationsAndWeatherStations();
       this.hideObservationEditor();
     } catch (error) {
