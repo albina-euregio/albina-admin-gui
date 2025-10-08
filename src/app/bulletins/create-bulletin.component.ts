@@ -20,7 +20,7 @@ import { ModalPublishAllComponent } from "./modal-publish-all.component";
 import { ModalPublishComponent } from "./modal-publish.component";
 // modals
 import { ModalSubmitComponent } from "./modal-submit.component";
-import { DatePipe, KeyValuePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { DatePipe, KeyValue, KeyValuePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   Component,
@@ -111,7 +111,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public comparedBulletin: BulletinModel;
   public internBulletinsList: BulletinModel[];
   private internBulletinsListEtag: string;
-  public externRegionsMap: Map<ServerModel, BulletinModel[]>;
+  public externRegionsMap: Map<string, { server: ServerModel; bulletins: BulletinModel[] }>;
   public showExternRegionsMap: Map<string, boolean>;
   public showExternRegions: boolean;
 
@@ -219,7 +219,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.showForeignRegions = true;
     this.mapService.resetAll();
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.externRegionsMap = new Map<string, { server: ServerModel; bulletins: BulletinModel[] }>();
     this.showExternRegionsMap = new Map<string, boolean>();
     this.showExternRegions = false;
     // this.preventClick = false;
@@ -256,7 +256,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.activeBulletin = undefined;
     this.comparedBulletin = undefined;
     this.internBulletinsList = new Array<BulletinModel>();
-    this.externRegionsMap = new Map<ServerModel, BulletinModel[]>();
+    this.externRegionsMap = new Map<string, { server: ServerModel; bulletins: BulletinModel[] }>();
     this.showExternRegionsMap = new Map<string, boolean>();
     this.showExternRegions = false;
 
@@ -279,7 +279,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   toggleShowExternalRegions() {
     this.showExternRegions = !this.showExternRegions;
     if (this.showExternRegions) {
-      this.externRegionsMap.forEach((bulletins) => {
+      this.externRegionsMap.forEach(({ bulletins }) => {
         bulletins.forEach((bulletin) => {
           this.mapService.updateAggregatedRegion(bulletin);
         });
@@ -1051,7 +1051,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (!this.showNewBulletinModal && !this.editRegions) {
       let hit = false;
       const clickedRegion = this.mapService.getClickedRegion();
-      for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
+      for (const bulletin of this.internBulletinsList.concat(
+        [...this.externRegionsMap.values()].map((v) => v.bulletins).flat(),
+      )) {
         if (bulletin.savedRegions.includes(clickedRegion) || bulletin.publishedRegions.includes(clickedRegion)) {
           hit = true;
           if (
@@ -1067,7 +1069,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         }
       }
       if (!hit) {
-        for (const bulletin of this.internBulletinsList.concat([...this.externRegionsMap.values()].flat())) {
+        for (const bulletin of this.internBulletinsList.concat(
+          [...this.externRegionsMap.values()].map((v) => v.bulletins).flat(),
+        )) {
           if (bulletin.suggestedRegions.includes(clickedRegion)) {
             this.toggleBulletin(bulletin);
             break;
@@ -1123,6 +1127,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   getExternalRegionsMap() {
     return this.externRegionsMap;
+  }
+
+  // Track by api url to avoid duplicates in external regions list
+  trackByApiUrl(index: number, item: KeyValue<string, object>) {
+    return item.key;
   }
 
   loadBulletinsFromYesterday() {
@@ -1220,7 +1229,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       return 0;
     });
 
-    this.externRegionsMap.set(server, bulletinsList);
+    this.externRegionsMap.set(server.apiUrl, { server: server, bulletins: bulletinsList });
     if (!this.showExternRegionsMap.has(server.apiUrl)) {
       this.showExternRegionsMap.set(server.apiUrl, false);
     }
@@ -1312,14 +1321,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     for (const bulletin of this.internBulletinsList) {
       this.mapService.updateAggregatedRegion(bulletin);
     }
-  }
-
-  private updateExternalBulletins() {
-    this.externRegionsMap.forEach((value: BulletinModel[]) => {
-      for (const bulletin of value) {
-        this.mapService.updateAggregatedRegion(bulletin);
-      }
-    });
   }
 
   private addInternalBulletin(bulletin: BulletinModel) {
