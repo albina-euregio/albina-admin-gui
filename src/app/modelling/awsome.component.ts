@@ -202,6 +202,12 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ? url.pathname.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, date)
         : url.pathname.replace(/20\d{2}-\d{2}-\d{2}_\d{2}-\d{2}/, date);
     url.searchParams.set("ts", date);
+
+    const stabilityIndex = this.stabilityIndex;
+    if (stabilityIndex) {
+      url.searchParams.set("stabilityIndex", stabilityIndex.type);
+    }
+
     this.filterService.filterSelectionData.forEach((f) =>
       f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.type), v.value)),
     );
