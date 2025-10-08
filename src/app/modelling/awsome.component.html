@@ -166,7 +166,7 @@
         }
 
         @if (!selectedObservationDetails && hazardChart) {
-          <div class="chart-container w2">
+          <div class="chart-container hazard-chart">
             <div
               echarts
               (chartMouseOver)="chartMouseOver($event)"
@@ -177,7 +177,7 @@
         }
 
         @if (!selectedObservationDetails && timeseriesChart) {
-          <div class="chart-container w3">
+          <div class="chart-container timeseries-chart">
             <div echarts [options]="timeseriesChart"></div>
           </div>
         }

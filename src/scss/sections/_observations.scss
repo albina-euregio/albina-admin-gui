@@ -350,12 +350,14 @@ nav ~ .app-body .layout-outer {
   .chart-container {
     width: 220px;
   }
-  .chart-container.w2 {
+  .chart-container.hazard-chart {
     display: inline-block;
+    height: 440px;
     width: 440px;
   }
-  .chart-container.w3 {
+  .chart-container.timeseries-chart {
     display: inline-block;
+    height: 440px;
     width: 660px;
   }
 }
