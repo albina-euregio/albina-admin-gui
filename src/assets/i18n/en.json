@@ -790,6 +790,7 @@
       "map": "Map",
       "gallery": "Gallery",
       "filters": "Filters",
+      "details": "Details",
       "title": "Observations",
       "newObservation": "New observation",
       "exportObservations": "Export observations (GeoJSON)",

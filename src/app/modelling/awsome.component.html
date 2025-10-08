@@ -111,77 +111,81 @@
     </div>
 
     <div class="layout-right">
-      <div class="toolset toolset-1 overflow-scroll">
-        <div class="toolset-content">
-          <div class="toolset-charts">
-            @for (filterSelection of filterService.filterSelectionData; track filterSelection) {
-              <app-observation-chart
-                class="chart-container"
-                [filterSelection]="filterSelection"
-                (handleReload)="loadSources()"
-                (handleChange)="applyLocalFilter()"
-              />
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="toolset toolset-2 overflow-scroll">
-        @if (selectedObservationDetails) {
-          <div>
-            <div class="toolset-content bg-white">
-              <button
-                type="button"
-                class="btn float-end"
-                title="Close"
-                (click)="closeObservation()"
-                ngxMousetrapKey="esc"
-              >
-                <i class="ph ph-x"></i>
-              </button>
-              <button
-                type="button"
-                class="btn float-end"
-                title="Fullscreen"
-                (click)="requestFullscreen($event)"
-                ngxMousetrapKey="shift+f"
-              >
-                <i class="ph ph-corners-out"></i>
-              </button>
-              <tabset>
-                @for (tab of selectedObservationDetails; track tab) {
-                  <tab
-                    [heading]="tab.label"
-                    [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
-                    (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
-                  >
-                    @if (selectedObservationActiveTabs[selectedObservation.$source] === tab.label) {
-                      <div [innerHTML]="tab.html"></div>
-                    }
-                  </tab>
-                }
-              </tabset>
+      @if (layout === "map" || layout === "chart") {
+        <div class="layout-chart toolset toolset-1 overflow-scroll">
+          <div class="toolset-content">
+            <div class="toolset-charts">
+              @for (filterSelection of filterService.filterSelectionData; track filterSelection) {
+                <app-observation-chart
+                  class="chart-container"
+                  [filterSelection]="filterSelection"
+                  (handleReload)="loadSources()"
+                  (handleChange)="applyLocalFilter()"
+                />
+              }
             </div>
           </div>
-        }
+        </div>
+      }
 
-        @if (!selectedObservationDetails && hazardChart) {
-          <div class="chart-container hazard-chart">
-            <div
-              echarts
-              (chartMouseOver)="chartMouseOver($event)"
-              (chartMouseOut)="chartMouseOut()"
-              [options]="hazardChart"
-            ></div>
-          </div>
-        }
+      @if (layout === "map" || layout === "details") {
+        <div class="layout-details toolset toolset-2 overflow-scroll">
+          @if (selectedObservationDetails) {
+            <div>
+              <div class="toolset-content bg-white">
+                <button
+                  type="button"
+                  class="btn float-end"
+                  title="Close"
+                  (click)="closeObservation()"
+                  ngxMousetrapKey="esc"
+                >
+                  <i class="ph ph-x"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn float-end"
+                  title="Fullscreen"
+                  (click)="requestFullscreen($event)"
+                  ngxMousetrapKey="shift+f"
+                >
+                  <i class="ph ph-corners-out"></i>
+                </button>
+                <tabset>
+                  @for (tab of selectedObservationDetails; track tab) {
+                    <tab
+                      [heading]="tab.label"
+                      [active]="selectedObservationActiveTabs[selectedObservation.$source] === tab.label"
+                      (selectTab)="selectedObservationActiveTabs[selectedObservation.$source] = tab.label"
+                    >
+                      @if (selectedObservationActiveTabs[selectedObservation.$source] === tab.label) {
+                        <div [innerHTML]="tab.html"></div>
+                      }
+                    </tab>
+                  }
+                </tabset>
+              </div>
+            </div>
+          }
 
-        @if (!selectedObservationDetails && timeseriesChart) {
-          <div class="chart-container timeseries-chart">
-            <div echarts [options]="timeseriesChart"></div>
-          </div>
-        }
-      </div>
+          @if (!selectedObservationDetails && hazardChart) {
+            <div class="chart-container hazard-chart">
+              <div
+                echarts
+                (chartMouseOver)="chartMouseOver($event)"
+                (chartMouseOut)="chartMouseOut()"
+                [options]="hazardChart"
+              ></div>
+            </div>
+          }
+
+          @if (!selectedObservationDetails && timeseriesChart) {
+            <div class="chart-container timeseries-chart">
+              <div echarts [options]="timeseriesChart"></div>
+            </div>
+          }
+        </div>
+      }
     </div>
 
     <div class="layout-switch">
@@ -198,6 +202,14 @@
           <span class="button-icon ph ph-chart-line"></span>
           <span class="button-text">
             {{ "admin.observations.charts.charts" | translate }}
+          </span>
+        </div>
+      }
+      @if (layout !== "details") {
+        <div (click)="layout = 'details'" class="layout-switch-details obs-button">
+          <span class="button-icon ph ph-list-magnifying-glass"></span>
+          <span class="button-text">
+            {{ "admin.observations.details" | translate }}
           </span>
         </div>
       }

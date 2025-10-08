@@ -87,7 +87,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   private config$q: Promise<AwsomeConfig>;
   config: AwsomeConfig = {} as AwsomeConfig;
   date = "";
-  layout: "map" | "chart" = "map";
+  layout: "map" | "chart" | "details" = "map";
   readonly mapDiv = viewChild<ElementRef<HTMLDivElement>>("observationsMap");
   private observations: FeatureProperties[] = [];
   private localObservations: FeatureProperties[] = [];
@@ -304,8 +304,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       },
     });
 
-    Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
-    Split([".toolset-1", ".toolset-2"], { sizes: [33, 66], direction: "vertical" });
+    if (window.matchMedia("(min-width: 769px)").matches) {
+      Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
+      Split([".toolset-1", ".toolset-2"], { sizes: [33, 66], direction: "vertical" });
+    }
   }
 
   nextDate(direction: -1 | 1) {
@@ -609,6 +611,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     }
 
     removed.node.style.display = removed.display;
+
+    if (this.isMobile) {
+      this.layout = "details";
+    }
   }
 
   private onObservationRightClick(observation: FeatureProperties) {

@@ -121,19 +121,15 @@ nav ~ .app-body .layout-outer {
     0 0px 0 1px rgba(0, 0, 0, 0.02);
 }
 
-.layout--is-map .layout-switch .layout-switch-map {
-  display: none;
-}
-
-.layout--is-table .layout-switch .layout-switch-table {
-  display: none;
-}
-
+.layout--is-details .layout-switch .layout-switch-details,
+.layout--is-map .layout-switch .layout-switch-map,
+.layout--is-table .layout-switch .layout-switch-table,
 .layout--is-charts .layout-switch .layout-switch-charts {
   display: none;
 }
 
 @media screen and (min-width: 769px) {
+  .layout-switch .layout-switch-details,
   .layout-switch .layout-switch-charts {
     display: none;
   }
@@ -295,6 +291,7 @@ nav ~ .app-body .layout-outer {
 }
 
 @media screen and (max-width: 768px) {
+  .layout--is-details .layout-map,
   .layout--is-charts .layout-map {
     display: none;
   }
@@ -338,6 +335,13 @@ nav ~ .app-body .layout-outer {
 
 .chart-container {
   width: calc(50% - 20px * 0.5);
+  height: 440px;
+  &.hazard-chart {
+    width: 100%;
+  }
+  &.timeseries-chart {
+    width: 100%;
+  }
 }
 
 @media screen and (min-width: 550px) {
@@ -349,16 +353,14 @@ nav ~ .app-body .layout-outer {
 @media screen and (min-width: 769px) {
   .chart-container {
     width: 220px;
-  }
-  .chart-container.hazard-chart {
-    display: inline-block;
-    height: 440px;
-    width: 440px;
-  }
-  .chart-container.timeseries-chart {
-    display: inline-block;
-    height: 440px;
-    width: 660px;
+    &.hazard-chart {
+      display: inline-block;
+      width: 440px;
+    }
+    &.timeseries-chart {
+      display: inline-block;
+      width: 660px;
+    }
   }
 }
 
