@@ -734,7 +734,7 @@
 <ng-template #bulletinTemplate let-bulletin="bulletin" let-key="key">
   <div
     (click)="toggleBulletin(bulletin)"
-    [ngxMousetrapKey]="`shift+${key}`"
+    [ngxMousetrapKey]="key ? `shift+${key}` : ''"
     class="region-thumb"
     [class.region-thumb--active]="bulletin === activeBulletin"
   >
