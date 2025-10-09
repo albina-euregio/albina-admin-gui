@@ -47,6 +47,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@eaws/micro-regions": "^8.0.6",
     "@eaws/micro-regions_names": "^8.0.6",
+    "@eaws/pmtiles": "^8.0.6",
     "@ngx-translate/core": "^17.0.0",
     "@phosphor-icons/web": "^2.1.1",
     "@popperjs/core": "^2.11.8",

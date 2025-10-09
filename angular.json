@@ -25,7 +25,18 @@
             "index": "src/index.html",
             "tsConfig": "src/tsconfig.json",
             "polyfills": ["zone.js"],
-            "assets": ["src/assets"],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets/",
+                "output": "/assets/"
+              },
+              {
+                "glob": "eaws-regions.pmtiles",
+                "input": "node_modules/@eaws/pmtiles/",
+                "output": "/assets/"
+              }
+            ],
             "stylePreprocessorOptions": {
               "sass": { "silenceDeprecations": ["mixed-decls", "color-functions", "global-builtin", "import"] }
             },

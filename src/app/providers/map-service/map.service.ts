@@ -172,7 +172,7 @@ export class MapService {
 
       // overlay to show aggregated regions
       aggregatedRegions: new PmLeafletLayer({
-        sources: { [dataSource]: { maxDataZoom: 10, url: "https://static.avalanche.report/eaws-regions.pmtiles" } },
+        sources: { [dataSource]: { maxDataZoom: 10, url: "./assets/eaws-regions.pmtiles" } },
       }),
     };
     overlayMaps.regions.on("add", (e) => {

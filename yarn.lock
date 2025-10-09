@@ -792,6 +792,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eaws/pmtiles@npm:^8.0.6":
+  version: 8.0.6
+  resolution: "@eaws/pmtiles@npm:8.0.6::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fpmtiles%2F-%2F%40eaws%2Fpmtiles-8.0.6.tgz"
+  checksum: 10c0/c70b9a5170a9642d3e5ae78816f7be56c175dd9699cc7d05757928cc70178af401cdbc162e5342e3d01e04774715955d48ff2b7c16a10393cc6f9e8c51a98410
+  languageName: node
+  linkType: hard
+
 "@emnapi/core@npm:^1.4.5":
   version: 1.4.5
   resolution: "@emnapi/core@npm:1.4.5"
@@ -2932,6 +2939,7 @@ __metadata:
     "@auth0/angular-jwt": "npm:^5.2.0"
     "@eaws/micro-regions": "npm:^8.0.6"
     "@eaws/micro-regions_names": "npm:^8.0.6"
+    "@eaws/pmtiles": "npm:^8.0.6"
     "@eslint/js": "npm:^9.31.0"
     "@ngx-translate/core": "npm:^17.0.0"
     "@phosphor-icons/web": "npm:^2.1.1"
