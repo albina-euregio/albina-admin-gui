@@ -704,6 +704,9 @@
           "enableEditableFields": "Editable textfields instead of textcat for bulletins",
           "enableGeneralHeadline": "Enable general overall headline for bulletins",
           "enableWeatherTextField": "Enable text input for weather synopsis"
+        },
+        "languageConfiguration": {
+          "title": "Language configuration"
         }
       },
       "success": "Configuration successfully saved",

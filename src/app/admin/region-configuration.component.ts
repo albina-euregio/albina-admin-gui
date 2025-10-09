@@ -1,4 +1,8 @@
-import { RegionConfiguration, RegionConfigurationSchema } from "../models/region-configuration.model";
+import {
+  LanguageConfigurationSchema,
+  RegionConfiguration,
+  RegionConfigurationSchema,
+} from "../models/region-configuration.model";
 import { LANGUAGES } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
@@ -22,6 +26,7 @@ export class RegionConfigurationComponent {
   authenticationService = inject(AuthenticationService);
 
   readonly RegionConfigurationSchema = RegionConfigurationSchema;
+  readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
   readonly config = input<RegionConfiguration>(undefined);
   readonly languages = LANGUAGES;
 

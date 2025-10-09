@@ -692,6 +692,76 @@
         </tbody>
       </table>
     </tab>
+    <tab heading="{{ 'admin.region-configuration.table.languageConfiguration.title' | translate }}">
+      <table class="table table-hover table-condensed mb-0">
+        <tbody *ngFor="let languageConfiguration of config().languageConfigurations">
+          <tr class="table-active">
+            <td>
+              <label class="col-form-label">{{ LanguageConfigurationSchema.shape.lang.description }}</label>
+            </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="languageConfiguration.lang" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">
+                {{ LanguageConfigurationSchema.shape.warningServiceName.description }}
+              </label>
+            </td>
+            <td>
+              <input
+                type="text"
+                [lang]="languageConfiguration.lang"
+                class="form-control"
+                [(ngModel)]="languageConfiguration.warningServiceName"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">
+                {{ LanguageConfigurationSchema.shape.warningServiceEmail.description }}
+              </label>
+            </td>
+            <td>
+              <input type="email" class="form-control" [(ngModel)]="languageConfiguration.warningServiceEmail" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">
+                {{ LanguageConfigurationSchema.shape.websiteName.description }}
+              </label>
+            </td>
+            <td>
+              <input
+                type="text"
+                [lang]="languageConfiguration.lang"
+                class="form-control"
+                [(ngModel)]="languageConfiguration.websiteName"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{ LanguageConfigurationSchema.shape.url.description }}</label>
+            </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="languageConfiguration.url" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{ LanguageConfigurationSchema.shape.urlWithDate.description }}</label>
+            </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="languageConfiguration.urlWithDate" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </tab>
   </tabset>
 </div>
 <button

@@ -1,12 +1,12 @@
 import { z } from "zod/v4";
 
 export const LanguageConfigurationSchema = z.object({
-  lang: z.string().nullish(),
-  websiteName: z.string().nullish(),
-  warningServiceName: z.string().nullish(),
-  warningServiceEmail: z.email().nullish(),
-  url: z.string().nullish(),
-  urlWithDate: z.string().nullish(),
+  lang: z.string().nullish().describe("Language code"),
+  websiteName: z.string().nullish().describe("Website name"),
+  warningServiceName: z.string().nullish().describe("Warning service name"),
+  warningServiceEmail: z.email().nullish().describe("Warning service email"),
+  url: z.url().nullish().describe("Website URL"),
+  urlWithDate: z.url().nullish().describe("Website URL for date given by %s"),
 });
 
 export const RegionConfigurationSchema = z.object({
