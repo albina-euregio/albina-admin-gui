@@ -494,8 +494,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         depth: z.number().nullish().array(),
         size_estimate: z.number().nullish().array(),
         lower: z.number().nullish().array(),
+        lower2: z.number().nullish().array().optional(),
         mean: z.number().nullish().array(),
         upper: z.number().nullish().array(),
+        upper2: z.number().nullish().array().optional(),
       });
       const TimeseriesSchema = z.object({
         indexes: z.record(z.string(), IndexSchema),
@@ -558,10 +560,31 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
             type: "line",
             data: data.timestamps.map((t, i) => [t, indexData.upper[i] - indexData.lower[i]]),
             lineStyle: { opacity: 0 },
-            areaStyle: { color: "#ccc" },
+            areaStyle: { color: "#bbb" },
             stack: "confidence-band",
             symbol: "none",
           } satisfies LineSeriesOption,
+          ...(indexData.lower2
+            ? [
+                {
+                  name: "lower",
+                  type: "line",
+                  data: data.timestamps.map((t, i) => [t, indexData.lower2[i]]),
+                  lineStyle: { opacity: 0 },
+                  stack: "confidence-band2",
+                  symbol: "none",
+                } satisfies LineSeriesOption,
+                {
+                  name: "upper",
+                  type: "line",
+                  data: data.timestamps.map((t, i) => [t, indexData.upper2[i] - indexData.lower2[i]]),
+                  lineStyle: { opacity: 0 },
+                  areaStyle: { color: "#ddd" },
+                  stack: "confidence-band2",
+                  symbol: "none",
+                } satisfies LineSeriesOption,
+              ]
+            : []),
         ],
       } satisfies EChartsOption;
 
