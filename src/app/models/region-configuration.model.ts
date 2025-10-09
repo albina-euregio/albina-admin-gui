@@ -58,8 +58,6 @@ export const RegionConfigurationSchema = z.object({
   mapLogoColorPath: z.string().nullish(),
   mapLogoBwPath: z.string().nullish(),
   mapLogoPosition: z.string().nullish(),
-  mapCenterLat: z.coerce.number().nullish(),
-  mapCenterLng: z.coerce.number().nullish(),
   imageColorbarColorPath: z.string().nullish(),
   imageColorbarBwPath: z.string().nullish(),
   defaultLang: z.string().nullish(),

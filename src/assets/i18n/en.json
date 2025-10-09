@@ -681,8 +681,6 @@
           "mapLogoColorPath": "Logo for map (color)",
           "mapLogoBwPath": "Logo for map (bw)",
           "mapLogoPosition": "Logo position for map",
-          "mapCenterLat": "Center position of map (lat)",
-          "mapCenterLng": "Center position of map (long)",
           "imageColorbarColorPath": "Colorbar (color)",
           "imageColorbarBwPath": "Colorbar (b/w)",
           "enabledLanguages": "Enabled languages",
