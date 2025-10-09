@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
 <div *ngFor="let alert of alerts">
   <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
 </div>
@@ -11,7 +12,7 @@
               <label class="col-form-label">{{ "admin.region-configuration.table.general.id" | translate }}</label>
             </td>
             <td>
-              <input type="text" class="form-control" id="input-name" placeholder="" [(ngModel)]="config().id" />
+              <input type="text" class="form-control" [(ngModel)]="config().id" />
             </td>
           </tr>
           <tr>
@@ -21,13 +22,7 @@
               }}</label>
             </td>
             <td>
-              <input
-                type="text"
-                class="form-control"
-                id="input-name"
-                placeholder=""
-                [(ngModel)]="config().microRegions"
-              />
+              <input type="text" class="form-control" [(ngModel)]="config().microRegions" />
             </td>
           </tr>
           <tr>
@@ -40,8 +35,6 @@
               <input
                 type="text"
                 class="form-control"
-                id="input-name"
-                placeholder=""
                 [ngModel]="config().subRegions"
                 (ngModelChange)="config().subRegions = $event.split(',')"
               />
@@ -57,8 +50,6 @@
               <input
                 type="text"
                 class="form-control"
-                id="input-name"
-                placeholder=""
                 [ngModel]="config().superRegions"
                 (ngModelChange)="config().superRegions = $event.split(',')"
               />
@@ -74,8 +65,6 @@
               <input
                 type="text"
                 class="form-control"
-                id="input-name"
-                placeholder=""
                 [ngModel]="config().neighborRegions"
                 (ngModelChange)="config().neighborRegions = $event.split(',')"
               />
@@ -221,13 +210,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-geoDataDirectory"
-                      placeholder=""
-                      [(ngModel)]="config().geoDataDirectory"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().geoDataDirectory" />
                   </td>
                 </tr>
                 <tr>
@@ -237,13 +220,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapLogoColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().mapLogoColorPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().mapLogoColorPath" />
                   </td>
                 </tr>
                 <tr>
@@ -253,13 +230,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapLogoBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().mapLogoBwPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().mapLogoBwPath" />
                   </td>
                 </tr>
                 <tr>
@@ -269,13 +240,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapLogoPosition"
-                      placeholder=""
-                      [(ngModel)]="config().mapLogoPosition"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().mapLogoPosition" />
                   </td>
                 </tr>
                 <tr>
@@ -285,13 +250,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapCenterLat"
-                      placeholder=""
-                      [(ngModel)]="config().mapCenterLat"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().mapCenterLat" />
                   </td>
                 </tr>
                 <tr>
@@ -301,13 +260,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapCenterLng"
-                      placeholder=""
-                      [(ngModel)]="config().mapCenterLng"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().mapCenterLng" />
                   </td>
                 </tr>
               </table>
@@ -336,13 +289,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfColor"
-                      placeholder=""
-                      [(ngModel)]="config().pdfColor"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfColor" />
                   </td>
                 </tr>
                 <tr>
@@ -352,13 +299,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapYAmPm"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapYAmPm"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfMapYAmPm" />
                   </td>
                 </tr>
                 <tr>
@@ -368,13 +309,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapYFd"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapYFd"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfMapYFd" />
                   </td>
                 </tr>
                 <tr>
@@ -384,13 +319,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapWidthAmPm"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapWidthAmPm"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfMapWidthAmPm" />
                   </td>
                 </tr>
                 <tr>
@@ -400,13 +329,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapWidthFd"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapWidthFd"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfMapWidthFd" />
                   </td>
                 </tr>
                 <tr>
@@ -416,13 +339,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapHeight"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapHeight"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfMapHeight" />
                   </td>
                 </tr>
                 <tr>
@@ -445,13 +362,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfFooterLogoColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().pdfFooterLogoColorPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfFooterLogoColorPath" />
                   </td>
                 </tr>
                 <tr>
@@ -461,13 +372,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfFooterLogoBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().pdfFooterLogoBwPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().pdfFooterLogoBwPath" />
                   </td>
                 </tr>
                 <tr>
@@ -477,13 +382,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarColorPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().imageColorbarColorPath" />
                   </td>
                 </tr>
                 <tr>
@@ -493,13 +392,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarBwPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().imageColorbarBwPath" />
                   </td>
                 </tr>
               </table>
@@ -528,13 +421,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-simpleHtmlTemplateName"
-                      placeholder=""
-                      [(ngModel)]="config().simpleHtmlTemplateName"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().simpleHtmlTemplateName" />
                   </td>
                 </tr>
               </table>
@@ -563,13 +450,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarColorPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().imageColorbarColorPath" />
                   </td>
                 </tr>
                 <tr>
@@ -579,13 +460,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarBwPath"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().imageColorbarBwPath" />
                   </td>
                 </tr>
                 <tr>
@@ -595,13 +470,7 @@
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-emailColor"
-                      placeholder=""
-                      [(ngModel)]="config().emailColor"
-                    />
+                    <input type="text" class="form-control" [(ngModel)]="config().emailColor" />
                   </td>
                 </tr>
               </table>
