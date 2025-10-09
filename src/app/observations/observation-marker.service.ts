@@ -36,17 +36,14 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     const filterSelectionValue = isHighlighted
       ? this.highlighted
       : this.markerClassify?.findForObservation(observation);
-    if (!filterSelectionValue) {
-      return;
-    }
     const options: PolylineOptions = {
       interactive: true,
       pane: "markerPane",
       color: filterSelectionValue?.borderColor,
-      fillColor: filterSelectionValue?.color,
+      fillColor: filterSelectionValue?.color ?? "rgba(0, 0, 0, 0)",
       fillOpacity: filterSelectionValue?.fillOpacity,
       opacity: filterSelectionValue?.opacity,
-      weight: filterSelectionValue?.weight,
+      weight: filterSelectionValue?.weight ?? 0,
     };
     const marker = GeoJSON.geometryToLayer({ geometry, type: "Feature", properties: {} }, options) as Polygon;
     marker.bindTooltip(() => this.createTooltipText(observation), {
@@ -62,7 +59,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
       tooltipclose: () =>
         marker.setStyle({
           color: filterSelectionValue?.borderColor,
-          weight: filterSelectionValue?.weight,
+          weight: filterSelectionValue?.weight ?? 0,
         }),
     });
     return marker;
