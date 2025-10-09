@@ -74,6 +74,29 @@ class RegionLayer extends GeoJSON<SelectableRegionProperties> {
       .filter((entry) => entry.feature.properties.selected)
       .map((entry) => entry.feature.properties.id);
   }
+
+  findRegion(region: string) {
+    return this.getLayers().find((entry) => entry.feature.properties.id === region);
+  }
+
+  toggleSelectedRegions(regions: string[], force?: boolean) {
+    regions.forEach((r) => {
+      const region = this.findRegion(r);
+      if (!region) return;
+      region.feature.properties.selected = force ?? !region.feature.properties.selected;
+    });
+  }
+
+  clearSelectedRegions() {
+    for (const entry of this.getLayers()) {
+      entry.feature.properties.selected = false;
+    }
+  }
+
+  setSelectedRegions(regions: string[]) {
+    this.clearSelectedRegions();
+    this.toggleSelectedRegions(regions);
+  }
 }
 
 const dataSource = "eaws-regions";
@@ -536,55 +559,22 @@ export class MapService {
   private handleClick(clickMode: ClickMode, e: MouseEvent, feature: RegionLayerFeature, editSelection: RegionLayer) {
     if (clickMode === "awsome") {
       if (e.shiftKey) {
-        this.toggleRegion(feature);
+        editSelection.toggleSelectedRegions([feature.properties.id]);
       } else if (feature.properties.selected) {
-        this.selectNone(editSelection);
+        editSelection.clearSelectedRegions();
       } else {
-        this.selectOnly(feature, editSelection);
+        editSelection.setSelectedRegions([feature.properties.id]);
       }
     } else if (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? e.metaKey : e.ctrlKey) {
-      this.toggleLevel1Regions(feature, editSelection);
+      const regions = this.regionsService.getLevel1Regions(feature.properties.id);
+      editSelection.toggleSelectedRegions(regions, !feature.properties.selected);
     } else if (e.altKey) {
-      this.toggleLevel2Regions(feature, editSelection);
+      const regions = this.regionsService.getLevel2Regions(feature.properties.id);
+      editSelection.toggleSelectedRegions(regions, !feature.properties.selected);
     } else {
-      this.toggleRegion(feature);
+      editSelection.toggleSelectedRegions([feature.properties.id]);
     }
-    this.overlayMaps.editSelection.updateEditSelection();
-  }
-
-  private toggleRegion(feature: RegionLayerFeature) {
-    const selected = !feature.properties.selected;
-    feature.properties.selected = selected;
-  }
-
-  private selectNone(editSelection: RegionLayer) {
-    for (const entry of editSelection.getLayers()) {
-      entry.feature.properties.selected = false;
-    }
-  }
-  private selectOnly(feature: RegionLayerFeature, editSelection: RegionLayer) {
-    this.selectNone(editSelection);
-    feature.properties.selected = true;
-  }
-
-  private toggleLevel1Regions(feature: RegionLayerFeature, editSelection: RegionLayer) {
-    const selected = !feature.properties.selected;
-    const regions = this.regionsService.getLevel1Regions(feature.properties.id);
-    for (const entry of editSelection.getLayers()) {
-      if (regions.includes(entry.feature.properties.id)) {
-        entry.feature.properties.selected = selected;
-      }
-    }
-  }
-
-  private toggleLevel2Regions(feature: RegionLayerFeature, editSelection: RegionLayer) {
-    const selected = !feature.properties.selected;
-    const regions = this.regionsService.getLevel2Regions(feature.properties.id);
-    for (const entry of editSelection.getLayers()) {
-      if (regions.includes(entry.feature.properties.id)) {
-        entry.feature.properties.selected = selected;
-      }
-    }
+    editSelection.updateEditSelection();
   }
 
   protected highlightAndShowName(layer: Layer) {
