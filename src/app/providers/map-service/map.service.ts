@@ -428,7 +428,7 @@ export class MapService {
           dataSource,
           dataLayer: "micro-regions_elevation",
           symbolizer: new BlendModePolygonSymbolizer("multiply", (f) => {
-            const properties = f.props as unknown as SelectableRegionProperties;
+            const properties = f.props as unknown as RegionWithElevationProperties;
             if (!filterFeature({ properties } as unknown as GeoJSON.Feature)) return undefined;
             if (properties.id !== region) return undefined;
             let isAbove = properties.elevation === "high" || properties.elevation === "low_high";
@@ -514,7 +514,12 @@ export class MapService {
     return result;
   }
 
-  private handleClick(clickMode: ClickMode, e: MouseEvent, feature: geojson.Feature, editSelection: GeoJSON) {
+  private handleClick(
+    clickMode: ClickMode,
+    e: MouseEvent,
+    feature: geojson.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
+    editSelection: GeoJSON<SelectableRegionProperties>,
+  ) {
     if (clickMode === "awsome") {
       if (e.shiftKey) {
         this.toggleRegion(feature);
@@ -533,22 +538,28 @@ export class MapService {
     this.updateEditSelection();
   }
 
-  private toggleRegion(feature: geojson.Feature) {
+  private toggleRegion(feature: geojson.Feature<GeoJSON.Geometry, SelectableRegionProperties>) {
     const selected = !feature.properties.selected;
     feature.properties.selected = selected;
   }
 
-  private selectNone(editSelection: GeoJSON) {
+  private selectNone(editSelection: GeoJSON<SelectableRegionProperties>) {
     for (const entry of editSelection.getLayers()) {
       entry.feature.properties.selected = false;
     }
   }
-  private selectOnly(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+  private selectOnly(
+    feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
+    editSelection: GeoJSON<SelectableRegionProperties>,
+  ) {
     this.selectNone(editSelection);
     feature.properties.selected = true;
   }
 
-  private toggleLevel1Regions(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+  private toggleLevel1Regions(
+    feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
+    editSelection: GeoJSON<SelectableRegionProperties>,
+  ) {
     const selected = !feature.properties.selected;
     const regions = this.regionsService.getLevel1Regions(feature.properties.id);
     for (const entry of editSelection.getLayers()) {
@@ -558,7 +569,10 @@ export class MapService {
     }
   }
 
-  private toggleLevel2Regions(feature: GeoJSON.Feature, editSelection: GeoJSON) {
+  private toggleLevel2Regions(
+    feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
+    editSelection: GeoJSON<SelectableRegionProperties>,
+  ) {
     const selected = !feature.properties.selected;
     const regions = this.regionsService.getLevel2Regions(feature.properties.id);
     for (const entry of editSelection.getLayers()) {
