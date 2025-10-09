@@ -32,16 +32,19 @@ declare module "leaflet" {
   interface Map {
     sync(other: Map): void;
   }
-
-  interface GeoJSON<P = any> {
-    feature?: geojson.Feature<geojson.MultiPoint, P>;
-
-    getLayers(): GeoJSON<P>[];
-  }
 }
 
 interface SelectableRegionProperties extends RegionWithElevationProperties {
   selected: boolean;
+}
+
+class RegionLayer<P = SelectableRegionProperties> extends GeoJSON<P> {
+  getLayers(): (GeoJSON<P> & {
+    feature: geojson.Feature<geojson.MultiPoint, P>;
+  })[] {
+    // @ts-expect-error Layer -> GeoJSON
+    return super.getLayers();
+  }
 }
 
 const dataSource = "eaws-regions";
@@ -66,14 +69,14 @@ export class MapService {
   protected afternoonBaseMaps: Record<string, TileLayer>;
   protected overlayMaps: {
     // Micro  regions without elevation
-    regions: GeoJSON<SelectableRegionProperties>;
-    editSelection: GeoJSON<SelectableRegionProperties>;
+    regions: RegionLayer;
+    editSelection: RegionLayer;
     aggregatedRegions: PmLeafletLayer;
   };
   protected afternoonOverlayMaps: {
     // Micro  regions without elevation
-    regions: GeoJSON<SelectableRegionProperties>;
-    editSelection: GeoJSON<SelectableRegionProperties>;
+    regions: RegionLayer;
+    editSelection: RegionLayer;
     aggregatedRegions: PmLeafletLayer;
   };
 
@@ -102,7 +105,7 @@ export class MapService {
 
     const overlayMaps: typeof this.overlayMaps = {
       // overlay to show micro regions without elevation (only outlines)
-      regions: new GeoJSON(regions, {
+      regions: new RegionLayer(regions, {
         onEachFeature: (feature, layer) => {
           layer.on("click", () => (feature.properties.selected = true));
           this.highlightAndShowName(layer);
@@ -111,7 +114,7 @@ export class MapService {
       }),
 
       // overlay to select regions (when editing an aggregated region)
-      editSelection: new GeoJSON(regions, {
+      editSelection: new RegionLayer(regions, {
         style: this.getEditSelectionBaseStyle(),
       }),
 
@@ -526,7 +529,7 @@ export class MapService {
     clickMode: ClickMode,
     e: MouseEvent,
     feature: geojson.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: GeoJSON<SelectableRegionProperties>,
+    editSelection: RegionLayer,
   ) {
     if (clickMode === "awsome") {
       if (e.shiftKey) {
@@ -551,14 +554,14 @@ export class MapService {
     feature.properties.selected = selected;
   }
 
-  private selectNone(editSelection: GeoJSON<SelectableRegionProperties>) {
+  private selectNone(editSelection: RegionLayer) {
     for (const entry of editSelection.getLayers()) {
       entry.feature.properties.selected = false;
     }
   }
   private selectOnly(
     feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: GeoJSON<SelectableRegionProperties>,
+    editSelection: RegionLayer,
   ) {
     this.selectNone(editSelection);
     feature.properties.selected = true;
@@ -566,7 +569,7 @@ export class MapService {
 
   private toggleLevel1Regions(
     feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: GeoJSON<SelectableRegionProperties>,
+    editSelection: RegionLayer,
   ) {
     const selected = !feature.properties.selected;
     const regions = this.regionsService.getLevel1Regions(feature.properties.id);
@@ -579,7 +582,7 @@ export class MapService {
 
   private toggleLevel2Regions(
     feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: GeoJSON<SelectableRegionProperties>,
+    editSelection: RegionLayer,
   ) {
     const selected = !feature.properties.selected;
     const regions = this.regionsService.getLevel2Regions(feature.properties.id);
