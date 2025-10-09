@@ -117,7 +117,7 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
     }
     const ll = new LatLng(observation.latitude, observation.longitude);
     const marker = new Marker(ll, {
-      bubblingMouseEvents: false,
+      bubblingPointerEvents: false,
       icon: icon,
       alt: `${observation.$source}-${observation.$id}`,
       opacity: filterSelectionValue?.opacity ?? 1,

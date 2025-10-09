@@ -2609,7 +2609,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/leaflet@npm:^1.9.3, @types/leaflet@npm:^1.9.8":
+"@types/leaflet@file:./local-types/leaflet/::locator=albina-admin-gui%40workspace%3A.":
+  version: 2.0.9999
+  resolution: "@types/leaflet@file:./local-types/leaflet/#./local-types/leaflet/::hash=09fc15&locator=albina-admin-gui%40workspace%3A."
+  dependencies:
+    "@types/geojson": "npm:*"
+  checksum: 10c0/1845bf504614869142cf2439b3b8562bf017b23c43a753315be0503ab0d016195802e60f81b1341c3f76efc2b31df88020e35fd9afb44b80afe9d78bdfec8170
+  languageName: node
+  linkType: hard
+
+"@types/leaflet@npm:^1.9.8":
   version: 1.9.9
   resolution: "@types/leaflet@npm:1.9.9"
   dependencies:
@@ -2932,7 +2941,7 @@ __metadata:
     "@types/diff-match-patch": "npm:^1.0.36"
     "@types/file-saver": "npm:^2.0.5"
     "@types/geojson": "npm:^7946.0.10"
-    "@types/leaflet": "npm:^1.9.3"
+    "@types/leaflet": "file:./local-types/leaflet/"
     "@types/lodash": "npm:^4"
     "@types/mousetrap": "npm:^1.6.15"
     "@types/node": "npm:^20.0.0"
