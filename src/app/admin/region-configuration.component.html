@@ -720,86 +720,118 @@
       </table>
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.languageConfiguration.title' | translate }}">
-      <table class="table table-hover table-condensed mb-0">
-        <tbody>
-          <tr>
-            <td>
-              <label class="col-form-label">{{ RegionConfigurationSchema.shape.defaultLang.description }}</label>
-            </td>
-            <td>
-              <input type="text" class="form-control" [(ngModel)]="config().defaultLang" />
-            </td>
-          </tr>
-        </tbody>
-        @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+      <div class="table-responsive">
+        <table class="table table-hover table-condensed mb-0">
+          <tbody>
+            <tr>
+              <td>
+                <label class="col-form-label text-nowrap">{{
+                  RegionConfigurationSchema.shape.defaultLang.description
+                }}</label>
+              </td>
+              <td>
+                <input type="text" class="form-control" [(ngModel)]="config().defaultLang" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-hover table-condensed mb-0">
           <tbody>
             <tr class="table-active">
               <td>
-                <label class="col-form-label">{{ LanguageConfigurationSchema.shape.lang.description }}</label>
+                <label class="col-form-label text-nowrap">{{
+                  LanguageConfigurationSchema.shape.lang.description
+                }}</label>
               </td>
-              <td>
-                <input type="text" class="form-control" [(ngModel)]="languageConfiguration.lang" />
-              </td>
+              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                <td style="min-width: 20em">
+                  <div class="input-group">
+                    <input type="text" class="form-control" [(ngModel)]="languageConfiguration.lang" />
+                    <button
+                      (click)="config().languageConfigurations.splice($index + 1, 0, {})"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="ph ph-plus"></i>
+                    </button>
+                    <button
+                      (click)="config().languageConfigurations.splice($index, 1)"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="ph ph-minus"></i>
+                    </button>
+                  </div>
+                </td>
+              }
             </tr>
             <tr>
               <td>
-                <label class="col-form-label">
+                <label class="col-form-label text-nowrap">
                   {{ LanguageConfigurationSchema.shape.warningServiceName.description }}
                 </label>
               </td>
-              <td>
-                <input
-                  type="text"
-                  [lang]="languageConfiguration.lang"
-                  class="form-control"
-                  [(ngModel)]="languageConfiguration.warningServiceName"
-                />
-              </td>
+              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                <td>
+                  <input
+                    type="text"
+                    [lang]="languageConfiguration.lang"
+                    class="form-control"
+                    [(ngModel)]="languageConfiguration.warningServiceName"
+                  />
+                </td>
+              }
             </tr>
             <tr>
               <td>
-                <label class="col-form-label">
+                <label class="col-form-label text-nowrap">
                   {{ LanguageConfigurationSchema.shape.warningServiceEmail.description }}
                 </label>
               </td>
-              <td>
-                <input type="email" class="form-control" [(ngModel)]="languageConfiguration.warningServiceEmail" />
-              </td>
+              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                <td>
+                  <input type="email" class="form-control" [(ngModel)]="languageConfiguration.warningServiceEmail" />
+                </td>
+              }
             </tr>
             <tr>
               <td>
-                <label class="col-form-label">
+                <label class="col-form-label text-nowrap">
                   {{ LanguageConfigurationSchema.shape.websiteName.description }}
                 </label>
               </td>
-              <td>
-                <input
-                  type="text"
-                  [lang]="languageConfiguration.lang"
-                  class="form-control"
-                  [(ngModel)]="languageConfiguration.websiteName"
-                />
-              </td>
+              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                <td>
+                  <input
+                    type="text"
+                    [lang]="languageConfiguration.lang"
+                    class="form-control"
+                    [(ngModel)]="languageConfiguration.websiteName"
+                  />
+                </td>
+              }
             </tr>
             <tr>
               <td>
                 <label class="col-form-label">{{ LanguageConfigurationSchema.shape.url.description }}</label>
               </td>
-              <td>
-                <input type="text" class="form-control" [(ngModel)]="languageConfiguration.url" />
-              </td>
+              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                <td>
+                  <input type="text" class="form-control" [(ngModel)]="languageConfiguration.url" />
+                </td>
+              }
             </tr>
             <tr>
               <td>
                 <label class="col-form-label">{{ LanguageConfigurationSchema.shape.urlWithDate.description }}</label>
               </td>
-              <td>
-                <input type="text" class="form-control" [(ngModel)]="languageConfiguration.urlWithDate" />
-              </td>
+              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                <td>
+                  <input type="text" class="form-control" [(ngModel)]="languageConfiguration.urlWithDate" />
+                </td>
+              }
             </tr>
           </tbody>
-        }
-      </table>
+        </table>
+      </div>
     </tab>
   </tabset>
 </div>
