@@ -21,6 +21,7 @@ export class RegionConfigurationComponent {
   configurationService = inject(ConfigurationService);
   authenticationService = inject(AuthenticationService);
 
+  readonly RegionConfigurationSchema = RegionConfigurationSchema;
   readonly config = input<RegionConfiguration>(undefined);
   readonly languages = LANGUAGES;
 

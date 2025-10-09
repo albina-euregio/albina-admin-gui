@@ -11,10 +11,10 @@ export const LanguageConfigurationSchema = z.object({
 
 export const RegionConfigurationSchema = z.object({
   id: z.string().nullish(),
-  microRegions: z.coerce.number().nullish(),
-  subRegions: z.array(z.string()).nullish(),
-  superRegions: z.array(z.string()).nullish(),
-  neighborRegions: z.array(z.string()).nullish(),
+  microRegions: z.coerce.number().nullish().describe("Number of micro regions"),
+  subRegions: z.array(z.string()).nullish().describe("ID of sub regions"),
+  superRegions: z.array(z.string()).nullish().describe("ID of super regions"),
+  neighborRegions: z.array(z.string()).nullish().describe("ID ob neighbouring regions"),
   languageConfigurations: z.array(LanguageConfigurationSchema).nullish(),
   enabledLanguages: z.array(z.string()).nullish(),
   ttsLanguages: z.array(z.string()).nullish(),
