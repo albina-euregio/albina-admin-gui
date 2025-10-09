@@ -283,7 +283,10 @@ nav ~ .app-body .layout-outer {
 }
 
 .layout-map > .observations-map {
-  height: calc(100vh - 110px);
+  height: 100vh;
+  body:has(nav) & {
+    height: calc(100vh - 110px);
+  }
 }
 
 .mix-blend-mode-multiply {
