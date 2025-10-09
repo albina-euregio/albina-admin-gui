@@ -694,6 +694,16 @@
     </tab>
     <tab heading="{{ 'admin.region-configuration.table.languageConfiguration.title' | translate }}">
       <table class="table table-hover table-condensed mb-0">
+        <tbody>
+          <tr>
+            <td>
+              <label class="col-form-label">{{ RegionConfigurationSchema.shape.defaultLang.description }}</label>
+            </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="config().defaultLang" />
+            </td>
+          </tr>
+        </tbody>
         <tbody *ngFor="let languageConfiguration of config().languageConfigurations">
           <tr class="table-active">
             <td>

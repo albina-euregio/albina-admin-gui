@@ -60,7 +60,7 @@ export const RegionConfigurationSchema = z.object({
   mapLogoPosition: z.string().nullish(),
   imageColorbarColorPath: z.string().nullish(),
   imageColorbarBwPath: z.string().nullish(),
-  defaultLang: z.string().nullish(),
+  defaultLang: z.string().nullish().describe("Default language for language dependent configuration"),
   logoPath: z.string().nullish(),
   logoBwPath: z.string().nullish(),
   coatOfArms: z.url().nullish().describe("Image URL for coat of arms"),
