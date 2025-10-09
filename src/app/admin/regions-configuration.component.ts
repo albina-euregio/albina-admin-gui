@@ -1,4 +1,4 @@
-import { RegionConfiguration } from "../models/region-configuration.model";
+import { RegionConfiguration, RegionConfigurationSchema } from "../models/region-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -41,8 +41,9 @@ export class RegionsConfigurationComponent implements AfterContentInit {
   }
 
   public createRegion() {
-    const newRegion = {} as RegionConfiguration;
-    newRegion.isNew = true;
+    const newRegion = RegionConfigurationSchema.parse({
+      $isNew: true,
+    });
     this.regionConfigurations.push(newRegion);
   }
 }

@@ -1,4 +1,3 @@
-import { ServerConfigurationSchema } from "./server-configuration.model";
 import { z } from "zod/v4";
 
 export const LanguageConfigurationSchema = z.object({
@@ -12,11 +11,11 @@ export const LanguageConfigurationSchema = z.object({
 
 export const RegionConfigurationSchema = z.object({
   id: z.string().nullish(),
-  microRegions: z.number().nullish(),
+  microRegions: z.coerce.number().nullish(),
   subRegions: z.array(z.string()).nullish(),
   superRegions: z.array(z.string()).nullish(),
   neighborRegions: z.array(z.string()).nullish(),
-  languageConfigurations: z.array(LanguageConfigurationSchema).default(() => []),
+  languageConfigurations: z.array(LanguageConfigurationSchema).nullish(),
   enabledLanguages: z.array(z.string()).nullish(),
   ttsLanguages: z.array(z.string()).nullish(),
   publishBulletins: z.boolean().nullish(),
@@ -44,28 +43,27 @@ export const RegionConfigurationSchema = z.object({
   enableGeneralHeadline: z.boolean().nullish(),
   enableWeatherTextField: z.boolean().nullish(),
   showMatrix: z.boolean().nullish(),
-  serverInstance: ServerConfigurationSchema.nullish(),
   pdfColor: z.string().nullish(),
   emailColor: z.string().nullish(),
-  pdfMapYAmPm: z.number().nullish(),
-  pdfMapYFd: z.number().nullish(),
-  pdfMapWidthAmPm: z.number().nullish(),
-  pdfMapWidthFd: z.number().nullish(),
-  pdfMapHeight: z.number().nullish(),
+  pdfMapYAmPm: z.coerce.number().nullish(),
+  pdfMapYFd: z.coerce.number().nullish(),
+  pdfMapWidthAmPm: z.coerce.number().nullish(),
+  pdfMapWidthFd: z.coerce.number().nullish(),
+  pdfMapHeight: z.coerce.number().nullish(),
   pdfFooterLogo: z.boolean().nullish(),
   pdfFooterLogoColorPath: z.string().nullish(),
   pdfFooterLogoBwPath: z.string().nullish(),
-  mapXmax: z.number().nullish(),
-  mapXmin: z.number().nullish(),
-  mapYmax: z.number().nullish(),
-  mapYmin: z.number().nullish(),
+  mapXmax: z.coerce.number().nullish(),
+  mapXmin: z.coerce.number().nullish(),
+  mapYmax: z.coerce.number().nullish(),
+  mapYmin: z.coerce.number().nullish(),
   simpleHtmlTemplateName: z.string().nullish(),
   geoDataDirectory: z.string().nullish(),
   mapLogoColorPath: z.string().nullish(),
   mapLogoBwPath: z.string().nullish(),
   mapLogoPosition: z.string().nullish(),
-  mapCenterLat: z.number().nullish(),
-  mapCenterLng: z.number().nullish(),
+  mapCenterLat: z.coerce.number().nullish(),
+  mapCenterLng: z.coerce.number().nullish(),
   imageColorbarColorPath: z.string().nullish(),
   imageColorbarBwPath: z.string().nullish(),
   defaultLang: z.string().nullish(),
@@ -73,7 +71,7 @@ export const RegionConfigurationSchema = z.object({
   logoBwPath: z.string().nullish(),
   coatOfArms: z.string().nullish(),
   staticUrl: z.string().nullish(),
-  isNew: z.boolean().nullish(),
+  $isNew: z.boolean().nullish(),
 });
 
 export type RegionConfiguration = z.infer<typeof RegionConfigurationSchema>;

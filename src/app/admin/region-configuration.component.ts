@@ -1,4 +1,4 @@
-import { RegionConfiguration } from "../models/region-configuration.model";
+import { RegionConfiguration, RegionConfigurationSchema } from "../models/region-configuration.model";
 import { LANGUAGES } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
@@ -49,64 +49,12 @@ export class RegionConfigurationComponent {
   public save() {
     this.saveConfigurationLoading = true;
     const config = this.config();
-    if (this.authenticationService.getActiveRegionId() == config.id) this.authenticationService.setActiveRegion(config);
-    const json = Object();
-    json["id"] = config.id;
-    json["microRegions"] = config.microRegions;
-    json["subRegions"] = config.subRegions;
-    json["superRegions"] = config.superRegions;
-    json["neighborRegions"] = config.neighborRegions;
-    json["showMatrix"] = config.showMatrix;
-    json["enabledLanguages"] = config.enabledLanguages;
-    json["ttsLanguages"] = config.ttsLanguages;
-    json["publishBulletins"] = config.publishBulletins;
-    json["publishBlogs"] = config.publishBlogs;
-    json["createCaamlV5"] = config.createCaamlV5;
-    json["createCaamlV6"] = config.createCaamlV6;
-    json["createJson"] = config.createJson;
-    json["createMaps"] = config.createMaps;
-    json["createPdf"] = config.createPdf;
-    json["createSimpleHtml"] = config.createSimpleHtml;
-    json["sendEmails"] = config.sendEmails;
-    json["sendTelegramMessages"] = config.sendTelegramMessages;
-    json["sendWhatsAppMessages"] = config.sendWhatsAppMessages;
-    json["sendPushNotifications"] = config.sendPushNotifications;
-    json["enableMediaFile"] = config.enableMediaFile;
-    json["enableDangerSources"] = config.enableDangerSources;
-    json["enableObservations"] = config.enableObservations;
-    json["enableModelling"] = config.enableModelling;
-    json["enableWeatherbox"] = config.enableWeatherbox;
-    json["enableStrategicMindset"] = config.enableStrategicMindset;
-    json["enableStressLevel"] = config.enableStressLevel;
-    json["enableEditableFields"] = config.enableEditableFields;
-    json["enableGeneralHeadline"] = config.enableGeneralHeadline;
-    json["enableWeatherTextField"] = config.enableWeatherTextField;
-    json["serverInstance"] = config.serverInstance;
-    json["pdfColor"] = config.pdfColor;
-    json["emailColor"] = config.emailColor;
-    json["pdfMapYAmPm"] = config.pdfMapYAmPm;
-    json["pdfMapYFd"] = config.pdfMapYFd;
-    json["pdfMapWidthAmPm"] = config.pdfMapWidthAmPm;
-    json["pdfMapWidthFd"] = config.pdfMapWidthFd;
-    json["pdfMapHeight"] = config.pdfMapHeight;
-    json["pdfFooterLogo"] = config.pdfFooterLogo;
-    json["pdfFooterLogoColorPath"] = config.pdfFooterLogoColorPath;
-    json["pdfFooterLogoBwPath"] = config.pdfFooterLogoBwPath;
-    json["mapXmax"] = config.mapXmax;
-    json["mapXmin"] = config.mapXmin;
-    json["mapYmax"] = config.mapYmax;
-    json["mapYmin"] = config.mapYmin;
-    json["simpleHtmlTemplateName"] = config.simpleHtmlTemplateName;
-    json["geoDataDirectory"] = config.geoDataDirectory;
-    json["mapLogoColorPath"] = config.mapLogoColorPath;
-    json["mapLogoBwPath"] = config.mapLogoBwPath;
-    json["mapLogoPosition"] = config.mapLogoPosition;
-    json["mapCenterLat"] = config.mapCenterLat;
-    json["mapCenterLng"] = config.mapCenterLng;
-    json["imageColorbarColorPath"] = config.imageColorbarColorPath;
-    json["imageColorbarBwPath"] = config.imageColorbarBwPath;
+    if (this.authenticationService.getActiveRegionId() == config.id) {
+      this.authenticationService.setActiveRegion(config);
+    }
 
-    if (!config.isNew) {
+    const json = RegionConfigurationSchema.omit({ $isNew: true }).parse(config);
+    if (!config.$isNew) {
       this.configurationService.updateRegionConfiguration(json).subscribe(
         () => {
           this.saveConfigurationLoading = false;
