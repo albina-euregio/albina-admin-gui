@@ -248,14 +248,6 @@ export class AuthenticationService {
     }
   }
 
-  public getUserLat() {
-    return this.activeRegion?.mapCenterLat ?? 47.1;
-  }
-
-  public getUserLng() {
-    return this.activeRegion?.mapCenterLng ?? 11.44;
-  }
-
   public isCurrentUserInRole(role: Enums.UserRole): boolean {
     const roles = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
@@ -285,6 +277,10 @@ export class AuthenticationService {
 
   public getExternalServers(): ServerModel[] {
     return this.externalServers;
+  }
+
+  public isActiveRegion(region: string): boolean {
+    return region?.startsWith(this.getActiveRegionId());
   }
 
   public isInternalRegion(region: string): boolean {
