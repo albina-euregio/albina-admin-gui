@@ -377,6 +377,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       xAxis: {
         nameLocation: "center",
         name: this.t(xType.label),
+        axisLabel: {
+          formatter: (value) => this.config.hazardChart.xAxisLabels?.[value] ?? value,
+        },
         min: xType?.chartAxisRange?.[0],
         max: xType?.chartAxisRange?.[1],
         axisPointer: { type: "line" },

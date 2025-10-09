@@ -283,6 +283,13 @@
         "xType": {
           "default": "size_estimate",
           "type": "string"
+        },
+        "xAxisLabels": {
+          "description": "Array of axis labels (indexed by the value)",
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
         }
       },
       "required": ["xType"],

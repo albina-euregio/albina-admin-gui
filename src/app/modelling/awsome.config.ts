@@ -76,6 +76,7 @@ export const AwsomeConfigSchema = z.object({
   hazardChart: z
     .object({
       xType: z.string().default("size_estimate"),
+      xAxisLabels: z.number().array().optional().describe("Array of axis labels (indexed by the value)"),
     })
     .default({ xType: "size_estimate" }),
   timeseriesChart: z
