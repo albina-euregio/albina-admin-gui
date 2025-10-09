@@ -38,12 +38,41 @@ interface SelectableRegionProperties extends RegionWithElevationProperties {
   selected: boolean;
 }
 
-class RegionLayer<P = SelectableRegionProperties> extends GeoJSON<P> {
-  getLayers(): (GeoJSON<P> & {
-    feature: geojson.Feature<geojson.MultiPoint, P>;
+type RegionLayerFeature = geojson.Feature<geojson.Geometry, SelectableRegionProperties>;
+class RegionLayer extends GeoJSON<SelectableRegionProperties> {
+  getLayers(): (GeoJSON<SelectableRegionProperties> & {
+    feature: RegionLayerFeature;
   })[] {
     // @ts-expect-error Layer -> GeoJSON
     return super.getLayers();
+  }
+
+  static readonly editSelectionBaseStyle: PathOptions = Object.freeze({
+    opacity: 0.0,
+    fillOpacity: 0.0,
+  });
+
+  discardEditSelection() {
+    for (const entry of this.getLayers()) {
+      entry.feature.properties.selected = false;
+      entry.setStyle(RegionLayer.editSelectionBaseStyle);
+    }
+  }
+
+  updateEditSelection() {
+    for (const entry of this.getLayers()) {
+      if (entry.feature.properties.selected) {
+        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.2 });
+      } else {
+        entry.setStyle({ fillColor: "#000000", fillOpacity: 0.0 });
+      }
+    }
+  }
+
+  getSelectedRegions(): string[] {
+    return this.getLayers()
+      .filter((entry) => entry.feature.properties.selected)
+      .map((entry) => entry.feature.properties.id);
   }
 }
 
@@ -115,7 +144,7 @@ export class MapService {
 
       // overlay to select regions (when editing an aggregated region)
       editSelection: new RegionLayer(regions, {
-        style: this.getEditSelectionBaseStyle(),
+        style: RegionLayer.editSelectionBaseStyle,
       }),
 
       // overlay to show aggregated regions
@@ -488,33 +517,12 @@ export class MapService {
 
   // editSelection overlay is only used in map (not in afternoonMap)
   discardEditSelection() {
-    for (const entry of this.overlayMaps.editSelection.getLayers()) {
-      entry.feature.properties.selected = false;
-      entry.setStyle(this.getEditSelectionBaseStyle());
-    }
+    this.overlayMaps.editSelection.discardEditSelection();
     this.map.removeLayer(this.overlayMaps.editSelection);
   }
 
-  updateEditSelection() {
-    for (const entry of this.overlayMaps.editSelection.getLayers()) {
-      if (entry.feature.properties.selected) {
-        entry.setStyle({ fillColor: "#3852A4", fillOpacity: 0.2 });
-      } else {
-        entry.setStyle({ fillColor: "#000000", fillOpacity: 0.0 });
-      }
-    }
-  }
-
   getSelectedRegions(): string[] {
-    const result = new Array<string>();
-    for (const entry of this.overlayMaps.editSelection.getLayers()) {
-      if (entry.feature.properties.selected) {
-        if (!result.includes(entry.feature.properties.id)) {
-          result.push(entry.feature.properties.id);
-        }
-      }
-    }
-    return result;
+    return this.overlayMaps.editSelection.getSelectedRegions();
   }
 
   clickRegion(regionIds: Record<string, boolean>) {
@@ -522,15 +530,10 @@ export class MapService {
     for (const entry of this.overlayMaps.regions.getLayers()) {
       entry.feature.properties.selected = regionIds[entry.feature.properties.id];
     }
-    this.updateEditSelection();
+    this.overlayMaps.editSelection.updateEditSelection();
   }
 
-  private handleClick(
-    clickMode: ClickMode,
-    e: MouseEvent,
-    feature: geojson.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: RegionLayer,
-  ) {
+  private handleClick(clickMode: ClickMode, e: MouseEvent, feature: RegionLayerFeature, editSelection: RegionLayer) {
     if (clickMode === "awsome") {
       if (e.shiftKey) {
         this.toggleRegion(feature);
@@ -546,10 +549,10 @@ export class MapService {
     } else {
       this.toggleRegion(feature);
     }
-    this.updateEditSelection();
+    this.overlayMaps.editSelection.updateEditSelection();
   }
 
-  private toggleRegion(feature: geojson.Feature<GeoJSON.Geometry, SelectableRegionProperties>) {
+  private toggleRegion(feature: RegionLayerFeature) {
     const selected = !feature.properties.selected;
     feature.properties.selected = selected;
   }
@@ -559,18 +562,12 @@ export class MapService {
       entry.feature.properties.selected = false;
     }
   }
-  private selectOnly(
-    feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: RegionLayer,
-  ) {
+  private selectOnly(feature: RegionLayerFeature, editSelection: RegionLayer) {
     this.selectNone(editSelection);
     feature.properties.selected = true;
   }
 
-  private toggleLevel1Regions(
-    feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: RegionLayer,
-  ) {
+  private toggleLevel1Regions(feature: RegionLayerFeature, editSelection: RegionLayer) {
     const selected = !feature.properties.selected;
     const regions = this.regionsService.getLevel1Regions(feature.properties.id);
     for (const entry of editSelection.getLayers()) {
@@ -580,10 +577,7 @@ export class MapService {
     }
   }
 
-  private toggleLevel2Regions(
-    feature: GeoJSON.Feature<GeoJSON.Geometry, SelectableRegionProperties>,
-    editSelection: RegionLayer,
-  ) {
+  private toggleLevel2Regions(feature: RegionLayerFeature, editSelection: RegionLayer) {
     const selected = !feature.properties.selected;
     const regions = this.regionsService.getLevel2Regions(feature.properties.id);
     for (const entry of editSelection.getLayers()) {
@@ -626,13 +620,6 @@ export class MapService {
       weight: this.constantsService.microRegionLineWeightStrong,
       opacity: this.constantsService.microRegionLineOpacityStrong,
       color: this.constantsService.microRegionLineColor,
-      fillOpacity: 0.0,
-    };
-  }
-
-  private getEditSelectionBaseStyle(): PathOptions {
-    return {
-      opacity: 0.0,
       fillOpacity: 0.0,
     };
   }
