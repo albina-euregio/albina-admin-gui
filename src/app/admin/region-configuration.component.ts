@@ -6,7 +6,6 @@ import {
 import { LANGUAGES } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { NgFor, NgIf } from "@angular/common";
 import { Component, input, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -18,7 +17,7 @@ import { TabsModule } from "ngx-bootstrap/tabs";
   templateUrl: "region-configuration.component.html",
   selector: "app-region-configuration",
   standalone: true,
-  imports: [NgFor, AlertModule, TabsModule, FormsModule, NgIf, TranslateModule],
+  imports: [AlertModule, TabsModule, FormsModule, TranslateModule],
 })
 export class RegionConfigurationComponent {
   private translateService = inject(TranslateService);

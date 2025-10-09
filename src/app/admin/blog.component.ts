@@ -1,7 +1,6 @@
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BlogService, PublicationChannel } from "../providers/blog-service/blog.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { NgFor } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -20,7 +19,7 @@ interface PublicationInformation {
   templateUrl: "blog.component.html",
   selector: "app-blog",
   standalone: true,
-  imports: [NgFor, AlertModule, TranslateModule],
+  imports: [AlertModule, TranslateModule],
 })
 export class BlogComponent {
   blogService = inject(BlogService);

@@ -1,5 +1,4 @@
 import { UserService } from "../providers/user-service/user.service";
-import { NgIf } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -16,7 +15,7 @@ type Result =
   templateUrl: "change-password.component.html",
   selector: "app-change-password",
   standalone: true,
-  imports: [FormsModule, NgIf, TranslateModule],
+  imports: [FormsModule, TranslateModule],
 })
 export class ChangePasswordComponent {
   private translateService = inject(TranslateService);
