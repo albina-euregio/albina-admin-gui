@@ -514,6 +514,14 @@ export class MapService {
     return result;
   }
 
+  clickRegion(regionIds: Record<string, boolean>) {
+    //console.log("clickRegion", this.overlayMaps.regions);
+    for (const entry of this.overlayMaps.regions.getLayers()) {
+      entry.feature.properties.selected = regionIds[entry.feature.properties.id];
+    }
+    this.updateEditSelection();
+  }
+
   private handleClick(
     clickMode: ClickMode,
     e: MouseEvent,
