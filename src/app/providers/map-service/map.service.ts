@@ -506,7 +506,7 @@ export class MapService {
     const result = new Array<string>();
     for (const entry of this.overlayMaps.editSelection.getLayers()) {
       if (entry.feature.properties.selected) {
-        if (result.indexOf(entry.feature.properties.id) < 0) {
+        if (!result.includes(entry.feature.properties.id)) {
           result.push(entry.feature.properties.id);
         }
       }
