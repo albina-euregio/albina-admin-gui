@@ -63,8 +63,8 @@ export const RegionConfigurationSchema = z.object({
   defaultLang: z.string().nullish(),
   logoPath: z.string().nullish(),
   logoBwPath: z.string().nullish(),
-  coatOfArms: z.string().nullish(),
-  staticUrl: z.string().nullish(),
+  coatOfArms: z.url().nullish().describe("Image URL for coat of arms"),
+  staticUrl: z.url().nullish().describe("URL to static avalanche files"),
   $isNew: z.boolean().nullish(),
 });
 

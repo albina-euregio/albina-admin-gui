@@ -17,6 +17,22 @@
           </tr>
           <tr>
             <td>
+              <label class="col-form-label">{{ RegionConfigurationSchema.shape.coatOfArms.description }}</label>
+            </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="config().coatOfArms" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{ RegionConfigurationSchema.shape.staticUrl.description }}</label>
+            </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="config().staticUrl" />
+            </td>
+          </tr>
+          <tr>
+            <td>
               <label class="col-form-label">{{ RegionConfigurationSchema.shape.microRegions.description }}</label>
             </td>
             <td>
