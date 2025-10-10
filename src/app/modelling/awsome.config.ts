@@ -60,8 +60,8 @@ export const AwsomeConfigSchema = z.object({
   dateMax: z.string().optional(),
   dateMin: z.string().optional(),
   dateStepSeconds: z.number().describe("Seconds between two models runs"),
-  filters: z.array(FilterSelectionSpecSchema),
-  sources: z.array(AwsomeSourceSchema),
+  filters: FilterSelectionSpecSchema.array(),
+  sources: AwsomeSourceSchema.array(),
   regions: z
     .object({
       url: z
