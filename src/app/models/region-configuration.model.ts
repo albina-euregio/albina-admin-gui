@@ -13,7 +13,7 @@ export const LanguageConfigurationSchema = z.object({
 export type LanguageConfiguration = z.infer<typeof LanguageConfigurationSchema>;
 
 export const RegionConfigurationSchema = z.object({
-  id: z.string().nullish(),
+  id: z.string().nullish().describe("Region ID"),
   microRegions: z.coerce.number().nullish().describe("Number of micro regions"),
   subRegions: z.string().array().nullish().describe("ID of sub regions"),
   superRegions: z.string().array().nullish().describe("ID of super regions"),
