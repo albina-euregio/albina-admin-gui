@@ -10,38 +10,16 @@
     <tab heading="{{ 'admin.region-configuration.table.general.title' | translate }}">
       <table class="table table-hover table-condensed mb-0">
         <tbody>
-          <tr>
-            <td>
-              <label class="col-form-label">{{ "admin.region-configuration.table.general.id" | translate }}</label>
-            </td>
-            <td>
-              <input type="text" class="form-control" [(ngModel)]="config().id" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label class="col-form-label">{{ RegionConfigurationSchema.shape.coatOfArms.description }}</label>
-            </td>
-            <td>
-              <input type="text" class="form-control" [(ngModel)]="config().coatOfArms" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label class="col-form-label">{{ RegionConfigurationSchema.shape.staticUrl.description }}</label>
-            </td>
-            <td>
-              <input type="text" class="form-control" [(ngModel)]="config().staticUrl" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label class="col-form-label">{{ RegionConfigurationSchema.shape.microRegions.description }}</label>
-            </td>
-            <td>
-              <input type="text" class="form-control" [(ngModel)]="config().microRegions" />
-            </td>
-          </tr>
+          @for (key of GeneralRegionConfigurationKeys; track key) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{ RegionConfigurationSchema.shape[key].description }}</label>
+              </td>
+              <td>
+                <app-zod-input [zodType]="RegionConfigurationSchema.shape[key]" [(value)]="config()[key]" />
+              </td>
+            </tr>
+          }
           <tr>
             <td>
               <label class="col-form-label">{{ RegionConfigurationSchema.shape.subRegions.description }}</label>

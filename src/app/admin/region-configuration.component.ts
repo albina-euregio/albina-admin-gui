@@ -27,6 +27,12 @@ export class RegionConfigurationComponent {
   authenticationService = inject(AuthenticationService);
 
   readonly RegionConfigurationSchema = RegionConfigurationSchema;
+  readonly GeneralRegionConfigurationKeys: (keyof RegionConfiguration)[] = [
+    "id",
+    "coatOfArms",
+    "staticUrl",
+    "microRegions",
+  ];
   readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
   readonly LanguageConfigurationKeys: (keyof LanguageConfiguration)[] = [
     "warningServiceName",
