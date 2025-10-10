@@ -5,7 +5,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { createWordDiff } from "../shared/wordDiff";
-import type { TextcatLegacyIn, TextcatTextfield } from "./avalanche-bulletin.component";
+import type { TextcatLegacyIn } from "./avalanche-bulletin.component";
 import { HtmlPipe } from "./html.pipe";
 import { NgClass, NgIf, NgFor, UpperCasePipe } from "@angular/common";
 import { Component, TemplateRef, input, output, inject } from "@angular/core";
@@ -26,7 +26,7 @@ export class BulletinTextComponent {
   copyService = inject(CopyService);
   translateService = inject(TranslateService);
 
-  readonly textField = input<TextcatTextfield>(undefined);
+  readonly textField = input<Enums.TextcatTextfield>(undefined);
   readonly rows = input<number>(undefined);
   readonly disabled = input<boolean>(undefined);
   readonly bulletin = input<BulletinModel>(undefined);
@@ -42,8 +42,8 @@ export class BulletinTextComponent {
     return LANGUAGES.filter((l) => l !== this.translateService.currentLang);
   }
 
-  get enableEditableFields(): boolean {
-    return this.authenticationService.getActiveRegion().enableEditableFields;
+  get enableEditableFields() {
+    return (this.authenticationService.getActiveRegion().enabledEditableFields ?? []).includes(this.textField());
   }
 
   openTextcat() {
@@ -65,11 +65,11 @@ export class BulletinTextComponent {
     });
   }
 
-  get bulletinTextKey(): `${TextcatTextfield}$` {
+  get bulletinTextKey(): `${Enums.TextcatTextfield}$` {
     return `${this.textField()}$`;
   }
 
-  get bulletinTextcatKey(): `${TextcatTextfield}Textcat` {
+  get bulletinTextcatKey(): `${Enums.TextcatTextfield}Textcat` {
     return `${this.textField()}Textcat`;
   }
 

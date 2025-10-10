@@ -210,6 +210,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   updateBulletinOnServer = debounce(this.updateBulletinOnServerNow, 1000);
 
+  TextcatTextfield = Enums.TextcatTextfield;
+
   constructor() {
     if (!this.bulletinsService.dates?.length) {
       this.bulletinsService.init();
@@ -1416,32 +1418,12 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     newBulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
     // if bulletin without textcats is copied to region with textcat, clear texts
-    if (!this.authenticationService.getActiveRegion().enableEditableFields) {
-      if (!bulletin.highlightsTextcat) {
-        newBulletin.highlights$ = emptyLangTexts();
+    const enabledEditableFields = this.authenticationService.getActiveRegion().enabledEditableFields ?? [];
+    Object.values(Enums.TextcatTextfield).forEach((textfield) => {
+      if (!bulletin[`${textfield}Textcat`] && !enabledEditableFields.includes(textfield)) {
+        newBulletin[`${textfield}$`] = emptyLangTexts();
       }
-      if (!bulletin.avActivityCommentTextcat) {
-        newBulletin.avActivityComment$ = emptyLangTexts();
-      }
-      if (!bulletin.avActivityHighlightsTextcat) {
-        newBulletin.avActivityHighlights$ = emptyLangTexts();
-      }
-      if (!bulletin.snowpackStructureCommentTextcat) {
-        newBulletin.snowpackStructureComment$ = emptyLangTexts();
-      }
-      if (!bulletin.snowpackStructureHighlightsTextcat) {
-        newBulletin.snowpackStructureHighlights$ = emptyLangTexts();
-      }
-      if (!bulletin.tendencyCommentTextcat) {
-        newBulletin.tendencyComment$ = emptyLangTexts();
-      }
-      if (!bulletin.generalHeadlineCommentTextcat) {
-        newBulletin.generalHeadlineComment$ = emptyLangTexts();
-      }
-      if (!bulletin.synopsisCommentTextcat) {
-        newBulletin.synopsisComment$ = emptyLangTexts();
-      }
-    }
+    });
 
     if (!this.authenticationService.getActiveRegion().enableGeneralHeadline) {
       newBulletin.generalHeadlineComment$ = emptyLangTexts();

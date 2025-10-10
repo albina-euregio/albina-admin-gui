@@ -134,3 +134,14 @@ export enum UserRole {
   FOREMAN = "FOREMAN",
   OBSERVER = "OBSERVER",
 }
+
+export enum TextcatTextfield {
+  avActivityComment = "avActivityComment",
+  avActivityHighlights = "avActivityHighlights",
+  generalHeadlineComment = "generalHeadlineComment",
+  highlights = "highlights",
+  snowpackStructureComment = "snowpackStructureComment",
+  snowpackStructureHighlights = "snowpackStructureHighlights",
+  synopsisComment = "synopsisComment",
+  tendencyComment = "tendencyComment",
+}

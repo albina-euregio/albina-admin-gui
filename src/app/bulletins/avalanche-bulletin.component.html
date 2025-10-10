@@ -343,7 +343,7 @@
         >
           <!-- Special alert -->
           <app-bulletin-text
-            textField="highlights"
+            [textField]="TextcatTextfield.highlights"
             [rows]="1"
             [bulletin]="bulletin()"
             [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
@@ -355,7 +355,7 @@
 
           <!-- Danger situation headline -->
           <app-bulletin-text
-            textField="avActivityHighlights"
+            [textField]="TextcatTextfield.avActivityHighlights"
             [rows]="3"
             [bulletin]="bulletin()"
             [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
@@ -366,7 +366,7 @@
 
           <!-- Danger situation description -->
           <app-bulletin-text
-            textField="avActivityComment"
+            [textField]="TextcatTextfield.avActivityComment"
             [rows]="9"
             [bulletin]="bulletin()"
             [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
@@ -429,7 +429,7 @@
 
           <!-- Danger pattern description -->
           <app-bulletin-text
-            textField="snowpackStructureComment"
+            [textField]="TextcatTextfield.snowpackStructureComment"
             [rows]="9"
             [bulletin]="bulletin()"
             [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
@@ -487,7 +487,7 @@
 
           <!-- Tendency comment -->
           <app-bulletin-text
-            textField="tendencyComment"
+            [textField]="TextcatTextfield.tendencyComment"
             [rows]="5"
             [bulletin]="bulletin()"
             [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
@@ -522,7 +522,7 @@
         <div class="region-form__synopsis">
           <!-- Weather synopsis comment -->
           <app-bulletin-text
-            textField="synopsisComment"
+            [textField]="TextcatTextfield.synopsisComment"
             [rows]="5"
             [bulletin]="bulletin()"
             [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
