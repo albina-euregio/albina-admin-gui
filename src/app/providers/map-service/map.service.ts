@@ -221,18 +221,17 @@ export class MapService {
     this.afternoonOverlayMaps = await this.initOverlayMaps();
 
     this.resetAll();
-    this.initAmMap();
-    this.initPmMap();
+    await Promise.allSettled([this.initAmMap(), this.initPmMap()]);
     this.map.sync(this.afternoonMap);
     this.afternoonMap.sync(this.map);
   }
 
-  private initAmMap() {
+  private async initAmMap() {
     this.map = new LeafletMap("map", {
       ...this.getMapInitOptions(),
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.aggregatedRegions, this.overlayMaps.regions],
     });
-    this.fitActiveRegionBounds(this.map);
+    await this.fitActiveRegionBounds(this.map);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
     this.localStorageService
@@ -256,7 +255,7 @@ export class MapService {
     return this.map;
   }
 
-  private initPmMap() {
+  private async initPmMap() {
     const afternoonMap = new LeafletMap("afternoonMap", {
       ...this.getMapInitOptions(),
       zoomControl: false,
@@ -266,7 +265,7 @@ export class MapService {
         this.afternoonOverlayMaps.regions,
       ],
     });
-    this.fitActiveRegionBounds(afternoonMap);
+    await this.fitActiveRegionBounds(afternoonMap);
 
     this.pmControl.addTo(afternoonMap);
 
