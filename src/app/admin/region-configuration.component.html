@@ -742,17 +742,18 @@
                 <label class="col-form-label text-nowrap">{{
                   LanguageConfigurationSchema.shape.lang.description
                 }}</label>
+                <button
+                  (click)="config().languageConfigurations.splice(0, 0, {})"
+                  class="btn btn-sm btn-outline-primary float-end"
+                  style="min-height: 38px"
+                >
+                  <i class="ph ph-plus"></i>
+                </button>
               </td>
               @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
                 <td style="min-width: 20em">
                   <div class="input-group">
                     <input type="text" class="form-control" [(ngModel)]="languageConfiguration.lang" />
-                    <button
-                      (click)="config().languageConfigurations.splice($index + 1, 0, {})"
-                      class="btn btn-sm btn-outline-primary"
-                    >
-                      <i class="ph ph-plus"></i>
-                    </button>
                     <button
                       (click)="config().languageConfigurations.splice($index, 1)"
                       class="btn btn-sm btn-outline-primary"
