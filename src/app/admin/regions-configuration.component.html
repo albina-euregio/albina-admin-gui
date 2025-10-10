@@ -7,13 +7,18 @@
         </button>
       </div>
     </div>
-    <accordion *ngIf="configurationPropertiesLoaded">
-      <accordion-group *ngFor="let config of regionConfigurations" class="my-3">
-        <div accordion-heading class="clearfix">
-          <strong>{{ regionsService.getRegionName(config.id) }}</strong> ({{ config.id }})
-        </div>
-        <app-region-configuration [config]="config"></app-region-configuration>
-      </accordion-group>
-    </accordion>
+
+    @if (configurationPropertiesLoaded) {
+      <accordion>
+        @for (config of regionConfigurations; track config) {
+          <accordion-group class="my-3">
+            <div accordion-heading class="clearfix">
+              <strong>{{ regionsService.getRegionName(config.id) }}</strong> ({{ config.id }})
+            </div>
+            <app-region-configuration [config]="config"></app-region-configuration>
+          </accordion-group>
+        }
+      </accordion>
+    }
   </div>
 </div>

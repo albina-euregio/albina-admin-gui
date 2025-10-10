@@ -1,6 +1,5 @@
 import { ServerConfiguration } from "../models/server-configuration.model";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { NgFor, NgIf } from "@angular/common";
 import { Component, inject, input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -11,7 +10,7 @@ import { AlertModule } from "ngx-bootstrap/alert";
   templateUrl: "server-configuration.component.html",
   selector: "app-server-configuration",
   standalone: true,
-  imports: [NgFor, AlertModule, FormsModule, NgIf, TranslateModule],
+  imports: [AlertModule, FormsModule, TranslateModule],
 })
 export class ServerConfigurationComponent {
   private translateService = inject(TranslateService);

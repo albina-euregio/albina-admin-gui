@@ -1,6 +1,9 @@
-<div *ngFor="let alert of alerts">
-  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
-</div>
+@for (alert of alerts; track alert) {
+  <div>
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+  </div>
+}
+
 <table class="table table-hover table-condensed mb-0">
   <tbody>
     <tr>
@@ -11,129 +14,157 @@
         <input type="text" class="form-control" id="input-name" placeholder="" [(ngModel)]="config().name" />
       </td>
     </tr>
-    <tr *ngIf="externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.username" | translate }}</label>
-      </td>
-      <td>
-        <input type="text" class="form-control" id="input-username" placeholder="" [(ngModel)]="config().userName" />
-      </td>
-    </tr>
-    <tr *ngIf="externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.password" | translate }}</label>
-      </td>
-      <td>
-        <input type="text" class="form-control" id="input-password" placeholder="" [(ngModel)]="config().password" />
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.publishAt5PM" | translate }}</label>
-      </td>
-      <td>
-        <label class="switch switch-primary">
-          <input type="checkbox" class="switch-input" [(ngModel)]="config().publishAt5PM" />
-          <span class="switch-slider"></span>
-        </label>
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.publishAt8AM" | translate }}</label>
-      </td>
-      <td>
-        <label class="switch switch-primary">
-          <input type="checkbox" class="switch-input" [(ngModel)]="config().publishAt8AM" />
-          <span class="switch-slider"></span>
-        </label>
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{
-          "admin.server-configuration.table.dangerLevelElevationDependency" | translate
-        }}</label>
-      </td>
-      <td>
-        <label class="switch switch-primary">
-          <input type="checkbox" class="switch-input" [(ngModel)]="config().dangerLevelElevationDependency" />
-          <span class="switch-slider"></span>
-        </label>
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.pdfDirectory" | translate }}</label>
-      </td>
-      <td>
-        <input
-          type="text"
-          class="form-control"
-          id="input-pdf-directory"
-          placeholder=""
-          [(ngModel)]="config().pdfDirectory"
-        />
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.htmlDirectory" | translate }}</label>
-      </td>
-      <td>
-        <input
-          type="text"
-          class="form-control"
-          id="input-html-directory"
-          placeholder=""
-          [(ngModel)]="config().htmlDirectory"
-        />
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.serverImagesUrl" | translate }}</label>
-      </td>
-      <td>
-        <input
-          type="text"
-          class="form-control"
-          id="input-server-images-url"
-          placeholder=""
-          [(ngModel)]="config().serverImagesUrl"
-        />
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.mapsPath" | translate }}</label>
-      </td>
-      <td>
-        <input type="text" class="form-control" id="input-maps-path" placeholder="" [(ngModel)]="config().mapsPath" />
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.mediaPath" | translate }}</label>
-      </td>
-      <td>
-        <input type="text" class="form-control" id="input-media-path" placeholder="" [(ngModel)]="config().mediaPath" />
-      </td>
-    </tr>
-    <tr *ngIf="!externalServer()">
-      <td>
-        <label class="col-form-label">{{ "admin.server-configuration.table.mapProductionUrl" | translate }}</label>
-      </td>
-      <td>
-        <input
-          type="text"
-          class="form-control"
-          id="input-map-production-url"
-          placeholder=""
-          [(ngModel)]="config().mapProductionUrl"
-        />
-      </td>
-    </tr>
+    @if (externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.username" | translate }}</label>
+        </td>
+        <td>
+          <input type="text" class="form-control" id="input-username" placeholder="" [(ngModel)]="config().userName" />
+        </td>
+      </tr>
+    }
+    @if (externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.password" | translate }}</label>
+        </td>
+        <td>
+          <input type="text" class="form-control" id="input-password" placeholder="" [(ngModel)]="config().password" />
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.publishAt5PM" | translate }}</label>
+        </td>
+        <td>
+          <label class="switch switch-primary">
+            <input type="checkbox" class="switch-input" [(ngModel)]="config().publishAt5PM" />
+            <span class="switch-slider"></span>
+          </label>
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.publishAt8AM" | translate }}</label>
+        </td>
+        <td>
+          <label class="switch switch-primary">
+            <input type="checkbox" class="switch-input" [(ngModel)]="config().publishAt8AM" />
+            <span class="switch-slider"></span>
+          </label>
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{
+            "admin.server-configuration.table.dangerLevelElevationDependency" | translate
+          }}</label>
+        </td>
+        <td>
+          <label class="switch switch-primary">
+            <input type="checkbox" class="switch-input" [(ngModel)]="config().dangerLevelElevationDependency" />
+            <span class="switch-slider"></span>
+          </label>
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.pdfDirectory" | translate }}</label>
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            id="input-pdf-directory"
+            placeholder=""
+            [(ngModel)]="config().pdfDirectory"
+          />
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.htmlDirectory" | translate }}</label>
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            id="input-html-directory"
+            placeholder=""
+            [(ngModel)]="config().htmlDirectory"
+          />
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.serverImagesUrl" | translate }}</label>
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            id="input-server-images-url"
+            placeholder=""
+            [(ngModel)]="config().serverImagesUrl"
+          />
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.mapsPath" | translate }}</label>
+        </td>
+        <td>
+          <input type="text" class="form-control" id="input-maps-path" placeholder="" [(ngModel)]="config().mapsPath" />
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.mediaPath" | translate }}</label>
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            id="input-media-path"
+            placeholder=""
+            [(ngModel)]="config().mediaPath"
+          />
+        </td>
+      </tr>
+    }
+    @if (!externalServer()) {
+      <tr>
+        <td>
+          <label class="col-form-label">{{ "admin.server-configuration.table.mapProductionUrl" | translate }}</label>
+        </td>
+        <td>
+          <input
+            type="text"
+            class="form-control"
+            id="input-map-production-url"
+            placeholder=""
+            [(ngModel)]="config().mapProductionUrl"
+          />
+        </td>
+      </tr>
+    }
     <tr>
       <td>
         <label class="col-form-label">{{ "admin.server-configuration.table.apiUrl" | translate }}</label>
@@ -144,9 +175,15 @@
     </tr>
   </tbody>
 </table>
-<button *ngIf="!saveConfigurationLoading" type="submit" class="btn btn-sm btn-primary px-3" (click)="save()">
-  <i class="ph ph-check"></i> {{ "admin.server-configuration.button.save" | translate }}
-</button>
-<button *ngIf="saveConfigurationLoading" type="submit" [disabled]="true" class="btn btn-sm btn-primary px-3">
-  <i class="ph ph-circle-notch"></i> {{ "admin.server-configuration.button.save" | translate }}
-</button>
+
+@if (!saveConfigurationLoading) {
+  <button type="submit" class="btn btn-sm btn-primary px-3" (click)="save()">
+    <i class="ph ph-check"></i> {{ "admin.server-configuration.button.save" | translate }}
+  </button>
+}
+
+@if (saveConfigurationLoading) {
+  <button type="submit" [disabled]="true" class="btn btn-sm btn-primary px-3">
+    <i class="ph ph-circle-notch"></i> {{ "admin.server-configuration.button.save" | translate }}
+  </button>
+}

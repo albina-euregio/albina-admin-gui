@@ -4,7 +4,6 @@ import { ConfigurationService } from "../providers/configuration-service/configu
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { RegionConfigurationComponent } from "./region-configuration.component";
-import { NgIf, NgFor } from "@angular/common";
 import { Component, AfterContentInit, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -13,7 +12,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
   templateUrl: "regions-configuration.component.html",
   selector: "app-regions-configuration",
   standalone: true,
-  imports: [NgIf, AccordionModule, NgFor, RegionConfigurationComponent, TranslateModule],
+  imports: [AccordionModule, RegionConfigurationComponent, TranslateModule],
 })
 export class RegionsConfigurationComponent implements AfterContentInit {
   private authenticationService = inject(AuthenticationService);

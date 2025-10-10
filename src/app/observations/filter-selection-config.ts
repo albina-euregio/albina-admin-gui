@@ -14,7 +14,8 @@ export const FilterSelectionValueSchema = z.object({
   labelFontSize: z.number().default(12).optional().describe("Label font size, in pt"),
   legend: z.string().optional().describe("Legend string shown in the chart, defaults to label"),
   numericRange: z
-    .array(z.number())
+    .number()
+    .array()
     .min(2)
     .max(2)
     .optional()
@@ -25,7 +26,8 @@ export const FilterSelectionValueSchema = z.object({
   fillOpacity: z.number().default(0.8).optional().describe("Polygon fill opacity"),
   radius: z.number().default(40).optional().describe("Radius of the circle marker, in pixels"),
   radiusByZoom: z
-    .array(z.number())
+    .number()
+    .array()
     .min(19)
     .max(19)
     .optional()
@@ -60,7 +62,8 @@ export const FilterSelectionSpecSchema = z.object({
       "Key in https://gitlab.com/albina-euregio/albina-admin-gui/-/blob/master/src/assets/i18n/en.json used for i18n (internationalization)",
     ),
   selectedValues: z
-    .array(z.string())
+    .string()
+    .array()
     .optional()
     .describe("Initially selected values, use 'nan' for features w/o specification"),
   stabilityIndex: z.boolean().optional().describe("Whether this filter represents a snowpack stability index"),
@@ -69,7 +72,7 @@ export const FilterSelectionSpecSchema = z.object({
     .url()
     .optional()
     .describe("URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."),
-  values: z.array(FilterSelectionValueSchema),
+  values: FilterSelectionValueSchema.array(),
 });
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FilterSelectionSpecSchemaNoKey = FilterSelectionSpecSchema.omit({ key: true });

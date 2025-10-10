@@ -1,47 +1,33 @@
-<div *ngFor="let alert of alerts">
-  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
-</div>
+<!-- eslint-disable @angular-eslint/template/label-has-associated-control -->
+@for (alert of alerts; track alert) {
+  <div>
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+  </div>
+}
+
 <div>
   <tabset>
     <tab heading="{{ 'admin.region-configuration.table.general.title' | translate }}">
       <table class="table table-hover table-condensed mb-0">
         <tbody>
+          @for (key of GeneralRegionConfigurationKeys; track key) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{ RegionConfigurationSchema.shape[key].description }}</label>
+              </td>
+              <td>
+                <app-zod-input [zodType]="RegionConfigurationSchema.shape[key]" [(value)]="config()[key]" />
+              </td>
+            </tr>
+          }
           <tr>
             <td>
-              <label class="col-form-label">{{ "admin.region-configuration.table.general.id" | translate }}</label>
-            </td>
-            <td>
-              <input type="text" class="form-control" id="input-name" placeholder="" [(ngModel)]="config().id" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.general.microRegions" | translate
-              }}</label>
+              <label class="col-form-label">{{ RegionConfigurationSchema.shape.subRegions.description }}</label>
             </td>
             <td>
               <input
                 type="text"
                 class="form-control"
-                id="input-name"
-                placeholder=""
-                [(ngModel)]="config().microRegions"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.general.subRegions" | translate
-              }}</label>
-            </td>
-            <td>
-              <input
-                type="text"
-                class="form-control"
-                id="input-name"
-                placeholder=""
                 [ngModel]="config().subRegions"
                 (ngModelChange)="config().subRegions = $event.split(',')"
               />
@@ -49,16 +35,12 @@
           </tr>
           <tr>
             <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.general.superRegions" | translate
-              }}</label>
+              <label class="col-form-label">{{ RegionConfigurationSchema.shape.superRegions.description }}</label>
             </td>
             <td>
               <input
                 type="text"
                 class="form-control"
-                id="input-name"
-                placeholder=""
                 [ngModel]="config().superRegions"
                 (ngModelChange)="config().superRegions = $event.split(',')"
               />
@@ -66,16 +48,12 @@
           </tr>
           <tr>
             <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.general.neighborRegions" | translate
-              }}</label>
+              <label class="col-form-label">{{ RegionConfigurationSchema.shape.neighborRegions.description }}</label>
             </td>
             <td>
               <input
                 type="text"
                 class="form-control"
-                id="input-name"
-                placeholder=""
                 [ngModel]="config().neighborRegions"
                 (ngModelChange)="config().neighborRegions = $event.split(',')"
               />
@@ -108,18 +86,20 @@
             </td>
             <td class="align-middle">
               <div class="d-flex gap-2">
-                <div *ngFor="let language of languages">
-                  <label>
-                    <input
-                      #checkbox
-                      type="checkbox"
-                      [value]="language"
-                      [checked]="config().enabledLanguages?.includes(language)"
-                      (change)="toggleLanguage(language, checkbox.checked)"
-                    />
-                    {{ language }}
-                  </label>
-                </div>
+                @for (language of languages; track language) {
+                  <div>
+                    <label>
+                      <input
+                        #checkbox
+                        type="checkbox"
+                        [value]="language"
+                        [checked]="config().enabledLanguages?.includes(language)"
+                        (change)="toggleLanguage(language, checkbox.checked)"
+                      />
+                      {{ language }}
+                    </label>
+                  </div>
+                }
               </div>
             </td>
           </tr>
@@ -131,18 +111,20 @@
             </td>
             <td class="align-middle">
               <div class="d-flex gap-2">
-                <div *ngFor="let language of languages">
-                  <label>
-                    <input
-                      #checkbox
-                      type="checkbox"
-                      [value]="language"
-                      [checked]="config().ttsLanguages?.includes(language)"
-                      (change)="toggleTTSLanguage(language, checkbox.checked)"
-                    />
-                    {{ language }}
-                  </label>
-                </div>
+                @for (language of languages; track language) {
+                  <div>
+                    <label>
+                      <input
+                        #checkbox
+                        type="checkbox"
+                        [value]="language"
+                        [checked]="config().ttsLanguages?.includes(language)"
+                        (change)="toggleTTSLanguage(language, checkbox.checked)"
+                      />
+                      {{ language }}
+                    </label>
+                  </div>
+                }
               </div>
             </td>
           </tr>
@@ -211,505 +193,321 @@
               </label>
             </td>
           </tr>
-          <tr *ngIf="config().createMaps">
-            <td colspan="2">
-              <table class="table">
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.geoDataDirectory" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-geoDataDirectory"
-                      placeholder=""
-                      [(ngModel)]="config().geoDataDirectory"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapXmax" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapXmax"
-                      placeholder=""
-                      [(ngModel)]="config().mapXmax"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapXmin" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapXmin"
-                      placeholder=""
-                      [(ngModel)]="config().mapXmin"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapYmax" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapYmax"
-                      placeholder=""
-                      [(ngModel)]="config().mapYmax"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapYmin" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapYmin"
-                      placeholder=""
-                      [(ngModel)]="config().mapYmin"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapLogoColorPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapLogoColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().mapLogoColorPath"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapLogoBwPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapLogoBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().mapLogoBwPath"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapLogoPosition" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapLogoPosition"
-                      placeholder=""
-                      [(ngModel)]="config().mapLogoPosition"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapCenterLat" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapCenterLat"
-                      placeholder=""
-                      [(ngModel)]="config().mapCenterLat"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.mapCenterLng" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-mapCenterLng"
-                      placeholder=""
-                      [(ngModel)]="config().mapCenterLng"
-                    />
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps">
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.publication.createPdf" | translate
-              }}</label>
-            </td>
-            <td>
-              <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config().createPdf" />
-                <span class="switch-slider"></span>
-              </label>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps && config().createPdf">
-            <td colspan="2">
-              <table class="table">
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfColor" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfColor"
-                      placeholder=""
-                      [(ngModel)]="config().pdfColor"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfMapYAmPm" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapYAmPm"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapYAmPm"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfMapYFd" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapYFd"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapYFd"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfMapWidthAmPm" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapWidthAmPm"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapWidthAmPm"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfMapWidthFd" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapWidthFd"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapWidthFd"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfMapHeight" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfMapHeight"
-                      placeholder=""
-                      [(ngModel)]="config().pdfMapHeight"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfFooterLogo" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <label class="switch switch-primary">
-                      <input type="checkbox" class="switch-pdfFooterLogo" [(ngModel)]="config().pdfFooterLogo" />
-                      <span class="switch-slider"></span>
-                    </label>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfFooterLogoColorPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfFooterLogoColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().pdfFooterLogoColorPath"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.pdfFooterLogoBwPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-pdfFooterLogoBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().pdfFooterLogoBwPath"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.imageColorbarColorPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarColorPath"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.imageColorbarBwPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarBwPath"
-                    />
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps">
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.publication.createSimpleHtml" | translate
-              }}</label>
-            </td>
-            <td>
-              <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config().createSimpleHtml" />
-                <span class="switch-slider"></span>
-              </label>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps && config().createSimpleHtml">
-            <td colspan="2">
-              <table class="table">
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.simpleHtmlTemplateName" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-simpleHtmlTemplateName"
-                      placeholder=""
-                      [(ngModel)]="config().simpleHtmlTemplateName"
-                    />
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps">
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.publication.sendEmails" | translate
-              }}</label>
-            </td>
-            <td>
-              <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendEmails" />
-                <span class="switch-slider"></span>
-              </label>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps && config().sendEmails">
-            <td colspan="2">
-              <table class="table">
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.imageColorbarColorPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarColorPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarColorPath"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.imageColorbarBwPath" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-imageColorbarBwPath"
-                      placeholder=""
-                      [(ngModel)]="config().imageColorbarBwPath"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label class="col-form-label">{{
-                      "admin.region-configuration.table.publication.emailColor" | translate
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="input-emailColor"
-                      placeholder=""
-                      [(ngModel)]="config().emailColor"
-                    />
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps">
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.publication.sendTelegramMessages" | translate
-              }}</label>
-            </td>
-            <td>
-              <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendTelegramMessages" />
-                <span class="switch-slider"></span>
-              </label>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps">
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.publication.sendWhatsAppMessages" | translate
-              }}</label>
-            </td>
-            <td>
-              <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendWhatsAppMessages" />
-                <span class="switch-slider"></span>
-              </label>
-            </td>
-          </tr>
-          <tr *ngIf="config().createMaps">
-            <td>
-              <label class="col-form-label">{{
-                "admin.region-configuration.table.publication.sendPushNotifications" | translate
-              }}</label>
-            </td>
-            <td>
-              <label class="switch switch-primary">
-                <input type="checkbox" class="switch-input" [(ngModel)]="config().sendPushNotifications" />
-                <span class="switch-slider"></span>
-              </label>
-            </td>
-          </tr>
+          @if (config().createMaps) {
+            <tr>
+              <td colspan="2">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.geoDataDirectory" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().geoDataDirectory" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.mapLogoColorPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().mapLogoColorPath" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.mapLogoBwPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().mapLogoBwPath" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.mapLogoPosition" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().mapLogoPosition" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "admin.region-configuration.table.publication.createPdf" | translate
+                }}</label>
+              </td>
+              <td>
+                <label class="switch switch-primary">
+                  <input type="checkbox" class="switch-input" [(ngModel)]="config().createPdf" />
+                  <span class="switch-slider"></span>
+                </label>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps && config().createPdf) {
+            <tr>
+              <td colspan="2">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfColor" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfColor" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfMapYAmPm" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfMapYAmPm" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfMapYFd" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfMapYFd" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfMapWidthAmPm" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfMapWidthAmPm" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfMapWidthFd" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfMapWidthFd" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfMapHeight" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfMapHeight" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfFooterLogo" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <label class="switch switch-primary">
+                        <input type="checkbox" class="switch-pdfFooterLogo" [(ngModel)]="config().pdfFooterLogo" />
+                        <span class="switch-slider"></span>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfFooterLogoColorPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfFooterLogoColorPath" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.pdfFooterLogoBwPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().pdfFooterLogoBwPath" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.imageColorbarColorPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().imageColorbarColorPath" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.imageColorbarBwPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().imageColorbarBwPath" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "admin.region-configuration.table.publication.createSimpleHtml" | translate
+                }}</label>
+              </td>
+              <td>
+                <label class="switch switch-primary">
+                  <input type="checkbox" class="switch-input" [(ngModel)]="config().createSimpleHtml" />
+                  <span class="switch-slider"></span>
+                </label>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps && config().createSimpleHtml) {
+            <tr>
+              <td colspan="2">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.simpleHtmlTemplateName" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().simpleHtmlTemplateName" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "admin.region-configuration.table.publication.sendEmails" | translate
+                }}</label>
+              </td>
+              <td>
+                <label class="switch switch-primary">
+                  <input type="checkbox" class="switch-input" [(ngModel)]="config().sendEmails" />
+                  <span class="switch-slider"></span>
+                </label>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps && config().sendEmails) {
+            <tr>
+              <td colspan="2">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.imageColorbarColorPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().imageColorbarColorPath" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.imageColorbarBwPath" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().imageColorbarBwPath" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label class="col-form-label">{{
+                        "admin.region-configuration.table.publication.emailColor" | translate
+                      }}</label>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [(ngModel)]="config().emailColor" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "admin.region-configuration.table.publication.sendTelegramMessages" | translate
+                }}</label>
+              </td>
+              <td>
+                <label class="switch switch-primary">
+                  <input type="checkbox" class="switch-input" [(ngModel)]="config().sendTelegramMessages" />
+                  <span class="switch-slider"></span>
+                </label>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "admin.region-configuration.table.publication.sendWhatsAppMessages" | translate
+                }}</label>
+              </td>
+              <td>
+                <label class="switch switch-primary">
+                  <input type="checkbox" class="switch-input" [(ngModel)]="config().sendWhatsAppMessages" />
+                  <span class="switch-slider"></span>
+                </label>
+              </td>
+            </tr>
+          }
+          @if (config().createMaps) {
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "admin.region-configuration.table.publication.sendPushNotifications" | translate
+                }}</label>
+              </td>
+              <td>
+                <label class="switch switch-primary">
+                  <input type="checkbox" class="switch-input" [(ngModel)]="config().sendPushNotifications" />
+                  <span class="switch-slider"></span>
+                </label>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </tab>
@@ -899,17 +697,86 @@
         </tbody>
       </table>
     </tab>
+    <tab heading="{{ 'admin.region-configuration.table.languageConfiguration.title' | translate }}">
+      <div class="table-responsive">
+        <table class="table table-hover table-condensed mb-0">
+          <tbody>
+            <tr>
+              <td>
+                <label class="col-form-label text-nowrap">{{
+                  RegionConfigurationSchema.shape.defaultLang.description
+                }}</label>
+              </td>
+              <td>
+                <input type="text" class="form-control" [(ngModel)]="config().defaultLang" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-hover table-condensed mb-0">
+          <tbody>
+            <tr class="table-active">
+              <td>
+                <label class="col-form-label text-nowrap">{{
+                  LanguageConfigurationSchema.shape.lang.description
+                }}</label>
+                <button
+                  (click)="config().languageConfigurations.splice(0, 0, {})"
+                  class="btn btn-sm btn-outline-primary float-end"
+                  style="min-height: 38px"
+                >
+                  <i class="ph ph-plus"></i>
+                </button>
+              </td>
+              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                <td style="min-width: 20em">
+                  <app-zod-input
+                    [zodType]="LanguageConfigurationSchema.shape.lang"
+                    [(value)]="languageConfiguration.lang"
+                  >
+                    <button
+                      (click)="config().languageConfigurations.splice($index, 1)"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="ph ph-minus"></i>
+                    </button>
+                  </app-zod-input>
+                </td>
+              }
+            </tr>
+            @for (key of LanguageConfigurationKeys; track key) {
+              <tr>
+                <td>
+                  <label class="col-form-label text-nowrap">
+                    {{ LanguageConfigurationSchema.shape[key].description }}
+                  </label>
+                </td>
+                @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                  <td>
+                    <app-zod-input
+                      [lang]="languageConfiguration.lang"
+                      [zodType]="LanguageConfigurationSchema.shape[key]"
+                      [(value)]="languageConfiguration[key]"
+                    />
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </tab>
   </tabset>
 </div>
-<button
-  *ngIf="!saveConfigurationLoading"
-  type="submit"
-  [disabled]="!config().id"
-  class="btn btn-sm btn-primary px-3"
-  (click)="save()"
->
-  <i class="ph ph-check"></i> {{ "admin.region-configuration.button.save" | translate }}
-</button>
-<button *ngIf="saveConfigurationLoading" type="submit" [disabled]="true" class="btn btn-sm btn-primary px-3">
-  <i class="ph ph-circle-notch"></i> {{ "admin.region-configuration.button.save" | translate }}
-</button>
+
+@if (!saveConfigurationLoading) {
+  <button type="submit" [disabled]="!config().id" class="btn btn-sm btn-primary px-3" (click)="save()">
+    <i class="ph ph-check"></i> {{ "admin.region-configuration.button.save" | translate }}
+  </button>
+}
+
+@if (saveConfigurationLoading) {
+  <button type="submit" [disabled]="true" class="btn btn-sm btn-primary px-3">
+    <i class="ph ph-circle-notch"></i> {{ "admin.region-configuration.button.save" | translate }}
+  </button>
+}

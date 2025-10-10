@@ -9,22 +9,26 @@
     </div>
     <accordion>
       <!-- Local server -->
-      <accordion-group *ngIf="localServerConfiguration" class="my-3">
-        <div accordion-heading class="clearfix">
-          <strong>{{ localServerConfiguration.name }}</strong>
-        </div>
-        <app-server-configuration
-          [config]="localServerConfiguration"
-          [externalServer]="false"
-        ></app-server-configuration>
-      </accordion-group>
+      @if (localServerConfiguration) {
+        <accordion-group class="my-3">
+          <div accordion-heading class="clearfix">
+            <strong>{{ localServerConfiguration.name }}</strong>
+          </div>
+          <app-server-configuration
+            [config]="localServerConfiguration"
+            [externalServer]="false"
+          ></app-server-configuration>
+        </accordion-group>
+      }
       <!-- External servers -->
-      <accordion-group *ngFor="let config of externalServerConfigurations" class="my-3">
-        <div accordion-heading class="clearfix">
-          <strong>{{ config.name }}</strong>
-        </div>
-        <app-server-configuration [config]="config" [externalServer]="true"></app-server-configuration>
-      </accordion-group>
+      @for (config of externalServerConfigurations; track config) {
+        <accordion-group class="my-3">
+          <div accordion-heading class="clearfix">
+            <strong>{{ config.name }}</strong>
+          </div>
+          <app-server-configuration [config]="config" [externalServer]="true"></app-server-configuration>
+        </accordion-group>
+      }
     </accordion>
   </div>
 </div>

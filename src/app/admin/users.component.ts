@@ -3,7 +3,6 @@ import { ConfigurationService } from "../providers/configuration-service/configu
 import { UserService } from "../providers/user-service/user.service";
 import { ChangePasswordComponent } from "./change-password.component";
 import { UpdateUserComponent } from "./update-user.component";
-import { NgFor, NgIf } from "@angular/common";
 import { AfterContentInit, Component, viewChild, inject } from "@angular/core";
 import { TemplateRef } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -16,7 +15,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
   templateUrl: "users.component.html",
   selector: "app-users",
   standalone: true,
-  imports: [NgFor, AlertModule, NgIf, TranslateModule],
+  imports: [AlertModule, TranslateModule],
 })
 export class UsersComponent implements AfterContentInit {
   authenticationService = inject(AuthenticationService);

@@ -650,11 +650,7 @@
       "table": {
         "general": {
           "title": "General",
-          "id": "ID",
-          "microRegions": "Number of micro regions",
-          "subRegions": "Sub regions",
-          "superRegions": "Super regions",
-          "neighborRegions": "Neighbouring regions"
+          "id": "ID"
         },
         "publication": {
           "title": "Publication",
@@ -680,17 +676,11 @@
           "pdfFooterLogo": "Logo for PDF footer",
           "pdfFooterLogoColorPath": "Logo for PDF footer (color)",
           "pdfFooterLogoBwPath": "Logo for PDF footer (bw)",
-          "mapXmax": "Map X max",
-          "mapXmin": "Map X min",
-          "mapYmax": "Map Y max",
-          "mapYmin": "Map Y min",
           "simpleHtmlTemplateName": "Simple HTML template",
           "geoDataDirectory": "Geodata directory",
           "mapLogoColorPath": "Logo for map (color)",
           "mapLogoBwPath": "Logo for map (bw)",
           "mapLogoPosition": "Logo position for map",
-          "mapCenterLat": "Center position of map (lat)",
-          "mapCenterLng": "Center position of map (long)",
           "imageColorbarColorPath": "Colorbar (color)",
           "imageColorbarBwPath": "Colorbar (b/w)",
           "enabledLanguages": "Enabled languages",
@@ -714,6 +704,9 @@
           "enableEditableFields": "Editable textfields instead of textcat for bulletins",
           "enableGeneralHeadline": "Enable general overall headline for bulletins",
           "enableWeatherTextField": "Enable text input for weather synopsis"
+        },
+        "languageConfiguration": {
+          "title": "Language configuration"
         }
       },
       "success": "Configuration successfully saved",

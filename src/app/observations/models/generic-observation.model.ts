@@ -167,7 +167,7 @@ export const genericObservationSchema = z.object({
   $allowEdit: z.boolean().default(false),
   $deleted: z.boolean().default(false),
   $externalURL: z.string().nullish().nullable().describe("External URL to display as iframe"),
-  $externalImgs: z.array(z.string()).nullish().nullable().describe("External image to display as img"),
+  $externalImgs: z.string().array().nullish().nullable().describe("External image to display as img"),
   stability: z
     .enum(SnowpackStability)
     .nullish()
@@ -189,16 +189,18 @@ export const genericObservationSchema = z.object({
   reportDate: z.coerce.date().nullish().nullable().describe("Date when the observation has been reported"),
   dangerSource: z.string().uuid().nullish().nullable().describe("Danger source UUID"),
   avalancheProblems: z
-    .array(z.enum(AvalancheProblem))
+    .enum(AvalancheProblem)
+    .array()
     .nullish()
     .nullable()
     .describe("Avalanche problem corresponding with this observation"),
   dangerPatterns: z
-    .array(z.enum(DangerPattern))
+    .enum(DangerPattern)
+    .array()
     .nullish()
     .nullable()
     .describe("Danger pattern corresponding with this observation"),
-  importantObservations: z.array(z.enum(ImportantObservation)).nullish().nullable().describe("Important observations"),
+  importantObservations: z.enum(ImportantObservation).array().nullish().nullable().describe("Important observations"),
   personInvolvement: z.enum(PersonInvolvement).nullish().nullable().describe("Person involvement"),
 });
 

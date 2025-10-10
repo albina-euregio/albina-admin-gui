@@ -3,7 +3,6 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { ServerConfigurationComponent } from "./server-configuration.component";
-import { NgIf, NgFor } from "@angular/common";
 import { Component, OnInit, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -12,7 +11,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
   templateUrl: "servers-configuration.component.html",
   selector: "app-servers-configuration",
   standalone: true,
-  imports: [AccordionModule, NgIf, ServerConfigurationComponent, NgFor, TranslateModule],
+  imports: [AccordionModule, ServerConfigurationComponent, TranslateModule],
 })
 export class ServersConfigurationComponent implements OnInit {
   private authenticationService = inject(AuthenticationService);

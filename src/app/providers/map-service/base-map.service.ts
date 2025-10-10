@@ -1,7 +1,7 @@
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
 import { Injectable } from "@angular/core";
-import { Control, LatLng, Map as LeafletMap } from "leaflet";
+import { Control, Map as LeafletMap } from "leaflet";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -21,12 +21,12 @@ export class BaseMapService extends MapService {
       doubleClickZoom: true,
       scrollWheelZoom: true,
       // pinchZoom: Browser.touch,
-      center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: 8,
       minZoom: 4,
       maxZoom: 15,
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.regions, this.overlayMaps.editSelection],
     });
+
+    this.fitActiveRegionBounds(this.map);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
     this.localStorageService

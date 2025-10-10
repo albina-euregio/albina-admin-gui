@@ -17,7 +17,6 @@ import {
   Browser,
   Control,
   GeoJSON,
-  LatLng,
   Layer,
   Map as LeafletMap,
   MapOptions,
@@ -233,6 +232,7 @@ export class MapService {
       ...this.getMapInitOptions(),
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.aggregatedRegions, this.overlayMaps.regions],
     });
+    this.fitActiveRegionBounds(this.map);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
     this.localStorageService
@@ -266,6 +266,7 @@ export class MapService {
         this.afternoonOverlayMaps.regions,
       ],
     });
+    this.fitActiveRegionBounds(afternoonMap);
 
     this.pmControl.addTo(afternoonMap);
 
@@ -335,24 +336,13 @@ export class MapService {
   }
 
   getMapInitOptions(): MapOptions {
-    const options: MapOptions = {
+    return {
       doubleClickZoom: true,
       scrollWheelZoom: true,
       // pinchZoom: Browser.touch,
-      center: new LatLng(this.authenticationService.getUserLat(), this.authenticationService.getUserLng()),
-      zoom: 8,
       minZoom: 6,
       maxZoom: 15,
     };
-
-    if (this.authenticationService.getActiveRegionId() === this.constantsService.codeAran) {
-      Object.assign(options, {
-        zoom: 10,
-        minZoom: 8,
-        maxZoom: 12,
-      });
-    }
-    return options;
   }
 
   getAlbinaBaseMap(options: TileLayerOptions = {}): TileLayer {
@@ -730,5 +720,11 @@ export class MapService {
       fillColor: color,
       fillOpacity: fillOpacity,
     };
+  }
+
+  async fitActiveRegionBounds(map: LeafletMap) {
+    const regions = await this.regionsService.getActiveServerRegionsAsync();
+    const bounds = new GeoJSON(regions).getBounds();
+    map.fitBounds(bounds);
   }
 }

@@ -1,8 +1,13 @@
-import { RegionConfiguration, RegionConfigurationSchema } from "../models/region-configuration.model";
+import {
+  LanguageConfiguration,
+  LanguageConfigurationSchema,
+  RegionConfiguration,
+  RegionConfigurationSchema,
+} from "../models/region-configuration.model";
 import { LANGUAGES } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
-import { NgFor, NgIf } from "@angular/common";
+import { ZodInputComponent } from "../shared/zod-input.component";
 import { Component, input, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -14,13 +19,28 @@ import { TabsModule } from "ngx-bootstrap/tabs";
   templateUrl: "region-configuration.component.html",
   selector: "app-region-configuration",
   standalone: true,
-  imports: [NgFor, AlertModule, TabsModule, FormsModule, NgIf, TranslateModule],
+  imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent],
 })
 export class RegionConfigurationComponent {
   private translateService = inject(TranslateService);
   configurationService = inject(ConfigurationService);
   authenticationService = inject(AuthenticationService);
 
+  readonly RegionConfigurationSchema = RegionConfigurationSchema;
+  readonly GeneralRegionConfigurationKeys: (keyof RegionConfiguration)[] = [
+    "id",
+    "coatOfArms",
+    "staticUrl",
+    "microRegions",
+  ];
+  readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
+  readonly LanguageConfigurationKeys: (keyof LanguageConfiguration)[] = [
+    "warningServiceName",
+    "warningServiceEmail",
+    "websiteName",
+    "url",
+    "urlWithDate",
+  ];
   readonly config = input<RegionConfiguration>(undefined);
   readonly languages = LANGUAGES;
 
