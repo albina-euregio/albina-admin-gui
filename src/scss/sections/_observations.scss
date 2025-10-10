@@ -135,19 +135,21 @@ nav ~ .app-body .layout-outer {
   }
 }
 
+$layout-global-height: 55px;
+
 .layout-global {
   z-index: 70;
   position: absolute;
   top: 0;
   width: 100%;
-  height: 55px;
+  height: $layout-global-height;
   background-color: #fff;
   border-bottom: 1px solid #e6eef2;
 }
 
 .global-bar-scroll {
   width: 100%;
-  height: calc(55px - 1px);
+  height: calc($layout-global-height - 1px);
   padding: 0 10px;
   display: flex;
   flex-wrap: nowrap;
@@ -282,10 +284,12 @@ nav ~ .app-body .layout-outer {
   background-color: #e6eef2;
 }
 
+$estimated-navbar-height: 60px;
+
 .layout-map > .observations-map {
-  height: 100vh;
+  height: calc(100vh - $layout-global-height);
   body:has(nav) & {
-    height: calc(100vh - 110px);
+    height: calc(100vh - $layout-global-height - $estimated-navbar-height);
   }
 }
 
