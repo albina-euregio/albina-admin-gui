@@ -100,6 +100,8 @@ export class AvalancheBulletinComponent implements OnInit {
     class: "modal-md",
   };
 
+  TextcatTextfield = Enums.TextcatTextfield;
+
   ngOnInit() {
     this.bulletinsService.accordionChanged$.subscribe(({ isOpen, groupName }) => {
       switch (groupName) {
@@ -429,21 +431,10 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 }
 
-export type TextcatTextfield =
-  | "highlights"
-  | "avActivityHighlights"
-  | "avActivityComment"
-  | "snowpackStructureHighlights"
-  | "snowpackStructureComment"
-  | "tendencyComment"
-  | "generalHeadlineComment"
-  | "synopsisComment"
-  | "text";
-
 // alias pmData, alias inputDef
 export interface TextcatLegacyIn {
   textDef: string;
-  textField: TextcatTextfield;
+  textField: Enums.TextcatTextfield;
   currentLang: string;
   region: string;
 }
@@ -451,7 +442,7 @@ export interface TextcatLegacyIn {
 // alias pmData, alias outputText
 interface TextcatLegacyOut {
   textDef: string;
-  textField: TextcatTextfield;
+  textField: Enums.TextcatTextfield;
   textDe: string;
   textDe_AT: string;
   textDe_CH: string;

@@ -11,6 +11,7 @@ import { z } from "zod/v4";
 export class ZodInputComponent<T> {
   zodType = input<z.ZodType<T>>();
   lang = input<string>();
+  csv = input<boolean>(false);
   value = input<T>();
   valueChange = output<T>();
 

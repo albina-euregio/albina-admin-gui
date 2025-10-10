@@ -1,3 +1,4 @@
+import { TextcatTextfield } from "app/enums/enums";
 import { z } from "zod/v4";
 
 export const LanguageConfigurationSchema = z.object({
@@ -41,7 +42,11 @@ export const RegionConfigurationSchema = z.object({
   enableWeatherbox: z.boolean().nullish(),
   enableStrategicMindset: z.boolean().nullish(),
   enableStressLevel: z.boolean().nullish(),
-  enableEditableFields: z.boolean().nullish(),
+  enabledEditableFields: z
+    .enum(TextcatTextfield)
+    .array()
+    .nullish()
+    .describe("Editable textfields instead of textcat for bulletins"),
   enableGeneralHeadline: z.boolean().nullish(),
   enableWeatherTextField: z.boolean().nullish(),
   showMatrix: z.boolean().nullish(),

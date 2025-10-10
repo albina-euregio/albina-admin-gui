@@ -304,7 +304,7 @@
       class="create-bulletin__general-headline"
     >
       <app-bulletin-text
-        textField="generalHeadlineComment"
+        [textField]="TextcatTextfield.generalHeadlineComment"
         [rows]="2"
         [bulletin]="activeBulletin"
         [disabled]="isDisabled()"
