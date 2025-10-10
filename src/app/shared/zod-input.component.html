@@ -1,0 +1,15 @@
+<div class="input-group">
+  <input
+    type="text"
+    [lang]="lang()"
+    [class]="cssClasses()"
+    [ngModel]="value()"
+    (ngModelChange)="valueChange.emit($event)"
+  />
+
+  <ng-content></ng-content>
+
+  @if (prettyError()) {
+    <div class="invalid-feedback">{{ prettyError() }}</div>
+  }
+</div>

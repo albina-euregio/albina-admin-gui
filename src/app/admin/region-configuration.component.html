@@ -752,84 +752,38 @@
               </td>
               @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
                 <td style="min-width: 20em">
-                  <div class="input-group">
-                    <input type="text" class="form-control" [(ngModel)]="languageConfiguration.lang" />
+                  <app-zod-input
+                    [zodType]="LanguageConfigurationSchema.shape.lang"
+                    [(value)]="languageConfiguration.lang"
+                  >
                     <button
                       (click)="config().languageConfigurations.splice($index, 1)"
                       class="btn btn-sm btn-outline-primary"
                     >
                       <i class="ph ph-minus"></i>
                     </button>
-                  </div>
+                  </app-zod-input>
                 </td>
               }
             </tr>
-            <tr>
-              <td>
-                <label class="col-form-label text-nowrap">
-                  {{ LanguageConfigurationSchema.shape.warningServiceName.description }}
-                </label>
-              </td>
-              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+            @for (key of LanguageConfigurationKeys; track key) {
+              <tr>
                 <td>
-                  <input
-                    type="text"
-                    [lang]="languageConfiguration.lang"
-                    class="form-control"
-                    [(ngModel)]="languageConfiguration.warningServiceName"
-                  />
+                  <label class="col-form-label text-nowrap">
+                    {{ LanguageConfigurationSchema.shape[key].description }}
+                  </label>
                 </td>
-              }
-            </tr>
-            <tr>
-              <td>
-                <label class="col-form-label text-nowrap">
-                  {{ LanguageConfigurationSchema.shape.warningServiceEmail.description }}
-                </label>
-              </td>
-              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
-                <td>
-                  <input type="email" class="form-control" [(ngModel)]="languageConfiguration.warningServiceEmail" />
-                </td>
-              }
-            </tr>
-            <tr>
-              <td>
-                <label class="col-form-label text-nowrap">
-                  {{ LanguageConfigurationSchema.shape.websiteName.description }}
-                </label>
-              </td>
-              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
-                <td>
-                  <input
-                    type="text"
-                    [lang]="languageConfiguration.lang"
-                    class="form-control"
-                    [(ngModel)]="languageConfiguration.websiteName"
-                  />
-                </td>
-              }
-            </tr>
-            <tr>
-              <td>
-                <label class="col-form-label">{{ LanguageConfigurationSchema.shape.url.description }}</label>
-              </td>
-              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
-                <td>
-                  <input type="text" class="form-control" [(ngModel)]="languageConfiguration.url" />
-                </td>
-              }
-            </tr>
-            <tr>
-              <td>
-                <label class="col-form-label">{{ LanguageConfigurationSchema.shape.urlWithDate.description }}</label>
-              </td>
-              @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
-                <td>
-                  <input type="text" class="form-control" [(ngModel)]="languageConfiguration.urlWithDate" />
-                </td>
-              }
-            </tr>
+                @for (languageConfiguration of config().languageConfigurations; track languageConfiguration.lang) {
+                  <td>
+                    <app-zod-input
+                      [lang]="languageConfiguration.lang"
+                      [zodType]="LanguageConfigurationSchema.shape[key]"
+                      [(value)]="languageConfiguration[key]"
+                    />
+                  </td>
+                }
+              </tr>
+            }
           </tbody>
         </table>
       </div>

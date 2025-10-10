@@ -9,6 +9,8 @@ export const LanguageConfigurationSchema = z.object({
   urlWithDate: z.url().nullish().describe("Website URL for date given by %s"),
 });
 
+export type LanguageConfiguration = z.infer<typeof LanguageConfigurationSchema>;
+
 export const RegionConfigurationSchema = z.object({
   id: z.string().nullish(),
   microRegions: z.coerce.number().nullish().describe("Number of micro regions"),

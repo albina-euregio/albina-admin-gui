@@ -1,4 +1,5 @@
 import {
+  LanguageConfiguration,
   LanguageConfigurationSchema,
   RegionConfiguration,
   RegionConfigurationSchema,
@@ -6,6 +7,7 @@ import {
 import { LANGUAGES } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
+import { ZodInputComponent } from "../shared/zod-input.component";
 import { Component, input, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -17,7 +19,7 @@ import { TabsModule } from "ngx-bootstrap/tabs";
   templateUrl: "region-configuration.component.html",
   selector: "app-region-configuration",
   standalone: true,
-  imports: [AlertModule, TabsModule, FormsModule, TranslateModule],
+  imports: [AlertModule, TabsModule, FormsModule, TranslateModule, ZodInputComponent],
 })
 export class RegionConfigurationComponent {
   private translateService = inject(TranslateService);
@@ -26,6 +28,13 @@ export class RegionConfigurationComponent {
 
   readonly RegionConfigurationSchema = RegionConfigurationSchema;
   readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
+  readonly LanguageConfigurationKeys: (keyof LanguageConfiguration)[] = [
+    "warningServiceName",
+    "warningServiceEmail",
+    "websiteName",
+    "url",
+    "urlWithDate",
+  ];
   readonly config = input<RegionConfiguration>(undefined);
   readonly languages = LANGUAGES;
 
