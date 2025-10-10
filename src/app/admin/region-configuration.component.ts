@@ -32,6 +32,9 @@ export class RegionConfigurationComponent {
     "coatOfArms",
     "staticUrl",
     "microRegions",
+    "subRegions",
+    "superRegions",
+    "neighborRegions",
   ];
   readonly LanguageConfigurationSchema = LanguageConfigurationSchema;
   readonly LanguageConfigurationKeys: (keyof LanguageConfiguration)[] = [

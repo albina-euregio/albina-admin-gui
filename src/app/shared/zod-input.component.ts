@@ -16,10 +16,11 @@ export class ZodInputComponent<T> {
   valueChange = output<T>();
 
   cssClasses() {
-    const result = this.zodType().safeParse(this.value());
+    const value = this.value();
+    const result = this.zodType().safeParse(value);
     return {
       "form-control": true,
-      "is-valid": this.value() && result.success,
+      "is-valid": (Array.isArray(value) ? value.length : value) && result.success,
       "is-invalid": result.error,
     };
   }
