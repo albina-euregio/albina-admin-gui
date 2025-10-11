@@ -102,7 +102,7 @@
                               $event.target.checked
                                 ? filter.regions.add(microRegion.id)
                                 : filter.regions.delete(microRegion.id);
-                              selectRegion(region)
+                              toggleRegion($event, microRegion.id)
                             "
                             type="checkbox"
                             class="form-check-input"
