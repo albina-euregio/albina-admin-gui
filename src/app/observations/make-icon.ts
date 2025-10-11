@@ -1,4 +1,4 @@
-import type { Aspect } from "../enums/enums";
+import { Aspect } from "../enums/enums";
 import { escape } from "es-toolkit";
 import { memoize } from "es-toolkit/compat";
 import { Icon } from "leaflet";
@@ -13,17 +13,6 @@ const snowsymbolsiacs = `
         }
     </style></defs>
   `;
-
-const aspects = {
-  N: `<g id="sector-n" transform="translate(11.3648, 0)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-247.5) translate(-10.8779, -12.5421)"></path></g>`,
-  NE: `<g id="sector-ne" transform="translate(19.4015, 3.3285)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(-202.5) translate(-12.5421, -10.8779)"></path></g>`,
-  E: `<g id="sector-e" transform="translate(25.0842, 11.3648)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(-157.5) translate(-12.5421, -10.8779)"></path></g>`,
-  SE: `<g id="sector-se" transform="translate(25.0842, 19.4015)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-112.5) translate(-10.8779, -12.5421)"></path></g>`,
-  S: `<g id="sector-s" transform="translate(17.0479, 25.0842)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-67.5) translate(-10.8779, -12.5421)"></path></g>`,
-  SW: `<g id="sector-sw" transform="translate(5.6827, 25.0842)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(-22.5) translate(-12.5421, -10.8779)"></path></g>`,
-  W: `<g id="sector-w" transform="translate(0, 17.0479)"><path d="M2.04211,3.45299143 C2.04211,9.25215827 4.38880596,14.5024523 8.18920473,18.3027324 L23.04211,3.45299143 L2.04211,3.45299143 Z" id="sector" transform="translate(12.5421, 10.8779) rotate(22.5) translate(-12.5421, -10.8779)"></path></g>`,
-  NW: `<g id="sector-nw" transform="translate(3.3285, 5.6827)"><path d="M0.37786189,5.11723954 C0.37786189,10.9164064 2.72455784,16.1667004 6.52495662,19.9669805 L21.3778619,5.11723954 L0.37786189,5.11723954 Z" id="sector" transform="translate(10.8779, 12.5421) rotate(-292.5) translate(-10.8779, -12.5421)"></path></g>`,
-};
 
 function icon0(
   aspect: Aspect,
@@ -42,28 +31,31 @@ function icon0(
   // https://bugzilla.mozilla.org/show_bug.cgi?id=700533
   label = escape(String(label));
   labelFont ||= getComputedStyle(document.body).getPropertyValue("font-family").replace(/"/g, "'");
+
+  const rotation = { N: 0, NE: 45, E: 90, SE: 135, S: 180, SW: 225, W: 270, NW: 315 }[aspect];
+  let aspectPath = "";
+  if (Aspect[aspect]) {
+    const radius = 21;
+    const angle1 = -Math.PI / 2 - Math.PI / 8;
+    const angle2 = -Math.PI / 2 + Math.PI / 8;
+    const x1 = radius * Math.cos(angle1);
+    const y1 = radius * Math.sin(angle1);
+    const x2 = radius * Math.cos(angle2);
+    const y2 = radius * Math.sin(angle2);
+    aspectPath += `M${0},${0} `;
+    aspectPath += `L${x1},${y1} `;
+    aspectPath += `A${radius},${radius} 0 0,1 ${x2},${y2} `;
+    aspectPath += "Z";
+  }
+
   const svg = `
-    <svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <svg width="42px" height="42px" viewBox="-21 -21 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     ${labelFont === "snowsymbolsiacs" ? snowsymbolsiacs : ""}
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="map-marker">
-
-            <g id="map-marker-sectors" transform="translate(-4.0842, -4.0842)" fill="${aspectColor}">
-              ${aspects[aspect]}
-            </g>
-
-            <g id="map-marker-bg" transform="translate(10, 10)" fill="${iconColor}">
-                <circle cx="11" cy="11" r="11"></circle>
-            </g>
-
-            <g id="map-marker-circle-inner" transform="translate(10, 10)">
-                <text x="11" y="15" text-anchor="middle" fill="${labelColor}" font-size="${labelFontSize}" font-family="${labelFont}">${label}</text>
-                <g id="line-bold" stroke="${borderColor}" stroke-width="${borderWidth}" stroke-dasharray="${borderDashArray}">
-                    <circle cx="11" cy="11" r="11"></circle>
-                </g>
-            </g>
-
-        </g>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path id="map-marker-sectors" d="${aspectPath}" fill="${aspectColor}" transform="rotate(${rotation})"/>
+        <circle id="map-marker-bg" r="11" fill="${iconColor}"></circle>
+        <text id="map-marker-label" y="4" text-anchor="middle" fill="${labelColor}" font-size="${labelFontSize}" font-family="${labelFont}">${label}</text>
+        <circle id="map-marker-circle-inner" r="11" stroke="${borderColor}" stroke-width="${borderWidth}" stroke-dasharray="${borderDashArray}"></circle>
     </g>
 </svg>
     `;
