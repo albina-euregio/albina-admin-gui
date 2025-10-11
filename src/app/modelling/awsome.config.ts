@@ -62,6 +62,13 @@ export const AwsomeConfigSchema = z.object({
   dateStepSeconds: z.number().describe("Seconds between two models runs"),
   filters: FilterSelectionSpecSchema.array(),
   sources: AwsomeSourceSchema.array(),
+  mapCenter: z
+    .number()
+    .array()
+    .min(3)
+    .max(3)
+    .describe("Map center given as [latitude, longitude, zoom]")
+    .default(() => [47.3, 11.3, 8]),
   regions: z
     .object({
       url: z

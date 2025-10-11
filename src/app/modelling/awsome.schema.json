@@ -263,6 +263,16 @@
         "additionalProperties": false
       }
     },
+    "mapCenter": {
+      "default": [47.3, 11.3, 8],
+      "description": "Map center given as [latitude, longitude, zoom]",
+      "minItems": 3,
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
     "regions": {
       "type": "object",
       "properties": {
@@ -306,6 +316,6 @@
       "additionalProperties": false
     }
   },
-  "required": ["date", "dateStepSeconds", "filters", "sources", "hazardChart"],
+  "required": ["date", "dateStepSeconds", "filters", "sources", "mapCenter", "hazardChart"],
   "additionalProperties": false
 }

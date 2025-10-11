@@ -295,6 +295,9 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
       clickMode: "awsome",
     });
 
+    const [lat, lon, zoom] = this.config.mapCenter;
+    this.mapService.map.setView([lat, lon], zoom);
+
     this.mapLayer.addTo(this.mapService.map);
     this.mapLayerHighlight.addTo(this.mapService.map);
     this.mapService.map.on({
