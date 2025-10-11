@@ -51,23 +51,13 @@ function icon0(
             </g>
 
             <g id="map-marker-bg" transform="translate(10, 10)" fill="${iconColor}">
-                <circle id="Oval" cx="11" cy="11" r="11"></circle>
+                <circle cx="11" cy="11" r="11"></circle>
             </g>
 
             <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="${borderColor}">
                 <text x="11" y="15" text-anchor="middle" fill="${labelColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
-
                 <g id="line-bold" stroke-width="2">
-                    <circle id="Oval" cx="11" cy="11" r="11"></circle>
-                </g>
-                <g id="line-thin">
-                    <circle id="Oval" cx="11" cy="11" r="11"></circle>
-                </g>
-                <g id="dotted-bold" stroke-dasharray="0,2.99" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                    <path d="M11,22 C17.0751322,22 22,17.0751322 22,11 C22,4.92486775 17.0751322,0 11,0 C4.92486775,0 0,4.92486775 0,11 C0,17.0751322 4.92486775,22 11,22 Z" id="Oval"></path>
-                </g>
-                <g id="dotted-thin" stroke-dasharray="0,3" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11,22 C17.0751322,22 22,17.0751322 22,11 C22,4.92486775 17.0751322,0 11,0 C4.92486775,0 0,4.92486775 0,11 C0,17.0751322 4.92486775,22 11,22 Z" id="Oval"></path>
+                    <circle cx="11" cy="11" r="11"></circle>
                 </g>
             </g>
 
