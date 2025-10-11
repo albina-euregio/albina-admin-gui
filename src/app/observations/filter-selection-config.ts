@@ -1,7 +1,13 @@
 import * as z from "zod/v4";
 
 export const FilterSelectionValueSchema = z.object({
-  borderColor: z.string().optional().describe("Stroke color"),
+  borderColor: z.string().optional().describe("Border stroke color"),
+  borderWidth: z.number().default(2).optional().describe("Border stroke width"),
+  borderDashArray: z
+    .string()
+    .default("")
+    .optional()
+    .describe("Border stroke dash-array, see https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-dasharray"),
   color: z.string().describe("Fill color"),
   label: z.string().describe("Label string shown inside the marker"),
   labelI18nKey: z

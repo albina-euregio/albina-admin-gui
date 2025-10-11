@@ -17,6 +17,8 @@ export class ObservationMarkerObserverService<T extends Partial<GenericObservati
         filterSelectionValue?.radius ?? 20,
         filterSelectionValue?.color ?? "#ca0020",
         filterSelectionValue?.borderColor ?? "#000",
+        filterSelectionValue?.borderWidth ?? 2,
+        filterSelectionValue?.borderDashArray ?? "",
         filterSelectionValue?.labelColor ?? "#000",
         filterSelectionValue?.labelFontSize ?? 12,
         undefined,

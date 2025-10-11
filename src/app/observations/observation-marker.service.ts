@@ -77,6 +77,8 @@ export class ObservationMarkerService<T extends Partial<GenericObservation>> {
           radius ?? 40,
           filterSelectionValue?.color ?? "white",
           filterSelectionValue?.borderColor ?? "#000",
+          filterSelectionValue?.borderWidth ?? 2,
+          filterSelectionValue?.borderDashArray ?? "",
           filterSelectionValue?.labelColor ?? "#000",
           filterSelectionValue?.labelFontSize ?? 12,
           this.markerLabel?.key === "importantObservations" ? "snowsymbolsiacs" : undefined,

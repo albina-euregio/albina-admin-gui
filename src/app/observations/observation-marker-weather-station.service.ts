@@ -192,6 +192,8 @@ export class ObservationMarkerWeatherStationService<T extends Partial<GenericObs
         filterSelectionValue?.radius ?? 30,
         filterSelectionValue?.color ?? this.toMarkerColor(observation),
         filterSelectionValue?.borderColor ?? "#555555",
+        filterSelectionValue?.borderWidth ?? 2,
+        filterSelectionValue?.borderDashArray ?? "",
         filterSelectionValue?.labelColor ?? "#000",
         filterSelectionValue?.labelFontSize ?? 10,
         undefined,

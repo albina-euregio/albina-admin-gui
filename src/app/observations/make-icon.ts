@@ -31,6 +31,8 @@ function icon0(
   iconSize: number,
   iconColor: string,
   borderColor: string,
+  borderWidth: number,
+  borderDashArray: string,
   labelColor: string,
   labelFontSize: number,
   labelFont: "snowsymbolsiacs" | string,
@@ -54,9 +56,9 @@ function icon0(
                 <circle cx="11" cy="11" r="11"></circle>
             </g>
 
-            <g id="map-marker-circle-inner" transform="translate(10, 10)" stroke="${borderColor}">
-                <text x="11" y="15" text-anchor="middle" fill="${labelColor}" font-size="${labelFontSize}" font-weight="lighter" font-family="${labelFont}">${label}</text>
-                <g id="line-bold" stroke-width="2">
+            <g id="map-marker-circle-inner" transform="translate(10, 10)">
+                <text x="11" y="15" text-anchor="middle" fill="${labelColor}" font-size="${labelFontSize}" font-family="${labelFont}">${label}</text>
+                <g id="line-bold" stroke="${borderColor}" stroke-width="${borderWidth}" stroke-dasharray="${borderDashArray}">
                     <circle cx="11" cy="11" r="11"></circle>
                 </g>
             </g>

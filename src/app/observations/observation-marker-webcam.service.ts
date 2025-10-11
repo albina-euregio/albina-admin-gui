@@ -17,6 +17,8 @@ export class ObservationMarkerWebcamService<T extends Partial<GenericObservation
         filterSelectionValue?.radius ?? 20,
         filterSelectionValue?.color ?? "black",
         filterSelectionValue?.borderColor ?? "#000",
+        filterSelectionValue?.borderWidth ?? 2,
+        filterSelectionValue?.borderDashArray ?? "",
         filterSelectionValue?.labelColor ?? "#000",
         filterSelectionValue?.labelFontSize ?? 6,
         undefined,

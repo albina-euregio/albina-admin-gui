@@ -84,7 +84,17 @@
               "type": "object",
               "properties": {
                 "borderColor": {
-                  "description": "Stroke color",
+                  "description": "Border stroke color",
+                  "type": "string"
+                },
+                "borderWidth": {
+                  "description": "Border stroke width",
+                  "default": 2,
+                  "type": "number"
+                },
+                "borderDashArray": {
+                  "description": "Border stroke dash-array, see https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-dasharray",
+                  "default": "",
                   "type": "string"
                 },
                 "color": {
