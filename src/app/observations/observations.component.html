@@ -81,9 +81,12 @@
                   >
                     <label class="form-check-label text-nowrap">
                       <input
-                        [(ngModel)]="filter.regions[region]"
+                        [ngModel]="filter.regions.has(region)"
                         [ngModelOptions]="{ standalone: true }"
-                        (change)="toggleRegion($event, region)"
+                        (change)="
+                          $event.target.checked ? filter.regions.add(region) : filter.regions.delete(region);
+                          toggleRegion($event, region)
+                        "
                         type="checkbox"
                         class="form-check-input"
                       />
@@ -93,9 +96,14 @@
                       <div *ngFor="let microRegion of getSubregions(region)" class="form-check">
                         <label class="form-check-label text-nowrap">
                           <input
-                            [(ngModel)]="filter.regions[microRegion.id]"
+                            [ngModel]="filter.regions.has(microRegion.id)"
                             [ngModelOptions]="{ standalone: true }"
-                            (change)="onRegionsDropdownSelect()"
+                            (change)="
+                              $event.target.checked
+                                ? filter.regions.add(microRegion.id)
+                                : filter.regions.delete(microRegion.id);
+                              selectRegion(region)
+                            "
                             type="checkbox"
                             class="form-check-input"
                           />

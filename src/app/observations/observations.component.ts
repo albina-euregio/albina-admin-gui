@@ -305,7 +305,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
     map.on({
       click: () => {
-        this.filter.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+        this.filter.regions = new Set(this.mapService.getSelectedRegions());
         this.applyLocalFilter();
       },
     });
@@ -362,11 +362,11 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   selectRegion(region: string) {
-    this.filter.regions = {};
+    this.filter.regions = new Set();
     if (region) {
       this.allRegions.forEach((r) => {
         if (r.id.startsWith(region)) {
-          this.filter.regions[r.id] = true;
+          this.filter.regions.add(r.id);
         }
       });
     }
@@ -374,11 +374,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.applyLocalFilter();
   }
 
-  toggleRegion(event, region: string) {
+  toggleRegion(event: Event, region: string) {
     if (region) {
       this.allRegions.forEach((r) => {
         if (r.id.startsWith(region)) {
-          this.filter.regions[r.id] = event.target.checked;
+          if ((event.target as HTMLInputElement).checked) {
+            this.filter.regions.add(r.id);
+          } else {
+            this.filter.regions.delete(r.id);
+          }
         }
       });
     }

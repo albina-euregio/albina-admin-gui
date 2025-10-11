@@ -17,7 +17,7 @@ export class ObservationFilterService<
   private localStorageService = inject(LocalStorageService);
 
   public dateRange: Date[] = [];
-  public regions = {} as Record<string, boolean>;
+  public regions: Set<string> = new Set<string>();
   public observationSources = {} as Record<ObservationSource, boolean>;
   public filterSelectionData: FilterSelectionData<T>[] = [];
   // 45.0 < latitude && latitude < 48.0 && 9.0 < longitude && longitude < 13.5;
@@ -133,11 +133,7 @@ export class ObservationFilterService<
   }
 
   inRegions(region: string): boolean {
-    return !Object.values(this.regions).some((v) => v) || (typeof region === "string" && this.regions[region]);
-  }
-
-  get selectedRegions(): string[] {
-    return Object.keys(this.regions).filter((r) => this.regions[r]);
+    return !this.regions.size || (typeof region === "string" && this.regions.has(region));
   }
 
   inObservationSources($source?: GenericObservation["$source"]): boolean {

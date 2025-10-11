@@ -218,7 +218,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.filterService.filterSelectionData.forEach((f) =>
       f.getSelectedValues("selected").forEach((v) => url.searchParams.append(String(f.type), v.value)),
     );
-    this.filterService.selectedRegions.forEach((r) => url.searchParams.append("region", r));
+    this.filterService.regions.forEach((r) => url.searchParams.append("region", r));
     return url;
   }
 
@@ -302,7 +302,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.mapLayerHighlight.addTo(this.mapService.map);
     this.mapService.map.on({
       click: () => {
-        this.filterService.regions = Object.fromEntries(this.mapService.getSelectedRegions().map((r) => [r, true]));
+        this.filterService.regions = new Set(this.mapService.getSelectedRegions());
         this.applyLocalFilter();
       },
     });

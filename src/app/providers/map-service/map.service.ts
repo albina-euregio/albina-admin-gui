@@ -537,10 +537,10 @@ export class MapService {
     return this.overlayMaps.editSelection.getSelectedRegions();
   }
 
-  clickRegion(regionIds: Record<string, boolean>) {
-    //console.log("clickRegion", this.overlayMaps.regions);
+  clickRegion(regionIds: Record<string, boolean> | Set<string>) {
     for (const entry of this.overlayMaps.regions.getLayers()) {
-      entry.feature.properties.selected = regionIds[entry.feature.properties.id];
+      entry.feature.properties.selected =
+        regionIds instanceof Set ? regionIds.has(entry.feature.properties.id) : regionIds[entry.feature.properties.id];
     }
     this.overlayMaps.editSelection.updateEditSelection();
   }
