@@ -29,15 +29,7 @@ import type {
 } from "echarts/types/dist/shared";
 import { debounce } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
-import {
-  Control,
-  DomEvent,
-  ImageOverlay,
-  LatLngBoundsLiteral,
-  LayerGroup,
-  LeafletMouseEvent,
-  MarkerOptions,
-} from "leaflet";
+import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, type Subscription } from "rxjs";
@@ -342,7 +334,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         ?.on({
           tooltipopen: debounce(() => this.highlightInHazardChart(observation), 500),
           tooltipclose: debounce(() => this.highlightInHazardChart(undefined), 500),
-          click: ($event) => this.onObservationClick($event),
+          click: ($event) => this.onObservationClick(observation, $event.originalEvent),
           contextmenu: () => this.onObservationRightClick(observation),
         })
         ?.addTo(this.mapLayer);
@@ -621,25 +613,20 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * Click through onto overlay pane for region selection.
+   * @see BaseMapService.handleClick
    */
-  private onObservationClick(event: LeafletMouseEvent) {
-    // https://gist.github.com/perliedman/84ce01954a1a43252d1b917ec925b3dd
-    // https://github.com/danwild/leaflet-event-forwarder
-    let target = event.originalEvent.target as HTMLElement;
-    const removed = { node: target, display: target.style.display };
-    target.style.display = "none";
-    target = document.elementFromPoint(event.originalEvent.clientX, event.originalEvent.clientY) as HTMLElement;
+  private onObservationClick(observation: FeatureProperties, e: MouseEvent) {
+    const id = observation.region_id;
+    const editSelection = this.mapService.overlayMaps.editSelection;
 
-    if (target && target !== this.mapService.map.createPane("overlay")) {
-      const ev = new MouseEvent(event.originalEvent.type, event.originalEvent);
-      const stopped = !target.dispatchEvent(ev);
-      if (stopped) {
-        DomEvent.stop(event);
-      }
+    if (e.shiftKey) {
+      editSelection.toggleSelectedRegions([id]);
+    } else if (editSelection.isRegionSelected(id)) {
+      editSelection.clearSelectedRegions();
+    } else {
+      editSelection.setSelectedRegions([id]);
     }
-
-    removed.node.style.display = removed.display;
+    editSelection.updateEditSelection();
 
     if (this.isMobile) {
       this.layout = "details";

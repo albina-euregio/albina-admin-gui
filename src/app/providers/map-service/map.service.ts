@@ -78,6 +78,10 @@ class RegionLayer extends GeoJSON<SelectableRegionProperties> {
     return this.getLayers().find((entry) => entry.feature.properties.id === region);
   }
 
+  isRegionSelected(region: string): boolean {
+    return this.findRegion(region)?.feature.properties.selected;
+  }
+
   toggleSelectedRegions(regions: string[], force?: boolean) {
     regions.forEach((r) => {
       const region = this.findRegion(r);
@@ -118,7 +122,7 @@ export class MapService {
 
   protected baseMaps: Record<string, TileLayer>;
   protected afternoonBaseMaps: Record<string, TileLayer>;
-  protected overlayMaps: {
+  overlayMaps: {
     // Micro  regions without elevation
     regions: RegionLayer;
     editSelection: RegionLayer;
@@ -545,7 +549,7 @@ export class MapService {
     this.overlayMaps.editSelection.updateEditSelection();
   }
 
-  private handleClick(clickMode: ClickMode, e: MouseEvent, feature: RegionLayerFeature, editSelection: RegionLayer) {
+  protected handleClick(clickMode: ClickMode, e: MouseEvent, feature: RegionLayerFeature, editSelection: RegionLayer) {
     if (clickMode === "awsome") {
       if (e.shiftKey) {
         editSelection.toggleSelectedRegions([feature.properties.id]);
