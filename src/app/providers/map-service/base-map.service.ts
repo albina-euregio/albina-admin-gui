@@ -26,7 +26,7 @@ export class BaseMapService extends MapService {
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.regions, this.overlayMaps.editSelection],
     });
 
-    this.fitActiveRegionBounds(this.map);
+    this.fitActiveRegionBounds(this.map, this.overlayMaps.editSelection);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
     this.localStorageService

@@ -34,6 +34,9 @@ export class RegionsService {
   }
 
   async getActiveServerRegionsAsync(): Promise<FeatureCollection<MultiPolygon, RegionProperties>> {
+    if (!this.authenticationService.getActiveRegionId()) {
+      return undefined;
+    }
     const regions = await this.getRegionsAsync();
     return {
       type: "FeatureCollection",

@@ -231,7 +231,7 @@ export class MapService {
       ...this.getMapInitOptions(),
       layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.aggregatedRegions, this.overlayMaps.regions],
     });
-    await this.fitActiveRegionBounds(this.map);
+    await this.fitActiveRegionBounds(this.map, this.overlayMaps.editSelection);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
     this.localStorageService
@@ -265,7 +265,7 @@ export class MapService {
         this.afternoonOverlayMaps.regions,
       ],
     });
-    await this.fitActiveRegionBounds(afternoonMap);
+    await this.fitActiveRegionBounds(afternoonMap, this.afternoonOverlayMaps.editSelection);
 
     this.pmControl.addTo(afternoonMap);
 
@@ -721,9 +721,13 @@ export class MapService {
     };
   }
 
-  async fitActiveRegionBounds(map: LeafletMap) {
+  async fitActiveRegionBounds(map: LeafletMap, editSelection: RegionLayer) {
     const regions = await this.regionsService.getActiveServerRegionsAsync();
     const bounds = new GeoJSON(regions).getBounds();
-    map.fitBounds(bounds);
+    if (bounds.isValid()) {
+      map.fitBounds(bounds);
+    } else {
+      map.fitBounds(editSelection.getBounds());
+    }
   }
 }
