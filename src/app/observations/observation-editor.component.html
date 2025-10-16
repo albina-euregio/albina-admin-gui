@@ -1,361 +1,391 @@
 <!-- eslint-disable @angular-eslint/template/no-autofocus -->
-<div *ngIf="observation()" class="row g-3">
-  <div *ngIf="observation().$source !== ObservationSource.AvalancheWarningService" class="d-flex align-items-center">
-    <i [style.color]="observation().$allowEdit ? null : 'rgba(0, 0, 0, 0.2)'" class="ph ph-rows-plus-bottom me-2"></i>
-    <div class="form-check form-switch">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        role="switch"
-        [(ngModel)]="observation().$allowEdit"
-        [title]="'observations.allowEditTooltip' | translate: { value: observation().$source }"
-      />
-      <label class="form-check-label mb-0" for="toggleBoolean">
-        {{ "observations.allowEdit" | translate }}
-      </label>
+@if (observation()) {
+  <div class="row g-3">
+    @if (observation().$source !== ObservationSource.AvalancheWarningService) {
+      <div class="d-flex align-items-center">
+        <i
+          [style.color]="observation().$allowEdit ? null : 'rgba(0, 0, 0, 0.2)'"
+          class="ph ph-rows-plus-bottom me-2"
+        ></i>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            [(ngModel)]="observation().$allowEdit"
+            [title]="'observations.allowEditTooltip' | translate: { value: observation().$source }"
+          />
+          <label class="form-check-label mb-0" for="toggleBoolean">
+            {{ "observations.allowEdit" | translate }}
+          </label>
+        </div>
+      </div>
+    }
+    <div class="col-12 col-md-3">
+      <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
+      <div id="eventDate" class="input-group">
+        <input
+          #eventDateDate
+          type="date"
+          required
+          class="date form-control"
+          [disabled]="!observation().$allowEdit"
+          autofocus
+        />
+        <input #eventDateTime type="time" required class="date form-control" [disabled]="!observation().$allowEdit" />
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          (click)="setDate(undefined, 'eventDate')"
+          [disabled]="!observation().$allowEdit"
+        >
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
     </div>
-  </div>
-
-  <div class="col-12 col-md-3">
-    <label for="eventDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
-    <div id="eventDate" class="input-group">
-      <input
-        #eventDateDate
-        type="date"
-        required
-        class="date form-control"
-        [disabled]="!observation().$allowEdit"
-        autofocus
-      />
-      <input #eventDateTime type="time" required class="date form-control" [disabled]="!observation().$allowEdit" />
-      <button
-        class="btn btn-outline-secondary"
-        type="button"
-        (click)="setDate(undefined, 'eventDate')"
+    <div class="col-12 col-md-3">
+      <label for="observationType">{{ "observations.observationType" | translate }}</label>
+      <select
+        id="observationType"
+        [(ngModel)]="observation().$type"
+        class="form-select"
         [disabled]="!observation().$allowEdit"
       >
-        <i class="ph ph-x"></i>
-      </button>
+        <option [ngValue]="undefined"></option>
+        @for (type of observationTypeValues; track type) {
+          <option [value]="type">
+            {{ "observationType." + type | translate }}
+          </option>
+        }
+      </select>
     </div>
-  </div>
-
-  <div class="col-12 col-md-3">
-    <label for="observationType">{{ "observations.observationType" | translate }}</label>
-    <select
-      id="observationType"
-      [(ngModel)]="observation().$type"
-      class="form-select"
-      [disabled]="!observation().$allowEdit"
-    >
-      <option [ngValue]="undefined"></option>
-      <option *ngFor="let type of observationTypeValues" [value]="type">
-        {{ "observationType." + type | translate }}
-      </option>
-    </select>
-  </div>
-
-  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-3">
-    <label for="personInvolvement">{{ "observations.personInvolvement" | translate }}</label>
-    <select
-      id="personInvolvement"
-      [(ngModel)]="observation().personInvolvement"
-      (change)="setObservationType()"
-      class="form-select"
-      [disabled]="!observation().$allowEdit"
-    >
-      <option [ngValue]="undefined"></option>
-      <option *ngFor="let personInvolvement of personInvolvementValues" [value]="personInvolvement">
-        {{ "personInvolvement." + personInvolvement | translate }}
-      </option>
-    </select>
-  </div>
-
-  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-3">
-    <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
-    <select
-      id="snowpackStability"
-      [(ngModel)]="observation().stability"
-      class="form-select"
-      [disabled]="!observation().$allowEdit"
-    >
-      <option [ngValue]="undefined"></option>
-      <option *ngFor="let stability of snowpackStabilityValues" [value]="stability">
-        {{ "snowpackStability." + stability | translate }}
-      </option>
-    </select>
-  </div>
-
-  <div class="col-12 col-md-9">
-    <label for="locationName"><i class="ph ph-globe"></i> {{ "observations.locationName" | translate }}</label>
-    <input
-      id="locationName"
-      type="text"
-      required
-      [(ngModel)]="observation().locationName"
-      [typeahead]="locationSuggestions$"
-      [typeaheadAsync]="true"
-      (typeaheadOnSelect)="selectLocation($event)"
-      typeaheadOptionField="properties.display_name"
-      class="form-control"
-      [disabled]="!observation().$allowEdit"
-    />
-  </div>
-
-  <div class="col-12 col-md-3">
-    <app-aspects
-      [aspects]="[observation().aspect]"
-      (aspectsChange)="observation().aspect = $event[0]"
-      [size]="100"
-      [singleton]="true"
-      [disabled]="!observation().$allowEdit"
-    />
-    {{ observation().aspect }}
-  </div>
-
-  <div class="col-12 col-md-3">
-    <label for="latitude"><i class="ph ph-map-pin"></i> {{ "observations.latitude" | translate }}</label>
-    <input
-      id="latitude"
-      (change)="fetchElevation()"
-      [(ngModel)]="observation().latitude"
-      type="number"
-      step="0.0000001"
-      class="form-control"
-      [disabled]="!observation().$allowEdit"
-    />
-  </div>
-
-  <div class="col-12 col-md-3">
-    <label for="longitude"><i class="ph ph-map-pin"></i> {{ "observations.longitude" | translate }}</label>
-    <div class="input-group">
+    @if (!isDrySnowFallLevel) {
+      <div class="col-12 col-md-3">
+        <label for="personInvolvement">{{ "observations.personInvolvement" | translate }}</label>
+        <select
+          id="personInvolvement"
+          [(ngModel)]="observation().personInvolvement"
+          (change)="setObservationType()"
+          class="form-select"
+          [disabled]="!observation().$allowEdit"
+        >
+          <option [ngValue]="undefined"></option>
+          @for (personInvolvement of personInvolvementValues; track personInvolvement) {
+            <option [value]="personInvolvement">
+              {{ "personInvolvement." + personInvolvement | translate }}
+            </option>
+          }
+        </select>
+      </div>
+    }
+    @if (!isDrySnowFallLevel) {
+      <div class="col-12 col-md-3">
+        <label for="snowpackStability">{{ "matrix.label.snowpackStability" | translate }}</label>
+        <select
+          id="snowpackStability"
+          [(ngModel)]="observation().stability"
+          class="form-select"
+          [disabled]="!observation().$allowEdit"
+        >
+          <option [ngValue]="undefined"></option>
+          @for (stability of snowpackStabilityValues; track stability) {
+            <option [value]="stability">
+              {{ "snowpackStability." + stability | translate }}
+            </option>
+          }
+        </select>
+      </div>
+    }
+    <div class="col-12 col-md-9">
+      <label for="locationName"><i class="ph ph-globe"></i> {{ "observations.locationName" | translate }}</label>
       <input
-        id="longitude"
+        id="locationName"
+        type="text"
+        required
+        [(ngModel)]="observation().locationName"
+        [typeahead]="locationSuggestions$"
+        [typeaheadAsync]="true"
+        (typeaheadOnSelect)="selectLocation($event)"
+        typeaheadOptionField="properties.display_name"
+        class="form-control"
+        [disabled]="!observation().$allowEdit"
+      />
+    </div>
+    <div class="col-12 col-md-3">
+      <app-aspects
+        [aspects]="[observation().aspect]"
+        (aspectsChange)="observation().aspect = $event[0]"
+        [size]="100"
+        [singleton]="true"
+        [disabled]="!observation().$allowEdit"
+      />
+      {{ observation().aspect }}
+    </div>
+    <div class="col-12 col-md-3">
+      <label for="latitude"><i class="ph ph-map-pin"></i> {{ "observations.latitude" | translate }}</label>
+      <input
+        id="latitude"
         (change)="fetchElevation()"
-        [(ngModel)]="observation().longitude"
+        [(ngModel)]="observation().latitude"
         type="number"
         step="0.0000001"
         class="form-control"
         [disabled]="!observation().$allowEdit"
       />
-      <button class="btn btn-outline-secondary" type="button" (click)="copyLatLng()">
-        <i class="ph ph-copy"></i>
-      </button>
     </div>
-  </div>
-
-  <div class="col-12 col-md-3">
-    <label for="elevation">
-      <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevation" | translate }}
-    </label>
-    <input
-      id="elevation"
-      [(ngModel)]="observation().elevation"
-      type="number"
-      step="1"
-      class="form-control"
-      [disabled]="!observation().$allowEdit"
-    />
-  </div>
-
-  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-3">
-    <label for="elevationLowerBound">
-      <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevationRange" | translate }}
-    </label>
-    <div class="input-group">
+    <div class="col-12 col-md-3">
+      <label for="longitude"><i class="ph ph-map-pin"></i> {{ "observations.longitude" | translate }}</label>
+      <div class="input-group">
+        <input
+          id="longitude"
+          (change)="fetchElevation()"
+          [(ngModel)]="observation().longitude"
+          type="number"
+          step="0.0000001"
+          class="form-control"
+          [disabled]="!observation().$allowEdit"
+        />
+        <button class="btn btn-outline-secondary" type="button" (click)="copyLatLng()">
+          <i class="ph ph-copy"></i>
+        </button>
+      </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <label for="elevation">
+        <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevation" | translate }}
+      </label>
       <input
-        id="elevationLowerBound"
-        [(ngModel)]="observation().elevationLowerBound"
+        id="elevation"
+        [(ngModel)]="observation().elevation"
         type="number"
         step="1"
         class="form-control"
-        title="{{ 'observations.elevationLowerBound' | translate }}"
         [disabled]="!observation().$allowEdit"
       />
+    </div>
+    @if (!isDrySnowFallLevel) {
+      <div class="col-12 col-md-3">
+        <label for="elevationLowerBound">
+          <i class="ph ph-arrows-out-line-vertical"></i> {{ "observations.elevationRange" | translate }}
+        </label>
+        <div class="input-group">
+          <input
+            id="elevationLowerBound"
+            [(ngModel)]="observation().elevationLowerBound"
+            type="number"
+            step="1"
+            class="form-control"
+            title="{{ 'observations.elevationLowerBound' | translate }}"
+            [disabled]="!observation().$allowEdit"
+          />
+          <input
+            id="elevationUpperBound"
+            [(ngModel)]="observation().elevationUpperBound"
+            type="number"
+            step="1"
+            class="form-control"
+            title="{{ 'observations.elevationUpperBound' | translate }}"
+            [disabled]="!observation().$allowEdit"
+          />
+        </div>
+      </div>
+    }
+    <div class="col-12 col-md-6">
+      <label for="authorName"><i class="ph ph-user"></i> {{ "observations.authorName" | translate }}</label>
       <input
-        id="elevationUpperBound"
-        [(ngModel)]="observation().elevationUpperBound"
-        type="number"
-        step="1"
+        id="authorName"
+        required
+        [(ngModel)]="observation().authorName"
+        type="text"
         class="form-control"
-        title="{{ 'observations.elevationUpperBound' | translate }}"
         [disabled]="!observation().$allowEdit"
       />
     </div>
-  </div>
-
-  <div class="col-12 col-md-6">
-    <label for="authorName"><i class="ph ph-user"></i> {{ "observations.authorName" | translate }}</label>
-    <input
-      id="authorName"
-      required
-      [(ngModel)]="observation().authorName"
-      type="text"
-      class="form-control"
-      [disabled]="!observation().$allowEdit"
-    />
-  </div>
-
-  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-6">
-    <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
-    <div id="reportDate" class="input-group">
-      <button
-        class="btn btn-outline-secondary"
-        type="button"
-        (click)="setDate(eventDate, 'reportDate')"
-        title="{{ 'observations.button.copyDate' | translate }}"
+    @if (!isDrySnowFallLevel) {
+      <div class="col-12 col-md-6">
+        <label for="reportDate"><i class="ph ph-pencil"></i> {{ "observations.reportDate" | translate }}</label>
+        <div id="reportDate" class="input-group">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="setDate(eventDate, 'reportDate')"
+            title="{{ 'observations.button.copyDate' | translate }}"
+            [disabled]="!observation().$allowEdit"
+          >
+            <i class="ph ph-calendar-star"></i>
+          </button>
+          <input
+            #reportDateDate
+            type="date"
+            required
+            class="date form-control"
+            [disabled]="!observation().$allowEdit"
+          />
+          <input
+            #reportDateTime
+            type="time"
+            required
+            class="date form-control"
+            [disabled]="!observation().$allowEdit"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="setDate(undefined, 'reportDate')"
+            [disabled]="!observation().$allowEdit"
+          >
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+      </div>
+    }
+    @if (!isDrySnowFallLevel) {
+      <div class="col-12 col-md-6">
+        <label>{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
+        <div class="avalanche-problem-detail__problem-icons">
+          @for (problem of avalancheProblems; track problem) {
+            <app-avalanche-problem-icons
+              (click)="
+                observation().$allowEdit &&
+                  (observation().avalancheProblems = xor(observation().avalancheProblems ?? [], [problem]))
+              "
+              [class.is-disabled]="!observation().avalancheProblems?.includes(problem)"
+              [value]="problem"
+              class="avalanche-problem-detail__problem-icon"
+              role="button"
+              title="{{ 'avalancheProblem.' + problem | translate }}"
+            />
+          }
+        </div>
+      </div>
+    }
+    @if (!isDrySnowFallLevel) {
+      <div class="col-12 col-md-6">
+        <label>{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
+        <div class="input-group">
+          <div class="btn-group">
+            @for (dangerPattern of dangerPatterns; track dangerPattern) {
+              <button
+                [ngClass]="
+                  observation().dangerPatterns?.includes(dangerPattern)
+                    ? 'btn btn-sm btn-dark'
+                    : 'btn btn-sm btn-outline-secondary'
+                "
+                (click)="observation().dangerPatterns = xor(observation().dangerPatterns ?? [], [dangerPattern])"
+                title="{{ 'dangerPattern.' + dangerPattern | translate }}"
+                [disabled]="!observation().$allowEdit"
+              >
+                {{ dangerPattern }}
+              </button>
+            }
+          </div>
+        </div>
+        <label class="mt-3">{{ "bulletins.create.label.importantObservations" | translate }}</label>
+        <div class="input-group">
+          <div class="btn-group">
+            @for (importantObservation of importantObservations; track importantObservation) {
+              <button
+                [ngClass]="
+                  observation().importantObservations?.includes(importantObservation)
+                    ? 'btn btn-sm btn-dark'
+                    : 'btn btn-sm btn-outline-secondary'
+                "
+                (click)="
+                  observation().importantObservations = xor(observation().importantObservations ?? [], [
+                    importantObservation,
+                  ])
+                "
+                [disabled]="!observation().$allowEdit"
+              >
+                {{ "importantObservation." + importantObservation | translate }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+    @if (isDrySnowFallLevel) {
+      <div class="col-md-6">
+        <label class="mt-3"> {{ "observations.elevationTolerance" | translate }} </label>
+        <div class="input-group">
+          <div class="btn-group">
+            @for (elevationTolerance of elevationTolerances; track elevationTolerance) {
+              <button
+                [ngClass]="
+                  observation().$data.elevationTolerance === elevationTolerance
+                    ? 'btn btn-sm btn-dark'
+                    : 'btn btn-sm btn-outline-secondary'
+                "
+                (click)="observation().$data.elevationTolerance = elevationTolerance"
+                [disabled]="!observation().$allowEdit"
+              >
+                {{ "elevationTolerance." + elevationTolerance | translate }}
+              </button>
+            }
+          </div>
+        </div>
+        <label class="mt-3"> {{ "observations.elevationPeriod" | translate }} </label>
+        <div class="input-group">
+          <div class="btn-group">
+            @for (elevationPeriod of elevationPeriods; track elevationPeriod) {
+              <button
+                [ngClass]="
+                  observation().$data.elevationPeriod === elevationPeriod
+                    ? 'btn btn-sm btn-dark'
+                    : 'btn btn-sm btn-outline-secondary'
+                "
+                (click)="observation().$data.elevationPeriod = elevationPeriod"
+                [disabled]="!observation().$allowEdit"
+              >
+                {{ "elevationPeriod." + elevationPeriod | translate }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+    @if (dangerSources().length) {
+      <div class="col-md-6">
+        <label for="dangerSource">{{ "observations.dangerSource" | translate }}</label>
+        <select
+          id="dangerSource"
+          [(ngModel)]="observation().dangerSource"
+          class="form-select"
+          [disabled]="!observation().$allowEdit"
+        >
+          <option [ngValue]="undefined"></option>
+          @for (dangerSource of dangerSources(); track dangerSource) {
+            <option [value]="dangerSource.id">
+              {{ dangerSource.creationDate | date: "mediumDate" : undefined : translateService.currentLang }}
+              &mdash;
+              {{ dangerSource.title }}
+            </option>
+          }
+        </select>
+      </div>
+    }
+    <div class="col-12">
+      <label for="externalURL"><i class="ph ph-link"></i> {{ "observations.externalURL" | translate }}</label>
+      <input
+        id="externalURL"
+        type="url"
+        [(ngModel)]="observation().$externalURL"
+        class="form-control"
         [disabled]="!observation().$allowEdit"
-      >
-        <i class="ph ph-calendar-star"></i>
-      </button>
-      <input #reportDateDate type="date" required class="date form-control" [disabled]="!observation().$allowEdit" />
-      <input #reportDateTime type="time" required class="date form-control" [disabled]="!observation().$allowEdit" />
-      <button
-        class="btn btn-outline-secondary"
-        type="button"
-        (click)="setDate(undefined, 'reportDate')"
-        [disabled]="!observation().$allowEdit"
-      >
-        <i class="ph ph-x"></i>
-      </button>
-    </div>
-  </div>
-
-  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-6">
-    <label>{{ "bulletins.create.label.avalancheProblems" | translate }}</label>
-    <div class="avalanche-problem-detail__problem-icons">
-      <app-avalanche-problem-icons
-        *ngFor="let problem of avalancheProblems"
-        (click)="
-          observation().$allowEdit &&
-            (observation().avalancheProblems = xor(observation().avalancheProblems ?? [], [problem]))
-        "
-        [class.is-disabled]="!observation().avalancheProblems?.includes(problem)"
-        [value]="problem"
-        class="avalanche-problem-detail__problem-icon"
-        role="button"
-        title="{{ 'avalancheProblem.' + problem | translate }}"
       />
     </div>
-  </div>
-
-  <div *ngIf="!isDrySnowFallLevel" class="col-12 col-md-6">
-    <label>{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
-    <div class="input-group">
-      <div class="btn-group">
-        <button
-          *ngFor="let dangerPattern of dangerPatterns"
-          [ngClass]="
-            observation().dangerPatterns?.includes(dangerPattern)
-              ? 'btn btn-sm btn-dark'
-              : 'btn btn-sm btn-outline-secondary'
-          "
-          (click)="observation().dangerPatterns = xor(observation().dangerPatterns ?? [], [dangerPattern])"
-          title="{{ 'dangerPattern.' + dangerPattern | translate }}"
-          [disabled]="!observation().$allowEdit"
-        >
-          {{ dangerPattern }}
-        </button>
-      </div>
-    </div>
-
-    <label class="mt-3">{{ "bulletins.create.label.importantObservations" | translate }}</label>
-    <div class="input-group">
-      <div class="btn-group">
-        <button
-          *ngFor="let importantObservation of importantObservations"
-          [ngClass]="
-            observation().importantObservations?.includes(importantObservation)
-              ? 'btn btn-sm btn-dark'
-              : 'btn btn-sm btn-outline-secondary'
-          "
-          (click)="
-            observation().importantObservations = xor(observation().importantObservations ?? [], [importantObservation])
-          "
-          [disabled]="!observation().$allowEdit"
-        >
-          {{ "importantObservation." + importantObservation | translate }}
-        </button>
-      </div>
+    <div class="col-12 mb-3">
+      <label for="content"><i class="ph ph-chat"></i> {{ "observations.content" | translate }}</label>
+      <textarea
+        id="content"
+        required
+        [(ngModel)]="observation().content"
+        (paste)="parseContent()"
+        type="text"
+        rows="8"
+        class="form-control"
+        [disabled]="!observation().$allowEdit"
+      ></textarea>
     </div>
   </div>
-
-  <div *ngIf="isDrySnowFallLevel" class="col-md-6">
-    <label class="mt-3"> {{ "observations.elevationTolerance" | translate }} </label>
-    <div class="input-group">
-      <div class="btn-group">
-        <button
-          *ngFor="let elevationTolerance of elevationTolerances"
-          [ngClass]="
-            observation().$data.elevationTolerance === elevationTolerance
-              ? 'btn btn-sm btn-dark'
-              : 'btn btn-sm btn-outline-secondary'
-          "
-          (click)="observation().$data.elevationTolerance = elevationTolerance"
-          [disabled]="!observation().$allowEdit"
-        >
-          {{ "elevationTolerance." + elevationTolerance | translate }}
-        </button>
-      </div>
-    </div>
-
-    <label class="mt-3"> {{ "observations.elevationPeriod" | translate }} </label>
-    <div class="input-group">
-      <div class="btn-group">
-        <button
-          *ngFor="let elevationPeriod of elevationPeriods"
-          [ngClass]="
-            observation().$data.elevationPeriod === elevationPeriod
-              ? 'btn btn-sm btn-dark'
-              : 'btn btn-sm btn-outline-secondary'
-          "
-          (click)="observation().$data.elevationPeriod = elevationPeriod"
-          [disabled]="!observation().$allowEdit"
-        >
-          {{ "elevationPeriod." + elevationPeriod | translate }}
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="dangerSources().length" class="col-md-6">
-    <label for="dangerSource">{{ "observations.dangerSource" | translate }}</label>
-    <select
-      id="dangerSource"
-      [(ngModel)]="observation().dangerSource"
-      class="form-select"
-      [disabled]="!observation().$allowEdit"
-    >
-      <option [ngValue]="undefined"></option>
-      <option *ngFor="let dangerSource of dangerSources()" [value]="dangerSource.id">
-        {{ dangerSource.creationDate | date: "mediumDate" : undefined : translateService.currentLang }}
-        &mdash;
-        {{ dangerSource.title }}
-      </option>
-    </select>
-  </div>
-
-  <div class="col-12">
-    <label for="externalURL"><i class="ph ph-link"></i> {{ "observations.externalURL" | translate }}</label>
-    <input
-      id="externalURL"
-      type="url"
-      [(ngModel)]="observation().$externalURL"
-      class="form-control"
-      [disabled]="!observation().$allowEdit"
-    />
-  </div>
-
-  <div class="col-12 mb-3">
-    <label for="content"><i class="ph ph-chat"></i> {{ "observations.content" | translate }}</label>
-    <textarea
-      id="content"
-      required
-      [(ngModel)]="observation().content"
-      (paste)="parseContent()"
-      type="text"
-      rows="8"
-      class="form-control"
-      [disabled]="!observation().$allowEdit"
-    ></textarea>
-  </div>
-</div>
+}

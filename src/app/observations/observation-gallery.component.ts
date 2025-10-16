@@ -2,14 +2,14 @@ import type { FotoWebcamEU } from "../../../observations-api/src/fetch/webcams/f
 import type { PanomaxThumbnailResponse } from "../../../observations-api/src/fetch/webcams/panomax.model";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { GenericObservation, ObservationSource, ObservationType } from "./models/generic-observation.model";
-import { CommonModule, formatDate } from "@angular/common";
+import { formatDate } from "@angular/common";
 import { Component, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, NgxMousetrapDirective],
+  imports: [FormsModule, TranslateModule, NgxMousetrapDirective],
   selector: "app-observation-gallery",
   templateUrl: "observation-gallery.component.html",
 })

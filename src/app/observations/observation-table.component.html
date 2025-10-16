@@ -31,60 +31,69 @@
     </tr>
   </thead>
 
-  <tbody *ngFor="let observation of sortedObservations">
-    <tr *ngIf="isShowObservation(observation)" (click)="observationClick.emit(observation)" role="button">
-      <td class="px-0 py-3 text-nowrap" style="max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
-        <span class="text-truncate d-block">
-          <i class="ph ph-calendar"></i>
-          {{ observation.eventDate | date: "dd.MM.yyyy HH:mm" }}
-        </span>
-        <span class="text-truncate d-block">
-          <i class="ph ph-user"></i>
-          {{ observation.authorName }}
-        </span>
-        <span class="text-truncate d-block">
-          <i class="ph ph-globe"></i>
-          {{ observation.locationName }}
-          <i
-            *ngIf="observation.latitude && observation.longitude"
-            class="ph ph-map-pin"
-            title="{{ 'observations.hasCoordinates' | translate }}"
-          ></i>
-        </span>
-      </td>
-      <td class="p-0">
-        <span *ngFor="let problem of observation.avalancheProblems">
-          <app-avalanche-problem-icons [value]="problem" />
-        </span>
-        <abbr
-          *ngFor="let importantObservation of observation.importantObservations"
-          [title]="importantObservation"
-          class="px-0 py-3 d-inline-block"
-        >
-          <span *ngIf="importantObservationTexts[importantObservation]" style="font-family: snowsymbolsiacs">
-            {{ importantObservationTexts[importantObservation] }}
-          </span>
-          <span *ngIf="importantObservationTexts[observation.$type]" style="font-family: snowsymbolsiacs">
-            {{ importantObservationTexts[observation.$type] }}
-          </span>
-          <span *ngIf="!importantObservationTexts[importantObservation]">
-            {{ formatImportantObservation(importantObservation) }}
-          </span>
-        </abbr>
-      </td>
-      <td class="px-0 py-3">
-        {{ observation.content }}
-        <div class="float-end">
-          <i
-            *ngIf="observation.$allowEdit && observation.$source !== ObservationSource.AvalancheWarningService"
-            class="ph ph-rows-plus-bottom icon-md"
-            title="{{ 'observations.editIconTooltip' | translate: { value: observation.$source } }}"
-          ></i>
-          <button class="btn btn-bare" (click)="editObservationEvent.emit(observation); $event.stopPropagation()">
-            <i class="ph-bold ph-pencil icon-md"></i>
-          </button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
+  @for (observation of sortedObservations; track observation) {
+    <tbody>
+      @if (isShowObservation(observation)) {
+        <tr (click)="observationClick.emit(observation)" role="button">
+          <td class="px-0 py-3 text-nowrap" style="max-width: 200px" [ngStyle]="getTableRowStyle(observation)">
+            <span class="text-truncate d-block">
+              <i class="ph ph-calendar"></i>
+              {{ observation.eventDate | date: "dd.MM.yyyy HH:mm" }}
+            </span>
+            <span class="text-truncate d-block">
+              <i class="ph ph-user"></i>
+              {{ observation.authorName }}
+            </span>
+            <span class="text-truncate d-block">
+              <i class="ph ph-globe"></i>
+              {{ observation.locationName }}
+              @if (observation.latitude && observation.longitude) {
+                <i class="ph ph-map-pin" title="{{ 'observations.hasCoordinates' | translate }}"></i>
+              }
+            </span>
+          </td>
+          <td class="p-0">
+            @for (problem of observation.avalancheProblems; track problem) {
+              <span>
+                <app-avalanche-problem-icons [value]="problem" />
+              </span>
+            }
+            @for (importantObservation of observation.importantObservations; track importantObservation) {
+              <abbr [title]="importantObservation" class="px-0 py-3 d-inline-block">
+                @if (importantObservationTexts[importantObservation]) {
+                  <span style="font-family: snowsymbolsiacs">
+                    {{ importantObservationTexts[importantObservation] }}
+                  </span>
+                }
+                @if (importantObservationTexts[observation.$type]) {
+                  <span style="font-family: snowsymbolsiacs">
+                    {{ importantObservationTexts[observation.$type] }}
+                  </span>
+                }
+                @if (!importantObservationTexts[importantObservation]) {
+                  <span>
+                    {{ formatImportantObservation(importantObservation) }}
+                  </span>
+                }
+              </abbr>
+            }
+          </td>
+          <td class="px-0 py-3">
+            {{ observation.content }}
+            <div class="float-end">
+              @if (observation.$allowEdit && observation.$source !== ObservationSource.AvalancheWarningService) {
+                <i
+                  class="ph ph-rows-plus-bottom icon-md"
+                  title="{{ 'observations.editIconTooltip' | translate: { value: observation.$source } }}"
+                ></i>
+              }
+              <button class="btn btn-bare" (click)="editObservationEvent.emit(observation); $event.stopPropagation()">
+                <i class="ph-bold ph-pencil icon-md"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  }
 </table>

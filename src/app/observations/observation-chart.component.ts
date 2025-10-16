@@ -1,6 +1,5 @@
 import type { FilterSelectionData } from "./filter-selection-data";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { CommonModule } from "@angular/common";
 import { Component, OnInit, output, input, inject } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import type { ECElementEvent, EChartsCoreOption as EChartsOption } from "echarts/core";
@@ -10,7 +9,7 @@ import { NgxEchartsDirective } from "ngx-echarts";
 @Component({
   standalone: true,
   selector: "app-observation-chart",
-  imports: [CommonModule, NgxEchartsDirective, TranslateModule],
+  imports: [NgxEchartsDirective, TranslateModule],
   templateUrl: "./observation-chart.component.html",
 })
 export class ObservationChartComponent<T> implements OnInit {

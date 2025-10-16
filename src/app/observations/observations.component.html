@@ -12,109 +12,123 @@
           <div class="global-bar global-bar-left" style="width: 100%">
             <div class="global-bar-item global-bar-item-load">
               <button type="button" class="btn btn-bare" (click)="loadObservationsAndWeatherStations()">
-                <i *ngIf="!this.data.observations.loading" class="ph ph-arrows-clockwise"></i>
-                <i *ngIf="this.data.observations.loading" class="ph ph-circle-notch"></i>
+                @if (!this.data.observations.loading) {
+                  <i class="ph ph-arrows-clockwise"></i>
+                }
+                @if (this.data.observations.loading) {
+                  <i class="ph ph-circle-notch"></i>
+                }
               </button>
             </div>
 
-            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-source">
-              <div class="dropdown">
-                <button
-                  type="button"
-                  class="btn dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  data-bs-auto-close="outside"
-                >
-                  {{ "admin.observations.selectSources.placeholder" | translate }}
-                </button>
-                <form class="dropdown-menu p-4 overflow-y-scroll">
-                  <div *ngFor="let source of allSources" class="form-check">
-                    <label class="form-check-label text-nowrap">
-                      <input
-                        [(ngModel)]="filter.observationSources[source.id]"
-                        [ngModelOptions]="{ standalone: true }"
-                        (change)="onSourcesDropdownSelect()"
-                        type="checkbox"
-                        class="form-check-input"
-                      />
-                      {{ source.name }}
-                    </label>
-                  </div>
-                </form>
+            @if (!showSearchInput) {
+              <div class="global-bar-item global-bar-item-source">
+                <div class="dropdown">
+                  <button
+                    type="button"
+                    class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    data-bs-auto-close="outside"
+                  >
+                    {{ "admin.observations.selectSources.placeholder" | translate }}
+                  </button>
+                  <form class="dropdown-menu p-4 overflow-y-scroll">
+                    @for (source of allSources; track source) {
+                      <div class="form-check">
+                        <label class="form-check-label text-nowrap">
+                          <input
+                            [(ngModel)]="filter.observationSources[source.id]"
+                            [ngModelOptions]="{ standalone: true }"
+                            (change)="onSourcesDropdownSelect()"
+                            type="checkbox"
+                            class="form-check-input"
+                          />
+                          {{ source.name }}
+                        </label>
+                      </div>
+                    }
+                  </form>
+                </div>
               </div>
-            </div>
+            }
 
             <div class="global-bar-item global-bar-item-region" style="width: 0">
               <button type="button" class="obs-button invisible" (click)="selectRegion('')" ngxMousetrapKey="r 0">
                 <i class="ph ph-number-circle-zero"></i>
               </button>
-              <span
-                *ngFor="let region of authenticationService.getInternalRegionsWithoutSuperRegions(); let i = index"
-                class="global-bar-item"
-              >
-                <button
-                  type="button"
-                  class="obs-button invisible"
-                  (click)="selectRegion(region)"
-                  [ngxMousetrapKey]="`r ${i + 1}`"
-                >
-                  <i class="ph ph-number-circle-one"></i>
-                </button>
-              </span>
-            </div>
-            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-region">
-              <div class="dropdown">
-                <button
-                  type="button"
-                  class="btn dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  data-bs-auto-close="outside"
-                >
-                  {{ "admin.observations.selectRegion.placeholder" | translate }}
-                </button>
-                <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
-                  <div
-                    *ngFor="let region of authenticationService.getInternalRegionsWithoutSuperRegions()"
-                    class="form-check"
+              @for (
+                region of authenticationService.getInternalRegionsWithoutSuperRegions();
+                track region;
+                let i = $index
+              ) {
+                <span class="global-bar-item">
+                  <button
+                    type="button"
+                    class="obs-button invisible"
+                    (click)="selectRegion(region)"
+                    [ngxMousetrapKey]="`r ${i + 1}`"
                   >
-                    <label class="form-check-label text-nowrap">
-                      <input
-                        [ngModel]="filter.regions.has(region)"
-                        [ngModelOptions]="{ standalone: true }"
-                        (change)="
-                          $event.target.checked ? filter.regions.add(region) : filter.regions.delete(region);
-                          toggleRegion($event, region)
-                        "
-                        type="checkbox"
-                        class="form-check-input"
-                      />
-                      {{ regionsService.getRegionName(region) }}
-                    </label>
-                    <div class="ms-3">
-                      <div *ngFor="let microRegion of getSubregions(region)" class="form-check">
+                    <i class="ph ph-number-circle-one"></i>
+                  </button>
+                </span>
+              }
+            </div>
+            @if (!showSearchInput) {
+              <div class="global-bar-item global-bar-item-region">
+                <div class="dropdown">
+                  <button
+                    type="button"
+                    class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    data-bs-auto-close="outside"
+                  >
+                    {{ "admin.observations.selectRegion.placeholder" | translate }}
+                  </button>
+                  <form class="dropdown-menu p-4 overflow-y-scroll" style="max-height: 400px">
+                    @for (region of authenticationService.getInternalRegionsWithoutSuperRegions(); track region) {
+                      <div class="form-check">
                         <label class="form-check-label text-nowrap">
                           <input
-                            [ngModel]="filter.regions.has(microRegion.id)"
+                            [ngModel]="filter.regions.has(region)"
                             [ngModelOptions]="{ standalone: true }"
                             (change)="
-                              $event.target.checked
-                                ? filter.regions.add(microRegion.id)
-                                : filter.regions.delete(microRegion.id);
-                              toggleRegion($event, microRegion.id)
+                              $event.target.checked ? filter.regions.add(region) : filter.regions.delete(region);
+                              toggleRegion($event, region)
                             "
                             type="checkbox"
                             class="form-check-input"
                           />
-                          {{ microRegion.name }}
+                          {{ regionsService.getRegionName(region) }}
                         </label>
+                        <div class="ms-3">
+                          @for (microRegion of getSubregions(region); track microRegion) {
+                            <div class="form-check">
+                              <label class="form-check-label text-nowrap">
+                                <input
+                                  [ngModel]="filter.regions.has(microRegion.id)"
+                                  [ngModelOptions]="{ standalone: true }"
+                                  (change)="
+                                    $event.target.checked
+                                      ? filter.regions.add(microRegion.id)
+                                      : filter.regions.delete(microRegion.id);
+                                    toggleRegion($event, microRegion.id)
+                                  "
+                                  type="checkbox"
+                                  class="form-check-input"
+                                />
+                                {{ microRegion.name }}
+                              </label>
+                            </div>
+                          }
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </form>
+                    }
+                  </form>
+                </div>
               </div>
-            </div>
+            }
 
             <div class="global-bar-item global-bar-item-calendar" style="width: 0">
               <button type="button" class="obs-button invisible" (click)="setDateRange(1)" ngxMousetrapKey="d 1">
@@ -139,27 +153,31 @@
                 <i class="ph ph-number-circle-three"></i>
               </button>
             </div>
-            <div *ngIf="!showSearchInput" class="global-bar-item global-bar-item-calendar">
-              <input
-                class="form-control d-inline-block"
-                #drp="bsDaterangepicker"
-                bsDaterangepicker
-                [(ngModel)]="filter.dateRange"
-                (ngModelChange)="this.loadObservationsAndWeatherStations()"
-                [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true }"
-                [maxDate]="filter.dateRangeMaxDate"
-              />
-            </div>
-            <div *ngIf="showSearchInput" class="input-group" style="width: 100%">
-              <input
-                id="observationSearchInput"
-                type="text"
-                [(ngModel)]="observationSearch"
-                (change)="this.applyLocalFilter()"
-                placeholder="{{ 'observations.search' | translate }}"
-                class="form-control"
-              />
-            </div>
+            @if (!showSearchInput) {
+              <div class="global-bar-item global-bar-item-calendar">
+                <input
+                  class="form-control d-inline-block"
+                  #drp="bsDaterangepicker"
+                  bsDaterangepicker
+                  [(ngModel)]="filter.dateRange"
+                  (ngModelChange)="this.loadObservationsAndWeatherStations()"
+                  [bsConfig]="{ withTimepicker: true, keepDatepickerOpened: true }"
+                  [maxDate]="filter.dateRangeMaxDate"
+                />
+              </div>
+            }
+            @if (showSearchInput) {
+              <div class="input-group" style="width: 100%">
+                <input
+                  id="observationSearchInput"
+                  type="text"
+                  [(ngModel)]="observationSearch"
+                  (change)="this.applyLocalFilter()"
+                  placeholder="{{ 'observations.search' | translate }}"
+                  class="form-control"
+                />
+              </div>
+            }
           </div>
           <!-- /global-bar-left -->
 
@@ -219,29 +237,33 @@
       </div>
       <!-- /layout-global -->
 
-      <div *ngIf="layout === 'table'" class="layout-table">
-        <div class="card h-100">
-          <div class="card-body overflow-auto">
-            <app-observation-table
-              #observationTable
-              [observations]="this.data.observations.filtered"
-              (observationClick)="onObservationClick($event)"
-              (editObservationEvent)="editObservation($event)"
-            ></app-observation-table>
+      @if (layout === "table") {
+        <div class="layout-table">
+          <div class="card h-100">
+            <div class="card-body overflow-auto">
+              <app-observation-table
+                #observationTable
+                [observations]="this.data.observations.filtered"
+                (observationClick)="onObservationClick($event)"
+                (editObservationEvent)="editObservation($event)"
+              ></app-observation-table>
+            </div>
           </div>
         </div>
-      </div>
+      }
 
-      <div *ngIf="layout === 'gallery'" class="layout-gallery">
-        <div class="card h-100">
-          <div class="card-body overflow-auto">
-            <app-observation-gallery
-              [observations]="this.data.webcams.filtered"
-              (observationClick)="onObservationClick($event)"
-            ></app-observation-gallery>
+      @if (layout === "gallery") {
+        <div class="layout-gallery">
+          <div class="card h-100">
+            <div class="card-body overflow-auto">
+              <app-observation-gallery
+                [observations]="this.data.webcams.filtered"
+                (observationClick)="onObservationClick($event)"
+              ></app-observation-gallery>
+            </div>
           </div>
         </div>
-      </div>
+      }
 
       <!-- !layout-map -->
       <div class="layout-map">
@@ -260,157 +282,156 @@
       <!-- /layout-map -->
 
       <!-- !layer-switch -->
-      <div *ngIf="layout === 'map'" class="layer-switch">
-        <div
-          class="obs-button"
-          [class.is-active]="this.data.observations.show"
-          (click)="this.data.observations.toggle(this.map)"
-          title="{{ 'observations.layers.observations' | translate }}"
-          ngxMousetrapKey="1"
-        >
-          <i class="ph ph-circle" aria-hidden="true"></i>
+      @if (layout === "map") {
+        <div class="layer-switch">
+          <div
+            class="obs-button"
+            [class.is-active]="this.data.observations.show"
+            (click)="this.data.observations.toggle(this.map)"
+            title="{{ 'observations.layers.observations' | translate }}"
+            ngxMousetrapKey="1"
+          >
+            <i class="ph ph-circle" aria-hidden="true"></i>
+          </div>
+          <div
+            class="obs-button"
+            [class.is-active]="this.data.webcams.show"
+            (click)="this.data.webcams.toggle(this.map)"
+            title="{{ 'observations.layers.webcams' | translate }}"
+            ngxMousetrapKey="2"
+          >
+            <i class="ph ph-webcam" aria-hidden="true"></i>
+          </div>
+          <div
+            class="obs-button"
+            [class.is-active]="this.data.observers.show"
+            (click)="this.data.observers.toggle(this.map)"
+            title="{{ 'observations.layers.observers' | translate }}"
+            ngxMousetrapKey="3"
+          >
+            <i class="ph ph-eye" aria-hidden="true"></i>
+          </div>
+          <div
+            class="obs-button"
+            [class.is-active]="this.data.weatherStations.show"
+            (click)="this.data.weatherStations.toggle(this.map)"
+            title="{{ 'observations.layers.weatherStations' | translate }}"
+            ngxMousetrapKey="4"
+          >
+            <i class="ph ph-chart-line" aria-hidden="true"></i>
+          </div>
         </div>
-        <div
-          class="obs-button"
-          [class.is-active]="this.data.webcams.show"
-          (click)="this.data.webcams.toggle(this.map)"
-          title="{{ 'observations.layers.webcams' | translate }}"
-          ngxMousetrapKey="2"
-        >
-          <i class="ph ph-webcam" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="this.data.observers.show"
-          (click)="this.data.observers.toggle(this.map)"
-          title="{{ 'observations.layers.observers' | translate }}"
-          ngxMousetrapKey="3"
-        >
-          <i class="ph ph-eye" aria-hidden="true"></i>
-        </div>
-        <div
-          class="obs-button"
-          [class.is-active]="this.data.weatherStations.show"
-          (click)="this.data.weatherStations.toggle(this.map)"
-          title="{{ 'observations.layers.weatherStations' | translate }}"
-          ngxMousetrapKey="4"
-        >
-          <i class="ph ph-chart-line" aria-hidden="true"></i>
-        </div>
-      </div>
+      }
 
       <!-- !parameter-switch -->
-      <div *ngIf="this.data.weatherStations.show && layout === 'map'" class="parameter-switch">
-        <button
-          type="button"
-          class="obs-button invisible"
-          (click)="togglePreviousWeatherStationParameter()"
-          ngxMousetrapKey="alt+up"
-        >
-          <i class="ph-bold ph-caret-up"></i>
-        </button>
-        <button
-          type="button"
-          class="obs-button invisible"
-          (click)="toggleNextWeatherStationParameter()"
-          ngxMousetrapKey="alt+down"
-        >
-          <i class="ph-bold ph-caret-down"></i>
-        </button>
-        <div
-          *ngFor="let parameter of markerWeatherStationService.allParameters"
-          class="obs-button"
-          [class.is-active]="markerWeatherStationService.weatherStationLabel === parameter"
-          (click)="selectParameter(parameter)"
-          title="{{ markerWeatherStationService.toLabelKey(parameter) | translate }}"
-        >
-          <i [class]="markerWeatherStationService.toIcon(parameter)" aria-hidden="true"></i>
+      @if (this.data.weatherStations.show && layout === "map") {
+        <div class="parameter-switch">
+          <button
+            type="button"
+            class="obs-button invisible"
+            (click)="togglePreviousWeatherStationParameter()"
+            ngxMousetrapKey="alt+up"
+          >
+            <i class="ph-bold ph-caret-up"></i>
+          </button>
+          <button
+            type="button"
+            class="obs-button invisible"
+            (click)="toggleNextWeatherStationParameter()"
+            ngxMousetrapKey="alt+down"
+          >
+            <i class="ph-bold ph-caret-down"></i>
+          </button>
+          @for (parameter of markerWeatherStationService.allParameters; track parameter) {
+            <div
+              class="obs-button"
+              [class.is-active]="markerWeatherStationService.weatherStationLabel === parameter"
+              (click)="selectParameter(parameter)"
+              title="{{ markerWeatherStationService.toLabelKey(parameter) | translate }}"
+            >
+              <i [class]="markerWeatherStationService.toIcon(parameter)" aria-hidden="true"></i>
+            </div>
+          }
         </div>
-      </div>
+      }
       <!-- /parameter-switch -->
     </div>
     <!-- /layout-left -->
 
     <!-- !layout-right -->
-    <div *ngIf="layoutFilters" class="layout-right">
-      <!-- !toolset -->
-      <div class="toolset">
-        <!-- !toolset-header -->
-        <div class="toolset-header">
-          <div class="toolset-name">
-            {{ "sidebar.observations" | translate }}
-          </div>
-          <div class="toolset-keydata">
-            <div class="keydata">
-              <span class="keydata-selected">{{ this.data.observations.filtered.length }}</span>
-              /
-              <span class="keydata-all">{{ this.data.observations.all.length }}</span>
+    @if (layoutFilters) {
+      <div class="layout-right">
+        <!-- !toolset -->
+        <div class="toolset">
+          <!-- !toolset-header -->
+          <div class="toolset-header">
+            <div class="toolset-name">
+              {{ "sidebar.observations" | translate }}
+            </div>
+            <div class="toolset-keydata">
+              <div class="keydata">
+                <span class="keydata-selected">{{ this.data.observations.filtered.length }}</span>
+                /
+                <span class="keydata-all">{{ this.data.observations.all.length }}</span>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- /toolset-header -->
-
-        <!-- !toolset-content -->
-        <div class="toolset-content">
-          <!-- !toolset-charts -->
-          <div class="toolset-charts">
-            <app-observation-chart
-              *ngFor="let filterSelection of filter.filterSelectionData"
-              class="chart-container"
-              [filterSelection]="filterSelection"
-              (handleChange)="applyLocalFilter(filterSelection.key !== 'elevation')"
-            />
+          <!-- /toolset-header -->
+          <!-- !toolset-content -->
+          <div class="toolset-content">
+            <!-- !toolset-charts -->
+            <div class="toolset-charts">
+              @for (filterSelection of filter.filterSelectionData; track filterSelection) {
+                <app-observation-chart
+                  class="chart-container"
+                  [filterSelection]="filterSelection"
+                  (handleChange)="applyLocalFilter(filterSelection.key !== 'elevation')"
+                />
+              }
+            </div>
+            <!-- /toolset-charts -->
+            <!-- /toolset-content -->
           </div>
-          <!-- /toolset-charts -->
-
-          <!-- /toolset-content -->
         </div>
+        <!-- /toolset -->
       </div>
-      <!-- /toolset -->
-    </div>
+    }
     <!-- /layout-right -->
 
     <!-- !layout-switch -->
     <div class="layout-switch">
-      <div *ngIf="layout !== 'map'" (click)="layout = 'map'" class="layout-switch-map obs-button" ngxMousetrapKey="v m">
-        <span class="button-icon ph ph-globe-hemisphere-west"></span>
-        <span class="button-text d-none d-lg-inline">
-          {{ "admin.observations.map" | translate }}
-        </span>
-      </div>
-      <div
-        *ngIf="layout !== 'table'"
-        (click)="layout = 'table'"
-        class="layout-switch-table obs-button"
-        ngxMousetrapKey="v t"
-      >
-        <span class="button-icon ph ph-list"></span>
-        <span class="button-text d-none d-lg-inline">
-          {{ "admin.observations.table" | translate }}
-        </span>
-      </div>
-      <div
-        *ngIf="layout !== 'chart'"
-        (click)="layout = 'chart'"
-        class="layout-switch-charts obs-button"
-        ngxMousetrapKey="v c"
-      >
-        <span class="button-icon ph ph-chart-line"></span>
-        <span class="button-text d-none d-lg-inline">
-          {{ "admin.observations.charts.charts" | translate }}
-        </span>
-      </div>
-      <div
-        *ngIf="layout !== 'gallery'"
-        (click)="layout = 'gallery'"
-        class="layout-switch-gallery obs-button"
-        ngxMousetrapKey="v g"
-      >
-        <span class="button-icon ph ph-images"></span>
-        <span class="button-text d-none d-lg-inline">
-          {{ "admin.observations.gallery" | translate }}
-        </span>
-      </div>
+      @if (layout !== "map") {
+        <div (click)="layout = 'map'" class="layout-switch-map obs-button" ngxMousetrapKey="v m">
+          <span class="button-icon ph ph-globe-hemisphere-west"></span>
+          <span class="button-text d-none d-lg-inline">
+            {{ "admin.observations.map" | translate }}
+          </span>
+        </div>
+      }
+      @if (layout !== "table") {
+        <div (click)="layout = 'table'" class="layout-switch-table obs-button" ngxMousetrapKey="v t">
+          <span class="button-icon ph ph-list"></span>
+          <span class="button-text d-none d-lg-inline">
+            {{ "admin.observations.table" | translate }}
+          </span>
+        </div>
+      }
+      @if (layout !== "chart") {
+        <div (click)="layout = 'chart'" class="layout-switch-charts obs-button" ngxMousetrapKey="v c">
+          <span class="button-icon ph ph-chart-line"></span>
+          <span class="button-text d-none d-lg-inline">
+            {{ "admin.observations.charts.charts" | translate }}
+          </span>
+        </div>
+      }
+      @if (layout !== "gallery") {
+        <div (click)="layout = 'gallery'" class="layout-switch-gallery obs-button" ngxMousetrapKey="v g">
+          <span class="button-icon ph ph-images"></span>
+          <span class="button-text d-none d-lg-inline">
+            {{ "admin.observations.gallery" | translate }}
+          </span>
+        </div>
+      }
     </div>
     <!-- /layout-switch -->
   </div>
@@ -430,62 +451,71 @@
       {{ " " }}
       <kbd (click)="changeObservation(+1)" ngxMousetrapKey="right" role="button">→</kbd>
       {{ " " }}
-      <kbd
-        *ngIf="observationPopup?.imgUrls?.length && observationPopup.imgIndex > 0"
-        (click)="observationPopup.imgIndex = observationPopup.imgIndex - 1"
-        ngxMousetrapKey="up"
-        role="button"
-        >↑</kbd
-      >
+      @if (observationPopup?.imgUrls?.length && observationPopup.imgIndex > 0) {
+        <kbd (click)="observationPopup.imgIndex = observationPopup.imgIndex - 1" ngxMousetrapKey="up" role="button"
+          >↑</kbd
+        >
+      }
       {{ " " }}
-      <kbd
-        *ngIf="observationPopup?.imgUrls?.length > observationPopup.imgIndex + 1"
-        (click)="observationPopup.imgIndex = observationPopup.imgIndex + 1"
-        ngxMousetrapKey="down"
-        role="button"
-        >↓</kbd
-      >
+      @if (observationPopup?.imgUrls?.length > observationPopup.imgIndex + 1) {
+        <kbd (click)="observationPopup.imgIndex = observationPopup.imgIndex + 1" ngxMousetrapKey="down" role="button"
+          >↓</kbd
+        >
+      }
     </div>
     <button type="button" class="btn-close" aria-label="Close" (click)="modalService.hide()"></button>
   </div>
   <div class="modal-body">
-    <table *ngIf="observationPopup" class="table table-sm">
-      <tr *ngFor="let row of observationPopup.table">
-        <th class="pe-3">{{ row.label }}</th>
-        <td>
-          <span *ngIf="row.date !== undefined">
-            {{ row.date | date: "full" : undefined : translateService.currentLang }}
-          </span>
-          <span *ngIf="row.number !== undefined">{{ row.number | number }}</span>
-          <span *ngIf="row.boolean !== undefined"><i [class]="row.boolean ? 'ph ph-check' : 'ph ph-x'"></i></span>
-          <span *ngIf="row.url !== undefined"
-            ><a href="{{ row.url }}" rel="noopener" target="_blank">{{ row.url }}</a></span
-          >
-          <span *ngIf="row.value !== undefined">{{ row.value }}</span>
-          <span
-            *ngIf="
-              row.date === undefined &&
-              row.number === undefined &&
-              row.boolean === undefined &&
-              row.url === undefined &&
-              row.value === undefined
-            "
-            >&mdash;</span
-          >
-        </td>
-      </tr>
-    </table>
-    <iframe
-      *ngIf="observationPopup?.iframe"
-      [src]="observationPopup?.iframe"
-      style="width: 100%; height: 80vh"
-    ></iframe>
-    <div *ngIf="observationPopup?.imgUrls" style="width: 100%; height: 90vh">
-      <img
-        [src]="observationPopup?.imgUrls[observationPopup?.imgIndex]"
-        style="width: 100%; height: 100%; object-fit: contain; object-position: top"
-      />
-    </div>
+    @if (observationPopup) {
+      <table class="table table-sm">
+        @for (row of observationPopup.table; track row) {
+          <tr>
+            <th class="pe-3">{{ row.label }}</th>
+            <td>
+              @if (row.date !== undefined) {
+                <span>
+                  {{ row.date | date: "full" : undefined : translateService.currentLang }}
+                </span>
+              }
+              @if (row.number !== undefined) {
+                <span>{{ row.number | number }}</span>
+              }
+              @if (row.boolean !== undefined) {
+                <span><i [class]="row.boolean ? 'ph ph-check' : 'ph ph-x'"></i></span>
+              }
+              @if (row.url !== undefined) {
+                <span
+                  ><a href="{{ row.url }}" rel="noopener" target="_blank">{{ row.url }}</a></span
+                >
+              }
+              @if (row.value !== undefined) {
+                <span>{{ row.value }}</span>
+              }
+              @if (
+                row.date === undefined &&
+                row.number === undefined &&
+                row.boolean === undefined &&
+                row.url === undefined &&
+                row.value === undefined
+              ) {
+                <span>&mdash;</span>
+              }
+            </td>
+          </tr>
+        }
+      </table>
+    }
+    @if (observationPopup?.iframe) {
+      <iframe [src]="observationPopup?.iframe" style="width: 100%; height: 80vh"></iframe>
+    }
+    @if (observationPopup?.imgUrls) {
+      <div style="width: 100%; height: 90vh">
+        <img
+          [src]="observationPopup?.imgUrls[observationPopup?.imgIndex]"
+          style="width: 100%; height: 100%; object-fit: contain; object-position: top"
+        />
+      </div>
+    }
   </div>
 </ng-template>
 
@@ -499,10 +529,9 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="hideObservationEditor()"></button>
   </div>
   <div class="modal-body">
-    <app-observation-editor
-      *ngIf="observationEditor.observation"
-      [observation]="observationEditor.observation"
-    ></app-observation-editor>
+    @if (observationEditor.observation) {
+      <app-observation-editor [observation]="observationEditor.observation"></app-observation-editor>
+    }
     <button
       type="button"
       [disabled]="
@@ -513,8 +542,12 @@
       (click)="saveObservation()"
       class="btn btn-sm btn-primary"
     >
-      <i *ngIf="observationEditor.saving" class="ph ph-circle-notch"></i>
-      <i *ngIf="!observationEditor.saving" class="ph ph-floppy-disk"></i>
+      @if (observationEditor.saving) {
+        <i class="ph ph-circle-notch"></i>
+      }
+      @if (!observationEditor.saving) {
+        <i class="ph ph-floppy-disk"></i>
+      }
       {{ "observations.button.save" | translate }}
     </button>
     <button
@@ -525,21 +558,23 @@
       (click)="deleteObservation()"
       class="btn btn-sm btn-danger"
     >
-      <i *ngIf="observationEditor.saving" class="ph ph-circle-notch"></i>
-      <i *ngIf="!observationEditor.saving" class="ph ph-trash"></i>
+      @if (observationEditor.saving) {
+        <i class="ph ph-circle-notch"></i>
+      }
+      @if (!observationEditor.saving) {
+        <i class="ph ph-trash"></i>
+      }
       {{ "observations.button.delete" | translate }}
     </button>
     <button type="button" (click)="discardObservation()" class="btn btn-sm btn-secondary">
       <i class="ph ph-x"></i>
       {{ "observations.button.discard" | translate }}
     </button>
-    <div
-      *ngFor="let message of observationEditor.messages"
-      class="alert alert-danger alert-dismissible my-2"
-      role="alert"
-    >
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    @for (message of observationEditor.messages; track message) {
+      <div class="alert alert-danger alert-dismissible my-2" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    }
   </div>
 </ng-template>
