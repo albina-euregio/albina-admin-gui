@@ -23,7 +23,6 @@ import { DangerSourcesService } from "app/danger-sources/danger-sources.service"
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
 import { zodCssClass } from "app/shared/zod-css-class";
-import { ZodInputComponent } from "app/shared/zod-input.component";
 import { orderBy, xor } from "es-toolkit";
 import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
@@ -40,7 +39,6 @@ import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
     TypeaheadModule,
     AspectsComponent,
     AvalancheProblemIconsComponent,
-    ZodInputComponent,
   ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
