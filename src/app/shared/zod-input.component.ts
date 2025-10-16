@@ -1,3 +1,4 @@
+import { zodCssClass } from "./zod-css-class";
 import { Component, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { z } from "zod/v4";
@@ -16,13 +17,7 @@ export class ZodInputComponent<T> {
   valueChange = output<T>();
 
   cssClasses() {
-    const value = this.value();
-    const result = this.zodType().safeParse(value);
-    return {
-      "form-control": true,
-      "is-valid": (Array.isArray(value) ? value.length : value) && result.success,
-      "is-invalid": result.error,
-    };
+    return zodCssClass(this.zodType(), this.value());
   }
 
   prettyError(): string | undefined {

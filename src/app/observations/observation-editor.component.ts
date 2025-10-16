@@ -9,6 +9,7 @@ import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icon
 import { GeocodingProperties, GeocodingService } from "./geocoding.service";
 import {
   GenericObservation,
+  genericObservationSchema,
   ImportantObservation,
   ObservationSource,
   ObservationType,
@@ -21,6 +22,8 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { DangerSourceModel } from "app/danger-sources/models/danger-source.model";
 import { CoordinateDataService } from "app/providers/map-service/coordinate-data.service";
+import { zodCssClass } from "app/shared/zod-css-class";
+import { ZodInputComponent } from "app/shared/zod-input.component";
 import { orderBy, xor } from "es-toolkit";
 import { Feature, Point } from "geojson";
 import { geocoders } from "leaflet-control-geocoder";
@@ -37,6 +40,7 @@ import { Observable, Observer, Subscription, map, of, switchMap } from "rxjs";
     TypeaheadModule,
     AspectsComponent,
     AvalancheProblemIconsComponent,
+    ZodInputComponent,
   ],
   selector: "app-observation-editor",
   templateUrl: "observation-editor.component.html",
@@ -61,6 +65,8 @@ export class ObservationEditorComponent implements AfterViewInit {
   snowpackStabilityValues = Object.values(Enums.SnowpackStability);
   personInvolvementValues = Object.values(PersonInvolvement);
   observationTypeValues = Object.values(ObservationType);
+  GenericObservationSchema = genericObservationSchema;
+  zodCssClass = zodCssClass;
   ObservationSource = ObservationSource;
   elevationTolerances = ["exact", "50m", "100m", "200"] satisfies LolaRainBoundaryElevationTolerance[];
   elevationPeriods = ["duringPrecipitationEvent", "observationPeriod"] satisfies LolaRainBoundaryElevationPeriod[];

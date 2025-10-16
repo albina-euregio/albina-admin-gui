@@ -107,7 +107,7 @@
         [typeaheadAsync]="true"
         (typeaheadOnSelect)="selectLocation($event)"
         typeaheadOptionField="properties.display_name"
-        class="form-control"
+        [class]="zodCssClass(GenericObservationSchema.shape.locationName, observation().locationName)"
         [disabled]="!observation().$allowEdit"
       />
     </div>
@@ -129,7 +129,7 @@
         [(ngModel)]="observation().latitude"
         type="number"
         step="0.0000001"
-        class="form-control"
+        [class]="zodCssClass(GenericObservationSchema.shape.latitude, observation().latitude)"
         [disabled]="!observation().$allowEdit"
       />
     </div>
@@ -142,7 +142,7 @@
           [(ngModel)]="observation().longitude"
           type="number"
           step="0.0000001"
-          class="form-control"
+          [class]="zodCssClass(GenericObservationSchema.shape.longitude, observation().longitude)"
           [disabled]="!observation().$allowEdit"
         />
         <button class="btn btn-outline-secondary" type="button" (click)="copyLatLng()">
@@ -159,7 +159,7 @@
         [(ngModel)]="observation().elevation"
         type="number"
         step="1"
-        class="form-control"
+        [class]="zodCssClass(GenericObservationSchema.shape.elevation, observation().elevation)"
         [disabled]="!observation().$allowEdit"
       />
     </div>
@@ -174,7 +174,7 @@
             [(ngModel)]="observation().elevationLowerBound"
             type="number"
             step="1"
-            class="form-control"
+            [class]="zodCssClass(GenericObservationSchema.shape.elevationLowerBound, observation().elevationLowerBound)"
             title="{{ 'observations.elevationLowerBound' | translate }}"
             [disabled]="!observation().$allowEdit"
           />
@@ -183,7 +183,7 @@
             [(ngModel)]="observation().elevationUpperBound"
             type="number"
             step="1"
-            class="form-control"
+            [class]="zodCssClass(GenericObservationSchema.shape.elevationUpperBound, observation().elevationUpperBound)"
             title="{{ 'observations.elevationUpperBound' | translate }}"
             [disabled]="!observation().$allowEdit"
           />
@@ -197,7 +197,7 @@
         required
         [(ngModel)]="observation().authorName"
         type="text"
-        class="form-control"
+        [class]="zodCssClass(GenericObservationSchema.shape.authorName, observation().authorName)"
         [disabled]="!observation().$allowEdit"
       />
     </div>
@@ -370,7 +370,7 @@
         id="externalURL"
         type="url"
         [(ngModel)]="observation().$externalURL"
-        class="form-control"
+        [class]="zodCssClass(GenericObservationSchema.shape.$externalURL, observation().$externalURL)"
         [disabled]="!observation().$allowEdit"
       />
     </div>
@@ -383,7 +383,7 @@
         (paste)="parseContent()"
         type="text"
         rows="8"
-        class="form-control"
+        [class]="zodCssClass(GenericObservationSchema.shape.content, observation().content)"
         [disabled]="!observation().$allowEdit"
       ></textarea>
     </div>
