@@ -256,6 +256,7 @@
         "edit": "Edit micro regions",
         "copy": "Copy region",
         "delete": "Delete region",
+        "deleteProblem": "Delete problem",
         "compare": "Compare region",
         "undo": "Undo last change in region",
         "redo": "Redo change in region",
