@@ -12,7 +12,7 @@
         <label class="col-form-label">{{ "admin.server-configuration.table.name" | translate }}</label>
       </td>
       <td>
-        <input type="text" class="form-control" [(ngModel)]="config().name" />
+        <app-zod-input [zodType]="ServerConfigurationSchema.shape.name" [(value)]="config().name" />
       </td>
     </tr>
     @if (externalServer()) {
@@ -21,7 +21,7 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.username" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().userName" />
+          <app-zod-input [zodType]="ServerConfigurationSchema.shape.userName" [(value)]="config().userName" />
         </td>
       </tr>
     }
@@ -31,7 +31,7 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.password" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().password" />
+          <app-zod-input [zodType]="ServerConfigurationSchema.shape.password" [(value)]="config().password" />
         </td>
       </tr>
     }
@@ -82,7 +82,7 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.pdfDirectory" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().pdfDirectory" />
+          <app-zod-input [zodType]="ServerConfigurationSchema.shape.pdfDirectory" [(value)]="config().pdfDirectory" />
         </td>
       </tr>
     }
@@ -92,7 +92,7 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.htmlDirectory" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().htmlDirectory" />
+          <app-zod-input [zodType]="ServerConfigurationSchema.shape.htmlDirectory" [(value)]="config().htmlDirectory" />
         </td>
       </tr>
     }
@@ -102,7 +102,10 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.serverImagesUrl" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().serverImagesUrl" />
+          <app-zod-input
+            [zodType]="ServerConfigurationSchema.shape.serverImagesUrl"
+            [(value)]="config().serverImagesUrl"
+          />
         </td>
       </tr>
     }
@@ -112,7 +115,7 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.mapsPath" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().mapsPath" />
+          <app-zod-input [zodType]="ServerConfigurationSchema.shape.mapsPath" [(value)]="config().mapsPath" />
         </td>
       </tr>
     }
@@ -122,7 +125,7 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.mediaPath" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().mediaPath" />
+          <app-zod-input [zodType]="ServerConfigurationSchema.shape.mediaPath" [(value)]="config().mediaPath" />
         </td>
       </tr>
     }
@@ -132,7 +135,10 @@
           <label class="col-form-label">{{ "admin.server-configuration.table.mapProductionUrl" | translate }}</label>
         </td>
         <td>
-          <input type="text" class="form-control" [(ngModel)]="config().mapProductionUrl" />
+          <app-zod-input
+            [zodType]="ServerConfigurationSchema.shape.mapProductionUrl"
+            [(value)]="config().mapProductionUrl"
+          />
         </td>
       </tr>
     }
@@ -141,7 +147,7 @@
         <label class="col-form-label">{{ "admin.server-configuration.table.apiUrl" | translate }}</label>
       </td>
       <td>
-        <input type="text" class="form-control" [(ngModel)]="config().apiUrl" />
+        <app-zod-input [zodType]="ServerConfigurationSchema.shape.apiUrl" [(value)]="config().apiUrl" />
       </td>
     </tr>
   </tbody>
