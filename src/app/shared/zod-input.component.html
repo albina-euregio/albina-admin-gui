@@ -4,7 +4,7 @@
     [lang]="lang()"
     [class]="cssClasses()"
     [ngModel]="value()"
-    (ngModelChange)="valueChange.emit(csv ? $event.split(',') : $event)"
+    (ngModelChange)="valueChange.emit(csv() ? $event.split(',') : $event)"
   />
 
   <ng-content></ng-content>
