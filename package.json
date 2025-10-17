@@ -64,7 +64,7 @@
     "ngx-bootstrap": "^20.0.2",
     "ngx-echarts": "^20.0.1",
     "ngx-image-compress": "^18.1.5",
-    "protomaps-leaflet": "^5.0.0",
+    "protomaps-leaflet": "^5.1.0",
     "rxjs": "7.8.2",
     "simple-statistics": "^7.8.7",
     "split.js": "^1.6.5",
