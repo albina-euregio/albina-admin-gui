@@ -1,19 +1,43 @@
 diff --git a/L.Map.Sync.js b/L.Map.Sync.js
-index a4795da85847b413d75b43436d76de35666e7ae9..23fb762ab5f415e3726052166c2931b9572cfaf0 100644
+index a4795da85847b413d75b43436d76de35666e7ae9..7610b5a859c8f272531c186a2336a15ac8005a9e 100644
 --- a/L.Map.Sync.js
 +++ b/L.Map.Sync.js
-@@ -19,8 +19,8 @@
-      * The values can be less than 0 or greater than 1. It will sync points out of the map.
-      */
-     L.Sync.offsetHelper = function (ratioRef, ratioTarget) {
+@@ -2,6 +2,8 @@
+  * Extends L.Map to synchronize the interaction on one map to one or more other maps.
+  */
+ 
++import * as L from "leaflet";
++
+ (function () {
+     var NO_ANIMATION = {
+         animate: false,
+@@ -9,33 +11,10 @@
+         disableViewprereset: true
+     };
+ 
+-    L.Sync = function () {};
+-    /*
+-     * Helper function to compute the offset easily.
+-     *
+-     * The arguments are relative positions with respect to reference and target maps of
+-     * the point to sync. If you provide ratioRef=[0, 1], ratioTarget=[1, 0] will sync the
+-     * bottom left corner of the reference map with the top right corner of the target map.
+-     * The values can be less than 0 or greater than 1. It will sync points out of the map.
+-     */
+-    L.Sync.offsetHelper = function (ratioRef, ratioTarget) {
 -        var or = L.Util.isArray(ratioRef) ? ratioRef : [0.5, 0.5];
 -        var ot = L.Util.isArray(ratioTarget) ? ratioTarget : [0.5, 0.5];
-+        var or = Array.isArray(ratioRef) ? ratioRef : [0.5, 0.5];
-+        var ot = Array.isArray(ratioTarget) ? ratioTarget : [0.5, 0.5];
-         return function (center, zoom, refMap, targetMap) {
-             var rs = refMap.getSize();
-             var ts = targetMap.getSize();
-@@ -35,7 +35,7 @@
+-        return function (center, zoom, refMap, targetMap) {
+-            var rs = refMap.getSize();
+-            var ts = targetMap.getSize();
+-            var pt = refMap.project(center, zoom)
+-                           .subtract([(0.5 - or[0]) * rs.x, (0.5 - or[1]) * rs.y])
+-                           .add([(0.5 - ot[0]) * ts.x, (0.5 - ot[1]) * ts.y]);
+-            return refMap.unproject(pt, zoom);
+-        };
+-    };
+-
+-
      L.Map.include({
          sync: function (map, options) {
              this._initSync();
@@ -22,7 +46,7 @@ index a4795da85847b413d75b43436d76de35666e7ae9..23fb762ab5f415e3726052166c2931b9
                  noInitialSync: false,
                  syncCursor: false,
                  syncCursorMarkerOptions: {
-@@ -63,7 +63,7 @@
+@@ -63,7 +42,7 @@
              }
              if (options.syncCursor) {
                  if (typeof map.cursor === 'undefined') {
@@ -31,7 +55,7 @@ index a4795da85847b413d75b43436d76de35666e7ae9..23fb762ab5f415e3726052166c2931b9
                  }
  
                  this._cursors.push(map.cursor);
-@@ -180,7 +180,7 @@
+@@ -180,7 +159,7 @@
              this._cursors = [];
              this._syncOffsetFns = {};
  
