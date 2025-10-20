@@ -111,7 +111,7 @@ test("filter observations", async ({ page }) => {
 test("observation details", async ({ page }) => {
   test.slow();
   await page.goto("#/observations?startDate=2024-12-23T00:00&endDate=2024-12-24T23:59");
-  await expect(page.locator(".keydata")).toHaveText("347 / 358", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("331 / 342", { timeout: 7000 });
   await page.getByText("Table", { exact: true }).click();
   await test.step("AvalancheWarningService", async () => {
     await page.getByRole("button", { name: "Sources" }).click();
@@ -271,7 +271,7 @@ test("Weather stations", async ({ page }) => {
   await page.clock.setFixedTime(new Date("2025-03-05"));
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  await expect(page.locator(".keydata")).toHaveText("700 / 748", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("675 / 723", { timeout: 7000 });
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
   await expect

@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 test("Check visible neighbors", async ({ page }) => {
   await test.step("Tyrol sees Carinthia and South Tyrol", async () => {
     await changeRegion(page, "Tyrol");
-    await expect(page.locator("thead")).toContainText("Tyrol Carinthia South Tyrol");
+    await expect(page.locator("thead")).toContainText("Tyrol South Tyrol Carinthia");
   });
   await test.step("Carinthia sees Tyrol", async () => {
     await changeRegion(page, "Carinthia");
