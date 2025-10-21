@@ -211,8 +211,6 @@ test("Bulletin synchronization", async ({ page }) => {
   // TODO edit bulletin in browser 1, check that changes are visible in browser 2
 });
 
-// TODO? assign different days to the different browsers, so they won't interfere with each other
-// -> right now the tests are not run in parallel on CI, so no interference anyway
 test("Load bulletin from the day before", async ({ page }) => {
   test.slow();
   const testDate = new Date("2024-12-21");

@@ -1,0 +1,47 @@
+- tab /Tyrol \(AT-\d+\)/:
+  - button /Tyrol \(AT-\d+\)/ [expanded]:
+    - strong: Tyrol
+- tabpanel:
+  - tablist "Tabs":
+    - listitem:
+      - tab "General" [selected]
+    - listitem:
+      - tab "Publication"
+    - listitem:
+      - tab "Components"
+    - listitem:
+      - tab "Configuration"
+    - listitem:
+      - tab "Language configuration"
+  - tabpanel:
+    - table:
+      - rowgroup:
+        - row /Region ID AT-\d+/:
+          - cell "Region ID"
+          - cell /AT-\d+/:
+            - textbox: /AT-\d+/
+        - row "Image URL for coat of arms https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg":
+          - cell "Image URL for coat of arms"
+          - cell "https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg":
+            - textbox: https://upload.wikimedia.org/wikipedia/commons/c/c3/AUT_Tirol_COA.svg
+        - row "URL to static avalanche files https://static.avalanche.report":
+          - cell "URL to static avalanche files"
+          - cell "https://static.avalanche.report":
+            - textbox: https://static.avalanche.report
+        - row /Number of micro regions \d+/:
+          - cell "Number of micro regions"
+          - cell /\d+/:
+            - textbox: /\d+/
+        - row "ID of sub regions":
+          - cell "ID of sub regions"
+          - cell:
+            - textbox
+        - row "ID of super regions EUREGIO":
+          - cell "ID of super regions"
+          - cell "EUREGIO":
+            - textbox: EUREGIO
+        - row /ID of neighbouring regions IT-\d+-BZ,AT-\d+/:
+          - cell "ID of neighbouring regions"
+          - cell /IT-\d+-BZ,AT-\d+/:
+            - textbox: /IT-\d+-BZ,AT-\d+/
+  - button " Save"
