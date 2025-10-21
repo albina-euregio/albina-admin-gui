@@ -1,9 +1,9 @@
-import { changeRegion, login } from "./utils";
+import { changeRegion, loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
-  await login(page);
+  await loginForecaster(page);
 });
 
 test("Check visible neighbors", async ({ page }) => {

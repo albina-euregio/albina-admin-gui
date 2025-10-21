@@ -1,4 +1,4 @@
-import { changeRegion, login } from "./utils";
+import { changeRegion, loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "path";
@@ -7,7 +7,7 @@ const testDate = new Date("2024-12-24");
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
-  await login(page);
+  await loginForecaster(page);
 });
 
 test("filter observations", async ({ page }) => {

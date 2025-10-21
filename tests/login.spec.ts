@@ -1,4 +1,4 @@
-import { login } from "./utils";
+import { loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
 
 test("login", async ({ page }) => {
@@ -11,7 +11,7 @@ test("login", async ({ page }) => {
     await expect.poll(() => page.getByRole("link", { name: "angular" }).count()).toBeGreaterThan(1);
   });
   await test.step("login is possible", async () => {
-    await login(page);
+    await loginForecaster(page);
     await expect(page).toHaveURL("#/bulletins");
     await expect(page.getByRole("button", { name: "Stress Level" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Tyrol", exact: true })).toBeVisible();

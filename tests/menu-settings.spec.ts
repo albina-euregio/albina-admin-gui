@@ -1,11 +1,11 @@
-import { login } from "./utils";
+import { loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "path";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
-  await login(page);
+  await loginForecaster(page);
 });
 
 test("change language setting", async ({ page }) => {
