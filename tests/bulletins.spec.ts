@@ -6,6 +6,14 @@ test.beforeEach(async ({ page }) => {
   await loginForecaster(page);
 });
 
+const waitForGetEdit = (page) =>
+  page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/bulletins\/edit/) &&
+      response.status() === 200 &&
+      response.request().method() === "GET",
+  );
+
 test("Check visible neighbors", async ({ page }) => {
   await test.step("Tyrol sees Carinthia and South Tyrol", async () => {
     await changeRegion(page, "Tyrol");
@@ -212,21 +220,26 @@ test("Load bulletin from the day before", async ({ page }) => {
   await page.reload();
   await changeRegion(page, "Tyrol");
   await test.step("load into empty bulletin", async () => {
+    const getBulletinsPromise = waitForGetEdit(page);
     await page.getByRole("row", { name: "Sunday, December 22, 2024" }).getByTitle("edit bulletin").click();
+    const bulletinResponse = await getBulletinsPromise;
     await expect(page.locator(".badge").first()).toContainText(/missing|draft/, { timeout: 7000 });
-
-    await test.step("Delete all warning regions", async () => {
-      await page.getByTitle("[b]").click();
-      await page.getByRole("button", { name: "Delete all warning regions" }).click();
-      const responsePromise = page.waitForResponse(
-        (response) =>
-          response.url().match(/\/api\/bulletins/) &&
-          response.status() === 200 &&
-          response.request().method() === "DELETE",
-      );
-      await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-      await responsePromise;
-    });
+    if ((await bulletinResponse.body()).length > 2) {
+      await test.step("Delete all warning regions", async () => {
+        await page.getByTitle("[b]").click();
+        await page.getByRole("button", { name: "Delete all warning regions" }).click();
+        const responsePromise = page.waitForResponse(
+          (response) =>
+            response.url().match(/\/api\/bulletins/) &&
+            response.status() === 200 &&
+            response.request().method() === "DELETE",
+        );
+        await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
+        await responsePromise;
+        await waitForGetEdit(page);
+      });
+    }
+    await waitForGetEdit(page);
     await test.step("Load from the day before", async () => {
       await page.getByTitle("[b]").click();
       await page.getByRole("button", { name: "Load bulletin from the day before" }).click();
@@ -240,12 +253,15 @@ test("Load bulletin from the day before", async ({ page }) => {
       await responsePromise;
       await expect(page.locator(".badge").first()).toContainText("draft");
       await expect(page.getByRole("heading", { name: "Tyrol (4)" })).toBeVisible();
-      await expect(page.locator(".region-thumb")).toContainText([
+      for (const region of [
         "Northern Zillertal Alps",
         "Brandenberg Alps + 5",
         "Lechtal Alps West + 3",
         "Kitzbühel Alps Wildseeloder + 2",
-      ]);
+      ]) {
+        await expect(page.locator(".region-thumb").filter({ hasText: region })).toBeVisible();
+      }
+      await waitForGetEdit(page);
     });
   });
   await test.step("Load into existing bulletin", async () => {
@@ -265,14 +281,20 @@ test("Load bulletin from the day before", async ({ page }) => {
       "Lechtal Alps West + 3",
       "Kitzbühel Alps Wildseeloder + 2",
     ]);
+    await waitForGetEdit(page);
   });
-  // TODO: Find out why we often get an error after running the second load from yesterday block.
-  // await test.step("Delete all warning regions", async () => {
-  //   await page.getByTitle("[b]").click();
-  //   await page.getByRole("button", { name: "Delete all warning regions" }).click();
-  //   await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
-  //   await page.reload();
-  //   await expect(page.locator(".region-thumb")).not.toBeVisible();
-  //   await expect(page.locator(".badge").first()).toContainText("missing");
-  // });
+  await test.step("Delete all warning regions", async () => {
+    await page.getByTitle("[b]").click();
+    await page.getByRole("button", { name: "Delete all warning regions" }).click();
+    const responsePromise = page.waitForResponse(
+      (response) =>
+        response.url().match(/\/api\/bulletins/) &&
+        response.status() === 200 &&
+        response.request().method() === "DELETE",
+    );
+    await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
+    await responsePromise;
+    await waitForGetEdit(page);
+    await expect(page.locator(".region-thumb")).not.toBeVisible();
+  });
 });
