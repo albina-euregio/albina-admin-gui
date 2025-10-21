@@ -1,0 +1,10 @@
+FROM mcr.microsoft.com/playwright:v1.55.0
+
+ENV TZ="Europe/Vienna"
+
+WORKDIR /home/
+
+COPY package.json yarn.lock .yarnrc.yml playwright.config.ts .env ./
+COPY .yarn .yarn
+
+RUN corepack enable && yarn install --immutable 
