@@ -872,10 +872,7 @@
       </button>
 
       <button
-        *ngIf="
-          bulletinsService.isLocked(bulletin?.id) ||
-          (bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin))
-        "
+        *ngIf="bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin)"
         [disabled]="loading || editRegions"
         type="button"
         class="btn btn-sm btn-icon btn-bare"
@@ -1088,12 +1085,6 @@
             <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.republished" class="badge bg-success">
               <i class="ph-bold ph-newspaper"></i>
               {{ "bulletins.table.status.republished" | translate }}
-            </span>
-            <span
-              *ngIf="bulletinsService.isLocked(date + authenticationService.getActiveRegionId())"
-              class="badge text-bg-light"
-            >
-              <i class="ph-bold ph-lock"></i>
             </span>
           </td>
           <td class="bulletins-table__region-status">

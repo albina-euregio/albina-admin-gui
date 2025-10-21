@@ -53,20 +53,8 @@
     </select>
   </div>
 
-  <div *ngIf="bulletinsService.isLocked(bulletin().id)" class="region-form__banner banner banner-warning-strong">
-    <p class="banner__text">
-      <i class="ph ph-lock"></i>
-      {{ "bulletins.create.regionLocked" | translate }}
-    </p>
-  </div>
-
   <div
-    *ngIf="
-      !disabled() &&
-      !bulletinsService.isLocked(bulletin().id) &&
-      bulletinsService.getIsEditable() &&
-      isCreator(bulletin())
-    "
+    *ngIf="!disabled() && bulletinsService.getIsEditable() && isCreator(bulletin())"
     class="region-form__banner banner banner-info"
   >
     <p class="banner__text">
@@ -149,7 +137,7 @@
   </div>
 
   <div
-    *ngIf="!bulletinsService.isLocked(bulletin().id) && !isCreator(bulletin()) && hasSuggestions(bulletin())"
+    *ngIf="!isCreator(bulletin()) && hasSuggestions(bulletin())"
     class="region-form__banner banner banner-warning-strong"
   >
     <p class="banner__text">
@@ -178,10 +166,9 @@
 
   <div
     *ngIf="
-      !bulletinsService.isLocked(bulletin().id) &&
-      (!bulletinsService.getIsEditable() ||
-        (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())) ||
-        disabled())
+      !bulletinsService.getIsEditable() ||
+      (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())) ||
+      disabled()
     "
     class="region-form__banner banner banner-warning"
   >

@@ -7,24 +7,23 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
-import { WsUpdateService } from "../providers/ws-update-service/ws-update.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
 import { formatDate, NgIf, NgFor, DatePipe } from "@angular/common";
-import { Component, OnDestroy, OnInit, inject } from "@angular/core";
+import { Component, OnDestroy, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { debounceTime, Subject } from "rxjs";
-import { groupBy, map, mergeMap } from "rxjs/operators";
+import { groupBy, mergeMap } from "rxjs/operators";
 
 @Component({
   templateUrl: "bulletins.component.html",
   standalone: true,
   imports: [NgIf, NgFor, FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective],
 })
-export class BulletinsComponent implements OnInit, OnDestroy {
+export class BulletinsComponent implements OnDestroy {
   translate = inject(TranslateService);
   bulletinsService = inject(BulletinsService);
   route = inject(ActivatedRoute);
@@ -34,7 +33,6 @@ export class BulletinsComponent implements OnInit, OnDestroy {
   constantsService = inject(ConstantsService);
   localStorageService = inject(LocalStorageService);
   router = inject(Router);
-  wsUpdateService = inject(WsUpdateService);
   userService = inject(UserService);
   private modalService = inject(BsModalService);
 
@@ -56,43 +54,8 @@ export class BulletinsComponent implements OnInit, OnDestroy {
       .subscribe((stressLevel) => this.userService.postStressLevel(stressLevel).subscribe(() => {}));
   }
 
-  ngOnInit() {
-    this.wsUpdateConnect();
-  }
-
   ngOnDestroy() {
     this.copying = false;
-    this.wsUpdateDisconnect();
-  }
-
-  private wsUpdateConnect() {
-    this.updates = this.wsUpdateService
-      .connect(this.constantsService.getServerWsUrl(`../update/${this.authenticationService.getUsername()}`))
-      .pipe(
-        map((response): BulletinUpdateModel => {
-          const data = JSON.parse(response.data);
-          const bulletinUpdate = BulletinUpdateModel.createFromJson(data);
-          console.debug(
-            "Bulletin update received: " +
-              bulletinUpdate.getDate().toLocaleDateString() +
-              " - " +
-              bulletinUpdate.getRegion() +
-              " [" +
-              bulletinUpdate.getStatus() +
-              "]",
-          );
-          this.bulletinsService.statusMap
-            .get(bulletinUpdate.region)
-            ?.set(new Date(bulletinUpdate.getDate()).getTime(), bulletinUpdate.getStatus());
-          return bulletinUpdate;
-        }),
-      ) as Subject<BulletinUpdateModel>;
-
-    this.updates.subscribe(() => {});
-  }
-
-  private wsUpdateDisconnect() {
-    this.wsUpdateService.disconnect();
   }
 
   getActiveRegionStatus(date: [Date, Date]) {

@@ -26,9 +26,6 @@ import { RegionsService } from "./app/providers/regions-service/regions.service"
 import { StatisticsService } from "./app/providers/statistics-service/statistics.service";
 import { UndoRedoService } from "./app/providers/undo-redo-service/undo-redo.service";
 import { UserService } from "./app/providers/user-service/user.service";
-import { WsBulletinService } from "./app/providers/ws-bulletin-service/ws-bulletin.service";
-import { WsRegionService } from "./app/providers/ws-region-service/ws-region.service";
-import { WsUpdateService } from "./app/providers/ws-update-service/ws-update.service";
 import routes from "./app/routes";
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
 import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
@@ -116,9 +113,6 @@ bootstrapApplication(AppComponent, {
     DangerSourcesService,
     StatisticsService,
     RegionsService,
-    WsRegionService,
-    WsUpdateService,
-    WsBulletinService,
     LocalStorageService,
     ConfigurationService,
     ConstantsService,
@@ -145,9 +139,6 @@ bootstrapApplication(AppComponent, {
     TranslateService,
     UndoRedoService,
     UserService,
-    WsBulletinService,
-    WsRegionService,
-    WsUpdateService,
     provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
     provideAnimations(),
   ],

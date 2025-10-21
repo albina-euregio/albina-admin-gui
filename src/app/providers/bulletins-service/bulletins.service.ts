@@ -6,7 +6,6 @@ import { AuthenticationService } from "../authentication-service/authentication.
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { UserService } from "../user-service/user.service";
-import { WsBulletinService } from "../ws-bulletin-service/ws-bulletin.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
@@ -37,7 +36,6 @@ export class BulletinsService {
   private translateService = inject(TranslateService);
   private localStorageService = inject(LocalStorageService);
   private userService = inject(UserService);
-  private wsBulletinService = inject(WsBulletinService);
 
   private activeDate: [Date, Date];
   private copyDate: [Date, Date];
@@ -63,9 +61,6 @@ export class BulletinsService {
     this.isEditable = false;
     this.isReadOnly = false;
     this.lockedBulletins = new Map<string, BulletinLockModel>();
-
-    // connect to websockets
-    this.wsBulletinConnect();
 
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
     const startDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
@@ -125,31 +120,6 @@ export class BulletinsService {
         },
       );
     });
-  }
-
-  public wsBulletinConnect() {
-    this.bulletinLocks = this.wsBulletinService
-      .connect(this.constantsService.getServerWsUrl(`../bulletin/${this.authenticationService.getUsername()}`))
-      .pipe(
-        map((response): BulletinLockModel => {
-          const data = JSON.parse(response.data);
-          const bulletinLock = BulletinLockModel.createFromJson(data);
-          if (bulletinLock.getLock()) {
-            console.debug("Bulletin lock received: " + bulletinLock.getBulletin());
-            this.addLockedBulletin(bulletinLock);
-          } else {
-            console.debug("Bulletin unlock received: " + bulletinLock.getBulletin());
-            this.removeLockedBulletin(bulletinLock.getBulletin());
-          }
-          return bulletinLock;
-        }),
-      ) as Subject<BulletinLockModel>;
-
-    this.bulletinLocks.subscribe(() => {});
-  }
-
-  public wsBulletinDisconnect() {
-    this.wsBulletinService.disconnect();
   }
 
   getActiveDate(): [Date, Date] {
@@ -494,72 +464,6 @@ export class BulletinsService {
       ["region", region],
     );
     return this.http.get(url);
-  }
-
-  loadLockedBulletins() {
-    this.lockedBulletins.clear();
-    const url = this.constantsService.getServerUrl("/bulletins/locked");
-    this.http.get(url).subscribe(
-      (data) => {
-        for (const response of data as any) {
-          const data = JSON.parse(response.data);
-          const bulletinLock = BulletinLockModel.createFromJson(data);
-          this.addLockedBulletin(bulletinLock);
-        }
-      },
-      (error) => {
-        console.warn("Locked bulletins could not be loaded!", error);
-      },
-    );
-  }
-
-  isLocked(bulletinId: string) {
-    return (
-      this.lockedBulletins.has(bulletinId) &&
-      this.lockedBulletins.get(bulletinId).getUserEmail() !== this.authenticationService.getEmail()
-    );
-  }
-
-  lockBulletin(date: [Date, Date], bulletinId: string) {
-    const bulletinLock = new BulletinLockModel();
-    bulletinLock.setBulletin(bulletinId);
-    bulletinLock.setDate(date[0]);
-    bulletinLock.setUserName(this.authenticationService.getUsername());
-    bulletinLock.setUserEmail(this.authenticationService.getEmail());
-    bulletinLock.setLock(true);
-
-    this.bulletinLocks.next(bulletinLock);
-
-    console.debug("Bulletin lock sent: " + bulletinLock.getDate() + " - " + bulletinLock.getBulletin());
-  }
-
-  unlockBulletin(date: [Date, Date], bulletinId: string) {
-    const bulletinLock = new BulletinLockModel();
-    bulletinLock.setBulletin(bulletinId);
-    bulletinLock.setDate(date[0]);
-    bulletinLock.setUserName(this.authenticationService.getUsername());
-    bulletinLock.setUserEmail(this.authenticationService.getEmail());
-    bulletinLock.setLock(false);
-
-    this.bulletinLocks.next(bulletinLock);
-
-    console.debug("Bulletin unlock sent: " + bulletinLock.getDate() + " - " + bulletinLock.getBulletin());
-  }
-
-  addLockedBulletin(bulletinLock: BulletinLockModel) {
-    if (this.lockedBulletins.has(bulletinLock.getBulletin())) {
-      console.warn("Bulletin already locked by " + bulletinLock.getUserName());
-    } else {
-      this.lockedBulletins.set(bulletinLock.getBulletin(), bulletinLock);
-    }
-  }
-
-  removeLockedBulletin(bulletinId: string) {
-    if (this.lockedBulletins.has(bulletinId)) {
-      this.lockedBulletins.delete(bulletinId);
-    } else {
-      console.warn("Bulletin was not locked!");
-    }
   }
 
   getStressLevelColor(date: StressLevel["date"]) {
