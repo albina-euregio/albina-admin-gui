@@ -146,7 +146,7 @@
     </p>
     <div class="btn-group banner__actions">
       <button
-        *ngIf="!disabled() && bulletinsService.getIsEditable()"
+        *ngIf="bulletinsService.getIsEditable()"
         (click)="rejectSuggestions($event)"
         type="button"
         class="btn btn-sm btn-outline-dark"
@@ -154,7 +154,7 @@
         <i class="ph ph-x"></i> <span>{{ "bulletins.create.rejectSuggestion" | translate }}</span>
       </button>
       <button
-        *ngIf="!disabled() && bulletinsService.getIsEditable()"
+        *ngIf="bulletinsService.getIsEditable()"
         (click)="acceptSuggestions($event)"
         type="button"
         class="btn btn-sm btn-dark"
