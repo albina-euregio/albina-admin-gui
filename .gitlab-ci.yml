@@ -215,7 +215,9 @@ playwright:dev:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - when: manual
       allow_failure: true
-
+  script:
+    - yarn playwright test --project=chromium 
+    
 playwright:localhost:
   extends: .playwright
   needs: []
