@@ -302,8 +302,8 @@
                   grainShapeEnum.IF,
                   grainShapeEnum.MFcr,
                 ]"
-                [value]="variant()?.slabGrainShape"
-                (valueChange)="variant().slabGrainShape = $event; updateVariantOnServer()"
+                [(value)]="variant().slabGrainShape"
+                (valueChange)="updateVariantOnServer()"
                 titleI18n="grainShape.#.class"
                 labelI18n="grainShape.#.code"
               />
@@ -376,8 +376,8 @@
                     handHardnessEnum.knife,
                     handHardnessEnum.ice,
                   ]"
-                  [value]="variant()?.slabHandHardnessLowerLimit"
-                  (valueChange)="variant().slabHandHardnessLowerLimit = $event; updateVariantOnServer()"
+                  [(value)]="variant().slabHandHardnessLowerLimit"
+                  (valueChange)="updateVariantOnServer()"
                   titleI18n="handHardness.#"
                   labelI18n="handHardness.#"
                 />
@@ -393,8 +393,8 @@
                     handHardnessEnum.knife,
                     handHardnessEnum.ice,
                   ]"
-                  [value]="variant()?.slabHandHardnessUpperLimit"
-                  (valueChange)="variant().slabHandHardnessUpperLimit = $event; updateVariantOnServer()"
+                  [(value)]="variant().slabHandHardnessUpperLimit"
+                  (valueChange)="updateVariantOnServer()"
                   titleI18n="handHardness.#"
                   labelI18n="handHardness.#"
                 />
@@ -414,8 +414,8 @@
               <app-toggle-btn-group
                 [disabled]="disabled()"
                 [enumValues]="[tendencyEnum.increasing, tendencyEnum.steady, tendencyEnum.decreasing]"
-                [value]="variant()?.slabHardnessProfile"
-                (valueChange)="variant().slabHardnessProfile = $event; updateVariantOnServer()"
+                [(value)]="variant().slabHardnessProfile"
+                (valueChange)="updateVariantOnServer()"
                 titleI18n="hardnessTendency.#"
                 labelI18n="hardnessTendency.#"
               />
@@ -440,8 +440,8 @@
                   characteristicEnum.high,
                   characteristicEnum.very_high,
                 ]"
-                [value]="variant()?.slabEnergyTransferPotential"
-                (valueChange)="variant().slabEnergyTransferPotential = $event; updateVariantOnServer()"
+                [(value)]="variant().slabEnergyTransferPotential"
+                (valueChange)="updateVariantOnServer()"
                 titleI18n="characteristic.#"
                 labelI18n="characteristic.#"
               />
@@ -460,8 +460,8 @@
               <app-toggle-btn-group
                 [disabled]="disabled()"
                 [enumValues]="[distributionEnum.isolated, distributionEnum.specific, distributionEnum.widespread]"
-                [value]="variant()?.slabDistribution"
-                (valueChange)="variant().slabDistribution = $event; updateVariantOnServer()"
+                [(value)]="variant().slabDistribution"
+                (valueChange)="updateVariantOnServer()"
                 titleI18n="distribution.#"
                 labelI18n="distribution.#"
               />
