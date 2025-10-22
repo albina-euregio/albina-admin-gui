@@ -520,9 +520,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private copyVariants(response, setForecastVariantId: boolean): DangerSourceVariantModel[] {
     const result = Array<DangerSourceVariantModel>();
     for (const jsonVariant of response) {
-      const originalVariant = DangerSourceVariantModel.createFromJson(jsonVariant);
+      const originalVariant = DangerSourceVariantModel.parse(jsonVariant);
 
-      const variant = new DangerSourceVariantModel(originalVariant);
+      const variant = DangerSourceVariantModel.parse(originalVariant);
       variant.ownerRegion = this.authenticationService.getActiveRegionId();
       variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
       variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
@@ -744,7 +744,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
     const variants = new Array<DangerSourceVariantModel>();
     for (const v of dangerSourceVariants) {
-      const variant = new DangerSourceVariantModel(v);
+      const variant = DangerSourceVariantModel.parse(v);
       variant.forecastDangerSourceVariantId = v.forecastDangerSourceVariantId;
       variant.id = v.id;
 
@@ -828,7 +828,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   copyVariant(event: Event, originalVariant: DangerSourceVariantModel) {
     this.showNewVariantModal = true;
-    const newVariant = new DangerSourceVariantModel(originalVariant);
+    const newVariant = DangerSourceVariantModel.parse(originalVariant);
     this.copying = false;
     newVariant.regions = new Array<string>();
     newVariant.ownerRegion = this.authenticationService.getActiveRegionId();
@@ -848,13 +848,14 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
     this.showNewVariantModal = true;
-    const newVariant = new DangerSourceVariantModel();
-    newVariant.dangerSource = dangerSource;
-    newVariant.regions = new Array<string>();
-    newVariant.ownerRegion = this.authenticationService.getActiveRegionId();
-    newVariant.validFrom = this.dangerSourcesService.getActiveDate()[0];
-    newVariant.validUntil = this.dangerSourcesService.getActiveDate()[1];
-    newVariant.creationDate = new Date();
+    const newVariant = DangerSourceVariantModel.parse({
+      dangerSource: dangerSource,
+      regions: new Array<string>(),
+      ownerRegion: this.authenticationService.getActiveRegionId(),
+      validFrom: this.dangerSourcesService.getActiveDate()[0],
+      validUntil: this.dangerSourcesService.getActiveDate()[1],
+      creationDate: new Date(),
+    });
     this.selectVariant(newVariant);
     this.editVariantMicroRegions(newVariant);
   }

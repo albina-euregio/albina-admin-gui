@@ -1,37 +1,17 @@
 import { PolygonObject } from "./polygon-object.model";
+import { ZSchema } from "./zod-util";
 import { RegionStatus, DangerRating } from "app/enums/enums";
+import { z } from "zod/v4";
 
-export class DangerSourceModel implements PolygonObject {
-  id: string;
-  ownerRegion: string;
-  creationDate: Date;
-  title: string;
-  description: string;
+export const DangerSourceSchema = z.object({
+  id: z.string().nullish(),
+  ownerRegion: z.string().nullish(),
+  creationDate: z.coerce.date().nullish(),
+  title: z.string().nullish(),
+  description: z.string().nullish(),
+});
 
-  static createFromJson(json) {
-    const dangerSource = new DangerSourceModel();
-    dangerSource.id = json.id;
-    dangerSource.ownerRegion = json.ownerRegion;
-    dangerSource.creationDate = json.creationDate;
-    dangerSource.title = json.title;
-    dangerSource.description = json.description;
-
-    return dangerSource;
-  }
-
-  constructor(dangerSource?: DangerSourceModel) {
-    if (dangerSource) {
-      this.ownerRegion = dangerSource.ownerRegion;
-      this.creationDate = dangerSource.creationDate;
-      this.title = dangerSource.title;
-      this.description = dangerSource.description;
-    } else {
-      this.creationDate = new Date();
-      this.title = "";
-      this.description = "";
-    }
-  }
-
+export class DangerSourceModel extends ZSchema(DangerSourceSchema) implements PolygonObject {
   getAllRegions(): string[] {
     throw new Error("Method not implemented.");
   }

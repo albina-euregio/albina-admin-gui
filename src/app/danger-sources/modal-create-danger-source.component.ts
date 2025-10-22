@@ -26,8 +26,9 @@ export class ModalCreateDangerSourceComponent {
   component: CreateDangerSourcesComponent;
 
   constructor() {
-    this.dangerSource = new DangerSourceModel();
-    this.dangerSource.creationDate = this.dangerSourcesService.getActiveDate()[0];
+    this.dangerSource = new DangerSourceModel({
+      creationDate: this.dangerSourcesService.getActiveDate()[0],
+    });
   }
 
   createDangerSourceModalConfirm(): void {
