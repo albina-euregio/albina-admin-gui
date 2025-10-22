@@ -328,6 +328,7 @@
               <i class="ph-bold ph-dots-three-outline-vertical"></i>
             </button>
 
+            <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
             <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
               <!-- map above / map aside -->
               <li>
@@ -460,7 +461,6 @@
                   <i class="ph-bold ph-upload-simple icon-md"></i>
                   {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
                 </button>
-                <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
               </li>
 
               <!-- download json -->
@@ -498,7 +498,6 @@
                   <i class="ph-bold ph-info icon-md"></i>
                   {{ "bulletins.tooltip.info" | translate }}
                 </button>
-                <input hidden type="file" accept=".json" #jsonBulletinUploader (change)="uploadJsonBulletin($event)" />
               </li>
 
               <!-- publish all -->
