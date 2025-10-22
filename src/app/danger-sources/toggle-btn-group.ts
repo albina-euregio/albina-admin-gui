@@ -15,13 +15,15 @@ export class ToggleBtnGroup<T> {
   valueChange = output<T>();
   disabled = input<boolean>(false);
   labelI18n = input<string>();
-  titleI18n = input<string>();
+  titleI18n = input<string>("");
 
   label(v: T) {
-    return this.translateService.instant(this.labelI18n().replace("#", String(v)));
+    const key = this.labelI18n().replace("#", String(v));
+    return this.translateService.instant(key);
   }
 
   title(v: T) {
-    return this.translateService.instant(this.titleI18n().replace("#", String(v)));
+    const key = (this.titleI18n() || this.labelI18n()).replace("#", String(v));
+    return this.translateService.instant(key);
   }
 }

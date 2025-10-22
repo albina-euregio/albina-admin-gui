@@ -257,7 +257,6 @@
                 [enumValues]="[true, false]"
                 [value]="variant()?.zeroDegreeIsotherm"
                 (valueChange)="setZeroDegreeIsotherm($event)"
-                titleI18n="button.#"
                 labelI18n="button.#"
               />
             </div>
@@ -378,7 +377,6 @@
                   ]"
                   [(value)]="variant().slabHandHardnessLowerLimit"
                   (valueChange)="updateVariantOnServer()"
-                  titleI18n="handHardness.#"
                   labelI18n="handHardness.#"
                 />
                 <label class="form-label mx-3" for="slabHandHardnessLabel"> - </label>
@@ -395,7 +393,6 @@
                   ]"
                   [(value)]="variant().slabHandHardnessUpperLimit"
                   (valueChange)="updateVariantOnServer()"
-                  titleI18n="handHardness.#"
                   labelI18n="handHardness.#"
                 />
               </div>
@@ -416,7 +413,6 @@
                 [enumValues]="[tendencyEnum.increasing, tendencyEnum.steady, tendencyEnum.decreasing]"
                 [(value)]="variant().slabHardnessProfile"
                 (valueChange)="updateVariantOnServer()"
-                titleI18n="hardnessTendency.#"
                 labelI18n="hardnessTendency.#"
               />
             </div>
@@ -442,7 +438,6 @@
                 ]"
                 [(value)]="variant().slabEnergyTransferPotential"
                 (valueChange)="updateVariantOnServer()"
-                titleI18n="characteristic.#"
                 labelI18n="characteristic.#"
               />
             </div>
@@ -462,7 +457,6 @@
                 [enumValues]="[distributionEnum.isolated, distributionEnum.specific, distributionEnum.widespread]"
                 [(value)]="variant().slabDistribution"
                 (valueChange)="updateVariantOnServer()"
-                titleI18n="distribution.#"
                 labelI18n="distribution.#"
               />
             </div>
