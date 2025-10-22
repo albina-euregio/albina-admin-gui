@@ -20,7 +20,7 @@ import {
   Probability,
 } from "./models/danger-source-variant.model";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { DatePipe, NgFor, NgIf, NgClass, NgTemplateOutlet } from "@angular/common";
+import { DatePipe, NgClass, NgTemplateOutlet } from "@angular/common";
 import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
@@ -34,8 +34,6 @@ import { Subscription } from "rxjs";
   templateUrl: "create-danger-sources.component.html",
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     NgClass,
     NgTemplateOutlet,
     DangerSourceVariantComponent,

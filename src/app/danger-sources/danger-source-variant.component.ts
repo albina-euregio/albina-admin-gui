@@ -28,7 +28,7 @@ import {
   WeakLayerCrust,
   Wetness,
 } from "./models/danger-source-variant.model";
-import { NgIf, NgFor, NgClass, DatePipe } from "@angular/common";
+import { NgClass, DatePipe } from "@angular/common";
 import { Component, OnChanges, input, output, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -45,9 +45,7 @@ import { debounceTime, Subject } from "rxjs";
   standalone: true,
   imports: [
     BsDropdownModule,
-    NgIf,
     FormsModule,
-    NgFor,
     AccordionModule,
     NgClass,
     AspectsComponent,

@@ -2,7 +2,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { UserService } from "../providers/user-service/user.service";
 import { DangerSourcesService } from "./danger-sources.service";
-import { formatDate, NgFor, NgIf, DatePipe } from "@angular/common";
+import { formatDate, DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -10,7 +10,7 @@ import { TranslateService, TranslateModule } from "@ngx-translate/core";
 @Component({
   templateUrl: "danger-sources.component.html",
   standalone: true,
-  imports: [NgFor, NgIf, DatePipe, TranslateModule],
+  imports: [DatePipe, TranslateModule],
 })
 export class DangerSourcesComponent {
   translate = inject(TranslateService);
