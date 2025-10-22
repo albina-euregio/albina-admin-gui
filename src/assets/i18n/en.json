@@ -743,8 +743,8 @@
         "error": "User could not be created"
       },
       "updateUser": {
-        "success": "User updated",
-        "error": "User could not be updated"
+        "success": "User saved",
+        "error": "User could not be saved"
       }
     },
     "createUser": {

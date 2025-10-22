@@ -7,6 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
 import { AuthenticationService } from "app/providers/authentication-service/authentication.service";
+import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { DOC_ORIENTATION, NgxImageCompressService } from "ngx-image-compress";
 
@@ -31,6 +32,7 @@ export class UpdateUserComponent implements AfterContentInit {
   authenticationService = inject(AuthenticationService);
   regionsService = inject(RegionsService);
   private bsModalRef = inject(BsModalRef);
+  private constantsService = inject(ConstantsService);
 
   public updateUserLoading: boolean;
   public update: boolean;
@@ -67,24 +69,26 @@ export class UpdateUserComponent implements AfterContentInit {
       }
       this.activeLanguageCode = this.user.languageCode;
     }
-    this.userService.getRoles().subscribe(
-      (data) => {
-        this.roles = data;
-      },
-      (error) => {
-        console.error("Roles could not be loaded!", error);
-      },
-    );
-    this.userService.getRegions().subscribe(
-      (data) => {
-        this.regions = data.sort((r1, r2) =>
-          this.regionsService.getRegionName(r1).localeCompare(this.regionsService.getRegionName(r2)),
-        );
-      },
-      (error) => {
-        console.error("Regions could not be loaded!", error);
-      },
-    );
+    if (this.user.roles.includes(this.constantsService.roleAdmin)) {
+      this.userService.getRoles().subscribe(
+        (data) => {
+          this.roles = data;
+        },
+        (error) => {
+          console.error("Roles could not be loaded!", error);
+        },
+      );
+      this.userService.getRegions().subscribe(
+        (data) => {
+          this.regions = data.sort((r1, r2) =>
+            this.regionsService.getRegionName(r1).localeCompare(this.regionsService.getRegionName(r2)),
+          );
+        },
+        (error) => {
+          console.error("Regions could not be loaded!", error);
+        },
+      );
+    }
   }
 
   onImageChanged(event) {
@@ -126,41 +130,7 @@ export class UpdateUserComponent implements AfterContentInit {
     }
   }
 
-  public createUser() {
-    this.updateUserLoading = true;
-
-    const user: UserModel = UserSchema.parse({
-      image: this.activeImage,
-      name: this.activeName,
-      email: this.activeEmail,
-      organization: this.activeOrganization,
-      password: this.activePassword,
-      roles: [...new Set(this.activeRoles)],
-      regions: this.activeRegions,
-    });
-
-    this.userService.createUser(user).subscribe(
-      () => {
-        this.updateUserLoading = false;
-        console.debug("User created!");
-        this.closeDialog({
-          type: "success",
-          msg: this.translateService.instant("admin.users.createUser.success"),
-        });
-      },
-      (error) => {
-        this.updateUserLoading = false;
-        console.error("User could not be created!", error);
-        window.scrollTo(0, 0);
-        this.closeDialog({
-          type: "danger",
-          msg: this.translateService.instant("admin.users.createUser.error"),
-        });
-      },
-    );
-  }
-
-  public updateUser() {
+  public saveUser() {
     this.updateUserLoading = true;
 
     const user: UserModel = UserSchema.parse({
@@ -173,55 +143,29 @@ export class UpdateUserComponent implements AfterContentInit {
       languageCode: this.activeLanguageCode,
     });
 
-    if (this.isAdmin) {
-      this.userService.updateUser(user).subscribe(
-        () => {
-          this.updateUserLoading = false;
-          console.debug("User updated!");
-          if (this.authenticationService.getCurrentAuthor().email === user.email) {
-            this.authenticationService.getCurrentAuthor().name = user.name;
-            this.authenticationService.getCurrentAuthor().image = user.image;
-            this.authenticationService.getCurrentAuthor().organization = user.organization;
-          }
-          this.closeDialog({
-            type: "success",
-            msg: this.translateService.instant("admin.users.updateUser.success"),
-          });
-        },
-        (error) => {
-          this.updateUserLoading = false;
-          console.error("User could not be updated!", error);
-          this.closeDialog({
-            type: "danger",
-            msg: this.translateService.instant("admin.users.updateUser.error"),
-          });
-        },
-      );
-    } else {
-      this.userService.updateOwnUser(user).subscribe(
-        () => {
-          this.updateUserLoading = false;
-          console.debug("User updated!");
-          if (this.authenticationService.getCurrentAuthor().email === user.email) {
-            this.authenticationService.getCurrentAuthor().name = user.name;
-            this.authenticationService.getCurrentAuthor().image = user.image;
-            this.authenticationService.getCurrentAuthor().organization = user.organization;
-          }
-          this.closeDialog({
-            type: "success",
-            msg: this.translateService.instant("admin.users.updateUser.success"),
-          });
-        },
-        (error) => {
-          this.updateUserLoading = false;
-          console.error("User could not be updated!", error);
-          this.closeDialog({
-            type: "danger",
-            msg: this.translateService.instant("admin.users.updateUser.error"),
-          });
-        },
-      );
-    }
+    this.userService.postUser(user).subscribe(
+      () => {
+        this.updateUserLoading = false;
+        console.debug("User saved!");
+        if (this.authenticationService.getCurrentAuthor().email === user.email) {
+          this.authenticationService.getCurrentAuthor().name = user.name;
+          this.authenticationService.getCurrentAuthor().image = user.image;
+          this.authenticationService.getCurrentAuthor().organization = user.organization;
+        }
+        this.closeDialog({
+          type: "success",
+          msg: this.translateService.instant("admin.users.updateUser.success"),
+        });
+      },
+      (error) => {
+        this.updateUserLoading = false;
+        console.error("User could not be saved!", error);
+        this.closeDialog({
+          type: "danger",
+          msg: this.translateService.instant("admin.users.updateUser.error"),
+        });
+      },
+    );
   }
 
   closeDialog(result: Result) {

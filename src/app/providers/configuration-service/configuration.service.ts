@@ -32,16 +32,10 @@ export class ConfigurationService {
     return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.array().parse(json)));
   }
 
-  public updateServerConfiguration(json: ServerConfiguration) {
+  public postServerConfiguration(json: ServerConfiguration) {
     const url = this.constantsService.getServerUrl("/server");
     const body = JSON.stringify(json);
-    return this.http.put(url, body);
-  }
-
-  public createServerConfiguration(json: ServerConfiguration) {
-    const url = this.constantsService.getServerUrl("/server");
-    const body = JSON.stringify(json);
-    return this.http.post(url, body);
+    return this.http.post(url, body).pipe(map((json) => ServerConfigurationSchema.parse(json)));
   }
 
   public loadRegionConfiguration(region): Observable<RegionConfiguration> {
@@ -54,13 +48,7 @@ export class ConfigurationService {
     return this.http.get<RegionConfiguration[]>(url);
   }
 
-  public updateRegionConfiguration(json) {
-    const url = this.constantsService.getServerUrl("/regions");
-    const body = JSON.stringify(json);
-    return this.http.put(url, body);
-  }
-
-  public createRegionConfiguration(json) {
+  public postRegionConfiguration(json) {
     const url = this.constantsService.getServerUrl("/regions");
     const body = JSON.stringify(json);
     return this.http.post(url, body);

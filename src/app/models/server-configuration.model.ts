@@ -17,7 +17,6 @@ export const ServerConfigurationSchema = z
     mapProductionUrl: z.string().nullish(),
     serverImagesUrl: z.string().nullish(),
     dangerLevelElevationDependency: z.boolean(),
-    $isNew: z.boolean().nullish(),
   })
   .partial();
 export const ServerConfigurationVersionSchema = ServerConfigurationSchema.extend({ version: z.string() });

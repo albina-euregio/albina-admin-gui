@@ -28,53 +28,30 @@ export class ServerConfigurationComponent {
   public save() {
     this.saveConfigurationLoading = true;
 
-    if (!this.config().$isNew) {
-      this.configurationService.updateServerConfiguration(this.config()).subscribe(
-        () => {
-          this.saveConfigurationLoading = false;
-          console.debug("Server configuration saved!");
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "success",
-            msg: this.translateService.instant("admin.server-configuration.success"),
-            timeout: 5000,
-          });
-        },
-        (error) => {
-          this.saveConfigurationLoading = false;
-          console.error("Server configuration could not be saved!", error);
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "danger",
-            msg: this.translateService.instant("admin.server-configuration.error"),
-            timeout: 5000,
-          });
-        },
-      );
-    } else {
-      this.configurationService.createServerConfiguration(this.config()).subscribe(
-        () => {
-          this.saveConfigurationLoading = false;
-          console.debug("Server configuration saved!");
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "success",
-            msg: this.translateService.instant("admin.server-configuration.success"),
-            timeout: 5000,
-          });
-        },
-        (error) => {
-          this.saveConfigurationLoading = false;
-          console.error("Server configuration could not be saved!", error);
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "danger",
-            msg: this.translateService.instant("admin.server-configuration.error"),
-            timeout: 5000,
-          });
-        },
-      );
-    }
+    this.configurationService.postServerConfiguration(this.config()).subscribe(
+      (response) => {
+        this.config().id = response.id;
+        console.log(response);
+        this.saveConfigurationLoading = false;
+        console.debug("Server configuration saved!");
+        window.scrollTo(0, 0);
+        this.alerts.push({
+          type: "success",
+          msg: this.translateService.instant("admin.server-configuration.success"),
+          timeout: 5000,
+        });
+      },
+      (error) => {
+        this.saveConfigurationLoading = false;
+        console.error("Server configuration could not be saved!", error);
+        window.scrollTo(0, 0);
+        this.alerts.push({
+          type: "danger",
+          msg: this.translateService.instant("admin.server-configuration.error"),
+          timeout: 5000,
+        });
+      },
+    );
   }
 
   onClosed(dismissedAlert: Alert): void {
