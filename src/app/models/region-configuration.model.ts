@@ -17,7 +17,7 @@ export const RegionConfigurationSchema = z.object({
   microRegions: z.coerce.number().nullish().describe("Number of micro regions"),
   subRegions: z.string().array().nullish().describe("ID of sub regions"),
   superRegions: z.string().array().nullish().describe("ID of super regions"),
-  neighborRegions: z.string().array().nullish().describe("ID ob neighbouring regions"),
+  neighborRegions: z.string().array().nullish().describe("ID of neighbouring regions"),
   languageConfigurations: LanguageConfigurationSchema.array().nullish(),
   enabledLanguages: z.string().array().nullish(),
   ttsLanguages: z.string().array().nullish(),
