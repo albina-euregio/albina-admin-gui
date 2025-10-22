@@ -4,8 +4,9 @@ import { DangerSourceVariantModel, DangerSourceVariantType } from "./models/dang
 import { DangerSourceModel } from "./models/danger-source.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { JsonArray } from "protomaps-leaflet";
 import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+import { z } from "zod/v4";
 
 interface AccordionChangeEvent {
   isOpen: boolean;
@@ -62,9 +63,9 @@ export class DangerSourcesService {
     this.analysisStatusMap = new Map<number, boolean>();
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
-        for (let i = (data as JsonArray).length - 1; i >= 0; i--) {
-          this.forecastStatusMap.set(new Date(data[i].date).getTime(), data[i].forecast);
-          this.analysisStatusMap.set(new Date(data[i].date).getTime(), data[i].analysis);
+        for (let i = data.length - 1; i >= 0; i--) {
+          this.forecastStatusMap.set(data[i].date.getTime(), data[i].forecast);
+          this.analysisStatusMap.set(data[i].date.getTime(), data[i].analysis);
         }
       },
       () => {
@@ -90,13 +91,20 @@ export class DangerSourcesService {
   }
 
   getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
+    const schema = z
+      .object({
+        date: z.coerce.date(),
+        forecast: z.boolean(),
+        analysis: z.boolean(),
+      })
+      .array();
     const url = this.constantsService.getServerUrl(
       "/danger-sources/status",
       ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
       ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
       ["region", region],
     );
-    return this.http.get(url);
+    return this.http.get(url).pipe(map((o) => schema.parse(o)));
   }
 
   getActiveDate(): [Date, Date] {
