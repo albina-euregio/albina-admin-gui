@@ -35,22 +35,10 @@ export class UserService {
     return this.http.put<Response>(url, body);
   }
 
-  public createUser(user: UserModel): Observable<Response> {
-    const url = this.constantsService.getServerUrl("/user/create");
-    const body = JSON.stringify(user);
-    return this.http.post<Response>(url, body);
-  }
-
-  public updateUser(user: UserModel): Observable<Response> {
-    const url = this.constantsService.getServerUrl("/user/") + user.email;
-    const body = JSON.stringify(user);
-    return this.http.put<Response>(url, body);
-  }
-
-  public updateOwnUser(user: UserModel): Observable<Response> {
+  public postUser(user: UserModel): Observable<Response> {
     const url = this.constantsService.getServerUrl("/user");
     const body = JSON.stringify(user);
-    return this.http.put<Response>(url, body);
+    return this.http.post<Response>(url, body);
   }
 
   public getUsers(): Observable<UserModel[]> {

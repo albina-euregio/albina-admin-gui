@@ -194,7 +194,7 @@
               [disabled]="!updateUserForm.valid"
               type="submit"
               class="btn btn-sm btn-primary px-3 mx-1"
-              (click)="createUser()"
+              (click)="saveUser()"
             >
               {{ "admin.createUser.button.create" | translate }}
             </button>
@@ -204,7 +204,7 @@
               [disabled]="!updateUserForm.valid"
               type="submit"
               class="btn btn-sm btn-primary px-3 mx-1"
-              (click)="updateUser()"
+              (click)="saveUser()"
             >
               {{ "admin.createUser.button.update" | translate }}
             </button>
