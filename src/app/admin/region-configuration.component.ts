@@ -76,54 +76,29 @@ export class RegionConfigurationComponent {
       this.authenticationService.setActiveRegion(config);
     }
 
-    const json = RegionConfigurationSchema.omit({ $isNew: true }).parse(config);
-    if (!config.$isNew) {
-      this.configurationService.updateRegionConfiguration(json).subscribe(
-        () => {
-          this.saveConfigurationLoading = false;
-          console.debug("Region configuration saved!");
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "success",
-            msg: this.translateService.instant("admin.region-configuration.success"),
-            timeout: 5000,
-          });
-        },
-        (error) => {
-          this.saveConfigurationLoading = false;
-          console.error("Region configuration could not be saved!", error);
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "danger",
-            msg: this.translateService.instant("admin.region-configuration.error"),
-            timeout: 5000,
-          });
-        },
-      );
-    } else {
-      this.configurationService.createRegionConfiguration(json).subscribe(
-        () => {
-          this.saveConfigurationLoading = false;
-          console.debug("Region configuration saved!");
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "success",
-            msg: this.translateService.instant("admin.region-configuration.success"),
-            timeout: 5000,
-          });
-        },
-        (error) => {
-          this.saveConfigurationLoading = false;
-          console.error("Region configuration could not be saved!", error);
-          window.scrollTo(0, 0);
-          this.alerts.push({
-            type: "danger",
-            msg: this.translateService.instant("admin.region-configuration.error"),
-            timeout: 5000,
-          });
-        },
-      );
-    }
+    const json = RegionConfigurationSchema.parse(config);
+    this.configurationService.postRegionConfiguration(json).subscribe(
+      () => {
+        this.saveConfigurationLoading = false;
+        console.debug("Region configuration saved!");
+        window.scrollTo(0, 0);
+        this.alerts.push({
+          type: "success",
+          msg: this.translateService.instant("admin.region-configuration.success"),
+          timeout: 5000,
+        });
+      },
+      (error) => {
+        this.saveConfigurationLoading = false;
+        console.error("Region configuration could not be saved!", error);
+        window.scrollTo(0, 0);
+        this.alerts.push({
+          type: "danger",
+          msg: this.translateService.instant("admin.region-configuration.error"),
+          timeout: 5000,
+        });
+      },
+    );
   }
 
   onClosed(dismissedAlert: Alert): void {

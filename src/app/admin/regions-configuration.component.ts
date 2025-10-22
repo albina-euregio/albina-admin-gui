@@ -40,9 +40,7 @@ export class RegionsConfigurationComponent implements AfterContentInit {
   }
 
   public createRegion() {
-    const newRegion = RegionConfigurationSchema.parse({
-      $isNew: true,
-    });
+    const newRegion = RegionConfigurationSchema.parse({});
     this.regionConfigurations.push(newRegion);
   }
 }

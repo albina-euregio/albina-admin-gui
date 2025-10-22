@@ -72,7 +72,6 @@ export const RegionConfigurationSchema = z.object({
   logoBwPath: z.string().nullish(),
   coatOfArms: z.url().nullish().describe("Image URL for coat of arms"),
   staticUrl: z.url().nullish().describe("URL to static avalanche files"),
-  $isNew: z.boolean().nullish(),
 });
 
 export type RegionConfiguration = z.infer<typeof RegionConfigurationSchema>;
