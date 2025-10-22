@@ -144,52 +144,14 @@
           for=""
           >{{ "avalancheType.title" | translate }}</label
         >
-        <div class="btn-group">
-          <!-- SLAB -->
-          <button
-            type="reset"
-            class="btn btn-sm"
-            [disabled]="disabled()"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-secondary' : 'btn-outline-secondary'"
-            (click)="
-              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)
-            "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.slab' | translate }}"
-          >
-            <span>{{ "avalancheType.label.slab" | translate }}</span>
-          </button>
-
-          <!-- LOOSE -->
-          <button
-            type="reset"
-            class="btn btn-sm"
-            [disabled]="disabled()"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-secondary' : 'btn-outline-secondary'"
-            (click)="
-              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
-            "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.loose' | translate }}"
-          >
-            <span>{{ "avalancheType.label.loose" | translate }}</span>
-          </button>
-
-          <!-- GLIDE -->
-          <button
-            type="reset"
-            class="btn btn-sm"
-            [disabled]="disabled()"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-secondary' : 'btn-outline-secondary'"
-            (click)="
-              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
-            "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.glide' | translate }}"
-          >
-            <span>{{ "avalancheType.label.glide" | translate }}</span>
-          </button>
-        </div>
+        <app-toggle-btn-group
+          [disabled]="disabled()"
+          [enumValues]="[avalancheTypeEnum.slab, avalancheTypeEnum.loose, avalancheTypeEnum.glide]"
+          [value]="variant()?.avalancheType"
+          (valueChange)="setAvalancheType($event)"
+          titleI18n="avalancheType.tooltip.#"
+          labelI18n="avalancheType.label.#"
+        />
       </div>
 
       <!-- Glide -->
@@ -290,34 +252,14 @@
                 for="zeroDegreeIsothermCheckbox"
                 >{{ "dangerSources.create.label.zeroDegreeIsotherm" | translate }}</label
               >
-              <div class="btn-group">
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="
-                    variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === true
-                      ? 'btn-secondary'
-                      : 'btn-outline-secondary'
-                  "
-                  (click)="setZeroDegreeIsotherm(true)"
-                >
-                  <span>{{ "button.yes" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="
-                    variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === false
-                      ? 'btn-secondary'
-                      : 'btn-outline-secondary'
-                  "
-                  (click)="setZeroDegreeIsotherm(false)"
-                >
-                  <span>{{ "button.no" | translate }}</span>
-                </button>
-              </div>
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[true, false]"
+                [value]="variant()?.zeroDegreeIsotherm"
+                (valueChange)="setZeroDegreeIsotherm($event)"
+                titleI18n="button.#"
+                labelI18n="button.#"
+              />
             </div>
           }
         </accordion-group>
@@ -349,99 +291,22 @@
                 for="textarea-input"
                 >{{ "dangerSources.create.label.slabGrainShape" | translate }}</label
               >
-              <div class="btn-group">
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)
-                  "
-                  data-toggle="tooltip"
-                  [title]="translateService.instant('grainShape.PP.class')"
-                >
-                  <span>{{ "grainShape.PP.code" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)
-                  "
-                  data-toggle="tooltip"
-                  [title]="translateService.instant('grainShape.DF.class')"
-                >
-                  <span>{{ "grainShape.DF.code" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabGrainShape(grainShapeEnum.RG) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)
-                  "
-                  data-toggle="tooltip"
-                  [title]="translateService.instant('grainShape.RG.class')"
-                >
-                  <span>{{ "grainShape.RG.code" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
-                  "
-                  data-toggle="tooltip"
-                  [title]="translateService.instant('grainShape.FC.class')"
-                >
-                  <span>{{ "grainShape.FC.code" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabGrainShape(grainShapeEnum.MF) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)
-                  "
-                  data-toggle="tooltip"
-                  [title]="translateService.instant('grainShape.MF.class')"
-                >
-                  <span>{{ "grainShape.MF.code" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabGrainShape(grainShapeEnum.IF) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.IF) ? undefined : grainShapeEnum.IF)
-                  "
-                  data-toggle="tooltip"
-                  [title]="translateService.instant('grainShape.IF.class')"
-                >
-                  <span>{{ "grainShape.IF.code" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabGrainShape(grainShapeEnum.MFcr) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MFcr) ? undefined : grainShapeEnum.MFcr)
-                  "
-                  data-toggle="tooltip"
-                  [title]="translateService.instant('grainShape.MFcr.class')"
-                >
-                  <span>{{ "grainShape.MFcr.code" | translate }}</span>
-                </button>
-              </div>
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[
+                  grainShapeEnum.PP,
+                  grainShapeEnum.DF,
+                  grainShapeEnum.RG,
+                  grainShapeEnum.FC,
+                  grainShapeEnum.MF,
+                  grainShapeEnum.IF,
+                  grainShapeEnum.MFcr,
+                ]"
+                [value]="variant()?.slabGrainShape"
+                (valueChange)="variant().slabGrainShape = $event; updateVariantOnServer()"
+                titleI18n="grainShape.#.class"
+                labelI18n="grainShape.#.code"
+              />
             </div>
           }
           @if (isAvalancheType(avalancheTypeEnum.slab)) {
@@ -500,243 +365,39 @@
                 >{{ "dangerSources.create.label.slabHandHardness" | translate }}</label
               >
               <div class="input-group align-items-baseline">
-                <div class="btn-group flex-fill">
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessLowerLimit(
-                        $event,
-                        isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? undefined : handHardnessEnum.fist
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.fist' | translate }}"
-                  >
-                    <span>{{ "handHardness.fist" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers)
-                        ? 'btn-secondary'
-                        : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessLowerLimit(
-                        $event,
-                        isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers)
-                          ? undefined
-                          : handHardnessEnum.four_fingers
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.four_fingers' | translate }}"
-                  >
-                    <span>{{ "handHardness.four_fingers" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger)
-                        ? 'btn-secondary'
-                        : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessLowerLimit(
-                        $event,
-                        isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger)
-                          ? undefined
-                          : handHardnessEnum.one_finger
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.one_finger' | translate }}"
-                  >
-                    <span>{{ "handHardness.one_finger" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessLowerLimit(
-                        $event,
-                        isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? undefined : handHardnessEnum.pencil
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.pencil' | translate }}"
-                  >
-                    <span>{{ "handHardness.pencil" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessLowerLimit(
-                        $event,
-                        isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? undefined : handHardnessEnum.knife
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.knife' | translate }}"
-                  >
-                    <span>{{ "handHardness.knife" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessLowerLimit(
-                        $event,
-                        isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? undefined : handHardnessEnum.ice
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.ice' | translate }}"
-                  >
-                    <span>{{ "handHardness.ice" | translate }}</span>
-                  </button>
-                </div>
+                <app-toggle-btn-group
+                  class="flex-fill"
+                  [disabled]="disabled()"
+                  [enumValues]="[
+                    handHardnessEnum.fist,
+                    handHardnessEnum.four_fingers,
+                    handHardnessEnum.one_finger,
+                    handHardnessEnum.pencil,
+                    handHardnessEnum.knife,
+                    handHardnessEnum.ice,
+                  ]"
+                  [value]="variant()?.slabHandHardnessLowerLimit"
+                  (valueChange)="variant().slabHandHardnessLowerLimit = $event; updateVariantOnServer()"
+                  titleI18n="handHardness.#"
+                  labelI18n="handHardness.#"
+                />
                 <label class="form-label mx-3" for="slabHandHardnessLabel"> - </label>
-                <div class="btn-group flex-fill">
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessUpperLimit(
-                        $event,
-                        isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? undefined : handHardnessEnum.fist
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.fist' | translate }}"
-                  >
-                    <span>{{ "handHardness.fist" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers)
-                        ? 'btn-secondary'
-                        : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessUpperLimit(
-                        $event,
-                        isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers)
-                          ? undefined
-                          : handHardnessEnum.four_fingers
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.four_fingers' | translate }}"
-                  >
-                    <span>{{ "handHardness.four_fingers" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger)
-                        ? 'btn-secondary'
-                        : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessUpperLimit(
-                        $event,
-                        isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger)
-                          ? undefined
-                          : handHardnessEnum.one_finger
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.one_finger' | translate }}"
-                  >
-                    <span>{{ "handHardness.one_finger" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessUpperLimit(
-                        $event,
-                        isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? undefined : handHardnessEnum.pencil
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.pencil' | translate }}"
-                  >
-                    <span>{{ "handHardness.pencil" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessUpperLimit(
-                        $event,
-                        isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? undefined : handHardnessEnum.knife
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.knife' | translate }}"
-                  >
-                    <span>{{ "handHardness.knife" | translate }}</span>
-                  </button>
-                  <button
-                    type="reset"
-                    class="btn btn-sm"
-                    [disabled]="disabled()"
-                    [ngClass]="
-                      isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? 'btn-secondary' : 'btn-outline-secondary'
-                    "
-                    (click)="
-                      setSlabHandHardnessUpperLimit(
-                        $event,
-                        isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? undefined : handHardnessEnum.ice
-                      )
-                    "
-                    data-toggle="tooltip"
-                    title="{{ 'handHardness.ice' | translate }}"
-                  >
-                    <span>{{ "handHardness.ice" | translate }}</span>
-                  </button>
-                </div>
+                <app-toggle-btn-group
+                  class="flex-fill"
+                  [disabled]="disabled()"
+                  [enumValues]="[
+                    handHardnessEnum.fist,
+                    handHardnessEnum.four_fingers,
+                    handHardnessEnum.one_finger,
+                    handHardnessEnum.pencil,
+                    handHardnessEnum.knife,
+                    handHardnessEnum.ice,
+                  ]"
+                  [value]="variant()?.slabHandHardnessUpperLimit"
+                  (valueChange)="variant().slabHandHardnessUpperLimit = $event; updateVariantOnServer()"
+                  titleI18n="handHardness.#"
+                  labelI18n="handHardness.#"
+                />
               </div>
             </div>
           }
@@ -750,56 +411,14 @@
                 for="textarea-input"
                 >{{ "dangerSources.create.label.slabHardnessProfile" | translate }}</label
               >
-              <div class="btn-group">
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabHardnessProfile(tendencyEnum.increasing) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabHardnessProfile(
-                      $event,
-                      isSlabHardnessProfile(tendencyEnum.increasing) ? undefined : tendencyEnum.increasing
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'hardnessTendency.increasing' | translate }}"
-                >
-                  <span>{{ "hardnessTendency.increasing" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabHardnessProfile(tendencyEnum.steady) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabHardnessProfile(
-                      $event,
-                      isSlabHardnessProfile(tendencyEnum.steady) ? undefined : tendencyEnum.steady
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'hardnessTendency.steady' | translate }}"
-                >
-                  <span>{{ "hardnessTendency.steady" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabHardnessProfile(tendencyEnum.decreasing) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabHardnessProfile(
-                      $event,
-                      isSlabHardnessProfile(tendencyEnum.decreasing) ? undefined : tendencyEnum.decreasing
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'hardnessTendency.decreasing' | translate }}"
-                >
-                  <span>{{ "hardnessTendency.decreasing" | translate }}</span>
-                </button>
-              </div>
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[tendencyEnum.increasing, tendencyEnum.steady, tendencyEnum.decreasing]"
+                [value]="variant()?.slabHardnessProfile"
+                (valueChange)="variant().slabHardnessProfile = $event; updateVariantOnServer()"
+                titleI18n="hardnessTendency.#"
+                labelI18n="hardnessTendency.#"
+              />
             </div>
           }
           @if (isAvalancheType(avalancheTypeEnum.slab)) {
@@ -813,84 +432,19 @@
                 for="textarea-input"
                 >{{ "dangerSources.create.label.slabEnergyTransferPotential" | translate }}</label
               >
-              <div class="btn-group">
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="
-                    isSlabEnergyTransferPotential(characteristicEnum.low) ? 'btn-secondary' : 'btn-outline-secondary'
-                  "
-                  (click)="
-                    setSlabEnergyTransferPotential(
-                      $event,
-                      isSlabEnergyTransferPotential(characteristicEnum.low) ? undefined : characteristicEnum.low
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'characteristic.low' | translate }}"
-                >
-                  <span>{{ "characteristic.low" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="
-                    isSlabEnergyTransferPotential(characteristicEnum.medium) ? 'btn-secondary' : 'btn-outline-secondary'
-                  "
-                  (click)="
-                    setSlabEnergyTransferPotential(
-                      $event,
-                      isSlabEnergyTransferPotential(characteristicEnum.medium) ? undefined : characteristicEnum.medium
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'characteristic.medium' | translate }}"
-                >
-                  <span>{{ "characteristic.medium" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="
-                    isSlabEnergyTransferPotential(characteristicEnum.high) ? 'btn-secondary' : 'btn-outline-secondary'
-                  "
-                  (click)="
-                    setSlabEnergyTransferPotential(
-                      $event,
-                      isSlabEnergyTransferPotential(characteristicEnum.high) ? undefined : characteristicEnum.high
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'characteristic.high' | translate }}"
-                >
-                  <span>{{ "characteristic.high" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="
-                    isSlabEnergyTransferPotential(characteristicEnum.very_high)
-                      ? 'btn-secondary'
-                      : 'btn-outline-secondary'
-                  "
-                  (click)="
-                    setSlabEnergyTransferPotential(
-                      $event,
-                      isSlabEnergyTransferPotential(characteristicEnum.very_high)
-                        ? undefined
-                        : characteristicEnum.very_high
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'characteristic.very_high' | translate }}"
-                >
-                  <span>{{ "characteristic.very_high" | translate }}</span>
-                </button>
-              </div>
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[
+                  characteristicEnum.low,
+                  characteristicEnum.medium,
+                  characteristicEnum.high,
+                  characteristicEnum.very_high,
+                ]"
+                [value]="variant()?.slabEnergyTransferPotential"
+                (valueChange)="variant().slabEnergyTransferPotential = $event; updateVariantOnServer()"
+                titleI18n="characteristic.#"
+                labelI18n="characteristic.#"
+              />
             </div>
           }
           @if (isAvalancheType(avalancheTypeEnum.slab)) {
@@ -903,58 +457,14 @@
                 for="textarea-input"
                 >{{ "dangerSources.create.label.slabDistribution" | translate }}</label
               >
-              <div class="btn-group">
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabDistribution(distributionEnum.isolated) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabDistribution(
-                      $event,
-                      isSlabDistribution(distributionEnum.isolated) ? undefined : distributionEnum.isolated
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'distribution.isolated' | translate }}"
-                >
-                  <span>{{ "distribution.isolated" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="isSlabDistribution(distributionEnum.specific) ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="
-                    setSlabDistribution(
-                      $event,
-                      isSlabDistribution(distributionEnum.specific) ? undefined : distributionEnum.specific
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'distribution.specific' | translate }}"
-                >
-                  <span>{{ "distribution.specific" | translate }}</span>
-                </button>
-                <button
-                  type="reset"
-                  class="btn btn-sm"
-                  [disabled]="disabled()"
-                  [ngClass]="
-                    isSlabDistribution(distributionEnum.widespread) ? 'btn-secondary' : 'btn-outline-secondary'
-                  "
-                  (click)="
-                    setSlabDistribution(
-                      $event,
-                      isSlabDistribution(distributionEnum.widespread) ? undefined : distributionEnum.widespread
-                    )
-                  "
-                  data-toggle="tooltip"
-                  title="{{ 'distribution.widespread' | translate }}"
-                >
-                  <span>{{ "distribution.widespread" | translate }}</span>
-                </button>
-              </div>
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[distributionEnum.isolated, distributionEnum.specific, distributionEnum.widespread]"
+                [value]="variant()?.slabDistribution"
+                (valueChange)="variant().slabDistribution = $event; updateVariantOnServer()"
+                titleI18n="distribution.#"
+                labelI18n="distribution.#"
+              />
             </div>
           }
         </accordion-group>

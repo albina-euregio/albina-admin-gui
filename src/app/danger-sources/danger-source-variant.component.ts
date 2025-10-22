@@ -28,6 +28,7 @@ import {
   WeakLayerCrust,
   Wetness,
 } from "./models/danger-source-variant.model";
+import { ToggleBtnGroup } from "./toggle-btn-group";
 import { NgClass, DatePipe } from "@angular/common";
 import { Component, OnChanges, input, output, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -52,6 +53,7 @@ import { debounceTime, Subject } from "rxjs";
     MatrixParameterComponent,
     DatePipe,
     TranslateModule,
+    ToggleBtnGroup,
   ],
 })
 export class DangerSourceVariantComponent implements OnChanges, OnInit {
@@ -274,8 +276,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     return this.variant()?.avalancheType === type;
   }
 
-  setAvalancheType(event: Event, type: Enums.AvalancheType) {
-    event.stopPropagation();
+  setAvalancheType(type: Enums.AvalancheType) {
     this.variant().avalancheType = type;
     // reset matrix parameters when changing the avalanche type
     this.variant().eawsMatrixInformation = MatrixInformationSchema.parse({});
@@ -399,66 +400,6 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   setLooseSnowGrainShape(event: Event, grainShape: GrainShape) {
     event.stopPropagation();
     this.variant().looseSnowGrainShape = grainShape;
-    this.updateVariantOnServer();
-  }
-
-  isSlabGrainShape(grainShape: GrainShape) {
-    return this.variant()?.slabGrainShape === grainShape;
-  }
-
-  setSlabGrainShape(event: Event, grainShape: GrainShape) {
-    event.stopPropagation();
-    this.variant().slabGrainShape = grainShape;
-    this.updateVariantOnServer();
-  }
-
-  isSlabHandHardnessLowerLimit(handHardness: HandHardness) {
-    return this.variant()?.slabHandHardnessLowerLimit === handHardness;
-  }
-
-  setSlabHandHardnessLowerLimit(event: Event, handHardness: HandHardness) {
-    event.stopPropagation();
-    this.variant().slabHandHardnessLowerLimit = handHardness;
-    this.updateVariantOnServer();
-  }
-
-  isSlabHandHardnessUpperLimit(handHardness: HandHardness) {
-    return this.variant()?.slabHandHardnessUpperLimit === handHardness;
-  }
-
-  setSlabHandHardnessUpperLimit(event: Event, handHardness: HandHardness) {
-    event.stopPropagation();
-    this.variant().slabHandHardnessUpperLimit = handHardness;
-    this.updateVariantOnServer();
-  }
-
-  isSlabHardnessProfile(tendency: Enums.Tendency) {
-    return this.variant()?.slabHardnessProfile === tendency;
-  }
-
-  setSlabHardnessProfile(event: Event, tendency: Enums.Tendency) {
-    event.stopPropagation();
-    this.variant().slabHardnessProfile = tendency;
-    this.updateVariantOnServer();
-  }
-
-  isSlabEnergyTransferPotential(slabEnergyTransferPotential: Characteristic) {
-    return this.variant()?.slabEnergyTransferPotential === slabEnergyTransferPotential;
-  }
-
-  setSlabEnergyTransferPotential(event: Event, slabEnergyTransferPotential: Characteristic) {
-    event.stopPropagation();
-    this.variant().slabEnergyTransferPotential = slabEnergyTransferPotential;
-    this.updateVariantOnServer();
-  }
-
-  isSlabDistribution(slabDistribution: Distribution) {
-    return this.variant()?.slabDistribution === slabDistribution;
-  }
-
-  setSlabDistribution(event: Event, slabDistribution: Distribution) {
-    event.stopPropagation();
-    this.variant().slabDistribution = slabDistribution;
     this.updateVariantOnServer();
   }
 

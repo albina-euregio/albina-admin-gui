@@ -1,0 +1,14 @@
+<div class="btn-group w-100">
+  @for (enumValue of enumValues(); track enumValue) {
+  <button
+    type="reset"
+    [disabled]="disabled()"
+    [className]="value() === enumValue ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'"
+    (click)="valueChange.emit(value() === enumValue ? undefined : enumValue)"
+    data-toggle="tooltip"
+    [title]="title(enumValue)"
+  >
+    <span>{{ label(enumValue) }}</span>
+  </button>
+  }
+</div>
