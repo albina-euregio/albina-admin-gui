@@ -181,7 +181,6 @@
                   (variant().snowHeightLowerLimit !== comparedVariant()?.snowHeightLowerLimit ||
                     variant().snowHeightUpperLimit !== comparedVariant()?.snowHeightUpperLimit)
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.snowHeight" | translate }}</label
               >
               <div class="input-group align-items-baseline">
@@ -222,7 +221,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().snowHeightAverage !== comparedVariant()?.snowHeightAverage
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.snowHeightAverage" | translate }}</label
               >
               <div class="input-group align-items-baseline">
@@ -287,7 +285,6 @@
               <label
                 class="form-label"
                 [class.changed]="isComparedVariant() && variant().slabGrainShape !== comparedVariant()?.slabGrainShape"
-                for="textarea-input"
                 >{{ "dangerSources.create.label.slabGrainShape" | translate }}</label
               >
               <app-toggle-btn-group
@@ -317,7 +314,6 @@
                   (variant().slabThicknessLowerLimit !== comparedVariant()?.slabThicknessLowerLimit ||
                     variant().slabThicknessUpperLimit !== comparedVariant()?.slabThicknessUpperLimit)
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.slabThickness" | translate }}</label
               >
               <div class="input-group align-items-baseline">
@@ -360,7 +356,6 @@
                   (variant().slabHandHardnessLowerLimit !== comparedVariant()?.slabHandHardnessLowerLimit ||
                     variant().slabHandHardnessUpperLimit !== comparedVariant()?.slabHandHardnessUpperLimit)
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.slabHandHardness" | translate }}</label
               >
               <div class="input-group align-items-baseline">
@@ -391,7 +386,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().slabHardnessProfile !== comparedVariant()?.slabHardnessProfile
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.slabHardnessProfile" | translate }}</label
               >
               <app-toggle-btn-group
@@ -411,7 +405,6 @@
                   isComparedVariant() &&
                   variant().slabEnergyTransferPotential !== comparedVariant()?.slabEnergyTransferPotential
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.slabEnergyTransferPotential" | translate }}</label
               >
               <app-toggle-btn-group
@@ -430,7 +423,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().slabDistribution !== comparedVariant()?.slabDistribution
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.slabDistribution" | translate }}</label
               >
               <app-toggle-btn-group
@@ -470,7 +462,6 @@
                   isComparedVariant() &&
                   !haveSameElements(variant().weakLayerGrainShapes, comparedVariant()?.weakLayerGrainShapes)
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.weakLayerGrainShape" | translate }}</label
               >
               <app-toggle-btn-group
@@ -500,7 +491,6 @@
                   (variant().weakLayerGrainSizeLowerLimit !== comparedVariant()?.weakLayerGrainSizeLowerLimit ||
                     variant().weakLayerGrainSizeUpperLimit !== comparedVariant()?.weakLayerGrainSizeUpperLimit)
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.weakLayerGrainSize" | translate }}</label
               >
               <div class="input-group align-items-baseline">
@@ -560,7 +550,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerThickness !== comparedVariant()?.weakLayerThickness
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.weakLayerThickness" | translate }}</label
               >
               <app-toggle-btn-group
@@ -579,7 +568,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerStrength !== comparedVariant()?.weakLayerStrength
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.weakLayerStrength" | translate }}</label
               >
               <app-toggle-btn-group
@@ -653,7 +641,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerPosition !== comparedVariant()?.weakLayerPosition
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.weakLayerPosition" | translate }}</label
               >
               <app-toggle-btn-group
@@ -672,7 +659,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerCreation !== comparedVariant()?.weakLayerCreation
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.weakLayerCreation" | translate }}</label
               >
               <app-toggle-btn-group
@@ -691,7 +677,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerDistribution !== comparedVariant()?.weakLayerDistribution
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.weakLayerDistribution" | translate }}</label
               >
               <app-toggle-btn-group
@@ -731,7 +716,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().looseSnowGrainShape !== comparedVariant()?.looseSnowGrainShape
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.looseSnowGrainShape" | translate }}</label
               >
               <app-toggle-btn-group
@@ -758,7 +742,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().looseSnowMoisture !== comparedVariant()?.looseSnowMoisture
                 "
-                for="textarea-input"
                 >{{ "dangerSources.create.label.looseSnowMoisture" | translate }}</label
               >
               <app-toggle-btn-group
@@ -835,7 +818,6 @@
             [class.changed]="
               isComparedVariant() && variant().highestDangerAspect !== comparedVariant()?.highestDangerAspect
             "
-            for="textarea-input"
             >{{ "dangerSources.create.label.highestDangerAspect" | translate }}</label
           >
           <app-toggle-btn-group
@@ -851,7 +833,6 @@
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().dangerPeak !== comparedVariant()?.dangerPeak"
-            for="textarea-input"
             >{{ "dangerSources.create.label.dangerPeak" | translate }}</label
           >
           <app-toggle-btn-group
@@ -867,7 +848,6 @@
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().slopeGradient !== comparedVariant()?.slopeGradient"
-            for="textarea-input"
             >{{ "dangerSources.create.label.slopeGradient" | translate }}</label
           >
           <app-toggle-btn-group
@@ -899,7 +879,6 @@
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().naturalRelease !== comparedVariant()?.naturalRelease"
-            for="textarea-input"
             >{{ "dangerSources.create.label.naturalRelease" | translate }}</label
           >
           <app-toggle-btn-group
@@ -917,7 +896,6 @@
             [class.changed]="
               isComparedVariant() && !haveSameElements(variant().dangerSigns, comparedVariant()?.dangerSigns)
             "
-            for="textarea-input"
             >{{ "dangerSources.create.label.dangerSigns" | translate }}</label
           >
           <app-toggle-btn-group
@@ -938,7 +916,6 @@
                 isComparedVariant() &&
                 variant().dangerSpotRecognizability !== comparedVariant()?.dangerSpotRecognizability
               "
-              for="textarea-input"
               >{{ "dangerSources.create.label.dangerSpotRecognizability" | translate }}</label
             >
             <app-toggle-btn-group
@@ -997,7 +974,6 @@
             [class.changed]="
               isComparedVariant() && !haveSameElements(variant().terrainTypes, comparedVariant()?.terrainTypes)
             "
-            for="textarea-input"
             >{{ "dangerSources.create.label.terrainTypes" | translate }}</label
           >
           <app-toggle-btn-group
