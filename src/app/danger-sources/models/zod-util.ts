@@ -26,3 +26,20 @@ export function ZSchema<T extends z.ZodRawShape, Type = ZSchemaInterface<T> & z.
   };
   return res as typeof res & any;
 }
+
+export function zEnumValues<T extends z.util.EnumLike>(
+  x:
+    | z.ZodOptional<z.ZodNullable<z.ZodArray<z.ZodEnum<T>>>>
+    | z.ZodOptional<z.ZodNullable<z.ZodEnum<T>>>
+    | z.ZodArray<z.ZodEnum<T>>
+    | z.ZodEnum<T>,
+): T[keyof T][] {
+  switch (x.type) {
+    case "optional":
+      return zEnumValues(x.unwrap().unwrap());
+    case "array":
+      return zEnumValues(x.unwrap());
+    case "enum":
+      return x.options;
+  }
+}

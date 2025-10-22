@@ -209,7 +209,7 @@ export const DangerSourceVariantSchema = z.object({
   elevationLow: z.number().nullish(),
   treelineLow: z.boolean().nullish(),
   dangerIncreaseWithElevation: z.boolean().nullish(),
-  highestDangerAspect: z.enum(Aspect).nullish(),
+  highestDangerAspect: z.enum([Aspect.N, Aspect.E, Aspect.S, Aspect.W]).nullish(),
   dangerPeak: z.enum(Daytime).nullish(),
   slopeGradient: z.enum(SlopeGradient).nullish(),
   runoutIntoGreen: z.boolean().nullish(),
