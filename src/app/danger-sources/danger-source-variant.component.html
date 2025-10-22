@@ -141,7 +141,6 @@
         <label
           class="form-label"
           [class.changed]="isComparedVariant() && variant().avalancheType !== comparedVariant()?.avalancheType"
-          for=""
           >{{ "avalancheType.title" | translate }}</label
         >
         <app-toggle-btn-group
@@ -197,7 +196,7 @@
                   (change)="updateVariantOnServer()"
                 />
                 <span class="input-group-text">cm</span>
-                <label class="form-label mx-3" for="snowHeightLabel"> - </label>
+                <label class="form-label mx-3"> - </label>
                 <input
                   step="1"
                   min="0"
@@ -247,7 +246,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().zeroDegreeIsotherm !== comparedVariant()?.zeroDegreeIsotherm
                 "
-                for="zeroDegreeIsothermCheckbox"
                 >{{ "dangerSources.create.label.zeroDegreeIsotherm" | translate }}</label
               >
               <app-toggle-btn-group
@@ -330,7 +328,7 @@
                   (change)="updateVariantOnServer()"
                 />
                 <span class="input-group-text">cm</span>
-                <label class="form-label mx-3" for="slabThicknessLabel"> - </label>
+                <label class="form-label mx-3"> - </label>
                 <input
                   step="5"
                   min="0"
@@ -367,7 +365,7 @@
                   (valueChange)="updateVariantOnServer()"
                   labelI18n="handHardness.#"
                 />
-                <label class="form-label mx-3" for="slabHandHardnessLabel"> - </label>
+                <label class="form-label mx-3"> - </label>
                 <app-toggle-btn-group
                   class="flex-fill"
                   [disabled]="disabled()"
@@ -507,7 +505,7 @@
                   (change)="updateVariantOnServer()"
                 />
                 <span class="input-group-text">mm</span>
-                <label class="form-label mx-3" for="weakLayerGrainSizeLabel"> - </label>
+                <label class="form-label mx-3"> - </label>
                 <input
                   step="0.25"
                   min="0"
@@ -531,7 +529,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerPersistent !== comparedVariant()?.weakLayerPersistent
                 "
-                for="weakLayerPersistentCheckbox"
                 >{{ "dangerSources.create.label.weakLayerPersistent" | translate }}</label
               >
               <app-toggle-btn-group
@@ -584,7 +581,6 @@
               <label
                 class="form-label"
                 [class.changed]="isComparedVariant() && variant().weakLayerWet !== comparedVariant()?.weakLayerWet"
-                for="weakLayerWetCheckbox"
                 >{{ "dangerSources.create.label.weakLayerWet" | translate }}</label
               >
               <app-toggle-btn-group
@@ -603,7 +599,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerCrustAbove !== comparedVariant()?.weakLayerCrustAbove
                 "
-                for="weakLayerCrustAboveCheckbox"
                 >{{ "dangerSources.create.label.weakLayerCrustAbove" | translate }}</label
               >
               <app-toggle-btn-group
@@ -622,7 +617,6 @@
                 [class.changed]="
                   isComparedVariant() && variant().weakLayerCrustBelow !== comparedVariant()?.weakLayerCrustBelow
                 "
-                for="weakLayerCrustBelowCheckbox"
                 >{{ "dangerSources.create.label.weakLayerCrustBelow" | translate }}</label
               >
               <app-toggle-btn-group
@@ -779,7 +773,6 @@
             [class.changed]="
               isComparedVariant() && variant().hasDaytimeDependency !== comparedVariant()?.hasDaytimeDependency
             "
-            for="hasDaytimeDependencyCheckbox"
             >{{ "dangerSources.create.label.hasDaytimeDependency" | translate }}</label
           >
           <app-toggle-btn-group
@@ -799,7 +792,6 @@
                 isComparedVariant() &&
                 variant().dangerIncreaseWithElevation !== comparedVariant()?.dangerIncreaseWithElevation
               "
-              for="dangerIncreaseWithElevationCheckbox"
               >{{ "dangerSources.create.label.dangerIncreaseWithElevation" | translate }}</label
             >
             <app-toggle-btn-group
@@ -863,7 +855,6 @@
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().runoutIntoGreen !== comparedVariant()?.runoutIntoGreen"
-            for="runoutIntoGreenCheckbox"
             >{{ "dangerSources.create.label.runoutIntoGreen" | translate }}</label
           >
           <app-toggle-btn-group
@@ -935,7 +926,6 @@
               [class.changed]="
                 isComparedVariant() && variant().remoteTriggering !== comparedVariant()?.remoteTriggering
               "
-              for="remoteTriggeringCheckbox"
               >{{ "dangerSources.create.label.remoteTriggering" | translate }}</label
             >
             <app-toggle-btn-group
@@ -955,7 +945,6 @@
               [class.changed]="
                 isComparedVariant() && variant().penetrateDeepLayers !== comparedVariant()?.penetrateDeepLayers
               "
-              for="runoutIntoGreenCheckbox"
               >{{ "dangerSources.create.label.penetrateDeepLayers" | translate }}</label
             >
             <app-toggle-btn-group
@@ -1009,7 +998,6 @@
             <label
               class="form-label"
               [class.changed]="isComparedVariant() && !haveSameElements(variant().aspects, comparedVariant()?.aspects)"
-              for=""
               >{{ "dangerSources.create.label.aspects" | translate }}</label
             >
             <div>
@@ -1022,7 +1010,7 @@
             </div>
           </div>
           <div class="col-md-7">
-            <label class="form-label" [class.changed]="isComparedVariant() && isElevationEqual" for="">{{
+            <label class="form-label" [class.changed]="isComparedVariant() && isElevationEqual">{{
               "elevation.title" | translate
             }}</label>
             <!-- Elevation (high) -->
