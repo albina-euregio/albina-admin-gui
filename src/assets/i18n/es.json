@@ -1,13 +1,13 @@
 {
   "daytime": {
-    "earlier": "AM",
-    "later": "PM"
+    "earlier": "Más pronto",
+    "later": "Más tarde"
   },
   "login": {
     "title": "Iniciar sesión",
     "text": "Iniciar sesión en tu cuenta",
     "button": "Iniciar sesión",
-    "stressLevel": "Stress Level",
+    "stressLevel": "Nivel de estrés",
     "errorDialog": {
       "message": "Usuario o contraseña incorrectas",
       "accept": "De acuerdo"
@@ -19,7 +19,7 @@
   },
   "sidebar": {
     "bulletins": "Avalanche.report",
-    "dangerSources": "Danger Sources",
+    "dangerSources": "Fuentes de peligro",
     "observations": "Observaciones",
     "qfa": "FAQ",
     "modelling": "Modelización",
@@ -30,7 +30,7 @@
     "modellingZamgMeteogram": "Meteograma GeoSphere",
     "modellingSnowpack": "modelo SNOWPACK",
     "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
-    "weatherbox": "Weatherbox",
+    "weatherbox": "Tiempo",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere"
@@ -68,114 +68,114 @@
   "dangerSources": {
     "status": {
       "missing": "ausente",
-      "available": "available",
-      "forecast": "forecast",
-      "analysis": "analysis",
-      "loading": "Loading danger sources ...",
-      "saveError": "Danger source could not be saved!",
-      "loadDangerSourcesError": "Danger sources could not be loaded!",
-      "loadVariantsError": "Danger source variants could not be loaded!"
+      "available": "disponible",
+      "forecast": "previsión",
+      "analysis": "análisis",
+      "loading": "Cargando fuentes de peligro",
+      "saveError": "¡No se pudo guardar la fuente de peligro! ",
+      "loadDangerSourcesError": "¡No se han podido cargar las fuentes de peligro!",
+      "loadVariantsError": "¡No se han podido cargar las variantes de fuentes de peligro!"
     },
     "variantStatus": {
-      "active": "active",
-      "dormant": "dormant",
-      "inactive": "inactive"
+      "active": "activo",
+      "dormant": "latente",
+      "inactive": "inactivo"
     },
     "tooltip": {
-      "read": "Read danger sources",
-      "edit": "Edit danger sources"
+      "read": "Leer las fuentes de peligro",
+      "edit": "Editar las fuentes de peligro"
     },
     "table": {
-      "loadMore": "Load {{count}} more days",
+      "loadMore": "Cargar {{count}} más días",
       "title": {
         "forecast": "Previsión",
-        "analysis": "Analysis"
+        "analysis": "Análisis"
       }
     },
     "create": {
-      "variantStatus": "Status",
-      "variantEditable": "This variant can be edited.",
-      "variantNotEditable": "This variant can not be edited.",
-      "noVariantsForSelectedDay": "No variants defined for this date.",
+      "variantStatus": "Estado",
+      "variantEditable": "Esta variante puede ser editada.",
+      "variantNotEditable": "Esta variante no puede ser editada.",
+      "noVariantsForSelectedDay": "No hay variantes definidas para esta fecha.",
       "tooltip": {
-        "editDangerSource": "Edit danger source",
-        "loadVariants": "Load variants from the day before",
-        "showVariantsOnMap": "Show variants on map",
+        "editDangerSource": "Editar la fuente de peligro",
+        "loadVariants": "Cargar variantes del día anterior",
+        "showVariantsOnMap": "Mostrar variantes al mapa",
         "edit": "Editar micro-regiones",
-        "copy": "Copy variant",
-        "delete": "Delete variant",
-        "compare": "Compare variant",
-        "forecast": "Compare with forecast"
+        "copy": "Copiar variante",
+        "delete": "Borrar variante",
+        "compare": "Comparar variante",
+        "forecast": "Comparar con la previsión"
       },
-      "createDangerSource": "Create danger source",
-      "createVariant": "Create new variant",
-      "noDangerSources": "No danger sources",
+      "createDangerSource": "Crear fuente de peligro",
+      "createVariant": "Crear nueva variante",
+      "noDangerSources": "No hay fuentes de peligro",
       "title": {
-        "slab": "Slab",
-        "weakLayer": "Weak layer",
-        "loose": "Loose snow",
-        "glide": "Glide snow",
+        "slab": "Placa",
+        "weakLayer": "Capa débil",
+        "loose": "Nieve suelta",
+        "glide": "Deslizamiento de nieve",
         "matrix": "Matriz",
         "characteristics": "Características",
         "comment": "Comentario"
       },
       "label": {
-        "glidingSnowActivity": "Gliding snow activity",
-        "snowHeight": "Snow height",
-        "snowHeightAverage": "Average snow height",
-        "zeroDegreeIsotherm": "0°C isotherm",
-        "looseSnowMoisture": "Loose snow moisture",
-        "looseSnowGrainShape": "Loose snow grain shape",
-        "slabGrainShape": "Slab grain shape",
-        "slabThickness": "Slab thickness",
-        "slabHandHardness": "Slab hand hardness",
-        "slabHardnessProfile": "Slab hardness",
-        "slabEnergyTransferPotential": "Slab energy transfer potential",
-        "slabDistribution": "Slab distribution",
-        "weakLayerGrainShape": "Weak layer grain shape",
-        "weakLayerGrainSize": "Weak layer grain size",
-        "weakLayerPersistent": "Weak layer persistent",
-        "weakLayerThickness": "Weak layer thickness",
-        "weakLayerStrength": "Weak layer strength",
-        "weakLayerWet": "Weak layer wet",
-        "weakLayerCrustAbove": "Weak layer crust above",
-        "weakLayerCrustBelow": "Weak layer crust below",
-        "weakLayerPosition": "Weak layer position",
-        "weakLayerCreation": "Weak layer creation",
-        "weakLayerDistribution": "Weak layer distribution",
-        "dangerSpotRecognizability": "Danger spot recognizability",
-        "remoteTriggering": "Remote triggering",
+        "glidingSnowActivity": "Actividad de deslizamiento de nieve",
+        "snowHeight": "Altura de la nieve",
+        "snowHeightAverage": "Altura de la nieve promedio",
+        "zeroDegreeIsotherm": "Isoterma de 0 °C",
+        "looseSnowMoisture": "Humedad de la nieve suelta",
+        "looseSnowGrainShape": "Forma de grano de la nieve suelta",
+        "slabGrainShape": "Forma de grano de la placa",
+        "slabThickness": "Espesor de la placa",
+        "slabHandHardness": "Dureza de mano de la placa",
+        "slabHardnessProfile": "Dureza de la placa",
+        "slabEnergyTransferPotential": "Potencial de transferencia de energía de la placa",
+        "slabDistribution": "Distribución de la placa",
+        "weakLayerGrainShape": "Forma de grano de la capa débil",
+        "weakLayerGrainSize": "Tamaño de grano de la capa débil",
+        "weakLayerPersistent": "Capa débil persistente",
+        "weakLayerThickness": "Espesor de la capa débil",
+        "weakLayerStrength": "Resistencia de la capa débil",
+        "weakLayerWet": "Humedad de la capa débil",
+        "weakLayerCrustAbove": "Costra encima de la capa débil",
+        "weakLayerCrustBelow": "Costra debajo de la capa débil",
+        "weakLayerPosition": "Posición de la capa débil",
+        "weakLayerCreation": "Creación de la capa débil",
+        "weakLayerDistribution": "Distribución de la capa débil",
+        "dangerSpotRecognizability": "Reconocibilidad del lugar peligroso",
+        "remoteTriggering": "Desencadenamiento a distancia",
         "hasDaytimeDependency": "Dependencia diurna",
-        "dangerIncreaseWithElevation": "Danger increase with elevation",
-        "runoutIntoGreen": "Runout into green",
-        "penetrateDeepLayers": "Penetrate deep layers",
-        "highestDangerAspect": "Highest danger aspect",
-        "dangerPeak": "Danger peak",
+        "dangerIncreaseWithElevation": "Aumento del peligro con la altitud",
+        "runoutIntoGreen": "Zona de llegada hacia el verde",
+        "penetrateDeepLayers": "Penetrar capas profundas",
+        "highestDangerAspect": "Orientación con el peligro más alto",
+        "dangerPeak": "Pico de peligro",
         "slopeGradient": "Gradiente de pendiente",
-        "naturalRelease": "Natural release",
-        "terrainTypes": "Terrain types",
-        "dangerSigns": "Danger signs",
+        "naturalRelease": "Desencadenamiento natural",
+        "terrainTypes": "Tipos de terreno",
+        "dangerSigns": "Signos de peligro",
         "aspects": "Orientaciones"
       },
       "createDangerSourceDialog": {
-        "title": "Title",
+        "title": "Título",
         "description": "Descripción",
         "save": "Guardar",
         "cancel": "Cancelar"
       },
       "editDangerSourceDialog": {
-        "title": "Title",
+        "title": "Título",
         "description": "Descripción",
         "update": "Actualización",
         "cancel": "Cancelar"
       },
       "deleteVariantDialog": {
-        "message": "Do you want to delete this variant?",
+        "message": "¿Quieres borrar esta variante?",
         "accept": "Si",
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "At least one micro-region has to be yours.",
+        "message": "Al menos una microrregión debe ser tuya",
         "accept": "De acuerdo"
       },
       "discardDialog": {
@@ -184,11 +184,11 @@
         "reject": "No"
       },
       "saveErrorDialog": {
-        "message": "There was an error saving the danger sources!",
+        "message": "¡Se ha producido un error guardando las fuentes de peligro!",
         "accept": "De acuerdo"
       },
       "loadDialog": {
-        "message": "Do you want to load all danger source variants from the day before?",
+        "message": "¿Quieres cargar todas las variantes de fuente de peligro del día anterior?",
         "accept": "Si",
         "reject": "No"
       }
@@ -197,14 +197,14 @@
   "avalancheType": {
     "title": "Tipo de alud",
     "label": {
-      "slab": "SLAB",
-      "loose": "LOOSE",
-      "glide": "GLIDE"
+      "slab": "PLACA",
+      "loose": "SIN COHESIÓN",
+      "glide": "DESLIZAMIENTO"
     },
     "tooltip": {
-      "slab": "Slab avalanche",
-      "loose": "Loose snow avalanche",
-      "glide": "Glide snow avalanche"
+      "slab": "Alud de placa",
+      "loose": "Alud de nieve sin cohesión",
+      "glide": "Alud de deslizamiento de nieve"
     }
   },
   "elevation": {
@@ -216,8 +216,8 @@
   "bulletins": {
     "title": "Avalanche.report",
     "tooltip": {
-      "edit": "Edit bulletin",
-      "read": "Read bulletin",
+      "edit": "Editar boletín",
+      "read": "Leer boletín",
       "copy": "Copiar boletín",
       "paste": "Pegar boletín",
       "cancel": "Cancelar copia",
@@ -232,10 +232,10 @@
       "preview": "Vista previa del boletín (PDF)",
       "check": "Comprobar boletín",
       "info": "Muestra estado de la publicación",
-      "loadSuggestionFromDangerSources": "Load suggestion",
-      "deleteAllWarningRegions": "Delete all warning regions",
+      "loadSuggestionFromDangerSources": "Cargar sugerencia",
+      "deleteAllWarningRegions": "Borrar todas las regiones de alerta",
       "publishAll": "Publicar todas las regiones",
-      "publishAllNoMessages": "Publish all regions (no messages)",
+      "publishAllNoMessages": "Publicar todas las regiones (sin mensajes)",
       "mediaFile": "Subir archivo multimedia"
     },
     "status": {
@@ -245,20 +245,21 @@
       "noPublicationInfo": "NO será publicado automàticamente",
       "loadingPreview": "Creando vista previa en PDF ...",
       "loading": "Cargando boletín ...",
-      "loadMoreBulletins": "Load {{count}} more bulletins",
+      "loadMoreBulletins": "Cargar {{count}} más boletines",
       "publishing": "Publicando boletín ...",
       "submitting": "Enviando boletín ...",
-      "saveError": "Bulletin could not be saved!",
-      "loadBulletinsError": "Bulletins could not be loaded!"
+      "saveError": "¡No se pudo guardar el boletín!",
+      "loadBulletinsError": "¡No se han podido cargar los boletines!"
     },
     "create": {
       "tooltip": {
         "edit": "Editar micro-regiones",
         "copy": "Copiar región",
         "delete": "Borrar región",
-        "compare": "Compare region",
-        "undo": "Undo last change in region",
-        "redo": "Redo change in region",
+        "deleteProblem": "Borrar problema",
+        "compare": "Comparar región",
+        "undo": "Deshacer el último cambio en la región",
+        "redo": "Volver a hacer el cambio en la región",
         "createRegion": "Crear región",
         "cancel": "Cancelar",
         "acceptSuggestion": "Aceptar la región sugerida",
@@ -315,14 +316,14 @@
       "changeDangerRatingElevation": "Extender el peligro de aludes",
       "mapTop": "Mapa arriba",
       "mapLeft": "Mapa al lado",
-      "showExternalRegions": "Show external regions",
-      "hideExternalRegions": "Hide external regions",
+      "showExternalRegions": "Mostrar regiones externas",
+      "hideExternalRegions": "Ocultar regiones externas",
       "showNotes": "Mostrar notas",
       "hideNotes": "Ocultar notas",
-      "incompleteAvalancheProblem": "Incomplete",
+      "incompleteAvalancheProblem": "Incompleto",
       "label": {
-        "generalHeadlineComment": "General overall headline",
-        "importantObservations": "Important observations",
+        "generalHeadlineComment": "Título general",
+        "importantObservations": "Observaciones importantes",
         "avalancheProblems": "Problema de aludes",
         "aspects": "Orientaciones",
         "highlights": "Alerta especial",
@@ -331,7 +332,7 @@
         "snowpackStructureComment": "Descripción de la estructura del manto",
         "dangerPatterns": "Patrón de peligro",
         "tendencyComment": "Descripción de la tendencia",
-        "synopsisComment": "Weather synopsis",
+        "synopsisComment": "Sinopsis del tiempo",
         "notes": "Notas"
       },
       "copyRegion": {
@@ -346,7 +347,7 @@
         "afternoon": "Tarde",
         "snowpackStructure": "Estructura del manto",
         "tendency": "Tendencia",
-        "synopsis": "Mterorología",
+        "synopsis": "Meteorología",
         "showTranslations": "Mostrar traducciones",
         "hideTranslations": "Ocultar traducciones"
       },
@@ -367,7 +368,7 @@
         "reject": "No"
       },
       "noRegionDialog": {
-        "message": "At least one micro-region has to be yours.",
+        "message": "Al menos una microrregión debe ser tuya",
         "accept": "De acuerdo"
       },
       "loadDialog": {
@@ -376,7 +377,7 @@
         "reject": "No"
       },
       "deleteAllWarningRegionsDialog": {
-        "message": "Do you want to delete all warning regions?",
+        "message": "¿Quieres eliminar todas las regiones de alerta?",
         "accept": "Si",
         "reject": "No"
       },
@@ -416,60 +417,60 @@
         "cancel": "Cancelar"
       },
       "removeDaytimeDependencyDialog": {
-        "message": "Which avalanche problems do you want to keep?",
+        "message": "¿Qué problemas de avalanchas quieres conservar?",
         "cancel": "Cancelar"
       },
       "strategicMindsetDialog": {
-        "title": "Strategic Mindsets",
-        "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
+        "title": "Predisposiciones mentales estratégicas",
+        "introduction": "Las \"Predisposiciones Mentales Estratégicas\" pretenden expresar nuestra actitud mental respecto a la situación de avalancha y su desarrollo en la zona de alerta correspondiente. No deben derivarse directamente de la evaluación del peligro, sino comprenderse y utilizarse como una impresión intuitiva de la situación general. Por lo tanto, las \"Predisposiciones Mentales Estratégicas\" son principalmente una herramienta de comunicación. Utilizando las predisposiciones mentales y las definiciones asociadas, los predictores podemos intercambiar información de forma rápida y eficiente sobre el desarrollo de la situación de peligro y encontrar un lenguaje común para la comunicación.",
         "description": {
-          "title": "Description:",
+          "title": "Descripción:",
           "text": {
-            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
-            "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
-            "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
-            "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
-            "entrenchment": "<b>Almost constant, tense hazardous situation.</b> The main danger comes from (a) <b>persistent weak layer</b>(s) susceptible to interference.",
-            "free_ride": "<b>Low avalanche danger</b> with generally stable snow cover. Only small avalanches are possible in extremely steep terrain. ",
-            "high_alert": "Exceptional situation with <b>high or very high avalanche danger</b>. Spontaneous avalanches of <b>very large or extreme magnitude</b> are possible",
-            "spring_diurnal": "Wet snow avalanches during the course of the day, which are subject to a <b>clear diurnal cycle</b>, are decisive for the risk assessment."
+            "assessment": "Existe una <b>gran incertidumbre</b> en la evaluación del peligro debido a la <b>información insuficiente</b> sobre el terreno.",
+            "stepping_out": "<b>Tendencia decreciente</b> de la situación de peligro (también dentro de un nivel de peligro).",
+            "status_quo": "Misma situación peligrosa. <b>Sin cambios significativos</b> en comparación con el día anterior.",
+            "stepping_back": "<b>Tendencia creciente</b> de la situación de peligro (también dentro de un nivel de peligro).",
+            "entrenchment": "<b>Situación peligrosa, casi constante y tensa.</b> El peligro principal proviene de (a) <b>capas débiles persistentes</b> (s) susceptibles a interferencias.",
+            "free_ride": "<b> Peligro de avalanchas Débil</b> con el manto de nieve generalmente estable. Solo son posibles avalanchas pequeñas en terreno extremadamente inclinado.",
+            "high_alert": "Situación excepcional con <b>peligro de avalanchas fuerte o muy fuerte</b>. Es posible que se produzcan avalanchas naturales de <b>magnitud muy grande o extrema</b>.",
+            "spring_diurnal": "Las avalanchas de nieve húmeda que se producen a lo largo del día, sujetas a un <b>ciclo diurno claro</b>, son decisivas para la evaluación del riesgo."
           }
         },
         "communication": {
-          "title": "Communication:",
+          "title": "Comunicación:",
           "text": {
-            "assessment": "Avalanche situation must be checked locally. Restraint is recommended.",
-            "stepping_out": "Gradual decrease in danger. However, caution is still required and the improving situation should be assessed locally before entering riskier terrain.  ",
-            "status_quo": "Hazardous situation is unchanged. Feedback from observers helps to better outline the hazardous situation. More favourable terrain should be communicated with emphasis. ",
-            "stepping_back": "Clear communication of the increase in avalanche danger - even within a danger level. Information on the causes supports comprehensibility in communication. ",
-            "entrenchment": "Caution and restraint are required. Situation hardly changes. If possible, provide as precise information as possible on distribution and possibility to trigger. Increased communication of observations that reveal the situation and trigger restraint.",
-            "free_ride": "Little text. Emphasise the generally favourable overall situation and potentially isolated hazard areas",
-            "high_alert": "Communication across all channels. The focus is no longer on winter sports. Danger even in areas that are not usually at risk of avalanches.",
-            "spring_diurnal": "Favourable situation in the morning, increasing during the day. Assessment should be made locally by observing the softening of the melt-freeze crust and the increasing soaking of the snow cover."
+            "assessment": "La situación de avalanchas debe evaluarse localmente. Se recomienda restricción.",
+            "stepping_out": "Disminución gradual del peligro. Sin embargo, todavía se requiere precaución y se debe evaluar la mejora de la situación localmente antes de adentrarse en terrenos más arriesgado.  ",
+            "status_quo": "La situación de peligro no ha cambiado. El feedback de los observadores ayuda a comprender mejor la situación de peligro. Se debe comunicar con mayor énfasis el terreno más favorable.",
+            "stepping_back": "Comunicación clara del aumento del peligro de avalanchas, incluso dentro de un nivel de peligro. La información sobre las causas facilita la comprensión de la comunicación.",
+            "entrenchment": "Se requiere precaución y restricción. La situación apenas cambia. De ser posible, proporcionar información lo más precisa posible sobre la distribución y la posibilidad de desencadenamiento. Se debe aumentar la comunicación de las observaciones que revelen la situación y muestran restricción.",
+            "free_ride": "Texto breve. Destacar la situación general favorable y las zonas de peligro potencialmente aisladas.",
+            "high_alert": "Comunicación a través de todos los canales. El enfoque ya no se centra en los deportes de invierno. Peligro incluso en zonas donde no suele haber riesgo de avalanchas.",
+            "spring_diurnal": "Situación favorable por la mañana, que empeorará durante el día. La evaluación debe realizarse localmente observando el reblandecimiento de la costra de rehielo y la creciente humidificación del manto de nieve."
           }
         },
         "examples": {
-          "title": "Examples:",
+          "title": "Ejemplos:",
           "text": {
-            "assessment": "Start of the season.",
-            "stepping_out": "Cooling leads to a decrease in the risk of wet snow avalanches after a warm and humid weather phase.",
-            "status_quo": "Consistent wind-slab problem with cold temperatures, loose snow and wind.",
-            "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
-            "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
-            "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
-            "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
-            "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
+            "assessment": "Inicio de la temporada.",
+            "stepping_out": "El enfriamiento conduce a una disminución del riesgo de avalanchas de nieve húmeda después de un periodo de tiempo cálido y húmedo.",
+            "status_quo": "Problema de placas de viento consistente con temperaturas frías, nieve suelta y viento.",
+            "stepping_back": "La nevada reciente abundante provoca un aumento de la situación de peligro.",
+            "entrenchment": "Problema crítico de capas débiles persistentes con potencial de avalanchas peligrosamente grandes. La situación se está estabilizando muy lentamente y requiere mucha restricción.",
+            "free_ride": "Peligro de avalanchas débil, no hay capas débiles persistentes, todo el terreno ya está pisado.",
+            "high_alert": "Nivel de peligro 4 o superior debido a grandes cantidades de nieve reciente y/o capas débiles persistentes y problemáticas.",
+            "spring_diurnal": "Situación primaveral con tiempo seco, presión alta y temperaturas moderadas con un manto de nieve viejo mayoritariamente estable."
           }
         },
         "strategicMindset": {
-          "assessment": "High Uncertainty",
-          "stepping_out": "Improving",
+          "assessment": "Alta incertidumbre",
+          "stepping_out": "Mejorando",
           "status_quo": "Status Quo",
-          "stepping_back": "Deteriorating",
-          "entrenchment": "Persistent Unstable",
+          "stepping_back": "Deteriorándose",
+          "entrenchment": "Inestable persistente",
           "free_ride": "Favorable",
-          "high_alert": "High Alert",
-          "spring_diurnal": "Spring Diurnal"
+          "high_alert": "Alerta máxima",
+          "spring_diurnal": "Primavera a lo largo del día"
         }
       },
       "decisionTree": {
@@ -515,7 +516,7 @@
         "validFor": "Válido para:",
         "title": {
           "prod": "Cosas serias",
-          "test": "Test system",
+          "test": "Sistema de prueba",
           "task": "Tarea",
           "language": {
             "all": "TODOS",
@@ -524,30 +525,29 @@
             "en": "EN"
           }
         },
-
         "email": {
           "label": "Correos electrónicos",
           "tooltip": "Enviar correos electrónicos",
-          "success": "Emails successfully sent!",
-          "error": "Emails could not be sent!"
+          "success": "¡Correos electrónicos enviados exitosamente!",
+          "error": "¡No se pudieron enviar los correos electrónicos!"
         },
         "telegram": {
           "label": "Mensajes de Telegram",
           "tooltip": "Enviar mensajes de Telegram",
-          "success": "Telegram Messages successfully sent!",
-          "error": "Telegram Messages could not be sent!"
+          "success": "¡Mensajes de Telegram enviados exitosamente!",
+          "error": "¡No se pudieron enviar los mensajes de Telegram!"
         },
         "whatsapp": {
-          "label": "WhatsApp Messages",
-          "tooltip": "Send WhatsApp Messages",
-          "success": "WhatsApp Messages successfully sent!",
-          "error": "WhatsApp Messages could not be sent!"
+          "label": "Mensajes de WhatsApp",
+          "tooltip": "Enviar mensajes de WhatsApp",
+          "success": "¡Mensajes de WhatsApp enviados exitosamente!",
+          "error": "¡No se pudieron enviar los mensajes de WhatsApp!"
         },
         "push": {
           "label": "Notificaciones push",
           "tooltip": "Enviar notificaciones push",
-          "success": "Push Notifications successfully sent!",
-          "error": "Push Notifications could not be sent!"
+          "success": "¡Notificaciones push enviadas exitosamente!",
+          "error": "¡No se pudieron enviar notificaciones push!"
         },
         "accept": "De acuerdo"
       },
@@ -606,15 +606,15 @@
       },
       "publishAllDialog": {
         "message": "¿Quieres publicar todas las regiones?",
-        "changeMessage": "Do you want to publish all regions? (no messages)",
+        "changeMessage": "¿Quieres publicar todas las regiones? (sin mensajes)",
         "accept": "Si",
         "reject": "No"
       }
     }
   },
   "training": {
-    "training": "Training",
-    "timestamp": "Training timestamp"
+    "training": "Entrenamiento",
+    "timestamp": "Marca de tiempo de entrenamiento"
   },
   "admin": {
     "loadingStatistics": "Creando CSV ...",
@@ -633,7 +633,7 @@
         "pdfDirectory": "Directorio para PDF",
         "htmlDirectory": "Directorio para HTML",
         "serverImagesUrl": "Ruta de acceso al servidor de imágenes",
-        "dangerLevelElevationDependency": "Elevation dependency of danger level",
+        "dangerLevelElevationDependency": "Dependencia de la altitud del nivel de peligro",
         "mapsPath": "Ruta de acceso a mapas",
         "mediaPath": "Ruta a los ficheros multimedia",
         "mapProductionUrl": "URL para producción de mapas",
@@ -651,14 +651,10 @@
       "table": {
         "general": {
           "title": "General",
-          "id": "ID",
-          "microRegions": "Nombre de micro-regiones",
-          "subRegions": "Sub-regiones",
-          "superRegions": "Super-regiones",
-          "neighborRegions": "Regiones vecinas"
+          "id": "ID"
         },
         "publication": {
-          "title": "Publication",
+          "title": "Publicación",
           "publishBulletins": "Publicar la predicción de aludes",
           "publishBlogs": "Publicar las entradas de blog",
           "createCaamlV5": "Crear CAAML v5",
@@ -669,7 +665,7 @@
           "sendEmails": "Enviar correos",
           "createSimpleHtml": "Crear HTML simple",
           "sendTelegramMessages": "Enviar mensajes de telegram",
-          "sendWhatsAppMessages": "Send WhatsApp messages",
+          "sendWhatsAppMessages": "Enviar mensajes de WhatsApp",
           "sendPushNotifications": "Enviar notificaciones push",
           "pdfColor": "PDF color",
           "emailColor": "E-mail color",
@@ -681,40 +677,36 @@
           "pdfFooterLogo": "Logotipo para el pie de página del PDF",
           "pdfFooterLogoColorPath": "Logotipo para el pie de página del PDF (color)",
           "pdfFooterLogoBwPath": "Logotipo para el pie de página del PDF (bw)",
-          "mapXmax": "X del mapa máximo",
-          "mapXmin": "X del mapa mínimo",
-          "mapYmax": "Y del mapa máximo",
-          "mapYmin": "Y del mapa mínimo",
           "simpleHtmlTemplateName": "Plantilla HTML simple",
           "geoDataDirectory": "Directorio de geodatos",
           "mapLogoColorPath": "Logotipo para el mapa (color)",
           "mapLogoBwPath": "Logotipo para el mapa (bw)",
           "mapLogoPosition": "Posición del logotipo para el mapa",
-          "mapCenterLat": "Centrar posición del mapa (latitud)",
-          "mapCenterLng": "Centrar posición del mapa (longitud)",
           "imageColorbarColorPath": "Barra de colores (color)",
           "imageColorbarBwPath": "Barra de colores (b/w)",
-          "enabledLanguages": "Enabled languages",
-          "ttsLanguages": "Text-to-speech languages"
+          "enabledLanguages": "Idiomas habilitados",
+          "ttsLanguages": "Idiomas de texto a voz"
         },
         "components": {
-          "title": "Components",
-          "enableDangerSources": "Enable danger sources",
-          "enableObservations": "Enable observations",
-          "enableModelling": "Enable modelling",
-          "enableWeatherbox": "Enable weather box"
+          "title": "Componentes",
+          "enableDangerSources": "Habilitar fuentes de peligro",
+          "enableObservations": "Habilitar observaciones",
+          "enableModelling": "Habilitar modelado",
+          "enableWeatherbox": "Habilitar la Meteo"
         },
         "configuration": {
-          "title": "Configuration",
+          "title": "Configuración",
           "showMatrix": "Mostrar matriz",
           "enableMediaFile": "Habilitar ficheros multimedia",
-          "enableStrategicMindset": "Enable strategic mindset",
-          "enableStressLevel": "Enable stress level",
+          "enableStrategicMindset": "Habilitar la predisposición mental estratégica",
+          "enableStressLevel": "Habilitar el nivel de estrés",
           "enableAvalancheProblemCornices": "Habilitar problema de alud CORNISAS",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Habilitar problema de alud NINGÚN PROBLEMA DE ALUDES EVIDENTE",
-          "enableEditableFields": "Editable textfields instead of textcat for bulletins",
-          "enableGeneralHeadline": "Enable general overall headline for bulletins",
-          "enableWeatherTextField": "Enable text input for weather synopsis"
+          "enableGeneralHeadline": "Habilitar título general para boletines",
+          "enableWeatherTextField": "Habilitar la entrada de texto para la sinopsis del tiempo"
+        },
+        "languageConfiguration": {
+          "title": "Configuración del idioma"
         }
       },
       "success": "Configuración guardada con éxito",
@@ -757,7 +749,7 @@
     },
     "createUser": {
       "table": {
-        "image": "Image",
+        "image": "Imagen",
         "name": "Nombre",
         "email": "Email",
         "organization": "Organización",
@@ -789,13 +781,14 @@
     "observations": {
       "table": "Tabla",
       "map": "Mapa",
-      "gallery": "Gallery",
+      "gallery": "Galería",
       "filters": "Flitros",
+      "details": "Detalles",
       "title": "Observaciones",
-      "newObservation": "New observation",
-      "exportObservations": "Export observations (GeoJSON)",
-      "exportStatistics": "Export statistics (CSV)",
-      "toggleFilterBar": "Show/hide filter bar",
+      "newObservation": "Nueva observación",
+      "exportObservations": "Exportar observaciones (GeoJSON)",
+      "exportStatistics": "Exportar estadísticas (CSV)",
+      "toggleFilterBar": "Mostrar/ocultar la barra de filtros",
       "button": {
         "submit": "Descargar"
       },
@@ -805,17 +798,16 @@
       },
       "selectRegion": {
         "placeholder": "Región",
-        "selectionLabel": "{0} region(s) selected"
+        "selectionLabel": "{0} región(es) seleccionadas"
       },
       "selectSources": {
         "placeholder": "Fuentes",
-        "selectionLabel": "{0} source(s) selected"
+        "selectionLabel": "{0} fuente(s) seleccionadas"
       },
-
       "charts": {
         "charts": "Mapas",
         "nan": "Sin especificación",
-        "reload": "Reload",
+        "reload": "Volver a cargar",
         "classify": "Classificar",
         "label": "Etiqueta",
         "invert": "Invertir",
@@ -833,7 +825,7 @@
           "caption": "Tipo de observación"
         },
         "importantObservation": {
-          "caption": "Important"
+          "caption": "Importante"
         },
         "avalancheProblem": {
           "caption": "Problema de aludes"
@@ -842,7 +834,7 @@
           "caption": "Patrón de peligro"
         },
         "dangerSource": {
-          "caption": "Danger Source"
+          "caption": "Fuente de peligro"
         },
         "days": {
           "caption": "Día"
@@ -858,29 +850,29 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Send Emails, Telegram, WhatsApp and Push",
-        "success": "Email, Telegram, Whatsapp and Push successfully sent!",
-        "error": "Email, Telegram, WhatsApp and Push could not be sent!"
+        "tooltip": "Enviar correos electrónicos, Telegram, WhatsApp y Push",
+        "success": "¡Correo electrónico, Telegram, WhatsApp y Push enviados exitosamente!",
+        "error": "¡No se pudieron enviar correos electrónicos, Telegram, WhatsApp y Push!"
       },
       "email": {
         "tooltip": "Enviar correos electrónicos",
-        "success": "Email successfully sent!",
-        "error": "Email could not be sent!"
+        "success": "¡Correo electrónico enviado exitosamente!",
+        "error": "¡No se pudo enviar el correo electrónico!"
       },
       "telegram": {
         "tooltip": "Enviar a través del canal de Telegram",
-        "success": "Telegram successfully sent!",
-        "error": "Telegram could not be sent!"
+        "success": "¡Telegram enviado exitosamente!",
+        "error": "¡No se pudo enviar el Telegram!"
       },
       "whatsapp": {
-        "tooltip": "Send via WhatsApp Channel",
-        "success": "WhatsApp successfully sent!",
-        "error": "WhatsApp could not be sent!"
+        "tooltip": "Enviar por canal de WhatsApp",
+        "success": "¡WhatsApp enviado exitosamente!",
+        "error": "¡No se pudo enviar el WhatsApp!"
       },
       "push": {
         "tooltip": "Enviar a través de notificaciones push",
-        "success": "Push successfully sent!",
-        "error": "Push could not be sent!"
+        "success": "¡Push enviado exitosamente!",
+        "error": "¡No se pudo enviar el push!"
       }
     }
   },
@@ -924,8 +916,8 @@
   },
   "statistics": {
     "title": "Estadisticas",
-    "bulletins": "Avalanche Bulletins",
-    "dangerSources": "Danger Sources",
+    "bulletins": "Boletines de aludes",
+    "dangerSources": "Fuentes de peligro",
     "button": {
       "submit": "Descargar"
     },
@@ -935,7 +927,6 @@
       "duplicates": "Duplicados"
     }
   },
-
   "dangerRating": {
     "noRating": "Sin clasificar",
     "low": "débil",
@@ -956,8 +947,8 @@
     "glidingSnow": "Deslizamientos basales",
     "gliding_snow": "Deslizamientos basales",
     "cornices": "Cornisas",
-    "noDistinctAvalancheProblem": "No distinct avalanche problem",
-    "no_distinct_avalanche_problem": "No distinct avalanche problem",
+    "noDistinctAvalancheProblem": "Ningún problema de aludes evidente",
+    "no_distinct_avalanche_problem": "Ningún problema de aludes evidente",
     "favourableSituation": "Situación favorable",
     "favourable_situation": "Situación favorable"
   },
@@ -968,24 +959,24 @@
     "dp4": "pp.4: frío sobre cálido / cálido sobre frío",
     "dp5": "pp.5: nevada reciente después de un largo periodo cálido",
     "dp6": "pp.6: frío, nieve suelta y viento",
-    "dp7": "dp.7: shallow snow next to deep snow",
+    "dp7": "dp.7: manto de nieve poco profundo junto a manto de nieve profundo",
     "dp8": "pp.8: escarcha de superfície enterrada",
     "dp9": "pp.9: nieve redonda enterrada",
     "dp10": "pp.10: escenario de primavera"
   },
   "strategicMindset": {
-    "title": "Strategic Mindset",
-    "assessment": "High Uncertainty",
-    "stepping_out": "Improving",
+    "title": "Predisposición mental estratégica",
+    "assessment": "Alta incertidumbre",
+    "stepping_out": "Mejorando",
     "status_quo": "Status Quo",
-    "stepping_back": "Deteriorating",
-    "entrenchment": "Persistent Unstable",
+    "stepping_back": "Deteriorándose",
+    "entrenchment": "Inestable persistente",
     "free_ride": "Favorable",
-    "high_alert": "High Alert",
+    "high_alert": "Alerta máxima",
     "spring_diurnal": "Spring Diurnal"
   },
   "observationType": {
-    "DrySnowfallLevel": "Dry snowfall level",
+    "DrySnowfallLevel": "Nivel de nevada seca",
     "TimeSeries": "Series temporales",
     "Incident": "Incidente",
     "Profile": "Perfil de nieve",
@@ -997,7 +988,7 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
-    "ForBlog": "For blog",
+    "ForBlog": "Para el blog",
     "SurfaceHoar": "Escarcha de superfície",
     "Graupel": "Nieve granulada",
     "StabilityTest": "Test de estabilidad",
@@ -1005,14 +996,14 @@
     "VeryLightNewSnow": "Nieve reciente muy ligera"
   },
   "elevationTolerance": {
-    "exact": "exact",
+    "exact": "exacto",
     "50m": "±50m",
     "100m": "±100m",
     "200": "±200m"
   },
   "elevationPeriod": {
-    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
-    "observationPeriod": "Dry snowfall boundary at the time of observation"
+    "duringPrecipitationEvent": "Límite de nieve seca para todo el evento de precipitación",
+    "observationPeriod": "Límite de nieve seca en el momento de la observación"
   },
   "aspect": {
     "N": "N",
@@ -1025,7 +1016,7 @@
     "NW": "NW"
   },
   "role": {
-    "SUPERADMIN": "Super Administrator",
+    "SUPERADMIN": "Super Administrador",
     "ADMIN": "Administrador",
     "FORECASTER": "Predictor",
     "FOREMAN": "Jefe",
@@ -1067,9 +1058,9 @@
     "high": "fuerte"
   },
   "wetness": {
-    "dry": "dry",
-    "moist": "moist",
-    "wet": "wet"
+    "dry": "seca",
+    "moist": "húmeda",
+    "wet": "muy húmeda"
   },
   "characteristic": {
     "low": "débil",
@@ -1078,98 +1069,98 @@
     "very_high": "muy fuerte"
   },
   "thickness": {
-    "thin": "thin",
-    "thick": "thick"
+    "thin": "degaldo",
+    "thick": "grueso"
   },
   "snowpackPosition": {
-    "upper": "upper",
-    "middle": "middle",
-    "lower": "lower",
-    "ground": "ground"
+    "upper": "superior",
+    "middle": "medio",
+    "lower": "inferior",
+    "ground": "tierra"
   },
   "weakLayerCrust": {
     "no": "no",
-    "partly": "partly",
-    "yes": "yes"
+    "partly": "parcialmente",
+    "yes": "sí"
   },
   "creationProcess": {
     "radiation_recrystallization": "radiación",
-    "diurnal_recrystallization": "diurnal",
-    "melt_layer_recrystallization": "melt layer",
-    "surface_hoar_formation": "surface hoar"
+    "diurnal_recrystallization": "diürno",
+    "melt_layer_recrystallization": "capa de fusión",
+    "surface_hoar_formation": "escarcha de superficie"
   },
   "recognizability": {
-    "very_easy": "very easy",
-    "easy": "easy",
-    "hard": "hard",
-    "very_hard": "very hard"
+    "very_easy": "muy fácil",
+    "easy": "fácil",
+    "hard": "difícil",
+    "very_hard": "muy difícil"
   },
   "distribution": {
-    "isolated": "isolated",
-    "specific": "specific",
-    "widespread": "widespread"
+    "isolated": "aislado",
+    "specific": "específico",
+    "widespread": "generalizado"
   },
   "probability": {
-    "likely": "likely",
+    "likely": "probable",
     "possible": "possible",
-    "unlikely": "unlikely"
+    "unlikely": "poco probable"
   },
   "detailedDaytime": {
-    "evening": "evening",
-    "first_night_half": "first night half",
-    "second_night_half": "second night half",
-    "morning": "morning",
-    "forenoon": "forenoon",
-    "afternoon": "afternoon"
+    "evening": "anochecer",
+    "first_night_half": "la primera parte de la noche",
+    "second_night_half": "la segunda parte de la noche",
+    "morning": "mañana",
+    "forenoon": "mañana",
+    "afternoon": "tarde"
   },
   "slopeGradient": {
-    "moderately_steep": "moderately steep",
-    "steep": "steep",
-    "very_steep": "very steep",
-    "extremely_steep": "extremely steep"
+    "moderately_steep": "moderadamente empinado",
+    "steep": "empinado",
+    "very_steep": "muy empinado",
+    "extremely_steep": "extremadamente empinado"
   },
   "handHardness": {
-    "fist": "F",
-    "four_fingers": "4F",
-    "one_finger": "1F",
-    "pencil": "P",
-    "knife": "K",
-    "ice": "I"
+    "fist": "P",
+    "four_fingers": "4D",
+    "one_finger": "1D",
+    "pencil": "L",
+    "knife": "C",
+    "ice": "H"
   },
   "hardnessTendency": {
-    "decreasing": "softer below",
-    "steady": "uniform",
-    "increasing": "softer above"
+    "decreasing": "más blando abajo",
+    "steady": "uniforme",
+    "increasing": "más blando encima"
   },
   "terrainType": {
-    "gullies_and_bowls": "gullies and bowls",
-    "adjacent_to_ridgelines": "adjacent to ridgelines",
-    "distant_from_ridgelines": "distant from ridgelines",
-    "in_the_vicinity_of_peaks": "in the vicinity of peaks",
-    "pass_areas": "pass areas",
-    "shady_slopes": "shady slopes",
-    "sunny_slopes": "sunny slopes",
-    "grassy_slopes": "grassy slopes",
-    "cut_slopes": "cut slopes",
-    "wind_loaded_slopes": "wind loaded slopes",
-    "base_of_rock_walls": "base of rock walls",
-    "behind_abrupt_changes_in_the_terrain": "behind abrupt changes in the terrain",
-    "transitions_into_gullies_and_bowls": "transitions into gullies and bowls",
-    "areas_where_the_snow_cover_is_rather_shallow": "areas where the snow cover is rather shallow",
-    "transitions_from_a_shallow_to_a_deep_snowpack": "transitions from a shallow to a deep snowpack",
-    "highly_frequented_off_piste_terrain": "highly frequented off piste terrain",
-    "little_used_backcountry_terrain": "little used backcountry terrain",
-    "places_that_are_protected_from_the_wind": "places that are protected from the wind",
-    "regions_exposed_to_the_foehn_wind": "regions exposed to the foehn wind",
-    "regions_with_a_lot_of_snow": "regions with a lot of snow",
-    "regions_exposed_to_precipitation": "regions exposed to precipitation",
-    "regions_exposed_to_heavier_precipitation": "regions exposed to heavier precipitation"
+    "gullies_and_bowls": "canales y cubetas",
+    "adjacent_to_ridgelines": "adyacente a crestas",
+    "distant_from_ridgelines": "lejano a las crestas",
+    "in_the_vicinity_of_peaks": "cerca de las cimas",
+    "pass_areas": "cerca de collados",
+    "shady_slopes": "laderas umbrías",
+    "sunny_slopes": "laderas solanas",
+    "grassy_slopes": "laderas herbosas",
+    "cut_slopes": "taludes",
+    "wind_loaded_slopes": "laderas con placas de viento",
+    "base_of_rock_walls": "base de paredes de roca",
+    "behind_abrupt_changes_in_the_terrain": "detrás de cambios abruptos en el terreno",
+    "transitions_into_gullies_and_bowls": "transiciones hacia canales y cubetas",
+    "areas_where_the_snow_cover_is_rather_shallow": "zonas donde el manto de nieve es bastante superficial",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "transiciones de manto de nieve delgado a profundo",
+    "highly_frequented_off_piste_terrain": "terreno fuera-pista muy frecuentado",
+    "little_used_backcountry_terrain": "terreno de montaña poco utilizado",
+    "places_that_are_protected_from_the_wind": "lugares protegidos del viento",
+    "regions_exposed_to_the_foehn_wind": "regiones expuestas al viento foehn",
+    "regions_with_a_lot_of_snow": "regiones con mucha nieve",
+    "regions_exposed_to_precipitation": "regiones expuestas a la precipitación",
+    "regions_exposed_to_heavier_precipitation": "regiones expuestas a precipitación abundante"
   },
   "dangerSign": {
-    "shooting_cracks": "shooting cracks",
+    "shooting_cracks": "fisuras con propagación",
     "whumpfing": "whumpfing",
-    "fresh_avalanches": "fresh avalanches",
-    "glide_cracks": "glide cracks"
+    "fresh_avalanches": "avalanchas recientes",
+    "glide_cracks": "grietas de deslizamiento"
   },
   "changeRegionDialog": {
     "message": "¿Quieres cambiar la región?",
@@ -1217,7 +1208,7 @@
   "grainShape": {
     "PP": {
       "code": "PP",
-      "class": "Precipitation Particles"
+      "class": "Partículas de precipitación"
     },
     "PPgp": {
       "code": "PPgp",
@@ -1225,45 +1216,45 @@
     },
     "DF": {
       "code": "DF",
-      "class": "Decomposing and Fragmented precipitation particles"
+      "class": "Partículas de precipitación descompuestas y fragmentadas"
     },
     "RG": {
       "code": "RG",
-      "class": "Rounded Grains"
+      "class": "Granos finos"
     },
     "FC": {
       "code": "FC",
-      "class": "Faceted Crystals"
+      "class": "Facetas"
     },
     "DH": {
       "code": "DH",
-      "class": "Depth Hoar"
+      "class": "Escarcha de profundidad"
     },
     "SH": {
       "code": "SH",
-      "class": "Surface Hoar"
+      "class": "Escarcha de superfície"
     },
     "MF": {
       "code": "MF",
-      "class": "Melt Forms"
+      "class": "Formas de fusión"
     },
     "MFcr": {
       "code": "MFcr",
-      "class": "Melt-freeze crust"
+      "class": "Costra de fusión-rehielo"
     },
     "IF": {
       "code": "IF",
-      "class": "Ice Formations"
+      "class": "Formaciones de hielo"
     }
   },
   "button": {
-    "yes": "yes",
+    "yes": "sí",
     "no": "no"
   },
   "observations": {
-    "allowEdit": "Edit external observation",
-    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
-    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
+    "allowEdit": "Editar la observación externa",
+    "allowEditTooltip": "Esto evitará sobrescrituras de {{ value }}",
+    "editIconTooltip": "Observación editada: no recibe actualizaciones de {{ value }}",
     "aspect": "Orientación",
     "authorName": "Nombre del autor",
     "avalancheLength": "Longitud de alud",
@@ -1273,41 +1264,41 @@
     "avalancheWidth": "Ancho de alud",
     "search": "Busca",
     "count": "# observaciones:",
-    "elevationTolerance": "Accuracy of elevation data",
-    "elevationPeriod": "Elevation time period",
+    "elevationTolerance": "Precisión de los datos de altura",
+    "elevationPeriod": "Período de tiempo de la altitud",
     "layers": {
-      "observers": "Observers",
-      "weatherStations": "Weather stations",
+      "observers": "Observadores",
+      "weatherStations": "Estaciones meteorológicas",
       "webcams": "Webcams",
       "observations": "Observaciones"
     },
     "weatherStations": {
       "tooltips": {
-        "drySnowfallLevel": "Dry snowfall level",
-        "globalRadiation": "Global radiation",
+        "drySnowfallLevel": "Nivel de nevada seca",
+        "globalRadiation": "Radiación global",
         "newSnow": "Nieve reciente",
         "snowLine": "Límite de nieve",
-        "snowHeight": "Snow height",
-        "snowDifference": "Snow difference",
-        "airTemperature": "Air temperature",
-        "airTemperatureMax": "Air temperature Max",
-        "airTemperatureMin": "Air temperature Min",
-        "surfaceTemperature": "Surface temperature",
-        "surfaceHoar": "Potential surface hoar formation",
-        "surfaceHoarCalc": "Potential surface hoar formation (Lehning et. al.)",
-        "dewPoint": "Dew point temperature",
-        "relativeHumidity": "Relative humidity",
-        "windDirection": "Wind direction",
-        "windSpeed": "Wind speed",
-        "windGust": "Wind gust"
+        "snowHeight": "Altura de nieve",
+        "snowDifference": "Diferencia de nieve",
+        "airTemperature": "Temperatura del aire",
+        "airTemperatureMax": "Temperatura del aire máx",
+        "airTemperatureMin": "Temperatura del aire mín",
+        "surfaceTemperature": "Temperatura de supeficie",
+        "surfaceHoar": "Potencial de formación de escarcha de superficie",
+        "surfaceHoarCalc": "Potencial de formación de escarcha de superficie (Lehning et. al.)",
+        "dewPoint": "Temperatura del punto de rocío",
+        "relativeHumidity": "Humedad relativa",
+        "windDirection": "Dirección del viento",
+        "windSpeed": "Velocidad del viento",
+        "windGust": "Racha de viento"
       }
     },
     "webcams": {
       "tooltips": {
-        "minusTenMinutes": "10min back",
-        "minusOneHour": "1h back",
-        "plusTenMinutes": "10min forward",
-        "plusOneHour": "1h forward"
+        "minusTenMinutes": "10min atrás",
+        "minusOneHour": "1h atrás",
+        "plusTenMinutes": "10min adelante",
+        "plusOneHour": "1h adelante"
       }
     },
     "button": {
@@ -1316,16 +1307,16 @@
       "delete": "Eliminar observación",
       "deleteConfirm": "Eliminar observación?",
       "discard": "Descartar",
-      "copyDate": "Copy event date"
+      "copyDate": "Copiar fecha del evento"
     },
     "comment": "Comentario",
     "content": "Contenido",
     "dangerRating": "Clasificación del peligro",
-    "dangerSource": "Danger source",
+    "dangerSource": "Fuente de peligro",
     "elevation": "Altitud",
-    "elevationRange": "Elevation range",
-    "elevationLowerBound": "Elevation lower bound",
-    "elevationUpperBound": "Elevation upper bound",
+    "elevationRange": "Rango de altitud",
+    "elevationLowerBound": "Límite inferior de altitud",
+    "elevationUpperBound": "Límite superior de altitud",
     "eventDate": "Fecha del evento",
     "eventType": "Tipo de evento",
     "eventTypes": {
@@ -1339,15 +1330,15 @@
       "PERSON_UNKNOWN": "Evento (desconocido)",
       "TRAFFIC": "Tránsito"
     },
-    "externalURL": "External URL (e.g. to photo database)",
+    "externalURL": "URL externa (por ejemplo, a una base de datos de fotografías)",
     "fractureDepth": "Profundiad de cicatriz",
     "hasCoordinates": "Tiene coordenadas",
     "incline": "Inclinación",
     "latitude": "Laltitud",
     "locationName": "Localización",
     "longitude": "Longitud",
-    "observationType": "Observation type",
-    "personInvolvement": "Person involvement",
+    "observationType": "Tipo de observación",
+    "personInvolvement": "Implicación de personas",
     "reportDate": "Fecha del informe",
     "showTable": "Tabla",
     "withoutCoordinates": "Observaciones sin coordenadas:",
@@ -1391,7 +1382,7 @@
       "N-CU": "Cobertura total de cúmulos en /8",
       "AUSL.T": "temperatura de desencadenamiento",
       "SHW-IX": "Índice Showalter",
-      "WX -CUF": "tiempo significativo: NIL (ninguno), RASH (lluvia), TS (tormenta eléctrica)\n\n",
+      "WX -CUF": "tiempo significativo: NIL (ninguno), RASH (lluvia), TS (tormenta eléctrica)",
       "RR": "Precipitación total [mm]",
       "RR-str": "precipitaciones estratiformes",
       "CONV": "Precipitación convectiva [mm]",
@@ -1416,26 +1407,27 @@
     }
   },
   "awsome": {
-    "Aggregation band": "Aggregation band",
+    "Aggregation band": "Banda de agregación",
     "Date": "Fecha",
-    "Datetag": "Datetag",
-    "Dry instability": "Dry instability",
-    "fair (<0.77)": "fair (<0.77)",
-    "fair (<1.05)": "fair (<1.05)",
-    "Grain type": "Grain type",
-    "LWC index": "LWC index",
+    "Datetag": "Etiqueta de fecha",
+    "Depth": "Profundidad",
+    "Dry instability": "Inestabilidad de nieve seca",
+    "fair (<0.77)": "regular (<0.77)",
+    "fair (<1.05)": "regular (<1.05)",
+    "Grain type": "Tipo de grano",
+    "LWC index": "Índice LWC",
     "New snow": "Nieve reciente",
-    "poor (<=3)": "poor (<=3)",
-    "poor (<0.95)": "poor (<0.95)",
-    "poor (>=0.77)": "poor (>=0.77)",
+    "poor (<=3)": "pobre (<=3)",
+    "poor (<0.95)": "pobre (<0.95)",
+    "poor (>=0.77)": "pobre (>=0.77)",
     "Punstable": "Punstable",
-    "rather stable (<0.7)": "rather stable (<0.7)",
-    "rather stable (<1)": "rather stable (<1)",
-    "rather stable (>1.05)": "rather stable (>1.05)",
-    "Size estimate": "Size estimate",
+    "rather stable (<0.7)": "bastante estable (<0.7)",
+    "rather stable (<1)": "bastante estable (<1)",
+    "rather stable (>1.05)": "bastante estable (>1.05)",
+    "Size estimate": "Estimación de tamaño",
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
-    "very poor (<=0.5)": "very poor (<=0.5)",
-    "very poor (>3)": "very poor (>3)",
-    "Wet instability": "Wet instability"
+    "very poor (<=0.5)": "muy pobre (<=0.5)",
+    "very poor (>3)": "muy pobre (>3)",
+    "Wet instability": "Inestabilidad de nieve húmeda"
   }
 }

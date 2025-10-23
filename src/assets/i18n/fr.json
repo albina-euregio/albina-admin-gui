@@ -256,6 +256,7 @@
         "edit": "Éditer les microrégions",
         "copy": "Copier la région de prévision",
         "delete": "Effacer la région de prévision",
+        "deleteProblem": "Delete problem",
         "compare": "Compare region",
         "undo": "Annuler dernière modification dans région de prévision",
         "redo": "Rétablir dernière modification dans région de prévision",
@@ -524,7 +525,6 @@
             "en": "EN"
           }
         },
-
         "email": {
           "label": "E-mails",
           "tooltip": "Envoyer e-mails",
@@ -651,11 +651,7 @@
       "table": {
         "general": {
           "title": "Général",
-          "id": "ID",
-          "microRegions": "Nombre de microrégions",
-          "subRegions": "Sous-régions",
-          "superRegions": "Super-régions",
-          "neighborRegions": "Régions voisines"
+          "id": "ID"
         },
         "publication": {
           "title": "Publication",
@@ -681,17 +677,11 @@
           "pdfFooterLogo": "Logo pour pied de page PDF",
           "pdfFooterLogoColorPath": "Logo pour pied de page PDF (couleur)",
           "pdfFooterLogoBwPath": "Logo pour pied de page PDF (noir et blanc)",
-          "mapXmax": "Carte X max",
-          "mapXmin": "Carte X min",
-          "mapYmax": "Carte Y max",
-          "mapYmin": "Carte Y min",
           "simpleHtmlTemplateName": "Modèle HTML simple",
           "geoDataDirectory": "Répertoire géodonnées",
           "mapLogoColorPath": "Logo pour carte (couleur)",
           "mapLogoBwPath": "Logo pour carte (noir et blanc)",
           "mapLogoPosition": "Position du logo pour carte",
-          "mapCenterLat": "Centre de la carte (lat)",
-          "mapCenterLng": "Centre de la carte (long)",
           "imageColorbarColorPath": "Barre de couleurs (couleur)",
           "imageColorbarBwPath": "Barre de couleurs (noir et blanc)",
           "enabledLanguages": "Enabled languages",
@@ -712,9 +702,11 @@
           "enableStressLevel": "Activer niveau de stress",
           "enableAvalancheProblemCornices": "Activer situation avalancheuse CONGÈRES",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Activer situation avalancheuse PAS DE SITUATION PARTICULIÈRE",
-          "enableEditableFields": "Editable textfields instead of textcat for bulletins",
           "enableGeneralHeadline": "Enable general overall headline for bulletins",
           "enableWeatherTextField": "Enable text input for weather synopsis"
+        },
+        "languageConfiguration": {
+          "title": "Language configuration"
         }
       },
       "success": "Configuration sauvegardée avec succès",
@@ -791,6 +783,7 @@
       "map": "Carte",
       "gallery": "Galerie",
       "filters": "Filtres",
+      "details": "Détails",
       "title": "Observations",
       "newObservation": "Ajouter une observation",
       "exportObservations": "Export observations (GeoJSON)",
@@ -811,7 +804,6 @@
         "placeholder": "Sources",
         "selectionLabel": "{0} source(s) sélectionnée(s)"
       },
-
       "charts": {
         "charts": "Diagramme",
         "nan": "Pas d'informations",
@@ -935,7 +927,6 @@
       "duplicates": "Doublons"
     }
   },
-
   "dangerRating": {
     "noRating": "pas noté",
     "low": "faible",
@@ -1419,6 +1410,7 @@
     "Aggregation band": "Aggregation band",
     "Date": "Date",
     "Datetag": "Datetag",
+    "Depth": "Depth",
     "Dry instability": "Dry instability",
     "fair (<0.77)": "fair (<0.77)",
     "fair (<1.05)": "fair (<1.05)",

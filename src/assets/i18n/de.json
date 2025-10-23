@@ -256,6 +256,7 @@
         "edit": "Kleinstregionen editieren",
         "copy": "Region kopieren",
         "delete": "Region löschen",
+        "deleteProblem": "Problem löschen",
         "compare": "Region vergleichen",
         "undo": "Letzte Änderung in der Warnregion rückgängig machen",
         "redo": "Letzte Änderung in der Warnregion wiederherstellen",
@@ -524,7 +525,6 @@
             "en": "EN"
           }
         },
-
         "email": {
           "label": "E-Mails",
           "tooltip": "E-Mails versenden",
@@ -651,11 +651,7 @@
       "table": {
         "general": {
           "title": "Allgemein",
-          "id": "ID",
-          "microRegions": "Anzahl an Mikroregionen",
-          "subRegions": "Subregionen",
-          "superRegions": "Superregionen",
-          "neighborRegions": "Nachbarregionen"
+          "id": "ID"
         },
         "publication": {
           "title": "Publikation",
@@ -681,17 +677,11 @@
           "pdfFooterLogo": "Logo für PDF Footer",
           "pdfFooterLogoColorPath": "Logo für PDF Footer (farbe)",
           "pdfFooterLogoBwPath": "Logo für PDF Footer (schwarz-weiß)",
-          "mapXmax": "Karte X max",
-          "mapXmin": "Karte X min",
-          "mapYmax": "Karte Y max",
-          "mapYmin": "Karte Y min",
           "simpleHtmlTemplateName": "Vorlage für einfaches HTML",
           "geoDataDirectory": "Ordner für Geodaten",
           "mapLogoColorPath": "Logo für Karte (farbe)",
           "mapLogoBwPath": "Logo für Karte (schwarz-weiß)",
           "mapLogoPosition": "Logoposition für Karte",
-          "mapCenterLat": "Mittelpunkt der Karte (lat)",
-          "mapCenterLng": "Mittelpunkt der Karte (long)",
           "imageColorbarColorPath": "Farbleiste (farbe)",
           "imageColorbarBwPath": "Farbleiste (schwarz-weiß)",
           "enabledLanguages": "Aktivierte Sprachen",
@@ -712,9 +702,11 @@
           "enableStressLevel": "Stresslevel aktivieren",
           "enableAvalancheProblemCornices": "Lawinenproblem WECHTEN aktivieren",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Lawinenproblem KEIN AUSGEPRÄGTES PROBLEM aktivieren",
-          "enableEditableFields": "Freitextfelder statt Satzkatalog",
           "enableGeneralHeadline": "Allgemeine Überschrift aktivieren",
           "enableWeatherTextField": "Wettervorhersage aktivieren"
+        },
+        "languageConfiguration": {
+          "title": "Sprach Konfiguration"
         }
       },
       "success": "Konfiguration erfolgreich gespeichert",
@@ -791,6 +783,7 @@
       "map": "Karte",
       "gallery": "Galerie",
       "filters": "Filter",
+      "details": "Details",
       "title": "Rückmeldungen",
       "newObservation": "Neue Beobachtung",
       "exportObservations": "Beobachtungen exportieren (GeoJSON)",
@@ -811,7 +804,6 @@
         "placeholder": "Quellen",
         "selectionLabel": "{0} Quelle(n) ausgewählt"
       },
-
       "charts": {
         "charts": "Diagramme",
         "nan": "Ohne Angabe",
@@ -935,7 +927,6 @@
       "duplicates": "Duplikate"
     }
   },
-
   "dangerRating": {
     "noRating": "keine Beurteilung",
     "low": "gering",
@@ -985,7 +976,7 @@
     "spring_diurnal": "Frühjahrssituation"
   },
   "observationType": {
-    "DrySnowfallLevel": "Trockene Schneefallgrenze",
+    "DrySnowfallLevel": "Höhengrenze des trockenen Schneefalls",
     "TimeSeries": "Zeitreihe",
     "Incident": "Ereignis",
     "Profile": "Schneeprofil",
@@ -1011,8 +1002,8 @@
     "200": "±200m"
   },
   "elevationPeriod": {
-    "duringPrecipitationEvent": "Trockene Schneefallgrenze des gesamten Niederschlagsereignisses",
-    "observationPeriod": "Trockene Schneefallgrenze zum Beobachtungszeitpunkt"
+    "duringPrecipitationEvent": "Höhengrenze des trockene Schneefall während des gesamten Niederschlagsereignisses",
+    "observationPeriod": "Höhengrenze des trockene Schneefall zum Beobachtungszeitpunkt"
   },
   "aspect": {
     "N": "N",
@@ -1283,7 +1274,7 @@
     },
     "weatherStations": {
       "tooltips": {
-        "drySnowfallLevel": "Trockene Schneefallgrenze",
+        "drySnowfallLevel": "Höhengrenze des trockenen Schneefalls",
         "globalRadiation": "Globalstrahlung",
         "newSnow": "Neuschnee",
         "snowLine": "Schneefallgrenze",
@@ -1419,6 +1410,7 @@
     "Aggregation band": "Aggregation band",
     "Date": "Datum",
     "Datetag": "Datetag",
+    "Depth": "Tiefe",
     "Dry instability": "Instabilität nasse Schneedecke",
     "fair (<0.77)": "mittel (<0.77)",
     "fair (<1.05)": "mittel (<1.05)",

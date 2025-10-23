@@ -7,7 +7,7 @@
     "title": "Iniciar session",
     "text": "Iniciar session ath tòn compde",
     "button": "Iniciar session",
-    "stressLevel": "Stress Level",
+    "stressLevel": "Nivèu d'estrès",
     "errorDialog": {
       "message": "Nòm d'usatgèr o contrasenya incorrècta!",
       "accept": "D'acòrd"
@@ -19,7 +19,7 @@
   },
   "sidebar": {
     "bulletins": "Avalanche.report",
-    "dangerSources": "Danger Sources",
+    "dangerSources": "Hònts de perilh",
     "observations": "Observacions",
     "qfa": "QFA",
     "modelling": "Modelitzacion",
@@ -30,7 +30,7 @@
     "modellingZamgMeteogram": "meteograma GeoSphere",
     "modellingSnowpack": "Modèl SNOWPACK",
     "modellingSnowpackMeteo": "Modèl meteo SNOWPACK",
-    "weatherbox": "Weatherbox",
+    "weatherbox": "Boita meteorologica",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere"
@@ -59,7 +59,7 @@
       "avalancheSize": "Mida de lauet",
       "dangerRating": "Grad de perilh",
       "override": "(modifique eth grad de perilh)",
-      "matrix": "Mairitz",
+      "matrix": "Matritz",
       "referToFairStability": "Referir-se a una estabilitat regular",
       "referToPoorStability": "Referir-se a una pobre estabilitat",
       "dangerLevel1": "Grad de perilh 1 (Fèble)"
@@ -68,114 +68,114 @@
   "dangerSources": {
     "status": {
       "missing": "absent",
-      "available": "available",
-      "forecast": "forecast",
-      "analysis": "analysis",
-      "loading": "Loading danger sources ...",
-      "saveError": "Danger source could not be saved!",
-      "loadDangerSourcesError": "Danger sources could not be loaded!",
-      "loadVariantsError": "Danger source variants could not be loaded!"
+      "available": "disponible",
+      "forecast": "prediccion",
+      "analysis": "analisis",
+      "loading": "En tot cargar es hònts de perilh ...",
+      "saveError": "Era hònt de perilh non s'a pas pogut sauvar!",
+      "loadDangerSourcesError": "Era hònt de perilh non s'a pas pogut cargar!",
+      "loadVariantsError": "Es variantes d'hònt de perilh non s'an pas pogut cargar!"
     },
     "variantStatus": {
-      "active": "active",
-      "dormant": "dormant",
-      "inactive": "inactive"
+      "active": "actiu",
+      "dormant": "latent",
+      "inactive": "inactiu"
     },
     "tooltip": {
-      "read": "Read danger sources",
-      "edit": "Edit danger sources"
+      "read": "Liéger es hònts de perilh",
+      "edit": "Editar es hònts de perilh"
     },
     "table": {
-      "loadMore": "Load {{count}} more days",
+      "loadMore": "Condar {{count}} mès dies",
       "title": {
         "forecast": "Prediccion",
-        "analysis": "Analysis"
+        "analysis": "Analisis"
       }
     },
     "create": {
-      "variantStatus": "Status",
-      "variantEditable": "This variant can be edited.",
-      "variantNotEditable": "This variant can not be edited.",
-      "noVariantsForSelectedDay": "No variants defined for this date.",
+      "variantStatus": "Estat",
+      "variantEditable": "Aquesta varianta pòt èster modificada.",
+      "variantNotEditable": "Aquesta varianta non pòt pas èster modificada.",
+      "noVariantsForSelectedDay": "Cap de varianta definida per aguesta data.",
       "tooltip": {
-        "editDangerSource": "Edit danger source",
-        "loadVariants": "Load variants from the day before",
-        "showVariantsOnMap": "Show variants on map",
+        "editDangerSource": "Editar hònt de perilh",
+        "loadVariants": "Cargar es variantes deth dia d'abans",
+        "showVariantsOnMap": "Mostrar es variantes en mapa",
         "edit": "Editar micro-regions",
-        "copy": "Copy variant",
-        "delete": "Delete variant",
-        "compare": "Compare variant",
-        "forecast": "Compare with forecast"
+        "copy": "Copiar varianta",
+        "delete": "Esborrar varianta",
+        "compare": "Comparar varianta",
+        "forecast": "Comparar damb era prediccion"
       },
-      "createDangerSource": "Create danger source",
-      "createVariant": "Create new variant",
-      "noDangerSources": "No danger sources",
+      "createDangerSource": "Crear hònt de perilh",
+      "createVariant": "Crear naua varianta",
+      "noDangerSources": "Sense hònts de perilh",
       "title": {
-        "slab": "Slab",
-        "weakLayer": "Weak layer",
-        "loose": "Loose snow",
-        "glide": "Glide snow",
+        "slab": "Placa",
+        "weakLayer": "Capa fèbla",
+        "loose": "Nhèu sense coesion",
+        "glide": "Esguitlament de nhèu",
         "matrix": "Mairitz",
         "characteristics": "Caracteristiques",
         "comment": "Comentari"
       },
       "label": {
-        "glidingSnowActivity": "Gliding snow activity",
-        "snowHeight": "Snow height",
-        "snowHeightAverage": "Average snow height",
-        "zeroDegreeIsotherm": "0°C isotherm",
-        "looseSnowMoisture": "Loose snow moisture",
-        "looseSnowGrainShape": "Loose snow grain shape",
-        "slabGrainShape": "Slab grain shape",
-        "slabThickness": "Slab thickness",
-        "slabHandHardness": "Slab hand hardness",
-        "slabHardnessProfile": "Slab hardness",
-        "slabEnergyTransferPotential": "Slab energy transfer potential",
-        "slabDistribution": "Slab distribution",
-        "weakLayerGrainShape": "Weak layer grain shape",
-        "weakLayerGrainSize": "Weak layer grain size",
-        "weakLayerPersistent": "Weak layer persistent",
-        "weakLayerThickness": "Weak layer thickness",
-        "weakLayerStrength": "Weak layer strength",
-        "weakLayerWet": "Weak layer wet",
-        "weakLayerCrustAbove": "Weak layer crust above",
-        "weakLayerCrustBelow": "Weak layer crust below",
-        "weakLayerPosition": "Weak layer position",
-        "weakLayerCreation": "Weak layer creation",
-        "weakLayerDistribution": "Weak layer distribution",
-        "dangerSpotRecognizability": "Danger spot recognizability",
-        "remoteTriggering": "Remote triggering",
+        "glidingSnowActivity": "Activitat d'esguitlament de nhèu",
+        "snowHeight": "Nautada de nhèu",
+        "snowHeightAverage": "Nautada de nhèu mejana",
+        "zeroDegreeIsotherm": "Isotèrma 0ºC",
+        "looseSnowMoisture": "Umiditat dera nhèu sense coesion",
+        "looseSnowGrainShape": "Forma de gran dera nhèu sense coesion",
+        "slabGrainShape": "Forma de gran dera placa",
+        "slabThickness": "Celh dera placa",
+        "slabHandHardness": "Duresa de man dera placa",
+        "slabHardnessProfile": "Duresa dera placa",
+        "slabEnergyTransferPotential": "Potenciau de transferencia d'energia dera placa",
+        "slabDistribution": "Distribucion dera placa",
+        "weakLayerGrainShape": "Forma de gran dera capa fèbla",
+        "weakLayerGrainSize": "Mesura de gran dera capa fèbla",
+        "weakLayerPersistent": "Capa fèbla persistent",
+        "weakLayerThickness": "Celh dera capa fèbla",
+        "weakLayerStrength": "Resisténcia dera capa fèbla",
+        "weakLayerWet": "Capa fèbla umida",
+        "weakLayerCrustAbove": "Capa fèbla costra ath dessús",
+        "weakLayerCrustBelow": "Capa fèbla costra ath dejós",
+        "weakLayerPosition": "Posicion dera capa fèbla",
+        "weakLayerCreation": "Creacion dera capa fèbla",
+        "weakLayerDistribution": "Distribucion dera capa fèbla",
+        "dangerSpotRecognizability": "Reconeissença de punts de perilh",
+        "remoteTriggering": "Desencadenament a distància",
         "hasDaytimeDependency": "Dependéncia ora deth dia",
-        "dangerIncreaseWithElevation": "Danger increase with elevation",
-        "runoutIntoGreen": "Runout into green",
-        "penetrateDeepLayers": "Penetrate deep layers",
-        "highestDangerAspect": "Highest danger aspect",
-        "dangerPeak": "Danger peak",
+        "dangerIncreaseWithElevation": "Perilh en aument damb era nautada",
+        "runoutIntoGreen": "Zòna d'arribada en verd",
+        "penetrateDeepLayers": "Penetrar en capes prigondes",
+        "highestDangerAspect": "Orientacion damb eth perilh mès naut",
+        "dangerPeak": "Pic de perilh",
         "slopeGradient": "Grad d'inclinacion",
-        "naturalRelease": "Natural release",
-        "terrainTypes": "Terrain types",
-        "dangerSigns": "Danger signs",
+        "naturalRelease": "Desencadenament naturau",
+        "terrainTypes": "Tipes de terren",
+        "dangerSigns": "Senhaus de perilh",
         "aspects": "Orientacions"
       },
       "createDangerSourceDialog": {
-        "title": "Title",
+        "title": "Títol",
         "description": "Descripcion",
         "save": "Sauvar",
         "cancel": "Anullar"
       },
       "editDangerSourceDialog": {
-        "title": "Title",
+        "title": "Títol",
         "description": "Descripcion",
         "update": "Actualizacion",
         "cancel": "Anullar"
       },
       "deleteVariantDialog": {
-        "message": "Do you want to delete this variant?",
+        "message": "Vòs suprimir aguesta varianta ?",
         "accept": "Òc",
         "reject": "Non"
       },
       "noRegionDialog": {
-        "message": "At least one micro-region has to be yours.",
+        "message": "Au mens una microregion a d'èster tua.",
         "accept": "D'acòrd"
       },
       "discardDialog": {
@@ -184,11 +184,11 @@
         "reject": "Non"
       },
       "saveErrorDialog": {
-        "message": "There was an error saving the danger sources!",
+        "message": "I a agut un error en moment de sauvar es hònts de perilh!",
         "accept": "D'acòrd"
       },
       "loadDialog": {
-        "message": "Do you want to load all danger source variants from the day before?",
+        "message": "Vòs cargar totes es variantes d'hònt de perilh deth dia d'abans?",
         "accept": "Òc",
         "reject": "Non"
       }
@@ -197,14 +197,14 @@
   "avalancheType": {
     "title": "Tipe de lauet",
     "label": {
-      "slab": "SLAB",
-      "loose": "LOOSE",
-      "glide": "GLIDE"
+      "slab": "PLACA",
+      "loose": "SENSE COESION",
+      "glide": "ESGUITLAMENT"
     },
     "tooltip": {
-      "slab": "Slab avalanche",
-      "loose": "Loose snow avalanche",
-      "glide": "Glide snow avalanche"
+      "slab": "Lauet de placa",
+      "loose": "Lauet sense coesion",
+      "glide": "Lauet d'esguitlament basau"
     }
   },
   "elevation": {
@@ -216,8 +216,8 @@
   "bulletins": {
     "title": "Avalanche.report",
     "tooltip": {
-      "edit": "Edit bulletin",
-      "read": "Read bulletin",
+      "edit": "Editar bulletin",
+      "read": "Liéger bulletin",
       "copy": "Copiar bulletin",
       "paste": "Colar bulletin",
       "cancel": "Cancelar copia",
@@ -232,10 +232,10 @@
       "preview": "Vista previa deth bulletin (PDF)",
       "check": "Verificar bulletin",
       "info": "Mostrar er estat de publicacion",
-      "loadSuggestionFromDangerSources": "Load suggestion",
-      "deleteAllWarningRegions": "Delete all warning regions",
+      "loadSuggestionFromDangerSources": "Cargar suggerència",
+      "deleteAllWarningRegions": "Suprimir totes es regions d'alèrta",
       "publishAll": "Publicar totes es regions",
-      "publishAllNoMessages": "Publish all regions (no messages)",
+      "publishAllNoMessages": "Publicar totes es regions (sense missatges)",
       "mediaFile": "Cargar un fichèr multimèdia"
     },
     "status": {
@@ -245,20 +245,21 @@
       "noPublicationInfo": "NON serà publicat automaticaments",
       "loadingPreview": "Creant ua vista prèvia de PDF...",
       "loading": "En tot cargar eth bulletin ...",
-      "loadMoreBulletins": "Load {{count}} more bulletins",
+      "loadMoreBulletins": "Cargar {{count}} mès bulletins",
       "publishing": "Bulletin publicant-se",
       "submitting": "Bulletin enviant-se",
-      "saveError": "Bulletin could not be saved!",
-      "loadBulletinsError": "Bulletins could not be loaded!"
+      "saveError": "Non s'a pogut sauvar eth bulletin!",
+      "loadBulletinsError": "Non s'an pogut cargar es bulletins!"
     },
     "create": {
       "tooltip": {
         "edit": "Editar micro-regions",
         "copy": "Copiar region",
         "delete": "Esborrar region",
-        "compare": "Compare region",
-        "undo": "Undo last change in region",
-        "redo": "Redo change in region",
+        "deleteProblem": "Esborrar problema",
+        "compare": "Comparar region",
+        "undo": "Anullar era darrièra modificacion dera region",
+        "redo": "Tornar a hèr eth cambi laguens era region",
         "createRegion": "Crear region",
         "cancel": "Anullar",
         "acceptSuggestion": "Acceptar regions suggerides",
@@ -315,14 +316,14 @@
       "changeDangerRatingElevation": "Extendre eth perilh de lauegi",
       "mapTop": "Mapa dessús",
       "mapLeft": "Mapa en costat",
-      "showExternalRegions": "Show external regions",
-      "hideExternalRegions": "Hide external regions",
+      "showExternalRegions": "Mostrar regions extèrnes",
+      "hideExternalRegions": "Amagar regions extèrnes",
       "showNotes": "Mostrar nòtes",
       "hideNotes": "Amagar nòtes",
-      "incompleteAvalancheProblem": "Incomplete",
+      "incompleteAvalancheProblem": "Incomplèt",
       "label": {
-        "generalHeadlineComment": "General overall headline",
-        "importantObservations": "Important observations",
+        "generalHeadlineComment": "Títol globau generau",
+        "importantObservations": "Observacions importantes",
         "avalancheProblems": "Problèma de lauegi",
         "aspects": "Orientacions",
         "highlights": "Alèrte especiau",
@@ -331,7 +332,7 @@
         "snowpackStructureComment": "Descripcion deth celh de nhèu",
         "dangerPatterns": "Patrons de perilh",
         "tendencyComment": "Descripcion de tendéncia",
-        "synopsisComment": "Weather synopsis",
+        "synopsisComment": "Sinopsi deth temps",
         "notes": "Nòtes"
       },
       "copyRegion": {
@@ -367,7 +368,7 @@
         "reject": "Non"
       },
       "noRegionDialog": {
-        "message": "At least one micro-region has to be yours.",
+        "message": "Au mens una microregion a d'èster vòstra.",
         "accept": "D'acòrd"
       },
       "loadDialog": {
@@ -376,7 +377,7 @@
         "reject": "Non"
       },
       "deleteAllWarningRegionsDialog": {
-        "message": "Do you want to delete all warning regions?",
+        "message": "Vòs suprimir totes es regions d'alèrta ?",
         "accept": "Òc",
         "reject": "Non"
       },
@@ -416,47 +417,47 @@
         "cancel": "Anullar"
       },
       "removeDaytimeDependencyDialog": {
-        "message": "Which avalanche problems do you want to keep?",
+        "message": "Quins problèmes de lauegi vòs sauvar?",
         "cancel": "Anullar"
       },
       "strategicMindsetDialog": {
-        "title": "Strategic Mindsets",
-        "introduction": "The \"Strategic Mindsets\" are intended to express our mental attitude with regard to the avalanche situation and its development in the corresponding warning region. It should not be derived directly from the hazard assessment, but rather understood and used as an intuitive impression of the overall situation. The \"Strategic Mindsets\" are therefore primarily a communication tool. Using the mindsets and associated definitions, we forecasters can quickly and efficiently exchange information about the development of the hazard situation and find a common language for communication.",
+        "title": "Predisposicions mentaus estrategiques",
+        "introduction": "Es \"Predisposicions Mentaus Estrategiques\" assagen d'expressar era nòstra actitud mentala respècte era situacion de lauegi e deth son desvolopament laguens era region d'alèrta correspondenta. Non auríe pas d'èster derivada dirèctament dera avaloracion deth risc, mès compréses e utilizades coma una impression intuitiva dera situacion globala. Es \"Predisposicions Mentaus Estrategiques\" son doncas subretot un estrument de comunicacion. En utilizant es predispocions mentaus e es definicions associades, nosati es predictors podèm rapidament e eficaçament escambiar informacions sus eth desvolopament dera situacion de perilh e trobar ua lengua comuna entara comunicacion.",
         "description": {
-          "title": "Description:",
+          "title": "Descripcion:",
           "text": {
-            "assessment": "There is <b>great uncertainty</b> in the hazard assessment due to <b>insufficient information</b> from the field.",
-            "stepping_out": "<b>Decreasing tendency</b> of the hazard situation (also within a danger level).",
-            "status_quo": "Same hazardous situation. <b>No significant change</b> compared to the previous day.",
-            "stepping_back": "<b>Increasing tendency</b> of the hazard situation (also within a danger level).",
-            "entrenchment": "<b>Almost constant, tense hazardous situation.</b> The main danger comes from (a) <b>persistent weak layer</b>(s) susceptible to interference.",
-            "free_ride": "<b>Low avalanche danger</b> with generally stable snow cover. Only small avalanches are possible in extremely steep terrain. ",
-            "high_alert": "Exceptional situation with <b>high or very high avalanche danger</b>. Spontaneous avalanches of <b>very large or extreme magnitude</b> are possible",
-            "spring_diurnal": "Wet snow avalanches during the course of the day, which are subject to a <b>clear diurnal cycle</b>, are decisive for the risk assessment."
+            "assessment": "I a ua grana incertitud ena avaloracion deth perilh a causa dera informacion insufisenta deth terren.",
+            "stepping_out": "<b>Tendéncia decreissenta</b> dera situacion de perilh (tanben en un nivèu de perilh).",
+            "status_quo": "Madeisha situacion perilhosa. <b>Sense cambiaments significatius</b> per çò qu'ei deth dia anterior.",
+            "stepping_back": "<b>Tendéncia en aument</b> dera situacion de perilh (tanben en un nivèu de perilh).",
+            "entrenchment": "<b>Situacion perilhosa, lèu constanta e tensa.</b> Eth perilh principau proven de (a) <b>capa fèbla persistenta</b>susceptibla(s) a interferir.",
+            "free_ride": "<b>Perilh de lauegi fèble</b>1 damb un celh de nhèu generauments establa. Solament son possibles petiti lauegi en terrens extrèmaments arribents.",
+            "high_alert": "Situacion excepcionau damb <b>perilh de lauegi fòrt o molt fòrt</b>. Son possibles lauegi naturaus de <b>magnitud fòrça grana o extrèma</b>",
+            "spring_diurnal": "Es lauegi de nhèu umida pendent eth transcors deth dia, que son subjèctes a un <b>cicle diürn clar</b>, son decisives entara avaloracion deth risc."
           }
         },
         "communication": {
-          "title": "Communication:",
+          "title": "Comunicacion:",
           "text": {
-            "assessment": "Avalanche situation must be checked locally. Restraint is recommended.",
-            "stepping_out": "Gradual decrease in danger. However, caution is still required and the improving situation should be assessed locally before entering riskier terrain.  ",
-            "status_quo": "Hazardous situation is unchanged. Feedback from observers helps to better outline the hazardous situation. More favourable terrain should be communicated with emphasis. ",
-            "stepping_back": "Clear communication of the increase in avalanche danger - even within a danger level. Information on the causes supports comprehensibility in communication. ",
-            "entrenchment": "Caution and restraint are required. Situation hardly changes. If possible, provide as precise information as possible on distribution and possibility to trigger. Increased communication of observations that reveal the situation and trigger restraint.",
-            "free_ride": "Little text. Emphasise the generally favourable overall situation and potentially isolated hazard areas",
-            "high_alert": "Communication across all channels. The focus is no longer on winter sports. Danger even in areas that are not usually at risk of avalanches.",
-            "spring_diurnal": "Favourable situation in the morning, increasing during the day. Assessment should be made locally by observing the softening of the melt-freeze crust and the increasing soaking of the snow cover."
+            "assessment": "Cau verificar localaments era situacion de lauegi. S'arrecomane restriccion.",
+            "stepping_out": "Diminucion graduala deth perilh. Totun, era precaucion ei encara requerida e era situacion en melhorament deuríe èster avalorada localament abans d'entrar en terren mès arriscat.",
+            "status_quo": "Era situacion de perilh ei invariable. Es comentaris des observadors ajuden a melhor esboçar era situacion perilhosa. Un terren mès favorable auríe d'èster comunicat damb remèrques.",
+            "stepping_back": "Comunicacion clara der aument deth perilh de lauegi - encara laguens d'un nivèu de perilh. Era informacion sus es causes sosten era comprension ena comunicacion.",
+            "entrenchment": "Cau precaucion e contencion. Era situacion quasi non càmbie. S'ei possible, proporcionatz informacion çò de mès de precís possibla sus era distribucion e era possibilitat de desencadenament. Aument dera comunicacion des observacions que revèlen era situacion e demanen contencion.",
+            "free_ride": "Pòc tèxte. Destacar era situacion generau favorabla e es zònes de perilh potenciauments isolat.",
+            "high_alert": "Comunicacion a trauès de toti es canaus. Era atencion ja non se centre enes espòrts d'iuèrn. Perilh en zònes que non sòlen auer risc de lauegi.",
+            "spring_diurnal": "Situacion favorabla peth maitin, qu'aumentarà pendent eth dia. Cau hèr avaloracion localaments en tot observar eth reblaniment dera costra de fusion e regèu e era umidificacion deth celh de nhèu."
           }
         },
         "examples": {
-          "title": "Examples:",
+          "title": "Exemples:",
           "text": {
-            "assessment": "Start of the season.",
-            "stepping_out": "Cooling leads to a decrease in the risk of wet snow avalanches after a warm and humid weather phase.",
-            "status_quo": "Consistent wind-slab problem with cold temperatures, loose snow and wind.",
-            "stepping_back": "Abundant fresh snowfall leads to an increase in the danger situation.",
-            "entrenchment": "Critical persistent weak layers problem with potential for dangerously large avalanches. The situation is only stabilising very slowly and requires a great deal of restraint.",
-            "free_ride": "Low avalanche danger, no persistent weak layers, all terrain has already been groomed.",
+            "assessment": "Començament dera sason.",
+            "stepping_out": "Eth heiredament diminuís eth risc de lauegi de nhèu humida dempús d'ua fasa de temps caud e umit.",
+            "status_quo": "Problèma consistent de plaques de vent damb temperatures heiredes, nhèu sense coesion e vent.",
+            "stepping_back": "Es nheuades recents abondiues provòquen un aument dera situacion de perilh.",
+            "entrenchment": "Problèma critic de capes fèbles persistentes damb potenciau de lauegi perilhosament grani. Era situacion ei en tot estabilitzar-se fòrça lentaments e requerís fòrça moderacion.",
+            "free_ride": "Perilh de lauegi feble, sense capes fèbles persistentes, tot eth terren ja ei caushigat.",
             "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
             "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
           }
@@ -524,7 +525,6 @@
             "en": "EN"
           }
         },
-
         "email": {
           "label": "Emails",
           "tooltip": "Enviar Emails",
@@ -651,11 +651,7 @@
       "table": {
         "general": {
           "title": "General",
-          "id": "ID",
-          "microRegions": "Nombre de micro-regions",
-          "subRegions": "Sub-regions",
-          "superRegions": "Super-regions",
-          "neighborRegions": "Regions vesines"
+          "id": "ID"
         },
         "publication": {
           "title": "Publication",
@@ -681,17 +677,11 @@
           "pdfFooterLogo": "Logotip entath pè de pagina de PDF",
           "pdfFooterLogoColorPath": "Logotip entath pè de pagina de PDF (color)",
           "pdfFooterLogoBwPath": "Logotip entath pè de pagina de PDF (bw)",
-          "mapXmax": "X deth mapa màxim",
-          "mapXmin": "X deth mapa minim",
-          "mapYmax": "Y deth mapa màxim",
-          "mapYmin": "Y deth mapa mínim",
           "simpleHtmlTemplateName": "Plantilha HTML simpla",
           "geoDataDirectory": "Directòri de geodonades",
           "mapLogoColorPath": "Logotip entath mapa (color)",
           "mapLogoBwPath": "Logotip entath mapa (bw)",
           "mapLogoPosition": "Posicion deth logotip entath mapa",
-          "mapCenterLat": "Centrar posicion deth mapa (latitud)",
-          "mapCenterLng": "Centrar posicion deth mapa (longitud)",
           "imageColorbarColorPath": "Barra de colors (color)",
           "imageColorbarBwPath": "Barra de colors (bw)",
           "enabledLanguages": "Enabled languages",
@@ -712,9 +702,11 @@
           "enableStressLevel": "Enable stress level",
           "enableAvalancheProblemCornices": "Abilitar eth problèma de lauegi CORNISES",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Abilitar eth problèma de lauegi CAP PROBLÈMA DE LAUEGI EVIDENT",
-          "enableEditableFields": "Editable textfields instead of textcat for bulletins",
           "enableGeneralHeadline": "Enable general overall headline for bulletins",
           "enableWeatherTextField": "Enable text input for weather synopsis"
+        },
+        "languageConfiguration": {
+          "title": "Language configuration"
         }
       },
       "success": "Configuracion sauvada corrèctaments",
@@ -791,6 +783,7 @@
       "map": "Mapa",
       "gallery": "Gallery",
       "filters": "Filtres",
+      "details": "Detalhs",
       "title": "Observacions",
       "newObservation": "New observation",
       "exportObservations": "Export observations (GeoJSON)",
@@ -811,7 +804,6 @@
         "placeholder": "Hònts",
         "selectionLabel": "{0} source(s) selected"
       },
-
       "charts": {
         "charts": "Grafiques",
         "nan": "Sense especificacion",
@@ -925,7 +917,7 @@
   "statistics": {
     "title": "Estadístiques",
     "bulletins": "Avalanche Bulletins",
-    "dangerSources": "Danger Sources",
+    "dangerSources": "Hònts de perilh",
     "button": {
       "submit": "Descargar"
     },
@@ -935,7 +927,6 @@
       "duplicates": "Duplicats"
     }
   },
-
   "dangerRating": {
     "noRating": "Sense grad de perilh",
     "low": "fèble",
@@ -1241,7 +1232,7 @@
     },
     "SH": {
       "code": "SH",
-      "class": "Surface Hoar"
+      "class": "Gibra de superfícia"
     },
     "MF": {
       "code": "MF",
@@ -1287,7 +1278,7 @@
         "globalRadiation": "Global radiation",
         "newSnow": "Nhèu recenta",
         "snowLine": "Limit de nhèu",
-        "snowHeight": "Snow height",
+        "snowHeight": "Nautada de nhèu",
         "snowDifference": "Snow difference",
         "airTemperature": "Air temperature",
         "airTemperatureMax": "Air temperature Max",
@@ -1419,6 +1410,7 @@
     "Aggregation band": "Aggregation band",
     "Date": "Data",
     "Datetag": "Datetag",
+    "Depth": "Depth",
     "Dry instability": "Dry instability",
     "fair (<0.77)": "fair (<0.77)",
     "fair (<1.05)": "fair (<1.05)",

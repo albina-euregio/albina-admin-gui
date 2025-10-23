@@ -100,7 +100,7 @@
       "tooltip": {
         "editDangerSource": "Modifica l'origine di pericolo",
         "loadVariants": "Carica le variazioni del giorno precedente",
-        "showVariantsOnMap": "Show variants on map",
+        "showVariantsOnMap": "Mostrare varianti sulla mappa",
         "edit": "Modifica le micro-zone",
         "copy": "Copia variazione",
         "delete": "elimina la variazione",
@@ -111,10 +111,10 @@
       "createVariant": "crea una nuova variazione",
       "noDangerSources": "nessuna origine di pericolo",
       "title": {
-        "slab": "Slab",
-        "weakLayer": "Weak layer",
-        "loose": "Loose snow",
-        "glide": "Glide snow",
+        "slab": "Lastrone",
+        "weakLayer": "Strato debole",
+        "loose": "Neve a debole coesione",
+        "glide": "Valanghe di slittamento",
         "matrix": "Matrice",
         "characteristics": "Caratteristiche",
         "comment": "Commento"
@@ -122,7 +122,7 @@
       "label": {
         "glidingSnowActivity": "attività di slittamento",
         "snowHeight": "altezza neve",
-        "snowHeightAverage": "Average snow height",
+        "snowHeightAverage": "altezza neve media",
         "zeroDegreeIsotherm": "Isoterma a 0°C",
         "looseSnowMoisture": "Umidità neve a debole coesione",
         "looseSnowGrainShape": "Tipologia grano neve a debole coesione",
@@ -148,7 +148,7 @@
         "hasDaytimeDependency": "Dipendenza diurna",
         "dangerIncreaseWithElevation": "Pericolo aumenta con la quota",
         "runoutIntoGreen": "Valanghe arrivano fino ai prati",
-        "penetrateDeepLayers": "Penetrate deep layers",
+        "penetrateDeepLayers": "Penetrare gli strati profondi",
         "highestDangerAspect": "Esposizione al pericolo più elevato",
         "dangerPeak": "Picco del pericolo",
         "slopeGradient": "Inclinazione del pendio",
@@ -158,13 +158,13 @@
         "aspects": "Esposizione"
       },
       "createDangerSourceDialog": {
-        "title": "Title",
+        "title": "Titolo",
         "description": "Descrizione",
         "save": "Salva",
         "cancel": "Cancella"
       },
       "editDangerSourceDialog": {
-        "title": "Title",
+        "title": "Titolo",
         "description": "Descrizione",
         "update": "Aggiornamento",
         "cancel": "Cancella"
@@ -232,10 +232,10 @@
       "preview": "Anteprima del bollettino valanghe (PDF)",
       "check": "Controlla bollettino valanghe",
       "info": "Mostra lo stato pubblicazione",
-      "loadSuggestionFromDangerSources": "Load suggestion",
-      "deleteAllWarningRegions": "Delete all warning regions",
+      "loadSuggestionFromDangerSources": "Caricare proposta",
+      "deleteAllWarningRegions": "Elimina tutte le meteo-nivo zone",
       "publishAll": "Pubblica tutte le meteo-nivo zone",
-      "publishAllNoMessages": "Publish all regions (no messages)",
+      "publishAllNoMessages": "Pubblica tutte le meteo-nivo zone (senza messaggi)",
       "mediaFile": "Carica file media"
     },
     "status": {
@@ -256,7 +256,8 @@
         "edit": "Modifica le micro-zone",
         "copy": "Copia meteo-nivo zona",
         "delete": "Elimina regione",
-        "compare": "Compare region",
+        "deleteProblem": "Cancella problema valanghivo",
+        "compare": "Confronta meteo-nivo zona",
         "undo": "Annulla l'ultima modifica apportata alla meteo-nivo zona",
         "redo": "Ripeti l'ultima modifica nella meteo-nivo zona",
         "createRegion": "Crea meteo-nivo zona",
@@ -315,13 +316,13 @@
       "changeDangerRatingElevation": "Estendi il pericolo valanghe",
       "mapTop": "Mappa in alto",
       "mapLeft": "Mappa a lato",
-      "showExternalRegions": "Show external regions",
-      "hideExternalRegions": "Hide external regions",
+      "showExternalRegions": "Mostra meteo-nivo zone esterne",
+      "hideExternalRegions": "Nascondi meteo-nivo zone esterne",
       "showNotes": "Mostra gli appunti",
       "hideNotes": "Nascondi gli appunti",
       "incompleteAvalancheProblem": "Incompleto",
       "label": {
-        "generalHeadlineComment": "General overall headline",
+        "generalHeadlineComment": "Titolo generale",
         "importantObservations": "Osservazioni importanti",
         "avalancheProblems": "Problema valanghivo",
         "aspects": "Esposizione",
@@ -331,7 +332,7 @@
         "snowpackStructureComment": "Descrizione struttura manto nevoso",
         "dangerPatterns": "Situazioni tipo",
         "tendencyComment": "Descrizione della tendenza",
-        "synopsisComment": "Weather synopsis",
+        "synopsisComment": "Panoramica meteo",
         "notes": "Commenti"
       },
       "copyRegion": {
@@ -376,7 +377,7 @@
         "reject": "No"
       },
       "deleteAllWarningRegionsDialog": {
-        "message": "Do you want to delete all warning regions?",
+        "message": "Vuoi cancellare tutte le meteo-nivo zone?",
         "accept": "Sì",
         "reject": "No"
       },
@@ -524,30 +525,29 @@
             "en": "EN"
           }
         },
-
         "email": {
           "label": "Email",
           "tooltip": "Inviare Email",
-          "success": "Emails successfully sent!",
-          "error": "Emails could not be sent!"
+          "success": "Email inviati con successo!",
+          "error": "Non è stato possibile inviare e-mail"
         },
         "telegram": {
           "label": "Messagio Telegram",
           "tooltip": "Invia messaggio via Telegram",
-          "success": "Telegram Messages successfully sent!",
-          "error": "Telegram Messages could not be sent!"
+          "success": "Messaggi via Telegram inviati con successo!",
+          "error": "Messaggi di Telegram non possono essere inviati!"
         },
         "whatsapp": {
-          "label": "WhatsApp Messages",
-          "tooltip": "Send WhatsApp Messages",
-          "success": "WhatsApp Messages successfully sent!",
-          "error": "WhatsApp Messages could not be sent!"
+          "label": "Messagio WhatsApp",
+          "tooltip": "Invia messaggi WhatsApp",
+          "success": "Messaggi via WhatsApp inviati con successo!",
+          "error": "Messaggi WhatsApp non possono essere inviati!"
         },
         "push": {
           "label": "Notifica push",
           "tooltip": "Invia notifica push",
-          "success": "Push Notifications successfully sent!",
-          "error": "Push Notifications could not be sent!"
+          "success": "Notifiche push inviate con successo!",
+          "error": "Non è stato possibile inviare le notifiche push!"
         },
         "accept": "Ok"
       },
@@ -606,7 +606,7 @@
       },
       "publishAllDialog": {
         "message": "Vuoi pubblicare tutte le meteo-nivo zone?",
-        "changeMessage": "Do you want to publish all regions? (no messages)",
+        "changeMessage": "Vuoi pubblicare tutte le meteo-nivo zone? (senza messaggi)",
         "accept": "Sí",
         "reject": "No"
       }
@@ -633,7 +633,7 @@
         "pdfDirectory": "Cartella per PDF",
         "htmlDirectory": "Cartella per HTML",
         "serverImagesUrl": "Path alle immagini sul server",
-        "dangerLevelElevationDependency": "Elevation dependency of danger level",
+        "dangerLevelElevationDependency": "Dipendenza di quota del grado di pericolo ",
         "mapsPath": "Path alle mappe",
         "mediaPath": "Path ai file media",
         "mapProductionUrl": "URL per la produzione di mappe",
@@ -651,11 +651,7 @@
       "table": {
         "general": {
           "title": "In generale",
-          "id": "ID",
-          "microRegions": "Numero micro-zone",
-          "subRegions": "Sottoregioni",
-          "superRegions": "Sovraregioni",
-          "neighborRegions": "Regioni confinanti"
+          "id": "ID"
         },
         "publication": {
           "title": "Pubblicazione",
@@ -669,7 +665,7 @@
           "sendEmails": "Invia email",
           "createSimpleHtml": "Crea HTML semplici",
           "sendTelegramMessages": "Invia messaggi via Telegram",
-          "sendWhatsAppMessages": "Send WhatsApp messages",
+          "sendWhatsAppMessages": "Invia messaggi WhatsApp",
           "sendPushNotifications": "Invia notifiche push",
           "pdfColor": "PDF a colori",
           "emailColor": "Email a colori",
@@ -681,21 +677,15 @@
           "pdfFooterLogo": "Logo per piè di pagina PDF",
           "pdfFooterLogoColorPath": "Logo per piè di pagina PDF (a colori)",
           "pdfFooterLogoBwPath": "Logo per piè di pagina PDF (bianco/nero)",
-          "mapXmax": "Mappa X massimo",
-          "mapXmin": "Mappa X minimo",
-          "mapYmax": "Mappa Y massimo",
-          "mapYmin": "Mappa Y minimo",
           "simpleHtmlTemplateName": "Template HTML semplice",
           "geoDataDirectory": "Cartella geodati",
           "mapLogoColorPath": "Logo per mappa (a colori)",
           "mapLogoBwPath": "Logo per mappa (bianco/nero)",
           "mapLogoPosition": "Posizione del logo nella mappa",
-          "mapCenterLat": "Posizione centrale della mappa (lat)",
-          "mapCenterLng": "Posizione centrale della mappa (long)",
           "imageColorbarColorPath": "Barra colori (a colori)",
           "imageColorbarBwPath": "Barra colori (bianco/nero)",
-          "enabledLanguages": "Enabled languages",
-          "ttsLanguages": "Text-to-speech languages"
+          "enabledLanguages": "Attiva lingue",
+          "ttsLanguages": "lingue text-to-speech"
         },
         "components": {
           "title": "Componenti",
@@ -712,9 +702,11 @@
           "enableStressLevel": "Attiva livello di stress",
           "enableAvalancheProblemCornices": "Attivare problema tipico valanghivo CORNICI",
           "enableAvalancheProblemNoDistinctAvalancheProblem": "Attiva problema tipico valanghivo NESSUN PROBLEMA VALANGHIVO EVIDENTE",
-          "enableEditableFields": "Editable textfields instead of textcat for bulletins",
-          "enableGeneralHeadline": "Enable general overall headline for bulletins",
-          "enableWeatherTextField": "Enable text input for weather synopsis"
+          "enableGeneralHeadline": "Attiva titolo generale per tutti i bollettini",
+          "enableWeatherTextField": "Attiva inserire testo per panoramica meteo"
+        },
+        "languageConfiguration": {
+          "title": "Configurazione lingue"
         }
       },
       "success": "Configurazione salvata con successo",
@@ -791,10 +783,11 @@
       "map": "Mappa",
       "gallery": "Galleria",
       "filters": "Filtri",
+      "details": "Dettagli",
       "title": "Osservazioni",
       "newObservation": "Nuova osservazione",
-      "exportObservations": "Export observations (GeoJSON)",
-      "exportStatistics": "Export statistics (CSV)",
+      "exportObservations": "Esporta osservazioni (GeoJSON)",
+      "exportStatistics": "Esporta statistiche (CSV)",
       "toggleFilterBar": "Visualizza/nascondi barra dei filtri",
       "button": {
         "submit": "Scarica"
@@ -811,11 +804,10 @@
         "placeholder": "origine dati",
         "selectionLabel": "{0} origine/i selezionato/i"
       },
-
       "charts": {
         "charts": "Diagrammi",
         "nan": "Senza specificazione",
-        "reload": "Reload",
+        "reload": "Ricarica",
         "classify": "Classifica",
         "label": "Denominazione",
         "invert": "Invert",
@@ -842,7 +834,7 @@
           "caption": "Situazione tipo"
         },
         "dangerSource": {
-          "caption": "Danger Source"
+          "caption": "Origini di pericolo"
         },
         "days": {
           "caption": "Giorno"
@@ -858,29 +850,29 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Send Emails, Telegram, WhatsApp and Push",
-        "success": "Email, Telegram, Whatsapp and Push successfully sent!",
-        "error": "Email, Telegram, WhatsApp and Push could not be sent!"
+        "tooltip": "Invia le Email, Telegram, WhatsApp e Push",
+        "success": "Email, Telegram, WhatsApp e Push inviati con successo!",
+        "error": "Non è stato possibile inviare le Email, Telegram, WhatApp e Push!"
       },
       "email": {
         "tooltip": "Invia email",
-        "success": "Email successfully sent!",
-        "error": "Email could not be sent!"
+        "success": "Email inviati con successo!",
+        "error": "Non è stato possibile inviare Email!"
       },
       "telegram": {
         "tooltip": "Pubblicazione via canale Telegram",
-        "success": "Telegram successfully sent!",
-        "error": "Telegram could not be sent!"
+        "success": "Messaggi via Telegram inviati con successo!",
+        "error": "Messaggi di Telegram non possono essere inviati!"
       },
       "whatsapp": {
-        "tooltip": "Send via WhatsApp Channel",
-        "success": "WhatsApp successfully sent!",
-        "error": "WhatsApp could not be sent!"
+        "tooltip": "Invia via canale WhatsApp",
+        "success": "WhatsApp inviato con successo!",
+        "error": "Non era possibile inviare WhatsApp!"
       },
       "push": {
         "tooltip": "Invia tramite notifiche push",
-        "success": "Push successfully sent!",
-        "error": "Push could not be sent!"
+        "success": "Push inviati con successo!",
+        "error": "Non è stato possibile inviare Push!"
       }
     }
   },
@@ -924,7 +916,7 @@
   },
   "statistics": {
     "title": "Statistiche",
-    "bulletins": "Avalanche Bulletins",
+    "bulletins": "Bollettini valanghe",
     "dangerSources": "Origini di pericolo",
     "button": {
       "submit": "Scarica"
@@ -935,7 +927,6 @@
       "duplicates": "Doppioni"
     }
   },
-
   "dangerRating": {
     "noRating": "senza valutazione",
     "low": "debole",
@@ -985,7 +976,7 @@
     "spring_diurnal": "Situazione primaverile"
   },
   "observationType": {
-    "DrySnowfallLevel": "Dry snowfall level",
+    "DrySnowfallLevel": "Limite nevicate asciutte ",
     "TimeSeries": "Serie cronologica",
     "Incident": "Incidente",
     "Profile": "Profilo stratigrafico",
@@ -1005,7 +996,7 @@
     "VeryLightNewSnow": "Neve fresca leggerissima"
   },
   "elevationTolerance": {
-    "exact": "exact",
+    "exact": "esato",
     "50m": "±50m",
     "100m": "±100m",
     "200": "±200m"
@@ -1089,14 +1080,14 @@
   },
   "weakLayerCrust": {
     "no": "no",
-    "partly": "partly",
+    "partly": "in parte",
     "yes": "si"
   },
   "creationProcess": {
     "radiation_recrystallization": "radiazione",
     "diurnal_recrystallization": "diurno",
     "melt_layer_recrystallization": "crosta da fusione",
-    "surface_hoar_formation": "surface hoar"
+    "surface_hoar_formation": "Brina di superficie"
   },
   "recognizability": {
     "very_easy": "molto facile",
@@ -1147,8 +1138,8 @@
     "distant_from_ridgelines": "distant from ridgelines",
     "in_the_vicinity_of_peaks": "in the vicinity of peaks",
     "pass_areas": "zone ai passi",
-    "shady_slopes": "shady slopes",
-    "sunny_slopes": "sunny slopes",
+    "shady_slopes": "Pendii ombreggiati",
+    "sunny_slopes": "Pendii soleggiati",
     "grassy_slopes": "grassy slopes",
     "cut_slopes": "cut slopes",
     "wind_loaded_slopes": "wind loaded slopes",
@@ -1283,7 +1274,7 @@
     },
     "weatherStations": {
       "tooltips": {
-        "drySnowfallLevel": "Dry snowfall level",
+        "drySnowfallLevel": "Limite nevicate asciutte ",
         "globalRadiation": "Radiazione globale",
         "newSnow": "Neve fresca",
         "snowLine": "Limite delle nevicate",
@@ -1419,6 +1410,7 @@
     "Aggregation band": "Aggregation band",
     "Date": "Data",
     "Datetag": "Datetag",
+    "Depth": "Depth",
     "Dry instability": "Dry instability",
     "fair (<0.77)": "fair (<0.77)",
     "fair (<1.05)": "fair (<1.05)",
