@@ -103,7 +103,7 @@
             <button
               type="button"
               class="btn btn-sm btn-primary mx-1"
-              (click)="editUser()"
+              (click)="showUpdateUserDialog()"
               data-toggle="tooltip"
               title="{{ 'admin.users.tooltip.edit' | translate }}"
             >
@@ -112,7 +112,7 @@
             <button
               type="button"
               class="btn btn-sm btn-primary mx-1"
-              (click)="changePassword()"
+              (click)="showChangePasswordDialog()"
               data-toggle="tooltip"
               title="{{ 'settings.changePassword.title' | translate }}"
             >

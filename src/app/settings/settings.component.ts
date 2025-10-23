@@ -23,13 +23,9 @@ export class SettingsComponent {
   private modalService = inject(BsModalService);
   private constantsService = inject(ConstantsService);
 
-  public oldPassword: string;
-  public newPassword1: string;
-  public newPassword2: string;
-
   public alerts: Alert[] = [];
 
-  showUpdateDialog() {
+  showUpdateUserDialog() {
     const author = this.authenticationService.getCurrentAuthor();
     const user: UserModel = UserSchema.parse({
       email: author.email,
@@ -61,10 +57,6 @@ export class SettingsComponent {
     });
   }
 
-  editUser() {
-    this.showUpdateDialog();
-  }
-
   showChangePasswordDialog() {
     const dialogRef = this.modalService.show(ChangePasswordComponent, {
       initialState: {
@@ -82,10 +74,6 @@ export class SettingsComponent {
         });
       }
     });
-  }
-
-  changePassword() {
-    this.showChangePasswordDialog();
   }
 
   onClosed(dismissedAlert: Alert): void {
