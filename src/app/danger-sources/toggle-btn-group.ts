@@ -20,8 +20,8 @@ export class ToggleBtnGroup<T> {
   valuesChange = output<T[]>();
 
   disabled = input<boolean>(false);
-  labelI18n = input<string>();
-  titleI18n = input<string>("");
+  labelI18n = input<`${string}#${string}`>();
+  titleI18n = input<"" | `${string}#${string}`>("");
   flexColumn = input(false);
 
   isSelected(v: T) {
