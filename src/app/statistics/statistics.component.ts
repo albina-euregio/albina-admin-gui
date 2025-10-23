@@ -35,7 +35,7 @@ export class StatisticsComponent {
         .getBulletinStatisticsCsv(
           this.bsRangeValueBulletin[0],
           this.bsRangeValueBulletin[1],
-          this.translateService.currentLang,
+          this.translateService.getCurrentLang(),
           this.extended,
           this.duplicates,
         )
@@ -54,7 +54,7 @@ export class StatisticsComponent {
               filename = filename + "e";
             }
           }
-          filename = filename + "_" + this.translateService.currentLang + ".csv";
+          filename = filename + "_" + this.translateService.getCurrentLang() + ".csv";
           saveAs(blob, filename);
           console.log("Bulletin statistics loaded.");
         });

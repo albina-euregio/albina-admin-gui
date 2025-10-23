@@ -356,7 +356,7 @@
           <option [ngValue]="undefined"></option>
           @for (dangerSource of dangerSources(); track dangerSource) {
             <option [value]="dangerSource.id">
-              {{ dangerSource.creationDate | date: "mediumDate" : undefined : translateService.currentLang }}
+              {{ dangerSource.creationDate | date: "mediumDate" : undefined : translateService.getCurrentLang() }}
               &mdash;
               {{ dangerSource.title }}
             </option>

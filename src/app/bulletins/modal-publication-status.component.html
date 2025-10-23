@@ -3,11 +3,11 @@
     <h1>{{ "bulletins.table.publicationStatusDialog.headline" | translate }}</h1>
     <p>
       <b>{{ "bulletins.table.publicationStatusDialog.validFor" | translate }}</b
-      >{{ json.report.date | date: "fullDate" : undefined : translateService.currentLang }}<br />
+      >{{ json.report.date | date: "fullDate" : undefined : translateService.getCurrentLang() }}<br />
       <b>{{ "bulletins.table.publicationStatusDialog.publishedBy" | translate }}</b
       >{{ json.report.user }}<br />
       <b>{{ "bulletins.table.publicationStatusDialog.publishedAt" | translate }}</b
-      >{{ json.report.timestamp | date: "medium" : undefined : translateService.currentLang }}
+      >{{ json.report.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
     </p>
   </div>
   <div class="col-lg-12">

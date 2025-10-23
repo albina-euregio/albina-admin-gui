@@ -258,8 +258,8 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         const values: FilterSelectionValue[] = orderBy(dangerSources, [(s) => s.creationDate], ["asc"]).map((s) => ({
           value: s.id,
           color: "#000000",
-          label: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
-          legend: formatDate(s.creationDate, "mediumDate", this.translateService.currentLang) + " — " + s.title,
+          label: formatDate(s.creationDate, "mediumDate", this.translateService.getCurrentLang()) + " — " + s.title,
+          legend: formatDate(s.creationDate, "mediumDate", this.translateService.getCurrentLang()) + " — " + s.title,
         }));
         filter.values.length = 0;
         filter.values.push(...values);
@@ -530,10 +530,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     const csvContent = toCSV(this.data.observations.filtered);
     const blob = new Blob([csvContent], { type: "text/csv" });
     const startDate = this.filter.startDate
-      ? formatDate(this.filter.startDate, "yyyy-MM-dd", this.translateService.currentLang)
+      ? formatDate(this.filter.startDate, "yyyy-MM-dd", this.translateService.getCurrentLang())
       : "";
     const endDate = this.filter.endDate
-      ? formatDate(this.filter.endDate, "yyyy-MM-dd", this.translateService.currentLang)
+      ? formatDate(this.filter.endDate, "yyyy-MM-dd", this.translateService.getCurrentLang())
       : "";
     saveAs(blob, `observations_${startDate}_to_${endDate}.csv`);
   }

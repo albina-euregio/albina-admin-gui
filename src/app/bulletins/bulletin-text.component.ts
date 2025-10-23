@@ -39,7 +39,7 @@ export class BulletinTextComponent {
   createWordDiff = createWordDiff;
 
   get translationLanguages() {
-    return LANGUAGES.filter((l) => l !== this.translateService.currentLang);
+    return LANGUAGES.filter((l) => l !== this.translateService.getCurrentLang());
   }
 
   get enableEditableFields() {
@@ -60,7 +60,7 @@ export class BulletinTextComponent {
     this.showDialog.emit({
       textField: this.textField(),
       textDef: this.bulletin()[this.bulletinTextcatKey] || "",
-      currentLang: this.translateService.currentLang,
+      currentLang: this.translateService.getCurrentLang(),
       region: regions[activeRegion] || "",
     });
   }
@@ -126,10 +126,10 @@ export class BulletinTextComponent {
 
   createText(): string {
     const currentBulletin = this.bulletin();
-    const currentText = currentBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang] ?? "";
+    const currentText = currentBulletin?.[this.bulletinTextKey]?.[this.translateService.getCurrentLang()] ?? "";
     if (currentBulletin !== null && currentBulletin !== undefined) {
       const comparedBulletin = this.comparedBulletin();
-      const comparedText = comparedBulletin?.[this.bulletinTextKey]?.[this.translateService.currentLang] ?? "";
+      const comparedText = comparedBulletin?.[this.bulletinTextKey]?.[this.translateService.getCurrentLang()] ?? "";
       return createWordDiff(currentText, comparedText);
     } else {
       return "";

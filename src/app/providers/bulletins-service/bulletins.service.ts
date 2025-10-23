@@ -221,7 +221,7 @@ export class BulletinsService {
     const url = this.constantsService.getServerUrl(
       "/bulletins/preview",
       ["region", this.authenticationService.getActiveRegionId()],
-      ["lang", this.translateService.currentLang],
+      ["lang", this.translateService.getCurrentLang()],
     );
     const headers = new HttpHeaders({ Accept: "application/pdf" });
     return this.http.post(url, body, { headers, responseType: "blob" });

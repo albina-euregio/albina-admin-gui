@@ -1,8 +1,8 @@
 <div>
   <div class="region-form__mobile-header" [class.d-none]="isVariantsSidebarVisible()">
     <h1 class="font-m-bold">
-      {{ dangerSourcesService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.currentLang }}
-      {{ dangerSourcesService.getActiveDate()[1] | date: "longDate" : undefined : translateService.currentLang }}
+      {{ dangerSourcesService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.getCurrentLang() }}
+      {{ dangerSourcesService.getActiveDate()[1] | date: "longDate" : undefined : translateService.getCurrentLang() }}
     </h1>
   </div>
 
@@ -23,7 +23,7 @@
         }
       </h2>
       <div class="user-avatar__name">
-        Updated on {{ variant().updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
+        Updated on {{ variant().updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.getCurrentLang() }}
       </div>
       <!-- Status -->
       <div class="create-bulletin__status">

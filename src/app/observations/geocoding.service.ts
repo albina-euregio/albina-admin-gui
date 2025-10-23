@@ -16,7 +16,7 @@ export class GeocodingService {
     // https://nominatim.org/release-docs/develop/api/Search/
     const { osmNominatimApi, osmNominatimCountries } = this;
     const params: Record<string, string> = {
-      "accept-language": this.translateService.currentLang,
+      "accept-language": this.translateService.getCurrentLang(),
       countrycodes: osmNominatimCountries,
       format: "geojson",
       limit: String(limit),

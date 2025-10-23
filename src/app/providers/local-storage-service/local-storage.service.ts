@@ -51,7 +51,7 @@ export class LocalStorageService {
     if (!language) {
       return;
     }
-    if (!this.translateService.langs.includes(language)) {
+    if (!this.translateService.getLangs().includes(language)) {
       language = "en";
     }
     document.documentElement.setAttribute("lang", language);

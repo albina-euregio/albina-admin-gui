@@ -53,7 +53,7 @@ export class RegionsService {
   }
 
   getRegionNames(): typeof regionsNamesDe {
-    switch (this.translateService.currentLang) {
+    switch (this.translateService.getCurrentLang()) {
       case "de":
         return regionsNamesDe;
       case "it":

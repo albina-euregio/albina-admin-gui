@@ -90,13 +90,13 @@
           dropdownToggle
           ngxMousetrapKey="l"
         >
-          {{ translateService.currentLang }}
+          {{ translateService.getCurrentLang() }}
         </a>
         <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
           <li>
             <h6 class="dropdown-header">{{ "menu.language" | translate }}</h6>
           </li>
-          <li *ngFor="let lang of translateService.langs; let i = index">
+          <li *ngFor="let lang of translateService.getLangs(); let i = index">
             <a
               class="dropdown-item"
               (click)="localStorageService.setLanguage(lang)"
@@ -104,7 +104,7 @@
               [ngxMousetrapKey]="`${i + 1}`"
             >
               {{ "menu." + lang | translate }}
-              <i *ngIf="translateService.currentLang === lang" class="ph ph-check"></i>
+              <i *ngIf="translateService.getCurrentLang() === lang" class="ph ph-check"></i>
             </a>
           </li>
         </ul>

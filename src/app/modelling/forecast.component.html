@@ -148,7 +148,7 @@
                   <span class="text-bg-light">
                     <kbd (click)="source.change(-1)" ngxMousetrapKey="left" role="button">←</kbd>
                     {{ " " }}
-                    {{ source.epochMilliseconds | date: "medium" : undefined : translateService.currentLang }}
+                    {{ source.epochMilliseconds | date: "medium" : undefined : translateService.getCurrentLang() }}
                     {{ " " }}
                     <kbd (click)="source.change(+1)" ngxMousetrapKey="right" role="button">→</kbd>
                   </span>

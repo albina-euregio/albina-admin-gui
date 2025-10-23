@@ -474,7 +474,7 @@
             <td>
               @if (row.date !== undefined) {
                 <span>
-                  {{ row.date | date: "full" : undefined : translateService.currentLang }}
+                  {{ row.date | date: "full" : undefined : translateService.getCurrentLang() }}
                 </span>
               }
               @if (row.number !== undefined) {

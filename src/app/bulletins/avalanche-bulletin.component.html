@@ -1,8 +1,8 @@
 <div>
   <div class="region-form__mobile-header" [class.d-none]="isBulletinSidebarVisible()">
     <h1 class="font-m-bold">
-      {{ bulletinsService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.currentLang }}
-      {{ bulletinsService.getActiveDate()[1] | date: "longDate" : undefined : translateService.currentLang }}
+      {{ bulletinsService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.getCurrentLang() }}
+      {{ bulletinsService.getActiveDate()[1] | date: "longDate" : undefined : translateService.getCurrentLang() }}
     </h1>
   </div>
 

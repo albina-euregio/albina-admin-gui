@@ -1,7 +1,7 @@
 <div class="modal-body">
   <div class="text-center">
     <h1>{{ "bulletins.table.mediaFileDialog.headline" | translate }}</h1>
-    <p>{{ date[1] | date: "fullDate" : undefined : translateService.currentLang }}<br /></p>
+    <p>{{ date[1] | date: "fullDate" : undefined : translateService.getCurrentLang() }}<br /></p>
   </div>
   <div *ngFor="let alert of alerts">
     <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>

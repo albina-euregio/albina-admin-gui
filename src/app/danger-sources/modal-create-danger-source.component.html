@@ -5,7 +5,7 @@
       <span>{{ dangerSource.title }} </span>
     </h2>
     <div class="user-avatar__name">
-      {{ dangerSource.creationDate | date: "fullDate" : undefined : translateService.currentLang }}
+      {{ dangerSource.creationDate | date: "fullDate" : undefined : translateService.getCurrentLang() }}
     </div>
   </div>
   <h2 class="form-label mt-3">{{ "dangerSources.create.createDangerSourceDialog.title" | translate }}</h2>

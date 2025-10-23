@@ -30,12 +30,12 @@
         <td [attr.data-label]="'bulletins.table.title.date' | translate">
           <div class="bulletins-table__day">
             <time>
-              {{ date[1] | date: "fullDate" : undefined : translateService.currentLang }}
+              {{ date[1] | date: "fullDate" : undefined : translateService.getCurrentLang() }}
               <br />
               <small class="fw-normal">
-                {{ date[0] | date: "medium" : undefined : translateService.currentLang }}
+                {{ date[0] | date: "medium" : undefined : translateService.getCurrentLang() }}
                 &ndash;
-                {{ date[1] | date: "medium" : undefined : translateService.currentLang }}
+                {{ date[1] | date: "medium" : undefined : translateService.getCurrentLang() }}
               </small>
             </time>
             <div class="bulletins-table__day-buttons-div">

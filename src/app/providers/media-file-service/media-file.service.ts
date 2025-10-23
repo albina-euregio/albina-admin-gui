@@ -16,7 +16,7 @@ export class MediaFileService {
       "/media",
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[1])],
       ["region", this.authenticationService.getActiveRegionId()],
-      ["lang", this.translateService.currentLang],
+      ["lang", this.translateService.getCurrentLang()],
       ["important", important],
     );
     const formData = new FormData();

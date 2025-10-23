@@ -85,8 +85,10 @@
           class="form-control"
           [rows]="rows()"
           [disabled]="disabled() || !enableEditableFields"
-          [ngModel]="bulletin()[bulletinTextKey][translateService.currentLang] | html"
-          (ngModelChange)="enableEditableFields && (bulletin()[bulletinTextKey][translateService.currentLang] = $event)"
+          [ngModel]="bulletin()[bulletinTextKey][translateService.getCurrentLang()] | html"
+          (ngModelChange)="
+            enableEditableFields && (bulletin()[bulletinTextKey][translateService.getCurrentLang()] = $event)
+          "
           (focusout)="enableEditableFields && updateBulletinOnServer.emit()"
         ></textarea>
       </div>

@@ -33,7 +33,7 @@ export class AppComponent {
     this.translateService.setTranslation("ca", ca);
     this.translateService.setTranslation("oc", oc);
     // this language will be used as a fallback when a translation isn't found in the current language
-    this.translateService.setDefaultLang("en");
+    this.translateService.setFallbackLang("en");
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     const lang = this.localStorageService.getLanguage() || navigator.language.split("-")[0];
     this.localStorageService.setLanguage(lang);
