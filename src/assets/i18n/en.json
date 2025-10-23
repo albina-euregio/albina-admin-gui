@@ -1248,6 +1248,8 @@
     }
   },
   "button": {
+    "true": "yes",
+    "false": "no",
     "yes": "yes",
     "no": "no"
   },

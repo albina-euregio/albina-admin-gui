@@ -12,63 +12,77 @@
       </tr>
     </thead>
     <tbody class="bulletins-table__body">
-      <tr
-        *ngFor="let date of dangerSourcesService.dates"
-        [class.bulletins-table__day--past]="dangerSourcesService.hasBeenPublished5PM(date)"
-      >
-        <td [attr.data-label]="'bulletins.table.title.date' | translate">
-          <div class="bulletins-table__day">
-            <time>
-              {{ date[1] | date: "fullDate" : undefined : translateService.currentLang }}
-              <br />
-              <small class="fw-normal">
-                {{ date[0] | date: "medium" : undefined : translateService.currentLang }}
-                &ndash;
-                {{ date[1] | date: "medium" : undefined : translateService.currentLang }}
-              </small>
-            </time>
-            <div class="bulletins-table__day-buttons-div">
-              <button
-                class="btn btn-secondary btn-icon bulletins-table__day-buttons"
-                type="button"
-                (click)="editDangerSources(date, false)"
-                title="{{ 'dangerSources.tooltip.edit' | translate }}"
-              >
-                <i class="ph ph-pencil-line"></i>
-              </button>
+      @for (date of dangerSourcesService.dates; track date) {
+        <tr [class.bulletins-table__day--past]="dangerSourcesService.hasBeenPublished5PM(date)">
+          <td [attr.data-label]="'bulletins.table.title.date' | translate">
+            <div class="bulletins-table__day">
+              <time>
+                {{ date[1] | date: "fullDate" : undefined : translateService.currentLang }}
+                <br />
+                <small class="fw-normal">
+                  {{ date[0] | date: "medium" : undefined : translateService.currentLang }}
+                  &ndash;
+                  {{ date[1] | date: "medium" : undefined : translateService.currentLang }}
+                </small>
+              </time>
+              <div class="bulletins-table__day-buttons-div">
+                <button
+                  class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+                  type="button"
+                  (click)="editDangerSources(date, false)"
+                  title="{{ 'dangerSources.tooltip.edit' | translate }}"
+                >
+                  <i class="ph ph-pencil-line"></i>
+                </button>
+              </div>
             </div>
-          </div>
-        </td>
-        <td class="bulletins-table__region-status" [attr.data-label]="'dangerSources.table.title.forecast' | translate">
-          <span *ngIf="getForecastStatus(date)" class="badge bg-primary">
-            {{ "dangerSources.status.available" | translate }}
-          </span>
-          <span *ngIf="!getForecastStatus(date)" class="badge bg-gray">
-            {{ "dangerSources.status.missing" | translate }}
-          </span>
-        </td>
-        <td class="bulletins-table__region-status" [attr.data-label]="'dangerSources.table.title.analysis' | translate">
-          <span *ngIf="getAnalysisStatus(date)" class="badge bg-success">
-            {{ "dangerSources.status.available" | translate }}
-          </span>
-          <span *ngIf="!getAnalysisStatus(date)" class="badge bg-gray">
-            {{ "dangerSources.status.missing" | translate }}
-          </span>
-        </td>
-      </tr>
+          </td>
+          <td
+            class="bulletins-table__region-status"
+            [attr.data-label]="'dangerSources.table.title.forecast' | translate"
+          >
+            @if (getForecastStatus(date)) {
+              <span class="badge bg-primary">
+                {{ "dangerSources.status.available" | translate }}
+              </span>
+            }
+            @if (!getForecastStatus(date)) {
+              <span class="badge bg-gray">
+                {{ "dangerSources.status.missing" | translate }}
+              </span>
+            }
+          </td>
+          <td
+            class="bulletins-table__region-status"
+            [attr.data-label]="'dangerSources.table.title.analysis' | translate"
+          >
+            @if (getAnalysisStatus(date)) {
+              <span class="badge bg-success">
+                {{ "dangerSources.status.available" | translate }}
+              </span>
+            }
+            @if (!getAnalysisStatus(date)) {
+              <span class="badge bg-gray">
+                {{ "dangerSources.status.missing" | translate }}
+              </span>
+            }
+          </td>
+        </tr>
+      }
     </tbody>
     <tfoot>
       <tr>
         <td colspan="999">
-          <button
-            *ngFor="let days of [7]"
-            style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
-            class="btn btn-icon btn-sm"
-            (click)="dangerSourcesService.init({ days: dangerSourcesService.dates.length + days })"
-            title="{{ 'dangerSources.table.loadMore' | translate: { count: days } }}"
-          >
-            <i class="ph ph-caret-down"></i>
-          </button>
+          @for (days of [7]; track days) {
+            <button
+              style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
+              class="btn btn-icon btn-sm"
+              (click)="dangerSourcesService.init({ days: dangerSourcesService.dates.length + days })"
+              title="{{ 'dangerSources.table.loadMore' | translate: { count: days } }}"
+            >
+              <i class="ph ph-caret-down"></i>
+            </button>
+          }
         </td>
       </tr>
     </tfoot>

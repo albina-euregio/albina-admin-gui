@@ -645,7 +645,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             let pmIndex = 1;
             let hasDaytimeDependency = false;
             for (const dangerSourceVariantId of dangerSourceVariantIds.split("|")) {
-              const dangerSourceVariant = DangerSourceVariantModel.createFromJson(
+              const dangerSourceVariant = DangerSourceVariantModel.parse(
                 dangerSourceVariants.find((variant) => variant.id === dangerSourceVariantId),
               );
               // create avalanche problem only if danger rating > 1

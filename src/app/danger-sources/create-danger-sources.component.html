@@ -16,22 +16,24 @@
           {{ dangerSourcesService.getActiveDate()[1] | date: "longDate" : undefined : translateService.currentLang }}
         </h1>
         <nav class="btn-group create-bulleting__days-nav">
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="changeDate(dangerSourcesService.getNextDate())"
-            *ngIf="dangerSourcesService.getNextDate()"
-          >
-            <i class="ph-bold ph-caret-left"></i>
-          </button>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="changeDate(dangerSourcesService.getPreviousDate())"
-            *ngIf="dangerSourcesService.getPreviousDate()"
-          >
-            <i class="ph-bold ph-caret-right"></i>
-          </button>
+          @if (dangerSourcesService.getNextDate()) {
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-bare--grey"
+              (click)="changeDate(dangerSourcesService.getNextDate())"
+            >
+              <i class="ph-bold ph-caret-left"></i>
+            </button>
+          }
+          @if (dangerSourcesService.getPreviousDate()) {
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-bare--grey"
+              (click)="changeDate(dangerSourcesService.getPreviousDate())"
+            >
+              <i class="ph-bold ph-caret-right"></i>
+            </button>
+          }
         </nav>
       </div>
       <div class="region-thumb__author font-s text-secondary">
@@ -46,37 +48,43 @@
       <!-- Status -->
       <div class="create-bulletin__status">
         <div>
-          <span
-            *ngIf="dangerSourcesService.getDangerSourceVariantType() === variantType.forecast"
-            class="badge bg-primary"
-          >
-            {{ "dangerSources.status.forecast" | translate }}
-          </span>
-          <span
-            *ngIf="dangerSourcesService.getDangerSourceVariantType() === variantType.analysis"
-            class="badge bg-success"
-          >
-            {{ "dangerSources.status.analysis" | translate }}
-          </span>
+          @if (dangerSourcesService.getDangerSourceVariantType() === variantType.forecast) {
+            <span class="badge bg-primary">
+              {{ "dangerSources.status.forecast" | translate }}
+            </span>
+          }
+          @if (dangerSourcesService.getDangerSourceVariantType() === variantType.analysis) {
+            <span class="badge bg-success">
+              {{ "dangerSources.status.analysis" | translate }}
+            </span>
+          }
         </div>
       </div>
       <!-- End status-->
 
-      <span class="create-bulletin__bulletin-info" *ngIf="loading"
-        ><i class="ph ph-circle-notch"></i> {{ "dangerSources.status.loading" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-alert" *ngIf="saveError.size" (click)="updateSaveErrors()"
-        ><i class="ph ph-warning icon-left"></i> {{ "dangerSources.status.saveError" | translate }}
-        <button class="btn btn-outline btn-danger btn-small lm-2">
-          <i class="ph ph-repeat icon-right"></i>
-        </button>
-      </span>
-      <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalVariantsError"
-        ><i class="ph ph-info"></i> {{ "dangerSources.status.loadVariantsError" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalDangerSourcesError"
-        ><i class="ph ph-info"></i> {{ "dangerSources.status.loadDangerSourcesError" | translate }}</span
-      >
+      @if (loading) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-circle-notch"></i> {{ "dangerSources.status.loading" | translate }}</span
+        >
+      }
+      @if (saveError.size) {
+        <span class="create-bulletin__bulletin-alert" (click)="updateSaveErrors()"
+          ><i class="ph ph-warning icon-left"></i> {{ "dangerSources.status.saveError" | translate }}
+          <button class="btn btn-outline btn-danger btn-small lm-2">
+            <i class="ph ph-repeat icon-right"></i>
+          </button>
+        </span>
+      }
+      @if (loadInternalVariantsError) {
+        <span class="create-bulletin__bulletin-warning"
+          ><i class="ph ph-info"></i> {{ "dangerSources.status.loadVariantsError" | translate }}</span
+        >
+      }
+      @if (loadInternalDangerSourcesError) {
+        <span class="create-bulletin__bulletin-warning"
+          ><i class="ph ph-info"></i> {{ "dangerSources.status.loadDangerSourcesError" | translate }}</span
+        >
+      }
     </header>
     <!-- End sidebar header -->
 
@@ -85,68 +93,77 @@
       <!-- Own danger sources -->
       <header class="create-bulletin__region-divider" style="background: none; border-top: none">
         <h5 class="font-s-bold">
-          <button
-            [disabled]="editRegions || loading"
-            *ngIf="dangerSourcesService.getIsEditable()"
-            (click)="createDangerSource()"
-            class="btn btn-sm btn-primary"
-            type="button"
-            title="{{ 'dangerSources.create.createDangerSource' | translate }}"
-            ngxMousetrapKey="c d"
-          >
-            {{ "dangerSources.create.createDangerSource" | translate }}
-          </button>
+          @if (dangerSourcesService.getIsEditable()) {
+            <button
+              [disabled]="editRegions || loading"
+              (click)="createDangerSource()"
+              class="btn btn-sm btn-primary"
+              type="button"
+              title="{{ 'dangerSources.create.createDangerSource' | translate }}"
+              ngxMousetrapKey="c d"
+            >
+              {{ "dangerSources.create.createDangerSource" | translate }}
+            </button>
+          }
         </h5>
         <div class="btn-group region-divider__actions">
           <!-- map above / map aside -->
-          <button
-            *ngIf="!isCompactMapLayout"
-            (click)="toggleCompactMapLayout()"
-            class="btn btn-sm btn-bare btn-sm btn-icon"
-            type="button"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.mapTop' | translate }}"
-            ngxMousetrapKey="v"
-          >
-            <i class="ph ph-bold icon-md ph-square-split-vertical"></i>
-          </button>
-          <button
-            *ngIf="isCompactMapLayout"
-            (click)="toggleCompactMapLayout()"
-            class="btn btn-sm btn-bare btn-sm btn-icon"
-            type="button"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.mapLeft' | translate }}"
-            ngxMousetrapKey="v"
-          >
-            <i class="ph ph-bold icon-md ph-square-split-horizontal"></i>
-          </button>
+          @if (!isCompactMapLayout) {
+            <button
+              (click)="toggleCompactMapLayout()"
+              class="btn btn-sm btn-bare btn-sm btn-icon"
+              type="button"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.mapTop' | translate }}"
+              ngxMousetrapKey="v"
+            >
+              <i class="ph ph-bold icon-md ph-square-split-vertical"></i>
+            </button>
+          }
+          @if (isCompactMapLayout) {
+            <button
+              (click)="toggleCompactMapLayout()"
+              class="btn btn-sm btn-bare btn-sm btn-icon"
+              type="button"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.mapLeft' | translate }}"
+              ngxMousetrapKey="v"
+            >
+              <i class="ph ph-bold icon-md ph-square-split-horizontal"></i>
+            </button>
+          }
           <!-- load danger sources from yesterday -->
-          <button
-            *ngIf="dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()"
-            [disabled]="editRegions || loading"
-            (click)="loadAllVariantsFromYesterday()"
-            class="btn btn-sm btn-bare btn-sm btn-icon"
-            type="button"
-            data-toggle="tooltip"
-            title="{{ 'dangerSources.create.tooltip.loadVariants' | translate }}"
-            ngxMousetrapKey="y"
-          >
-            <i class="ph-bold ph-copy icon-md"></i>
-          </button>
+          @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
+            <button
+              [disabled]="editRegions || loading"
+              (click)="loadAllVariantsFromYesterday()"
+              class="btn btn-sm btn-bare btn-sm btn-icon"
+              type="button"
+              data-toggle="tooltip"
+              title="{{ 'dangerSources.create.tooltip.loadVariants' | translate }}"
+              ngxMousetrapKey="y"
+            >
+              <i class="ph-bold ph-copy icon-md"></i>
+            </button>
+          }
         </div>
       </header>
       <!-- End own danger sources header -->
       <!-- List of own danger sources -->
       <nav class="create-bulletin__region-list">
         <!-- Show the list of danger sources if there are any -->
-        <ng-container *ngIf="internDangerSourcesList.length; else noDangerSourcesTemplate">
-          <ng-container *ngFor="let dangerSource of internDangerSourcesList; trackBy: trackByDangerSourceId">
+        @if (internDangerSourcesList.length) {
+          @for (dangerSource of internDangerSourcesList; track trackByDangerSourceId($index, dangerSource)) {
             <ng-container
               *ngTemplateOutlet="dangerSourceTemplate; context: { dangerSource: dangerSource }"
             ></ng-container>
-          </ng-container>
-        </ng-container>
+          }
+        } @else {
+          <div class="create-bulletin__nobulletins">
+            <i class="ph ph-mountains"></i>
+            <p>{{ "dangerSources.create.noDangerSources" | translate }}</p>
+          </div>
+        }
       </nav>
     </div>
   </aside>
@@ -163,44 +180,46 @@
     [class.full-width]="!isVariantsSidebarVisible"
   >
     <!-- Active variant -->
-    <div
-      *ngIf="activeVariant && !showNewVariantModal"
-      class="create-bulletin__region-form"
-      (scroll)="updateVariantScroll('scrollActiveVariant', $event)"
-      #scrollActiveVariant
-    >
-      <app-danger-source-variant
-        [variant]="activeVariant"
-        [disabled]="isDisabled()"
-        [isCompactMapLayout]="isCompactMapLayout"
-        [isVariantsSidebarVisible]="isVariantsSidebarVisible"
-        [isComparedVariant]="false"
-        (updateVariantOnServerEvent)="updateVariantOnServer($event)"
-        (deleteVariantEvent)="eventDeleteVariant($event)"
-        (copyVariantEvent)="eventCopyVariant($event)"
-        (editMicroRegionsEvent)="eventEditMicroRegions($event)"
-        (deselectVariantEvent)="eventDeselectVariant()"
-        (toggleVariantsSidebarEvent)="toggleVariantsSidebar()"
-      ></app-danger-source-variant>
-    </div>
+    @if (activeVariant && !showNewVariantModal) {
+      <div
+        class="create-bulletin__region-form"
+        (scroll)="updateVariantScroll('scrollActiveVariant', $event)"
+        #scrollActiveVariant
+      >
+        <app-danger-source-variant
+          [variant]="activeVariant"
+          [disabled]="isDisabled()"
+          [isCompactMapLayout]="isCompactMapLayout"
+          [isVariantsSidebarVisible]="isVariantsSidebarVisible"
+          [isComparedVariant]="false"
+          (updateVariantOnServerEvent)="updateVariantOnServer($event)"
+          (deleteVariantEvent)="eventDeleteVariant($event)"
+          (copyVariantEvent)="eventCopyVariant($event)"
+          (editMicroRegionsEvent)="eventEditMicroRegions($event)"
+          (deselectVariantEvent)="eventDeselectVariant()"
+          (toggleVariantsSidebarEvent)="toggleVariantsSidebar()"
+        ></app-danger-source-variant>
+      </div>
+    }
     <!-- End Active variant -->
     <!-- Compared variant -->
-    <div
-      *ngIf="comparedVariant && !showNewVariantModal"
-      class="create-bulletin__region-form"
-      (scroll)="updateVariantScroll('scrollComparedVariant', $event)"
-      #scrollComparedVariant
-    >
-      <app-danger-source-variant
-        [variant]="comparedVariant"
-        [comparedVariant]="activeVariant"
-        [disabled]="true"
-        [isCompactMapLayout]="isCompactMapLayout"
-        [isVariantsSidebarVisible]="isVariantsSidebarVisible"
-        [isComparedVariant]="true"
-        (deselectVariantEvent)="eventDeselectComparedVariant()"
-      ></app-danger-source-variant>
-    </div>
+    @if (comparedVariant && !showNewVariantModal) {
+      <div
+        class="create-bulletin__region-form"
+        (scroll)="updateVariantScroll('scrollComparedVariant', $event)"
+        #scrollComparedVariant
+      >
+        <app-danger-source-variant
+          [variant]="comparedVariant"
+          [comparedVariant]="activeVariant"
+          [disabled]="true"
+          [isCompactMapLayout]="isCompactMapLayout"
+          [isVariantsSidebarVisible]="isVariantsSidebarVisible"
+          [isComparedVariant]="true"
+          (deselectVariantEvent)="eventDeselectComparedVariant()"
+        ></app-danger-source-variant>
+      </div>
+    }
     <!-- End Compared variant -->
 
     <!-- Map -->
@@ -210,30 +229,32 @@
         <i class="ph ph-sidebar"></i>
       </button>
       <!-- End Variant Sidebar toggle icon -->
-      <div class="floating-action create-region-floating-action" *ngIf="showNewVariantModal && activeVariant">
-        <div class="floating-action__text">
-          <i class="ph ph-globe-hemisphere-west"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
+      @if (showNewVariantModal && activeVariant) {
+        <div class="floating-action create-region-floating-action">
+          <div class="floating-action__text">
+            <i class="ph ph-globe-hemisphere-west"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
+          </div>
+          <div class="floating-action__actions btn-toolbar">
+            <button
+              type="reset"
+              class="btn btn-bare"
+              (click)="discardVariant($event, activeVariant)"
+              ngxMousetrapKey="esc"
+            >
+              <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
+            </button>
+            <button type="button" class="btn btn-primary" (click)="saveVariant($event)">
+              <i class="ph-bold ph-check"></i>
+              @if (activeVariant.regions.length === 0) {
+                <span>{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
+              }
+              @if (activeVariant.regions.length > 0) {
+                <span>{{ "bulletins.create.tooltip.saveChanges" | translate }}</span>
+              }
+            </button>
+          </div>
         </div>
-        <div class="floating-action__actions btn-toolbar">
-          <button
-            type="reset"
-            class="btn btn-bare"
-            (click)="discardVariant($event, activeVariant)"
-            ngxMousetrapKey="esc"
-          >
-            <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
-          </button>
-          <button type="button" class="btn btn-primary" (click)="saveVariant($event)">
-            <i class="ph-bold ph-check"></i>
-            <span *ngIf="activeVariant.regions.length === 0">{{
-              "bulletins.create.tooltip.createRegion" | translate
-            }}</span>
-            <span *ngIf="activeVariant.regions.length > 0">{{
-              "bulletins.create.tooltip.saveChanges" | translate
-            }}</span>
-          </button>
-        </div>
-      </div>
+      }
 
       <div id="map" class="create-bulletin__map create-bulletin__map--am"></div>
       <div id="afternoonMap" class="create-bulletin__map create-bulletin__map--pm"></div>
@@ -243,12 +264,6 @@
 </div>
 
 <!-- Display this template when there are no danger sources -->
-<ng-template #noDangerSourcesTemplate>
-  <div class="create-bulletin__nobulletins">
-    <i class="ph ph-mountains"></i>
-    <p>{{ "dangerSources.create.noDangerSources" | translate }}</p>
-  </div>
-</ng-template>
 
 <ng-template #dangerSourceTemplate let-dangerSource="dangerSource">
   <!-- List of danger sources -->
@@ -272,10 +287,16 @@
           {{ dangerSource.title }}
         </h5>
         <div class="region-thumb__author font-s text-secondary">
-          <div *ngIf="getVariantCount(dangerSource) > 0" class="btn-group region-divider__actions">
-            <i *ngIf="showDangerSourceVariantsMap.get(dangerSource.id)" class="ph-bold ph-caret-right"></i>
-            <i *ngIf="!showDangerSourceVariantsMap.get(dangerSource.id)" class="ph-bold ph-caret-down"></i>
-          </div>
+          @if (getVariantCount(dangerSource) > 0) {
+            <div class="btn-group region-divider__actions">
+              @if (showDangerSourceVariantsMap.get(dangerSource.id)) {
+                <i class="ph-bold ph-caret-right"></i>
+              }
+              @if (!showDangerSourceVariantsMap.get(dangerSource.id)) {
+                <i class="ph-bold ph-caret-down"></i>
+              }
+            </div>
+          }
           <div class="btn-group region-divider__actions">
             {{
               getMainDateString(dangerSource.creationDate)
@@ -299,30 +320,32 @@
           <ul *bsDropdownMenu class="dropdown-menu create-bulletin__region-dropdown">
             <!-- load variants from yesterday -->
             <li>
-              <button
-                *ngIf="dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()"
-                [disabled]="editRegions || loading"
-                type="reset"
-                class="dropdown-item"
-                (click)="openEditDangerSourceModal(dangerSource)"
-                data-toggle="tooltip"
-                title="{{ 'dangerSources.create.tooltip.editDangerSource' | translate }}"
-              >
-                <i class="ph-bold ph-pencil icon-md"></i>
-                {{ "dangerSources.create.tooltip.editDangerSource" | translate }}
-              </button>
-              <button
-                *ngIf="dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()"
-                [disabled]="editRegions || loading"
-                type="reset"
-                class="dropdown-item"
-                (click)="loadVariantsFromYesterday(dangerSource.id)"
-                data-toggle="tooltip"
-                title="{{ 'dangerSources.create.tooltip.loadVariants' | translate }}"
-              >
-                <i class="ph-bold ph-copy icon-md"></i>
-                {{ "dangerSources.create.tooltip.loadVariants" | translate }}
-              </button>
+              @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
+                <button
+                  [disabled]="editRegions || loading"
+                  type="reset"
+                  class="dropdown-item"
+                  (click)="openEditDangerSourceModal(dangerSource)"
+                  data-toggle="tooltip"
+                  title="{{ 'dangerSources.create.tooltip.editDangerSource' | translate }}"
+                >
+                  <i class="ph-bold ph-pencil icon-md"></i>
+                  {{ "dangerSources.create.tooltip.editDangerSource" | translate }}
+                </button>
+              }
+              @if (dangerSourcesService.getIsEditable() && !dangerSourcesService.getIsReadOnly()) {
+                <button
+                  [disabled]="editRegions || loading"
+                  type="reset"
+                  class="dropdown-item"
+                  (click)="loadVariantsFromYesterday(dangerSource.id)"
+                  data-toggle="tooltip"
+                  title="{{ 'dangerSources.create.tooltip.loadVariants' | translate }}"
+                >
+                  <i class="ph-bold ph-copy icon-md"></i>
+                  {{ "dangerSources.create.tooltip.loadVariants" | translate }}
+                </button>
+              }
             </li>
           </ul>
         </div>
@@ -339,29 +362,32 @@
           </button>
         </div>
         <div style="height: 100%; padding-left: 3px">
-          <button
-            [disabled]="editRegions || loading"
-            *ngIf="dangerSourcesService.getIsEditable()"
-            (click)="createVariant($event, dangerSource)"
-            class="btn btn-sm btn-icon btn-primary"
-            type="button"
-            title="{{ 'dangerSources.create.createVariant' | translate }}"
-          >
-            <i class="ph-bold ph-plus"></i>
-          </button>
+          @if (dangerSourcesService.getIsEditable()) {
+            <button
+              [disabled]="editRegions || loading"
+              (click)="createVariant($event, dangerSource)"
+              class="btn btn-sm btn-icon btn-primary"
+              type="button"
+              title="{{ 'dangerSources.create.createVariant' | translate }}"
+            >
+              <i class="ph-bold ph-plus"></i>
+            </button>
+          }
         </div>
       </div>
     </header>
     <!-- End own danger sources header -->
     <!-- List of variants of danger source -->
-    <nav *ngIf="!showDangerSourceVariantsMap.get(dangerSource.id)" class="create-bulletin__region-list">
-      <!-- Show the list of variants if there are any -->
-      <ng-container>
-        <ng-container *ngFor="let variant of getVariantsOfDangerSource(dangerSource.id)">
-          <ng-container *ngTemplateOutlet="variantTemplate; context: { variant: variant }"></ng-container>
+    @if (!showDangerSourceVariantsMap.get(dangerSource.id)) {
+      <nav class="create-bulletin__region-list">
+        <!-- Show the list of variants if there are any -->
+        <ng-container>
+          @for (variant of getVariantsOfDangerSource(dangerSource.id); track variant) {
+            <ng-container *ngTemplateOutlet="variantTemplate; context: { variant: variant }"></ng-container>
+          }
         </ng-container>
-      </ng-container>
-    </nav>
+      </nav>
+    }
   </div>
 </ng-template>
 
@@ -376,36 +402,51 @@
   <div (click)="toggleVariant(variant)" class="region-thumb" [class.region-thumb--active]="variant === activeVariant">
     <div class="region-thumb__details">
       <p>
-        <span
-          *ngIf="isDangerSourceVariantStatus(variant, variantStatus.active)"
-          class="badge bg-secondary"
-          [style.background-color]="getDangerRatingColor(variant)"
-          [style.color]="getFontColor(variant)"
-        >
-          {{ "dangerSources.variantStatus.active" | translate }}
-          <!-- Natural Avalanches -->
-          <span *ngIf="isNaturalReleaseLikely(variant)">
-            <i class="ph-bold ph-warning-circle icon-md"></i>
+        @if (isDangerSourceVariantStatus(variant, variantStatus.active)) {
+          <span
+            class="badge bg-secondary"
+            [style.background-color]="getDangerRatingColor(variant)"
+            [style.color]="getFontColor(variant)"
+          >
+            {{ "dangerSources.variantStatus.active" | translate }}
+            <!-- Natural Avalanches -->
+            @if (isNaturalReleaseLikely(variant)) {
+              <span>
+                <i class="ph-bold ph-warning-circle icon-md"></i>
+              </span>
+            }
+            <!-- Natural Avalanches -->
+            <!-- Remote Triggering -->
+            @if (variant.remoteTriggering) {
+              <span>
+                <i class="ph-bold ph-trend-up icon-md"></i>
+              </span>
+            }
+            <!-- Remote Triggering -->
           </span>
-          <!-- Natural Avalanches -->
-          <!-- Remote Triggering -->
-          <span *ngIf="variant.remoteTriggering">
-            <i class="ph-bold ph-trend-up icon-md"></i>
+        }
+        @if (isDangerSourceVariantStatus(variant, variantStatus.dormant)) {
+          <span class="badge bg-gray">
+            {{ "dangerSources.variantStatus.dormant" | translate }}
           </span>
-          <!-- Remote Triggering -->
-        </span>
-        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.dormant)" class="badge bg-gray">
-          {{ "dangerSources.variantStatus.dormant" | translate }}
-        </span>
-        <span *ngIf="isDangerSourceVariantStatus(variant, variantStatus.inactive)" class="badge bg-light-gray">
-          {{ "dangerSources.variantStatus.inactive" | translate }}
-        </span>
+        }
+        @if (isDangerSourceVariantStatus(variant, variantStatus.inactive)) {
+          <span class="badge bg-light-gray">
+            {{ "dangerSources.variantStatus.inactive" | translate }}
+          </span>
+        }
       </p>
 
       <h6 class="region-thumb__title font-s-medium" role="button">
-        <span *ngIf="saveError.has(variant.id)">* </span>
-        <span *ngIf="variant.regions.length > 0">{{ regionsService.getRegionName(variant.regions[0]) }}</span>
-        <span *ngIf="variant.regions.length > 1"> + {{ variant.regions.length - 1 }} </span>
+        @if (saveError.has(variant.id)) {
+          <span>* </span>
+        }
+        @if (variant.regions.length > 0) {
+          <span>{{ regionsService.getRegionName(variant.regions[0]) }}</span>
+        }
+        @if (variant.regions.length > 1) {
+          <span> + {{ variant.regions.length - 1 }} </span>
+        }
       </h6>
       <p class="region-thumb__author font-s text-secondary" role="button">
         Updated on {{ variant.updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
@@ -424,73 +465,83 @@
         <app-aspects [(aspects)]="variant.aspects" [disabled]="true" [size]="32"></app-aspects>
         <!-- Aspects -->
         <!-- Elevations -->
-        <span class="badge text-bg-light" *ngIf="variant.treelineHigh || variant.elevationHigh">
-          <i class="ph ph-arrow-down icon-sm"></i>
-          {{ variant.treelineHigh ? ("elevation.treeline" | translate) : variant.elevationHigh + " m" }}
-        </span>
-        <span class="badge text-bg-light" *ngIf="variant.treelineLow || variant.elevationLow">
-          <i class="ph ph-arrow-up icon-sm"></i>
-          {{ variant.treelineLow ? ("elevation.treeline" | translate) : variant.elevationLow + " m" }}
-        </span>
+        @if (variant.treelineHigh || variant.elevationHigh) {
+          <span class="badge text-bg-light">
+            <i class="ph ph-arrow-down icon-sm"></i>
+            {{ variant.treelineHigh ? ("elevation.treeline" | translate) : variant.elevationHigh + " m" }}
+          </span>
+        }
+        @if (variant.treelineLow || variant.elevationLow) {
+          <span class="badge text-bg-light">
+            <i class="ph ph-arrow-up icon-sm"></i>
+            {{ variant.treelineLow ? ("elevation.treeline" | translate) : variant.elevationLow + " m" }}
+          </span>
+        }
         <!-- Elevations -->
         <!-- Daytime Dependency -->
-        <span *ngIf="variant.hasDaytimeDependency">
-          <i class="ph-bold ph-clock icon-md"></i>
-        </span>
+        @if (variant.hasDaytimeDependency) {
+          <span>
+            <i class="ph-bold ph-clock icon-md"></i>
+          </span>
+        }
         <!-- Daytime Dependency -->
       </div>
     </div>
 
     <div class="btn-group-vertical btn-group--border region-thumb__actions">
-      <button
-        *ngIf="!authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-sm btn-bare btn-sm btn-icon"
-        (click)="copyVariant($event, variant)"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
-      >
-        <i class="ph ph-copy"></i>
-      </button>
+      @if (!authenticationService.isCurrentUserInRole(constantsService.roleObserver)) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-sm btn-bare btn-sm btn-icon"
+          (click)="copyVariant($event, variant)"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
+        >
+          <i class="ph ph-copy"></i>
+        </button>
+      }
 
-      <button
-        *ngIf="dangerSourcesService.getIsEditable()"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-sm btn-icon btn-bare"
-        (click)="deleteVariant($event, variant)"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
-      >
-        <i class="ph ph-trash"></i>
-      </button>
+      @if (dangerSourcesService.getIsEditable()) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-sm btn-icon btn-bare"
+          (click)="deleteVariant($event, variant)"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
+        >
+          <i class="ph ph-trash"></i>
+        </button>
+      }
 
-      <button
-        *ngIf="activeVariant !== undefined && activeVariant !== variant"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-bare btn-sm btn-icon"
-        [class.btn-bare--inverse]="comparedVariant && variant.id === comparedVariant.id"
-        (click)="eventCompareVariant($event, variant)"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.compare' | translate }}"
-      >
-        <i class="ph ph-square-half"></i>
-      </button>
+      @if (activeVariant !== undefined && activeVariant !== variant) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-bare btn-sm btn-icon"
+          [class.btn-bare--inverse]="comparedVariant && variant.id === comparedVariant.id"
+          (click)="eventCompareVariant($event, variant)"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.compare' | translate }}"
+        >
+          <i class="ph ph-square-half"></i>
+        </button>
+      }
 
-      <button
-        *ngIf="hasForecast(variant)"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-bare btn-sm btn-icon"
-        [class.btn-bare--inverse]="comparedVariant && variant.forecastDangerSourceVariantId === comparedVariant.id"
-        (click)="compareForecast($event, variant)"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.forecast' | translate }}"
-      >
-        <i class="ph ph-git-diff"></i>
-      </button>
+      @if (hasForecast(variant)) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-bare btn-sm btn-icon"
+          [class.btn-bare--inverse]="comparedVariant && variant.forecastDangerSourceVariantId === comparedVariant.id"
+          (click)="compareForecast($event, variant)"
+          data-toggle="tooltip"
+          title="{{ 'dangerSources.create.tooltip.forecast' | translate }}"
+        >
+          <i class="ph ph-git-diff"></i>
+        </button>
+      }
     </div>
   </div>
 </ng-template>

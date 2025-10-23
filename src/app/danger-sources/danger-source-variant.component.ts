@@ -8,31 +8,22 @@ import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 import { SliderOptions } from "../shared/slider.component";
 import { DangerSourcesService } from "./danger-sources.service";
 import {
-  Characteristic,
-  CreationProcess,
   DangerSign,
   DangerSourceVariantModel,
+  DangerSourceVariantSchema,
   DangerSourceVariantStatus,
   DangerSourceVariantType,
-  Daytime,
-  Distribution,
   GlidingSnowActivity,
   GrainShape,
-  HandHardness,
-  Probability,
-  Recognizability,
-  SlopeGradient,
-  SnowpackPosition,
   TerrainType,
-  Thickness,
-  WeakLayerCrust,
-  Wetness,
 } from "./models/danger-source-variant.model";
-import { NgIf, NgFor, NgClass, DatePipe } from "@angular/common";
-import { Component, OnChanges, input, output, inject, OnInit } from "@angular/core";
+import { zEnumValues } from "./models/zod-util";
+import { ToggleBtnGroup } from "./toggle-btn-group";
+import { DatePipe, NgClass } from "@angular/common";
+import { Component, inject, input, OnChanges, OnInit, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MatrixInformationSchema } from "app/models/matrix-information.model";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
@@ -45,15 +36,14 @@ import { debounceTime, Subject } from "rxjs";
   standalone: true,
   imports: [
     BsDropdownModule,
-    NgIf,
     FormsModule,
-    NgFor,
     AccordionModule,
     NgClass,
     AspectsComponent,
     MatrixParameterComponent,
     DatePipe,
     TranslateModule,
+    ToggleBtnGroup,
   ],
 })
 export class DangerSourceVariantComponent implements OnChanges, OnInit {
@@ -65,6 +55,8 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   regionsService = inject(RegionsService);
   translateService = inject(TranslateService);
 
+  readonly DangerSourceVariantSchema = DangerSourceVariantSchema;
+  readonly zEnumValues = zEnumValues;
   readonly variant = input<DangerSourceVariantModel>(undefined);
   readonly comparedVariant = input<DangerSourceVariantModel>(undefined);
   readonly disabled = input<boolean>(undefined);
@@ -87,23 +79,31 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   haveSameElements = haveSameElements;
 
   avalancheTypeEnum = Enums.AvalancheType;
-  wetnessEnum = Wetness;
   grainShapeEnum = GrainShape;
-  thicknessEnum = Thickness;
-  characteristicEnum = Characteristic;
-  snowpackPositionEnum = SnowpackPosition;
-  weakLayerCrustEnum = WeakLayerCrust;
-  creationProcessEnum = CreationProcess;
-  distributionEnum = Distribution;
-  recognizabilityEnum = Recognizability;
-  aspectEnum = Enums.Aspect;
-  daytimeEnum = Daytime;
-  slopeGradientEnum = SlopeGradient;
-  probabilityEnum = Probability;
-  tendencyEnum = Enums.Tendency;
-  handHardnessEnum = HandHardness;
-  terrainTypeEnum = TerrainType;
-  dangerSignEnum = DangerSign;
+  terrainTypeDiminish = (): Partial<Record<TerrainType, boolean>> => ({
+    [TerrainType.gullies_and_bowls]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.adjacent_to_ridgelines]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.distant_from_ridgelines]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.in_the_vicinity_of_peaks]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.pass_areas]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.grassy_slopes]: !this.isAvalancheType(Enums.AvalancheType.glide),
+    [TerrainType.cut_slopes]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.wind_loaded_slopes]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.base_of_rock_walls]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.behind_abrupt_changes_in_the_terrain]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.areas_where_the_snow_cover_is_rather_shallow]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.transitions_into_gullies_and_bowls]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.transitions_from_a_shallow_to_a_deep_snowpack]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.highly_frequented_off_piste_terrain]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [TerrainType.little_used_backcountry_terrain]: this.isAvalancheType(Enums.AvalancheType.glide),
+    [TerrainType.places_that_are_protected_from_the_wind]: this.isAvalancheType(Enums.AvalancheType.glide),
+    [TerrainType.regions_exposed_to_the_foehn_wind]: !this.isAvalancheType(Enums.AvalancheType.slab),
+  });
+  dangerSignDiminish = (): Partial<Record<DangerSign, boolean>> => ({
+    [DangerSign.shooting_cracks]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [DangerSign.whumpfing]: !this.isAvalancheType(Enums.AvalancheType.slab),
+    [DangerSign.glide_cracks]: !this.isAvalancheType(Enums.AvalancheType.glide),
+  });
 
   useElevationHigh = false;
   useElevationLow = false;
@@ -276,8 +276,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     return this.variant()?.avalancheType === type;
   }
 
-  setAvalancheType(event: Event, type: Enums.AvalancheType) {
-    event.stopPropagation();
+  setAvalancheType(type: Enums.AvalancheType) {
     this.variant().avalancheType = type;
     // reset matrix parameters when changing the avalanche type
     this.variant().eawsMatrixInformation = MatrixInformationSchema.parse({});
@@ -290,330 +289,6 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
       variant.zeroDegreeIsotherm = undefined;
     } else {
       variant.zeroDegreeIsotherm = zeroDegreeIsotherm;
-    }
-    this.updateVariantOnServer();
-  }
-
-  setWeakLayerPersistent(weakLayerPersistent: boolean) {
-    const variant = this.variant();
-    if (variant?.weakLayerPersistent === weakLayerPersistent) {
-      variant.weakLayerPersistent = undefined;
-    } else {
-      variant.weakLayerPersistent = weakLayerPersistent;
-    }
-    this.updateVariantOnServer();
-  }
-
-  setWeakLayerWet(weakLayerWet: boolean) {
-    const variant = this.variant();
-    if (variant?.weakLayerWet === weakLayerWet) {
-      variant.weakLayerWet = undefined;
-    } else {
-      variant.weakLayerWet = weakLayerWet;
-    }
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerCrustAbove(weakLayerCrustAbove: WeakLayerCrust) {
-    return this.variant()?.weakLayerCrustAbove === weakLayerCrustAbove;
-  }
-
-  setWeakLayerCrustAbove(event: Event, weakLayerCrustAbove: WeakLayerCrust) {
-    event.stopPropagation();
-    this.variant().weakLayerCrustAbove = weakLayerCrustAbove;
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerCrustBelow(weakLayerCrustBelow: WeakLayerCrust) {
-    return this.variant()?.weakLayerCrustBelow === weakLayerCrustBelow;
-  }
-
-  setWeakLayerCrustBelow(event: Event, weakLayerCrustBelow: WeakLayerCrust) {
-    event.stopPropagation();
-    this.variant().weakLayerCrustBelow = weakLayerCrustBelow;
-    this.updateVariantOnServer();
-  }
-
-  isRemoteTriggering(remoteTriggering: Probability) {
-    return this.variant()?.remoteTriggering === remoteTriggering;
-  }
-
-  setRemoteTriggering(event: Event, remoteTriggering: Probability) {
-    event.stopPropagation();
-    this.variant().remoteTriggering = remoteTriggering;
-    this.updateVariantOnServer();
-  }
-
-  setHasDaytimeDependency(hasDaytimeDependency: boolean) {
-    const variant = this.variant();
-    if (variant?.hasDaytimeDependency === hasDaytimeDependency) {
-      variant.hasDaytimeDependency = undefined;
-    } else {
-      variant.hasDaytimeDependency = hasDaytimeDependency;
-    }
-    this.updateVariantOnServer();
-  }
-
-  setDangerIncreaseWithElevation(dangerIncreaseWithElevation: boolean) {
-    const variant = this.variant();
-    if (variant?.dangerIncreaseWithElevation === dangerIncreaseWithElevation) {
-      variant.dangerIncreaseWithElevation = undefined;
-    } else {
-      variant.dangerIncreaseWithElevation = dangerIncreaseWithElevation;
-    }
-    this.updateVariantOnServer();
-  }
-
-  setRunoutIntoGreen(runoutIntoGreen: boolean) {
-    const variant = this.variant();
-    if (variant?.runoutIntoGreen === runoutIntoGreen) {
-      variant.runoutIntoGreen = undefined;
-    } else {
-      variant.runoutIntoGreen = runoutIntoGreen;
-    }
-    this.updateVariantOnServer();
-  }
-
-  setPenetrateDeepLayers(penetrateDeepLayers: boolean) {
-    const variant = this.variant();
-    if (variant?.penetrateDeepLayers === penetrateDeepLayers) {
-      variant.penetrateDeepLayers = undefined;
-    } else {
-      variant.penetrateDeepLayers = penetrateDeepLayers;
-    }
-    this.updateVariantOnServer();
-  }
-
-  isLooseSnowMoisture(wetness: Wetness) {
-    return this.variant()?.looseSnowMoisture === wetness;
-  }
-
-  setLooseSnowMoisture(event: Event, wetness: Wetness) {
-    event.stopPropagation();
-    this.variant().looseSnowMoisture = wetness;
-    this.updateVariantOnServer();
-  }
-
-  isLooseSnowGrainShape(grainShape: GrainShape) {
-    return this.variant()?.looseSnowGrainShape === grainShape;
-  }
-
-  setLooseSnowGrainShape(event: Event, grainShape: GrainShape) {
-    event.stopPropagation();
-    this.variant().looseSnowGrainShape = grainShape;
-    this.updateVariantOnServer();
-  }
-
-  isSlabGrainShape(grainShape: GrainShape) {
-    return this.variant()?.slabGrainShape === grainShape;
-  }
-
-  setSlabGrainShape(event: Event, grainShape: GrainShape) {
-    event.stopPropagation();
-    this.variant().slabGrainShape = grainShape;
-    this.updateVariantOnServer();
-  }
-
-  isSlabHandHardnessLowerLimit(handHardness: HandHardness) {
-    return this.variant()?.slabHandHardnessLowerLimit === handHardness;
-  }
-
-  setSlabHandHardnessLowerLimit(event: Event, handHardness: HandHardness) {
-    event.stopPropagation();
-    this.variant().slabHandHardnessLowerLimit = handHardness;
-    this.updateVariantOnServer();
-  }
-
-  isSlabHandHardnessUpperLimit(handHardness: HandHardness) {
-    return this.variant()?.slabHandHardnessUpperLimit === handHardness;
-  }
-
-  setSlabHandHardnessUpperLimit(event: Event, handHardness: HandHardness) {
-    event.stopPropagation();
-    this.variant().slabHandHardnessUpperLimit = handHardness;
-    this.updateVariantOnServer();
-  }
-
-  isSlabHardnessProfile(tendency: Enums.Tendency) {
-    return this.variant()?.slabHardnessProfile === tendency;
-  }
-
-  setSlabHardnessProfile(event: Event, tendency: Enums.Tendency) {
-    event.stopPropagation();
-    this.variant().slabHardnessProfile = tendency;
-    this.updateVariantOnServer();
-  }
-
-  isSlabEnergyTransferPotential(slabEnergyTransferPotential: Characteristic) {
-    return this.variant()?.slabEnergyTransferPotential === slabEnergyTransferPotential;
-  }
-
-  setSlabEnergyTransferPotential(event: Event, slabEnergyTransferPotential: Characteristic) {
-    event.stopPropagation();
-    this.variant().slabEnergyTransferPotential = slabEnergyTransferPotential;
-    this.updateVariantOnServer();
-  }
-
-  isSlabDistribution(slabDistribution: Distribution) {
-    return this.variant()?.slabDistribution === slabDistribution;
-  }
-
-  setSlabDistribution(event: Event, slabDistribution: Distribution) {
-    event.stopPropagation();
-    this.variant().slabDistribution = slabDistribution;
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerGrainShape(grainShape: GrainShape) {
-    return this.variant()?.weakLayerGrainShapes?.includes(grainShape);
-  }
-
-  setWeakLayerGrainShape(event: Event, grainShape: GrainShape) {
-    event.stopPropagation();
-    const variant = this.variant();
-    if (variant?.weakLayerGrainShapes.includes(grainShape)) {
-      const index = variant?.weakLayerGrainShapes.indexOf(grainShape, 0);
-      if (index > -1) {
-        variant?.weakLayerGrainShapes.splice(index, 1);
-      }
-    } else {
-      variant?.weakLayerGrainShapes.push(grainShape);
-    }
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerThickness(thickness: Thickness) {
-    return this.variant()?.weakLayerThickness === thickness;
-  }
-
-  setWeakLayerThickness(event: Event, thickness: Thickness) {
-    event.stopPropagation();
-    this.variant().weakLayerThickness = thickness;
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerStrength(strength: Characteristic) {
-    return this.variant()?.weakLayerStrength === strength;
-  }
-
-  setWeakLayerStrength(event: Event, strength: Characteristic) {
-    event.stopPropagation();
-    this.variant().weakLayerStrength = strength;
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerPosition(snowpackPosition: SnowpackPosition) {
-    return this.variant()?.weakLayerPosition === snowpackPosition;
-  }
-
-  setWeakLayerPosition(event: Event, snowpackPosition: SnowpackPosition) {
-    event.stopPropagation();
-    this.variant().weakLayerPosition = snowpackPosition;
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerCreation(creationProcess: CreationProcess) {
-    return this.variant()?.weakLayerCreation === creationProcess;
-  }
-
-  setWeakLayerCreation(event: Event, creationProcess: CreationProcess) {
-    event.stopPropagation();
-    this.variant().weakLayerCreation = creationProcess;
-    this.updateVariantOnServer();
-  }
-
-  isWeakLayerDistribution(distribution: Distribution) {
-    return this.variant()?.weakLayerDistribution === distribution;
-  }
-
-  setWeakLayerDistribution(event: Event, distribution: Distribution) {
-    event.stopPropagation();
-    this.variant().weakLayerDistribution = distribution;
-    this.updateVariantOnServer();
-  }
-
-  isDangerSpotRecognizability(dangerSpotRecognizability: Recognizability) {
-    return this.variant()?.dangerSpotRecognizability === dangerSpotRecognizability;
-  }
-
-  setDangerSpotRecognizability(event: Event, dangerSpotRecognizability: Recognizability) {
-    event.stopPropagation();
-    this.variant().dangerSpotRecognizability = dangerSpotRecognizability;
-    this.updateVariantOnServer();
-  }
-
-  isHighestDangerAspect(highestDangerAspect: Enums.Aspect) {
-    return this.variant()?.highestDangerAspect === highestDangerAspect;
-  }
-
-  setHighestDangerAspect(event: Event, highestDangerAspect: Enums.Aspect) {
-    event.stopPropagation();
-    this.variant().highestDangerAspect = highestDangerAspect;
-    this.updateVariantOnServer();
-  }
-
-  isDangerPeak(dangerPeak: Daytime) {
-    return this.variant()?.dangerPeak === dangerPeak;
-  }
-
-  setDangerPeak(event: Event, dangerPeak: Daytime) {
-    event.stopPropagation();
-    this.variant().dangerPeak = dangerPeak;
-    this.updateVariantOnServer();
-  }
-
-  isSlopeGradient(slopeGradient: SlopeGradient) {
-    return this.variant()?.slopeGradient === slopeGradient;
-  }
-
-  setSlopeGradient(event: Event, slopeGradient: SlopeGradient) {
-    event.stopPropagation();
-    this.variant().slopeGradient = slopeGradient;
-    this.updateVariantOnServer();
-  }
-
-  isNaturalRelease(naturalRelease: Probability) {
-    return this.variant()?.naturalRelease === naturalRelease;
-  }
-
-  setNaturalRelease(event: Event, naturalRelease: Probability) {
-    event.stopPropagation();
-    this.variant().naturalRelease = naturalRelease;
-    this.updateVariantOnServer();
-  }
-
-  isTerrainType(terrainType: TerrainType) {
-    return this.variant()?.terrainTypes.includes(terrainType);
-  }
-
-  setTerrainType(event: Event, terrainType: TerrainType) {
-    event.stopPropagation();
-    const variant = this.variant();
-    if (variant?.terrainTypes.includes(terrainType)) {
-      const index = variant?.terrainTypes.indexOf(terrainType, 0);
-      if (index > -1) {
-        variant?.terrainTypes.splice(index, 1);
-      }
-    } else {
-      variant?.terrainTypes.push(terrainType);
-    }
-    this.updateVariantOnServer();
-  }
-
-  isDangerSign(dangerSign: DangerSign) {
-    return this.variant()?.dangerSigns.includes(dangerSign);
-  }
-
-  setDangerSign(event: Event, dangerSign: DangerSign) {
-    event.stopPropagation();
-    const variant = this.variant();
-    if (variant?.dangerSigns.includes(dangerSign)) {
-      const index = variant?.dangerSigns.indexOf(dangerSign, 0);
-      if (index > -1) {
-        variant?.dangerSigns.splice(index, 1);
-      }
-    } else {
-      variant?.dangerSigns.push(dangerSign);
     }
     this.updateVariantOnServer();
   }

@@ -15,10 +15,12 @@
     <div class="region-form__title">
       <h6 class="font-xs text-secondary">{{ variant().dangerSource?.title }}</h6>
       <h2 class="font-l">
-        <span *ngIf="variant().regions.length > 0">{{
-          regionsService.getRegionName(variant().regions[0].toString())
-        }}</span>
-        <span *ngIf="variant().regions.length > 1"> + {{ variant().regions.length - 1 }} </span>
+        @if (variant().regions.length > 0) {
+          <span>{{ regionsService.getRegionName(variant().regions[0].toString()) }}</span>
+        }
+        @if (variant().regions.length > 1) {
+          <span> + {{ variant().regions.length - 1 }} </span>
+        }
       </h2>
       <div class="user-avatar__name">
         Updated on {{ variant().updateDate | date: "dd.MM.yyyy HH:mm" : undefined : translateService.currentLang }}
@@ -26,22 +28,20 @@
       <!-- Status -->
       <div class="create-bulletin__status">
         <div>
-          <span
-            *ngIf="
-              variant().forecastDangerSourceVariantId !== null &&
-              variant().forecastDangerSourceVariantId !== '' &&
-              dangerSourcesService.getDangerSourceVariantType() === variantType.analysis
-            "
-            class="badge bg-success"
-          >
-            {{ "dangerSources.status.analysis" | translate }}
-          </span>
-          <span
-            *ngIf="variant().forecastDangerSourceVariantId === null || variant().forecastDangerSourceVariantId === ''"
-            class="badge bg-primary"
-          >
-            {{ "dangerSources.status.forecast" | translate }}
-          </span>
+          @if (
+            variant().forecastDangerSourceVariantId !== null &&
+            variant().forecastDangerSourceVariantId !== "" &&
+            dangerSourcesService.getDangerSourceVariantType() === variantType.analysis
+          ) {
+            <span class="badge bg-success">
+              {{ "dangerSources.status.analysis" | translate }}
+            </span>
+          }
+          @if (variant().forecastDangerSourceVariantId === null || variant().forecastDangerSourceVariantId === "") {
+            <span class="badge bg-primary">
+              {{ "dangerSources.status.forecast" | translate }}
+            </span>
+          }
         </div>
       </div>
       <!-- End status-->
@@ -64,73 +64,76 @@
       class="form-select"
     >
       <option selected></option>
-      <option *ngFor="let status of variantStatus" [value]="status">
-        {{ "dangerSources.variantStatus." + status | translate }}
-      </option>
+      @for (status of variantStatus; track status) {
+        <option [value]="status">
+          {{ "dangerSources.variantStatus." + status | translate }}
+        </option>
+      }
     </select>
   </div>
 
-  <div
-    *ngIf="!this.isComparedVariant() && dangerSourcesService.getIsEditable() && isCreator(variant())"
-    class="region-form__banner banner banner-info"
-  >
-    <p class="banner__text">
-      <i class="ph ph-pencil-line"></i>
-      {{ "dangerSources.create.variantEditable" | translate }}
-    </p>
-    <div class="btn-group banner__actions">
-      <button
-        *ngIf="!editRegions"
-        (click)="editMicroRegions()"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.edit' | translate }}"
-        type="button"
-        class="btn btn-sm btn-icon btn-outline-primary"
-      >
-        <i class="ph ph-globe-hemisphere-west"></i>
-      </button>
-      <button
-        *ngIf="!editRegions && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
-        (click)="copyVariant()"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
-        type="button"
-        class="btn btn-sm btn-icon btn-outline-primary"
-      >
-        <i class="ph ph-copy"></i>
-      </button>
-      <button
-        *ngIf="!editRegions"
-        (click)="deleteVariant()"
-        data-toggle="tooltip"
-        title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
-        type="button"
-        class="btn btn-sm btn-icon btn-outline-primary"
-      >
-        <i class="ph ph-trash"></i>
-      </button>
+  @if (!this.isComparedVariant() && dangerSourcesService.getIsEditable() && isCreator(variant())) {
+    <div class="region-form__banner banner banner-info">
+      <p class="banner__text">
+        <i class="ph ph-pencil-line"></i>
+        {{ "dangerSources.create.variantEditable" | translate }}
+      </p>
+      <div class="btn-group banner__actions">
+        @if (!editRegions) {
+          <button
+            (click)="editMicroRegions()"
+            data-toggle="tooltip"
+            title="{{ 'dangerSources.create.tooltip.edit' | translate }}"
+            type="button"
+            class="btn btn-sm btn-icon btn-outline-primary"
+          >
+            <i class="ph ph-globe-hemisphere-west"></i>
+          </button>
+        }
+        @if (!editRegions && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)) {
+          <button
+            (click)="copyVariant()"
+            data-toggle="tooltip"
+            title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
+            type="button"
+            class="btn btn-sm btn-icon btn-outline-primary"
+          >
+            <i class="ph ph-copy"></i>
+          </button>
+        }
+        @if (!editRegions) {
+          <button
+            (click)="deleteVariant()"
+            data-toggle="tooltip"
+            title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
+            type="button"
+            class="btn btn-sm btn-icon btn-outline-primary"
+          >
+            <i class="ph ph-trash"></i>
+          </button>
+        }
+      </div>
     </div>
-  </div>
+  }
 
-  <div
-    *ngIf="
-      this.isComparedVariant() ||
-      !dangerSourcesService.getIsEditable() ||
-      (dangerSourcesService.getIsEditable() && !isCreator(variant()))
-    "
-    class="region-form__banner banner banner-warning"
-  >
-    <p class="banner__text">
-      <i class="ph ph-pencil-slash"></i>
-      {{ "dangerSources.create.variantNotEditable" | translate }}
-    </p>
-    <div class="btn-group banner__actions">
-      <!-- dummy button to keep layout -->
-      <button class="btn btn-sm btn-icon btn-outline-primary" style="visibility: hidden">
-        <i class="ph ph-globe-hemisphere-west"></i>
-      </button>
+  @if (
+    this.isComparedVariant() ||
+    !dangerSourcesService.getIsEditable() ||
+    (dangerSourcesService.getIsEditable() && !isCreator(variant()))
+  ) {
+    <div class="region-form__banner banner banner-warning">
+      <p class="banner__text">
+        <i class="ph ph-pencil-slash"></i>
+        {{ "dangerSources.create.variantNotEditable" | translate }}
+      </p>
+      <div class="btn-group banner__actions">
+        <!-- dummy button to keep layout -->
+        <button class="btn btn-sm btn-icon btn-outline-primary" style="visibility: hidden">
+          <i class="ph ph-globe-hemisphere-west"></i>
+        </button>
+      </div>
     </div>
-  </div>
+  }
 
   <main class="region-form__content">
     <accordion class="accordion">
@@ -138,1643 +141,614 @@
         <label
           class="form-label"
           [class.changed]="isComparedVariant() && variant().avalancheType !== comparedVariant()?.avalancheType"
-          for=""
           >{{ "avalancheType.title" | translate }}</label
         >
-        <div class="btn-group">
-          <!-- SLAB -->
-          <button
-            type="reset"
-            class="btn btn-sm"
-            [disabled]="disabled()"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-secondary' : 'btn-outline-secondary'"
-            (click)="
-              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)
-            "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.slab' | translate }}"
-          >
-            <span>{{ "avalancheType.label.slab" | translate }}</span>
-          </button>
-
-          <!-- LOOSE -->
-          <button
-            type="reset"
-            class="btn btn-sm"
-            [disabled]="disabled()"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-secondary' : 'btn-outline-secondary'"
-            (click)="
-              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
-            "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.loose' | translate }}"
-          >
-            <span>{{ "avalancheType.label.loose" | translate }}</span>
-          </button>
-
-          <!-- GLIDE -->
-          <button
-            type="reset"
-            class="btn btn-sm"
-            [disabled]="disabled()"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-secondary' : 'btn-outline-secondary'"
-            (click)="
-              setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
-            "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.glide' | translate }}"
-          >
-            <span>{{ "avalancheType.label.glide" | translate }}</span>
-          </button>
-        </div>
+        <app-toggle-btn-group
+          [disabled]="disabled()"
+          [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.avalancheType)"
+          [value]="variant()?.avalancheType"
+          (valueChange)="setAvalancheType($event)"
+          titleI18n="avalancheType.tooltip.#"
+          labelI18n="avalancheType.label.#"
+        />
       </div>
 
       <!-- Glide -->
-      <accordion-group
-        *ngIf="isAvalancheType(avalancheTypeEnum.glide)"
-        class="accordion-group"
-        [isOpen]="isAccordionGlideOpen"
-        (isOpenChange)="accordionChanged($event, 'glide')"
-      >
-        <div accordion-heading class="accordion-header accordion-header--with-buttons">
-          <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionGlideOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionGlideOpen" class="accordion__arrow ph ph-caret-down"></i>
-            {{ "dangerSources.create.title.glide" | translate }}
-          </h2>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label
-            class="form-label me-3"
-            [class.changed]="
-              isComparedVariant() &&
-              (variant().snowHeightLowerLimit !== comparedVariant()?.snowHeightLowerLimit ||
-                variant().snowHeightUpperLimit !== comparedVariant()?.snowHeightUpperLimit)
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.snowHeight" | translate }}</label
-          >
-          <div class="input-group align-items-baseline">
-            <input
-              step="1"
-              min="0"
-              id="inputSnowHeightLowerLimit"
-              class="form-control"
-              size="14"
-              type="number"
-              name="snow-height-lower-limit-input"
-              [disabled]="disabled()"
-              [(ngModel)]="variant().snowHeightLowerLimit"
-              (change)="updateVariantOnServer()"
-            />
-            <span class="input-group-text">cm</span>
-            <label class="form-label mx-3" for="snowHeightLabel"> - </label>
-            <input
-              step="1"
-              min="0"
-              id="inputSnowHeightUpperLimit"
-              class="form-control"
-              size="14"
-              type="number"
-              name="snow-height-upper-limit-input"
-              [disabled]="disabled()"
-              [(ngModel)]="variant().snowHeightUpperLimit"
-              (change)="updateVariantOnServer()"
-            />
-            <span class="input-group-text">cm</span>
+      @if (isAvalancheType(avalancheTypeEnum.glide)) {
+        <accordion-group
+          class="accordion-group"
+          [isOpen]="isAccordionGlideOpen"
+          (isOpenChange)="accordionChanged($event, 'glide')"
+        >
+          <div accordion-heading class="accordion-header accordion-header--with-buttons">
+            <h2 class="accordion-header__title">
+              @if (!isAccordionGlideOpen) {
+                <i class="accordion__arrow ph ph-caret-right"></i>
+              }
+              @if (isAccordionGlideOpen) {
+                <i class="accordion__arrow ph ph-caret-down"></i>
+              }
+              {{ "dangerSources.create.title.glide" | translate }}
+            </h2>
           </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label
-            class="form-label me-3"
-            [class.changed]="
-              isComparedVariant() && variant().snowHeightAverage !== comparedVariant()?.snowHeightAverage
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.snowHeightAverage" | translate }}</label
-          >
-          <div class="input-group align-items-baseline">
-            <input
-              step="1"
-              min="0"
-              id="inputSnowHeightAverage"
-              class="form-control"
-              size="14"
-              type="number"
-              name="snow-height-average-input"
-              [disabled]="disabled()"
-              [(ngModel)]="variant().snowHeightAverage"
-              (change)="updateVariantOnServer()"
-            />
-            <span class="input-group-text">cm</span>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().zeroDegreeIsotherm !== comparedVariant()?.zeroDegreeIsotherm
-            "
-            for="zeroDegreeIsothermCheckbox"
-            >{{ "dangerSources.create.label.zeroDegreeIsotherm" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setZeroDegreeIsotherm(true)"
-            >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().zeroDegreeIsotherm !== undefined && variant().zeroDegreeIsotherm === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setZeroDegreeIsotherm(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
-          </div>
-        </div>
-      </accordion-group>
+          @if (isAvalancheType(avalancheTypeEnum.glide)) {
+            <div class="form-group row">
+              <label
+                class="form-label me-3"
+                [class.changed]="
+                  isComparedVariant() &&
+                  (variant().snowHeightLowerLimit !== comparedVariant()?.snowHeightLowerLimit ||
+                    variant().snowHeightUpperLimit !== comparedVariant()?.snowHeightUpperLimit)
+                "
+                >{{ "dangerSources.create.label.snowHeight" | translate }}</label
+              >
+              <div class="input-group align-items-baseline">
+                <input
+                  step="1"
+                  min="0"
+                  id="inputSnowHeightLowerLimit"
+                  class="form-control"
+                  size="14"
+                  type="number"
+                  name="snow-height-lower-limit-input"
+                  [disabled]="disabled()"
+                  [(ngModel)]="variant().snowHeightLowerLimit"
+                  (change)="updateVariantOnServer()"
+                />
+                <span class="input-group-text">cm</span>
+                <label class="form-label mx-3"> - </label>
+                <input
+                  step="1"
+                  min="0"
+                  id="inputSnowHeightUpperLimit"
+                  class="form-control"
+                  size="14"
+                  type="number"
+                  name="snow-height-upper-limit-input"
+                  [disabled]="disabled()"
+                  [(ngModel)]="variant().snowHeightUpperLimit"
+                  (change)="updateVariantOnServer()"
+                />
+                <span class="input-group-text">cm</span>
+              </div>
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.glide)) {
+            <div class="form-group row">
+              <label
+                class="form-label me-3"
+                [class.changed]="
+                  isComparedVariant() && variant().snowHeightAverage !== comparedVariant()?.snowHeightAverage
+                "
+                >{{ "dangerSources.create.label.snowHeightAverage" | translate }}</label
+              >
+              <div class="input-group align-items-baseline">
+                <input
+                  step="1"
+                  min="0"
+                  id="inputSnowHeightAverage"
+                  class="form-control"
+                  size="14"
+                  type="number"
+                  name="snow-height-average-input"
+                  [disabled]="disabled()"
+                  [(ngModel)]="variant().snowHeightAverage"
+                  (change)="updateVariantOnServer()"
+                />
+                <span class="input-group-text">cm</span>
+              </div>
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.glide)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().zeroDegreeIsotherm !== comparedVariant()?.zeroDegreeIsotherm
+                "
+                >{{ "dangerSources.create.label.zeroDegreeIsotherm" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[true, false]"
+                [value]="variant()?.zeroDegreeIsotherm"
+                (valueChange)="setZeroDegreeIsotherm($event)"
+                labelI18n="button.#"
+              />
+            </div>
+          }
+        </accordion-group>
+      }
 
       <!-- SLAB AVALANCHES -->
-      <accordion-group
-        *ngIf="isAvalancheType(avalancheTypeEnum.slab)"
-        class="accordion-group"
-        [isOpen]="isAccordionSlabOpen"
-        (isOpenChange)="accordionChanged($event, 'slab')"
-      >
-        <div accordion-heading class="accordion-header accordion-header--with-buttons">
-          <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionSlabOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionSlabOpen" class="accordion__arrow ph ph-caret-down"></i>
-            {{ "dangerSources.create.title.slab" | translate }}
-          </h2>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().slabGrainShape !== comparedVariant()?.slabGrainShape"
-            for="textarea-input"
-            >{{ "dangerSources.create.label.slabGrainShape" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.PP.class')"
-            >
-              <span>{{ "grainShape.PP.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.DF.class')"
-            >
-              <span>{{ "grainShape.DF.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.RG) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.RG) ? undefined : grainShapeEnum.RG)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.RG.class')"
-            >
-              <span>{{ "grainShape.RG.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.FC.class')"
-            >
-              <span>{{ "grainShape.FC.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.MF) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.MF.class')"
-            >
-              <span>{{ "grainShape.MF.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.IF) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.IF) ? undefined : grainShapeEnum.IF)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.IF.class')"
-            >
-              <span>{{ "grainShape.IF.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabGrainShape(grainShapeEnum.MFcr) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlabGrainShape($event, isSlabGrainShape(grainShapeEnum.MFcr) ? undefined : grainShapeEnum.MFcr)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.MFcr.class')"
-            >
-              <span>{{ "grainShape.MFcr.code" | translate }}</span>
-            </button>
+      @if (isAvalancheType(avalancheTypeEnum.slab)) {
+        <accordion-group
+          class="accordion-group"
+          [isOpen]="isAccordionSlabOpen"
+          (isOpenChange)="accordionChanged($event, 'slab')"
+        >
+          <div accordion-heading class="accordion-header accordion-header--with-buttons">
+            <h2 class="accordion-header__title">
+              @if (!isAccordionSlabOpen) {
+                <i class="accordion__arrow ph ph-caret-right"></i>
+              }
+              @if (isAccordionSlabOpen) {
+                <i class="accordion__arrow ph ph-caret-down"></i>
+              }
+              {{ "dangerSources.create.title.slab" | translate }}
+            </h2>
           </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label pe-3"
-            [class.changed]="
-              isComparedVariant() &&
-              (variant().slabThicknessLowerLimit !== comparedVariant()?.slabThicknessLowerLimit ||
-                variant().slabThicknessUpperLimit !== comparedVariant()?.slabThicknessUpperLimit)
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.slabThickness" | translate }}</label
-          >
-          <div class="input-group align-items-baseline">
-            <input
-              step="5"
-              min="0"
-              id="inputSlabThicknessLowerLimit"
-              class="form-control"
-              size="14"
-              type="number"
-              name="slab-thickness-lower-limit-input"
-              [disabled]="disabled()"
-              [(ngModel)]="variant().slabThicknessLowerLimit"
-              (change)="updateVariantOnServer()"
-            />
-            <span class="input-group-text">cm</span>
-            <label class="form-label mx-3" for="slabThicknessLabel"> - </label>
-            <input
-              step="5"
-              min="0"
-              id="inputSlabThicknessUpperLimit"
-              class="form-control"
-              size="14"
-              type="number"
-              name="slab-thickness-upper-limit-input"
-              [disabled]="disabled()"
-              [(ngModel)]="variant().slabThicknessUpperLimit"
-              (change)="updateVariantOnServer()"
-            />
-            <span class="input-group-text">cm</span>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label pe-3"
-            [class.changed]="
-              isComparedVariant() &&
-              (variant().slabHandHardnessLowerLimit !== comparedVariant()?.slabHandHardnessLowerLimit ||
-                variant().slabHandHardnessUpperLimit !== comparedVariant()?.slabHandHardnessUpperLimit)
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.slabHandHardness" | translate }}</label
-          >
-          <div class="input-group align-items-baseline">
-            <div class="btn-group flex-fill">
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessLowerLimit(
-                    $event,
-                    isSlabHandHardnessLowerLimit(handHardnessEnum.fist) ? undefined : handHardnessEnum.fist
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.fist' | translate }}"
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="isComparedVariant() && variant().slabGrainShape !== comparedVariant()?.slabGrainShape"
+                >{{ "dangerSources.create.label.slabGrainShape" | translate }}</label
               >
-                <span>{{ "handHardness.fist" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
+              <app-toggle-btn-group
                 [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers)
-                    ? 'btn-secondary'
-                    : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessLowerLimit(
-                    $event,
-                    isSlabHandHardnessLowerLimit(handHardnessEnum.four_fingers)
-                      ? undefined
-                      : handHardnessEnum.four_fingers
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.four_fingers' | translate }}"
-              >
-                <span>{{ "handHardness.four_fingers" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessLowerLimit(
-                    $event,
-                    isSlabHandHardnessLowerLimit(handHardnessEnum.one_finger) ? undefined : handHardnessEnum.one_finger
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.one_finger' | translate }}"
-              >
-                <span>{{ "handHardness.one_finger" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessLowerLimit(
-                    $event,
-                    isSlabHandHardnessLowerLimit(handHardnessEnum.pencil) ? undefined : handHardnessEnum.pencil
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.pencil' | translate }}"
-              >
-                <span>{{ "handHardness.pencil" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessLowerLimit(
-                    $event,
-                    isSlabHandHardnessLowerLimit(handHardnessEnum.knife) ? undefined : handHardnessEnum.knife
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.knife' | translate }}"
-              >
-                <span>{{ "handHardness.knife" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessLowerLimit(
-                    $event,
-                    isSlabHandHardnessLowerLimit(handHardnessEnum.ice) ? undefined : handHardnessEnum.ice
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.ice' | translate }}"
-              >
-                <span>{{ "handHardness.ice" | translate }}</span>
-              </button>
+                [enumValues]="[
+                  grainShapeEnum.PP,
+                  grainShapeEnum.DF,
+                  grainShapeEnum.RG,
+                  grainShapeEnum.FC,
+                  grainShapeEnum.MF,
+                  grainShapeEnum.IF,
+                  grainShapeEnum.MFcr,
+                ]"
+                [(value)]="variant().slabGrainShape"
+                (valueChange)="updateVariantOnServer()"
+                titleI18n="grainShape.#.class"
+                labelI18n="grainShape.#.code"
+              />
             </div>
-            <label class="form-label mx-3" for="slabHandHardnessLabel"> - </label>
-            <div class="btn-group flex-fill">
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? 'btn-secondary' : 'btn-outline-secondary'
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label pe-3"
+                [class.changed]="
+                  isComparedVariant() &&
+                  (variant().slabThicknessLowerLimit !== comparedVariant()?.slabThicknessLowerLimit ||
+                    variant().slabThicknessUpperLimit !== comparedVariant()?.slabThicknessUpperLimit)
                 "
-                (click)="
-                  setSlabHandHardnessUpperLimit(
-                    $event,
-                    isSlabHandHardnessUpperLimit(handHardnessEnum.fist) ? undefined : handHardnessEnum.fist
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.fist' | translate }}"
+                >{{ "dangerSources.create.label.slabThickness" | translate }}</label
               >
-                <span>{{ "handHardness.fist" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers)
-                    ? 'btn-secondary'
-                    : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessUpperLimit(
-                    $event,
-                    isSlabHandHardnessUpperLimit(handHardnessEnum.four_fingers)
-                      ? undefined
-                      : handHardnessEnum.four_fingers
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.four_fingers' | translate }}"
-              >
-                <span>{{ "handHardness.four_fingers" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessUpperLimit(
-                    $event,
-                    isSlabHandHardnessUpperLimit(handHardnessEnum.one_finger) ? undefined : handHardnessEnum.one_finger
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.one_finger' | translate }}"
-              >
-                <span>{{ "handHardness.one_finger" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessUpperLimit(
-                    $event,
-                    isSlabHandHardnessUpperLimit(handHardnessEnum.pencil) ? undefined : handHardnessEnum.pencil
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.pencil' | translate }}"
-              >
-                <span>{{ "handHardness.pencil" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessUpperLimit(
-                    $event,
-                    isSlabHandHardnessUpperLimit(handHardnessEnum.knife) ? undefined : handHardnessEnum.knife
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.knife' | translate }}"
-              >
-                <span>{{ "handHardness.knife" | translate }}</span>
-              </button>
-              <button
-                type="reset"
-                class="btn btn-sm"
-                [disabled]="disabled()"
-                [ngClass]="
-                  isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? 'btn-secondary' : 'btn-outline-secondary'
-                "
-                (click)="
-                  setSlabHandHardnessUpperLimit(
-                    $event,
-                    isSlabHandHardnessUpperLimit(handHardnessEnum.ice) ? undefined : handHardnessEnum.ice
-                  )
-                "
-                data-toggle="tooltip"
-                title="{{ 'handHardness.ice' | translate }}"
-              >
-                <span>{{ "handHardness.ice" | translate }}</span>
-              </button>
+              <div class="input-group align-items-baseline">
+                <input
+                  step="5"
+                  min="0"
+                  id="inputSlabThicknessLowerLimit"
+                  class="form-control"
+                  size="14"
+                  type="number"
+                  name="slab-thickness-lower-limit-input"
+                  [disabled]="disabled()"
+                  [(ngModel)]="variant().slabThicknessLowerLimit"
+                  (change)="updateVariantOnServer()"
+                />
+                <span class="input-group-text">cm</span>
+                <label class="form-label mx-3"> - </label>
+                <input
+                  step="5"
+                  min="0"
+                  id="inputSlabThicknessUpperLimit"
+                  class="form-control"
+                  size="14"
+                  type="number"
+                  name="slab-thickness-upper-limit-input"
+                  [disabled]="disabled()"
+                  [(ngModel)]="variant().slabThicknessUpperLimit"
+                  (change)="updateVariantOnServer()"
+                />
+                <span class="input-group-text">cm</span>
+              </div>
             </div>
-          </div>
-        </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label pe-3"
+                [class.changed]="
+                  isComparedVariant() &&
+                  (variant().slabHandHardnessLowerLimit !== comparedVariant()?.slabHandHardnessLowerLimit ||
+                    variant().slabHandHardnessUpperLimit !== comparedVariant()?.slabHandHardnessUpperLimit)
+                "
+                >{{ "dangerSources.create.label.slabHandHardness" | translate }}</label
+              >
+              <div class="input-group align-items-baseline">
+                <app-toggle-btn-group
+                  class="flex-fill"
+                  [disabled]="disabled()"
+                  [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.slabHandHardnessLowerLimit)"
+                  [(value)]="variant().slabHandHardnessLowerLimit"
+                  (valueChange)="updateVariantOnServer()"
+                  labelI18n="handHardness.#"
+                />
+                <label class="form-label mx-3"> - </label>
+                <app-toggle-btn-group
+                  class="flex-fill"
+                  [disabled]="disabled()"
+                  [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.slabHandHardnessUpperLimit)"
+                  [(value)]="variant().slabHandHardnessUpperLimit"
+                  (valueChange)="updateVariantOnServer()"
+                  labelI18n="handHardness.#"
+                />
+              </div>
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().slabHardnessProfile !== comparedVariant()?.slabHardnessProfile
+                "
+                >{{ "dangerSources.create.label.slabHardnessProfile" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.slabHardnessProfile)"
+                [(value)]="variant().slabHardnessProfile"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="hardnessTendency.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() &&
+                  variant().slabEnergyTransferPotential !== comparedVariant()?.slabEnergyTransferPotential
+                "
+                >{{ "dangerSources.create.label.slabEnergyTransferPotential" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.slabEnergyTransferPotential)"
+                [(value)]="variant().slabEnergyTransferPotential"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="characteristic.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().slabDistribution !== comparedVariant()?.slabDistribution
+                "
+                >{{ "dangerSources.create.label.slabDistribution" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.slabDistribution)"
+                [(value)]="variant().slabDistribution"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="distribution.#"
+              />
+            </div>
+          }
+        </accordion-group>
+      }
 
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().slabHardnessProfile !== comparedVariant()?.slabHardnessProfile
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.slabHardnessProfile" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabHardnessProfile(tendencyEnum.increasing) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlabHardnessProfile(
-                  $event,
-                  isSlabHardnessProfile(tendencyEnum.increasing) ? undefined : tendencyEnum.increasing
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'hardnessTendency.increasing' | translate }}"
-            >
-              <span>{{ "hardnessTendency.increasing" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabHardnessProfile(tendencyEnum.steady) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlabHardnessProfile(
-                  $event,
-                  isSlabHardnessProfile(tendencyEnum.steady) ? undefined : tendencyEnum.steady
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'hardnessTendency.steady' | translate }}"
-            >
-              <span>{{ "hardnessTendency.steady" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabHardnessProfile(tendencyEnum.decreasing) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlabHardnessProfile(
-                  $event,
-                  isSlabHardnessProfile(tendencyEnum.decreasing) ? undefined : tendencyEnum.decreasing
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'hardnessTendency.decreasing' | translate }}"
-            >
-              <span>{{ "hardnessTendency.decreasing" | translate }}</span>
-            </button>
+      @if (isAvalancheType(avalancheTypeEnum.slab)) {
+        <accordion-group
+          class="accordion-group"
+          [isOpen]="isAccordionWeakLayerOpen"
+          (isOpenChange)="accordionChanged($event, 'weakLayer')"
+        >
+          <div accordion-heading class="accordion-header accordion-header--with-buttons">
+            <h2 class="accordion-header__title">
+              @if (!isAccordionWeakLayerOpen) {
+                <i class="accordion__arrow ph ph-caret-right"></i>
+              }
+              @if (isAccordionWeakLayerOpen) {
+                <i class="accordion__arrow ph ph-caret-down"></i>
+              }
+              {{ "dangerSources.create.title.weakLayer" | translate }}
+            </h2>
           </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() &&
-              variant().slabEnergyTransferPotential !== comparedVariant()?.slabEnergyTransferPotential
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.slabEnergyTransferPotential" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isSlabEnergyTransferPotential(characteristicEnum.low) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setSlabEnergyTransferPotential(
-                  $event,
-                  isSlabEnergyTransferPotential(characteristicEnum.low) ? undefined : characteristicEnum.low
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.low' | translate }}"
-            >
-              <span>{{ "characteristic.low" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isSlabEnergyTransferPotential(characteristicEnum.medium) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setSlabEnergyTransferPotential(
-                  $event,
-                  isSlabEnergyTransferPotential(characteristicEnum.medium) ? undefined : characteristicEnum.medium
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.medium' | translate }}"
-            >
-              <span>{{ "characteristic.medium" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isSlabEnergyTransferPotential(characteristicEnum.high) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setSlabEnergyTransferPotential(
-                  $event,
-                  isSlabEnergyTransferPotential(characteristicEnum.high) ? undefined : characteristicEnum.high
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.high' | translate }}"
-            >
-              <span>{{ "characteristic.high" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isSlabEnergyTransferPotential(characteristicEnum.very_high) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setSlabEnergyTransferPotential(
-                  $event,
-                  isSlabEnergyTransferPotential(characteristicEnum.very_high) ? undefined : characteristicEnum.very_high
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.very_high' | translate }}"
-            >
-              <span>{{ "characteristic.very_high" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().slabDistribution !== comparedVariant()?.slabDistribution"
-            for="textarea-input"
-            >{{ "dangerSources.create.label.slabDistribution" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabDistribution(distributionEnum.isolated) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlabDistribution(
-                  $event,
-                  isSlabDistribution(distributionEnum.isolated) ? undefined : distributionEnum.isolated
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'distribution.isolated' | translate }}"
-            >
-              <span>{{ "distribution.isolated" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabDistribution(distributionEnum.specific) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlabDistribution(
-                  $event,
-                  isSlabDistribution(distributionEnum.specific) ? undefined : distributionEnum.specific
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'distribution.specific' | translate }}"
-            >
-              <span>{{ "distribution.specific" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlabDistribution(distributionEnum.widespread) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlabDistribution(
-                  $event,
-                  isSlabDistribution(distributionEnum.widespread) ? undefined : distributionEnum.widespread
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'distribution.widespread' | translate }}"
-            >
-              <span>{{ "distribution.widespread" | translate }}</span>
-            </button>
-          </div>
-        </div>
-      </accordion-group>
-
-      <accordion-group
-        *ngIf="isAvalancheType(avalancheTypeEnum.slab)"
-        class="accordion-group"
-        [isOpen]="isAccordionWeakLayerOpen"
-        (isOpenChange)="accordionChanged($event, 'weakLayer')"
-      >
-        <div accordion-heading class="accordion-header accordion-header--with-buttons">
-          <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionWeakLayerOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionWeakLayerOpen" class="accordion__arrow ph ph-caret-down"></i>
-            {{ "dangerSources.create.title.weakLayer" | translate }}
-          </h2>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() &&
-              !haveSameElements(variant().weakLayerGrainShapes, comparedVariant()?.weakLayerGrainShapes)
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.weakLayerGrainShape" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setWeakLayerGrainShape($event, grainShapeEnum.PP)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.PP.class')"
-            >
-              <span>{{ "grainShape.PP.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setWeakLayerGrainShape($event, grainShapeEnum.DF)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.DF.class')"
-            >
-              <span>{{ "grainShape.DF.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.RG) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setWeakLayerGrainShape($event, grainShapeEnum.RG)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.RG.class')"
-            >
-              <span>{{ "grainShape.RG.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setWeakLayerGrainShape($event, grainShapeEnum.FC)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.FC.class')"
-            >
-              <span>{{ "grainShape.FC.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.DH) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setWeakLayerGrainShape($event, grainShapeEnum.DH)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.DH.class')"
-            >
-              <span>{{ "grainShape.DH.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.SH) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setWeakLayerGrainShape($event, grainShapeEnum.SH)"
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.SH.class')"
-            >
-              <span>{{ "grainShape.SH.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerGrainShape(grainShapeEnum.PPgp) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerGrainShape(
-                  $event,
-                  isWeakLayerGrainShape(grainShapeEnum.PPgp) ? undefined : grainShapeEnum.PPgp
-                )
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.PPgp.class')"
-            >
-              <span>{{ "grainShape.PPgp.code" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label pe-3"
-            [class.changed]="
-              isComparedVariant() &&
-              (variant().weakLayerGrainSizeLowerLimit !== comparedVariant()?.weakLayerGrainSizeLowerLimit ||
-                variant().weakLayerGrainSizeUpperLimit !== comparedVariant()?.weakLayerGrainSizeUpperLimit)
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.weakLayerGrainSize" | translate }}</label
-          >
-          <div class="input-group align-items-baseline">
-            <input
-              step="0.25"
-              min="0"
-              id="inputWeakLayerGrainSizeLowerLimit"
-              class="form-control"
-              size="14"
-              type="number"
-              name="weak-layer-grain-size-lower-limit-input"
-              [disabled]="disabled()"
-              [(ngModel)]="variant().weakLayerGrainSizeLowerLimit"
-              (change)="updateVariantOnServer()"
-            />
-            <span class="input-group-text">mm</span>
-            <label class="form-label mx-3" for="weakLayerGrainSizeLabel"> - </label>
-            <input
-              step="0.25"
-              min="0"
-              id="inputWeakLayerGrainSizeUpperLimit"
-              class="form-control"
-              size="14"
-              type="number"
-              name="weak-layer-grain-size-upper-limit-input"
-              [disabled]="disabled()"
-              [(ngModel)]="variant().weakLayerGrainSizeUpperLimit"
-              (change)="updateVariantOnServer()"
-            />
-            <span class="input-group-text">mm</span>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerPersistent !== comparedVariant()?.weakLayerPersistent
-            "
-            for="weakLayerPersistentCheckbox"
-            >{{ "dangerSources.create.label.weakLayerPersistent" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerPersistent !== undefined && variant().weakLayerPersistent === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setWeakLayerPersistent(true)"
-            >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerPersistent !== undefined && variant().weakLayerPersistent === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setWeakLayerPersistent(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerThickness !== comparedVariant()?.weakLayerThickness
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.weakLayerThickness" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerThickness(thicknessEnum.thin) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerThickness($event, isWeakLayerThickness(thicknessEnum.thin) ? undefined : thicknessEnum.thin)
-              "
-              data-toggle="tooltip"
-              title="{{ 'thickness.thin' | translate }}"
-            >
-              <span>{{ "thickness.thin" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerThickness(thicknessEnum.thick) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerThickness(
-                  $event,
-                  isWeakLayerThickness(thicknessEnum.thick) ? undefined : thicknessEnum.thick
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'thickness.thick' | translate }}"
-            >
-              <span>{{ "thickness.thick" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerStrength !== comparedVariant()?.weakLayerStrength
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.weakLayerStrength" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.low) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerStrength(
-                  $event,
-                  isWeakLayerStrength(characteristicEnum.low) ? undefined : characteristicEnum.low
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.low' | translate }}"
-            >
-              <span>{{ "characteristic.low" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.medium) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerStrength(
-                  $event,
-                  isWeakLayerStrength(characteristicEnum.medium) ? undefined : characteristicEnum.medium
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.medium' | translate }}"
-            >
-              <span>{{ "characteristic.medium" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.high) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerStrength(
-                  $event,
-                  isWeakLayerStrength(characteristicEnum.high) ? undefined : characteristicEnum.high
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.high' | translate }}"
-            >
-              <span>{{ "characteristic.high" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerStrength(characteristicEnum.very_high) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerStrength(
-                  $event,
-                  isWeakLayerStrength(characteristicEnum.very_high) ? undefined : characteristicEnum.very_high
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'characteristic.very_high' | translate }}"
-            >
-              <span>{{ "characteristic.very_high" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().weakLayerWet !== comparedVariant()?.weakLayerWet"
-            for="weakLayerWetCheckbox"
-            >{{ "dangerSources.create.label.weakLayerWet" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerWet !== undefined && variant().weakLayerWet === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setWeakLayerWet(true)"
-            >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().weakLayerWet !== undefined && variant().weakLayerWet === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setWeakLayerWet(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerCrustAbove !== comparedVariant()?.weakLayerCrustAbove
-            "
-            for="weakLayerCrustAboveCheckbox"
-            >{{ "dangerSources.create.label.weakLayerCrustAbove" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerCrustAbove(
-                  $event,
-                  isWeakLayerCrustAbove(weakLayerCrustEnum.yes) ? undefined : weakLayerCrustEnum.yes
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'weakLayerCrust.yes' | translate }}"
-            >
-              <span>{{ "weakLayerCrust.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerCrustAbove(
-                  $event,
-                  isWeakLayerCrustAbove(weakLayerCrustEnum.partly) ? undefined : weakLayerCrustEnum.partly
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'weakLayerCrust.partly' | translate }}"
-            >
-              <span>{{ "weakLayerCrust.partly" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerCrustAbove(
-                  $event,
-                  isWeakLayerCrustAbove(weakLayerCrustEnum.no) ? undefined : weakLayerCrustEnum.no
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'weakLayerCrust.no' | translate }}"
-            >
-              <span>{{ "weakLayerCrust.no" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerCrustBelow !== comparedVariant()?.weakLayerCrustBelow
-            "
-            for="weakLayerCrustBelowCheckbox"
-            >{{ "dangerSources.create.label.weakLayerCrustBelow" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerCrustBelow(
-                  $event,
-                  isWeakLayerCrustBelow(weakLayerCrustEnum.yes) ? undefined : weakLayerCrustEnum.yes
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'weakLayerCrust.yes' | translate }}"
-            >
-              <span>{{ "weakLayerCrust.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerCrustBelow(
-                  $event,
-                  isWeakLayerCrustBelow(weakLayerCrustEnum.partly) ? undefined : weakLayerCrustEnum.partly
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'weakLayerCrust.partly' | translate }}"
-            >
-              <span>{{ "weakLayerCrust.partly" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerCrustBelow(
-                  $event,
-                  isWeakLayerCrustBelow(weakLayerCrustEnum.no) ? undefined : weakLayerCrustEnum.no
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'weakLayerCrust.no' | translate }}"
-            >
-              <span>{{ "weakLayerCrust.no" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerPosition !== comparedVariant()?.weakLayerPosition
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.weakLayerPosition" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.ground) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerPosition(
-                  $event,
-                  isWeakLayerPosition(snowpackPositionEnum.ground) ? undefined : snowpackPositionEnum.ground
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'snowpackPosition.ground' | translate }}"
-            >
-              <span>{{ "snowpackPosition.ground" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.lower) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerPosition(
-                  $event,
-                  isWeakLayerPosition(snowpackPositionEnum.lower) ? undefined : snowpackPositionEnum.lower
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'snowpackPosition.lower' | translate }}"
-            >
-              <span>{{ "snowpackPosition.lower" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.middle) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerPosition(
-                  $event,
-                  isWeakLayerPosition(snowpackPositionEnum.middle) ? undefined : snowpackPositionEnum.middle
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'snowpackPosition.middle' | translate }}"
-            >
-              <span>{{ "snowpackPosition.middle" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerPosition(snowpackPositionEnum.upper) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerPosition(
-                  $event,
-                  isWeakLayerPosition(snowpackPositionEnum.upper) ? undefined : snowpackPositionEnum.upper
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'snowpackPosition.upper' | translate }}"
-            >
-              <span>{{ "snowpackPosition.upper" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerCreation !== comparedVariant()?.weakLayerCreation
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.weakLayerCreation" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isWeakLayerCreation(creationProcessEnum.radiation_recrystallization)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="
-                setWeakLayerCreation(
-                  $event,
-                  isWeakLayerCreation(creationProcessEnum.radiation_recrystallization)
-                    ? undefined
-                    : creationProcessEnum.radiation_recrystallization
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'creationProcess.radiation_recrystallization' | translate }}"
-            >
-              <span>{{ "creationProcess.radiation_recrystallization" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isWeakLayerCreation(creationProcessEnum.diurnal_recrystallization)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="
-                setWeakLayerCreation(
-                  $event,
-                  isWeakLayerCreation(creationProcessEnum.diurnal_recrystallization)
-                    ? undefined
-                    : creationProcessEnum.diurnal_recrystallization
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'creationProcess.diurnal_recrystallization' | translate }}"
-            >
-              <span>{{ "creationProcess.diurnal_recrystallization" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isWeakLayerCreation(creationProcessEnum.melt_layer_recrystallization)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="
-                setWeakLayerCreation(
-                  $event,
-                  isWeakLayerCreation(creationProcessEnum.melt_layer_recrystallization)
-                    ? undefined
-                    : creationProcessEnum.melt_layer_recrystallization
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'creationProcess.melt_layer_recrystallization' | translate }}"
-            >
-              <span>{{ "creationProcess.melt_layer_recrystallization" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isWeakLayerCreation(creationProcessEnum.surface_hoar_formation)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="
-                setWeakLayerCreation(
-                  $event,
-                  isWeakLayerCreation(creationProcessEnum.surface_hoar_formation)
-                    ? undefined
-                    : creationProcessEnum.surface_hoar_formation
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'creationProcess.surface_hoar_formation' | translate }}"
-            >
-              <span>{{ "creationProcess.surface_hoar_formation" | translate }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().weakLayerDistribution !== comparedVariant()?.weakLayerDistribution
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.weakLayerDistribution" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerDistribution(distributionEnum.isolated) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerDistribution(
-                  $event,
-                  isWeakLayerDistribution(distributionEnum.isolated) ? undefined : distributionEnum.isolated
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'distribution.isolated' | translate }}"
-            >
-              <span>{{ "distribution.isolated" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isWeakLayerDistribution(distributionEnum.specific) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setWeakLayerDistribution(
-                  $event,
-                  isWeakLayerDistribution(distributionEnum.specific) ? undefined : distributionEnum.specific
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'distribution.specific' | translate }}"
-            >
-              <span>{{ "distribution.specific" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isWeakLayerDistribution(distributionEnum.widespread) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setWeakLayerDistribution(
-                  $event,
-                  isWeakLayerDistribution(distributionEnum.widespread) ? undefined : distributionEnum.widespread
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'distribution.widespread' | translate }}"
-            >
-              <span>{{ "distribution.widespread" | translate }}</span>
-            </button>
-          </div>
-        </div>
-      </accordion-group>
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() &&
+                  !haveSameElements(variant().weakLayerGrainShapes, comparedVariant()?.weakLayerGrainShapes)
+                "
+                >{{ "dangerSources.create.label.weakLayerGrainShape" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[
+                  grainShapeEnum.PP,
+                  grainShapeEnum.DF,
+                  grainShapeEnum.RG,
+                  grainShapeEnum.FC,
+                  grainShapeEnum.DH,
+                  grainShapeEnum.SH,
+                  grainShapeEnum.PPgp,
+                ]"
+                [(values)]="variant().weakLayerGrainShapes"
+                (valuesChange)="updateVariantOnServer()"
+                titleI18n="grainShape.#.class"
+                labelI18n="grainShape.#.code"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label pe-3"
+                [class.changed]="
+                  isComparedVariant() &&
+                  (variant().weakLayerGrainSizeLowerLimit !== comparedVariant()?.weakLayerGrainSizeLowerLimit ||
+                    variant().weakLayerGrainSizeUpperLimit !== comparedVariant()?.weakLayerGrainSizeUpperLimit)
+                "
+                >{{ "dangerSources.create.label.weakLayerGrainSize" | translate }}</label
+              >
+              <div class="input-group align-items-baseline">
+                <input
+                  step="0.25"
+                  min="0"
+                  id="inputWeakLayerGrainSizeLowerLimit"
+                  class="form-control"
+                  size="14"
+                  type="number"
+                  name="weak-layer-grain-size-lower-limit-input"
+                  [disabled]="disabled()"
+                  [(ngModel)]="variant().weakLayerGrainSizeLowerLimit"
+                  (change)="updateVariantOnServer()"
+                />
+                <span class="input-group-text">mm</span>
+                <label class="form-label mx-3"> - </label>
+                <input
+                  step="0.25"
+                  min="0"
+                  id="inputWeakLayerGrainSizeUpperLimit"
+                  class="form-control"
+                  size="14"
+                  type="number"
+                  name="weak-layer-grain-size-upper-limit-input"
+                  [disabled]="disabled()"
+                  [(ngModel)]="variant().weakLayerGrainSizeUpperLimit"
+                  (change)="updateVariantOnServer()"
+                />
+                <span class="input-group-text">mm</span>
+              </div>
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerPersistent !== comparedVariant()?.weakLayerPersistent
+                "
+                >{{ "dangerSources.create.label.weakLayerPersistent" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[true, false]"
+                [(value)]="variant().weakLayerPersistent"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="button.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerThickness !== comparedVariant()?.weakLayerThickness
+                "
+                >{{ "dangerSources.create.label.weakLayerThickness" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerThickness)"
+                [(value)]="variant().weakLayerThickness"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="thickness.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerStrength !== comparedVariant()?.weakLayerStrength
+                "
+                >{{ "dangerSources.create.label.weakLayerStrength" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerStrength)"
+                [(value)]="variant().weakLayerStrength"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="characteristic.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="isComparedVariant() && variant().weakLayerWet !== comparedVariant()?.weakLayerWet"
+                >{{ "dangerSources.create.label.weakLayerWet" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[true, false]"
+                [(value)]="variant().weakLayerWet"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="button.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerCrustAbove !== comparedVariant()?.weakLayerCrustAbove
+                "
+                >{{ "dangerSources.create.label.weakLayerCrustAbove" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerCrustBelow)"
+                [(value)]="variant().weakLayerCrustAbove"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="weakLayerCrust.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerCrustBelow !== comparedVariant()?.weakLayerCrustBelow
+                "
+                >{{ "dangerSources.create.label.weakLayerCrustBelow" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerCrustBelow)"
+                [(value)]="variant().weakLayerCrustBelow"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="weakLayerCrust.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerPosition !== comparedVariant()?.weakLayerPosition
+                "
+                >{{ "dangerSources.create.label.weakLayerPosition" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerPosition)"
+                [(value)]="variant().weakLayerPosition"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="snowpackPosition.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerCreation !== comparedVariant()?.weakLayerCreation
+                "
+                >{{ "dangerSources.create.label.weakLayerCreation" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerCreation)"
+                [(value)]="variant().weakLayerCreation"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="creationProcess.#"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.slab)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().weakLayerDistribution !== comparedVariant()?.weakLayerDistribution
+                "
+                >{{ "dangerSources.create.label.weakLayerDistribution" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerDistribution)"
+                [(value)]="variant().weakLayerDistribution"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="creationProcess.#"
+              />
+            </div>
+          }
+        </accordion-group>
+      }
 
       <!-- LOOSE SNOW AVALANCHES -->
-      <accordion-group
-        *ngIf="isAvalancheType(avalancheTypeEnum.loose)"
-        class="accordion-group"
-        [isOpen]="isAccordionLooseOpen"
-        (isOpenChange)="accordionChanged($event, 'loose')"
-      >
-        <div accordion-heading class="accordion-header accordion-header--with-buttons">
-          <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionLooseOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionLooseOpen" class="accordion__arrow ph ph-caret-down"></i>
-            {{ "dangerSources.create.title.loose" | translate }}
-          </h2>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().looseSnowGrainShape !== comparedVariant()?.looseSnowGrainShape
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.looseSnowGrainShape" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.PP) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.PP) ? undefined : grainShapeEnum.PP)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.PP.class')"
-            >
-              <span>{{ "grainShape.PP.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DF) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.DF) ? undefined : grainShapeEnum.DF)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.DF.class')"
-            >
-              <span>{{ "grainShape.DF.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.FC) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.FC) ? undefined : grainShapeEnum.FC)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.FC.class')"
-            >
-              <span>{{ "grainShape.FC.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.DH) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.DH) ? undefined : grainShapeEnum.DH)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.DH.class')"
-            >
-              <span>{{ "grainShape.DH.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.SH) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.SH) ? undefined : grainShapeEnum.SH)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.SH.class')"
-            >
-              <span>{{ "grainShape.SH.code" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowGrainShape(grainShapeEnum.MF) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowGrainShape($event, isLooseSnowGrainShape(grainShapeEnum.MF) ? undefined : grainShapeEnum.MF)
-              "
-              data-toggle="tooltip"
-              [title]="translateService.instant('grainShape.MF.class')"
-            >
-              <span>{{ "grainShape.MF.code" | translate }}</span>
-            </button>
+      @if (isAvalancheType(avalancheTypeEnum.loose)) {
+        <accordion-group
+          class="accordion-group"
+          [isOpen]="isAccordionLooseOpen"
+          (isOpenChange)="accordionChanged($event, 'loose')"
+        >
+          <div accordion-heading class="accordion-header accordion-header--with-buttons">
+            <h2 class="accordion-header__title">
+              @if (!isAccordionLooseOpen) {
+                <i class="accordion__arrow ph ph-caret-right"></i>
+              }
+              @if (isAccordionLooseOpen) {
+                <i class="accordion__arrow ph ph-caret-down"></i>
+              }
+              {{ "dangerSources.create.title.loose" | translate }}
+            </h2>
           </div>
-        </div>
-
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().looseSnowMoisture !== comparedVariant()?.looseSnowMoisture
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.looseSnowMoisture" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowMoisture(wetnessEnum.dry) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.dry) ? undefined : wetnessEnum.dry)"
-              data-toggle="tooltip"
-              title="{{ 'wetness.dry' | translate }}"
-            >
-              <span>{{ "wetness.dry" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowMoisture(wetnessEnum.moist) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.moist) ? undefined : wetnessEnum.moist)
-              "
-              data-toggle="tooltip"
-              title="{{ 'wetness.moist' | translate }}"
-            >
-              <span>{{ "wetness.moist" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isLooseSnowMoisture(wetnessEnum.wet) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setLooseSnowMoisture($event, isLooseSnowMoisture(wetnessEnum.wet) ? undefined : wetnessEnum.wet)"
-              data-toggle="tooltip"
-              title="{{ 'wetness.wet' | translate }}"
-            >
-              <span>{{ "wetness.wet" | translate }}</span>
-            </button>
-          </div>
-        </div>
-      </accordion-group>
+          @if (isAvalancheType(avalancheTypeEnum.loose)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().looseSnowGrainShape !== comparedVariant()?.looseSnowGrainShape
+                "
+                >{{ "dangerSources.create.label.looseSnowGrainShape" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="[
+                  grainShapeEnum.PP,
+                  grainShapeEnum.DF,
+                  grainShapeEnum.FC,
+                  grainShapeEnum.DH,
+                  grainShapeEnum.SH,
+                  grainShapeEnum.MF,
+                ]"
+                [(value)]="variant().looseSnowGrainShape"
+                (valueChange)="updateVariantOnServer()"
+                titleI18n="grainShape.#.class"
+                labelI18n="grainShape.#.code"
+              />
+            </div>
+          }
+          @if (isAvalancheType(avalancheTypeEnum.loose)) {
+            <div class="form-group row">
+              <label
+                class="form-label"
+                [class.changed]="
+                  isComparedVariant() && variant().looseSnowMoisture !== comparedVariant()?.looseSnowMoisture
+                "
+                >{{ "dangerSources.create.label.looseSnowMoisture" | translate }}</label
+              >
+              <app-toggle-btn-group
+                [disabled]="disabled()"
+                [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.looseSnowMoisture)"
+                [(value)]="variant().looseSnowMoisture"
+                (valueChange)="updateVariantOnServer()"
+                labelI18n="wetness.#"
+              />
+            </div>
+          }
+        </accordion-group>
+      }
 
       <accordion-group
         class="accordion-group"
@@ -1783,8 +757,12 @@
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionCharacteristicsOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionCharacteristicsOpen" class="accordion__arrow ph ph-caret-down"></i>
+            @if (!isAccordionCharacteristicsOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionCharacteristicsOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
             {{ "dangerSources.create.title.characteristics" | translate }}
           </h2>
         </div>
@@ -1795,78 +773,36 @@
             [class.changed]="
               isComparedVariant() && variant().hasDaytimeDependency !== comparedVariant()?.hasDaytimeDependency
             "
-            for="hasDaytimeDependencyCheckbox"
             >{{ "dangerSources.create.label.hasDaytimeDependency" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().hasDaytimeDependency !== undefined && variant().hasDaytimeDependency === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setHasDaytimeDependency(true)"
-            >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().hasDaytimeDependency !== undefined && variant().hasDaytimeDependency === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setHasDaytimeDependency(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="[true, false]"
+            [(value)]="variant().hasDaytimeDependency"
+            (valueChange)="updateVariantOnServer()"
+            labelI18n="button.#"
+          />
         </div>
 
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() &&
-              variant().dangerIncreaseWithElevation !== comparedVariant()?.dangerIncreaseWithElevation
-            "
-            for="dangerIncreaseWithElevationCheckbox"
-            >{{ "dangerSources.create.label.dangerIncreaseWithElevation" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().dangerIncreaseWithElevation !== undefined && variant().dangerIncreaseWithElevation === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
+        @if (isAvalancheType(avalancheTypeEnum.slab)) {
+          <div class="form-group row">
+            <label
+              class="form-label"
+              [class.changed]="
+                isComparedVariant() &&
+                variant().dangerIncreaseWithElevation !== comparedVariant()?.dangerIncreaseWithElevation
               "
-              (click)="setDangerIncreaseWithElevation(true)"
+              >{{ "dangerSources.create.label.dangerIncreaseWithElevation" | translate }}</label
             >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
+            <app-toggle-btn-group
               [disabled]="disabled()"
-              [ngClass]="
-                variant().dangerIncreaseWithElevation !== undefined && variant().dangerIncreaseWithElevation === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setDangerIncreaseWithElevation(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
+              [enumValues]="[true, false]"
+              [(value)]="variant().dangerIncreaseWithElevation"
+              (valueChange)="updateVariantOnServer()"
+              labelI18n="button.#"
+            />
           </div>
-        </div>
+        }
 
         <div class="form-group row">
           <label
@@ -1874,311 +810,75 @@
             [class.changed]="
               isComparedVariant() && variant().highestDangerAspect !== comparedVariant()?.highestDangerAspect
             "
-            for="textarea-input"
             >{{ "dangerSources.create.label.highestDangerAspect" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.N) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.N) ? undefined : aspectEnum.N)"
-              data-toggle="tooltip"
-              title="{{ 'aspect.N' | translate }}"
-            >
-              <span>{{ "aspect.N" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.E) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.E) ? undefined : aspectEnum.E)"
-              data-toggle="tooltip"
-              title="{{ 'aspect.E' | translate }}"
-            >
-              <span>{{ "aspect.E" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.S) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.S) ? undefined : aspectEnum.S)"
-              data-toggle="tooltip"
-              title="{{ 'aspect.S' | translate }}"
-            >
-              <span>{{ "aspect.S" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isHighestDangerAspect(aspectEnum.W) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setHighestDangerAspect($event, isHighestDangerAspect(aspectEnum.W) ? undefined : aspectEnum.W)"
-              data-toggle="tooltip"
-              title="{{ 'aspect.W' | translate }}"
-            >
-              <span>{{ "aspect.W" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.highestDangerAspect)"
+            [(value)]="variant().highestDangerAspect"
+            (valueChange)="updateVariantOnServer()"
+            labelI18n="aspect.#"
+          />
         </div>
 
         <div class="form-group row">
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().dangerPeak !== comparedVariant()?.dangerPeak"
-            for="textarea-input"
             >{{ "dangerSources.create.label.dangerPeak" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.evening) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.evening) ? undefined : daytimeEnum.evening)"
-              data-toggle="tooltip"
-              title="{{ 'detailedDaytime.evening' | translate }}"
-            >
-              <span>{{ "detailedDaytime.evening" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.first_night_half) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setDangerPeak(
-                  $event,
-                  isDangerPeak(daytimeEnum.first_night_half) ? undefined : daytimeEnum.first_night_half
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'detailedDaytime.first_night_half' | translate }}"
-            >
-              <span>{{ "detailedDaytime.first_night_half" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.second_night_half) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setDangerPeak(
-                  $event,
-                  isDangerPeak(daytimeEnum.second_night_half) ? undefined : daytimeEnum.second_night_half
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'detailedDaytime.second_night_half' | translate }}"
-            >
-              <span>{{ "detailedDaytime.second_night_half" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.morning) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.morning) ? undefined : daytimeEnum.morning)"
-              data-toggle="tooltip"
-              title="{{ 'detailedDaytime.morning' | translate }}"
-            >
-              <span>{{ "detailedDaytime.morning" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.forenoon) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.forenoon) ? undefined : daytimeEnum.forenoon)"
-              data-toggle="tooltip"
-              title="{{ 'detailedDaytime.forenoon' | translate }}"
-            >
-              <span>{{ "detailedDaytime.forenoon" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isDangerPeak(daytimeEnum.afternoon) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerPeak($event, isDangerPeak(daytimeEnum.afternoon) ? undefined : daytimeEnum.afternoon)"
-              data-toggle="tooltip"
-              title="{{ 'detailedDaytime.afternoon' | translate }}"
-            >
-              <span>{{ "detailedDaytime.afternoon" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.dangerPeak)"
+            [(value)]="variant().dangerPeak"
+            (valueChange)="updateVariantOnServer()"
+            labelI18n="detailedDaytime.#"
+          />
         </div>
 
         <div class="form-group row">
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().slopeGradient !== comparedVariant()?.slopeGradient"
-            for="textarea-input"
             >{{ "dangerSources.create.label.slopeGradient" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="isAvalancheType(avalancheTypeEnum.loose)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isSlopeGradient(slopeGradientEnum.moderately_steep) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setSlopeGradient(
-                  $event,
-                  isSlopeGradient(slopeGradientEnum.moderately_steep) ? undefined : slopeGradientEnum.moderately_steep
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'slopeGradient.moderately_steep' | translate }}"
-            >
-              <span>{{ "slopeGradient.moderately_steep" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="isAvalancheType(avalancheTypeEnum.loose)"
-              [disabled]="disabled()"
-              [ngClass]="isSlopeGradient(slopeGradientEnum.steep) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlopeGradient($event, isSlopeGradient(slopeGradientEnum.steep) ? undefined : slopeGradientEnum.steep)
-              "
-              data-toggle="tooltip"
-              title="{{ 'slopeGradient.steep' | translate }}"
-            >
-              <span>{{ "slopeGradient.steep" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlopeGradient(slopeGradientEnum.very_steep) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlopeGradient(
-                  $event,
-                  isSlopeGradient(slopeGradientEnum.very_steep) ? undefined : slopeGradientEnum.very_steep
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'slopeGradient.very_steep' | translate }}"
-            >
-              <span>{{ "slopeGradient.very_steep" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isSlopeGradient(slopeGradientEnum.extremely_steep) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setSlopeGradient(
-                  $event,
-                  isSlopeGradient(slopeGradientEnum.extremely_steep) ? undefined : slopeGradientEnum.extremely_steep
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'slopeGradient.extremely_steep' | translate }}"
-            >
-              <span>{{ "slopeGradient.extremely_steep" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.slopeGradient)"
+            [(value)]="variant().slopeGradient"
+            (valueChange)="updateVariantOnServer()"
+            labelI18n="slopeGradient.#"
+          />
         </div>
 
         <div class="form-group row">
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().runoutIntoGreen !== comparedVariant()?.runoutIntoGreen"
-            for="runoutIntoGreenCheckbox"
             >{{ "dangerSources.create.label.runoutIntoGreen" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().runoutIntoGreen !== undefined && variant().runoutIntoGreen === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setRunoutIntoGreen(true)"
-            >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().runoutIntoGreen !== undefined && variant().runoutIntoGreen === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setRunoutIntoGreen(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="[true, false]"
+            [(value)]="variant().runoutIntoGreen"
+            (valueChange)="updateVariantOnServer()"
+            labelI18n="button.#"
+          />
         </div>
 
         <div class="form-group row">
           <label
             class="form-label"
             [class.changed]="isComparedVariant() && variant().naturalRelease !== comparedVariant()?.naturalRelease"
-            for="textarea-input"
             >{{ "dangerSources.create.label.naturalRelease" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isNaturalRelease(probabilityEnum.likely) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setNaturalRelease($event, isNaturalRelease(probabilityEnum.likely) ? undefined : probabilityEnum.likely)
-              "
-              data-toggle="tooltip"
-              title="{{ 'probability.likely' | translate }}"
-            >
-              <span>{{ "probability.likely" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isNaturalRelease(probabilityEnum.possible) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setNaturalRelease(
-                  $event,
-                  isNaturalRelease(probabilityEnum.possible) ? undefined : probabilityEnum.possible
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'probability.possible' | translate }}"
-            >
-              <span>{{ "probability.possible" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isNaturalRelease(probabilityEnum.unlikely) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setNaturalRelease(
-                  $event,
-                  isNaturalRelease(probabilityEnum.unlikely) ? undefined : probabilityEnum.unlikely
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'probability.unlikely' | translate }}"
-            >
-              <span>{{ "probability.unlikely" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.naturalRelease)"
+            [(value)]="variant().naturalRelease"
+            (valueChange)="updateVariantOnServer()"
+            labelI18n="probability.#"
+          />
         </div>
 
         <div class="form-group row">
@@ -2187,246 +887,75 @@
             [class.changed]="
               isComparedVariant() && !haveSameElements(variant().dangerSigns, comparedVariant()?.dangerSigns)
             "
-            for="textarea-input"
             >{{ "dangerSources.create.label.dangerSigns" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="isDangerSign(dangerSignEnum.shooting_cracks) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerSign($event, dangerSignEnum.shooting_cracks)"
-              data-toggle="tooltip"
-              title="{{ 'dangerSign.shooting_cracks' | translate }}"
-            >
-              <span>{{ "dangerSign.shooting_cracks" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="isDangerSign(dangerSignEnum.whumpfing) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerSign($event, dangerSignEnum.whumpfing)"
-              data-toggle="tooltip"
-              title="{{ 'dangerSign.whumpfing' | translate }}"
-            >
-              <span>{{ "dangerSign.whumpfing" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isDangerSign(dangerSignEnum.fresh_avalanches) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerSign($event, dangerSignEnum.fresh_avalanches)"
-              data-toggle="tooltip"
-              title="{{ 'dangerSign.fresh_avalanches' | translate }}"
-            >
-              <span>{{ "dangerSign.fresh_avalanches" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.glide)"
-              [disabled]="disabled()"
-              [ngClass]="isDangerSign(dangerSignEnum.glide_cracks) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setDangerSign($event, dangerSignEnum.glide_cracks)"
-              data-toggle="tooltip"
-              title="{{ 'dangerSign.glide_cracks' | translate }}"
-            >
-              <span>{{ "dangerSign.glide_cracks" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [disabled]="disabled()"
+            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.dangerSigns)"
+            [diminishValues]="dangerSignDiminish()"
+            [(values)]="variant().dangerSigns"
+            (valuesChange)="updateVariantOnServer()"
+            labelI18n="dangerSign.#"
+          />
         </div>
 
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() &&
-              variant().dangerSpotRecognizability !== comparedVariant()?.dangerSpotRecognizability
-            "
-            for="textarea-input"
-            >{{ "dangerSources.create.label.dangerSpotRecognizability" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isDangerSpotRecognizability(recognizabilityEnum.very_easy) ? 'btn-secondary' : 'btn-outline-secondary'
+        @if (isAvalancheType(avalancheTypeEnum.slab)) {
+          <div class="form-group row">
+            <label
+              class="form-label"
+              [class.changed]="
+                isComparedVariant() &&
+                variant().dangerSpotRecognizability !== comparedVariant()?.dangerSpotRecognizability
               "
-              (click)="
-                setDangerSpotRecognizability(
-                  $event,
-                  isDangerSpotRecognizability(recognizabilityEnum.very_easy) ? undefined : recognizabilityEnum.very_easy
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'recognizability.very_easy' | translate }}"
+              >{{ "dangerSources.create.label.dangerSpotRecognizability" | translate }}</label
             >
-              <span>{{ "recognizability.very_easy" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
+            <app-toggle-btn-group
               [disabled]="disabled()"
-              [ngClass]="
-                isDangerSpotRecognizability(recognizabilityEnum.easy) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setDangerSpotRecognizability(
-                  $event,
-                  isDangerSpotRecognizability(recognizabilityEnum.easy) ? undefined : recognizabilityEnum.easy
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'recognizability.easy' | translate }}"
-            >
-              <span>{{ "recognizability.easy" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isDangerSpotRecognizability(recognizabilityEnum.hard) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setDangerSpotRecognizability(
-                  $event,
-                  isDangerSpotRecognizability(recognizabilityEnum.hard) ? undefined : recognizabilityEnum.hard
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'recognizability.hard' | translate }}"
-            >
-              <span>{{ "recognizability.hard" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isDangerSpotRecognizability(recognizabilityEnum.very_hard) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="
-                setDangerSpotRecognizability(
-                  $event,
-                  isDangerSpotRecognizability(recognizabilityEnum.very_hard) ? undefined : recognizabilityEnum.very_hard
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'recognizability.very_hard' | translate }}"
-            >
-              <span>{{ "recognizability.very_hard" | translate }}</span>
-            </button>
+              [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.dangerSpotRecognizability)"
+              [(value)]="variant().dangerSpotRecognizability"
+              (valueChange)="updateVariantOnServer()"
+              labelI18n="recognizability.#"
+            />
           </div>
-        </div>
+        }
 
-        <div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" class="form-group row">
-          <label
-            class="form-label"
-            [class.changed]="isComparedVariant() && variant().remoteTriggering !== comparedVariant()?.remoteTriggering"
-            for="remoteTriggeringCheckbox"
-            >{{ "dangerSources.create.label.remoteTriggering" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isRemoteTriggering(probabilityEnum.likely) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setRemoteTriggering(
-                  $event,
-                  isRemoteTriggering(probabilityEnum.likely) ? undefined : probabilityEnum.likely
-                )
+        @if (isAvalancheType(avalancheTypeEnum.slab)) {
+          <div class="form-group row">
+            <label
+              class="form-label"
+              [class.changed]="
+                isComparedVariant() && variant().remoteTriggering !== comparedVariant()?.remoteTriggering
               "
-              data-toggle="tooltip"
-              title="{{ 'probability.likely' | translate }}"
+              >{{ "dangerSources.create.label.remoteTriggering" | translate }}</label
             >
-              <span>{{ "probability.likely" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
+            <app-toggle-btn-group
               [disabled]="disabled()"
-              [ngClass]="isRemoteTriggering(probabilityEnum.possible) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setRemoteTriggering(
-                  $event,
-                  isRemoteTriggering(probabilityEnum.possible) ? undefined : probabilityEnum.possible
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'probability.possible' | translate }}"
-            >
-              <span>{{ "probability.possible" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="isRemoteTriggering(probabilityEnum.unlikely) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="
-                setRemoteTriggering(
-                  $event,
-                  isRemoteTriggering(probabilityEnum.unlikely) ? undefined : probabilityEnum.unlikely
-                )
-              "
-              data-toggle="tooltip"
-              title="{{ 'probability.unlikely' | translate }}"
-            >
-              <span>{{ "probability.unlikely" | translate }}</span>
-            </button>
+              [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.remoteTriggering)"
+              [(value)]="variant().remoteTriggering"
+              (valueChange)="updateVariantOnServer()"
+              labelI18n="recognizability.#"
+            />
           </div>
-        </div>
+        }
 
-        <div
-          *ngIf="isAvalancheType(avalancheTypeEnum.slab) || isAvalancheType(avalancheTypeEnum.loose)"
-          class="form-group row"
-        >
-          <label
-            class="form-label"
-            [class.changed]="
-              isComparedVariant() && variant().penetrateDeepLayers !== comparedVariant()?.penetrateDeepLayers
-            "
-            for="runoutIntoGreenCheckbox"
-            >{{ "dangerSources.create.label.penetrateDeepLayers" | translate }}</label
-          >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === true
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
+        @if (isAvalancheType(avalancheTypeEnum.slab) || isAvalancheType(avalancheTypeEnum.loose)) {
+          <div class="form-group row">
+            <label
+              class="form-label"
+              [class.changed]="
+                isComparedVariant() && variant().penetrateDeepLayers !== comparedVariant()?.penetrateDeepLayers
               "
-              (click)="setPenetrateDeepLayers(true)"
+              >{{ "dangerSources.create.label.penetrateDeepLayers" | translate }}</label
             >
-              <span>{{ "button.yes" | translate }}</span>
-            </button>
-            <button
-              type="reset"
-              class="btn btn-sm"
+            <app-toggle-btn-group
               [disabled]="disabled()"
-              [ngClass]="
-                variant().penetrateDeepLayers !== undefined && variant().penetrateDeepLayers === false
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setPenetrateDeepLayers(false)"
-            >
-              <span>{{ "button.no" | translate }}</span>
-            </button>
+              [enumValues]="[true, false]"
+              [(value)]="variant().penetrateDeepLayers"
+              (valueChange)="updateVariantOnServer()"
+              labelI18n="button.#"
+            />
           </div>
-        </div>
+        }
 
         <div class="form-group row">
           <label
@@ -2434,334 +963,17 @@
             [class.changed]="
               isComparedVariant() && !haveSameElements(variant().terrainTypes, comparedVariant()?.terrainTypes)
             "
-            for="textarea-input"
             >{{ "dangerSources.create.label.terrainTypes" | translate }}</label
           >
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.gullies_and_bowls) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.gullies_and_bowls)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.gullies_and_bowls' | translate }}"
-            >
-              <span>{{ "terrainType.gullies_and_bowls" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.adjacent_to_ridgelines) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.adjacent_to_ridgelines)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.adjacent_to_ridgelines' | translate }}"
-            >
-              <span>{{ "terrainType.adjacent_to_ridgelines" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.distant_from_ridgelines) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.distant_from_ridgelines)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.distant_from_ridgelines' | translate }}"
-            >
-              <span>{{ "terrainType.distant_from_ridgelines" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.in_the_vicinity_of_peaks) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.in_the_vicinity_of_peaks)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.in_the_vicinity_of_peaks' | translate }}"
-            >
-              <span>{{ "terrainType.in_the_vicinity_of_peaks" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.pass_areas) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.pass_areas)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.pass_areas' | translate }}"
-            >
-              <span>{{ "terrainType.pass_areas" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.glide)"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.grassy_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.grassy_slopes)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.grassy_slopes' | translate }}"
-            >
-              <span>{{ "terrainType.grassy_slopes" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.cut_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.cut_slopes)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.cut_slopes' | translate }}"
-            >
-              <span>{{ "terrainType.cut_slopes" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.wind_loaded_slopes) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.wind_loaded_slopes)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.wind_loaded_slopes' | translate }}"
-            >
-              <span>{{ "terrainType.wind_loaded_slopes" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="isTerrainType(terrainTypeEnum.base_of_rock_walls) ? 'btn-secondary' : 'btn-outline-secondary'"
-              (click)="setTerrainType($event, terrainTypeEnum.base_of_rock_walls)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.base_of_rock_walls' | translate }}"
-            >
-              <span>{{ "terrainType.base_of_rock_walls" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.behind_abrupt_changes_in_the_terrain)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.behind_abrupt_changes_in_the_terrain)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.behind_abrupt_changes_in_the_terrain' | translate }}"
-            >
-              <span>{{ "terrainType.behind_abrupt_changes_in_the_terrain" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.areas_where_the_snow_cover_is_rather_shallow)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.areas_where_the_snow_cover_is_rather_shallow)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.areas_where_the_snow_cover_is_rather_shallow' | translate }}"
-            >
-              <span>{{ "terrainType.areas_where_the_snow_cover_is_rather_shallow" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.transitions_into_gullies_and_bowls)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.transitions_into_gullies_and_bowls)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.transitions_into_gullies_and_bowls' | translate }}"
-            >
-              <span>{{ "terrainType.transitions_into_gullies_and_bowls" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.transitions_from_a_shallow_to_a_deep_snowpack)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.transitions_from_a_shallow_to_a_deep_snowpack)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.transitions_from_a_shallow_to_a_deep_snowpack' | translate }}"
-            >
-              <span>{{ "terrainType.transitions_from_a_shallow_to_a_deep_snowpack" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.highly_frequented_off_piste_terrain)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.highly_frequented_off_piste_terrain)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.highly_frequented_off_piste_terrain' | translate }}"
-            >
-              <span>{{ "terrainType.highly_frequented_off_piste_terrain" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="isAvalancheType(avalancheTypeEnum.glide)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.little_used_backcountry_terrain)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.little_used_backcountry_terrain)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.little_used_backcountry_terrain' | translate }}"
-            >
-              <span>{{ "terrainType.little_used_backcountry_terrain" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="isAvalancheType(avalancheTypeEnum.glide)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.places_that_are_protected_from_the_wind)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.places_that_are_protected_from_the_wind)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.places_that_are_protected_from_the_wind' | translate }}"
-            >
-              <span>{{ "terrainType.places_that_are_protected_from_the_wind" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [class.diminish]="!isAvalancheType(avalancheTypeEnum.slab)"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.regions_exposed_to_the_foehn_wind)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.regions_exposed_to_the_foehn_wind)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.regions_exposed_to_the_foehn_wind' | translate }}"
-            >
-              <span>{{ "terrainType.regions_exposed_to_the_foehn_wind" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.regions_with_a_lot_of_snow) ? 'btn-secondary' : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.regions_with_a_lot_of_snow)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.regions_with_a_lot_of_snow' | translate }}"
-            >
-              <span>{{ "terrainType.regions_with_a_lot_of_snow" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.regions_exposed_to_precipitation)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.regions_exposed_to_precipitation)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.regions_exposed_to_precipitation' | translate }}"
-            >
-              <span>{{ "terrainType.regions_exposed_to_precipitation" | translate }}</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button
-              type="reset"
-              class="btn btn-sm"
-              [disabled]="disabled()"
-              [ngClass]="
-                isTerrainType(terrainTypeEnum.regions_exposed_to_heavier_precipitation)
-                  ? 'btn-secondary'
-                  : 'btn-outline-secondary'
-              "
-              (click)="setTerrainType($event, terrainTypeEnum.regions_exposed_to_heavier_precipitation)"
-              data-toggle="tooltip"
-              title="{{ 'terrainType.regions_exposed_to_heavier_precipitation' | translate }}"
-            >
-              <span>{{ "terrainType.regions_exposed_to_heavier_precipitation" | translate }}</span>
-            </button>
-          </div>
+          <app-toggle-btn-group
+            [flexColumn]="true"
+            [disabled]="disabled()"
+            [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.terrainTypes)"
+            [diminishValues]="terrainTypeDiminish()"
+            [(values)]="variant().terrainTypes"
+            (valueChange)="updateVariantOnServer()"
+            labelI18n="terrainType.#"
+          />
         </div>
       </accordion-group>
 
@@ -2772,8 +984,12 @@
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionMatrixOpen" class="accordion__arrow ph ph-caret-down"></i>
+            @if (!isAccordionMatrixOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionMatrixOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
             {{ "dangerSources.create.title.matrix" | translate }}
           </h2>
         </div>
@@ -2782,7 +998,6 @@
             <label
               class="form-label"
               [class.changed]="isComparedVariant() && !haveSameElements(variant().aspects, comparedVariant()?.aspects)"
-              for=""
               >{{ "dangerSources.create.label.aspects" | translate }}</label
             >
             <div>
@@ -2795,7 +1010,7 @@
             </div>
           </div>
           <div class="col-md-7">
-            <label class="form-label" [class.changed]="isComparedVariant() && isElevationEqual" for="">{{
+            <label class="form-label" [class.changed]="isComparedVariant() && isElevationEqual">{{
               "elevation.title" | translate
             }}</label>
             <!-- Elevation (high) -->
@@ -2909,8 +1124,12 @@
       >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
-            <i *ngIf="!isAccordionCommentOpen" class="accordion__arrow ph ph-caret-right"></i>
-            <i *ngIf="isAccordionCommentOpen" class="accordion__arrow ph ph-caret-down"></i>
+            @if (!isAccordionCommentOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionCommentOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
             {{ "dangerSources.create.title.comment" | translate }}
           </h2>
         </div>

@@ -1,11 +1,16 @@
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { DangerSourceVariantModel, DangerSourceVariantType } from "./models/danger-source-variant.model";
-import { DangerSourceModel } from "./models/danger-source.model";
+import {
+  DangerSourceVariantModel,
+  DangerSourceVariantSchema,
+  DangerSourceVariantType,
+} from "./models/danger-source-variant.model";
+import { DangerSourceModel, DangerSourceSchema } from "./models/danger-source.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { JsonArray } from "protomaps-leaflet";
 import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+import { z } from "zod/v4";
 
 interface AccordionChangeEvent {
   isOpen: boolean;
@@ -62,9 +67,9 @@ export class DangerSourcesService {
     this.analysisStatusMap = new Map<number, boolean>();
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
-        for (let i = (data as JsonArray).length - 1; i >= 0; i--) {
-          this.forecastStatusMap.set(new Date(data[i].date).getTime(), data[i].forecast);
-          this.analysisStatusMap.set(new Date(data[i].date).getTime(), data[i].analysis);
+        for (let i = data.length - 1; i >= 0; i--) {
+          this.forecastStatusMap.set(data[i].date.getTime(), data[i].forecast);
+          this.analysisStatusMap.set(data[i].date.getTime(), data[i].analysis);
         }
       },
       () => {
@@ -90,13 +95,20 @@ export class DangerSourcesService {
   }
 
   getStatus(region: string, startDate: [Date, Date], endDate: [Date, Date]) {
+    const schema = z
+      .object({
+        date: z.coerce.date(),
+        forecast: z.boolean(),
+        analysis: z.boolean(),
+      })
+      .array();
     const url = this.constantsService.getServerUrl(
       "/danger-sources/status",
       ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
       ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
       ["region", region],
     );
-    return this.http.get(url);
+    return this.http.get(url).pipe(map((o) => schema.parse(o)));
   }
 
   getActiveDate(): [Date, Date] {
@@ -179,13 +191,19 @@ export class DangerSourcesService {
       ["date", date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : ""],
       ["region", region],
     );
-    return this.http.get<DangerSourceModel[]>(url);
+    return this.http.get<unknown>(url).pipe(
+      map((ss) =>
+        DangerSourceSchema.array()
+          .parse(ss)
+          .map((s) => DangerSourceModel.parse(s)),
+      ),
+    );
   }
 
   updateDangerSource(dangerSource: DangerSourceModel) {
     const url = this.constantsService.getServerUrl(`/danger-sources/${dangerSource.id}`);
     const body = JSON.stringify(dangerSource);
-    return this.http.post(url, body);
+    return this.http.post<unknown>(url, body);
   }
 
   loadDangerSourceVariants(
@@ -207,26 +225,26 @@ export class DangerSourcesService {
         ["region", region],
       );
     }
-    return this.http.get<DangerSourceVariantModel[]>(url);
+    return this.http.get<unknown>(url).pipe(
+      map((vs) =>
+        DangerSourceVariantSchema.array()
+          .parse(vs)
+          .map((v) => DangerSourceVariantModel.parse(v)),
+      ),
+    );
   }
 
-  createDangerSourceVariant(
-    dangerSourceVariant: DangerSourceVariantModel,
-    date: [Date, Date],
-  ): Observable<DangerSourceVariantModel[]> {
+  createDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
     const url = this.constantsService.getServerUrl(
       "/danger-sources/variants",
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", this.authenticationService.getActiveRegionId()],
     );
     const body = JSON.stringify(dangerSourceVariant);
-    return this.http.put<DangerSourceVariantModel[]>(url, body);
+    return this.http.put<unknown>(url, body);
   }
 
-  updateDangerSourceVariant(
-    dangerSourceVariant: DangerSourceVariantModel,
-    date: [Date, Date],
-  ): Observable<DangerSourceVariantModel[]> {
+  updateDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
     // check if danger source has ID
     const url = this.constantsService.getServerUrl(
       `/danger-sources/variants/${dangerSourceVariant.id}`,
@@ -234,20 +252,17 @@ export class DangerSourcesService {
       ["region", this.authenticationService.getActiveRegionId()],
     );
     const body = JSON.stringify(dangerSourceVariant);
-    return this.http.post<DangerSourceVariantModel[]>(url, body);
+    return this.http.post<unknown>(url, body);
   }
 
-  deleteDangerSourceVariant(
-    variant: DangerSourceVariantModel,
-    date: [Date, Date],
-  ): Observable<DangerSourceVariantModel[]> {
+  deleteDangerSourceVariant(variant: DangerSourceVariantModel, date: [Date, Date]) {
     // check if variant has ID
     const url = this.constantsService.getServerUrl(
       `/danger-sources/variants/${variant.id}`,
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", this.authenticationService.getActiveRegionId()],
     );
-    return this.http.delete<DangerSourceVariantModel[]>(url);
+    return this.http.delete<unknown>(url);
   }
 
   saveVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
@@ -257,7 +272,7 @@ export class DangerSourcesService {
       ["region", this.authenticationService.getActiveRegionId()],
     );
     const body = JSON.stringify(variants);
-    return this.http.post(url, body);
+    return this.http.post<unknown>(url, body);
   }
 
   emitAccordionChanged(event: AccordionChangeEvent) {

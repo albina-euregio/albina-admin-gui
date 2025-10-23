@@ -1,0 +1,15 @@
+<div class="btn-group w-100" [class.flex-column]="flexColumn()">
+  @for (enumValue of enumValues(); track enumValue) {
+  <button
+    type="reset"
+    [disabled]="disabled()"
+    [class]="isSelected(enumValue) ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'"
+    [class.diminish]="diminishValues()?.[`${enumValue}`]"
+    (click)="emitChange(enumValue)"
+    data-toggle="tooltip"
+    [title]="title(enumValue)"
+  >
+    <span>{{ label(enumValue) }}</span>
+  </button>
+  }
+</div>
