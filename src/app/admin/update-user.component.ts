@@ -2,6 +2,7 @@ import { UserModel, UserSchema } from "../models/user.model";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
+import { PasswordMismatchValidatorDirective } from "./password-mismatch.directive";
 import { AfterContentInit, Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -22,7 +23,7 @@ type Result =
   templateUrl: "update-user.component.html",
   selector: "app-update-user",
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [FormsModule, TranslateModule, PasswordMismatchValidatorDirective],
 })
 export class UpdateUserComponent implements AfterContentInit {
   private imageCompress = inject(NgxImageCompressService);

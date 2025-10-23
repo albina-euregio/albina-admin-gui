@@ -1,4 +1,5 @@
 import { UserService } from "../providers/user-service/user.service";
+import { Password2MismatchValidatorDirective } from "./password2-mismatch.directive";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -15,7 +16,7 @@ type Result =
   templateUrl: "change-password.component.html",
   selector: "app-change-password",
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [FormsModule, TranslateModule, Password2MismatchValidatorDirective],
 })
 export class ChangePasswordComponent {
   private translateService = inject(TranslateService);
