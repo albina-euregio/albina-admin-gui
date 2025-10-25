@@ -663,15 +663,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   private fetchJSON<T>(url: string) {
-    if (typeof url === "string" && !url.includes("?")) {
-      url = `${url}?_=${Date.now()}`;
-    }
-    // FIXME const headers = { "Cache-Control": "no-cache" };
-    // FIXME CORS Access-Control-Request-Headers: cache-control
-    return this.httpClient.get(url, { responseType: "text" }).pipe(
-      map((text) => text.replace(/\bNaN\b/g, "null")),
-      map((text) => JSON.parse(text) as T),
-    );
+    return this.httpClient.get<T>(url, { cache: "no-cache" });
   }
 
   requestFullscreen($event: MouseEvent) {
