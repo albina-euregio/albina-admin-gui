@@ -1,4 +1,3 @@
-import { NgClass } from "@angular/common";
 import { Component, inject, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
@@ -7,7 +6,7 @@ import { TranslateService } from "@ngx-translate/core";
   selector: "app-toggle-btn-group",
   templateUrl: "toggle-btn-group.html",
   standalone: true,
-  imports: [FormsModule, NgClass],
+  imports: [FormsModule],
 })
 export class ToggleBtnGroup<T> {
   translateService = inject(TranslateService);
