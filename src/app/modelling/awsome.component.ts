@@ -46,6 +46,7 @@ export type FeatureProperties = GeoJSON.Feature["properties"] & {
   $sourceObject?: AwsomeSource;
   $geometry: GeoJSON.Geometry;
   region_id: string;
+  vstation?: string;
 } & Pick<GenericObservation, "$source" | "latitude" | "longitude" | "elevation">;
 
 type DetailsTabLabel = string;
@@ -345,6 +346,11 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
         this.filterService.isSelected(o),
       ),
     );
+
+    if (this.selectedObservation && !this.localObservations.includes(this.selectedObservation)) {
+      const observation = this.localObservations.find((o) => o?.vstation === this.selectedObservation?.vstation);
+      this.onObservationRightClick(observation);
+    }
 
     try {
       this.loadHazardChart();
