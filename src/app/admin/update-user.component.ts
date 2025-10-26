@@ -70,7 +70,7 @@ export class UpdateUserComponent implements AfterContentInit {
       }
       this.activeLanguageCode = this.user.languageCode;
     }
-    if (this.user.roles.includes(this.constantsService.roleAdmin)) {
+    if (this.isAdmin) {
       this.userService.getRoles().subscribe(
         (data) => {
           this.roles = data;
