@@ -156,9 +156,6 @@ test("observation details", async ({ page }) => {
     await expect(page.getByRole("dialog")).toMatchAriaSnapshot({ name: "SnobsDetails.aria.yaml" });
     await page.getByRole("button", { name: "Close" }).click();
   });
-  await test.step("WikisnowECT", async () => {
-    // TODO if this is still active? Couldn't easily find an observation.
-  });
 });
 
 test("export observation details", async ({ page }) => {
@@ -226,7 +223,10 @@ test("Create new observation", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Save" })).toBeEnabled();
   await page.locator("#eventDate").getByRole("button", { name: "" }).click();
   await expect(page.getByRole("button", { name: "Save" })).toBeDisabled();
-  // TODO think about if/how to test sending of new observation
+});
+
+test("Edit existing observation", async ({ page }) => {
+  // TODO
 });
 
 test("Webcams and Observers", async ({ page }) => {
