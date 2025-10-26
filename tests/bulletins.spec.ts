@@ -1,5 +1,7 @@
 import { changeRegion, loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
+import fs from "node:fs";
+import path from "path";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("");
@@ -23,6 +25,42 @@ test("Check visible neighbors", async ({ page }) => {
     await changeRegion(page, "Carinthia");
     await expect(page.locator("thead")).toContainText("Carinthia Tyrol");
   });
+});
+
+test("Upload media file", async ({ page }) => {
+  // TODO
+});
+
+test("JSON download", async ({ page }) => {
+  const testDate = new Date("2024-12-24");
+  await page.clock.setFixedTime(testDate);
+  await page.reload();
+  await changeRegion(page, "Tyrol");
+  await page.getByRole("row", { name: "Thursday, December 19, 2024" }).getByTitle("read bulletin").click();
+  await page.getByTitle("[b]").click();
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "JSON format" }).click();
+  const jsonDownload = await downloadPromise;
+  expect(jsonDownload.suggestedFilename()).toMatch("2024-12-19_report.json");
+  const downloadPath = path.join(__dirname, "../playwright/generated-data/", jsonDownload.suggestedFilename());
+  await jsonDownload.saveAs(downloadPath);
+  expect(fs.statSync(downloadPath).size).toBeGreaterThan(20 * 10 ** 3); // 20 KB
+});
+
+test("Preview PDF", async ({ page }) => {
+  const testDate = new Date("2024-12-24");
+  await page.clock.setFixedTime(testDate);
+  await page.reload();
+  await changeRegion(page, "Tyrol");
+  await page.getByRole("row", { name: "Thursday, December 19, 2024" }).getByTitle("read bulletin").click();
+  await page.getByTitle("[b]").click();
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Preview bulletin (PDF)" }).click();
+  const pdfDownload = await downloadPromise;
+  expect(pdfDownload.suggestedFilename()).toMatch("PREVIEW_2024-12-19.pdf");
+  const downloadPath = path.join(__dirname, "../playwright/generated-data/", pdfDownload.suggestedFilename());
+  await pdfDownload.saveAs(downloadPath);
+  expect(fs.statSync(downloadPath).size).toBeGreaterThan(10 ** 6); // 1 MB
 });
 
 test("View bulletin", async ({ page }) => {
@@ -49,7 +87,6 @@ test("View bulletin", async ({ page }) => {
     await page.getByRole("button", { name: "" }).click();
     await expect(page.getByRole("button", { name: "Glockner Group + 2" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Brandenberg Alps + 5" })).toBeVisible();
-    // TODO assert map - right now colors in the map are not rendered in the Playwright browser window
     await page.getByTitle("[ctrl+right]").click();
     await expect(page.getByRole("button", { name: "Lechtal Alps East + 2" })).toBeVisible();
     await expect(page.locator("#afternoonMap")).toBeVisible();
@@ -102,7 +139,6 @@ test("Edit bulletin", async ({ page }) => {
   await test.step("Create new region", async () => {
     await page.getByRole("button", { name: "" }).click();
     const region = page.locator("path.leaflet-interactive").nth(100);
-    // TODO assert hover tooltip
     await region.click({ force: true });
     await page.getByRole("button", { name: "Create region" }).click();
     await expect(regionProblem).toContainText("Brandenberg Alps");
@@ -145,7 +181,6 @@ test("Edit bulletin", async ({ page }) => {
     await page.getByRole("button", { name: /Avalanche problems Afternoon/ }).click();
     await expect(page.getByRole("tab", { name: /SLAB.*Treeline/ }).nth(1)).toBeVisible();
     await expect(page.locator("#afternoonMap")).toBeVisible();
-    // TODO export JSON and compare
     await page.getByTitle("Daytime dependency").click();
     await page.getByRole("button", { name: "Later" }).click();
     await expect(page.locator("#afternoonMap")).toBeHidden();
