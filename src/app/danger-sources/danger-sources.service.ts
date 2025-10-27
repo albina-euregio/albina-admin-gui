@@ -200,10 +200,10 @@ export class DangerSourcesService {
     );
   }
 
-  updateDangerSource(dangerSource: DangerSourceModel) {
-    const url = this.constantsService.getServerUrl(`/danger-sources/${dangerSource.id}`);
+  saveDangerSource(dangerSource: DangerSourceModel) {
+    const url = this.constantsService.getServerUrl("/danger-sources");
     const body = JSON.stringify(dangerSource);
-    return this.http.post<unknown>(url, body);
+    return this.http.post<unknown>(url, body).pipe(map((s) => DangerSourceModel.parse(s)));
   }
 
   loadDangerSourceVariants(
@@ -234,20 +234,9 @@ export class DangerSourcesService {
     );
   }
 
-  createDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
+  saveDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
     const url = this.constantsService.getServerUrl(
       "/danger-sources/variants",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
-    );
-    const body = JSON.stringify(dangerSourceVariant);
-    return this.http.put<unknown>(url, body);
-  }
-
-  updateDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
-    // check if danger source has ID
-    const url = this.constantsService.getServerUrl(
-      `/danger-sources/variants/${dangerSourceVariant.id}`,
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", this.authenticationService.getActiveRegionId()],
     );
@@ -265,9 +254,9 @@ export class DangerSourcesService {
     return this.http.delete<unknown>(url);
   }
 
-  saveVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
+  replaceVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
     const url = this.constantsService.getServerUrl(
-      "/danger-sources",
+      "/danger-sources/variants/replace",
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", this.authenticationService.getActiveRegionId()],
     );
