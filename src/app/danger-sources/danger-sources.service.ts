@@ -234,20 +234,9 @@ export class DangerSourcesService {
     );
   }
 
-  createDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
+  saveDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
     const url = this.constantsService.getServerUrl(
       "/danger-sources/variants",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
-    );
-    const body = JSON.stringify(dangerSourceVariant);
-    return this.http.put<unknown>(url, body);
-  }
-
-  updateDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
-    // check if danger source has ID
-    const url = this.constantsService.getServerUrl(
-      `/danger-sources/variants/${dangerSourceVariant.id}`,
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", this.authenticationService.getActiveRegionId()],
     );

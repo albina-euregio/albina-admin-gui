@@ -1079,12 +1079,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private createVariantOnServer(variant: DangerSourceVariantModel) {
     variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+    variant.updateDate = new Date();
     if (this.dangerSourcesService.hasBeenPublished5PM(this.dangerSourcesService.getActiveDate())) {
       variant.dangerSourceVariantType = DangerSourceVariantType.analysis;
     } else {
       variant.dangerSourceVariantType = DangerSourceVariantType.forecast;
     }
-    this.dangerSourcesService.createDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
+    this.dangerSourcesService.saveDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
@@ -1109,7 +1110,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
     variant.updateDate = new Date();
-    this.dangerSourcesService.updateDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
+    this.dangerSourcesService.saveDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.saveError.delete(variant.id);
