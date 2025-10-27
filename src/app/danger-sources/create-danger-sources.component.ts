@@ -549,7 +549,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     if (!variants.length) {
       return;
     }
-    this.dangerSourcesService.saveVariants(variants, this.dangerSourcesService.getActiveDate()).subscribe(
+    this.dangerSourcesService.replaceVariants(variants, this.dangerSourcesService.getActiveDate()).subscribe(
       () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;

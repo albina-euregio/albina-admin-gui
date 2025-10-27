@@ -265,9 +265,9 @@ export class DangerSourcesService {
     return this.http.delete<unknown>(url);
   }
 
-  saveVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
+  replaceVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
     const url = this.constantsService.getServerUrl(
-      "/danger-sources",
+      "/danger-sources/variants/replace",
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", this.authenticationService.getActiveRegionId()],
     );
