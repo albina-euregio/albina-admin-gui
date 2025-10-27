@@ -1127,21 +1127,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     );
   }
 
-  private deleteVariantOnServer(variant: DangerSourceVariantModel) {
-    this.dangerSourcesService.deleteDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
-      () => {
-        this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
-        this.loadInternalVariantsError = false;
-        this.loading = false;
-        console.log("Variant deleted on server.");
-      },
-      () => {
-        console.error("Variant could not be deleted on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate());
-      },
-    );
-  }
-
   isCreator(variant: DangerSourceVariantModel): boolean {
     return (
       variant.ownerRegion !== undefined &&
