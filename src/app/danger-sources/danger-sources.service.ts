@@ -200,10 +200,10 @@ export class DangerSourcesService {
     );
   }
 
-  updateDangerSource(dangerSource: DangerSourceModel) {
-    const url = this.constantsService.getServerUrl(`/danger-sources/${dangerSource.id}`);
+  saveDangerSource(dangerSource: DangerSourceModel) {
+    const url = this.constantsService.getServerUrl("/danger-sources");
     const body = JSON.stringify(dangerSource);
-    return this.http.post<unknown>(url, body);
+    return this.http.post<unknown>(url, body).pipe(map((s) => DangerSourceModel.parse(s)));
   }
 
   loadDangerSourceVariants(

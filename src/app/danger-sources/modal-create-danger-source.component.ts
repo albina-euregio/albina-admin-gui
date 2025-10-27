@@ -33,7 +33,7 @@ export class ModalCreateDangerSourceComponent {
   }
 
   createDangerSourceModalConfirm(): void {
-    this.dangerSourcesService.updateDangerSource(this.dangerSource).subscribe(() => {
+    this.dangerSourcesService.saveDangerSource(this.dangerSource).subscribe(() => {
       console.log("Danger source created!");
     });
     this.component.createDangerSourceModalConfirm(this.dangerSource);
