@@ -2,6 +2,26 @@
 
 https://admin.avalanche.report/ – A frontend to enter avalanche bulletins.
 
+## Deployment
+
+1. Install [Node.js](https://nodejs.org/en).
+1. Use `corepack enable` to install [Yarn](https://yarnpkg.com/).
+1. Use `yarn install` to download necessary packages.
+1. Use `yarn build`
+1. Copy `dist/assets/env.template.js` to `dist/assets/env.js` and edit accordingly
+1. Copy the contents of `dist/` to the server `/var/www/admin-albina.example.com/`
+1. Configure [Caddy server](https://caddyserver.com/) (see config file below)
+1. Open https://admin-albina.example.com/ in your webbrowser
+
+```
+# /etc/caddy/Caddyfile
+admin-albina.example.com {
+	root * /var/www/admin-albina.example.com/
+	encode zstd gzip
+	log
+}
+```
+
 ## Development server
 
 ### First set up
@@ -73,9 +93,11 @@ use e.g. `yarn git-cliff -p CHANGELOG.md v7.0.6..` to prepend all changes that
 happened _after_ version v7.0.6 was released.
 
 ## Playwright tests
-The folder `tests/` contains several Playwright tests which are executed on each merge request and push to the master branch. 
+
+The folder `tests/` contains several Playwright tests which are executed on each merge request and push to the master branch.
 To test locally, you can use the VS Code extension or just type `yarn playwright test`. If you want to be sure that you have the exact same setup as the CI tests,
 use the dockerfile `Dockerfile.playwright`:
+
 ```
 yarn dev  # local server needs to be running
 docker build -f Dockerfile.playwright -t albina-playwright .
@@ -85,6 +107,6 @@ yarn playwright test --workers=1
 
 To simulate the CI conditions these settings could be helpful:
 
-``` 
+```
 docker run -it  --cpus=1 --memory=2g --network="host" -v ./:/home/  albina-playwright
 ```
