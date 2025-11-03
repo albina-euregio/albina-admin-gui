@@ -30,7 +30,7 @@
     "modellingZamgMeteogram": "meteograma GeoSphere",
     "modellingSnowpack": "Modèl SNOWPACK",
     "modellingSnowpackMeteo": "Modèl meteo SNOWPACK",
-    "weatherbox": "Boita meteorologica",
+    "weatherbox": "Caisha meteorologica",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere"
@@ -347,7 +347,7 @@
         "afternoon": "Tarde",
         "snowpackStructure": "Estructura deth celh de nhèu",
         "tendency": "Tendéncia",
-        "synopsis": "Meteo",
+        "synopsis": "Temps atmosferic",
         "showTranslations": "Mostrar revirades",
         "hideTranslations": "Amagar revirades"
       },
@@ -458,19 +458,19 @@
             "stepping_back": "Es nheuades recents abondiues provòquen un aument dera situacion de perilh.",
             "entrenchment": "Problèma critic de capes fèbles persistentes damb potenciau de lauegi perilhosament grani. Era situacion ei en tot estabilitzar-se fòrça lentaments e requerís fòrça moderacion.",
             "free_ride": "Perilh de lauegi feble, sense capes fèbles persistentes, tot eth terren ja ei caushigat.",
-            "high_alert": "Danger level 4 or higher due to large amounts of fresh snow and/or problematic, persistent weak layers. ",
-            "spring_diurnal": "Spring situation with dry high-pressure weather and moderate temperatures with otherwise mostly stable old snow cover."
+            "high_alert": "Nivèu de perilh 4 o superior a causa de granes quantitats de nèu recenta e/o de capes febles persistentes, problematiques.",
+            "spring_diurnal": "Situacion de primauera damb temps sec, nauta pression e temperatures moderades damb un celh de nhèu vielh majoritàriament establa."
           }
         },
         "strategicMindset": {
-          "assessment": "High Uncertainty",
-          "stepping_out": "Improving",
+          "assessment": "Incertesa nauta",
+          "stepping_out": "Mielhorant",
           "status_quo": "Status Quo",
-          "stepping_back": "Deteriorating",
-          "entrenchment": "Persistent Unstable",
+          "stepping_back": "Deteriorant",
+          "entrenchment": "Persistent inestable",
           "free_ride": "Favorable",
-          "high_alert": "High Alert",
-          "spring_diurnal": "Spring Diurnal"
+          "high_alert": "Alèrta nauta",
+          "spring_diurnal": "Primauera ath long deth dia"
         }
       },
       "decisionTree": {
@@ -516,7 +516,7 @@
         "validFor": "Valid per:",
         "title": {
           "prod": "Causes serioses",
-          "test": "Test system",
+          "test": "Test deth sistema",
           "task": "Prètzhèt",
           "language": {
             "all": "TOTI",
@@ -528,28 +528,28 @@
         "email": {
           "label": "Emails",
           "tooltip": "Enviar Emails",
-          "success": "Emails successfully sent!",
-          "error": "Emails could not be sent!"
+          "success": "Corrèus electronics enviadi corrèctaments!",
+          "error": "Es corrèus non s'an pas pogut enviar!"
         },
         "telegram": {
           "label": "Messatges de Telegram",
           "tooltip": "Enviar messatges de Telegram",
-          "success": "Telegram Messages successfully sent!",
-          "error": "Telegram Messages could not be sent!"
+          "success": "Messatges de Telegram enviadi corrèctaments!",
+          "error": "Non s'an pogut enviar es messatges de Telegram!"
         },
         "whatsapp": {
-          "label": "WhatsApp Messages",
-          "tooltip": "Send WhatsApp Messages",
-          "success": "WhatsApp Messages successfully sent!",
-          "error": "WhatsApp Messages could not be sent!"
+          "label": "Messatges de WhatsApp",
+          "tooltip": "Enviar messatges de WhatsApp",
+          "success": "Messatges de WhatsApp enviadi corrèctaments!",
+          "error": "Non s'an pogut enviar es messatges de WhatsApp!"
         },
         "push": {
           "label": "Notificacions Push",
           "tooltip": "Enviar notificacions Push",
-          "success": "Push Notifications successfully sent!",
-          "error": "Push Notifications could not be sent!"
+          "success": "Notificacions Push enviades corrèctaments!",
+          "error": "Non s'an pogut enviar es notificacions Push!"
         },
-        "accept": "d'acòrd"
+        "accept": "Òc ben"
       },
       "mediaFileDialog": {
         "headline": "Fichèr multimèdia",
@@ -561,7 +561,7 @@
       },
       "publishBulletinsErrorDialog": {
         "message": "S'a produsit un error en publicar bulletins!",
-        "accept": "d'acòrd"
+        "accept": "Òc ben"
       },
       "submitBulletinsDialog": {
         "message": "Vòs enviar eth bulletin?",
@@ -585,11 +585,11 @@
       },
       "checkBulletinsErrorDialog": {
         "message": "S'a produsit un error en verificar es bulletins!",
-        "accept": "d'acòrd"
+        "accept": "Òc ben"
       },
       "previewErrorDialog": {
         "message": "Non s'a pogut cargar era vista prèvia!",
-        "accept": "D'acòrd"
+        "accept": "Òc ben"
       },
       "checkBulletinsDialog": {
         "message": "Verificar eth bulletin",
@@ -606,15 +606,15 @@
       },
       "publishAllDialog": {
         "message": "Vòs publicar totes es regions?",
-        "changeMessage": "Do you want to publish all regions? (no messages)",
+        "changeMessage": "Vòs publicar totes es regions? (sense messatges)",
         "accept": "Òc",
         "reject": "Non"
       }
     }
   },
   "training": {
-    "training": "Training",
-    "timestamp": "Training timestamp"
+    "training": "Entrenament",
+    "timestamp": "Mèrca de temps d'entrenament"
   },
   "admin": {
     "loadingStatistics": "Creant eth CSV ...",
@@ -633,7 +633,7 @@
         "pdfDirectory": "Directòri entà PDF",
         "htmlDirectory": "Directòri entà HTML",
         "serverImagesUrl": "Rota as imatges deth servidor",
-        "dangerLevelElevationDependency": "Elevation dependency of danger level",
+        "dangerLevelElevationDependency": "Dependéncia de nautada deth nivèu de perilh",
         "mapsPath": "Rota as mapes",
         "mediaPath": "Rota des fichèrs multimèdia",
         "mapProductionUrl": "URL entara produccion de mapes",
@@ -650,11 +650,11 @@
       },
       "table": {
         "general": {
-          "title": "General",
+          "title": "Generau",
           "id": "ID"
         },
         "publication": {
-          "title": "Publication",
+          "title": "Publicacion",
           "publishBulletins": "Publicar era prediccion de lauegi",
           "publishBlogs": "Publicar entrades de blòg",
           "createCaamlV5": "Crear CAAML v5",
@@ -665,7 +665,7 @@
           "sendEmails": "Corrèus electronics enviadi",
           "createSimpleHtml": "Crear HTML simple",
           "sendTelegramMessages": "Enviar messatges de Telegram",
-          "sendWhatsAppMessages": "Send WhatsApp messages",
+          "sendWhatsAppMessages": "Enviar messatges de WhatsApp",
           "sendPushNotifications": "Enviar notificacions push",
           "pdfColor": "PDF color",
           "emailColor": "Email color",
@@ -684,29 +684,29 @@
           "mapLogoPosition": "Posicion deth logotip entath mapa",
           "imageColorbarColorPath": "Barra de colors (color)",
           "imageColorbarBwPath": "Barra de colors (bw)",
-          "enabledLanguages": "Enabled languages",
-          "ttsLanguages": "Text-to-speech languages"
+          "enabledLanguages": "Lengües activades",
+          "ttsLanguages": "Idiòmes de tèxte a votz"
         },
         "components": {
           "title": "Components",
-          "enableDangerSources": "Enable danger sources",
-          "enableObservations": "Enable observations",
-          "enableModelling": "Enable modelling",
-          "enableWeatherbox": "Enable weather box"
+          "enableDangerSources": "Abilitar hònts de perilh",
+          "enableObservations": "Abilitar observacions",
+          "enableModelling": "Abilitar modelitzacion",
+          "enableWeatherbox": "Abilitar caisha meteorologica"
         },
         "configuration": {
-          "title": "Configuration",
+          "title": "Configuracion",
           "showMatrix": "Mostrar era mairitz",
-          "enableMediaFile": "Activar eth fichèr multimèdia",
-          "enableStrategicMindset": "Enable strategic mindset",
-          "enableStressLevel": "Enable stress level",
+          "enableMediaFile": "Abilitar eth fichèr multimèdia",
+          "enableStrategicMindset": "Abilitar predisposicion mentau",
+          "enableStressLevel": "Abilitar nivèu estrés",
           "enableAvalancheProblemCornices": "Abilitar eth problèma de lauegi CORNISES",
-          "enableAvalancheProblemNoDistinctAvalancheProblem": "Abilitar eth problèma de lauegi CAP PROBLÈMA DE LAUEGI EVIDENT",
-          "enableGeneralHeadline": "Enable general overall headline for bulletins",
-          "enableWeatherTextField": "Enable text input for weather synopsis"
+          "enableAvalancheProblemNoDistinctAvalancheProblem": "Abilitar problèma de lauegi CAP PROBLÈMA DE LAUEGI EVIDENT",
+          "enableGeneralHeadline": "Abilitar títol globau generau des bulletins",
+          "enableWeatherTextField": "Abilitar entrada de tèxte entara sinopsi meteorologica"
         },
         "languageConfiguration": {
-          "title": "Language configuration"
+          "title": "Configuracion de lengües"
         }
       },
       "success": "Configuracion sauvada corrèctaments",
@@ -749,7 +749,7 @@
     },
     "createUser": {
       "table": {
-        "image": "Image",
+        "image": "Imatge",
         "name": "Nòm",
         "email": "Corrèu electronic",
         "organization": "Organizacion",
@@ -781,14 +781,14 @@
     "observations": {
       "table": "Taula",
       "map": "Mapa",
-      "gallery": "Gallery",
+      "gallery": "Galeria",
       "filters": "Filtres",
       "details": "Detalhs",
       "title": "Observacions",
-      "newObservation": "New observation",
-      "exportObservations": "Export observations (GeoJSON)",
-      "exportStatistics": "Export statistics (CSV)",
-      "toggleFilterBar": "Show/hide filter bar",
+      "newObservation": "Naua observacion",
+      "exportObservations": "Exportar observacions (GeoJSON)",
+      "exportStatistics": "Exportar estadistiques (CSV)",
+      "toggleFilterBar": "Mostrar / Amagar barra de filtres",
       "button": {
         "submit": "Descargar"
       },
@@ -798,16 +798,16 @@
       },
       "selectRegion": {
         "placeholder": "Region",
-        "selectionLabel": "{0} region(s) selected"
+        "selectionLabel": "{0} region(s) seleccionades"
       },
       "selectSources": {
         "placeholder": "Hònts",
-        "selectionLabel": "{0} source(s) selected"
+        "selectionLabel": "{0} hònt(s) seleccionades"
       },
       "charts": {
         "charts": "Grafiques",
         "nan": "Sense especificacion",
-        "reload": "Reload",
+        "reload": "Recargar",
         "classify": "Classificar",
         "label": "Etiqueta",
         "invert": "Invertir",
@@ -834,7 +834,7 @@
           "caption": "Patron de perilh"
         },
         "dangerSource": {
-          "caption": "Danger Source"
+          "caption": "Hònt de perilh"
         },
         "days": {
           "caption": "Dia"
@@ -850,58 +850,58 @@
         "en": "EN"
       },
       "all": {
-        "tooltip": "Send Emails, Telegram, WhatsApp and Push",
-        "success": "Email, Telegram, Whatsapp and Push successfully sent!",
-        "error": "Email, Telegram, WhatsApp and Push could not be sent!"
+        "tooltip": "Enviar corrèus electronics, Telegram, WhatsApp e Push",
+        "success": "Messatges de Corrèu electronic, Telegram, WhatsApp e Push enviadi corrèctaments!",
+        "error": "Non s'an pogut enviar es Corrèus electronics, Telegram, WhatsApp e Push!"
       },
       "email": {
         "tooltip": "Enviar corrèus electronics",
-        "success": "Email successfully sent!",
-        "error": "Email could not be sent!"
+        "success": "Corrèu electronic enviat corrèctaments!",
+        "error": "Non s'a pogut enviar eth corrèu electronic"
       },
       "telegram": {
         "tooltip": "Enviat per canau de Telegram",
-        "success": "Telegram successfully sent!",
-        "error": "Telegram could not be sent!"
+        "success": "Telegram enviat corrèctaments!",
+        "error": "Non s'a pogut enviar eth messatge de Telegram!"
       },
       "whatsapp": {
-        "tooltip": "Send via WhatsApp Channel",
-        "success": "WhatsApp successfully sent!",
-        "error": "WhatsApp could not be sent!"
+        "tooltip": "Enviat per canau de WhatsApp",
+        "success": "WhatsApp enviat corrèctaments!",
+        "error": "Non s'a pogut enviar eth WhatsApp"
       },
       "push": {
         "tooltip": "Enviar per Notificacions Push",
-        "success": "Push successfully sent!",
-        "error": "Push could not be sent!"
+        "success": "Push enviat corrèctaments!",
+        "error": "Non s'a pogut enviar eth Push"
       }
     }
   },
   "settings": {
     "title": "Configuracion",
     "changePassword": {
-      "title": "Cambiar contrasenya",
+      "title": "Cambiar contrasenha",
       "oldPassword": {
-        "label": "Contrasenya actuau",
-        "placeholder": "Contrasenya actuau"
+        "label": "Contrasenha actuau",
+        "placeholder": "Contrasenha actuau"
       },
       "newPassword1": {
-        "label": "Naua contrasenya",
-        "placeholder": "Naua contrasenya"
+        "label": "Naua contrasenha",
+        "placeholder": "Naua contrasenha"
       },
       "newPassword2": {
         "label": "Contrasenha naua (repetir)",
-        "placeholder": "Naua contrasenya"
+        "placeholder": "Naua contrasenha"
       },
-      "submit": "Cambiar contrasenya",
-      "passwordChanged": "Contrasenya cambiada corrèctaments",
-      "passwordChangeError": "Non s'a pogut cambiar era contrasenya",
+      "submit": "Cambiar contrasenha",
+      "passwordChanged": "Contrasenha cambiada corrèctaments",
+      "passwordChangeError": "Non s'a pogut cambiar era contrasenha",
       "passwordIncorrect": "Era contrasenha actuau ei incorrècta",
       "error": {
         "oldPassword": {
-          "required": "Se te platz, entre era tua contrasenya actuau"
+          "required": "Se te platz, entre era tua contrasenha actuau"
         },
         "newPassword": {
-          "required": "Se te platz, entre ua naua contrasenya",
+          "required": "Se te platz, entra ua naua contrasenha",
           "mismatch": "Es contrasenhes non coïncidissen"
         }
       }
@@ -916,7 +916,7 @@
   },
   "statistics": {
     "title": "Estadístiques",
-    "bulletins": "Avalanche Bulletins",
+    "bulletins": "Bulletins de lauegi",
     "dangerSources": "Hònts de perilh",
     "button": {
       "submit": "Descargar"
@@ -947,8 +947,8 @@
     "glidingSnow": "Esguitlaments basaus",
     "gliding_snow": "Esguitlaments basaus",
     "cornices": "Cornises",
-    "noDistinctAvalancheProblem": "No distinct avalanche problem",
-    "no_distinct_avalanche_problem": "No distinct avalanche problem",
+    "noDistinctAvalancheProblem": "Cap problèma de lauegi evident",
+    "no_distinct_avalanche_problem": "Cap problèma de lauegi evident",
     "favourableSituation": "Situacion favorabla",
     "favourable_situation": "Situacion favorabla"
   },
@@ -959,24 +959,24 @@
     "dp4": "pp.4: heired dempús de caud / caud dempús de heired",
     "dp5": "pp.5: nheuades dempús d’un long periòde de heired",
     "dp6": "pp.6: nhèu heireda, sense coesion e vent",
-    "dp7": "dp.7: shallow snow next to deep snow",
+    "dp7": "pp.7 nhèu escassa ath costat de nhèu prigonda",
     "dp8": "pp.8: geladiua de superfícia enterrada",
     "dp9": "pp.9: graupel enterrat",
     "dp10": "pp.10: scenari de primauera"
   },
   "strategicMindset": {
-    "title": "Strategic Mindset",
-    "assessment": "High Uncertainty",
-    "stepping_out": "Improving",
+    "title": "Predisposicion mentau estrategica",
+    "assessment": "Incertesa nauta",
+    "stepping_out": "Mielhorant",
     "status_quo": "Status Quo",
-    "stepping_back": "Deteriorating",
-    "entrenchment": "Persistent Unstable",
+    "stepping_back": "Deteriorant",
+    "entrenchment": "Persistent inestable",
     "free_ride": "Favorable",
-    "high_alert": "High Alert",
-    "spring_diurnal": "Spring Diurnal"
+    "high_alert": "Alèrta nauta",
+    "spring_diurnal": "Primauera diürn"
   },
   "observationType": {
-    "DrySnowfallLevel": "Dry snowfall level",
+    "DrySnowfallLevel": "Limit de nheuada seca",
     "TimeSeries": "Series temporaus",
     "Incident": "Incident",
     "Profile": "Perfil de nhèu",
@@ -988,7 +988,7 @@
     "Webcam": "Webcam"
   },
   "importantObservation": {
-    "ForBlog": "For blog",
+    "ForBlog": "Tath Blòg",
     "SurfaceHoar": "Gibra de superfícia",
     "Graupel": "Nhèu redona",
     "StabilityTest": "Test d'estabilitat",
@@ -996,14 +996,14 @@
     "VeryLightNewSnow": "Nhèu recenta molt leugèra"
   },
   "elevationTolerance": {
-    "exact": "exact",
+    "exact": "exacte",
     "50m": "±50m",
     "100m": "±100m",
     "200": "±200m"
   },
   "elevationPeriod": {
-    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
-    "observationPeriod": "Dry snowfall boundary at the time of observation"
+    "duringPrecipitationEvent": "Limit de nhèu seca deth eveniment de precipitacion entièr",
+    "observationPeriod": "Limit de nhèu seca ath moment dera observacion"
   },
   "aspect": {
     "N": "N",
@@ -1016,7 +1016,7 @@
     "NW": "NW"
   },
   "role": {
-    "SUPERADMIN": "Super Administrator",
+    "SUPERADMIN": "Super Administrador",
     "ADMIN": "Administrador",
     "FORECASTER": "Predictor",
     "FOREMAN": "Cap",
@@ -1058,9 +1058,9 @@
     "high": "fòrt"
   },
   "wetness": {
-    "dry": "dry",
-    "moist": "moist",
-    "wet": "wet"
+    "dry": "seca",
+    "moist": "umida",
+    "wet": "fòrça umida"
   },
   "characteristic": {
     "low": "fèble",
@@ -1069,98 +1069,98 @@
     "very_high": "molt fòrt"
   },
   "thickness": {
-    "thin": "thin",
-    "thick": "thick"
+    "thin": "prim",
+    "thick": "grossut"
   },
   "snowpackPosition": {
-    "upper": "upper",
-    "middle": "middle",
-    "lower": "lower",
-    "ground": "ground"
+    "upper": "superior",
+    "middle": "intermig",
+    "lower": "inferior",
+    "ground": "tèrra"
   },
   "weakLayerCrust": {
-    "no": "no",
-    "partly": "partly",
-    "yes": "yes"
+    "no": "non",
+    "partly": "parciauments",
+    "yes": "òc"
   },
   "creationProcess": {
     "radiation_recrystallization": "radiacion",
-    "diurnal_recrystallization": "diurnal",
-    "melt_layer_recrystallization": "melt layer",
-    "surface_hoar_formation": "surface hoar"
+    "diurnal_recrystallization": "diürn",
+    "melt_layer_recrystallization": "capa de fosion",
+    "surface_hoar_formation": "gibra de superfícia"
   },
   "recognizability": {
-    "very_easy": "very easy",
-    "easy": "easy",
-    "hard": "hard",
-    "very_hard": "very hard"
+    "very_easy": "molt facil",
+    "easy": "facil",
+    "hard": "dificil",
+    "very_hard": "molt dificil"
   },
   "distribution": {
-    "isolated": "isolated",
-    "specific": "specific",
-    "widespread": "widespread"
+    "isolated": "isolat",
+    "specific": "especific",
+    "widespread": "generalizat"
   },
   "probability": {
-    "likely": "likely",
+    "likely": "probable",
     "possible": "possible",
-    "unlikely": "unlikely"
+    "unlikely": "pòc probable"
   },
   "detailedDaytime": {
-    "evening": "evening",
-    "first_night_half": "first night half",
-    "second_night_half": "second night half",
-    "morning": "morning",
-    "forenoon": "forenoon",
-    "afternoon": "afternoon"
+    "evening": "ser",
+    "first_night_half": "prumèra meitat dera net",
+    "second_night_half": "segona meitat dera net",
+    "morning": "maitin",
+    "forenoon": "maitin",
+    "afternoon": "tarde"
   },
   "slopeGradient": {
-    "moderately_steep": "moderately steep",
-    "steep": "steep",
-    "very_steep": "very steep",
-    "extremely_steep": "extremely steep"
+    "moderately_steep": "moderadament arribent",
+    "steep": "arribent",
+    "very_steep": "fòrça arribent",
+    "extremely_steep": "extrèmaments arribent"
   },
   "handHardness": {
-    "fist": "F",
-    "four_fingers": "4F",
-    "one_finger": "1F",
-    "pencil": "P",
-    "knife": "K",
-    "ice": "I"
+    "fist": "P",
+    "four_fingers": "4D",
+    "one_finger": "1D",
+    "pencil": "CR",
+    "knife": "GI",
+    "ice": "GÈU"
   },
   "hardnessTendency": {
-    "decreasing": "softer below",
-    "steady": "uniform",
-    "increasing": "softer above"
+    "decreasing": "mès trendre dejós",
+    "steady": "uniforme",
+    "increasing": "mès trendre dessús"
   },
   "terrainType": {
-    "gullies_and_bowls": "gullies and bowls",
-    "adjacent_to_ridgelines": "adjacent to ridgelines",
-    "distant_from_ridgelines": "distant from ridgelines",
-    "in_the_vicinity_of_peaks": "in the vicinity of peaks",
-    "pass_areas": "pass areas",
-    "shady_slopes": "shady slopes",
-    "sunny_slopes": "sunny slopes",
-    "grassy_slopes": "grassy slopes",
-    "cut_slopes": "cut slopes",
-    "wind_loaded_slopes": "wind loaded slopes",
-    "base_of_rock_walls": "base of rock walls",
-    "behind_abrupt_changes_in_the_terrain": "behind abrupt changes in the terrain",
-    "transitions_into_gullies_and_bowls": "transitions into gullies and bowls",
-    "areas_where_the_snow_cover_is_rather_shallow": "areas where the snow cover is rather shallow",
-    "transitions_from_a_shallow_to_a_deep_snowpack": "transitions from a shallow to a deep snowpack",
-    "highly_frequented_off_piste_terrain": "highly frequented off piste terrain",
-    "little_used_backcountry_terrain": "little used backcountry terrain",
-    "places_that_are_protected_from_the_wind": "places that are protected from the wind",
-    "regions_exposed_to_the_foehn_wind": "regions exposed to the foehn wind",
-    "regions_with_a_lot_of_snow": "regions with a lot of snow",
-    "regions_exposed_to_precipitation": "regions exposed to precipitation",
-    "regions_exposed_to_heavier_precipitation": "regions exposed to heavier precipitation"
+    "gullies_and_bowls": "canaus e cubetes",
+    "adjacent_to_ridgelines": "adjacent as grinches",
+    "distant_from_ridgelines": "luenh des grinches",
+    "in_the_vicinity_of_peaks": "apròp des soms",
+    "pass_areas": "apròp de còthi",
+    "shady_slopes": "pales ombrères",
+    "sunny_slopes": "pales solanères",
+    "grassy_slopes": "pales erboses",
+    "cut_slopes": "talussi",
+    "wind_loaded_slopes": "pales acumulades peth vent",
+    "base_of_rock_walls": "pè de parets rocassosses",
+    "behind_abrupt_changes_in_the_terrain": "darrèr de cambis abruptes deth terren",
+    "transitions_into_gullies_and_bowls": "transicions a canaus e cubetes",
+    "areas_where_the_snow_cover_is_rather_shallow": "zònes on eth celh de nhèu ei fòrça escàs",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "transicions de nhèu escassa a nhèu prigonda",
+    "highly_frequented_off_piste_terrain": "terren dehòra pista fòrça freqüentat",
+    "little_used_backcountry_terrain": "terren de montanha pòc utilizat",
+    "places_that_are_protected_from_the_wind": "lòcs emparadi deth vent",
+    "regions_exposed_to_the_foehn_wind": "regions exposades ath vent de foehn",
+    "regions_with_a_lot_of_snow": "regions damb fòrça nhèu",
+    "regions_exposed_to_precipitation": "regions exposades ara precipitacion",
+    "regions_exposed_to_heavier_precipitation": "regions exposades a precipitacion abondiua"
   },
   "dangerSign": {
-    "shooting_cracks": "shooting cracks",
-    "whumpfing": "whumpfing",
-    "fresh_avalanches": "fresh avalanches",
-    "glide_cracks": "glide cracks"
+    "shooting_cracks": "fissures damb propagacion",
+    "whumpfing": "sons de \"whumpf\"",
+    "fresh_avalanches": "lauegi recenti",
+    "glide_cracks": "henerècles d'esguitlament"
   },
   "changeRegionDialog": {
     "message": "Vòs cambiar de region?",
@@ -1208,7 +1208,7 @@
   "grainShape": {
     "PP": {
       "code": "PP",
-      "class": "Precipitation Particles"
+      "class": "Partícules de precipitacion"
     },
     "PPgp": {
       "code": "PPgp",
@@ -1216,19 +1216,19 @@
     },
     "DF": {
       "code": "DF",
-      "class": "Decomposing and Fragmented precipitation particles"
+      "class": "Partícules de precipitacion descompòstes e fragmentadas"
     },
     "RG": {
       "code": "RG",
-      "class": "Rounded Grains"
+      "class": "Grans fini"
     },
     "FC": {
       "code": "FC",
-      "class": "Faceted Crystals"
+      "class": "Cristalhs facetadi"
     },
     "DH": {
       "code": "DH",
-      "class": "Depth Hoar"
+      "class": "Gobelets"
     },
     "SH": {
       "code": "SH",
@@ -1236,25 +1236,25 @@
     },
     "MF": {
       "code": "MF",
-      "class": "Melt Forms"
+      "class": "Formes de fosion"
     },
     "MFcr": {
       "code": "MFcr",
-      "class": "Melt-freeze crust"
+      "class": "Crosta de fosion-regèu"
     },
     "IF": {
       "code": "IF",
-      "class": "Ice Formations"
+      "class": "Formacions de gèu"
     }
   },
   "button": {
-    "yes": "yes",
-    "no": "no"
+    "yes": "òc",
+    "no": "non"
   },
   "observations": {
-    "allowEdit": "Edit external observation",
-    "allowEditTooltip": "This will prevent overwrites from {{ value }}",
-    "editIconTooltip": "Edited observation - receives no updates from {{ value }}",
+    "allowEdit": "Editar observacion extèrna",
+    "allowEditTooltip": "Açò evitarà es sobreescriptures de {{ value }}",
+    "editIconTooltip": "Observacion editada - non arrecep actualizacions de {{ value }}",
     "aspect": "Orientacion",
     "authorName": "Nom de l'autor",
     "avalancheLength": "Longitud de lauet",
@@ -1264,41 +1264,41 @@
     "avalancheWidth": "Amplada de lauet",
     "search": "Cercar",
     "count": "# observacions:",
-    "elevationTolerance": "Accuracy of elevation data",
-    "elevationPeriod": "Elevation time period",
+    "elevationTolerance": "Precision des donades d'elevacion",
+    "elevationPeriod": "Periòde de temps de nautada",
     "layers": {
-      "observers": "Observers",
-      "weatherStations": "Weather stations",
+      "observers": "Observadors",
+      "weatherStations": "Estacions meteorologiques",
       "webcams": "Webcams",
       "observations": "Observacions"
     },
     "weatherStations": {
       "tooltips": {
-        "drySnowfallLevel": "Dry snowfall level",
-        "globalRadiation": "Global radiation",
+        "drySnowfallLevel": "Limit de nheuada seca",
+        "globalRadiation": "Radiacion globau",
         "newSnow": "Nhèu recenta",
         "snowLine": "Limit de nhèu",
         "snowHeight": "Nautada de nhèu",
-        "snowDifference": "Snow difference",
-        "airTemperature": "Air temperature",
-        "airTemperatureMax": "Air temperature Max",
-        "airTemperatureMin": "Air temperature Min",
-        "surfaceTemperature": "Surface temperature",
-        "surfaceHoar": "Potential surface hoar formation",
-        "surfaceHoarCalc": "Potential surface hoar formation (Lehning et. al.)",
-        "dewPoint": "Dew point temperature",
-        "relativeHumidity": "Relative humidity",
-        "windDirection": "Wind direction",
-        "windSpeed": "Wind speed",
-        "windGust": "Wind gust"
+        "snowDifference": "Diferencia de nhèu",
+        "airTemperature": "Temperatura der aire",
+        "airTemperatureMax": "Temperatura der aire Max",
+        "airTemperatureMin": "Temperatura der aire Min",
+        "surfaceTemperature": "Temperatura de superfície",
+        "surfaceHoar": "Potenciau de formacion deth Gibra de Superfícia",
+        "surfaceHoarCalc": "Potenciau de formacion deth Gibra de Superfícia (Lehning et. al.)",
+        "dewPoint": "Temperatura deth punt de rosada",
+        "relativeHumidity": "Umiditat relativa",
+        "windDirection": "Direccion deth vent",
+        "windSpeed": "Velocitat deth vent",
+        "windGust": "Bohada de vent"
       }
     },
     "webcams": {
       "tooltips": {
-        "minusTenMinutes": "10min back",
-        "minusOneHour": "1h back",
-        "plusTenMinutes": "10min forward",
-        "plusOneHour": "1h forward"
+        "minusTenMinutes": "10min darrèr",
+        "minusOneHour": "1or darrèr",
+        "plusTenMinutes": "10min endauant",
+        "plusOneHour": "1or endauant"
       }
     },
     "button": {
@@ -1307,16 +1307,16 @@
       "delete": "Eliminar observacion",
       "deleteConfirm": "Eliminar observacion?",
       "discard": "Escartar",
-      "copyDate": "Copy event date"
+      "copyDate": "Copiar data d'eveniment"
     },
     "comment": "Comentari",
     "content": "Contengut",
     "dangerRating": "Grad de perilh",
-    "dangerSource": "Danger source",
+    "dangerSource": "Hònt de perilh",
     "elevation": "Nautada",
-    "elevationRange": "Elevation range",
-    "elevationLowerBound": "Elevation lower bound",
-    "elevationUpperBound": "Elevation upper bound",
+    "elevationRange": "Banda de nautada",
+    "elevationLowerBound": "Banda de nautada inferiora",
+    "elevationUpperBound": "Banda de nautada superiora",
     "eventDate": "Data d'eveniment",
     "eventType": "Tipe d'eveniment",
     "eventTypes": {
@@ -1330,15 +1330,15 @@
       "PERSON_UNKNOWN": "Eveniment (desconeishut)",
       "TRAFFIC": "Transit"
     },
-    "externalURL": "External URL (e.g. to photo database)",
+    "externalURL": "URL extèrna (ex. tara base de donades de fòtos)",
     "fractureDepth": "Prigondor de cicatritz",
     "hasCoordinates": "A coordenades",
     "incline": "Inclinacion",
     "latitude": "Latitud",
     "locationName": "Localitat",
     "longitude": "Longitud",
-    "observationType": "Observation type",
-    "personInvolvement": "Person involvement",
+    "observationType": "Tipe d'observacion",
+    "personInvolvement": "Implicacion de persones",
     "reportDate": "Data der infòrme",
     "showTable": "Taula",
     "withoutCoordinates": "Observacions sense coordenades:",
@@ -1372,7 +1372,7 @@
   "qfa": {
     "day": "Dia",
     "time": "Òra",
-    "back": "Endarrere",
+    "back": "Darrèr",
     "parameters": {
       "DUST": "povàs saharià",
       "N": "cobertura de bromes totau en /8",
@@ -1407,27 +1407,27 @@
     }
   },
   "awsome": {
-    "Aggregation band": "Aggregation band",
+    "Aggregation band": "Banda d'agregacion",
     "Date": "Data",
-    "Datetag": "Datetag",
-    "Depth": "Depth",
-    "Dry instability": "Dry instability",
-    "fair (<0.77)": "fair (<0.77)",
-    "fair (<1.05)": "fair (<1.05)",
-    "Grain type": "Grain type",
-    "LWC index": "LWC index",
+    "Datetag": "Etiqueta de dia",
+    "Depth": "Prigondor",
+    "Dry instability": "Inestabilitat seca",
+    "fair (<0.77)": "regular (<0.77)",
+    "fair (<1.05)": "regular (<1.05)",
+    "Grain type": "Tipe de gra",
+    "LWC index": "Índex LWC",
     "New snow": "Nhèu recenta",
-    "poor (<=3)": "poor (<=3)",
-    "poor (<0.95)": "poor (<0.95)",
-    "poor (>=0.77)": "poor (>=0.77)",
+    "poor (<=3)": "praube (<=3)",
+    "poor (<0.95)": "praube (<0.95)",
+    "poor (>=0.77)": "praube (>=0.77)",
     "Punstable": "Punstable",
-    "rather stable (<0.7)": "rather stable (<0.7)",
-    "rather stable (<1)": "rather stable (<1)",
-    "rather stable (>1.05)": "rather stable (>1.05)",
-    "Size estimate": "Size estimate",
+    "rather stable (<0.7)": "fòrça estable (<0.7)",
+    "rather stable (<1)": "fòrça estable (<1)",
+    "rather stable (>1.05)": "fòrça estable (>1.05)",
+    "Size estimate": "Estimacion de mesura",
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
-    "very poor (<=0.5)": "very poor (<=0.5)",
-    "very poor (>3)": "very poor (>3)",
-    "Wet instability": "Wet instability"
+    "very poor (<=0.5)": "fòrça praube (<=0.5)",
+    "very poor (>3)": "fòrça praube (>3)",
+    "Wet instability": "Inestabilitat umida"
   }
 }

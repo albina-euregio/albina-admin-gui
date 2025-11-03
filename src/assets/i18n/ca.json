@@ -30,7 +30,7 @@
     "modellingZamgMeteogram": "Meteograma GeoSphere",
     "modellingSnowpack": "SNOWPACK model",
     "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
-    "weatherbox": "Meteo",
+    "weatherbox": "Caixa meteorològica",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere"
@@ -347,7 +347,7 @@
         "afternoon": "Tarda",
         "snowpackStructure": "Estructura del mantell",
         "tendency": "Tendència",
-        "synopsis": "Meteo",
+        "synopsis": "Temps atmosfèric",
         "showTranslations": "-mostra traduccions",
         "hideTranslations": "Amaga traduccions"
       },
@@ -692,7 +692,7 @@
           "enableDangerSources": "Habilitar les fonts de perill",
           "enableObservations": "Habilitar les observacions",
           "enableModelling": "Habilitar la modelització",
-          "enableWeatherbox": "Activar la Meteo"
+          "enableWeatherbox": "Activar caixa meteorològica"
         },
         "configuration": {
           "title": "Configuració",

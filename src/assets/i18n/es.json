@@ -30,7 +30,7 @@
     "modellingZamgMeteogram": "Meteograma GeoSphere",
     "modellingSnowpack": "modelo SNOWPACK",
     "modellingSnowpackMeteo": "SNOWPACK modelled meteo",
-    "weatherbox": "Tiempo",
+    "weatherbox": "Caja meteorológica",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere"
@@ -347,7 +347,7 @@
         "afternoon": "Tarde",
         "snowpackStructure": "Estructura del manto",
         "tendency": "Tendencia",
-        "synopsis": "Meteorología",
+        "synopsis": "Tiempo atmosférico",
         "showTranslations": "Mostrar traducciones",
         "hideTranslations": "Ocultar traducciones"
       },
@@ -692,7 +692,7 @@
           "enableDangerSources": "Habilitar fuentes de peligro",
           "enableObservations": "Habilitar observaciones",
           "enableModelling": "Habilitar modelado",
-          "enableWeatherbox": "Habilitar la Meteo"
+          "enableWeatherbox": "Habilitar caja meteorológica"
         },
         "configuration": {
           "title": "Configuración",
