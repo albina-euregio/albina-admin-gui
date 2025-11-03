@@ -778,24 +778,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eaws/micro-regions@npm:^8.0.6":
-  version: 8.0.6
-  resolution: "@eaws/micro-regions@npm:8.0.6::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions%2F-%2F%40eaws%2Fmicro-regions-8.0.6.tgz"
-  checksum: 10c0/5858739cf1fb464196c68774e593e6447bab398b4dddca11e449074da84490cc312006bd1e27b9487e90300941b397beb685740cfcefac1c8a03bf43df559112
+"@eaws/micro-regions@npm:^8.0.8":
+  version: 8.0.8
+  resolution: "@eaws/micro-regions@npm:8.0.8::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions%2F-%2F%40eaws%2Fmicro-regions-8.0.8.tgz"
+  checksum: 10c0/fb791eb377dbd85f6f2bac9d4a859268fdc2bd0ed974d7a67c505cc5108e9440902477ae4d3c1873f4d01e5d1f9f370ec18ed3d4b93737cbe670da92a07ef7d4
   languageName: node
   linkType: hard
 
-"@eaws/micro-regions_names@npm:^8.0.6":
-  version: 8.0.6
-  resolution: "@eaws/micro-regions_names@npm:8.0.6::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions_names%2F-%2F%40eaws%2Fmicro-regions_names-8.0.6.tgz"
-  checksum: 10c0/347355aecbd5973895a5a306435793f968d739d1b84dc05ba324236200745f4c46e8324527a51244dd1b67c79557f596e7825c4de70704902bb6ca96ae54fae4
+"@eaws/micro-regions_names@npm:^8.0.8":
+  version: 8.0.8
+  resolution: "@eaws/micro-regions_names@npm:8.0.8::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fmicro-regions_names%2F-%2F%40eaws%2Fmicro-regions_names-8.0.8.tgz"
+  checksum: 10c0/f6b74d4d4ae9981ea897874063316de4734c5605f34031bda552dae49d6982bc635a834958a57fb75f560b802a9339cd620eec92135e04a16d078c8133318bf2
   languageName: node
   linkType: hard
 
-"@eaws/pmtiles@npm:^8.0.6":
-  version: 8.0.6
-  resolution: "@eaws/pmtiles@npm:8.0.6::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fpmtiles%2F-%2F%40eaws%2Fpmtiles-8.0.6.tgz"
-  checksum: 10c0/c70b9a5170a9642d3e5ae78816f7be56c175dd9699cc7d05757928cc70178af401cdbc162e5342e3d01e04774715955d48ff2b7c16a10393cc6f9e8c51a98410
+"@eaws/pmtiles@npm:^8.0.8":
+  version: 8.0.8
+  resolution: "@eaws/pmtiles@npm:8.0.8::__archiveUrl=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F25330421%2Fpackages%2Fnpm%2F%40eaws%2Fpmtiles%2F-%2F%40eaws%2Fpmtiles-8.0.8.tgz"
+  checksum: 10c0/aa00243c711119b649a4d7c044bec9b11bd016908b4f8f93917b3842793a5372754b2fee4bcee67a94b365fba3c31a78b2eb08fc61c497b7c86e32dccfc0df22
   languageName: node
   linkType: hard
 
@@ -2793,9 +2793,9 @@ __metadata:
     "@angular/router": "npm:^20.3.7"
     "@angular/upgrade": "npm:^20.3.7"
     "@auth0/angular-jwt": "npm:^5.2.0"
-    "@eaws/micro-regions": "npm:^8.0.6"
-    "@eaws/micro-regions_names": "npm:^8.0.6"
-    "@eaws/pmtiles": "npm:^8.0.6"
+    "@eaws/micro-regions": "npm:^8.0.8"
+    "@eaws/micro-regions_names": "npm:^8.0.8"
+    "@eaws/pmtiles": "npm:^8.0.8"
     "@eslint/js": "npm:^9.31.0"
     "@ngx-translate/core": "npm:^17.0.0"
     "@phosphor-icons/web": "npm:^2.1.1"
