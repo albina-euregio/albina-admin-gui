@@ -8,7 +8,7 @@ export interface ZSchemaInterface<T extends z.ZodRawShape, TObject = z.ZodObject
 
   parse<TFinal extends new (data: z.infer<z.ZodObject<T>>) => InstanceType<TFinal>>(
     this: TFinal,
-    value: z.infer<z.ZodObject<T>>,
+    value: unknown,
   ): InstanceType<TFinal>;
 }
 

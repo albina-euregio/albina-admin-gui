@@ -234,14 +234,17 @@ export class DangerSourcesService {
     );
   }
 
-  saveDangerSourceVariant(dangerSourceVariant: DangerSourceVariantModel, date: [Date, Date]) {
+  saveDangerSourceVariant(
+    dangerSourceVariant: DangerSourceVariantModel,
+    date: [Date, Date],
+  ): Observable<DangerSourceVariantModel> {
     const url = this.constantsService.getServerUrl(
       "/danger-sources/variants",
       ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
       ["region", this.authenticationService.getActiveRegionId()],
     );
     const body = JSON.stringify(dangerSourceVariant);
-    return this.http.post<unknown>(url, body);
+    return this.http.post<unknown>(url, body).pipe(map((v) => DangerSourceVariantModel.parse(v)));
   }
 
   deleteDangerSourceVariant(variant: DangerSourceVariantModel, date: [Date, Date]) {
