@@ -1,6 +1,7 @@
 import * as Enums from "../enums/enums";
 // models
 import { BulletinModel } from "../models/bulletin.model";
+import { MatrixInformationSchema } from "../models/matrix-information.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { MapService } from "../providers/map-service/map.service";
@@ -847,12 +848,19 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
     this.showNewVariantModal = true;
     const newVariant = DangerSourceVariantModel.parse({
+      dangerSourceVariantStatus: DangerSourceVariantStatus.active,
+      hasDaytimeDependency: false,
+      aspects: [],
+      dangerSigns: [],
+      eawsMatrixInformation: MatrixInformationSchema.parse({}),
+      terrainTypes: [],
       dangerSource: dangerSource,
-      regions: new Array<string>(),
+      regions: [],
       ownerRegion: this.authenticationService.getActiveRegionId(),
       validFrom: this.dangerSourcesService.getActiveDate()[0],
       validUntil: this.dangerSourcesService.getActiveDate()[1],
       creationDate: new Date(),
+      updateDate: new Date(),
     });
     this.selectVariant(newVariant);
     this.editVariantMicroRegions(newVariant);
