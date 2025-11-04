@@ -523,7 +523,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       if (setForecastVariantId) {
         variant.forecastDangerSourceVariantId = variant.id;
       }
-      variant.id = crypto.randomUUID();
+      variant.id = undefined;
       variant.ownerRegion = this.authenticationService.getActiveRegionId();
       variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
       variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
@@ -828,7 +828,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.showNewVariantModal = true;
     this.copying = false;
     const variant = DangerSourceVariantModel.parse(originalVariant);
-    variant.id = crypto.randomUUID();
+    variant.id = undefined;
     variant.regions = new Array<string>();
     variant.ownerRegion = this.authenticationService.getActiveRegionId();
     variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
@@ -847,10 +847,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
     this.showNewVariantModal = true;
-    const id = crypto.randomUUID();
     const newVariant = DangerSourceVariantModel.parse({
-      id,
-      originalDangerSourceVariantId: id,
       dangerSourceVariantStatus: DangerSourceVariantStatus.active,
       hasDaytimeDependency: false,
       aspects: [],
