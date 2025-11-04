@@ -1,13 +1,13 @@
 import { augmentRegion, initAugmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
 import {
   findExistingObservation,
+  ObservationSource,
   type Aspect,
   type AvalancheProblem,
   type DangerPattern,
   type ForecastSource,
   type GenericObservation,
   type ImportantObservation,
-  type ObservationSource,
   type ObservationType,
   type PersonInvolvement,
   type SnowpackStability,
@@ -67,6 +67,10 @@ export class ObservationDatabaseConnection {
     if (ex?.$deleted) {
       console.log("Skipping observation since it is deleted", o.$id, o.$source);
       return;
+    }
+    if (ex && ex.$source === ObservationSource.LoLaKronos) {
+      // retain $externalURL for LoLaKronos (do not store ALBINA_LOLA_KRONOS_API_TOKEN)
+      o.$externalURL = ex.$externalURL;
     }
     if (!ex || o.latitude !== ex.latitude || o.longitude !== ex.longitude) {
       await initAugmentRegion();
