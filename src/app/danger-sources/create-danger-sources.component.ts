@@ -518,16 +518,15 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private copyVariants(response, setForecastVariantId: boolean): DangerSourceVariantModel[] {
     const result = Array<DangerSourceVariantModel>();
     for (const jsonVariant of response) {
-      const originalVariant = DangerSourceVariantModel.parse(jsonVariant);
-
-      const variant = DangerSourceVariantModel.parse(originalVariant);
+      const variant = DangerSourceVariantModel.parse(jsonVariant);
+      if (setForecastVariantId) {
+        variant.forecastDangerSourceVariantId = variant.id;
+      }
+      variant.id = undefined;
       variant.ownerRegion = this.authenticationService.getActiveRegionId();
       variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
       variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
       variant.dangerSourceVariantType = this.dangerSourcesService.getDangerSourceVariantType();
-      if (setForecastVariantId) {
-        variant.forecastDangerSourceVariantId = jsonVariant.id;
-      }
 
       // reset regions
       const regions = new Array<string>();
@@ -826,15 +825,16 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   copyVariant(event: Event, originalVariant: DangerSourceVariantModel) {
     this.showNewVariantModal = true;
-    const newVariant = DangerSourceVariantModel.parse(originalVariant);
     this.copying = false;
-    newVariant.regions = new Array<string>();
-    newVariant.ownerRegion = this.authenticationService.getActiveRegionId();
-    newVariant.validFrom = this.dangerSourcesService.getActiveDate()[0];
-    newVariant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+    const variant = DangerSourceVariantModel.parse(originalVariant);
+    variant.id = undefined;
+    variant.regions = new Array<string>();
+    variant.ownerRegion = this.authenticationService.getActiveRegionId();
+    variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
+    variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
 
-    this.selectVariant(newVariant);
-    this.editVariantMicroRegions(newVariant);
+    this.selectVariant(variant);
+    this.editVariantMicroRegions(variant);
   }
 
   createDangerSource() {
