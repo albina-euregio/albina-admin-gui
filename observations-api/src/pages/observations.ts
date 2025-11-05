@@ -2,6 +2,7 @@ import {
   type GenericObservation,
   genericObservationSchema,
   genericObservationWithIdSchema,
+  ObservationSource,
   type RawGenericObservation,
 } from "../../../src/app/observations/models/generic-observation.model";
 import { ObservationDatabaseConnection } from "../db/database";
@@ -28,7 +29,12 @@ export async function serveObservations(url: URL): Promise<GenericObservation[]>
 
   const connection = await ObservationDatabaseConnection.createConnection();
   try {
-    return await connection.selectObservations(startDate, endDate);
+    const observations = await connection.selectObservations(startDate, endDate);
+    for (const o of observations) {
+      if (o.$source !== ObservationSource.LoLaKronos) continue;
+      o.$externalURL += "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN;
+    }
+    return observations;
   } finally {
     connection.destroy();
   }
@@ -59,6 +65,11 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const connection = await ObservationDatabaseConnection.createConnection();
     try {
+      const ex = await connection.selectObservation(observation);
+      if (ex?.$source === ObservationSource.LoLaKronos) {
+        // retain $externalURL for LoLaKronos (do not store ALBINA_LOLA_KRONOS_API_TOKEN)
+        observation.$externalURL = ex.$externalURL;
+      }
       await connection.augmentAndInsertObservation(observation);
     } finally {
       connection.destroy();

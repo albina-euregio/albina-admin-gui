@@ -1187,7 +1187,7 @@ export function convertLoLaToGeneric(
               | LolaSnowStabilityTest
           ).pdfName
         }`
-      : `${urlPrefix}${obs.uuId}/${process.env.ALBINA_LOLA_KRONOS_API_TOKEN}`,
+      : `${urlPrefix}${obs.uuId}`,
     $source:
       Array.isArray(obs.entities) && obs.entities.every((e) => e.entityName === "SNOBS")
         ? ObservationSource.Snobs

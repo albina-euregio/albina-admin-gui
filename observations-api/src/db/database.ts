@@ -1,13 +1,13 @@
 import { augmentRegion, initAugmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
 import {
   findExistingObservation,
+  ObservationSource,
   type Aspect,
   type AvalancheProblem,
   type DangerPattern,
   type ForecastSource,
   type GenericObservation,
   type ImportantObservation,
-  type ObservationSource,
   type ObservationType,
   type PersonInvolvement,
   type SnowpackStability,
@@ -142,6 +142,17 @@ export class ObservationDatabaseConnection {
   async selectObservations(startDate: Date, endDate: Date): Promise<GenericObservation[]> {
     const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ? AND deleted = 0";
     const values = [startDate.toISOString(), endDate.toISOString()];
+    return await this.query(sql, values);
+  }
+
+  async selectObservation(observation: GenericObservation): Promise<GenericObservation | undefined> {
+    const sql = "SELECT * FROM generic_observations WHERE SOURCE = ? AND ID = ?";
+    const values = [observation.$source, observation.$id];
+    const result = await this.query(sql, values);
+    return result.length ? result[0] : undefined;
+  }
+
+  private async query(sql: string, values: string[]) {
     const [rows] = await this.connection.query(sql, values);
     return (rows as unknown as GenericObservationTable[]).map(
       (row): GenericObservation => ({
