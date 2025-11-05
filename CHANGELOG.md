@@ -2,6 +2,45 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.0.0] - 2025-11-04
+
+### Breaking Changes
+
+- This project is now licensed under the GNU Affero General Public License v3.0
+
+### 🚀 Features
+
+- Add automated Playwright tests
+- Limit matrix parameter range based on avalanche type
+- Allow selecting “(nearly) none” as a frequency option in matrix parameters
+- Add WhatsApp settings
+- Display region coat of arms in the region selection dropdown
+- Improve the [AWSOME](https://gitlab.com/groups/avalanche-warning/-/wikis/home) dashboard for snowpack simulations
+- Allow choosing between the catalog of phrases and free-text input
+- Add an optional general headline for bulletins
+- Add an optional weather section for bulletins
+- Extend region configuration (languages, coat of arms, static URL, default language)
+- Show differences between bulletins
+- Show differences between danger sources
+- Extend and improve danger source management
+- Load bulletins directly from danger sources
+- Display [OpenTopoMap](https://opentopomap.org/about) for zoom levels above 12
+- Add button to show or hide external regions on the map
+- Add new regions: ES-AR and AT-02
+- Introduce updated [micro-regions](https://gitlab.com/eaws/eaws-regions)
+
+### ⚙️ Miscellaneous Tasks
+
+- Upgrade all dependencies to the latest versions
+- Add documentation for deployment
+
+### 🚜 Refactor
+
+- Simplify region configuration and load several parameters from avalanche-warning-maps
+- Remove obsolete WebSocket support
+- Merge create and update endpoints
+- Use [Zod](https://zod.dev/) for parsing and validation
+
 ## [7.1.13] - 2025-04-25
 
 ### 🐛 Bug Fixes
