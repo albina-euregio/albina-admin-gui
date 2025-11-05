@@ -253,6 +253,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (dangerSources) => {
           console.log("Loaded %d danger sources", dangerSources.length);
+          this.addInternalDangerSources(dangerSources);
           this.loadInternalDangerSourcesError = false;
           this.pendingDangerSourcesVariants?.unsubscribe();
           console.log("Loading danger source variants");
@@ -274,7 +275,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                   //this.addInternalVariants(dangerSources, variants.concat(newVariants), type);
                   this.save(variants.concat(newVariants));
                 } else {
-                  this.addInternalVariants(dangerSources, variants, type);
+                  this.addInternalVariants(variants, type);
                 }
                 this.sortInternDangerSourcesList();
                 this.loading = false;
@@ -736,13 +737,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
    * Replaces all old variants with new ones.
    * @param dangerSourceVariants new variants
    */
-  private addInternalVariants(
-    dangerSources: DangerSourceModel[],
-    dangerSourceVariants: DangerSourceVariantModel[],
-    type: DangerSourceVariantType,
-  ) {
-    this.addInternalDangerSources(dangerSources);
-
+  private addInternalVariants(dangerSourceVariants: DangerSourceVariantModel[], type: DangerSourceVariantType) {
     const variants = new Array<DangerSourceVariantModel>();
     for (const v of dangerSourceVariants) {
       const variant = DangerSourceVariantModel.parse(v);
