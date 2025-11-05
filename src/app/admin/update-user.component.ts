@@ -139,6 +139,7 @@ export class UpdateUserComponent implements AfterContentInit {
       name: this.activeName,
       email: this.activeEmail,
       organization: this.activeOrganization,
+      password: this.activePassword,
       roles: [...new Set(this.activeRoles)],
       regions: this.activeRegions,
       languageCode: this.activeLanguageCode,
