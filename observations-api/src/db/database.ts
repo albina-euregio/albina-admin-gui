@@ -68,10 +68,6 @@ export class ObservationDatabaseConnection {
       console.log("Skipping observation since it is deleted", o.$id, o.$source);
       return;
     }
-    if (ex && ex.$source === ObservationSource.LoLaKronos) {
-      // retain $externalURL for LoLaKronos (do not store ALBINA_LOLA_KRONOS_API_TOKEN)
-      o.$externalURL = ex.$externalURL;
-    }
     if (!ex || o.latitude !== ex.latitude || o.longitude !== ex.longitude) {
       await initAugmentRegion();
       augmentRegion(o);
@@ -146,6 +142,17 @@ export class ObservationDatabaseConnection {
   async selectObservations(startDate: Date, endDate: Date): Promise<GenericObservation[]> {
     const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ? AND deleted = 0";
     const values = [startDate.toISOString(), endDate.toISOString()];
+    return await this.query(sql, values);
+  }
+
+  async selectObservation(observation: GenericObservation): Promise<GenericObservation | undefined> {
+    const sql = "SELECT * FROM generic_observations WHERE SOURCE = ? AND ID = ?";
+    const values = [observation.$source, observation.$id];
+    const result = await this.query(sql, values);
+    return result.length ? result[0] : undefined;
+  }
+
+  private async query(sql: string, values: string[]) {
     const [rows] = await this.connection.query(sql, values);
     return (rows as unknown as GenericObservationTable[]).map(
       (row): GenericObservation => ({

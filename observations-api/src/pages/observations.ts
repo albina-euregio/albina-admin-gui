@@ -65,6 +65,11 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const connection = await ObservationDatabaseConnection.createConnection();
     try {
+      const ex = await connection.selectObservation(observation);
+      if (ex?.$source === ObservationSource.LoLaKronos) {
+        // retain $externalURL for LoLaKronos (do not store ALBINA_LOLA_KRONOS_API_TOKEN)
+        observation.$externalURL = ex.$externalURL;
+      }
       await connection.augmentAndInsertObservation(observation);
     } finally {
       connection.destroy();
