@@ -2,13 +2,12 @@ import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { GenericObservation } from "app/observations/models/generic-observation.model";
-import { ConstantsService } from "app/providers/constants-service/constants.service";
 import { augmentRegion, initAugmentRegion } from "app/providers/regions-service/augmentRegion";
 import { from, Observable } from "rxjs";
 import { last, map, mergeMap } from "rxjs/operators";
 
 interface MultimodelPointCsv {
-  statnr: string;
+  synop: string;
   lat: string;
   lon: string;
   elev: string;
@@ -19,7 +18,6 @@ interface MultimodelPointCsv {
 @Injectable()
 export class MultimodelSourceService {
   private http = inject(HttpClient);
-  private constantsService = inject(ConstantsService);
 
   private readonly URL = "https://static.avalanche.report/zamg/zamg/";
 
@@ -49,12 +47,12 @@ export class MultimodelSourceService {
     return from(initAugmentRegion()).pipe(
       last(),
       mergeMap(() =>
-        this.http.get(this.URL + "snowgridmultimodel_stationlist.txt", { responseType: "text" }).pipe(
+        this.http.get(`${this.URL}eps_ecmwf/snowgrid_ECMWF_EPS_stationlist.txt`, { responseType: "text" }).pipe(
           map((response) => this.parseCSV<MultimodelPointCsv>(response.toString().replace(/^#\s*/, ""))),
           map((points) =>
             points
               .map((row: MultimodelPointCsv): GenericObservation => {
-                const id = row.statnr;
+                const id = row.synop;
                 return augmentRegion({
                   $source: "multimodel",
                   $data: row,
