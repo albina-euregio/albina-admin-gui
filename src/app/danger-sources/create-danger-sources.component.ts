@@ -854,6 +854,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       terrainTypes: [],
       dangerSource: dangerSource,
       regions: [],
+      weakLayerGrainShapes: [],
       ownerRegion: this.authenticationService.getActiveRegionId(),
       validFrom: this.dangerSourcesService.getActiveDate()[0],
       validUntil: this.dangerSourcesService.getActiveDate()[1],
