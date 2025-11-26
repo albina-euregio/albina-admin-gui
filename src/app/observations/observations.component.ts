@@ -407,7 +407,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
-  @HostListener("document:keydown.escape", ["$event"])
+  @HostListener("document:keydown.escape")
   handleEscapeKey() {
     if (this.showSearchInput) {
       this.toggleSearchInput();
