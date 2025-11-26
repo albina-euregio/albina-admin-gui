@@ -971,7 +971,7 @@
             [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.terrainTypes)"
             [diminishValues]="terrainTypeDiminish()"
             [(values)]="variant().terrainTypes"
-            (valueChange)="updateVariantOnServer()"
+            (valuesChange)="updateVariantOnServer()"
             labelI18n="terrainType.#"
           />
         </div>
