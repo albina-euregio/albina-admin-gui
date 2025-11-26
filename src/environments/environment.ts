@@ -12,7 +12,6 @@ export const environment: Environment = {
   headerBgColor: "#8e2232",
   faviconPath: "assets/img/admin-favicon-local.ico",
   logoPath: "assets/img/admin-logo-local.svg",
-  sentryDSN: "",
 };
 
 Object.assign(environment, globalThis.ENV);

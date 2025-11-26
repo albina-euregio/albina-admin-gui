@@ -10,5 +10,4 @@ globalThis.ENV = {
   headerBgColor: "${HEADER_BG_COLOR}",
   faviconPath: "${FAVICON_PATH}",
   logoPath: "${LOGO_PATH}",
-  sentryDSN: "${SENTRY_DSN}",
 };

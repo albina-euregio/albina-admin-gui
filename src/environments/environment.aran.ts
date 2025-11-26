@@ -8,7 +8,6 @@ export const environment: Environment = {
   headerBgColor: "#ffffff",
   faviconPath: "assets/img/admin-favicon-aran.ico",
   logoPath: "assets/img/admin-logo-aran.svg",
-  sentryDSN: "",
 };
 
 Object.assign(environment, globalThis.ENV);

@@ -8,7 +8,6 @@ export const environment: Environment = {
   headerBgColor: window["ENV"].HEADER_BG_COLOR,
   faviconPath: window["ENV"].FAVICON_PATH,
   logoPath: window["ENV"].LOGO_PATH,
-  sentryDSN: window["ENV"].SENTRY_DSN,
 };
 
 Object.assign(environment, globalThis.ENV);

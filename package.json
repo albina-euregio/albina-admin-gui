@@ -51,7 +51,6 @@
     "@ngx-translate/core": "^17.0.0",
     "@phosphor-icons/web": "^2.1.1",
     "@popperjs/core": "^2.11.8",
-    "@sentry/angular": "^10.17.0",
     "bootstrap": "^5.3.7",
     "diff-match-patch": "^1.0.5",
     "echarts": "^6.0.0",
