@@ -555,7 +555,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       .subscribe({
         next: async (variants) => {
           let dangerSourceVariants: DangerSourceVariantModel[] = variants;
-
+debugger
           // filter only analysis variants with status active
           if (variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)) {
             dangerSourceVariants = variants.filter(
