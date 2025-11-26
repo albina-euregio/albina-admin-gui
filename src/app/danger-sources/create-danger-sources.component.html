@@ -285,27 +285,27 @@
               : 'danger-source__empty'
       "
     >
-      <div class="region-thumb__details">
-        <h5 class="font-s-bold">
+      <div class="region-thumb__details" style="flex: 1 1 auto; min-width: 0; overflow: hidden;">
+        <h5 class="font-s-bold" style="overflow: hidden; text-overflow: ellipsis; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-clamp: 2;">
           {{ dangerSource.title }}
         </h5>
-        <div class="region-thumb__author font-s text-secondary">
+        <div class="region-thumb__author font-s text-secondary" style="display: flex; align-items: center; gap: 8px; min-width: 0;">
           @if (getVariantCount(dangerSource) > 0) {
-            <div class="btn-group region-divider__actions">
-              @if (showDangerSourceVariantsMap.get(dangerSource.id)) {
-                <i class="ph-bold ph-caret-right"></i>
-              }
-              @if (!showDangerSourceVariantsMap.get(dangerSource.id)) {
-                <i class="ph-bold ph-caret-down"></i>
-              }
-            </div>
+        <div class="btn-group region-divider__actions" style="flex: none;">
+          @if (showDangerSourceVariantsMap.get(dangerSource.id)) {
+        <i class="ph-bold ph-caret-right"></i>
           }
-          <div class="btn-group region-divider__actions">
-            {{
-              getMainDateString(dangerSource.creationDate)
-                | date: "mediumDate" : undefined : translateService.getCurrentLang()
-            }}
-            {{ getStatusString(dangerSource) }}
+          @if (!showDangerSourceVariantsMap.get(dangerSource.id)) {
+        <i class="ph-bold ph-caret-down"></i>
+          }
+        </div>
+          }
+          <div class="btn-group region-divider__actions" style="flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+        {{
+          getMainDateString(dangerSource.creationDate)
+        | date: "mediumDate" : undefined : translateService.getCurrentLang()
+        }}
+        {{ getStatusString(dangerSource) }}
           </div>
         </div>
       </div>
