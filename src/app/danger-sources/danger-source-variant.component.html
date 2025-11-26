@@ -678,7 +678,7 @@
                 [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.weakLayerDistribution)"
                 [(value)]="variant().weakLayerDistribution"
                 (valueChange)="updateVariantOnServer()"
-                labelI18n="creationProcess.#"
+                labelI18n="distribution.#"
               />
             </div>
           }
@@ -933,7 +933,7 @@
               [enumValues]="zEnumValues(DangerSourceVariantSchema.shape.remoteTriggering)"
               [(value)]="variant().remoteTriggering"
               (valueChange)="updateVariantOnServer()"
-              labelI18n="recognizability.#"
+              labelI18n="probability.#"
             />
           </div>
         }
