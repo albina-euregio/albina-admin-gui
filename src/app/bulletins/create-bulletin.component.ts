@@ -555,7 +555,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       .subscribe({
         next: async (variants) => {
           let dangerSourceVariants: DangerSourceVariantModel[] = variants;
-
+debugger
           // filter only analysis variants with status active
           if (variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)) {
             dangerSourceVariants = variants.filter(
@@ -641,8 +641,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             // create avalanche problem for each danger source variant
             const amDaytimeDescription = new BulletinDaytimeDescriptionModel();
             const pmDaytimeDescription = new BulletinDaytimeDescriptionModel();
-            let amIndex = 1;
-            let pmIndex = 1;
+            let amIndex = 0;
+            let pmIndex = 0;
             let hasDaytimeDependency = false;
             for (const dangerSourceVariantId of dangerSourceVariantIds.split("|")) {
               const dangerSourceVariant = DangerSourceVariantModel.parse(
@@ -753,18 +753,18 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     daytimeDescription: BulletinDaytimeDescriptionModel,
     index: number,
   ) {
-    if (index < 3) {
+    if (index < 4) {
       switch (index) {
-        case 1:
+        case 0:
           daytimeDescription.avalancheProblem1 = avalancheProblem;
           break;
-        case 2:
+        case 1:
           daytimeDescription.avalancheProblem2 = avalancheProblem;
           break;
-        case 3:
+        case 2:
           daytimeDescription.avalancheProblem3 = avalancheProblem;
           break;
-        case 4:
+        case 3:
           daytimeDescription.avalancheProblem4 = avalancheProblem;
           break;
         default:
