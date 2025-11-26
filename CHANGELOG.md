@@ -2,6 +2,29 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.0.2] - 2025-11-26
+
+### 🐛 Bug Fixes
+
+- Set height of hidden elements to 0 in observations dashboard
+- Use correct translation strings for remote triggering and weak layer distribution (danger sources)
+- Init weakLayerGrainShapes (danger sources)
+- Save terrain types (danger sources)
+- Generate max 4 avalanche problems from danger source variants (danger sources)
+- Highlight cut slopes for glide avalanches, diminish shady slopes for glide avalanches (danger sources)
+
+## [8.0.1] - 2025-11-10
+
+### 🐛 Bug Fixes
+
+- Show danger sources w/o variants
+- Use snowgrid_ECMWF_EPS_stationlist.txt for map markers
+- Set password when creating user
+
+### ⚙️ Miscellaneous Tasks
+
+- Do not store ALBINA_LOLA_KRONOS_API_TOKEN in database
+
 ## [8.0.0] - 2025-11-04
 
 ### Breaking Changes
