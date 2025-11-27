@@ -3189,7 +3189,7 @@ __metadata:
     lint-staged: "npm:^15.2.10"
     mousetrap: "npm:^1.6.5"
     ngx-bootstrap: "npm:^20.0.2"
-    ngx-echarts: "npm:^20.0.1"
+    ngx-echarts: "npm:^21.0.0"
     ngx-image-compress: "npm:^18.1.5"
     prettier: "npm:^3.6.2"
     protomaps-leaflet: "npm:^5.1.0"
@@ -5945,15 +5945,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ngx-echarts@npm:^20.0.1":
-  version: 20.0.1
-  resolution: "ngx-echarts@npm:20.0.1"
+"ngx-echarts@npm:^21.0.0":
+  version: 21.0.0
+  resolution: "ngx-echarts@npm:21.0.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/core": ">=20.0.0"
+    "@angular/core": ">=21.0.0"
     echarts: ">=5.0.0"
-  checksum: 10c0/32e7219360489220da26e9504992ee177652b7007571a2febe1c72487b360e6377f7364f050be722043150dd3944c2a633cd5a5b376c2741db1ba0b7aabe5f7c
+  checksum: 10c0/f22828a55107015c60b602fa3bdb52f7287d5a70461407b314effd4fd8218d9d2ab0fcd2333acafdbab80a6944a5d0633e83061bd6d876f293625dd9e5e6f29c
   languageName: node
   linkType: hard
 
