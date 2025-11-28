@@ -2,6 +2,20 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.0.3] - 2025-11-28
+
+### 🐛 Bug Fixes
+
+- Sort danger source variants by danger rating, snowpack stability and avalanche size
+
+### 🚜 Refactor
+
+- Remove @sentry/angular
+
+### ⚙️ Miscellaneous Tasks
+
+- Sort danger sources by creation date
+
 ## [8.0.2] - 2025-11-26
 
 ### 🐛 Bug Fixes
