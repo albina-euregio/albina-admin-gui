@@ -571,31 +571,69 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           );
 
           // sort variants by relevance
-          dangerSourceVariants.sort((a, b) => {
-            if (
-              Enums.WarnLevel[a.eawsMatrixInformation.dangerRating] <
-              Enums.WarnLevel[b.eawsMatrixInformation.dangerRating]
-            ) {
-              return 1;
-            } else if (a.eawsMatrixInformation.dangerRating > b.eawsMatrixInformation.dangerRating) {
-              return -1;
-            } else {
-              if (a.eawsMatrixInformation.snowpackStabilityValue < b.eawsMatrixInformation.snowpackStabilityValue) {
-                return 1;
-              } else if (
-                a.eawsMatrixInformation.snowpackStabilityValue > b.eawsMatrixInformation.snowpackStabilityValue
-              ) {
-                return -1;
-              } else {
-                if (a.eawsMatrixInformation.avalancheSizeValue < b.eawsMatrixInformation.avalancheSizeValue) {
-                  return 1;
-                } else if (a.eawsMatrixInformation.avalancheSizeValue > b.eawsMatrixInformation.avalancheSizeValue) {
-                  return -1;
-                } else {
-                  return 0;
-                }
-              }
+          dangerSourceVariants.sort((a, b): number => {
+            // 1. dangerRating (desc)
+            const aDangerRating = Enums.WarnLevel[a.eawsMatrixInformation?.dangerRating] ?? -1;
+            const bDangerRating = Enums.WarnLevel[b.eawsMatrixInformation?.dangerRating] ?? -1;
+            if (aDangerRating !== bDangerRating) {
+              return bDangerRating - aDangerRating;
             }
+
+            // 2. dangerRatingModificator (desc)
+            const aMod = a.eawsMatrixInformation?.dangerRatingModificator ?? null;
+            const bMod = b.eawsMatrixInformation?.dangerRatingModificator ?? null;
+            if (aMod !== bMod) {
+              // Order: plus (1) > equal (0) > minus (-1) > null/undefined
+              const order = [
+                Enums.DangerRatingModificator.plus,
+                Enums.DangerRatingModificator.equal,
+                Enums.DangerRatingModificator.minus,
+                null,
+                undefined,
+              ];
+              const aIndex = order.indexOf(aMod);
+              const bIndex = order.indexOf(bMod);
+              return aIndex - bIndex;
+            }
+
+            // 3. snowpackStability (desc)
+            const aStability = a.eawsMatrixInformation?.snowpackStability ?? null;
+            const bStability = b.eawsMatrixInformation?.snowpackStability ?? null;
+            if (aStability !== bStability) {
+              // Order: very_poor > poor > fair > good > null/undefined
+              const order = [
+                Enums.SnowpackStability.very_poor,
+                Enums.SnowpackStability.poor,
+                Enums.SnowpackStability.fair,
+                Enums.SnowpackStability.good,
+                null,
+                undefined,
+              ];
+              const aIndex = order.indexOf(aStability);
+              const bIndex = order.indexOf(bStability);
+              return aIndex - bIndex;
+            }
+
+            // 4. avalancheSize (desc)
+            const aAvalancheSize = a.eawsMatrixInformation?.avalancheSize ?? null;
+            const bAvalancheSize = b.eawsMatrixInformation?.avalancheSize ?? null;
+            if (aAvalancheSize !== bAvalancheSize) {
+              // Order: extreme > very_large > large > medium > small > null/undefined
+              const order = [
+                Enums.AvalancheSize.extreme,
+                Enums.AvalancheSize.very_large,
+                Enums.AvalancheSize.large,
+                Enums.AvalancheSize.medium,
+                Enums.AvalancheSize.small,
+                null,
+                undefined,
+              ];
+              const aIndex = order.indexOf(aAvalancheSize);
+              const bIndex = order.indexOf(bAvalancheSize);
+              return aIndex - bIndex;
+            }
+
+            return 0;
           });
 
           // map micro regions to danger source variants
