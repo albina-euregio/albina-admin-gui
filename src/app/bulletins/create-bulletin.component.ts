@@ -611,15 +611,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }
 
           // keep only 4 variants per micro region
-          for (const [microRegionId, dangerSourceVariantIds] of microRegionDangerSourceVariants) {
-            microRegionDangerSourceVariants.set(microRegionId, dangerSourceVariantIds.slice(0, 4));
+          for (const [microRegionId, dangerSourceVariants] of microRegionDangerSourceVariants) {
+            microRegionDangerSourceVariants.set(microRegionId, dangerSourceVariants.slice(0, 5));
           }
 
           // aggregate micro regions with same danger source variants
           const aggregatedRegions = new Map<string, string[]>(); // dangerSourceVariantId -> microRegionId[]
 
-          for (const [microRegionId, dangerSourceVariantIds] of microRegionDangerSourceVariants) {
-            const key = dangerSourceVariantIds.map((variant) => variant.id).join("|");
+          for (const [microRegionId, dangerSourceVariants] of microRegionDangerSourceVariants) {
+            const key = dangerSourceVariants.map((variant) => variant.id).join("|");
             if (aggregatedRegions.has(key)) {
               aggregatedRegions.get(key).push(microRegionId);
             } else {
