@@ -596,19 +596,23 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       const aCounts = getStatusCounts(a);
       const bCounts = getStatusCounts(b);
 
-      // Compare by active count
-      if (aCounts.active !== bCounts.active) {
-        return bCounts.active - aCounts.active;
+      // Determine primary status for each danger source
+      const getPrimaryStatus = (counts: { active: number; dormant: number; inactive: number }) => {
+        if (counts.active > 0) return 0; // active
+        if (counts.dormant > 0) return 1; // dormant
+        if (counts.inactive > 0) return 2; // inactive
+        return 3; // no variants
+      };
+
+      const aStatus = getPrimaryStatus(aCounts);
+      const bStatus = getPrimaryStatus(bCounts);
+
+      // Compare by primary status
+      if (aStatus !== bStatus) {
+        return aStatus - bStatus;
       }
-      // Then by dormant count
-      if (aCounts.dormant !== bCounts.dormant) {
-        return bCounts.dormant - aCounts.dormant;
-      }
-      // Then by inactive count
-      if (aCounts.inactive !== bCounts.inactive) {
-        return bCounts.inactive - aCounts.inactive;
-      }
-      // If status counts are equal, sort by creationDate (desc)
+
+      // If status is equal, sort by creationDate (desc)
       if (a.creationDate < b.creationDate) {
         return 1;
       }
