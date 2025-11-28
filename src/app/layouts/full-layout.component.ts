@@ -11,6 +11,7 @@ import { Component, TemplateRef, viewChild, inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { DangerSourcesService } from "app/danger-sources/danger-sources.service";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { BsModalRef } from "ngx-bootstrap/modal";
@@ -34,6 +35,7 @@ export class FullLayoutComponent {
   translateService = inject(TranslateService);
   authenticationService = inject(AuthenticationService);
   bulletinsService = inject(BulletinsService);
+  dangerSourcesService = inject(DangerSourcesService);
   regionsService = inject(RegionsService);
   constantsService = inject(ConstantsService);
   router = inject(Router);
@@ -111,6 +113,7 @@ export class FullLayoutComponent {
   private change(region: RegionConfiguration) {
     this.authenticationService.setActiveRegion(region);
     this.bulletinsService.loadStatus();
+    this.dangerSourcesService.loadStatus();
     if (
       (this.router.url.startsWith("/modelling/zamg-wbt") && !region.enableWeatherbox) ||
       (this.router.url.startsWith("/modelling/geosphere") && !region.enableModelling) ||
