@@ -599,7 +599,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       // Determine primary status for each danger source
       const getPrimaryStatus = (counts: { active: number; dormant: number; inactive: number }) => {
         if (counts.active > 0) return 0; // active
-        if (counts.dormant > 0) return 1; // dormant
+        if (counts.dormant > 0) return 0; // dormant
         if (counts.inactive > 0) return 2; // inactive
         return 3; // no variants
       };
