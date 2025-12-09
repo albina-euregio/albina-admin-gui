@@ -2,6 +2,19 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.0.4] - 2025-12-09
+
+### 🐛 Bug Fixes
+
+- Reload status of danger sources map after region change
+- Keep accordion for avalanche problem open after update
+- Concat external url with token for observations coming from SNOBS
+- Observations-API: Data too long for column 'LOCATION_NAME'
+
+### ⚙️ Miscellaneous Tasks
+
+- Observations-API: Upgrade Astro to 5.16.4
+
 ## [8.0.3] - 2025-11-28
 
 ### 🐛 Bug Fixes
