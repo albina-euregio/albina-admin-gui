@@ -29,6 +29,14 @@
                 <button
                   class="btn btn-secondary btn-icon bulletins-table__day-buttons"
                   type="button"
+                  (click)="editDangerSources(date, true)"
+                  title="{{ 'dangerSources.tooltip.read' | translate }}"
+                >
+                  <i class="ph ph-eye"></i>
+                </button>
+                <button
+                  class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+                  type="button"
                   (click)="editDangerSources(date, false)"
                   title="{{ 'dangerSources.tooltip.edit' | translate }}"
                 >
