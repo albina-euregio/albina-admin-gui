@@ -28,16 +28,12 @@
       <!-- Status -->
       <div class="create-bulletin__status">
         <div>
-          @if (
-            variant().forecastDangerSourceVariantId !== null &&
-            variant().forecastDangerSourceVariantId !== "" &&
-            dangerSourcesService.getDangerSourceVariantType() === variantType.analysis
-          ) {
+          @if (variant().dangerSourceVariantType === variantType.analysis) {
             <span class="badge bg-success">
               {{ "dangerSources.status.analysis" | translate }}
             </span>
           }
-          @if (variant().forecastDangerSourceVariantId === null || variant().forecastDangerSourceVariantId === "") {
+          @if (variant().dangerSourceVariantType === variantType.forecast) {
             <span class="badge bg-primary">
               {{ "dangerSources.status.forecast" | translate }}
             </span>
