@@ -805,6 +805,12 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       : this.internVariantsList;
     for (let i = variants.length - 1; i >= 0; --i) {
       if (variants[i].dangerSourceVariantType === type) {
+        if (
+          variants[i].dangerSourceVariantStatus === DangerSourceVariantStatus.inactive ||
+          variants[i].dangerSourceVariantStatus === DangerSourceVariantStatus.dormant
+        ) {
+          continue;
+        }
         if (variants[i].hasDaytimeDependency) {
           if (variants[i].dangerPeak !== Daytime.afternoon) {
             this.mapService.updateAggregatedRegionAM(variants[i]);
