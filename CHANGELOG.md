@@ -2,6 +2,17 @@
 
 <!-- Update using `yarn changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.0.5] - 2025-12-09
+
+### 🐛 Bug Fixes
+
+- Show correct danger source variant type in compared variant view
+
+### ⚙️ Miscellaneous Tasks
+
+- Color overview map only with danger source variants which are active
+- Add read only mode for danger sources
+
 ## [8.0.4] - 2025-12-09
 
 ### 🐛 Bug Fixes
