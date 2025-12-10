@@ -1,4 +1,15 @@
 <div class="bulletins animated fadeIn container">
+  @if (invalidStatusInformation.length > 0) {
+    <alert type="warning" [dismissible]="true">
+      <ul class="mb-0">
+        @for (status of invalidStatusInformation; track status[0]) {
+          <li class="text-break">
+            <strong>{{ status[0] }}:</strong> {{ status[1].message }}
+          </li>
+        }
+      </ul>
+    </alert>
+  }
   <table class="table table-bordered responsive-table">
     <thead class="bulletins-table__header">
       <tr>
