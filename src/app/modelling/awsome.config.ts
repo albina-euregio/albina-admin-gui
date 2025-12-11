@@ -1,12 +1,13 @@
 import { FilterSelectionSpecSchema } from "../observations/filter-selection-config";
 import * as z from "zod/v4";
 
+const url = z.union([z.url().describe("Absolute URL"), z.string().describe("Relative URL")]);
+
 export const AwsomeSourceSchema = z.object({
   name: z.string().optional().describe("Identifier shown in source multiselect"),
   domain: z.string().optional().describe("Domain identifier used in AWSOME, for instance tirol24"),
   toolchain: z.string().optional().describe("Toolchain identifier used in AWSOME, for instance gridded-chain"),
-  url: z
-    .url()
+  url: url
     .optional()
     .describe("URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."),
   detailsTemplates: z
@@ -28,7 +29,7 @@ export const AwsomeSourceSchema = z.object({
   imageOverlays: z
     .object({
       name: z.string().describe("Identifier shown in map layer control"),
-      imageUrl: z.url(),
+      imageUrl: url,
       imageBounds: z
         .number()
         .array()
@@ -55,7 +56,7 @@ export const AwsomeSourceSchema = z.object({
 export type AwsomeSource = z.infer<typeof AwsomeSourceSchema>;
 
 export const AwsomeConfigSchema = z.object({
-  $schema: z.string().optional().describe("URL of JSON Schema awsome.schema.json"),
+  $schema: url.optional().describe("URL of JSON Schema awsome.schema.json"),
   date: z.string().describe("Initial date/time when opening the dashboard"),
   dateMax: z.string().optional(),
   dateMin: z.string().optional(),
@@ -71,12 +72,10 @@ export const AwsomeConfigSchema = z.object({
     .default(() => [47.3, 11.3, 8]),
   regions: z
     .object({
-      url: z
-        .url()
-        .describe(
-          "URL to GeoJSON FeatureCollection for micro-region polygons. " +
-            "For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json",
-        ),
+      url: url.describe(
+        "URL to GeoJSON FeatureCollection for micro-region polygons. " +
+          "For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json",
+      ),
     })
     .partial()
     .optional(),
@@ -88,7 +87,7 @@ export const AwsomeConfigSchema = z.object({
     .default({ xType: "size_estimate" }),
   timeseriesChart: z
     .object({
-      url: z.url().optional(),
+      url: url.optional(),
     })
     .optional(),
 });

@@ -4,7 +4,17 @@
   "properties": {
     "$schema": {
       "description": "URL of JSON Schema awsome.schema.json",
-      "type": "string"
+      "anyOf": [
+        {
+          "description": "Absolute URL",
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "description": "Relative URL",
+          "type": "string"
+        }
+      ]
     },
     "date": {
       "description": "Initial date/time when opening the dashboard",
@@ -198,8 +208,17 @@
           },
           "url": {
             "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
-            "type": "string",
-            "format": "uri"
+            "anyOf": [
+              {
+                "description": "Absolute URL",
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "description": "Relative URL",
+                "type": "string"
+              }
+            ]
           },
           "detailsTemplates": {
             "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
@@ -233,8 +252,17 @@
                   "type": "string"
                 },
                 "imageUrl": {
-                  "type": "string",
-                  "format": "uri"
+                  "anyOf": [
+                    {
+                      "description": "Absolute URL",
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    {
+                      "description": "Relative URL",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "imageBounds": {
                   "description": "Image bounds such as [[40.712,-74.227],[40.774,-74.125]]",
@@ -288,8 +316,17 @@
       "properties": {
         "url": {
           "description": "URL to GeoJSON FeatureCollection for micro-region polygons. For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json",
-          "type": "string",
-          "format": "uri"
+          "anyOf": [
+            {
+              "description": "Absolute URL",
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "description": "Relative URL",
+              "type": "string"
+            }
+          ]
         }
       },
       "additionalProperties": false
@@ -319,8 +356,17 @@
       "type": "object",
       "properties": {
         "url": {
-          "type": "string",
-          "format": "uri"
+          "anyOf": [
+            {
+              "description": "Absolute URL",
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "description": "Relative URL",
+              "type": "string"
+            }
+          ]
         }
       },
       "additionalProperties": false
