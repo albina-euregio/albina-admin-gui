@@ -183,6 +183,17 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     this.applyLocalFilter();
   }
 
+  get dateForPicker() {
+    return this.date;
+  }
+
+  set dateForPicker(d: string) {
+    if (this.date.length === "2006-01-02T03:04:05".length && d.length === "2006-01-02T03:04".length) {
+      d += ":00";
+    }
+    this.date = d;
+  }
+
   private get albinaDate() {
     return this.date.replace(/T/, "_").replace(/:/g, "-");
   }

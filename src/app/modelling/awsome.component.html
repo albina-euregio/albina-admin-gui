@@ -60,7 +60,7 @@
                   type="datetime-local"
                   [step]="config.dateStepSeconds"
                   class="form-control"
-                  [(ngModel)]="date"
+                  [(ngModel)]="dateForPicker"
                   [min]="config.dateMin"
                   [max]="config.dateMax"
                   (ngModelChange)="loadSources()"
