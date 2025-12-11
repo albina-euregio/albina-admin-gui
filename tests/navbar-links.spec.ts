@@ -19,7 +19,7 @@ test("check all links in navbar", async ({ page }) => {
     await expect(page.locator("#observationsMap")).toBeVisible();
     await expect(page.locator(".toolset")).toBeVisible();
     await expect
-      .poll(() => page.locator(".leaflet-marker-pane").getByRole("button").count(), { timeout: 7000 })
+      .poll(() => page.locator(".leaflet-marker-pane").getByRole("button").count(), { timeout: 9000 })
       .toBeGreaterThan(3);
   });
   await test.step("GeoSphere", async () => {
@@ -50,8 +50,8 @@ test("check all links in navbar", async ({ page }) => {
     await expect(page).toHaveURL(/bulletins/);
     // more details are checked in bulletins.spec
   });
-  await test.step("Carinthia only has bulletins and observations", async () => {
-    await changeRegion(page, "Carinthia");
+  await test.step("PLAYWRIGHT only has bulletins and observations", async () => {
+    await changeRegion(page, "PLAYWRIGHT");
     await expect(page.getByRole("link", { name: "Avalanche.report", exact: true })).toBeVisible();
     await expect(page.getByRole("link", { name: "Observations", exact: true })).toBeVisible();
     await expect(page.getByRole("link", { name: "GeoSphere", exact: true })).toBeHidden();

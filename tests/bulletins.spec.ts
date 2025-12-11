@@ -103,7 +103,7 @@ test("View bulletin", async ({ page }) => {
   });
 
   await test.step("External regions are visible", async () => {
-    await page.locator("header").filter({ hasText: "GeoSphere (12)" }).getByRole("button").click();
+    await page.locator("header").filter({ hasText: "GeoSphere (11)" }).getByRole("button").click();
     await expect(page.locator(".region-thumb").filter({ hasText: "Werdenfels Alps + 4" })).toMatchAriaSnapshot(`
       - button "Werdenfels Alps + 4"
       - button "Christoph Hummel"

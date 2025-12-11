@@ -68,7 +68,7 @@ test("User settings", async ({ page }) => {
       - cell "Playwright"
       - cell "playwright@avalanche.report"
       - cell "Playwright"
-      - cell "IT-32-BZ,AT-02,AT-07"
+      - cell "IT-32-BZ,AT-02,AT-07,PLAYWRIGHT"
       - cell "FORECASTER"
   `);
   await page.getByRole("row", { name: "playwright.test@avalanche.report" }).getByTitle("Edit").click();
