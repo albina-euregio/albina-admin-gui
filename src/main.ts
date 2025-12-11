@@ -35,7 +35,7 @@ import { default as localeEn, default as localeOc } from "@angular/common/locale
 import localeEs from "@angular/common/locales/es";
 import localeFr from "@angular/common/locales/fr";
 import localeIt from "@angular/common/locales/it";
-import { importProvidersFrom } from "@angular/core";
+import { importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
@@ -88,6 +88,7 @@ registerLocaleData(localeOc, "oc");
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     importProvidersFrom(
       BrowserModule,
