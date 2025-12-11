@@ -7,7 +7,7 @@
   [isComparedBulletin]="isCompared()"
   (sliderValueChange)="getSnowpackStabilityOptions(avalancheType()).onValueChange($event)"
   [sliderOptions]="getSnowpackStabilityOptions(avalancheType())"
-/>
+  />
 
 <!-- Frequency slider -->
 <app-slider
@@ -18,7 +18,7 @@
   [isComparedBulletin]="isCompared()"
   (sliderValueChange)="getFrequencyOptions(avalancheType()).onValueChange($event)"
   [sliderOptions]="getFrequencyOptions(avalancheType())"
-/>
+  />
 
 <!-- Avalanche size slider -->
 <app-slider
@@ -29,7 +29,7 @@
   [isComparedBulletin]="isCompared()"
   (sliderValueChange)="avalancheSizeOptions.onValueChange($event)"
   [sliderOptions]="avalancheSizeOptions"
-/>
+  />
 
 <div class="form-group">
   <label
@@ -42,34 +42,37 @@
     "
     for="textarea-input"
     >{{ "matrix.label.dangerRating" | translate }}</label
-  >
+    >
 
-  <div class="avalanche-problem-detail__override">
-    <!-- danger rating -->
-    <app-danger-rating
-      [value]="dangerRating.missing"
-      *ngIf="!dangerRatingEnabled && isDangerRating(dangerRating.missing)"
-    />
-    <app-danger-rating
-      *ngFor="
-        let rating of [
-          dangerRating.low,
-          dangerRating.moderate,
-          dangerRating.considerable,
-          dangerRating.high,
-          dangerRating.very_high,
+    <div class="avalanche-problem-detail__override">
+      <!-- danger rating -->
+      @if (!dangerRatingEnabled && isDangerRating(dangerRating.missing)) {
+        <app-danger-rating
+          [value]="dangerRating.missing"
+          />
+      }
+      @for (
+        rating of [
+        dangerRating.low,
+        dangerRating.moderate,
+        dangerRating.considerable,
+        dangerRating.high,
+        dangerRating.very_high,
         ]
-      "
-      [value]="rating"
-      [style.display]="isDangerRating(rating) || dangerRatingEnabled ? '' : 'none'"
-      [style.filter]="!isDangerRating(rating) ? 'grayscale()' : undefined"
-      (click)="overrideDangerRating($event, rating)"
-    />
-  </div>
+        ; track
+        rating) {
+        <app-danger-rating
+          [value]="rating"
+          [style.display]="isDangerRating(rating) || dangerRatingEnabled ? '' : 'none'"
+          [style.filter]="!isDangerRating(rating) ? 'grayscale()' : undefined"
+          (click)="overrideDangerRating($event, rating)"
+          />
+      }
+    </div>
 
-  <div class="btn-group">
-    <button
-      *ngIf="isDangerRatingModificator(modificatorEnum.minus)"
+    <div class="btn-group">
+      @if (isDangerRatingModificator(modificatorEnum.minus)) {
+        <button
       [disabled]="
         disabled() ||
         !matrixInformation() ||
@@ -77,14 +80,15 @@
         !matrixInformation().frequency ||
         !matrixInformation().avalancheSize
       "
-      type="reset"
-      class="btn btn-sm btn-dark btn-icon"
-      (click)="setDangerRatingModificator($event, undefined)"
-    >
-      <i class="ph ph-minus"></i>
-    </button>
-    <button
-      *ngIf="!isDangerRatingModificator(modificatorEnum.minus)"
+          type="reset"
+          class="btn btn-sm btn-dark btn-icon"
+          (click)="setDangerRatingModificator($event, undefined)"
+          >
+          <i class="ph ph-minus"></i>
+        </button>
+      }
+      @if (!isDangerRatingModificator(modificatorEnum.minus)) {
+        <button
       [disabled]="
         disabled() ||
         !matrixInformation() ||
@@ -92,15 +96,16 @@
         !matrixInformation().frequency ||
         !matrixInformation().avalancheSize
       "
-      type="reset"
-      class="btn btn-sm btn-outline-secondary btn-icon"
-      (click)="setDangerRatingModificator($event, modificatorEnum.minus)"
-    >
-      <i class="ph ph-minus"></i>
-    </button>
+          type="reset"
+          class="btn btn-sm btn-outline-secondary btn-icon"
+          (click)="setDangerRatingModificator($event, modificatorEnum.minus)"
+          >
+          <i class="ph ph-minus"></i>
+        </button>
+      }
 
-    <button
-      *ngIf="isDangerRatingModificator(modificatorEnum.equal)"
+      @if (isDangerRatingModificator(modificatorEnum.equal)) {
+        <button
       [disabled]="
         disabled() ||
         !matrixInformation() ||
@@ -108,14 +113,15 @@
         !matrixInformation().frequency ||
         !matrixInformation().avalancheSize
       "
-      type="reset"
-      class="btn btn-sm btn-dark btn-icon"
-      (click)="setDangerRatingModificator($event, undefined)"
-    >
-      <i class="ph ph-equals"></i>
-    </button>
-    <button
-      *ngIf="!isDangerRatingModificator(modificatorEnum.equal)"
+          type="reset"
+          class="btn btn-sm btn-dark btn-icon"
+          (click)="setDangerRatingModificator($event, undefined)"
+          >
+          <i class="ph ph-equals"></i>
+        </button>
+      }
+      @if (!isDangerRatingModificator(modificatorEnum.equal)) {
+        <button
       [disabled]="
         disabled() ||
         !matrixInformation() ||
@@ -123,15 +129,16 @@
         !matrixInformation().frequency ||
         !matrixInformation().avalancheSize
       "
-      type="reset"
-      class="btn btn-sm btn-outline-secondary btn-icon"
-      (click)="setDangerRatingModificator($event, modificatorEnum.equal)"
-    >
-      <i class="ph ph-equals"></i>
-    </button>
+          type="reset"
+          class="btn btn-sm btn-outline-secondary btn-icon"
+          (click)="setDangerRatingModificator($event, modificatorEnum.equal)"
+          >
+          <i class="ph ph-equals"></i>
+        </button>
+      }
 
-    <button
-      *ngIf="isDangerRatingModificator(modificatorEnum.plus)"
+      @if (isDangerRatingModificator(modificatorEnum.plus)) {
+        <button
       [disabled]="
         disabled() ||
         !matrixInformation() ||
@@ -139,14 +146,15 @@
         !matrixInformation().frequency ||
         !matrixInformation().avalancheSize
       "
-      type="reset"
-      class="btn btn-sm btn-dark btn-icon"
-      (click)="setDangerRatingModificator($event, undefined)"
-    >
-      <i class="ph ph-plus"></i>
-    </button>
-    <button
-      *ngIf="!isDangerRatingModificator(modificatorEnum.plus)"
+          type="reset"
+          class="btn btn-sm btn-dark btn-icon"
+          (click)="setDangerRatingModificator($event, undefined)"
+          >
+          <i class="ph ph-plus"></i>
+        </button>
+      }
+      @if (!isDangerRatingModificator(modificatorEnum.plus)) {
+        <button
       [disabled]="
         disabled() ||
         !matrixInformation() ||
@@ -154,17 +162,19 @@
         !matrixInformation().frequency ||
         !matrixInformation().avalancheSize
       "
-      type="reset"
-      class="btn btn-sm btn-outline-secondary btn-icon"
-      (click)="setDangerRatingModificator($event, modificatorEnum.plus)"
-    >
-      <i class="ph ph-plus"></i>
-    </button>
-    <div *ngIf="!disabled()" class="form-check ms-3">
-      <input
-        [id]="forLabelId('overrideCheckbox')"
-        type="checkbox"
-        class="form-check-input"
+          type="reset"
+          class="btn btn-sm btn-outline-secondary btn-icon"
+          (click)="setDangerRatingModificator($event, modificatorEnum.plus)"
+          >
+          <i class="ph ph-plus"></i>
+        </button>
+      }
+      @if (!disabled()) {
+        <div class="form-check ms-3">
+          <input
+            [id]="forLabelId('overrideCheckbox')"
+            type="checkbox"
+            class="form-check-input"
         [disabled]="
           disabled() ||
           !matrixInformation() ||
@@ -172,13 +182,15 @@
           !matrixInformation().frequency ||
           !matrixInformation().avalancheSize
         "
-        [ngModel]="dangerRatingEnabled"
-        (click)="setDangerRatingEnabled()"
-      />
-
-      <label *ngIf="!disabled()" class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{
-        "matrix.label.override" | translate
-      }}</label>
+            [ngModel]="dangerRatingEnabled"
+            (click)="setDangerRatingEnabled()"
+            />
+          @if (!disabled()) {
+            <label class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{
+              "matrix.label.override" | translate
+            }}</label>
+          }
+        </div>
+      }
     </div>
   </div>
-</div>

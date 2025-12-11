@@ -1,13 +1,13 @@
 import * as Enums from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-import { NgIf } from "@angular/common";
+
 import { Component, input, inject } from "@angular/core";
 
 @Component({
   selector: "app-danger-rating-icon",
   templateUrl: "danger-rating-icon.component.html",
   standalone: true,
-  imports: [NgIf],
+  imports: [],
 })
 export class DangerRatingIconComponent {
   private constantsService = inject(ConstantsService);

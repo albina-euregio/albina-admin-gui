@@ -2,7 +2,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { BulletinsService, PublicationChannel } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CreateBulletinComponent } from "./create-bulletin.component";
-import { NgFor, DatePipe } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
@@ -21,7 +21,7 @@ interface PublicationInformation {
   selector: "app-modal-publication-status",
   templateUrl: "modal-publication-status.component.html",
   standalone: true,
-  imports: [NgFor, AlertModule, DatePipe, TranslateModule],
+  imports: [AlertModule, DatePipe, TranslateModule],
 })
 export class ModalPublicationStatusComponent {
   bsModalRef = inject(BsModalRef);

@@ -1,171 +1,191 @@
 <accordion class="avalanche-problems__accordion">
-  <accordion-group
-    *ngIf="bulletinDaytimeDescription().avalancheProblem1"
-    [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[0]"
-    (isOpenChange)="accordionChanged($event, 'avalancheProblem1')"
-    #accordionAvalancheProblem1
-  >
-    <div accordion-heading class="avalanche-problem-preview__header">
-      <i *ngIf="accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-down"></i>
-      <i *ngIf="!accordionAvalancheProblem1.isOpen" class="accordion__arrow ph ph-caret-right"></i>
+  @if (bulletinDaytimeDescription().avalancheProblem1) {
+    <accordion-group
+      [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[0]"
+      (isOpenChange)="accordionChanged($event, 'avalancheProblem1')"
+      #accordionAvalancheProblem1
+      >
+      <div accordion-heading class="avalanche-problem-preview__header">
+        @if (accordionAvalancheProblem1.isOpen) {
+          <i class="accordion__arrow ph ph-caret-down"></i>
+        }
+        @if (!accordionAvalancheProblem1.isOpen) {
+          <i class="accordion__arrow ph ph-caret-right"></i>
+        }
+        <app-avalanche-problem-preview
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem1"
+          [count]="1"
+          [disabled]="disabled()"
+          (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
+        ></app-avalanche-problem-preview>
+      </div>
+      <div>
+        <app-avalanche-problem-detail
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem1"
+          [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem1"
+          [isComparedBulletin]="isComparedBulletin()"
+          [count]="1"
+          [afternoon]="afternoon()"
+          [disabled]="disabled()"
+          (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
+        ></app-avalanche-problem-detail>
+      </div>
+    </accordion-group>
+  }
 
-      <app-avalanche-problem-preview
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem1"
-        [count]="1"
-        [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
-      ></app-avalanche-problem-preview>
-    </div>
-    <div>
-      <app-avalanche-problem-detail
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem1"
-        [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem1"
-        [isComparedBulletin]="isComparedBulletin()"
-        [count]="1"
-        [afternoon]="afternoon()"
-        [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
-      ></app-avalanche-problem-detail>
-    </div>
-  </accordion-group>
+  @if (bulletinDaytimeDescription().avalancheProblem2) {
+    <accordion-group
+      [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[1]"
+      (isOpenChange)="accordionChanged($event, 'avalancheProblem2')"
+      #accordionAvalancheProblem2
+      >
+      <div accordion-heading class="avalanche-problem-preview__header">
+        @if (accordionAvalancheProblem2.isOpen) {
+          <i class="accordion__arrow ph ph-caret-down"></i>
+        }
+        @if (!accordionAvalancheProblem2.isOpen) {
+          <i class="accordion__arrow ph ph-caret-right"></i>
+        }
+        <app-avalanche-problem-preview
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem2"
+          [count]="2"
+          [disabled]="disabled()"
+          (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
+        ></app-avalanche-problem-preview>
+      </div>
+      <div>
+        <app-avalanche-problem-detail
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem2"
+          [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem2"
+          [isComparedBulletin]="isComparedBulletin()"
+          [count]="2"
+          [afternoon]="afternoon()"
+          [disabled]="disabled()"
+          (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
+        ></app-avalanche-problem-detail>
+      </div>
+    </accordion-group>
+  }
 
-  <accordion-group
-    *ngIf="bulletinDaytimeDescription().avalancheProblem2"
-    [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[1]"
-    (isOpenChange)="accordionChanged($event, 'avalancheProblem2')"
-    #accordionAvalancheProblem2
-  >
-    <div accordion-heading class="avalanche-problem-preview__header">
-      <i *ngIf="accordionAvalancheProblem2.isOpen" class="accordion__arrow ph ph-caret-down"></i>
-      <i *ngIf="!accordionAvalancheProblem2.isOpen" class="accordion__arrow ph ph-caret-right"></i>
+  @if (bulletinDaytimeDescription().avalancheProblem3) {
+    <accordion-group
+      [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[2]"
+      (isOpenChange)="accordionChanged($event, 'avalancheProblem3')"
+      #accordionAvalancheProblem3
+      >
+      <div accordion-heading class="avalanche-problem-preview__header">
+        @if (accordionAvalancheProblem3.isOpen) {
+          <i class="accordion__arrow ph ph-caret-down"></i>
+        }
+        @if (!accordionAvalancheProblem3.isOpen) {
+          <i class="accordion__arrow ph ph-caret-right"></i>
+        }
+        <app-avalanche-problem-preview
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem3"
+          [count]="3"
+          [disabled]="disabled()"
+          (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
+        ></app-avalanche-problem-preview>
+      </div>
+      <div>
+        <app-avalanche-problem-detail
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem3"
+          [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem3"
+          [isComparedBulletin]="isComparedBulletin()"
+          [count]="3"
+          [afternoon]="afternoon()"
+          [disabled]="disabled()"
+          (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
+        ></app-avalanche-problem-detail>
+      </div>
+    </accordion-group>
+  }
 
-      <app-avalanche-problem-preview
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem2"
-        [count]="2"
-        [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
-      ></app-avalanche-problem-preview>
-    </div>
-    <div>
-      <app-avalanche-problem-detail
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem2"
-        [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem2"
-        [isComparedBulletin]="isComparedBulletin()"
-        [count]="2"
-        [afternoon]="afternoon()"
-        [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
-      ></app-avalanche-problem-detail>
-    </div>
-  </accordion-group>
+  @if (bulletinDaytimeDescription().avalancheProblem4) {
+    <accordion-group
+      [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[3]"
+      (isOpenChange)="accordionChanged($event, 'avalancheProblem4')"
+      #accordionAvalancheProblem4
+      >
+      <div accordion-heading class="avalanche-problem-preview__header">
+        @if (accordionAvalancheProblem4.isOpen) {
+          <i class="accordion__arrow ph ph-caret-down"></i>
+        }
+        @if (!accordionAvalancheProblem4.isOpen) {
+          <i class="accordion__arrow ph ph-caret-right"></i>
+        }
+        <app-avalanche-problem-preview
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem4"
+          [count]="4"
+          [disabled]="disabled()"
+          (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
+        ></app-avalanche-problem-preview>
+      </div>
+      <div>
+        <app-avalanche-problem-detail
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem4"
+          [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem4"
+          [isComparedBulletin]="isComparedBulletin()"
+          [count]="4"
+          [afternoon]="afternoon()"
+          [disabled]="disabled()"
+          (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
+        ></app-avalanche-problem-detail>
+      </div>
+    </accordion-group>
+  }
 
-  <accordion-group
-    *ngIf="bulletinDaytimeDescription().avalancheProblem3"
-    [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[2]"
-    (isOpenChange)="accordionChanged($event, 'avalancheProblem3')"
-    #accordionAvalancheProblem3
-  >
-    <div accordion-heading class="avalanche-problem-preview__header">
-      <i *ngIf="accordionAvalancheProblem3.isOpen" class="accordion__arrow ph ph-caret-down"></i>
-      <i *ngIf="!accordionAvalancheProblem3.isOpen" class="accordion__arrow ph ph-caret-right"></i>
-
-      <app-avalanche-problem-preview
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem3"
-        [count]="3"
-        [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
-      ></app-avalanche-problem-preview>
-    </div>
-    <div>
-      <app-avalanche-problem-detail
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem3"
-        [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem3"
-        [isComparedBulletin]="isComparedBulletin()"
-        [count]="3"
-        [afternoon]="afternoon()"
-        [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
-      ></app-avalanche-problem-detail>
-    </div>
-  </accordion-group>
-
-  <accordion-group
-    *ngIf="bulletinDaytimeDescription().avalancheProblem4"
-    [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[3]"
-    (isOpenChange)="accordionChanged($event, 'avalancheProblem4')"
-    #accordionAvalancheProblem4
-  >
-    <div accordion-heading class="avalanche-problem-preview__header">
-      <i *ngIf="accordionAvalancheProblem4.isOpen" class="accordion__arrow ph ph-caret-down"></i>
-      <i *ngIf="!accordionAvalancheProblem4.isOpen" class="accordion__arrow ph ph-caret-right"></i>
-
-      <app-avalanche-problem-preview
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem4"
-        [count]="4"
-        [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
-      ></app-avalanche-problem-preview>
-    </div>
-    <div>
-      <app-avalanche-problem-detail
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem4"
-        [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem4"
-        [isComparedBulletin]="isComparedBulletin()"
-        [count]="4"
-        [afternoon]="afternoon()"
-        [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
-      ></app-avalanche-problem-detail>
-    </div>
-  </accordion-group>
-
-  <accordion-group
-    *ngIf="bulletinDaytimeDescription().avalancheProblem5"
-    [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[4]"
-    (isOpenChange)="accordionChanged($event, 'avalancheProblem5')"
-    #accordionAvalancheProblem5
-  >
-    <div accordion-heading class="avalanche-problem-preview__header">
-      <i *ngIf="accordionAvalancheProblem5.isOpen" class="accordion__arrow ph ph-caret-down"></i>
-      <i *ngIf="!accordionAvalancheProblem5.isOpen" class="accordion__arrow ph ph-caret-right"></i>
-
-      <app-avalanche-problem-preview
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem5"
-        [count]="5"
-        [disabled]="disabled()"
-        (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
-      ></app-avalanche-problem-preview>
-    </div>
-    <div>
-      <app-avalanche-problem-detail
-        [bulletin]="bulletinModel()"
-        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-        [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem5"
-        [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem5"
-        [isComparedBulletin]="isComparedBulletin()"
-        [count]="5"
-        [afternoon]="afternoon()"
-        [disabled]="disabled()"
-        (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
-      ></app-avalanche-problem-detail>
-    </div>
-  </accordion-group>
+  @if (bulletinDaytimeDescription().avalancheProblem5) {
+    <accordion-group
+      [isOpen]="bulletinDaytimeDescription().isAvalancheProblemOpen[4]"
+      (isOpenChange)="accordionChanged($event, 'avalancheProblem5')"
+      #accordionAvalancheProblem5
+      >
+      <div accordion-heading class="avalanche-problem-preview__header">
+        @if (accordionAvalancheProblem5.isOpen) {
+          <i class="accordion__arrow ph ph-caret-down"></i>
+        }
+        @if (!accordionAvalancheProblem5.isOpen) {
+          <i class="accordion__arrow ph ph-caret-right"></i>
+        }
+        <app-avalanche-problem-preview
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblem]="bulletinDaytimeDescription().avalancheProblem5"
+          [count]="5"
+          [disabled]="disabled()"
+          (changeAvalancheProblemPreviewEvent)="changeAvalancheProblemPreview()"
+        ></app-avalanche-problem-preview>
+      </div>
+      <div>
+        <app-avalanche-problem-detail
+          [bulletin]="bulletinModel()"
+          [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+          [avalancheProblemModel]="bulletinDaytimeDescription().avalancheProblem5"
+          [comparedAvalancheProblemModel]="comparedBulletinDaytimeDescription()?.avalancheProblem5"
+          [isComparedBulletin]="isComparedBulletin()"
+          [count]="5"
+          [afternoon]="afternoon()"
+          [disabled]="disabled()"
+          (changeAvalancheProblemDetailEvent)="changeAvalancheProblemDetail()"
+        ></app-avalanche-problem-detail>
+      </div>
+    </accordion-group>
+  }
 </accordion>

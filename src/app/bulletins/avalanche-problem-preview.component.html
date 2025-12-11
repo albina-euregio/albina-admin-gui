@@ -1,27 +1,28 @@
 <div class="avalanche-problem__preview">
   <div class="avalanche-problem-preview__info">
-    <h2
-      class="accordion-header__title"
-      *ngIf="
-        !isAvalancheProblem(avalancheProblemEnum.new_snow) &&
-        !isAvalancheProblem(avalancheProblemEnum.wind_slab) &&
-        !isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers) &&
-        !isAvalancheProblem(avalancheProblemEnum.wet_snow) &&
-        !isAvalancheProblem(avalancheProblemEnum.gliding_snow) &&
-        !isAvalancheProblem(avalancheProblemEnum.favourable_situation) &&
-        !isAvalancheProblem(avalancheProblemEnum.cornices) &&
-        !isAvalancheProblem(avalancheProblemEnum.no_distinct_avalanche_problem)
-      "
-    >
-      {{ "bulletins.create.createAvalancheProblem" | translate }}
-    </h2>
+    @if (
+      !isAvalancheProblem(avalancheProblemEnum.new_snow) &&
+      !isAvalancheProblem(avalancheProblemEnum.wind_slab) &&
+      !isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers) &&
+      !isAvalancheProblem(avalancheProblemEnum.wet_snow) &&
+      !isAvalancheProblem(avalancheProblemEnum.gliding_snow) &&
+      !isAvalancheProblem(avalancheProblemEnum.favourable_situation) &&
+      !isAvalancheProblem(avalancheProblemEnum.cornices) &&
+      !isAvalancheProblem(avalancheProblemEnum.no_distinct_avalanche_problem)
+      ) {
+      <h2
+        class="accordion-header__title"
+        >
+        {{ "bulletins.create.createAvalancheProblem" | translate }}
+      </h2>
+    }
 
     <!-- Danger rating -->
     <div class="avalanche-problem-preview__info-item">
       <app-danger-rating
         [value]="avalancheProblem().getDangerRating()"
         class="avalanche-problem-preview__danger-rating"
-      />
+        />
     </div>
     <!-- End danger rating -->
 
@@ -30,7 +31,7 @@
       <app-avalanche-problem-icons
         [value]="avalancheProblem().avalancheProblem"
         class="avalanche-problem-preview__problem-icon"
-      />
+        />
     </div>
     <!-- End avalanche problem icon-->
 
@@ -47,50 +48,57 @@
     <!-- End aspects -->
     <!-- Altitude -->
     <div class="avalanche-problem-preview__info-item avalanche-problem-preview__info-elevation">
-      <p *ngIf="avalancheProblem().hasElevationHigh()">
-        <i class="ph ph-arrow-line-down-right"></i> {{ getElevationHighString() }}
-      </p>
-      <p *ngIf="avalancheProblem().hasElevationLow()">
-        <i class="ph ph-arrow-line-up-right"></i> {{ getElevationLowString() }}
-      </p>
+      @if (avalancheProblem().hasElevationHigh()) {
+        <p>
+          <i class="ph ph-arrow-line-down-right"></i> {{ getElevationHighString() }}
+        </p>
+      }
+      @if (avalancheProblem().hasElevationLow()) {
+        <p>
+          <i class="ph ph-arrow-line-up-right"></i> {{ getElevationLowString() }}
+        </p>
+      }
     </div>
 
     <!-- End altitude-->
   </div>
   <div class="avalanche-problem-preview__actions">
-    <button
-      *ngIf="!disabled() && !isFirst()"
-      [disabled]="disabled()"
-      class="btn btn-sm btn-bare--grey btn-icon"
-      type="button"
-      (click)="moveUpAvalancheProblem($event)"
-      data-toggle="tooltip"
-      title="{{ 'bulletins.create.tooltip.moveUpAvalancheProblem' | translate }}"
-    >
-      <i class="ph ph-arrow-up"></i>
-    </button>
-    <button
-      *ngIf="!disabled() && !isLast()"
-      [disabled]="disabled()"
-      class="btn btn-sm btn-bare--grey btn-icon"
-      type="button"
-      (click)="moveDownAvalancheProblem($event)"
-      data-toggle="tooltip"
-      title="{{ 'bulletins.create.tooltip.moveDownAvalancheProblem' | translate }}"
-    >
-      <i class="ph ph-arrow-down"></i>
-    </button>
+    @if (!disabled() && !isFirst()) {
+      <button
+        [disabled]="disabled()"
+        class="btn btn-sm btn-bare--grey btn-icon"
+        type="button"
+        (click)="moveUpAvalancheProblem($event)"
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.moveUpAvalancheProblem' | translate }}"
+        >
+        <i class="ph ph-arrow-up"></i>
+      </button>
+    }
+    @if (!disabled() && !isLast()) {
+      <button
+        [disabled]="disabled()"
+        class="btn btn-sm btn-bare--grey btn-icon"
+        type="button"
+        (click)="moveDownAvalancheProblem($event)"
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.moveDownAvalancheProblem' | translate }}"
+        >
+        <i class="ph ph-arrow-down"></i>
+      </button>
+    }
 
-    <button
-      *ngIf="!disabled()"
-      [disabled]="disabled()"
-      type="reset"
-      class="btn btn-sm btn-icon btn-bare--grey"
-      (click)="deleteAvalancheProblem($event)"
-      data-toggle="tooltip"
-      title="{{ 'bulletins.create.tooltip.deleteProblem' | translate }}"
-    >
-      <i class="ph ph-trash"></i>
-    </button>
+    @if (!disabled()) {
+      <button
+        [disabled]="disabled()"
+        type="reset"
+        class="btn btn-sm btn-icon btn-bare--grey"
+        (click)="deleteAvalancheProblem($event)"
+        data-toggle="tooltip"
+        title="{{ 'bulletins.create.tooltip.deleteProblem' | translate }}"
+        >
+        <i class="ph ph-trash"></i>
+      </button>
+    }
   </div>
 </div>

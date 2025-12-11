@@ -20,7 +20,7 @@ import { ModalPublishAllComponent } from "./modal-publish-all.component";
 import { ModalPublishComponent } from "./modal-publish.component";
 // modals
 import { ModalSubmitComponent } from "./modal-submit.component";
-import { DatePipe, KeyValue, KeyValuePipe, NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
+import { DatePipe, KeyValue, KeyValuePipe, NgTemplateOutlet } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   Component,
@@ -59,8 +59,6 @@ import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, t
   templateUrl: "create-bulletin.component.html",
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     BsDropdownModule,
     NgTemplateOutlet,
     AvalancheBulletinComponent,
@@ -70,8 +68,8 @@ import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, t
     KeyValuePipe,
     TranslateModule,
     NgxMousetrapDirective,
-    BulletinTextComponent,
-  ],
+    BulletinTextComponent
+],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
   private router = inject(Router);

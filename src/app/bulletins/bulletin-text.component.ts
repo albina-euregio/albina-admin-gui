@@ -7,7 +7,7 @@ import { CopyService } from "../providers/copy-service/copy.service";
 import { createWordDiff } from "../shared/wordDiff";
 import type { TextcatLegacyIn } from "./avalanche-bulletin.component";
 import { HtmlPipe } from "./html.pipe";
-import { NgClass, NgIf, NgFor, UpperCasePipe } from "@angular/common";
+import { NgClass, UpperCasePipe } from "@angular/common";
 import { Component, TemplateRef, input, output, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -17,7 +17,7 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
   selector: "app-bulletin-text",
   templateUrl: "./bulletin-text.component.html",
   standalone: true,
-  imports: [NgClass, NgIf, FormsModule, NgFor, UpperCasePipe, TranslateModule, HtmlPipe],
+  imports: [NgClass, FormsModule, UpperCasePipe, TranslateModule, HtmlPipe],
 })
 export class BulletinTextComponent {
   protected authenticationService = inject(AuthenticationService);

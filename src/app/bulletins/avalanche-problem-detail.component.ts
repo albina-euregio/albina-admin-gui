@@ -8,7 +8,7 @@ import { haveSameElements } from "../shared/compareArrays";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 import { MatrixComponent } from "../shared/matrix.component";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
-import { NgClass, NgFor, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { Component, inject, input, OnChanges, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -21,16 +21,14 @@ import { BsModalService } from "ngx-bootstrap/modal";
   styleUrls: ["avalanche-problem-detail.component.scss"],
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     AvalancheProblemIconsComponent,
     NgClass,
     AspectsComponent,
     FormsModule,
     MatrixParameterComponent,
     MatrixComponent,
-    TranslateModule,
-  ],
+    TranslateModule
+],
 })
 export class AvalancheProblemDetailComponent implements OnChanges {
   authenticationService = inject(AuthenticationService);

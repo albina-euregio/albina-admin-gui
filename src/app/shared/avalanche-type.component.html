@@ -1,3 +1,9 @@
-<div *ngIf="isAvalancheType(avalancheTypeEnum.slab)" style="width: 3rem">SLAB</div>
-<div *ngIf="isAvalancheType(avalancheTypeEnum.loose)" style="width: 3rem">LOOSE</div>
-<div *ngIf="isAvalancheType(avalancheTypeEnum.glide)" style="width: 3rem">GLIDE</div>
+@if (isAvalancheType(avalancheTypeEnum.slab)) {
+  <div style="width: 3rem">SLAB</div>
+}
+@if (isAvalancheType(avalancheTypeEnum.loose)) {
+  <div style="width: 3rem">LOOSE</div>
+}
+@if (isAvalancheType(avalancheTypeEnum.glide)) {
+  <div style="width: 3rem">GLIDE</div>
+}

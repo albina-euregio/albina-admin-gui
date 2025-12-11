@@ -1,11 +1,11 @@
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
-import { NgIf } from "@angular/common";
+
 import { Component, input } from "@angular/core";
 
 @Component({
   standalone: true,
-  imports: [NgIf],
+  imports: [],
   selector: "app-avalanche-problem-icons",
   templateUrl: "./avalanche-problem-icons.component.html",
 })

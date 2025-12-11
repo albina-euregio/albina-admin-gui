@@ -7,60 +7,65 @@
       <div class="form-field-with-toolbar">
         <!-- Toolbar -->
         <div class="btn-group--border form-field-toolbar">
-          <button
-            *ngIf="!enableEditableFields"
-            class="btn btn-sm btn-icon btn-bare"
-            [disabled]="disabled()"
-            type="reset"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
-            (click)="openTextcat()"
-          >
-            <i class="ph ph-pencil-line"></i>
-          </button>
-          <button
-            *ngIf="textField() === 'avActivityComment' && !enableEditableFields"
-            class="btn btn-sm btn-icon btn-bare"
-            [disabled]="disabled()"
-            type="reset"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
-            (click)="openLoadExampleTextModal(loadAvActivityCommentExampleTextTemplate)"
-          >
-            <i class="ph ph-article"></i>
-          </button>
-          <button
-            *ngIf="textField() === 'snowpackStructureComment' && !enableEditableFields"
-            class="btn btn-sm btn-icon btn-bare"
-            [disabled]="disabled()"
-            type="reset"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
-            (click)="openLoadExampleTextModal(loadSnowpackStructureCommentExampleTextTemplate)"
-          >
-            <i class="ph ph-article"></i>
-          </button>
-          <button
-            class="btn btn-sm btn-icon btn-bare"
-            *ngIf="!copyService.isCopyTextcat()"
-            type="reset"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
-            (click)="copyTextcat()"
-          >
-            <i class="ph ph-copy"></i>
-          </button>
-          <button
-            class="btn btn-sm btn-icon btn-bare"
-            *ngIf="copyService.isCopyTextcat()"
-            [disabled]="disabled()"
-            type="reset"
-            data-toggle="tooltip"
-            title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
-            (click)="pasteTextcat()"
-          >
-            <i class="ph ph-clipboard-text"></i>
-          </button>
+          @if (!enableEditableFields) {
+            <button
+              class="btn btn-sm btn-icon btn-bare"
+              [disabled]="disabled()"
+              type="reset"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
+              (click)="openTextcat()"
+              >
+              <i class="ph ph-pencil-line"></i>
+            </button>
+          }
+          @if (textField() === 'avActivityComment' && !enableEditableFields) {
+            <button
+              class="btn btn-sm btn-icon btn-bare"
+              [disabled]="disabled()"
+              type="reset"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
+              (click)="openLoadExampleTextModal(loadAvActivityCommentExampleTextTemplate)"
+              >
+              <i class="ph ph-article"></i>
+            </button>
+          }
+          @if (textField() === 'snowpackStructureComment' && !enableEditableFields) {
+            <button
+              class="btn btn-sm btn-icon btn-bare"
+              [disabled]="disabled()"
+              type="reset"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
+              (click)="openLoadExampleTextModal(loadSnowpackStructureCommentExampleTextTemplate)"
+              >
+              <i class="ph ph-article"></i>
+            </button>
+          }
+          @if (!copyService.isCopyTextcat()) {
+            <button
+              class="btn btn-sm btn-icon btn-bare"
+              type="reset"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
+              (click)="copyTextcat()"
+              >
+              <i class="ph ph-copy"></i>
+            </button>
+          }
+          @if (copyService.isCopyTextcat()) {
+            <button
+              class="btn btn-sm btn-icon btn-bare"
+              [disabled]="disabled()"
+              type="reset"
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
+              (click)="pasteTextcat()"
+              >
+              <i class="ph ph-clipboard-text"></i>
+            </button>
+          }
           <button
             class="btn btn-sm btn-icon btn-bare"
             [disabled]="disabled()"
@@ -68,62 +73,68 @@
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
             (click)="deleteTextcat()"
-          >
+            >
             <i class="ph ph-trash"></i>
           </button>
         </div>
         <!-- End of toolbar -->
-        <div
-          *ngIf="comparedBulletin()"
-          [innerHTML]="createText()"
-          class="form-control"
-          [style.height.px]="rows() * 24 + 13"
-          style="white-space: pre-wrap; overflow-y: auto; resize: vertical"
-        ></div>
-        <textarea
-          *ngIf="!comparedBulletin() && bulletin() && bulletin()[bulletinTextKey]"
-          class="form-control"
-          [rows]="rows()"
-          [disabled]="disabled() || !enableEditableFields"
-          [ngModel]="bulletin()[bulletinTextKey][translateService.getCurrentLang()] | html"
+        @if (comparedBulletin()) {
+          <div
+            [innerHTML]="createText()"
+            class="form-control"
+            [style.height.px]="rows() * 24 + 13"
+            style="white-space: pre-wrap; overflow-y: auto; resize: vertical"
+          ></div>
+        }
+        @if (!comparedBulletin() && bulletin() && bulletin()[bulletinTextKey]) {
+          <textarea
+            class="form-control"
+            [rows]="rows()"
+            [disabled]="disabled() || !enableEditableFields"
+            [ngModel]="bulletin()[bulletinTextKey][translateService.getCurrentLang()] | html"
           (ngModelChange)="
             enableEditableFields && (bulletin()[bulletinTextKey][translateService.getCurrentLang()] = $event)
           "
-          (focusout)="enableEditableFields && updateBulletinOnServer.emit()"
-        ></textarea>
+            (focusout)="enableEditableFields && updateBulletinOnServer.emit()"
+          ></textarea>
+        }
       </div>
     </div>
-    <div *ngIf="showNotes" class="col-5">
-      <label class="form-label">{{ "bulletins.create.label.notes" | translate }} </label>
-      <textarea
-        class="form-control"
-        [rows]="rows()"
-        [disabled]="authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
-        [(ngModel)]="bulletin()[textField() + 'Notes']"
-        (focusout)="updateBulletinOnServer.emit()"
-        placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
-      ></textarea>
-    </div>
+    @if (showNotes) {
+      <div class="col-5">
+        <label class="form-label">{{ "bulletins.create.label.notes" | translate }} </label>
+        <textarea
+          class="form-control"
+          [rows]="rows()"
+          [disabled]="authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
+          [(ngModel)]="bulletin()[textField() + 'Notes']"
+          (focusout)="updateBulletinOnServer.emit()"
+          placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
+        ></textarea>
+      </div>
+    }
   </div>
 
-  <button
-    class="btn btn-sm btn-bare region-form__translation-toggle"
-    type="button"
-    *ngIf="showTranslations"
-    (click)="showTranslations = !showTranslations"
-  >
-    <i class="ph ph-caret-down font-s text-secondary"></i>
-    <span class="font-s text-secondary">{{ "bulletins.create.title.hideTranslations" | translate }}</span>
-  </button>
-  <button
-    class="btn btn-sm btn-bare region-form__translation-toggle"
-    type="button"
-    *ngIf="!showTranslations"
-    (click)="showTranslations = !showTranslations"
-  >
-    <i class="ph ph-caret-right font-s text-secondary"></i>
-    <span class="font-s text-secondary">{{ "bulletins.create.title.showTranslations" | translate }}</span>
-  </button>
+  @if (showTranslations) {
+    <button
+      class="btn btn-sm btn-bare region-form__translation-toggle"
+      type="button"
+      (click)="showTranslations = !showTranslations"
+      >
+      <i class="ph ph-caret-down font-s text-secondary"></i>
+      <span class="font-s text-secondary">{{ "bulletins.create.title.hideTranslations" | translate }}</span>
+    </button>
+  }
+  @if (!showTranslations) {
+    <button
+      class="btn btn-sm btn-bare region-form__translation-toggle"
+      type="button"
+      (click)="showTranslations = !showTranslations"
+      >
+      <i class="ph ph-caret-right font-s text-secondary"></i>
+      <span class="font-s text-secondary">{{ "bulletins.create.title.showTranslations" | translate }}</span>
+    </button>
+  }
 
   <!--
   <button class="btn btn-sm btn-bare region-form__translation-toggle" type="button" (click)="showNotes = !showNotes">
@@ -133,17 +144,21 @@
   </button>
   -->
 
-  <div *ngIf="showTranslations" class="region-form__translation-block">
-    <div *ngFor="let lang of translationLanguages" class="input-group region-form__translation-item">
-      <span class="input-group-text">{{ lang | uppercase }}</span>
-      <textarea
-        class="form-control"
-        [rows]="rows()"
-        disabled
-        [ngModel]="bulletin()[bulletinTextKey][lang] | html"
-      ></textarea>
+  @if (showTranslations) {
+    <div class="region-form__translation-block">
+      @for (lang of translationLanguages; track lang) {
+        <div class="input-group region-form__translation-item">
+          <span class="input-group-text">{{ lang | uppercase }}</span>
+          <textarea
+            class="form-control"
+            [rows]="rows()"
+            disabled
+            [ngModel]="bulletin()[bulletinTextKey][lang] | html"
+          ></textarea>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>
 
 <ng-template #loadAvActivityCommentExampleTextTemplate>

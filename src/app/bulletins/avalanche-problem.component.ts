@@ -2,7 +2,7 @@ import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-desc
 import { BulletinModel } from "../models/bulletin.model";
 import { AvalancheProblemDetailComponent } from "./avalanche-problem-detail.component";
 import { AvalancheProblemPreviewComponent } from "./avalanche-problem-preview.component";
-import { NgIf } from "@angular/common";
+
 import { Component, inject, input, output } from "@angular/core";
 import { BulletinsService } from "app/providers/bulletins-service/bulletins.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
@@ -11,7 +11,7 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
   selector: "app-avalanche-problem",
   templateUrl: "avalanche-problem.component.html",
   standalone: true,
-  imports: [AccordionModule, NgIf, AvalancheProblemPreviewComponent, AvalancheProblemDetailComponent],
+  imports: [AccordionModule, AvalancheProblemPreviewComponent, AvalancheProblemDetailComponent],
 })
 export class AvalancheProblemComponent {
   bulletinsService = inject(BulletinsService);

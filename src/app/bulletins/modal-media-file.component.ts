@@ -2,7 +2,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CreateBulletinComponent } from "./create-bulletin.component";
-import { NgFor, NgIf, DatePipe } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
@@ -15,7 +15,7 @@ import { BsModalRef } from "ngx-bootstrap/modal";
   selector: "app-modal-media-file",
   templateUrl: "modal-media-file.component.html",
   standalone: true,
-  imports: [NgFor, AlertModule, FormsModule, NgIf, DatePipe, TranslateModule],
+  imports: [AlertModule, FormsModule, DatePipe, TranslateModule],
 })
 export class ModalMediaFileComponent {
   bsModalRef = inject(BsModalRef);
