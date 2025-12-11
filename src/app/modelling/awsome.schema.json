@@ -85,8 +85,17 @@
           },
           "url": {
             "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
-            "type": "string",
-            "format": "uri"
+            "anyOf": [
+              {
+                "description": "Absolute URL",
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "description": "Relative URL",
+                "type": "string"
+              }
+            ]
           },
           "values": {
             "type": "array",

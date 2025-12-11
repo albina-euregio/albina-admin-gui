@@ -1,5 +1,7 @@
 import * as z from "zod/v4";
 
+export const UrlSchema = z.union([z.url().describe("Absolute URL"), z.string().describe("Relative URL")]);
+
 export const FilterSelectionValueSchema = z.object({
   borderColor: z.string().optional().describe("Border stroke color"),
   borderWidth: z.number().default(2).optional().describe("Border stroke width"),
@@ -74,10 +76,9 @@ export const FilterSelectionSpecSchema = z.object({
     .describe("Initially selected values, use 'nan' for features w/o specification"),
   stabilityIndex: z.boolean().optional().describe("Whether this filter represents a snowpack stability index"),
   type: z.string().describe("Identifier for this filter"),
-  url: z
-    .url()
-    .optional()
-    .describe("URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated."),
+  url: UrlSchema.optional().describe(
+    "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
+  ),
   values: FilterSelectionValueSchema.array(),
 });
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
