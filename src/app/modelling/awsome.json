@@ -1,6 +1,6 @@
 {
   "$schema": "https://gitlab.com/albina-euregio/albina-admin-gui/-/raw/master/src/app/modelling/awsome.schema.json",
-  "date": "2025-10-24T00:00:00",
+  "date": "2025-12-11T00:00:00",
   "dateStepSeconds": 21600,
   "dateMin": "2025-10-01T00:00:00",
   "dateMax": "2026-05-15T00:00:00",
@@ -13,23 +13,6 @@
   },
   "sources": [
     {
-      "name": "Weather Stations: tirol",
-      "domain": "tirol",
-      "toolchain": "stations-chain",
-      "url": "https://models.avalanche.report/api/vstations",
-      "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>Station:</th><th>{longname} ({name})</th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @ {snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @ {snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>-</td></tr></table>",
-      "detailsTemplates": [
-        {
-          "label": "Stratigraphy",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?service=ps&pro=/var/www/html/tirol/stations-chain/pro/{name}{aspect[1]}.pro&smet=/var/www/html/tirol/stations-chain/pro/{name}.smet'></iframe></div>"
-        },
-        {
-          "label": "Meteograms",
-          "template": "<iframe style='width: 100%; height: 100vh' src='https://winter.avalanche.report/?domain=tirol&poi={name}'></iframe>"
-        }
-      ]
-    },
-    {
       "name": "Gridded: tirol",
       "domain": "tirol",
       "toolchain": "gridded-chain",
@@ -38,11 +21,11 @@
       "detailsTemplates": [
         {
           "label": "Dry-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=tirol&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=tirol&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
         },
         {
           "label": "Wet-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=tirol&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=tirol&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
         },
         {
           "label": "Dry: {vstation}-{aspect[1]}",
@@ -67,11 +50,11 @@
       "detailsTemplates": [
         {
           "label": "Dry-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=stirol&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=stirol&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
         },
         {
           "label": "Wet-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=stirol&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=stirol&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
         },
         {
           "label": "Dry: {vstation}-{aspect[1]}",
@@ -96,11 +79,11 @@
       "detailsTemplates": [
         {
           "label": "Dry-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=etirol&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=etirol&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
         },
         {
           "label": "Wet-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=etirol&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=etirol&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
         },
         {
           "label": "Dry: {vstation}-{aspect[1]}",
@@ -125,11 +108,11 @@
       "detailsTemplates": [
         {
           "label": "Dry-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=trentino&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=trentino&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
         },
         {
           "label": "Wet-Aggregate: {region_id} ({band})",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=trentino&toolchain=gridded-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=trentino&toolchain=gridded-chain&region_id={region_id}&band={band}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
         },
         {
           "label": "Dry: {vstation}-{aspect[1]}",
@@ -146,22 +129,39 @@
       ]
     },
     {
-      "name": "Leo's Spielwiese: carinthia",
-      "domain": "carinthia",
-      "toolchain": "mini-chain",
+      "name": "Weather Stations: tirol",
+      "domain": "tirol",
+      "toolchain": "stations-chain",
+      "url": "https://models.avalanche.report/api/vstations",
+      "tooltipTemplate": "<table cellspacing='1' cellpadding='1'><tr><th>Station:</th><th>{longname} ({name})</th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @ {snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @ {snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>LWC:</td><td>-</td></tr></table>",
+      "detailsTemplates": [
+        {
+          "label": "Stratigraphy",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?service=ps&pro=/var/www/html/tirol/stations-chain/pro/{name}{aspect[1]}.pro&smet=/var/www/html/tirol/stations-chain/pro/{name}.smet'></iframe></div>"
+        },
+        {
+          "label": "Meteograms",
+          "template": "<iframe style='width: 100%; height: 100vh' src='https://winter.avalanche.report/?domain=tirol&poi={name}'></iframe>"
+        }
+      ]
+    },
+    {
+      "name": "Observed profiles: euregio",
+      "domain": "euregio",
+      "toolchain": "snowobs-chain",
       "url": "https://models.avalanche.report/api/vstations",
       "tooltipTemplate": "<div style='max-width:250px;max-height:90px;width:250px;height:90px;overflow:hidden;box-sizing:border-box;padding:2px;border:1px solid #ccc;background:#fff;'><table cellspacing='1' cellpadding='1'><tr><th>{vstation}{aspect[1]}</th><th></th></tr><tr><td>Punstable:</td><td>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td>Sk38:</td><td>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td>Errors:</td><td>{error}</td></tr></table></div>",
       "detailsTemplates": [
         {
-          "label": "Dry instability",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_gridded.html?domain=carinthia&toolchain=mini-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
+          "label": "Dry: {vstation}",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=euregio&toolchain=snowobs-chain&vstation={vstation}&ts={$date}&params=grainshape,profile_sk38,cutlength'></iframe></div>"
         },
         {
-          "label": "Wet instability",
-          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_gridded.html?domain=carinthia&toolchain=mini-chain&vstation={vstation}&aspect={aspect[1]}&ts={$date}&params=grainshape,lwc'></iframe></div>"
+          "label": "Wet: {vstation}",
+          "template": "<div style='width: 100%; height: 100vh'><iframe style='width:100%; height:100vh' src='https://models.avalanche.report/niviz_station.html?domain=euregio&toolchain=snowobs-chain&vstation={vstation}&ts={$date}&params=grainshape,lwc'></iframe></div>"
         },
         {
-          "label": "Meta info",
+          "label": "VStation info",
           "template": "<div style='max-width:860px;max-height:540px;width:860px;height:540px;overflow:auto;box-sizing:border-box;padding:8px;border:1px solid #ccc;background:#fff;'><table cellspacing='0' cellpadding='3' style='table-layout:fixed;width:100%;border-collapse:collapse;font-family:sans-serif;font-size:13px;'><colgroup><col style='width:15%'><col style='width:85%'></colgroup><tr><th colspan='2' style='text-align:left;font-size:13px;padding:2px 0 8px 0;'>{vstation}{aspect[1]}</th></tr><tr><td style='vertical-align:top;padding-right:8px;white-space:nowrap;'>Punstable:</td><td style='vertical-align:top;'>{snp_characteristics.Punstable.value} @{snp_characteristics.Punstable.depth}cm</td></tr><tr><td style='vertical-align:top;padding-right:8px;white-space:nowrap;'>Sk38:</td><td style='vertical-align:top;'>{snp_characteristics.sk38_rta.value} @{snp_characteristics.sk38_rta.depth}cm</td></tr><tr><td style='vertical-align:top;padding-right:8px;white-space:nowrap;'>Error:</td><td style='vertical-align:top;'><pre style='margin:0;display:block;white-space:pre;overflow:auto;max-height:420px;max-width:100%;line-height:1.3;font-family:monospace;-webkit-overflow-scrolling:touch;'>{error}</pre></td></tr></table></div>"
         }
       ]
@@ -321,7 +321,47 @@
         {
           "value": "new_snow",
           "color": "#ffde00",
-          "label": "New snow"
+          "label": "Unburied new snow"
+        },
+        {
+          "value": "shallow_old_snow",
+          "color": "#ffde00",
+          "label": "Unburied old snow"
+        },
+        {
+          "value": "2025-11-23",
+          "color": "#0078ff",
+          "label": "2025-11-23"
+        },
+        {
+          "value": "2025-11-19",
+          "color": "#0078ff",
+          "label": "2025-11-19"
+        },
+        {
+          "value": "2025-11-16",
+          "color": "#0078ff",
+          "label": "2025-11-16"
+        },
+        {
+          "value": "2025-11-15",
+          "color": "#0078ff",
+          "label": "2025-11-15"
+        },
+        {
+          "value": "2025-11-14",
+          "color": "#0078ff",
+          "label": "2025-11-14"
+        },
+        {
+          "value": "2025-11-01",
+          "color": "#0078ff",
+          "label": "2025-11-01"
+        },
+        {
+          "value": "2025-10-29",
+          "color": "#0078ff",
+          "label": "2025-10-29"
         },
         {
           "value": "2025-10-22",
@@ -329,24 +369,14 @@
           "label": "2025-10-22"
         },
         {
-          "value": "2025-10-21",
+          "value": "2025-10-19",
           "color": "#0078ff",
-          "label": "2025-10-21"
-        },
-        {
-          "value": "2025-10-05",
-          "color": "#0078ff",
-          "label": "2025-10-05"
+          "label": "2025-10-19"
         },
         {
           "value": "2025-10-04",
           "color": "#0078ff",
           "label": "2025-10-04"
-        },
-        {
-          "value": "2025-10-03",
-          "color": "#0078ff",
-          "label": "2025-10-03"
         }
       ]
     },
@@ -546,43 +576,48 @@
           "value": "1",
           "color": "#ffde00",
           "label": "small",
+          "legend": "0-26 (small)",
           "labelI18nKey": "avalancheSize.small",
-          "numericRange": [0, 1]
+          "numericRange": [0, 1.5]
         },
         {
           "value": "2",
           "color": "#ffde00",
           "label": "medium",
+          "legend": "26-53 (medium)",
           "labelI18nKey": "avalancheSize.medium",
-          "numericRange": [1, 2]
+          "numericRange": [1.5, 2.5]
         },
         {
           "value": "3",
           "color": "#ffde00",
           "label": "large",
+          "legend": "53-110 (large)",
           "labelI18nKey": "avalancheSize.large",
-          "numericRange": [2, 3]
+          "numericRange": [2.5, 3.5]
         },
         {
           "value": "4",
           "color": "#ffde00",
           "label": "very large",
+          "legend": "110-225 (very large)",
           "labelI18nKey": "avalancheSize.very_large",
-          "numericRange": [3, 4]
+          "numericRange": [3.5, 4.5]
         },
         {
           "value": "5",
           "color": "#ffde00",
           "label": "extreme",
+          "legend": "225-\u221e (extreme)",
           "labelI18nKey": "avalancheSize.extreme",
-          "numericRange": [4, 5]
+          "numericRange": [4.5, 10]
         }
       ]
     },
     {
       "chartRichLabel": "label",
       "chartType": "bar",
-      "label": "24h New Snow (cm)",
+      "label": "24h New Snow / cm",
       "key": "snp_characteristics.hn24",
       "type": "hn24",
       "chartAxisRange": [0, 300],
@@ -655,7 +690,7 @@
     {
       "chartRichLabel": "label",
       "chartType": "bar",
-      "label": "72h New Snow (cm)",
+      "label": "72h New Snow / cm",
       "key": "snp_characteristics.hn72",
       "type": "hn72",
       "chartAxisRange": [0, 300],
@@ -728,7 +763,7 @@
     {
       "chartRichLabel": "label",
       "chartType": "bar",
-      "label": "Snow height (cm)",
+      "label": "Snow height / cm",
       "key": "snp_characteristics.hs",
       "type": "hs",
       "chartAxisRange": [0, 400],
