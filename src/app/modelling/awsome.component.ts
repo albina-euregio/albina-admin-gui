@@ -35,7 +35,6 @@ import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, type Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 import Split from "split.js";
-import { Temporal } from "temporal-polyfill";
 import * as z from "zod/v4";
 
 type AwsomeSource = AwsomeSource0 & { $loading?: Subscription; $error?: unknown };
@@ -105,6 +104,10 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   }
 
   async ngOnInit() {
+    if (!globalThis.Temporal) {
+      await import("temporal-polyfill/global");
+    }
+
     // this.config = (await import("./awsome.json")) as unknown as Awsome;
     this.route.queryParamMap.subscribe((params) => {
       this.configURL = params.get("config") || this.configURL;

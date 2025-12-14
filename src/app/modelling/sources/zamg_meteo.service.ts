@@ -1,7 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ImageOverlay, type LayerGroup, type Map } from "leaflet";
-import { Temporal } from "temporal-polyfill";
 
 function legend(label: string, color: string) {
   return `<i style="color:${color}">■</i> ${label}`;
@@ -200,6 +199,9 @@ class MapLink {
   }
 
   async fetchDate(): Promise<void> {
+    if (!globalThis.Temporal) {
+      await import("temporal-polyfill/global");
+    }
     if (!this.dateHref) {
       return;
     }
