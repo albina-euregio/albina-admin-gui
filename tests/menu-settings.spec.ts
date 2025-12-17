@@ -55,6 +55,8 @@ test("Statistics", async ({ page }) => {
   });
   await test.step("Danger Sources", async () => {
     await page.getByRole("tab", { name: "Danger Sources" }).click();
+    // click on footer to close download menu, which might be displayed on top of the textbox or button
+    await page.locator(".card-footer").nth(1).click();
     await page.getByRole("textbox").fill("02/15/2025 - 02/20/2025");
     await page.getByRole("button", { name: "Download" }).click();
     const downloadPromise = page.waitForEvent("download");

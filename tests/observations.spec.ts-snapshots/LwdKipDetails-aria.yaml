@@ -5,9 +5,9 @@
     - button "→"
     - button "Close"
     - table:
-      - row /Event date Tuesday, December \d+, \d+ at 7:\d+:\d+ PM GMT\+\d+:\d+/:
+      - row /Event date Tuesday, December \d+, \d+, 7:\d+:\d+ PM GMT\+\d+:\d+/:
         - cell "Event date"
-        - cell /Tuesday, December \d+, \d+ at 7:\d+:\d+ PM GMT\+\d+:\d+/
+        - cell /Tuesday, December \d+, \d+, 7:\d+:\d+ PM GMT\+\d+:\d+/
       - row "Report date —":
         - cell "Report date"
         - cell "—"
