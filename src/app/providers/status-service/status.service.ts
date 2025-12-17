@@ -13,4 +13,9 @@ export class StatusService {
     const url = this.constantsService.getServerUrl(`/status/channels`);
     return this.http.get(url).pipe(map((json) => StatusInformationSchema.array().parse(json)));
   }
+
+  triggerStatusChecks(): Observable<StatusInformationModel[]> {
+    const url = this.constantsService.getServerUrl(`/status/channels`);
+    return this.http.post(url, null).pipe(map((json) => StatusInformationSchema.array().parse(json)));
+  }
 }

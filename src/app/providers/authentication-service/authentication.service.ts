@@ -268,17 +268,6 @@ export class AuthenticationService {
     return this.internalRegions.map((r) => r.id).sort((a, b) => a.localeCompare(b));
   }
 
-  public getInternalRegionsWithWhatsApp(): string[] {
-    return this.internalRegions.filter((r) => r.sendWhatsAppMessages).map((r) => r.id);
-  }
-
-  public getInternalRegionsWithTelegram(): string[] {
-    return this.internalRegions.filter((r) => r.sendTelegramMessages).map((r) => r.id);
-  }
-  public getInternalRegionsWithBlog(): string[] {
-    return this.internalRegions.filter((r) => r.publishBlogs).map((r) => r.id);
-  }
-
   public getInternalRegionsWithoutSuperRegions(): string[] {
     return this.internalRegions
       .filter((r) => r.subRegions && r.subRegions.length === 0)

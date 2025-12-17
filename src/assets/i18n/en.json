@@ -1431,5 +1431,9 @@
     "very poor (<=0.5)": "very poor (<=0.5)",
     "very poor (>3)": "very poor (>3)",
     "Wet instability": "Wet instability"
+  },
+  "channelStatus": {
+    "loading": "Loading channel status information...",
+    "triggerStatusChecks": "Trigger status checks"
   }
 }

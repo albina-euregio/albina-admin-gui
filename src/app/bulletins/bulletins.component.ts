@@ -45,6 +45,7 @@ export class BulletinsComponent implements OnDestroy {
   public copying: boolean;
   public readonly postStressLevel = new Subject<StressLevel>();
   public channelStatusInformation: StatusInformationModel[] = [];
+  public channelStatusLoading = false;
 
   constructor() {
     this.copying = false;
@@ -144,8 +145,32 @@ export class BulletinsComponent implements OnDestroy {
   }
 
   loadChannelStatusInformation() {
-    this.statusService.getStatusInformation().subscribe((result) => {
-      this.channelStatusInformation = result;
+    this.channelStatusLoading = true;
+    this.statusService.getStatusInformation().subscribe({
+      next: (result) => {
+        this.channelStatusInformation = result;
+        this.channelStatusLoading = false;
+      },
+      error: (err) => {
+        console.error("Failed to load channel status", err);
+        this.channelStatusInformation = [{ ok: false, title: "Error", message: err.message }];
+        this.channelStatusLoading = false;
+      },
+    });
+  }
+
+  triggerChannelStatusChecks() {
+    this.channelStatusLoading = true;
+
+    this.statusService.triggerStatusChecks().subscribe({
+      next: (result) => {
+        this.channelStatusInformation = result;
+        this.channelStatusLoading = false;
+      },
+      error: (err) => {
+        console.error("Failed to trigger status checks", err);
+        this.channelStatusLoading = false;
+      },
     });
   }
 
