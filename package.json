@@ -14,7 +14,7 @@
     "url": "https://gitlab.com/albina-euregio/albina-admin-gui"
   },
   "angular-cli": {},
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "yarn@4.12.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
