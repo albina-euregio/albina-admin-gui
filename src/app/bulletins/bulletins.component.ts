@@ -9,7 +9,7 @@ import { RegionsService } from "../providers/regions-service/regions.service";
 import { UserService } from "../providers/user-service/user.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
-import { formatDate, NgIf, NgFor, DatePipe } from "@angular/common";
+import { formatDate, DatePipe } from "@angular/common";
 import { Component, OnDestroy, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -21,7 +21,7 @@ import { groupBy, mergeMap } from "rxjs/operators";
 @Component({
   templateUrl: "bulletins.component.html",
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective],
+  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective],
 })
 export class BulletinsComponent implements OnDestroy {
   translate = inject(TranslateService);

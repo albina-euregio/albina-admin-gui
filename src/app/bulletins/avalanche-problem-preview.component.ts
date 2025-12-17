@@ -5,7 +5,7 @@ import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { AvalancheTypeComponent } from "../shared/avalanche-type.component";
 import { DangerRatingComponent } from "../shared/danger-rating.component";
-import { NgIf } from "@angular/common";
+
 import { Component, inject, input, output } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinModel } from "app/models/bulletin.model";
@@ -15,13 +15,12 @@ import { BulletinModel } from "app/models/bulletin.model";
   templateUrl: "avalanche-problem-preview.component.html",
   standalone: true,
   imports: [
-    NgIf,
     DangerRatingComponent,
     AvalancheProblemIconsComponent,
     AvalancheTypeComponent,
     AspectsComponent,
-    TranslateModule,
-  ],
+    TranslateModule
+],
 })
 export class AvalancheProblemPreviewComponent {
   translateService = inject(TranslateService);

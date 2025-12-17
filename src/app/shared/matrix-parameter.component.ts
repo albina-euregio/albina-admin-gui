@@ -3,7 +3,7 @@ import * as Enums from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { DangerRatingComponent } from "./danger-rating.component";
 import { SliderComponent, SliderOptions } from "./slider.component";
-import { NgFor, NgIf } from "@angular/common";
+
 import { Component, inject, input, OnInit, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -14,7 +14,7 @@ import { MatrixInformationModel } from "app/models/matrix-information.model";
   selector: "app-matrix-parameter",
   templateUrl: "matrix-parameter.component.html",
   standalone: true,
-  imports: [NgIf, DangerRatingComponent, NgFor, FormsModule, TranslateModule, SliderComponent],
+  imports: [DangerRatingComponent, FormsModule, TranslateModule, SliderComponent],
 })
 export class MatrixParameterComponent implements OnInit {
   constantsService = inject(ConstantsService);

@@ -3,9 +3,11 @@
     <h1>{{ "bulletins.table.mediaFileDialog.headline" | translate }}</h1>
     <p>{{ date[1] | date: "fullDate" : undefined : translateService.getCurrentLang() }}<br /></p>
   </div>
-  <div *ngFor="let alert of alerts">
-    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
-  </div>
+  @for (alert of alerts; track alert) {
+    <div>
+      <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+    </div>
+  }
   <div class="row">
     <div class="col-lg-12">
       <textarea
@@ -26,7 +28,7 @@
         (change)="selectFile($event)"
         placeholder="Upload file"
         accept="audio/*"
-      />
+        />
     </div>
   </div>
   <div class="row mt-3 mb-5">
@@ -38,7 +40,7 @@
           role="switch"
           id="mediaFileDialogImportant"
           [(ngModel)]="important"
-        />
+          />
         <label class="form-check-label" for="mediaFileDialogImportant">
           {{ "bulletins.table.mediaFileDialog.important" | translate }}
         </label>
@@ -47,12 +49,16 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button *ngIf="!important" type="button" class="btn btn-primary" (click)="mediaFileModalConfirm()">
-    {{ "bulletins.table.mediaFileDialog.accept" | translate }}
-  </button>
-  <button *ngIf="important" type="button" class="btn btn-danger" (click)="mediaFileModalConfirm()">
-    {{ "bulletins.table.mediaFileDialog.accept" | translate }}
-  </button>
+  @if (!important) {
+    <button type="button" class="btn btn-primary" (click)="mediaFileModalConfirm()">
+      {{ "bulletins.table.mediaFileDialog.accept" | translate }}
+    </button>
+  }
+  @if (important) {
+    <button type="button" class="btn btn-danger" (click)="mediaFileModalConfirm()">
+      {{ "bulletins.table.mediaFileDialog.accept" | translate }}
+    </button>
+  }
   <button type="button" class="btn btn-default" (click)="mediaFileModalDecline()">
     {{ "bulletins.table.mediaFileDialog.reject" | translate }}
   </button>

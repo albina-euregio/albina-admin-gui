@@ -3,12 +3,20 @@
   <!-- upper left -->
   <div class="grid-item" [style.background-color]="getColorAbove()"></div>
   <!-- upper right -->
-  <div *ngIf="hasElevationDependency()" class="grid-item" [style.background-color]="getColorBelow()"></div>
+  @if (hasElevationDependency()) {
+    <div class="grid-item" [style.background-color]="getColorBelow()"></div>
+  }
   <!-- lower left -->
-  <div *ngIf="!hasElevationDependency()" class="grid-item" [style.background-color]="getColorAbove()"></div>
+  @if (!hasElevationDependency()) {
+    <div class="grid-item" [style.background-color]="getColorAbove()"></div>
+  }
   <!-- lower left -->
-  <div *ngIf="hasElevationDependency()" class="grid-item" [style.background-color]="getColorBelow()"></div>
+  @if (hasElevationDependency()) {
+    <div class="grid-item" [style.background-color]="getColorBelow()"></div>
+  }
   <!-- lower right -->
-  <div *ngIf="!hasElevationDependency()" class="grid-item" [style.background-color]="getColorAbove()"></div>
+  @if (!hasElevationDependency()) {
+    <div class="grid-item" [style.background-color]="getColorAbove()"></div>
+  }
   <!-- lower right -->
 </div>

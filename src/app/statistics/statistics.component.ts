@@ -1,6 +1,6 @@
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { StatisticsService } from "../providers/statistics-service/statistics.service";
-import { NgIf } from "@angular/common";
+
 import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -12,7 +12,7 @@ import { TabsModule } from "ngx-bootstrap/tabs";
   templateUrl: "statistics.component.html",
   selector: "app-statistics",
   standalone: true,
-  imports: [FormsModule, BsDatepickerModule, NgIf, TranslateModule, TabsModule],
+  imports: [FormsModule, BsDatepickerModule, TranslateModule, TabsModule],
 })
 export class StatisticsComponent {
   statisticsService = inject(StatisticsService);

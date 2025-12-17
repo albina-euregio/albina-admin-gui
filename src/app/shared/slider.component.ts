@@ -1,4 +1,4 @@
-import { NgForOf } from "@angular/common";
+
 import { Component, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
@@ -18,7 +18,7 @@ export interface SliderOptions {
   selector: "app-slider",
   templateUrl: "slider.component.html",
   standalone: true,
-  imports: [TranslateModule, FormsModule, NgForOf],
+  imports: [TranslateModule, FormsModule],
 })
 export class SliderComponent {
   id = input(`app-slider-${uniqueId++}`);

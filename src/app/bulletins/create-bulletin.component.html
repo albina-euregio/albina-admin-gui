@@ -33,24 +33,26 @@
           >
             <i class="ph-bold ph-caret-up"></i>
           </button>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="changeDate(bulletinsService.getPreviousDate())"
-            *ngIf="bulletinsService.getPreviousDate()"
-            ngxMousetrapKey="mod+left"
-          >
-            <i class="ph-bold ph-caret-left"></i>
-          </button>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-bare--grey"
-            (click)="changeDate(bulletinsService.getNextDate())"
-            *ngIf="bulletinsService.getNextDate()"
-            ngxMousetrapKey="mod+right"
-          >
-            <i class="ph-bold ph-caret-right"></i>
-          </button>
+          @if (bulletinsService.getPreviousDate()) {
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-bare--grey"
+              (click)="changeDate(bulletinsService.getPreviousDate())"
+              ngxMousetrapKey="mod+left"
+            >
+              <i class="ph-bold ph-caret-left"></i>
+            </button>
+          }
+          @if (bulletinsService.getNextDate()) {
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-bare--grey"
+              (click)="changeDate(bulletinsService.getNextDate())"
+              ngxMousetrapKey="mod+right"
+            >
+              <i class="ph-bold ph-caret-right"></i>
+            </button>
+          }
         </nav>
       </div>
       <!-- End Date Switch -->
@@ -65,253 +67,290 @@
           <i class="icon-md ph-bold ph-caret-up-down"></i>
         </h2>
 
-        <div *ngIf="!showStatusOfAllRegions">
-          <span
-            *ngIf="
+        @if (!showStatusOfAllRegions) {
+          <div>
+            @if (
               getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.missing ||
               getActiveRegionStatus(bulletinsService.getActiveDate()) === undefined
-            "
-            class="badge bg-danger"
-            ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.draft"
-            class="badge bg-warning"
-            ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted"
-            class="badge bg-primary"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"
-            class="badge bg-success"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated"
-            class="badge bg-orange"
-            ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"
-            class="badge bg-primary"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"
-            class="badge bg-success"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
-          >
-        </div>
+            ) {
+              <span class="badge bg-danger"
+                ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.draft) {
+              <span class="badge bg-warning"
+                ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted) {
+              <span class="badge bg-primary"
+                ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published) {
+              <span class="badge bg-success"
+                ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated) {
+              <span class="badge bg-orange"
+                ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted) {
+              <span class="badge bg-primary"
+                ><i class="ph-bold icon-sm ph-newspaper"></i>
+                {{ "bulletins.table.status.resubmitted" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished) {
+              <span class="badge bg-success"
+                ><i class="ph-bold icon-sm ph-newspaper"></i>
+                {{ "bulletins.table.status.republished" | translate }}</span
+              >
+            }
+          </div>
+        }
       </div>
       <!-- End status-->
 
       <!-- Status of all regions -->
-      <ul *ngIf="showStatusOfAllRegions" class="create-bulletin__bulletin-status">
-        <li>
-          <h5 class="bulletin-status__region-name font-xs text-secondary">
-            {{ regionsService.getRegionName(authenticationService.getActiveRegionId()) }}
-          </h5>
-          <span
-            *ngIf="
+      @if (showStatusOfAllRegions) {
+        <ul class="create-bulletin__bulletin-status">
+          <li>
+            <h5 class="bulletin-status__region-name font-xs text-secondary">
+              {{ regionsService.getRegionName(authenticationService.getActiveRegionId()) }}
+            </h5>
+            @if (
               getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.missing ||
               getActiveRegionStatus(bulletinsService.getActiveDate()) === undefined
-            "
-            class="badge bg-danger"
-            ><i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.draft"
-            class="badge bg-warning"
-            ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted"
-            class="badge bg-primary"
-            ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published"
-            class="badge bg-success"
-            ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated"
-            class="badge bg-orange"
-            ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"
-            class="badge bg-primary"
-            ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
-          >
-          <span
-            *ngIf="getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished"
-            class="badge bg-success"
-            ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
-          >
-        </li>
-        <li *ngFor="let region of authenticationService.getActiveRegion().neighborRegions">
-          <h5 class="bulletin-status__region-name font-xs text-secondary">
-            {{ regionsService.getRegionName(region) }}
-          </h5>
-          <span
-            *ngIf="
-              getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.missing ||
-              getRegionStatus(region, bulletinsService.getActiveDate()) === undefined
-            "
-            class="badge bg-danger"
-            ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
-          >
-          <span
-            *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.draft"
-            class="badge bg-warning"
-            ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
-          >
-          <span
-            *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.submitted"
-            class="badge bg-primary"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
-          >
-          <span
-            *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.published"
-            class="badge bg-success"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
-          >
-          <span
-            *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.updated"
-            class="badge bg-orange"
-            ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
-          >
-          <span
-            *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.resubmitted"
-            class="badge bg-primary"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
-          >
-          <span
-            *ngIf="getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.republished"
-            class="badge bg-success"
-            ><i class="ph-bold icon-sm ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
-          >
-        </li>
-      </ul>
+            ) {
+              <span class="badge bg-danger"
+                ><i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.draft) {
+              <span class="badge bg-warning"
+                ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.submitted) {
+              <span class="badge bg-primary"
+                ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.submitted" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.published) {
+              <span class="badge bg-success"
+                ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.updated) {
+              <span class="badge bg-orange"
+                ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.resubmitted) {
+              <span class="badge bg-primary"
+                ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
+              >
+            }
+            @if (getActiveRegionStatus(bulletinsService.getActiveDate()) === bulletinStatus.republished) {
+              <span class="badge bg-success"
+                ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
+              >
+            }
+          </li>
+          @for (region of authenticationService.getActiveRegion().neighborRegions; track region) {
+            <li>
+              <h5 class="bulletin-status__region-name font-xs text-secondary">
+                {{ regionsService.getRegionName(region) }}
+              </h5>
+              @if (
+                getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.missing ||
+                getRegionStatus(region, bulletinsService.getActiveDate()) === undefined
+              ) {
+                <span class="badge bg-danger"
+                  ><i class="ph-bold icon-sm ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.draft) {
+                <span class="badge bg-warning"
+                  ><i class="ph-bold icon-sm ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.submitted) {
+                <span class="badge bg-primary"
+                  ><i class="ph-bold icon-sm ph-newspaper"></i>
+                  {{ "bulletins.table.status.submitted" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.published) {
+                <span class="badge bg-success"
+                  ><i class="ph-bold icon-sm ph-newspaper"></i>
+                  {{ "bulletins.table.status.published" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.updated) {
+                <span class="badge bg-orange"
+                  ><i class="ph-bold icon-sm ph-file-dashed"></i>
+                  {{ "bulletins.table.status.updated" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.resubmitted) {
+                <span class="badge bg-primary"
+                  ><i class="ph-bold icon-sm ph-newspaper"></i>
+                  {{ "bulletins.table.status.resubmitted" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, bulletinsService.getActiveDate()) === bulletinStatus.republished) {
+                <span class="badge bg-success"
+                  ><i class="ph-bold icon-sm ph-newspaper"></i>
+                  {{ "bulletins.table.status.republished" | translate }}</span
+                >
+              }
+            </li>
+          }
+        </ul>
+      }
       <!-- End status of all regions-->
 
-      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt5PM(bulletinsService.getActiveDate())"
-        ><i class="ph ph-info"></i> {{ "bulletins.status.submittedInfo" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappensAt8AM(bulletinsService.getActiveDate())"
-        ><i class="ph ph-info"></i> {{ "bulletins.status.resubmittedInfo" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-info" *ngIf="showPublicationHappened(bulletinsService.getActiveDate())"
-        ><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-info" *ngIf="showNoPublicationWillHappen(bulletinsService.getActiveDate())"
-        ><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-info" *ngIf="loadingPreview"
-        ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loadingPreview" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-info" *ngIf="loading"
-        ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loading" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-info" *ngIf="publishing"
-        ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.publishing" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-info" *ngIf="submitting"
-        ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.submitting" | translate }}</span
-      >
-      <span class="create-bulletin__bulletin-alert" *ngIf="saveError.size" (click)="updateSaveErrors()"
-        ><i class="ph ph-warning icon-left"></i> {{ "bulletins.status.saveError" | translate }}
-        <button class="btn btn-outline btn-danger btn-small lm-2">
-          <i class="ph ph-repeat icon-right"></i>
-        </button>
-      </span>
-      <span class="create-bulletin__bulletin-warning" *ngIf="loadInternalBulletinsError"
-        ><i class="ph ph-info"></i> {{ "bulletins.status.loadBulletinsError" | translate }}</span
-      >
+      @if (showPublicationHappensAt5PM(bulletinsService.getActiveDate())) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-info"></i> {{ "bulletins.status.submittedInfo" | translate }}</span
+        >
+      }
+      @if (showPublicationHappensAt8AM(bulletinsService.getActiveDate())) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-info"></i> {{ "bulletins.status.resubmittedInfo" | translate }}</span
+        >
+      }
+      @if (showPublicationHappened(bulletinsService.getActiveDate())) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-info"></i> {{ "bulletins.status.publishedInfo" | translate }}</span
+        >
+      }
+      @if (showNoPublicationWillHappen(bulletinsService.getActiveDate())) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-info"></i> {{ "bulletins.status.noPublicationInfo" | translate }}</span
+        >
+      }
+      @if (loadingPreview) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loadingPreview" | translate }}</span
+        >
+      }
+      @if (loading) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.loading" | translate }}</span
+        >
+      }
+      @if (publishing) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.publishing" | translate }}</span
+        >
+      }
+      @if (submitting) {
+        <span class="create-bulletin__bulletin-info"
+          ><i class="ph ph-circle-notch"></i> {{ "bulletins.status.submitting" | translate }}</span
+        >
+      }
+      @if (saveError.size) {
+        <span class="create-bulletin__bulletin-alert" (click)="updateSaveErrors()"
+          ><i class="ph ph-warning icon-left"></i> {{ "bulletins.status.saveError" | translate }}
+          <button class="btn btn-outline btn-danger btn-small lm-2">
+            <i class="ph ph-repeat icon-right"></i>
+          </button>
+        </span>
+      }
+      @if (loadInternalBulletinsError) {
+        <span class="create-bulletin__bulletin-warning"
+          ><i class="ph ph-info"></i> {{ "bulletins.status.loadBulletinsError" | translate }}</span
+        >
+      }
 
       <!-- submit -->
-      <button
-        *ngIf="showSubmitButton(bulletinsService.getActiveDate())"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
-        (click)="submit($event, bulletinsService.getActiveDate())"
-        ngxMousetrapKey="mod+enter"
-      >
-        <i class="ph ph-paper-plane-tilt"></i>
-        <span>{{ "bulletins.tooltip.submit" | translate }}</span>
-      </button>
+      @if (showSubmitButton(bulletinsService.getActiveDate())) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
+          (click)="submit($event, bulletinsService.getActiveDate())"
+          ngxMousetrapKey="mod+enter"
+        >
+          <i class="ph ph-paper-plane-tilt"></i>
+          <span>{{ "bulletins.tooltip.submit" | translate }}</span>
+        </button>
+      }
 
       <!-- update -->
-      <button
-        *ngIf="showUpdateButton(bulletinsService.getActiveDate())"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
-        (click)="createUpdate($event)"
-        ngxMousetrapKey="e"
-      >
-        <i class="ph ph-pencil"></i>
-        <span>{{ "bulletins.tooltip.update" | translate }}</span>
-      </button>
+      @if (showUpdateButton(bulletinsService.getActiveDate())) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-outline-primary btn-sm create-bulletin__action-buttons"
+          (click)="createUpdate($event)"
+          ngxMousetrapKey="e"
+        >
+          <i class="ph ph-pencil"></i>
+          <span>{{ "bulletins.tooltip.update" | translate }}</span>
+        </button>
+      }
 
       <!-- publish update (not 5PM nor 8AM) -->
-      <button
-        *ngIf="showPublishButton(bulletinsService.getActiveDate())"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
-        (click)="publish($event, bulletinsService.getActiveDate())"
-        ngxMousetrapKey="mod+enter"
-      >
-        <i class="ph ph-paper-plane-tilt"></i>
-        <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
-      </button>
+      @if (showPublishButton(bulletinsService.getActiveDate())) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
+          (click)="publish($event, bulletinsService.getActiveDate())"
+          ngxMousetrapKey="mod+enter"
+        >
+          <i class="ph ph-paper-plane-tilt"></i>
+          <span>{{ "bulletins.tooltip.publishUpdate" | translate }}</span>
+        </button>
+      }
 
       <!-- publish change (not 5PM nor 8AM, no messages) -->
-      <button
-        *ngIf="showPublishButton(bulletinsService.getActiveDate())"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
-        (click)="publish($event, bulletinsService.getActiveDate(), true)"
-        ngxMousetrapKey="mod+shift+enter"
-      >
-        <i class="ph ph-paper-plane-tilt"></i>
-        <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
-      </button>
+      @if (showPublishButton(bulletinsService.getActiveDate())) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
+          (click)="publish($event, bulletinsService.getActiveDate(), true)"
+          ngxMousetrapKey="mod+shift+enter"
+        >
+          <i class="ph ph-paper-plane-tilt"></i>
+          <span>{{ "bulletins.tooltip.publishChange" | translate }}</span>
+        </button>
+      }
 
       <!-- check -->
-      <button
-        *ngIf="showCheckButton(bulletinsService.getActiveDate())"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
-        (click)="check($event, bulletinsService.getActiveDate())"
-      >
-        <i class="ph ph-check"></i>
-        <span>{{ "bulletins.tooltip.check" | translate }}</span>
-      </button>
+      @if (showCheckButton(bulletinsService.getActiveDate())) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-outline-primary btn-sm create-bulletin__action-buttons flex-grow-1"
+          (click)="check($event, bulletinsService.getActiveDate())"
+        >
+          <i class="ph ph-check"></i>
+          <span>{{ "bulletins.tooltip.check" | translate }}</span>
+        </button>
+      }
     </header>
     <!-- End sidebar header -->
 
     <!-- Overall headline -->
-    <div
-      *ngIf="activeBulletin && authenticationService.getActiveRegion()?.enableGeneralHeadline"
-      class="create-bulletin__general-headline"
-    >
-      <app-bulletin-text
-        [textField]="TextcatTextfield.generalHeadlineComment"
-        [rows]="2"
-        [bulletin]="activeBulletin"
-        [disabled]="isDisabled()"
-        (updateBulletinOnServer)="updateBulletinOnServer(activeBulletin)"
-      />
-    </div>
+    @if (activeBulletin && authenticationService.getActiveRegion()?.enableGeneralHeadline) {
+      <div class="create-bulletin__general-headline">
+        <app-bulletin-text
+          [textField]="TextcatTextfield.generalHeadlineComment"
+          [rows]="2"
+          [bulletin]="activeBulletin"
+          [disabled]="isDisabled()"
+          (updateBulletinOnServer)="updateBulletinOnServer(activeBulletin)"
+        />
+      </div>
+    }
     <!-- end overall headline -->
 
     <!-- List of regions -->
@@ -334,10 +373,18 @@
               <!-- map above / map aside -->
               <li>
                 <button class="dropdown-item" (click)="toggleCompactMapLayout(); dropdown.hide()" ngxMousetrapKey="v">
-                  <i *ngIf="isCompactMapLayout" class="ph icon-md ph-square-split-horizontal"></i>
-                  <i *ngIf="!isCompactMapLayout" class="ph icon-md ph-square-split-vertical"></i>
-                  <span *ngIf="isCompactMapLayout">{{ "bulletins.create.mapLeft" | translate }}</span>
-                  <span *ngIf="!isCompactMapLayout">{{ "bulletins.create.mapTop" | translate }}</span>
+                  @if (isCompactMapLayout) {
+                    <i class="ph icon-md ph-square-split-horizontal"></i>
+                  }
+                  @if (!isCompactMapLayout) {
+                    <i class="ph icon-md ph-square-split-vertical"></i>
+                  }
+                  @if (isCompactMapLayout) {
+                    <span>{{ "bulletins.create.mapLeft" | translate }}</span>
+                  }
+                  @if (!isCompactMapLayout) {
+                    <span>{{ "bulletins.create.mapTop" | translate }}</span>
+                  }
                 </button>
               </li>
 
@@ -348,99 +395,112 @@
                   (click)="toggleShowExternalRegions(); dropdown.hide()"
                   ngxMousetrapKey="h"
                 >
-                  <i *ngIf="showExternRegions" class="ph icon-md ph-eye-slash"></i>
-                  <i *ngIf="!showExternRegions" class="ph icon-md ph-eye"></i>
-                  <span *ngIf="showExternRegions">{{ "bulletins.create.hideExternalRegions" | translate }}</span>
-                  <span *ngIf="!showExternRegions">{{ "bulletins.create.showExternalRegions" | translate }}</span>
+                  @if (showExternRegions) {
+                    <i class="ph icon-md ph-eye-slash"></i>
+                  }
+                  @if (!showExternRegions) {
+                    <i class="ph icon-md ph-eye"></i>
+                  }
+                  @if (showExternRegions) {
+                    <span>{{ "bulletins.create.hideExternalRegions" | translate }}</span>
+                  }
+                  @if (!showExternRegions) {
+                    <span>{{ "bulletins.create.showExternalRegions" | translate }}</span>
+                  }
                 </button>
               </li>
 
               <!-- load bulletin from yesterday -->
               <li>
-                <button
-                  *ngIf="
-                    (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) ||
-                    localStorageService.isTrainingEnabled
-                  "
-                  [disabled]="editRegions || loading"
-                  type="reset"
-                  class="dropdown-item"
-                  (click)="loadBulletinsFromYesterday(); dropdown.hide()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
-                  ngxMousetrapKey="y"
-                >
-                  <i class="ph-bold ph-copy icon-md"></i>
-                  {{ "bulletins.create.tooltip.loadBulletin" | translate }}
-                </button>
+                @if (
+                  (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) ||
+                  localStorageService.isTrainingEnabled
+                ) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="loadBulletinsFromYesterday(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.loadBulletin' | translate }}"
+                    ngxMousetrapKey="y"
+                  >
+                    <i class="ph-bold ph-copy icon-md"></i>
+                    {{ "bulletins.create.tooltip.loadBulletin" | translate }}
+                  </button>
+                }
               </li>
 
               <!-- preview -->
               <li>
-                <button
-                  *ngIf="showPreviewButton()"
-                  [disabled]="editRegions || loading"
-                  type="reset"
-                  class="dropdown-item"
-                  (click)="preview(); dropdown.hide()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.tooltip.preview' | translate }}"
-                  ngxMousetrapKey="p"
-                >
-                  <i class="ph-bold ph-eye icon-md"></i>
-                  {{ "bulletins.tooltip.preview" | translate }}
-                </button>
+                @if (showPreviewButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="preview(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.preview' | translate }}"
+                    ngxMousetrapKey="p"
+                  >
+                    <i class="ph-bold ph-eye icon-md"></i>
+                    {{ "bulletins.tooltip.preview" | translate }}
+                  </button>
+                }
               </li>
 
               <!-- media file -->
               <li>
-                <button
-                  *ngIf="showMediaFileButton()"
-                  [disabled]="editRegions || loading"
-                  type="reset"
-                  class="dropdown-item"
-                  (click)="openMediaFileModal(); dropdown.hide()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
-                  ngxMousetrapKey="m"
-                >
-                  <i class="ph-bold ph-microphone icon-md"></i>
-                  {{ "bulletins.tooltip.mediaFile" | translate }}
-                </button>
+                @if (showMediaFileButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="reset"
+                    class="dropdown-item"
+                    (click)="openMediaFileModal(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.mediaFile' | translate }}"
+                    ngxMousetrapKey="m"
+                  >
+                    <i class="ph-bold ph-microphone icon-md"></i>
+                    {{ "bulletins.tooltip.mediaFile" | translate }}
+                  </button>
+                }
               </li>
 
               <!-- load suggestion from danger sources  -->
               <li>
-                <button
-                  *ngIf="showLoadSuggestionFromDangerSourcesButton()"
-                  [disabled]="editRegions || loading"
-                  type="button"
-                  class="dropdown-item"
-                  (click)="loadSuggestionFromDangerSources()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.tooltip.loadSuggestionFromDangerSources' | translate }}"
-                  ngxMousetrapKey="d"
-                >
-                  <i class="ph-bold ph-magic-wand icon-md"></i>
-                  {{ "bulletins.tooltip.loadSuggestionFromDangerSources" | translate }}
-                </button>
+                @if (showLoadSuggestionFromDangerSourcesButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="loadSuggestionFromDangerSources()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.loadSuggestionFromDangerSources' | translate }}"
+                    ngxMousetrapKey="d"
+                  >
+                    <i class="ph-bold ph-magic-wand icon-md"></i>
+                    {{ "bulletins.tooltip.loadSuggestionFromDangerSources" | translate }}
+                  </button>
+                }
               </li>
 
               <!-- delete all warning regions  -->
               <li>
-                <button
-                  *ngIf="showDeleteAllWarningRegionsButton()"
-                  [disabled]="editRegions || loading"
-                  type="button"
-                  class="dropdown-item"
-                  (click)="deleteAllWarningRegions()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.tooltip.deleteAllWarningRegions' | translate }}"
-                  ngxMousetrapKey="del"
-                >
-                  <i class="ph-bold ph-trash icon-md"></i>
-                  {{ "bulletins.tooltip.deleteAllWarningRegions" | translate }}
-                </button>
+                @if (showDeleteAllWarningRegionsButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="deleteAllWarningRegions()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.deleteAllWarningRegions' | translate }}"
+                    ngxMousetrapKey="del"
+                  >
+                    <i class="ph-bold ph-trash icon-md"></i>
+                    {{ "bulletins.tooltip.deleteAllWarningRegions" | translate }}
+                  </button>
+                }
               </li>
 
               <li>
@@ -449,19 +509,20 @@
 
               <!-- upload json -->
               <li>
-                <button
-                  *ngIf="bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()"
-                  [disabled]="editRegions || loading"
-                  type="button"
-                  class="dropdown-item"
-                  (click)="jsonBulletinUploader.click(); dropdown.hide()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
-                  ngxMousetrapKey="j u"
-                >
-                  <i class="ph-bold ph-upload-simple icon-md"></i>
-                  {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
-                </button>
+                @if (bulletinsService.getIsEditable() && !bulletinsService.getIsReadOnly()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="jsonBulletinUploader.click(); dropdown.hide()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.uploadJsonBulletin' | translate }}"
+                    ngxMousetrapKey="j u"
+                  >
+                    <i class="ph-bold ph-upload-simple icon-md"></i>
+                    {{ "bulletins.create.tooltip.uploadJsonBulletin" | translate }}
+                  </button>
+                }
               </li>
 
               <!-- download json -->
@@ -486,51 +547,54 @@
 
               <!-- info -->
               <li>
-                <button
-                  *ngIf="showInfoButton()"
-                  [disabled]="editRegions || loading"
-                  type="button"
-                  class="dropdown-item"
-                  (click)="showPublicationInfo()"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.tooltip.info' | translate }}"
-                  ngxMousetrapKey="s"
-                >
-                  <i class="ph-bold ph-info icon-md"></i>
-                  {{ "bulletins.tooltip.info" | translate }}
-                </button>
+                @if (showInfoButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="showPublicationInfo()"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.info' | translate }}"
+                    ngxMousetrapKey="s"
+                  >
+                    <i class="ph-bold ph-info icon-md"></i>
+                    {{ "bulletins.tooltip.info" | translate }}
+                  </button>
+                }
               </li>
 
               <!-- publish all -->
               <li>
-                <button
-                  *ngIf="showPublishAllButton()"
-                  [disabled]="editRegions || loading"
-                  type="button"
-                  class="dropdown-item"
-                  (click)="publishAll(false)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.tooltip.publishAll' | translate }}"
-                  ngxMousetrapKey="p"
-                >
-                  <i class="ph-bold ph-warning icon-md"></i>
-                  {{ "bulletins.tooltip.publishAll" | translate }}
-                </button>
+                @if (showPublishAllButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="publishAll(false)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.publishAll' | translate }}"
+                    ngxMousetrapKey="p"
+                  >
+                    <i class="ph-bold ph-warning icon-md"></i>
+                    {{ "bulletins.tooltip.publishAll" | translate }}
+                  </button>
+                }
               </li>
               <li>
-                <button
-                  *ngIf="showPublishAllButton()"
-                  [disabled]="editRegions || loading"
-                  type="button"
-                  class="dropdown-item"
-                  (click)="publishAll(true)"
-                  data-toggle="tooltip"
-                  title="{{ 'bulletins.tooltip.publishAllNoMessages' | translate }}"
-                  ngxMousetrapKey="p"
-                >
-                  <i class="ph-bold ph-warning icon-md"></i>
-                  {{ "bulletins.tooltip.publishAllNoMessages" | translate }}
-                </button>
+                @if (showPublishAllButton()) {
+                  <button
+                    [disabled]="editRegions || loading"
+                    type="button"
+                    class="dropdown-item"
+                    (click)="publishAll(true)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.tooltip.publishAllNoMessages' | translate }}"
+                    ngxMousetrapKey="p"
+                  >
+                    <i class="ph-bold ph-warning icon-md"></i>
+                    {{ "bulletins.tooltip.publishAllNoMessages" | translate }}
+                  </button>
+                }
               </li>
 
               <!--- dummy button to hide dropdown -->
@@ -539,30 +603,36 @@
               </li>
             </ul>
           </div>
-          <button
-            [disabled]="editRegions || loading"
-            *ngIf="bulletinsService.getIsEditable() && !this.copyService.isCopyBulletin()"
-            (click)="createBulletin(false)"
-            class="btn btn-sm btn-icon btn-primary"
-            type="button"
-            title="{{ 'bulletins.create.createAggregatedRegion' | translate }}"
-            ngxMousetrapKey="c r"
-          >
-            <i class="ph-bold ph-plus"></i>
-          </button>
+          @if (bulletinsService.getIsEditable() && !this.copyService.isCopyBulletin()) {
+            <button
+              [disabled]="editRegions || loading"
+              (click)="createBulletin(false)"
+              class="btn btn-sm btn-icon btn-primary"
+              type="button"
+              title="{{ 'bulletins.create.createAggregatedRegion' | translate }}"
+              ngxMousetrapKey="c r"
+            >
+              <i class="ph-bold ph-plus"></i>
+            </button>
+          }
         </div>
       </header>
       <!-- End own regions header -->
       <!-- List of own regions -->
       <nav class="create-bulletin__region-list">
         <!-- Show the list of bulletins if there are any -->
-        <ng-container *ngIf="getOwnBulletins().length; else noBulletinsTemplate">
-          <ng-container *ngFor="let bulletin of getOwnBulletins(); let i = index">
+        @if (getOwnBulletins().length) {
+          @for (bulletin of getOwnBulletins(); track bulletin; let i = $index) {
             <ng-container
               *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: i + 1 }"
             ></ng-container>
-          </ng-container>
-        </ng-container>
+          }
+        } @else {
+          <div class="create-bulletin__nobulletins">
+            <i class="ph ph-mountains"></i>
+            <p>{{ "bulletins.create.noBulletinsForSelectedDay" | translate }}</p>
+          </div>
+        }
       </nav>
     </div>
 
@@ -579,54 +649,73 @@
         <div class="btn-group region-divider__actions">
           <div class="region-divider__actions-dropdown mr-1">
             <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
-              <i *ngIf="!showForeignRegions" class="ph-bold ph-caret-right"></i>
-              <i *ngIf="showForeignRegions" class="ph-bold ph-caret-down"></i>
+              @if (!showForeignRegions) {
+                <i class="ph-bold ph-caret-right"></i>
+              }
+              @if (showForeignRegions) {
+                <i class="ph-bold ph-caret-down"></i>
+              }
             </button>
           </div>
         </div>
       </header>
       <!-- List of foreign regions -->
-      <nav *ngIf="showForeignRegions" class="create-bulletin__region-list">
-        <ng-container *ngFor="let bulletin of getForeignBulletins(); let i = index">
-          <ng-container
-            *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: i + getOwnBulletins().length + 1 }"
-          ></ng-container>
-        </ng-container>
-      </nav>
+      @if (showForeignRegions) {
+        <nav class="create-bulletin__region-list">
+          @for (bulletin of getForeignBulletins(); track bulletin; let i = $index) {
+            <ng-container
+              *ngTemplateOutlet="
+                bulletinTemplate;
+                context: { bulletin: bulletin, key: i + getOwnBulletins().length + 1 }
+              "
+            ></ng-container>
+          }
+        </nav>
+      }
     </div>
 
     <!-- External regions -->
-    <div *ngIf="hasExternalRegions()" class="create-bulletin__regions">
-      <ng-container
-        *ngFor="let externalRegion of getExternalRegionsMap() | keyvalue; trackBy: trackByApiUrl; let i = index"
-      >
-        <header
-          class="create-bulletin__region-divider foreign"
-          (click)="toggleShowExternalRegionsList(externalRegion.key)"
-          ngxMousetrapKey="f {{ i + 1 }}"
-        >
-          <h5 class="font-s-medium">
-            {{ externalRegion.value.server.name }} ({{ externalRegion.value.bulletins.length }})
-          </h5>
-          <div class="btn-group region-divider__actions">
-            <div class="region-divider__actions-dropdown mr-1">
-              <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
-                <i *ngIf="!showExternalRegions(externalRegion.key)" class="ph-bold ph-caret-right"></i>
-                <i *ngIf="showExternalRegions(externalRegion.key)" class="ph-bold ph-caret-down"></i>
-              </button>
+    @if (hasExternalRegions()) {
+      <div class="create-bulletin__regions">
+        @for (
+          externalRegion of getExternalRegionsMap() | keyvalue;
+          track trackByApiUrl(i, externalRegion);
+          let i = $index
+        ) {
+          <header
+            class="create-bulletin__region-divider foreign"
+            (click)="toggleShowExternalRegionsList(externalRegion.key)"
+            ngxMousetrapKey="f {{ i + 1 }}"
+          >
+            <h5 class="font-s-medium">
+              {{ externalRegion.value.server.name }} ({{ externalRegion.value.bulletins.length }})
+            </h5>
+            <div class="btn-group region-divider__actions">
+              <div class="region-divider__actions-dropdown mr-1">
+                <button class="btn btn-sm btn-icon btn-bare--grey" type="button">
+                  @if (!showExternalRegions(externalRegion.key)) {
+                    <i class="ph-bold ph-caret-right"></i>
+                  }
+                  @if (showExternalRegions(externalRegion.key)) {
+                    <i class="ph-bold ph-caret-down"></i>
+                  }
+                </button>
+              </div>
             </div>
-          </div>
-        </header>
-        <!-- List of external regions -->
-        <nav *ngIf="showExternalRegions(externalRegion.key)" class="create-bulletin__region-list">
-          <ng-container *ngFor="let bulletin of externalRegion.value.bulletins">
-            <ng-container
-              *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: undefined }"
-            ></ng-container>
-          </ng-container>
-        </nav>
-      </ng-container>
-    </div>
+          </header>
+          <!-- List of external regions -->
+          @if (showExternalRegions(externalRegion.key)) {
+            <nav class="create-bulletin__region-list">
+              @for (bulletin of externalRegion.value.bulletins; track bulletin) {
+                <ng-container
+                  *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: undefined }"
+                ></ng-container>
+              }
+            </nav>
+          }
+        }
+      </div>
+    }
     <!-- End list of regions -->
   </aside>
   <!-- End Sidebar -->
@@ -642,46 +731,48 @@
     [class.full-width]="!isBulletinSidebarVisible"
   >
     <!-- Active bulletin -->
-    <div
-      *ngIf="activeBulletin && !showNewBulletinModal"
-      class="create-bulletin__region-form"
-      (scroll)="updateBulletinScroll('scrollActiveBulletin', $event)"
-      #scrollActiveBulletin
-    >
-      <app-avalanche-bulletin
-        [bulletin]="activeBulletin"
-        [comparedBulletin]="comparedBulletin"
-        [disabled]="isDisabled()"
-        [isCompactMapLayout]="isCompactMapLayout"
-        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
-        [isComparedBulletin]="false"
-        (updateBulletinOnServerEvent)="updateBulletinOnServer($event)"
-        (deleteBulletinEvent)="eventDeleteBulletin($event)"
-        (editMicroRegionsEvent)="eventEditMicroRegions($event)"
-        (copyBulletinEvent)="eventCopyBulletin($event)"
-        (deselectBulletinEvent)="eventDeselectBulletin()"
-        (toggleBulletinSidebarEvent)="toggleBulletinSidebar()"
-        (undoRedoEvent)="undoRedoActiveBulletin($event)"
-      ></app-avalanche-bulletin>
-    </div>
+    @if (activeBulletin && !showNewBulletinModal) {
+      <div
+        class="create-bulletin__region-form"
+        (scroll)="updateBulletinScroll('scrollActiveBulletin', $event)"
+        #scrollActiveBulletin
+      >
+        <app-avalanche-bulletin
+          [bulletin]="activeBulletin"
+          [comparedBulletin]="comparedBulletin"
+          [disabled]="isDisabled()"
+          [isCompactMapLayout]="isCompactMapLayout"
+          [isBulletinSidebarVisible]="isBulletinSidebarVisible"
+          [isComparedBulletin]="false"
+          (updateBulletinOnServerEvent)="updateBulletinOnServer($event)"
+          (deleteBulletinEvent)="eventDeleteBulletin($event)"
+          (editMicroRegionsEvent)="eventEditMicroRegions($event)"
+          (copyBulletinEvent)="eventCopyBulletin($event)"
+          (deselectBulletinEvent)="eventDeselectBulletin()"
+          (toggleBulletinSidebarEvent)="toggleBulletinSidebar()"
+          (undoRedoEvent)="undoRedoActiveBulletin($event)"
+        ></app-avalanche-bulletin>
+      </div>
+    }
     <!-- End Active bulletin -->
     <!-- Compared bulletin -->
-    <div
-      *ngIf="comparedBulletin && !showNewBulletinModal"
-      class="create-bulletin__region-form"
-      (scroll)="updateBulletinScroll('scrollComparedBulletin', $event)"
-      #scrollComparedBulletin
-    >
-      <app-avalanche-bulletin
-        [bulletin]="comparedBulletin"
-        [comparedBulletin]="activeBulletin"
-        [disabled]="true"
-        [isCompactMapLayout]="isCompactMapLayout"
-        [isBulletinSidebarVisible]="isBulletinSidebarVisible"
-        [isComparedBulletin]="true"
-        (deselectBulletinEvent)="eventDeselectComparedBulletin()"
-      ></app-avalanche-bulletin>
-    </div>
+    @if (comparedBulletin && !showNewBulletinModal) {
+      <div
+        class="create-bulletin__region-form"
+        (scroll)="updateBulletinScroll('scrollComparedBulletin', $event)"
+        #scrollComparedBulletin
+      >
+        <app-avalanche-bulletin
+          [bulletin]="comparedBulletin"
+          [comparedBulletin]="activeBulletin"
+          [disabled]="true"
+          [isCompactMapLayout]="isCompactMapLayout"
+          [isBulletinSidebarVisible]="isBulletinSidebarVisible"
+          [isComparedBulletin]="true"
+          (deselectBulletinEvent)="eventDeselectComparedBulletin()"
+        ></app-avalanche-bulletin>
+      </div>
+    }
     <!-- End Compared bulletin -->
 
     <!-- Map -->
@@ -691,30 +782,32 @@
         <i class="ph ph-sidebar"></i>
       </button>
       <!-- End Bulletin Sidebar toggle icon -->
-      <div class="floating-action create-region-floating-action" *ngIf="showNewBulletinModal && activeBulletin">
-        <div class="floating-action__text">
-          <i class="ph ph-globe-hemisphere-west"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
+      @if (showNewBulletinModal && activeBulletin) {
+        <div class="floating-action create-region-floating-action">
+          <div class="floating-action__text">
+            <i class="ph ph-globe-hemisphere-west"></i> {{ "bulletins.create.mapSelectRegion" | translate }}
+          </div>
+          <div class="floating-action__actions btn-toolbar">
+            <button
+              type="reset"
+              class="btn btn-bare"
+              (click)="discardBulletin($event, activeBulletin)"
+              ngxMousetrapKey="esc"
+            >
+              <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
+            </button>
+            <button type="button" class="btn btn-primary" (click)="saveBulletin($event)" ngxMousetrapKey="enter">
+              <i class="ph-bold ph-check"></i>
+              @if (activeBulletin.savedRegions.length === 0 && activeBulletin.publishedRegions.length === 0) {
+                <span>{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
+              }
+              @if (activeBulletin.savedRegions.length > 0 || activeBulletin.publishedRegions.length > 0) {
+                <span>{{ "bulletins.create.tooltip.saveChanges" | translate }}</span>
+              }
+            </button>
+          </div>
         </div>
-        <div class="floating-action__actions btn-toolbar">
-          <button
-            type="reset"
-            class="btn btn-bare"
-            (click)="discardBulletin($event, activeBulletin)"
-            ngxMousetrapKey="esc"
-          >
-            <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
-          </button>
-          <button type="button" class="btn btn-primary" (click)="saveBulletin($event)" ngxMousetrapKey="enter">
-            <i class="ph-bold ph-check"></i>
-            <span *ngIf="activeBulletin.savedRegions.length === 0 && activeBulletin.publishedRegions.length === 0">{{
-              "bulletins.create.tooltip.createRegion" | translate
-            }}</span>
-            <span *ngIf="activeBulletin.savedRegions.length > 0 || activeBulletin.publishedRegions.length > 0">{{
-              "bulletins.create.tooltip.saveChanges" | translate
-            }}</span>
-          </button>
-        </div>
-      </div>
+      }
 
       <div id="map" class="create-bulletin__map create-bulletin__map--am"></div>
       <div id="afternoonMap" class="create-bulletin__map create-bulletin__map--pm"></div>
@@ -724,12 +817,6 @@
 </div>
 
 <!-- Display this template when there are no bulletins -->
-<ng-template #noBulletinsTemplate>
-  <div class="create-bulletin__nobulletins">
-    <i class="ph ph-mountains"></i>
-    <p>{{ "bulletins.create.noBulletinsForSelectedDay" | translate }}</p>
-  </div>
-</ng-template>
 
 <ng-template #bulletinTemplate let-bulletin="bulletin" let-key="key">
   <div
@@ -740,161 +827,185 @@
   >
     <div class="region-thumb__details">
       <h6 class="region-thumb__title font-s-medium" role="button">
-        <span *ngIf="saveError.has(bulletin.id)">* </span>
-        <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 0">{{
-          regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0])
-        }}</span>
-        <span *ngIf="bulletin.getSavedAndPublishedRegions().length > 1">
-          + {{ bulletin.getSavedAndPublishedRegions().length - 1 }}
-        </span>
+        @if (saveError.has(bulletin.id)) {
+          <span>* </span>
+        }
+        @if (bulletin.getSavedAndPublishedRegions().length > 0) {
+          <span>{{ regionsService.getRegionName(bulletin.getSavedAndPublishedRegions()[0]) }}</span>
+        }
+        @if (bulletin.getSavedAndPublishedRegions().length > 1) {
+          <span> + {{ bulletin.getSavedAndPublishedRegions().length - 1 }} </span>
+        }
       </h6>
       <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.author.name }}</p>
 
-      <div
-        *ngIf="checkBulletin(bulletin)"
-        class="region-thumb__avalanche-info text-danger"
-        title="{{ 'bulletins.create.tooltip.incompleteAvalancheProblem' | translate }}"
-      >
-        <i class="ph ph-warning"></i>
-        <span class="region-thumb__author font-s" role="button">{{
-          "bulletins.create.incompleteAvalancheProblem" | translate
-        }}</span>
-      </div>
+      @if (checkBulletin(bulletin)) {
+        <div
+          class="region-thumb__avalanche-info text-danger"
+          title="{{ 'bulletins.create.tooltip.incompleteAvalancheProblem' | translate }}"
+        >
+          <i class="ph ph-warning"></i>
+          <span class="region-thumb__author font-s" role="button">{{
+            "bulletins.create.incompleteAvalancheProblem" | translate
+          }}</span>
+        </div>
+      }
 
-      <div *ngIf="!checkBulletin(bulletin)" class="region-thumb__avalanche-info">
-        <app-danger-rating-icon
-          [hasElevationDependency]="bulletin.forenoon.hasElevationDependency"
-          [dangerRatingAbove]="bulletin.forenoon.dangerRatingAbove"
-          [dangerRatingBelow]="bulletin.forenoon.dangerRatingBelow"
-        ></app-danger-rating-icon>
-        <!-- Avalanche problems -->
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.forenoon?.avalancheProblem1"
-          [value]="bulletin.forenoon.avalancheProblem1"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.forenoon?.avalancheProblem2"
-          [value]="bulletin.forenoon.avalancheProblem2"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.forenoon?.avalancheProblem3"
-          [value]="bulletin.forenoon.avalancheProblem3"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.forenoon?.avalancheProblem4"
-          [value]="bulletin.forenoon.avalancheProblem4"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.forenoon?.avalancheProblem5"
-          [value]="bulletin.forenoon.avalancheProblem5"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <!-- Avalanche problems -->
-        <!-- Elevations -->
-        <span class="badge text-bg-light" *ngIf="bulletin.forenoon.hasElevationDependency">
-          <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
-          {{
-            bulletin.forenoon.treeline
-              ? ("bulletins.create.tooltip.treeline" | translate)
-              : bulletin.forenoon.elevation + " m"
-          }}
-        </span>
-        <!-- Elevations -->
-      </div>
-      <div *ngIf="bulletin?.hasDaytimeDependency" class="region-thumb__avalanche-info">
-        <app-danger-rating-icon
-          [hasElevationDependency]="bulletin.afternoon.hasElevationDependency"
-          [dangerRatingAbove]="bulletin.afternoon.dangerRatingAbove"
-          [dangerRatingBelow]="bulletin.afternoon.dangerRatingBelow"
-        ></app-danger-rating-icon>
-        <!-- Avalanche problems -->
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.afternoon?.avalancheProblem1"
-          [value]="bulletin.afternoon.avalancheProblem1"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.afternoon?.avalancheProblem2"
-          [value]="bulletin.afternoon.avalancheProblem2"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.afternoon?.avalancheProblem3"
-          [value]="bulletin.afternoon.avalancheProblem3"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.afternoon?.avalancheProblem4"
-          [value]="bulletin.afternoon.avalancheProblem4"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <app-avalanche-problem-icons
-          *ngIf="bulletin?.afternoon?.avalancheProblem5"
-          [value]="bulletin.afternoon.avalancheProblem5"
-          class="region-thumb__avalanche-problem-icon"
-        />
-        <!-- Avalanche problems -->
-        <!-- Elevations -->
-        <span class="badge text-bg-light" *ngIf="bulletin.afternoon.hasElevationDependency">
-          <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
-          {{
-            bulletin.afternoon.treeline
-              ? ("bulletins.create.tooltip.treeline" | translate)
-              : bulletin.afternoon.elevation + " m"
-          }}
-        </span>
-        <!-- Elevations -->
-      </div>
-      <div *ngIf="hasSuggestions(bulletin)" class="region-thumb__avalanche-info">
-        <span class="badge bg-orange">
-          <i class="ph-bold ph-lightbulb"></i> {{ "bulletins.create.suggestions" | translate }}
-        </span>
-      </div>
+      @if (!checkBulletin(bulletin)) {
+        <div class="region-thumb__avalanche-info">
+          <app-danger-rating-icon
+            [hasElevationDependency]="bulletin.forenoon.hasElevationDependency"
+            [dangerRatingAbove]="bulletin.forenoon.dangerRatingAbove"
+            [dangerRatingBelow]="bulletin.forenoon.dangerRatingBelow"
+          ></app-danger-rating-icon>
+          <!-- Avalanche problems -->
+          @if (bulletin?.forenoon?.avalancheProblem1) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.forenoon.avalancheProblem1"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.forenoon?.avalancheProblem2) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.forenoon.avalancheProblem2"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.forenoon?.avalancheProblem3) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.forenoon.avalancheProblem3"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.forenoon?.avalancheProblem4) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.forenoon.avalancheProblem4"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.forenoon?.avalancheProblem5) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.forenoon.avalancheProblem5"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          <!-- Avalanche problems -->
+          <!-- Elevations -->
+          @if (bulletin.forenoon.hasElevationDependency) {
+            <span class="badge text-bg-light">
+              <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
+              {{
+                bulletin.forenoon.treeline
+                  ? ("bulletins.create.tooltip.treeline" | translate)
+                  : bulletin.forenoon.elevation + " m"
+              }}
+            </span>
+          }
+          <!-- Elevations -->
+        </div>
+      }
+      @if (bulletin?.hasDaytimeDependency) {
+        <div class="region-thumb__avalanche-info">
+          <app-danger-rating-icon
+            [hasElevationDependency]="bulletin.afternoon.hasElevationDependency"
+            [dangerRatingAbove]="bulletin.afternoon.dangerRatingAbove"
+            [dangerRatingBelow]="bulletin.afternoon.dangerRatingBelow"
+          ></app-danger-rating-icon>
+          <!-- Avalanche problems -->
+          @if (bulletin?.afternoon?.avalancheProblem1) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.afternoon.avalancheProblem1"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.afternoon?.avalancheProblem2) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.afternoon.avalancheProblem2"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.afternoon?.avalancheProblem3) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.afternoon.avalancheProblem3"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.afternoon?.avalancheProblem4) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.afternoon.avalancheProblem4"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          @if (bulletin?.afternoon?.avalancheProblem5) {
+            <app-avalanche-problem-icons
+              [value]="bulletin.afternoon.avalancheProblem5"
+              class="region-thumb__avalanche-problem-icon"
+            />
+          }
+          <!-- Avalanche problems -->
+          <!-- Elevations -->
+          @if (bulletin.afternoon.hasElevationDependency) {
+            <span class="badge text-bg-light">
+              <i class="ph ph-arrows-out-line-vertical icon-sm"></i>
+              {{
+                bulletin.afternoon.treeline
+                  ? ("bulletins.create.tooltip.treeline" | translate)
+                  : bulletin.afternoon.elevation + " m"
+              }}
+            </span>
+          }
+          <!-- Elevations -->
+        </div>
+      }
+      @if (hasSuggestions(bulletin)) {
+        <div class="region-thumb__avalanche-info">
+          <span class="badge bg-orange">
+            <i class="ph-bold ph-lightbulb"></i> {{ "bulletins.create.suggestions" | translate }}
+          </span>
+        </div>
+      }
     </div>
 
     <div class="btn-group-vertical btn-group--border region-thumb__actions">
-      <button
-        *ngIf="
-          !copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
-        "
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-sm btn-bare btn-sm btn-icon"
-        (click)="openCopyRegionModal($event, bulletin)"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.copy' | translate }}"
-      >
-        <i class="ph ph-copy"></i>
-      </button>
+      @if (!copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole(constantsService.roleObserver)) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-sm btn-bare btn-sm btn-icon"
+          (click)="openCopyRegionModal($event, bulletin)"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.copy' | translate }}"
+        >
+          <i class="ph ph-copy"></i>
+        </button>
+      }
 
-      <button
-        *ngIf="bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin)"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-sm btn-icon btn-bare"
-        (click)="deleteBulletin($event, bulletin)"
-        data-toggle="tooltip"
-        title="{{ 'bulletins.create.tooltip.delete' | translate }}"
-      >
-        <i class="ph ph-trash"></i>
-      </button>
+      @if (bulletinsService.getIsEditable() && !hasSuggestions(bulletin) && isCreator(bulletin)) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-sm btn-icon btn-bare"
+          (click)="deleteBulletin($event, bulletin)"
+          data-toggle="tooltip"
+          title="{{ 'bulletins.create.tooltip.delete' | translate }}"
+        >
+          <i class="ph ph-trash"></i>
+        </button>
+      }
 
-      <button
-        *ngIf="activeBulletin !== undefined && activeBulletin !== bulletin"
-        [disabled]="loading || editRegions"
-        type="button"
-        class="btn btn-sm btn-icon"
-        [class.btn-bare--inverse]="comparedBulletin && bulletin.id === comparedBulletin.id"
-        [class.btn-bare]="!comparedBulletin || bulletin.id !== comparedBulletin.id"
-        (click)="eventCompareBulletin($event, bulletin)"
-        title="{{ 'bulletins.create.tooltip.compare' | translate }}"
-      >
-        <i class="ph ph-square-half"></i>
-      </button>
+      @if (activeBulletin !== undefined && activeBulletin !== bulletin) {
+        <button
+          [disabled]="loading || editRegions"
+          type="button"
+          class="btn btn-sm btn-icon"
+          [class.btn-bare--inverse]="comparedBulletin && bulletin.id === comparedBulletin.id"
+          [class.btn-bare]="!comparedBulletin || bulletin.id !== comparedBulletin.id"
+          (click)="eventCompareBulletin($event, bulletin)"
+          title="{{ 'bulletins.create.tooltip.compare' | translate }}"
+        >
+          <i class="ph ph-square-half"></i>
+        </button>
+      }
     </div>
   </div>
 </ng-template>
@@ -1043,66 +1154,76 @@
   <div class="modal-body">
     <table class="table table-bordered responsive-table">
       <tbody class="bulletins-table__body">
-        <tr *ngFor="let date of bulletinsService.dates" [class.bulletins-table__active--day]="isActiveDate(date)">
-          <td [attr.data-label]="'bulletins.table.title.date' | translate">
-            <div class="bulletins-table__day--small">
-              <time>
-                {{ date[1] | date: "fullDate" : undefined : translateService.getCurrentLang() }}
-              </time>
-            </div>
-          </td>
-          <td
-            class="bulletins-table__region-status"
-            [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion().id)"
-          >
-            <span
-              *ngIf="
-                getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined
-              "
-              class="badge bg-danger"
+        @for (date of bulletinsService.dates; track date) {
+          <tr [class.bulletins-table__active--day]="isActiveDate(date)">
+            <td [attr.data-label]="'bulletins.table.title.date' | translate">
+              <div class="bulletins-table__day--small">
+                <time>
+                  {{ date[1] | date: "fullDate" : undefined : translateService.getCurrentLang() }}
+                </time>
+              </div>
+            </td>
+            <td
+              class="bulletins-table__region-status"
+              [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion().id)"
             >
-              <i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}
-            </span>
-            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.draft" class="badge bg-warning">
-              <i class="ph-bold ph-file-dashed"></i>
-              {{ "bulletins.table.status.draft" | translate }}
-            </span>
-            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.submitted" class="badge bg-primary">
-              <i class="ph-bold ph-clock-countdown"></i>
-              {{ "bulletins.table.status.submitted" | translate }}
-            </span>
-            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.published" class="badge bg-success">
-              <i class="ph-bold ph-newspaper"></i>
-              {{ "bulletins.table.status.published" | translate }}
-            </span>
-            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.updated" class="badge bg-orange">
-              <i class="ph-bold ph-file-dashed"></i>
-              {{ "bulletins.table.status.updated" | translate }}
-            </span>
-            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.resubmitted" class="badge bg-primary">
-              <i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.resubmitted" | translate }}
-            </span>
-            <span *ngIf="getActiveRegionStatus(date) === bulletinStatus.republished" class="badge bg-success">
-              <i class="ph-bold ph-newspaper"></i>
-              {{ "bulletins.table.status.republished" | translate }}
-            </span>
-          </td>
-          <td class="bulletins-table__region-status">
-            <button
-              *ngIf="
+              @if (
+                getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined
+              ) {
+                <span class="badge bg-danger">
+                  <i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}
+                </span>
+              }
+              @if (getActiveRegionStatus(date) === bulletinStatus.draft) {
+                <span class="badge bg-warning">
+                  <i class="ph-bold ph-file-dashed"></i>
+                  {{ "bulletins.table.status.draft" | translate }}
+                </span>
+              }
+              @if (getActiveRegionStatus(date) === bulletinStatus.submitted) {
+                <span class="badge bg-primary">
+                  <i class="ph-bold ph-clock-countdown"></i>
+                  {{ "bulletins.table.status.submitted" | translate }}
+                </span>
+              }
+              @if (getActiveRegionStatus(date) === bulletinStatus.published) {
+                <span class="badge bg-success">
+                  <i class="ph-bold ph-newspaper"></i>
+                  {{ "bulletins.table.status.published" | translate }}
+                </span>
+              }
+              @if (getActiveRegionStatus(date) === bulletinStatus.updated) {
+                <span class="badge bg-orange">
+                  <i class="ph-bold ph-file-dashed"></i>
+                  {{ "bulletins.table.status.updated" | translate }}
+                </span>
+              }
+              @if (getActiveRegionStatus(date) === bulletinStatus.resubmitted) {
+                <span class="badge bg-primary">
+                  <i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.resubmitted" | translate }}
+                </span>
+              }
+              @if (getActiveRegionStatus(date) === bulletinStatus.republished) {
+                <span class="badge bg-success">
+                  <i class="ph-bold ph-newspaper"></i>
+                  {{ "bulletins.table.status.republished" | translate }}
+                </span>
+              }
+            </td>
+            <td class="bulletins-table__region-status">
+              @if (
                 getActiveRegionStatus(date) === bulletinStatus.draft ||
                 getActiveRegionStatus(date) === bulletinStatus.updated ||
                 getActiveRegionStatus(date) === bulletinStatus.missing ||
                 getActiveRegionStatus(date) === undefined
-              "
-              class="btn btn-primary btn-icon"
-              type="button"
-              (click)="copyRegionModalConfirm(date)"
-            >
-              <i class="ph ph-arrow-right"></i>
-            </button>
-          </td>
-        </tr>
+              ) {
+                <button class="btn btn-primary btn-icon" type="button" (click)="copyRegionModalConfirm(date)">
+                  <i class="ph ph-arrow-right"></i>
+                </button>
+              }
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
@@ -1169,17 +1290,6 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-primary" (click)="previewErrorModalConfirm()" ngxMousetrapKey="enter">
       {{ "bulletins.table.previewErrorDialog.accept" | translate }}
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #checkBulletinsErrorTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "bulletins.table.checkBulletinsErrorDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="checkBulletinsErrorModalConfirm()" ngxMousetrapKey="enter">
-      {{ "bulletins.table.checkBulletinsErrorDialog.accept" | translate }}
     </button>
   </div>
 </ng-template>

@@ -20,7 +20,7 @@
                     autofocus
                     placeholder="{{ 'login.placeholder.username' | translate }}"
                     [(ngModel)]="username"
-                  />
+                    />
                 </div>
                 <div class="input-group mb-2">
                   <span class="input-group-text"><i class="ph-bold ph-lock"></i></span>
@@ -32,36 +32,44 @@
                     name="password"
                     placeholder="{{ 'login.placeholder.password' | translate }}"
                     [(ngModel)]="password"
-                  />
+                    />
                 </div>
                 <div class="row">
-                  <div *ngIf="!loading" class="col-6">
-                    <button type="submit" class="btn btn-primary" (click)="login()">
-                      {{ "login.button" | translate }}
-                    </button>
-                  </div>
-                  <div *ngIf="loading" class="col-6">
-                    <button type="button" disabled class="btn btn-primary px-3">
-                      <i class="ph ph-circle-notch"></i>
-                    </button>
-                  </div>
+                  @if (!loading) {
+                    <div class="col-6">
+                      <button type="submit" class="btn btn-primary" (click)="login()">
+                        {{ "login.button" | translate }}
+                      </button>
+                    </div>
+                  }
+                  @if (loading) {
+                    <div class="col-6">
+                      <button type="button" disabled class="btn btn-primary px-3">
+                        <i class="ph ph-circle-notch"></i>
+                      </button>
+                    </div>
+                  }
                 </div>
                 <hr class="bg-secondary" />
                 <a href="{{ constantsService.gitlab }}" rel="noopener" target="_blank">
                   <small>{{ constantsService.release }}</small>
                 </a>
                 ∥
-                <a *ngIf="serverInfo" href="{{ serverInfo.apiUrl }}" rel="noopener" target="_blank">
-                  <small>albina-server&#64;{{ serverInfo.version }}</small>
-                </a>
+                @if (serverInfo) {
+                  <a href="{{ serverInfo.apiUrl }}" rel="noopener" target="_blank">
+                    <small>albina-server&#64;{{ serverInfo.version }}</small>
+                  </a>
+                }
                 <details>
                   <summary>Open-source Licenses</summary>
-                  <li *ngFor="let dependency of constantsService.dependencies" class="list-inline-item text-break">
-                    <a [href]="dependency.homepage" target="_blank" rel="external noopener noreferrer">{{
-                      dependency.name
-                    }}</a>
-                    {{ dependency.version }}
-                  </li>
+                  @for (dependency of constantsService.dependencies; track dependency) {
+                    <li class="list-inline-item text-break">
+                      <a [href]="dependency.homepage" target="_blank" rel="external noopener noreferrer">{{
+                        dependency.name
+                      }}</a>
+                      {{ dependency.version }}
+                    </li>
+                  }
                 </details>
               </div>
             </div>

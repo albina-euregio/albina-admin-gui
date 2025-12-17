@@ -13,7 +13,7 @@ import { RegionsService } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
-import { DatePipe, NgFor, NgIf } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 // For iframe
@@ -31,16 +31,14 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
   standalone: true,
   imports: [
     BsDropdownModule,
-    NgIf,
     FormsModule,
-    NgFor,
     AccordionModule,
     AvalancheProblemComponent,
     BulletinTextComponent,
     DatePipe,
     TranslateModule,
-    NgxMousetrapDirective,
-  ],
+    NgxMousetrapDirective
+],
 })
 export class AvalancheBulletinComponent implements OnInit {
   bulletinsService = inject(BulletinsService);

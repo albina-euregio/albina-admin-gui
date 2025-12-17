@@ -1,5 +1,5 @@
 import * as Enums from "../enums/enums";
-import { NgIf } from "@angular/common";
+
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 @Component({
@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, input } from "@angular/core";
   templateUrl: "danger-rating.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgIf],
+  imports: [],
 })
 export class DangerRatingComponent {
   dangerRating = Enums.DangerRating;

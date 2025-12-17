@@ -1,12 +1,12 @@
 import * as Enums from "../enums/enums";
-import { NgIf } from "@angular/common";
+
 import { Component, input } from "@angular/core";
 
 @Component({
   selector: "app-avalanche-type",
   templateUrl: "./avalanche-type.component.html",
   standalone: true,
-  imports: [NgIf],
+  imports: [],
 })
 export class AvalancheTypeComponent {
   readonly value = input<Enums.AvalancheType>(undefined);
