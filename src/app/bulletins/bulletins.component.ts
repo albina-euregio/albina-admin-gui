@@ -6,7 +6,7 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
-import { StatusChannel, StatusService } from "../providers/status-service/status.service";
+import { StatusService } from "../providers/status-service/status.service";
 import { UserService } from "../providers/user-service/user.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
@@ -44,7 +44,7 @@ export class BulletinsComponent implements OnDestroy {
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
   public readonly postStressLevel = new Subject<StressLevel>();
-  public channelStatusInformation: Record<string, StatusInformationModel> = {};
+  public channelStatusInformation: StatusInformationModel[] = [];
 
   constructor() {
     this.copying = false;
@@ -144,20 +144,8 @@ export class BulletinsComponent implements OnDestroy {
   }
 
   loadChannelStatusInformation() {
-    for (const region of this.authenticationService.getInternalRegionsWithWhatsApp()) {
-      this.loadChannelStatus(region, StatusChannel.WhatsApp);
-    }
-    for (const region of this.authenticationService.getInternalRegionsWithTelegram()) {
-      this.loadChannelStatus(region, StatusChannel.Telegram);
-    }
-    for (const region of this.authenticationService.getInternalRegionsWithBlog()) {
-      this.loadChannelStatus(region, StatusChannel.Blog);
-    }
-  }
-
-  loadChannelStatus(region: string, channel: StatusChannel) {
-    this.statusService.getStatusInformation(region, channel).subscribe((status) => {
-      this.channelStatusInformation[channel + " for " + region] = status;
+    this.statusService.getStatusInformation().subscribe((result) => {
+      this.channelStatusInformation = result;
     });
   }
 
@@ -166,7 +154,7 @@ export class BulletinsComponent implements OnDestroy {
    * {"ok": false, "message": "..."}.
    */
   get invalidStatusInformation() {
-    return Object.entries(this.channelStatusInformation).filter((status) => !status[1].ok);
+    return this.channelStatusInformation.filter((status) => !status.ok);
   }
 
   protected readonly formatDate = formatDate;

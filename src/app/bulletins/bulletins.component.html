@@ -2,9 +2,9 @@
   @if (invalidStatusInformation.length > 0) {
     <alert type="warning" [dismissible]="true">
       <ul class="mb-0">
-        @for (status of invalidStatusInformation; track status[0]) {
+        @for (status of invalidStatusInformation; track status.title) {
           <li class="text-break">
-            <strong>{{ status[0] }}:</strong> {{ status[1].message }}
+            <strong>{{ status.title }}:</strong> {{ status.message }}
           </li>
         }
       </ul>
