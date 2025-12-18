@@ -1,7 +1,7 @@
 <div class="bulletins animated fadeIn container">
   <div class="d-flex mb-3 align-items-center">
     @if (!channelStatusLoading && invalidStatusInformation.length > 0) {
-      <alert type="warning" [dismissible]="true" class="w-100">
+      <alert type="warning" [dismissible]="true" class="w-100 me-2">
         <ul class="mb-0">
           @for (status of invalidStatusInformation; track status.title) {
             <li class="text-break">
@@ -18,7 +18,7 @@
       </div>
     } @else {
       <button
-        class="btn btn-sm btn-secondary ms-3 mb-3"
+        class="btn btn-sm btn-secondary ms-auto mb-3"
         [disabled]="channelStatusLoading"
         (click)="triggerChannelStatusChecks()"
         title="{{ 'channelStatus.triggerStatusChecks' | translate }}"
