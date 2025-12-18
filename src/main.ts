@@ -41,6 +41,7 @@ import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { StatusService } from "app/providers/status-service/status.service";
 import { BarChart, LineChart, ScatterChart } from "echarts/charts";
 import {
   DatasetComponent,
@@ -137,6 +138,7 @@ bootstrapApplication(AppComponent, {
     QfaService,
     RegionsService,
     StatisticsService,
+    StatusService,
     TranslateService,
     UndoRedoService,
     UserService,

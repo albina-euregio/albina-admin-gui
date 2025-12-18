@@ -1,4 +1,32 @@
 <div class="bulletins animated fadeIn container">
+  <div class="d-flex mb-3 align-items-center">
+    @if (!channelStatusLoading && invalidStatusInformation.length > 0) {
+      <alert type="warning" [dismissible]="true" class="w-100">
+        <ul class="mb-0">
+          @for (status of invalidStatusInformation; track status.title) {
+            <li class="text-break">
+              <strong>{{ status.title }}:</strong> {{ status.message }}
+            </li>
+          }
+        </ul>
+      </alert>
+    }
+    @if (channelStatusLoading) {
+      <div class="d-flex align-items-center">
+        <div class="spinner-border me-2" role="status"></div>
+        <span>{{ "channelStatus.loading" | translate }}</span>
+      </div>
+    } @else {
+      <button
+        class="btn btn-sm btn-secondary ms-3 mb-3"
+        [disabled]="channelStatusLoading"
+        (click)="triggerChannelStatusChecks()"
+        title="{{ 'channelStatus.triggerStatusChecks' | translate }}"
+      >
+        <i class="ph-bold ph-arrows-clockwise"></i>
+      </button>
+    }
+  </div>
   <table class="table table-bordered responsive-table">
     <thead class="bulletins-table__header">
       <tr>

@@ -6,6 +6,7 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import { StatusService } from "../providers/status-service/status.service";
 import { UserService } from "../providers/user-service/user.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { TeamStressLevelsComponent } from "./team-stress-levels.component";
@@ -14,6 +15,8 @@ import { Component, OnDestroy, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { StatusInformationModel } from "app/models/status-information.model";
+import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { debounceTime, Subject } from "rxjs";
 import { groupBy, mergeMap } from "rxjs/operators";
@@ -21,7 +24,7 @@ import { groupBy, mergeMap } from "rxjs/operators";
 @Component({
   templateUrl: "bulletins.component.html",
   standalone: true,
-  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective],
+  imports: [FormsModule, DatePipe, TranslateModule, NgxMousetrapDirective, AlertModule],
 })
 export class BulletinsComponent implements OnDestroy {
   translate = inject(TranslateService);
@@ -34,17 +37,24 @@ export class BulletinsComponent implements OnDestroy {
   localStorageService = inject(LocalStorageService);
   router = inject(Router);
   userService = inject(UserService);
+  statusService = inject(StatusService);
   private modalService = inject(BsModalService);
 
   public bulletinStatus = Enums.BulletinStatus;
   public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
   public readonly postStressLevel = new Subject<StressLevel>();
+  public channelStatusInformation: StatusInformationModel[] = [];
+  public channelStatusLoading = false;
 
   constructor() {
     this.copying = false;
 
     this.bulletinsService.init();
+
+    if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin)) {
+      this.loadChannelStatusInformation();
+    }
 
     this.postStressLevel
       .pipe(
@@ -132,6 +142,44 @@ export class BulletinsComponent implements OnDestroy {
       return;
     }
     this.modalService.show(TeamStressLevelsComponent, {});
+  }
+
+  loadChannelStatusInformation() {
+    this.channelStatusLoading = true;
+    this.statusService.getStatusInformation().subscribe({
+      next: (result) => {
+        this.channelStatusInformation = result;
+        this.channelStatusLoading = false;
+      },
+      error: (err) => {
+        console.error("Failed to load channel status", err);
+        this.channelStatusInformation = [{ ok: false, title: "Error", message: err.message }];
+        this.channelStatusLoading = false;
+      },
+    });
+  }
+
+  triggerChannelStatusChecks() {
+    this.channelStatusLoading = true;
+
+    this.statusService.triggerStatusChecks().subscribe({
+      next: (result) => {
+        this.channelStatusInformation = result;
+        this.channelStatusLoading = false;
+      },
+      error: (err) => {
+        console.error("Failed to trigger status checks", err);
+        this.channelStatusLoading = false;
+      },
+    });
+  }
+
+  /**
+   * Filter status information to get only those entries for which the server returned
+   * {"ok": false, "message": "..."}.
+   */
+  get invalidStatusInformation() {
+    return this.channelStatusInformation.filter((status) => !status.ok);
   }
 
   protected readonly formatDate = formatDate;
