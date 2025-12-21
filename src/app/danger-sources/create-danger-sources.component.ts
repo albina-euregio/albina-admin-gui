@@ -800,6 +800,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   private updateInternalVariantsOnMap(type: DangerSourceVariantType) {
+    this.mapService.resetInternalAggregatedRegions();
     const variants = this.activeDangerSourceOnMap
       ? this.internVariantsList.filter((v) => v.dangerSource.id === this.activeDangerSourceOnMap.id)
       : this.internVariantsList;
