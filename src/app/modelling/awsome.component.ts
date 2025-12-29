@@ -229,12 +229,18 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return url;
   }
 
+  private get baseURL() {
+    return this.configURL.endsWith("dcfg/awsome.json")
+      ? new URL(this.configURL.replace("dcfg/awsome.json", ""), location.href)
+      : location.href;
+  }
+
   private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {
     const date = this.albinaDate;
     const filterUrl = this.filterService.filterSelectionData.find(
       (f) => f.url && f.getSelectedValues("selected").length,
     );
-    const url0 = new URL(filterUrl?.url ?? source.url, location.href);
+    const url0 = new URL(filterUrl?.url ?? source.url, this.baseURL);
     const url = this.setSearchParams(url0, [source]).toString();
 
     const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "aspect");
@@ -504,7 +510,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (!url0) {
       return;
     }
-    const url = this.setSearchParams(new URL(url0, location.href), this.activeSources);
+    const url = this.setSearchParams(new URL(url0, this.baseURL), this.activeSources);
 
     this.timeseriesChart$loading = this.fetchJSON(url.toString()).subscribe((d) => {
       this.timeseriesChart$loading = undefined;
