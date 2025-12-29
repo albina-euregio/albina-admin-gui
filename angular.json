@@ -38,7 +38,7 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "sass": { "silenceDeprecations": ["mixed-decls", "color-functions", "global-builtin", "import"] }
+              "sass": { "silenceDeprecations": ["color-functions", "global-builtin", "import"] }
             },
             "styles": [
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
