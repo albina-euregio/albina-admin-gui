@@ -230,58 +230,58 @@
                 </button>
               </div>
             </div>
-            <div>
-              <!-- Extend sea level danger up/down -->
-              @if (
-                count() === 1 && avalancheProblemModel().hasElevationHigh() && avalancheProblemModel().hasElevationLow()
-                ) {
-                <div
-                  class="avalanche-problem__elevation-change-danger-rating"
-                  >
-                  <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
-                  <!-- UP Button -->
-                  <div class="btn-group">
-                    <button
-                      [disabled]="disabled()"
-                      type="reset"
-                      class="btn btn-sm"
-                      [ngClass]="isDangerRatingDirection(directionEnum.up) ? 'btn-dark' : 'btn-outline-secondary'"
-              (click)="
-                setDangerRatingDirection(
-                  $event,
-                  isDangerRatingDirection(directionEnum.up) ? undefined : directionEnum.up
-                )
-              "
-                      data-toggle="tooltip"
-                      title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
-                      >
-                      <i class="ph ph-arrow-up-right"></i>
-                      <span>{{ "bulletins.create.tooltip.dangerRatingDirectionUp" | translate }}</span>
-                    </button>
-                    <!-- DOWN Button -->
-                    <button
-                      [disabled]="disabled()"
-                      type="reset"
-                      class="btn btn-sm"
-                      [ngClass]="isDangerRatingDirection(directionEnum.down) ? 'btn-dark' : 'btn-outline-secondary'"
-              (click)="
-                setDangerRatingDirection(
-                  $event,
-                  isDangerRatingDirection(directionEnum.down) ? undefined : directionEnum.down
-                )
-              "
-                      data-toggle="tooltip"
-                      title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"
-                      >
-                      <i class="ph ph-arrow-down-right"></i>
-                      <span>{{ "bulletins.create.tooltip.dangerRatingDirectionDown" | translate }}</span>
-                    </button>
-                  </div>
-                  <!-- End of btn-group -->
+          </div>
+          <div>
+            <!-- Extend sea level danger up/down -->
+            @if (
+              count() === 1 && avalancheProblemModel().hasElevationHigh() && avalancheProblemModel().hasElevationLow()
+              ) {
+              <div
+                class="avalanche-problem__elevation-change-danger-rating"
+                >
+                <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
+                <!-- UP Button -->
+                <div class="btn-group">
+                  <button
+                    [disabled]="disabled()"
+                    type="reset"
+                    class="btn btn-sm"
+                    [ngClass]="isDangerRatingDirection(directionEnum.up) ? 'btn-dark' : 'btn-outline-secondary'"
+            (click)="
+              setDangerRatingDirection(
+                $event,
+                isDangerRatingDirection(directionEnum.up) ? undefined : directionEnum.up
+              )
+            "
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
+                    >
+                    <i class="ph ph-arrow-up-right"></i>
+                    <span>{{ "bulletins.create.tooltip.dangerRatingDirectionUp" | translate }}</span>
+                  </button>
+                  <!-- DOWN Button -->
+                  <button
+                    [disabled]="disabled()"
+                    type="reset"
+                    class="btn btn-sm"
+                    [ngClass]="isDangerRatingDirection(directionEnum.down) ? 'btn-dark' : 'btn-outline-secondary'"
+            (click)="
+              setDangerRatingDirection(
+                $event,
+                isDangerRatingDirection(directionEnum.down) ? undefined : directionEnum.down
+              )
+            "
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"
+                    >
+                    <i class="ph ph-arrow-down-right"></i>
+                    <span>{{ "bulletins.create.tooltip.dangerRatingDirectionDown" | translate }}</span>
+                  </button>
                 </div>
-              }
-              <!-- End of Extend sea level danger up/down  -->
-            </div>
+                <!-- End of btn-group -->
+              </div>
+            }
+            <!-- End of Extend sea level danger up/down  -->
           </div>
         </div>
         <div class="form-group">
