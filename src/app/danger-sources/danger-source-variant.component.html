@@ -1096,6 +1096,33 @@
           ></textarea>
         </div>
       </accordion-group>
+      <accordion-group
+        class="accordion-group"
+        [isOpen]="isAccordionUncertaintiesOpen"
+        (isOpenChange)="accordionChanged($event, 'uncertainties')"
+      >
+        <div accordion-heading class="accordion-header accordion-header--with-buttons">
+          <h2 class="accordion-header__title">
+            @if (!isAccordionUncertaintiesOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionUncertaintiesOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
+            {{ "dangerSources.create.title.uncertainties" | translate }}
+          </h2>
+        </div>
+        <div class="form-group row">
+          <textarea
+            id="textarea-input"
+            class="form-control"
+            rows="15"
+            [disabled]="disabled()"
+            [(ngModel)]="variant().uncertainties"
+            (change)="updateVariantOnServer()"
+          ></textarea>
+        </div>
+      </accordion-group>
     </accordion>
   </main>
 </div>

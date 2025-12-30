@@ -117,6 +117,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   public isAccordionMatrixOpen: boolean;
   public isAccordionCharacteristicsOpen: boolean;
   public isAccordionCommentOpen: boolean;
+  public isAccordionUncertaintiesOpen: boolean;
 
   public config = {
     animated: false,
@@ -189,6 +190,9 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
           break;
         case "comment":
           this.isAccordionCommentOpen = isOpen;
+          break;
+        case "uncertainties":
+          this.isAccordionUncertaintiesOpen = isOpen;
           break;
         default:
           break;
