@@ -20,7 +20,7 @@ import {
 } from "./models/danger-source-variant.model";
 import { zEnumValues } from "./models/zod-util";
 import { ToggleBtnGroup } from "./toggle-btn-group";
-import { DatePipe, NgClass } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { Component, inject, input, OnChanges, OnInit, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -39,7 +39,6 @@ import { debounceTime, Subject } from "rxjs";
     BsDropdownModule,
     FormsModule,
     AccordionModule,
-    NgClass,
     AspectsComponent,
     ElevationsComponent,
     MatrixParameterComponent,
