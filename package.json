@@ -56,7 +56,7 @@
     "echarts": "^6.0.0",
     "es-toolkit": "^1.38.0",
     "file-saver": "^2.0.5",
-    "leaflet": "patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=b341c309e08c675303c25e9f70b67432dcd0967c#~/.yarn/patches/leaflet-https-78e8e288ea.patch",
+    "leaflet": "patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=611aee1c561ae57ccca1fd28c5410010e387386e#~/.yarn/patches/leaflet-https-78e8e288ea.patch",
     "leaflet-control-geocoder": "^3.3.0",
     "leaflet.sync": "patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch",
     "mousetrap": "^1.6.5",

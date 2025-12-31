@@ -3126,7 +3126,7 @@ __metadata:
     file-saver: "npm:^2.0.5"
     git-cliff: "npm:^2.7.0"
     husky: "npm:^9.1.7"
-    leaflet: "patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=b341c309e08c675303c25e9f70b67432dcd0967c#~/.yarn/patches/leaflet-https-78e8e288ea.patch"
+    leaflet: "patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=611aee1c561ae57ccca1fd28c5410010e387386e#~/.yarn/patches/leaflet-https-78e8e288ea.patch"
     leaflet-control-geocoder: "npm:^3.3.0"
     leaflet.sync: "patch:leaflet.sync@npm%3A0.2.4#~/.yarn/patches/leaflet.sync-npm-0.2.4-fe6b3a2e7a.patch"
     lint-staged: "npm:^15.2.10"
@@ -5258,17 +5258,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"leaflet@https://github.com/leaflet/leaflet.git#commit=b341c309e08c675303c25e9f70b67432dcd0967c":
+"leaflet@https://github.com/leaflet/leaflet.git#commit=611aee1c561ae57ccca1fd28c5410010e387386e":
   version: 2.0.0-alpha.1
-  resolution: "leaflet@https://github.com/leaflet/leaflet.git#commit=b341c309e08c675303c25e9f70b67432dcd0967c"
-  checksum: 10c0/85c319b36306e85a71f773bda209c6a142bf101a3597c8848a46fe31f76a0b82255d5509f315926c8c1ca59fb0b6dba0c6bd9bedee4d957e3b05a782bfb75b61
+  resolution: "leaflet@https://github.com/leaflet/leaflet.git#commit=611aee1c561ae57ccca1fd28c5410010e387386e"
+  checksum: 10c0/b744e6e622f01575fa1bbfaf0d3ee614a8e44550d16086d1add4491eb443b45d64f00d3410a0d48ce259fd46bf13d1eb88f670659394ede63910b0c8731d5e78
   languageName: node
   linkType: hard
 
-"leaflet@patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=b341c309e08c675303c25e9f70b67432dcd0967c#~/.yarn/patches/leaflet-https-78e8e288ea.patch":
+"leaflet@patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=611aee1c561ae57ccca1fd28c5410010e387386e#~/.yarn/patches/leaflet-https-78e8e288ea.patch":
   version: 2.0.0-alpha.1
-  resolution: "leaflet@patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=b341c309e08c675303c25e9f70b67432dcd0967c#~/.yarn/patches/leaflet-https-78e8e288ea.patch::version=2.0.0-alpha.1&hash=816404"
-  checksum: 10c0/55213f07728e9877dfe871bb6eeff952733cc4b31f56600fe9d59db25b0914cad3e60a6de6adef7eed6096171c32a7f890c5a5a1863a1c0d4cf818817f5ad75d
+  resolution: "leaflet@patch:leaflet@https%3A//github.com/leaflet/leaflet.git%23commit=611aee1c561ae57ccca1fd28c5410010e387386e#~/.yarn/patches/leaflet-https-78e8e288ea.patch::version=2.0.0-alpha.1&hash=93c31e"
+  checksum: 10c0/7a388faf08fc50f07d0cc010f6936a2d5c2f8f3c9243ccca49e0c93597d902b7cfd07ce6425d6d5883beef462b064623ff405a1cd0e9c13d9cc70551d1301598
   languageName: node
   linkType: hard
 
