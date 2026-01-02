@@ -138,97 +138,15 @@
             <label class="form-label" [class.changed]="isComparedBulletin() && isElevationEqual" for="">{{
               "elevation.title" | translate
             }}</label>
-            <!-- Elevation (high) -->
-            <div class="avalanche-problem-detail__elevation">
-              <div class="avalanche-problem-detail__elevation-label form-check">
-                <input
-                  id="elevationHighCheckbox"
-                  [id]="forLabelId('elevationHighCheckbox')"
-                  type="checkbox"
-                  class="form-check-input"
-                  [disabled]="disabled()"
-                  (change)="setUseElevationHigh($event)"
-                  [(ngModel)]="useElevationHigh"
-                  />
-                <label class="form-label" [attr.for]="forLabelId('elevationHighCheckbox')">{{
-                  "elevation.high" | translate
-                }}</label>
-              </div>
-              <div class="avalanche-problem-detail__elevation-inputs">
-                <div class="input-group">
-                  <input
-                    step="100"
-                    min="0"
-                    max="9000"
-                    id="inputElevationHigh"
-                    class="form-control"
-                    size="14"
-                    type="number"
-                    name="elevation-input"
-                    [disabled]="disabled() || avalancheProblemModel().treelineHigh || !useElevationHigh"
-                    [(ngModel)]="localElevationHigh"
-                    (change)="updateElevationHigh()"
-                    />
-                  <span class="input-group-text">m</span>
-                </div>
-                <button
-                  [disabled]="disabled() || !useElevationHigh"
-                  type="reset"
-                  class="btn btn-icon"
-                  [ngClass]="localTreelineHigh ? 'btn-dark' : 'btn-outline-secondary'"
-                  (click)="treelineHighClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'elevation.treeline' | translate }}"
-                  >
-                  <i class="ph ph-tree-evergreen"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Elevation (low) -->
-            <div class="avalanche-problem-detail__elevation">
-              <div class="form-check avalanche-problem-detail__elevation-label">
-                <input
-                  [id]="forLabelId('elevationLowCheckbox')"
-                  type="checkbox"
-                  class="form-check-input"
-                  [disabled]="disabled()"
-                  (change)="setUseElevationLow($event)"
-                  [(ngModel)]="useElevationLow"
-                  />
-                <label class="form-label" [attr.for]="forLabelId('elevationLowCheckbox')">{{
-                  "elevation.low" | translate
-                }}</label>
-              </div>
-              <div class="avalanche-problem-detail__elevation-inputs">
-                <div class="input-group">
-                  <input
-                    step="100"
-                    min="0"
-                    max="9000"
-                    id="inputElevationLow"
-                    class="form-control"
-                    size="14"
-                    type="number"
-                    name="elevation-input"
-                    [disabled]="disabled() || avalancheProblemModel().treelineLow || !useElevationLow"
-                    [(ngModel)]="localElevationLow"
-                    (change)="updateElevationLow()"
-                    />
-                  <span class="input-group-text">m</span>
-                </div>
-                <button
-                  [disabled]="disabled() || !useElevationLow"
-                  type="reset"
-                  class="btn btn-icon"
-                  [ngClass]="localTreelineLow ? 'btn-dark' : 'btn-outline-secondary'"
-                  (click)="treelineLowClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'elevation.treeline' | translate }}"
-                  >
-                  <i class="ph ph-tree-evergreen"></i>
-                </button>
-              </div>
+            <div>
+              <app-elevations
+                [(elevationHigh)]="avalancheProblemModel().elevationHigh"
+                [(treelineHigh)]="avalancheProblemModel().treelineHigh"
+                [(elevationLow)]="avalancheProblemModel().elevationLow"
+                [(treelineLow)]="avalancheProblemModel().treelineLow"
+                [disabled]="disabled()"
+                (elevationsChange)="updateElevations()"
+              ></app-elevations>
             </div>
           </div>
           <div>

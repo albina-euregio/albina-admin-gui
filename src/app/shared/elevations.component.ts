@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, input, OnChanges, output } from "@angular/core";
+import { Component, input, OnChanges, output, model } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 
@@ -10,10 +10,10 @@ import { TranslateModule } from "@ngx-translate/core";
   imports: [TranslateModule, FormsModule, CommonModule],
 })
 export class ElevationsComponent implements OnChanges {
-  @Input() elevationHigh?: number;
-  @Input() treelineHigh?: boolean;
-  @Input() elevationLow?: number;
-  @Input() treelineLow?: boolean;
+  elevationHigh = model<number>(undefined);
+  treelineHigh = model<boolean>(false);
+  elevationLow = model<number>(undefined);
+  treelineLow = model<boolean>(false);
 
   readonly elevationsChange = output<void>();
   readonly disabled = input<boolean>(false);
@@ -23,34 +23,25 @@ export class ElevationsComponent implements OnChanges {
   useElevationLow = false;
   isElevationHighEditing = false;
   isElevationLowEditing = false;
-  localElevationHigh = undefined;
-  localElevationLow = undefined;
-  localTreelineHigh = false;
-  localTreelineLow = false;
 
   ngOnChanges() {
     if (!this.isElevationHighEditing) {
-      this.useElevationHigh = this.treelineHigh || this.elevationHigh !== null;
-      this.localElevationHigh = this.elevationHigh;
-      this.localTreelineHigh = this.treelineHigh;
+      this.useElevationHigh = this.treelineHigh() || this.elevationHigh() !== undefined;
     }
     if (!this.isElevationLowEditing) {
-      this.useElevationLow = this.treelineLow || this.elevationLow !== null;
-      this.localElevationLow = this.elevationLow;
-      this.localTreelineLow = this.treelineLow;
+      this.useElevationLow = this.treelineLow() || this.elevationLow() !== undefined;
     }
   }
 
   updateElevationHigh() {
-    if (!this.localTreelineHigh) {
-      if (this.localElevationHigh !== undefined && this.localElevationHigh !== "") {
-        this.localElevationHigh = Math.round(this.localElevationHigh / 100) * 100;
-        if (this.localElevationHigh > 9000) {
-          this.localElevationHigh = 9000;
-        } else if (this.localElevationHigh < 0) {
-          this.localElevationHigh = 0;
+    if (!this.treelineHigh) {
+      if (this.elevationHigh !== undefined) {
+        this.elevationHigh.set(Math.round(this.elevationHigh() / 100) * 100);
+        if (this.elevationHigh() > 9000) {
+          this.elevationHigh.set(9000);
+        } else if (this.elevationHigh() < 0) {
+          this.elevationHigh.set(0);
         }
-        this.elevationHigh = this.localElevationHigh;
       }
       this.isElevationHighEditing = false;
       this.elevationsChange.emit();
@@ -58,15 +49,14 @@ export class ElevationsComponent implements OnChanges {
   }
 
   updateElevationLow() {
-    if (!this.localTreelineLow) {
-      if (this.localElevationLow !== undefined && this.localElevationLow !== "") {
-        this.localElevationLow = Math.round(this.localElevationLow / 100) * 100;
-        if (this.localElevationLow > 9000) {
-          this.localElevationLow = 9000;
-        } else if (this.localElevationLow < 0) {
-          this.localElevationLow = 0;
+    if (!this.treelineLow()) {
+      if (this.elevationLow() !== undefined) {
+        this.elevationLow.set(Math.round(this.elevationLow() / 100) * 100);
+        if (this.elevationLow() > 9000) {
+          this.elevationLow.set(9000);
+        } else if (this.elevationLow() < 0) {
+          this.elevationLow.set(0);
         }
-        this.elevationLow = this.localElevationLow;
       }
       this.isElevationLowEditing = false;
       this.elevationsChange.emit();
@@ -77,14 +67,10 @@ export class ElevationsComponent implements OnChanges {
     event.stopPropagation();
     if (this.treelineHigh) {
       this.isElevationHighEditing = true;
-      this.treelineHigh = false;
-      this.localElevationHigh = "";
-      this.localTreelineHigh = false;
+      this.treelineHigh.set(false);
     } else {
-      this.treelineHigh = true;
-      this.elevationHigh = undefined;
-      this.localElevationHigh = "";
-      this.localTreelineHigh = true;
+      this.treelineHigh.set(true);
+      this.elevationHigh.set(undefined);
       this.isElevationHighEditing = false;
     }
     this.elevationsChange.emit();
@@ -94,14 +80,10 @@ export class ElevationsComponent implements OnChanges {
     event.stopPropagation();
     if (this.treelineLow) {
       this.isElevationLowEditing = true;
-      this.localTreelineLow = false;
-      this.localElevationLow = "";
-      this.treelineLow = false;
+      //this.treelineLow.set(false);
     } else {
-      this.treelineLow = true;
-      this.elevationLow = undefined;
-      this.localElevationLow = "";
-      this.localTreelineLow = true;
+      //this.treelineLow.set(true);
+      this.elevationLow.set(undefined);
       this.isElevationLowEditing = false;
     }
     this.elevationsChange.emit();
@@ -109,10 +91,8 @@ export class ElevationsComponent implements OnChanges {
 
   setUseElevationHigh(event) {
     if (!event.currentTarget.checked) {
-      this.localElevationHigh = "";
-      this.localTreelineHigh = false;
-      this.treelineHigh = false;
-      this.elevationHigh = undefined;
+      this.treelineHigh.set(false);
+      this.elevationHigh.set(undefined);
       this.isElevationHighEditing = false;
       this.useElevationHigh = false;
       this.elevationsChange.emit();
@@ -124,10 +104,8 @@ export class ElevationsComponent implements OnChanges {
 
   setUseElevationLow(event) {
     if (!event.currentTarget.checked) {
-      this.localElevationLow = "";
-      this.localTreelineLow = false;
-      this.treelineLow = false;
-      this.elevationLow = undefined;
+      this.treelineLow.set(false);
+      this.elevationLow.set(undefined);
       this.isElevationLowEditing = false;
       this.useElevationLow = false;
       this.elevationsChange.emit();
