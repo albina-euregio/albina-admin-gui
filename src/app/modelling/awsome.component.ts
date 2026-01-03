@@ -27,7 +27,7 @@ import type {
   XAXisOption,
   YAXisOption,
 } from "echarts/types/dist/shared";
-import { debounce } from "es-toolkit";
+import { throttle } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
 import { TabsModule } from "ngx-bootstrap/tabs";
@@ -353,8 +353,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           : this.markerService.createMarker(observation, isHighlighted);
       marker
         ?.on({
-          tooltipopen: debounce(() => this.highlightInHazardChart(observation), 500),
-          tooltipclose: debounce(() => this.highlightInHazardChart(undefined), 500),
+          tooltipopen: () => this.highlightInHazardChart(observation),
+          tooltipclose: () => this.highlightInHazardChart(undefined),
           click: ($event) => this.onObservationClick(observation, $event.originalEvent),
           contextmenu: () => this.onObservationRightClick(observation),
         })
@@ -464,7 +464,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     ];
   }
 
-  private highlightInHazardChart(observation: FeatureProperties) {
+  private highlightInHazardChart = throttle((o: FeatureProperties) => this.highlightInHazardChart0(o), 500);
+  private highlightInHazardChart0(observation: FeatureProperties) {
     this.hazardChart = { ...this.hazardChart };
     const series: ScatterSeriesOption = this.hazardChart.series[1];
     const xAxis: XAXisOption = this.hazardChart.xAxis;
