@@ -469,14 +469,14 @@ export class BulletinsService {
   getStressLevelColor(date: StressLevel["date"]) {
     const stress0 = this.stress[date];
     return !stress0
-      ? this.constantsService.colorDangerRatingMissing
+      ? this.constantsService.getDangerRatingColor(Enums.DangerRating.missing)
       : stress0 < 25
-        ? this.constantsService.colorDangerRatingLow
+        ? this.constantsService.getDangerRatingColor(Enums.DangerRating.low)
         : stress0 < 50
-          ? this.constantsService.colorDangerRatingModerate
+          ? this.constantsService.getDangerRatingColor(Enums.DangerRating.moderate)
           : stress0 < 75
-            ? this.constantsService.colorDangerRatingConsiderable
-            : this.constantsService.colorDangerRatingHigh;
+            ? this.constantsService.getDangerRatingColor(Enums.DangerRating.considerable)
+            : this.constantsService.getDangerRatingColor(Enums.DangerRating.high);
   }
 
   getStressLevelIcon(date: StressLevel["date"]) {

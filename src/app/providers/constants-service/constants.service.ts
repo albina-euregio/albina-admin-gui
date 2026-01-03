@@ -37,30 +37,38 @@ export class ConstantsService {
   public roleObserver = Enums.UserRole.OBSERVER;
 
   // danger rating (color)
-  public colorDangerRatingLow = "#CCFF66";
-  public colorDangerRatingModerate = "#FFFF00";
-  public colorDangerRatingConsiderable = "#FF9900";
-  public colorDangerRatingHigh = "#FF0000";
-  public colorDangerRatingVeryHigh = "#000000";
-  // danger rating (color, muted)
-  public colorDangerRatingLowMuted = "#A0C95A";
-  public colorDangerRatingModerateMuted = "#CFCF4D";
-  public colorDangerRatingConsiderableMuted = "#C97A2B";
-  public colorDangerRatingHighMuted = "#B04A4A";
-  public colorDangerRatingVeryHighMuted = "#333333";
-  // danger rating (bw)
-  public colorDangerRatingLowBw = "#EFEFEF";
-  public colorDangerRatingModerateBw = "#D8D8D8";
-  public colorDangerRatingConsiderableBw = "#B0B0B0";
-  public colorDangerRatingHighBw = "#888888";
-  // TODO use EAWS color (most probably black)
-  public colorDangerRatingVeryHighBw = "#666666";
+  private colorDangerRating = {
+    [Enums.DangerRating.low]: "#CCFF66",
+    [Enums.DangerRating.moderate]: "#FFFF00",
+    [Enums.DangerRating.considerable]: "#FF9900",
+    [Enums.DangerRating.high]: "#FF0000",
+    [Enums.DangerRating.very_high]: "#000000",
+    [Enums.DangerRating.missing]: "#969696",
+    [Enums.DangerRating.no_snow]: "#A0522D", // TODO use correct color
+  } as const;
 
-  public colorDangerRatingMissing = "#969696";
-  public colorDangerRatingMissingMuted = "#B0B0B0";
-  // TODO use correct color
-  public colorDangerRatingNoSnow = "#A0522D";
-  public colorDangerRatingNoSnowMuted = "#8B5C2D";
+  // danger rating (color, muted)
+  private colorDangerRatingMuted = {
+    [Enums.DangerRating.low]: "#A0C95A",
+    [Enums.DangerRating.moderate]: "#CFCF4D",
+    [Enums.DangerRating.considerable]: "#C97A2B",
+    [Enums.DangerRating.high]: "#B04A4A",
+    [Enums.DangerRating.very_high]: "#333333",
+    [Enums.DangerRating.missing]: "#B0B0B0",
+    [Enums.DangerRating.no_snow]: "#8B5C2D", // TODO use correct color
+  } as const;
+
+  // danger rating (bw)
+  private colorDangerRatingBw = {
+    [Enums.DangerRating.low]: "#EFEFEF",
+    [Enums.DangerRating.moderate]: "#D8D8D8",
+    [Enums.DangerRating.considerable]: "#B0B0B0",
+    [Enums.DangerRating.high]: "#888888",
+    [Enums.DangerRating.very_high]: "#666666", // TODO use EAWS color (most probably black)
+    [Enums.DangerRating.missing]: "#969696",
+    [Enums.DangerRating.no_snow]: "#969696", // TODO use correct color
+  } as const;
+
   public colorActiveSelection = "#3852A4";
 
   public microRegionLineColor = "#000000";
@@ -120,63 +128,15 @@ export class ConstantsService {
   };
 
   getDangerRatingColor(dangerRating: Enums.DangerRating) {
-    switch (dangerRating) {
-      case Enums.DangerRating.very_high:
-        return this.colorDangerRatingVeryHigh;
-      case Enums.DangerRating.high:
-        return this.colorDangerRatingHigh;
-      case Enums.DangerRating.considerable:
-        return this.colorDangerRatingConsiderable;
-      case Enums.DangerRating.moderate:
-        return this.colorDangerRatingModerate;
-      case Enums.DangerRating.low:
-        return this.colorDangerRatingLow;
-      case Enums.DangerRating.no_snow:
-        return this.colorDangerRatingNoSnow;
-
-      default:
-        return this.colorDangerRatingMissing;
-    }
+    return this.colorDangerRating[dangerRating] ?? this.colorDangerRating[Enums.DangerRating.missing];
   }
 
   getDangerRatingColorMuted(dangerRating: Enums.DangerRating) {
-    switch (dangerRating) {
-      case Enums.DangerRating.very_high:
-        return this.colorDangerRatingVeryHighMuted;
-      case Enums.DangerRating.high:
-        return this.colorDangerRatingHighMuted;
-      case Enums.DangerRating.considerable:
-        return this.colorDangerRatingConsiderableMuted;
-      case Enums.DangerRating.moderate:
-        return this.colorDangerRatingModerateMuted;
-      case Enums.DangerRating.low:
-        return this.colorDangerRatingLowMuted;
-      case Enums.DangerRating.no_snow:
-        return this.colorDangerRatingNoSnowMuted;
-
-      default:
-        return this.colorDangerRatingMissingMuted;
-    }
+    return this.colorDangerRatingMuted[dangerRating] ?? this.colorDangerRatingMuted[Enums.DangerRating.missing];
   }
 
   getDangerRatingColorBw(dangerRating: Enums.DangerRating) {
-    switch (dangerRating) {
-      case Enums.DangerRating.very_high:
-        return this.colorDangerRatingVeryHighBw;
-      case Enums.DangerRating.high:
-        return this.colorDangerRatingHighBw;
-      case Enums.DangerRating.considerable:
-        return this.colorDangerRatingConsiderableBw;
-      case Enums.DangerRating.moderate:
-        return this.colorDangerRatingModerateBw;
-      case Enums.DangerRating.low:
-        return this.colorDangerRatingLowBw;
-      case Enums.DangerRating.no_snow:
-        return this.colorDangerRatingNoSnow;
-
-      default:
-        return this.colorDangerRatingMissing;
-    }
+    return this.colorDangerRatingBw[dangerRating] ?? this.colorDangerRatingBw[Enums.DangerRating.missing];
   }
 
   getExternalServerUrl(server: ServerModel, endpoint: `/${string}`, ...params: [string, any][]) {
