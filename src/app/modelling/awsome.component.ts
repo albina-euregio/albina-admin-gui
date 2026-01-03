@@ -661,10 +661,22 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private onObservationRightClick(observation: FeatureProperties) {
     this.selectedObservation = observation;
-    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => ({
-      label: this.markerService.formatTemplate(label, observation),
-      html: this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(template, observation)),
-    }));
+    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => {
+      let html = this.markerService.formatTemplate(template, observation);
+      try {
+        const dom = new DOMParser().parseFromString(html, "text/html");
+        dom.querySelectorAll("[src]").forEach((node) => {
+          node.setAttribute("src", new URL(node.getAttribute("src"), this.baseURL).toString());
+        });
+        html = dom.body.innerHTML;
+      } catch (e) {
+        console.warn("Failed update URLs using DOMParser", html, e);
+      }
+      return {
+        label: this.markerService.formatTemplate(label, observation),
+        html: this.sanitizer.bypassSecurityTrustHtml(html),
+      };
+    });
     this.selectedObservationActiveTabs[observation.$source] = (
       this.selectedObservationDetails.find(
         ({ label }) => label === this.selectedObservationActiveTabs[observation.$source],
