@@ -18,29 +18,20 @@ variables:
 .build:
   stage: build
   image: node:lts
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - .yarn-cache/
-  variables:
-    NODE_OPTIONS: "--max-old-space-size=4096"
-    YARN_CACHE_FOLDER: .yarn-cache/
   before_script:
     - corepack enable
-    - yarn install --immutable
+    - pnpm install --frozen-lockfile
     - npm --no-git-tag-version version $(git describe --tags)
 
 lint:
   extends: .build
   script:
-    - yarn lint
+    - pnpm lint
 
 build:
   extends: .build
   script:
-    - yarn build
+    - pnpm build
   artifacts:
     name: ${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}
     paths:
@@ -168,8 +159,8 @@ build:observations-api:
   script:
     - cd observations-api/
     - corepack enable
-    - yarn install --immutable
-    - yarn build
+    - pnpm install --frozen-lockfile
+    - pnpm build
   environment:
     name: observations-api
   artifacts:
@@ -200,9 +191,9 @@ deploy:observations-api:
       junit: test-results/junit-results.xml
   before_script:
     - corepack enable
-    - yarn install --immutable
+    - pnpm install --frozen-lockfile
   script:
-    - yarn playwright test
+    - pnpm playwright test
 
 playwright:dev:
   extends: .playwright
@@ -213,7 +204,7 @@ playwright:dev:
     - when: manual
       allow_failure: true
   script:
-    - yarn playwright test --project=chromium
+    - pnpm playwright test --project=chromium
 
 playwright:localhost:
   extends: .playwright
@@ -225,4 +216,4 @@ playwright:localhost:
     - when: manual
       allow_failure: true
   script:
-    - yarn playwright test --project=chromium # especially webkit is slow -> don't run on merge requests
+    - pnpm playwright test --project=chromium # especially webkit is slow -> don't run on merge requests

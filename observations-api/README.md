@@ -22,8 +22,8 @@ MYSQL_DATABASE=
 ```sh
 > cd observations-api/
 > corepack enable
-> yarn install
-> yarn dev
+> pnpm install
+> pnpm dev
 ```
 
 ## Deployment
@@ -33,8 +33,8 @@ Build
 ```sh
 > observations-api/
 > corepack enable
-> yarn install
-> yarn build
+> pnpm install
+> pnpm build
 ```
 
 Copy to server
@@ -71,7 +71,7 @@ Environment=MYSQL_DATABASE=
 Environment=LOKANDO_API=
 Environment=LOKANDO_API_KEY=
 Environment=PORT=3000
-ExecStartPre=/usr/bin/yarn install
+ExecStartPre=/usr/bin/pnpm install
 ExecStart=/usr/bin/node dist/server/entry.mjs
 MemoryAccounting=yes
 MemoryHigh=1G
