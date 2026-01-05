@@ -206,7 +206,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     class: "modal-md",
   };
 
-  updateBulletinOnServer = debounce(this.updateBulletinOnServerNow, 1000);
+  updateBulletinOnServerDebounced = debounce(this.updateBulletinOnServerNow, 1000);
+  updateBulletinOnServer(bulletin: BulletinModel, checkErrors = true, writeUndoStack = true) {
+    this.mapService.updateAggregatedRegion(this.activeBulletin);
+    this.updateBulletinOnServerDebounced(bulletin, checkErrors, writeUndoStack);
+  }
 
   TextcatTextfield = Enums.TextcatTextfield;
 
@@ -1284,7 +1288,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   undoRedoActiveBulletin(type: "undo" | "redo") {
-    this.updateBulletinOnServer.flush();
+    this.updateBulletinOnServerDebounced.flush();
     const activeId = this.activeBulletin.id;
     const bulletin = this.undoRedoService.undoRedoActiveBulletin(type, activeId);
     const index = this.internBulletinsList.indexOf(this.activeBulletin);
@@ -1670,6 +1674,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   saveBulletin(event: Event) {
     event.stopPropagation();
+
+    this.mapService.updateAggregatedRegion(this.activeBulletin);
 
     const isUpdate: boolean = this.activeBulletin.savedRegions.length !== 0; // save selected regions to active bulletin
     const regions = this.mapService.getSelectedRegions();
