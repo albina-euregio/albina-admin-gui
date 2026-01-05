@@ -68,8 +68,8 @@ import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, t
     KeyValuePipe,
     TranslateModule,
     NgxMousetrapDirective,
-    BulletinTextComponent
-],
+    BulletinTextComponent,
+  ],
 })
 export class CreateBulletinComponent implements OnInit, OnDestroy {
   private router = inject(Router);
@@ -1355,7 +1355,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private updateInternalBulletins() {
+    if (this.activeBulletin) {
+      this.mapService.updateAggregatedRegion(this.activeBulletin);
+    }
     for (const bulletin of this.internBulletinsList) {
+      if (bulletin?.id === this.activeBulletin?.id) {
+        continue;
+      }
       this.mapService.updateAggregatedRegion(bulletin);
     }
   }
