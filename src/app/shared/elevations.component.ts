@@ -34,8 +34,8 @@ export class ElevationsComponent implements OnChanges {
   }
 
   updateElevationHigh() {
-    if (!this.treelineHigh) {
-      if (this.elevationHigh !== undefined) {
+    if (!this.treelineHigh()) {
+      if (this.elevationHigh() !== undefined) {
         this.elevationHigh.set(Math.round(this.elevationHigh() / 100) * 100);
         if (this.elevationHigh() > 9000) {
           this.elevationHigh.set(9000);
@@ -65,7 +65,7 @@ export class ElevationsComponent implements OnChanges {
 
   treelineHighClicked(event) {
     event.stopPropagation();
-    if (this.treelineHigh) {
+    if (this.treelineHigh()) {
       this.isElevationHighEditing = true;
       this.treelineHigh.set(false);
     } else {
@@ -78,7 +78,7 @@ export class ElevationsComponent implements OnChanges {
 
   treelineLowClicked(event) {
     event.stopPropagation();
-    if (this.treelineLow) {
+    if (this.treelineLow()) {
       this.isElevationLowEditing = true;
       //this.treelineLow.set(false);
     } else {
