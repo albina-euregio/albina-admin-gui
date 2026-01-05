@@ -164,7 +164,7 @@ test("export observation details", async ({ page }) => {
   // apply some filter
   await page.getByRole("button", { name: "Region" }).click();
   await page.getByRole("checkbox", { name: "Tuxer Alps East" }).check();
-  await page.getByRole("checkbox", { name: "Kitzbühel Alps Brixental" }).check();
+  await page.getByRole("checkbox", { name: "Kitzbühel Alps Wildschönau" }).check();
   await page.getByRole("checkbox", { name: "Zillertal Alps Northwest" }).check();
   await expect(page.locator(".keydata")).toHaveText("4 / 175", { timeout: 7000 });
   await test.step("GEOJSON", async () => {
