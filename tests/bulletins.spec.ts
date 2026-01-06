@@ -6,6 +6,18 @@ import path from "path";
 test.beforeEach(async ({ page }) => {
   await page.goto("");
   await loginForecaster(page);
+  // Wait until Bootstrap CSS is present
+  await page.waitForFunction(() => {
+    return getComputedStyle(document.documentElement).getPropertyValue("--bs-font-sans-serif").includes("system-ui");
+  });
+  // set fixed font before comparing screenshot
+  await page.addStyleTag({
+    content: `
+    * {
+      font-family: "Noto Sans", sans-serif !important;
+    }
+  `,
+  });
 });
 
 const waitForGetEdit = (page) =>
