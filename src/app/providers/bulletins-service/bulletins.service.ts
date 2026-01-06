@@ -1,6 +1,5 @@
 import * as Enums from "../../enums/enums";
 import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
-import { BulletinLockModel } from "../../models/bulletin-lock.model";
 import { ServerModel } from "../../models/server.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -42,9 +41,6 @@ export class BulletinsService {
   private isEditable: boolean;
   private isReadOnly: boolean;
 
-  public lockedBulletins: Map<string, BulletinLockModel>;
-  public bulletinLocks: Subject<BulletinLockModel>;
-
   public stress: Record<StressLevel["date"], StressLevel["stressLevel"]> = {};
 
   public statusMap: Map<string, Map<number, Enums.BulletinStatus>>;
@@ -60,7 +56,6 @@ export class BulletinsService {
     this.copyDate = undefined;
     this.isEditable = false;
     this.isReadOnly = false;
-    this.lockedBulletins = new Map<string, BulletinLockModel>();
 
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
     const startDate = isTrainingEnabled ? new Date(trainingTimestamp) : new Date();
