@@ -1,0 +1,29 @@
+<h1>Linea Station Selector</h1>
+
+<!-- Station buttons -->
+<div class="stations">
+  <button
+    *ngFor="let id of stationIds"
+    (click)="addStation(id)">
+    {{ id }}
+  </button>
+</div>
+
+<!-- Selected station chips -->
+<div class="selected-stations">
+  <div class="station-chip" *ngFor="let id of selectedIds">
+    {{ id }}
+    <button (click)="removeStation(id)">×</button>
+  </div>
+</div>
+
+
+<linea-plot
+  [attr.src]="srcs"
+  [attr.lazysrc]="lazysrcs"
+  showsurfaceHoarseries
+  showtitle
+  showexport
+  showinteractiveblogexport
+  showdatepicker>
+</linea-plot>

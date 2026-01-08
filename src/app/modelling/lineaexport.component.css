@@ -1,0 +1,79 @@
+:host {
+  display: block;
+  font-family: Helvetica, sans-serif;
+  margin: 20px;
+  color: #333;
+}
+
+/* Station button grid */
+.stations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.stations button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #eee;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.stations button:hover {
+  background: #0078d7;
+  color: white;
+}
+
+/* Selected station chips */
+.selected-stations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.station-chip {
+  background: #0078d7;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.station-chip button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+}
+
+/* linea web component wrapper */
+linea-plot,
+linea-plot-year {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+linea-plot > div:empty {
+  display: none;
+}
+
+linea-plot > div {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
