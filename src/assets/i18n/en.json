@@ -33,7 +33,8 @@
     "weatherbox": "Weatherbox",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
-    "geosphere": "GeoSphere"
+    "geosphere": "GeoSphere",
+    "lineaexport": "LineaExport"
   },
   "menu": {
     "logout": "Logout",

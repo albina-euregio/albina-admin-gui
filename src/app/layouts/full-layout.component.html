@@ -73,6 +73,15 @@
               </a>
             </li>
           }
+          @if (true && authenticationService.isUserLoggedIn()) {
+            <li
+              class="nav-item"
+              >
+              <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/lineaexport']" ngxMousetrapKey="g l">
+                {{ "sidebar.lineaexport" | translate }}
+              </a>
+            </li>
+          }
           <!-- dummy button for keyboard shortcut to place focus on map -->
           <li class="nav-item invisible">
             <button class="btn" type="button" (click)="focusMap()" ngxMousetrapKey="f m">Focus Map</button>
