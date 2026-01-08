@@ -2,11 +2,11 @@
 
 <!-- Station buttons -->
 <div class="stations">
-  <button
-    *ngFor="let id of stationIds"
-    (click)="addStation(id)">
-    {{ id }}
-  </button>
+  @for (id of stationIds; track id) {
+    <button (click)="addStation(id)">
+      {{ id }}
+    </button>
+  }
 </div>
 
 <!-- Selected station chips -->

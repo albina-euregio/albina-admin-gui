@@ -2,9 +2,11 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 @Component({
-  selector: "lineaexport",
+  selector: "app-linea-export",
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule
+  ],
   templateUrl: "./lineaexport.component.html",
   styleUrls: ["./lineaexport.component.css"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
