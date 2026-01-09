@@ -66,5 +66,5 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: process.env.CI_ENVIRONMENT_URL
     ? undefined
-    : { command: "yarn dev", reuseExistingServer: !process.env.CI, timeout: 60 * 1000, url: "http://localhost:4200/" },
+    : { command: "pnpm dev", reuseExistingServer: !process.env.CI, timeout: 60 * 1000, url: "http://localhost:4200/" },
 });

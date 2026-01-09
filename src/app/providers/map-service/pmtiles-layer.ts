@@ -100,7 +100,7 @@ export class PmLeafletLayer extends GridLayer {
 
     this.lastRequestedZ = undefined;
 
-    this.views = sourcesToViews(options);
+    this.views = sourcesToViews(options as unknown);
 
     this.scratch = document.createElement("canvas").getContext("2d")!;
     this.onTilesInvalidated = (tiles: Set<string>) => {

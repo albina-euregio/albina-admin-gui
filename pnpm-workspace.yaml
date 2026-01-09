@@ -1,0 +1,3 @@
+patchedDependencies:
+  leaflet: patches/leaflet.patch
+  leaflet.sync: patches/leaflet.sync.patch
