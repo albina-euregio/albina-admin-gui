@@ -5,9 +5,9 @@ https://admin.avalanche.report/ – A frontend to enter avalanche bulletins.
 ## Deployment
 
 1. Install [Node.js](https://nodejs.org/en).
-1. Use `corepack enable` to install [Yarn](https://yarnpkg.com/).
-1. Use `yarn install` to download necessary packages.
-1. Use `yarn build`
+1. Use `corepack enable` to install [pnpm](https://pnpm.io/).
+1. Use `pnpm install` to download necessary packages.
+1. Use `pnpm build`
 1. Copy `dist/assets/env.template.js` to `dist/assets/env.js` and edit accordingly
 1. Copy the contents of `dist/` to the server `/var/www/admin-albina.example.com/`
 1. Configure [Caddy server](https://caddyserver.com/) (see config file below)
@@ -29,10 +29,8 @@ admin-albina.example.com {
 ```sh
 nvm install
 corepack enable
-yarn install
+pnpm install
 ```
-
-If you encounter Yarn Plug'n'Play errors, make sure there is no `.pnp.cjs` in any folder that could be picked up by yarn (e.g. in your home directory).
 
 ### Run
 
@@ -45,7 +43,7 @@ It will automatically reload if you change any of the source files.
 Use:
 
 ```sh
-yarn run start-dev
+pnpm start-dev
 ```
 
 #### Start frontend with local server
@@ -55,7 +53,7 @@ The server should be available under http://localhost:8080/albina.
 Then use:
 
 ```sh
-yarn run start-local
+pnpm start-local
 ```
 
 ## Code scaffolding
@@ -79,30 +77,30 @@ This project uses Transifex for its translations: https://app.transifex.com/albi
 Please use the following workflow when releasing new versions:
 
 1. determine new version number `<TAG>` and
-   run `yarn changelog <TAG>`
+   run `pnpm changelog <TAG>`
 2. edit `CHANGELOG.md` by hand if necessary and commit
 3. create `<TAG>` with git
 
 If you forgot to update the changelog before creating a new tag in git, use
-`yarn changelog-latest`. This will add all commits for the newest tag to
+`pnpm changelog-latest`. This will add all commits for the newest tag to
 the CHANGELOG. The downside compared to the workflow above is, that the
 changes to CHANGELOG itself are not included in the release.
 
 If there have been several new releases since the last update to CHANGELOG,
-use e.g. `yarn git-cliff -p CHANGELOG.md v7.0.6..` to prepend all changes that
+use e.g. `pnpm git-cliff -p CHANGELOG.md v7.0.6..` to prepend all changes that
 happened _after_ version v7.0.6 was released.
 
 ## Playwright tests
 
 The folder `tests/` contains several Playwright tests which are executed on each merge request and push to the master branch.
-To test locally, you can use the VS Code extension or just type `yarn playwright test`. If you want to be sure that you have the exact same setup as the CI tests,
+To test locally, you can use the VS Code extension or just type `pnpm playwright test`. If you want to be sure that you have the exact same setup as the CI tests,
 use the dockerfile `Dockerfile.playwright`:
 
 ```
-yarn dev  # local server needs to be running
+pnpm dev  # local server needs to be running
 docker build -f Dockerfile.playwright -t albina-playwright .
 docker run -it --network="host" -v ./:/home/ albina-playwright
-yarn playwright test --workers=1
+pnpm playwright test --workers=1
 ```
 
 To simulate the CI conditions these settings could be helpful:

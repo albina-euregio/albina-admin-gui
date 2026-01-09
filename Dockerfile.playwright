@@ -8,4 +8,4 @@ COPY package.json yarn.lock .yarnrc.yml playwright.config.ts .env ./
 COPY .yarn .yarn
 COPY local-types ./local-types
 
-RUN corepack enable && yarn install --immutable 
+RUN corepack enable && yarn install --frozen-lockfile
