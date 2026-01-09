@@ -357,20 +357,11 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   private getColor(id): string {
-    switch (this.getDangerRating(id)) {
-      case Enums.DangerRating.low:
-        return this.constantsService.colorDangerRatingLow;
-      case Enums.DangerRating.moderate:
-        return this.constantsService.colorDangerRatingModerate;
-      case Enums.DangerRating.considerable:
-        return this.constantsService.colorDangerRatingConsiderable;
-      case Enums.DangerRating.high:
-        return this.constantsService.colorDangerRatingHigh;
-      case Enums.DangerRating.very_high:
-        return this.constantsService.colorDangerRatingVeryHigh;
-      default:
-        return "#FFFFFF";
+    const rating = this.getDangerRating(id);
+    if (!rating) {
+      return "#FFFFFF";
     }
+    return this.constantsService.getDangerRatingColor(rating);
   }
 
   private getGrayscaleColor(id): string {
@@ -378,20 +369,11 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
     if (id == 26 || id == 31 || id == 32 || id == 36 || id == 37 || id == 41 || id == 42) {
       return "#FFFFFF";
     }
-    switch (this.getDangerRating(id)) {
-      case Enums.DangerRating.low:
-        return this.constantsService.colorDangerRatingLowBw;
-      case Enums.DangerRating.moderate:
-        return this.constantsService.colorDangerRatingModerateBw;
-      case Enums.DangerRating.considerable:
-        return this.constantsService.colorDangerRatingConsiderableBw;
-      case Enums.DangerRating.high:
-        return this.constantsService.colorDangerRatingHighBw;
-      case Enums.DangerRating.very_high:
-        return this.constantsService.colorDangerRatingVeryHighBw;
-      default:
-        return "#FFFFFF";
+    const rating = this.getDangerRating(id);
+    if (!rating) {
+      return "#FFFFFF";
     }
+    return this.constantsService.getDangerRatingColorBw(rating);
   }
 
   private getCell(matrixInformation: MatrixInformationModel): string {

@@ -15,6 +15,7 @@ export function loadRegions() {
     import("@eaws/micro-regions/AT-07_micro-regions.geojson.json"),
     import("@eaws/micro-regions/AT-08_micro-regions.geojson.json"),
     import("@eaws/micro-regions/DE-BY_micro-regions.geojson.json"),
+    import("@eaws/micro-regions/SI_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-BZ_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-32-TN_micro-regions.geojson.json"),
     import("@eaws/micro-regions/IT-21_micro-regions.geojson.json"),

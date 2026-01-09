@@ -55,9 +55,9 @@ export type AwsomeSource = z.infer<typeof AwsomeSourceSchema>;
 
 export const AwsomeConfigSchema = z.object({
   $schema: UrlSchema.optional().describe("URL of JSON Schema awsome.schema.json"),
-  date: z.string().describe("Initial date/time when opening the dashboard"),
-  dateMax: z.string().optional(),
-  dateMin: z.string().optional(),
+  date: z.iso.datetime({ local: true }).describe("Initial date/time when opening the dashboard"),
+  dateMax: z.iso.datetime({ local: true }).optional(),
+  dateMin: z.iso.datetime({ local: true }).optional(),
   dateStepSeconds: z.number().describe("Seconds between two models runs"),
   filters: FilterSelectionSpecSchema.array(),
   sources: AwsomeSourceSchema.array(),

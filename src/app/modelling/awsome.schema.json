@@ -6,29 +6,35 @@
       "description": "URL of JSON Schema awsome.schema.json",
       "anyOf": [
         {
-          "description": "Absolute URL",
           "type": "string",
-          "format": "uri"
+          "format": "uri",
+          "description": "Absolute URL"
         },
         {
-          "description": "Relative URL",
-          "type": "string"
+          "type": "string",
+          "description": "Relative URL"
         }
       ]
     },
     "date": {
-      "description": "Initial date/time when opening the dashboard",
-      "type": "string"
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|))$",
+      "description": "Initial date/time when opening the dashboard"
     },
     "dateMax": {
-      "type": "string"
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|))$"
     },
     "dateMin": {
-      "type": "string"
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|))$"
     },
     "dateStepSeconds": {
-      "description": "Seconds between two models runs",
-      "type": "number"
+      "type": "number",
+      "description": "Seconds between two models runs"
     },
     "filters": {
       "type": "array",
@@ -57,12 +63,12 @@
             "enum": ["classify", "label"]
           },
           "key": {
-            "description": "Key name defining how to obtain the value from a GeoJSON Feature representing this filter, such as `path.to.variable.in.json`, evaluated relative to the `properties` of a GeoJSON Feature.",
-            "type": "string"
+            "type": "string",
+            "description": "Key name defining how to obtain the value from a GeoJSON Feature representing this filter, such as `path.to.variable.in.json`, evaluated relative to the `properties` of a GeoJSON Feature."
           },
           "label": {
-            "description": "Label text shown in the chart",
-            "type": "string"
+            "type": "string",
+            "description": "Label text shown in the chart"
           },
           "labelI18nKey": {
             "description": "Key in https://gitlab.com/albina-euregio/albina-admin-gui/-/blob/master/src/assets/i18n/en.json used for i18n (internationalization)",
@@ -80,20 +86,20 @@
             "type": "boolean"
           },
           "type": {
-            "description": "Identifier for this filter",
-            "type": "string"
+            "type": "string",
+            "description": "Identifier for this filter"
           },
           "url": {
             "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
             "anyOf": [
               {
-                "description": "Absolute URL",
                 "type": "string",
-                "format": "uri"
+                "format": "uri",
+                "description": "Absolute URL"
               },
               {
-                "description": "Relative URL",
-                "type": "string"
+                "type": "string",
+                "description": "Relative URL"
               }
             ]
           },
@@ -117,12 +123,12 @@
                   "type": "string"
                 },
                 "color": {
-                  "description": "Fill color",
-                  "type": "string"
+                  "type": "string",
+                  "description": "Fill color"
                 },
                 "label": {
-                  "description": "Label string shown inside the marker",
-                  "type": "string"
+                  "type": "string",
+                  "description": "Label string shown inside the marker"
                 },
                 "labelI18nKey": {
                   "description": "Key in https://gitlab.com/albina-euregio/albina-admin-gui/-/blob/master/src/assets/i18n/en.json used for i18n (internationalization)",
@@ -219,19 +225,19 @@
             "description": "URL to GeoJSON FeatureCollection. Timestamps in the format 2023-11-12_06-00-00 are evaluated.",
             "anyOf": [
               {
-                "description": "Absolute URL",
                 "type": "string",
-                "format": "uri"
+                "format": "uri",
+                "description": "Absolute URL"
               },
               {
-                "description": "Relative URL",
-                "type": "string"
+                "type": "string",
+                "description": "Relative URL"
               }
             ]
           },
           "detailsTemplates": {
-            "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
             "default": [],
+            "description": "Template for details HTML. The details are shown in the sidebar after clicking an marker on the map. Placeholders such as `{path.to.variable.in.json}` are evaluated relative to the `properties` of a GeoJSON Feature.",
             "type": "array",
             "items": {
               "type": "object",
@@ -257,24 +263,23 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "description": "Identifier shown in map layer control",
-                  "type": "string"
+                  "type": "string",
+                  "description": "Identifier shown in map layer control"
                 },
                 "imageUrl": {
                   "anyOf": [
                     {
-                      "description": "Absolute URL",
                       "type": "string",
-                      "format": "uri"
+                      "format": "uri",
+                      "description": "Absolute URL"
                     },
                     {
-                      "description": "Relative URL",
-                      "type": "string"
+                      "type": "string",
+                      "description": "Relative URL"
                     }
                   ]
                 },
                 "imageBounds": {
-                  "description": "Image bounds such as [[40.712,-74.227],[40.774,-74.125]]",
                   "minItems": 2,
                   "maxItems": 2,
                   "type": "array",
@@ -285,7 +290,8 @@
                     "items": {
                       "type": "number"
                     }
-                  }
+                  },
+                  "description": "Image bounds such as [[40.712,-74.227],[40.774,-74.125]]"
                 },
                 "opacity": {
                   "description": "The opacity of the image overlay.",
@@ -296,8 +302,8 @@
                   "type": "number"
                 },
                 "className": {
-                  "description": "A custom class name to assign to the image. Empty by default.",
                   "default": "",
+                  "description": "A custom class name to assign to the image. Empty by default.",
                   "type": "string"
                 }
               },
@@ -312,30 +318,30 @@
     },
     "mapCenter": {
       "default": [47.3, 11.3, 8],
-      "description": "Map center given as [latitude, longitude, zoom]",
       "minItems": 3,
       "maxItems": 3,
       "type": "array",
       "items": {
         "type": "number"
-      }
+      },
+      "description": "Map center given as [latitude, longitude, zoom]"
     },
     "regions": {
       "type": "object",
       "properties": {
         "url": {
-          "description": "URL to GeoJSON FeatureCollection for micro-region polygons. For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json",
           "anyOf": [
             {
-              "description": "Absolute URL",
               "type": "string",
-              "format": "uri"
+              "format": "uri",
+              "description": "Absolute URL"
             },
             {
-              "description": "Relative URL",
-              "type": "string"
+              "type": "string",
+              "description": "Relative URL"
             }
-          ]
+          ],
+          "description": "URL to GeoJSON FeatureCollection for micro-region polygons. For instance, https://regions.avalanches.org/micro-regions/latest/AT-07_micro-regions.geojson.json"
         }
       },
       "additionalProperties": false
@@ -367,13 +373,13 @@
         "url": {
           "anyOf": [
             {
-              "description": "Absolute URL",
               "type": "string",
-              "format": "uri"
+              "format": "uri",
+              "description": "Absolute URL"
             },
             {
-              "description": "Relative URL",
-              "type": "string"
+              "type": "string",
+              "description": "Relative URL"
             }
           ]
         }

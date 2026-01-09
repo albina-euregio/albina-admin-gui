@@ -8,12 +8,23 @@ const testDate = new Date("2024-12-24");
 test.beforeEach(async ({ page }) => {
   await page.goto("");
   await loginForecaster(page);
+  // Wait until Bootstrap CSS is present
+  await page.waitForFunction(() => {
+    return getComputedStyle(document.documentElement).getPropertyValue("--bs-font-sans-serif").includes("system-ui");
+  });
+  // set fixed font before comparing screenshot
+  await page.addStyleTag({
+    content: `
+    * {
+      font-family: "Noto Sans", sans-serif !important;
+    }
+  `,
+  });
 });
 
 test("filter observations", async ({ page }) => {
   test.slow();
   await page.clock.setFixedTime(testDate);
-  await page.reload();
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
 
@@ -104,6 +115,15 @@ test("filter observations", async ({ page }) => {
     await page.locator("app-observation-chart").filter({ hasText: "Aspect" }).getByTitle("classify").click();
     await page.locator("app-observation-chart").filter({ hasText: "Observation Type" }).getByTitle("label").click();
     await page.locator("app-observation-chart").filter({ hasText: "Day" }).getByTitle("invert").click();
+    // set fixed font before comparing screenshot
+    await page.addStyleTag({
+      // font gets reset when we reload, so we need to add it again
+      content: `
+    * {
+      font-family: "Noto Sans", sans-serif !important;
+    }
+  `,
+    });
     await expect(page.locator(".app-body")).toHaveScreenshot("filter-bar.png", { maxDiffPixelRatio: 0.1 });
   });
 });
@@ -164,7 +184,7 @@ test("export observation details", async ({ page }) => {
   // apply some filter
   await page.getByRole("button", { name: "Region" }).click();
   await page.getByRole("checkbox", { name: "Tuxer Alps East" }).check();
-  await page.getByRole("checkbox", { name: "Kitzbühel Alps Brixental" }).check();
+  await page.getByRole("checkbox", { name: "Kitzbühel Alps Wildschönau" }).check();
   await page.getByRole("checkbox", { name: "Zillertal Alps Northwest" }).check();
   await expect(page.locator(".keydata")).toHaveText("4 / 175", { timeout: 7000 });
   await test.step("GEOJSON", async () => {

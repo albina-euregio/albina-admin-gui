@@ -27,7 +27,7 @@ import type {
   XAXisOption,
   YAXisOption,
 } from "echarts/types/dist/shared";
-import { debounce } from "es-toolkit";
+import { throttle } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
 import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
 import { TabsModule } from "ngx-bootstrap/tabs";
@@ -229,12 +229,18 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     return url;
   }
 
+  private get baseURL() {
+    return this.configURL.endsWith("dcfg/awsome.json")
+      ? new URL(this.configURL.replace("dcfg/awsome.json", ""), location.href)
+      : location.href;
+  }
+
   private async loadSource(source: AwsomeSource): Promise<FeatureProperties[]> {
     const date = this.albinaDate;
     const filterUrl = this.filterService.filterSelectionData.find(
       (f) => f.url && f.getSelectedValues("selected").length,
     );
-    const url0 = new URL(filterUrl?.url ?? source.url, location.href);
+    const url0 = new URL(filterUrl?.url ?? source.url, this.baseURL);
     const url = this.setSearchParams(url0, [source]).toString();
 
     const aspectFilter = this.filterService.filterSelectionData.find((f) => f.type === "aspect");
@@ -347,8 +353,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
           : this.markerService.createMarker(observation, isHighlighted);
       marker
         ?.on({
-          tooltipopen: debounce(() => this.highlightInHazardChart(observation), 500),
-          tooltipclose: debounce(() => this.highlightInHazardChart(undefined), 500),
+          tooltipopen: () => this.highlightInHazardChart(observation),
+          tooltipclose: () => this.highlightInHazardChart(undefined),
           click: ($event) => this.onObservationClick(observation, $event.originalEvent),
           contextmenu: () => this.onObservationRightClick(observation),
         })
@@ -458,7 +464,8 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     ];
   }
 
-  private highlightInHazardChart(observation: FeatureProperties) {
+  private highlightInHazardChart = throttle((o: FeatureProperties) => this.highlightInHazardChart0(o), 500);
+  private highlightInHazardChart0(observation: FeatureProperties) {
     this.hazardChart = { ...this.hazardChart };
     const series: ScatterSeriesOption = this.hazardChart.series[1];
     const xAxis: XAXisOption = this.hazardChart.xAxis;
@@ -504,7 +511,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
     if (!url0) {
       return;
     }
-    const url = this.setSearchParams(new URL(url0, location.href), this.activeSources);
+    const url = this.setSearchParams(new URL(url0, this.baseURL), this.activeSources);
 
     this.timeseriesChart$loading = this.fetchJSON(url.toString()).subscribe((d) => {
       this.timeseriesChart$loading = undefined;
@@ -655,10 +662,22 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   private onObservationRightClick(observation: FeatureProperties) {
     this.selectedObservation = observation;
-    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => ({
-      label: this.markerService.formatTemplate(label, observation),
-      html: this.sanitizer.bypassSecurityTrustHtml(this.markerService.formatTemplate(template, observation)),
-    }));
+    this.selectedObservationDetails = observation.$sourceObject.detailsTemplates.map(({ label, template }) => {
+      let html = this.markerService.formatTemplate(template, observation);
+      try {
+        const dom = new DOMParser().parseFromString(html, "text/html");
+        dom.querySelectorAll("[src]").forEach((node) => {
+          node.setAttribute("src", new URL(node.getAttribute("src"), this.baseURL).toString());
+        });
+        html = dom.body.innerHTML;
+      } catch (e) {
+        console.warn("Failed update URLs using DOMParser", html, e);
+      }
+      return {
+        label: this.markerService.formatTemplate(label, observation),
+        html: this.sanitizer.bypassSecurityTrustHtml(html),
+      };
+    });
     this.selectedObservationActiveTabs[observation.$source] = (
       this.selectedObservationDetails.find(
         ({ label }) => label === this.selectedObservationActiveTabs[observation.$source],

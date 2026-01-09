@@ -1,0 +1,22 @@
+diff --git a/package.json b/package.json
+index cce6d231a171e00b9cb582d0d814b32848138237..9cba255052107909bd79034626e572f4e7c64bac 100644
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "leaflet",
+-  "version": "2.0.0-alpha.1",
++  "version": "2.0.0-alpha.1-98-g611aee1c",
+   "homepage": "https://leafletjs.com/",
+   "description": "JavaScript library for mobile-friendly interactive maps",
+   "devDependencies": {
+@@ -35,7 +35,7 @@
+   },
+   "type": "module",
+   "exports": {
+-    ".": "./dist/leaflet-src.js",
+-    "./styles.css": "./dist/leaflet.css"
++    ".": "./src/Leaflet.js",
++    "./styles.css": "./src/leaflet.css"
+   },
+   "style": "dist/leaflet.css",

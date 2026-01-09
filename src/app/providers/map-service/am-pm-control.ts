@@ -1,6 +1,10 @@
-import { Control, DomUtil } from "leaflet";
+import { Control, ControlOptions, DomUtil } from "leaflet";
 
-export const AmPmControl = Control.extend({
+interface Options extends ControlOptions {
+  text?: string;
+}
+
+export class AmPmControl extends Control<Options> {
   onAdd() {
     const container = DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
     container.style.backgroundColor = "white";
@@ -8,14 +12,14 @@ export const AmPmControl = Control.extend({
     container.style.height = "35px";
     container.innerHTML = `<p style="font-size: 1.75em; color: #989898; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%)"><b>${this.options.text}</b></p>`;
     return container;
-  },
+  }
 
   setText(text: string) {
     this.options.text = text;
     return this;
-  },
+  }
 
   onRemove() {
     // Nothing to do here
-  },
-});
+  }
+}

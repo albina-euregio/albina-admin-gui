@@ -18,29 +18,20 @@ variables:
 .build:
   stage: build
   image: node:lts
-  cache:
-    key:
-      files:
-        - yarn.lock
-    paths:
-      - .yarn-cache/
-  variables:
-    NODE_OPTIONS: "--max-old-space-size=4096"
-    YARN_CACHE_FOLDER: .yarn-cache/
   before_script:
     - corepack enable
-    - yarn install --immutable
+    - pnpm install --frozen-lockfile
     - npm --no-git-tag-version version $(git describe --tags)
 
 lint:
   extends: .build
   script:
-    - yarn lint
+    - pnpm lint
 
 build:
   extends: .build
   script:
-    - yarn build
+    - pnpm build
   artifacts:
     name: ${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}
     paths:
@@ -79,7 +70,7 @@ build:development:
     INITIAL_URL: ""
     API_BASE_URL: "https://admin.avalanche.report/albina_dev/api/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng-dev/"
-    AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"
+    AWSOME_CONFIG_URL: "https://models.avalanche.report/dcfg/awsome.json"
     HEADER_BG_COLOR: "#f4ea12"
     FAVICON_PATH: "assets/img/admin-favicon-dev.ico"
     LOGO_PATH: "assets/img/admin-logo-dev.svg"
@@ -103,7 +94,7 @@ build:beta:
     INITIAL_URL: ""
     API_BASE_URL: "https://admin.avalanche.report/albina/api/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
-    AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"
+    AWSOME_CONFIG_URL: "https://models.avalanche.report/dcfg/awsome.json"
     HEADER_BG_COLOR: "#839194"
     FAVICON_PATH: "assets/img/admin-favicon-beta.ico"
     LOGO_PATH: "assets/img/admin-logo-beta.svg"
@@ -127,7 +118,7 @@ build:production:
     INITIAL_URL: ""
     API_BASE_URL: "https://admin.avalanche.report/albina/api/"
     TEXTCAT_URL: "https://admin.avalanche.report/textcat-ng/"
-    AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"
+    AWSOME_CONFIG_URL: "https://models.avalanche.report/dcfg/awsome.json"
     HEADER_BG_COLOR: "#ffffff"
     FAVICON_PATH: "assets/img/admin-favicon.ico"
     LOGO_PATH: "assets/img/admin-logo.svg"
@@ -153,7 +144,7 @@ build:aran:
     INITIAL_URL: ""
     API_BASE_URL: "https://api.lauegi.report/api/"
     TEXTCAT_URL: "https://admin.lauegi.report/textcat-ng/"
-    AWSOME_CONFIG_URL: "https://models.avalanche.report/dashboard/awsome.json"
+    AWSOME_CONFIG_URL: "https://models.avalanche.report/dcfg/awsome.json"
     HEADER_BG_COLOR: "#ffffff"
     FAVICON_PATH: "assets/img/admin-favicon-aran.ico"
     LOGO_PATH: "assets/img/admin-logo-aran.svg"
@@ -168,8 +159,8 @@ build:observations-api:
   script:
     - cd observations-api/
     - corepack enable
-    - yarn install --immutable
-    - yarn build
+    - pnpm install --frozen-lockfile
+    - pnpm build
   environment:
     name: observations-api
   artifacts:
@@ -200,9 +191,9 @@ deploy:observations-api:
       junit: test-results/junit-results.xml
   before_script:
     - corepack enable
-    - yarn install --immutable
+    - pnpm install --frozen-lockfile
   script:
-    - yarn playwright test
+    - pnpm playwright test
 
 playwright:dev:
   extends: .playwright
@@ -213,7 +204,7 @@ playwright:dev:
     - when: manual
       allow_failure: true
   script:
-    - yarn playwright test --project=chromium
+    - pnpm playwright test --project=chromium
 
 playwright:localhost:
   extends: .playwright
@@ -225,4 +216,4 @@ playwright:localhost:
     - when: manual
       allow_failure: true
   script:
-    - yarn playwright test --project=chromium # especially webkit is slow -> don't run on merge requests
+    - pnpm playwright test --project=chromium # especially webkit is slow -> don't run on merge requests
