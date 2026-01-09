@@ -346,22 +346,27 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private onMapClick(event: MouseEvent) {
     if (!this.showNewVariantModal && !this.editRegions) {
       const clickedRegion = this.mapService.getClickedRegion();
-      for (let i = this.internVariantsList.length - 1; i >= 0; --i) {
-        if (this.internVariantsList[i].regions.includes(clickedRegion)) {
-          if (
-            (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? event.metaKey : event.ctrlKey) &&
-            this.activeVariant &&
-            this.activeVariant !== this.internVariantsList[i]
-          ) {
-            this.compareVariant(this.internVariantsList[i]);
-            break;
-          } else {
-            if (this.activeVariant === this.internVariantsList[i]) {
-              this.deselectVariant();
+      for (const variant of this.internVariantsList) {
+        if (
+          variant.regions.includes(clickedRegion) &&
+          variant.dangerSourceVariantStatus !== DangerSourceVariantStatus.inactive
+        ) {
+          if (!this.activeDangerSourceOnMap || (this.activeDangerSourceOnMap && variant.dangerSource.id === this.activeDangerSourceOnMap.id)) {
+            if (
+              (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? event.metaKey : event.ctrlKey) &&
+              this.activeVariant &&
+              this.activeVariant !== variant
+            ) {
+              this.compareVariant(variant);
               break;
             } else {
-              this.selectVariant(this.internVariantsList[i]);
-              break;
+              if (this.activeVariant === variant) {
+                this.deselectVariant();
+                break;
+              } else {
+                this.selectVariant(variant);
+                break;
+              }
             }
           }
         }
