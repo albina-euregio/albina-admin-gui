@@ -174,6 +174,16 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.showDangerSourceVariantsMap = new Map<string, boolean>();
   }
 
+  private initDangerSourceVariantsMap() {
+    for (const dangerSource of this.internDangerSourcesList) {
+      if (this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.active) == 0 && this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.dormant) == 0) {
+        this.showDangerSourceVariantsMap.set(dangerSource.id, false);
+      } else {
+        this.showDangerSourceVariantsMap.set(dangerSource.id, true);
+      }
+    }
+  }
+
   ngOnInit() {
     this.activeRoute.params.subscribe((routeParams) => {
       const date = new Date(routeParams.date);
@@ -278,6 +288,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                   this.addInternalVariants(variants, type);
                 }
                 this.sortInternDangerSourcesList();
+                this.initDangerSourceVariantsMap();
                 this.loading = false;
               },
               error: (error) => {

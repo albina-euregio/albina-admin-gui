@@ -292,10 +292,10 @@
         <div class="region-thumb__author font-s text-secondary" style="display: flex; align-items: center; gap: 8px; min-width: 0;">
           @if (getVariantCount(dangerSource) > 0) {
         <div class="btn-group region-divider__actions" style="flex: none;">
-          @if (showDangerSourceVariantsMap.get(dangerSource.id)) {
+          @if (!showDangerSourceVariantsMap.get(dangerSource.id)) {
         <i class="ph-bold ph-caret-right"></i>
           }
-          @if (!showDangerSourceVariantsMap.get(dangerSource.id)) {
+          @if (showDangerSourceVariantsMap.get(dangerSource.id)) {
         <i class="ph-bold ph-caret-down"></i>
           }
         </div>
@@ -381,7 +381,7 @@
     </header>
     <!-- End own danger sources header -->
     <!-- List of variants of danger source -->
-    @if (!showDangerSourceVariantsMap.get(dangerSource.id)) {
+    @if (!showDangerSourceVariantsMap.has(dangerSource.id) || showDangerSourceVariantsMap.get(dangerSource.id)) {
       <nav class="create-bulletin__region-list">
         <!-- Show the list of variants if there are any -->
         <ng-container>
