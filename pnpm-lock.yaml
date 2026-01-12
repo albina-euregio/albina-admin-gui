@@ -19,6 +19,9 @@ importers:
 
   .:
     dependencies:
+      '@albina-euregio/linea':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@angular/animations':
         specifier: ^21.0.4
         version: 21.0.4(@angular/core@21.0.4(@angular/compiler@21.0.4)(rxjs@7.8.2)(zone.js@0.16.0))
@@ -73,6 +76,9 @@ importers:
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
+      air-datepicker:
+        specifier: ^3.6.0
+        version: 3.6.0
       bootstrap:
         specifier: ^5.3.7
         version: 5.3.7(@popperjs/core@2.11.8)
@@ -214,6 +220,9 @@ importers:
         version: 8.48.0(eslint@9.31.0)(typescript@5.9.3)
 
 packages:
+
+  '@albina-euregio/linea@8.4.1':
+    resolution: {integrity: sha1-njA4Sfkko2VCTRWgoCN8tsIQ6Tk=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.4.1.tgz}
 
   '@algolia/abtesting@1.6.1':
     resolution: {integrity: sha512-wV/gNRkzb7sI9vs1OneG129hwe3Q5zPj7zigz3Ps7M5Lpo2hSorrOnXNodHEOV+yXE/ks4Pd+G3CDFIjFTWhMQ==}
@@ -1850,6 +1859,9 @@ packages:
     resolution: {integrity: sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==}
     engines: {node: '>= 14'}
 
+  air-datepicker@3.6.0:
+    resolution: {integrity: sha512-+txUkqa949rXBJDmkQAIb/GehZECJYF4rm9XJxVYtEX22C9WvBpE/XwCUQZBopKIkpg4ycAySJ9lH3JOg9qQTw==}
+
   ajv-formats@3.0.1:
     resolution: {integrity: sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==}
     peerDependencies:
@@ -3458,6 +3470,9 @@ packages:
     peerDependencies:
       browserslist: '>= 4.21.0'
 
+  uplot@1.6.32:
+    resolution: {integrity: sha512-KIMVnG68zvu5XXUbC4LQEPnhwOxBuLyW1AHtpm6IKTXImkbLgkMy+jabjLgSLMasNuGGzQm/ep3tOkyTxpiQIw==}
+
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
@@ -3618,6 +3633,12 @@ packages:
     resolution: {integrity: sha512-41dFXEEXuJpNecuUQq6JlbybmnHaqqpGlbH1yxnA5V9MMP4SbohSVZsJIwz+zdjQXSSlR1Vc34EgH1zxyTDvhg==}
 
 snapshots:
+
+  '@albina-euregio/linea@8.4.1':
+    dependencies:
+      air-datepicker: 3.6.0
+      temporal-polyfill: 0.3.0
+      uplot: 1.6.32
 
   '@algolia/abtesting@1.6.1':
     dependencies:
@@ -5098,6 +5119,8 @@ snapshots:
   acorn@8.15.0: {}
 
   agent-base@7.1.3: {}
+
+  air-datepicker@3.6.0: {}
 
   ajv-formats@3.0.1(ajv@8.17.1):
     optionalDependencies:
@@ -6864,6 +6887,8 @@ snapshots:
       browserslist: 4.28.0
       escalade: 3.2.0
       picocolors: 1.1.1
+
+  uplot@1.6.32: {}
 
   uri-js@4.4.1:
     dependencies:
