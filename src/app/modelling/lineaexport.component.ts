@@ -164,7 +164,7 @@ export class LineaExportComponent {
   ];
 
   // Initially selected station
-  selectedIds: string[] = ["AXLIZ1"];
+  selectedIds: string[] = [];
 
   // Add a station
   addStation(id: string): void {
