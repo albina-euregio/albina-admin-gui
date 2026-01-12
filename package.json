@@ -57,7 +57,7 @@
     "echarts": "^6.0.0",
     "es-toolkit": "^1.38.0",
     "file-saver": "^2.0.5",
-    "leaflet": "https://github.com/Leaflet/Leaflet/tarball/611aee1c561ae57ccca1fd28c5410010e387386e",
+    "leaflet": "https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b",
     "leaflet-control-geocoder": "^3.3.0",
     "leaflet.sync": "^0.2.4",
     "mousetrap": "^1.6.5",
