@@ -29,7 +29,7 @@ import type {
 } from "echarts/types/dist/shared";
 import { throttle } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
-import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, LayersControl, MarkerOptions } from "leaflet";
+import { ImageOverlay, LatLngBoundsLiteral, LayerGroup, LayersControl, MarkerOptions } from "leaflet";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, type Subscription } from "rxjs";
