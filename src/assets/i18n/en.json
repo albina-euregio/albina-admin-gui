@@ -693,7 +693,8 @@
           "enableDangerSources": "Enable danger sources",
           "enableObservations": "Enable observations",
           "enableModelling": "Enable modelling",
-          "enableWeatherbox": "Enable weather box"
+          "enableWeatherbox": "Enable weather box",
+          "enableLineaExport": "Enable LINEA export"
         },
         "configuration": {
           "title": "Configuration",
