@@ -29,7 +29,7 @@ import type {
 } from "echarts/types/dist/shared";
 import { throttle } from "es-toolkit";
 import { FeatureCollection, MultiPolygon } from "geojson";
-import { Control, ImageOverlay, LatLngBoundsLiteral, LayerGroup, MarkerOptions } from "leaflet";
+import { ImageOverlay, LatLngBoundsLiteral, LayerGroup, LayersControl, MarkerOptions } from "leaflet";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { NgxEchartsDirective } from "ngx-echarts";
 import { firstValueFrom, type Subscription } from "rxjs";
@@ -87,7 +87,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
   selectedObservationDetails: { label: DetailsTabLabel; html: SafeHtml }[] | undefined = undefined;
   selectedObservationActiveTabs = {} as Record<string, DetailsTabLabel>;
   sources: AwsomeSource[];
-  private mapLayerControl = new Control.Layers();
+  private mapLayerControl = new LayersControl();
   private mapLayer = new LayerGroup();
   private mapLayerHighlight = new LayerGroup();
   hazardChart: EChartsOption | undefined;
@@ -147,7 +147,7 @@ export class AwsomeComponent implements AfterViewInit, OnInit {
 
   async loadSources() {
     this.mapLayerControl.remove();
-    this.mapLayerControl = new Control.Layers();
+    this.mapLayerControl = new LayersControl();
     this.observations.length = 0;
     this.applyLocalFilter();
 

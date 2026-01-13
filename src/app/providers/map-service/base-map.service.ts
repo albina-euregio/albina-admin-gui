@@ -1,7 +1,7 @@
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
 import { Injectable } from "@angular/core";
-import { Control, Map as LeafletMap } from "leaflet";
+import { AttributionControl, ZoomControl, LeafletMap } from "leaflet";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -54,8 +54,8 @@ export class BaseMapService extends MapService {
     });
 
     this.resetAll();
-    new Control.Attribution({ prefix: false }).addTo(this.map);
-    new Control.Zoom({ position: "topleft" }).addTo(this.map);
+    new AttributionControl({ prefix: false }).addTo(this.map);
+    new ZoomControl({ position: "topleft" }).addTo(this.map);
     this.regionNameControl = new RegionNameControl().addTo(this.map);
     return this.map;
   }
