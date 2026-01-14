@@ -12,9 +12,9 @@
 /* Station button grid */
 .stations {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 /* Selected station chips */

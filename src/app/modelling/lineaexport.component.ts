@@ -22,6 +22,10 @@ export class LineaExportComponent implements AfterViewInit {
   readonly mapLayer = new LayerGroup();
 
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
+  readonly stations: StationFeature[] = [];
+  filteredStations: StationFeature[] = [];
+  private searchTimeout: any;
+  searchTerm = "";
 
   readonly markers = {};
 
@@ -49,13 +53,18 @@ export class LineaExportComponent implements AfterViewInit {
             marker.on("click", () => {
               if (this.selectedIds.includes(id)) {
                 this.removeStation(id);
-                marker.setStyle(this.getModelPointOptions(false)); // unselected style
               } else {
                 this.addStation(id);
-                marker.setStyle(this.getModelPointOptions(true)); // selected style
               }
             });
             this.markers[id] = marker;
+
+            this.stations.push({
+              id: String(id),
+              name: String(feature.properties.name),
+              lat: feature.geometry.coordinates[1] as number,
+              lng: feature.geometry.coordinates[0] as number,
+            } as StationFeature);
           }
         });
       });
@@ -79,21 +88,50 @@ export class LineaExportComponent implements AfterViewInit {
 
   private updateBaseLayer(): void {}
 
-  getModelPointOptions(selected: boolean): CircleMarkerOptions {
-    return {
-      pane: "markerPane",
-      radius: 8,
-      fillColor: selected ? "red" : "blue",
-      color: "black",
-      weight: 1,
-      opacity: 1,
-      fillOpacity: 1,
-    };
+  onSearchFieldEnter(): void {
+    if (!this.searchTerm) return;
+
+    if (this.filteredStations.length === 1) {
+      this.toggleStation(this.filteredStations[0].id);
+    }
   }
+
+  toggleStation(id: string): void {
+    if (this.selectedIds.includes(id)) {
+      this.removeStation(id);
+    } else {
+      this.addStation(id);
+    }
+    this.searchTerm = "";
+    this.filteredStations = [...this.stations];
+  }
+
+  onSearch(event: Event): void {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
+      this.searchTerm = value;
+      if (!value) {
+        this.filteredStations = [...this.stations];
+      } else {
+        this.filteredStations = this.stations.filter(
+          (s) => s.id.toLowerCase().includes(value) || s.name.toLowerCase().includes(value),
+        );
+        const exact = this.stations.find((s) => s.id.toLowerCase() === this.searchTerm);
+
+        if (exact) {
+          this.toggleStation(exact.id);
+          return;
+        }
+      }
+    }, 200);
+  }
+
   // Add a station
   addStation(id: string): void {
     if (!this.selectedIds.includes(id)) {
       this.selectedIds.push(id);
+      this.markers[id].setStyle(this.getModelPointOptions(true)); // selected style
     }
   }
 
@@ -116,4 +154,24 @@ export class LineaExportComponent implements AfterViewInit {
       this.selectedIds.map((id) => `https://api.avalanche.report/lawine/grafiken/smet/winter/${id}.smet.gz`),
     );
   }
+
+  // Marker style
+  getModelPointOptions(selected: boolean): CircleMarkerOptions {
+    return {
+      pane: "markerPane",
+      radius: 8,
+      fillColor: selected ? "red" : "blue",
+      color: "black",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 1,
+    };
+  }
+}
+
+interface StationFeature {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
 }
