@@ -3,7 +3,7 @@
 <!-- Station buttons -->
 <div class="stations">
   @for (id of stationIds; track id) {
-    <button (click)="addStation(id)">
+    <button class="btn-primary" (click)="addStation(id)">
       {{ id }}
     </button>
   }
@@ -19,7 +19,6 @@
   }
 </div>
 
-
 <linea-plot
   [attr.src]="srcs"
   [attr.lazysrc]="lazysrcs"
@@ -27,5 +26,6 @@
   showtitle
   showexport
   showinteractiveblogexport
-  showdatepicker>
+  showdatepicker
+>
 </linea-plot>
