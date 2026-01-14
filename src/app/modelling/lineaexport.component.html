@@ -1,12 +1,10 @@
 <h1>Linea Station Selector</h1>
 
 <!-- Station buttons -->
-<div class="stations">
-  @for (id of stationIds; track id) {
-    <button class="btn btn-outline-primary btn-sm" (click)="addStation(id)">
-      {{ id }}
-    </button>
-  }
+<div class="stations"></div>
+
+<div height="300px" style="height: 300px; width: 100%; margin-top: 20px">
+  <div class="station-map" id="stationsMap" #stationsMap></div>
 </div>
 
 <!-- Selected station chips -->

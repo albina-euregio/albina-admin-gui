@@ -4,6 +4,11 @@
   margin: 20px;
 }
 
+.station-map {
+  height: 100%; /* Fill parent div */
+  width: 100%;
+}
+
 /* Station button grid */
 .stations {
   display: grid;
