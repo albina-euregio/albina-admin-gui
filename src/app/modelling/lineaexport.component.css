@@ -5,8 +5,15 @@
 }
 
 .station-map {
+  margin-bottom: 10px;
   height: 100%; /* Fill parent div */
   width: 100%;
+}
+
+.hint {
+  padding: 2px;
+  margin: 2px;
+  background-color: rgb(186, 214, 61);
 }
 
 /* Station button grid */
