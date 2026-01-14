@@ -1437,5 +1437,9 @@
   "channelStatus": {
     "loading": "Loading channel status information...",
     "triggerStatusChecks": "Trigger status checks"
+  },
+  "lineaexport": {
+    "searchfieldplaceholder": "Search stations...",
+    "hint": "Press Enter to add"
   }
 }

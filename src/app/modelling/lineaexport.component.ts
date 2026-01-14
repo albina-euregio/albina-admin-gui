@@ -1,13 +1,14 @@
 import "@albina-euregio/linea/dist/linea";
 import { CommonModule } from "@angular/common";
 import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild, ElementRef, inject, AfterViewInit } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { CircleMarker, CircleMarkerOptions, LayerGroup } from "leaflet";
 
 @Component({
   selector: "app-linea-export",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: "./lineaexport.component.html",
   styleUrls: ["./lineaexport.component.css"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

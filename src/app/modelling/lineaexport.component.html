@@ -2,13 +2,13 @@
   style="width: 100%"
   class="form-control"
   type="text"
-  placeholder="Search stations..."
+  [placeholder]="'lineaexport.searchfieldplaceholder' | translate"
   (input)="onSearch($event)"
   [value]="searchTerm"
   (keydown.enter)="onSearchFieldEnter()"
 />
 @if (filteredStations.length === 1) {
-  <div class="hint">Press Enter to add {{ filteredStations[0].name }}</div>
+  <div class="hint">{{ "lineaexport.hint" | translate }} {{ filteredStations[0].name }}</div>
 }
 <div class="stations">
   @if (searchTerm !== "") {
