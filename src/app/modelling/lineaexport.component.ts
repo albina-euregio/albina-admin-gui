@@ -27,6 +27,7 @@ export class LineaExportComponent implements AfterViewInit {
   filteredStations: StationFeature[] = [];
   private searchTimeout: any;
   searchTerm = "";
+  showDropdown = false;
 
   readonly markers = {};
 
@@ -95,6 +96,12 @@ export class LineaExportComponent implements AfterViewInit {
     if (this.filteredStations.length === 1) {
       this.toggleStation(this.filteredStations[0].id);
     }
+  }
+
+  onBlur() {
+    setTimeout(() => {
+      this.showDropdown = false;
+    }, 150);
   }
 
   toggleStation(id: string): void {

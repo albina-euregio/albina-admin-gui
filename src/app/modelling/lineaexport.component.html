@@ -1,28 +1,37 @@
-<input
-  style="width: 100%"
-  class="form-control"
-  type="text"
-  [placeholder]="'lineaexport.searchfieldplaceholder' | translate"
-  (input)="onSearch($event)"
-  [value]="searchTerm"
-  (keydown.enter)="onSearchFieldEnter()"
-/>
+<div class="search-wrapper">
+  <input
+    class="form-control"
+    type="text"
+    style="width: 100%"
+    [placeholder]="'lineaexport.searchfieldplaceholder' | translate"
+    (input)="onSearch($event)"
+    [value]="searchTerm"
+    (keydown.enter)="onSearchFieldEnter()"
+    axliz1
+    (focus)="showDropdown = true"
+    (blur)="onBlur()"
+  />
+
+  @if (showDropdown && searchTerm !== "" && filteredStations.length > 0) {
+    <div class="stations-dropdown">
+      @for (station of filteredStations; track station.id) {
+        <button
+          type="button"
+          class="dropdown-item"
+          [class.selected]="selectedIds.includes(station.id)"
+          (mousedown)="toggleStation(station.id)"
+        >
+          {{ station.name }} ({{ station.id }})
+        </button>
+      }
+    </div>
+  }
+</div>
+
 @if (filteredStations.length === 1) {
   <div class="hint">{{ "lineaexport.hint" | translate }} {{ filteredStations[0].name }}</div>
 }
-<div class="stations">
-  @if (searchTerm !== "") {
-    @for (station of filteredStations; track station.id) {
-      <button
-        class="btn btn-outline-primary btn-sm"
-        [class.selected]="selectedIds.includes(station.id)"
-        (click)="toggleStation(station.id)"
-      >
-        {{ station.name }} ({{ station.id }})
-      </button>
-    }
-  }
-</div>
+
 <div height="300px" style="height: 300px; width: 100%; margin-top: 0px">
   <div class="station-map" id="stationsMap" #stationsMap></div>
 </div>
