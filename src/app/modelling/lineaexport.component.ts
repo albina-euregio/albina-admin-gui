@@ -1,6 +1,15 @@
 import "@albina-euregio/linea/dist/linea";
 import { CommonModule } from "@angular/common";
-import { Component, CUSTOM_ELEMENTS_SCHEMA, viewChild, ElementRef, inject, AfterViewInit } from "@angular/core";
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  viewChild,
+  ElementRef,
+  inject,
+  AfterViewInit,
+  ViewChildren,
+  QueryList,
+} from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
 import { CircleMarker, CircleMarkerOptions, LayerGroup } from "leaflet";
@@ -22,12 +31,14 @@ export class LineaExportComponent implements AfterViewInit {
   private mapService;
   readonly mapLayer = new LayerGroup();
 
+  private searchTimeout: any;
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
   readonly stations: StationFeature[] = [];
+
   filteredStations: StationFeature[] = [];
-  private searchTimeout: any;
   searchTerm = "";
   showDropdown = false;
+  activeIndex = -1;
 
   readonly markers = {};
 
@@ -104,14 +115,37 @@ export class LineaExportComponent implements AfterViewInit {
     }, 150);
   }
 
-  toggleStation(id: string): void {
-    if (this.selectedIds.includes(id)) {
-      this.removeStation(id);
-    } else {
-      this.addStation(id);
+  onKeyDown(event: KeyboardEvent) {
+    if (!this.showDropdown || this.filteredStations.length === 0) {
+      return;
     }
-    this.searchTerm = "";
-    this.filteredStations = [...this.stations];
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        this.activeIndex = (this.activeIndex + 1) % this.filteredStations.length;
+        this.scrollToActive();
+        break;
+
+      case "ArrowUp":
+        event.preventDefault();
+        this.activeIndex = (this.activeIndex - 1 + this.filteredStations.length) % this.filteredStations.length;
+        this.scrollToActive();
+        break;
+
+      case "Enter":
+        event.preventDefault();
+        if (this.activeIndex >= 0) {
+          const station = this.filteredStations[this.activeIndex];
+          this.toggleStation(station.id);
+        }
+        break;
+
+      case "Escape":
+        this.showDropdown = false;
+        this.activeIndex = -1;
+        break;
+    }
   }
 
   onSearch(event: Event): void {
@@ -132,7 +166,29 @@ export class LineaExportComponent implements AfterViewInit {
           return;
         }
       }
+      this.showDropdown = true;
+      this.activeIndex = -1;
     }, 200);
+  }
+
+  @ViewChildren("dropdownItem") items!: QueryList<ElementRef>;
+
+  scrollToActive() {
+    const el = this.items.get(this.activeIndex);
+    el?.nativeElement.scrollIntoView({
+      block: "nearest",
+      behavior: "smooth",
+    });
+  }
+
+  toggleStation(id: string): void {
+    if (this.selectedIds.includes(id)) {
+      this.removeStation(id);
+    } else {
+      this.addStation(id);
+    }
+    this.searchTerm = "";
+    this.filteredStations = [...this.stations];
   }
 
   // Add a station

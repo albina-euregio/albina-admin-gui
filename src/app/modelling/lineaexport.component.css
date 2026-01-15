@@ -56,6 +56,15 @@
   color: white;
 }
 
+.dropdown-item.active {
+  background-color: #e9ecef;
+}
+
+.dropdown-item.active.selected {
+  background-color: #0d6efd;
+  color: white;
+}
+
 /* Station button grid */
 .stations {
   display: grid;

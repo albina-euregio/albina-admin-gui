@@ -2,24 +2,24 @@
   <input
     class="form-control"
     type="text"
-    style="width: 100%"
-    [placeholder]="'lineaexport.searchfieldplaceholder' | translate"
-    (input)="onSearch($event)"
     [value]="searchTerm"
-    (keydown.enter)="onSearchFieldEnter()"
-    axliz1
+    (input)="onSearch($event)"
+    (keydown)="onKeyDown($event)"
     (focus)="showDropdown = true"
     (blur)="onBlur()"
+    [placeholder]="'lineaexport.searchfieldplaceholder' | translate"
   />
 
   @if (showDropdown && searchTerm !== "" && filteredStations.length > 0) {
     <div class="stations-dropdown">
-      @for (station of filteredStations; track station.id) {
+      @for (station of filteredStations; track station.id; let i = $index) {
         <button
           type="button"
           class="dropdown-item"
           [class.selected]="selectedIds.includes(station.id)"
+          [class.active]="i === activeIndex"
           (mousedown)="toggleStation(station.id)"
+          #dropdownItem
         >
           {{ station.name }} ({{ station.id }})
         </button>
