@@ -50,7 +50,7 @@ export default [
   {
     path: "lineaexport",
     data: {
-      title: "Linea Export",
+      title: "Linea",
       modelling: "lineaexport",
     } satisfies ModellingRouteData,
     component: LineaExportComponent,
