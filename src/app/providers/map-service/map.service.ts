@@ -229,6 +229,9 @@ export class MapService {
     }
     this.overlayMaps = undefined;
     this.afternoonOverlayMaps = undefined;
+    this.amControl?.remove();
+    this.pmControl?.remove();
+    this.regionNameControl?.remove();
     this.regionNameControl = undefined;
     this.map = undefined;
     this.afternoonMap = undefined;
