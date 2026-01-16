@@ -79,6 +79,14 @@ class ObservationData {
     private applyLocalFilter0: () => void = () => {},
   ) {}
 
+  clear() {
+    this.loading?.unsubscribe();
+    this.loading = undefined;
+    this.all = [];
+    this.filtered = [];
+    this.layer.remove();
+  }
+
   toggle(map: LeafletMap) {
     if (this.show) {
       this.show = false;
@@ -312,7 +320,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   ngOnDestroy() {
-    Object.values(this.data).forEach(({ layer }) => layer.clearLayers());
+    Object.values(this.data).forEach((d) => d.clear());
     this.mapService.resetAll();
     this.mapService.removeMaps();
   }
