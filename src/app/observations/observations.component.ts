@@ -285,7 +285,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   async ngAfterViewInit() {
     await this.initMap();
     if (window.matchMedia("(min-width: 769px)").matches) {
-      Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
+      Split([".layout-left", ".layout-right"]);
     }
   }
 
@@ -309,11 +309,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         this.applyLocalFilter();
       },
     });
-
-    const resizeObserver = new ResizeObserver(() => {
-      this.mapService.map?.invalidateSize();
-    });
-    resizeObserver.observe(this.mapDiv().nativeElement);
   }
 
   get map() {

@@ -14,6 +14,7 @@ export class BaseMapService extends MapService {
     this.overlayMaps = await this.initOverlayMaps(options);
 
     this.map = new LeafletMap(el, {
+      trackResize: true,
       attributionControl: false,
       zoomAnimation: false,
       zoomControl: false,
