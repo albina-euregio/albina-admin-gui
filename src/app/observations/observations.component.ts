@@ -41,6 +41,7 @@ import {
   inject,
   ViewChild,
   HostListener,
+  DestroyRef,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -183,6 +184,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
+  private destroyRef = inject(DestroyRef);
 
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
@@ -299,16 +301,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       Split([".layout-left", ".layout-right"]);
     }
   }
-
+  ////
   async loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
     this.data.observations.loadFrom(
-      this.observationsService.getGenericObservations().pipe(takeUntilDestroyed()),
+      this.observationsService.getGenericObservations().pipe(takeUntilDestroyed(this.destroyRef)),
 
       this.observationSearch,
     );
     this.data.weatherStations.loadFrom(
-      this.observationsService.getWeatherStations().pipe(takeUntilDestroyed()),
+      this.observationsService.getWeatherStations().pipe(takeUntilDestroyed(this.destroyRef)),
 
       this.observationSearch,
     );
@@ -323,12 +325,12 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.data.observations.toggle(this.mapService.map);
     this.loadObservationsAndWeatherStations();
     this.data.observers.loadFrom(
-      this.observationsService.getObservers().pipe(takeUntilDestroyed()),
+      this.observationsService.getObservers().pipe(takeUntilDestroyed(this.destroyRef)),
 
       this.observationSearch,
     );
     this.data.webcams.loadFrom(
-      this.observationsService.getGenericWebcams().pipe(takeUntilDestroyed()),
+      this.observationsService.getGenericWebcams().pipe(takeUntilDestroyed(this.destroyRef)),
       this.observationSearch,
     );
 
