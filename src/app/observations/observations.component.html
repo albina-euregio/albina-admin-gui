@@ -287,7 +287,7 @@
           <div
             class="obs-button"
             [class.is-active]="this.data.observations.show"
-            (click)="this.data.observations.toggle(this.map)"
+            (click)="this.data.observations.toggle(this.mapService.map)"
             title="{{ 'observations.layers.observations' | translate }}"
             ngxMousetrapKey="1"
           >
@@ -296,7 +296,7 @@
           <div
             class="obs-button"
             [class.is-active]="this.data.webcams.show"
-            (click)="this.data.webcams.toggle(this.map)"
+            (click)="this.data.webcams.toggle(this.mapService.map)"
             title="{{ 'observations.layers.webcams' | translate }}"
             ngxMousetrapKey="2"
           >
@@ -305,7 +305,7 @@
           <div
             class="obs-button"
             [class.is-active]="this.data.observers.show"
-            (click)="this.data.observers.toggle(this.map)"
+            (click)="this.data.observers.toggle(this.mapService.map)"
             title="{{ 'observations.layers.observers' | translate }}"
             ngxMousetrapKey="3"
           >
@@ -314,7 +314,7 @@
           <div
             class="obs-button"
             [class.is-active]="this.data.weatherStations.show"
-            (click)="this.data.weatherStations.toggle(this.map)"
+            (click)="this.data.weatherStations.toggle(this.mapService.map)"
             title="{{ 'observations.layers.weatherStations' | translate }}"
             ngxMousetrapKey="4"
           >

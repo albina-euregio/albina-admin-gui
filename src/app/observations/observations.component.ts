@@ -298,7 +298,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   private async initMap() {
     const map = await this.mapService.initMaps(this.mapDiv().nativeElement);
 
-    this.data.observations.toggle(this.map);
+    this.data.observations.toggle(this.mapService.map);
     this.loadObservationsAndWeatherStations();
     this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
     this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
@@ -309,10 +309,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         this.applyLocalFilter();
       },
     });
-  }
-
-  get map() {
-    return this.mapService.map;
   }
 
   ngOnDestroy() {
