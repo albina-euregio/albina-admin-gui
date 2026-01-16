@@ -32,6 +32,7 @@ import { Subscription } from "rxjs";
 declare module "leaflet" {
   interface Map {
     sync(other: Map): void;
+    unsync(other: Map): void;
   }
 }
 
@@ -202,6 +203,12 @@ export class MapService {
 
   removeMaps() {
     this.observeMapCenterSubscription?.unsubscribe();
+    try {
+      this.map.unsync(this.afternoonMap);
+      this.afternoonMap.unsync(this.map);
+    } catch {
+      //ignore
+    }
     for (const map of [this.map, this.afternoonMap]) {
       if (!map) continue;
       map.eachLayer((l) => {
