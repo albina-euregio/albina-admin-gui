@@ -42,6 +42,7 @@ import {
   ViewChild,
   HostListener,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -263,6 +264,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     this.dangerSourcesService
       .loadDangerSources([new Date(), new Date()], this.authenticationService.getActiveRegionId())
+      .pipe(takeUntilDestroyed())
       .subscribe((dangerSources) => {
         const values: FilterSelectionValue[] = orderBy(dangerSources, [(s) => s.creationDate], ["asc"]).map((s) => ({
           value: s.id,
@@ -300,8 +302,16 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
   async loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
-    this.data.observations.loadFrom(this.observationsService.getGenericObservations(), this.observationSearch);
-    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
+    this.data.observations.loadFrom(
+      this.observationsService.getGenericObservations().pipe(takeUntilDestroyed()),
+
+      this.observationSearch,
+    );
+    this.data.weatherStations.loadFrom(
+      this.observationsService.getWeatherStations().pipe(takeUntilDestroyed()),
+
+      this.observationSearch,
+    );
   }
 
   private async initMap() {
@@ -312,8 +322,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
 
     this.data.observations.toggle(this.mapService.map);
     this.loadObservationsAndWeatherStations();
-    this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
-    this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
+    this.data.observers.loadFrom(
+      this.observationsService.getObservers().pipe(takeUntilDestroyed()),
+
+      this.observationSearch,
+    );
+    this.data.webcams.loadFrom(
+      this.observationsService.getGenericWebcams().pipe(takeUntilDestroyed()),
+      this.observationSearch,
+    );
 
     map.on({
       click: () => {
