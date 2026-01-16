@@ -18,6 +18,7 @@ import {
   Control,
   GeoJSON,
   Layer,
+  LayerGroup,
   Map as LeafletMap,
   MapOptions,
   Path,
@@ -202,16 +203,26 @@ export class MapService {
   removeMaps() {
     this.observeMapCenterSubscription?.unsubscribe();
     if (this.map) {
-      Object.values(this.overlayMaps ?? {}).forEach((l) => l.remove());
       this.overlayMaps = undefined;
+      this.map.eachLayer((l) => {
+        if (l instanceof LayerGroup) {
+          l.clearLayers();
+        }
+        l.remove();
+      });
       this.map.off();
       this.map.remove();
       this.map = undefined;
       this.regionNameControl = undefined;
     }
     if (this.afternoonMap) {
-      Object.values(this.afternoonOverlayMaps ?? {}).forEach((l) => l.remove());
       this.afternoonOverlayMaps = undefined;
+      this.afternoonMap.eachLayer((l) => {
+        if (l instanceof LayerGroup) {
+          l.clearLayers();
+        }
+        l.remove();
+      });
       this.afternoonMap.off();
       this.afternoonMap.remove();
       this.afternoonMap = undefined;
