@@ -202,9 +202,9 @@ export class MapService {
 
   removeMaps() {
     this.observeMapCenterSubscription?.unsubscribe();
-    if (this.map) {
-      this.overlayMaps = undefined;
-      this.map.eachLayer((l) => {
+    for (const map of [this.map, this.afternoonMap]) {
+      if (!map) continue;
+      map.eachLayer((l) => {
         if (l instanceof LayerGroup) {
           l.clearLayers();
         }
@@ -214,27 +214,14 @@ export class MapService {
         l.off();
         l.remove();
       });
-      this.map.off();
-      this.map.remove();
-      this.map = undefined;
-      this.regionNameControl = undefined;
+      map.off();
+      map.remove();
     }
-    if (this.afternoonMap) {
-      this.afternoonOverlayMaps = undefined;
-      this.afternoonMap.eachLayer((l) => {
-        if (l instanceof LayerGroup) {
-          l.clearLayers();
-        }
-        if (l instanceof PmLeafletLayer) {
-          l.views.clear();
-        }
-        l.off();
-        l.remove();
-      });
-      this.afternoonMap.off();
-      this.afternoonMap.remove();
-      this.afternoonMap = undefined;
-    }
+    this.overlayMaps = undefined;
+    this.afternoonOverlayMaps = undefined;
+    this.regionNameControl = undefined;
+    this.map = undefined;
+    this.afternoonMap = undefined;
   }
 
   async initAmPmMap() {
