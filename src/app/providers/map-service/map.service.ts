@@ -211,6 +211,7 @@ export class MapService {
         if (l instanceof PmLeafletLayer) {
           l.views.clear();
         }
+        l.off();
         l.remove();
       });
       this.map.off();
@@ -227,6 +228,7 @@ export class MapService {
         if (l instanceof PmLeafletLayer) {
           l.views.clear();
         }
+        l.off();
         l.remove();
       });
       this.afternoonMap.off();
