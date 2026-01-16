@@ -208,6 +208,9 @@ export class MapService {
         if (l instanceof LayerGroup) {
           l.clearLayers();
         }
+        if (l instanceof GeoJSON) {
+          l.options.onEachFeature = undefined;
+        }
         if (l instanceof PmLeafletLayer) {
           l.views.clear();
         }
