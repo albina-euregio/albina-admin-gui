@@ -24,6 +24,7 @@ import { DatePipe, KeyValue, KeyValuePipe, NgTemplateOutlet } from "@angular/com
 import { HttpErrorResponse } from "@angular/common/http";
 import {
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
   inject,
@@ -87,6 +88,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private mapService = inject(MapService);
   private modalService = inject(BsModalService);
   private undoRedoService = inject(UndoRedoService);
+  private destroyRef = inject(DestroyRef);
 
   public bulletinStatus = Enums.BulletinStatus;
 
@@ -312,7 +314,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.initializeComponent();
 
       this.internalBulletinsSubscription = timer(5000, 5000)
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .pipe(
           map(() => {
             if (!this.loading && !this.publishing && !this.submitting && !this.copying && !this.showNewBulletinModal) {
@@ -323,7 +325,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         .subscribe();
 
       this.externalBulletinsSubscription = timer(2000, 30000)
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .pipe(
           map(() => {
             this.loadExternalBulletinsFromServer();
