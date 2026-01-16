@@ -33,6 +33,7 @@ import {
   viewChild,
   ViewChild,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 // services
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -53,7 +54,7 @@ import { saveAs } from "file-saver";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 // For iframe
-import { forkJoin, map, Observable, of, Subject, Subscription, takeUntil, tap, timer } from "rxjs";
+import { forkJoin, map, Observable, of, Subscription, tap, timer } from "rxjs";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -96,8 +97,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public saveError: Map<string, BulletinModel>;
   public loadInternalBulletinsError: boolean;
   public loadExternalBulletinsError: boolean;
-
-  private destroy$ = new Subject<void>();
 
   public originalBulletins: Map<string, BulletinModel>;
 
@@ -313,7 +312,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.initializeComponent();
 
       this.internalBulletinsSubscription = timer(5000, 5000)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntilDestroyed())
         .pipe(
           map(() => {
             if (!this.loading && !this.publishing && !this.submitting && !this.copying && !this.showNewBulletinModal) {
@@ -324,7 +323,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         .subscribe();
 
       this.externalBulletinsSubscription = timer(2000, 30000)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntilDestroyed())
         .pipe(
           map(() => {
             this.loadExternalBulletinsFromServer();
@@ -467,9 +466,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-
     this.mapService.resetAll();
 
     this.bulletinsService.setActiveDate(undefined);
