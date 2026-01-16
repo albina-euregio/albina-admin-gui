@@ -84,6 +84,7 @@ class ObservationData {
     this.loading = undefined;
     this.all = [];
     this.filtered = [];
+    this.layer.clearLayers();
     this.layer.remove();
   }
 
