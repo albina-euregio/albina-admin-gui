@@ -30,7 +30,7 @@ export class BaseMapService extends MapService {
     this.fitActiveRegionBounds(this.map, this.overlayMaps.editSelection);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
-    this.localStorageService
+    this.observeMapCenterSubscription = this.localStorageService
       .observeMapCenter()
       .subscribe((mapCenter) => this.map.setView(mapCenter, mapCenter.zoom, { reset: true } as unknown));
 

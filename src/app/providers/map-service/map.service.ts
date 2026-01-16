@@ -26,6 +26,7 @@ import {
   TileLayerOptions,
 } from "leaflet";
 import "leaflet.sync";
+import { Subscription } from "rxjs";
 
 declare module "leaflet" {
   interface Map {
@@ -134,6 +135,7 @@ export class MapService {
     editSelection: RegionLayer;
     aggregatedRegions: PmLeafletLayer;
   };
+  protected observeMapCenterSubscription: Subscription;
 
   constructor() {
     this.amControl = new AmPmControl({ position: "bottomleft" }).setText(
@@ -198,6 +200,7 @@ export class MapService {
   }
 
   removeMaps() {
+    this.observeMapCenterSubscription?.unsubscribe();
     if (this.map) {
       Object.values(this.overlayMaps ?? {}).forEach((l) => l.remove());
       this.overlayMaps = undefined;
@@ -242,7 +245,7 @@ export class MapService {
     await this.fitActiveRegionBounds(this.map, this.overlayMaps.editSelection);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
-    this.localStorageService
+    this.observeMapCenterSubscription = this.localStorageService
       .observeMapCenter()
       .subscribe((mapCenter) => this.map.setView(mapCenter, mapCenter.zoom, { reset: true } as unknown));
 
