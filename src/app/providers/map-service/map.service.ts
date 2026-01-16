@@ -204,6 +204,7 @@ export class MapService {
     if (this.map) {
       Object.values(this.overlayMaps ?? {}).forEach((l) => l.remove());
       this.overlayMaps = undefined;
+      this.map.off();
       this.map.remove();
       this.map = undefined;
       this.regionNameControl = undefined;
@@ -211,6 +212,7 @@ export class MapService {
     if (this.afternoonMap) {
       Object.values(this.afternoonOverlayMaps ?? {}).forEach((l) => l.remove());
       this.afternoonOverlayMaps = undefined;
+      this.afternoonMap.off();
       this.afternoonMap.remove();
       this.afternoonMap = undefined;
     }
