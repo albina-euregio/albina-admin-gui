@@ -301,6 +301,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.mapService.resetAll();
+    this.mapService.removeMaps();
 
     this.dangerSourcesService.setActiveDate(undefined);
     this.dangerSourcesService.setIsEditable(false);

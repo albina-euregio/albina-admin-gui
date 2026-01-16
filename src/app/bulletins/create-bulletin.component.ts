@@ -467,6 +467,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.mapService.resetAll();
+    this.mapService.removeMaps();
 
     this.bulletinsService.setActiveDate(undefined);
     this.bulletinsService.setIsEditable(false);
