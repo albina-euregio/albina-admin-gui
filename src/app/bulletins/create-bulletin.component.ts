@@ -331,16 +331,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           }),
         )
         .subscribe();
-
-      const mapDiv = document.getElementById("map");
-
-      const resizeObserver = new ResizeObserver(() => {
-        this.mapService.map?.invalidateSize();
-        if (this.showAfternoonMap) {
-          this.mapService.afternoonMap?.invalidateSize();
-        }
-      });
-      resizeObserver.observe(mapDiv);
     });
   }
 

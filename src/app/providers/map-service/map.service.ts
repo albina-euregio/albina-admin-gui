@@ -347,6 +347,7 @@ export class MapService {
 
   getMapInitOptions(): MapOptions {
     return {
+      trackResize: true,
       doubleClickZoom: true,
       scrollWheelZoom: true,
       // pinchZoom: Browser.touch,

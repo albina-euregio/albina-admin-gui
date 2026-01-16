@@ -176,7 +176,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   private initDangerSourceVariantsMap() {
     for (const dangerSource of this.internDangerSourcesList) {
-      if (this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.active) == 0 && this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.dormant) == 0) {
+      if (
+        this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.active) == 0 &&
+        this.getVariantCountByStatus(dangerSource, DangerSourceVariantStatus.dormant) == 0
+      ) {
         this.showDangerSourceVariantsMap.set(dangerSource.id, false);
       } else {
         this.showDangerSourceVariantsMap.set(dangerSource.id, true);
@@ -195,16 +198,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
 
       this.initializeComponent();
-
-      const mapDiv = document.getElementById("map");
-
-      const resizeObserver = new ResizeObserver(() => {
-        this.mapService.map?.invalidateSize();
-        if (this.showAfternoonMap) {
-          this.mapService.afternoonMap?.invalidateSize();
-        }
-      });
-      resizeObserver.observe(mapDiv);
     });
   }
 
@@ -351,7 +344,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
           variant.regions.includes(clickedRegion) &&
           variant.dangerSourceVariantStatus !== DangerSourceVariantStatus.inactive
         ) {
-          if (!this.activeDangerSourceOnMap || (this.activeDangerSourceOnMap && variant.dangerSource.id === this.activeDangerSourceOnMap.id)) {
+          if (
+            !this.activeDangerSourceOnMap ||
+            (this.activeDangerSourceOnMap && variant.dangerSource.id === this.activeDangerSourceOnMap.id)
+          ) {
             if (
               (/Mac|iPod|iPhone|iPad/.test(navigator.platform) ? event.metaKey : event.ctrlKey) &&
               this.activeVariant &&
