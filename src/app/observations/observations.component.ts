@@ -304,7 +304,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   }
 
   private async initMap() {
-    const map = await this.mapService.initMaps(this.mapDiv().nativeElement);
+    const map = await this.mapService.initMaps(this.mapDiv().nativeElement, {
+      regions: await this.regionsService.getInternalServerRegionsAsync(),
+      internalRegions: await this.regionsService.getInternalServerRegionsAsync(),
+    });
 
     this.data.observations.toggle(this.mapService.map);
     this.loadObservationsAndWeatherStations();
