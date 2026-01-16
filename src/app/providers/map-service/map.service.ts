@@ -211,23 +211,13 @@ export class MapService {
     }
     for (const map of [this.map, this.afternoonMap]) {
       if (!map) continue;
-      map.eachLayer((l) => {
-        if (l instanceof LayerGroup) {
-          l.clearLayers();
-        }
-        if (l instanceof GeoJSON) {
-          l.options.onEachFeature = undefined;
-        }
-        if (l instanceof PmLeafletLayer) {
-          l.views.clear();
-        }
-        l.off();
-        l.remove();
-      });
+      map.eachLayer((l) => this.removeLayer(l));
       map.off();
       map.remove();
     }
+    Object.values(this.overlayMaps ?? {}).forEach((l) => this.removeLayer(l));
     this.overlayMaps = undefined;
+    Object.values(this.afternoonOverlayMaps ?? {}).forEach((l) => this.removeLayer(l));
     this.afternoonOverlayMaps = undefined;
     this.amControl?.remove();
     this.pmControl?.remove();
@@ -235,6 +225,20 @@ export class MapService {
     this.regionNameControl = undefined;
     this.map = undefined;
     this.afternoonMap = undefined;
+  }
+
+  private removeLayer(l: Layer) {
+    if (l instanceof LayerGroup) {
+      l.clearLayers();
+    }
+    if (l instanceof GeoJSON) {
+      l.options.onEachFeature = undefined;
+    }
+    if (l instanceof PmLeafletLayer) {
+      l.views.clear();
+    }
+    l.off();
+    l.remove();
   }
 
   async initAmPmMap() {
