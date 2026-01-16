@@ -208,6 +208,9 @@ export class MapService {
         if (l instanceof LayerGroup) {
           l.clearLayers();
         }
+        if (l instanceof PmLeafletLayer) {
+          l.views.clear();
+        }
         l.remove();
       });
       this.map.off();
@@ -220,6 +223,9 @@ export class MapService {
       this.afternoonMap.eachLayer((l) => {
         if (l instanceof LayerGroup) {
           l.clearLayers();
+        }
+        if (l instanceof PmLeafletLayer) {
+          l.views.clear();
         }
         l.remove();
       });
