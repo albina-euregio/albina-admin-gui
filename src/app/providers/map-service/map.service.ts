@@ -411,7 +411,8 @@ export class MapService {
   }
 
   resetInternalAggregatedRegions() {
-    for (const layer of [this.overlayMaps.aggregatedRegions, this.afternoonOverlayMaps.aggregatedRegions]) {
+    for (const layer of [this.overlayMaps?.aggregatedRegions, this.afternoonOverlayMaps?.aggregatedRegions]) {
+      if (!layer) continue;
       const regions = Object.keys(layer.paintRules).filter((region) =>
         this.authenticationService.isInternalRegion(region),
       );
