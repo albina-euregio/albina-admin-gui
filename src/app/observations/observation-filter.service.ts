@@ -20,8 +20,9 @@ export class ObservationFilterService<
   public regions: Set<string> = new Set<string>();
   public observationSources = {} as Record<ObservationSource, boolean>;
   public filterSelectionData: FilterSelectionData<T>[] = [];
+  public mapBounds: LatLngBounds | undefined = undefined;
   // 45.0 < latitude && latitude < 48.0 && 9.0 < longitude && longitude < 13.5;
-  public mapBounds: LatLngBounds | undefined = new LatLngBounds({ lat: 45.0, lng: 9.0 }, { lat: 48.0, lng: 13.5 });
+  // new LatLngBounds({ lat: 45.0, lng: 9.0 }, { lat: 48.0, lng: 13.5 });
 
   set days(days: number) {
     const { isTrainingEnabled, trainingTimestamp } = this.localStorageService;
