@@ -301,17 +301,15 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       Split([".layout-left", ".layout-right"]);
     }
   }
-  ////
+
   async loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
     this.data.observations.loadFrom(
       this.observationsService.getGenericObservations().pipe(takeUntilDestroyed(this.destroyRef)),
-
       this.observationSearch,
     );
     this.data.weatherStations.loadFrom(
       this.observationsService.getWeatherStations().pipe(takeUntilDestroyed(this.destroyRef)),
-
       this.observationSearch,
     );
   }
@@ -326,7 +324,6 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     this.loadObservationsAndWeatherStations();
     this.data.observers.loadFrom(
       this.observationsService.getObservers().pipe(takeUntilDestroyed(this.destroyRef)),
-
       this.observationSearch,
     );
     this.data.webcams.loadFrom(
