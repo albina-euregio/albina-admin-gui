@@ -28,6 +28,7 @@ import { ObservationMarkerWebcamService } from "./observation-marker-webcam.serv
 import { ObservationMarkerService } from "./observation-marker.service";
 import { ObservationTableComponent } from "./observation-table.component";
 import { AlbinaObservationsService } from "./observations.service";
+import "@albina-euregio/linea";
 import { CommonModule, formatDate } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
@@ -42,6 +43,7 @@ import {
   ViewChild,
   HostListener,
   DestroyRef,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -164,6 +166,7 @@ class ObservationData {
     NgxMousetrapDirective,
   ],
   templateUrl: "observations.component.html",
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   filter = inject<ObservationFilterService<GenericObservation>>(ObservationFilterService);
@@ -576,6 +579,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
+  isLineaUrl(imgUrl: string | SafeResourceUrl): boolean {
+    return String(imgUrl).endsWith(".smet") || String(imgUrl).endsWith(".smet.gz");
+  }
+
   private $externalImgs(observation: GenericObservation) {
     if (!observation) return undefined;
     return observation.$source === ObservationSource.AvalancheWarningService &&
@@ -590,7 +597,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe, imgUrls: undefined, imgIndex };
     } else if ($externalImgs) {
-      const imgUrls = $externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
+      const imgUrls = $externalImgs.map((img) =>
+        img.endsWith(".smet.gz") ? img : this.sanitizer.bypassSecurityTrustResourceUrl(img),
+      );
       this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls, imgIndex };
     } else {
       const table: ObservationTableRow[] = [
