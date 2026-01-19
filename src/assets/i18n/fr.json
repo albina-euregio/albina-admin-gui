@@ -33,7 +33,8 @@
     "weatherbox": "Boîte météo",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
-    "geosphere": "GeoSphere"
+    "geosphere": "GeoSphere",
+    "lineaexport": "LINEA"
   },
   "menu": {
     "logout": "Se déconnecter",
@@ -692,7 +693,8 @@
           "enableDangerSources": "Activer sources de dangers",
           "enableObservations": "Activer observations",
           "enableModelling": "Activer modélisation",
-          "enableWeatherbox": "Activer boîte météo"
+          "enableWeatherbox": "Activer boîte météo",
+          "enableLineaExport": "Enable LINEA export"
         },
         "configuration": {
           "title": "Configuration",
@@ -743,8 +745,8 @@
         "error": "Impossible de créer l'utilisateur"
       },
       "updateUser": {
-        "success": "Utilisateur mis à jour",
-        "error": "Mise à jour utilisateur impossible"
+        "success": "User saved",
+        "error": "User could not be saved"
       }
     },
     "createUser": {
@@ -1248,6 +1250,8 @@
     }
   },
   "button": {
+    "true": "yes",
+    "false": "no",
     "yes": "oui",
     "no": "non"
   },
@@ -1429,5 +1433,13 @@
     "very poor (<=0.5)": "very poor (<=0.5)",
     "very poor (>3)": "very poor (>3)",
     "Wet instability": "Wet instability"
+  },
+  "channelStatus": {
+    "loading": "Loading channel status information...",
+    "triggerStatusChecks": "Trigger status checks"
+  },
+  "lineaexport": {
+    "searchfieldplaceholder": "Search stations...",
+    "hint": "Press Enter to add"
   }
 }

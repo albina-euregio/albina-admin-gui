@@ -33,7 +33,8 @@
     "weatherbox": "Dashboard meteo",
     "awsome": "AWSOME",
     "snowpack": "SNOWPACK",
-    "geosphere": "GeoSphere"
+    "geosphere": "GeoSphere",
+    "lineaexport": "LINEA"
   },
   "menu": {
     "logout": "Logout",
@@ -692,7 +693,8 @@
           "enableDangerSources": "Attiva fonti di pericolo",
           "enableObservations": "Attiva osservazioni",
           "enableModelling": "Attiva modellazione",
-          "enableWeatherbox": "Attiva box meteo"
+          "enableWeatherbox": "Attiva box meteo",
+          "enableLineaExport": "Enable LINEA export"
         },
         "configuration": {
           "title": "Configurazione",
@@ -743,8 +745,8 @@
         "error": "L'utente non può essere creato"
       },
       "updateUser": {
-        "success": "Utente aggiornato",
-        "error": "L'utente non può essere aggiornato"
+        "success": "User saved",
+        "error": "User could not be saved"
       }
     },
     "createUser": {
@@ -1002,8 +1004,8 @@
     "200": "±200m"
   },
   "elevationPeriod": {
-    "duringPrecipitationEvent": "Dry snowfall boundary for the entire precipitation event",
-    "observationPeriod": "Dry snowfall boundary at the time of observation"
+    "duringPrecipitationEvent": "Limite delle nevicate asciutte per l'intero periodo di precipitazione",
+    "observationPeriod": "Limite delle nevicate asciutte durante il momento di osservazione"
   },
   "aspect": {
     "N": "N",
@@ -1133,34 +1135,34 @@
     "increasing": "al di sopra più morbido"
   },
   "terrainType": {
-    "gullies_and_bowls": "gullies and bowls",
-    "adjacent_to_ridgelines": "adjacent to ridgelines",
-    "distant_from_ridgelines": "distant from ridgelines",
-    "in_the_vicinity_of_peaks": "in the vicinity of peaks",
+    "gullies_and_bowls": " conche e canaloni ",
+    "adjacent_to_ridgelines": "zone in prossimità delle creste",
+    "distant_from_ridgelines": "zone lontano dalle creste",
+    "in_the_vicinity_of_peaks": " in prossimità delle cime",
     "pass_areas": "zone ai passi",
     "shady_slopes": "Pendii ombreggiati",
     "sunny_slopes": "Pendii soleggiati",
-    "grassy_slopes": "grassy slopes",
-    "cut_slopes": "cut slopes",
-    "wind_loaded_slopes": "wind loaded slopes",
-    "base_of_rock_walls": "base of rock walls",
-    "behind_abrupt_changes_in_the_terrain": "behind abrupt changes in the terrain",
-    "transitions_into_gullies_and_bowls": "transitions into gullies and bowls",
-    "areas_where_the_snow_cover_is_rather_shallow": "areas where the snow cover is rather shallow",
-    "transitions_from_a_shallow_to_a_deep_snowpack": "transitions from a shallow to a deep snowpack",
-    "highly_frequented_off_piste_terrain": "highly frequented off piste terrain",
-    "little_used_backcountry_terrain": "little used backcountry terrain",
-    "places_that_are_protected_from_the_wind": "places that are protected from the wind",
-    "regions_exposed_to_the_foehn_wind": "regions exposed to the foehn wind",
-    "regions_with_a_lot_of_snow": "regions with a lot of snow",
-    "regions_exposed_to_precipitation": "regions exposed to precipitation",
-    "regions_exposed_to_heavier_precipitation": "regions exposed to heavier precipitation"
+    "grassy_slopes": "pendii erbosi",
+    "cut_slopes": "scarpate",
+    "wind_loaded_slopes": "pendii carichi di neve ventata",
+    "base_of_rock_walls": "basi di pareti rocciose",
+    "behind_abrupt_changes_in_the_terrain": "dietro cambi di pendenza",
+    "transitions_into_gullies_and_bowls": "passaggi che conducono a conche e canaloni",
+    "areas_where_the_snow_cover_is_rather_shallow": "zone scarsamente innevate",
+    "transitions_from_a_shallow_to_a_deep_snowpack": "zone di passaggio da poca a molta neve",
+    "highly_frequented_off_piste_terrain": "zone escursionistiche molto frequentate",
+    "little_used_backcountry_terrain": "zone escursionistiche poco frequentate",
+    "places_that_are_protected_from_the_wind": "zone riparate dal vento",
+    "regions_exposed_to_the_foehn_wind": " aree esposte al Föhn",
+    "regions_with_a_lot_of_snow": "aree con tanta neve",
+    "regions_exposed_to_precipitation": "areee colpite dalle precipitazioni",
+    "regions_exposed_to_heavier_precipitation": " aree più colpite dalle precipitazioni"
   },
   "dangerSign": {
     "shooting_cracks": "crepe",
     "whumpfing": "rumori \"whumpf\"",
-    "fresh_avalanches": "fresh avalanches",
-    "glide_cracks": "glide cracks"
+    "fresh_avalanches": "nuove valanghe",
+    "glide_cracks": "bocche di balena"
   },
   "changeRegionDialog": {
     "message": "Vuoi cambiare la meteo-nivo zona?",
@@ -1248,6 +1250,8 @@
     }
   },
   "button": {
+    "true": "yes",
+    "false": "no",
     "yes": "si",
     "no": "no"
   },
@@ -1264,8 +1268,8 @@
     "avalancheWidth": "Larghezza della valanga",
     "search": "Cerca",
     "count": "# osservazioni",
-    "elevationTolerance": "Accuracy of elevation data",
-    "elevationPeriod": "Elevation time period",
+    "elevationTolerance": "Precisione dei dati di quota",
+    "elevationPeriod": "Quota tempo periodo",
     "layers": {
       "observers": "Osservatori",
       "weatherStations": "Stazioni nivometeorologiche automatiche",
@@ -1279,7 +1283,7 @@
         "newSnow": "Neve fresca",
         "snowLine": "Limite delle nevicate",
         "snowHeight": "altezza neve",
-        "snowDifference": "Snow difference",
+        "snowDifference": "Differenza altezza neve",
         "airTemperature": "Temperatura dell'aria",
         "airTemperatureMax": "Temperatura dell'aria max.",
         "airTemperatureMin": "Temperatura dell'aria min.",
@@ -1295,10 +1299,10 @@
     },
     "webcams": {
       "tooltips": {
-        "minusTenMinutes": "10min back",
-        "minusOneHour": "1h back",
-        "plusTenMinutes": "10min forward",
-        "plusOneHour": "1h forward"
+        "minusTenMinutes": "10 minuti indietro",
+        "minusOneHour": "1 ora indietro",
+        "plusTenMinutes": "10 minuti in avanti",
+        "plusOneHour": "1 ora in avanti"
       }
     },
     "button": {
@@ -1312,7 +1316,7 @@
     "comment": "Commento",
     "content": "Contenuto",
     "dangerRating": "Grado pericolo valanghe",
-    "dangerSource": "Danger source",
+    "dangerSource": "Origini di pericolo",
     "elevation": "Quota",
     "elevationRange": "Fascia altitudinale",
     "elevationLowerBound": "Limite inferiore quota",
@@ -1407,27 +1411,35 @@
     }
   },
   "awsome": {
-    "Aggregation band": "Aggregation band",
+    "Aggregation band": "Fascia di altitudine per profili aggregati",
     "Date": "Data",
-    "Datetag": "Datetag",
-    "Depth": "Depth",
-    "Dry instability": "Dry instability",
-    "fair (<0.77)": "fair (<0.77)",
-    "fair (<1.05)": "fair (<1.05)",
-    "Grain type": "Grain type",
-    "LWC index": "LWC index",
+    "Datetag": "Tag data",
+    "Depth": "Profondità",
+    "Dry instability": "Instabilità asciuta",
+    "fair (<0.77)": "discreta (<0.77)",
+    "fair (<1.05)": "discreta (>1.05)",
+    "Grain type": "Tipologia grano",
+    "LWC index": "Indice LWC",
     "New snow": "Neve fresca",
-    "poor (<=3)": "poor (<=3)",
-    "poor (<0.95)": "poor (<0.95)",
-    "poor (>=0.77)": "poor (>=0.77)",
+    "poor (<=3)": "scarso (<=3)",
+    "poor (<0.95)": "scarso (<0.95)",
+    "poor (>=0.77)": "scarso (>=0.77)",
     "Punstable": "Punstable",
-    "rather stable (<0.7)": "rather stable (<0.7)",
-    "rather stable (<1)": "rather stable (<1)",
-    "rather stable (>1.05)": "rather stable (>1.05)",
-    "Size estimate": "Size estimate",
+    "rather stable (<0.7)": "piuttosto stabile (<0.7)",
+    "rather stable (<1)": "piuttosto stabile (<1)",
+    "rather stable (>1.05)": "piuttosto stabile (>1.05)",
+    "Size estimate": "Stima della dimensione",
     "SK38 (RTA > 0.8)": "SK38 (RTA > 0.8)",
-    "very poor (<=0.5)": "very poor (<=0.5)",
-    "very poor (>3)": "very poor (>3)",
-    "Wet instability": "Wet instability"
+    "very poor (<=0.5)": "molto scarso (<=0.5)",
+    "very poor (>3)": "molto scarso (>3)",
+    "Wet instability": "Instabilità bagnata"
+  },
+  "channelStatus": {
+    "loading": "Loading channel status information...",
+    "triggerStatusChecks": "Trigger status checks"
+  },
+  "lineaexport": {
+    "searchfieldplaceholder": "Search stations...",
+    "hint": "Press Enter to add"
   }
 }
