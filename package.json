@@ -34,6 +34,7 @@
   },
   "private": true,
   "dependencies": {
+    "@albina-euregio/linea": "^8.4.2",
     "@angular/animations": "^21.1.0",
     "@angular/cdk": "^21.1.0",
     "@angular/common": "^21.1.0",
@@ -52,6 +53,7 @@
     "@ngx-translate/core": "^17.0.0",
     "@phosphor-icons/web": "^2.1.1",
     "@popperjs/core": "^2.11.8",
+    "air-datepicker": "^3.6.0",
     "bootstrap": "^5.3.7",
     "diff-match-patch": "^1.0.5",
     "echarts": "^6.0.0",

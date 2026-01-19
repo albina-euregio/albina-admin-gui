@@ -40,6 +40,7 @@ export const RegionConfigurationSchema = z.object({
   enableObservations: z.boolean().nullish(),
   enableModelling: z.boolean().nullish(),
   enableWeatherbox: z.boolean().nullish(),
+  enableLineaExport: z.boolean().nullish(),
   enableStrategicMindset: z.boolean().nullish(),
   enableStressLevel: z.boolean().nullish(),
   enabledEditableFields: z

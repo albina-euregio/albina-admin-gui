@@ -19,6 +19,9 @@ importers:
 
   .:
     dependencies:
+      '@albina-euregio/linea':
+        specifier: ^8.4.2
+        version: 8.4.2
       '@angular/animations':
         specifier: ^21.1.0
         version: 21.1.0(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))
@@ -73,6 +76,9 @@ importers:
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
+      air-datepicker:
+        specifier: ^3.6.0
+        version: 3.6.0
       bootstrap:
         specifier: ^5.3.7
         version: 5.3.7(@popperjs/core@2.11.8)
@@ -214,6 +220,9 @@ importers:
         version: 8.48.0(eslint@9.31.0)(typescript@5.9.3)
 
 packages:
+
+  '@albina-euregio/linea@8.4.2':
+    resolution: {integrity: sha1-W0xo7bGgLN7r+8GOx+fZ8x4uuJw=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.4.2.tgz}
 
   '@algolia/abtesting@1.12.2':
     resolution: {integrity: sha512-oWknd6wpfNrmRcH0vzed3UPX0i17o4kYLM5OMITyMVM2xLgaRbIafoxL0e8mcrNNb0iORCJA0evnNDKRYth5WQ==}
@@ -1682,6 +1691,9 @@ packages:
     resolution: {integrity: sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==}
     engines: {node: '>= 14'}
 
+  air-datepicker@3.6.0:
+    resolution: {integrity: sha512-+txUkqa949rXBJDmkQAIb/GehZECJYF4rm9XJxVYtEX22C9WvBpE/XwCUQZBopKIkpg4ycAySJ9lH3JOg9qQTw==}
+
   ajv-formats@3.0.1:
     resolution: {integrity: sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==}
     peerDependencies:
@@ -2494,7 +2506,7 @@ packages:
     resolution: {integrity: sha512-e59CcQNMFFZJWCAGzyFxcsVldWd0cU7G71q2Zh5a5Pbe7ua4G7CNQcKz51IALf0NzOyRF7ws6gjnndiVWkYN+w==}
 
   leaflet@https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b:
-    resolution: {tarball: https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b}
+    resolution: {integrity: sha512-u4zj1bZflETjrZia2hxZ63kDeECt9qmQxwBmbcf3JPrHbAWJBRjWIJHNq7QCZoZOyNCGoGakICPgJA0LtEpXbw==, tarball: https://github.com/Leaflet/Leaflet/tarball/ad004fc7241036c2b18abe00e5497ed1c928915b}
     version: 2.0.0-alpha.1
 
   levn@0.4.1:
@@ -3272,6 +3284,9 @@ packages:
     peerDependencies:
       browserslist: '>= 4.21.0'
 
+  uplot@1.6.32:
+    resolution: {integrity: sha512-KIMVnG68zvu5XXUbC4LQEPnhwOxBuLyW1AHtpm6IKTXImkbLgkMy+jabjLgSLMasNuGGzQm/ep3tOkyTxpiQIw==}
+
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
@@ -3420,6 +3435,12 @@ packages:
     resolution: {integrity: sha512-41dFXEEXuJpNecuUQq6JlbybmnHaqqpGlbH1yxnA5V9MMP4SbohSVZsJIwz+zdjQXSSlR1Vc34EgH1zxyTDvhg==}
 
 snapshots:
+
+  '@albina-euregio/linea@8.4.2':
+    dependencies:
+      air-datepicker: 3.6.0
+      temporal-polyfill: 0.3.0
+      uplot: 1.6.32
 
   '@algolia/abtesting@1.12.2':
     dependencies:
@@ -4817,6 +4838,8 @@ snapshots:
   acorn@8.15.0: {}
 
   agent-base@7.1.3: {}
+
+  air-datepicker@3.6.0: {}
 
   ajv-formats@3.0.1(ajv@8.17.1):
     optionalDependencies:
@@ -6537,6 +6560,8 @@ snapshots:
       browserslist: 4.28.0
       escalade: 3.2.0
       picocolors: 1.1.1
+
+  uplot@1.6.32: {}
 
   uri-js@4.4.1:
     dependencies:

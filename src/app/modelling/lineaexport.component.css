@@ -1,0 +1,103 @@
+:host {
+  display: block;
+  font-family: Helvetica, sans-serif;
+  margin: 20px;
+}
+
+.station-map {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 100%;
+  width: 100%;
+}
+
+.hint {
+  padding: 2px;
+  margin: 2px;
+  background-color: rgb(186, 214, 61);
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.stations-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1050;
+
+  max-height: 250px;
+  overflow-y: auto;
+
+  background: #fff;
+  border: 1px solid #ced4da;
+  border-top: none;
+  border-radius: 0 0 0.375rem 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item.selected {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.dropdown-item.active {
+  background-color: #e9ecef;
+}
+
+.dropdown-item.active.selected {
+  background-color: #0d6efd;
+  color: white;
+}
+
+/* Station button grid */
+.stations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+/* Selected station chips */
+.selected-stations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.station-chip {
+  background: #0078d7;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.station-chip button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+}

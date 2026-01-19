@@ -8,7 +8,7 @@
         (click)="toggleSidebar()"
         aria-controls="sidebarMenu"
         aria-label="Toggle navigation"
-        >
+      >
         <i class="ph ph-list sidebar-toggle"></i>
       </button>
       <a class="navbar-brand" href="#">
@@ -24,35 +24,39 @@
             </li>
           }
           @if (authenticationService.getActiveRegion()?.enableDangerSources && authenticationService.isUserLoggedIn()) {
-            <li
-              class="nav-item"
-              >
+            <li class="nav-item">
               <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']" ngxMousetrapKey="g d">
                 {{ "sidebar.dangerSources" | translate }}
               </a>
             </li>
           }
           @if (authenticationService.getActiveRegion()?.enableObservations && authenticationService.isUserLoggedIn()) {
-            <li
-              class="nav-item"
-              >
+            <li class="nav-item">
               <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']" ngxMousetrapKey="g o">
                 {{ "sidebar.observations" | translate }}
               </a>
             </li>
           }
           @if (authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()) {
-            <li
-              class="nav-item"
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                [routerLink]="['/modelling/geosphere']"
+                ngxMousetrapKey="g m"
               >
-              <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']" ngxMousetrapKey="g m">
                 {{ "sidebar.geosphere" | translate }}
               </a>
             </li>
           }
           @if (authenticationService.getActiveRegion()?.enableModelling) {
             <li class="nav-item">
-              <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/snowpack']" ngxMousetrapKey="g s">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                [routerLink]="['/modelling/snowpack']"
+                ngxMousetrapKey="g s"
+              >
                 {{ "sidebar.snowpack" | translate }}
               </a>
             </li>
@@ -65,11 +69,26 @@
             </li>
           }
           @if (authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()) {
-            <li
-              class="nav-item"
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                [routerLink]="['/modelling/zamg-wbt']"
+                ngxMousetrapKey="g w"
               >
-              <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']" ngxMousetrapKey="g w">
                 {{ "sidebar.weatherbox" | translate }}
+              </a>
+            </li>
+          }
+          @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLinkActive="active"
+                [routerLink]="['/modelling/lineaexport']"
+                ngxMousetrapKey="g l"
+              >
+                {{ "sidebar.lineaexport" | translate }}
               </a>
             </li>
           }
@@ -81,10 +100,7 @@
       </div>
       <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
         @if (localStorageService.isTrainingEnabled) {
-          <li
-            class="navbar-text"
-            title="{{ 'training.timestamp' | translate }}"
-            >
+          <li class="navbar-text" title="{{ 'training.timestamp' | translate }}">
             <i class="ph ph-clock-afternoon"></i>
             {{ localStorageService.trainingTimestamp }}
           </li>
@@ -98,7 +114,7 @@
             aria-expanded="false"
             dropdownToggle
             ngxMousetrapKey="l"
-            >
+          >
             {{ translateService.getCurrentLang() }}
           </a>
           <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
@@ -112,7 +128,7 @@
                   (click)="localStorageService.setLanguage(lang)"
                   role="button"
                   [ngxMousetrapKey]="`${i + 1}`"
-                  >
+                >
                   {{ "menu." + lang | translate }}
                   @if (translateService.getCurrentLang() === lang) {
                     <i class="ph ph-check"></i>
@@ -131,12 +147,12 @@
             aria-expanded="false"
             dropdownToggle
             ngxMousetrapKey="u"
-            >
+          >
             @if (authenticationService.getCurrentAuthor() && authenticationService.getCurrentAuthor().image) {
               <img
                 [src]="authenticationService.getUserImageSanitized(authenticationService.getCurrentAuthor().image)"
                 class="user-avatar__img"
-                />
+              />
             }
             {{ authenticationService.getUsername() }}
           </a>
@@ -153,7 +169,7 @@
                       style="height: 24px"
                       [alt]="region.id + ' coat of arms'"
                       aria-hidden="true"
-                      />
+                    />
                   }
                   {{ regionsService.getRegionName(region.id) }}
                   @if (authenticationService.getActiveRegionId() === region.id) {
@@ -176,11 +192,7 @@
             </li>
             <li>
               @if (authenticationService.isCurrentUserInRole(constantsService.roleForecaster)) {
-                <a
-                  class="dropdown-item"
-                  routerLinkActive="active"
-                  [routerLink]="['/statistics']"
-                  >
+                <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/statistics']">
                   <i class="ph ph-chart-line"></i>
                   {{ "menu.statistics" | translate }}
                 </a>
@@ -194,12 +206,7 @@
             </li>
             <li>
               @if (authenticationService.isCurrentUserInRole(constantsService.roleAdmin)) {
-                <a
-                  class="dropdown-item"
-                  routerLinkActive="active"
-                  [routerLink]="['/admin']"
-                  ngxMousetrapKey="a"
-                  >
+                <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/admin']" ngxMousetrapKey="a">
                   <i class="ph ph-detective"></i>
                   {{ "menu.admin" | translate }}
                 </a>
@@ -234,9 +241,7 @@
         </li>
       }
       @if (authenticationService.getActiveRegion()?.enableDangerSources && authenticationService.isUserLoggedIn()) {
-        <li
-          class="nav-item"
-          >
+        <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/danger-sources']">
             <i class="ph ph-snowflake"></i>
             {{ "sidebar.dangerSources" | translate }}
@@ -244,9 +249,7 @@
         </li>
       }
       @if (authenticationService.getActiveRegion()?.enableObservations && authenticationService.isUserLoggedIn()) {
-        <li
-          class="nav-item"
-          >
+        <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/observations']">
             <i class="ph ph-eye"></i>
             {{ "sidebar.observations" | translate }}
@@ -254,9 +257,7 @@
         </li>
       }
       @if (authenticationService.getActiveRegion()?.enableModelling && authenticationService.isUserLoggedIn()) {
-        <li
-          class="nav-item"
-          >
+        <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/geosphere']">
             <i class="ph ph-sphere"></i>
             {{ "sidebar.geosphere" | translate }}
@@ -278,9 +279,7 @@
         </li>
       }
       @if (authenticationService.getActiveRegion()?.enableWeatherbox && authenticationService.isUserLoggedIn()) {
-        <li
-          class="nav-item"
-          >
+        <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" [routerLink]="['/modelling/zamg-wbt']">
             {{ "sidebar.weatherbox" | translate }}
           </a>
