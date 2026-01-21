@@ -1,0 +1,58 @@
+<div class="search-wrapper">
+  <input
+    class="form-control"
+    type="text"
+    [value]="searchTerm"
+    (input)="onSearch($event)"
+    (keydown)="onKeyDown($event)"
+    (focus)="showDropdown = true"
+    (blur)="onBlur()"
+    [placeholder]="'lineaexport.searchfieldplaceholder' | translate"
+  />
+
+  @if (showDropdown && searchTerm !== "" && filteredStations.length > 0) {
+    <div class="stations-dropdown">
+      @for (station of filteredStations; track station.id; let i = $index) {
+        <button
+          type="button"
+          class="dropdown-item"
+          [class.selected]="selectedIds.includes(station.id)"
+          [class.active]="i === activeIndex"
+          (mousedown)="toggleStation(station.id)"
+          #dropdownItem
+        >
+          {{ station.name }} ({{ station.id }})
+        </button>
+      }
+    </div>
+  }
+</div>
+
+@if (filteredStations.length === 1) {
+  <div class="hint">{{ "lineaexport.hint" | translate }} {{ filteredStations[0].name }}</div>
+}
+
+<div height="300px" style="height: 300px; width: 100%; margin-top: 0px">
+  <div class="station-map" id="stationsMap" #stationsMap></div>
+</div>
+
+<!-- Selected station chips -->
+<div class="selected-stations">
+  @for (id of selectedIds; track id) {
+    <div class="station-chip">
+      {{ id }}
+      <button (click)="removeStation(id)">×</button>
+    </div>
+  }
+</div>
+
+<linea-plot
+  [attr.src]="srcs"
+  [attr.lazysrc]="lazysrcs"
+  showsurfaceHoarseries
+  showtitle
+  showexport
+  showinteractiveblogexport
+  showdatepicker
+>
+</linea-plot>

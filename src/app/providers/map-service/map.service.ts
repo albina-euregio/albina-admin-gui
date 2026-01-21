@@ -18,6 +18,7 @@ import {
   Control,
   GeoJSON,
   Layer,
+  LayerGroup,
   Map as LeafletMap,
   MapOptions,
   Path,
@@ -26,10 +27,12 @@ import {
   TileLayerOptions,
 } from "leaflet";
 import "leaflet.sync";
+import { Subscription } from "rxjs";
 
 declare module "leaflet" {
   interface Map {
     sync(other: Map): void;
+    unsync(other: Map): void;
   }
 }
 
@@ -134,6 +137,7 @@ export class MapService {
     editSelection: RegionLayer;
     aggregatedRegions: PmLeafletLayer;
   };
+  protected observeMapCenterSubscription: Subscription;
 
   constructor() {
     this.amControl = new AmPmControl({ position: "bottomleft" }).setText(
@@ -198,15 +202,43 @@ export class MapService {
   }
 
   removeMaps() {
-    if (this.map) {
-      this.map.remove();
-      this.map = undefined;
-      this.regionNameControl = undefined;
+    this.observeMapCenterSubscription?.unsubscribe();
+    try {
+      this.map.unsync(this.afternoonMap);
+      this.afternoonMap.unsync(this.map);
+    } catch {
+      //ignore
     }
-    if (this.afternoonMap) {
-      this.afternoonMap.remove();
-      this.afternoonMap = undefined;
+    for (const map of [this.map, this.afternoonMap]) {
+      if (!map) continue;
+      map.eachLayer((l) => this.removeLayer(l));
+      map.off();
+      map.remove();
     }
+    Object.values(this.overlayMaps ?? {}).forEach((l) => this.removeLayer(l));
+    this.overlayMaps = undefined;
+    Object.values(this.afternoonOverlayMaps ?? {}).forEach((l) => this.removeLayer(l));
+    this.afternoonOverlayMaps = undefined;
+    this.amControl?.remove();
+    this.pmControl?.remove();
+    this.regionNameControl?.remove();
+    this.regionNameControl = undefined;
+    this.map = undefined;
+    this.afternoonMap = undefined;
+  }
+
+  private removeLayer(l: Layer) {
+    if (l instanceof LayerGroup) {
+      l.clearLayers();
+    }
+    if (l instanceof GeoJSON) {
+      l.options.onEachFeature = undefined;
+    }
+    if (l instanceof PmLeafletLayer) {
+      l.views.clear();
+    }
+    l.off();
+    l.remove();
   }
 
   async initAmPmMap() {
@@ -238,7 +270,7 @@ export class MapService {
     await this.fitActiveRegionBounds(this.map, this.overlayMaps.editSelection);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
-    this.localStorageService
+    this.observeMapCenterSubscription = this.localStorageService
       .observeMapCenter()
       .subscribe((mapCenter) => this.map.setView(mapCenter, mapCenter.zoom, { reset: true } as unknown));
 
@@ -340,6 +372,7 @@ export class MapService {
 
   getMapInitOptions(): MapOptions {
     return {
+      trackResize: true,
       doubleClickZoom: true,
       scrollWheelZoom: true,
       // pinchZoom: Browser.touch,
@@ -378,7 +411,8 @@ export class MapService {
   }
 
   resetInternalAggregatedRegions() {
-    for (const layer of [this.overlayMaps.aggregatedRegions, this.afternoonOverlayMaps.aggregatedRegions]) {
+    for (const layer of [this.overlayMaps?.aggregatedRegions, this.afternoonOverlayMaps?.aggregatedRegions]) {
+      if (!layer) continue;
       const regions = Object.keys(layer.paintRules).filter((region) =>
         this.authenticationService.isInternalRegion(region),
       );

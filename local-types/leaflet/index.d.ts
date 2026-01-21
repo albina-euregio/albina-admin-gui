@@ -1974,80 +1974,76 @@ export class Control<Options extends ControlOptions = ControlOptions> extends Cl
     options: Options;
 }
 
-export namespace Control {
-    interface ZoomOptions extends ControlOptions {
-        zoomInText?: string | undefined;
-        zoomInTitle?: string | undefined;
-        zoomOutText?: string | undefined;
-        zoomOutTitle?: string | undefined;
-    }
+export interface ZoomControlOptions extends ControlOptions {
+    zoomInText?: string | undefined;
+    zoomInTitle?: string | undefined;
+    zoomOutText?: string | undefined;
+    zoomOutTitle?: string | undefined;
+}
 
-    class Zoom extends Control {
-        constructor(options?: ZoomOptions);
-        disable(): this;
-        enable(): this;
+export class ZoomControl extends Control {
+    constructor(options?: ZoomControlOptions);
+    disable(): this;
+    enable(): this;
 
-        options: ZoomOptions;
-    }
+    options: ZoomControlOptions;
+}
 
-    interface AttributionOptions extends ControlOptions {
-        prefix?: string | boolean | undefined;
-    }
+export interface AttributionControlOptions extends ControlOptions {
+    prefix?: string | boolean | undefined;
+}
 
-    class Attribution extends Control {
-        constructor(options?: AttributionOptions);
-        setPrefix(prefix: string | false): this;
-        addAttribution(text: string): this;
-        removeAttribution(text: string): this;
+export class AttributionControl extends Control {
+    constructor(options?: AttributionControlOptions);
+    setPrefix(prefix: string | false): this;
+    addAttribution(text: string): this;
+    removeAttribution(text: string): this;
 
-        options: AttributionOptions;
-    }
+    options: AttributionControlOptions;
+}
 
-    interface LayersOptions extends ControlOptions {
-        collapsed?: boolean | undefined;
-        collapseDelay?: number | undefined;
-        autoZIndex?: boolean | undefined;
-        hideSingleBase?: boolean | undefined;
-        /**
-         * Whether to sort the layers. When `false`, layers will keep the order in which they were added to the control.
-         */
-        sortLayers?: boolean | undefined;
-        /**
-         * A [compare function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
-         * that will be used for sorting the layers, when `sortLayers` is `true`. The function receives both the
-         * [`Layer`](https://leafletjs.com/reference.html#layer) instances and their names, as in
-         * `sortFunction(layerA, layerB, nameA, nameB)`. By default, it sorts layers alphabetically by their name.
-         */
-        sortFunction?: ((layerA: Layer, layerB: Layer, nameA: string, nameB: string) => number) | undefined;
-    }
+export interface LayersControlOptions extends ControlOptions {
+    collapsed?: boolean | undefined;
+    collapseDelay?: number | undefined;
+    autoZIndex?: boolean | undefined;
+    hideSingleBase?: boolean | undefined;
+    /**
+     * Whether to sort the layers. When `false`, layers will keep the order in which they were added to the control.
+     */
+    sortLayers?: boolean | undefined;
+    /**
+     * A [compare function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+     * that will be used for sorting the layers, when `sortLayers` is `true`. The function receives both the
+     * [`Layer`](https://leafletjs.com/reference.html#layer) instances and their names, as in
+     * `sortFunction(layerA, layerB, nameA, nameB)`. By default, it sorts layers alphabetically by their name.
+     */
+    sortFunction?: ((layerA: Layer, layerB: Layer, nameA: string, nameB: string) => number) | undefined;
+}
 
-    interface LayersObject {
-        [name: string]: Layer;
-    }
+type LayersObject = Record<string, Layer>;
 
-    class Layers extends Control {
-        constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersOptions);
-        addBaseLayer(layer: Layer, name: string): this;
-        addOverlay(layer: Layer, name: string): this;
-        removeLayer(layer: Layer): this;
-        expand(): this;
-        collapse(): this;
+export class LayersControl extends Control {
+    constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersControlOptions);
+    addBaseLayer(layer: Layer, name: string): this;
+    addOverlay(layer: Layer, name: string): this;
+    removeLayer(layer: Layer): this;
+    expand(): this;
+    collapse(): this;
 
-        options: LayersOptions;
-    }
+    options: LayersControlOptions;
+}
 
-    interface ScaleOptions extends ControlOptions {
-        maxWidth?: number | undefined;
-        metric?: boolean | undefined;
-        imperial?: boolean | undefined;
-        updateWhenIdle?: boolean | undefined;
-    }
+export interface ScaleControlOptions extends ControlOptions {
+    maxWidth?: number | undefined;
+    metric?: boolean | undefined;
+    imperial?: boolean | undefined;
+    updateWhenIdle?: boolean | undefined;
+}
 
-    class Scale extends Control {
-        constructor(options?: ScaleOptions);
+export class ScaleControl extends Control {
+    constructor(options?: LayersControlOptions);
 
-        options: ScaleOptions;
-    }
+    options: LayersControlOptions;
 }
 
 export interface DivOverlayOptions {
@@ -2441,7 +2437,7 @@ export class Map extends Evented {
     options: MapOptions;
 }
 
-export type LeafletMap = Map;
+export const LeafletMap = Map;
 
 export interface BaseIconOptions {
     iconUrl?: string | undefined;

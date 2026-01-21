@@ -28,6 +28,7 @@ import { ObservationMarkerWebcamService } from "./observation-marker-webcam.serv
 import { ObservationMarkerService } from "./observation-marker.service";
 import { ObservationTableComponent } from "./observation-table.component";
 import { AlbinaObservationsService } from "./observations.service";
+import "@albina-euregio/linea";
 import { CommonModule, formatDate } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
@@ -41,7 +42,10 @@ import {
   inject,
   ViewChild,
   HostListener,
+  DestroyRef,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -78,6 +82,15 @@ class ObservationData {
     private forEachObservation0: (observation: GenericObservation) => void = () => {},
     private applyLocalFilter0: () => void = () => {},
   ) {}
+
+  clear() {
+    this.loading?.unsubscribe();
+    this.loading = undefined;
+    this.all = [];
+    this.filtered = [];
+    this.layer.clearLayers();
+    this.layer.remove();
+  }
 
   toggle(map: LeafletMap) {
     if (this.show) {
@@ -153,6 +166,7 @@ class ObservationData {
     NgxMousetrapDirective,
   ],
   templateUrl: "observations.component.html",
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ObservationsComponent implements AfterContentInit, AfterViewInit, OnDestroy {
   filter = inject<ObservationFilterService<GenericObservation>>(ObservationFilterService);
@@ -173,6 +187,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   authenticationService = inject(AuthenticationService);
   mapService = inject(BaseMapService);
   modalService = inject(BsModalService);
+  private destroyRef = inject(DestroyRef);
 
   public layout: "map" | "table" | "chart" | "gallery" = "map";
   public layoutFilters = true;
@@ -254,6 +269,7 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
     this.dangerSourcesService
       .loadDangerSources([new Date(), new Date()], this.authenticationService.getActiveRegionId())
+      .pipe(takeUntilDestroyed())
       .subscribe((dangerSources) => {
         const values: FilterSelectionValue[] = orderBy(dangerSources, [(s) => s.creationDate], ["asc"]).map((s) => ({
           value: s.id,
@@ -285,23 +301,38 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
   async ngAfterViewInit() {
     await this.initMap();
     if (window.matchMedia("(min-width: 769px)").matches) {
-      Split([".layout-left", ".layout-right"], { onDragEnd: () => this.mapService.map.invalidateSize() });
+      Split([".layout-left", ".layout-right"]);
     }
   }
 
   async loadObservationsAndWeatherStations() {
     this.filter.updateDateInURL();
-    this.data.observations.loadFrom(this.observationsService.getGenericObservations(), this.observationSearch);
-    this.data.weatherStations.loadFrom(this.observationsService.getWeatherStations(), this.observationSearch);
+    this.data.observations.loadFrom(
+      this.observationsService.getGenericObservations().pipe(takeUntilDestroyed(this.destroyRef)),
+      this.observationSearch,
+    );
+    this.data.weatherStations.loadFrom(
+      this.observationsService.getWeatherStations().pipe(takeUntilDestroyed(this.destroyRef)),
+      this.observationSearch,
+    );
   }
 
   private async initMap() {
-    const map = await this.mapService.initMaps(this.mapDiv().nativeElement);
+    const map = await this.mapService.initMaps(this.mapDiv().nativeElement, {
+      regions: await this.regionsService.getInternalServerRegionsAsync(),
+      internalRegions: await this.regionsService.getInternalServerRegionsAsync(),
+    });
 
-    this.data.observations.toggle(this.map);
+    this.data.observations.toggle(this.mapService.map);
     this.loadObservationsAndWeatherStations();
-    this.data.observers.loadFrom(this.observationsService.getObservers(), this.observationSearch);
-    this.data.webcams.loadFrom(this.observationsService.getGenericWebcams(), this.observationSearch);
+    this.data.observers.loadFrom(
+      this.observationsService.getObservers().pipe(takeUntilDestroyed(this.destroyRef)),
+      this.observationSearch,
+    );
+    this.data.webcams.loadFrom(
+      this.observationsService.getGenericWebcams().pipe(takeUntilDestroyed(this.destroyRef)),
+      this.observationSearch,
+    );
 
     map.on({
       click: () => {
@@ -309,19 +340,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
         this.applyLocalFilter();
       },
     });
-
-    const resizeObserver = new ResizeObserver(() => {
-      this.mapService.map?.invalidateSize();
-    });
-    resizeObserver.observe(this.mapDiv().nativeElement);
-  }
-
-  get map() {
-    return this.mapService.map;
   }
 
   ngOnDestroy() {
-    Object.values(this.data).forEach(({ layer }) => layer.clearLayers());
+    Object.values(this.data).forEach((d) => d.clear());
     this.mapService.resetAll();
     this.mapService.removeMaps();
   }
@@ -557,6 +579,10 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
     }
   }
 
+  isLineaUrl(imgUrl: string | SafeResourceUrl): boolean {
+    return String(imgUrl).endsWith(".smet") || String(imgUrl).endsWith(".smet.gz");
+  }
+
   private $externalImgs(observation: GenericObservation) {
     if (!observation) return undefined;
     return observation.$source === ObservationSource.AvalancheWarningService &&
@@ -571,7 +597,9 @@ export class ObservationsComponent implements AfterContentInit, AfterViewInit, O
       const iframe = this.sanitizer.bypassSecurityTrustResourceUrl(observation.$externalURL);
       this.observationPopup = { observation, table: [], iframe, imgUrls: undefined, imgIndex };
     } else if ($externalImgs) {
-      const imgUrls = $externalImgs.map((img) => this.sanitizer.bypassSecurityTrustResourceUrl(img));
+      const imgUrls = $externalImgs.map((img) =>
+        img.endsWith(".smet.gz") ? img : this.sanitizer.bypassSecurityTrustResourceUrl(img),
+      );
       this.observationPopup = { observation, table: [], iframe: undefined, imgUrls: imgUrls, imgIndex };
     } else {
       const table: ObservationTableRow[] = [

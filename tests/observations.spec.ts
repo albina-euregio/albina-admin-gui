@@ -41,7 +41,7 @@ test("filter observations", async ({ page }) => {
     await page.getByText("6", { exact: true }).first().click();
     await expect(page.getByRole("textbox")).toHaveValue("12/03/2024 - 12/06/2024");
     await expect(page).toHaveURL("#/observations?startDate=2024-12-03T10:00&endDate=2024-12-06T14:30");
-    await expect(page.locator(".keydata")).toHaveText("165 / 175", { timeout: 7000 });
+    await expect(page.locator(".keydata")).toHaveText("175 / 175", { timeout: 7000 });
     await page.getByText("Table", { exact: true }).click();
     await expect(
       page.getByText(
@@ -86,7 +86,7 @@ test("filter observations", async ({ page }) => {
           y: 95,
         },
       });
-    await expect(page.locator(".keydata")).toHaveText("43 / 175");
+    await expect(page.locator(".keydata")).toHaveText("45 / 175");
     await page
       .locator("app-observation-chart")
       .filter({ hasText: "Observation Type" })
@@ -131,7 +131,7 @@ test("filter observations", async ({ page }) => {
 test("observation details", async ({ page }) => {
   test.slow();
   await page.goto("#/observations?startDate=2024-12-23T00:00&endDate=2024-12-24T23:59");
-  await expect(page.locator(".keydata")).toHaveText("331 / 342", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("342 / 342", { timeout: 7000 });
   await page.getByText("Table", { exact: true }).click();
   await test.step("AvalancheWarningService", async () => {
     await page.getByRole("button", { name: "Sources" }).click();
@@ -291,7 +291,7 @@ test("Weather stations", async ({ page }) => {
   await page.clock.setFixedTime(new Date("2025-03-05"));
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  await expect(page.locator(".keydata")).toHaveText("675 / 723", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("723 / 723", { timeout: 7000 });
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
   await expect

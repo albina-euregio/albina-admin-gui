@@ -1,5 +1,4 @@
 import * as Enums from "../enums/enums";
-import { BulletinUpdateModel } from "../models/bulletin-update.model";
 import { StressLevel } from "../models/stress-level.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -41,7 +40,6 @@ export class BulletinsComponent implements OnDestroy {
   private modalService = inject(BsModalService);
 
   public bulletinStatus = Enums.BulletinStatus;
-  public updates: Subject<BulletinUpdateModel>;
   public copying: boolean;
   public readonly postStressLevel = new Subject<StressLevel>();
   public channelStatusInformation: StatusInformationModel[] = [];

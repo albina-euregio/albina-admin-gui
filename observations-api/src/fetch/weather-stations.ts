@@ -75,7 +75,7 @@ class StationValues {
 }
 
 function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>): GenericObservation<FeatureProperties> {
-  return {
+  const observation = {
     $data: feature.properties,
     $externalImgs: [
       `https://wiski.tirol.gv.at/lawine/grafiken/1100/standard/woche/${feature.properties.plot}.png`,
@@ -98,6 +98,14 @@ function mapFeature(feature: GeoJSON.Feature<GeoJSON.Point, FeatureProperties>):
     longitude: feature.geometry.coordinates[0],
     region: feature.properties["LWD-Region"]?.split(" ")?.[0] || "",
   } as GenericObservation;
+  const smetOperators = /LWD Tirol|HD Tirol|Südtirol - Alto Adige|Trentino|LWD Bayern|Tiroler Wasserkraft|Verbund/;
+  if (smetOperators.test(feature.properties.operator)) {
+    observation.$externalImgs.unshift(
+      `https://api.avalanche.report/lawine/grafiken/smet/woche/${observation.$id}.smet.gz`,
+      `https://api.avalanche.report/lawine/grafiken/smet/winter/${observation.$id}.smet.gz`,
+    );
+  }
+  return observation;
 }
 
 export interface FeatureProperties {

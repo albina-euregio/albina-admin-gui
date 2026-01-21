@@ -2,6 +2,40 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.1.0] - 2026-01-12
+
+### 🚀 Features
+
+- Request and display status information for enabled publication channels
+- Add micro-regions for SI
+- Support relative URLs in AWSOME
+- Do not expand danger sources with inactive variants only
+- Color headline of inactive danger sources grey
+
+### 🐛 Bug Fixes
+
+- danger-sources: Click on map opens most relevant variant
+- Immediately update local activeBulletin map state
+
+### ⚙️ Miscellaneous Tasks
+
+- Yarn 4.12.0
+- Update to ngx-echarts 21.0.0
+- Update to angular-eslint 21.0.1
+- Update to zone.js 0.16.0
+- Update to angular 21.0.4
+- Upgrade to eaws-regions v8.1.1
+- Upgrade to leaflet 2.0.0-alpha.1-98-g611aee1c
+- Update to zod 4.3.2
+
+### Temporal
+
+- Prefer native implementation
+
+### Build
+
+- Silence SASS deprecations
+
 ## [8.0.5] - 2025-12-09
 
 ### 🐛 Bug Fixes

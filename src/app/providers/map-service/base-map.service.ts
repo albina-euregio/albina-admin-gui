@@ -1,7 +1,7 @@
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
 import { Injectable } from "@angular/core";
-import { Control, Map as LeafletMap } from "leaflet";
+import { AttributionControl, ZoomControl, LeafletMap } from "leaflet";
 
 @Injectable()
 export class BaseMapService extends MapService {
@@ -14,6 +14,7 @@ export class BaseMapService extends MapService {
     this.overlayMaps = await this.initOverlayMaps(options);
 
     this.map = new LeafletMap(el, {
+      trackResize: true,
       attributionControl: false,
       zoomAnimation: false,
       zoomControl: false,
@@ -29,7 +30,7 @@ export class BaseMapService extends MapService {
     this.fitActiveRegionBounds(this.map, this.overlayMaps.editSelection);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
-    this.localStorageService
+    this.observeMapCenterSubscription = this.localStorageService
       .observeMapCenter()
       .subscribe((mapCenter) => this.map.setView(mapCenter, mapCenter.zoom, { reset: true } as unknown));
 
@@ -54,8 +55,8 @@ export class BaseMapService extends MapService {
     });
 
     this.resetAll();
-    new Control.Attribution({ prefix: false }).addTo(this.map);
-    new Control.Zoom({ position: "topleft" }).addTo(this.map);
+    new AttributionControl({ prefix: false }).addTo(this.map);
+    new ZoomControl({ position: "topleft" }).addTo(this.map);
     this.regionNameControl = new RegionNameControl().addTo(this.map);
     return this.map;
   }
