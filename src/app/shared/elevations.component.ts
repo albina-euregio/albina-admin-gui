@@ -17,7 +17,6 @@ export class ElevationsComponent implements OnChanges {
 
   readonly elevationsChange = output<void>();
   readonly disabled = input<boolean>(false);
-  readonly singleton = input<boolean>(false);
 
   useElevationHigh = false;
   useElevationLow = false;
