@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod/v4";
 
 // https://github.com/colinhacks/zod/issues/38#issuecomment-1938821172
 export interface ZSchemaInterface<T extends z.ZodRawShape, TObject = z.ZodObject<T>> {
