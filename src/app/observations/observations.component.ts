@@ -7,13 +7,13 @@ import { FilterSelectionValue } from "./filter-selection-config";
 import { observationFilters } from "./filter-selection-data-data";
 import {
   GenericObservation,
-  genericObservationSchema,
   ImportantObservation,
   ObservationSource,
   ObservationTableRow,
   ObservationType,
   toGeoJSON,
   toCSV,
+  partialGenericObservationSchema,
 } from "./models/generic-observation.model";
 import { ObservationChartComponent } from "./observation-chart.component";
 import { ObservationEditorComponent } from "./observation-editor.component";
@@ -120,11 +120,9 @@ class ObservationData {
   }
 
   forEachObservation(observation: GenericObservation) {
-    try {
-      genericObservationSchema.partial().parse(observation);
-    } catch (err) {
-      console.warn("Observation does not match schema", observation, err);
-    }
+    partialGenericObservationSchema
+      .parseAsync(observation)
+      .catch((err) => console.warn("Observation does not match schema", observation, err));
     augmentRegion(observation);
     this.forEachObservation0(observation);
     this.all.push(observation);

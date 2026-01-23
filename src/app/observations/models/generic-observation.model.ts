@@ -206,6 +206,8 @@ export const genericObservationSchema = z.object({
 
 export const genericObservationWithIdSchema = genericObservationSchema.extend({ $id: z.string().min(1) });
 
+export const partialGenericObservationSchema = genericObservationSchema.partial();
+
 export type RawGenericObservation = z.infer<typeof genericObservationSchema>;
 
 export type GenericObservation<Data = any> = z.infer<typeof genericObservationSchema> & {
