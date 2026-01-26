@@ -171,10 +171,10 @@
           }}</label>
           <div>
             <app-elevations
-              [elevationHigh]="variant().elevationHighOfExistence"
-              [treelineHigh]="variant().treelineHighOfExistence"
-              [elevationLow]="variant().elevationLowOfExistence"
-              [treelineLow]="variant().treelineLowOfExistence"
+              [(elevationHigh)]="variant().elevationHighOfExistence"
+              [(treelineHigh)]="variant().treelineHighOfExistence"
+              [(elevationLow)]="variant().elevationLowOfExistence"
+              [(treelineLow)]="variant().treelineLowOfExistence"
               [disabled]="disabled()"
               (elevationsChange)="updateVariantOnServer()"
             ></app-elevations>
@@ -1044,10 +1044,10 @@
             }}</label>
             <div>
               <app-elevations
-                [elevationHigh]="variant().elevationHigh"
-                [treelineHigh]="variant().treelineHigh"
-                [elevationLow]="variant().elevationLow"
-                [treelineLow]="variant().treelineLow"
+                [(elevationHigh)]="variant().elevationHigh"
+                [(treelineHigh)]="variant().treelineHigh"
+                [(elevationLow)]="variant().elevationLow"
+                [(treelineLow)]="variant().treelineLow"
                 [disabled]="disabled()"
                 (elevationsChange)="updateVariantOnServer()"
               ></app-elevations>
