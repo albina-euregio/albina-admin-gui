@@ -79,9 +79,9 @@ export class ElevationsComponent implements OnChanges {
     event.stopPropagation();
     if (this.treelineLow()) {
       this.isElevationLowEditing = true;
-      //this.treelineLow.set(false);
+      this.treelineLow.set(false);
     } else {
-      //this.treelineLow.set(true);
+      this.treelineLow.set(true);
       this.elevationLow.set(undefined);
       this.isElevationLowEditing = false;
     }
