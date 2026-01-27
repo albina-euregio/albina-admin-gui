@@ -521,10 +521,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleShowVariantsOnMap(event: Event, dangerSourceId: string) {
-    if (event) {
-      event.stopPropagation();
-    }
+  toggleShowVariantsOnMap(dangerSourceId: string) {
     if (this.activeDangerSourceOnMap && this.activeDangerSourceOnMap.id === dangerSourceId) {
       this.activeDangerSourceOnMap = undefined;
     } else {
@@ -759,11 +756,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.showDangerSourceVariantsMap.set(dangerSourceId, !this.showDangerSourceVariantsMap.get(dangerSourceId));
   }
 
-  eventCopyVariant(variant: DangerSourceVariantModel) {
-    this.copyVariant(undefined, variant);
-  }
-
-  copyVariant(event: Event, originalVariant: DangerSourceVariantModel) {
+  copyVariant(originalVariant: DangerSourceVariantModel) {
     this.showNewVariantModal = true;
     this.copying = false;
     const variant = DangerSourceVariantModel.parse(originalVariant);
@@ -781,10 +774,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.openCreateDangerSourceModal();
   }
 
-  createVariant(event: Event, dangerSource: DangerSourceModel) {
-    if (event) {
-      event.stopPropagation();
-    }
+  createVariant(dangerSource: DangerSourceModel) {
     this.showNewVariantModal = true;
     const newVariant = DangerSourceVariantModel.parse({
       dangerSourceVariantStatus: DangerSourceVariantStatus.active,
@@ -907,10 +897,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  eventDeselectVariant() {
-    this.deselectVariant();
-  }
-
   deselectVariant() {
     if (!this.editRegions && this.activeVariant !== null && this.activeVariant !== undefined) {
       this.mapService.deselectAggregatedRegion();
@@ -920,23 +906,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.updateInternalVariantsOnMap(this.dangerSourcesService.getDangerSourceVariantType());
   }
 
-  eventDeselectComparedVariant() {
+  deselectComparedVariant() {
     this.comparedVariant = undefined;
   }
 
-  deleteVariant(event: Event, variant: DangerSourceVariantModel) {
-    event.stopPropagation();
-    this.eventDeleteVariant(variant);
-  }
-
-  eventDeleteVariant(variant: DangerSourceVariantModel) {
+  deleteVariant(variant: DangerSourceVariantModel) {
     this.variantMarkedDelete = variant;
     this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate());
-  }
-
-  eventCompareVariant(event: Event, variant: DangerSourceVariantModel) {
-    event.stopPropagation();
-    this.compareVariant(variant);
   }
 
   compareVariant(variant: DangerSourceVariantModel) {
@@ -950,14 +926,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  eventEditMicroRegions(variant: DangerSourceVariantModel) {
+  editMicroRegions(variant: DangerSourceVariantModel) {
     this.showNewVariantModal = true;
     this.editVariantMicroRegions(variant);
-  }
-
-  editMicroRegions(event: Event, variant: DangerSourceVariantModel) {
-    event.stopPropagation();
-    this.eventEditMicroRegions(variant);
   }
 
   private editVariantMicroRegions(variant: DangerSourceVariantModel) {
@@ -1039,6 +1010,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
     variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
     variant.updateDate = new Date();
+    ////
     this.dangerSourcesService.saveDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
       (newVariant) => {
         this.activeVariant = newVariant;

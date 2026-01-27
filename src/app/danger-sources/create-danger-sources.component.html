@@ -196,10 +196,10 @@
           [isVariantsSidebarVisible]="isVariantsSidebarVisible"
           [isComparedVariant]="false"
           (updateVariantOnServerEvent)="saveVariantOnServer($event)"
-          (deleteVariantEvent)="eventDeleteVariant($event)"
-          (copyVariantEvent)="eventCopyVariant($event)"
-          (editMicroRegionsEvent)="eventEditMicroRegions($event)"
-          (deselectVariantEvent)="eventDeselectVariant()"
+          (deleteVariantEvent)="deleteVariant($event)"
+          (copyVariantEvent)="copyVariant($event)"
+          (editMicroRegionsEvent)="editMicroRegions($event)"
+          (deselectVariantEvent)="deselectVariant()"
           (toggleVariantsSidebarEvent)="toggleVariantsSidebar()"
         ></app-danger-source-variant>
       </div>
@@ -219,7 +219,7 @@
           [isCompactMapLayout]="isCompactMapLayout"
           [isVariantsSidebarVisible]="isVariantsSidebarVisible"
           [isComparedVariant]="true"
-          (deselectVariantEvent)="eventDeselectComparedVariant()"
+          (deselectVariantEvent)="deselectComparedVariant()"
         ></app-danger-source-variant>
       </div>
     }
@@ -375,7 +375,7 @@
             type="button"
             class="btn btn-sm btn-icon"
             [class.btn-primary]="activeDangerSourceOnMap === dangerSource"
-            (click)="toggleShowVariantsOnMap($event, dangerSource.id)"
+            (click)="$event.stopPropagation(); toggleShowVariantsOnMap(dangerSource.id)"
             title="{{ 'dangerSources.create.tooltip.showVariantsOnMap' | translate }}"
           >
             <i class="ph-bold ph-eye icon-md"></i>
@@ -385,7 +385,7 @@
           @if (dangerSourcesService.getIsEditable()) {
             <button
               [disabled]="editRegions || loading"
-              (click)="createVariant($event, dangerSource)"
+              (click)="$event.stopPropagation(); createVariant(dangerSource)"
               class="btn btn-sm btn-icon btn-primary"
               type="button"
               title="{{ 'dangerSources.create.createVariant' | translate }}"
@@ -530,7 +530,7 @@
           [disabled]="loading || editRegions"
           type="button"
           class="btn btn-sm btn-bare btn-sm btn-icon"
-          (click)="copyVariant($event, variant)"
+          (click)="$event.stopPropagation(); copyVariant(variant)"
           data-toggle="tooltip"
           title="{{ 'dangerSources.create.tooltip.copy' | translate }}"
         >
@@ -543,7 +543,7 @@
           [disabled]="loading || editRegions"
           type="button"
           class="btn btn-sm btn-icon btn-bare"
-          (click)="deleteVariant($event, variant)"
+          (click)="$event.stopPropagation(); deleteVariant(variant)"
           data-toggle="tooltip"
           title="{{ 'dangerSources.create.tooltip.delete' | translate }}"
         >
@@ -557,7 +557,7 @@
           type="button"
           class="btn btn-bare btn-sm btn-icon"
           [class.btn-bare--inverse]="comparedVariant && variant.id === comparedVariant.id"
-          (click)="eventCompareVariant($event, variant)"
+          (click)="$event.stopPropagation(); compareVariant(variant)"
           data-toggle="tooltip"
           title="{{ 'dangerSources.create.tooltip.compare' | translate }}"
         >
