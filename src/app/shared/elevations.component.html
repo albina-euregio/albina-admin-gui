@@ -1,0 +1,91 @@
+<!-- Elevation (high) -->
+<div class="avalanche-problem-detail__elevation">
+  <div class="avalanche-problem-detail__elevation-label form-check">
+    <input
+      id="elevationHighCheckbox"
+      type="checkbox"
+      class="form-check-input"
+      [disabled]="disabled()"
+      (change)="setUseElevationHigh($event)"
+      [(ngModel)]="useElevationHigh"
+      />
+    <label class="form-label" for="elevationHighCheckbox">{{
+      "elevation.high" | translate
+    }}</label>
+  </div>
+  <div class="avalanche-problem-detail__elevation-inputs">
+    <div class="input-group">
+      <input
+        step="100"
+        min="0"
+        max="9000"
+        id="inputElevationHigh"
+        class="form-control"
+        size="14"
+        type="number"
+        name="elevation-input"
+        [disabled]="disabled() || treelineHigh() || !useElevationHigh"
+        [(ngModel)]="elevationHigh"
+        (change)="updateElevationHigh()"
+        />
+      <span class="input-group-text">m</span>
+    </div>
+    <button
+      [disabled]="disabled() || !useElevationHigh"
+      type="reset"
+      class="btn btn-icon"
+      [ngClass]="treelineHigh() ? 'btn-dark' : 'btn-outline-secondary'"
+      (click)="treelineHighClicked($event)"
+      data-toggle="tooltip"
+      title="{{ 'elevation.treeline' | translate }}"
+      >
+      <i class="ph ph-tree-evergreen"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Elevation (low) -->
+<div class="avalanche-problem-detail__elevation">
+  <div class="form-check avalanche-problem-detail__elevation-label">
+    <input
+      id="elevationLowCheckbox"
+      type="checkbox"
+      class="form-check-input"
+      [disabled]="disabled()"
+      (change)="setUseElevationLow($event)"
+      [(ngModel)]="useElevationLow"
+      />
+    <label class="form-label" for="elevationLowCheckbox">{{
+      "elevation.low" | translate
+    }}</label>
+  </div>
+  <div class="avalanche-problem-detail__elevation-inputs">
+    <div class="input-group">
+      <input
+        step="100"
+        min="0"
+        max="9000"
+        id="inputElevationLow"
+        class="form-control"
+        size="14"
+        type="number"
+        name="elevation-input"
+        [disabled]="disabled() || treelineLow() || !useElevationLow"
+        [(ngModel)]="elevationLow"
+        (change)="updateElevationLow()"
+        />
+      <span class="input-group-text">m</span>
+    </div>
+    <button
+      [disabled]="disabled() || !useElevationLow"
+      type="reset"
+      class="btn btn-icon"
+      [ngClass]="treelineLow() ? 'btn-dark' : 'btn-outline-secondary'"
+      (click)="treelineLowClicked($event)"
+      data-toggle="tooltip"
+      title="{{ 'elevation.treeline' | translate }}"
+      >
+      <i class="ph ph-tree-evergreen"></i>
+    </button>
+  </div>
+</div>

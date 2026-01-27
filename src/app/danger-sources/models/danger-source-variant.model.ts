@@ -188,6 +188,7 @@ export enum Wetness {
 export const DangerSourceVariantSchema = z.object({
   id: z.string().nullish(),
   comment: z.string().nullish(),
+  uncertainties: z.string().nullish(),
   textcat: z.string().nullish(),
 
   originalDangerSourceVariantId: z.string().nullish(),
@@ -208,6 +209,11 @@ export const DangerSourceVariantSchema = z.object({
   treelineHigh: z.boolean().nullish(),
   elevationLow: z.number().nullish(),
   treelineLow: z.boolean().nullish(),
+  aspectsOfExistence: z.enum(Aspect).array().nullish(),
+  elevationHighOfExistence: z.number().nullish(),
+  treelineHighOfExistence: z.boolean().nullish(),
+  elevationLowOfExistence: z.number().nullish(),
+  treelineLowOfExistence: z.boolean().nullish(),
   dangerIncreaseWithElevation: z.boolean().nullish(),
   highestDangerAspect: z.enum([Aspect.N, Aspect.E, Aspect.S, Aspect.W]).nullish(),
   dangerPeak: z.enum(Daytime).nullish(),

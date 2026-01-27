@@ -118,7 +118,8 @@
         "glide": "Glide snow",
         "matrix": "Matrix",
         "characteristics": "Characteristics",
-        "comment": "Comment"
+        "comment": "Comment",
+        "uncertainties": "Uncertainties"
       },
       "label": {
         "glidingSnowActivity": "Gliding snow activity",

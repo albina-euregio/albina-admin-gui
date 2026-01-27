@@ -547,12 +547,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         next: async (variants) => {
           let dangerSourceVariants: DangerSourceVariantModel[] = variants;
 
-          // filter only analysis variants with status active
+          // if any variant has type "analysis", filter only analysis variants
           if (variants.some((variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis)) {
             dangerSourceVariants = variants.filter(
-              (variant) =>
-                variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
-                variant.dangerSourceVariantStatus === "active",
+              (variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
             );
           }
 
@@ -562,70 +560,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           );
 
           // sort variants by relevance
-          dangerSourceVariants.sort((a, b): number => {
-            // 1. dangerRating (desc)
-            const aDangerRating = Enums.WarnLevel[a.eawsMatrixInformation?.dangerRating] ?? -1;
-            const bDangerRating = Enums.WarnLevel[b.eawsMatrixInformation?.dangerRating] ?? -1;
-            if (aDangerRating !== bDangerRating) {
-              return bDangerRating - aDangerRating;
-            }
-
-            // 2. dangerRatingModificator (desc)
-            const aMod = a.eawsMatrixInformation?.dangerRatingModificator ?? null;
-            const bMod = b.eawsMatrixInformation?.dangerRatingModificator ?? null;
-            if (aMod !== bMod) {
-              // Order: plus (1) > equal (0) > minus (-1) > null/undefined
-              const order = [
-                Enums.DangerRatingModificator.plus,
-                Enums.DangerRatingModificator.equal,
-                Enums.DangerRatingModificator.minus,
-                null,
-                undefined,
-              ];
-              const aIndex = order.indexOf(aMod);
-              const bIndex = order.indexOf(bMod);
-              return aIndex - bIndex;
-            }
-
-            // 3. snowpackStability (desc)
-            const aStability = a.eawsMatrixInformation?.snowpackStability ?? null;
-            const bStability = b.eawsMatrixInformation?.snowpackStability ?? null;
-            if (aStability !== bStability) {
-              // Order: very_poor > poor > fair > good > null/undefined
-              const order = [
-                Enums.SnowpackStability.very_poor,
-                Enums.SnowpackStability.poor,
-                Enums.SnowpackStability.fair,
-                Enums.SnowpackStability.good,
-                null,
-                undefined,
-              ];
-              const aIndex = order.indexOf(aStability);
-              const bIndex = order.indexOf(bStability);
-              return aIndex - bIndex;
-            }
-
-            // 4. avalancheSize (desc)
-            const aAvalancheSize = a.eawsMatrixInformation?.avalancheSize ?? null;
-            const bAvalancheSize = b.eawsMatrixInformation?.avalancheSize ?? null;
-            if (aAvalancheSize !== bAvalancheSize) {
-              // Order: extreme > very_large > large > medium > small > null/undefined
-              const order = [
-                Enums.AvalancheSize.extreme,
-                Enums.AvalancheSize.very_large,
-                Enums.AvalancheSize.large,
-                Enums.AvalancheSize.medium,
-                Enums.AvalancheSize.small,
-                null,
-                undefined,
-              ];
-              const aIndex = order.indexOf(aAvalancheSize);
-              const bIndex = order.indexOf(bAvalancheSize);
-              return aIndex - bIndex;
-            }
-
-            return 0;
-          });
+          this.sortDangerSourceVariantsByRelevance(dangerSourceVariants);
 
           // map micro regions to danger source variants
           const microRegionDangerSourceVariants = new Map<string, DangerSourceVariantModel[]>(); // microRegionId -> dangerSourceVariantId[]
@@ -639,115 +574,40 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             }
           }
 
-          // keep only 4 variants per micro region
-          for (const [microRegionId, dangerSourceVariants] of microRegionDangerSourceVariants) {
-            microRegionDangerSourceVariants.set(microRegionId, dangerSourceVariants.slice(0, 5));
-          }
+          // cluster micro regions by checking the two most relevant danger source variants
+          const clusterMap = new Map<
+            string,
+            { microRegionIds: string[]; dangerSourceVariants: DangerSourceVariantModel[] }
+          >(); // key of 2 most relevant variants -> { microRegions, all variants in cluster }
 
-          // aggregate micro regions with same danger source variants
-          const aggregatedRegions = new Map<string, string[]>(); // dangerSourceVariantId -> microRegionId[]
+          for (const [microRegionId, variants] of microRegionDangerSourceVariants) {
+            const relevantVariants = this.filterDangerSourceVariants(variants);
+            const key = relevantVariants.map((variant) => variant.id).join("|");
 
-          for (const [microRegionId, dangerSourceVariants] of microRegionDangerSourceVariants) {
-            const key = dangerSourceVariants.map((variant) => variant.id).join("|");
-            if (aggregatedRegions.has(key)) {
-              aggregatedRegions.get(key).push(microRegionId);
+            if (clusterMap.has(key)) {
+              const cluster = clusterMap.get(key);
+              cluster.microRegionIds.push(microRegionId);
+              // add all variants from this micro region to cluster
+              for (const variant of variants) {
+                if (!cluster.dangerSourceVariants.find((v) => v.id === variant.id)) {
+                  cluster.dangerSourceVariants.push(variant);
+                }
+              }
             } else {
-              aggregatedRegions.set(key, [microRegionId]);
+              clusterMap.set(key, {
+                microRegionIds: [microRegionId],
+                dangerSourceVariants: [...variants],
+              });
             }
           }
 
           // create bulletin for each aggregated region
           const bulletins = new Array<BulletinModel>();
-          for (const [dangerSourceVariantIds, microRegionIds] of aggregatedRegions) {
-            const bulletin = new BulletinModel();
-            // set bulletin properties
-            bulletin.savedRegions = microRegionIds;
-            bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-            bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
-            bulletin.author = this.authenticationService.getCurrentAuthor();
-            bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
-
-            // create avalanche problem for each danger source variant
-            const amDaytimeDescription = new BulletinDaytimeDescriptionModel();
-            const pmDaytimeDescription = new BulletinDaytimeDescriptionModel();
-            let amIndex = 0;
-            let pmIndex = 0;
-            let hasDaytimeDependency = false;
-            for (const dangerSourceVariantId of dangerSourceVariantIds.split("|")) {
-              const dangerSourceVariant = DangerSourceVariantModel.parse(
-                dangerSourceVariants.find((variant) => variant.id === dangerSourceVariantId),
-              );
-              // create avalanche problem only if danger rating > 1
-              if (dangerSourceVariant.eawsMatrixInformation.dangerRating != Enums.DangerRating.low) {
-                const avalancheProblem = new AvalancheProblemModel();
-                avalancheProblem.aspects = dangerSourceVariant.aspects;
-                if (dangerSourceVariant.treelineHigh) {
-                  avalancheProblem.treelineHigh = dangerSourceVariant.treelineHigh;
-                } else {
-                  avalancheProblem.elevationHigh = dangerSourceVariant.elevationHigh;
-                }
-                if (dangerSourceVariant.treelineLow) {
-                  avalancheProblem.treelineLow = dangerSourceVariant.treelineLow;
-                } else {
-                  avalancheProblem.elevationLow = dangerSourceVariant.elevationLow;
-                }
-                avalancheProblem.setAvalancheProblem(dangerSourceVariant.getAvalancheProblem());
-                avalancheProblem.avalancheType = Enums.AvalancheType[dangerSourceVariant.avalancheType];
-                avalancheProblem.matrixInformation = dangerSourceVariant.eawsMatrixInformation;
-
-                if (dangerSourceVariant.hasDaytimeDependency) {
-                  hasDaytimeDependency = true;
-                  if (dangerSourceVariant.dangerPeak === Daytime.afternoon) {
-                    this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
-                    pmIndex = pmIndex + 1;
-                  } else {
-                    this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
-                    amIndex = amIndex + 1;
-                  }
-                } else {
-                  this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
-                  amIndex = amIndex + 1;
-                  this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
-                  pmIndex = pmIndex + 1;
-                }
-              }
-
-              // add texts from danger source variant
-              if (dangerSourceVariant.textcat) {
-                bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
-                  ? bulletin.avActivityCommentTextcat +
-                    "," +
-                    this.constantsService.textcatLineBreak +
-                    "," +
-                    this.constantsService.textcatLineBreak +
-                    "," +
-                    dangerSourceVariant.textcat
-                  : "[" + dangerSourceVariant.textcat;
-              }
-              bulletin.avActivityComment$ = {
-                en: "⚠ Error: Missing translation",
-                de: "⚠ Error: Missing translation",
-                it: "⚠ Error: Missing translation",
-                fr: "⚠ Error: Missing translation",
-                es: "⚠ Error: Missing translation",
-                ca: "⚠ Error: Missing translation",
-                oc: "⚠ Error: Missing translation",
-              };
-            }
-
-            bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
-              ? bulletin.avActivityCommentTextcat + "]"
-              : undefined;
-
-            amDaytimeDescription.updateDangerRating();
-            bulletin.forenoon = amDaytimeDescription;
-
-            if (hasDaytimeDependency) {
-              bulletin.hasDaytimeDependency = true;
-              pmDaytimeDescription.updateDangerRating();
-              bulletin.afternoon = pmDaytimeDescription;
-            }
-
+          for (const {
+            dangerSourceVariants: dangerSourceVariants,
+            microRegionIds: microRegionIds,
+          } of clusterMap.values()) {
+            const bulletin = this.createBulletinFromDangerSourceVariants(microRegionIds, dangerSourceVariants);
             bulletins.push(bulletin);
             this.addInternalBulletin(bulletin);
           }
@@ -775,6 +635,215 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
       });
+  }
+
+  private createBulletinFromDangerSourceVariants(
+    microRegionIds: string[],
+    dangerSourceVariants: DangerSourceVariantModel[],
+  ) {
+    const bulletin = new BulletinModel();
+    // set bulletin properties
+    bulletin.savedRegions = microRegionIds;
+    bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
+    bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+    bulletin.author = this.authenticationService.getCurrentAuthor();
+    bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
+
+    // create avalanche problem for each danger source variant
+    const amDaytimeDescription = new BulletinDaytimeDescriptionModel();
+    const pmDaytimeDescription = new BulletinDaytimeDescriptionModel();
+    let amIndex = 0;
+    let pmIndex = 0;
+    let hasDaytimeDependency = false;
+    for (const variant of dangerSourceVariants) {
+      // create avalanche problem only if danger rating > 1
+      if (variant.eawsMatrixInformation.dangerRating != Enums.DangerRating.low) {
+        const avalancheProblem = new AvalancheProblemModel();
+        avalancheProblem.aspects = variant.aspects;
+        if (variant.treelineHigh) {
+          avalancheProblem.treelineHigh = variant.treelineHigh;
+        } else {
+          avalancheProblem.elevationHigh = variant.elevationHigh;
+        }
+        if (variant.treelineLow) {
+          avalancheProblem.treelineLow = variant.treelineLow;
+        } else {
+          avalancheProblem.elevationLow = variant.elevationLow;
+        }
+        avalancheProblem.setAvalancheProblem(variant.getAvalancheProblem());
+        avalancheProblem.avalancheType = Enums.AvalancheType[variant.avalancheType];
+        avalancheProblem.matrixInformation = variant.eawsMatrixInformation;
+
+        if (variant.hasDaytimeDependency) {
+          hasDaytimeDependency = true;
+          if (variant.dangerPeak === Daytime.afternoon) {
+            if (
+              !(
+                pmDaytimeDescription.avalancheProblem1?.avalancheProblem === avalancheProblem.avalancheProblem ||
+                pmDaytimeDescription.avalancheProblem2?.avalancheProblem === avalancheProblem.avalancheProblem ||
+                pmDaytimeDescription.avalancheProblem3?.avalancheProblem === avalancheProblem.avalancheProblem ||
+                pmDaytimeDescription.avalancheProblem4?.avalancheProblem === avalancheProblem.avalancheProblem
+              )
+            ) {
+              this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
+              pmIndex++;
+            }
+          } else {
+            if (
+              !(
+                amDaytimeDescription.avalancheProblem1?.avalancheProblem === avalancheProblem.avalancheProblem ||
+                amDaytimeDescription.avalancheProblem2?.avalancheProblem === avalancheProblem.avalancheProblem ||
+                amDaytimeDescription.avalancheProblem3?.avalancheProblem === avalancheProblem.avalancheProblem ||
+                amDaytimeDescription.avalancheProblem4?.avalancheProblem === avalancheProblem.avalancheProblem
+              )
+            ) {
+              this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
+              amIndex++;
+            }
+          }
+        } else {
+          if (
+            !(
+              amDaytimeDescription.avalancheProblem1?.avalancheProblem === avalancheProblem.avalancheProblem ||
+              amDaytimeDescription.avalancheProblem2?.avalancheProblem === avalancheProblem.avalancheProblem ||
+              amDaytimeDescription.avalancheProblem3?.avalancheProblem === avalancheProblem.avalancheProblem ||
+              amDaytimeDescription.avalancheProblem4?.avalancheProblem === avalancheProblem.avalancheProblem
+            )
+          ) {
+            this.addAvalancheProblem(avalancheProblem, amDaytimeDescription, amIndex);
+            amIndex++;
+          }
+          if (
+            !(
+              pmDaytimeDescription.avalancheProblem1?.avalancheProblem === avalancheProblem.avalancheProblem ||
+              pmDaytimeDescription.avalancheProblem2?.avalancheProblem === avalancheProblem.avalancheProblem ||
+              pmDaytimeDescription.avalancheProblem3?.avalancheProblem === avalancheProblem.avalancheProblem ||
+              pmDaytimeDescription.avalancheProblem4?.avalancheProblem === avalancheProblem.avalancheProblem
+            )
+          ) {
+            this.addAvalancheProblem(avalancheProblem, pmDaytimeDescription, pmIndex);
+            pmIndex++;
+          }
+        }
+      }
+
+      // add texts from danger source variant
+      if (variant.textcat) {
+        bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
+          ? bulletin.avActivityCommentTextcat +
+            "," +
+            this.constantsService.textcatLineBreak +
+            "," +
+            this.constantsService.textcatLineBreak +
+            "," +
+            variant.textcat
+          : "[" + variant.textcat;
+      }
+      bulletin.avActivityComment$ = {
+        en: "⚠ Error: Missing translation",
+        de: "⚠ Error: Missing translation",
+        it: "⚠ Error: Missing translation",
+        fr: "⚠ Error: Missing translation",
+        es: "⚠ Error: Missing translation",
+        ca: "⚠ Error: Missing translation",
+        oc: "⚠ Error: Missing translation",
+      };
+    }
+
+    bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
+      ? bulletin.avActivityCommentTextcat + "]"
+      : undefined;
+
+    amDaytimeDescription.updateDangerRating();
+    bulletin.forenoon = amDaytimeDescription;
+
+    if (hasDaytimeDependency) {
+      bulletin.hasDaytimeDependency = true;
+      pmDaytimeDescription.updateDangerRating();
+      bulletin.afternoon = pmDaytimeDescription;
+    }
+    return bulletin;
+  }
+
+  private sortDangerSourceVariantsByRelevance(dangerSourceVariants: DangerSourceVariantModel[]) {
+    dangerSourceVariants.sort((a, b): number => {
+      // 1. dangerRating (desc)
+      const aDangerRating = Enums.WarnLevel[a.eawsMatrixInformation?.dangerRating] ?? -1;
+      const bDangerRating = Enums.WarnLevel[b.eawsMatrixInformation?.dangerRating] ?? -1;
+      if (aDangerRating !== bDangerRating) {
+        return bDangerRating - aDangerRating;
+      }
+
+      // 2. dangerRatingModificator (desc)
+      const aMod = a.eawsMatrixInformation?.dangerRatingModificator ?? null;
+      const bMod = b.eawsMatrixInformation?.dangerRatingModificator ?? null;
+      if (aMod !== bMod) {
+        // Order: plus (1) > equal (0) > minus (-1) > null/undefined
+        const order = [
+          Enums.DangerRatingModificator.plus,
+          Enums.DangerRatingModificator.equal,
+          Enums.DangerRatingModificator.minus,
+          null,
+          undefined,
+        ];
+        const aIndex = order.indexOf(aMod);
+        const bIndex = order.indexOf(bMod);
+        return aIndex - bIndex;
+      }
+
+      // 3. snowpackStability (desc)
+      const aStability = a.eawsMatrixInformation?.snowpackStability ?? null;
+      const bStability = b.eawsMatrixInformation?.snowpackStability ?? null;
+      if (aStability !== bStability) {
+        // Order: very_poor > poor > fair > good > null/undefined
+        const order = [
+          Enums.SnowpackStability.very_poor,
+          Enums.SnowpackStability.poor,
+          Enums.SnowpackStability.fair,
+          Enums.SnowpackStability.good,
+          null,
+          undefined,
+        ];
+        const aIndex = order.indexOf(aStability);
+        const bIndex = order.indexOf(bStability);
+        return aIndex - bIndex;
+      }
+
+      // 4. avalancheSize (desc)
+      const aAvalancheSize = a.eawsMatrixInformation?.avalancheSize ?? null;
+      const bAvalancheSize = b.eawsMatrixInformation?.avalancheSize ?? null;
+      if (aAvalancheSize !== bAvalancheSize) {
+        // Order: extreme > very_large > large > medium > small > null/undefined
+        const order = [
+          Enums.AvalancheSize.extreme,
+          Enums.AvalancheSize.very_large,
+          Enums.AvalancheSize.large,
+          Enums.AvalancheSize.medium,
+          Enums.AvalancheSize.small,
+          null,
+          undefined,
+        ];
+        const aIndex = order.indexOf(aAvalancheSize);
+        const bIndex = order.indexOf(bAvalancheSize);
+        return aIndex - bIndex;
+      }
+
+      return 0;
+    });
+  }
+
+  // filters danger source variants to keep only the first two unique avalanche problem types
+  private filterDangerSourceVariants(dangerSourceVariants: DangerSourceVariantModel[]): DangerSourceVariantModel[] {
+    const seenTypes = new Set<string>();
+    const filteredVariants = dangerSourceVariants.filter((variant) => {
+      const type = variant.getAvalancheProblem();
+      if (seenTypes.has(type)) {
+        return false;
+      }
+      seenTypes.add(type);
+      return true;
+    });
+    return filteredVariants.slice(0, 2);
   }
 
   private addAvalancheProblem(

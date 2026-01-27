@@ -133,7 +133,7 @@
 
   <main class="region-form__content">
     <accordion class="accordion">
-      <div class="form-group row" style="padding: 1.5rem 2rem">
+      <div class="form-group row" style="padding-top: 1.5rem; padding-bottom: 1.5rem; padding-left: 2rem; padding-right: 2rem">
         <label
           class="form-label"
           [class.changed]="isComparedVariant() && variant().avalancheType !== comparedVariant()?.avalancheType"
@@ -147,6 +147,39 @@
           titleI18n="avalancheType.tooltip.#"
           labelI18n="avalancheType.label.#"
         />
+      </div>
+
+      <div class="form-group row" style="padding-bottom: 1.5rem; padding-left: 2rem; padding-right: 2rem">
+        <div class="col-md-5">
+          <label
+            class="form-label"
+            [class.changed]="isComparedVariant() && !haveSameElements(variant().aspectsOfExistence, comparedVariant()?.aspectsOfExistence)"
+            >{{ "dangerSources.create.label.aspects" | translate }}</label
+          >
+          <div>
+            <app-aspects
+              [(aspects)]="variant().aspectsOfExistence"
+              [disabled]="disabled()"
+              [size]="150"
+              (aspectsChange)="updateVariantOnServer()"
+            ></app-aspects>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <label class="form-label" [class.changed]="isComparedVariant() && isElevationOfExistenceEqual">{{
+            "elevation.title" | translate
+          }}</label>
+          <div>
+            <app-elevations
+              [(elevationHigh)]="variant().elevationHighOfExistence"
+              [(treelineHigh)]="variant().treelineHighOfExistence"
+              [(elevationLow)]="variant().elevationLowOfExistence"
+              [(treelineLow)]="variant().treelineLowOfExistence"
+              [disabled]="disabled()"
+              (elevationsChange)="updateVariantOnServer()"
+            ></app-elevations>
+          </div>
+        </div>
       </div>
 
       <!-- Glide -->
@@ -1009,92 +1042,15 @@
             <label class="form-label" [class.changed]="isComparedVariant() && isElevationEqual">{{
               "elevation.title" | translate
             }}</label>
-            <!-- Elevation (high) -->
-            <div class="avalanche-problem-detail__elevation">
-              <div class="avalanche-problem-detail__elevation-label form-check">
-                <input
-                  id="elevationHighCheckbox"
-                  type="checkbox"
-                  class="form-check-input"
-                  [disabled]="disabled()"
-                  (change)="setUseElevationHigh($event)"
-                  [(ngModel)]="useElevationHigh"
-                />
-                <label class="form-label" for="elevationHighCheckbox">{{ "elevation.high" | translate }}</label>
-              </div>
-              <div class="avalanche-problem-detail__elevation-inputs">
-                <div class="input-group">
-                  <input
-                    step="100"
-                    min="0"
-                    max="9000"
-                    id="inputElevationHigh"
-                    class="form-control"
-                    size="14"
-                    type="number"
-                    name="elevation-input"
-                    [disabled]="disabled() || variant().treelineHigh || !useElevationHigh"
-                    [(ngModel)]="localElevationHigh"
-                    (change)="updateElevationHigh()"
-                  />
-                  <span class="input-group-text">m</span>
-                </div>
-                <button
-                  [disabled]="disabled() || !useElevationHigh"
-                  type="reset"
-                  class="btn btn-icon"
-                  [ngClass]="localTreelineHigh ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="treelineHighClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'elevation.treeline' | translate }}"
-                >
-                  <i class="ph ph-tree-evergreen"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Elevation (low) -->
-            <div class="avalanche-problem-detail__elevation">
-              <div class="form-check avalanche-problem-detail__elevation-label">
-                <input
-                  id="elevationLowCheckbox"
-                  type="checkbox"
-                  class="form-check-input"
-                  [disabled]="disabled()"
-                  (change)="setUseElevationLow($event)"
-                  [(ngModel)]="useElevationLow"
-                />
-                <label class="form-label" for="elevationLowCheckbox">{{ "elevation.low" | translate }}</label>
-              </div>
-              <div class="avalanche-problem-detail__elevation-inputs">
-                <div class="input-group">
-                  <input
-                    step="100"
-                    min="0"
-                    max="9000"
-                    id="inputElevationLow"
-                    class="form-control"
-                    size="14"
-                    type="number"
-                    name="elevation-input"
-                    [disabled]="disabled() || variant().treelineLow || !useElevationLow"
-                    [(ngModel)]="localElevationLow"
-                    (change)="updateElevationLow()"
-                  />
-                  <span class="input-group-text">m</span>
-                </div>
-                <button
-                  [disabled]="disabled() || !useElevationLow"
-                  type="reset"
-                  class="btn btn-icon"
-                  [ngClass]="localTreelineLow ? 'btn-secondary' : 'btn-outline-secondary'"
-                  (click)="treelineLowClicked($event)"
-                  data-toggle="tooltip"
-                  title="{{ 'elevation.treeline' | translate }}"
-                >
-                  <i class="ph ph-tree-evergreen"></i>
-                </button>
-              </div>
+            <div>
+              <app-elevations
+                [(elevationHigh)]="variant().elevationHigh"
+                [(treelineHigh)]="variant().treelineHigh"
+                [(elevationLow)]="variant().elevationLow"
+                [(treelineLow)]="variant().treelineLow"
+                [disabled]="disabled()"
+                (elevationsChange)="updateVariantOnServer()"
+              ></app-elevations>
             </div>
           </div>
         </div>
@@ -1136,6 +1092,33 @@
             rows="15"
             [disabled]="disabled()"
             [(ngModel)]="variant().comment"
+            (change)="updateVariantOnServer()"
+          ></textarea>
+        </div>
+      </accordion-group>
+      <accordion-group
+        class="accordion-group"
+        [isOpen]="isAccordionUncertaintiesOpen"
+        (isOpenChange)="accordionChanged($event, 'uncertainties')"
+      >
+        <div accordion-heading class="accordion-header accordion-header--with-buttons">
+          <h2 class="accordion-header__title">
+            @if (!isAccordionUncertaintiesOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionUncertaintiesOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
+            {{ "dangerSources.create.title.uncertainties" | translate }}
+          </h2>
+        </div>
+        <div class="form-group row">
+          <textarea
+            id="textarea-input"
+            class="form-control"
+            rows="15"
+            [disabled]="disabled()"
+            [(ngModel)]="variant().uncertainties"
             (change)="updateVariantOnServer()"
           ></textarea>
         </div>

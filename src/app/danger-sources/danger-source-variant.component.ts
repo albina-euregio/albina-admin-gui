@@ -4,6 +4,7 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { haveSameElements } from "../shared/compareArrays";
+import { ElevationsComponent } from "../shared/elevations.component";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 import { SliderOptions } from "../shared/slider.component";
 import { DangerSourcesService } from "./danger-sources.service";
@@ -19,7 +20,7 @@ import {
 } from "./models/danger-source-variant.model";
 import { zEnumValues } from "./models/zod-util";
 import { ToggleBtnGroup } from "./toggle-btn-group";
-import { DatePipe, NgClass } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { Component, inject, input, OnChanges, OnInit, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -38,8 +39,8 @@ import { debounceTime, Subject } from "rxjs";
     BsDropdownModule,
     FormsModule,
     AccordionModule,
-    NgClass,
     AspectsComponent,
+    ElevationsComponent,
     MatrixParameterComponent,
     DatePipe,
     TranslateModule,
@@ -106,15 +107,6 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     [DangerSign.glide_cracks]: !this.isAvalancheType(Enums.AvalancheType.glide),
   });
 
-  useElevationHigh = false;
-  useElevationLow = false;
-  isElevationHighEditing = false;
-  isElevationLowEditing = false;
-  localElevationHigh = undefined;
-  localElevationLow = undefined;
-  localTreelineHigh = false;
-  localTreelineLow = false;
-
   public editRegions: boolean;
 
   public isAccordionGlideOpen: boolean;
@@ -124,6 +116,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   public isAccordionMatrixOpen: boolean;
   public isAccordionCharacteristicsOpen: boolean;
   public isAccordionCommentOpen: boolean;
+  public isAccordionUncertaintiesOpen: boolean;
 
   public config = {
     animated: false,
@@ -197,6 +190,9 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
         case "comment":
           this.isAccordionCommentOpen = isOpen;
           break;
+        case "uncertainties":
+          this.isAccordionUncertaintiesOpen = isOpen;
+          break;
         default:
           break;
       }
@@ -204,18 +200,6 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges() {
-    if (!this.isElevationHighEditing) {
-      const variant = this.variant();
-      this.useElevationHigh = variant.treelineHigh || variant.elevationHigh !== null;
-      this.localElevationHigh = this.variant().elevationHigh;
-      this.localTreelineHigh = this.variant().treelineHigh;
-    }
-    if (!this.isElevationLowEditing) {
-      const variant = this.variant();
-      this.useElevationLow = variant.treelineLow || variant.elevationLow !== null;
-      this.localElevationLow = this.variant().elevationLow;
-      this.localTreelineLow = this.variant().treelineLow;
-    }
     this.glidingSnowActivityOptions = Object.assign({}, this.glidingSnowActivityOptions, { disabled: this.disabled() });
   }
 
@@ -294,108 +278,6 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     this.updateVariantOnServer();
   }
 
-  updateElevationHigh() {
-    if (!this.localTreelineHigh) {
-      const variant = this.variant();
-      if (variant && this.localElevationHigh !== undefined && this.localElevationHigh !== "") {
-        this.localElevationHigh = Math.round(this.localElevationHigh / 100) * 100;
-        variant.elevationHigh = this.localElevationHigh;
-        if (variant.elevationHigh > 9000) {
-          variant.elevationHigh = 9000;
-        } else if (variant.elevationHigh < 0) {
-          variant.elevationHigh = 0;
-        }
-      }
-      this.isElevationHighEditing = false;
-      this.updateVariantOnServer();
-    }
-  }
-
-  updateElevationLow() {
-    if (!this.localTreelineLow) {
-      const variant = this.variant();
-      if (variant && this.localElevationLow !== undefined && this.localElevationLow !== "") {
-        this.localElevationLow = Math.round(this.localElevationLow / 100) * 100;
-        variant.elevationLow = this.localElevationLow;
-        if (variant.elevationLow > 9000) {
-          variant.elevationLow = 9000;
-        } else if (variant.elevationLow < 0) {
-          variant.elevationLow = 0;
-        }
-      }
-      this.isElevationLowEditing = false;
-      this.updateVariantOnServer();
-    }
-  }
-
-  treelineHighClicked(event) {
-    event.stopPropagation();
-    const variant = this.variant();
-    if (variant.treelineHigh) {
-      this.isElevationHighEditing = true;
-      variant.treelineHigh = false;
-      this.localElevationHigh = "";
-      this.localTreelineHigh = false;
-    } else {
-      variant.treelineHigh = true;
-      variant.elevationHigh = undefined;
-      this.localElevationHigh = "";
-      this.localTreelineHigh = true;
-      this.isElevationHighEditing = false;
-    }
-    this.updateVariantOnServer();
-  }
-
-  treelineLowClicked(event) {
-    event.stopPropagation();
-    const variant = this.variant();
-    if (variant.treelineLow) {
-      this.isElevationLowEditing = true;
-      this.localTreelineLow = false;
-      this.localElevationLow = "";
-      variant.treelineLow = false;
-    } else {
-      variant.treelineLow = true;
-      variant.elevationLow = undefined;
-      this.localElevationLow = "";
-      this.localTreelineLow = true;
-      this.isElevationLowEditing = false;
-    }
-    this.updateVariantOnServer();
-  }
-
-  setUseElevationHigh(event) {
-    if (!event.currentTarget.checked) {
-      this.localElevationHigh = "";
-      this.localTreelineHigh = false;
-      const variant = this.variant();
-      variant.treelineHigh = false;
-      variant.elevationHigh = undefined;
-      this.isElevationHighEditing = false;
-      this.useElevationHigh = false;
-      this.updateVariantOnServer();
-    } else {
-      this.useElevationHigh = true;
-      this.isElevationHighEditing = true;
-    }
-  }
-
-  setUseElevationLow(event) {
-    if (!event.currentTarget.checked) {
-      this.localElevationLow = "";
-      this.localTreelineLow = false;
-      const variant = this.variant();
-      variant.treelineLow = false;
-      variant.elevationLow = undefined;
-      this.isElevationLowEditing = false;
-      this.useElevationLow = false;
-      this.updateVariantOnServer();
-    } else {
-      this.useElevationLow = true;
-      this.isElevationLowEditing = true;
-    }
-  }
-
   /**
    * Compares elevationHigh, elevationLow, treelineHigh, treelineLow between variant and comparedVariant.
    * For treelineHigh/treelineLow, null/undefined is treated as false.
@@ -452,6 +334,67 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
       )
     ) {
       console.log("treelineLow not equal", v.treelineLow, c.treelineLow);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Compares elevationHigh, elevationLow, treelineHigh, treelineLow between variant and comparedVariant.
+   * For treelineHigh/treelineLow, null/undefined is treated as false.
+   */
+  get isElevationOfExistenceEqual(): boolean {
+    const v = this.variant();
+    const c = this.comparedVariant();
+    if (!v || !c) return false;
+
+    // elevationHigh
+    if (
+      !(
+        ((v.elevationHighOfExistence === null || v.elevationHighOfExistence === undefined) &&
+          (c.elevationHighOfExistence === null || c.elevationHighOfExistence === undefined)) ||
+        v.elevationHighOfExistence === c.elevationHighOfExistence
+      )
+    ) {
+      console.log("elevationHigh not equal", v.elevationHighOfExistence, c.elevationHighOfExistence);
+      return true;
+    }
+
+    // elevationLow
+    if (
+      !(
+        ((v.elevationLowOfExistence === null || v.elevationLowOfExistence === undefined) &&
+          (c.elevationLowOfExistence === null || c.elevationLowOfExistence === undefined)) ||
+        v.elevationLowOfExistence === c.elevationLowOfExistence
+      )
+    ) {
+      console.log("elevationLow not equal", v.elevationLowOfExistence, c.elevationLowOfExistence);
+      return true;
+    }
+
+    // treelineHigh
+    if (
+      !(
+        ((v.treelineHighOfExistence === null || v.treelineHighOfExistence === undefined) &&
+          (c.treelineHighOfExistence === null || c.treelineHighOfExistence === undefined)) ||
+        (v.treelineHighOfExistence && c.treelineHighOfExistence) ||
+        (!v.treelineHighOfExistence && !c.treelineHighOfExistence)
+      )
+    ) {
+      console.log("treelineHigh not equal", v.treelineHighOfExistence, c.treelineHighOfExistence);
+      return true;
+    }
+
+    // treelineLow
+    if (
+      !(
+        ((v.treelineLowOfExistence === null || v.treelineLowOfExistence === undefined) &&
+          (c.treelineLowOfExistence === null || c.treelineLowOfExistence === undefined)) ||
+        (v.treelineLowOfExistence && c.treelineLowOfExistence) ||
+        (!v.treelineLowOfExistence && !c.treelineLowOfExistence)
+      )
+    ) {
+      console.log("treelineLow not equal", v.treelineLowOfExistence, c.treelineLowOfExistence);
       return true;
     }
     return false;
