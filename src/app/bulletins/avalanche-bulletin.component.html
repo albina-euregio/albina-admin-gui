@@ -118,7 +118,7 @@
         @if (!editRegions) {
           <button
             (click)="undoRedoEvent.emit('undo')"
-            [disabled]="!undoRedoService.isEnabled('undo', bulletin().id)"
+            [disabled]="!bulletinsService.undoRedo.isEnabled('undo', bulletin().id)"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.undo' | translate }}"
             type="button"
@@ -131,7 +131,7 @@
         @if (!editRegions) {
           <button
             (click)="undoRedoEvent.emit('redo')"
-            [disabled]="!undoRedoService.isEnabled('redo', bulletin().id)"
+            [disabled]="!bulletinsService.undoRedo.isEnabled('redo', bulletin().id)"
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.redo' | translate }}"
             type="button"

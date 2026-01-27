@@ -50,7 +50,6 @@ import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-des
 import { ServerModel } from "app/models/server.model";
 import { emptyLangTexts, LangTexts } from "app/models/text.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
-import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 import { debounce, orderBy } from "es-toolkit";
 import { saveAs } from "file-saver";
 import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
@@ -88,7 +87,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   copyService = inject(CopyService);
   private mapService = inject(MapService);
   private modalService = inject(BsModalService);
-  private undoRedoService = inject(UndoRedoService);
   private destroyRef = inject(DestroyRef);
 
   public bulletinStatus = Enums.BulletinStatus;
@@ -1278,7 +1276,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   undoRedoActiveBulletin(type: "undo" | "redo") {
     this.updateBulletinOnServerDebounced.flush();
     const activeId = this.activeBulletin.id;
-    const bulletin = this.undoRedoService.undoRedoActiveBulletin(type, activeId);
+    const bulletin = this.bulletinsService.undoRedo.undoRedoActive(type, activeId);
     const index = this.internBulletinsList.indexOf(this.activeBulletin);
     this.activeBulletin = bulletin;
     this.internBulletinsList.splice(index, 1, bulletin);
@@ -1292,7 +1290,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
       const bulletin = BulletinModel.createFromJson(jsonBulletin);
-      this.undoRedoService.initUndoRedoStacksFromServer(bulletin);
+      this.bulletinsService.undoRedo.initUndoRedoStacksFromServer(bulletin);
       if (this.activeBulletin && this.activeBulletin.id === bulletin.id) {
         // do not update active bulletin (this is currently edited) except if it is disabled
         if (this.isDisabled()) {
@@ -1775,7 +1773,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
     bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
     if (writeUndoStack) {
-      this.undoRedoService.pushToUndoStack(bulletin);
+      this.bulletinsService.undoRedo.pushToUndoStack(bulletin);
     }
     this.bulletinsService.updateBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {

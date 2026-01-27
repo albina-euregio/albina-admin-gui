@@ -20,7 +20,6 @@ import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
-import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
@@ -49,7 +48,6 @@ export class AvalancheBulletinComponent implements OnInit {
   regionsService = inject(RegionsService);
   copyService = inject(CopyService);
   translateService = inject(TranslateService);
-  undoRedoService = inject(UndoRedoService);
 
   readonly bulletin = input<BulletinModel>(undefined);
   readonly comparedBulletin = input<BulletinModel>(undefined);
