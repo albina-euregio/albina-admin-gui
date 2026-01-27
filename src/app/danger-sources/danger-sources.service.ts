@@ -1,5 +1,6 @@
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
+import { UndoRedoState } from "../providers/undo-redo-service/undo-redo.service";
 import {
   DangerSourceVariantModel,
   DangerSourceVariantSchema,
@@ -34,6 +35,11 @@ export class DangerSourcesService {
 
   private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared variants
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
+
+  readonly undoRedo = new UndoRedoState<DangerSourceVariantModel>(
+    (bulletin) => bulletin,
+    (json) => DangerSourceVariantModel.parse(json),
+  );
 
   constructor() {
     this.init();
