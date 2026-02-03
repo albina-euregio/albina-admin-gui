@@ -209,7 +209,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   updateBulletinOnServerDebounced = debounce(this.updateBulletinOnServerNow, 1000);
   updateBulletinOnServer(bulletin: BulletinModel, checkErrors = true, writeUndoStack = true) {
-    this.mapService.updateAggregatedRegion(this.activeBulletin);
+    if (this.activeBulletin != null) {
+      this.mapService.updateAggregatedRegion(this.activeBulletin);
+    }
     this.updateBulletinOnServerDebounced(bulletin, checkErrors, writeUndoStack);
   }
 
