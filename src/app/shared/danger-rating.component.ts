@@ -1,5 +1,4 @@
 import * as Enums from "../enums/enums";
-
 import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 @Component({

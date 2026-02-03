@@ -11,220 +11,216 @@
         "
         for=""
         >{{ "bulletins.create.label.avalancheProblems" | translate }}</label
-        >
-        @if (!disabled()) {
-          <div>
-            <button
-              type="button"
-              class="btn btn-primary btn-sm"
-              style="padding: 3px 7px"
-              (click)="showDecisionTreeDialog()"
-              autofocus
-              >
-              {{ "bulletins.create.decisionTree.decisionTree" | translate }}
-            </button>
-            <a
-              class="btn btn-link"
-              style="padding: 3px 7px"
-              href="{{ 'bulletins.create.decisionTree.feedbackURL' | translate }}"
-              target="_blank"
-              >
-              <small>{{ "bulletins.create.decisionTree.feedback" | translate }}</small>
-            </a>
-          </div>
-        }
-      </div>
-      <div class="avalanche-problem-detail__problem-icons">
-        @for (problem of avalancheProblems; track problem) {
-          <app-avalanche-problem-icons
-            [value]="problem"
-            (click)="selectAvalancheProblem(problem)"
-            class="avalanche-problem-detail__problem-icon"
-            [class.is-disabled]="!isAvalancheProblem(problem)"
-            />
-        }
-      </div>
+      >
+      @if (!disabled()) {
+        <div>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm"
+            style="padding: 3px 7px"
+            (click)="showDecisionTreeDialog()"
+            autofocus
+          >
+            {{ "bulletins.create.decisionTree.decisionTree" | translate }}
+          </button>
+          <a
+            class="btn btn-link"
+            style="padding: 3px 7px"
+            href="{{ 'bulletins.create.decisionTree.feedbackURL' | translate }}"
+            target="_blank"
+          >
+            <small>{{ "bulletins.create.decisionTree.feedback" | translate }}</small>
+          </a>
+        </div>
+      }
     </div>
+    <div class="avalanche-problem-detail__problem-icons">
+      @for (problem of avalancheProblems; track problem) {
+        <app-avalanche-problem-icons
+          [value]="problem"
+          (click)="selectAvalancheProblem(problem)"
+          class="avalanche-problem-detail__problem-icon"
+          [class.is-disabled]="!isAvalancheProblem(problem)"
+        />
+      }
+    </div>
+  </div>
 
-    <div class="form-group row">
-      <label
-        class="form-label"
+  <div class="form-group row">
+    <label
+      class="form-label"
       [class.changed]="
         isComparedBulletin() &&
         comparedAvalancheProblemModel() &&
         comparedAvalancheProblemModel().avalancheType !== avalancheProblemModel().avalancheType
       "
-        for=""
-        >{{ "avalancheType.title" | translate }}</label
-        >
-        <div class="btn-group">
-          <!-- SLAB -->
-          <button
+      for=""
+      >{{ "avalancheType.title" | translate }}</label
+    >
+    <div class="btn-group">
+      <!-- SLAB -->
+      <button
         [disabled]="
           disabled() ||
           isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
           isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
           isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
         "
-            type="reset"
-            class="btn btn-sm"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-dark' : 'btn-outline-secondary'"
-            (click)="setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)"
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.slab' | translate }}"
-            >
-            <span>{{ "avalancheType.label.slab" | translate }}</span>
-          </button>
+        type="reset"
+        class="btn btn-sm"
+        [ngClass]="isAvalancheType(avalancheTypeEnum.slab) ? 'btn-dark' : 'btn-outline-secondary'"
+        (click)="setAvalancheType($event, isAvalancheType(avalancheTypeEnum.slab) ? undefined : avalancheTypeEnum.slab)"
+        data-toggle="tooltip"
+        title="{{ 'avalancheType.tooltip.slab' | translate }}"
+      >
+        <span>{{ "avalancheType.label.slab" | translate }}</span>
+      </button>
 
-          <!-- LOOSE -->
-          <button
+      <!-- LOOSE -->
+      <button
         [disabled]="
           disabled() ||
           isAvalancheProblem(avalancheProblemEnum.gliding_snow) ||
           isAvalancheProblem(avalancheProblemEnum.wind_slab) ||
           isAvalancheProblem(avalancheProblemEnum.persistent_weak_layers)
         "
-            type="reset"
-            class="btn btn-sm"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-dark' : 'btn-outline-secondary'"
+        type="reset"
+        class="btn btn-sm"
+        [ngClass]="isAvalancheType(avalancheTypeEnum.loose) ? 'btn-dark' : 'btn-outline-secondary'"
         (click)="
           setAvalancheType($event, isAvalancheType(avalancheTypeEnum.loose) ? undefined : avalancheTypeEnum.loose)
         "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.loose' | translate }}"
-            >
-            <span>{{ "avalancheType.label.loose" | translate }}</span>
-          </button>
+        data-toggle="tooltip"
+        title="{{ 'avalancheType.tooltip.loose' | translate }}"
+      >
+        <span>{{ "avalancheType.label.loose" | translate }}</span>
+      </button>
 
-          <!-- GLIDE -->
-          <button
-            disabled
-            type="reset"
-            class="btn btn-sm"
-            [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-dark' : 'btn-outline-secondary'"
+      <!-- GLIDE -->
+      <button
+        disabled
+        type="reset"
+        class="btn btn-sm"
+        [ngClass]="isAvalancheType(avalancheTypeEnum.glide) ? 'btn-dark' : 'btn-outline-secondary'"
         (click)="
           setAvalancheType($event, isAvalancheType(avalancheTypeEnum.glide) ? undefined : avalancheTypeEnum.glide)
         "
-            data-toggle="tooltip"
-            title="{{ 'avalancheType.tooltip.glide' | translate }}"
-            >
-            <span>{{ "avalancheType.label.glide" | translate }}</span>
-          </button>
-        </div>
-      </div>
+        data-toggle="tooltip"
+        title="{{ 'avalancheType.tooltip.glide' | translate }}"
+      >
+        <span>{{ "avalancheType.label.glide" | translate }}</span>
+      </button>
+    </div>
+  </div>
 
-      <div class="form-group row">
-        <div class="col-md-5">
-          <label
-            class="form-label"
+  <div class="form-group row">
+    <div class="col-md-5">
+      <label
+        class="form-label"
         [class.changed]="
           isComparedBulletin() &&
           comparedAvalancheProblemModel() &&
           !haveSameElements(comparedAvalancheProblemModel().aspects, avalancheProblemModel().aspects)
         "
-            for=""
-            >{{ "bulletins.create.label.aspects" | translate }}</label
-            >
-            <div>
-              <app-aspects
-                [(aspects)]="avalancheProblemModel().aspects"
-                [disabled]="disabled()"
-                [size]="150"
-                (aspectsChange)="changeAspects()"
-              ></app-aspects>
-            </div>
-          </div>
-          <div class="col-md-7">
-            <label class="form-label" [class.changed]="isComparedBulletin() && isElevationEqual" for="">{{
-              "elevation.title" | translate
-            }}</label>
-            <div>
-              <app-elevations
-                [(elevationHigh)]="avalancheProblemModel().elevationHigh"
-                [(treelineHigh)]="avalancheProblemModel().treelineHigh"
-                [(elevationLow)]="avalancheProblemModel().elevationLow"
-                [(treelineLow)]="avalancheProblemModel().treelineLow"
-                [disabled]="disabled()"
-                (elevationsChange)="updateElevations()"
-              ></app-elevations>
-            </div>
-          </div>
-          <div>
-            <!-- Extend sea level danger up/down -->
-            @if (
-              count() === 1 && avalancheProblemModel().hasElevationHigh() && avalancheProblemModel().hasElevationLow()
-              ) {
-              <div
-                class="avalanche-problem__elevation-change-danger-rating"
-                >
-                <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
-                <!-- UP Button -->
-                <div class="btn-group">
-                  <button
-                    [disabled]="disabled()"
-                    type="reset"
-                    class="btn btn-sm"
-                    [ngClass]="isDangerRatingDirection(directionEnum.up) ? 'btn-dark' : 'btn-outline-secondary'"
-            (click)="
-              setDangerRatingDirection(
-                $event,
-                isDangerRatingDirection(directionEnum.up) ? undefined : directionEnum.up
-              )
-            "
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
-                    >
-                    <i class="ph ph-arrow-up-right"></i>
-                    <span>{{ "bulletins.create.tooltip.dangerRatingDirectionUp" | translate }}</span>
-                  </button>
-                  <!-- DOWN Button -->
-                  <button
-                    [disabled]="disabled()"
-                    type="reset"
-                    class="btn btn-sm"
-                    [ngClass]="isDangerRatingDirection(directionEnum.down) ? 'btn-dark' : 'btn-outline-secondary'"
-            (click)="
-              setDangerRatingDirection(
-                $event,
-                isDangerRatingDirection(directionEnum.down) ? undefined : directionEnum.down
-              )
-            "
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"
-                    >
-                    <i class="ph ph-arrow-down-right"></i>
-                    <span>{{ "bulletins.create.tooltip.dangerRatingDirectionDown" | translate }}</span>
-                  </button>
-                </div>
-                <!-- End of btn-group -->
-              </div>
-            }
-            <!-- End of Extend sea level danger up/down  -->
-          </div>
-        </div>
-        <div class="form-group">
-          <app-matrix-parameter
-            [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-            [matrixInformation]="avalancheProblemModel().matrixInformation"
-            [comparedMatrixInformation]="comparedAvalancheProblemModel()?.matrixInformation"
-            [isCompared]="isComparedBulletin()"
-            [disabled]="disabled()"
-            [count]="count()"
-            [afternoon]="afternoon()"
-            (changeMatrixEvent)="changeMatrix()"
-            [avalancheType]="avalancheProblemModel().avalancheType"
-          ></app-matrix-parameter>
-        </div>
-        @if (authenticationService.getActiveRegion().showMatrix) {
-          <div class="form-group">
-            <app-matrix
-              [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
-              [matrixInformation]="avalancheProblemModel().matrixInformation"
-              [snowpackStability]="avalancheProblemModel().matrixInformation.snowpackStability"
-              [frequency]="avalancheProblemModel().matrixInformation.frequency"
-              [avalancheSize]="avalancheProblemModel().matrixInformation.avalancheSize"
-              [disabled]="true"
-            ></app-matrix>
-          </div>
-        }
+        for=""
+        >{{ "bulletins.create.label.aspects" | translate }}</label
+      >
+      <div>
+        <app-aspects
+          [(aspects)]="avalancheProblemModel().aspects"
+          [disabled]="disabled()"
+          [size]="150"
+          (aspectsChange)="changeAspects()"
+        ></app-aspects>
       </div>
+    </div>
+    <div class="col-md-7">
+      <label class="form-label" [class.changed]="isComparedBulletin() && isElevationEqual" for="">{{
+        "elevation.title" | translate
+      }}</label>
+      <div>
+        <app-elevations
+          [(elevationHigh)]="avalancheProblemModel().elevationHigh"
+          [(treelineHigh)]="avalancheProblemModel().treelineHigh"
+          [(elevationLow)]="avalancheProblemModel().elevationLow"
+          [(treelineLow)]="avalancheProblemModel().treelineLow"
+          [disabled]="disabled()"
+          (elevationsChange)="updateElevations()"
+        ></app-elevations>
+      </div>
+    </div>
+    <div>
+      <!-- Extend sea level danger up/down -->
+      @if (count() === 1 && avalancheProblemModel().hasElevationHigh() && avalancheProblemModel().hasElevationLow()) {
+        <div class="avalanche-problem__elevation-change-danger-rating">
+          <label class="form-label">{{ "bulletins.create.changeDangerRatingElevation" | translate }}</label>
+          <!-- UP Button -->
+          <div class="btn-group">
+            <button
+              [disabled]="disabled()"
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerRatingDirection(directionEnum.up) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setDangerRatingDirection(
+                  $event,
+                  isDangerRatingDirection(directionEnum.up) ? undefined : directionEnum.up
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.dangerRatingDirectionUp' | translate }}"
+            >
+              <i class="ph ph-arrow-up-right"></i>
+              <span>{{ "bulletins.create.tooltip.dangerRatingDirectionUp" | translate }}</span>
+            </button>
+            <!-- DOWN Button -->
+            <button
+              [disabled]="disabled()"
+              type="reset"
+              class="btn btn-sm"
+              [ngClass]="isDangerRatingDirection(directionEnum.down) ? 'btn-dark' : 'btn-outline-secondary'"
+              (click)="
+                setDangerRatingDirection(
+                  $event,
+                  isDangerRatingDirection(directionEnum.down) ? undefined : directionEnum.down
+                )
+              "
+              data-toggle="tooltip"
+              title="{{ 'bulletins.create.tooltip.dangerRatingDirectionDown' | translate }}"
+            >
+              <i class="ph ph-arrow-down-right"></i>
+              <span>{{ "bulletins.create.tooltip.dangerRatingDirectionDown" | translate }}</span>
+            </button>
+          </div>
+          <!-- End of btn-group -->
+        </div>
+      }
+      <!-- End of Extend sea level danger up/down  -->
+    </div>
+  </div>
+  <div class="form-group">
+    <app-matrix-parameter
+      [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+      [matrixInformation]="avalancheProblemModel().matrixInformation"
+      [comparedMatrixInformation]="comparedAvalancheProblemModel()?.matrixInformation"
+      [isCompared]="isComparedBulletin()"
+      [disabled]="disabled()"
+      [count]="count()"
+      [afternoon]="afternoon()"
+      (changeMatrixEvent)="changeMatrix()"
+      [avalancheType]="avalancheProblemModel().avalancheType"
+    ></app-matrix-parameter>
+  </div>
+  @if (authenticationService.getActiveRegion().showMatrix) {
+    <div class="form-group">
+      <app-matrix
+        [bulletinDaytimeDescription]="bulletinDaytimeDescription()"
+        [matrixInformation]="avalancheProblemModel().matrixInformation"
+        [snowpackStability]="avalancheProblemModel().matrixInformation.snowpackStability"
+        [frequency]="avalancheProblemModel().matrixInformation.frequency"
+        [avalancheSize]="avalancheProblemModel().matrixInformation.avalancheSize"
+        [disabled]="true"
+      ></app-matrix>
+    </div>
+  }
+</div>

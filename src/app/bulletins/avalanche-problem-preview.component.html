@@ -9,10 +9,8 @@
       !isAvalancheProblem(avalancheProblemEnum.favourable_situation) &&
       !isAvalancheProblem(avalancheProblemEnum.cornices) &&
       !isAvalancheProblem(avalancheProblemEnum.no_distinct_avalanche_problem)
-      ) {
-      <h2
-        class="accordion-header__title"
-        >
+    ) {
+      <h2 class="accordion-header__title">
         {{ "bulletins.create.createAvalancheProblem" | translate }}
       </h2>
     }
@@ -22,7 +20,7 @@
       <app-danger-rating
         [value]="avalancheProblem().getDangerRating()"
         class="avalanche-problem-preview__danger-rating"
-        />
+      />
     </div>
     <!-- End danger rating -->
 
@@ -31,7 +29,7 @@
       <app-avalanche-problem-icons
         [value]="avalancheProblem().avalancheProblem"
         class="avalanche-problem-preview__problem-icon"
-        />
+      />
     </div>
     <!-- End avalanche problem icon-->
 
@@ -49,14 +47,10 @@
     <!-- Altitude -->
     <div class="avalanche-problem-preview__info-item avalanche-problem-preview__info-elevation">
       @if (avalancheProblem().hasElevationHigh()) {
-        <p>
-          <i class="ph ph-arrow-line-down-right"></i> {{ getElevationHighString() }}
-        </p>
+        <p><i class="ph ph-arrow-line-down-right"></i> {{ getElevationHighString() }}</p>
       }
       @if (avalancheProblem().hasElevationLow()) {
-        <p>
-          <i class="ph ph-arrow-line-up-right"></i> {{ getElevationLowString() }}
-        </p>
+        <p><i class="ph ph-arrow-line-up-right"></i> {{ getElevationLowString() }}</p>
       }
     </div>
 
@@ -71,7 +65,7 @@
         (click)="moveUpAvalancheProblem($event)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.moveUpAvalancheProblem' | translate }}"
-        >
+      >
         <i class="ph ph-arrow-up"></i>
       </button>
     }
@@ -83,7 +77,7 @@
         (click)="moveDownAvalancheProblem($event)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.moveDownAvalancheProblem' | translate }}"
-        >
+      >
         <i class="ph ph-arrow-down"></i>
       </button>
     }
@@ -96,7 +90,7 @@
         (click)="deleteAvalancheProblem($event)"
         data-toggle="tooltip"
         title="{{ 'bulletins.create.tooltip.deleteProblem' | translate }}"
-        >
+      >
         <i class="ph ph-trash"></i>
       </button>
     }

@@ -3,126 +3,126 @@
     <h1>{{ "bulletins.table.publicationStatusDialog.headline" | translate }}</h1>
     <p>
       <b>{{ "bulletins.table.publicationStatusDialog.validFor" | translate }}</b
-        >{{ json.report.date | date: "fullDate" : undefined : translateService.getCurrentLang() }}<br />
-        <b>{{ "bulletins.table.publicationStatusDialog.publishedBy" | translate }}</b
-          >{{ json.report.user }}<br />
-          <b>{{ "bulletins.table.publicationStatusDialog.publishedAt" | translate }}</b
-            >{{ json.report.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
-          </p>
-        </div>
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-header d-flex align-items-center">
-              <i class="ph ph-warning me-2"></i>{{ "bulletins.table.publicationStatusDialog.title.prod" | translate }}
-            </div>
-            <div class="card-body p-0">
-              @for (alert of alerts; track alert) {
-                <div>
-                  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{
-                    alert.msg
-                  }}</alert>
-                </div>
-              }
-              <table class="table table-bordered table-condensed mb-0">
-                <thead>
-                  <tr>
-                    <th>{{ "bulletins.table.publicationStatusDialog.title.task" | translate }}</th>
-                    @for (language of languages; track language) {
-                      <th>
-                        {{ "bulletins.table.publicationStatusDialog.title.language." + language | translate }}
-                      </th>
-                    }
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <label class="col-form-label">{{
-                        "bulletins.table.publicationStatusDialog.email.label" | translate
-                      }}</label>
-                    </td>
-                    @for (language of languages; track language) {
-                      <td>
-                        <button
-                          type="button"
-                          class="btn btn-secondary btn-sm"
-                          (click)="triggerPublicationChannel($event, language, emailPublication)"
-                          data-toggle="tooltip"
-                          title="{{ 'bulletins.table.publicationStatusDialog.email.tooltip' | translate }}"
-                          >
-                          <i class="ph ph-envelope-simple"></i>
-                        </button>
-                      </td>
-                    }
-                  </tr>
-                  <tr>
-                    <td>
-                      <label class="col-form-label">{{
-                        "bulletins.table.publicationStatusDialog.telegram.label" | translate
-                      }}</label>
-                    </td>
-                    @for (language of languages; track language) {
-                      <td>
-                        <button
-                          type="button"
-                          class="btn btn-secondary btn-sm"
-                          (click)="triggerPublicationChannel($event, language, telegramPublication)"
-                          data-toggle="tooltip"
-                          title="{{ 'bulletins.table.publicationStatusDialog.telegram.tooltip' | translate }}"
-                          >
-                          <i class="ph ph-telegram-logo"></i>
-                        </button>
-                      </td>
-                    }
-                  </tr>
-                  <tr>
-                    <td>
-                      <label class="col-form-label">{{
-                        "bulletins.table.publicationStatusDialog.whatsapp.label" | translate
-                      }}</label>
-                    </td>
-                    @for (language of languages; track language) {
-                      <td>
-                        <button
-                          type="button"
-                          class="btn btn-secondary btn-sm"
-                          (click)="triggerPublicationChannel($event, language, whatsAppPublication)"
-                          data-toggle="tooltip"
-                          title="{{ 'bulletins.table.publicationStatusDialog.whatsapp.tooltip' | translate }}"
-                          >
-                          <i class="ph ph-whatsapp-logo"></i>
-                        </button>
-                      </td>
-                    }
-                  </tr>
-                  <tr>
-                    <td>
-                      <label class="col-form-label">{{
-                        "bulletins.table.publicationStatusDialog.push.label" | translate
-                      }}</label>
-                    </td>
-                    @for (language of languages; track language) {
-                      <td>
-                        <button
-                          type="button"
-                          class="btn btn-secondary btn-sm"
-                          (click)="triggerPublicationChannel($event, language, pushPublication)"
-                          data-toggle="tooltip"
-                          title="{{ 'bulletins.table.publicationStatusDialog.push.tooltip' | translate }}"
-                          >
-                          <i class="ph ph-bell"></i>
-                        </button>
-                      </td>
-                    }
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+      >{{ json.report.date | date: "fullDate" : undefined : translateService.getCurrentLang() }}<br />
+      <b>{{ "bulletins.table.publicationStatusDialog.publishedBy" | translate }}</b
+      >{{ json.report.user }}<br />
+      <b>{{ "bulletins.table.publicationStatusDialog.publishedAt" | translate }}</b
+      >{{ json.report.timestamp | date: "medium" : undefined : translateService.getCurrentLang() }}
+    </p>
+  </div>
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header d-flex align-items-center">
+        <i class="ph ph-warning me-2"></i>{{ "bulletins.table.publicationStatusDialog.title.prod" | translate }}
+      </div>
+      <div class="card-body p-0">
+        @for (alert of alerts; track alert) {
+          <div>
+            <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{
+              alert.msg
+            }}</alert>
           </div>
-        </div>
+        }
+        <table class="table table-bordered table-condensed mb-0">
+          <thead>
+            <tr>
+              <th>{{ "bulletins.table.publicationStatusDialog.title.task" | translate }}</th>
+              @for (language of languages; track language) {
+                <th>
+                  {{ "bulletins.table.publicationStatusDialog.title.language." + language | translate }}
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "bulletins.table.publicationStatusDialog.email.label" | translate
+                }}</label>
+              </td>
+              @for (language of languages; track language) {
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                    (click)="triggerPublicationChannel($event, language, emailPublication)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.table.publicationStatusDialog.email.tooltip' | translate }}"
+                  >
+                    <i class="ph ph-envelope-simple"></i>
+                  </button>
+                </td>
+              }
+            </tr>
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "bulletins.table.publicationStatusDialog.telegram.label" | translate
+                }}</label>
+              </td>
+              @for (language of languages; track language) {
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                    (click)="triggerPublicationChannel($event, language, telegramPublication)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.table.publicationStatusDialog.telegram.tooltip' | translate }}"
+                  >
+                    <i class="ph ph-telegram-logo"></i>
+                  </button>
+                </td>
+              }
+            </tr>
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "bulletins.table.publicationStatusDialog.whatsapp.label" | translate
+                }}</label>
+              </td>
+              @for (language of languages; track language) {
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                    (click)="triggerPublicationChannel($event, language, whatsAppPublication)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.table.publicationStatusDialog.whatsapp.tooltip' | translate }}"
+                  >
+                    <i class="ph ph-whatsapp-logo"></i>
+                  </button>
+                </td>
+              }
+            </tr>
+            <tr>
+              <td>
+                <label class="col-form-label">{{
+                  "bulletins.table.publicationStatusDialog.push.label" | translate
+                }}</label>
+              </td>
+              @for (language of languages; track language) {
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                    (click)="triggerPublicationChannel($event, language, pushPublication)"
+                    data-toggle="tooltip"
+                    title="{{ 'bulletins.table.publicationStatusDialog.push.tooltip' | translate }}"
+                  >
+                    <i class="ph ph-bell"></i>
+                  </button>
+                </td>
+              }
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="publicationStatusModalConfirm()">
-          {{ "bulletins.table.publicationStatusDialog.accept" | translate }}
-        </button>
-      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="publicationStatusModalConfirm()">
+    {{ "bulletins.table.publicationStatusDialog.accept" | translate }}
+  </button>
+</div>

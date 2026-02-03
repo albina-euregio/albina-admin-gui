@@ -6,7 +6,6 @@ import { ConstantsService } from "../providers/constants-service/constants.servi
 import { LocalStorageService } from "../providers/local-storage-service/local-storage.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-
 import { Component, TemplateRef, viewChild, inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router, RouterLinkActive, RouterLink, RouterOutlet } from "@angular/router";
@@ -20,14 +19,7 @@ import { BsModalRef } from "ngx-bootstrap/modal";
   selector: "app-dashboard",
   templateUrl: "./full-layout.component.html",
   standalone: true,
-  imports: [
-    RouterLinkActive,
-    RouterLink,
-    BsDropdownModule,
-    RouterOutlet,
-    TranslateModule,
-    NgxMousetrapDirective
-],
+  imports: [RouterLinkActive, RouterLink, BsDropdownModule, RouterOutlet, TranslateModule, NgxMousetrapDirective],
 })
 export class FullLayoutComponent {
   translateService = inject(TranslateService);

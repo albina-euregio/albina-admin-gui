@@ -32,10 +32,7 @@
       <tr>
         <th></th>
         @if (authenticationService.getActiveRegion().enableStressLevel && !localStorageService.isTrainingEnabled) {
-          <th
-            role="button"
-            (click)="showTeamStressLevels()"
-            >
+          <th role="button" (click)="showTeamStressLevels()">
             <i class="ph ph-brain"></i> {{ "login.stressLevel" | translate }}
           </th>
         }
@@ -43,10 +40,7 @@
           {{ regionsService.getRegionName(authenticationService.getActiveRegion().id) }}
         </th>
         @for (region of authenticationService.getActiveRegion().neighborRegions; track region) {
-          <th
-            role="button"
-            (click)="authenticationService.setActiveRegion(region); bulletinsService.loadStatus()"
-            >
+          <th role="button" (click)="authenticationService.setActiveRegion(region); bulletinsService.loadStatus()">
             {{ regionsService.getRegionName(region) }}
           </th>
         }
@@ -54,9 +48,7 @@
     </thead>
     <tbody class="bulletins-table__body">
       @for (date of bulletinsService.dates; track date) {
-        <tr
-          [class.bulletins-table__day--past]="bulletinsService.hasBeenPublished5PM(date)"
-          >
+        <tr [class.bulletins-table__day--past]="bulletinsService.hasBeenPublished5PM(date)">
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
             <div class="bulletins-table__day">
               <time>
@@ -74,19 +66,19 @@
                   type="button"
                   (click)="editBulletin(date, true)"
                   title="{{ 'bulletins.tooltip.read' | translate }}"
-                  >
+                >
                   <i class="ph ph-eye"></i>
                 </button>
                 @if (
                   authenticationService.isCurrentUserInRole(constantsService.roleForecaster) ||
                   authenticationService.isCurrentUserInRole(constantsService.roleForeman)
-                  ) {
+                ) {
                   <button
                     class="btn btn-secondary btn-icon bulletins-table__day-buttons"
                     type="button"
                     (click)="editBulletin(date, false)"
                     title="{{ 'bulletins.tooltip.edit' | translate }}"
-                    >
+                  >
                     <i class="ph ph-pencil-line"></i>
                   </button>
                 }
@@ -94,10 +86,7 @@
             </div>
           </td>
           @if (authenticationService.getActiveRegion().enableStressLevel && !localStorageService.isTrainingEnabled) {
-            <td
-              [attr.data-label]="'login.stressLevel' | translate"
-              class="align-middle"
-              >
+            <td [attr.data-label]="'login.stressLevel' | translate" class="align-middle">
               @for (date of [constantsService.getISODateString(date[1])]; track date) {
                 <div class="d-flex">
                   <input
@@ -106,7 +95,7 @@
                     [(ngModel)]="bulletinsService.stress[date]"
                     (input)="postStressLevel.next({ date, stressLevel: bulletinsService.stress[date] })"
                     [style.--form-range-thumb-bg]="bulletinsService.getStressLevelColor(date)"
-                    />
+                  />
                   <span>
                     <i class="ph" [class]="bulletinsService.getStressLevelIcon(date)"></i>
                   </span>
@@ -117,11 +106,9 @@
           <td
             class="bulletins-table__region-status"
             [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion().id)"
-            >
+          >
             @if (getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined) {
-              <span
-                class="badge bg-danger"
-                >
+              <span class="badge bg-danger">
                 <i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}
               </span>
             }
@@ -162,107 +149,104 @@
             }
           </td>
           @for (region of authenticationService.getActiveRegion().neighborRegions; track region) {
-            <td
-              class="bulletins-table__region-status"
-              [attr.data-label]="regionsService.getRegionName(region)"
-              >
+            <td class="bulletins-table__region-status" [attr.data-label]="regionsService.getRegionName(region)">
               @if (
                 getRegionStatus(region, date) === bulletinStatus.missing || getRegionStatus(region, date) === undefined
-                ) {
-                <span
-                  class="badge bg-danger"
+              ) {
+                <span class="badge bg-danger"
                   ><i class="ph-bold ph-x"></i> {{ "bulletins.table.status.missing" | translate }}</span
-                  >
-                }
-                @if (getRegionStatus(region, date) === bulletinStatus.draft) {
-                  <span class="badge bg-warning"
-                    ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
-                    >
-                  }
-                  @if (getRegionStatus(region, date) === bulletinStatus.submitted) {
-                    <span class="badge bg-primary"
-                      ><i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.submitted" | translate }}</span
-                      >
-                    }
-                    @if (getRegionStatus(region, date) === bulletinStatus.published) {
-                      <span class="badge bg-success"
-                        ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
-                        >
-                      }
-                      @if (getRegionStatus(region, date) === bulletinStatus.updated) {
-                        <span class="badge bg-orange"
-                          ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
-                          >
-                        }
-                        @if (getRegionStatus(region, date) === bulletinStatus.resubmitted) {
-                          <span class="badge bg-primary"
-                            ><i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.resubmitted" | translate }}</span
-                            >
-                          }
-                          @if (getRegionStatus(region, date) === bulletinStatus.republished) {
-                            <span class="badge bg-success"
-                              ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
-                              >
-                            }
-                          </td>
-                        }
-                        <td class="bulletins-table__region-publishing-tools">
-                          <!-- copy -->
-                          @if (showCopyButton(date)) {
-                            <button
-                              type="button"
-                              class="btn btn-secondary btn-sm"
-                              (click)="copy($event, date)"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.tooltip.copy' | translate }}"
-                              >
-                              <i class="ph ph-copy"></i>
-                            </button>
-                          }
-                          <!-- paste -->
-                          @if (showPasteButton(date)) {
-                            <button
-                              type="button"
-                              class="btn btn-secondary btn-sm"
-                              (click)="paste($event, date)"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.tooltip.paste' | translate }}"
-                              >
-                              <i class="ph ph-clipboard-text"></i>
-                            </button>
-                          }
-                          <!-- cancel -->
-                          @if (showPasteButton(date)) {
-                            <button
-                              type="button"
-                              class="btn btn-secondary btn-sm"
-                              (click)="cancelCopy($event)"
-                              data-toggle="tooltip"
-                              title="{{ 'bulletins.tooltip.cancel' | translate }}"
-                              ngxMousetrapKey="esc"
-                              >
-                              <i class="ph ph-x"></i>
-                            </button>
-                          }
-                        </td>
-                      </tr>
-                    }
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="999">
-                        @for (days of [7]; track days) {
-                          <button
-                            style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
-                            class="btn btn-icon btn-sm"
-                            (click)="bulletinsService.init({ days: bulletinsService.dates.length + days })"
-                            title="{{ 'bulletins.status.loadMoreBulletins' | translate: { count: days } }}"
-                            >
-                            <i class="ph ph-caret-down"></i>
-                          </button>
-                        }
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
+                >
+              }
+              @if (getRegionStatus(region, date) === bulletinStatus.draft) {
+                <span class="badge bg-warning"
+                  ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.draft" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, date) === bulletinStatus.submitted) {
+                <span class="badge bg-primary"
+                  ><i class="ph-bold ph-clock-countdown"></i> {{ "bulletins.table.status.submitted" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, date) === bulletinStatus.published) {
+                <span class="badge bg-success"
+                  ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.published" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, date) === bulletinStatus.updated) {
+                <span class="badge bg-orange"
+                  ><i class="ph-bold ph-file-dashed"></i> {{ "bulletins.table.status.updated" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, date) === bulletinStatus.resubmitted) {
+                <span class="badge bg-primary"
+                  ><i class="ph-bold ph-clock-countdown"></i>
+                  {{ "bulletins.table.status.resubmitted" | translate }}</span
+                >
+              }
+              @if (getRegionStatus(region, date) === bulletinStatus.republished) {
+                <span class="badge bg-success"
+                  ><i class="ph-bold ph-newspaper"></i> {{ "bulletins.table.status.republished" | translate }}</span
+                >
+              }
+            </td>
+          }
+          <td class="bulletins-table__region-publishing-tools">
+            <!-- copy -->
+            @if (showCopyButton(date)) {
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                (click)="copy($event, date)"
+                data-toggle="tooltip"
+                title="{{ 'bulletins.tooltip.copy' | translate }}"
+              >
+                <i class="ph ph-copy"></i>
+              </button>
+            }
+            <!-- paste -->
+            @if (showPasteButton(date)) {
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                (click)="paste($event, date)"
+                data-toggle="tooltip"
+                title="{{ 'bulletins.tooltip.paste' | translate }}"
+              >
+                <i class="ph ph-clipboard-text"></i>
+              </button>
+            }
+            <!-- cancel -->
+            @if (showPasteButton(date)) {
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                (click)="cancelCopy($event)"
+                data-toggle="tooltip"
+                title="{{ 'bulletins.tooltip.cancel' | translate }}"
+                ngxMousetrapKey="esc"
+              >
+                <i class="ph ph-x"></i>
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="999">
+          @for (days of [7]; track days) {
+            <button
+              style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
+              class="btn btn-icon btn-sm"
+              (click)="bulletinsService.init({ days: bulletinsService.dates.length + days })"
+              title="{{ 'bulletins.status.loadMoreBulletins' | translate: { count: days } }}"
+            >
+              <i class="ph ph-caret-down"></i>
+            </button>
+          }
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

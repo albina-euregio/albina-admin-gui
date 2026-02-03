@@ -4,30 +4,30 @@
     [class.changed]="isComparedBulletin() && comparedSliderValue() && comparedSliderValue() !== sliderValue()"
     [for]="id()"
     >{{ label() }}</label
-    >
-    <input
-      [name]="id()"
-      class="form-range"
-      type="range"
-      [min]="sliderOptions().floor"
-      [max]="sliderOptions().ceil"
-      [disabled]="disabled()"
-      [ngModel]="sliderValue()"
-      (ngModelChange)="sliderValueChange.emit($event)"
-      [style.--form-range-thumb-bg]="sliderOptions().getSelectionBarColor(sliderValue())"
-      list="datalist"
-      />
-    <datalist id="datalist">
-      @for (tick of sliderOptions().ticks; track tick) {
-        <option
-          [value]="tick"
-          [disabled]="disabled()"
-          [label]="sliderOptions().getLegend(tick)"
-          (click)="sliderValueChange.emit(tick)"
-      [class.fw-bold]="
-        sliderOptions().getSelectionBarColor(tick) === sliderOptions().getSelectionBarColor(sliderValue())
-      "
-        ></option>
-      }
-    </datalist>
-  </div>
+  >
+  <input
+    [name]="id()"
+    class="form-range"
+    type="range"
+    [min]="sliderOptions().floor"
+    [max]="sliderOptions().ceil"
+    [disabled]="disabled()"
+    [ngModel]="sliderValue()"
+    (ngModelChange)="sliderValueChange.emit($event)"
+    [style.--form-range-thumb-bg]="sliderOptions().getSelectionBarColor(sliderValue())"
+    list="datalist"
+  />
+  <datalist id="datalist">
+    @for (tick of sliderOptions().ticks; track tick) {
+      <option
+        [value]="tick"
+        [disabled]="disabled()"
+        [label]="sliderOptions().getLegend(tick)"
+        (click)="sliderValueChange.emit(tick)"
+        [class.fw-bold]="
+          sliderOptions().getSelectionBarColor(tick) === sliderOptions().getSelectionBarColor(sliderValue())
+        "
+      ></option>
+    }
+  </datalist>
+</div>

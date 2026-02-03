@@ -1,7 +1,6 @@
 import { environment } from "../../environments/environment";
 import { ServerConfigurationVersion } from "../models/server-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-
 import { Component, OnInit, TemplateRef, viewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";

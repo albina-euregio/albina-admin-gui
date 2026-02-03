@@ -16,14 +16,10 @@
       <h6 class="font-xs text-secondary">{{ regionsService.getRegionName(bulletin().ownerRegion) }}</h6>
       <h2 class="font-l">
         @if (bulletin().getSavedAndPublishedRegions().length > 0) {
-          <span>{{
-            regionsService.getRegionName(bulletin().getSavedAndPublishedRegions()[0].toString())
-          }}</span>
+          <span>{{ regionsService.getRegionName(bulletin().getSavedAndPublishedRegions()[0].toString()) }}</span>
         }
         @if (bulletin().getSavedAndPublishedRegions().length > 1) {
-          <span>
-            + {{ bulletin().getSavedAndPublishedRegions().length - 1 }}
-          </span>
+          <span> + {{ bulletin().getSavedAndPublishedRegions().length - 1 }} </span>
         }
       </h2>
 
@@ -38,7 +34,7 @@
       <label
         class="region-form__mindset-text"
         [class.changed]="isComparedBulletin() && bulletin().strategicMindset !== comparedBulletin()?.strategicMindset"
-        >
+      >
         {{ "strategicMindset.title" | translate }}
         <i
           class="ph ph-info region-form__mindset-info"
@@ -50,7 +46,7 @@
         (change)="updateBulletinOnServer()"
         [disabled]="disabled()"
         class="form-select"
-        >
+      >
         <option [ngValue]="undefined"></option>
         @for (mindset of strategicMindset; track mindset) {
           <option [value]="mindset">
@@ -62,9 +58,7 @@
   }
 
   @if (!disabled() && bulletinsService.getIsEditable() && isCreator(bulletin())) {
-    <div
-      class="region-form__banner banner banner-info"
-      >
+    <div class="region-form__banner banner banner-info">
       <p class="banner__text">
         <i class="ph ph-pencil-line"></i>
         {{ "bulletins.create.regionEditable" | translate }}
@@ -78,7 +72,7 @@
             title="{{ 'bulletins.create.tooltip.daytimeDependency' | translate }}"
             type="button"
             class="btn btn-sm btn-icon"
-            >
+          >
             <i class="ph ph-sun-horizon"></i>
           </button>
         }
@@ -89,7 +83,7 @@
             title="{{ 'bulletins.create.tooltip.edit' | translate }}"
             type="button"
             class="btn btn-sm btn-icon btn-outline-primary"
-            >
+          >
             <i class="ph ph-globe-hemisphere-west"></i>
           </button>
         }
@@ -97,7 +91,7 @@
           !editRegions &&
           !copyService.isCopyBulletin() &&
           !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
-          ) {
+        ) {
           <button
             (click)="copyBulletin()"
             data-toggle="tooltip"
@@ -105,7 +99,7 @@
             type="button"
             class="btn btn-sm btn-icon btn-outline-primary"
             ngxMousetrapKey="mod+c"
-            >
+          >
             <i class="ph ph-copy"></i>
           </button>
         }
@@ -117,7 +111,7 @@
             type="button"
             class="btn btn-sm btn-icon btn-outline-primary"
             ngxMousetrapKey="del"
-            >
+          >
             <i class="ph ph-trash"></i>
           </button>
         }
@@ -130,7 +124,7 @@
             type="button"
             class="btn btn-sm btn-icon btn-outline-primary"
             ngxMousetrapKey="mod+z"
-            >
+          >
             <i class="ph ph-arrow-counter-clockwise"></i>
           </button>
         }
@@ -143,7 +137,7 @@
             type="button"
             class="btn btn-sm btn-icon btn-outline-primary"
             ngxMousetrapKey="mod+y"
-            >
+          >
             <i class="ph ph-arrow-clockwise"></i>
           </button>
         }
@@ -152,29 +146,19 @@
   }
 
   @if (!isCreator(bulletin()) && hasSuggestions(bulletin())) {
-    <div
-      class="region-form__banner banner banner-warning-strong"
-      >
+    <div class="region-form__banner banner banner-warning-strong">
       <p class="banner__text">
         <i class="ph ph-lightbulb"></i>
         {{ "bulletins.create.pendingSuggestions" | translate }}
       </p>
       <div class="btn-group banner__actions">
         @if (bulletinsService.getIsEditable()) {
-          <button
-            (click)="rejectSuggestions($event)"
-            type="button"
-            class="btn btn-sm btn-outline-dark"
-            >
+          <button (click)="rejectSuggestions($event)" type="button" class="btn btn-sm btn-outline-dark">
             <i class="ph ph-x"></i> <span>{{ "bulletins.create.rejectSuggestion" | translate }}</span>
           </button>
         }
         @if (bulletinsService.getIsEditable()) {
-          <button
-            (click)="acceptSuggestions($event)"
-            type="button"
-            class="btn btn-sm btn-dark"
-            >
+          <button (click)="acceptSuggestions($event)" type="button" class="btn btn-sm btn-dark">
             <i class="ph ph-check"></i><span>{{ "bulletins.create.acceptSuggestion" | translate }}</span>
           </button>
         }
@@ -186,10 +170,8 @@
     !bulletinsService.getIsEditable() ||
     (bulletinsService.getIsEditable() && !isCreator(bulletin()) && !hasSuggestions(bulletin())) ||
     disabled()
-    ) {
-    <div
-      class="region-form__banner banner banner-warning"
-      >
+  ) {
+    <div class="region-form__banner banner banner-warning">
       <p class="banner__text">
         <i class="ph ph-pencil-slash"></i>
         {{ "bulletins.create.regionNotEditable" | translate }}
@@ -206,7 +188,7 @@
             title="{{ 'bulletins.create.tooltip.edit' | translate }}"
             type="button"
             class="btn btn-sm btn-icon btn-outline-primary"
-            >
+          >
             <i class="ph ph-globe-hemisphere-west"></i>
           </button>
         }
@@ -214,7 +196,7 @@
           !isComparedBulletin() &&
           !copyService.isCopyBulletin() &&
           !authenticationService.isCurrentUserInRole(constantsService.roleObserver)
-          ) {
+        ) {
           <button
             (click)="copyBulletin()"
             data-toggle="tooltip"
@@ -222,7 +204,7 @@
             type="button"
             class="btn btn-sm btn-icon btn-outline-primary"
             ngxMousetrapKey="mod+c"
-            >
+          >
             <i class="ph ph-copy"></i>
           </button>
         }
@@ -238,7 +220,7 @@
         #accordionAvalancheProblemForenoon
         [isOpen]="isAccordionAvalancheProblemForenoonOpen"
         (isOpenChange)="accordionChanged($event, 'avalancheProblemForenoon')"
-        >
+      >
         <div accordion-heading class="accordion-header accordion-header--with-buttons">
           <h2 class="accordion-header__title">
             @if (!isAccordionAvalancheProblemForenoonOpen) {
@@ -247,11 +229,9 @@
             @if (isAccordionAvalancheProblemForenoonOpen) {
               <i class="accordion__arrow ph ph-caret-down"></i>
             }
-            {{ "bulletins.create.title.avalancheProblem" | translate
-            }}@if (bulletin().hasDaytimeDependency) {
-            <span
-              >&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span
-              >
+            {{ "bulletins.create.title.avalancheProblem" | translate }}
+            @if (bulletin().hasDaytimeDependency) {
+              <span>&nbsp;{{ "bulletins.create.title.forenoon" | translate }}</span>
             }
           </h2>
 
@@ -263,7 +243,7 @@
                 class="btn btn-primary btn-icon btn-sm ml-2"
                 title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
                 ngxMousetrapKey="c p"
-                >
+              >
                 <i class="ph ph-plus"></i>
               </button>
             }
@@ -287,7 +267,7 @@
           [isOpen]="isAccordionAvalancheProblemAfternoonOpen"
           (isOpenChange)="accordionChanged($event, 'avalancheProblemAfternoon')"
           class="accordion-group"
-          >
+        >
           <div accordion-heading class="accordion-header accordion-header--with-buttons">
             <h2 class="accordion-header__title">
               @if (accordionAvalancheProblemAfternoon.isOpen) {
@@ -299,186 +279,250 @@
               <span
                 >{{ "bulletins.create.title.avalancheProblem" | translate }}
                 {{ "bulletins.create.title.afternoon" | translate }}</span
+              >
+            </h2>
+            <div class="btn-group accordion-header__buttons">
+              @if (!disabled()) {
+                <button
+                  [disabled]="editRegions || hasFiveAvalancheProblems(false) || !isCreator(bulletin())"
+                  (click)="createAvalancheProblem(true); $event.stopPropagation()"
+                  class="btn btn-primary btn-icon btn-sm"
+                  title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
                 >
-              </h2>
-              <div class="btn-group accordion-header__buttons">
-                @if (!disabled()) {
-                  <button
-                    [disabled]="editRegions || hasFiveAvalancheProblems(false) || !isCreator(bulletin())"
-                    (click)="createAvalancheProblem(true); $event.stopPropagation()"
-                    class="btn btn-primary btn-icon btn-sm"
-                    title="{{ 'bulletins.create.createAvalancheProblem' | translate }}"
-                    >
-                    <i class="ph ph-plus"></i>
-                  </button>
-                }
-              </div>
+                  <i class="ph ph-plus"></i>
+                </button>
+              }
             </div>
-            <app-avalanche-problem
-              [bulletinModel]="bulletin()"
-              [bulletinDaytimeDescription]="bulletin()?.afternoon"
-              [comparedBulletinDaytimeDescription]="comparedBulletin()?.afternoon"
-              [isComparedBulletin]="isComparedBulletin()"
-              [afternoon]="true"
-              [disabled]="disabled()"
-              (changeAvalancheProblemEvent)="updateBulletinOnServer()"
-            ></app-avalanche-problem>
-          </accordion-group>
-        }
-        <!-- show empty afternoon section if compared bulletin has daytime dependency but current bulletin has not -->
-        @if (comparedBulletin() && !bulletin()?.hasDaytimeDependency && comparedBulletin()?.hasDaytimeDependency) {
-          <accordion-group
-            #accordionAvalancheProblemAfternoon
-            class="accordion-group"
-            [isOpen]="false"
-            [isDisabled]="true"
-            >
-            <div accordion-heading class="accordion-header accordion-header--with-buttons" style="cursor: default">
-              <h2 class="accordion-header__title">
-                <i class="accordion__arrow ph ph-caret-right" style="visibility: hidden"></i>
-              </h2>
-            </div>
-          </accordion-group>
-        }
-        <!-- End avalanche problems -->
-
-        <!-- Danger description -->
+          </div>
+          <app-avalanche-problem
+            [bulletinModel]="bulletin()"
+            [bulletinDaytimeDescription]="bulletin()?.afternoon"
+            [comparedBulletinDaytimeDescription]="comparedBulletin()?.afternoon"
+            [isComparedBulletin]="isComparedBulletin()"
+            [afternoon]="true"
+            [disabled]="disabled()"
+            (changeAvalancheProblemEvent)="updateBulletinOnServer()"
+          ></app-avalanche-problem>
+        </accordion-group>
+      }
+      <!-- show empty afternoon section if compared bulletin has daytime dependency but current bulletin has not -->
+      @if (comparedBulletin() && !bulletin()?.hasDaytimeDependency && comparedBulletin()?.hasDaytimeDependency) {
         <accordion-group
-          [isOpen]="isAccordionDangerDescriptionOpen"
-          (isOpenChange)="accordionChanged($event, 'dangerDescription')"
-          >
-          <div accordion-heading class="accordion-header">
+          #accordionAvalancheProblemAfternoon
+          class="accordion-group"
+          [isOpen]="false"
+          [isDisabled]="true"
+        >
+          <div accordion-heading class="accordion-header accordion-header--with-buttons" style="cursor: default">
             <h2 class="accordion-header__title">
-              @if (!isAccordionDangerDescriptionOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionDangerDescriptionOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
-              <span>
-                {{ "bulletins.create.title.dangerDescription" | translate }}
-              </span>
+              <i class="accordion__arrow ph ph-caret-right" style="visibility: hidden"></i>
             </h2>
           </div>
-          <!-- Danger description panel content -->
-          <div
-            id="region-form-danger-description"
-            class="accordion-collapse -collapse show"
-            data-bs-parent="#region-form-accordion"
-            >
-            <!-- Special alert -->
-            <app-bulletin-text
-              [textField]="TextcatTextfield.highlights"
-              [rows]="1"
-              [bulletin]="bulletin()"
-              [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
-              [disabled]="disabled()"
-              (showDialog)="showDialog($event)"
-              (updateBulletinOnServer)="updateBulletinOnServer()"
-              />
-            <!-- End Translations-->
-
-            <!-- Danger situation headline -->
-            <app-bulletin-text
-              [textField]="TextcatTextfield.avActivityHighlights"
-              [rows]="3"
-              [bulletin]="bulletin()"
-              [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
-              [disabled]="disabled()"
-              (showDialog)="showDialog($event)"
-              (updateBulletinOnServer)="updateBulletinOnServer()"
-              />
-
-            <!-- Danger situation description -->
-            <app-bulletin-text
-              [textField]="TextcatTextfield.avActivityComment"
-              [rows]="9"
-              [bulletin]="bulletin()"
-              [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
-              [disabled]="disabled()"
-              (showDialog)="showDialog($event)"
-              (updateBulletinOnServer)="updateBulletinOnServer()"
-              />
-            <!-- End of danger situation description -->
-          </div>
-          <!-- End of danger description panel content -->
         </accordion-group>
-        <!-- End danger description -->
+      }
+      <!-- End avalanche problems -->
 
-        <!-- Snowpack structure -->
-        <accordion-group
-          [isOpen]="isAccordionSnowpackStructureOpen"
-          (isOpenChange)="accordionChanged($event, 'snowpackStructure')"
-          >
-          <div accordion-heading class="accordion-header">
-            <h2 class="accordion-header__title">
-              @if (!isAccordionSnowpackStructureOpen) {
-                <i class="accordion__arrow ph ph-caret-right"></i>
-              }
-              @if (isAccordionSnowpackStructureOpen) {
-                <i class="accordion__arrow ph ph-caret-down"></i>
-              }
-              <span>
-                {{ "bulletins.create.title.snowpackStructure" | translate }}
-              </span>
-            </h2>
-          </div>
-          <!-- Snowpack structure panel content -->
-          <div
-            id="region-form-snowpack-structure"
-            class="accordion-collapse -collapse show"
-            data-bs-parent="#region-form-accordion"
-            >
-            <!-- Danger patterns -->
-            <div class="form-group region-form__danger-patterns">
-              <label class="form-label" for="">{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
-              <select
-                [(ngModel)]="bulletin().dangerPattern1"
-                (change)="updateBulletinOnServer()"
-                [disabled]="disabled()"
-                class="form-select"
-                [class.changed]="isComparedBulletin() && bulletin().dangerPattern1 !== comparedBulletin()?.dangerPattern1"
-                >
-                <option [ngValue]="undefined"></option>
-                @for (dp of dangerPattern; track dp) {
-                  <option [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
-                }
-              </select>
+      <!-- Danger description -->
+      <accordion-group
+        [isOpen]="isAccordionDangerDescriptionOpen"
+        (isOpenChange)="accordionChanged($event, 'dangerDescription')"
+      >
+        <div accordion-heading class="accordion-header">
+          <h2 class="accordion-header__title">
+            @if (!isAccordionDangerDescriptionOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionDangerDescriptionOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
+            <span>
+              {{ "bulletins.create.title.dangerDescription" | translate }}
+            </span>
+          </h2>
+        </div>
+        <!-- Danger description panel content -->
+        <div
+          id="region-form-danger-description"
+          class="accordion-collapse -collapse show"
+          data-bs-parent="#region-form-accordion"
+        >
+          <!-- Special alert -->
+          <app-bulletin-text
+            [textField]="TextcatTextfield.highlights"
+            [rows]="1"
+            [bulletin]="bulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+            [disabled]="disabled()"
+            (showDialog)="showDialog($event)"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          />
+          <!-- End Translations-->
 
-              <select
-                [(ngModel)]="bulletin().dangerPattern2"
-                (change)="updateBulletinOnServer()"
-                [disabled]="disabled()"
-                class="form-select"
-                [class.changed]="isComparedBulletin() && bulletin().dangerPattern2 !== comparedBulletin()?.dangerPattern2"
-                >
-                <option [ngValue]="undefined"></option>
-                @for (dp of dangerPattern; track dp) {
-                  <option [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
-                }
-              </select>
-            </div>
-            <!-- End of danger patterns -->
+          <!-- Danger situation headline -->
+          <app-bulletin-text
+            [textField]="TextcatTextfield.avActivityHighlights"
+            [rows]="3"
+            [bulletin]="bulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+            [disabled]="disabled()"
+            (showDialog)="showDialog($event)"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          />
 
-            <!-- Danger pattern description -->
-            <app-bulletin-text
-              [textField]="TextcatTextfield.snowpackStructureComment"
-              [rows]="9"
-              [bulletin]="bulletin()"
-              [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+          <!-- Danger situation description -->
+          <app-bulletin-text
+            [textField]="TextcatTextfield.avActivityComment"
+            [rows]="9"
+            [bulletin]="bulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+            [disabled]="disabled()"
+            (showDialog)="showDialog($event)"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          />
+          <!-- End of danger situation description -->
+        </div>
+        <!-- End of danger description panel content -->
+      </accordion-group>
+      <!-- End danger description -->
+
+      <!-- Snowpack structure -->
+      <accordion-group
+        [isOpen]="isAccordionSnowpackStructureOpen"
+        (isOpenChange)="accordionChanged($event, 'snowpackStructure')"
+      >
+        <div accordion-heading class="accordion-header">
+          <h2 class="accordion-header__title">
+            @if (!isAccordionSnowpackStructureOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionSnowpackStructureOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
+            <span>
+              {{ "bulletins.create.title.snowpackStructure" | translate }}
+            </span>
+          </h2>
+        </div>
+        <!-- Snowpack structure panel content -->
+        <div
+          id="region-form-snowpack-structure"
+          class="accordion-collapse -collapse show"
+          data-bs-parent="#region-form-accordion"
+        >
+          <!-- Danger patterns -->
+          <div class="form-group region-form__danger-patterns">
+            <label class="form-label" for="">{{ "bulletins.create.label.dangerPatterns" | translate }}</label>
+            <select
+              [(ngModel)]="bulletin().dangerPattern1"
+              (change)="updateBulletinOnServer()"
               [disabled]="disabled()"
-              (showDialog)="showDialog($event)"
-              (updateBulletinOnServer)="updateBulletinOnServer()"
-              />
-            <!-- End of danger pattern description -->
-          </div>
-          <!-- End of snowpack structure panel content-->
-        </accordion-group>
-        <!-- End Snowpack structure -->
+              class="form-select"
+              [class.changed]="isComparedBulletin() && bulletin().dangerPattern1 !== comparedBulletin()?.dangerPattern1"
+            >
+              <option [ngValue]="undefined"></option>
+              @for (dp of dangerPattern; track dp) {
+                <option [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
+              }
+            </select>
 
+            <select
+              [(ngModel)]="bulletin().dangerPattern2"
+              (change)="updateBulletinOnServer()"
+              [disabled]="disabled()"
+              class="form-select"
+              [class.changed]="isComparedBulletin() && bulletin().dangerPattern2 !== comparedBulletin()?.dangerPattern2"
+            >
+              <option [ngValue]="undefined"></option>
+              @for (dp of dangerPattern; track dp) {
+                <option [value]="dp">{{ "dangerPattern." + dp | translate }}</option>
+              }
+            </select>
+          </div>
+          <!-- End of danger patterns -->
+
+          <!-- Danger pattern description -->
+          <app-bulletin-text
+            [textField]="TextcatTextfield.snowpackStructureComment"
+            [rows]="9"
+            [bulletin]="bulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+            [disabled]="disabled()"
+            (showDialog)="showDialog($event)"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          />
+          <!-- End of danger pattern description -->
+        </div>
+        <!-- End of snowpack structure panel content-->
+      </accordion-group>
+      <!-- End Snowpack structure -->
+
+      <!-- Tendency -->
+      <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'tendency')">
         <!-- Tendency -->
-        <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'tendency')">
-          <!-- Tendency -->
+        <div accordion-heading class="accordion-header">
+          <h2 class="accordion-header__title">
+            @if (!isAccordionTendencyOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionTendencyOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
+
+            <span>
+              {{ "bulletins.create.title.tendency" | translate }}
+            </span>
+          </h2>
+        </div>
+
+        <div class="region-form__tendency">
+          <!-- Tendency picker -->
+          <div class="form-group region-form__tendency">
+            <div
+              class="btn-group"
+              [class.changed]="isComparedBulletin() && bulletin().tendency !== comparedBulletin()?.tendency"
+            >
+              @for (t of tendency; track t) {
+                <button
+                  [disabled]="disabled()"
+                  type="reset"
+                  [class]="isTendency(t) ? 'btn btn-small btn-dark' : 'btn btn-small btn-outline-secondary'"
+                  (click)="setTendency($event, isTendency(t) ? undefined : t)"
+                  data-toggle="tooltip"
+                  title="{{ 'bulletins.create.tooltip.tendency.' + t | translate }}"
+                >
+                  <i
+                    class="ph"
+                    [class.ph-arrow-down-right]="t === 'decreasing'"
+                    [class.ph-equals]="t === 'steady'"
+                    [class.ph-arrow-up-right]="t === 'increasing'"
+                  ></i>
+                  {{ "tendency." + t | translate }}
+                </button>
+              }
+            </div>
+          </div>
+          <!-- End of tendency picker -->
+
+          <!-- Tendency comment -->
+          <app-bulletin-text
+            [textField]="TextcatTextfield.tendencyComment"
+            [rows]="5"
+            [bulletin]="bulletin()"
+            [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
+            [disabled]="disabled()"
+            (showDialog)="showDialog($event)"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          />
+          <!-- End of tendency comment -->
+        </div>
+        <!-- End tendency-->
+      </accordion-group>
+      <!-- End tendency -->
+
+      <!-- Weather synopsis -->
+      @if (this.authenticationService.getActiveRegion().enableWeatherTextField) {
+        <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'synopsis')">
+          <!-- Weather synopsis -->
           <div accordion-heading class="accordion-header">
             <h2 class="accordion-header__title">
               @if (!isAccordionTendencyOpen) {
@@ -487,146 +531,79 @@
               @if (isAccordionTendencyOpen) {
                 <i class="accordion__arrow ph ph-caret-down"></i>
               }
-
               <span>
-                {{ "bulletins.create.title.tendency" | translate }}
+                {{ "bulletins.create.title.synopsis" | translate }}
               </span>
             </h2>
           </div>
-
-          <div class="region-form__tendency">
-            <!-- Tendency picker -->
-            <div class="form-group region-form__tendency">
-              <div
-                class="btn-group"
-                [class.changed]="isComparedBulletin() && bulletin().tendency !== comparedBulletin()?.tendency"
-                >
-                @for (t of tendency; track t) {
-                  <button
-                    [disabled]="disabled()"
-                    type="reset"
-                    [class]="isTendency(t) ? 'btn btn-small btn-dark' : 'btn btn-small btn-outline-secondary'"
-                    (click)="setTendency($event, isTendency(t) ? undefined : t)"
-                    data-toggle="tooltip"
-                    title="{{ 'bulletins.create.tooltip.tendency.' + t | translate }}"
-                    >
-                    <i
-                      class="ph"
-                      [class.ph-arrow-down-right]="t === 'decreasing'"
-                      [class.ph-equals]="t === 'steady'"
-                      [class.ph-arrow-up-right]="t === 'increasing'"
-                    ></i>
-                    {{ "tendency." + t | translate }}
-                  </button>
-                }
-              </div>
-            </div>
-            <!-- End of tendency picker -->
-
-            <!-- Tendency comment -->
+          <div class="region-form__synopsis">
+            <!-- Weather synopsis comment -->
             <app-bulletin-text
-              [textField]="TextcatTextfield.tendencyComment"
+              [textField]="TextcatTextfield.synopsisComment"
               [rows]="5"
               [bulletin]="bulletin()"
               [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
               [disabled]="disabled()"
               (showDialog)="showDialog($event)"
               (updateBulletinOnServer)="updateBulletinOnServer()"
-              />
+            />
             <!-- End of tendency comment -->
           </div>
           <!-- End tendency-->
         </accordion-group>
-        <!-- End tendency -->
+      }
+      <!-- End tendency -->
+    </accordion>
+  </main>
+</div>
 
-        <!-- Weather synopsis -->
-        @if (this.authenticationService.getActiveRegion().enableWeatherTextField) {
-          <accordion-group
-            [isOpen]="isAccordionTendencyOpen"
-            (isOpenChange)="accordionChanged($event, 'synopsis')"
-            >
-            <!-- Weather synopsis -->
-            <div accordion-heading class="accordion-header">
-              <h2 class="accordion-header__title">
-                @if (!isAccordionTendencyOpen) {
-                  <i class="accordion__arrow ph ph-caret-right"></i>
-                }
-                @if (isAccordionTendencyOpen) {
-                  <i class="accordion__arrow ph ph-caret-down"></i>
-                }
-                <span>
-                  {{ "bulletins.create.title.synopsis" | translate }}
-                </span>
-              </h2>
-            </div>
-            <div class="region-form__synopsis">
-              <!-- Weather synopsis comment -->
-              <app-bulletin-text
-                [textField]="TextcatTextfield.synopsisComment"
-                [rows]="5"
-                [bulletin]="bulletin()"
-                [comparedBulletin]="isComparedBulletin() ? comparedBulletin() : undefined"
-                [disabled]="disabled()"
-                (showDialog)="showDialog($event)"
-                (updateBulletinOnServer)="updateBulletinOnServer()"
-                />
-              <!-- End of tendency comment -->
-            </div>
-            <!-- End tendency-->
-          </accordion-group>
-        }
-        <!-- End tendency -->
-      </accordion>
-    </main>
+<ng-template #catalogOfPhrasesTemplate>
+  <button type="reset" class="btn btn-bare pull-end" (click)="hideDialog()">&times;</button>
+  <iframe
+    (load)="initCatalogOfPhrases($event)"
+    (message)="getText($event)"
+    [src]="pmUrl"
+    width="100%"
+    height="100%"
+  ></iframe>
+</ng-template>
+
+<ng-template #removeDaytimeDependencyTemplate>
+  <div class="modal-body text-center">
+    <p>{{ "bulletins.create.removeDaytimeDependencyDialog.message" | translate }}</p>
   </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="removeDaytimeDependencyModalConfirm($event, true)">
+      {{ "daytime.earlier" | translate }}
+    </button>
 
-  <ng-template #catalogOfPhrasesTemplate>
-    <button type="reset" class="btn btn-bare pull-end" (click)="hideDialog()">&times;</button>
-    <iframe
-      (load)="initCatalogOfPhrases($event)"
-      (message)="getText($event)"
-      [src]="pmUrl"
-      width="100%"
-      height="100%"
-    ></iframe>
-  </ng-template>
+    <button type="button" class="btn btn-primary" (click)="removeDaytimeDependencyModalConfirm($event, false)">
+      <span>{{ "daytime.later" | translate }}</span>
+    </button>
 
-  <ng-template #removeDaytimeDependencyTemplate>
-    <div class="modal-body text-center">
-      <p>{{ "bulletins.create.removeDaytimeDependencyDialog.message" | translate }}</p>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="removeDaytimeDependencyModalConfirm($event, true)">
-        {{ "daytime.earlier" | translate }}
-      </button>
+    <button type="reset" class="btn btn-bare" (click)="removeDaytimeDependencyModalDecline()">
+      <span>{{ "bulletins.create.removeDaytimeDependencyDialog.cancel" | translate }}</span>
+    </button>
+  </div>
+</ng-template>
 
-      <button type="button" class="btn btn-primary" (click)="removeDaytimeDependencyModalConfirm($event, false)">
-        <span>{{ "daytime.later" | translate }}</span>
-      </button>
-
-      <button type="reset" class="btn btn-bare" (click)="removeDaytimeDependencyModalDecline()">
-        <span>{{ "bulletins.create.removeDaytimeDependencyDialog.cancel" | translate }}</span>
-      </button>
-    </div>
-  </ng-template>
-
-  <ng-template #strategicMindsetTemplate>
-    <div class="modal-header">
-      <h3 class="modal-title pull-left">{{ "bulletins.create.strategicMindsetDialog.title" | translate }}</h3>
-      <button
-        type="button"
-        class="btn-close close pull-right"
-        (click)="closeStrategicMindsetInfoModal()"
-        aria-label="Close"
-        >
-        <span aria-hidden="true" class="visually-hidden">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body region-form__mindset-modal">
-      <p>{{ "bulletins.create.strategicMindsetDialog.introduction" | translate }}</p>
-      <div class="overflow-x-scroll">
-        <table class="strategic-mindset__table">
-          <colgroup>
+<ng-template #strategicMindsetTemplate>
+  <div class="modal-header">
+    <h3 class="modal-title pull-left">{{ "bulletins.create.strategicMindsetDialog.title" | translate }}</h3>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      (click)="closeStrategicMindsetInfoModal()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body region-form__mindset-modal">
+    <p>{{ "bulletins.create.strategicMindsetDialog.introduction" | translate }}</p>
+    <div class="overflow-x-scroll">
+      <table class="strategic-mindset__table">
+        <colgroup>
           <col span="1" />
           <col span="1" />
           <col span="1" />
@@ -650,22 +627,22 @@
             @for (mindset of strategicMindset; track mindset) {
               <td>
                 <b>{{ "bulletins.create.strategicMindsetDialog.description.title" | translate }}</b
-                  ><br />
-                  <div
-                    [innerHtml]="'bulletins.create.strategicMindsetDialog.description.text.' + mindset | translate"
-                  ></div>
-                  <br />
-                  <b>{{ "bulletins.create.strategicMindsetDialog.examples.title" | translate }}</b
-                    ><br />
-                    {{ "bulletins.create.strategicMindsetDialog.examples.text." + mindset | translate }}<br /><br />
-                    <b>{{ "bulletins.create.strategicMindsetDialog.communication.title" | translate }}</b
-                      ><br />
-                      {{ "bulletins.create.strategicMindsetDialog.communication.text." + mindset | translate }}
-                    </td>
-                  }
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </ng-template>
+                ><br />
+                <div
+                  [innerHtml]="'bulletins.create.strategicMindsetDialog.description.text.' + mindset | translate"
+                ></div>
+                <br />
+                <b>{{ "bulletins.create.strategicMindsetDialog.examples.title" | translate }}</b
+                ><br />
+                {{ "bulletins.create.strategicMindsetDialog.examples.text." + mindset | translate }}<br /><br />
+                <b>{{ "bulletins.create.strategicMindsetDialog.communication.title" | translate }}</b
+                ><br />
+                {{ "bulletins.create.strategicMindsetDialog.communication.text." + mindset | translate }}
+              </td>
+            }
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

@@ -133,7 +133,10 @@
 
   <main class="region-form__content">
     <accordion class="accordion">
-      <div class="form-group row" style="padding-top: 1.5rem; padding-bottom: 1.5rem; padding-left: 2rem; padding-right: 2rem">
+      <div
+        class="form-group row"
+        style="padding-top: 1.5rem; padding-bottom: 1.5rem; padding-left: 2rem; padding-right: 2rem"
+      >
         <label
           class="form-label"
           [class.changed]="isComparedVariant() && variant().avalancheType !== comparedVariant()?.avalancheType"
@@ -153,7 +156,10 @@
         <div class="col-md-5">
           <label
             class="form-label"
-            [class.changed]="isComparedVariant() && !haveSameElements(variant().aspectsOfExistence, comparedVariant()?.aspectsOfExistence)"
+            [class.changed]="
+              isComparedVariant() &&
+              !haveSameElements(variant().aspectsOfExistence, comparedVariant()?.aspectsOfExistence)
+            "
             >{{ "dangerSources.create.label.aspects" | translate }}</label
           >
           <div>

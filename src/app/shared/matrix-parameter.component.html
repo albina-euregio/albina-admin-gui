@@ -7,7 +7,7 @@
   [isComparedBulletin]="isCompared()"
   (sliderValueChange)="getSnowpackStabilityOptions(avalancheType()).onValueChange($event)"
   [sliderOptions]="getSnowpackStabilityOptions(avalancheType())"
-  />
+/>
 
 <!-- Frequency slider -->
 <app-slider
@@ -18,7 +18,7 @@
   [isComparedBulletin]="isCompared()"
   (sliderValueChange)="getFrequencyOptions(avalancheType()).onValueChange($event)"
   [sliderOptions]="getFrequencyOptions(avalancheType())"
-  />
+/>
 
 <!-- Avalanche size slider -->
 <app-slider
@@ -29,7 +29,7 @@
   [isComparedBulletin]="isCompared()"
   (sliderValueChange)="avalancheSizeOptions.onValueChange($event)"
   [sliderOptions]="avalancheSizeOptions"
-  />
+/>
 
 <div class="form-group">
   <label
@@ -42,139 +42,35 @@
     "
     for="textarea-input"
     >{{ "matrix.label.dangerRating" | translate }}</label
-    >
+  >
 
-    <div class="avalanche-problem-detail__override">
-      <!-- danger rating -->
-      @if (!dangerRatingEnabled && isDangerRating(dangerRating.missing)) {
-        <app-danger-rating
-          [value]="dangerRating.missing"
-          />
-      }
-      @for (
-        rating of [
+  <div class="avalanche-problem-detail__override">
+    <!-- danger rating -->
+    @if (!dangerRatingEnabled && isDangerRating(dangerRating.missing)) {
+      <app-danger-rating [value]="dangerRating.missing" />
+    }
+    @for (
+      rating of [
         dangerRating.low,
         dangerRating.moderate,
         dangerRating.considerable,
         dangerRating.high,
         dangerRating.very_high,
-        ]
-        ; track
-        rating) {
-        <app-danger-rating
-          [value]="rating"
-          [style.display]="isDangerRating(rating) || dangerRatingEnabled ? '' : 'none'"
-          [style.filter]="!isDangerRating(rating) ? 'grayscale()' : undefined"
-          (click)="overrideDangerRating($event, rating)"
-          />
-      }
-    </div>
+      ];
+      track rating
+    ) {
+      <app-danger-rating
+        [value]="rating"
+        [style.display]="isDangerRating(rating) || dangerRatingEnabled ? '' : 'none'"
+        [style.filter]="!isDangerRating(rating) ? 'grayscale()' : undefined"
+        (click)="overrideDangerRating($event, rating)"
+      />
+    }
+  </div>
 
-    <div class="btn-group">
-      @if (isDangerRatingModificator(modificatorEnum.minus)) {
-        <button
-      [disabled]="
-        disabled() ||
-        !matrixInformation() ||
-        !matrixInformation().snowpackStability ||
-        !matrixInformation().frequency ||
-        !matrixInformation().avalancheSize
-      "
-          type="reset"
-          class="btn btn-sm btn-dark btn-icon"
-          (click)="setDangerRatingModificator($event, undefined)"
-          >
-          <i class="ph ph-minus"></i>
-        </button>
-      }
-      @if (!isDangerRatingModificator(modificatorEnum.minus)) {
-        <button
-      [disabled]="
-        disabled() ||
-        !matrixInformation() ||
-        !matrixInformation().snowpackStability ||
-        !matrixInformation().frequency ||
-        !matrixInformation().avalancheSize
-      "
-          type="reset"
-          class="btn btn-sm btn-outline-secondary btn-icon"
-          (click)="setDangerRatingModificator($event, modificatorEnum.minus)"
-          >
-          <i class="ph ph-minus"></i>
-        </button>
-      }
-
-      @if (isDangerRatingModificator(modificatorEnum.equal)) {
-        <button
-      [disabled]="
-        disabled() ||
-        !matrixInformation() ||
-        !matrixInformation().snowpackStability ||
-        !matrixInformation().frequency ||
-        !matrixInformation().avalancheSize
-      "
-          type="reset"
-          class="btn btn-sm btn-dark btn-icon"
-          (click)="setDangerRatingModificator($event, undefined)"
-          >
-          <i class="ph ph-equals"></i>
-        </button>
-      }
-      @if (!isDangerRatingModificator(modificatorEnum.equal)) {
-        <button
-      [disabled]="
-        disabled() ||
-        !matrixInformation() ||
-        !matrixInformation().snowpackStability ||
-        !matrixInformation().frequency ||
-        !matrixInformation().avalancheSize
-      "
-          type="reset"
-          class="btn btn-sm btn-outline-secondary btn-icon"
-          (click)="setDangerRatingModificator($event, modificatorEnum.equal)"
-          >
-          <i class="ph ph-equals"></i>
-        </button>
-      }
-
-      @if (isDangerRatingModificator(modificatorEnum.plus)) {
-        <button
-      [disabled]="
-        disabled() ||
-        !matrixInformation() ||
-        !matrixInformation().snowpackStability ||
-        !matrixInformation().frequency ||
-        !matrixInformation().avalancheSize
-      "
-          type="reset"
-          class="btn btn-sm btn-dark btn-icon"
-          (click)="setDangerRatingModificator($event, undefined)"
-          >
-          <i class="ph ph-plus"></i>
-        </button>
-      }
-      @if (!isDangerRatingModificator(modificatorEnum.plus)) {
-        <button
-      [disabled]="
-        disabled() ||
-        !matrixInformation() ||
-        !matrixInformation().snowpackStability ||
-        !matrixInformation().frequency ||
-        !matrixInformation().avalancheSize
-      "
-          type="reset"
-          class="btn btn-sm btn-outline-secondary btn-icon"
-          (click)="setDangerRatingModificator($event, modificatorEnum.plus)"
-          >
-          <i class="ph ph-plus"></i>
-        </button>
-      }
-      @if (!disabled()) {
-        <div class="form-check ms-3">
-          <input
-            [id]="forLabelId('overrideCheckbox')"
-            type="checkbox"
-            class="form-check-input"
+  <div class="btn-group">
+    @if (isDangerRatingModificator(modificatorEnum.minus)) {
+      <button
         [disabled]="
           disabled() ||
           !matrixInformation() ||
@@ -182,15 +78,117 @@
           !matrixInformation().frequency ||
           !matrixInformation().avalancheSize
         "
-            [ngModel]="dangerRatingEnabled"
-            (click)="setDangerRatingEnabled()"
-            />
-          @if (!disabled()) {
-            <label class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{
-              "matrix.label.override" | translate
-            }}</label>
-          }
-        </div>
-      }
-    </div>
+        type="reset"
+        class="btn btn-sm btn-dark btn-icon"
+        (click)="setDangerRatingModificator($event, undefined)"
+      >
+        <i class="ph ph-minus"></i>
+      </button>
+    }
+    @if (!isDangerRatingModificator(modificatorEnum.minus)) {
+      <button
+        [disabled]="
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
+        "
+        type="reset"
+        class="btn btn-sm btn-outline-secondary btn-icon"
+        (click)="setDangerRatingModificator($event, modificatorEnum.minus)"
+      >
+        <i class="ph ph-minus"></i>
+      </button>
+    }
+
+    @if (isDangerRatingModificator(modificatorEnum.equal)) {
+      <button
+        [disabled]="
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
+        "
+        type="reset"
+        class="btn btn-sm btn-dark btn-icon"
+        (click)="setDangerRatingModificator($event, undefined)"
+      >
+        <i class="ph ph-equals"></i>
+      </button>
+    }
+    @if (!isDangerRatingModificator(modificatorEnum.equal)) {
+      <button
+        [disabled]="
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
+        "
+        type="reset"
+        class="btn btn-sm btn-outline-secondary btn-icon"
+        (click)="setDangerRatingModificator($event, modificatorEnum.equal)"
+      >
+        <i class="ph ph-equals"></i>
+      </button>
+    }
+
+    @if (isDangerRatingModificator(modificatorEnum.plus)) {
+      <button
+        [disabled]="
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
+        "
+        type="reset"
+        class="btn btn-sm btn-dark btn-icon"
+        (click)="setDangerRatingModificator($event, undefined)"
+      >
+        <i class="ph ph-plus"></i>
+      </button>
+    }
+    @if (!isDangerRatingModificator(modificatorEnum.plus)) {
+      <button
+        [disabled]="
+          disabled() ||
+          !matrixInformation() ||
+          !matrixInformation().snowpackStability ||
+          !matrixInformation().frequency ||
+          !matrixInformation().avalancheSize
+        "
+        type="reset"
+        class="btn btn-sm btn-outline-secondary btn-icon"
+        (click)="setDangerRatingModificator($event, modificatorEnum.plus)"
+      >
+        <i class="ph ph-plus"></i>
+      </button>
+    }
+    @if (!disabled()) {
+      <div class="form-check ms-3">
+        <input
+          [id]="forLabelId('overrideCheckbox')"
+          type="checkbox"
+          class="form-check-input"
+          [disabled]="
+            disabled() ||
+            !matrixInformation() ||
+            !matrixInformation().snowpackStability ||
+            !matrixInformation().frequency ||
+            !matrixInformation().avalancheSize
+          "
+          [ngModel]="dangerRatingEnabled"
+          (click)="setDangerRatingEnabled()"
+        />
+        @if (!disabled()) {
+          <label class="form-label" [attr.for]="forLabelId('overrideCheckbox')">{{
+            "matrix.label.override" | translate
+          }}</label>
+        }
+      </div>
+    }
   </div>
+</div>

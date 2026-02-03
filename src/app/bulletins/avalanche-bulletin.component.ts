@@ -37,8 +37,8 @@ import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
     BulletinTextComponent,
     DatePipe,
     TranslateModule,
-    NgxMousetrapDirective
-],
+    NgxMousetrapDirective,
+  ],
 })
 export class AvalancheBulletinComponent implements OnInit {
   bulletinsService = inject(BulletinsService);

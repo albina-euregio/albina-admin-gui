@@ -1,6 +1,5 @@
 import * as Enums from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
-
 import { Component, input, inject } from "@angular/core";
 
 @Component({

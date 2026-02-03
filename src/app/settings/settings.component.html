@@ -23,7 +23,7 @@
             <div class="col-sm-10">
               <img
                 src="{{ authenticationService.getUserImageSanitized(authenticationService.getCurrentAuthor().image) }}"
-                />
+              />
             </div>
           </div>
           <div class="form-group row">
@@ -39,7 +39,7 @@
                 id="inputName"
                 name="name"
                 [ngModel]="authenticationService.getUsername()"
-                />
+              />
             </div>
           </div>
           <div class="form-group row">
@@ -56,7 +56,7 @@
                 id="inputEmail"
                 name="email"
                 [ngModel]="authenticationService.getCurrentAuthor().email"
-                />
+              />
             </div>
           </div>
           <div class="form-group row">
@@ -71,7 +71,7 @@
                 disabled
                 name="organization"
                 [ngModel]="authenticationService.getCurrentAuthor().organization"
-                />
+              />
             </div>
           </div>
           <div class="form-group row">
@@ -86,14 +86,14 @@
                 name="trainingTimestamp"
                 step="3600"
                 [(ngModel)]="localStorageService.trainingTimestamp"
-                />
+              />
             </div>
             <div class="col-sm-1">
               <button
                 type="button"
                 class="btn btn-sm btn-secondary"
                 (click)="localStorageService.trainingTimestamp = undefined"
-                >
+              >
                 ×
               </button>
             </div>
@@ -108,7 +108,7 @@
               (click)="showUpdateUserDialog()"
               data-toggle="tooltip"
               title="{{ 'admin.users.tooltip.edit' | translate }}"
-              >
+            >
               {{ "admin.createUser.button.update" | translate }}
             </button>
             <button
@@ -117,7 +117,7 @@
               (click)="showChangePasswordDialog()"
               data-toggle="tooltip"
               title="{{ 'settings.changePassword.title' | translate }}"
-              >
+            >
               {{ "settings.changePassword.title" | translate }}
             </button>
           </div>

@@ -8,10 +8,8 @@
       [disabled]="disabled()"
       (change)="setUseElevationHigh($event)"
       [(ngModel)]="useElevationHigh"
-      />
-    <label class="form-label" for="elevationHighCheckbox">{{
-      "elevation.high" | translate
-    }}</label>
+    />
+    <label class="form-label" for="elevationHighCheckbox">{{ "elevation.high" | translate }}</label>
   </div>
   <div class="avalanche-problem-detail__elevation-inputs">
     <div class="input-group">
@@ -27,7 +25,7 @@
         [disabled]="disabled() || treelineHigh() || !useElevationHigh"
         [(ngModel)]="elevationHigh"
         (change)="updateElevationHigh()"
-        />
+      />
       <span class="input-group-text">m</span>
     </div>
     <button
@@ -38,7 +36,7 @@
       (click)="treelineHighClicked($event)"
       data-toggle="tooltip"
       title="{{ 'elevation.treeline' | translate }}"
-      >
+    >
       <i class="ph ph-tree-evergreen"></i>
     </button>
   </div>
@@ -54,10 +52,8 @@
       [disabled]="disabled()"
       (change)="setUseElevationLow($event)"
       [(ngModel)]="useElevationLow"
-      />
-    <label class="form-label" for="elevationLowCheckbox">{{
-      "elevation.low" | translate
-    }}</label>
+    />
+    <label class="form-label" for="elevationLowCheckbox">{{ "elevation.low" | translate }}</label>
   </div>
   <div class="avalanche-problem-detail__elevation-inputs">
     <div class="input-group">
@@ -73,7 +69,7 @@
         [disabled]="disabled() || treelineLow() || !useElevationLow"
         [(ngModel)]="elevationLow"
         (change)="updateElevationLow()"
-        />
+      />
       <span class="input-group-text">m</span>
     </div>
     <button
@@ -84,7 +80,7 @@
       (click)="treelineLowClicked($event)"
       data-toggle="tooltip"
       title="{{ 'elevation.treeline' | translate }}"
-      >
+    >
       <i class="ph ph-tree-evergreen"></i>
     </button>
   </div>

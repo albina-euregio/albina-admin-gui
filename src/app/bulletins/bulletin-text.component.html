@@ -15,11 +15,11 @@
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.textcat.edit' | translate }}"
               (click)="openTextcat()"
-              >
+            >
               <i class="ph ph-pencil-line"></i>
             </button>
           }
-          @if (textField() === 'avActivityComment' && !enableEditableFields) {
+          @if (textField() === "avActivityComment" && !enableEditableFields) {
             <button
               class="btn btn-sm btn-icon btn-bare"
               [disabled]="disabled()"
@@ -27,11 +27,11 @@
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
               (click)="openLoadExampleTextModal(loadAvActivityCommentExampleTextTemplate)"
-              >
+            >
               <i class="ph ph-article"></i>
             </button>
           }
-          @if (textField() === 'snowpackStructureComment' && !enableEditableFields) {
+          @if (textField() === "snowpackStructureComment" && !enableEditableFields) {
             <button
               class="btn btn-sm btn-icon btn-bare"
               [disabled]="disabled()"
@@ -39,7 +39,7 @@
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.textcat.example' | translate }}"
               (click)="openLoadExampleTextModal(loadSnowpackStructureCommentExampleTextTemplate)"
-              >
+            >
               <i class="ph ph-article"></i>
             </button>
           }
@@ -50,7 +50,7 @@
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.textcat.copy' | translate }}"
               (click)="copyTextcat()"
-              >
+            >
               <i class="ph ph-copy"></i>
             </button>
           }
@@ -62,7 +62,7 @@
               data-toggle="tooltip"
               title="{{ 'bulletins.create.tooltip.textcat.paste' | translate }}"
               (click)="pasteTextcat()"
-              >
+            >
               <i class="ph ph-clipboard-text"></i>
             </button>
           }
@@ -73,7 +73,7 @@
             data-toggle="tooltip"
             title="{{ 'bulletins.create.tooltip.textcat.delete' | translate }}"
             (click)="deleteTextcat()"
-            >
+          >
             <i class="ph ph-trash"></i>
           </button>
         </div>
@@ -92,9 +92,9 @@
             [rows]="rows()"
             [disabled]="disabled() || !enableEditableFields"
             [ngModel]="bulletin()[bulletinTextKey][translateService.getCurrentLang()] | html"
-          (ngModelChange)="
-            enableEditableFields && (bulletin()[bulletinTextKey][translateService.getCurrentLang()] = $event)
-          "
+            (ngModelChange)="
+              enableEditableFields && (bulletin()[bulletinTextKey][translateService.getCurrentLang()] = $event)
+            "
             (focusout)="enableEditableFields && updateBulletinOnServer.emit()"
           ></textarea>
         }
@@ -120,7 +120,7 @@
       class="btn btn-sm btn-bare region-form__translation-toggle"
       type="button"
       (click)="showTranslations = !showTranslations"
-      >
+    >
       <i class="ph ph-caret-down font-s text-secondary"></i>
       <span class="font-s text-secondary">{{ "bulletins.create.title.hideTranslations" | translate }}</span>
     </button>
@@ -130,7 +130,7 @@
       class="btn btn-sm btn-bare region-form__translation-toggle"
       type="button"
       (click)="showTranslations = !showTranslations"
-      >
+    >
       <i class="ph ph-caret-right font-s text-secondary"></i>
       <span class="font-s text-secondary">{{ "bulletins.create.title.showTranslations" | translate }}</span>
     </button>

@@ -3,7 +3,6 @@ import * as Enums from "../enums/enums";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { DangerRatingComponent } from "./danger-rating.component";
 import { SliderComponent, SliderOptions } from "./slider.component";
-
 import { Component, inject, input, OnInit, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
