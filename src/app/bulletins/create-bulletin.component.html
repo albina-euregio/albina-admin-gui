@@ -622,7 +622,7 @@
       <nav class="create-bulletin__region-list">
         <!-- Show the list of bulletins if there are any -->
         @if (getOwnBulletins().length) {
-          @for (bulletin of getOwnBulletins(); track bulletin; let i = $index) {
+          @for (bulletin of getOwnBulletins(); track bulletin.id; let i = $index) {
             <ng-container
               *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: i + 1 }"
             ></ng-container>
@@ -662,7 +662,7 @@
       <!-- List of foreign regions -->
       @if (showForeignRegions) {
         <nav class="create-bulletin__region-list">
-          @for (bulletin of getForeignBulletins(); track bulletin; let i = $index) {
+          @for (bulletin of getForeignBulletins(); track bulletin.id; let i = $index) {
             <ng-container
               *ngTemplateOutlet="
                 bulletinTemplate;
@@ -706,7 +706,7 @@
           <!-- List of external regions -->
           @if (showExternalRegions(externalRegion.key)) {
             <nav class="create-bulletin__region-list">
-              @for (bulletin of externalRegion.value.bulletins; track bulletin) {
+              @for (bulletin of externalRegion.value.bulletins; track bulletin.id) {
                 <ng-container
                   *ngTemplateOutlet="bulletinTemplate; context: { bulletin: bulletin, key: undefined }"
                 ></ng-container>
