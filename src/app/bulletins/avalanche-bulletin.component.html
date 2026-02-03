@@ -29,7 +29,7 @@
     </div>
   </header>
 
-  @if (authenticationService.getActiveRegion().enableStrategicMindset) {
+  @if (authenticationService.getActiveRegion()?.enableStrategicMindset) {
     <div class="form-group region-form__mindset">
       <label
         class="region-form__mindset-text"
@@ -520,7 +520,7 @@
       <!-- End tendency -->
 
       <!-- Weather synopsis -->
-      @if (this.authenticationService.getActiveRegion().enableWeatherTextField) {
+      @if (this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
         <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'synopsis')">
           <!-- Weather synopsis -->
           <div accordion-heading class="accordion-header">

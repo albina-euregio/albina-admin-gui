@@ -211,7 +211,7 @@
       [avalancheType]="avalancheProblemModel().avalancheType"
     ></app-matrix-parameter>
   </div>
-  @if (authenticationService.getActiveRegion().showMatrix) {
+  @if (authenticationService.getActiveRegion()?.showMatrix) {
     <div class="form-group">
       <app-matrix
         [bulletinDaytimeDescription]="bulletinDaytimeDescription()"

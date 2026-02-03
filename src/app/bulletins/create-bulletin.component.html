@@ -160,7 +160,7 @@
               >
             }
           </li>
-          @for (region of authenticationService.getActiveRegion().neighborRegions; track region) {
+          @for (region of authenticationService.getActiveRegion()?.neighborRegions; track region) {
             <li>
               <h5 class="bulletin-status__region-name font-xs text-secondary">
                 {{ regionsService.getRegionName(region) }}
@@ -358,7 +358,7 @@
       <!-- Own regions -->
       <header class="create-bulletin__region-divider">
         <h5 class="font-s-bold">
-          {{ regionsService.getRegionName(authenticationService.getActiveRegion().id) }} ({{
+          {{ regionsService.getRegionName(authenticationService.getActiveRegion()?.id) }} ({{
             getOwnBulletins().length
           }})
         </h5>
@@ -1165,7 +1165,7 @@
             </td>
             <td
               class="bulletins-table__region-status"
-              [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion().id)"
+              [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion()?.id)"
             >
               @if (
                 getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined

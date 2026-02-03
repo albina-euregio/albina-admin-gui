@@ -31,15 +31,15 @@
     <thead class="bulletins-table__header">
       <tr>
         <th></th>
-        @if (authenticationService.getActiveRegion().enableStressLevel && !localStorageService.isTrainingEnabled) {
+        @if (authenticationService.getActiveRegion()?.enableStressLevel && !localStorageService.isTrainingEnabled) {
           <th role="button" (click)="showTeamStressLevels()">
             <i class="ph ph-brain"></i> {{ "login.stressLevel" | translate }}
           </th>
         }
         <th role="button" (click)="bulletinsService.loadStatus()">
-          {{ regionsService.getRegionName(authenticationService.getActiveRegion().id) }}
+          {{ regionsService.getRegionName(authenticationService.getActiveRegion()?.id) }}
         </th>
-        @for (region of authenticationService.getActiveRegion().neighborRegions; track region) {
+        @for (region of authenticationService.getActiveRegion()?.neighborRegions; track region) {
           <th role="button" (click)="authenticationService.setActiveRegion(region); bulletinsService.loadStatus()">
             {{ regionsService.getRegionName(region) }}
           </th>
@@ -85,7 +85,7 @@
               </div>
             </div>
           </td>
-          @if (authenticationService.getActiveRegion().enableStressLevel && !localStorageService.isTrainingEnabled) {
+          @if (authenticationService.getActiveRegion()?.enableStressLevel && !localStorageService.isTrainingEnabled) {
             <td [attr.data-label]="'login.stressLevel' | translate" class="align-middle">
               @for (date of [constantsService.getISODateString(date[1])]; track date) {
                 <div class="d-flex">
@@ -105,7 +105,7 @@
           }
           <td
             class="bulletins-table__region-status"
-            [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion().id)"
+            [attr.data-label]="regionsService.getRegionName(authenticationService.getActiveRegion()?.id)"
           >
             @if (getActiveRegionStatus(date) === bulletinStatus.missing || getActiveRegionStatus(date) === undefined) {
               <span class="badge bg-danger">
@@ -148,7 +148,7 @@
               </span>
             }
           </td>
-          @for (region of authenticationService.getActiveRegion().neighborRegions; track region) {
+          @for (region of authenticationService.getActiveRegion()?.neighborRegions; track region) {
             <td class="bulletins-table__region-status" [attr.data-label]="regionsService.getRegionName(region)">
               @if (
                 getRegionStatus(region, date) === bulletinStatus.missing || getRegionStatus(region, date) === undefined

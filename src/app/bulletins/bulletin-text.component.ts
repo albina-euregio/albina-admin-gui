@@ -43,7 +43,7 @@ export class BulletinTextComponent {
   }
 
   get enableEditableFields() {
-    return (this.authenticationService.getActiveRegion().enabledEditableFields ?? []).includes(this.textField());
+    return (this.authenticationService.getActiveRegion()?.enabledEditableFields ?? []).includes(this.textField());
   }
 
   openTextcat() {

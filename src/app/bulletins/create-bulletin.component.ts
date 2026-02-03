@@ -983,7 +983,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return (
       !this.copying &&
       this.authenticationService.getActiveRegionId() !== undefined &&
-      this.authenticationService.getActiveRegion().enableMediaFile &&
+      this.authenticationService.getActiveRegion()?.enableMediaFile &&
       (this.authenticationService.isCurrentUserInRole(this.constantsService.roleAdmin) ||
         this.authenticationService.isCurrentUserInRole(this.constantsService.roleForecaster))
     );
@@ -1500,7 +1500,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
-      if (this.authenticationService.getActiveRegion().enableGeneralHeadline && this.internBulletinsList.length) {
+      if (this.authenticationService.getActiveRegion()?.enableGeneralHeadline && this.internBulletinsList.length) {
         bulletin.generalHeadlineCommentTextcat = this.internBulletinsList[0].generalHeadlineCommentTextcat;
         bulletin.generalHeadlineComment$ = this.internBulletinsList[0].generalHeadlineComment$;
         bulletin.generalHeadlineCommentNotes = this.internBulletinsList[0].generalHeadlineCommentNotes;
@@ -1523,17 +1523,17 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     newBulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
     // if bulletin without textcats is copied to region with textcat, clear texts
-    const enabledEditableFields = this.authenticationService.getActiveRegion().enabledEditableFields ?? [];
+    const enabledEditableFields = this.authenticationService.getActiveRegion()?.enabledEditableFields ?? [];
     Object.values(Enums.TextcatTextfield).forEach((textfield) => {
       if (!bulletin[`${textfield}Textcat`] && !enabledEditableFields.includes(textfield)) {
         newBulletin[`${textfield}$`] = emptyLangTexts();
       }
     });
 
-    if (!this.authenticationService.getActiveRegion().enableGeneralHeadline) {
+    if (!this.authenticationService.getActiveRegion()?.enableGeneralHeadline) {
       newBulletin.generalHeadlineComment$ = emptyLangTexts();
     }
-    if (!this.authenticationService.getActiveRegion().enableWeatherTextField) {
+    if (!this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
       newBulletin.synopsisComment$ = emptyLangTexts();
     }
 
