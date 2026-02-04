@@ -34,7 +34,7 @@
   },
   "private": true,
   "dependencies": {
-    "@albina-euregio/linea": "^8.4.2",
+    "@albina-euregio/linea": "^8.7.1",
     "@angular/animations": "^21.1.0",
     "@angular/cdk": "^21.1.0",
     "@angular/common": "^21.1.0",
