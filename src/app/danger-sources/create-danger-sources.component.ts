@@ -19,6 +19,7 @@ import {
   DangerSourceVariantType,
   Daytime,
   Probability,
+  sortDangerSourceVariantsByRelevance,
 } from "./models/danger-source-variant.model";
 import { DangerSourceModel } from "./models/danger-source.model";
 import { DatePipe, NgClass, NgTemplateOutlet } from "@angular/common";
@@ -27,6 +28,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 // services
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
+import { orderBy } from "es-toolkit";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Subscription } from "rxjs";
@@ -587,53 +589,35 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       ? DangerSourceVariantType.analysis
       : DangerSourceVariantType.forecast;
 
-    // Count variants by status for each danger source
-    const getStatusCounts = (dangerSource: DangerSourceModel) => {
-      const counts = {
-        active: 0,
-        dormant: 0,
-        inactive: 0,
-      };
-      for (const variant of this.internVariantsList) {
-        if (variant.dangerSource.id === dangerSource.id && variant.dangerSourceVariantType === variantType) {
-          if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.active) counts.active++;
-          else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.dormant) counts.dormant++;
-          else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.inactive) counts.inactive++;
-        }
-      }
-      return counts;
-    };
-
     // Sort by status (active > dormant > inactive), then by creationDate (desc)
-    this.internDangerSourcesList.sort((a, b): number => {
-      const aCounts = getStatusCounts(a);
-      const bCounts = getStatusCounts(b);
-
-      // Determine primary status for each danger source
-      const getPrimaryStatus = (counts: { active: number; dormant: number; inactive: number }) => {
-        if (counts.active > 0) return 0; // active
-        if (counts.dormant > 0) return 0; // dormant
-        if (counts.inactive > 0) return 2; // inactive
-        return 3; // no variants
-      };
-
-      const aStatus = getPrimaryStatus(aCounts);
-      const bStatus = getPrimaryStatus(bCounts);
-
-      // Compare by primary status
-      if (aStatus !== bStatus) {
-        return aStatus - bStatus;
-      }
-
-      // If status is equal, sort by creationDate (desc)
-      if (a.creationDate < b.creationDate) {
-        return 1;
-      }
-      if (a.creationDate > b.creationDate) {
-        return -1;
-      }
-      return 0;
-    });
+    orderBy(
+      this.internDangerSourcesList,
+      [
+        // Determine primary status for each danger source
+        (dangerSource) => {
+          // Count variants by status for each danger source
+          const counts = {
+            active: 0,
+            dormant: 0,
+            inactive: 0,
+          };
+          for (const variant of this.internVariantsList) {
+            if (variant.dangerSource.id === dangerSource.id && variant.dangerSourceVariantType === variantType) {
+              if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.active) counts.active++;
+              else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.dormant) counts.dormant++;
+              else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.inactive) counts.inactive++;
+            }
+          }
+          if (counts.active > 0) return 0; // active
+          if (counts.dormant > 0) return 0; // dormant
+          if (counts.inactive > 0) return 2; // inactive
+          return 3; // no variants
+        },
+        // If status is equal, sort by creationDate (desc)
+        (dangerSource) => dangerSource.creationDate,
+      ],
+      ["asc", "desc"],
+    );
   }
 
   private addInternalDangerSources(dangerSources: DangerSourceModel[]) {
@@ -674,80 +658,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
    */
   private addInternalVariant(variant: DangerSourceVariantModel) {
     this.internVariantsList.push(variant);
-    this.sortInternVariantsList();
+    sortDangerSourceVariantsByRelevance(this.internVariantsList);
     if (this.activeVariant && this.activeVariant.id === variant.id) {
       this.activeVariant = variant;
     }
     if (variant.hasDaytimeDependency && this.showAfternoonMap === false) {
       this.onShowAfternoonMapChange(true);
     }
-  }
-
-  private sortInternVariantsList() {
-    this.internVariantsList.sort((a, b): number => {
-      // 1. dangerRating (desc)
-      const aDangerRating = Enums.WarnLevel[a.eawsMatrixInformation?.dangerRating] ?? -1;
-      const bDangerRating = Enums.WarnLevel[b.eawsMatrixInformation?.dangerRating] ?? -1;
-      if (aDangerRating !== bDangerRating) {
-        return bDangerRating - aDangerRating;
-      }
-
-      // 2. dangerRatingModificator (desc)
-      const aMod = a.eawsMatrixInformation?.dangerRatingModificator ?? null;
-      const bMod = b.eawsMatrixInformation?.dangerRatingModificator ?? null;
-      if (aMod !== bMod) {
-        // Order: plus (1) > equal (0) > minus (-1) > null/undefined
-        const order = [
-          Enums.DangerRatingModificator.plus,
-          Enums.DangerRatingModificator.equal,
-          Enums.DangerRatingModificator.minus,
-          null,
-          undefined,
-        ];
-        const aIndex = order.indexOf(aMod);
-        const bIndex = order.indexOf(bMod);
-        return aIndex - bIndex;
-      }
-
-      // 3. snowpackStability (desc)
-      const aStability = a.eawsMatrixInformation?.snowpackStability ?? null;
-      const bStability = b.eawsMatrixInformation?.snowpackStability ?? null;
-      if (aStability !== bStability) {
-        // Order: very_poor > poor > fair > good > null/undefined
-        const order = [
-          Enums.SnowpackStability.very_poor,
-          Enums.SnowpackStability.poor,
-          Enums.SnowpackStability.fair,
-          Enums.SnowpackStability.good,
-          null,
-          undefined,
-        ];
-        const aIndex = order.indexOf(aStability);
-        const bIndex = order.indexOf(bStability);
-        return aIndex - bIndex;
-      }
-
-      // 4. avalancheSize (desc)
-      const aAvalancheSize = a.eawsMatrixInformation?.avalancheSize ?? null;
-      const bAvalancheSize = b.eawsMatrixInformation?.avalancheSize ?? null;
-      if (aAvalancheSize !== bAvalancheSize) {
-        // Order: extreme > very_large > large > medium > small > null/undefined
-        const order = [
-          Enums.AvalancheSize.extreme,
-          Enums.AvalancheSize.very_large,
-          Enums.AvalancheSize.large,
-          Enums.AvalancheSize.medium,
-          Enums.AvalancheSize.small,
-          null,
-          undefined,
-        ];
-        const aIndex = order.indexOf(aAvalancheSize);
-        const bIndex = order.indexOf(bAvalancheSize);
-        return aIndex - bIndex;
-      }
-
-      return 0;
-    });
   }
 
   /**
@@ -802,7 +719,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.sortInternVariantsList();
+    sortDangerSourceVariantsByRelevance(this.internVariantsList);
     this.updateInternalVariantsOnMap(type);
 
     if (this.editRegions) {
