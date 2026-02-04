@@ -2,6 +2,31 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.2.0] - 2026-02-02
+
+### 🚀 Features
+
+- Add LINEA export in main menu
+- Add configuration parameter to enable LINEA export per province
+- Disable mapBounds for observations
+
+### 🐛 Bug Fixes
+
+- Fix memory leaks in leaflet maps
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to es-toolkit 1.44.0
+- Upgrade to eaws-regions v8.1.2
+- Update to angular 21.1.0
+- Updated to linea 8.4.2
+
+### 🚜 Refactor
+
+- Introduce elevation component
+- Remove BulletinLockModel (websockets are not used)
+- Remove BulletinUpdateModel (websockets are not used)
+
 ## [8.1.0] - 2026-01-12
 
 ### 🚀 Features
