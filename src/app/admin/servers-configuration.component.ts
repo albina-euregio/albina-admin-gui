@@ -1,4 +1,4 @@
-import { ServerConfiguration } from "../models/server-configuration.model";
+import { LocalServerConfiguration, ServerConfiguration } from "../models/server-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -18,7 +18,7 @@ export class ServersConfigurationComponent implements OnInit {
   private constantsService = inject(ConstantsService);
   configurationService = inject(ConfigurationService);
 
-  public localServerConfiguration: ServerConfiguration;
+  public localServerConfiguration: LocalServerConfiguration;
   public externalServerConfigurations: ServerConfiguration[];
 
   ngOnInit() {

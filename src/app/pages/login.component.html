@@ -56,7 +56,7 @@
                 </a>
                 ∥
                 @if (serverInfo) {
-                  <a href="{{ serverInfo.apiUrl }}" rel="noopener" target="_blank">
+                  <a href="{{ environment.apiBaseUrl }}" rel="noopener" target="_blank">
                     <small>albina-server&#64;{{ serverInfo.version }}</small>
                   </a>
                 }

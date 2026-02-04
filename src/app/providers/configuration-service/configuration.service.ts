@@ -1,9 +1,11 @@
 import { RegionConfiguration } from "../../models/region-configuration.model";
 import {
+  LocalServerConfiguration,
+  LocalServerConfigurationSchema,
   ServerConfiguration,
   ServerConfigurationSchema,
-  ServerConfigurationVersion,
-  ServerConfigurationVersionSchema,
+  ServerVersionInfo,
+  ServerVersionInfoSchema,
 } from "../../models/server-configuration.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
@@ -17,14 +19,14 @@ export class ConfigurationService {
   private constantsService = inject(ConstantsService);
   private authenticationService = inject(AuthenticationService);
 
-  public loadPublicLocalServerConfiguration(): Observable<ServerConfigurationVersion> {
+  public loadPublicLocalServerConfiguration(): Observable<ServerVersionInfo> {
     const url = this.constantsService.getServerUrl("/server/info");
-    return this.http.get(url).pipe(map((json) => ServerConfigurationVersionSchema.parse(json)));
+    return this.http.get(url).pipe(map((json) => ServerVersionInfoSchema.parse(json)));
   }
 
-  public loadLocalServerConfiguration(): Observable<ServerConfiguration> {
+  public loadLocalServerConfiguration(): Observable<LocalServerConfiguration> {
     const url = this.constantsService.getServerUrl("/server");
-    return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.parse(json)));
+    return this.http.get(url).pipe(map((json) => LocalServerConfigurationSchema.parse(json)));
   }
 
   public loadExternalServerConfigurations(): Observable<ServerConfiguration[]> {
