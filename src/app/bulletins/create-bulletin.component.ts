@@ -2476,4 +2476,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   checkBulletinsModalConfirm(): void {
     this.checkBulletinsModalRef.hide();
   }
+
+  asBulletin(bulletin: unknown): BulletinModel {
+    return bulletin as BulletinModel;
+  }
 }

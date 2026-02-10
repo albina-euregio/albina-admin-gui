@@ -818,7 +818,8 @@
 
 <!-- Display this template when there are no bulletins -->
 
-<ng-template #bulletinTemplate let-bulletin="bulletin" let-key="key">
+<ng-template #bulletinTemplate let-bulletin0="bulletin" let-key="key">
+  @let bulletin = asBulletin(bulletin0);
   <div
     (click)="toggleBulletin(bulletin)"
     [ngxMousetrapKey]="key ? `shift+${key}` : ''"
@@ -837,7 +838,13 @@
           <span> + {{ bulletin.getSavedAndPublishedRegions().length - 1 }} </span>
         }
       </h6>
-      <p class="region-thumb__author font-s text-secondary" role="button">{{ bulletin.author.name }}</p>
+      <p
+        class="region-thumb__author font-s text-secondary"
+        role="button"
+        [title]="bulletin.saveDate | date: 'medium' : undefined : translateService.getCurrentLang()"
+      >
+        {{ bulletin.author.name }}
+      </p>
 
       @if (checkBulletin(bulletin)) {
         <div
