@@ -115,7 +115,7 @@ class ObservationData {
       });
     });
     this.applyLocalFilter(observationSearch);
-    this.all.sort((o1, o2) => (+o1.eventDate === +o2.eventDate ? 0 : +o1.eventDate < +o2.eventDate ? 1 : -1));
+    orderBy(this.all, [(o) => +o.eventDate], ["desc"]);
     this.loading = undefined;
   }
 

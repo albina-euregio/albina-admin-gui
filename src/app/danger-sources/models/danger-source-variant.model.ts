@@ -1,8 +1,10 @@
 import { Aspect, AvalancheProblem, AvalancheType, DangerRating, RegionStatus, Tendency } from "../../enums/enums";
+import * as Enums from "../../enums/enums";
 import { MatrixInformationSchema } from "../../models/matrix-information.model";
 import { DangerSourceSchema } from "./danger-source.model";
 import { PolygonObject } from "./polygon-object.model";
 import { ZSchema } from "./zod-util";
+import { orderBy } from "es-toolkit";
 import { z } from "zod/v4";
 
 export enum DangerSourceVariantStatus {
@@ -445,4 +447,48 @@ export class DangerSourceVariantModel extends ZSchema(DangerSourceVariantSchema)
       }
     }
   }
+}
+
+export function sortDangerSourceVariantsByRelevance(dangerSourceVariants: DangerSourceVariantModel[]) {
+  orderBy(
+    dangerSourceVariants,
+    [
+      // 1. dangerRating (desc)
+      (v) => Enums.WarnLevel[v.eawsMatrixInformation?.dangerRating] ?? -1,
+      // 2. dangerRatingModificator (desc)
+      (v) =>
+        // Order: plus (1) > equal (0) > minus (-1) > null/undefined
+        [
+          Enums.DangerRatingModificator.plus,
+          Enums.DangerRatingModificator.equal,
+          Enums.DangerRatingModificator.minus,
+          null,
+          undefined,
+        ].indexOf(v.eawsMatrixInformation?.dangerRatingModificator ?? null),
+      // 3. snowpackStability (desc)
+      (v) =>
+        // Order: very_poor > poor > fair > good > null/undefined
+        [
+          Enums.SnowpackStability.very_poor,
+          Enums.SnowpackStability.poor,
+          Enums.SnowpackStability.fair,
+          Enums.SnowpackStability.good,
+          null,
+          undefined,
+        ].indexOf(v.eawsMatrixInformation?.snowpackStability ?? null),
+      // 4. avalancheSize (desc)
+      (v) =>
+        // Order: extreme > very_large > large > medium > small > null/undefined
+        [
+          Enums.AvalancheSize.extreme,
+          Enums.AvalancheSize.very_large,
+          Enums.AvalancheSize.large,
+          Enums.AvalancheSize.medium,
+          Enums.AvalancheSize.small,
+          null,
+          undefined,
+        ].indexOf(v.eawsMatrixInformation?.avalancheSize ?? null),
+    ],
+    ["desc", "asc", "asc", "asc"],
+  );
 }

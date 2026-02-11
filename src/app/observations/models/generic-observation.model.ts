@@ -1,4 +1,5 @@
 import { Aspect, AvalancheProblem, DangerPattern, SnowpackStability } from "../../enums/enums";
+import { orderBy } from "es-toolkit";
 import { z } from "zod/v4";
 
 export enum ImportantObservation {
@@ -111,7 +112,7 @@ export function toCSV(observations: GenericObservation[]) {
   const csvLineBreak = "\n";
 
   // Sort observations by event date
-  observations.sort((a, b) => (a.eventDate?.getTime() || 0) - (b.eventDate?.getTime() || 0));
+  orderBy(observations, [(o) => +o.eventDate], ["asc"]);
 
   let csvContent = "";
 
