@@ -189,6 +189,7 @@ export enum Wetness {
 
 export const DangerSourceVariantSchema = z.object({
   id: z.string().nullish(),
+  title: z.string().nullish(),
   comment: z.string().nullish(),
   uncertainties: z.string().nullish(),
   textcat: z.string().nullish(),
