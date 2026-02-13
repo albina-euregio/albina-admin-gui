@@ -56,14 +56,14 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(@angular/common@21.1.0(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))
       '@eaws/micro-regions':
-        specifier: ^8.1.2
-        version: 8.1.2
+        specifier: ^8.2.0
+        version: 8.2.0
       '@eaws/micro-regions_names':
-        specifier: ^8.1.2
-        version: 8.1.2
+        specifier: ^8.2.0
+        version: 8.2.0
       '@eaws/pmtiles':
-        specifier: ^8.1.2
-        version: 8.1.2
+        specifier: ^8.2.0
+        version: 8.2.0
       '@mapbox/point-geometry':
         specifier: ^1.1.0
         version: 1.1.0
@@ -595,14 +595,14 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@eaws/micro-regions@8.1.2':
-    resolution: {integrity: sha1-eqFn4kKh2ygw4TWGAnkELL44Lzo=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions/-/@eaws/micro-regions-8.1.2.tgz}
+  '@eaws/micro-regions@8.2.0':
+    resolution: {integrity: sha1-focWPjdHzKowsE7utJwbzI+VRTQ=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions/-/@eaws/micro-regions-8.2.0.tgz}
 
-  '@eaws/micro-regions_names@8.1.2':
-    resolution: {integrity: sha1-wCWdu9RUbj5oWaXDW7TMwXxBcRI=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions_names/-/@eaws/micro-regions_names-8.1.2.tgz}
+  '@eaws/micro-regions_names@8.2.0':
+    resolution: {integrity: sha1-8sfRAtmdJWT052MNMzasReiHmwg=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/micro-regions_names/-/@eaws/micro-regions_names-8.2.0.tgz}
 
-  '@eaws/pmtiles@8.1.2':
-    resolution: {integrity: sha1-6TEFniZFeuyFbSx5iRBa+6Uvn64=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/pmtiles/-/@eaws/pmtiles-8.1.2.tgz}
+  '@eaws/pmtiles@8.2.0':
+    resolution: {integrity: sha1-B7PiOQH7sT5xHbfyJ7w+xU3fcGo=, tarball: https://gitlab.com/api/v4/projects/25330421/packages/npm/@eaws/pmtiles/-/@eaws/pmtiles-8.2.0.tgz}
 
   '@emnapi/core@1.7.1':
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
@@ -3956,11 +3956,11 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@eaws/micro-regions@8.1.2': {}
+  '@eaws/micro-regions@8.2.0': {}
 
-  '@eaws/micro-regions_names@8.1.2': {}
+  '@eaws/micro-regions_names@8.2.0': {}
 
-  '@eaws/pmtiles@8.1.2': {}
+  '@eaws/pmtiles@8.2.0': {}
 
   '@emnapi/core@1.7.1':
     dependencies:
