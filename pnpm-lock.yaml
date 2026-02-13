@@ -20,8 +20,8 @@ importers:
   .:
     dependencies:
       '@albina-euregio/linea':
-        specifier: ^8.7.1
-        version: 8.7.1
+        specifier: ^8.7.4
+        version: 8.7.4
       '@angular/animations':
         specifier: ^21.1.0
         version: 21.1.0(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))
@@ -218,8 +218,8 @@ importers:
 
 packages:
 
-  '@albina-euregio/linea@8.7.1':
-    resolution: {integrity: sha1-6Q2MmjPG5J1uFFirKDc91c9a/NM=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.7.1.tgz}
+  '@albina-euregio/linea@8.7.4':
+    resolution: {integrity: sha1-YjvwxxRhCXQIr0tUmkYARCI4+iY=, tarball: https://gitlab.com/api/v4/projects/70517866/packages/npm/@albina-euregio/linea/-/@albina-euregio/linea-8.7.4.tgz}
 
   '@algolia/abtesting@1.12.2':
     resolution: {integrity: sha512-oWknd6wpfNrmRcH0vzed3UPX0i17o4kYLM5OMITyMVM2xLgaRbIafoxL0e8mcrNNb0iORCJA0evnNDKRYth5WQ==}
@@ -3445,7 +3445,7 @@ packages:
 
 snapshots:
 
-  '@albina-euregio/linea@8.7.1':
+  '@albina-euregio/linea@8.7.4':
     dependencies:
       air-datepicker: 3.6.0
       temporal-polyfill: 0.3.0
