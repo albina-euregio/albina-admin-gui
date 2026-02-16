@@ -320,7 +320,7 @@ function getLwdKipSprengerfolgStability(feature: GeoJSON.Feature<GeoJSON.Point, 
 function getLwdKipLawinenabgangStability(
   feature: GeoJSON.Feature<GeoJSON.LineString, LawinenabgangProperties>,
 ): Stability {
-  return Stability.poor;
+  return Stability.very_poor;
 }
 
 function getLwdKipSperreStability(feature: GeoJSON.Feature<GeoJSON.LineString, SperreProperties>): Stability {
