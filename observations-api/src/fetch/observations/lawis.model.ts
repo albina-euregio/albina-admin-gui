@@ -258,7 +258,7 @@ export function toLawisIncidentDetails(
     ...incident,
     $data: lawisDetails,
     $extraDialogRows: toLawisIncidentTable(lawisDetails),
-    stability: getLawisIncidentStability(lawisDetails),
+    stability: Stability.very_poor,
     avalancheProblems: getLawisIncidentAvalancheProblems(lawisDetails),
     authorName: lawisDetails.reported?.name,
     content: (lawisDetails.comments || "") + imageCountString(lawisDetails.images),
@@ -375,15 +375,6 @@ export function getRBTestStability(step: number, propagation: string): Stability
     return Stability.good;
   }
   return null;
-}
-
-function getLawisIncidentStability(incident: IncidentDetails): Stability {
-  return incident.involved?.dead ||
-    incident.involved?.injured ||
-    incident.involved?.buried_partial ||
-    incident.involved?.buried_total
-    ? Stability.poor
-    : Stability.fair;
 }
 
 function getLawisIncidentAvalancheProblems(incident: IncidentDetails): AvalancheProblem[] {

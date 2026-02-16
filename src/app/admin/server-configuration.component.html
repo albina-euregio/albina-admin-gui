@@ -15,133 +15,22 @@
         <app-zod-input [zodType]="ServerConfigurationSchema.shape.name" [(value)]="config().name" />
       </td>
     </tr>
-    @if (externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.username" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input [zodType]="ServerConfigurationSchema.shape.userName" [(value)]="config().userName" />
-        </td>
-      </tr>
-    }
-    @if (externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.password" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input [zodType]="ServerConfigurationSchema.shape.password" [(value)]="config().password" />
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.publishAt5PM" | translate }}</label>
-        </td>
-        <td>
-          <label class="switch switch-primary">
-            <input type="checkbox" class="switch-input" [(ngModel)]="config().publishAt5PM" />
-            <span class="switch-slider"></span>
-          </label>
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.publishAt8AM" | translate }}</label>
-        </td>
-        <td>
-          <label class="switch switch-primary">
-            <input type="checkbox" class="switch-input" [(ngModel)]="config().publishAt8AM" />
-            <span class="switch-slider"></span>
-          </label>
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{
-            "admin.server-configuration.table.dangerLevelElevationDependency" | translate
-          }}</label>
-        </td>
-        <td>
-          <label class="switch switch-primary">
-            <input type="checkbox" class="switch-input" [(ngModel)]="config().dangerLevelElevationDependency" />
-            <span class="switch-slider"></span>
-          </label>
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.pdfDirectory" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input [zodType]="ServerConfigurationSchema.shape.pdfDirectory" [(value)]="config().pdfDirectory" />
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.htmlDirectory" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input [zodType]="ServerConfigurationSchema.shape.htmlDirectory" [(value)]="config().htmlDirectory" />
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.serverImagesUrl" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input
-            [zodType]="ServerConfigurationSchema.shape.serverImagesUrl"
-            [(value)]="config().serverImagesUrl"
-          />
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.mapsPath" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input [zodType]="ServerConfigurationSchema.shape.mapsPath" [(value)]="config().mapsPath" />
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.mediaPath" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input [zodType]="ServerConfigurationSchema.shape.mediaPath" [(value)]="config().mediaPath" />
-        </td>
-      </tr>
-    }
-    @if (!externalServer()) {
-      <tr>
-        <td>
-          <label class="col-form-label">{{ "admin.server-configuration.table.mapProductionUrl" | translate }}</label>
-        </td>
-        <td>
-          <app-zod-input
-            [zodType]="ServerConfigurationSchema.shape.mapProductionUrl"
-            [(value)]="config().mapProductionUrl"
-          />
-        </td>
-      </tr>
-    }
+    <tr>
+      <td>
+        <label class="col-form-label">{{ "admin.server-configuration.table.username" | translate }}</label>
+      </td>
+      <td>
+        <app-zod-input [zodType]="ServerConfigurationSchema.shape.userName" [(value)]="config().userName" />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label class="col-form-label">{{ "admin.server-configuration.table.password" | translate }}</label>
+      </td>
+      <td>
+        <app-zod-input [zodType]="ServerConfigurationSchema.shape.password" [(value)]="config().password" />
+      </td>
+    </tr>
     <tr>
       <td>
         <label class="col-form-label">{{ "admin.server-configuration.table.apiUrl" | translate }}</label>

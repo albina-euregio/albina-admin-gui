@@ -1,5 +1,5 @@
 import { environment } from "../../environments/environment";
-import { ServerConfigurationVersion } from "../models/server-configuration.model";
+import { ServerVersionInfo } from "../models/server-configuration.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { Component, OnInit, TemplateRef, viewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
     keyboard: true,
     class: "modal-sm",
   };
-  serverInfo: ServerConfigurationVersion;
+  serverInfo: ServerVersionInfo;
 
   ngOnInit() {
     // reset login status
@@ -48,8 +48,8 @@ export class LoginComponent implements OnInit {
     this.returnUrl = "/bulletins";
 
     this.configurationService.loadPublicLocalServerConfiguration().subscribe((info) => {
-      document.title = info.name;
-      return (this.serverInfo = info);
+      // document.title = info.name;
+      this.serverInfo = info;
     });
   }
 
@@ -91,4 +91,6 @@ export class LoginComponent implements OnInit {
     this.errorModalRef.hide();
     this.loading = false;
   }
+
+  protected readonly environment = environment;
 }

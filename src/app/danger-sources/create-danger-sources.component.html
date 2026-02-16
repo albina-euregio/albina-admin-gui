@@ -457,10 +457,26 @@
         }
       </p>
 
-      <h6 class="region-thumb__title font-s-medium" role="button">
+      <h5
+        class="font-s-bold"
+        style="
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          line-clamp: 2;
+        "
+      >
         @if (saveError.has(variant.id)) {
           <span>* </span>
         }
+        @if (variant.title !== null && variant.title !== undefined && variant.title.trim() !== "") {
+          <span>{{ variant.title }}</span>
+        }
+      </h5>
+      <h6 class="region-thumb__author font-s text-secondary" role="button">
         @if (variant.regions.length > 0) {
           <span>{{ regionsService.getRegionName(variant.regions[0]) }}</span>
         }

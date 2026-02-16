@@ -21,7 +21,7 @@ import {
 import { zEnumValues } from "./models/zod-util";
 import { ToggleBtnGroup } from "./toggle-btn-group";
 import { DatePipe } from "@angular/common";
-import { Component, inject, input, OnChanges, OnInit, output } from "@angular/core";
+import { Component, ElementRef, inject, input, OnChanges, OnInit, output, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -108,6 +108,8 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   });
 
   public editRegions: boolean;
+  public isEditingTitle = false;
+  @ViewChild("titleInput") titleInput?: ElementRef<HTMLInputElement>;
 
   public isAccordionGlideOpen: boolean;
   public isAccordionLooseOpen: boolean;
@@ -251,6 +253,19 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
 
   toggleVariantsSidebar() {
     this.toggleVariantsSidebarEvent.emit();
+  }
+
+  startEditingTitle(): void {
+    this.isEditingTitle = true;
+    // Use setTimeout to ensure the input is rendered before focusing
+    setTimeout(() => {
+      this.titleInput?.nativeElement.focus();
+    });
+  }
+
+  stopEditingTitle(): void {
+    this.isEditingTitle = false;
+    this.updateVariantOnServer();
   }
 
   accordionChanged(isOpen: boolean, groupName: string) {

@@ -19,7 +19,6 @@ export class ServerConfigurationComponent {
 
   ServerConfigurationSchema = ServerConfigurationSchema;
   readonly config = input<ServerConfiguration>(undefined);
-  readonly externalServer = input<boolean>(undefined);
 
   public saveConfigurationLoading = false;
 

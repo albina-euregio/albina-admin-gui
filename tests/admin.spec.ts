@@ -16,12 +16,17 @@ test.beforeEach(async ({ page }) => {
 
 test("Server settings", async ({ page }) => {
   await page.getByRole("tab", { name: "Server", exact: true }).click();
-  await page.getByRole("tab", { name: "Avalanche.report DEV" }).click();
   await page.getByRole("tab", { name: "AINEVA" }).click();
   await expect(page.locator("app-servers-configuration")).toMatchAriaSnapshot({ name: "ServerSettings.aria.yaml" });
   await page.getByRole("button", { name: "Create Server" }).click();
+  // close AINEVA tab
+  await page
+    .getByRole("tab")
+    .filter({ hasText: /AINEVA/ })
+    .click();
+  // open tab for new server
   await page.getByRole("tab").filter({ hasText: /^$/ }).click();
-  await page.getByRole("row", { name: "Name", exact: true }).getByRole("textbox").fill("Test");
+  await page.getByRole("row", { name: "Name" }).first().getByRole("textbox").fill("Test");
   await expect(page.getByRole("tab", { name: "Test" })).toBeVisible();
   await page.getByRole("row", { name: "Username", exact: true }).getByRole("textbox").fill("test");
   await page.getByRole("row", { name: "Password", exact: true }).getByRole("textbox").fill("1234");
