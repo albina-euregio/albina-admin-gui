@@ -6,179 +6,178 @@ import * as geojson from "geojson";
 export const version: string;
 
 export class Class {
-    static extend(props: any): { new(...args: any[]): any } & typeof Class;
-    static include(props: any): typeof Class;
-    static setDefaultOptions(options: any): typeof Class;
-    static mergeOptions(options: any): typeof Class;
+  static extend(props: any): { new (...args: any[]): any } & typeof Class;
+  static include(props: any): typeof Class;
+  static setDefaultOptions(options: any): typeof Class;
+  static mergeOptions(options: any): typeof Class;
 
-    static addInitHook(initHookFn: () => void): typeof Class;
-    static addInitHook(methodName: string, ...args: any[]): typeof Class;
+  static addInitHook(initHookFn: () => void): typeof Class;
+  static addInitHook(methodName: string, ...args: any[]): typeof Class;
 
-    initialize(...args: any[]): void;
-    callInitHooks(): void;
+  initialize(...args: any[]): void;
+  callInitHooks(): void;
 }
 
 export class Transformation {
-    /** Instantiates a Transformation object with the given coefficients. */
-    constructor(a: number, b: number, c: number, d: number);
-    /** Expects an coefficients array of the form `[a: Number, b: Number, c: Number, d: Number]`. */
-    constructor(coefficients: [number, number, number, number]);
-    transform(point: Point, scale?: number): Point;
-    untransform(point: Point, scale?: number): Point;
+  /** Instantiates a Transformation object with the given coefficients. */
+  constructor(a: number, b: number, c: number, d: number);
+  /** Expects an coefficients array of the form `[a: Number, b: Number, c: Number, d: Number]`. */
+  constructor(coefficients: [number, number, number, number]);
+  transform(point: Point, scale?: number): Point;
+  untransform(point: Point, scale?: number): Point;
 }
 
 /**
  * @see https://github.com/Leaflet/Leaflet/blob/bc918d4bdc2ba189807bc207c77080fb41ecc196/src/geometry/LineUtil.js#L118
  */
 export namespace LineUtil {
-    function simplify(points: Point[], tolerance: number): Point[];
-    function pointToSegmentDistance(p: Point, p1: Point, p2: Point): number;
-    function closestPointOnSegment(p: Point, p1: Point, p2: Point): Point;
-    function isFlat(latlngs: LatLngExpression[]): boolean;
-    function clipSegment(
-        a: Point,
-        b: Point,
-        bounds: Bounds,
-        useLastCode?: boolean,
-        round?: boolean,
-    ): [Point, Point] | false;
-    function polylineCenter(latlngs: LatLngExpression[], crs: CRS): LatLng;
+  function simplify(points: Point[], tolerance: number): Point[];
+  function pointToSegmentDistance(p: Point, p1: Point, p2: Point): number;
+  function closestPointOnSegment(p: Point, p1: Point, p2: Point): Point;
+  function isFlat(latlngs: LatLngExpression[]): boolean;
+  function clipSegment(
+    a: Point,
+    b: Point,
+    bounds: Bounds,
+    useLastCode?: boolean,
+    round?: boolean,
+  ): [Point, Point] | false;
+  function polylineCenter(latlngs: LatLngExpression[], crs: CRS): LatLng;
 }
 
 export namespace PolyUtil {
-    function clipPolygon(points: Point[], bounds: BoundsExpression, round?: boolean): Point[];
-    function polygonCenter(latlngs: LatLngExpression[], crs: CRS): LatLng;
-    function centroid(latlngs: LatLngExpression[]): LatLng;
+  function clipPolygon(points: Point[], bounds: BoundsExpression, round?: boolean): Point[];
+  function polygonCenter(latlngs: LatLngExpression[], crs: CRS): LatLng;
+  function centroid(latlngs: LatLngExpression[]): LatLng;
 }
 
 export namespace DomUtil {
-    /**
-     * Get Element by its ID or with the given HTML-Element
-     */
-    function get(element: string | HTMLElement): HTMLElement | null;
-    /**
-     * Creates an HTML element with `tagName`, sets its class to `className`, and optionally appends it to `container` element.
-     * @param tagName The name of the tag to create (for example: `div` or `canvas`).
-     * @param className The class to set on the created element.
-     * @param container The container to append the created element to.
-     */
-    function create<T extends keyof HTMLElementTagNameMap>(
-        tagName: T,
-        className?: string,
-        container?: HTMLElement,
-    ): HTMLElementTagNameMap[T];
-    function create(tagName: string, className?: string, container?: HTMLElement): HTMLElement;
-    function toFront(el: HTMLElement): void;
-    function toBack(el: HTMLElement): void;
-    function setTransform(el: HTMLElement, offset: Point, scale?: number): void;
-    function setPosition(el: HTMLElement, position: Point): void;
-    function getPosition(el: HTMLElement): Point;
-    function getScale(el: HTMLElement): { x: number; y: number; boundingClientRect: DOMRect };
-    function getSizedParentNode(el: HTMLElement): HTMLElement;
-    function disableTextSelection(): void;
-    function enableTextSelection(): void;
-    function disableImageDrag(): void;
-    function enableImageDrag(): void;
-    function preventOutline(el: HTMLElement): void;
-    function restoreOutline(): void;
+  /**
+   * Get Element by its ID or with the given HTML-Element
+   */
+  function get(element: string | HTMLElement): HTMLElement | null;
+  /**
+   * Creates an HTML element with `tagName`, sets its class to `className`, and optionally appends it to `container` element.
+   * @param tagName The name of the tag to create (for example: `div` or `canvas`).
+   * @param className The class to set on the created element.
+   * @param container The container to append the created element to.
+   */
+  function create<T extends keyof HTMLElementTagNameMap>(
+    tagName: T,
+    className?: string,
+    container?: HTMLElement,
+  ): HTMLElementTagNameMap[T];
+  function create(tagName: string, className?: string, container?: HTMLElement): HTMLElement;
+  function toFront(el: HTMLElement): void;
+  function toBack(el: HTMLElement): void;
+  function setTransform(el: HTMLElement, offset: Point, scale?: number): void;
+  function setPosition(el: HTMLElement, position: Point): void;
+  function getPosition(el: HTMLElement): Point;
+  function getScale(el: HTMLElement): { x: number; y: number; boundingClientRect: DOMRect };
+  function getSizedParentNode(el: HTMLElement): HTMLElement;
+  function disableTextSelection(): void;
+  function enableTextSelection(): void;
+  function disableImageDrag(): void;
+  function enableImageDrag(): void;
+  function preventOutline(el: HTMLElement): void;
+  function restoreOutline(): void;
 }
 
 export class PosAnimation extends Evented {
-    run(el: HTMLElement, newPos: Point, duration?: number, easeLinearity?: number): void;
-    stop(): void;
+  run(el: HTMLElement, newPos: Point, duration?: number, easeLinearity?: number): void;
+  stop(): void;
 }
 
 export class CRS {
-    static projection: Projection | undefined;
-    static transformation: Transformation;
+  static projection: Projection | undefined;
+  static transformation: Transformation;
 
-    static latLngToPoint(latlng: LatLngExpression, zoom: number): Point;
-    static pointToLatLng(point: PointExpression, zoom: number): LatLng;
-    static project(latlng: LatLngExpression): Point;
-    static unproject(point: PointExpression): LatLng;
-    static scale(zoom: number): number;
-    static zoom(scale: number): number;
-    static getProjectedBounds(zoom: number): Bounds;
+  static latLngToPoint(latlng: LatLngExpression, zoom: number): Point;
+  static pointToLatLng(point: PointExpression, zoom: number): LatLng;
+  static project(latlng: LatLngExpression): Point;
+  static unproject(point: PointExpression): LatLng;
+  static scale(zoom: number): number;
+  static zoom(scale: number): number;
+  static getProjectedBounds(zoom: number): Bounds;
 
-    static infinite: boolean;
-    static wrapLatLng(latlng: LatLngExpression): LatLng;
-    static wrapLatLngBounds(bounds: LatLngBoundsExpression[]): LatLngBounds;
+  static infinite: boolean;
+  static wrapLatLng(latlng: LatLngExpression): LatLng;
+  static wrapLatLngBounds(bounds: LatLngBoundsExpression[]): LatLngBounds;
 }
 
 export namespace CRS {
-    class Earth extends CRS {
-        static wrapLng: [number, number];
-        static R: number;
+  class Earth extends CRS {
+    static wrapLng: [number, number];
+    static R: number;
 
-        static distance(latlng1: LatLngExpression, latlng2: LatLngExpression): number;
-    }
+    static distance(latlng1: LatLngExpression, latlng2: LatLngExpression): number;
+  }
 
-    class EPSG3395 extends Earth {
-        static code: string;
-        static projection: Projection.Mercator;
-    }
+  class EPSG3395 extends Earth {
+    static code: string;
+    static projection: Projection.Mercator;
+  }
 
-    class EPSG3857 extends Earth {
-        static code: string;
-        static projection: Projection.SphericalMercator;
-    }
+  class EPSG3857 extends Earth {
+    static code: string;
+    static projection: Projection.SphericalMercator;
+  }
 
-    class EPSG900913 extends EPSG3857 {
-    }
+  class EPSG900913 extends EPSG3857 {}
 
-    class EPSG4326 extends Earth {
-        static code: string;
-        static projection: Projection.LonLat;
-    }
+  class EPSG4326 extends Earth {
+    static code: string;
+    static projection: Projection.LonLat;
+  }
 
-    class Simple extends CRS {
-        static projection: Projection.LonLat;
+  class Simple extends CRS {
+    static projection: Projection.LonLat;
 
-        static distance(latlng1: LatLngExpression, latlng2: LatLngExpression): Bounds;
-    }
+    static distance(latlng1: LatLngExpression, latlng2: LatLngExpression): Bounds;
+  }
 }
 
 export interface Projection {
-    project(latlng: LatLngExpression): Point;
-    unproject(point: PointExpression): LatLng;
+  project(latlng: LatLngExpression): Point;
+  unproject(point: PointExpression): LatLng;
 
-    bounds: Bounds;
+  bounds: Bounds;
 }
 
 export namespace Projection {
-    type LonLat = Projection;
+  type LonLat = Projection;
 
-    interface Mercator extends Projection {
-        R: 6378137;
-        R_MINOR: 6356752.314245179;
-    }
+  interface Mercator extends Projection {
+    R: 6378137;
+    R_MINOR: 6356752.314245179;
+  }
 
-    interface SphericalMercator extends Projection {
-        R: 6378137;
-        MAX_LATITUDE: 85.0511287798;
-    }
+  interface SphericalMercator extends Projection {
+    R: 6378137;
+    MAX_LATITUDE: 85.0511287798;
+  }
 }
 
 export class LatLng {
-    constructor(latitude: number, longitude: number, altitude?: number);
-    constructor(coords: LatLngExpression);
-    static validate(latitude: number, longitude: number, altitude?: number): boolean;
-    static validate(coords: LatLngExpression): boolean;
-    equals(otherLatLng: LatLngExpression, maxMargin?: number): boolean;
-    toString(precision?: number): string;
-    distanceTo(otherLatLng: LatLngExpression): number;
-    wrap(): LatLng;
-    toBounds(sizeInMeters: number): LatLngBounds;
-    clone(): LatLng;
+  constructor(latitude: number, longitude: number, altitude?: number);
+  constructor(coords: LatLngExpression);
+  static validate(latitude: number, longitude: number, altitude?: number): boolean;
+  static validate(coords: LatLngExpression): boolean;
+  equals(otherLatLng: LatLngExpression, maxMargin?: number): boolean;
+  toString(precision?: number): string;
+  distanceTo(otherLatLng: LatLngExpression): number;
+  wrap(): LatLng;
+  toBounds(sizeInMeters: number): LatLngBounds;
+  clone(): LatLng;
 
-    lat: number;
-    lng: number;
-    alt?: number;
+  lat: number;
+  lng: number;
+  alt?: number;
 }
 export interface LatLngLiteral {
-    lat: number;
-    lng: number;
-    alt?: number;
+  lat: number;
+  lng: number;
+  alt?: number;
 }
 
 export type LatLngTuple = [number, number, number?];
@@ -186,28 +185,28 @@ export type LatLngTuple = [number, number, number?];
 export type LatLngExpression = LatLng | LatLngTuple | LatLngLiteral;
 
 export class LatLngBounds {
-    constructor(southWest: LatLngExpression, northEast: LatLngExpression);
-    constructor(latlngs: LatLngExpression[]);
-    extend(latlngOrBounds: LatLngExpression | LatLngBoundsExpression): this;
-    pad(bufferRatio: number): LatLngBounds; // Returns a new LatLngBounds
-    getCenter(): LatLng;
-    getSouthWest(): LatLng;
-    getNorthEast(): LatLng;
-    getNorthWest(): LatLng;
-    getSouthEast(): LatLng;
-    getWest(): number;
-    getSouth(): number;
-    getEast(): number;
-    getNorth(): number;
-    contains(otherBoundsOrLatLng: LatLngBoundsExpression | LatLngExpression): boolean;
-    intersects(otherBounds: LatLngBoundsExpression): boolean;
-    overlaps(otherBounds: LatLngBoundsExpression): boolean;
-    toBBoxString(): string;
-    equals(otherBounds: LatLngBoundsExpression, maxMargin?: number): boolean;
-    isValid(): boolean;
+  constructor(southWest: LatLngExpression, northEast: LatLngExpression);
+  constructor(latlngs: LatLngExpression[]);
+  extend(latlngOrBounds: LatLngExpression | LatLngBoundsExpression): this;
+  pad(bufferRatio: number): LatLngBounds; // Returns a new LatLngBounds
+  getCenter(): LatLng;
+  getSouthWest(): LatLng;
+  getNorthEast(): LatLng;
+  getNorthWest(): LatLng;
+  getSouthEast(): LatLng;
+  getWest(): number;
+  getSouth(): number;
+  getEast(): number;
+  getNorth(): number;
+  contains(otherBoundsOrLatLng: LatLngBoundsExpression | LatLngExpression): boolean;
+  intersects(otherBounds: LatLngBoundsExpression): boolean;
+  overlaps(otherBounds: LatLngBoundsExpression): boolean;
+  toBBoxString(): string;
+  equals(otherBounds: LatLngBoundsExpression, maxMargin?: number): boolean;
+  isValid(): boolean;
 
-    protected _southWest: LatLng;
-    protected _northEast: LatLng;
+  protected _southWest: LatLng;
+  protected _northEast: LatLng;
 }
 
 export type LatLngBoundsLiteral = LatLngTuple[]; // Must be [LatLngTuple, LatLngTuple], cant't change because Map.setMaxBounds
@@ -215,64 +214,64 @@ export type LatLngBoundsLiteral = LatLngTuple[]; // Must be [LatLngTuple, LatLng
 export type LatLngBoundsExpression = LatLngBounds | LatLngBoundsLiteral;
 
 export class Point {
-    constructor(x: number, y: number, round?: boolean);
-    constructor(coords: PointExpression);
-    static validate(x: number, y: number): boolean;
-    static validate(coords: PointExpression): boolean;
-    clone(): Point;
-    add(otherPoint: PointExpression): Point; // non-destructive, returns a new point
-    subtract(otherPoint: PointExpression): Point;
-    divideBy(num: number): Point;
-    multiplyBy(num: number): Point;
-    scaleBy(scale: PointExpression): Point;
-    unscaleBy(scale: PointExpression): Point;
-    round(): Point;
-    floor(): Point;
-    ceil(): Point;
-    trunc(): Point;
-    distanceTo(otherPoint: PointExpression): number;
-    equals(otherPoint: PointExpression): boolean;
-    contains(otherPoint: PointExpression): boolean;
-    toString(): string;
-    x: number;
-    y: number;
+  constructor(x: number, y: number, round?: boolean);
+  constructor(coords: PointExpression);
+  static validate(x: number, y: number): boolean;
+  static validate(coords: PointExpression): boolean;
+  clone(): Point;
+  add(otherPoint: PointExpression): Point; // non-destructive, returns a new point
+  subtract(otherPoint: PointExpression): Point;
+  divideBy(num: number): Point;
+  multiplyBy(num: number): Point;
+  scaleBy(scale: PointExpression): Point;
+  unscaleBy(scale: PointExpression): Point;
+  round(): Point;
+  floor(): Point;
+  ceil(): Point;
+  trunc(): Point;
+  distanceTo(otherPoint: PointExpression): number;
+  equals(otherPoint: PointExpression): boolean;
+  contains(otherPoint: PointExpression): boolean;
+  toString(): string;
+  x: number;
+  y: number;
 }
 
 export interface Coords extends Point {
-    z: number;
+  z: number;
 }
 
 export type PointTuple = [number, number];
 
 export interface PointLiteral {
-    x: number;
-    y: number;
+  x: number;
+  y: number;
 }
 
 export type PointExpression = Point | PointTuple | PointLiteral;
 
 export class Bounds {
-    constructor();
-    constructor(topLeft: PointExpression, bottomRight: PointExpression);
-    constructor(points: PointExpression[] | BoundsExpression);
+  constructor();
+  constructor(topLeft: PointExpression, bottomRight: PointExpression);
+  constructor(points: PointExpression[] | BoundsExpression);
 
-    extend(pointOrBounds: BoundsExpression | PointExpression): this;
+  extend(pointOrBounds: BoundsExpression | PointExpression): this;
 
-    getCenter(round?: boolean): Point;
-    getBottomLeft(): Point;
-    getBottomRight(): Point;
-    getTopLeft(): Point;
-    getTopRight(): Point;
-    getSize(): Point;
-    contains(pointOrBounds: BoundsExpression | PointExpression): boolean;
-    intersects(otherBounds: BoundsExpression): boolean;
-    overlaps(otherBounds: BoundsExpression): boolean;
-    isValid(): boolean;
-    pad(bufferRatio: number): Bounds; // Returns a new Bounds
-    equals(otherBounds: BoundsExpression): boolean;
+  getCenter(round?: boolean): Point;
+  getBottomLeft(): Point;
+  getBottomRight(): Point;
+  getTopLeft(): Point;
+  getTopRight(): Point;
+  getSize(): Point;
+  contains(pointOrBounds: BoundsExpression | PointExpression): boolean;
+  intersects(otherBounds: BoundsExpression): boolean;
+  overlaps(otherBounds: BoundsExpression): boolean;
+  isValid(): boolean;
+  pad(bufferRatio: number): Bounds; // Returns a new Bounds
+  equals(otherBounds: BoundsExpression): boolean;
 
-    min?: Point;
-    max?: Point;
+  min?: Point;
+  max?: Point;
 }
 
 export type BoundsLiteral = [PointTuple, PointTuple];
@@ -282,85 +281,85 @@ export type BoundsExpression = Bounds | BoundsLiteral;
 // Events
 
 export interface LeafletEvent {
-    type: string;
-    popup: any;
-    target: any;
-    sourceTarget: any;
-    propagatedFrom: any;
+  type: string;
+  popup: any;
+  target: any;
+  sourceTarget: any;
+  propagatedFrom: any;
 }
 
 export interface LeafletMouseEvent extends LeafletEvent {
-    latlng: LatLng;
-    layerPoint: Point;
-    containerPoint: Point;
-    originalEvent: MouseEvent;
+  latlng: LatLng;
+  layerPoint: Point;
+  containerPoint: Point;
+  originalEvent: MouseEvent;
 }
 
 export interface LeafletKeyboardEvent extends LeafletEvent {
-    originalEvent: KeyboardEvent;
+  originalEvent: KeyboardEvent;
 }
 
 export interface LocationEvent extends LeafletEvent {
-    latlng: LatLng;
-    bounds: LatLngBounds;
-    accuracy: number;
-    altitude: number;
-    altitudeAccuracy: number;
-    heading: number;
-    speed: number;
-    timestamp: number;
+  latlng: LatLng;
+  bounds: LatLngBounds;
+  accuracy: number;
+  altitude: number;
+  altitudeAccuracy: number;
+  heading: number;
+  speed: number;
+  timestamp: number;
 }
 
 export interface ErrorEvent extends LeafletEvent {
-    message: string;
-    code: number;
+  message: string;
+  code: number;
 }
 
 export interface LayerEvent extends LeafletEvent {
-    layer: Layer;
+  layer: Layer;
 }
 
 export interface LayersControlEvent extends LayerEvent {
-    name: string;
+  name: string;
 }
 
 export interface TileEvent extends LeafletEvent {
-    tile: HTMLImageElement;
-    coords: Coords;
+  tile: HTMLImageElement;
+  coords: Coords;
 }
 
 export interface TileErrorEvent extends TileEvent {
-    error: Error;
+  error: Error;
 }
 
 export interface ResizeEvent extends LeafletEvent {
-    oldSize: Point;
-    newSize: Point;
+  oldSize: Point;
+  newSize: Point;
 }
 
 export interface GeoJSONEvent extends LeafletEvent {
-    layer: Layer;
-    properties: any;
-    geometryType: string;
-    id: string;
+  layer: Layer;
+  properties: any;
+  geometryType: string;
+  id: string;
 }
 
 export interface PopupEvent extends LeafletEvent {
-    popup: Popup;
+  popup: Popup;
 }
 
 export interface TooltipEvent extends LeafletEvent {
-    tooltip: Tooltip;
+  tooltip: Tooltip;
 }
 
 export interface DragEndEvent extends LeafletEvent {
-    distance: number;
+  distance: number;
 }
 
 export interface ZoomAnimEvent extends LeafletEvent {
-    center: LatLng;
-    zoom: number;
-    noUpdate: boolean;
+  center: LatLng;
+  zoom: number;
+  noUpdate: boolean;
 }
 
 // Event handler types
@@ -394,73 +393,73 @@ export type TileEventHandlerFn = (event: TileEvent) => void;
 export type TileErrorEventHandlerFn = (event: TileErrorEvent) => void;
 
 export interface LeafletEventHandlerFnMap {
-    baselayerchange?: LayersControlEventHandlerFn | undefined;
-    overlayadd?: LayersControlEventHandlerFn | undefined;
-    overlayremove?: LayersControlEventHandlerFn | undefined;
+  baselayerchange?: LayersControlEventHandlerFn | undefined;
+  overlayadd?: LayersControlEventHandlerFn | undefined;
+  overlayremove?: LayersControlEventHandlerFn | undefined;
 
-    layeradd?: LayerEventHandlerFn | undefined;
-    layerremove?: LayerEventHandlerFn | undefined;
+  layeradd?: LayerEventHandlerFn | undefined;
+  layerremove?: LayerEventHandlerFn | undefined;
 
-    zoomlevelschange?: LeafletEventHandlerFn | undefined;
-    unload?: LeafletEventHandlerFn | undefined;
-    viewreset?: LeafletEventHandlerFn | undefined;
-    load?: LeafletEventHandlerFn | undefined;
-    zoomstart?: LeafletEventHandlerFn | undefined;
-    movestart?: LeafletEventHandlerFn | undefined;
-    zoom?: LeafletEventHandlerFn | undefined;
-    move?: LeafletEventHandlerFn | undefined;
-    zoomend?: LeafletEventHandlerFn | undefined;
-    moveend?: LeafletEventHandlerFn | undefined;
-    autopanstart?: LeafletEventHandlerFn | undefined;
-    dragstart?: LeafletEventHandlerFn | undefined;
-    drag?: LeafletEventHandlerFn | undefined;
-    add?: LeafletEventHandlerFn | undefined;
-    remove?: LeafletEventHandlerFn | undefined;
-    loading?: LeafletEventHandlerFn | undefined;
-    error?: LeafletEventHandlerFn | undefined;
-    update?: LeafletEventHandlerFn | undefined;
-    down?: LeafletEventHandlerFn | undefined;
-    predrag?: LeafletEventHandlerFn | undefined;
+  zoomlevelschange?: LeafletEventHandlerFn | undefined;
+  unload?: LeafletEventHandlerFn | undefined;
+  viewreset?: LeafletEventHandlerFn | undefined;
+  load?: LeafletEventHandlerFn | undefined;
+  zoomstart?: LeafletEventHandlerFn | undefined;
+  movestart?: LeafletEventHandlerFn | undefined;
+  zoom?: LeafletEventHandlerFn | undefined;
+  move?: LeafletEventHandlerFn | undefined;
+  zoomend?: LeafletEventHandlerFn | undefined;
+  moveend?: LeafletEventHandlerFn | undefined;
+  autopanstart?: LeafletEventHandlerFn | undefined;
+  dragstart?: LeafletEventHandlerFn | undefined;
+  drag?: LeafletEventHandlerFn | undefined;
+  add?: LeafletEventHandlerFn | undefined;
+  remove?: LeafletEventHandlerFn | undefined;
+  loading?: LeafletEventHandlerFn | undefined;
+  error?: LeafletEventHandlerFn | undefined;
+  update?: LeafletEventHandlerFn | undefined;
+  down?: LeafletEventHandlerFn | undefined;
+  predrag?: LeafletEventHandlerFn | undefined;
 
-    resize?: ResizeEventHandlerFn | undefined;
+  resize?: ResizeEventHandlerFn | undefined;
 
-    popupopen?: PopupEventHandlerFn | undefined;
-    popupclose?: PopupEventHandlerFn | undefined;
+  popupopen?: PopupEventHandlerFn | undefined;
+  popupclose?: PopupEventHandlerFn | undefined;
 
-    tooltipopen?: TooltipEventHandlerFn | undefined;
-    tooltipclose?: TooltipEventHandlerFn | undefined;
+  tooltipopen?: TooltipEventHandlerFn | undefined;
+  tooltipclose?: TooltipEventHandlerFn | undefined;
 
-    locationerror?: ErrorEventHandlerFn | undefined;
+  locationerror?: ErrorEventHandlerFn | undefined;
 
-    locationfound?: LocationEventHandlerFn | undefined;
+  locationfound?: LocationEventHandlerFn | undefined;
 
-    click?: LeafletMouseEventHandlerFn | undefined;
-    dblclick?: LeafletMouseEventHandlerFn | undefined;
-    mousedown?: LeafletMouseEventHandlerFn | undefined;
-    mouseup?: LeafletMouseEventHandlerFn | undefined;
-    mouseover?: LeafletMouseEventHandlerFn | undefined;
-    mouseout?: LeafletMouseEventHandlerFn | undefined;
-    mousemove?: LeafletMouseEventHandlerFn | undefined;
-    contextmenu?: LeafletMouseEventHandlerFn | undefined;
-    preclick?: LeafletMouseEventHandlerFn | undefined;
+  click?: LeafletMouseEventHandlerFn | undefined;
+  dblclick?: LeafletMouseEventHandlerFn | undefined;
+  mousedown?: LeafletMouseEventHandlerFn | undefined;
+  mouseup?: LeafletMouseEventHandlerFn | undefined;
+  mouseover?: LeafletMouseEventHandlerFn | undefined;
+  mouseout?: LeafletMouseEventHandlerFn | undefined;
+  mousemove?: LeafletMouseEventHandlerFn | undefined;
+  contextmenu?: LeafletMouseEventHandlerFn | undefined;
+  preclick?: LeafletMouseEventHandlerFn | undefined;
 
-    keypress?: LeafletKeyboardEventHandlerFn | undefined;
-    keydown?: LeafletKeyboardEventHandlerFn | undefined;
-    keyup?: LeafletKeyboardEventHandlerFn | undefined;
+  keypress?: LeafletKeyboardEventHandlerFn | undefined;
+  keydown?: LeafletKeyboardEventHandlerFn | undefined;
+  keyup?: LeafletKeyboardEventHandlerFn | undefined;
 
-    zoomanim?: ZoomAnimEventHandlerFn | undefined;
+  zoomanim?: ZoomAnimEventHandlerFn | undefined;
 
-    dragend?: DragEndEventHandlerFn | undefined;
+  dragend?: DragEndEventHandlerFn | undefined;
 
-    tileunload?: TileEventHandlerFn | undefined;
-    tileloadstart?: TileEventHandlerFn | undefined;
-    tileload?: TileEventHandlerFn | undefined;
-    tileabort?: TileEventHandlerFn | undefined;
+  tileunload?: TileEventHandlerFn | undefined;
+  tileloadstart?: TileEventHandlerFn | undefined;
+  tileload?: TileEventHandlerFn | undefined;
+  tileabort?: TileEventHandlerFn | undefined;
 
-    tileerror?: TileErrorEventHandlerFn | undefined;
+  tileerror?: TileErrorEventHandlerFn | undefined;
 
-    // [name: string]: any;
-    // You are able add additional properties, but it makes this interface uncheckable.
+  // [name: string]: any;
+  // You are able add additional properties, but it makes this interface uncheckable.
 }
 
 /**
@@ -471,370 +470,357 @@ export interface LeafletEventHandlerFnMap {
  */
 // eslint-disable-next-line @definitelytyped/strict-export-declare-modifiers
 declare class Events {
-    /**
-     * Adds a listener function (fn) to a particular event type of the object.
-     * You can optionally specify the context of the listener (object the this
-     * keyword will point to). You can also pass several space-separated types
-     * (e.g. 'click dblclick').
-     */
-    // tslint:disable:unified-signatures
-    on(type: "baselayerchange" | "overlayadd" | "overlayremove", fn: LayersControlEventHandlerFn, context?: any): this;
-    on(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
-    on(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn: LeafletEventHandlerFn,
-        context?: any,
-    ): this;
-    on(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
-    on(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
-    on(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
-    on(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
-    on(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
-    on(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn: LeafletMouseEventHandlerFn,
-        context?: any,
-    ): this;
-    on(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
-    on(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
-    on(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
-    on(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
-    on(type: "tileerror", fn: TileErrorEventHandlerFn, context?: any): this;
-    on(type: string, fn: LeafletEventHandlerFn, context?: any): this;
+  /**
+   * Adds a listener function (fn) to a particular event type of the object.
+   * You can optionally specify the context of the listener (object the this
+   * keyword will point to). You can also pass several space-separated types
+   * (e.g. 'click dblclick').
+   */
+  // tslint:disable:unified-signatures
+  on(type: "baselayerchange" | "overlayadd" | "overlayremove", fn: LayersControlEventHandlerFn, context?: any): this;
+  on(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
+  on(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn: LeafletEventHandlerFn,
+    context?: any,
+  ): this;
+  on(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
+  on(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
+  on(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
+  on(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
+  on(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
+  on(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn: LeafletMouseEventHandlerFn,
+    context?: any,
+  ): this;
+  on(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
+  on(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
+  on(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
+  on(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
+  on(type: "tileerror", fn: TileErrorEventHandlerFn, context?: any): this;
+  on(type: string, fn: LeafletEventHandlerFn, context?: any): this;
 
-    /**
-     * Adds a set of type/listener pairs, e.g. {click: onClick, mousemove: onMouseMove}
-     */
-    on(eventMap: LeafletEventHandlerFnMap): this;
-    // tslint:enable:unified-signatures
+  /**
+   * Adds a set of type/listener pairs, e.g. {click: onClick, mousemove: onMouseMove}
+   */
+  on(eventMap: LeafletEventHandlerFnMap): this;
+  // tslint:enable:unified-signatures
 
-    /**
-     * Removes a previously added listener function. If no function is specified,
-     * it will remove all the listeners of that particular event from the object.
-     * Note that if you passed a custom context to on, you must pass the same context
-     * to off in order to remove the listener.
-     */
-    // tslint:disable:unified-signatures
-    off(
-        type: "baselayerchange" | "overlayadd" | "overlayremove",
-        fn?: LayersControlEventHandlerFn,
-        context?: any,
-    ): this;
-    off(type: "layeradd" | "layerremove", fn?: LayerEventHandlerFn, context?: any): this;
-    off(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn?: LeafletEventHandlerFn,
-        context?: any,
-    ): this;
-    off(type: "resize", fn?: ResizeEventHandlerFn, context?: any): this;
-    off(type: "popupopen" | "popupclose", fn?: PopupEventHandlerFn, context?: any): this;
-    off(type: "tooltipopen" | "tooltipclose", fn?: TooltipEventHandlerFn, context?: any): this;
-    off(type: "locationerror", fn?: ErrorEventHandlerFn, context?: any): this;
-    off(type: "locationfound", fn?: LocationEventHandlerFn, context?: any): this;
-    off(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn?: LeafletMouseEventHandlerFn,
-        context?: any,
-    ): this;
-    off(type: "keypress" | "keydown" | "keyup", fn?: LeafletKeyboardEventHandlerFn, context?: any): this;
-    off(type: "zoomanim", fn?: ZoomAnimEventHandlerFn, context?: any): this;
-    off(type: "dragend", fn?: DragEndEventHandlerFn, context?: any): this;
-    off(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn?: TileEventHandlerFn, context?: any): this;
-    off(type: "tileerror", fn?: TileErrorEventHandlerFn, context?: any): this;
-    off(type: string, fn?: LeafletEventHandlerFn, context?: any): this;
+  /**
+   * Removes a previously added listener function. If no function is specified,
+   * it will remove all the listeners of that particular event from the object.
+   * Note that if you passed a custom context to on, you must pass the same context
+   * to off in order to remove the listener.
+   */
+  // tslint:disable:unified-signatures
+  off(type: "baselayerchange" | "overlayadd" | "overlayremove", fn?: LayersControlEventHandlerFn, context?: any): this;
+  off(type: "layeradd" | "layerremove", fn?: LayerEventHandlerFn, context?: any): this;
+  off(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn?: LeafletEventHandlerFn,
+    context?: any,
+  ): this;
+  off(type: "resize", fn?: ResizeEventHandlerFn, context?: any): this;
+  off(type: "popupopen" | "popupclose", fn?: PopupEventHandlerFn, context?: any): this;
+  off(type: "tooltipopen" | "tooltipclose", fn?: TooltipEventHandlerFn, context?: any): this;
+  off(type: "locationerror", fn?: ErrorEventHandlerFn, context?: any): this;
+  off(type: "locationfound", fn?: LocationEventHandlerFn, context?: any): this;
+  off(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn?: LeafletMouseEventHandlerFn,
+    context?: any,
+  ): this;
+  off(type: "keypress" | "keydown" | "keyup", fn?: LeafletKeyboardEventHandlerFn, context?: any): this;
+  off(type: "zoomanim", fn?: ZoomAnimEventHandlerFn, context?: any): this;
+  off(type: "dragend", fn?: DragEndEventHandlerFn, context?: any): this;
+  off(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn?: TileEventHandlerFn, context?: any): this;
+  off(type: "tileerror", fn?: TileErrorEventHandlerFn, context?: any): this;
+  off(type: string, fn?: LeafletEventHandlerFn, context?: any): this;
 
-    /**
-     * Removes a set of type/listener pairs.
-     */
-    // With an eventMap there are no additional arguments allowed
-    off(eventMap: LeafletEventHandlerFnMap): this;
+  /**
+   * Removes a set of type/listener pairs.
+   */
+  // With an eventMap there are no additional arguments allowed
+  off(eventMap: LeafletEventHandlerFnMap): this;
 
-    /**
-     * Removes all listeners to all events on the object.
-     */
-    off(): this;
-    // tslint:enable:unified-signatures
+  /**
+   * Removes all listeners to all events on the object.
+   */
+  off(): this;
+  // tslint:enable:unified-signatures
 
-    /**
-     * Fires an event of the specified type. You can optionally provide a data
-     * object — the first argument of the listener function will contain its properties.
-     * The event might can optionally be propagated to event parents.
-     */
-    fire(type: string, data?: any, propagate?: boolean): this;
+  /**
+   * Fires an event of the specified type. You can optionally provide a data
+   * object — the first argument of the listener function will contain its properties.
+   * The event might can optionally be propagated to event parents.
+   */
+  fire(type: string, data?: any, propagate?: boolean): this;
 
-    /**
-     * Returns true if a particular event type has any listeners attached to it.
-     */
-    // tslint:disable:unified-signatures
-    listens(
-        type:
-            | "baselayerchange"
-            | "overlayadd"
-            | "overlayremove"
-            | "layeradd"
-            | "layerremove"
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag"
-            | "resize"
-            | "popupopen"
-            | "tooltipopen"
-            | "tooltipclose"
-            | "locationerror"
-            | "locationfound"
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick"
-            | "keypress"
-            | "keydown"
-            | "keyup"
-            | "zoomanim"
-            | "dragend"
-            | "tileunload"
-            | "tileloadstart"
-            | "tileload"
-            | "tileabort"
-            | "tileerror",
-        propagate?: boolean,
-    ): boolean;
+  /**
+   * Returns true if a particular event type has any listeners attached to it.
+   */
+  // tslint:disable:unified-signatures
+  listens(
+    type:
+      | "baselayerchange"
+      | "overlayadd"
+      | "overlayremove"
+      | "layeradd"
+      | "layerremove"
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag"
+      | "resize"
+      | "popupopen"
+      | "tooltipopen"
+      | "tooltipclose"
+      | "locationerror"
+      | "locationfound"
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick"
+      | "keypress"
+      | "keydown"
+      | "keyup"
+      | "zoomanim"
+      | "dragend"
+      | "tileunload"
+      | "tileloadstart"
+      | "tileload"
+      | "tileabort"
+      | "tileerror",
+    propagate?: boolean,
+  ): boolean;
 
-    listens(
-        type: "baselayerchange" | "overlayadd" | "overlayremove",
-        fn: LayersControlEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn: LeafletEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "resize", fn: ResizeEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type: "tooltipopen" | "tooltipclose",
-        fn: TooltipEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "locationerror", fn: ErrorEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: "locationfound", fn: LocationEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn: LeafletMouseEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(
-        type: "keypress" | "keydown" | "keyup",
-        fn: LeafletKeyboardEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: "dragend", fn: DragEndEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type: "tileunload" | "tileloadstart" | "tileload" | "tileabort",
-        fn: TileEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "tileerror", fn: TileEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: string, fn: LeafletEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type: "baselayerchange" | "overlayadd" | "overlayremove",
+    fn: LayersControlEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn: LeafletEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "resize", fn: ResizeEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "locationerror", fn: ErrorEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "locationfound", fn: LocationEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn: LeafletMouseEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(
+    type: "keypress" | "keydown" | "keyup",
+    fn: LeafletKeyboardEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "dragend", fn: DragEndEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type: "tileunload" | "tileloadstart" | "tileload" | "tileabort",
+    fn: TileEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "tileerror", fn: TileEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: string, fn: LeafletEventHandlerFn, context?: any, propagate?: boolean): boolean;
 
-    /**
-     * Behaves as on(...), except the listener will only get fired once and then removed.
-     */
-    // tslint:disable:unified-signatures
-    once(
-        type: "baselayerchange" | "overlayadd" | "overlayremove",
-        fn: LayersControlEventHandlerFn,
-        context?: any,
-    ): this;
-    once(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
-    once(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn: LeafletEventHandlerFn,
-        context?: any,
-    ): this;
-    once(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
-    once(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
-    once(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
-    once(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
-    once(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
-    once(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn: LeafletMouseEventHandlerFn,
-        context?: any,
-    ): this;
-    once(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
-    once(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
-    once(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
-    once(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
-    once(type: "tileerror", fn: TileEventHandlerFn, context?: any): this;
-    once(type: string, fn: LeafletEventHandlerFn, context?: any): this;
+  /**
+   * Behaves as on(...), except the listener will only get fired once and then removed.
+   */
+  // tslint:disable:unified-signatures
+  once(type: "baselayerchange" | "overlayadd" | "overlayremove", fn: LayersControlEventHandlerFn, context?: any): this;
+  once(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
+  once(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn: LeafletEventHandlerFn,
+    context?: any,
+  ): this;
+  once(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
+  once(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
+  once(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
+  once(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
+  once(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
+  once(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn: LeafletMouseEventHandlerFn,
+    context?: any,
+  ): this;
+  once(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
+  once(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
+  once(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
+  once(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
+  once(type: "tileerror", fn: TileEventHandlerFn, context?: any): this;
+  once(type: string, fn: LeafletEventHandlerFn, context?: any): this;
 
-    /**
-     * Behaves as on(...), except the listener will only get fired once and then removed.
-     */
-    once(eventMap: LeafletEventHandlerFnMap): this;
-    // tslint:enable:unified-signatures
+  /**
+   * Behaves as on(...), except the listener will only get fired once and then removed.
+   */
+  once(eventMap: LeafletEventHandlerFnMap): this;
+  // tslint:enable:unified-signatures
 
-    /**
-     * Adds an event parent - an Evented that will receive propagated events
-     */
-    addEventParent(obj: Evented): this;
+  /**
+   * Adds an event parent - an Evented that will receive propagated events
+   */
+  addEventParent(obj: Evented): this;
 
-    /**
-     * Removes an event parent, so it will stop receiving propagated events
-     */
-    removeEventParent(obj: Evented): this;
+  /**
+   * Removes an event parent, so it will stop receiving propagated events
+   */
+  removeEventParent(obj: Evented): this;
 }
 
 // eslint-disable-next-line @definitelytyped/strict-export-declare-modifiers
 declare class MixinType {
-    Events: Events;
+  Events: Events;
 }
 
 export const Mixin: MixinType;
@@ -843,373 +829,360 @@ export const Mixin: MixinType;
  * Base class of Leaflet classes supporting events
  */
 export abstract class Evented extends Class {
-    /**
-     * Adds a listener function (fn) to a particular event type of the object.
-     * You can optionally specify the context of the listener (object the this
-     * keyword will point to). You can also pass several space-separated types
-     * (e.g. 'click dblclick').
-     */
-    // tslint:disable:unified-signatures
-    on(type: "baselayerchange" | "overlayadd" | "overlayremove", fn: LayersControlEventHandlerFn, context?: any): this;
-    on(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
-    on(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn: LeafletEventHandlerFn,
-        context?: any,
-    ): this;
-    on(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
-    on(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
-    on(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
-    on(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
-    on(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
-    on(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn: LeafletMouseEventHandlerFn,
-        context?: any,
-    ): this;
-    on(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
-    on(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
-    on(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
-    on(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
-    on(type: "tileerror", fn: TileErrorEventHandlerFn, context?: any): this;
-    on(type: string, fn: LeafletEventHandlerFn, context?: any): this;
+  /**
+   * Adds a listener function (fn) to a particular event type of the object.
+   * You can optionally specify the context of the listener (object the this
+   * keyword will point to). You can also pass several space-separated types
+   * (e.g. 'click dblclick').
+   */
+  // tslint:disable:unified-signatures
+  on(type: "baselayerchange" | "overlayadd" | "overlayremove", fn: LayersControlEventHandlerFn, context?: any): this;
+  on(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
+  on(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn: LeafletEventHandlerFn,
+    context?: any,
+  ): this;
+  on(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
+  on(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
+  on(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
+  on(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
+  on(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
+  on(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn: LeafletMouseEventHandlerFn,
+    context?: any,
+  ): this;
+  on(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
+  on(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
+  on(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
+  on(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
+  on(type: "tileerror", fn: TileErrorEventHandlerFn, context?: any): this;
+  on(type: string, fn: LeafletEventHandlerFn, context?: any): this;
 
-    /**
-     * Adds a set of type/listener pairs, e.g. {click: onClick, mousemove: onMouseMove}
-     */
-    on(eventMap: LeafletEventHandlerFnMap): this;
-    // tslint:enable:unified-signatures
+  /**
+   * Adds a set of type/listener pairs, e.g. {click: onClick, mousemove: onMouseMove}
+   */
+  on(eventMap: LeafletEventHandlerFnMap): this;
+  // tslint:enable:unified-signatures
 
-    /**
-     * Removes a previously added listener function. If no function is specified,
-     * it will remove all the listeners of that particular event from the object.
-     * Note that if you passed a custom context to on, you must pass the same context
-     * to off in order to remove the listener.
-     */
-    // tslint:disable:unified-signatures
-    off(
-        type: "baselayerchange" | "overlayadd" | "overlayremove",
-        fn?: LayersControlEventHandlerFn,
-        context?: any,
-    ): this;
-    off(type: "layeradd" | "layerremove", fn?: LayerEventHandlerFn, context?: any): this;
-    off(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn?: LeafletEventHandlerFn,
-        context?: any,
-    ): this;
-    off(type: "resize", fn?: ResizeEventHandlerFn, context?: any): this;
-    off(type: "popupopen" | "popupclose", fn?: PopupEventHandlerFn, context?: any): this;
-    off(type: "tooltipopen" | "tooltipclose", fn?: TooltipEventHandlerFn, context?: any): this;
-    off(type: "locationerror", fn?: ErrorEventHandlerFn, context?: any): this;
-    off(type: "locationfound", fn?: LocationEventHandlerFn, context?: any): this;
-    off(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn?: LeafletMouseEventHandlerFn,
-        context?: any,
-    ): this;
-    off(type: "keypress" | "keydown" | "keyup", fn?: LeafletKeyboardEventHandlerFn, context?: any): this;
-    off(type: "zoomanim", fn?: ZoomAnimEventHandlerFn, context?: any): this;
-    off(type: "dragend", fn?: DragEndEventHandlerFn, context?: any): this;
-    off(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn?: TileEventHandlerFn, context?: any): this;
-    off(type: "tileerror", fn?: TileErrorEventHandlerFn, context?: any): this;
-    off(type: string, fn?: LeafletEventHandlerFn, context?: any): this;
+  /**
+   * Removes a previously added listener function. If no function is specified,
+   * it will remove all the listeners of that particular event from the object.
+   * Note that if you passed a custom context to on, you must pass the same context
+   * to off in order to remove the listener.
+   */
+  // tslint:disable:unified-signatures
+  off(type: "baselayerchange" | "overlayadd" | "overlayremove", fn?: LayersControlEventHandlerFn, context?: any): this;
+  off(type: "layeradd" | "layerremove", fn?: LayerEventHandlerFn, context?: any): this;
+  off(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn?: LeafletEventHandlerFn,
+    context?: any,
+  ): this;
+  off(type: "resize", fn?: ResizeEventHandlerFn, context?: any): this;
+  off(type: "popupopen" | "popupclose", fn?: PopupEventHandlerFn, context?: any): this;
+  off(type: "tooltipopen" | "tooltipclose", fn?: TooltipEventHandlerFn, context?: any): this;
+  off(type: "locationerror", fn?: ErrorEventHandlerFn, context?: any): this;
+  off(type: "locationfound", fn?: LocationEventHandlerFn, context?: any): this;
+  off(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn?: LeafletMouseEventHandlerFn,
+    context?: any,
+  ): this;
+  off(type: "keypress" | "keydown" | "keyup", fn?: LeafletKeyboardEventHandlerFn, context?: any): this;
+  off(type: "zoomanim", fn?: ZoomAnimEventHandlerFn, context?: any): this;
+  off(type: "dragend", fn?: DragEndEventHandlerFn, context?: any): this;
+  off(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn?: TileEventHandlerFn, context?: any): this;
+  off(type: "tileerror", fn?: TileErrorEventHandlerFn, context?: any): this;
+  off(type: string, fn?: LeafletEventHandlerFn, context?: any): this;
 
-    /**
-     * Removes a set of type/listener pairs.
-     */
-    // With an eventMap there are no additional arguments allowed
-    off(eventMap: LeafletEventHandlerFnMap): this;
+  /**
+   * Removes a set of type/listener pairs.
+   */
+  // With an eventMap there are no additional arguments allowed
+  off(eventMap: LeafletEventHandlerFnMap): this;
 
-    /**
-     * Removes all listeners to all events on the object.
-     */
-    off(): this;
-    // tslint:enable:unified-signatures
+  /**
+   * Removes all listeners to all events on the object.
+   */
+  off(): this;
+  // tslint:enable:unified-signatures
 
-    /**
-     * Fires an event of the specified type. You can optionally provide a data
-     * object — the first argument of the listener function will contain its properties.
-     * The event might can optionally be propagated to event parents.
-     */
-    fire(type: string, data?: any, propagate?: boolean): this;
+  /**
+   * Fires an event of the specified type. You can optionally provide a data
+   * object — the first argument of the listener function will contain its properties.
+   * The event might can optionally be propagated to event parents.
+   */
+  fire(type: string, data?: any, propagate?: boolean): this;
 
-    /**
-     * Returns true if a particular event type has any listeners attached to it.
-     */
-    // tslint:disable:unified-signatures
-    listens(
-        type:
-            | "baselayerchange"
-            | "overlayadd"
-            | "overlayremove"
-            | "layeradd"
-            | "layerremove"
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag"
-            | "resize"
-            | "popupopen"
-            | "tooltipopen"
-            | "tooltipclose"
-            | "locationerror"
-            | "locationfound"
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick"
-            | "keypress"
-            | "keydown"
-            | "keyup"
-            | "zoomanim"
-            | "dragend"
-            | "tileunload"
-            | "tileloadstart"
-            | "tileload"
-            | "tileabort"
-            | "tileerror",
-        propagate?: boolean,
-    ): boolean;
+  /**
+   * Returns true if a particular event type has any listeners attached to it.
+   */
+  // tslint:disable:unified-signatures
+  listens(
+    type:
+      | "baselayerchange"
+      | "overlayadd"
+      | "overlayremove"
+      | "layeradd"
+      | "layerremove"
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag"
+      | "resize"
+      | "popupopen"
+      | "tooltipopen"
+      | "tooltipclose"
+      | "locationerror"
+      | "locationfound"
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick"
+      | "keypress"
+      | "keydown"
+      | "keyup"
+      | "zoomanim"
+      | "dragend"
+      | "tileunload"
+      | "tileloadstart"
+      | "tileload"
+      | "tileabort"
+      | "tileerror",
+    propagate?: boolean,
+  ): boolean;
 
-    listens(
-        type: "baselayerchange" | "overlayadd" | "overlayremove",
-        fn: LayersControlEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn: LeafletEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "resize", fn: ResizeEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type: "tooltipopen" | "tooltipclose",
-        fn: TooltipEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "locationerror", fn: ErrorEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: "locationfound", fn: LocationEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn: LeafletMouseEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(
-        type: "keypress" | "keydown" | "keyup",
-        fn: LeafletKeyboardEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: "dragend", fn: DragEndEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(
-        type: "tileunload" | "tileloadstart" | "tileload" | "tileabort",
-        fn: TileEventHandlerFn,
-        context?: any,
-        propagate?: boolean,
-    ): boolean;
-    listens(type: "tileerror", fn: TileEventHandlerFn, context?: any, propagate?: boolean): boolean;
-    listens(type: string, fn: LeafletEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type: "baselayerchange" | "overlayadd" | "overlayremove",
+    fn: LayersControlEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn: LeafletEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "resize", fn: ResizeEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "locationerror", fn: ErrorEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "locationfound", fn: LocationEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn: LeafletMouseEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(
+    type: "keypress" | "keydown" | "keyup",
+    fn: LeafletKeyboardEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: "dragend", fn: DragEndEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(
+    type: "tileunload" | "tileloadstart" | "tileload" | "tileabort",
+    fn: TileEventHandlerFn,
+    context?: any,
+    propagate?: boolean,
+  ): boolean;
+  listens(type: "tileerror", fn: TileEventHandlerFn, context?: any, propagate?: boolean): boolean;
+  listens(type: string, fn: LeafletEventHandlerFn, context?: any, propagate?: boolean): boolean;
 
-    /**
-     * Behaves as on(...), except the listener will only get fired once and then removed.
-     */
-    // tslint:disable:unified-signatures
-    once(
-        type: "baselayerchange" | "overlayadd" | "overlayremove",
-        fn: LayersControlEventHandlerFn,
-        context?: any,
-    ): this;
-    once(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
-    once(
-        type:
-            | "zoomlevelschange"
-            | "unload"
-            | "viewreset"
-            | "load"
-            | "zoomstart"
-            | "movestart"
-            | "zoom"
-            | "move"
-            | "zoomend"
-            | "moveend"
-            | "autopanstart"
-            | "dragstart"
-            | "drag"
-            | "add"
-            | "remove"
-            | "loading"
-            | "error"
-            | "update"
-            | "down"
-            | "predrag",
-        fn: LeafletEventHandlerFn,
-        context?: any,
-    ): this;
-    once(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
-    once(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
-    once(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
-    once(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
-    once(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
-    once(
-        type:
-            | "click"
-            | "dblclick"
-            | "mousedown"
-            | "mouseup"
-            | "mouseover"
-            | "mouseout"
-            | "mousemove"
-            | "contextmenu"
-            | "preclick",
-        fn: LeafletMouseEventHandlerFn,
-        context?: any,
-    ): this;
-    once(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
-    once(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
-    once(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
-    once(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
-    once(type: "tileerror", fn: TileEventHandlerFn, context?: any): this;
-    once(type: string, fn: LeafletEventHandlerFn, context?: any): this;
+  /**
+   * Behaves as on(...), except the listener will only get fired once and then removed.
+   */
+  // tslint:disable:unified-signatures
+  once(type: "baselayerchange" | "overlayadd" | "overlayremove", fn: LayersControlEventHandlerFn, context?: any): this;
+  once(type: "layeradd" | "layerremove", fn: LayerEventHandlerFn, context?: any): this;
+  once(
+    type:
+      | "zoomlevelschange"
+      | "unload"
+      | "viewreset"
+      | "load"
+      | "zoomstart"
+      | "movestart"
+      | "zoom"
+      | "move"
+      | "zoomend"
+      | "moveend"
+      | "autopanstart"
+      | "dragstart"
+      | "drag"
+      | "add"
+      | "remove"
+      | "loading"
+      | "error"
+      | "update"
+      | "down"
+      | "predrag",
+    fn: LeafletEventHandlerFn,
+    context?: any,
+  ): this;
+  once(type: "resize", fn: ResizeEventHandlerFn, context?: any): this;
+  once(type: "popupopen" | "popupclose", fn: PopupEventHandlerFn, context?: any): this;
+  once(type: "tooltipopen" | "tooltipclose", fn: TooltipEventHandlerFn, context?: any): this;
+  once(type: "locationerror", fn: ErrorEventHandlerFn, context?: any): this;
+  once(type: "locationfound", fn: LocationEventHandlerFn, context?: any): this;
+  once(
+    type:
+      | "click"
+      | "dblclick"
+      | "mousedown"
+      | "mouseup"
+      | "mouseover"
+      | "mouseout"
+      | "mousemove"
+      | "contextmenu"
+      | "preclick",
+    fn: LeafletMouseEventHandlerFn,
+    context?: any,
+  ): this;
+  once(type: "keypress" | "keydown" | "keyup", fn: LeafletKeyboardEventHandlerFn, context?: any): this;
+  once(type: "zoomanim", fn: ZoomAnimEventHandlerFn, context?: any): this;
+  once(type: "dragend", fn: DragEndEventHandlerFn, context?: any): this;
+  once(type: "tileunload" | "tileloadstart" | "tileload" | "tileabort", fn: TileEventHandlerFn, context?: any): this;
+  once(type: "tileerror", fn: TileEventHandlerFn, context?: any): this;
+  once(type: string, fn: LeafletEventHandlerFn, context?: any): this;
 
-    /**
-     * Behaves as on(...), except the listener will only get fired once and then removed.
-     */
-    once(eventMap: LeafletEventHandlerFnMap): this;
-    // tslint:enable:unified-signatures
+  /**
+   * Behaves as on(...), except the listener will only get fired once and then removed.
+   */
+  once(eventMap: LeafletEventHandlerFnMap): this;
+  // tslint:enable:unified-signatures
 
-    /**
-     * Adds an event parent - an Evented that will receive propagated events
-     */
-    addEventParent(obj: Evented): this;
+  /**
+   * Adds an event parent - an Evented that will receive propagated events
+   */
+  addEventParent(obj: Evented): this;
 
-    /**
-     * Removes an event parent, so it will stop receiving propagated events
-     */
-    removeEventParent(obj: Evented): this;
+  /**
+   * Removes an event parent, so it will stop receiving propagated events
+   */
+  removeEventParent(obj: Evented): this;
 }
 
 export interface DraggableOptions {
-    /**
-     * The max number of pixels a user can shift the mouse pointer during a click
-     * for it to be considered a valid click (as opposed to a mouse drag).
-     */
-    clickTolerance: number;
+  /**
+   * The max number of pixels a user can shift the mouse pointer during a click
+   * for it to be considered a valid click (as opposed to a mouse drag).
+   */
+  clickTolerance: number;
 }
 
 /**
@@ -1218,304 +1191,304 @@ export interface DraggableOptions {
  * that were positioned with [`DomUtil.setPosition`](#domutil-setposition).
  */
 export class Draggable extends Evented {
-    constructor(
-        element: HTMLElement,
-        dragStartTarget?: HTMLElement,
-        preventOutline?: boolean,
-        options?: DraggableOptions,
-    );
+  constructor(
+    element: HTMLElement,
+    dragStartTarget?: HTMLElement,
+    preventOutline?: boolean,
+    options?: DraggableOptions,
+  );
 
-    enable(): void;
+  enable(): void;
 
-    disable(): void;
+  disable(): void;
 
-    finishDrag(): void;
+  finishDrag(): void;
 }
 
 export interface LayerOptions {
-    pane?: string | undefined;
-    attribution?: string | undefined;
-    // TODO: should it be in InteractiveLayerOptions because it will be only used if interactive is true?
-    // But GridLayerOptions and other options extend from LayerOptions but bubblingPointerEvents is not used by Leaflet core in the tile layers but maybe by plugins.
-    bubblingPointerEvents?: boolean | undefined;
+  pane?: string | undefined;
+  attribution?: string | undefined;
+  // TODO: should it be in InteractiveLayerOptions because it will be only used if interactive is true?
+  // But GridLayerOptions and other options extend from LayerOptions but bubblingPointerEvents is not used by Leaflet core in the tile layers but maybe by plugins.
+  bubblingPointerEvents?: boolean | undefined;
 }
 
 export interface InteractiveLayerOptions extends LayerOptions {
-    interactive?: boolean | undefined;
+  interactive?: boolean | undefined;
 }
 
 export class Layer extends Evented {
-    // TODO: InteractiveLayerOptions?
-    constructor(options?: LayerOptions);
-    addTo(map: Map | LayerGroup): this;
-    remove(): this;
-    removeFrom(map: Map | LayerGroup): this;
-    getPane(name?: string): HTMLElement | undefined;
+  // TODO: InteractiveLayerOptions?
+  constructor(options?: LayerOptions);
+  addTo(map: Map | LayerGroup): this;
+  remove(): this;
+  removeFrom(map: Map | LayerGroup): this;
+  getPane(name?: string): HTMLElement | undefined;
 
-    addInteractiveTarget(targetEl: HTMLElement): this;
-    removeInteractiveTarget(targetEl: HTMLElement): this;
+  addInteractiveTarget(targetEl: HTMLElement): this;
+  removeInteractiveTarget(targetEl: HTMLElement): this;
 
-    // Popup methods
-    bindPopup(content: ((layer: Layer) => Content) | Content | Popup, options?: PopupOptions): this;
-    unbindPopup(): this;
-    openPopup(latlng?: LatLngExpression): this;
-    closePopup(): this;
-    togglePopup(): this;
-    isPopupOpen(): boolean;
-    setPopupContent(content: Content | ((layer: Layer) => Content)): this;
-    getPopup(): Popup | undefined;
+  // Popup methods
+  bindPopup(content: ((layer: Layer) => Content) | Content | Popup, options?: PopupOptions): this;
+  unbindPopup(): this;
+  openPopup(latlng?: LatLngExpression): this;
+  closePopup(): this;
+  togglePopup(): this;
+  isPopupOpen(): boolean;
+  setPopupContent(content: Content | ((layer: Layer) => Content)): this;
+  getPopup(): Popup | undefined;
 
-    // Tooltip methods
-    bindTooltip(content: ((layer: Layer) => Content) | Content | Tooltip, options?: TooltipOptions): this;
-    unbindTooltip(): this;
-    openTooltip(latlng?: LatLngExpression): this;
-    closeTooltip(): this;
-    toggleTooltip(): this;
-    isTooltipOpen(): boolean;
-    setTooltipContent(content: Content | ((layer: Layer) => Content)): this;
-    getTooltip(): Tooltip | undefined;
+  // Tooltip methods
+  bindTooltip(content: ((layer: Layer) => Content) | Content | Tooltip, options?: TooltipOptions): this;
+  unbindTooltip(): this;
+  openTooltip(latlng?: LatLngExpression): this;
+  closeTooltip(): this;
+  toggleTooltip(): this;
+  isTooltipOpen(): boolean;
+  setTooltipContent(content: Content | ((layer: Layer) => Content)): this;
+  getTooltip(): Tooltip | undefined;
 
-    // Extension methods
-    onAdd(map: Map): this;
-    onRemove(map: Map): this;
-    getEvents?(): { [name: string]: LeafletEventHandlerFn };
-    getAttribution?(): string | null;
-    beforeAdd?(map: Map): this;
+  // Extension methods
+  onAdd(map: Map): this;
+  onRemove(map: Map): this;
+  getEvents?(): { [name: string]: LeafletEventHandlerFn };
+  getAttribution?(): string | null;
+  beforeAdd?(map: Map): this;
 
-    protected _map: Map;
+  protected _map: Map;
 
-    // TODO: InteractiveLayerOptions?
-    options: LayerOptions;
+  // TODO: InteractiveLayerOptions?
+  options: LayerOptions;
 }
 
 export interface GridLayerOptions extends LayerOptions {
-    tileSize?: number | Point | undefined;
-    opacity?: number | undefined;
-    updateWhenIdle?: boolean | undefined;
-    updateWhenZooming?: boolean | undefined;
-    updateInterval?: number | undefined;
-    zIndex?: number | undefined;
-    bounds?: LatLngBoundsExpression | undefined;
-    minZoom?: number | undefined;
-    maxZoom?: number | undefined;
-    /**
-     * Maximum zoom number the tile source has available. If it is specified, the tiles on all zoom levels higher than
-     * `maxNativeZoom` will be loaded from `maxNativeZoom` level and auto-scaled.
-     */
-    maxNativeZoom?: number | undefined;
-    /**
-     * Minimum zoom number the tile source has available. If it is specified, the tiles on all zoom levels lower than
-     * `minNativeZoom` will be loaded from `minNativeZoom` level and auto-scaled.
-     */
-    minNativeZoom?: number | undefined;
-    noWrap?: boolean | undefined;
-    pane?: string | undefined;
-    className?: string | undefined;
-    keepBuffer?: number | undefined;
+  tileSize?: number | Point | undefined;
+  opacity?: number | undefined;
+  updateWhenIdle?: boolean | undefined;
+  updateWhenZooming?: boolean | undefined;
+  updateInterval?: number | undefined;
+  zIndex?: number | undefined;
+  bounds?: LatLngBoundsExpression | undefined;
+  minZoom?: number | undefined;
+  maxZoom?: number | undefined;
+  /**
+   * Maximum zoom number the tile source has available. If it is specified, the tiles on all zoom levels higher than
+   * `maxNativeZoom` will be loaded from `maxNativeZoom` level and auto-scaled.
+   */
+  maxNativeZoom?: number | undefined;
+  /**
+   * Minimum zoom number the tile source has available. If it is specified, the tiles on all zoom levels lower than
+   * `minNativeZoom` will be loaded from `minNativeZoom` level and auto-scaled.
+   */
+  minNativeZoom?: number | undefined;
+  noWrap?: boolean | undefined;
+  pane?: string | undefined;
+  className?: string | undefined;
+  keepBuffer?: number | undefined;
 }
 
 export type DoneCallback = (error?: Error, tile?: HTMLElement) => void;
 
 export interface InternalTiles {
-    [key: string]: {
-        active?: boolean | undefined;
-        coords: Coords;
-        current: boolean;
-        el: HTMLElement;
-        loaded?: Date | undefined;
-        retain?: boolean | undefined;
-    };
+  [key: string]: {
+    active?: boolean | undefined;
+    coords: Coords;
+    current: boolean;
+    el: HTMLElement;
+    loaded?: Date | undefined;
+    retain?: boolean | undefined;
+  };
 }
 
 export class GridLayer extends Layer {
-    constructor(options?: GridLayerOptions);
-    bringToFront(): this;
-    bringToBack(): this;
-    getContainer(): HTMLElement | null;
-    setOpacity(opacity: number): this;
-    setZIndex(zIndex: number): this;
-    isLoading(): boolean;
-    redraw(): this;
-    getTileSize(): Point;
+  constructor(options?: GridLayerOptions);
+  bringToFront(): this;
+  bringToBack(): this;
+  getContainer(): HTMLElement | null;
+  setOpacity(opacity: number): this;
+  setZIndex(zIndex: number): this;
+  isLoading(): boolean;
+  redraw(): this;
+  getTileSize(): Point;
 
-    protected createTile(coords: Coords, done?: DoneCallback): HTMLElement;
-    protected _tileCoordsToKey(coords: Coords): string;
-    protected _wrapCoords(parameter: Coords): Coords;
+  protected createTile(coords: Coords, done?: DoneCallback): HTMLElement;
+  protected _tileCoordsToKey(coords: Coords): string;
+  protected _wrapCoords(parameter: Coords): Coords;
 
-    protected _tiles: InternalTiles;
-    protected _tileZoom?: number | undefined;
+  protected _tiles: InternalTiles;
+  protected _tileZoom?: number | undefined;
 
-    options: GridLayerOptions;
+  options: GridLayerOptions;
 }
 
 export interface TileLayerOptions extends GridLayerOptions {
-    id?: string | undefined;
-    subdomains?: string | string[] | undefined;
-    errorTileUrl?: string | undefined;
-    zoomOffset?: number | undefined;
-    tms?: boolean | undefined;
-    zoomReverse?: boolean | undefined;
-    detectRetina?: boolean | undefined;
-    crossOrigin?: CrossOrigin | boolean | undefined;
-    referrerPolicy?: ReferrerPolicy | boolean | undefined;
-    // [name: string]: any;
-    // You are able add additional properties, but it makes this interface uncheckable.
-    // See: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/15313
-    // Example:
-    // tileLayer = new TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}&{bar}&{abc}', {foo: 'bar', bar: (data: any) => 'foo', abc: () => ''});
+  id?: string | undefined;
+  subdomains?: string | string[] | undefined;
+  errorTileUrl?: string | undefined;
+  zoomOffset?: number | undefined;
+  tms?: boolean | undefined;
+  zoomReverse?: boolean | undefined;
+  detectRetina?: boolean | undefined;
+  crossOrigin?: CrossOrigin | boolean | undefined;
+  referrerPolicy?: ReferrerPolicy | boolean | undefined;
+  // [name: string]: any;
+  // You are able add additional properties, but it makes this interface uncheckable.
+  // See: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/15313
+  // Example:
+  // tileLayer = new TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?{foo}&{bar}&{abc}', {foo: 'bar', bar: (data: any) => 'foo', abc: () => ''});
 }
 
 export class TileLayer extends GridLayer {
-    constructor(urlTemplate: string, options?: TileLayerOptions);
-    setUrl(url: string, noRedraw?: boolean): this;
-    getTileUrl(coords: Coords): string;
+  constructor(urlTemplate: string, options?: TileLayerOptions);
+  setUrl(url: string, noRedraw?: boolean): this;
+  getTileUrl(coords: Coords): string;
 
-    // ?
-    protected createTile(coords: Coords, done?: DoneCallback): HTMLElement;
+  // ?
+  protected createTile(coords: Coords, done?: DoneCallback): HTMLElement;
 
-    protected _tileOnLoad(done: DoneCallback, tile: HTMLElement): void;
-    protected _tileOnError(done: DoneCallback, tile: HTMLElement, e: Error): void;
-    protected _abortLoading(): void;
-    protected _getZoomForUrl(): number;
+  protected _tileOnLoad(done: DoneCallback, tile: HTMLElement): void;
+  protected _tileOnError(done: DoneCallback, tile: HTMLElement, e: Error): void;
+  protected _abortLoading(): void;
+  protected _getZoomForUrl(): number;
 
-    options: TileLayerOptions;
+  options: TileLayerOptions;
 }
 
 export namespace TileLayer {
-    class WMS extends TileLayer {
-        constructor(baseUrl: string, options: WMSOptions);
-        setParams(params: WMSParams, noRedraw?: boolean): this;
+  class WMS extends TileLayer {
+    constructor(baseUrl: string, options: WMSOptions);
+    setParams(params: WMSParams, noRedraw?: boolean): this;
 
-        // TODO: is this correctly added?
-        static defaultWmsParams: WMSParams;
+    // TODO: is this correctly added?
+    static defaultWmsParams: WMSParams;
 
-        wmsParams: WMSParams;
-        options: WMSOptions;
-    }
+    wmsParams: WMSParams;
+    options: WMSOptions;
+  }
 }
 
 export interface WMSOptions extends TileLayerOptions {
-    layers?: string | undefined;
-    styles?: string | undefined;
-    format?: string | undefined;
-    transparent?: boolean | undefined;
-    version?: string | undefined;
-    crs?: CRS | undefined;
-    uppercase?: boolean | undefined;
+  layers?: string | undefined;
+  styles?: string | undefined;
+  format?: string | undefined;
+  transparent?: boolean | undefined;
+  version?: string | undefined;
+  crs?: CRS | undefined;
+  uppercase?: boolean | undefined;
 }
 
 export interface WMSParams {
-    format?: string | undefined;
-    layers: string;
-    request?: string | undefined;
-    service?: string | undefined;
-    styles?: string | undefined;
-    version?: string | undefined;
-    transparent?: boolean | undefined;
-    width?: number | undefined;
-    height?: number | undefined;
+  format?: string | undefined;
+  layers: string;
+  request?: string | undefined;
+  service?: string | undefined;
+  styles?: string | undefined;
+  version?: string | undefined;
+  transparent?: boolean | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
 }
 
 export type CrossOrigin = "anonymous" | "use-credentials" | "";
 export type ReferrerPolicy =
-    | "no-referrer"
-    | "no-referrer-when-downgrade"
-    | "origin"
-    | "origin-when-cross-origin"
-    | "same-origin"
-    | "strict-origin"
-    | "strict-origin-when-cross-origin"
-    | "unsafe-url";
+  | "no-referrer"
+  | "no-referrer-when-downgrade"
+  | "origin"
+  | "origin-when-cross-origin"
+  | "same-origin"
+  | "strict-origin"
+  | "strict-origin-when-cross-origin"
+  | "unsafe-url";
 
 export interface ImageOverlayOptions extends InteractiveLayerOptions {
-    opacity?: number | undefined;
-    alt?: string | undefined;
-    interactive?: boolean | undefined;
-    crossOrigin?: CrossOrigin | boolean | undefined;
-    errorOverlayUrl?: string | undefined;
-    zIndex?: number | undefined;
-    className?: string | undefined;
-    decoding?: string | undefined;
+  opacity?: number | undefined;
+  alt?: string | undefined;
+  interactive?: boolean | undefined;
+  crossOrigin?: CrossOrigin | boolean | undefined;
+  errorOverlayUrl?: string | undefined;
+  zIndex?: number | undefined;
+  className?: string | undefined;
+  decoding?: string | undefined;
 }
 
 export interface ImageOverlayStyleOptions {
-    opacity?: number;
+  opacity?: number;
 
-    // TODO: should it be removed?
-    [name: string]: any;
+  // TODO: should it be removed?
+  [name: string]: any;
 }
 
 export class ImageOverlay<T extends Element = HTMLImageElement> extends Layer {
-    constructor(imageUrl: string, bounds: LatLngBoundsExpression, options?: ImageOverlayOptions);
-    bringToFront(): this;
-    bringToBack(): this;
-    setUrl(url: string): this;
+  constructor(imageUrl: string, bounds: LatLngBoundsExpression, options?: ImageOverlayOptions);
+  bringToFront(): this;
+  bringToBack(): this;
+  setUrl(url: string): this;
 
-    /** Update the bounds that this ImageOverlay covers */
-    setBounds(bounds: LatLngBoundsExpression): this;
+  /** Update the bounds that this ImageOverlay covers */
+  setBounds(bounds: LatLngBoundsExpression): this;
 
-    /** Changes the zIndex of the image overlay */
-    setZIndex(value: number): this;
+  /** Changes the zIndex of the image overlay */
+  setZIndex(value: number): this;
 
-    /** Changes the opacity of the image element */
-    setOpacity(opacity: number): this;
+  /** Changes the opacity of the image element */
+  setOpacity(opacity: number): this;
 
-    /** Changes the style of the image element. As of 1.8, only the opacity is changed */
-    setStyle(styleOpts: ImageOverlayStyleOptions): this;
+  /** Changes the style of the image element. As of 1.8, only the opacity is changed */
+  setStyle(styleOpts: ImageOverlayStyleOptions): this;
 
-    /** Get the bounds that this ImageOverlay covers */
-    getBounds(): LatLngBounds;
+  /** Get the bounds that this ImageOverlay covers */
+  getBounds(): LatLngBounds;
 
-    /** Get the center of the bounds this ImageOverlay covers */
-    getCenter(): LatLng;
+  /** Get the center of the bounds this ImageOverlay covers */
+  getCenter(): LatLng;
 
-    /** Get the img element that represents the ImageOverlay on the map */
-    getElement(): T | undefined;
+  /** Get the img element that represents the ImageOverlay on the map */
+  getElement(): T | undefined;
 
-    options: ImageOverlayOptions;
+  options: ImageOverlayOptions;
 }
 
 export type SVGOverlayOptions = ImageOverlayOptions;
 export type SVGOverlayStyleOptions = ImageOverlayStyleOptions;
 
 export class SVGOverlay extends ImageOverlay<SVGElement> {
-    constructor(svgImage: string | SVGElement, bounds: LatLngBoundsExpression, options?: SVGOverlayOptions);
-    /** Changes the style of the image element. As of 1.8, only the opacity is changed */
-    setStyle(styleOpts: SVGOverlayStyleOptions): this;
+  constructor(svgImage: string | SVGElement, bounds: LatLngBoundsExpression, options?: SVGOverlayOptions);
+  /** Changes the style of the image element. As of 1.8, only the opacity is changed */
+  setStyle(styleOpts: SVGOverlayStyleOptions): this;
 
-    options: SVGOverlayOptions;
+  options: SVGOverlayOptions;
 }
 
 export interface VideoOverlayOptions extends ImageOverlayOptions {
-    /** Whether the video starts playing automatically when loaded. */
-    autoplay?: boolean | undefined;
-    /** Whether the video will loop back to the beginning when played. */
-    loop?: boolean | undefined;
-    /**
-     * Whether the video will save aspect ratio after the projection. Relevant for supported browsers. See
-     * [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
-     */
-    keepAspectRatio?: boolean | undefined;
-    /** Whether the video starts on mute when loaded. */
-    muted?: boolean | undefined;
-    playsInline?: boolean | undefined;
-    controls?: boolean | undefined;
+  /** Whether the video starts playing automatically when loaded. */
+  autoplay?: boolean | undefined;
+  /** Whether the video will loop back to the beginning when played. */
+  loop?: boolean | undefined;
+  /**
+   * Whether the video will save aspect ratio after the projection. Relevant for supported browsers. See
+   * [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit)
+   */
+  keepAspectRatio?: boolean | undefined;
+  /** Whether the video starts on mute when loaded. */
+  muted?: boolean | undefined;
+  playsInline?: boolean | undefined;
+  controls?: boolean | undefined;
 }
 export type VideoOverlayStyleOptions = ImageOverlayStyleOptions;
 
 export class VideoOverlay extends ImageOverlay<HTMLVideoElement> {
-    constructor(
-        video: string | string[] | HTMLVideoElement,
-        bounds: LatLngBoundsExpression,
-        options?: VideoOverlayOptions,
-    );
-    /** Changes the style of the image element. As of 1.8, only the opacity is changed */
-    setStyle(styleOpts: VideoOverlayStyleOptions): this;
+  constructor(
+    video: string | string[] | HTMLVideoElement,
+    bounds: LatLngBoundsExpression,
+    options?: VideoOverlayOptions,
+  );
+  /** Changes the style of the image element. As of 1.8, only the opacity is changed */
+  setStyle(styleOpts: VideoOverlayStyleOptions): this;
 
-    /** Get the video element that represents the VideoOverlay on the map */
-    getElement(): HTMLVideoElement | undefined;
+  /** Get the video element that represents the VideoOverlay on the map */
+  getElement(): HTMLVideoElement | undefined;
 
-    options: VideoOverlayOptions;
+  options: VideoOverlayOptions;
 }
 
 export type LineCapShape = "butt" | "round" | "square" | "inherit";
@@ -1525,161 +1498,163 @@ export type LineJoinShape = "miter" | "round" | "bevel" | "inherit";
 export type FillRule = "nonzero" | "evenodd" | "inherit";
 
 export interface PathOptions extends InteractiveLayerOptions {
-    stroke?: boolean | undefined;
-    color?: string | undefined;
-    weight?: number | undefined;
-    opacity?: number | undefined;
-    lineCap?: LineCapShape | undefined;
-    lineJoin?: LineJoinShape | undefined;
-    dashArray?: string | number[] | undefined;
-    dashOffset?: string | undefined;
-    // TODO: should be fill moved to the correct options? PolygonOptions, CircleMarkerOptions, ...
-    fill?: boolean | undefined;
-    fillColor?: string | undefined;
-    fillOpacity?: number | undefined;
-    fillRule?: FillRule | undefined;
-    renderer?: Renderer | undefined;
-    className?: string | undefined;
+  stroke?: boolean | undefined;
+  color?: string | undefined;
+  weight?: number | undefined;
+  opacity?: number | undefined;
+  lineCap?: LineCapShape | undefined;
+  lineJoin?: LineJoinShape | undefined;
+  dashArray?: string | number[] | undefined;
+  dashOffset?: string | undefined;
+  // TODO: should be fill moved to the correct options? PolygonOptions, CircleMarkerOptions, ...
+  fill?: boolean | undefined;
+  fillColor?: string | undefined;
+  fillOpacity?: number | undefined;
+  fillRule?: FillRule | undefined;
+  renderer?: Renderer | undefined;
+  className?: string | undefined;
 }
 
 export abstract class Path extends Layer {
-    redraw(): this;
-    // TODO: should Partial<PathOptions> be used?
-    setStyle(style: PathOptions): this;
-    bringToFront(): this;
-    bringToBack(): this;
-    getElement(): Element | undefined;
+  redraw(): this;
+  // TODO: should Partial<PathOptions> be used?
+  setStyle(style: PathOptions): this;
+  bringToFront(): this;
+  bringToBack(): this;
+  getElement(): Element | undefined;
 
-    options: PathOptions;
+  options: PathOptions;
 }
 
 export interface PolylineOptions extends PathOptions {
-    smoothFactor?: number | undefined;
-    noClip?: boolean | undefined;
+  smoothFactor?: number | undefined;
+  noClip?: boolean | undefined;
 }
 
 export class Polyline<
-    T extends geojson.GeometryObject = geojson.LineString | geojson.MultiLineString,
-    P = any,
-    U = LatLng[] | LatLng[][],
+  T extends geojson.GeometryObject = geojson.LineString | geojson.MultiLineString,
+  P = any,
+  U = LatLng[] | LatLng[][],
 > extends Path {
-    constructor(latlngs: LatLngExpression[] | LatLngExpression[][], options?: PolylineOptions);
-    toGeoJSON(precision?: number | false): geojson.Feature<T, P>;
-    getLatLngs(): U;
-    setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][]): this;
-    isEmpty(): boolean;
-    getCenter(): LatLng;
-    getBounds(): LatLngBounds;
-    addLatLng(latlng: LatLngExpression | LatLngExpression[], latlngs?: LatLng[]): this;
-    closestLayerPoint(p: PointExpression): Point;
-    // TODO: should Partial<PolylineOptions> be used?
-    setStyle(options: PolylineOptions): this;
+  constructor(latlngs: LatLngExpression[] | LatLngExpression[][], options?: PolylineOptions);
+  toGeoJSON(precision?: number | false): geojson.Feature<T, P>;
+  getLatLngs(): U;
+  setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][]): this;
+  isEmpty(): boolean;
+  getCenter(): LatLng;
+  getBounds(): LatLngBounds;
+  addLatLng(latlng: LatLngExpression | LatLngExpression[], latlngs?: LatLng[]): this;
+  closestLayerPoint(p: PointExpression): Point;
+  // TODO: should Partial<PolylineOptions> be used?
+  setStyle(options: PolylineOptions): this;
 
-    feature?: geojson.Feature<T, P> | undefined;
-    options: PolylineOptions;
+  feature?: geojson.Feature<T, P> | undefined;
+  options: PolylineOptions;
 }
 
 export type PolygonOptions = PolylineOptions;
-export class Polygon<P = any>
-    extends Polyline<geojson.Polygon | geojson.MultiPolygon, P, LatLng[] | LatLng[][] | LatLng[][][]>
-{
-    constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolygonOptions);
-    setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]): this;
+export class Polygon<P = any> extends Polyline<
+  geojson.Polygon | geojson.MultiPolygon,
+  P,
+  LatLng[] | LatLng[][] | LatLng[][][]
+> {
+  constructor(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][], options?: PolygonOptions);
+  setLatLngs(latlngs: LatLngExpression[] | LatLngExpression[][] | LatLngExpression[][][]): this;
 
-    // TODO: should Partial<PolygonOptions> be used?
-    setStyle(options: PolygonOptions): this;
-    options: PolygonOptions;
+  // TODO: should Partial<PolygonOptions> be used?
+  setStyle(options: PolygonOptions): this;
+  options: PolygonOptions;
 }
 
 export type RectangleOptions = PolygonOptions;
 export class Rectangle<P = any> extends Polygon<P> {
-    constructor(latLngBounds: LatLngBoundsExpression, options?: RectangleOptions);
-    setBounds(latLngBounds: LatLngBoundsExpression): this;
+  constructor(latLngBounds: LatLngBoundsExpression, options?: RectangleOptions);
+  setBounds(latLngBounds: LatLngBoundsExpression): this;
 
-    // TODO: should Partial<PolygonOptions> be used?
-    setStyle(options: RectangleOptions): this;
-    options: RectangleOptions;
+  // TODO: should Partial<PolygonOptions> be used?
+  setStyle(options: RectangleOptions): this;
+  options: RectangleOptions;
 }
 
 export interface CircleMarkerOptions extends PathOptions {
-    radius: number;
+  radius: number;
 }
 
 export class CircleMarker<P = any> extends Path {
-    constructor(latlng: LatLngExpression, options: CircleMarkerOptions);
-    toGeoJSON(precision?: number | false): geojson.Feature<geojson.Point, P>;
-    setLatLng(latLng: LatLngExpression): this;
-    getLatLng(): LatLng;
-    setRadius(radius: number): this;
-    getRadius(): number;
-    setStyle(options: Partial<CircleMarkerOptions>): this;
+  constructor(latlng: LatLngExpression, options: CircleMarkerOptions);
+  toGeoJSON(precision?: number | false): geojson.Feature<geojson.Point, P>;
+  setLatLng(latLng: LatLngExpression): this;
+  getLatLng(): LatLng;
+  setRadius(radius: number): this;
+  getRadius(): number;
+  setStyle(options: Partial<CircleMarkerOptions>): this;
 
-    options: CircleMarkerOptions;
-    feature?: geojson.Feature<geojson.Point, P> | undefined;
+  options: CircleMarkerOptions;
+  feature?: geojson.Feature<geojson.Point, P> | undefined;
 }
 
 // TODO: sometimes options are "defined" as type and sometimes as interface, should it be unified?
 export type CircleOptions = CircleMarkerOptions;
 
 export class Circle<P = any> extends CircleMarker<P> {
-    constructor(latlng: LatLngExpression, options: CircleOptions);
-    getBounds(): LatLngBounds;
-    setRadius(radius: number): this;
-    getRadius(): number;
-    // TODO: should Partial<PathOptions> be used?
-    setStyle(style: PathOptions): this;
+  constructor(latlng: LatLngExpression, options: CircleOptions);
+  getBounds(): LatLngBounds;
+  setRadius(radius: number): this;
+  getRadius(): number;
+  // TODO: should Partial<PathOptions> be used?
+  setStyle(style: PathOptions): this;
 }
 
 export interface BlanketOverlayOptions extends LayerOptions {
-    padding?: number | undefined;
-    continuous?: boolean | undefined;
+  padding?: number | undefined;
+  continuous?: boolean | undefined;
 }
 
 export class BlanketOverlay extends Layer {
-    constructor(options?: BlanketOverlayOptions);
+  constructor(options?: BlanketOverlayOptions);
 
-    _initContainer(): undefined;
-    _destroyContainer(): undefined;
-    _resizeContainer(): Point;
-    _onZoomEnd(): undefined;
-    _onViewReset(): undefined;
-    _onSettled(): undefined;
+  _initContainer(): undefined;
+  _destroyContainer(): undefined;
+  _resizeContainer(): Point;
+  _onZoomEnd(): undefined;
+  _onViewReset(): undefined;
+  _onSettled(): undefined;
 
-    options: BlanketOverlayOptions;
+  options: BlanketOverlayOptions;
 }
 
 export interface RendererOptions extends BlanketOverlayOptions {
-    continuous: false;
+  continuous: false;
 }
 
 export class Renderer extends BlanketOverlay {
-    constructor(options?: RendererOptions);
+  constructor(options?: RendererOptions);
 
-    options: RendererOptions;
+  options: RendererOptions;
 }
 
 export type SVGOptions = RendererOptions;
 export class SVG extends Renderer {
-    constructor(options?: SVGOptions);
+  constructor(options?: SVGOptions);
 
-    options: SVGOptions;
+  options: SVGOptions;
 }
 
 export namespace SVG {
-    function create<K extends keyof SVGElementTagNameMap>(name: K): SVGElementTagNameMap[K];
-    function create(name: string): SVGElement;
+  function create<K extends keyof SVGElementTagNameMap>(name: K): SVGElementTagNameMap[K];
+  function create(name: string): SVGElement;
 
-    function pointsToPath(rings: Point[], closed: boolean): string;
+  function pointsToPath(rings: Point[], closed: boolean): string;
 }
 
 export interface CanvasOptions extends RendererOptions {
-    tolerance?: number | undefined;
+  tolerance?: number | undefined;
 }
 
 export class Canvas extends Renderer {
-    constructor(options?: CanvasOptions);
+  constructor(options?: CanvasOptions);
 
-    options: CanvasOptions;
+  options: CanvasOptions;
 }
 
 /**
@@ -1688,181 +1663,182 @@ export class Canvas extends Renderer {
  * added/removed on the map as well. Extends Layer.
  */
 export class LayerGroup<P = any> extends Layer {
-    constructor(layers?: Layer[], options?: InteractiveLayerOptions);
+  constructor(layers?: Layer[], options?: InteractiveLayerOptions);
 
-    toMultiPoint(precision?: number): geojson.Feature<geojson.MultiPoint, P>;
+  toMultiPoint(precision?: number): geojson.Feature<geojson.MultiPoint, P>;
 
-    /**
-     * Returns a GeoJSON representation of the layer group (as a GeoJSON GeometryCollection, GeoJSONFeatureCollection or Multipoint).
-     */
-    toGeoJSON(
-        precision?: number | false,
-    ):
-        | geojson.FeatureCollection<geojson.GeometryObject, P>
-        | geojson.Feature<geojson.MultiPoint, P>
-        | geojson.GeometryCollection;
+  /**
+   * Returns a GeoJSON representation of the layer group (as a GeoJSON GeometryCollection, GeoJSONFeatureCollection or Multipoint).
+   */
+  toGeoJSON(
+    precision?: number | false,
+  ):
+    | geojson.FeatureCollection<geojson.GeometryObject, P>
+    | geojson.Feature<geojson.MultiPoint, P>
+    | geojson.GeometryCollection;
 
-    /**
-     * Adds the given layer to the group.
-     */
-    addLayer(layer: Layer): this;
+  /**
+   * Adds the given layer to the group.
+   */
+  addLayer(layer: Layer): this;
 
-    /**
-     * Removes the layer with the given internal ID or the given layer from the group.
-     */
-    removeLayer(layer: number | Layer): this;
+  /**
+   * Removes the layer with the given internal ID or the given layer from the group.
+   */
+  removeLayer(layer: number | Layer): this;
 
-    /**
-     * Returns true if the the given internal ID or the given layer is currently added to the group.
-     */
-    hasLayer(layer: number | Layer): boolean;
+  /**
+   * Returns true if the the given internal ID or the given layer is currently added to the group.
+   */
+  hasLayer(layer: number | Layer): boolean;
 
-    /**
-     * Removes all the layers from the group.
-     */
-    clearLayers(): this;
+  /**
+   * Removes all the layers from the group.
+   */
+  clearLayers(): this;
 
-    /**
-     * Calls methodName on every layer contained in this group, passing any additional parameters.
-     * Has no effect if the layers contained do not implement methodName.
-     */
-    invoke(methodName: string, ...params: any[]): this;
+  /**
+   * Calls methodName on every layer contained in this group, passing any additional parameters.
+   * Has no effect if the layers contained do not implement methodName.
+   */
+  invoke(methodName: string, ...params: any[]): this;
 
-    /**
-     * Iterates over the layers of the group,
-     * optionally specifying context of the iterator function.
-     */
-    eachLayer(fn: (layer: Layer) => void, context?: any): this;
+  /**
+   * Iterates over the layers of the group,
+   * optionally specifying context of the iterator function.
+   */
+  eachLayer(fn: (layer: Layer) => void, context?: any): this;
 
-    /**
-     * Returns the layer with the given internal ID.
-     */
-    getLayer(id: number): Layer | undefined;
+  /**
+   * Returns the layer with the given internal ID.
+   */
+  getLayer(id: number): Layer | undefined;
 
-    /**
-     * Returns an array of all the layers added to the group.
-     */
-    getLayers(): Layer[];
+  /**
+   * Returns an array of all the layers added to the group.
+   */
+  getLayers(): Layer[];
 
-    /**
-     * Calls setZIndex on every layer contained in this group, passing the z-index.
-     */
-    setZIndex(zIndex: number): this;
+  /**
+   * Calls setZIndex on every layer contained in this group, passing the z-index.
+   */
+  setZIndex(zIndex: number): this;
 
-    /**
-     * Returns the internal ID for a layer
-     */
-    getLayerId(layer: Layer): number;
+  /**
+   * Returns the internal ID for a layer
+   */
+  getLayerId(layer: Layer): number;
 
-    feature?:
-        | geojson.FeatureCollection<geojson.GeometryObject, P>
-        | geojson.Feature<geojson.MultiPoint, P>
-        | geojson.GeometryCollection
-        | undefined;
+  feature?:
+    | geojson.FeatureCollection<geojson.GeometryObject, P>
+    | geojson.Feature<geojson.MultiPoint, P>
+    | geojson.GeometryCollection
+    | undefined;
 }
 
 export type VectorLayerOptions =
-    | PathOptions
-    | PolylineOptions
-    | PolygonOptions
-    | RectangleOptions
-    | CircleMarkerOptions
-    | CircleOptions;
+  | PathOptions
+  | PolylineOptions
+  | PolygonOptions
+  | RectangleOptions
+  | CircleMarkerOptions
+  | CircleOptions;
 
 /**
  * Extended LayerGroup that also has pointer events (propagated from
  * members of the group) and a shared bindPopup method.
  */
 export class FeatureGroup<P = any> extends LayerGroup<P> {
-    /**
-     * Sets the given path options to each layer of the group that has a setStyle method.
-     */
-    setStyle(style: VectorLayerOptions): this;
+  /**
+   * Sets the given path options to each layer of the group that has a setStyle method.
+   */
+  setStyle(style: VectorLayerOptions): this;
 
-    /**
-     * Brings the layer group to the top of all other layers
-     */
-    bringToFront(): this;
+  /**
+   * Brings the layer group to the top of all other layers
+   */
+  bringToFront(): this;
 
-    /**
-     * Brings the layer group to the top [sic] of all other layers
-     */
-    bringToBack(): this;
+  /**
+   * Brings the layer group to the top [sic] of all other layers
+   */
+  bringToBack(): this;
 
-    /**
-     * Returns the LatLngBounds of the Feature Group (created from
-     * bounds and coordinates of its children).
-     */
-    getBounds(): LatLngBounds;
+  /**
+   * Returns the LatLngBounds of the Feature Group (created from
+   * bounds and coordinates of its children).
+   */
+  getBounds(): LatLngBounds;
 }
 
 export type StyleFunction<P = any> = (feature?: geojson.Feature<geojson.GeometryObject, P>) => VectorLayerOptions;
 
-export interface GeoJSONOptions<P = any, G extends geojson.GeometryObject = geojson.GeometryObject>
-    extends InteractiveLayerOptions
-{
-    /**
-     * A Function defining how GeoJSON points spawn Leaflet layers.
-     * It is internally called when data is added, passing the GeoJSON point
-     * feature and its LatLng.
-     *
-     * The default is to spawn a default Marker:
-     *
-     * ```
-     * function(geoJsonPoint, latlng) {
-     *     return new Marker(latlng);
-     * }
-     * ```
-     */
-    pointToLayer?(geoJsonPoint: geojson.Feature<geojson.Point, P>, latlng: LatLng): Layer; // should import GeoJSON typings
+export interface GeoJSONOptions<
+  P = any,
+  G extends geojson.GeometryObject = geojson.GeometryObject,
+> extends InteractiveLayerOptions {
+  /**
+   * A Function defining how GeoJSON points spawn Leaflet layers.
+   * It is internally called when data is added, passing the GeoJSON point
+   * feature and its LatLng.
+   *
+   * The default is to spawn a default Marker:
+   *
+   * ```
+   * function(geoJsonPoint, latlng) {
+   *     return new Marker(latlng);
+   * }
+   * ```
+   */
+  pointToLayer?(geoJsonPoint: geojson.Feature<geojson.Point, P>, latlng: LatLng): Layer; // should import GeoJSON typings
 
-    /**
-     * PathOptions or a Function defining the Path options for styling GeoJSON lines and polygons,
-     * called internally when data is added.
-     *
-     * The default value is to not override any defaults:
-     *
-     * ```
-     * function (geoJsonFeature) {
-     *     return {}
-     * }
-     * ```
-     */
-    style?: VectorLayerOptions | StyleFunction<P> | undefined;
+  /**
+   * PathOptions or a Function defining the Path options for styling GeoJSON lines and polygons,
+   * called internally when data is added.
+   *
+   * The default value is to not override any defaults:
+   *
+   * ```
+   * function (geoJsonFeature) {
+   *     return {}
+   * }
+   * ```
+   */
+  style?: VectorLayerOptions | StyleFunction<P> | undefined;
 
-    /**
-     * A Function that will be called once for each created Feature, after it
-     * has been created and styled. Useful for attaching events and popups to features.
-     *
-     * The default is to do nothing with the newly created layers:
-     *
-     * ```
-     * function (feature, layer) {}
-     * ```
-     */
-    onEachFeature?(feature: geojson.Feature<G, P>, layer: Layer): void;
+  /**
+   * A Function that will be called once for each created Feature, after it
+   * has been created and styled. Useful for attaching events and popups to features.
+   *
+   * The default is to do nothing with the newly created layers:
+   *
+   * ```
+   * function (feature, layer) {}
+   * ```
+   */
+  onEachFeature?(feature: geojson.Feature<G, P>, layer: Layer): void;
 
-    /**
-     * A Function that will be used to decide whether to show a feature or not.
-     *
-     * The default is to show all features:
-     *
-     * ```
-     * function (geoJsonFeature) {
-     *     return true;
-     * }
-     * ```
-     */
-    filter?(geoJsonFeature: geojson.Feature<G, P>): boolean;
+  /**
+   * A Function that will be used to decide whether to show a feature or not.
+   *
+   * The default is to show all features:
+   *
+   * ```
+   * function (geoJsonFeature) {
+   *     return true;
+   * }
+   * ```
+   */
+  filter?(geoJsonFeature: geojson.Feature<G, P>): boolean;
 
-    /**
-     * A Function that will be used for converting GeoJSON coordinates to LatLngs.
-     * The default is the coordsToLatLng static method.
-     */
-    coordsToLatLng?(coords: [number, number] | [number, number, number]): LatLng; // check if LatLng has an altitude property
+  /**
+   * A Function that will be used for converting GeoJSON coordinates to LatLngs.
+   * The default is the coordsToLatLng static method.
+   */
+  coordsToLatLng?(coords: [number, number] | [number, number, number]): LatLng; // check if LatLng has an altitude property
 
-    /** Whether default Markers for "Point" type Features inherit from group options. */
-    markersInheritOptions?: boolean | undefined;
+  /** Whether default Markers for "Point" type Features inherit from group options. */
+  markersInheritOptions?: boolean | undefined;
 }
 
 /**
@@ -1870,699 +1846,694 @@ export interface GeoJSONOptions<P = any, G extends geojson.GeometryObject = geoj
  * Allows you to parse GeoJSON data and display it on the map. Extends FeatureGroup.
  */
 export class GeoJSON<P = any, G extends geojson.GeometryObject = geojson.GeometryObject> extends FeatureGroup<P> {
-    /**
-     * Convert layer into GeoJSON feature
-     */
-    static getFeature<P = any, G extends geojson.GeometryObject = geojson.GeometryObject>(
-        layer: Layer,
-        newGeometry: geojson.Feature<G, P> | G,
-    ): geojson.Feature<G, P>;
+  /**
+   * Convert layer into GeoJSON feature
+   */
+  static getFeature<P = any, G extends geojson.GeometryObject = geojson.GeometryObject>(
+    layer: Layer,
+    newGeometry: geojson.Feature<G, P> | G,
+  ): geojson.Feature<G, P>;
 
-    /**
-     * Creates a Layer from a given GeoJSON feature. Can use a custom pointToLayer
-     * and/or coordsToLatLng functions if provided as options.
-     */
-    static geometryToLayer<P = any, G extends geojson.GeometryObject = geojson.GeometryObject>(
-        featureData: geojson.Feature<G, P>,
-        options?: GeoJSONOptions<P, G>,
-    ): Layer;
+  /**
+   * Creates a Layer from a given GeoJSON feature. Can use a custom pointToLayer
+   * and/or coordsToLatLng functions if provided as options.
+   */
+  static geometryToLayer<P = any, G extends geojson.GeometryObject = geojson.GeometryObject>(
+    featureData: geojson.Feature<G, P>,
+    options?: GeoJSONOptions<P, G>,
+  ): Layer;
 
-    /**
-     * Creates a LatLng object from an array of 2 numbers (longitude, latitude) or
-     * 3 numbers (longitude, latitude, altitude) used in GeoJSON for points.
-     */
-    static coordsToLatLng(coords: [number, number] | [number, number, number]): LatLng;
+  /**
+   * Creates a LatLng object from an array of 2 numbers (longitude, latitude) or
+   * 3 numbers (longitude, latitude, altitude) used in GeoJSON for points.
+   */
+  static coordsToLatLng(coords: [number, number] | [number, number, number]): LatLng;
 
-    /**
-     * Creates a multidimensional array of LatLngs from a GeoJSON coordinates array.
-     * levelsDeep specifies the nesting level (0 is for an array of points, 1 for an array of
-     * arrays of points, etc., 0 by default).
-     * Can use a custom coordsToLatLng function.
-     */
-    static coordsToLatLngs(
-        coords: any[],
-        levelsDeep?: number,
-        coordsToLatLng?: (coords: [number, number] | [number, number, number]) => LatLng,
-    ): any[]; // Using any[] to avoid artificially limiting valid calls
+  /**
+   * Creates a multidimensional array of LatLngs from a GeoJSON coordinates array.
+   * levelsDeep specifies the nesting level (0 is for an array of points, 1 for an array of
+   * arrays of points, etc., 0 by default).
+   * Can use a custom coordsToLatLng function.
+   */
+  static coordsToLatLngs(
+    coords: any[],
+    levelsDeep?: number,
+    coordsToLatLng?: (coords: [number, number] | [number, number, number]) => LatLng,
+  ): any[]; // Using any[] to avoid artificially limiting valid calls
 
-    /**
-     * Reverse of coordsToLatLng
-     */
-    static latLngToCoords(latlng: LatLngExpression, precision?: number): [number, number] | [number, number, number];
+  /**
+   * Reverse of coordsToLatLng
+   */
+  static latLngToCoords(latlng: LatLngExpression, precision?: number): [number, number] | [number, number, number];
 
-    /**
-     * Reverse of coordsToLatLngs closed determines whether the first point should be
-     * appended to the end of the array to close the feature, only used when levelsDeep is 0.
-     * False by default.
-     */
-    static latLngsToCoords(
-        latlngs: LatLngExpression[],
-        levelsDeep?: number,
-        closed?: boolean,
-        precision?: number,
-    ): any[]; // Using any[] to avoid artificially limiting valid calls
+  /**
+   * Reverse of coordsToLatLngs closed determines whether the first point should be
+   * appended to the end of the array to close the feature, only used when levelsDeep is 0.
+   * False by default.
+   */
+  static latLngsToCoords(latlngs: LatLngExpression[], levelsDeep?: number, closed?: boolean, precision?: number): any[]; // Using any[] to avoid artificially limiting valid calls
 
-    /**
-     * Normalize GeoJSON geometries/features into GeoJSON features.
-     */
-    static asFeature<P = any, G extends geojson.GeometryObject = geojson.GeometryObject>(
-        geojson: geojson.Feature<G, P> | G,
-    ): geojson.Feature<G, P>;
+  /**
+   * Normalize GeoJSON geometries/features into GeoJSON features.
+   */
+  static asFeature<P = any, G extends geojson.GeometryObject = geojson.GeometryObject>(
+    geojson: geojson.Feature<G, P> | G,
+  ): geojson.Feature<G, P>;
 
-    constructor(geojson?: geojson.GeoJsonObject | null, options?: GeoJSONOptions<P, G> | null);
-    /**
-     * Adds a GeoJSON object to the layer.
-     */
-    addData(data: geojson.GeoJsonObject): this;
+  constructor(geojson?: geojson.GeoJsonObject | null, options?: GeoJSONOptions<P, G> | null);
+  /**
+   * Adds a GeoJSON object to the layer.
+   */
+  addData(data: geojson.GeoJsonObject): this;
 
-    /**
-     * Resets the given vector layer's style to the original GeoJSON style,
-     * useful for resetting style after hover events.
-     */
-    resetStyle(layer?: Layer): this;
+  /**
+   * Resets the given vector layer's style to the original GeoJSON style,
+   * useful for resetting style after hover events.
+   */
+  resetStyle(layer?: Layer): this;
 
-    /**
-     * Same as FeatureGroup's setStyle method, but style-functions are also
-     * allowed here to set the style according to the feature.
-     */
-    setStyle(style: VectorLayerOptions | StyleFunction<P>): this;
+  /**
+   * Same as FeatureGroup's setStyle method, but style-functions are also
+   * allowed here to set the style according to the feature.
+   */
+  setStyle(style: VectorLayerOptions | StyleFunction<P>): this;
 
-    options: GeoJSONOptions<P, G>;
+  options: GeoJSONOptions<P, G>;
 }
 
 export type ControlPosition = "topleft" | "topright" | "bottomleft" | "bottomright";
 
 export interface ControlOptions {
-    position?: ControlPosition | undefined;
+  position?: ControlPosition | undefined;
 }
 
 export class Control<Options extends ControlOptions = ControlOptions> extends Class {
-    static extend<T extends object, Options extends ControlOptions = ControlOptions>(
-        props: T,
-    ): { new(...args: any[]): T } & typeof Control<Options>;
-    constructor(options?: Options);
-    getPosition(): ControlPosition;
-    setPosition(position: ControlPosition): this;
-    getContainer(): HTMLElement | undefined;
-    addTo(map: Map): this;
-    remove(): this;
+  static extend<T extends object, Options extends ControlOptions = ControlOptions>(
+    props: T,
+  ): { new (...args: any[]): T } & typeof Control<Options>;
+  constructor(options?: Options);
+  getPosition(): ControlPosition;
+  setPosition(position: ControlPosition): this;
+  getContainer(): HTMLElement | undefined;
+  addTo(map: Map): this;
+  remove(): this;
 
-    // Extension methods
-    onAdd?(map: Map): HTMLElement;
-    onRemove?(map: Map): void;
+  // Extension methods
+  onAdd?(map: Map): HTMLElement;
+  onRemove?(map: Map): void;
 
-    options: Options;
+  options: Options;
 }
 
 export interface ZoomControlOptions extends ControlOptions {
-    zoomInText?: string | undefined;
-    zoomInTitle?: string | undefined;
-    zoomOutText?: string | undefined;
-    zoomOutTitle?: string | undefined;
+  zoomInText?: string | undefined;
+  zoomInTitle?: string | undefined;
+  zoomOutText?: string | undefined;
+  zoomOutTitle?: string | undefined;
 }
 
 export class ZoomControl extends Control {
-    constructor(options?: ZoomControlOptions);
-    disable(): this;
-    enable(): this;
+  constructor(options?: ZoomControlOptions);
+  disable(): this;
+  enable(): this;
 
-    options: ZoomControlOptions;
+  options: ZoomControlOptions;
 }
 
 export interface AttributionControlOptions extends ControlOptions {
-    prefix?: string | boolean | undefined;
+  prefix?: string | boolean | undefined;
 }
 
 export class AttributionControl extends Control {
-    constructor(options?: AttributionControlOptions);
-    setPrefix(prefix: string | false): this;
-    addAttribution(text: string): this;
-    removeAttribution(text: string): this;
+  constructor(options?: AttributionControlOptions);
+  setPrefix(prefix: string | false): this;
+  addAttribution(text: string): this;
+  removeAttribution(text: string): this;
 
-    options: AttributionControlOptions;
+  options: AttributionControlOptions;
 }
 
 export interface LayersControlOptions extends ControlOptions {
-    collapsed?: boolean | undefined;
-    collapseDelay?: number | undefined;
-    autoZIndex?: boolean | undefined;
-    hideSingleBase?: boolean | undefined;
-    /**
-     * Whether to sort the layers. When `false`, layers will keep the order in which they were added to the control.
-     */
-    sortLayers?: boolean | undefined;
-    /**
-     * A [compare function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
-     * that will be used for sorting the layers, when `sortLayers` is `true`. The function receives both the
-     * [`Layer`](https://leafletjs.com/reference.html#layer) instances and their names, as in
-     * `sortFunction(layerA, layerB, nameA, nameB)`. By default, it sorts layers alphabetically by their name.
-     */
-    sortFunction?: ((layerA: Layer, layerB: Layer, nameA: string, nameB: string) => number) | undefined;
+  collapsed?: boolean | undefined;
+  collapseDelay?: number | undefined;
+  autoZIndex?: boolean | undefined;
+  hideSingleBase?: boolean | undefined;
+  /**
+   * Whether to sort the layers. When `false`, layers will keep the order in which they were added to the control.
+   */
+  sortLayers?: boolean | undefined;
+  /**
+   * A [compare function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+   * that will be used for sorting the layers, when `sortLayers` is `true`. The function receives both the
+   * [`Layer`](https://leafletjs.com/reference.html#layer) instances and their names, as in
+   * `sortFunction(layerA, layerB, nameA, nameB)`. By default, it sorts layers alphabetically by their name.
+   */
+  sortFunction?: ((layerA: Layer, layerB: Layer, nameA: string, nameB: string) => number) | undefined;
 }
 
 type LayersObject = Record<string, Layer>;
 
 export class LayersControl extends Control {
-    constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersControlOptions);
-    addBaseLayer(layer: Layer, name: string): this;
-    addOverlay(layer: Layer, name: string): this;
-    removeLayer(layer: Layer): this;
-    expand(): this;
-    collapse(): this;
+  constructor(baseLayers?: LayersObject, overlays?: LayersObject, options?: LayersControlOptions);
+  addBaseLayer(layer: Layer, name: string): this;
+  addOverlay(layer: Layer, name: string): this;
+  removeLayer(layer: Layer): this;
+  expand(): this;
+  collapse(): this;
 
-    options: LayersControlOptions;
+  options: LayersControlOptions;
 }
 
 export interface ScaleControlOptions extends ControlOptions {
-    maxWidth?: number | undefined;
-    metric?: boolean | undefined;
-    imperial?: boolean | undefined;
-    updateWhenIdle?: boolean | undefined;
+  maxWidth?: number | undefined;
+  metric?: boolean | undefined;
+  imperial?: boolean | undefined;
+  updateWhenIdle?: boolean | undefined;
 }
 
 export class ScaleControl extends Control {
-    constructor(options?: LayersControlOptions);
+  constructor(options?: LayersControlOptions);
 
-    options: LayersControlOptions;
+  options: LayersControlOptions;
 }
 
 export interface DivOverlayOptions {
-    offset?: PointExpression | undefined;
-    className?: string | undefined;
-    pane?: string | undefined;
-    interactive?: boolean | undefined;
-    content?: string | HTMLElement | ((layer: Layer) => string) | ((layer: Layer) => HTMLElement);
+  offset?: PointExpression | undefined;
+  className?: string | undefined;
+  pane?: string | undefined;
+  interactive?: boolean | undefined;
+  content?: string | HTMLElement | ((layer: Layer) => string) | ((layer: Layer) => HTMLElement);
 }
 
 export type Content = string | HTMLElement;
 
 export abstract class DivOverlay extends Layer {
-    constructor(latlng: LatLngExpression, options?: DivOverlayOptions);
-    constructor(options?: DivOverlayOptions, source?: Layer);
-    getLatLng(): LatLng | undefined;
-    setLatLng(latlng: LatLngExpression): this;
-    getContent(): Content | undefined;
-    // getContent(): Content | ((source: Layer) => Content) | undefined;
-    setContent(htmlContent: ((source: Layer) => Content) | Content): this;
-    getElement(): HTMLElement | undefined;
-    update(): void;
-    isOpen(): boolean;
-    bringToFront(): this;
-    bringToBack(): this;
-    openOn(map: Map): this;
-    toggle(layer?: Layer): this;
-    close(): this;
+  constructor(latlng: LatLngExpression, options?: DivOverlayOptions);
+  constructor(options?: DivOverlayOptions, source?: Layer);
+  getLatLng(): LatLng | undefined;
+  setLatLng(latlng: LatLngExpression): this;
+  getContent(): Content | undefined;
+  // getContent(): Content | ((source: Layer) => Content) | undefined;
+  setContent(htmlContent: ((source: Layer) => Content) | Content): this;
+  getElement(): HTMLElement | undefined;
+  update(): void;
+  isOpen(): boolean;
+  bringToFront(): this;
+  bringToBack(): this;
+  openOn(map: Map): this;
+  toggle(layer?: Layer): this;
+  close(): this;
 
-    options: DivOverlayOptions;
+  options: DivOverlayOptions;
 }
 
 export interface PopupOptions extends DivOverlayOptions {
-    maxWidth?: number | undefined;
-    minWidth?: number | undefined;
-    maxHeight?: number | undefined;
-    keepInView?: boolean | undefined;
-    closeButton?: boolean | undefined;
-    closeButtonLabel?: string | undefined;
-    autoPan?: boolean | undefined;
-    autoPanPaddingTopLeft?: PointExpression | undefined;
-    autoPanPaddingBottomRight?: PointExpression | undefined;
-    autoPanPadding?: PointExpression | undefined;
-    autoClose?: boolean | undefined;
-    closeOnClick?: boolean | undefined;
-    closeOnEscapeKey?: boolean | undefined;
-    trackResize?: boolean | undefined;
+  maxWidth?: number | undefined;
+  minWidth?: number | undefined;
+  maxHeight?: number | undefined;
+  keepInView?: boolean | undefined;
+  closeButton?: boolean | undefined;
+  closeButtonLabel?: string | undefined;
+  autoPan?: boolean | undefined;
+  autoPanPaddingTopLeft?: PointExpression | undefined;
+  autoPanPaddingBottomRight?: PointExpression | undefined;
+  autoPanPadding?: PointExpression | undefined;
+  autoClose?: boolean | undefined;
+  closeOnClick?: boolean | undefined;
+  closeOnEscapeKey?: boolean | undefined;
+  trackResize?: boolean | undefined;
 }
 
 export class Popup extends DivOverlay {
-    constructor(latlng: LatLngExpression, options?: PopupOptions);
-    constructor(options?: PopupOptions, source?: Layer);
-    openOn(map: Map): this;
+  constructor(latlng: LatLngExpression, options?: PopupOptions);
+  constructor(options?: PopupOptions, source?: Layer);
+  openOn(map: Map): this;
 
-    options: PopupOptions;
+  options: PopupOptions;
 }
 
 export type Direction = "right" | "left" | "top" | "bottom" | "center" | "auto";
 
 export interface TooltipOptions extends DivOverlayOptions {
-    pane?: string | undefined;
-    offset?: PointExpression | undefined;
-    direction?: Direction | undefined;
-    permanent?: boolean | undefined;
-    sticky?: boolean | undefined;
-    opacity?: number | undefined;
+  pane?: string | undefined;
+  offset?: PointExpression | undefined;
+  direction?: Direction | undefined;
+  permanent?: boolean | undefined;
+  sticky?: boolean | undefined;
+  opacity?: number | undefined;
 }
 
 export class Tooltip extends DivOverlay {
-    constructor(latlng: LatLngExpression, options?: TooltipOptions);
-    constructor(options?: TooltipOptions, source?: Layer);
-    setOpacity(opacity: number): void;
+  constructor(latlng: LatLngExpression, options?: TooltipOptions);
+  constructor(options?: TooltipOptions, source?: Layer);
+  setOpacity(opacity: number): void;
 
-    options: TooltipOptions;
+  options: TooltipOptions;
 }
 
 export class Handler extends Class {
-    constructor(map: Map);
-    enable(): this;
-    disable(): this;
-    enabled(): boolean;
+  constructor(map: Map);
+  enable(): this;
+  disable(): this;
+  enabled(): boolean;
 
-    // Extension methods
-    addHooks?(): void;
-    removeHooks?(): void;
+  // Extension methods
+  addHooks?(): void;
+  removeHooks?(): void;
 }
 
 export class BoxZoom extends Handler {
-    moved(): boolean;
+  moved(): boolean;
 
-    boxZoom: boolean;
+  boxZoom: boolean;
 }
 
 export class DoubleClickZoom extends Handler {
-    doubleClickZoom: boolean;
+  doubleClickZoom: boolean;
 }
 
 export class MapDrag extends Handler {
-    dragging: boolean;
-    inertia: boolean;
-    inertiaDeceleration: number;
-    inertiaMaxSpeed: number;
-    easeLinearity: number;
-    worldCopyJump: boolean;
-    maxBoundsViscosity: number;
+  dragging: boolean;
+  inertia: boolean;
+  inertiaDeceleration: number;
+  inertiaMaxSpeed: number;
+  easeLinearity: number;
+  worldCopyJump: boolean;
+  maxBoundsViscosity: number;
 
-    moved(): boolean;
-    moving(): boolean;
+  moved(): boolean;
+  moving(): boolean;
 }
 
 export class Keyboard extends Handler {
-    keyboard: boolean;
-    keyboardPanDelta: number;
+  keyboard: boolean;
+  keyboardPanDelta: number;
 }
 
 export class PinchZoom extends Handler {
-    pinchZoom: boolean;
-    bounceAtZoomLimits: boolean;
+  pinchZoom: boolean;
+  bounceAtZoomLimits: boolean;
 }
 
 export class ScrollWheelZoom extends Handler {
-    scrollWheelZoom: boolean;
-    wheelDebounceTime: number;
-    wheelPxPerZoomLevel: number;
+  scrollWheelZoom: boolean;
+  wheelDebounceTime: number;
+  wheelPxPerZoomLevel: number;
 }
 
 export class TapHold extends Handler {
-    tapHold: boolean;
-    tapTolerance: number;
+  tapHold: boolean;
+  tapTolerance: number;
 }
 
 export class MarkerDrag extends Handler {
-    constructor(marker: Marker);
+  constructor(marker: Marker);
 
-    moved(): boolean;
+  moved(): boolean;
 
-    protected _draggable: Draggable;
-    protected _marker: Marker;
+  protected _draggable: Draggable;
+  protected _marker: Marker;
 }
 
 export namespace DomEvent {
-    type EventHandlerFn = (event: Event) => void;
+  type EventHandlerFn = (event: Event) => void;
 
-    type PropagableEvent = LeafletMouseEvent | LeafletKeyboardEvent | LeafletEvent | Event;
+  type PropagableEvent = LeafletMouseEvent | LeafletKeyboardEvent | LeafletEvent | Event;
 
-    function on(el: HTMLElement, types: string, fn: EventHandlerFn, context?: any): typeof DomEvent;
+  function on(el: HTMLElement, types: string, fn: EventHandlerFn, context?: any): typeof DomEvent;
 
-    function on(el: HTMLElement, eventMap: { [eventName: string]: EventHandlerFn }, context?: any): typeof DomEvent;
+  function on(el: HTMLElement, eventMap: { [eventName: string]: EventHandlerFn }, context?: any): typeof DomEvent;
 
-    // tslint:disable:unified-signatures
-    function off(el: HTMLElement): typeof DomEvent;
+  // tslint:disable:unified-signatures
+  function off(el: HTMLElement): typeof DomEvent;
 
-    function off(el: HTMLElement, types: string, fn: EventHandlerFn, context?: any): typeof DomEvent;
+  function off(el: HTMLElement, types: string, fn: EventHandlerFn, context?: any): typeof DomEvent;
 
-    function off(el: HTMLElement, eventMap: { [eventName: string]: EventHandlerFn }, context?: any): typeof DomEvent;
-    // tslint:enable:unified-signatures
+  function off(el: HTMLElement, eventMap: { [eventName: string]: EventHandlerFn }, context?: any): typeof DomEvent;
+  // tslint:enable:unified-signatures
 
-    function stopPropagation(ev: PropagableEvent): typeof DomEvent;
+  function stopPropagation(ev: PropagableEvent): typeof DomEvent;
 
-    function disableScrollPropagation(el: HTMLElement): typeof DomEvent;
+  function disableScrollPropagation(el: HTMLElement): typeof DomEvent;
 
-    function disableClickPropagation(el: HTMLElement): typeof DomEvent;
+  function disableClickPropagation(el: HTMLElement): typeof DomEvent;
 
-    function preventDefault(ev: Event): typeof DomEvent;
+  function preventDefault(ev: Event): typeof DomEvent;
 
-    function stop(ev: PropagableEvent): typeof DomEvent;
+  function stop(ev: PropagableEvent): typeof DomEvent;
 
-    function getPointerPosition(ev: MouseEvent, container?: HTMLElement): Point;
+  function getPointerPosition(ev: MouseEvent, container?: HTMLElement): Point;
 
-    function getWheelDelta(ev: Event): number;
+  function getWheelDelta(ev: Event): number;
 
-    function getPropagationPath(ev: Event): HTMLElement[];
+  function getPropagationPath(ev: Event): HTMLElement[];
 
-    function getWheelPxFactor(): number;
+  function getWheelPxFactor(): number;
 
-    function isExternalTarget(el: HTMLElement, ev: Event): number;
+  function isExternalTarget(el: HTMLElement, ev: Event): number;
 
-    // Pointer detection
-    function enablePointerDetection(): void;
-    function disablePointerDetection(): void;
-    function getPointers(): PointerEvent[];
-    function cleanupPointers(): void;
+  // Pointer detection
+  function enablePointerDetection(): void;
+  function disablePointerDetection(): void;
+  function getPointers(): PointerEvent[];
+  function cleanupPointers(): void;
 }
 
 export type Zoom = boolean | "center";
 
 export interface MapOptions {
-    preferCanvas?: boolean | undefined;
+  preferCanvas?: boolean | undefined;
 
-    // Control options
-    attributionControl?: boolean | undefined;
-    zoomControl?: boolean | undefined;
+  // Control options
+  attributionControl?: boolean | undefined;
+  zoomControl?: boolean | undefined;
 
-    // Interaction options
-    closePopupOnClick?: boolean | undefined;
-    zoomSnap?: number | undefined;
-    zoomDelta?: number | undefined;
-    trackResize?: boolean | undefined;
-    boxZoom?: boolean | undefined;
-    doubleClickZoom?: Zoom | undefined;
-    dragging?: boolean | undefined;
+  // Interaction options
+  closePopupOnClick?: boolean | undefined;
+  zoomSnap?: number | undefined;
+  zoomDelta?: number | undefined;
+  trackResize?: boolean | undefined;
+  boxZoom?: boolean | undefined;
+  doubleClickZoom?: Zoom | undefined;
+  dragging?: boolean | undefined;
 
-    // Map state options
-    crs?: CRS | undefined;
-    center?: LatLngExpression | undefined;
-    zoom?: number | undefined;
-    minZoom?: number | undefined;
-    maxZoom?: number | undefined;
-    layers?: Layer[] | undefined;
-    maxBounds?: LatLngBoundsExpression | undefined;
-    renderer?: Renderer | undefined;
+  // Map state options
+  crs?: CRS | undefined;
+  center?: LatLngExpression | undefined;
+  zoom?: number | undefined;
+  minZoom?: number | undefined;
+  maxZoom?: number | undefined;
+  layers?: Layer[] | undefined;
+  maxBounds?: LatLngBoundsExpression | undefined;
+  renderer?: Renderer | undefined;
 
-    // Animation options
-    fadeAnimation?: boolean | undefined;
-    markerZoomAnimation?: boolean | undefined;
-    transform3DLimit?: number | undefined;
-    zoomAnimation?: boolean | undefined;
-    zoomAnimationThreshold?: number | undefined;
+  // Animation options
+  fadeAnimation?: boolean | undefined;
+  markerZoomAnimation?: boolean | undefined;
+  transform3DLimit?: number | undefined;
+  zoomAnimation?: boolean | undefined;
+  zoomAnimationThreshold?: number | undefined;
 
-    // Panning inertia options
-    inertia?: boolean | undefined;
-    inertiaDeceleration?: number | undefined;
-    inertiaMaxSpeed?: number | undefined;
-    easeLinearity?: number | undefined;
-    worldCopyJump?: boolean | undefined;
-    maxBoundsViscosity?: number | undefined;
+  // Panning inertia options
+  inertia?: boolean | undefined;
+  inertiaDeceleration?: number | undefined;
+  inertiaMaxSpeed?: number | undefined;
+  easeLinearity?: number | undefined;
+  worldCopyJump?: boolean | undefined;
+  maxBoundsViscosity?: number | undefined;
 
-    // Keyboard navigation options
-    keyboard?: boolean | undefined;
-    keyboardPanDelta?: number | undefined;
+  // Keyboard navigation options
+  keyboard?: boolean | undefined;
+  keyboardPanDelta?: number | undefined;
 
-    // Mousewheel options
-    scrollWheelZoom?: Zoom | undefined;
-    wheelDebounceTime?: number | undefined;
-    wheelPxPerZoomLevel?: number | undefined;
+  // Mousewheel options
+  scrollWheelZoom?: Zoom | undefined;
+  wheelDebounceTime?: number | undefined;
+  wheelPxPerZoomLevel?: number | undefined;
 
-    // Touch interaction options
-    tapHold?: boolean | undefined;
-    tapTolerance?: number | undefined;
-    pinchZoom?: Zoom | undefined;
-    bounceAtZoomLimits?: boolean | undefined;
+  // Touch interaction options
+  tapHold?: boolean | undefined;
+  tapTolerance?: number | undefined;
+  pinchZoom?: Zoom | undefined;
+  bounceAtZoomLimits?: boolean | undefined;
 }
 
 export interface ZoomOptions {
-    animate?: boolean | undefined;
+  animate?: boolean | undefined;
 }
 
 export interface PanOptions {
-    animate?: boolean | undefined;
-    duration?: number | undefined;
-    easeLinearity?: number | undefined;
-    noMoveStart?: boolean | undefined;
+  animate?: boolean | undefined;
+  duration?: number | undefined;
+  easeLinearity?: number | undefined;
+  noMoveStart?: boolean | undefined;
 }
 
 // This is not empty, it extends two interfaces into one...
 export interface ZoomPanOptions extends ZoomOptions, PanOptions {}
 
 export interface InvalidateSizeOptions extends ZoomPanOptions {
-    debounceMoveend?: boolean | undefined;
-    pan?: boolean | undefined;
+  debounceMoveend?: boolean | undefined;
+  pan?: boolean | undefined;
 }
 
 export interface PanInsideOptions extends PanOptions {
-    paddingTopLeft?: PointExpression | undefined;
-    paddingBottomRight?: PointExpression | undefined;
-    padding?: PointExpression | undefined;
+  paddingTopLeft?: PointExpression | undefined;
+  paddingBottomRight?: PointExpression | undefined;
+  padding?: PointExpression | undefined;
 }
 
 export interface FitBoundsOptions extends ZoomOptions, PanInsideOptions {
-    maxZoom?: number | undefined;
+  maxZoom?: number | undefined;
 }
 
 export interface LocateOptions {
-    watch?: boolean | undefined;
-    setView?: boolean | undefined;
-    maxZoom?: number | undefined;
-    timeout?: number | undefined;
-    maximumAge?: number | undefined;
-    enableHighAccuracy?: boolean | undefined;
+  watch?: boolean | undefined;
+  setView?: boolean | undefined;
+  maxZoom?: number | undefined;
+  timeout?: number | undefined;
+  maximumAge?: number | undefined;
+  enableHighAccuracy?: boolean | undefined;
 }
 
 export interface DefaultMapPanes {
-    mapPane: HTMLElement;
-    tilePane: HTMLElement;
-    overlayPane: HTMLElement;
-    shadowPane: HTMLElement;
-    markerPane: HTMLElement;
-    tooltipPane: HTMLElement;
-    popupPane: HTMLElement;
+  mapPane: HTMLElement;
+  tilePane: HTMLElement;
+  overlayPane: HTMLElement;
+  shadowPane: HTMLElement;
+  markerPane: HTMLElement;
+  tooltipPane: HTMLElement;
+  popupPane: HTMLElement;
 }
 
 export class Map extends Evented {
-    constructor(element: string | HTMLElement, options?: MapOptions);
-    getRenderer(layer: Path): Renderer;
+  constructor(element: string | HTMLElement, options?: MapOptions);
+  getRenderer(layer: Path): Renderer;
 
-    // Methods for layers and controls
-    addControl(control: Control): this;
-    removeControl(control: Control): this;
-    addLayer(layer: Layer): this;
-    removeLayer(layer: Layer): this;
-    hasLayer(layer: Layer): boolean;
-    eachLayer(fn: (layer: Layer) => void, context?: any): this;
-    openPopup(popup: Popup): this;
-    openPopup(content: Content, latlng: LatLngExpression, options?: PopupOptions): this;
-    closePopup(popup?: Popup): this;
-    openTooltip(tooltip: Tooltip): this;
-    openTooltip(content: Content, latlng: LatLngExpression, options?: TooltipOptions): this;
-    closeTooltip(tooltip?: Tooltip): this;
+  // Methods for layers and controls
+  addControl(control: Control): this;
+  removeControl(control: Control): this;
+  addLayer(layer: Layer): this;
+  removeLayer(layer: Layer): this;
+  hasLayer(layer: Layer): boolean;
+  eachLayer(fn: (layer: Layer) => void, context?: any): this;
+  openPopup(popup: Popup): this;
+  openPopup(content: Content, latlng: LatLngExpression, options?: PopupOptions): this;
+  closePopup(popup?: Popup): this;
+  openTooltip(tooltip: Tooltip): this;
+  openTooltip(content: Content, latlng: LatLngExpression, options?: TooltipOptions): this;
+  closeTooltip(tooltip?: Tooltip): this;
 
-    // Methods for modifying map state
-    setView(center: LatLngExpression, zoom?: number, options?: ZoomPanOptions): this;
-    setZoom(zoom: number, options?: ZoomPanOptions): this;
-    zoomIn(delta?: number, options?: ZoomOptions): this;
-    zoomOut(delta?: number, options?: ZoomOptions): this;
-    setZoomAround(position: Point | LatLngExpression, zoom: number, options?: ZoomOptions): this;
-    fitBounds(bounds: LatLngBoundsExpression, options?: FitBoundsOptions): this;
-    fitWorld(options?: FitBoundsOptions): this;
-    panTo(latlng: LatLngExpression, options?: PanOptions): this;
-    panBy(offset: PointExpression, options?: PanOptions): this;
-    setMaxBounds(bounds?: LatLngBoundsExpression): this;
-    setMinZoom(zoom: number): this;
-    setMaxZoom(zoom: number): this;
-    panInside(latLng: LatLngExpression, options?: PanInsideOptions): this;
-    panInsideBounds(bounds: LatLngBoundsExpression, options?: PanOptions): this;
-    /**
-     * Boolean for animate or advanced ZoomPanOptions
-     */
-    invalidateSize(options?: boolean | InvalidateSizeOptions): this;
-    stop(): this;
-    flyTo(latlng: LatLngExpression, zoom?: number, options?: ZoomPanOptions): this;
-    flyToBounds(bounds: LatLngBoundsExpression, options?: FitBoundsOptions): this;
+  // Methods for modifying map state
+  setView(center: LatLngExpression, zoom?: number, options?: ZoomPanOptions): this;
+  setZoom(zoom: number, options?: ZoomPanOptions): this;
+  zoomIn(delta?: number, options?: ZoomOptions): this;
+  zoomOut(delta?: number, options?: ZoomOptions): this;
+  setZoomAround(position: Point | LatLngExpression, zoom: number, options?: ZoomOptions): this;
+  fitBounds(bounds: LatLngBoundsExpression, options?: FitBoundsOptions): this;
+  fitWorld(options?: FitBoundsOptions): this;
+  panTo(latlng: LatLngExpression, options?: PanOptions): this;
+  panBy(offset: PointExpression, options?: PanOptions): this;
+  setMaxBounds(bounds?: LatLngBoundsExpression): this;
+  setMinZoom(zoom: number): this;
+  setMaxZoom(zoom: number): this;
+  panInside(latLng: LatLngExpression, options?: PanInsideOptions): this;
+  panInsideBounds(bounds: LatLngBoundsExpression, options?: PanOptions): this;
+  /**
+   * Boolean for animate or advanced ZoomPanOptions
+   */
+  invalidateSize(options?: boolean | InvalidateSizeOptions): this;
+  stop(): this;
+  flyTo(latlng: LatLngExpression, zoom?: number, options?: ZoomPanOptions): this;
+  flyToBounds(bounds: LatLngBoundsExpression, options?: FitBoundsOptions): this;
 
-    // Other methods
-    addHandler(name: string, HandlerClass: typeof Handler): this; // Alternatively, HandlerClass: new(map: Map) => Handler
-    remove(): this;
-    createPane(name: string, container?: HTMLElement): HTMLElement;
-    /**
-     * Name of the pane or the pane as HTML-Element
-     */
-    getPane(pane: string | HTMLElement): HTMLElement | undefined;
-    getPanes(): { [name: string]: HTMLElement } & DefaultMapPanes;
-    getContainer(): HTMLElement;
-    whenReady(fn: (event: { target: Map }) => void, context?: any): this;
+  // Other methods
+  addHandler(name: string, HandlerClass: typeof Handler): this; // Alternatively, HandlerClass: new(map: Map) => Handler
+  remove(): this;
+  createPane(name: string, container?: HTMLElement): HTMLElement;
+  /**
+   * Name of the pane or the pane as HTML-Element
+   */
+  getPane(pane: string | HTMLElement): HTMLElement | undefined;
+  getPanes(): { [name: string]: HTMLElement } & DefaultMapPanes;
+  getContainer(): HTMLElement;
+  whenReady(fn: (event: { target: Map }) => void, context?: any): this;
 
-    // Methods for getting map state
-    getCenter(): LatLng;
-    getZoom(): number;
-    getBounds(): LatLngBounds;
-    getMinZoom(): number;
-    getMaxZoom(): number;
-    getBoundsZoom(bounds: LatLngBoundsExpression, inside?: boolean, padding?: PointExpression): number;
-    getSize(): Point;
-    getPixelBounds(): Bounds;
-    getPixelOrigin(): Point;
-    getPixelWorldBounds(zoom?: number): Bounds;
+  // Methods for getting map state
+  getCenter(): LatLng;
+  getZoom(): number;
+  getBounds(): LatLngBounds;
+  getMinZoom(): number;
+  getMaxZoom(): number;
+  getBoundsZoom(bounds: LatLngBoundsExpression, inside?: boolean, padding?: PointExpression): number;
+  getSize(): Point;
+  getPixelBounds(): Bounds;
+  getPixelOrigin(): Point;
+  getPixelWorldBounds(zoom?: number): Bounds;
 
-    // Conversion methods
-    getZoomScale(toZoom: number, fromZoom?: number): number;
-    getScaleZoom(scale: number, fromZoom?: number): number;
-    project(latlng: LatLngExpression, zoom?: number): Point;
-    unproject(point: PointExpression, zoom?: number): LatLng;
-    layerPointToLatLng(point: PointExpression): LatLng;
-    latLngToLayerPoint(latlng: LatLngExpression): Point;
-    wrapLatLng(latlng: LatLngExpression): LatLng;
-    wrapLatLngBounds(bounds: LatLngBoundsExpression): LatLngBounds;
-    distance(latlng1: LatLngExpression, latlng2: LatLngExpression): number;
-    containerPointToLayerPoint(point: PointExpression): Point;
-    containerPointToLatLng(point: PointExpression): LatLng;
-    layerPointToContainerPoint(point: PointExpression): Point;
-    latLngToContainerPoint(latlng: LatLngExpression): Point;
-    pointerEventToContainerPoint(ev: PointerEvent): Point;
-    pointerEventToLayerPoint(ev: PointerEvent): Point;
-    pointerEventToLatLng(ev: PointerEvent): LatLng;
+  // Conversion methods
+  getZoomScale(toZoom: number, fromZoom?: number): number;
+  getScaleZoom(scale: number, fromZoom?: number): number;
+  project(latlng: LatLngExpression, zoom?: number): Point;
+  unproject(point: PointExpression, zoom?: number): LatLng;
+  layerPointToLatLng(point: PointExpression): LatLng;
+  latLngToLayerPoint(latlng: LatLngExpression): Point;
+  wrapLatLng(latlng: LatLngExpression): LatLng;
+  wrapLatLngBounds(bounds: LatLngBoundsExpression): LatLngBounds;
+  distance(latlng1: LatLngExpression, latlng2: LatLngExpression): number;
+  containerPointToLayerPoint(point: PointExpression): Point;
+  containerPointToLatLng(point: PointExpression): LatLng;
+  layerPointToContainerPoint(point: PointExpression): Point;
+  latLngToContainerPoint(latlng: LatLngExpression): Point;
+  pointerEventToContainerPoint(ev: PointerEvent): Point;
+  pointerEventToLayerPoint(ev: PointerEvent): Point;
+  pointerEventToLatLng(ev: PointerEvent): LatLng;
 
-    // Geolocation methods
-    locate(options?: LocateOptions): this;
-    stopLocate(): this;
+  // Geolocation methods
+  locate(options?: LocateOptions): this;
+  stopLocate(): this;
 
-    // Properties
-    attributionControl?: Control.Attribution | undefined;
-    zoomControl?: Control.Zoom | undefined;
+  // Properties
+  attributionControl?: Control.Attribution | undefined;
+  zoomControl?: Control.Zoom | undefined;
 
-    boxZoom?: BoxZoom | undefined;
-    doubleClickZoom?: DoubleClickZoom | undefined;
-    dragging?: MapDrag | undefined;
-    keyboard?: Keyboard | undefined;
-    scrollWheelZoom?: ScrollWheelZoom | undefined;
-    tapHold?: TapHold | undefined;
-    pinchZoom?: PinchZoom | undefined;
+  boxZoom?: BoxZoom | undefined;
+  doubleClickZoom?: DoubleClickZoom | undefined;
+  dragging?: MapDrag | undefined;
+  keyboard?: Keyboard | undefined;
+  scrollWheelZoom?: ScrollWheelZoom | undefined;
+  tapHold?: TapHold | undefined;
+  pinchZoom?: PinchZoom | undefined;
 
-    options: MapOptions;
+  options: MapOptions;
 }
 
 export const LeafletMap = Map;
 
 export interface BaseIconOptions {
-    iconUrl?: string | undefined;
-    iconRetinaUrl?: string | undefined;
-    iconSize?: PointExpression | undefined;
-    iconAnchor?: PointExpression | undefined;
-    popupAnchor?: PointExpression | undefined;
-    tooltipAnchor?: PointExpression | undefined;
-    shadowUrl?: string | undefined;
-    shadowRetinaUrl?: string | undefined;
-    shadowSize?: PointExpression | undefined;
-    shadowAnchor?: PointExpression | undefined;
-    className?: string | undefined;
-    crossOrigin?: CrossOrigin | boolean | undefined;
+  iconUrl?: string | undefined;
+  iconRetinaUrl?: string | undefined;
+  iconSize?: PointExpression | undefined;
+  iconAnchor?: PointExpression | undefined;
+  popupAnchor?: PointExpression | undefined;
+  tooltipAnchor?: PointExpression | undefined;
+  shadowUrl?: string | undefined;
+  shadowRetinaUrl?: string | undefined;
+  shadowSize?: PointExpression | undefined;
+  shadowAnchor?: PointExpression | undefined;
+  className?: string | undefined;
+  crossOrigin?: CrossOrigin | boolean | undefined;
 }
 
 export interface IconOptions extends BaseIconOptions {
-    iconUrl: string;
+  iconUrl: string;
 }
 
 export class Icon<T extends BaseIconOptions = IconOptions> extends Class {
-    constructor(options: T);
-    createIcon(oldIcon?: HTMLElement): HTMLElement;
-    createShadow(oldIcon?: HTMLElement): HTMLElement;
+  constructor(options: T);
+  createIcon(oldIcon?: HTMLElement): HTMLElement;
+  createShadow(oldIcon?: HTMLElement): HTMLElement;
 
-    options: T;
+  options: T;
 }
 
 export namespace Icon {
-    interface DefaultIconOptions extends BaseIconOptions {
-        imagePath?: string | undefined;
-    }
-    class Default extends Icon<DefaultIconOptions> {
-        static imagePath?: string | undefined;
-        constructor(options?: DefaultIconOptions);
+  interface DefaultIconOptions extends BaseIconOptions {
+    imagePath?: string | undefined;
+  }
+  class Default extends Icon<DefaultIconOptions> {
+    static imagePath?: string | undefined;
+    constructor(options?: DefaultIconOptions);
 
-        options: DefaultIconOptions;
-    }
+    options: DefaultIconOptions;
+  }
 }
 
 export interface DivIconOptions extends BaseIconOptions {
-    html?: string | HTMLElement | false | undefined;
-    bgPos?: PointExpression | undefined;
+  html?: string | HTMLElement | false | undefined;
+  bgPos?: PointExpression | undefined;
 }
 
 export class DivIcon extends Icon<DivIconOptions> {
-    constructor(options?: DivIconOptions);
+  constructor(options?: DivIconOptions);
 
-    options: DivIconOptions;
+  options: DivIconOptions;
 }
 
 export interface MarkerOptions extends InteractiveLayerOptions {
-    // TODO: should it be `typeof Icon`?
-    icon?: Icon | DivIcon | undefined;
-    /** Whether the marker is draggable with mouse/touch or not. */
-    draggable?: boolean | undefined;
-    /** Whether the marker can be tabbed to with a keyboard and clicked by pressing enter. */
-    keyboard?: boolean | undefined;
-    /** Text for the browser tooltip that appear on marker hover (no tooltip by default). */
-    title?: string | undefined;
-    /** Text for the `alt` attribute of the icon image (useful for accessibility). */
-    alt?: string | undefined;
-    /** Option for putting the marker on top of all others (or below). */
-    zIndexOffset?: number | undefined;
-    /** The opacity of the marker. */
-    opacity?: number | undefined;
-    /** If `true`, the marker will get on top of others when you hover the mouse over it. */
-    riseOnHover?: boolean | undefined;
-    /** The z-index offset used for the `riseOnHover` feature. */
-    riseOffset?: number | undefined;
-    /** `Map pane` where the markers shadow will be added. */
-    shadowPane?: string | undefined;
-    /** Whether to pan the map when dragging this marker near its edge or not. */
-    autoPan?: boolean | undefined;
-    /** Distance (in pixels to the left/right and to the top/bottom) of the map edge to start panning the map. */
-    autoPanPadding?: PointExpression | undefined;
-    /** Number of pixels the map should pan by. */
-    autoPanSpeed?: number | undefined;
-    autoPanOnFocus?: boolean | undefined;
+  // TODO: should it be `typeof Icon`?
+  icon?: Icon | DivIcon | undefined;
+  /** Whether the marker is draggable with mouse/touch or not. */
+  draggable?: boolean | undefined;
+  /** Whether the marker can be tabbed to with a keyboard and clicked by pressing enter. */
+  keyboard?: boolean | undefined;
+  /** Text for the browser tooltip that appear on marker hover (no tooltip by default). */
+  title?: string | undefined;
+  /** Text for the `alt` attribute of the icon image (useful for accessibility). */
+  alt?: string | undefined;
+  /** Option for putting the marker on top of all others (or below). */
+  zIndexOffset?: number | undefined;
+  /** The opacity of the marker. */
+  opacity?: number | undefined;
+  /** If `true`, the marker will get on top of others when you hover the mouse over it. */
+  riseOnHover?: boolean | undefined;
+  /** The z-index offset used for the `riseOnHover` feature. */
+  riseOffset?: number | undefined;
+  /** `Map pane` where the markers shadow will be added. */
+  shadowPane?: string | undefined;
+  /** Whether to pan the map when dragging this marker near its edge or not. */
+  autoPan?: boolean | undefined;
+  /** Distance (in pixels to the left/right and to the top/bottom) of the map edge to start panning the map. */
+  autoPanPadding?: PointExpression | undefined;
+  /** Number of pixels the map should pan by. */
+  autoPanSpeed?: number | undefined;
+  autoPanOnFocus?: boolean | undefined;
 }
 
 export class Marker<P = any> extends Layer {
-    constructor(latlng: LatLngExpression, options?: MarkerOptions);
-    toGeoJSON(precision?: number | false): geojson.Feature<geojson.Point, P>;
-    getLatLng(): LatLng;
-    setLatLng(latlng: LatLngExpression): this;
-    setZIndexOffset(offset: number): this;
-    // TODO: should it be `typeof Icon`?
-    getIcon(): Icon | DivIcon;
-    setIcon(icon: Icon | DivIcon): this;
-    setOpacity(opacity: number): this;
-    getElement(): HTMLElement | undefined;
-    update(): void;
+  constructor(latlng: LatLngExpression, options?: MarkerOptions);
+  toGeoJSON(precision?: number | false): geojson.Feature<geojson.Point, P>;
+  getLatLng(): LatLng;
+  setLatLng(latlng: LatLngExpression): this;
+  setZIndexOffset(offset: number): this;
+  // TODO: should it be `typeof Icon`?
+  getIcon(): Icon | DivIcon;
+  setIcon(icon: Icon | DivIcon): this;
+  setOpacity(opacity: number): this;
+  getElement(): HTMLElement | undefined;
+  update(): void;
 
-    // Properties
-    options: MarkerOptions;
-    dragging?: MarkerDrag | undefined;
-    feature?: geojson.Feature<geojson.Point, P> | undefined;
+  // Properties
+  options: MarkerOptions;
+  dragging?: MarkerDrag | undefined;
+  feature?: geojson.Feature<geojson.Point, P> | undefined;
 
-    protected _shadow: HTMLElement | undefined;
+  protected _shadow: HTMLElement | undefined;
 }
 
 export namespace Browser {
-    // sorting according to https://leafletjs.com/reference.html#browser
-    const chrome: boolean;
-    const safari: boolean;
-    const mobile: boolean;
-    const pointer: boolean;
-    const touchNative: boolean;
-    const touch: boolean;
-    const retina: boolean;
-    const mac: boolean;
-    const linux: boolean;
+  // sorting according to https://leafletjs.com/reference.html#browser
+  const chrome: boolean;
+  const safari: boolean;
+  const mobile: boolean;
+  const pointer: boolean;
+  const touchNative: boolean;
+  const touch: boolean;
+  const retina: boolean;
+  const mac: boolean;
+  const linux: boolean;
 }
 
 export namespace Util {
-    function stamp(obj: any): number;
-    function throttle(fn: () => void, time: number, context: any): () => void;
-    function wrapNum(num: number, range: number[], includeMax?: boolean): number;
-    function falseFn(): false;
-    function formatNum(num: number, digits?: number | false): number;
-    function splitWords(str: string): string[];
-    function setOptions(obj: any, options: any): any;
-    function template(str: string, data: any): string;
+  function stamp(obj: any): number;
+  function throttle(fn: () => void, time: number, context: any): () => void;
+  function wrapNum(num: number, range: number[], includeMax?: boolean): number;
+  function falseFn(): false;
+  function formatNum(num: number, digits?: number | false): number;
+  function splitWords(str: string): string[];
+  function setOptions(obj: any, options: any): any;
+  function template(str: string, data: any): string;
 
-    let lastId: number;
-    let emptyImageUrl: string;
+  let lastId: number;
+  let emptyImageUrl: string;
 }

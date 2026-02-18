@@ -1,10 +1,7 @@
 {
-  "private": true,
   "name": "@types/leaflet",
   "version": "2.0.9999",
-  "projects": [
-    "https://github.com/Leaflet/Leaflet"
-  ],
+  "private": true,
   "dependencies": {
     "@types/geojson": "*"
   },
@@ -44,5 +41,8 @@
       "name": "Hugo Sales",
       "githubUsername": "someonewithpc"
     }
+  ],
+  "projects": [
+    "https://github.com/Leaflet/Leaflet"
   ]
 }
