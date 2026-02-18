@@ -1,20 +1,17 @@
 {
   "name": "albina-admin-gui",
   "version": "0.0.0",
+  "private": true,
   "description": "Admin user interface for avalanche bulletins.",
-  "author": "Norbert Lanzanasto",
-  "url": "https://avalanche.report/",
-  "copyright": "Copyright 2017 Norbert Lanzanasto",
+  "bugs": {
+    "url": "https://gitlab.com/albina-euregio/albina-admin-gui"
+  },
   "license": "AGPL-3.0-or-later",
+  "author": "Norbert Lanzanasto",
   "repository": {
     "type": "git",
     "url": "git@gitlab.com:albina-euregio/albina-admin-gui.git"
   },
-  "bugs": {
-    "url": "https://gitlab.com/albina-euregio/albina-admin-gui"
-  },
-  "angular-cli": {},
-  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -32,7 +29,6 @@
     "changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag",
     "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },
-  "private": true,
   "dependencies": {
     "@albina-euregio/linea": "^8.7.4",
     "@angular/animations": "^21.1.0",
@@ -84,7 +80,6 @@
     "@angular/compiler-cli": "^21.1.0",
     "@eslint/js": "^9.31.0",
     "@playwright/test": "^1.55.0",
-    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/diff-match-patch": "^1.0.36",
     "@types/file-saver": "^2.0.5",
     "@types/geojson": "^7946.0.10",
@@ -98,37 +93,18 @@
     "git-cliff": "^2.7.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "prettier": "^3.8.1",
+    "oxfmt": "^0.33.0",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.48.0"
   },
   "resolutions": {
     "@types/css-font-loading-module": "^0.0.13"
   },
-  "prettier": {
-    "arrowParens": "always",
-    "bracketSameLine": false,
-    "bracketSpacing": true,
-    "endOfLine": "lf",
-    "htmlWhitespaceSensitivity": "css",
-    "importOrderParserPlugins": [
-      "decorators",
-      "typescript"
-    ],
-    "plugins": [
-      "@trivago/prettier-plugin-sort-imports"
-    ],
-    "printWidth": 120,
-    "proseWrap": "preserve",
-    "quoteProps": "as-needed",
-    "semi": true,
-    "singleAttributePerLine": false,
-    "singleQuote": false,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "useTabs": false
-  },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
-  }
+    "**/*": "oxfmt --no-error-on-unmatched-pattern"
+  },
+  "packageManager": "pnpm@10.27.0+sha512.72d699da16b1179c14ba9e64dc71c9a40988cbdc65c264cb0e489db7de917f20dcf4d64d8723625f2969ba52d4b7e2a1170682d9ac2a5dcaeaab732b7e16f04a",
+  "angular-cli": {},
+  "copyright": "Copyright 2017 Norbert Lanzanasto",
+  "url": "https://avalanche.report/"
 }

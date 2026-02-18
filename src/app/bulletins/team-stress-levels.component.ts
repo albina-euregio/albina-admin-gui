@@ -7,7 +7,9 @@ import { NgxEchartsDirective } from "ngx-echarts";
 
 @Component({
   selector: "app-team-stress-levels",
-  template: ` <div echarts [options]="dataset"></div>`,
+  template: `
+    <div echarts [options]="dataset"></div>
+  `,
   standalone: true,
   imports: [NgxEchartsDirective],
 })

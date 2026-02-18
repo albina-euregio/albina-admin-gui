@@ -5,11 +5,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          11.820795371450345,
-          47.22181340861587,
-          2120
-        ]
+        "coordinates": [11.820795371450345, 47.22181340861587, 2120]
       },
       "properties": {
         "$id": "32649745-69de-4729-accf-bfa945419340",
@@ -29,17 +25,13 @@
         "longitude": 11.820795371450345,
         "region": "AT-07-16",
         "reportDate": "2024-12-05T12:26:54.000Z",
-        "importantObservations": [
-          "StabilityTest"
-        ],
+        "importantObservations": ["StabilityTest"],
         "regionLabel": "AT-07-16 Tuxer Alps East",
         "_id": "67519796b0e20c5bb4fb66e4",
         "uuId": "32649745-69de-4729-accf-bfa945419340",
         "__v": 0,
         "altitude": 2120,
-        "aspects": [
-          "N"
-        ],
+        "aspects": ["N"],
         "comment": "Untergrund: alpiner Rasen, Stauden, nicht gefroren\nEXP N: Oberflächenreif konstant, EXP S Oberflächenreif im Laufe des Vormittags aufgrund von Sonneneinstrahlung abgebaut. ",
         "commissionId": "",
         "commissionName": "",
@@ -304,11 +296,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          11.8596389,
-          47.1914402,
-          0
-        ]
+        "coordinates": [11.8596389, 47.1914402, 0]
       },
       "properties": {
         "$id": "53276a95-7576-4725-8e11-d747c21c95dc",
@@ -332,9 +320,7 @@
         "__v": 0,
         "comment": "VV Exp S im Laufe des Vormittags abgebaut (1500-2300m)\nVV Exp N konstant. ",
         "createdAt": "2024-12-05T12:11:13.565Z",
-        "dangerSigns": [
-          "freshWindDriftedSnow"
-        ],
+        "dangerSigns": ["freshWindDriftedSnow"],
         "deleted": false,
         "deletedTime": "1970-01-01T00:00:00.000Z",
         "deletedUsername": "",
@@ -408,11 +394,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          11.82079537145,
-          47.221813408616,
-          2120
-        ]
+        "coordinates": [11.82079537145, 47.221813408616, 2120]
       },
       "properties": {
         "$id": "Profile-22309",
@@ -432,9 +414,7 @@
         "longitude": 11.82079537145,
         "region": "AT-07-16",
         "reportDate": "2024-12-05T12:26:52.000Z",
-        "importantObservations": [
-          "StabilityTest"
-        ],
+        "importantObservations": ["StabilityTest"],
         "regionLabel": "AT-07-16 Tuxer Alps East",
         "id": 22309,
         "files": {
@@ -734,11 +714,7 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          11.97476101947646,
-          47.34493250358361,
-          1787
-        ]
+        "coordinates": [11.97476101947646, 47.34493250358361, 1787]
       },
       "properties": {
         "$id": "d073ade3-3d44-4d3a-91b0-63df2701de2f",

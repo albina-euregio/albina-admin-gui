@@ -16,5 +16,6 @@
     "role.*"
   ],
   "nuxt.isNuxtApp": false,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.formatOnSave": true
 }
