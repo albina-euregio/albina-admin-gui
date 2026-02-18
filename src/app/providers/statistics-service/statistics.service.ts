@@ -21,10 +21,10 @@ export class StatisticsService {
       "/statistics",
       ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate)],
       ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate)],
-      ["region", this.authenticationService.getActiveRegionId()],
+      ["regions", this.authenticationService.getActiveRegionId()],
       ["lang", lang],
-      ["extended", extended],
-      ["duplicates", duplicates],
+      ["extended", extended ?? false],
+      ["duplicate", duplicates ?? false],
     );
     const headers = new HttpHeaders({ Accept: "text/csv" });
     return this.http.get(url, { headers, responseType: "blob" });
