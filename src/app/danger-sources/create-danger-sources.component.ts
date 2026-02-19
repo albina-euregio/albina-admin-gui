@@ -900,7 +900,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       if (isUpdate) {
         this.saveVariantOnServer(this.activeVariant);
       } else {
-        if (this.dangerSourcesService.hasBeenPublished5PM(this.dangerSourcesService.sourceDates.activeDate)) {
+        if (
+          this.dangerSourcesService.sourceDates.hasBeenPublished5PM(this.dangerSourcesService.sourceDates.activeDate)
+        ) {
           this.activeVariant.dangerSourceVariantType = DangerSourceVariantType.analysis;
         } else {
           this.activeVariant.dangerSourceVariantType = DangerSourceVariantType.forecast;

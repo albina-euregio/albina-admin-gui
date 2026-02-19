@@ -13,7 +13,7 @@
     </thead>
     <tbody class="bulletins-table__body">
       @for (date of dangerSourcesService.sourceDates.dates; track date) {
-        <tr [class.bulletins-table__day--past]="dangerSourcesService.hasBeenPublished5PM(date)">
+        <tr [class.bulletins-table__day--past]="dangerSourcesService.sourceDates.hasBeenPublished5PM(date)">
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
             <div class="bulletins-table__day">
               <time>

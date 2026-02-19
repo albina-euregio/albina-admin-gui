@@ -60,4 +60,10 @@ export class SourceDates {
     validUntil.setTime(validUntil.getTime() + 17 * 60 * 60 * 1000);
     return [validFrom, validUntil];
   }
+
+  hasBeenPublished5PM(date: [Date, Date]): boolean {
+    // date[0] = validFrom = 17:00 = published at
+    const published = date[0];
+    return Date.now() >= published.getTime();
+  }
 }

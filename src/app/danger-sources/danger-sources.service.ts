@@ -100,12 +100,6 @@ export class DangerSourcesService {
     return this.http.get(url).pipe(map((o) => schema.parse(o)));
   }
 
-  hasBeenPublished5PM(date: [Date, Date]): boolean {
-    // date[0] = validFrom = 17:00 = published at
-    const published = date[0];
-    return Date.now() >= published.getTime();
-  }
-
   getIsEditable(): boolean {
     return this.isEditable && !this.isReadOnly;
   }
@@ -123,7 +117,7 @@ export class DangerSourcesService {
   }
 
   getDangerSourceVariantType() {
-    if (this.hasBeenPublished5PM(this.sourceDates.activeDate)) {
+    if (this.sourceDates.hasBeenPublished5PM(this.sourceDates.activeDate)) {
       return DangerSourceVariantType.analysis;
     } else {
       return DangerSourceVariantType.forecast;
