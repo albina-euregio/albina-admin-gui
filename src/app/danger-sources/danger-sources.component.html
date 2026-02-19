@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody class="bulletins-table__body">
-      @for (date of dangerSourcesService.dates; track date) {
+      @for (date of dangerSourcesService.sourceDates.dates; track date) {
         <tr [class.bulletins-table__day--past]="dangerSourcesService.hasBeenPublished5PM(date)">
           <td [attr.data-label]="'bulletins.table.title.date' | translate">
             <div class="bulletins-table__day">
@@ -85,7 +85,7 @@
             <button
               style="width: 100%; width: -moz-available; width: -webkit-fill-available; width: fill-available"
               class="btn btn-icon btn-sm"
-              (click)="dangerSourcesService.init({ days: dangerSourcesService.dates.length + days })"
+              (click)="dangerSourcesService.init({ days: dangerSourcesService.sourceDates.dates.length + days })"
               title="{{ 'dangerSources.table.loadMore' | translate: { count: days } }}"
             >
               <i class="ph ph-caret-down"></i>

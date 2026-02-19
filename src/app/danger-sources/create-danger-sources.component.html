@@ -12,27 +12,30 @@
 
       <div class="create-bulletin__date" style="margin-bottom: 5px">
         <h1 class="create-bulletin__current-date font-m-bold">
-          {{ dangerSourcesService.getActiveDate()[1] | date: "EEEE," : undefined : translateService.getCurrentLang()
+          {{
+            dangerSourcesService.sourceDates.activeDate[1]
+              | date: "EEEE," : undefined : translateService.getCurrentLang()
           }}<br />
           {{
-            dangerSourcesService.getActiveDate()[1] | date: "longDate" : undefined : translateService.getCurrentLang()
+            dangerSourcesService.sourceDates.activeDate[1]
+              | date: "longDate" : undefined : translateService.getCurrentLang()
           }}
         </h1>
         <nav class="btn-group create-bulleting__days-nav">
-          @if (dangerSourcesService.getNextDate()) {
+          @if (dangerSourcesService.sourceDates.getNextDate()) {
             <button
               type="button"
               class="btn btn-icon btn-sm btn-bare--grey"
-              (click)="changeDate(dangerSourcesService.getNextDate())"
+              (click)="changeDate(dangerSourcesService.sourceDates.getNextDate())"
             >
               <i class="ph-bold ph-caret-left"></i>
             </button>
           }
-          @if (dangerSourcesService.getPreviousDate()) {
+          @if (dangerSourcesService.sourceDates.getPreviousDate()) {
             <button
               type="button"
               class="btn btn-icon btn-sm btn-bare--grey"
-              (click)="changeDate(dangerSourcesService.getPreviousDate())"
+              (click)="changeDate(dangerSourcesService.sourceDates.getPreviousDate())"
             >
               <i class="ph-bold ph-caret-right"></i>
             </button>
@@ -41,9 +44,15 @@
       </div>
       <div class="region-thumb__author font-s text-secondary">
         <small>
-          {{ dangerSourcesService.getActiveDate()[0] | date: "medium" : undefined : translateService.getCurrentLang() }}
+          {{
+            dangerSourcesService.sourceDates.activeDate[0]
+              | date: "medium" : undefined : translateService.getCurrentLang()
+          }}
           &ndash;
-          {{ dangerSourcesService.getActiveDate()[1] | date: "medium" : undefined : translateService.getCurrentLang() }}
+          {{
+            dangerSourcesService.sourceDates.activeDate[1]
+              | date: "medium" : undefined : translateService.getCurrentLang()
+          }}
         </small>
       </div>
       <!-- End Date Switch -->

@@ -152,7 +152,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.activeRoute.params.subscribe((routeParams) => {
       const date = new Date(routeParams.date);
       date.setHours(0, 0, 0, 0);
-      this.dangerSourcesService.setActiveDate(this.dangerSourcesService.getValidFromUntil(date));
+      this.dangerSourcesService.sourceDates.activeDate = this.dangerSourcesService.sourceDates.getValidFromUntil(date);
 
       if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)) {
         this.dangerSourcesService.setIsReadOnly(true);
@@ -167,7 +167,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
     await this.initMaps();
 
-    if (this.dangerSourcesService.getActiveDate() && this.authenticationService.isUserLoggedIn()) {
+    if (this.dangerSourcesService.sourceDates.activeDate && this.authenticationService.isUserLoggedIn()) {
       this.reset();
 
       this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
@@ -211,7 +211,10 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.internVariantsList = new Array<DangerSourceVariantModel>();
     this.pendingDangerSources?.unsubscribe();
     this.pendingDangerSources = this.dangerSourcesService
-      .loadDangerSources(this.dangerSourcesService.getActiveDate(), this.authenticationService.getActiveRegionId())
+      .loadDangerSources(
+        this.dangerSourcesService.sourceDates.activeDate,
+        this.authenticationService.getActiveRegionId(),
+      )
       .subscribe({
         next: (dangerSources) => {
           console.log("Loaded %d danger sources", dangerSources.length);
@@ -221,7 +224,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
           console.log("Loading danger source variants");
           this.pendingDangerSourcesVariants = this.dangerSourcesService
             .loadDangerSourceVariants(
-              this.dangerSourcesService.getActiveDate(),
+              this.dangerSourcesService.sourceDates.activeDate,
               this.authenticationService.getActiveRegionId(),
             )
             .subscribe({
@@ -262,7 +265,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.mapService.resetAll();
     this.mapService.removeMaps();
 
-    this.dangerSourcesService.setActiveDate(undefined);
+    this.dangerSourcesService.sourceDates.activeDate = undefined;
     this.dangerSourcesService.setIsEditable(false);
 
     this.loading = false;
@@ -381,7 +384,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   loadVariantsFromYesterday(dangerSourceId?: string) {
-    const date = this.dangerSourcesService.getNextDate();
+    const date = this.dangerSourcesService.sourceDates.getNextDate();
 
     if (dangerSourceId) {
       this.dangerSourcesService
@@ -463,8 +466,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
       variant.id = undefined;
       variant.ownerRegion = this.authenticationService.getActiveRegionId();
-      variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
-      variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+      variant.validFrom = this.dangerSourcesService.sourceDates.activeDate[0];
+      variant.validUntil = this.dangerSourcesService.sourceDates.activeDate[1];
       variant.dangerSourceVariantType = this.dangerSourcesService.getDangerSourceVariantType();
 
       // reset regions
@@ -487,7 +490,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     if (!variants.length) {
       return;
     }
-    this.dangerSourcesService.replaceVariants(variants, this.dangerSourcesService.getActiveDate()).subscribe(
+    this.dangerSourcesService.replaceVariants(variants, this.dangerSourcesService.sourceDates.activeDate).subscribe(
       () => {
         this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
         this.loadInternalVariantsError = false;
@@ -670,8 +673,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     variant.id = undefined;
     variant.regions = new Array<string>();
     variant.ownerRegion = this.authenticationService.getActiveRegionId();
-    variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
-    variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+    variant.validFrom = this.dangerSourcesService.sourceDates.activeDate[0];
+    variant.validUntil = this.dangerSourcesService.sourceDates.activeDate[1];
 
     this.selectVariant(variant);
     this.editVariantMicroRegions(variant);
@@ -694,8 +697,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       regions: [],
       weakLayerGrainShapes: [],
       ownerRegion: this.authenticationService.getActiveRegionId(),
-      validFrom: this.dangerSourcesService.getActiveDate()[0],
-      validUntil: this.dangerSourcesService.getActiveDate()[1],
+      validFrom: this.dangerSourcesService.sourceDates.activeDate[0],
+      validUntil: this.dangerSourcesService.sourceDates.activeDate[1],
       creationDate: new Date(),
       updateDate: new Date(),
     });
@@ -897,7 +900,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       if (isUpdate) {
         this.saveVariantOnServer(this.activeVariant);
       } else {
-        if (this.dangerSourcesService.hasBeenPublished5PM(this.dangerSourcesService.getActiveDate())) {
+        if (this.dangerSourcesService.hasBeenPublished5PM(this.dangerSourcesService.sourceDates.activeDate)) {
           this.activeVariant.dangerSourceVariantType = DangerSourceVariantType.analysis;
         } else {
           this.activeVariant.dangerSourceVariantType = DangerSourceVariantType.forecast;
@@ -916,31 +919,33 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   saveVariantOnServer(variant: DangerSourceVariantModel, checkErrors: boolean | "modal" = true) {
-    variant.validFrom = this.dangerSourcesService.getActiveDate()[0];
-    variant.validUntil = this.dangerSourcesService.getActiveDate()[1];
+    variant.validFrom = this.dangerSourcesService.sourceDates.activeDate[0];
+    variant.validUntil = this.dangerSourcesService.sourceDates.activeDate[1];
     variant.updateDate = new Date();
     ////
-    this.dangerSourcesService.saveDangerSourceVariant(variant, this.dangerSourcesService.getActiveDate()).subscribe(
-      (newVariant) => {
-        this.activeVariant = newVariant;
-        this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
-        this.saveError.delete(newVariant.id);
-        this.loadInternalVariantsError = false;
-        this.loading = false;
-        if (checkErrors === true) {
-          this.updateSaveErrors();
-        }
-        console.log("Variant saved on server.");
-      },
-      () => {
-        console.error("Variant could not be saved on server!");
-        if (checkErrors === "modal") {
-          this.openSaveErrorModal();
-        } else {
-          this.saveError.set(variant.id, variant);
-        }
-      },
-    );
+    this.dangerSourcesService
+      .saveDangerSourceVariant(variant, this.dangerSourcesService.sourceDates.activeDate)
+      .subscribe(
+        (newVariant) => {
+          this.activeVariant = newVariant;
+          this.loadDangerSourcesFromServer(this.dangerSourcesService.getDangerSourceVariantType());
+          this.saveError.delete(newVariant.id);
+          this.loadInternalVariantsError = false;
+          this.loading = false;
+          if (checkErrors === true) {
+            this.updateSaveErrors();
+          }
+          console.log("Variant saved on server.");
+        },
+        () => {
+          console.error("Variant could not be saved on server!");
+          if (checkErrors === "modal") {
+            this.openSaveErrorModal();
+          } else {
+            this.saveError.set(variant.id, variant);
+          }
+        },
+      );
   }
 
   isCreator(variant: DangerSourceVariantModel): boolean {
@@ -1015,7 +1020,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.deleteInternalVariant(this.variantMarkedDelete);
     this.dangerSourcesService
-      .deleteDangerSourceVariant(this.variantMarkedDelete, this.dangerSourcesService.getActiveDate())
+      .deleteDangerSourceVariant(this.variantMarkedDelete, this.dangerSourcesService.sourceDates.activeDate)
       .subscribe(() => {
         this.loading = false;
         this.mapService.resetAggregatedRegions();
