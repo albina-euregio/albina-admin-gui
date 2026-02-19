@@ -1,58 +1,65 @@
-import { Injectable } from "@angular/core";
+import { DangerSourceVariantModel } from "../../danger-sources/models/danger-source-variant.model";
 import { BulletinModel } from "app/models/bulletin.model";
 
-@Injectable()
-export class UndoRedoService {
+export type UndoOrRedo = "undo" | "redo";
+
+export class UndoRedoState<T extends BulletinModel | DangerSourceVariantModel> {
   public undoStack: Record<string, string[]> = {};
   public redoStack: Record<string, string[]> = {};
 
-  undoRedoActiveBulletin(type: "undo" | "redo", activeBulletinID: string) {
-    if (!activeBulletinID) return undefined;
-    if (type === "undo" && this.isEnabled(type, activeBulletinID)) {
-      this.redoStack[activeBulletinID].push(this.undoStack[activeBulletinID].pop());
-    } else if (type === "redo" && this.isEnabled(type, activeBulletinID)) {
-      this.undoStack[activeBulletinID].push(this.redoStack[activeBulletinID].pop());
+  constructor(
+    private toJson: (obj: T) => object,
+    private createFromJson: (json: object) => T,
+  ) {}
+
+  undoRedoActive(type: UndoOrRedo, id: T["id"]) {
+    if (!id) return undefined;
+    if (type === "undo" && this.isEnabled(type, id)) {
+      this.redoStack[id].push(this.undoStack[id].pop());
+    } else if (type === "redo" && this.isEnabled(type, id)) {
+      this.undoStack[id].push(this.redoStack[id].pop());
     } else {
       return undefined;
     }
     console.info(
       "performing " + type,
-      "undo stack size: " + this.undoStack[activeBulletinID].length,
-      "redo stack size: " + this.redoStack[activeBulletinID].length,
+      "undo stack size: " + this.undoStack[id].length,
+      "redo stack size: " + this.redoStack[id].length,
     );
-    const jsonBulletin = JSON.parse(this.undoStack[activeBulletinID].at(-1));
-    return BulletinModel.createFromJson(jsonBulletin);
+    const jsonBulletin = JSON.parse(this.undoStack[id].at(-1));
+    return this.createFromJson(jsonBulletin);
   }
 
-  isEnabled(type: "undo" | "redo", activeBulletinID: string) {
+  isEnabled(type: UndoOrRedo, id: T["id"]) {
     if (type === "undo") {
-      return this.undoStack[activeBulletinID]?.length > 1;
+      return this.undoStack[id]?.length > 1;
     } else if (type === "redo") {
-      return this.undoStack[activeBulletinID]?.length > 0 && this.redoStack[activeBulletinID]?.length > 0;
+      return this.undoStack[id]?.length > 0 && this.redoStack[id]?.length > 0;
     } else return false;
   }
 
-  pushToUndoStack(bulletin: BulletinModel) {
-    this.redoStack[bulletin.id] = [];
-    this.undoStack[bulletin.id] ??= [];
+  pushToUndoStack(model: T) {
+    this.redoStack[model.id] = [];
+    this.undoStack[model.id] ??= [];
     // cap undo stack at 100 entries
-    if (this.undoStack[bulletin.id].length >= 100) {
-      this.undoStack[bulletin.id].shift();
+    if (this.undoStack[model.id].length >= 100) {
+      this.undoStack[model.id].shift();
     }
-    this.undoStack[bulletin.id].push(JSON.stringify(bulletin.toJson()));
+    this.undoStack[model.id].push(JSON.stringify(this.toJson(model)));
     console.info(
-      "undo stack size: " + this.undoStack[bulletin.id].length,
-      "redo stack size: " + this.redoStack[bulletin.id].length,
+      "undo stack size: " + this.undoStack[model.id].length,
+      "redo stack size: " + this.redoStack[model.id].length,
     );
   }
 
-  initUndoRedoStacksFromServer(bulletin: BulletinModel) {
-    this.undoStack[bulletin.id] ??= [];
-    this.redoStack[bulletin.id] ??= [];
+  initUndoRedoStacksFromServer(model: T) {
+    this.undoStack[model.id] ??= [];
+    this.redoStack[model.id] ??= [];
     // If the user did not perform any actions of their own, and the state changes on the server, the undo stack should be re-initialized with the state from the server.
     // On the other hand: if the undo stack has length <= 1 because the user is in the middle of some undo/redo, the stacks should not be overwritten.
-    if (this.undoStack[bulletin.id].length <= 1 && this.redoStack[bulletin.id].length === 0) {
-      this.pushToUndoStack(bulletin);
+    if (this.undoStack[model.id].length <= 1 && this.redoStack[model.id].length === 0) {
+      this.undoStack[model.id].length = 0;
+      this.pushToUndoStack(model);
     }
   }
 }

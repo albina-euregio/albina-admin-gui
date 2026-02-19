@@ -4,6 +4,7 @@ import { ServerModel } from "../../models/server.model";
 import { AuthenticationService } from "../authentication-service/authentication.service";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import { UndoRedoState } from "../undo-redo-service/undo-redo.service";
 import { UserService } from "../user-service/user.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
@@ -50,6 +51,11 @@ export class BulletinsService {
 
   private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
+
+  readonly undoRedo = new UndoRedoState<BulletinModel>(
+    (bulletin) => bulletin.toJson(),
+    (json) => BulletinModel.createFromJson(json),
+  );
 
   init({ days } = { days: 10 }) {
     this.dates = [];

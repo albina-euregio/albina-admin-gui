@@ -20,10 +20,10 @@ import { FormsModule } from "@angular/forms";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
-import { UndoRedoService } from "app/providers/undo-redo-service/undo-redo.service";
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -49,7 +49,6 @@ export class AvalancheBulletinComponent implements OnInit {
   regionsService = inject(RegionsService);
   copyService = inject(CopyService);
   translateService = inject(TranslateService);
-  undoRedoService = inject(UndoRedoService);
 
   readonly bulletin = input<BulletinModel>(undefined);
   readonly comparedBulletin = input<BulletinModel>(undefined);
@@ -65,7 +64,7 @@ export class AvalancheBulletinComponent implements OnInit {
   readonly copyBulletinEvent = output<BulletinModel>();
   readonly deselectBulletinEvent = output<BulletinModel>();
   readonly toggleBulletinSidebarEvent = output<void>();
-  readonly undoRedoEvent = output<"undo" | "redo">();
+  readonly undoRedoEvent = output<UndoOrRedo>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);

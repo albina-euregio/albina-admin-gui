@@ -24,7 +24,6 @@ import { MapService } from "./app/providers/map-service/map.service";
 import { MediaFileService } from "./app/providers/media-file-service/media-file.service";
 import { RegionsService } from "./app/providers/regions-service/regions.service";
 import { StatisticsService } from "./app/providers/statistics-service/statistics.service";
-import { UndoRedoService } from "./app/providers/undo-redo-service/undo-redo.service";
 import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
@@ -140,7 +139,6 @@ bootstrapApplication(AppComponent, {
     StatisticsService,
     StatusService,
     TranslateService,
-    UndoRedoService,
     UserService,
     provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
     provideAnimations(),

@@ -30,6 +30,8 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { debounceTime, Subject } from "rxjs";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-danger-source-variant",
@@ -45,6 +47,7 @@ import { debounceTime, Subject } from "rxjs";
     DatePipe,
     TranslateModule,
     ToggleBtnGroup,
+    NgxMousetrapDirective,
   ],
 })
 export class DangerSourceVariantComponent implements OnChanges, OnInit {
@@ -72,6 +75,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   readonly copyVariantEvent = output<DangerSourceVariantModel>();
   readonly deselectVariantEvent = output<DangerSourceVariantModel>();
   readonly toggleVariantsSidebarEvent = output<void>();
+  readonly undoRedoEvent = output<UndoOrRedo>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);
@@ -303,51 +307,25 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     if (!v || !c) return false;
 
     // elevationHigh
-    if (
-      !(
-        ((v.elevationHigh === null || v.elevationHigh === undefined) &&
-          (c.elevationHigh === null || c.elevationHigh === undefined)) ||
-        v.elevationHigh === c.elevationHigh
-      )
-    ) {
+    if ((v.elevationHigh ?? null) !== (c.elevationHigh ?? null)) {
       console.log("elevationHigh not equal", v.elevationHigh, c.elevationHigh);
       return true;
     }
 
     // elevationLow
-    if (
-      !(
-        ((v.elevationLow === null || v.elevationLow === undefined) &&
-          (c.elevationLow === null || c.elevationLow === undefined)) ||
-        v.elevationLow === c.elevationLow
-      )
-    ) {
+    if ((v.elevationLow ?? null) !== (c.elevationLow ?? null)) {
       console.log("elevationLow not equal", v.elevationLow, c.elevationLow);
       return true;
     }
 
     // treelineHigh
-    if (
-      !(
-        ((v.treelineHigh === null || v.treelineHigh === undefined) &&
-          (c.treelineHigh === null || c.treelineHigh === undefined)) ||
-        (v.treelineHigh && c.treelineHigh) ||
-        (!v.treelineHigh && !c.treelineHigh)
-      )
-    ) {
+    if ((v.treelineHigh ?? false) !== (c.treelineHigh ?? false)) {
       console.log("treelineHigh not equal", v.treelineHigh, c.treelineHigh);
       return true;
     }
 
     // treelineLow
-    if (
-      !(
-        ((v.treelineLow === null || v.treelineLow === undefined) &&
-          (c.treelineLow === null || c.treelineLow === undefined)) ||
-        (v.treelineLow && c.treelineLow) ||
-        (!v.treelineLow && !c.treelineLow)
-      )
-    ) {
+    if ((v.treelineLow ?? false) !== (c.treelineLow ?? false)) {
       console.log("treelineLow not equal", v.treelineLow, c.treelineLow);
       return true;
     }
@@ -364,51 +342,25 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
     if (!v || !c) return false;
 
     // elevationHigh
-    if (
-      !(
-        ((v.elevationHighOfExistence === null || v.elevationHighOfExistence === undefined) &&
-          (c.elevationHighOfExistence === null || c.elevationHighOfExistence === undefined)) ||
-        v.elevationHighOfExistence === c.elevationHighOfExistence
-      )
-    ) {
+    if ((v.elevationHighOfExistence ?? null) !== (c.elevationHighOfExistence ?? null)) {
       console.log("elevationHigh not equal", v.elevationHighOfExistence, c.elevationHighOfExistence);
       return true;
     }
 
     // elevationLow
-    if (
-      !(
-        ((v.elevationLowOfExistence === null || v.elevationLowOfExistence === undefined) &&
-          (c.elevationLowOfExistence === null || c.elevationLowOfExistence === undefined)) ||
-        v.elevationLowOfExistence === c.elevationLowOfExistence
-      )
-    ) {
+    if ((v.elevationLowOfExistence ?? null) !== (c.elevationLowOfExistence ?? null)) {
       console.log("elevationLow not equal", v.elevationLowOfExistence, c.elevationLowOfExistence);
       return true;
     }
 
     // treelineHigh
-    if (
-      !(
-        ((v.treelineHighOfExistence === null || v.treelineHighOfExistence === undefined) &&
-          (c.treelineHighOfExistence === null || c.treelineHighOfExistence === undefined)) ||
-        (v.treelineHighOfExistence && c.treelineHighOfExistence) ||
-        (!v.treelineHighOfExistence && !c.treelineHighOfExistence)
-      )
-    ) {
+    if ((v.treelineHighOfExistence ?? false) !== (c.treelineHighOfExistence ?? false)) {
       console.log("treelineHigh not equal", v.treelineHighOfExistence, c.treelineHighOfExistence);
       return true;
     }
 
     // treelineLow
-    if (
-      !(
-        ((v.treelineLowOfExistence === null || v.treelineLowOfExistence === undefined) &&
-          (c.treelineLowOfExistence === null || c.treelineLowOfExistence === undefined)) ||
-        (v.treelineLowOfExistence && c.treelineLowOfExistence) ||
-        (!v.treelineLowOfExistence && !c.treelineLowOfExistence)
-      )
-    ) {
+    if ((v.treelineLowOfExistence ?? false) !== (c.treelineLowOfExistence ?? false)) {
       console.log("treelineLow not equal", v.treelineLowOfExistence, c.treelineLowOfExistence);
       return true;
     }

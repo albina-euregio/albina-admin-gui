@@ -28,7 +28,7 @@ export class ModalCreateDangerSourceComponent {
   constructor() {
     this.dangerSource = new DangerSourceModel({
       ownerRegion: this.authenticationService.getActiveRegionId(),
-      creationDate: this.dangerSourcesService.getActiveDate()[0],
+      creationDate: this.dangerSourcesService.sourceDates.activeValidFrom,
     });
   }
 
