@@ -394,7 +394,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   loadAllVariantsFromYesterday() {
-    this.openLoadModal(this.loadTemplate());
+    this.openLoadModal();
   }
 
   loadVariantsFromYesterday(dangerSourceId?: string) {
@@ -427,7 +427,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
           },
           () => {
             this.loading = false;
-            this.openLoadingErrorModal(this.loadingErrorTemplate());
+            this.openLoadingErrorModal();
           },
         );
     } else {
@@ -454,7 +454,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
           },
           () => {
             this.loading = false;
-            this.openLoadingErrorModal(this.loadingErrorTemplate());
+            this.openLoadingErrorModal();
           },
         );
     }
@@ -513,7 +513,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       },
       () => {
         console.error("Variants could not be saved on server!");
-        this.openSaveErrorModal(this.saveErrorTemplate());
+        this.openSaveErrorModal();
       },
     );
   }
@@ -836,7 +836,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   deleteVariant(variant: DangerSourceVariantModel) {
     this.variantMarkedDelete = variant;
-    this.openDeleteAggregatedRegionModal(this.deleteAggregatedRegionTemplate());
+    this.openDeleteAggregatedRegionModal();
   }
 
   compareVariant(variant: DangerSourceVariantModel) {
@@ -920,7 +920,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         this.saveVariantOnServer(this.activeVariant, "modal");
       }
     } else {
-      this.openNoRegionModal(this.noRegionTemplate());
+      this.openNoRegionModal();
     }
   }
 
@@ -950,7 +950,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       () => {
         console.error("Variant could not be saved on server!");
         if (checkErrors === "modal") {
-          this.openSaveErrorModal(this.saveErrorTemplate());
+          this.openSaveErrorModal();
         } else {
           this.saveError.set(variant.id, variant);
         }
@@ -991,8 +991,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return variant.dangerSourceVariantStatus === status;
   }
 
-  openLoadModal(template: TemplateRef<unknown>) {
-    this.loadModalRef = this.modalService.show(template, this.config);
+  openLoadModal() {
+    this.loadModalRef = this.modalService.show(this.loadTemplate(), this.config);
   }
 
   loadModalConfirm(event: Event): void {
@@ -1007,16 +1007,16 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.loadModalRef.hide();
   }
 
-  openLoadingErrorModal(template: TemplateRef<unknown>) {
-    this.loadingErrorModalRef = this.modalService.show(template, this.config);
+  openLoadingErrorModal() {
+    this.loadingErrorModalRef = this.modalService.show(this.loadingErrorTemplate(), this.config);
   }
 
   loadingErrorModalConfirm(): void {
     this.loadingErrorModalRef.hide();
   }
 
-  openDeleteAggregatedRegionModal(template: TemplateRef<unknown>) {
-    this.deleteAggregatedRegionModalRef = this.modalService.show(template, this.config);
+  openDeleteAggregatedRegionModal() {
+    this.deleteAggregatedRegionModalRef = this.modalService.show(this.deleteAggregatedRegionTemplate(), this.config);
   }
 
   deleteAggregatedRegionModalConfirm(): void {
@@ -1036,16 +1036,16 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.deleteAggregatedRegionModalRef.hide();
   }
 
-  openNoRegionModal(template: TemplateRef<unknown>) {
-    this.noRegionModalRef = this.modalService.show(template, this.config);
+  openNoRegionModal() {
+    this.noRegionModalRef = this.modalService.show(this.noRegionTemplate(), this.config);
   }
 
   noRegionModalConfirm(): void {
     this.noRegionModalRef.hide();
   }
 
-  openSaveErrorModal(template: TemplateRef<unknown>) {
-    this.saveErrorModalRef = this.modalService.show(template, this.config);
+  openSaveErrorModal() {
+    this.saveErrorModalRef = this.modalService.show(this.saveErrorTemplate(), this.config);
   }
 
   saveErrorModalConfirm(): void {
