@@ -30,6 +30,8 @@ import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { debounceTime, Subject } from "rxjs";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-danger-source-variant",
@@ -45,6 +47,7 @@ import { debounceTime, Subject } from "rxjs";
     DatePipe,
     TranslateModule,
     ToggleBtnGroup,
+    NgxMousetrapDirective,
   ],
 })
 export class DangerSourceVariantComponent implements OnChanges, OnInit {
@@ -72,6 +75,7 @@ export class DangerSourceVariantComponent implements OnChanges, OnInit {
   readonly copyVariantEvent = output<DangerSourceVariantModel>();
   readonly deselectVariantEvent = output<DangerSourceVariantModel>();
   readonly toggleVariantsSidebarEvent = output<void>();
+  readonly undoRedoEvent = output<UndoOrRedo>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);

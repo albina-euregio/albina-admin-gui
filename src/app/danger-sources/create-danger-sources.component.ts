@@ -31,6 +31,7 @@ import { orderBy } from "es-toolkit";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Subscription } from "rxjs";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",
@@ -242,6 +243,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
                   //this.addInternalVariants(dangerSources, variants.concat(newVariants), type);
                   this.save(variants.concat(newVariants));
                 } else {
+                  for (const variant of variants) {
+                    this.dangerSourcesService.undoRedo.initUndoRedoStacksFromServer(variant);
+                  }
                   this.addInternalVariants(variants, type);
                 }
                 this.sortInternDangerSourcesList();
@@ -924,11 +928,24 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveVariantOnServer(variant: DangerSourceVariantModel, checkErrors: boolean | "modal" = true) {
+  undoRedoActiveVariant(type: UndoOrRedo) {
+    // this.updateBulletinOnServerDebounced.flush();
+    const activeId = this.activeVariant.id;
+    const variant = this.dangerSourcesService.undoRedo.undoRedoActive(type, activeId);
+    const index = this.internVariantsList.indexOf(this.activeVariant);
+    this.activeVariant = variant;
+    this.internVariantsList.splice(index, 1, variant);
+    this.mapService.updateAggregatedRegion(variant);
+    this.saveVariantOnServer(variant, true, false);
+  }
+
+  saveVariantOnServer(variant: DangerSourceVariantModel, checkErrors: boolean | "modal" = true, writeUndoStack = true) {
     variant.validFrom = this.dangerSourcesService.sourceDates.activeValidFrom;
     variant.validUntil = this.dangerSourcesService.sourceDates.activeValidUntil;
     variant.updateDate = new Date();
-    ////
+    if (writeUndoStack) {
+      this.dangerSourcesService.undoRedo.pushToUndoStack(variant);
+    }
     this.dangerSourcesService
       .saveDangerSourceVariant(variant, this.dangerSourcesService.sourceDates.activeDate)
       .subscribe(

@@ -142,6 +142,32 @@
             <i class="ph ph-trash"></i>
           </button>
         }
+        @if (!editRegions) {
+          <button
+            (click)="undoRedoEvent.emit('undo')"
+            [disabled]="!dangerSourcesService.undoRedo.isEnabled('undo', variant().id)"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.undo' | translate }}"
+            type="button"
+            class="btn btn-sm btn-icon btn-outline-primary"
+            ngxMousetrapKey="mod+z"
+          >
+            <i class="ph ph-arrow-counter-clockwise"></i>
+          </button>
+        }
+        @if (!editRegions) {
+          <button
+            (click)="undoRedoEvent.emit('redo')"
+            [disabled]="!dangerSourcesService.undoRedo.isEnabled('redo', variant().id)"
+            data-toggle="tooltip"
+            title="{{ 'bulletins.create.tooltip.redo' | translate }}"
+            type="button"
+            class="btn btn-sm btn-icon btn-outline-primary"
+            ngxMousetrapKey="mod+y"
+          >
+            <i class="ph ph-arrow-clockwise"></i>
+          </button>
+        }
       </div>
     </div>
   }
