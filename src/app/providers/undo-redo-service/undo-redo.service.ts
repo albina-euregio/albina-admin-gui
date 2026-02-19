@@ -58,6 +58,7 @@ export class UndoRedoState<T extends BulletinModel | DangerSourceVariantModel> {
     // If the user did not perform any actions of their own, and the state changes on the server, the undo stack should be re-initialized with the state from the server.
     // On the other hand: if the undo stack has length <= 1 because the user is in the middle of some undo/redo, the stacks should not be overwritten.
     if (this.undoStack[model.id].length <= 1 && this.redoStack[model.id].length === 0) {
+      this.undoStack[model.id].length = 0;
       this.pushToUndoStack(model);
     }
   }
