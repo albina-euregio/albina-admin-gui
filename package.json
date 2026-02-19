@@ -59,7 +59,7 @@
     "leaflet-control-geocoder": "^3.3.0",
     "leaflet.sync": "^0.2.4",
     "mousetrap": "^1.6.5",
-    "ngx-bootstrap": "^20.0.2",
+    "ngx-bootstrap": "^21.0.1",
     "ngx-echarts": "^21.0.0",
     "ngx-image-compress": "^18.1.5",
     "pmtiles": "^4.3.2",
