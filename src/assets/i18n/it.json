@@ -118,7 +118,8 @@
         "glide": "Valanghe di slittamento",
         "matrix": "Matrice",
         "characteristics": "Caratteristiche",
-        "comment": "Commento"
+        "comment": "Commento",
+        "uncertainties": "Incertezze"
       },
       "label": {
         "glidingSnowActivity": "attività di slittamento",
@@ -694,7 +695,7 @@
           "enableObservations": "Attiva osservazioni",
           "enableModelling": "Attiva modellazione",
           "enableWeatherbox": "Attiva box meteo",
-          "enableLineaExport": "Enable LINEA export"
+          "enableLineaExport": "Abilita l’esportazione LINEA"
         },
         "configuration": {
           "title": "Configurazione",
@@ -745,8 +746,8 @@
         "error": "L'utente non può essere creato"
       },
       "updateUser": {
-        "success": "User saved",
-        "error": "User could not be saved"
+        "success": "Utente salvato con successo",
+        "error": " Non è stato possibile salvare l’utente"
       }
     },
     "createUser": {
@@ -1250,7 +1251,7 @@
     }
   },
   "button": {
-    "true": "yes",
+    "true": "si",
     "false": "no",
     "yes": "si",
     "no": "no"
@@ -1435,11 +1436,11 @@
     "Wet instability": "Instabilità bagnata"
   },
   "channelStatus": {
-    "loading": "Loading channel status information...",
-    "triggerStatusChecks": "Trigger status checks"
+    "loading": "Caricamento dello stato del canale...",
+    "triggerStatusChecks": "Esegui i controlli dello stato"
   },
   "lineaexport": {
-    "searchfieldplaceholder": "Search stations...",
-    "hint": "Press Enter to add"
+    "searchfieldplaceholder": "Cerca stazioni...",
+    "hint": "Premi Invio per aggiungere"
   }
 }

@@ -118,7 +118,8 @@
         "glide": "Gleitschnee",
         "matrix": "Matrix",
         "characteristics": "Merkmale",
-        "comment": "Kommentar"
+        "comment": "Kommentar",
+        "uncertainties": "Unsicherheiten"
       },
       "label": {
         "glidingSnowActivity": "Gleitschneeaktivität",
@@ -244,7 +245,7 @@
       "resubmittedInfo": "Wird um 8 Uhr publiziert",
       "publishedInfo": "Wurde publiziert",
       "noPublicationInfo": "Wird NICHT automatisch publiziert",
-      "loadingPreview": "Erzeuge PDF Vorschau ...",
+      "loadingPreview": "Erzeuge PDF-Vorschau ...",
       "loading": "Bulletin lädt ...",
       "loadMoreBulletins": "{{count}} weitere Bulletins laden",
       "publishing": "Bulletin wird publiziert ...",
@@ -668,16 +669,16 @@
           "sendTelegramMessages": "Telegram Nachrichten verschicken",
           "sendWhatsAppMessages": "WhatsApp Nachrichten verschicken",
           "sendPushNotifications": "Push Nachrichten verschicken",
-          "pdfColor": "PDF Farbe",
+          "pdfColor": "PDF-Farbe",
           "emailColor": "Email Farbe",
-          "pdfMapYAmPm": "Y für PDF Karte (am/pm)",
-          "pdfMapYFd": "Y für PDF Karte (fd)",
+          "pdfMapYAmPm": "Y für PDF-Karte (am/pm)",
+          "pdfMapYFd": "Y für PDF-Karte (fd)",
           "pdfMapWidthAmPm": "Kartenbreite für PDF (am/pm)",
           "pdfMapWidthFd": "Kartenbreite für PDF (fd)",
           "pdfMapHeight": "Kartenhöhe für PDF",
-          "pdfFooterLogo": "Logo für PDF Footer",
-          "pdfFooterLogoColorPath": "Logo für PDF Footer (farbe)",
-          "pdfFooterLogoBwPath": "Logo für PDF Footer (schwarz-weiß)",
+          "pdfFooterLogo": "Logo für PDF-Footer",
+          "pdfFooterLogoColorPath": "Logo für PDF-Footer (farbe)",
+          "pdfFooterLogoBwPath": "Logo für PDF-Footer (schwarz-weiß)",
           "simpleHtmlTemplateName": "Vorlage für einfaches HTML",
           "geoDataDirectory": "Ordner für Geodaten",
           "mapLogoColorPath": "Logo für Karte (farbe)",
@@ -694,7 +695,7 @@
           "enableObservations": "Beobachtungen aktivieren",
           "enableModelling": "Modellierung aktivieren",
           "enableWeatherbox": "Wetterbox aktivieren",
-          "enableLineaExport": "Enable LINEA export"
+          "enableLineaExport": "LINEA-Export aktivieren"
         },
         "configuration": {
           "title": "Konfiguration",
@@ -745,8 +746,8 @@
         "error": "Benutzer konnte nicht angelegt werden"
       },
       "updateUser": {
-        "success": "User saved",
-        "error": "User could not be saved"
+        "success": "Benutzer gespeichert",
+        "error": "Benutzer konnte nicht gespeichert werden"
       }
     },
     "createUser": {
@@ -1250,8 +1251,8 @@
     }
   },
   "button": {
-    "true": "yes",
-    "false": "no",
+    "true": "ja",
+    "false": "nein",
     "yes": "ja",
     "no": "nein"
   },
@@ -1435,11 +1436,11 @@
     "Wet instability": "Instabilität trockene Schneedecke"
   },
   "channelStatus": {
-    "loading": "Loading channel status information...",
-    "triggerStatusChecks": "Trigger status checks"
+    "loading": "Informationen über Publikationsstati werden geladen...",
+    "triggerStatusChecks": "Status-Checks ausführen"
   },
   "lineaexport": {
-    "searchfieldplaceholder": "Search stations...",
-    "hint": "Press Enter to add"
+    "searchfieldplaceholder": "Stationen suchen...",
+    "hint": "Zum Hinzufügen die Eingabetaste drücken"
   }
 }
