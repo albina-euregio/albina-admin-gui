@@ -192,9 +192,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return variant.naturalRelease === Probability.likely;
   }
 
-  updateVariantScroll(scrollId: string, event): void {
-    event.preventDefault();
-    event.stopPropagation();
+  updateVariantScroll(scrollId: string): void {
     const scrollActiveVariant = this.scrollActiveVariant();
     if (!scrollActiveVariant?.nativeElement) return;
     const scrollComparedVariant = this.scrollComparedVariant();
@@ -350,9 +348,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     );
   }
 
-  compareForecast(event: Event, variant: DangerSourceVariantModel) {
-    event.stopPropagation();
-
+  compareForecast(variant: DangerSourceVariantModel) {
     if (this.comparedVariant && this.comparedVariant.id === variant.forecastDangerSourceVariantId) {
       this.comparedVariant = undefined;
     } else {
@@ -845,9 +841,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.mapService.editAggregatedRegion(variant);
   }
 
-  saveVariant(event: Event) {
-    event.stopPropagation();
-
+  saveVariant() {
     // save selected regions to active variant
     const isUpdate: boolean = this.activeVariant.regions.length !== 0;
     // only allow regions within own area
@@ -950,8 +944,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     );
   }
 
-  discardVariant(event: Event, variant?: DangerSourceVariantModel) {
-    event.stopPropagation();
+  discardVariant(variant?: DangerSourceVariantModel) {
     this.showNewVariantModal = false;
     this.editRegions = false;
     if (variant !== undefined && variant.regions.length === 0) {
@@ -983,15 +976,13 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.loadModalRef = this.modalService.show(this.loadTemplate(), this.config);
   }
 
-  loadModalConfirm(event: Event): void {
-    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+  loadModalConfirm(): void {
     this.loadModalRef.hide();
     this.loading = true;
     this.loadVariantsFromYesterday();
   }
 
-  loadModalDecline(event: Event): void {
-    (event.currentTarget as HTMLButtonElement).setAttribute("disabled", "disabled");
+  loadModalDecline(): void {
     this.loadModalRef.hide();
   }
 

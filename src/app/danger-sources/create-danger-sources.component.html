@@ -186,7 +186,7 @@
     @if (activeVariant && !showNewVariantModal) {
       <div
         class="create-bulletin__region-form"
-        (scroll)="updateVariantScroll('scrollActiveVariant', $event)"
+        (scroll)="updateVariantScroll('scrollActiveVariant')"
         #scrollActiveVariant
       >
         <app-danger-source-variant
@@ -209,7 +209,7 @@
     @if (comparedVariant && !showNewVariantModal) {
       <div
         class="create-bulletin__region-form"
-        (scroll)="updateVariantScroll('scrollComparedVariant', $event)"
+        (scroll)="updateVariantScroll('scrollComparedVariant')"
         #scrollComparedVariant
       >
         <app-danger-source-variant
@@ -241,12 +241,12 @@
             <button
               type="reset"
               class="btn btn-bare"
-              (click)="discardVariant($event, activeVariant)"
+              (click)="$event.stopPropagation(); discardVariant(activeVariant)"
               ngxMousetrapKey="esc"
             >
               <span>{{ "bulletins.create.tooltip.cancel" | translate }}</span>
             </button>
-            <button type="button" class="btn btn-primary" (click)="saveVariant($event)">
+            <button type="button" class="btn btn-primary" (click)="$event.stopPropagation(); saveVariant()">
               <i class="ph-bold ph-check"></i>
               @if (activeVariant.regions.length === 0) {
                 <span>{{ "bulletins.create.tooltip.createRegion" | translate }}</span>
@@ -564,7 +564,7 @@
           type="button"
           class="btn btn-bare btn-sm btn-icon"
           [class.btn-bare--inverse]="comparedVariant && variant.forecastDangerSourceVariantId === comparedVariant.id"
-          (click)="compareForecast($event, variant)"
+          (click)="$event.stopPropagation(); compareForecast(variant)"
           data-toggle="tooltip"
           title="{{ 'dangerSources.create.tooltip.forecast' | translate }}"
         >
@@ -591,10 +591,10 @@
     <p>{{ "dangerSources.create.loadDialog.message" | translate }}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="loadModalConfirm($event)" ngxMousetrapKey="enter">
+    <button type="button" class="btn btn-primary" (click)="loadModalConfirm()" ngxMousetrapKey="enter">
       {{ "dangerSources.create.loadDialog.accept" | translate }}
     </button>
-    <button type="button" class="btn btn-default" (click)="loadModalDecline($event)" ngxMousetrapKey="esc">
+    <button type="button" class="btn btn-default" (click)="loadModalDecline()" ngxMousetrapKey="esc">
       {{ "dangerSources.create.loadDialog.reject" | translate }}
     </button>
   </div>
