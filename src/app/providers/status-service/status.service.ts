@@ -10,12 +10,12 @@ export class StatusService {
   private constantsService = inject(ConstantsService);
 
   getStatusInformation(): Observable<StatusInformationModel[]> {
-    const url = this.constantsService.getServerUrl(`/status/channels`);
+    const url = this.constantsService.getServerUrlGET(`/status/channels`);
     return this.http.get(url).pipe(map((json) => StatusInformationSchema.array().parse(json)));
   }
 
   triggerStatusChecks(): Observable<StatusInformationModel[]> {
-    const url = this.constantsService.getServerUrl(`/status/channels`);
+    const url = this.constantsService.getServerUrlPOST(`/status/channels`);
     return this.http.post(url, null).pipe(map((json) => StatusInformationSchema.array().parse(json)));
   }
 }

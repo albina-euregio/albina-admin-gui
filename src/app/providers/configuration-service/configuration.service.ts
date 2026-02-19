@@ -20,38 +20,38 @@ export class ConfigurationService {
   private authenticationService = inject(AuthenticationService);
 
   public loadPublicLocalServerConfiguration(): Observable<ServerVersionInfo> {
-    const url = this.constantsService.getServerUrl("/server/info");
+    const url = this.constantsService.getServerUrlGET("/server/info");
     return this.http.get(url).pipe(map((json) => ServerVersionInfoSchema.parse(json)));
   }
 
   public loadLocalServerConfiguration(): Observable<LocalServerConfiguration> {
-    const url = this.constantsService.getServerUrl("/server");
+    const url = this.constantsService.getServerUrlGET("/server");
     return this.http.get(url).pipe(map((json) => LocalServerConfigurationSchema.parse(json)));
   }
 
   public loadExternalServerConfigurations(): Observable<ServerConfiguration[]> {
-    const url = this.constantsService.getServerUrl("/server/external");
+    const url = this.constantsService.getServerUrlGET("/server/external");
     return this.http.get(url).pipe(map((json) => ServerConfigurationSchema.array().parse(json)));
   }
 
   public postServerConfiguration(json: ServerConfiguration) {
-    const url = this.constantsService.getServerUrl("/server");
+    const url = this.constantsService.getServerUrlGET("/server");
     const body = JSON.stringify(json);
     return this.http.post(url, body).pipe(map((json) => ServerConfigurationSchema.parse(json)));
   }
 
   public loadRegionConfiguration(region): Observable<RegionConfiguration> {
-    const url = this.constantsService.getServerUrl("/regions/region", ["region", region]);
+    const url = this.constantsService.getServerUrlGET("/regions/region", { region: region });
     return this.http.get<RegionConfiguration>(url);
   }
 
   public loadRegionConfigurations(): Observable<RegionConfiguration[]> {
-    const url = this.constantsService.getServerUrl("/regions");
+    const url = this.constantsService.getServerUrlGET("/regions");
     return this.http.get<RegionConfiguration[]>(url);
   }
 
   public postRegionConfiguration(json) {
-    const url = this.constantsService.getServerUrl("/regions");
+    const url = this.constantsService.getServerUrlGET("/regions");
     const body = JSON.stringify(json);
     return this.http.post(url, body);
   }

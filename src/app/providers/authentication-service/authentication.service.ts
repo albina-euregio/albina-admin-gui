@@ -52,7 +52,7 @@ export class AuthenticationService {
   }
 
   public login(username: string, password: string): Observable<boolean> {
-    const url = this.constantsService.getServerUrl("/authentication");
+    const url = this.constantsService.getServerUrlPOST("/authentication");
     const body = JSON.stringify({ username, password });
     return this.http.post(url, body).pipe(
       map((json) => {
@@ -95,7 +95,7 @@ export class AuthenticationService {
   }
 
   private loadInternalRegions(): void {
-    const url = this.constantsService.getServerUrl("/regions");
+    const url = this.constantsService.getServerUrlGET("/regions");
     this.http.get<RegionConfiguration[]>(url).subscribe((regions) => this.setInternalRegions(regions));
   }
 
@@ -105,7 +105,7 @@ export class AuthenticationService {
   }
 
   private externalServerLogins() {
-    const url = this.constantsService.getServerUrl("/server/external");
+    const url = this.constantsService.getServerUrlGET("/server/external");
     this.http.get<ServerConfiguration[]>(url).subscribe(
       (data) => {
         for (const entry of data) {

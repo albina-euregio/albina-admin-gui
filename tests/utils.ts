@@ -35,5 +35,8 @@ export async function loginAdmin(page: Page) {
 
 export async function changeRegion(page: Page, region: string) {
   await page.getByRole("button", { name: "Playwright" }).click();
-  await page.locator(".dropdown-menu").getByRole("button", { name: region, exact: true }).click();
+  await page
+    .locator(".dropdown-menu")
+    .getByRole("button", { name: new RegExp(`^${region}`, "i") })
+    .click();
 }

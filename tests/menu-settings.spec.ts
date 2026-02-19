@@ -1,4 +1,4 @@
-import { loginForecaster } from "./utils";
+import { changeRegion, loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "path";
@@ -33,6 +33,8 @@ test("Education link", async ({ page }) => {
 });
 
 test("Statistics", async ({ page }) => {
+  await changeRegion(page, "Tyrol");
+  await page.reload();
   await page.getByRole("button", { name: "Playwright" }).click();
   await page.getByRole("link", { name: "Statistics" }).click();
 

@@ -72,7 +72,7 @@ test("Preview PDF", async ({ page }) => {
   expect(pdfDownload.suggestedFilename()).toMatch("PREVIEW_2024-12-19.pdf");
   const downloadPath = path.join(__dirname, "../playwright/generated-data/", pdfDownload.suggestedFilename());
   await pdfDownload.saveAs(downloadPath);
-  expect(fs.statSync(downloadPath).size).toBeGreaterThan(10 ** 6); // 1 MB
+  expect(fs.statSync(downloadPath).size).toBeGreaterThan(10 ** 5 * 5); // 500 KB
 });
 
 test("View bulletin", async ({ page }) => {

@@ -1,6 +1,8 @@
 export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"] as const);
 
-export type LangTexts = Record<(typeof LANGUAGES)[number], string>;
+export type AlbinaLanguage = "de" | "en" | "fr" | "it" | "es" | "ca" | "oc";
+
+export type LangTexts = Record<AlbinaLanguage[number], string>;
 
 export interface TextModel {
   languageCode: string;

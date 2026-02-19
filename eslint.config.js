@@ -12,6 +12,7 @@ module.exports = tseslint.config(
       ...angular.configs.tsRecommended,
     ],
     files: ["**/*.ts"],
+    ignores: ["src/app/providers/openapi.d.ts"],
     processor: angular.processInlineTemplates,
     rules: {
       "@angular-eslint/component-selector": [

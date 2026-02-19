@@ -3,6 +3,7 @@ import { ConstantsService } from "../constants-service/constants.service";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { AlbinaLanguage } from "../../models/text.model";
 
 @Injectable()
 export class MediaFileService {
@@ -12,13 +13,12 @@ export class MediaFileService {
   private authenticationService = inject(AuthenticationService);
 
   uploadFile(date: [Date, Date], file: File, text: string, important: boolean) {
-    const url = this.constantsService.getServerUrl(
-      "/media",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[1])],
-      ["region", this.authenticationService.getActiveRegionId()],
-      ["lang", this.translateService.getCurrentLang()],
-      ["important", important],
-    );
+    const url = this.constantsService.getServerUrlPOST("/media", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[1]),
+      region: this.authenticationService.getActiveRegionId(),
+      lang: this.translateService.getCurrentLang() as AlbinaLanguage,
+      important: important,
+    });
     const formData = new FormData();
     formData.append("file", file);
     formData.append("text", text);

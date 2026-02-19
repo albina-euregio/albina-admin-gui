@@ -26,6 +26,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prepare": "husky",
+    "openapi": "pnpx openapi-typescript https://api.avalanche.report/albina_dev/api/openapi.json -o ./src/app/providers/openapi.d.ts",
     "changelog": "git-cliff --unreleased --prepend CHANGELOG.md --tag",
     "changelog-latest": "git-cliff --latest --prepend CHANGELOG.md"
   },

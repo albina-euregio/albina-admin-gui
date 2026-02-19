@@ -73,7 +73,11 @@ export class BlogComponent {
   sendLatestBlogPost(event, region, language, publicationInformation: PublicationInformation) {
     event.stopPropagation();
     this.blogService
-      .sendLatestBlogPostToChannel(region, language, publicationInformation.publicationChannel)
+      .sendLatestBlogPostToChannel(
+        region,
+        language,
+        publicationInformation.publicationChannel as Exclude<PublicationChannel, PublicationChannel.All>,
+      )
       .subscribe({
         next: () => {
           console.info(publicationInformation.debugMsg);
