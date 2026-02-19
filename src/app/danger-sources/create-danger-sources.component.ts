@@ -466,8 +466,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       }
       variant.id = undefined;
       variant.ownerRegion = this.authenticationService.getActiveRegionId();
-      variant.validFrom = this.dangerSourcesService.sourceDates.activeDate[0];
-      variant.validUntil = this.dangerSourcesService.sourceDates.activeDate[1];
+      variant.validFrom = this.dangerSourcesService.sourceDates.activeValidFrom;
+      variant.validUntil = this.dangerSourcesService.sourceDates.activeValidUntil;
       variant.dangerSourceVariantType = this.dangerSourcesService.getDangerSourceVariantType();
 
       // reset regions
@@ -673,8 +673,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     variant.id = undefined;
     variant.regions = new Array<string>();
     variant.ownerRegion = this.authenticationService.getActiveRegionId();
-    variant.validFrom = this.dangerSourcesService.sourceDates.activeDate[0];
-    variant.validUntil = this.dangerSourcesService.sourceDates.activeDate[1];
+    variant.validFrom = this.dangerSourcesService.sourceDates.activeValidFrom;
+    variant.validUntil = this.dangerSourcesService.sourceDates.activeValidUntil;
 
     this.selectVariant(variant);
     this.editVariantMicroRegions(variant);
@@ -697,8 +697,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       regions: [],
       weakLayerGrainShapes: [],
       ownerRegion: this.authenticationService.getActiveRegionId(),
-      validFrom: this.dangerSourcesService.sourceDates.activeDate[0],
-      validUntil: this.dangerSourcesService.sourceDates.activeDate[1],
+      validFrom: this.dangerSourcesService.sourceDates.activeValidFrom,
+      validUntil: this.dangerSourcesService.sourceDates.activeValidUntil,
       creationDate: new Date(),
       updateDate: new Date(),
     });
@@ -921,8 +921,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   saveVariantOnServer(variant: DangerSourceVariantModel, checkErrors: boolean | "modal" = true) {
-    variant.validFrom = this.dangerSourcesService.sourceDates.activeDate[0];
-    variant.validUntil = this.dangerSourcesService.sourceDates.activeDate[1];
+    variant.validFrom = this.dangerSourcesService.sourceDates.activeValidFrom;
+    variant.validUntil = this.dangerSourcesService.sourceDates.activeValidUntil;
     variant.updateDate = new Date();
     ////
     this.dangerSourcesService

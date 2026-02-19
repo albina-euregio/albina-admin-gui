@@ -2,10 +2,11 @@
   <div class="region-form__mobile-header" [class.d-none]="isVariantsSidebarVisible()">
     <h1 class="font-m-bold">
       {{
-        dangerSourcesService.sourceDates.activeDate[1] | date: "EEEE," : undefined : translateService.getCurrentLang()
+        dangerSourcesService.sourceDates.activeValidUntil
+          | date: "EEEE," : undefined : translateService.getCurrentLang()
       }}
       {{
-        dangerSourcesService.sourceDates.activeDate[1]
+        dangerSourcesService.sourceDates.activeValidUntil
           | date: "longDate" : undefined : translateService.getCurrentLang()
       }}
     </h1>

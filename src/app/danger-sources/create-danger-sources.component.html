@@ -13,11 +13,11 @@
       <div class="create-bulletin__date" style="margin-bottom: 5px">
         <h1 class="create-bulletin__current-date font-m-bold">
           {{
-            dangerSourcesService.sourceDates.activeDate[1]
+            dangerSourcesService.sourceDates.activeValidUntil
               | date: "EEEE," : undefined : translateService.getCurrentLang()
           }}<br />
           {{
-            dangerSourcesService.sourceDates.activeDate[1]
+            dangerSourcesService.sourceDates.activeValidUntil
               | date: "longDate" : undefined : translateService.getCurrentLang()
           }}
         </h1>
@@ -45,12 +45,12 @@
       <div class="region-thumb__author font-s text-secondary">
         <small>
           {{
-            dangerSourcesService.sourceDates.activeDate[0]
+            dangerSourcesService.sourceDates.activeValidFrom
               | date: "medium" : undefined : translateService.getCurrentLang()
           }}
           &ndash;
           {{
-            dangerSourcesService.sourceDates.activeDate[1]
+            dangerSourcesService.sourceDates.activeValidUntil
               | date: "medium" : undefined : translateService.getCurrentLang()
           }}
         </small>

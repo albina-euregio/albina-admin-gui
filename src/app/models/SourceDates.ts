@@ -2,6 +2,14 @@ export class SourceDates {
   activeDate: [Date, Date];
   dates: [Date, Date][] = [];
 
+  get activeValidFrom() {
+    return this.activeDate[0];
+  }
+
+  get activeValidUntil() {
+    return this.activeDate[1];
+  }
+
   init(days = 10) {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 7);
