@@ -1,6 +1,5 @@
 import * as Enums from "../enums/enums";
 // models
-import { BulletinModel } from "../models/bulletin.model";
 import { MatrixInformationSchema } from "../models/matrix-information.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -79,8 +78,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public activeDangerSourceOnMap: DangerSourceModel;
 
   public showDangerSourceVariantsMap: Map<string, boolean>;
-  public showStatusOfAllRegions = false;
-
   public showNewVariantModal = false;
 
   public isCompactMapLayout = false;
@@ -141,7 +138,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.internVariantsList = new Array<DangerSourceVariantModel>();
     this.internDangerSourcesList = new Array<DangerSourceModel>();
     this.showDangerSourceVariantsMap = new Map<string, boolean>(); // this.preventClick = false;
-    // this.timer = 0;
 
     if (this.localStorageService.getCompactMapLayout()) {
       this.isCompactMapLayout = this.localStorageService.getCompactMapLayout();
@@ -169,7 +165,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.activeVariant = undefined;
     this.comparedVariant = undefined;
     this.activeDangerSourceOnMap = undefined;
-    // this.internVariantsList = new Array<DangerSourceVariantModel>();
 
     this.editRegions = false;
     this.showAfternoonMap = false;
@@ -650,21 +645,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Adds one variant to internal variants.
-   * @param variant variant to add
-   */
-  private addInternalVariant(variant: DangerSourceVariantModel) {
-    this.internVariantsList.push(variant);
-    sortDangerSourceVariantsByRelevance(this.internVariantsList);
-    if (this.activeVariant && this.activeVariant.id === variant.id) {
-      this.activeVariant = variant;
-    }
-    if (variant.hasDaytimeDependency && this.showAfternoonMap === false) {
-      this.onShowAfternoonMapChange(true);
-    }
-  }
-
-  /**
    * Replaces all old variants with new ones.
    * @param dangerSourceVariants new variants
    */
@@ -1120,10 +1100,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.noRegionModalRef.hide();
   }
 
-  openDiscardModal(template: TemplateRef<unknown>) {
-    this.discardModalRef = this.modalService.show(template, this.config);
-  }
-
   discardModalConfirm(): void {
     this.discardModalRef.hide();
     this.goBack();
@@ -1133,10 +1109,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     this.discardModalRef.hide();
   }
 
-  isActiveDate(date: [Date, Date]) {
-    return this.dangerSourcesService.getActiveDate()[0].getTime() === date[0].getTime();
-  }
-
   openSaveErrorModal(template: TemplateRef<unknown>) {
     this.saveErrorModalRef = this.modalService.show(template, this.config);
   }
@@ -1144,11 +1116,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   saveErrorModalConfirm(): void {
     this.saveErrorModalRef.hide();
     this.loading = false;
-  }
-
-  getRegionNames(bulletin: BulletinModel): string {
-    const regionNames = bulletin.savedRegions.map((regionCode) => this.regionsService.getRegionName(regionCode));
-    return regionNames.join(", ");
   }
 
   getDangerRatingColor(variant: DangerSourceVariantModel): string {
@@ -1164,9 +1131,5 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     } else {
       return "white";
     }
-  }
-
-  trackByDangerSourceId(index: number, item: DangerSourceModel) {
-    return item.id;
   }
 }

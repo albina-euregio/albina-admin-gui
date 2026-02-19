@@ -156,7 +156,7 @@
       <nav class="create-bulletin__region-list">
         <!-- Show the list of danger sources if there are any -->
         @if (internDangerSourcesList.length) {
-          @for (dangerSource of internDangerSourcesList; track trackByDangerSourceId($index, dangerSource)) {
+          @for (dangerSource of internDangerSourcesList; track dangerSource.id) {
             <ng-container
               *ngTemplateOutlet="dangerSourceTemplate; context: { dangerSource: dangerSource }"
             ></ng-container>
@@ -408,13 +408,6 @@
         </ng-container>
       </nav>
     }
-  </div>
-</ng-template>
-
-<ng-template #noVariantsTemplate>
-  <div class="create-bulletin__nobulletins">
-    <i class="ph ph-mountains"></i>
-    <p>{{ "dangerSources.create.noVariantsForSelectedDay" | translate }}</p>
   </div>
 </ng-template>
 
