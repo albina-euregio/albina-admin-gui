@@ -23,6 +23,7 @@ import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-des
 import { AccordionModule } from "ngx-bootstrap/accordion";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-avalanche-bulletin",
@@ -63,7 +64,7 @@ export class AvalancheBulletinComponent implements OnInit {
   readonly copyBulletinEvent = output<BulletinModel>();
   readonly deselectBulletinEvent = output<BulletinModel>();
   readonly toggleBulletinSidebarEvent = output<void>();
-  readonly undoRedoEvent = output<"undo" | "redo">();
+  readonly undoRedoEvent = output<UndoOrRedo>();
 
   dangerPattern: Enums.DangerPattern[] = Object.values(Enums.DangerPattern);
   tendency: Enums.Tendency[] = Object.values(Enums.Tendency);

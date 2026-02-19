@@ -56,6 +56,7 @@ import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 // For iframe
 import { forkJoin, map, Observable, of, Subscription, tap, timer } from "rxjs";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   templateUrl: "create-bulletin.component.html",
@@ -1273,7 +1274,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
-  undoRedoActiveBulletin(type: "undo" | "redo") {
+  undoRedoActiveBulletin(type: UndoOrRedo) {
     this.updateBulletinOnServerDebounced.flush();
     const activeId = this.activeBulletin.id;
     const bulletin = this.bulletinsService.undoRedo.undoRedoActive(type, activeId);

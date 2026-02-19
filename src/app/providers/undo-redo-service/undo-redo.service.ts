@@ -1,6 +1,8 @@
 import { DangerSourceVariantModel } from "../../danger-sources/models/danger-source-variant.model";
 import { BulletinModel } from "app/models/bulletin.model";
 
+export type UndoOrRedo = "undo" | "redo";
+
 export class UndoRedoState<T extends BulletinModel | DangerSourceVariantModel> {
   public undoStack: Record<string, string[]> = {};
   public redoStack: Record<string, string[]> = {};
@@ -10,7 +12,7 @@ export class UndoRedoState<T extends BulletinModel | DangerSourceVariantModel> {
     private createFromJson: (json: object) => T,
   ) {}
 
-  undoRedoActive(type: "undo" | "redo", id: T["id"]) {
+  undoRedoActive(type: UndoOrRedo, id: T["id"]) {
     if (!id) return undefined;
     if (type === "undo" && this.isEnabled(type, id)) {
       this.redoStack[id].push(this.undoStack[id].pop());
@@ -28,7 +30,7 @@ export class UndoRedoState<T extends BulletinModel | DangerSourceVariantModel> {
     return this.createFromJson(jsonBulletin);
   }
 
-  isEnabled(type: "undo" | "redo", id: T["id"]) {
+  isEnabled(type: UndoOrRedo, id: T["id"]) {
     if (type === "undo") {
       return this.undoStack[id]?.length > 1;
     } else if (type === "redo") {
