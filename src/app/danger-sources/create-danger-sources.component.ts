@@ -101,29 +101,12 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   public noRegionModalRef: BsModalRef;
   readonly noRegionTemplate = viewChild<TemplateRef<unknown>>("noRegionTemplate");
 
-  public discardModalRef: BsModalRef;
-  readonly discardTemplate = viewChild<TemplateRef<unknown>>("discardTemplate");
-
   public saveErrorModalRef: BsModalRef;
   readonly saveErrorTemplate = viewChild<TemplateRef<unknown>>("saveErrorTemplate");
 
-  public changeErrorModalRef: BsModalRef;
-  readonly changeErrorTemplate = viewChild<TemplateRef<unknown>>("changeErrorTemplate");
-
-  public avalancheProblemErrorModalRef: BsModalRef;
-  readonly avalancheProblemErrorTemplate = viewChild<TemplateRef<unknown>>("avalancheProblemErrorTemplate");
-
-  public checkBulletinsModalRef: BsModalRef;
-  readonly checkBulletinsTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsTemplate");
-
-  public checkBulletinsErrorModalRef: BsModalRef;
-  readonly checkBulletinsErrorTemplate = viewChild<TemplateRef<unknown>>("checkBulletinsErrorTemplate");
-
   public editDangerSourceModalRef: BsModalRef;
-  readonly editDangerSourceTemplate = viewChild<TemplateRef<unknown>>("editDangerSourceTemplate");
 
   public createDangerSourceModalRef: BsModalRef;
-  readonly createDangerSourceTemplate = viewChild<TemplateRef<unknown>>("createDangerSourceTemplate");
 
   public config = {
     animated: false,
@@ -379,22 +362,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  onShowAfternoonMapChange(checked) {
-    this.showAfternoonMap = checked;
-
-    const map = document.getElementById("map");
-    const afternoonMap = document.getElementById("afternoonMap");
-    if (this.showAfternoonMap) {
-      map.classList.add("create-bulletin__map--am");
-      afternoonMap.classList.add("create-bulletin__map--am");
-      this.mapService.addAMControl();
-    } else {
-      map.classList.remove("create-bulletin__map--am");
-      afternoonMap.classList.remove("create-bulletin__map--am");
-      this.mapService.removeAMControl();
-    }
-  }
-
   hasForecast(variant: DangerSourceVariantModel): boolean {
     return (
       variant.dangerSourceVariantType === DangerSourceVariantType.analysis &&
@@ -419,29 +386,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       if (
         variant.dangerSource.id === dangerSourceId &&
         variant.dangerSourceVariantType === this.dangerSourcesService.getDangerSourceVariantType()
-      ) {
-        result.push(variant);
-      }
-    }
-    return result;
-  }
-
-  getOwnVariants() {
-    const result = new Array<DangerSourceVariantModel>();
-    for (const variant of this.internVariantsList) {
-      if (variant.ownerRegion.startsWith(this.authenticationService.getActiveRegionId())) {
-        result.push(variant);
-      }
-    }
-    return result;
-  }
-
-  getForeignVariants() {
-    const result = new Array<DangerSourceVariantModel>();
-    for (const variant of this.internVariantsList) {
-      if (
-        !variant.ownerRegion.startsWith(this.authenticationService.getActiveRegionId()) &&
-        !this.authenticationService.isExternalRegion(variant.ownerRegion.toString())
       ) {
         result.push(variant);
       }
@@ -1098,15 +1042,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
 
   noRegionModalConfirm(): void {
     this.noRegionModalRef.hide();
-  }
-
-  discardModalConfirm(): void {
-    this.discardModalRef.hide();
-    this.goBack();
-  }
-
-  discardModalDecline(): void {
-    this.discardModalRef.hide();
   }
 
   openSaveErrorModal(template: TemplateRef<unknown>) {

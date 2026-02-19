@@ -630,20 +630,6 @@
   </div>
 </ng-template>
 
-<ng-template #discardTemplate>
-  <div class="modal-body text-center">
-    <p>{{ "dangerSources.create.discardDialog.message" | translate }}</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="discardModalConfirm()" ngxMousetrapKey="enter">
-      {{ "dangerSources.create.discardDialog.accept" | translate }}
-    </button>
-    <button type="button" class="btn btn-default" (click)="discardModalDecline()" ngxMousetrapKey="esc">
-      {{ "dangerSources.create.discardDialog.reject" | translate }}
-    </button>
-  </div>
-</ng-template>
-
 <ng-template #saveErrorTemplate>
   <div class="modal-body text-center">
     <p>{{ "dangerSources.create.saveErrorDialog.message" | translate }}</p>
