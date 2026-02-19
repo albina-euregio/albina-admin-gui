@@ -207,7 +207,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   private pendingDangerSources: Subscription;
   private pendingDangerSourcesVariants: Subscription;
   public loadDangerSourcesFromServer(type: DangerSourceVariantType) {
-    console.log("Loading danger sources");
+    console.group("Loading danger sources");
     this.internVariantsList = new Array<DangerSourceVariantModel>();
     this.pendingDangerSources?.unsubscribe();
     this.pendingDangerSources = this.dangerSourcesService
@@ -218,10 +218,11 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (dangerSources) => {
           console.log("Loaded %d danger sources", dangerSources.length);
+          console.groupEnd();
           this.addInternalDangerSources(dangerSources);
           this.loadInternalDangerSourcesError = false;
           this.pendingDangerSourcesVariants?.unsubscribe();
-          console.log("Loading danger source variants");
+          console.group("Loading danger source variants");
           this.pendingDangerSourcesVariants = this.dangerSourcesService
             .loadDangerSourceVariants(
               this.dangerSourcesService.sourceDates.activeDate,
@@ -230,6 +231,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
             .subscribe({
               next: (variants) => {
                 console.log("Loaded %d danger source variants", variants.length);
+                console.groupEnd();
                 this.loadInternalVariantsError = false;
 
                 if (
@@ -248,6 +250,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
               },
               error: (error) => {
                 console.error("Variants could not be loaded!", error);
+                console.groupEnd();
                 this.loading = false;
                 this.loadInternalVariantsError = true;
               },
@@ -255,6 +258,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error("Danger sources could not be loaded!", error);
+          console.groupEnd();
           this.loading = false;
           this.loadInternalDangerSourcesError = true;
         },
