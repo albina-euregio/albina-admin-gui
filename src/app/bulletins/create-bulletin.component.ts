@@ -99,6 +99,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public loading: boolean;
   public saveError: Map<string, BulletinModel>;
   public loadInternalBulletinsError: boolean;
+  public loadExternalBulletins = true;
   public loadExternalBulletinsError: boolean;
 
   public originalBulletins: Map<string, BulletinModel>;
@@ -250,6 +251,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe((params) => {
       this.bulletinsService.setIsReadOnly(params.readOnly ? params.readOnly.toLocaleLowerCase() === "true" : false);
+      this.loadExternalBulletins = params.external !== "false";
     });
   }
 
@@ -452,7 +454,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private loadExternalBulletinsFromServer() {
-    if (!this.editRegions) {
+    if (this.loadExternalBulletins && !this.editRegions) {
       console.log("Load external bulletins");
       this.authenticationService.checkExternalServerLogin();
       this.authenticationService.getExternalServers().map((server) =>
@@ -2475,5 +2477,9 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   checkBulletinsModalConfirm(): void {
     this.checkBulletinsModalRef.hide();
+  }
+
+  asBulletin(bulletin: unknown): BulletinModel {
+    return bulletin as BulletinModel;
   }
 }
