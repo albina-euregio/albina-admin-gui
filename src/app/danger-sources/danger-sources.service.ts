@@ -102,12 +102,11 @@ export class DangerSourcesService {
         analysis: z.boolean(),
       })
       .array();
-    const url = this.constantsService.getServerUrl(
-      "/danger-sources/status",
-      ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
-      ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlGET("/danger-sources/status", {
+      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate[0]),
+      endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate[0]),
+      region: region,
+    });
     return this.http.get(url).pipe(map((o) => schema.parse(o)));
   }
 
@@ -186,11 +185,10 @@ export class DangerSourcesService {
   }
 
   loadDangerSources(date: [Date, Date], region: string): Observable<DangerSourceModel[]> {
-    const url = this.constantsService.getServerUrl(
-      "/danger-sources",
-      ["date", date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : ""],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlGET("/danger-sources", {
+      date: date ? this.constantsService.getISOStringWithTimezoneOffset(date[0]) : "",
+      region: region,
+    });
     return this.http.get<unknown>(url).pipe(
       map((ss) =>
         DangerSourceSchema.array()
@@ -201,7 +199,7 @@ export class DangerSourcesService {
   }
 
   saveDangerSource(dangerSource: DangerSourceModel) {
-    const url = this.constantsService.getServerUrl("/danger-sources");
+    const url = this.constantsService.getServerUrlPOST("/danger-sources");
     const body = JSON.stringify(dangerSource);
     return this.http.post<unknown>(url, body).pipe(map((s) => DangerSourceModel.parse(s)));
   }
@@ -213,17 +211,21 @@ export class DangerSourcesService {
   ): Observable<DangerSourceVariantModel[]> {
     let url;
     if (dangerSourceId && dangerSourceId !== "") {
-      url = this.constantsService.getServerUrl(
-        `/danger-sources/${dangerSourceId}/edit`,
-        ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-        ["region", region],
+      url = this.constantsService.getServerUrlGET(
+        `/danger-sources/{dangerSourceId}/edit`,
+        {
+          date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+          region: region,
+        },
+        {
+          dangerSourceId,
+        },
       );
     } else {
-      url = this.constantsService.getServerUrl(
-        "/danger-sources/edit",
-        ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-        ["region", region],
-      );
+      url = this.constantsService.getServerUrlGET("/danger-sources/edit", {
+        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+        region: region,
+      });
     }
     return this.http.get<unknown>(url).pipe(
       map((vs) =>
@@ -238,31 +240,32 @@ export class DangerSourcesService {
     dangerSourceVariant: DangerSourceVariantModel,
     date: [Date, Date],
   ): Observable<DangerSourceVariantModel> {
-    const url = this.constantsService.getServerUrl(
-      "/danger-sources/variants",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
-    );
+    const url = this.constantsService.getServerUrlPOST("/danger-sources/variants", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: this.authenticationService.getActiveRegionId(),
+    });
     const body = JSON.stringify(dangerSourceVariant);
     return this.http.post<unknown>(url, body).pipe(map((v) => DangerSourceVariantModel.parse(v)));
   }
 
   deleteDangerSourceVariant(variant: DangerSourceVariantModel, date: [Date, Date]) {
     // check if variant has ID
-    const url = this.constantsService.getServerUrl(
-      `/danger-sources/variants/${variant.id}`,
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
+    const url = this.constantsService.getServerUrlDELETE(
+      `/danger-sources/variants/{variantId}`,
+      {
+        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+        region: this.authenticationService.getActiveRegionId(),
+      },
+      { variantId: variant.id },
     );
     return this.http.delete<unknown>(url);
   }
 
   replaceVariants(variants: DangerSourceVariantModel[], date: [Date, Date]) {
-    const url = this.constantsService.getServerUrl(
-      "/danger-sources/variants/replace",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
-    );
+    const url = this.constantsService.getServerUrlPOST("/danger-sources/variants/replace", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: this.authenticationService.getActiveRegionId(),
+    });
     const body = JSON.stringify(variants);
     return this.http.post<unknown>(url, body);
   }

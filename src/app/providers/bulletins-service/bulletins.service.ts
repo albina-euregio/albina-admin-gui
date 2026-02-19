@@ -12,6 +12,7 @@ import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
+import { AlbinaLanguage } from "../../models/text.model";
 
 class TrainingModeError extends Error {}
 
@@ -213,11 +214,10 @@ export class BulletinsService {
 
   getPreviewPdf(bulletins: BulletinModel[]): Observable<Blob> {
     const body = JSON.stringify(bulletins.map((b) => b.toJson()));
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/preview",
-      ["region", this.authenticationService.getActiveRegionId()],
-      ["lang", this.translateService.getCurrentLang()],
-    );
+    const url = this.constantsService.getServerUrlPOST("/bulletins/preview", {
+      region: this.authenticationService.getActiveRegionId(),
+      lang: this.translateService.getCurrentLang() as AlbinaLanguage,
+    });
     const headers = new HttpHeaders({ Accept: "application/pdf" });
     return this.http.post(url, body, { headers, responseType: "blob" });
   }
@@ -237,21 +237,19 @@ export class BulletinsService {
         }),
       );
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/status/internal",
-      ["startDate", this.constantsService.getISOStringWithTimezoneOffset(startDate[0])],
-      ["endDate", this.constantsService.getISOStringWithTimezoneOffset(endDate[0])],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlGET("/bulletins/status/internal", {
+      startDate: this.constantsService.getISOStringWithTimezoneOffset(startDate[0]),
+      endDate: this.constantsService.getISOStringWithTimezoneOffset(endDate[0]),
+      region: region,
+    });
     return this.http.get<{ date: string; status: keyof typeof Enums.BulletinStatus }[]>(url);
   }
 
   getPublicationStatus(region: string, date: [Date, Date]) {
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/status/publication",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlGET("/bulletins/status/publication", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: region,
+    });
     return this.http.get(url);
   }
 
@@ -272,11 +270,10 @@ export class BulletinsService {
     regions: string[],
     etag?: string,
   ): Observable<{ bulletins: BulletinModelAsJSON[]; etag: string | null }> {
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/edit",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["regions", regions],
-    );
+    const url = this.constantsService.getServerUrlGET("/bulletins/edit", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      regions: regions,
+    });
     const headers = etag ? new HttpHeaders({ "If-None-Match": etag }) : undefined;
     return this.http
       .get<BulletinModelAsJSON[]>(url, { headers, observe: "response" })
@@ -295,19 +292,17 @@ export class BulletinsService {
         .pipe(map((data) => data.bulletins.map((b) => toAlbinaBulletin(b))));
     }
     return this.http
-      .get<{ date: string }>(this.constantsService.getExternalServerUrl(server, "/bulletins/latest"), { headers })
+      .get<{ date: string }>(this.constantsService.getExternalServerUrlGET(server, "/bulletins/latest"), { headers })
       .pipe(
         switchMap((latest) => {
           const date = new Date(date0);
           if (latest.date.endsWith("T22:00:00Z") || latest.date.endsWith("T23:00:00Z")) {
             date.setHours(24, 0, 0);
           }
-          const url = this.constantsService.getExternalServerUrl(
-            server,
-            "/bulletins/edit",
-            ["date", this.constantsService.getISOStringWithTimezoneOffset(date)],
-            ["regions", server.regions.filter((region) => !this.authenticationService.isInternalRegion(region))],
-          );
+          const url = this.constantsService.getExternalServerUrlGET(server, "/bulletins/edit", {
+            date: this.constantsService.getISOStringWithTimezoneOffset(date),
+            regions: server.regions.filter((region) => !this.authenticationService.isInternalRegion(region)),
+          });
           return this.http.get<BulletinModelAsJSON[]>(url, { headers });
         }),
       );
@@ -319,11 +314,10 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
-    );
+    const url = this.constantsService.getServerUrlPOST("/bulletins", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: this.authenticationService.getActiveRegionId(),
+    });
     const jsonBulletins = [];
     for (let i = bulletins.length - 1; i >= 0; i--) {
       jsonBulletins.push(bulletins[i].toJson());
@@ -340,11 +334,10 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
-    );
+    const url = this.constantsService.getServerUrlPUT("/bulletins", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: this.authenticationService.getActiveRegionId(),
+    });
     const body = JSON.stringify(bulletin.toJson());
     return this.http.put<BulletinModelAsJSON[]>(url, body);
   }
@@ -357,10 +350,13 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrl(
-      `/bulletins/${bulletin.id}`,
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
+    const url = this.constantsService.getServerUrlPOST(
+      `/bulletins/{bulletinId}`,
+      {
+        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+        region: this.authenticationService.getActiveRegionId(),
+      },
+      { bulletinId: bulletin.id },
     );
     const body = JSON.stringify(bulletin.toJson());
     return this.http.post<BulletinModelAsJSON[]>(url, body);
@@ -374,10 +370,13 @@ export class BulletinsService {
       this.localStorageService.setTrainingBulletins(date, newBulletins);
       return of(newBulletins);
     }
-    const url = this.constantsService.getServerUrl(
-      `/bulletins/${bulletin.id}`,
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", this.authenticationService.getActiveRegionId()],
+    const url = this.constantsService.getServerUrlDELETE(
+      `/bulletins/{bulletinId}`,
+      {
+        date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+        region: this.authenticationService.getActiveRegionId(),
+      },
+      { bulletinId: bulletin.id },
     );
     return this.http.delete<BulletinModelAsJSON[]>(url);
   }
@@ -386,11 +385,10 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/submit",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlPOST("/bulletins/submit", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: region,
+    });
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);
   }
@@ -399,11 +397,10 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/publish",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlPOST("/bulletins/publish", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: region,
+    });
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);
   }
@@ -412,11 +409,10 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/change",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlPOST("/bulletins/change", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: region,
+    });
     const jsonBulletins = [];
     const body = JSON.stringify(jsonBulletins);
     return this.http.post<void>(url, body);
@@ -426,11 +422,10 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/publish/all",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["change", change],
-    );
+    const url = this.constantsService.getServerUrlPOST("/bulletins/publish/all", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      change: change,
+    });
     const body = JSON.stringify("");
     return this.http.post<void>(url, body);
   }
@@ -439,12 +434,14 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       throw new TrainingModeError();
     }
-    const url = this.constantsService.getServerUrl(
-      `/bulletins/publish/${channel}`,
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", region],
-      ...(language !== "all" ? [["lang", language] as [string, string]] : []),
-    );
+    if (language == "all") {
+      language = undefined;
+    }
+    const url = this.constantsService.getServerUrlPOST(`/bulletins/publish/${channel}` as `/bulletins/publish/email`, {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: region,
+      lang: language as AlbinaLanguage,
+    });
     const body = JSON.stringify("");
     return this.http.post(url, body);
   }
@@ -453,11 +450,10 @@ export class BulletinsService {
     if (this.localStorageService.isTrainingEnabled) {
       // TODO check bulletins from POST JSON
     }
-    const url = this.constantsService.getServerUrl(
-      "/bulletins/check",
-      ["date", this.constantsService.getISOStringWithTimezoneOffset(date[0])],
-      ["region", region],
-    );
+    const url = this.constantsService.getServerUrlGET("/bulletins/check", {
+      date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
+      region: region,
+    });
     return this.http.get(url);
   }
 

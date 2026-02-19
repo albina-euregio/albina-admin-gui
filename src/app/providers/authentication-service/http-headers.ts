@@ -21,7 +21,7 @@ export const httpHeaders: HttpInterceptorFn = (req, next) => {
       setHeaders["Content-Type"] = "application/json";
     }
   }
-  if (authenticationService.isUserLoggedIn() && req.url.startsWith(constantsService.getServerUrl("/"))) {
+  if (authenticationService.isUserLoggedIn() && req.url.startsWith(constantsService.getServerUrlGET("/"))) {
     setHeaders["Authorization"] = "Bearer " + authenticationService.accessToken;
     if (!window.location.origin.includes("localhost")) {
       setHeaders["X-Client-Version"] = constantsService.release;
