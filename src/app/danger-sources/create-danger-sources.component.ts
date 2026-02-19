@@ -1058,4 +1058,8 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       return "white";
     }
   }
+
+  protected asDangerSource(dangerSource: unknown): DangerSourceModel {
+    return dangerSource as DangerSourceModel;
+  }
 }

@@ -268,7 +268,8 @@
 
 <!-- Display this template when there are no danger sources -->
 
-<ng-template #dangerSourceTemplate let-dangerSource="dangerSource">
+<ng-template #dangerSourceTemplate let-dangerSource0="dangerSource">
+  @let dangerSource = asDangerSource(dangerSource0);
   <!-- List of danger sources -->
   <div class="create-bulletin__regions">
     <!-- Own danger sources -->
