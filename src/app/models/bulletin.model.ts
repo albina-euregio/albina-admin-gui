@@ -1,41 +1,44 @@
 import * as Enums from "../enums/enums";
 import { DangerRating, RegionStatus } from "../enums/enums";
-import { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
-import { convertLangTextsToJSON, LangTexts, TextModel, toLangTexts } from "./text.model";
-import { UserModel, UserSchema } from "./user.model";
-import { formatDate } from "@angular/common";
+import {
+  BulletinDaytimeDescriptionModel,
+  BulletinDaytimeDescriptionSchema,
+} from "./bulletin-daytime-description.model";
+import { convertLangTextsToJSON, TextSchema, toLangTexts } from "./text.model";
+import { UserSchema } from "./user.model";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
+import { z } from "zod/v4";
+import { ZSchema } from "../danger-sources/models/zod-util";
 
-export type BulletinModelAsJSON = BulletinModel & {
-  validity: { from: Date; until: Date };
-  highlights: TextModel[];
-  avActivityHighlights: TextModel[];
-  avActivityComment: TextModel[];
-  snowpackStructureHighlights: TextModel[];
-  snowpackStructureComment: TextModel[];
-  tendencyComment: TextModel[];
-};
+export const BulletinSchema = z.object({
+  id: z.string().nullish(),
 
-export class BulletinModel implements PolygonObject {
-  public id: string;
+  author: UserSchema.partial().default(() => ({})),
+  additionalAuthors: z
+    .string()
+    .array()
+    .default(() => []),
+  ownerRegion: z.string().nullish(),
 
-  public author: UserModel;
-  public additionalAuthors: string[];
-  public ownerRegion: string;
+  updateDate: z.coerce.date().nullish(),
+  publicationDate: z.coerce.date().nullish(),
 
-  public updateDate: Date;
-  public publicationDate: Date;
+  suggestedRegions: z
+    .string()
+    .array()
+    .default(() => []),
+  savedRegions: z
+    .string()
+    .array()
+    .default(() => []),
+  publishedRegions: z
+    .string()
+    .array()
+    .default(() => []),
 
-  public validFrom: Date;
-  public validUntil: Date;
+  strategicMindset: z.enum(Enums.StrategicMindset).nullish(),
 
-  public suggestedRegions: string[];
-  public savedRegions: string[];
-  public publishedRegions: string[];
-
-  public strategicMindset: Enums.StrategicMindset;
-
-  public hasDaytimeDependency: boolean;
+  hasDaytimeDependency: z.boolean().default(false),
 
   public forenoon: BulletinDaytimeDescriptionModel;
   public afternoon: BulletinDaytimeDescriptionModel;
@@ -88,8 +91,8 @@ export class BulletinModel implements PolygonObject {
       bulletin.ownerRegion = json.ownerRegion;
     }
 
-    if (json.updateDate) {
-      bulletin.updateDate = new Date(json.updateDate);
+    if (json.saveDate) {
+      bulletin.saveDate = new Date(json.saveDate);
     }
 
     if (json.publicationDate) {
@@ -229,7 +232,7 @@ export class BulletinModel implements PolygonObject {
 
   constructor(bulletin?: BulletinModel) {
     this.author = undefined;
-    this.updateDate = undefined;
+    this.saveDate = undefined;
     this.publicationDate = undefined;
     if (bulletin) {
       this.additionalAuthors = bulletin.additionalAuthors;
@@ -383,178 +386,7 @@ export class BulletinModel implements PolygonObject {
   }
 
   toJson(): BulletinModelAsJSON {
-    const json = Object();
-
-    if (this.id) {
-      json["id"] = this.id;
-    }
-    if (this.author) {
-      json["author"] = this.author;
-    }
-    if (this.additionalAuthors && this.additionalAuthors.length > 0) {
-      const additionalAuthors = [];
-      for (let i = 0; i <= this.additionalAuthors.length - 1; i++) {
-        additionalAuthors.push(this.additionalAuthors[i]);
-      }
-      json["additionalAuthors"] = additionalAuthors;
-    }
-
-    if (this.ownerRegion) {
-      json["ownerRegion"] = this.ownerRegion;
-    }
-
-    if (this.publicationDate) {
-      json["publicationDate"] = formatDate(this.publicationDate, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
-    }
-
-    const validity = Object();
-    if (this.validFrom) {
-      validity["from"] = formatDate(this.validFrom, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
-    }
-    if (this.validUntil) {
-      validity["until"] = formatDate(this.validUntil, "yyyy-MM-ddTHH:mm:ssZZZZZ", "en-US");
-    }
-    json["validity"] = validity;
-
-    if (this.suggestedRegions && this.suggestedRegions.length > 0) {
-      const suggestedRegions = [];
-      for (let i = 0; i <= this.suggestedRegions.length - 1; i++) {
-        suggestedRegions.push(this.suggestedRegions[i]);
-      }
-      json["suggestedRegions"] = suggestedRegions;
-    }
-
-    if (this.savedRegions && this.savedRegions.length > 0) {
-      const savedRegions = [];
-      for (let i = 0; i <= this.savedRegions.length - 1; i++) {
-        savedRegions.push(this.savedRegions[i]);
-      }
-      json["savedRegions"] = savedRegions;
-    }
-
-    if (this.publishedRegions && this.publishedRegions.length > 0) {
-      const publishedRegions = [];
-      for (let i = 0; i <= this.publishedRegions.length - 1; i++) {
-        publishedRegions.push(this.publishedRegions[i]);
-      }
-      json["publishedRegions"] = publishedRegions;
-    }
-
-    json["hasDaytimeDependency"] = this.hasDaytimeDependency;
-
-    if (this.forenoon) {
-      json["forenoon"] = this.forenoon;
-    }
-
-    if (this.hasDaytimeDependency && this.afternoon) {
-      json["afternoon"] = this.afternoon;
-    }
-
-    if (this.highlightsTextcat) {
-      json["highlightsTextcat"] = this.highlightsTextcat;
-    }
-
-    if (this.avActivityHighlightsTextcat) {
-      json["avActivityHighlightsTextcat"] = this.avActivityHighlightsTextcat;
-    }
-
-    if (this.avActivityCommentTextcat) {
-      json["avActivityCommentTextcat"] = this.avActivityCommentTextcat;
-    }
-
-    if (this.snowpackStructureHighlightsTextcat) {
-      json["snowpackStructureHighlightsTextcat"] = this.snowpackStructureHighlightsTextcat;
-    }
-
-    if (this.snowpackStructureCommentTextcat) {
-      json["snowpackStructureCommentTextcat"] = this.snowpackStructureCommentTextcat;
-    }
-
-    if (this.tendencyCommentTextcat) {
-      json["tendencyCommentTextcat"] = this.tendencyCommentTextcat;
-    }
-
-    if (this.generalHeadlineCommentTextcat) {
-      json["generalHeadlineCommentTextcat"] = this.generalHeadlineCommentTextcat;
-    }
-
-    if (this.synopsisCommentTextcat) {
-      json["synopsisCommentTextcat"] = this.synopsisCommentTextcat;
-    }
-
-    if (this.avActivityHighlightsNotes) {
-      json["avActivityHighlightsNotes"] = this.avActivityHighlightsNotes;
-    }
-
-    if (this.avActivityCommentNotes) {
-      json["avActivityCommentNotes"] = this.avActivityCommentNotes;
-    }
-
-    if (this.snowpackStructureHighlightsNotes) {
-      json["snowpackStructureHighlightsNotes"] = this.snowpackStructureHighlightsNotes;
-    }
-
-    if (this.snowpackStructureCommentNotes) {
-      json["snowpackStructureCommentNotes"] = this.snowpackStructureCommentNotes;
-    }
-
-    if (this.tendencyCommentNotes) {
-      json["tendencyCommentNotes"] = this.tendencyCommentNotes;
-    }
-
-    if (this.generalHeadlineCommentNotes) {
-      json["generalHeadlineCommentNotes"] = this.generalHeadlineCommentNotes;
-    }
-
-    if (this.highlights$) {
-      json["highlights"] = convertLangTextsToJSON(this.highlights$);
-    }
-
-    if (this.avActivityHighlights$) {
-      json["avActivityHighlights"] = convertLangTextsToJSON(this.avActivityHighlights$);
-    }
-
-    if (this.avActivityComment$) {
-      json["avActivityComment"] = convertLangTextsToJSON(this.avActivityComment$);
-    }
-
-    if (this.snowpackStructureHighlights$) {
-      json["snowpackStructureHighlights"] = convertLangTextsToJSON(this.snowpackStructureHighlights$);
-    }
-
-    if (this.snowpackStructureComment$) {
-      json["snowpackStructureComment"] = convertLangTextsToJSON(this.snowpackStructureComment$);
-    }
-
-    if (this.tendencyComment$) {
-      json["tendencyComment"] = convertLangTextsToJSON(this.tendencyComment$);
-    }
-
-    if (this.generalHeadlineComment$) {
-      json["generalHeadlineComment"] = convertLangTextsToJSON(this.generalHeadlineComment$);
-    }
-
-    if (this.synopsisComment$) {
-      json["synopsisComment"] = convertLangTextsToJSON(this.synopsisComment$);
-    }
-
-    if (this.tendency) {
-      json["tendency"] = this.tendency;
-    }
-
-    if (this.dangerPattern1) {
-      json["dangerPattern1"] = this.dangerPattern1;
-    }
-
-    if (this.dangerPattern2) {
-      json["dangerPattern2"] = this.dangerPattern2;
-    }
-
-    if (this.strategicMindset) {
-      json["strategicMindset"] = this.strategicMindset;
-    }
-
-    return json;
+    return this;
   }
 
   public getRegionsByStatus(type?: RegionStatus): string[] {

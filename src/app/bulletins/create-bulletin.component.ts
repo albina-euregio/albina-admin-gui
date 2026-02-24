@@ -645,11 +645,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     microRegionIds: string[],
     dangerSourceVariants: DangerSourceVariantModel[],
   ) {
-    const bulletin = new BulletinModel();
+    const bulletin = BulletinModel.parse({});
     // set bulletin properties
     bulletin.savedRegions = microRegionIds;
-    bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-    bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+    bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+    bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
     bulletin.author = this.authenticationService.getCurrentAuthor();
     bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
@@ -1016,8 +1016,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const result = new Array<BulletinModel>();
 
     for (const bulletin of this.internBulletinsList) {
-      bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-      bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+      bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+      bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
 
       // only own regions
       const saved = new Array<string>();
@@ -1411,7 +1411,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
-      bulletin = new BulletinModel();
+      bulletin = BulletinModel.parse({});
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
@@ -1746,8 +1746,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private createBulletinOnServer(bulletin: BulletinModel) {
     if (this.isWriteDisabled()) return;
     const regionId = bulletin.getSavedAndPublishedRegions()[0];
-    bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-    bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+    bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+    bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
     this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         if (this.activeBulletin && this.activeBulletin.id == undefined) {
@@ -1775,8 +1775,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private updateBulletinOnServerNow(bulletin: BulletinModel, checkErrors = true, writeUndoStack = true) {
     if (this.isWriteDisabled()) return;
-    bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-    bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+    bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+    bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
     if (writeUndoStack) {
       this.bulletinsService.undoRedo.pushToUndoStack(bulletin);
     }
@@ -1881,8 +1881,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const regions = bulletin.publishedRegions.concat(bulletin.savedRegions);
       for (const region of regions) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-          bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+          bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+          bulletin.validity.from = this.bulletinsService.getActiveDate()[1];
           result.push(bulletin);
           break;
         }
