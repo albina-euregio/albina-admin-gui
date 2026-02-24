@@ -48,7 +48,7 @@ import {
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { ServerModel } from "app/models/server.model";
-import { emptyLangTexts, LangTexts } from "app/models/text.model";
+import { convertLangTextsToJSON, emptyLangTexts, LangTexts, toLangTexts } from "app/models/text.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { debounce, orderBy } from "es-toolkit";
 import { saveAs } from "file-saver";
@@ -743,7 +743,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             variant.textcat
           : "[" + variant.textcat;
       }
-      bulletin.avActivityComment$ = {
+      bulletin.avActivityComment = convertLangTextsToJSON({
         en: "⚠ Error: Missing translation",
         de: "⚠ Error: Missing translation",
         it: "⚠ Error: Missing translation",
@@ -751,7 +751,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         es: "⚠ Error: Missing translation",
         ca: "⚠ Error: Missing translation",
         oc: "⚠ Error: Missing translation",
-      };
+      });
     }
 
     bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
@@ -1417,7 +1417,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
       if (this.authenticationService.getActiveRegion()?.enableGeneralHeadline && this.internBulletinsList.length) {
         bulletin.generalHeadlineCommentTextcat = this.internBulletinsList[0].generalHeadlineCommentTextcat;
-        bulletin.generalHeadlineComment$ = this.internBulletinsList[0].generalHeadlineComment$;
+        bulletin.generalHeadlineComment = this.internBulletinsList[0].generalHeadlineComment;
         bulletin.generalHeadlineCommentNotes = this.internBulletinsList[0].generalHeadlineCommentNotes;
       }
     }
@@ -1441,15 +1441,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const enabledEditableFields = this.authenticationService.getActiveRegion()?.enabledEditableFields ?? [];
     Object.values(Enums.TextcatTextfield).forEach((textfield) => {
       if (!bulletin[`${textfield}Textcat`] && !enabledEditableFields.includes(textfield)) {
-        newBulletin[`${textfield}$`] = emptyLangTexts();
+        newBulletin[textfield] = convertLangTextsToJSON(emptyLangTexts());
       }
     });
 
     if (!this.authenticationService.getActiveRegion()?.enableGeneralHeadline) {
-      newBulletin.generalHeadlineComment$ = emptyLangTexts();
+      newBulletin.generalHeadlineComment = convertLangTextsToJSON(emptyLangTexts());
     }
     if (!this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
-      newBulletin.synopsisComment$ = emptyLangTexts();
+      newBulletin.synopsisComment = convertLangTextsToJSON(emptyLangTexts());
     }
 
     this.copyService.setCopyBulletin(true);
@@ -1568,10 +1568,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     if (
       checkTexts([
-        bulletin.avActivityHighlights$,
-        bulletin.avActivityComment$,
-        bulletin.snowpackStructureHighlights$,
-        bulletin.snowpackStructureComment$,
+        toLangTexts(bulletin.avActivityHighlights),
+        toLangTexts(bulletin.avActivityComment),
+        toLangTexts(bulletin.snowpackStructureHighlights),
+        toLangTexts(bulletin.snowpackStructureComment),
       ])
     ) {
       return true;

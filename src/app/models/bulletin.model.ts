@@ -4,7 +4,7 @@ import {
   BulletinDaytimeDescriptionModel,
   BulletinDaytimeDescriptionSchema,
 } from "./bulletin-daytime-description.model";
-import { convertLangTextsToJSON, TextSchema, toLangTexts } from "./text.model";
+import { TextSchema } from "./text.model";
 import { UserSchema } from "./user.model";
 import { PolygonObject } from "app/danger-sources/models/polygon-object.model";
 import { z } from "zod/v4";
@@ -85,61 +85,6 @@ export const BulletinSchema = z.object({
 export type BulletinModelAsJSON = z.input<typeof BulletinSchema>;
 
 export class BulletinModel extends ZSchema(BulletinSchema) implements PolygonObject {
-  get avActivityComment$() {
-    return toLangTexts(this.avActivityComment);
-  }
-  set avActivityComment$(v) {
-    this.avActivityComment = convertLangTextsToJSON(v);
-  }
-
-  get avActivityHighlights$() {
-    return toLangTexts(this.avActivityHighlights);
-  }
-  set avActivityHighlights$(v) {
-    this.avActivityHighlights = convertLangTextsToJSON(v);
-  }
-
-  get generalHeadlineComment$() {
-    return toLangTexts(this.generalHeadlineComment);
-  }
-  set generalHeadlineComment$(v) {
-    this.generalHeadlineComment = convertLangTextsToJSON(v);
-  }
-
-  get highlights$() {
-    return toLangTexts(this.highlights);
-  }
-  set highlights$(v) {
-    this.highlights = convertLangTextsToJSON(v);
-  }
-
-  get snowpackStructureComment$() {
-    return toLangTexts(this.snowpackStructureComment);
-  }
-  set snowpackStructureComment$(v) {
-    this.snowpackStructureComment = convertLangTextsToJSON(v);
-  }
-
-  get snowpackStructureHighlights$() {
-    return toLangTexts(this.snowpackStructureHighlights);
-  }
-  set snowpackStructureHighlights$(v) {
-    this.snowpackStructureHighlights = convertLangTextsToJSON(v);
-  }
-
-  get synopsisComment$() {
-    return toLangTexts(this.synopsisComment);
-  }
-  set synopsisComment$(v) {
-    this.synopsisComment = convertLangTextsToJSON(v);
-  }
-
-  get tendencyComment$() {
-    return toLangTexts(this.tendencyComment);
-  }
-  set tendencyComment$(v) {
-    this.tendencyComment = convertLangTextsToJSON(v);
-  }
   addAdditionalAuthor(author: string) {
     if (!this.additionalAuthors.includes(author)) {
       this.additionalAuthors.push(author);
