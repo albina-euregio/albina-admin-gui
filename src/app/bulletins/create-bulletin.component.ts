@@ -1043,7 +1043,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     const jsonBulletins = [];
     for (let i = result.length - 1; i >= 0; i--) {
-      jsonBulletins.push(result[i].toJson());
+      jsonBulletins.push(result[i]);
     }
     const sJson = JSON.stringify(jsonBulletins);
     const element = document.createElement("a");
@@ -1183,7 +1183,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
-      const originalBulletin = BulletinModel.createFromJson(jsonBulletin);
+      const originalBulletin = BulletinModel.parse(jsonBulletin);
 
       this.originalBulletins.set(originalBulletin.id, originalBulletin);
 
@@ -1228,7 +1228,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
-      const bulletin = BulletinModel.createFromJson(jsonBulletin);
+      const bulletin = BulletinModel.parse(jsonBulletin);
 
       if (!bulletin.ownerRegion.startsWith(this.authenticationService.getActiveRegionId())) {
         this.addInternalBulletin(bulletin);
@@ -1244,7 +1244,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const bulletinsList = new Array<BulletinModel>();
     if (response) {
       for (const jsonBulletin of response) {
-        const bulletin = BulletinModel.createFromJson(jsonBulletin);
+        const bulletin = BulletinModel.parse(jsonBulletin);
         bulletinsList.push(bulletin);
         if (this.activeBulletin && this.activeBulletin.id === bulletin.id) {
           this.activeBulletin = bulletin;
@@ -1294,7 +1294,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
-      const bulletin = BulletinModel.createFromJson(jsonBulletin);
+      const bulletin = BulletinModel.parse(jsonBulletin);
       this.bulletinsService.undoRedo.initUndoRedoStacksFromServer(bulletin);
       if (this.activeBulletin && this.activeBulletin.id === bulletin.id) {
         // do not update active bulletin (this is currently edited) except if it is disabled
