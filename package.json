@@ -63,7 +63,7 @@
     "ngx-bootstrap": "^21.0.1",
     "ngx-echarts": "^21.0.0",
     "ngx-image-compress": "^18.1.5",
-    "pmtiles": "^4.3.2",
+    "pmtiles": "^4.4.0",
     "protomaps-leaflet": "^5.1.0",
     "rxjs": "7.8.2",
     "simple-statistics": "^7.8.7",

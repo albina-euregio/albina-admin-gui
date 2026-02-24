@@ -116,8 +116,8 @@ importers:
         specifier: ^18.1.5
         version: 18.1.5(@angular/common@21.1.0(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))
       pmtiles:
-        specifier: ^4.3.2
-        version: 4.3.2
+        specifier: ^4.4.0
+        version: 4.4.0
       protomaps-leaflet:
         specifier: ^5.1.0
         version: 5.1.0
@@ -2961,8 +2961,8 @@ packages:
   pmtiles@3.2.1:
     resolution: {integrity: sha512-3R4fBwwoli5mw7a6t1IGwOtfmcSAODq6Okz0zkXhS1zi9sz1ssjjIfslwPvcWw5TNhdjNBUg9fgfPLeqZlH6ng==}
 
-  pmtiles@4.3.2:
-    resolution: {integrity: sha512-Ath2F2U2E37QyNXjN1HOF+oLiNIbdrDYrk/K3C9K4Pgw2anwQX10y4WYWEH9O75vPiu0gBbSWIAbSG19svyvZg==}
+  pmtiles@4.4.0:
+    resolution: {integrity: sha512-tCLI1C5134MR54i8izUWhse0QUtO/EC33n9yWp1N5dYLLvyc197U0fkF5gAJhq1TdWO9Tvl+9hgvFvM0fR27Zg==}
 
   postcss-media-query-parser@0.2.3:
     resolution: {integrity: sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig==}
@@ -6210,7 +6210,7 @@ snapshots:
       '@types/leaflet': 1.9.9
       fflate: 0.8.2
 
-  pmtiles@4.3.2:
+  pmtiles@4.4.0:
     dependencies:
       fflate: 0.8.2
 
