@@ -1286,6 +1286,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   private addInternalBulletins(response: BulletinModelAsJSON[]) {
+    if (this.editRegions) {
+      return;
+    }
+
     let hasDaytimeDependency = false;
 
     const bulletinsList = new Array<BulletinModel>();
