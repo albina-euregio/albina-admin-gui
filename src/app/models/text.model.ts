@@ -1,13 +1,19 @@
+import { z } from "zod/v4";
+
 export const LANGUAGES = Object.freeze(["de", "en", "fr", "it", "es", "ca", "oc"] as const);
 
-export type AlbinaLanguage = "de" | "en" | "fr" | "it" | "es" | "ca" | "oc";
+export const LanguageSchema = z.enum(LANGUAGES);
+
+export type AlbinaLanguage = z.infer<typeof LanguageSchema>;
 
 export type LangTexts = Record<AlbinaLanguage[number], string>;
 
-export interface TextModel {
-  languageCode: string;
-  text: string;
-}
+export const TextSchema = z.object({
+  languageCode: LanguageSchema,
+  text: z.string(),
+});
+
+export type TextModel = z.infer<typeof TextSchema>;
 
 export function toLangTexts(models: TextModel[]): LangTexts {
   return Object.fromEntries(models.map((t) => [t.languageCode, t.text])) as LangTexts;

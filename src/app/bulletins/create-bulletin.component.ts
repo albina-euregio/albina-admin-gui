@@ -662,7 +662,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     for (const variant of dangerSourceVariants) {
       // create avalanche problem only if danger rating > 1
       if (variant.eawsMatrixInformation.dangerRating != Enums.DangerRating.low) {
-        const avalancheProblem = new AvalancheProblemModel();
+        const avalancheProblem = AvalancheProblemModel.parse({});
         avalancheProblem.aspects = variant.aspects;
         if (variant.treelineHigh) {
           avalancheProblem.treelineHigh = variant.treelineHigh;

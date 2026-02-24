@@ -3,6 +3,7 @@ import type { AvalancheProblemModel } from "./avalanche-problem.model";
 import type { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
 import type { BulletinModelAsJSON } from "./bulletin.model";
 import * as z from "zod/v4";
+import { LanguageSchema } from "./text.model";
 
 export const CustomDataSchema = z.optional(z.any());
 export type CustomData = z.infer<typeof CustomDataSchema>;
@@ -114,7 +115,7 @@ export const BulletinSchema = z.object({
   customData: CustomDataSchema,
   dangerRatings: z.optional(z.array(DangerRatingSchema)),
   highlights: z.optional(z.string()),
-  lang: z.optional(z.string()),
+  lang: z.optional(LanguageSchema),
   metaData: z.optional(MetaDataSchema),
   nextUpdate: z.optional(z.coerce.date()),
   publicationTime: z.coerce.date(),

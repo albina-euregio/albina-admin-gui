@@ -336,23 +336,23 @@ export class AvalancheBulletinComponent implements OnInit {
     daytime.isAvalancheProblemOpen = Array(5).fill(false);
     switch (count) {
       case 1:
-        daytime.avalancheProblem1 = new AvalancheProblemModel();
+        daytime.avalancheProblem1 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[0] = true;
         break;
       case 2:
-        daytime.avalancheProblem2 = new AvalancheProblemModel();
+        daytime.avalancheProblem2 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[1] = true;
         break;
       case 3:
-        daytime.avalancheProblem3 = new AvalancheProblemModel();
+        daytime.avalancheProblem3 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[2] = true;
         break;
       case 4:
-        daytime.avalancheProblem4 = new AvalancheProblemModel();
+        daytime.avalancheProblem4 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[3] = true;
         break;
       case 5:
-        daytime.avalancheProblem5 = new AvalancheProblemModel();
+        daytime.avalancheProblem5 = AvalancheProblemModel.parse({});
         daytime.isAvalancheProblemOpen[4] = true;
         break;
       default:

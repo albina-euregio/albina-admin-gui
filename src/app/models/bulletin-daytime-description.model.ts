@@ -45,19 +45,19 @@ export class BulletinDaytimeDescriptionModel {
     }
 
     if (json.avalancheProblem1) {
-      bulletinDaytimeDescription.avalancheProblem1 = AvalancheProblemModel.createFromJson(json.avalancheProblem1);
+      bulletinDaytimeDescription.avalancheProblem1 = AvalancheProblemModel.parse(json.avalancheProblem1);
     }
     if (json.avalancheProblem2) {
-      bulletinDaytimeDescription.avalancheProblem2 = AvalancheProblemModel.createFromJson(json.avalancheProblem2);
+      bulletinDaytimeDescription.avalancheProblem2 = AvalancheProblemModel.parse(json.avalancheProblem2);
     }
     if (json.avalancheProblem3) {
-      bulletinDaytimeDescription.avalancheProblem3 = AvalancheProblemModel.createFromJson(json.avalancheProblem3);
+      bulletinDaytimeDescription.avalancheProblem3 = AvalancheProblemModel.parse(json.avalancheProblem3);
     }
     if (json.avalancheProblem4) {
-      bulletinDaytimeDescription.avalancheProblem4 = AvalancheProblemModel.createFromJson(json.avalancheProblem4);
+      bulletinDaytimeDescription.avalancheProblem4 = AvalancheProblemModel.parse(json.avalancheProblem4);
     }
     if (json.avalancheProblem5) {
-      bulletinDaytimeDescription.avalancheProblem5 = AvalancheProblemModel.createFromJson(json.avalancheProblem5);
+      bulletinDaytimeDescription.avalancheProblem5 = AvalancheProblemModel.parse(json.avalancheProblem5);
     }
 
     bulletinDaytimeDescription.elevation = json.elevation;
@@ -272,36 +272,19 @@ export class BulletinDaytimeDescriptionModel {
     }
 
     if (this.avalancheProblem1) {
-      json["avalancheProblem1"] = this.avalancheProblem1.toJson();
+      json["avalancheProblem1"] = this.avalancheProblem1;
     }
     if (this.avalancheProblem2) {
-      json["avalancheProblem2"] = this.avalancheProblem2.toJson();
+      json["avalancheProblem2"] = this.avalancheProblem2;
     }
     if (this.avalancheProblem3) {
-      json["avalancheProblem3"] = this.avalancheProblem3.toJson();
+      json["avalancheProblem3"] = this.avalancheProblem3;
     }
     if (this.avalancheProblem4) {
-      json["avalancheProblem4"] = this.avalancheProblem4.toJson();
+      json["avalancheProblem4"] = this.avalancheProblem4;
     }
     if (this.avalancheProblem5) {
-      json["avalancheProblem5"] = this.avalancheProblem5.toJson();
-    }
-
-    // TODO delete if AINEVA does not need it anymore
-    if (this.avalancheProblem1) {
-      json["avalancheSituation1"] = this.avalancheProblem1.toAinevaJson();
-    }
-    if (this.avalancheProblem2) {
-      json["avalancheSituation2"] = this.avalancheProblem2.toAinevaJson();
-    }
-    if (this.avalancheProblem3) {
-      json["avalancheSituation3"] = this.avalancheProblem3.toAinevaJson();
-    }
-    if (this.avalancheProblem4) {
-      json["avalancheSituation4"] = this.avalancheProblem4.toAinevaJson();
-    }
-    if (this.avalancheProblem5) {
-      json["avalancheSituation5"] = this.avalancheProblem5.toAinevaJson();
+      json["avalancheProblem5"] = this.avalancheProblem5;
     }
 
     if (this.hasElevationDependency) {
