@@ -654,8 +654,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
     // create avalanche problem for each danger source variant
-    const amDaytimeDescription = new BulletinDaytimeDescriptionModel();
-    const pmDaytimeDescription = new BulletinDaytimeDescriptionModel();
+    const amDaytimeDescription = BulletinDaytimeDescriptionModel.parse({});
+    const pmDaytimeDescription = BulletinDaytimeDescriptionModel.parse({});
     let amIndex = 0;
     let pmIndex = 0;
     let hasDaytimeDependency = false;

@@ -129,10 +129,10 @@ export class BulletinModel implements PolygonObject {
     bulletin.hasDaytimeDependency = json.hasDaytimeDependency;
 
     if (json.forenoon) {
-      bulletin.forenoon = BulletinDaytimeDescriptionModel.createFromJson(json.forenoon);
+      bulletin.forenoon = BulletinDaytimeDescriptionModel.parse(json.forenoon);
     }
     if (json.afternoon) {
-      bulletin.afternoon = BulletinDaytimeDescriptionModel.createFromJson(json.afternoon);
+      bulletin.afternoon = BulletinDaytimeDescriptionModel.parse(json.afternoon);
     }
 
     if (json.highlightsTextcat) {
@@ -279,8 +279,8 @@ export class BulletinModel implements PolygonObject {
       this.suggestedRegions = new Array<string>();
       this.savedRegions = new Array<string>();
       this.publishedRegions = new Array<string>();
-      this.forenoon = new BulletinDaytimeDescriptionModel();
-      this.afternoon = new BulletinDaytimeDescriptionModel();
+      this.forenoon = BulletinDaytimeDescriptionModel.parse({});
+      this.afternoon = BulletinDaytimeDescriptionModel.parse({});
       this.highlightsTextcat = undefined;
       this.avActivityHighlightsTextcat = undefined;
       this.avActivityCommentTextcat = undefined;
@@ -443,11 +443,11 @@ export class BulletinModel implements PolygonObject {
     json["hasDaytimeDependency"] = this.hasDaytimeDependency;
 
     if (this.forenoon) {
-      json["forenoon"] = this.forenoon.toJson();
+      json["forenoon"] = this.forenoon;
     }
 
     if (this.hasDaytimeDependency && this.afternoon) {
-      json["afternoon"] = this.afternoon.toJson();
+      json["afternoon"] = this.afternoon;
     }
 
     if (this.highlightsTextcat) {
