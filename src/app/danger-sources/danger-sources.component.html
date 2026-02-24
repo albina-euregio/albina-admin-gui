@@ -25,24 +25,6 @@
                   {{ date[1] | date: "medium" : undefined : translateService.getCurrentLang() }}
                 </small>
               </time>
-              <div class="bulletins-table__day-buttons-div">
-                <button
-                  class="btn btn-secondary btn-icon bulletins-table__day-buttons"
-                  type="button"
-                  (click)="editDangerSources(date, true)"
-                  title="{{ 'dangerSources.tooltip.read' | translate }}"
-                >
-                  <i class="ph ph-eye"></i>
-                </button>
-                <button
-                  class="btn btn-secondary btn-icon bulletins-table__day-buttons"
-                  type="button"
-                  (click)="editDangerSources(date, false)"
-                  title="{{ 'dangerSources.tooltip.edit' | translate }}"
-                >
-                  <i class="ph ph-pencil-line"></i>
-                </button>
-              </div>
             </div>
           </td>
           <td
@@ -59,6 +41,22 @@
                 {{ "dangerSources.status.missing" | translate }}
               </span>
             }
+            <button
+              class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+              type="button"
+              (click)="editDangerSources(date, DangerSourceVariantType.forecast, true)"
+              title="{{ 'dangerSources.tooltip.read' | translate }}"
+            >
+              <i class="ph ph-eye"></i>
+            </button>
+            <button
+              class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+              type="button"
+              (click)="editDangerSources(date, DangerSourceVariantType.forecast, false)"
+              title="{{ 'dangerSources.tooltip.edit' | translate }}"
+            >
+              <i class="ph ph-pencil-line"></i>
+            </button>
           </td>
           <td
             class="bulletins-table__region-status"
@@ -74,6 +72,22 @@
                 {{ "dangerSources.status.missing" | translate }}
               </span>
             }
+            <button
+              class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+              type="button"
+              (click)="editDangerSources(date, DangerSourceVariantType.analysis, true)"
+              title="{{ 'dangerSources.tooltip.read' | translate }}"
+            >
+              <i class="ph ph-eye"></i>
+            </button>
+            <button
+              class="btn btn-secondary btn-icon bulletins-table__day-buttons"
+              type="button"
+              (click)="editDangerSources(date, DangerSourceVariantType.analysis, false)"
+              title="{{ 'dangerSources.tooltip.edit' | translate }}"
+            >
+              <i class="ph ph-pencil-line"></i>
+            </button>
           </td>
         </tr>
       }

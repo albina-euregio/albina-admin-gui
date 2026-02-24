@@ -2,6 +2,7 @@ import { formatDate, DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { DangerSourceVariantType } from "./models/danger-source-variant.model";
 
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
@@ -22,6 +23,7 @@ export class DangerSourcesComponent {
   constantsService = inject(ConstantsService);
   router = inject(Router);
   userService = inject(UserService);
+  DangerSourceVariantType = DangerSourceVariantType;
 
   constructor() {
     this.dangerSourcesService.init();
@@ -36,10 +38,10 @@ export class DangerSourcesComponent {
     }
   }
 
-  editDangerSources(date: [Date, Date], isReadOnly?: boolean) {
+  editDangerSources(date: [Date, Date], type: DangerSourceVariantType, isReadOnly?: boolean) {
     const formattedDate = this.constantsService.getISODateString(date[1]);
     this.dangerSourcesService.setIsReadOnly(isReadOnly);
-    this.router.navigate(["/danger-sources/" + formattedDate], { queryParams: { readOnly: isReadOnly } });
+    this.router.navigate([`/danger-sources/${formattedDate}/${type}`], { queryParams: { readOnly: isReadOnly } });
   }
 
   getForecastStatus(date: [Date, Date]) {

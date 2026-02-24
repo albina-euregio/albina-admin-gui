@@ -14,7 +14,7 @@ export default [
     },
   },
   {
-    path: ":date",
+    path: ":date/:dangerSourceVariantType",
     component: CreateDangerSourcesComponent,
     canActivate: [AuthGuard],
     data: {
