@@ -1,6 +1,5 @@
 import * as Enums from "../enums/enums";
 import { MatrixInformationSchema } from "./matrix-information.model";
-import { TextSchema } from "./text.model";
 import { z } from "zod/v4";
 import { ZSchema } from "../danger-sources/models/zod-util";
 
@@ -17,8 +16,6 @@ export const AvalancheProblemSchema = z.object({
   treelineLow: z.boolean().default(false),
   dangerRatingDirection: z.enum(Enums.DangerRatingDirection).nullish(),
   eawsMatrixInformation: MatrixInformationSchema.default(() => MatrixInformationSchema.parse({})),
-  terrainFeatureTextcat: z.string().nullish(),
-  terrainFeature: TextSchema.array().default(() => []),
 });
 
 export class AvalancheProblemModel extends ZSchema(AvalancheProblemSchema) {

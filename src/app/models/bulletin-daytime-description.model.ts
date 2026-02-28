@@ -1,16 +1,11 @@
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel, AvalancheProblemSchema } from "./avalanche-problem.model";
-import { TextSchema } from "./text.model";
 import { z } from "zod/v4";
 import { ZSchema } from "../danger-sources/models/zod-util";
 
 export const BulletinDaytimeDescriptionSchema = z.object({
   dangerRatingAbove: z.enum(Enums.DangerRating).nullish(),
-  terrainFeatureAboveTextcat: z.string().nullish(),
-  terrainFeatureAbove: TextSchema.array().default(() => []),
   dangerRatingBelow: z.enum(Enums.DangerRating).nullish(),
-  terrainFeatureBelowTextcat: z.string().nullish(),
-  terrainFeatureBelow: TextSchema.array().default(() => []),
   hasElevationDependency: z.boolean().default(false),
   elevation: z.number().nullish(),
   treeline: z.boolean().default(false),
