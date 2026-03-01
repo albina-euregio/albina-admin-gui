@@ -6,38 +6,38 @@
     - button "Close"
     - table:
       - row /Event date Tuesday, December \d+, \d+, 7:\d+:\d+ PM GMT\+\d+:\d+/:
-        - cell "Event date"
+        - rowheader "Event date"
         - cell /Tuesday, December \d+, \d+, 7:\d+:\d+ PM GMT\+\d+:\d+/
       - row "Report date —":
-        - cell "Report date"
+        - rowheader "Report date"
         - cell "—"
       - row "Author name —":
-        - cell "Author name"
+        - rowheader "Author name"
         - cell "—"
       - row "Location Larchlehne":
-        - cell "Location"
+        - rowheader "Location"
         - cell "Larchlehne"
       - row "Elevation —":
-        - cell "Elevation"
+        - rowheader "Elevation"
         - cell "—"
       - row "Aspect —":
-        - cell "Aspect"
+        - rowheader "Aspect"
         - cell "—"
       - 'row "Comment Spontaner Abgang, wie beurteilt nur geringe Reichweite – Lawinengröße: mittlere Lawine – Lawinenart: Schneebrettlawine – Lawinenfeuchte: trocken"':
-        - cell "Comment"
+        - rowheader "Comment"
         - 'cell "Spontaner Abgang, wie beurteilt nur geringe Reichweite – Lawinengröße: mittlere Lawine – Lawinenart: Schneebrettlawine – Lawinenfeuchte: trocken"'
       - row "Lawinengröße mittlere Lawine":
-        - cell "Lawinengröße"
+        - rowheader "Lawinengröße"
         - cell "mittlere Lawine"
       - row "Lawinenart Schneebrettlawine":
-        - cell "Lawinenart"
+        - rowheader "Lawinenart"
         - cell "Schneebrettlawine"
       - row "Lawinenfeuchte trocken":
-        - cell "Lawinenfeuchte"
+        - rowheader "Lawinenfeuchte"
         - cell "trocken"
       - row "Sprengung ":
-        - cell "Sprengung"
+        - rowheader "Sprengung"
         - cell ""
       - row "observations.incline":
-        - cell "observations.incline"
+        - rowheader "observations.incline"
         - cell
