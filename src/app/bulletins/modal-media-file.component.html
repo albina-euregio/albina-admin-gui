@@ -50,12 +50,18 @@
 </div>
 <div class="modal-footer">
   @if (!important) {
-    <button type="button" class="btn btn-primary" (click)="mediaFileModalConfirm()">
+    <button type="button" class="btn btn-primary" [disabled]="isUploading" (click)="mediaFileModalConfirm()">
+      @if (isUploading) {
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      }
       {{ "bulletins.table.mediaFileDialog.accept" | translate }}
     </button>
   }
   @if (important) {
-    <button type="button" class="btn btn-danger" (click)="mediaFileModalConfirm()">
+    <button type="button" class="btn btn-danger" [disabled]="isUploading" (click)="mediaFileModalConfirm()">
+      @if (isUploading) {
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      }
       {{ "bulletins.table.mediaFileDialog.accept" | translate }}
     </button>
   }

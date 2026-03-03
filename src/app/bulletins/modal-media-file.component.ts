@@ -10,6 +10,7 @@ import { Alert } from "app/models/Alert";
 import { MediaFileService } from "app/providers/media-file-service/media-file.service";
 import { AlertModule } from "ngx-bootstrap/alert";
 import { BsModalRef } from "ngx-bootstrap/modal";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-modal-media-file",
@@ -30,6 +31,7 @@ export class ModalMediaFileComponent {
   file;
   text;
   important;
+  isUploading = false;
 
   public alerts: Alert[] = [];
 
@@ -46,6 +48,10 @@ export class ModalMediaFileComponent {
   }
 
   uploadFile() {
+    if (this.isUploading) {
+      return;
+    }
+
     if (this.text == null || this.text == "") {
       this.text = "---";
     }
@@ -60,21 +66,29 @@ export class ModalMediaFileComponent {
       return;
     }
 
-    this.mediaFileService.uploadFile(this.date, this.file, this.text, this.important).subscribe(
-      () => {
-        console.log("Upload complete!");
-        this.component.mediaFileModalConfirm();
-      },
-      (error) => {
-        console.log("Upload Error:", error);
-        window.scrollTo(0, 0);
-        this.alerts.push({
-          type: "danger",
-          msg: this.translateService.instant("bulletins.table.mediaFileDialog.uploadError"),
-          timeout: 5000,
-        });
-      },
-    );
+    this.isUploading = true;
+    this.mediaFileService
+      .uploadFile(this.date, this.file, this.text, this.important)
+      .pipe(
+        finalize(() => {
+          this.isUploading = false;
+        }),
+      )
+      .subscribe(
+        () => {
+          console.log("Upload complete!");
+          this.component.mediaFileModalConfirm();
+        },
+        (error) => {
+          console.log("Upload Error:", error);
+          window.scrollTo(0, 0);
+          this.alerts.push({
+            type: "danger",
+            msg: this.translateService.instant("bulletins.table.mediaFileDialog.uploadError"),
+            timeout: 5000,
+          });
+        },
+      );
   }
 
   onClosed(dismissedAlert: Alert): void {
