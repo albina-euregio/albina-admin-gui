@@ -24,6 +24,7 @@ import { MapService } from "./app/providers/map-service/map.service";
 import { MediaFileService } from "./app/providers/media-file-service/media-file.service";
 import { RegionsService } from "./app/providers/regions-service/regions.service";
 import { StatisticsService } from "./app/providers/statistics-service/statistics.service";
+import { initializeStationApiConfig } from "./app/providers/station-data-service/station-data.service";
 import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
 import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
@@ -34,7 +35,7 @@ import { default as localeEn, default as localeOc } from "@angular/common/locale
 import localeEs from "@angular/common/locales/es";
 import localeFr from "@angular/common/locales/fr";
 import localeIt from "@angular/common/locales/it";
-import { importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
+import { importProvidersFrom, provideAppInitializer, provideZoneChangeDetection } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
@@ -140,6 +141,7 @@ bootstrapApplication(AppComponent, {
     StatusService,
     TranslateService,
     UserService,
+    provideAppInitializer(() => initializeStationApiConfig()),
     provideHttpClient(withInterceptors([httpHeaders]), withFetch()),
     provideAnimations(),
   ],

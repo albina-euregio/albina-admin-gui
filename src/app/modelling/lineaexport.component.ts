@@ -12,6 +12,7 @@ import {
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { BaseMapService } from "app/providers/map-service/base-map.service";
+import { loadStationData } from "app/providers/station-data-service/station-data.service";
 import { CircleMarker, CircleMarkerOptions, LayerGroup } from "leaflet";
 
 @Component({
@@ -31,7 +32,7 @@ export class LineaExportComponent implements AfterViewInit {
   private mapService;
   readonly mapLayer = new LayerGroup();
 
-  private searchTimeout: any;
+  private searchTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
   readonly stations: StationFeature[] = [];
 
@@ -52,35 +53,39 @@ export class LineaExportComponent implements AfterViewInit {
   }
 
   async load() {
-    fetch("https://static.avalanche.report/weather_stations/stations.geojson")
-      .then((response) => response.json())
-      .then((data) => {
-        data.features.forEach((feature: any) => {
-          const id = feature.properties?.["LWD-Nummer"];
-          if (id) {
-            const marker = new CircleMarker(
-              { lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] },
-              this.getModelPointOptions(false), // default style
-            ).addTo(this.mapLayer);
+    const stationData = await loadStationData();
+    stationData.forEach((station) => {
+      const id = String(station.id);
+      if (!id) {
+        return;
+      }
 
-            marker.on("click", () => {
-              if (this.selectedIds.includes(id)) {
-                this.removeStation(id);
-              } else {
-                this.addStation(id);
-              }
-            });
-            this.markers[id] = marker;
+      const marker = new CircleMarker({ lat: station.lat, lng: station.lon }, this.getModelPointOptions(false)).addTo(
+        this.mapLayer,
+      );
 
-            this.stations.push({
-              id: String(id),
-              name: String(feature.properties.name),
-              lat: feature.geometry.coordinates[1] as number,
-              lng: feature.geometry.coordinates[0] as number,
-            } as StationFeature);
-          }
-        });
+      marker.on("click", () => {
+        if (this.selectedIds.includes(id)) {
+          this.removeStation(id);
+        } else {
+          this.addStation(id);
+        }
       });
+      this.markers[id] = marker;
+
+      this.stations.push({
+        id,
+        name: String(station.name),
+        lat: station.lat,
+        lng: station.lon,
+        shortName:
+          typeof station.properties?.shortName === "string" && station.properties.shortName.length > 0
+            ? station.properties.shortName
+            : String(station.smetId ?? id),
+        smetId: String(station.smetId),
+        smet: station.$smet ?? [],
+      });
+    });
   }
 
   async initMaps() {
@@ -99,7 +104,9 @@ export class LineaExportComponent implements AfterViewInit {
     this.mapLayer.addTo(map);
   }
 
-  private updateBaseLayer(): void {}
+  private updateBaseLayer(): void {
+    return;
+  }
 
   onSearchFieldEnter(): void {
     if (!this.searchTerm) return;
@@ -157,9 +164,14 @@ export class LineaExportComponent implements AfterViewInit {
         this.filteredStations = [...this.stations];
       } else {
         this.filteredStations = this.stations.filter(
-          (s) => s.id.toLowerCase().includes(value) || s.name.toLowerCase().includes(value),
+          (s) =>
+            s.id.toLowerCase().includes(value) ||
+            s.shortName.toLowerCase().includes(value) ||
+            s.name.toLowerCase().includes(value),
         );
-        const exact = this.stations.find((s) => s.id.toLowerCase() === this.searchTerm);
+        const exact = this.stations.find(
+          (s) => s.id.toLowerCase() === this.searchTerm || s.shortName.toLowerCase() === this.searchTerm,
+        );
 
         if (exact) {
           this.toggleStation(exact.id);
@@ -199,6 +211,10 @@ export class LineaExportComponent implements AfterViewInit {
     }
   }
 
+  getShortNameById(id: string): string {
+    return this.stations.find((station) => station.id === id)?.shortName ?? id;
+  }
+
   // Remove a station
   removeStation(id: string): void {
     this.selectedIds = this.selectedIds.filter((s) => s !== id);
@@ -208,14 +224,28 @@ export class LineaExportComponent implements AfterViewInit {
   // linea-plot srcs
   get srcs(): string {
     return JSON.stringify(
-      this.selectedIds.map((id) => `https://api.avalanche.report/lawine/grafiken/smet/woche/${id}.smet.gz`),
+      this.selectedIds
+        .map((id) => {
+          const station = this.stations.find((item) => item.id === id);
+          const template = station?.smet?.[0];
+          const smetId = station?.smetId;
+          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
+        })
+        .filter((url): url is string => !!url),
     );
   }
 
   // linea-plot lazysrcs
   get lazysrcs(): string {
     return JSON.stringify(
-      this.selectedIds.map((id) => `https://api.avalanche.report/lawine/grafiken/smet/winter/${id}.smet.gz`),
+      this.selectedIds
+        .map((id) => {
+          const station = this.stations.find((item) => item.id === id);
+          const template = station?.smet?.[1];
+          const smetId = station?.smetId;
+          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
+        })
+        .filter((url): url is string => !!url),
     );
   }
 
@@ -238,4 +268,7 @@ interface StationFeature {
   name: string;
   lat: number;
   lng: number;
+  shortName: string;
+  smetId: string;
+  smet: string[];
 }

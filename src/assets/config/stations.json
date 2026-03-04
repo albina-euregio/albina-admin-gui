@@ -1,0 +1,24 @@
+[
+  {
+    "smet": [
+      "https://api.avalanche.report/lawine/grafiken/smet/woche/{id}.smet.gz",
+      "https://api.avalanche.report/lawine/grafiken/smet/winter/{id}.smet.gz",
+      "https://api.avalanche.report/lawine/grafiken/smet/all/{id}.smet.gz"
+    ],
+    "smetOperators": "LWD Tirol|HD Tirol|Südtirol - Alto Adige|Trentino|LWD Bayern|Tiroler Wasserkraft|Verbund|Bundesforschungszentrum für Wald|IGF|Nationalpark Hohe Tauern|Universität Innsbruck|Wildbach- und Lawinenverbauung|fotho-electric.tirol",
+    "stations": "https://static.avalanche.report/weather_stations/stations.geojson?v=legacy"
+  },
+  {
+    "smet": [
+      "https://www.salzburg.gv.at/lawine/smet/woche/{id}.smet.gz",
+      "https://www.salzburg.gv.at/lawine/smet/winter/{id}.smet.gz"
+    ],
+    "smetOperators": "LWD Salzburg.*",
+    "stations": "https://www.salzburg.gv.at/lawine/smet/salzburg.geojson?v=legacy"
+  },
+  {
+    "smet": ["https://lawinen.at/smet/vor/woche/{id}.smet.gz"],
+    "smetOperators": "",
+    "stations": "https://lawinen.at/smet/vor/stations_vor.geojson?v=legacy"
+  }
+]

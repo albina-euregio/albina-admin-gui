@@ -9,6 +9,7 @@ https://admin.avalanche.report/ – A frontend to enter avalanche bulletins.
 1. Use `pnpm install` to download necessary packages.
 1. Use `pnpm build`
 1. Copy `dist/assets/env.template.js` to `dist/assets/env.js` and edit accordingly
+1. Optional: adjust weather station sources in `dist/assets/config/stations.json` (replace this file per deployment if needed)
 1. Copy the contents of `dist/` to the server `/var/www/admin-albina.example.com/`
 1. Configure [Caddy server](https://caddyserver.com/) (see config file below)
 1. Open https://admin-albina.example.com/ in your webbrowser
