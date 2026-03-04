@@ -11,9 +11,9 @@ import {
   QueryList,
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { BaseMapService } from "app/providers/map-service/base-map.service";
+import { LineaMapService } from "app/providers/map-service/linea-map.service";
 import { loadStationData } from "app/providers/station-data-service/station-data.service";
-import { CircleMarker, CircleMarkerOptions, LayerGroup } from "leaflet";
+import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
 @Component({
   selector: "app-linea-export",
@@ -29,8 +29,7 @@ export class LineaExportComponent implements AfterViewInit {
   // Initially selected station
   selectedIds: string[] = [];
 
-  private mapService;
-  readonly mapLayer = new LayerGroup();
+  private mapService: LineaMapService;
 
   private searchTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
@@ -44,11 +43,11 @@ export class LineaExportComponent implements AfterViewInit {
   readonly markers = {};
 
   constructor() {
-    this.mapService = inject(BaseMapService);
+    this.mapService = inject(LineaMapService);
   }
 
   async ngAfterViewInit() {
-    await this.initMaps();
+    await this.mapService.initMaps(this.stationsMap().nativeElement);
     await this.load();
   }
 
@@ -61,8 +60,17 @@ export class LineaExportComponent implements AfterViewInit {
       }
 
       const marker = new CircleMarker({ lat: station.lat, lng: station.lon }, this.getModelPointOptions(false)).addTo(
-        this.mapLayer,
+        this.mapService.stationLayer,
       );
+      marker.feature = {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [station.lon, station.lat],
+        },
+        properties: { name: station.name ?? id },
+      };
+      this.mapService.showStationName(marker);
 
       marker.on("click", () => {
         if (this.selectedIds.includes(id)) {
@@ -86,21 +94,6 @@ export class LineaExportComponent implements AfterViewInit {
         smet: station.$smet ?? [],
       });
     });
-  }
-
-  async initMaps() {
-    const map = await this.mapService.initMaps(this.stationsMap().nativeElement);
-
-    // Watch zoom changes
-    this.mapService.map.on("zoomend", () => {
-      this.updateBaseLayer();
-    });
-
-    this.mapLayer.addTo(map);
-  }
-
-  private updateBaseLayer(): void {
-    return;
   }
 
   onSearchFieldEnter(): void {
