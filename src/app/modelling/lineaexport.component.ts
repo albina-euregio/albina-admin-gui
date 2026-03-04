@@ -1,4 +1,4 @@
-//import "@albina-euregio/linea/dist/linea";
+import "@albina-euregio/linea/dist/linea";
 import { CommonModule } from "@angular/common";
 import {
   Component,
