@@ -249,6 +249,20 @@ export class LineaExportComponent implements AfterViewInit {
     );
   }
 
+  // linea-plot winter srcs
+  get wintersrcs(): string {
+    return JSON.stringify(
+      this.selectedIds
+        .map((id) => {
+          const station = this.stations.find((item) => item.id === id);
+          const template = station?.smet?.[2];
+          const smetId = station?.smetId;
+          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
+        })
+        .filter((url): url is string => !!url),
+    );
+  }
+
   // Marker style
   getModelPointOptions(selected: boolean): CircleMarkerOptions {
     return {
