@@ -1,4 +1,4 @@
-import "@albina-euregio/linea/dist/linea";
+//import "@albina-euregio/linea/dist/linea";
 import { CommonModule } from "@angular/common";
 import {
   Component,
@@ -212,7 +212,11 @@ export class LineaExportComponent implements AfterViewInit {
   }
 
   getShortNameById(id: string): string {
-    return this.stations.find((station) => station.id === id)?.shortName ?? id;
+    const station = this.stations.find((station) => station.id === id);
+    if (station.shortName && station.name) {
+      return station.shortName.split("-").length == 5 ? station.name : station.shortName;
+    }
+    return station.shortName ?? id;
   }
 
   // Remove a station
