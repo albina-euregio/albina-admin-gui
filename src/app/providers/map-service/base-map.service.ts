@@ -35,23 +35,7 @@ export class BaseMapService extends MapService {
       .subscribe((mapCenter) => this.map.setView(mapCenter, mapCenter.zoom, { reset: true } as unknown));
 
     this.map.on("zoomend", () => {
-      const zoom = this.map.getZoom();
-
-      if (zoom >= 13) {
-        if (this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
-          this.map.removeLayer(this.baseMaps.AlbinaBaseMap);
-        }
-        if (!this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
-          this.map.addLayer(this.baseMaps.OpenTopoBaseMap);
-        }
-      } else {
-        if (this.map.hasLayer(this.baseMaps.OpenTopoBaseMap)) {
-          this.map.removeLayer(this.baseMaps.OpenTopoBaseMap);
-        }
-        if (!this.map.hasLayer(this.baseMaps.AlbinaBaseMap)) {
-          this.map.addLayer(this.baseMaps.AlbinaBaseMap);
-        }
-      }
+      this.updateMapLayers();
     });
 
     this.resetAll();

@@ -322,7 +322,7 @@ export class MapService {
     return afternoonMap;
   }
 
-  private updateMapLayers(): void {
+  protected updateMapLayers(): void {
     const zoom = this.map.getZoom();
 
     if (zoom >= 13) {
