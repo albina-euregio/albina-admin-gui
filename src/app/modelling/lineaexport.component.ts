@@ -90,11 +90,6 @@ export class LineaExportComponent implements AfterViewInit {
 
   async initMaps() {
     const map = await this.mapService.initMaps(this.stationsMap().nativeElement);
-    map.on({
-      click: () => {
-        console.log("Map clicked");
-      },
-    });
 
     // Watch zoom changes
     this.mapService.map.on("zoomend", () => {
