@@ -258,16 +258,36 @@ export class AuthenticationService {
     }
   }
 
-  public isCurrentUserInRole(role: Enums.UserRole): boolean {
+  private isCurrentUserInRole(role: Enums.UserRole): boolean {
     const roles = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
-    if (roles.includes(this.constantsService.roleObserver) && this.localStorageService.isTrainingEnabled) {
-      const updatedRoles = roles.map((r) =>
-        r === this.constantsService.roleObserver ? this.constantsService.roleForecaster : r,
+    if (roles.includes(Enums.UserRole.OBSERVER) && this.localStorageService.isTrainingEnabled) {
+      const updatedRoles: Enums.UserRole[] = roles.map((r) =>
+        r === Enums.UserRole.OBSERVER ? Enums.UserRole.FORECASTER : r,
       );
       return updatedRoles.includes(role);
     }
     return roles.includes(role);
+  }
+
+  public isCurrentUserAdmin() {
+    return this.isCurrentUserInRole(Enums.UserRole.ADMIN);
+  }
+
+  public isCurrentUserForecaster() {
+    return this.isCurrentUserInRole(Enums.UserRole.FORECASTER);
+  }
+
+  public isCurrentUserForeman() {
+    return this.isCurrentUserInRole(Enums.UserRole.FOREMAN);
+  }
+
+  public isCurrentUserForecasterOrForman() {
+    return this.isCurrentUserInRole(Enums.UserRole.FORECASTER) || this.isCurrentUserInRole(Enums.UserRole.FOREMAN);
+  }
+
+  public isCurrentUserObserver() {
+    return this.isCurrentUserInRole(Enums.UserRole.OBSERVER);
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {

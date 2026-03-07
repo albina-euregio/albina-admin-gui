@@ -158,7 +158,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       date.setHours(0, 0, 0, 0);
       this.dangerSourcesService.sourceDates.activeDate = this.dangerSourcesService.sourceDates.getValidFromUntil(date);
 
-      if (this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)) {
+      if (this.authenticationService.isCurrentUserObserver()) {
         this.dangerSourcesService.setIsReadOnly(true);
       }
 
@@ -290,7 +290,7 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       !this.dangerSourcesService.getIsEditable() ||
       this.editRegions ||
       !this.isCreator(this.activeVariant) ||
-      this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)
+      this.authenticationService.isCurrentUserObserver()
     );
   }
 
