@@ -2,6 +2,37 @@
 
 <!-- Update using `pnpm changelog <TAG>` before creating new tag <TAG> with git. -->
 
+## [8.3.0] - 2026-03-05
+
+### 🚀 Features
+
+- Validate all API parameters using openapi-typescript
+- Implement undo/redo for danger sources
+- Add title to danger source variant
+- Add BulletinModel.saveDate
+- Skip addInternalBulletins while editRegions
+- Disable media file upload button during upload
+
+### 🚜 Refactor
+
+- Use orderBy from es-toolkit
+- LocalServerInstance
+- Region.serverImagesUrl
+
+### ⚙️ Miscellaneous Tasks
+
+- Update to linea v8.7.4
+- Update to eaws-regions v8.2.0
+- Update to ngx-bootstrap 21.0.1
+- Update to playwright 1.58.2
+- Update protomaps-leaflet
+- Update to angular 21.2.0
+- Update to eslint 9.39.3
+
+### Build
+
+- Migrate to oxfmt
+
 ## [8.2.0] - 2026-02-02
 
 ### 🚀 Features
