@@ -23,7 +23,7 @@ export class BulletinModel implements PolygonObject {
   public additionalAuthors: string[];
   public ownerRegion: string;
 
-  public saveDate: Date;
+  public updateDate: Date;
   public publicationDate: Date;
 
   public validFrom: Date;
@@ -88,8 +88,8 @@ export class BulletinModel implements PolygonObject {
       bulletin.ownerRegion = json.ownerRegion;
     }
 
-    if (json.saveDate) {
-      bulletin.saveDate = new Date(json.saveDate);
+    if (json.updateDate) {
+      bulletin.updateDate = new Date(json.updateDate);
     }
 
     if (json.publicationDate) {
@@ -229,7 +229,7 @@ export class BulletinModel implements PolygonObject {
 
   constructor(bulletin?: BulletinModel) {
     this.author = undefined;
-    this.saveDate = undefined;
+    this.updateDate = undefined;
     this.publicationDate = undefined;
     if (bulletin) {
       this.additionalAuthors = bulletin.additionalAuthors;
