@@ -1139,7 +1139,7 @@ export interface components {
       author?: components["schemas"]["User"] | null;
       additionalAuthors?: string[];
       /** Format: date-time */
-      saveDate?: string;
+      updateDate?: string;
       ownerRegion?: string;
       highlightsTextcat?: string;
       avActivityHighlightsTextcat?: string;
@@ -1155,17 +1155,17 @@ export interface components {
       snowpackStructureCommentNotes?: string;
       tendencyCommentNotes?: string;
       generalHeadlineCommentNotes?: string;
-      highlights?: components["schemas"]["Texts"];
-      avActivityHighlights?: components["schemas"]["Texts"];
-      avActivityComment?: components["schemas"]["Texts"];
-      synopsisHighlights?: components["schemas"]["Texts"];
-      synopsisComment?: components["schemas"]["Texts"];
-      snowpackStructureHighlights?: components["schemas"]["Texts"];
-      snowpackStructureComment?: components["schemas"]["Texts"];
-      travelAdvisoryHighlights?: components["schemas"]["Texts"];
-      travelAdvisoryComment?: components["schemas"]["Texts"];
-      tendencyComment?: components["schemas"]["Texts"];
-      generalHeadlineComment?: components["schemas"]["Texts"];
+      highlights?: components["schemas"]["AvalancheBulletin.Text"][];
+      avActivityHighlights?: components["schemas"]["AvalancheBulletin.Text"][];
+      avActivityComment?: components["schemas"]["AvalancheBulletin.Text"][];
+      synopsisHighlights?: components["schemas"]["AvalancheBulletin.Text"][];
+      synopsisComment?: components["schemas"]["AvalancheBulletin.Text"][];
+      snowpackStructureHighlights?: components["schemas"]["AvalancheBulletin.Text"][];
+      snowpackStructureComment?: components["schemas"]["AvalancheBulletin.Text"][];
+      travelAdvisoryHighlights?: components["schemas"]["AvalancheBulletin.Text"][];
+      travelAdvisoryComment?: components["schemas"]["AvalancheBulletin.Text"][];
+      tendencyComment?: components["schemas"]["AvalancheBulletin.Text"][];
+      generalHeadlineComment?: components["schemas"]["AvalancheBulletin.Text"][];
       tendency?: components["schemas"]["Tendency"];
       dangerPattern1?: components["schemas"]["DangerPattern"];
       dangerPattern2?: components["schemas"]["DangerPattern"];
@@ -1184,6 +1184,10 @@ export interface components {
       afternoon?: components["schemas"]["AvalancheBulletinDaytimeDescription"] | null;
       hasDaytimeDependency?: boolean;
     };
+    "AvalancheBulletin.Text": {
+      languageCode: components["schemas"]["LanguageCode"];
+      text: string;
+    };
     "AvalancheBulletin.Validity": {
       /** Format: date-time */
       from?: string;
@@ -1198,11 +1202,7 @@ export interface components {
       elevation?: number;
       treeline?: boolean;
       dangerRatingAbove?: components["schemas"]["DangerRating"];
-      terrainFeatureAboveTextcat?: string;
-      terrainFeatureAbove?: components["schemas"]["Text"][];
       dangerRatingBelow?: components["schemas"]["DangerRating"];
-      terrainFeatureBelowTextcat?: string;
-      terrainFeatureBelow?: components["schemas"]["Text"][];
       complexity?: components["schemas"]["Complexity"];
       avalancheProblem1?: components["schemas"]["AvalancheProblem"] | null;
       avalancheProblem2?: components["schemas"]["AvalancheProblem"] | null;
@@ -1239,8 +1239,6 @@ export interface components {
       matrixInformation?: components["schemas"]["MatrixInformation"];
       /** @description Information about the selected field in the EAWS matrix */
       eawsMatrixInformation?: components["schemas"]["EawsMatrixInformation"];
-      terrainFeatureTextcat?: string;
-      terrainFeature?: components["schemas"]["Text"][];
     };
     /** @enum {string} */
     AvalancheProblem_1:
@@ -1689,10 +1687,6 @@ export interface components {
       | "regions_with_a_lot_of_snow"
       | "regions_exposed_to_precipitation"
       | "regions_exposed_to_heavier_precipitation";
-    Text: {
-      languageCode?: components["schemas"]["LanguageCode"];
-      text?: string;
-    };
     /** @enum {string} */
     TextcatTextfield:
       | "avActivityComment"
@@ -1703,10 +1697,6 @@ export interface components {
       | "snowpackStructureHighlights"
       | "synopsisComment"
       | "tendencyComment";
-    Texts: components["schemas"]["AbstractPersistentObject"] & {
-      id?: string | null;
-      texts: components["schemas"]["Text"][];
-    };
     /** @enum {string} */
     Thickness: "thick" | "thin";
     User: {
