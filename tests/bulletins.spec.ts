@@ -40,7 +40,46 @@ test("Check visible neighbors", async ({ page }) => {
 });
 
 test("Upload media file", async ({ page }) => {
-  // TODO
+  const testDate = new Date("2024-12-24");
+  const mediaText = "Es gibt ein Altschneeproblem.\nAlle Details und wo's günstiger ist findet ihr auf Lawinen.report.";
+  await page.clock.setFixedTime(testDate);
+  await page.reload();
+  await changeRegion(page, "Tyrol");
+  await page.getByRole("row", { name: "Wednesday, December 25, 2024" }).getByTitle("edit bulletin").click();
+  await page.getByTitle("[b]").click();
+  await page.getByRole("button", { name: /Upload media file/ }).click();
+  await page
+    .getByRole("button", { name: "Choose File" })
+    .setInputFiles(path.join(__dirname, "data/test_lawinenreport_norbert-lanzanasto.mp3"));
+  await page.locator("#textarea-input").fill(mediaText);
+  const uploadResponsePromise = page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/media/) && response.request().method() === "POST" && response.status() === 200,
+  );
+  await page.getByRole("button", { name: "Send" }).click();
+  const now = new Date();
+  await uploadResponsePromise;
+  const formattedNow = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).formatToParts(now);
+  const getPart = (type: Intl.DateTimeFormatPartTypes) => formattedNow.find((part) => part.type === type)?.value ?? "";
+  const uploadedAtPattern = new RegExp(
+    `${getPart("month")}/${getPart("day")}/${getPart("year")},\\s${getPart("hour")}:${getPart("minute")}:\\d{2}\\s${getPart("dayPeriod")}`,
+  );
+  await page.goto("https://static.avalanche.report/media_files_dev/AT-07/en/");
+  await expect(page.getByRole("row", { name: "2024-12-25_avalanchereport_playwright.mp3" })).toContainText(
+    uploadedAtPattern,
+  );
+  await expect(page.getByRole("row", { name: "2024-12-25_avalanchereport_playwright.txt" })).toContainText(
+    uploadedAtPattern,
+  );
+  await page.getByRole("link", { name: "2024-12-25_avalanchereport_playwright.txt" }).click();
+  await expect(page.locator("pre")).toContainText(mediaText);
 });
 
 test("JSON download", async ({ page }) => {
