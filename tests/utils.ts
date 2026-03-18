@@ -17,8 +17,21 @@ export async function login(page: Page, username: string, password: string) {
   await page.getByRole("textbox", { name: /username/ }).fill(username);
   await page.getByRole("textbox", { name: /password/ }).fill(password);
   await page.getByRole("button", { name: /login/i }).click();
+  const authResponsePromise = page.waitForResponse(
+    (response) =>
+      response.url().match(/\/api\/authentication/) &&
+      response.status() === 200 &&
+      response.request().method() === "POST",
+  );
+  // wait for login to geosphere api
+  const externalResponsePromise = page.waitForResponse(
+    (response) =>
+      response.url().match("admin.lawinen-warnung.eu") &&
+      response.status() === 200 &&
+      response.request().method() === "POST",
+  );
+  await Promise.all([authResponsePromise, externalResponsePromise]);
   await expect(page).toHaveURL("#/bulletins");
-  await page.waitForTimeout(1000); // FIXME? better indicator of app being ready, some API call maybe
 }
 
 /**
