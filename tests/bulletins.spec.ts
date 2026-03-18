@@ -293,10 +293,6 @@ test("Copy foreign region", async ({ page }) => {
   await page.getByRole("button", { name: "Yes" }).click();
 });
 
-test("Bulletin synchronization", async ({ page }) => {
-  // TODO edit bulletin in browser 1, check that changes are visible in browser 2
-});
-
 test("Load bulletin from the day before", async ({ page }) => {
   test.slow();
   const testDate = new Date("2024-12-21");

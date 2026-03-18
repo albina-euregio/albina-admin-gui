@@ -192,6 +192,7 @@ deploy:observations-api:
   before_script:
     - corepack enable
     - pnpm install --frozen-lockfile
+    - export TZ="Europe/Vienna"
   script:
     - pnpm playwright test
 
