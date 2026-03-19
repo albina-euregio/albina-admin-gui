@@ -4,8 +4,8 @@ import { z } from "zod/v4";
 import { ZSchema } from "../danger-sources/models/zod-util";
 
 export const BulletinDaytimeDescriptionSchema = z.object({
-  dangerRatingAbove: z.enum(Enums.DangerRating).nullish(),
-  dangerRatingBelow: z.enum(Enums.DangerRating).nullish(),
+  dangerRatingAbove: z.enum(Enums.DangerRating).nullish().default(Enums.DangerRating.low),
+  dangerRatingBelow: z.enum(Enums.DangerRating).nullish().default(Enums.DangerRating.low),
   hasElevationDependency: z.boolean().default(false),
   elevation: z.number().nullish(),
   treeline: z.boolean().default(false),

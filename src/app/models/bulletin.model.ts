@@ -40,11 +40,9 @@ export const BulletinSchema = z.object({
 
   hasDaytimeDependency: z.boolean().default(false),
 
-  forenoon: BulletinDaytimeDescriptionSchema.transform((v) =>
-    v ? BulletinDaytimeDescriptionModel.parse(v) : undefined,
-  ).default(() => BulletinDaytimeDescriptionModel.parse({})),
+  forenoon: BulletinDaytimeDescriptionSchema.nullish().transform((v) => BulletinDaytimeDescriptionModel.parse(v ?? {})),
   afternoon: BulletinDaytimeDescriptionSchema.nullish().transform((v) =>
-    v ? BulletinDaytimeDescriptionModel.parse(v) : undefined,
+    BulletinDaytimeDescriptionModel.parse(v ?? {}),
   ),
 
   validity: z
