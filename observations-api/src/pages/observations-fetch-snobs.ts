@@ -1,7 +1,9 @@
-import { fetchLolaKronos } from "../fetch/observations/lola-kronos";
-import { ObservationSource } from "../../../src/app/observations/models/generic-observation.model";
 import { writeFile } from "node:fs/promises";
+
 import type { APIRoute } from "astro";
+
+import { ObservationSource } from "../../../src/app/observations/models/generic-observation.model";
+import { fetchLolaKronos } from "../fetch/observations/lola-kronos";
 
 export const POST: APIRoute = async ({ request }) => {
   if (

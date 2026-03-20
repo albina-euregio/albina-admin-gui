@@ -1,7 +1,8 @@
-//implement a service which returns the height, aspect name and angle of two coordinates using plane.model.ts
-import { ElevationService } from "../map-service/elevation.service";
 import { Injectable, inject } from "@angular/core";
 import { Observable } from "rxjs";
+
+//implement a service which returns the height, aspect name and angle of two coordinates using plane.model.ts
+import { ElevationService } from "../map-service/elevation.service";
 
 interface Point {
   lat: number;

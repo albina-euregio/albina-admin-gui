@@ -1,11 +1,3 @@
-import * as Enums from "../../enums/enums";
-import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
-import { ServerModel } from "../../models/server.model";
-import { AuthenticationService } from "../authentication-service/authentication.service";
-import { ConstantsService } from "../constants-service/constants.service";
-import { LocalStorageService } from "../local-storage-service/local-storage.service";
-import { UndoRedoState } from "../undo-redo-service/undo-redo.service";
-import { UserService } from "../user-service/user.service";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
@@ -13,7 +5,16 @@ import { BulletinModel, BulletinModelAsJSON } from "app/models/bulletin.model";
 import { StressLevel } from "app/models/stress-level.model";
 import { Observable, of, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
+
+import * as Enums from "../../enums/enums";
+import { Bulletins, toAlbinaBulletin } from "../../models/CAAMLv6";
+import { ServerModel } from "../../models/server.model";
 import { AlbinaLanguage } from "../../models/text.model";
+import { AuthenticationService } from "../authentication-service/authentication.service";
+import { ConstantsService } from "../constants-service/constants.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import { UndoRedoState } from "../undo-redo-service/undo-redo.service";
+import { UserService } from "../user-service/user.service";
 
 class TrainingModeError extends Error {}
 

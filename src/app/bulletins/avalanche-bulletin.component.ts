@@ -1,3 +1,14 @@
+import { DatePipe } from "@angular/common";
+import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+// For iframe
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
+import { AccordionModule } from "ngx-bootstrap/accordion";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+
 import { environment } from "../../environments/environment";
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
@@ -10,20 +21,10 @@ import { BulletinsService } from "../providers/bulletins-service/bulletins.servi
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { CopyService } from "../providers/copy-service/copy.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
-import { DatePipe } from "@angular/common";
-import { Component, HostListener, inject, input, OnInit, output, TemplateRef, viewChild } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-// For iframe
-import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
-import { AccordionModule } from "ngx-bootstrap/accordion";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   selector: "app-avalanche-bulletin",

@@ -1,7 +1,8 @@
+import { z } from "zod/v4";
+
+import { ZSchema } from "../danger-sources/models/zod-util";
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel, AvalancheProblemSchema } from "./avalanche-problem.model";
-import { z } from "zod/v4";
-import { ZSchema } from "../danger-sources/models/zod-util";
 
 export const BulletinDaytimeDescriptionSchema = z.object({
   dangerRatingAbove: z.enum(Enums.DangerRating).nullish().default(Enums.DangerRating.low),

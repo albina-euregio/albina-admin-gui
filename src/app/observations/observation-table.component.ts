@@ -1,3 +1,8 @@
+import { CommonModule } from "@angular/common";
+import { Component, input, output, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { grainShapes } from "./grain.shapes";
 import {
@@ -7,10 +12,6 @@ import {
   ObservationType,
 } from "./models/generic-observation.model";
 import { ObservationMarkerService } from "./observation-marker.service";
-import { CommonModule } from "@angular/common";
-import { Component, input, output, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
   standalone: true,

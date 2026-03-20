@@ -1,11 +1,12 @@
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { UserService } from "../providers/user-service/user.service";
-import { DangerSourcesService } from "./danger-sources.service";
 import { formatDate, DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService, TranslateModule } from "@ngx-translate/core";
+
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { UserService } from "../providers/user-service/user.service";
+import { DangerSourcesService } from "./danger-sources.service";
 
 @Component({
   templateUrl: "danger-sources.component.html",

@@ -1,13 +1,14 @@
-import { environment } from "../../../environments/environment";
-import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
-import { RegionConfiguration } from "../../models/region-configuration.model";
-import type { ServerModel } from "../../models/server.model";
-import { AuthenticationResponse, AuthenticationResponseSchema } from "../authentication-service/authentication.service";
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { Map as LeafletMap } from "leaflet";
 import { filter, fromEventPattern, map, Observable } from "rxjs";
 import * as z from "zod/v4";
+
+import { environment } from "../../../environments/environment";
+import { BulletinModel, BulletinModelAsJSON } from "../../models/bulletin.model";
+import { RegionConfiguration } from "../../models/region-configuration.model";
+import type { ServerModel } from "../../models/server.model";
+import { AuthenticationResponse, AuthenticationResponseSchema } from "../authentication-service/authentication.service";
 
 export const MapCenterSchema = z.object({
   lat: z.number(),

@@ -1,7 +1,9 @@
-import { changeRegion, loginForecaster } from "./utils";
-import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import path from "path";
+
+import { test, expect } from "@playwright/test";
+
+import { changeRegion, loginForecaster } from "./utils";
 
 const testDate = new Date("2024-12-24");
 

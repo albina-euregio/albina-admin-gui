@@ -1,10 +1,11 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
+
 import { GetDustParamService } from "./dust.service";
 import { GetFilenamesService } from "./filenames.service";
 import { ParamService } from "./param.service";
 import { QfaFile } from "./qfa-file.model";
 import * as types from "./qfa-types";
-import { HttpClient } from "@angular/common/http";
-import { Injectable, inject } from "@angular/core";
 
 export interface QfaFilename {
   filename: string;

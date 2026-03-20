@@ -1,14 +1,3 @@
-import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
-import * as Enums from "../../enums/enums";
-import { BulletinModel } from "../../models/bulletin.model";
-import { AuthenticationService } from "../authentication-service/authentication.service";
-import { ConstantsService } from "../constants-service/constants.service";
-import { LocalStorageService } from "../local-storage-service/local-storage.service";
-import { filterFeature } from "../regions-service/filterFeature";
-import { RegionProperties, RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
-import { AmPmControl } from "./am-pm-control";
-import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
-import { RegionNameControl } from "./region-name-control";
 import { Injectable, inject } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import * as geojson from "geojson";
@@ -26,8 +15,21 @@ import {
   TileLayer,
   TileLayerOptions,
 } from "leaflet";
-import "leaflet.sync";
 import { Subscription } from "rxjs";
+
+import { PolygonObject } from "../../danger-sources/models/polygon-object.model";
+import * as Enums from "../../enums/enums";
+import { BulletinModel } from "../../models/bulletin.model";
+import { AuthenticationService } from "../authentication-service/authentication.service";
+import { ConstantsService } from "../constants-service/constants.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import { filterFeature } from "../regions-service/filterFeature";
+import { RegionProperties, RegionsService, RegionWithElevationProperties } from "../regions-service/regions.service";
+import { AmPmControl } from "./am-pm-control";
+import { BlendModePolygonSymbolizer, PmLeafletLayer } from "./pmtiles-layer";
+
+import "leaflet.sync";
+import { RegionNameControl } from "./region-name-control";
 
 declare module "leaflet" {
   interface Map {

@@ -1,25 +1,3 @@
-import { DangerSourcesService } from "../danger-sources/danger-sources.service";
-import * as Enums from "../enums/enums";
-// models
-import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
-import { AuthenticationService } from "../providers/authentication-service/authentication.service";
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { CopyService } from "../providers/copy-service/copy.service";
-import { MapService } from "../providers/map-service/map.service";
-import { RegionsService } from "../providers/regions-service/regions.service";
-import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
-import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
-import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
-import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
-import { BulletinTextComponent } from "./bulletin-text.component";
-import { ModalCheckComponent } from "./modal-check.component";
-import { ModalMediaFileComponent } from "./modal-media-file.component";
-import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
-import { ModalPublishAllComponent } from "./modal-publish-all.component";
-import { ModalPublishComponent } from "./modal-publish.component";
-// modals
-import { ModalSubmitComponent } from "./modal-submit.component";
 import { DatePipe, KeyValue, KeyValuePipe, NgTemplateOutlet } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
@@ -56,7 +34,30 @@ import { BsDropdownDirective, BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 // For iframe
 import { forkJoin, map, Observable, of, Subscription, tap, timer } from "rxjs";
+
+import { DangerSourcesService } from "../danger-sources/danger-sources.service";
+import * as Enums from "../enums/enums";
+// models
+import { BulletinModel, BulletinModelAsJSON } from "../models/bulletin.model";
+import { AuthenticationService } from "../providers/authentication-service/authentication.service";
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { CopyService } from "../providers/copy-service/copy.service";
+import { MapService } from "../providers/map-service/map.service";
+import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
+import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
+import { DangerRatingIconComponent } from "../shared/danger-rating-icon.component";
+import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { AvalancheBulletinComponent } from "./avalanche-bulletin.component";
+import { BulletinTextComponent } from "./bulletin-text.component";
+import { ModalCheckComponent } from "./modal-check.component";
+import { ModalMediaFileComponent } from "./modal-media-file.component";
+import { ModalPublicationStatusComponent } from "./modal-publication-status.component";
+import { ModalPublishAllComponent } from "./modal-publish-all.component";
+import { ModalPublishComponent } from "./modal-publish.component";
+// modals
+import { ModalSubmitComponent } from "./modal-submit.component";
 
 @Component({
   templateUrl: "create-bulletin.component.html",

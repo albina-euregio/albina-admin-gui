@@ -1,4 +1,5 @@
 import test, { expect } from "@playwright/test";
+
 import { changeRegion, loginAdmin, loginForecaster } from "./utils";
 
 const waitForGetEdit = (page) =>

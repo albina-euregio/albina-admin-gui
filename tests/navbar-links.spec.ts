@@ -1,5 +1,6 @@
-import { changeRegion, loginForecaster } from "./utils";
 import { test, expect } from "@playwright/test";
+
+import { changeRegion, loginForecaster } from "./utils";
 
 test("check all links in navbar", async ({ page }) => {
   await page.goto("");

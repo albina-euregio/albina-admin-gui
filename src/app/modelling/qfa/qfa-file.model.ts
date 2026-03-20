@@ -1,6 +1,7 @@
-import * as types from "./qfa-types";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
+
+import * as types from "./qfa-types";
 
 export class QfaFile implements types.QFA {
   public metadata = {} as types.metadata;

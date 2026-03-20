@@ -1,11 +1,12 @@
-import { ServerConfiguration, ServerConfigurationSchema } from "../models/server-configuration.model";
-import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 import { Component, inject, input } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Alert } from "app/models/Alert";
 import { ZodInputComponent } from "app/shared/zod-input.component";
 import { AlertModule } from "ngx-bootstrap/alert";
+
+import { ServerConfiguration, ServerConfigurationSchema } from "../models/server-configuration.model";
+import { ConfigurationService } from "../providers/configuration-service/configuration.service";
 
 @Component({
   templateUrl: "server-configuration.component.html",

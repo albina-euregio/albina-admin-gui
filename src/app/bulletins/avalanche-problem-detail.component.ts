@@ -1,3 +1,11 @@
+import { NgClass } from "@angular/common";
+import { Component, inject, input, OnChanges, output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { BulletinModel } from "app/models/bulletin.model";
+import { ElevationsComponent } from "app/shared/elevations.component";
+import { BsModalService } from "ngx-bootstrap/modal";
+
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
@@ -8,13 +16,6 @@ import { haveSameElements } from "../shared/compareArrays";
 import { MatrixParameterComponent } from "../shared/matrix-parameter.component";
 import { MatrixComponent } from "../shared/matrix.component";
 import { AvalancheProblemDecisionTreeComponent } from "./avalanche-problem-decision-tree.component";
-import { NgClass } from "@angular/common";
-import { Component, inject, input, OnChanges, output } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { BulletinModel } from "app/models/bulletin.model";
-import { ElevationsComponent } from "app/shared/elevations.component";
-import { BsModalService } from "ngx-bootstrap/modal";
 
 @Component({
   selector: "app-avalanche-problem-detail",

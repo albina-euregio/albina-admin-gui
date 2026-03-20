@@ -1,8 +1,9 @@
-import { CreateBulletinComponent } from "./create-bulletin.component";
 import { Component, inject } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { NgxMousetrapDirective } from "app/shared/mousetrap-directive";
 import { BsModalRef } from "ngx-bootstrap/modal";
+
+import { CreateBulletinComponent } from "./create-bulletin.component";
 
 @Component({
   selector: "app-modal-publish",

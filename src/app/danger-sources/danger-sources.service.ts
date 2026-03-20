@@ -1,3 +1,10 @@
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { Observable, Subject } from "rxjs";
+import { map } from "rxjs/operators";
+import { z } from "zod/v4";
+
+import { SourceDates } from "../models/SourceDates";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { UndoRedoState } from "../providers/undo-redo-service/undo-redo.service";
@@ -7,12 +14,6 @@ import {
   DangerSourceVariantType,
 } from "./models/danger-source-variant.model";
 import { DangerSourceModel, DangerSourceSchema } from "./models/danger-source.model";
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { map } from "rxjs/operators";
-import { z } from "zod/v4";
-import { SourceDates } from "../models/SourceDates";
 
 interface AccordionChangeEvent {
   isOpen: boolean;

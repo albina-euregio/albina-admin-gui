@@ -1,9 +1,10 @@
-import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
-import { ConstantsService } from "../providers/constants-service/constants.service";
-import { UserService } from "../providers/user-service/user.service";
 import { Component, OnInit, inject } from "@angular/core";
 import type { EChartsCoreOption as EChartsOption } from "echarts/core";
 import { NgxEchartsDirective } from "ngx-echarts";
+
+import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
+import { ConstantsService } from "../providers/constants-service/constants.service";
+import { UserService } from "../providers/user-service/user.service";
 
 @Component({
   selector: "app-team-stress-levels",

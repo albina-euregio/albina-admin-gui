@@ -1,4 +1,11 @@
+import { NgClass, UpperCasePipe } from "@angular/common";
+import { Component, TemplateRef, input, output, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TranslateService, TranslateModule } from "@ngx-translate/core";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+
 import * as Enums from "../enums/enums";
+import { TextcatTextfield } from "../enums/enums";
 import type { BulletinModel } from "../models/bulletin.model";
 import { concatenateLangTexts, convertLangTextsToJSON, LangTexts, LANGUAGES, toLangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -7,12 +14,6 @@ import { CopyService } from "../providers/copy-service/copy.service";
 import { createWordDiff } from "../shared/wordDiff";
 import type { TextcatLegacyIn } from "./avalanche-bulletin.component";
 import { HtmlPipe } from "./html.pipe";
-import { NgClass, UpperCasePipe } from "@angular/common";
-import { Component, TemplateRef, input, output, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { TranslateService, TranslateModule } from "@ngx-translate/core";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { TextcatTextfield } from "../enums/enums";
 
 @Component({
   selector: "app-bulletin-text",

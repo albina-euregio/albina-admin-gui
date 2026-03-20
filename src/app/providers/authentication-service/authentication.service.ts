@@ -1,9 +1,3 @@
-import * as Enums from "../../enums/enums";
-import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
-import { ServerConfiguration } from "../../models/server-configuration.model";
-import { ServerModel, ServerSchema } from "../../models/server.model";
-import { ConstantsService } from "../constants-service/constants.service";
-import { LocalStorageService } from "../local-storage-service/local-storage.service";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -12,6 +6,13 @@ import { UserModel, UserSchema } from "app/models/user.model";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { z } from "zod/v4";
+
+import * as Enums from "../../enums/enums";
+import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
+import { ServerConfiguration } from "../../models/server-configuration.model";
+import { ServerModel, ServerSchema } from "../../models/server.model";
+import { ConstantsService } from "../constants-service/constants.service";
+import { LocalStorageService } from "../local-storage-service/local-storage.service";
 
 @Injectable()
 export class AuthenticationService {

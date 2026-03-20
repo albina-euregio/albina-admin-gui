@@ -1,6 +1,7 @@
+import { Routes } from "@angular/router";
+
 import { AuthGuard } from "../guards/auth.guard";
 import { EducationComponent } from "./education.component";
-import { Routes } from "@angular/router";
 
 export default [
   {

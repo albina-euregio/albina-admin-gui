@@ -1,5 +1,6 @@
-import * as Enums from "../enums/enums";
 import { z } from "zod/v4";
+
+import * as Enums from "../enums/enums";
 
 export const UserSchema = z.object({
   name: z.string(),

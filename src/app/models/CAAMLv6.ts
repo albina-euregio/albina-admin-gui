@@ -1,8 +1,9 @@
+import * as z from "zod/v4";
+
 import * as Enums from "../enums/enums";
 import type { AvalancheProblemModel } from "./avalanche-problem.model";
 import type { BulletinDaytimeDescriptionModel } from "./bulletin-daytime-description.model";
 import type { BulletinModelAsJSON } from "./bulletin.model";
-import * as z from "zod/v4";
 import { LanguageSchema } from "./text.model";
 
 export const CustomDataSchema = z.optional(z.any());

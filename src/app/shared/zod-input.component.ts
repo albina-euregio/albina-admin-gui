@@ -1,7 +1,8 @@
-import { zodCssClass } from "./zod-css-class";
 import { Component, input, output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { z } from "zod/v4";
+
+import { zodCssClass } from "./zod-css-class";
 
 @Component({
   selector: "app-zod-input",

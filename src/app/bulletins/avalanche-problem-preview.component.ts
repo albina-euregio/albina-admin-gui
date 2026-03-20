@@ -1,3 +1,7 @@
+import { Component, inject, input, output } from "@angular/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { BulletinModel } from "app/models/bulletin.model";
+
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-description.model";
@@ -5,9 +9,6 @@ import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { AvalancheTypeComponent } from "../shared/avalanche-type.component";
 import { DangerRatingComponent } from "../shared/danger-rating.component";
-import { Component, inject, input, output } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { BulletinModel } from "app/models/bulletin.model";
 
 @Component({
   selector: "app-avalanche-problem-preview",

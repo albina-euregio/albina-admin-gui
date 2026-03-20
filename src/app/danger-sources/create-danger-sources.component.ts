@@ -1,3 +1,14 @@
+import { DatePipe, NgClass, NgTemplateOutlet } from "@angular/common";
+import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+// services
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
+import { orderBy } from "es-toolkit";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
+import { Subscription } from "rxjs";
+
 import * as Enums from "../enums/enums";
 // models
 import { MatrixInformationSchema } from "../models/matrix-information.model";
@@ -5,6 +16,7 @@ import { AuthenticationService } from "../providers/authentication-service/authe
 import { ConstantsService } from "../providers/constants-service/constants.service";
 import { MapService } from "../providers/map-service/map.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
+import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { AspectsComponent } from "../shared/aspects.component";
 import { AvalancheProblemIconsComponent } from "../shared/avalanche-problem-icons.component";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
@@ -21,17 +33,6 @@ import {
   sortDangerSourceVariantsByRelevance,
 } from "./models/danger-source-variant.model";
 import { DangerSourceModel } from "./models/danger-source.model";
-import { DatePipe, NgClass, NgTemplateOutlet } from "@angular/common";
-import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, TemplateRef, viewChild } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-// services
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
-import { orderBy } from "es-toolkit";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { Subscription } from "rxjs";
-import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 
 @Component({
   templateUrl: "create-danger-sources.component.html",

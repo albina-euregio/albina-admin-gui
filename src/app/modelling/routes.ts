@@ -1,9 +1,10 @@
+import { Routes } from "@angular/router";
+
 import { AuthGuard } from "../guards/auth.guard";
 import { AwsomeComponent } from "./awsome.component";
 import { ForecastComponent } from "./forecast.component";
 import { LineaExportComponent } from "./lineaexport.component";
 import { ZamgWbtComponent } from "./zamg-wbt.component";
-import { Routes } from "@angular/router";
 
 export interface ModellingRouteData {
   title: string;

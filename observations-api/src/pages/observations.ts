@@ -1,3 +1,5 @@
+import type { APIRoute } from "astro";
+
 import {
   type GenericObservation,
   genericObservationSchema,
@@ -8,7 +10,6 @@ import {
 import { ObservationDatabaseConnection } from "../db/database";
 import { fetchAndInsert } from "../fetch/observations";
 import { newDate } from "../util/newDate.ts";
-import type { APIRoute } from "astro";
 
 let lastFetch = 0;
 

@@ -1,3 +1,40 @@
+import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
+import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
+import localeCa from "@angular/common/locales/ca";
+import localeDe from "@angular/common/locales/de";
+import { default as localeEn, default as localeOc } from "@angular/common/locales/en";
+import localeEs from "@angular/common/locales/es";
+import localeFr from "@angular/common/locales/fr";
+import localeIt from "@angular/common/locales/it";
+import { importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideRouter } from "@angular/router";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { LineaMapService } from "app/providers/map-service/linea-map.service";
+import { StatusService } from "app/providers/status-service/status.service";
+import { BarChart, LineChart, ScatterChart } from "echarts/charts";
+import {
+  DatasetComponent,
+  GridComponent,
+  LegendComponent,
+  MarkLineComponent,
+  PolarComponent,
+  SingleAxisComponent,
+  TitleComponent,
+  TooltipComponent,
+  TransformComponent,
+} from "echarts/components";
+import * as echarts from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { AlertModule } from "ngx-bootstrap/alert";
+import { CollapseModule } from "ngx-bootstrap/collapse";
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { ModalModule } from "ngx-bootstrap/modal";
+import { TabsModule } from "ngx-bootstrap/tabs";
+import { provideEchartsCore } from "ngx-echarts";
+
 import { AppComponent } from "./app/app.component";
 import { DangerSourcesService } from "./app/danger-sources/danger-sources.service";
 import { AuthGuard } from "./app/guards/auth.guard";
@@ -26,42 +63,6 @@ import { RegionsService } from "./app/providers/regions-service/regions.service"
 import { StatisticsService } from "./app/providers/statistics-service/statistics.service";
 import { UserService } from "./app/providers/user-service/user.service";
 import routes from "./app/routes";
-import { DatePipe, HashLocationStrategy, LocationStrategy, registerLocaleData } from "@angular/common";
-import { provideHttpClient, withFetch, withInterceptors } from "@angular/common/http";
-import localeCa from "@angular/common/locales/ca";
-import localeDe from "@angular/common/locales/de";
-import { default as localeEn, default as localeOc } from "@angular/common/locales/en";
-import localeEs from "@angular/common/locales/es";
-import localeFr from "@angular/common/locales/fr";
-import localeIt from "@angular/common/locales/it";
-import { importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideRouter } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { StatusService } from "app/providers/status-service/status.service";
-import { BarChart, LineChart, ScatterChart } from "echarts/charts";
-import {
-  DatasetComponent,
-  GridComponent,
-  LegendComponent,
-  MarkLineComponent,
-  PolarComponent,
-  SingleAxisComponent,
-  TitleComponent,
-  TooltipComponent,
-  TransformComponent,
-} from "echarts/components";
-import * as echarts from "echarts/core";
-import { CanvasRenderer } from "echarts/renderers";
-import { AlertModule } from "ngx-bootstrap/alert";
-import { CollapseModule } from "ngx-bootstrap/collapse";
-import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-import { ModalModule } from "ngx-bootstrap/modal";
-import { TabsModule } from "ngx-bootstrap/tabs";
-import { provideEchartsCore } from "ngx-echarts";
-import { LineaMapService } from "app/providers/map-service/linea-map.service";
 
 echarts.use([
   BarChart,

@@ -1,5 +1,6 @@
-import { DangerSourceVariantModel } from "../../danger-sources/models/danger-source-variant.model";
 import { BulletinModel } from "app/models/bulletin.model";
+
+import { DangerSourceVariantModel } from "../../danger-sources/models/danger-source-variant.model";
 
 export type UndoOrRedo = "undo" | "redo";
 

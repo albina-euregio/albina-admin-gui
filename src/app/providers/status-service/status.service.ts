@@ -1,8 +1,9 @@
-import { StatusInformationModel, StatusInformationSchema } from "../../models/status-information.model";
-import { ConstantsService } from "../constants-service/constants.service";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
+
+import { StatusInformationModel, StatusInformationSchema } from "../../models/status-information.model";
+import { ConstantsService } from "../constants-service/constants.service";
 
 @Injectable()
 export class StatusService {

@@ -1,11 +1,12 @@
-import { environment } from "../../environments/environment";
-import { GenericObservation } from "./models/generic-observation.model";
-import { ObservationFilterService } from "./observation-filter.service";
 import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { firstValueFrom, Observable } from "rxjs";
 import { map, mergeAll } from "rxjs/operators";
+
+import { environment } from "../../environments/environment";
+import { GenericObservation } from "./models/generic-observation.model";
+import { ObservationFilterService } from "./observation-filter.service";
 
 @Injectable()
 export class AlbinaObservationsService {

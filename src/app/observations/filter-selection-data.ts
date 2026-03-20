@@ -1,7 +1,8 @@
-import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
-import type { GenericObservation } from "./models/generic-observation.model";
 import { FeatureProperties } from "app/modelling/awsome.component";
 import { castArray, get } from "es-toolkit/compat";
+
+import type { FilterSelectionSpec, FilterSelectionValue } from "./filter-selection-config";
+import type { GenericObservation } from "./models/generic-observation.model";
 
 export type { FilterSelectionSpec, FilterSelectionValue };
 

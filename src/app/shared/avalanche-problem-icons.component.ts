@@ -1,6 +1,7 @@
+import { Component, input } from "@angular/core";
+
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
-import { Component, input } from "@angular/core";
 
 @Component({
   standalone: true,
