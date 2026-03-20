@@ -1,10 +1,12 @@
 import { MapService } from "./map.service";
 import { RegionNameControl } from "./region-name-control";
 import { Injectable } from "@angular/core";
-import { AttributionControl, ZoomControl, LeafletMap } from "leaflet";
+import { AttributionControl, ZoomControl, LeafletMap, GeoJSON, LayerGroup, Layer, CircleMarker } from "leaflet";
 
 @Injectable()
-export class BaseMapService extends MapService {
+export class LineaMapService extends MapService {
+  stationLayer: LayerGroup = new LayerGroup();
+
   async initMaps(el: HTMLElement, options?: Parameters<typeof this.initOverlayMaps>[0]) {
     this.baseMaps = {
       AlbinaBaseMap: this.getAlbinaBaseMap({ minZoom: 5, maxZoom: 12 }),
@@ -24,10 +26,12 @@ export class BaseMapService extends MapService {
       // pinchZoom: Browser.touch,
       minZoom: 4,
       maxZoom: 15,
-      layers: [this.baseMaps.AlbinaBaseMap, this.overlayMaps.regions, this.overlayMaps.editSelection],
+      layers: [this.baseMaps.AlbinaBaseMap, this.stationLayer],
     });
 
-    this.fitActiveRegionBounds(this.map, this.overlayMaps.editSelection);
+    const regions = await this.regionsService.getActiveServerRegionsAsync();
+    const bounds = new GeoJSON(regions).getBounds();
+    this.map.fitBounds(bounds);
 
     this.map.on("dragend zoomend", () => this.localStorageService.setMapCenter(this.map));
     this.observeMapCenterSubscription = this.localStorageService
@@ -43,5 +47,24 @@ export class BaseMapService extends MapService {
     new ZoomControl({ position: "topleft" }).addTo(this.map);
     this.regionNameControl = new RegionNameControl().addTo(this.map);
     return this.map;
+  }
+
+  showStationName(layer: Layer) {
+    layer.on("pointerover", (e: any) => {
+      this.regionNameControl.update(e.target.feature?.properties?.name || "");
+      const l = e.target as CircleMarker;
+      l.setStyle({
+        weight: 3,
+      });
+      l.bringToFront();
+    });
+    layer.on("pointerout", (e: any) => {
+      this.regionNameControl.update("");
+      const l = e.target as CircleMarker;
+      l.setStyle({
+        weight: 1,
+      });
+      l.bringToFront();
+    });
   }
 }

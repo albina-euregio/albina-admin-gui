@@ -61,6 +61,7 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { TabsModule } from "ngx-bootstrap/tabs";
 import { provideEchartsCore } from "ngx-echarts";
+import { LineaMapService } from "app/providers/map-service/linea-map.service";
 
 echarts.use([
   BarChart,
@@ -109,6 +110,7 @@ bootstrapApplication(AppComponent, {
     AuthenticationService,
     AuthGuard,
     BaseMapService,
+    LineaMapService,
     BlogService,
     BulletinsService,
     DangerSourcesService,

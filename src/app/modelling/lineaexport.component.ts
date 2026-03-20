@@ -11,8 +11,14 @@ import {
   QueryList,
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { BaseMapService } from "app/providers/map-service/base-map.service";
-import { CircleMarker, CircleMarkerOptions, LayerGroup } from "leaflet";
+import { LineaMapService } from "app/providers/map-service/linea-map.service";
+import { CircleMarker, CircleMarkerOptions } from "leaflet";
+import { listingLegacy, listing } from "@albina-euregio/linea";
+import sources from "../../assets/config/stations.json";
+import type { FeatureCollectionSchema as FeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing";
+import type { FeatureCollectionSchema as LegacyFeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing-legacy";
+const FeatureCollectionSchema = listing.FeatureCollectionSchema as typeof FeatureCollectionSchema0;
+const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema as typeof LegacyFeatureCollectionSchema0;
 
 @Component({
   selector: "app-linea-export",
@@ -28,10 +34,9 @@ export class LineaExportComponent implements AfterViewInit {
   // Initially selected station
   selectedIds: string[] = [];
 
-  private mapService;
-  readonly mapLayer = new LayerGroup();
+  private mapService = inject(LineaMapService);
 
-  private searchTimeout: any;
+  private searchTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
   readonly stations: StationFeature[] = [];
 
@@ -42,64 +47,47 @@ export class LineaExportComponent implements AfterViewInit {
 
   readonly markers = {};
 
-  constructor() {
-    this.mapService = inject(BaseMapService);
-  }
-
   async ngAfterViewInit() {
-    await this.initMaps();
+    await this.mapService.initMaps(this.stationsMap().nativeElement);
     await this.load();
   }
 
   async load() {
-    fetch("https://static.avalanche.report/weather_stations/stations.geojson")
-      .then((response) => response.json())
-      .then((data) => {
-        data.features.forEach((feature: any) => {
-          const id = feature.properties?.["LWD-Nummer"];
-          if (id) {
-            const marker = new CircleMarker(
-              { lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] },
-              this.getModelPointOptions(false), // default style
-            ).addTo(this.mapLayer);
+    for (const source of sources) {
+      const url = source.stations;
+      const response = await fetch(url);
+      const json = await response.json();
+      const searchParams = new URL(url, location.href).searchParams;
+      const isLegacy = searchParams.get("v") === "legacy";
+      const schema = isLegacy ? LegacyFeatureCollectionSchema : FeatureCollectionSchema;
+      const collection = schema.parse(json, { reportInput: true });
+      for (const feature of collection.features) {
+        if (!new RegExp(source.smetOperators).test(feature.properties.operator)) {
+          continue;
+        }
+        const id = feature.id;
+        const marker = new CircleMarker(
+          {
+            lat: feature.geometry.coordinates[1],
+            lng: feature.geometry.coordinates[0],
+          },
+          this.getModelPointOptions(false),
+        ).addTo(this.mapService.stationLayer);
+        this.mapService.showStationName(marker);
 
-            marker.on("click", () => {
-              if (this.selectedIds.includes(id)) {
-                this.removeStation(id);
-              } else {
-                this.addStation(id);
-              }
-            });
-            this.markers[id] = marker;
+        marker.on("click", () => void this.toggleStation(id));
+        this.markers[id] = marker;
 
-            this.stations.push({
-              id: String(id),
-              name: String(feature.properties.name),
-              lat: feature.geometry.coordinates[1] as number,
-              lng: feature.geometry.coordinates[0] as number,
-            } as StationFeature);
-          }
+        this.stations.push({
+          id,
+          name: feature.properties?.name,
+          shortName: feature.properties?.shortName ?? "",
+          smetId: feature.properties?.shortName ?? id,
+          smet: source.smet,
         });
-      });
+      }
+    }
   }
-
-  async initMaps() {
-    const map = await this.mapService.initMaps(this.stationsMap().nativeElement);
-    map.on({
-      click: () => {
-        console.log("Map clicked");
-      },
-    });
-
-    // Watch zoom changes
-    this.mapService.map.on("zoomend", () => {
-      this.updateBaseLayer();
-    });
-
-    this.mapLayer.addTo(map);
-  }
-
-  private updateBaseLayer(): void {}
 
   onSearchFieldEnter(): void {
     if (!this.searchTerm) return;
@@ -157,9 +145,14 @@ export class LineaExportComponent implements AfterViewInit {
         this.filteredStations = [...this.stations];
       } else {
         this.filteredStations = this.stations.filter(
-          (s) => s.id.toLowerCase().includes(value) || s.name.toLowerCase().includes(value),
+          (s) =>
+            s.id.toLowerCase().includes(value) ||
+            s.shortName.toLowerCase().includes(value) ||
+            s.name.toLowerCase().includes(value),
         );
-        const exact = this.stations.find((s) => s.id.toLowerCase() === this.searchTerm);
+        const exact = this.stations.find(
+          (s) => s.id.toLowerCase() === this.searchTerm || s.shortName.toLowerCase() === this.searchTerm,
+        );
 
         if (exact) {
           this.toggleStation(exact.id);
@@ -199,6 +192,14 @@ export class LineaExportComponent implements AfterViewInit {
     }
   }
 
+  getShortNameById(id: string): string {
+    const station = this.stations.find((station) => station.id === id);
+    if (station.shortName && station.name) {
+      return station.shortName.split("-").length == 5 ? station.name : station.shortName;
+    }
+    return station.shortName ?? id;
+  }
+
   // Remove a station
   removeStation(id: string): void {
     this.selectedIds = this.selectedIds.filter((s) => s !== id);
@@ -208,14 +209,42 @@ export class LineaExportComponent implements AfterViewInit {
   // linea-plot srcs
   get srcs(): string {
     return JSON.stringify(
-      this.selectedIds.map((id) => `https://api.avalanche.report/lawine/grafiken/smet/woche/${id}.smet.gz`),
+      this.selectedIds
+        .map((id) => {
+          const station = this.stations.find((item) => item.id === id);
+          const template = station?.smet?.[0];
+          const smetId = station?.smetId;
+          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
+        })
+        .filter((url): url is string => !!url),
     );
   }
 
   // linea-plot lazysrcs
   get lazysrcs(): string {
     return JSON.stringify(
-      this.selectedIds.map((id) => `https://api.avalanche.report/lawine/grafiken/smet/winter/${id}.smet.gz`),
+      this.selectedIds
+        .map((id) => {
+          const station = this.stations.find((item) => item.id === id);
+          const template = station?.smet?.[1];
+          const smetId = station?.smetId;
+          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
+        })
+        .filter((url): url is string => !!url),
+    );
+  }
+
+  // linea-plot winter srcs
+  get wintersrcs(): string {
+    return JSON.stringify(
+      this.selectedIds
+        .map((id) => {
+          const station = this.stations.find((item) => item.id === id);
+          const template = station?.smet?.[2];
+          const smetId = station?.smetId;
+          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
+        })
+        .filter((url): url is string => !!url),
     );
   }
 
@@ -236,6 +265,7 @@ export class LineaExportComponent implements AfterViewInit {
 interface StationFeature {
   id: string;
   name: string;
-  lat: number;
-  lng: number;
+  shortName: string;
+  smetId: string;
+  smet: string[];
 }

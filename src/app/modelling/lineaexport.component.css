@@ -9,6 +9,7 @@
   margin-bottom: 10px;
   height: 100%;
   width: 100%;
+  border: #c5d2d8 solid var(--bs-border-width);
 }
 
 .hint {
@@ -78,8 +79,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .station-chip {
@@ -100,4 +101,11 @@
   cursor: pointer;
   font-weight: bold;
   padding: 0;
+}
+
+linea-plot {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: white;
+  border: #c5d2d8 solid var(--bs-border-width);
 }
