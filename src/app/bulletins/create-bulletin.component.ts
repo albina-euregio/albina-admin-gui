@@ -101,8 +101,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public loadExternalBulletins = true;
   public loadExternalBulletinsError: boolean;
 
-  public originalBulletins: Map<string, BulletinModel>;
-
   public showAfternoonMap: boolean;
 
   public showForeignRegions: boolean;
@@ -261,7 +259,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.originalBulletins = new Map<string, BulletinModel>();
     this.activeBulletin = undefined;
     this.comparedBulletin = undefined;
     this.internBulletinsList = new Array<BulletinModel>();
@@ -1180,12 +1177,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
-      const originalBulletin = BulletinModel.parse(jsonBulletin);
-
-      this.originalBulletins.set(originalBulletin.id, originalBulletin);
-
-      const bulletin = new BulletinModel(originalBulletin);
-
+      const bulletin = BulletinModel.parse(jsonBulletin);
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.additionalAuthors = new Array<string>();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
