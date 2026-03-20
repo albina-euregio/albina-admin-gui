@@ -378,8 +378,11 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   }
 
   private getCell(matrixInformation: MatrixInformationModel): string {
+    // eslint-disable-next-line no-useless-assignment
     let snowpackStabilityFactor = 0;
+    // eslint-disable-next-line no-useless-assignment
     let frequencyFactor = 0;
+    // eslint-disable-next-line no-useless-assignment
     let avalancheSizeFactor = 0;
 
     switch (matrixInformation.snowpackStability) {
