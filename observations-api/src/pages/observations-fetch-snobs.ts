@@ -5,12 +5,12 @@ import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async ({ request }) => {
   if (
-    !process.env.ALBINA_SNOBS_API_TOKEN ||
-    process.env.ALBINA_SNOBS_API_TOKEN !== request.headers.get("X-Snobs-API-Token")
+    !process.env.ALBINA_SNOBS_POST_SECRET ||
+    process.env.ALBINA_SNOBS_POST_SECRET !== request.headers.get("Authorization")
   ) {
-    console.warn("Invalid sync token", {
-      t1: process.env.ALBINA_SNOBS_API_TOKEN,
-      t2: request.headers.get("X-Snobs-API-Token"),
+    console.warn("Invalid secret", {
+      t1: process.env.ALBINA_SNOBS_POST_SECRET,
+      t2: request.headers.get("Authorization"),
     });
     return new Response("", { status: 403, statusText: "Forbidden" });
   }
