@@ -1871,7 +1871,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       for (const region of regions) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
           bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
-          bulletin.validity.from = this.bulletinsService.getActiveDate()[1];
+          bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
           result.push(bulletin);
           break;
         }
