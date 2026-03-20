@@ -513,41 +513,35 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   private sortInternDangerSourcesList() {
-    const variantType = this.internVariantsList.some(
-      (variant) => variant.dangerSourceVariantType === DangerSourceVariantType.analysis,
-    )
-      ? DangerSourceVariantType.analysis
-      : DangerSourceVariantType.forecast;
+    const variantType = this.dangerSourcesService.getDangerSourceVariantType();
 
-    // Sort by status (active > dormant > inactive), then by creationDate (desc)
-    orderBy(
+    // Keep danger sources with only inactive variants at the end.
+    // Inside each bucket, show newest danger sources first.
+    const sortedDangerSources = orderBy(
       this.internDangerSourcesList,
       [
-        // Determine primary status for each danger source
         (dangerSource) => {
-          // Count variants by status for each danger source
-          const counts = {
-            active: 0,
-            dormant: 0,
-            inactive: 0,
-          };
-          for (const variant of this.internVariantsList) {
-            if (variant.dangerSource.id === dangerSource.id && variant.dangerSourceVariantType === variantType) {
-              if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.active) counts.active++;
-              else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.dormant) counts.dormant++;
-              else if (variant.dangerSourceVariantStatus === DangerSourceVariantStatus.inactive) counts.inactive++;
-            }
+          const variants = this.internVariantsList.filter(
+            (variant) => variant.dangerSource.id === dangerSource.id && variant.dangerSourceVariantType === variantType,
+          );
+
+          if (!variants.length) {
+            return 0;
           }
-          if (counts.active > 0) return 0; // active
-          if (counts.dormant > 0) return 0; // dormant
-          if (counts.inactive > 0) return 2; // inactive
-          return 3; // no variants
+
+          const hasOnlyInactiveVariants = variants.every(
+            (variant) => variant.dangerSourceVariantStatus === DangerSourceVariantStatus.inactive,
+          );
+
+          return hasOnlyInactiveVariants ? 1 : 0;
         },
-        // If status is equal, sort by creationDate (desc)
         (dangerSource) => dangerSource.creationDate,
       ],
       ["asc", "desc"],
     );
+
+    // Keep array reference stable for template bindings while updating order.
+    this.internDangerSourcesList.splice(0, this.internDangerSourcesList.length, ...sortedDangerSources);
   }
 
   private addInternalDangerSources(dangerSources: DangerSourceModel[]) {
