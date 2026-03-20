@@ -257,185 +257,35 @@
           {{ "snowpackStability.very_poor" | translate }}
         </text>
 
-        <rect
-          #1
-          id="1"
-          x="202"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#000000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="202" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[1])" (click)="selectCell(CELLS[1])" />
         <text x="222" y="186" fill="#FFFFFF" class="matrix-danger-text">5</text>
-        <rect
-          #2
-          id="2"
-          x="242"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#000000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="242" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[2])" (click)="selectCell(CELLS[2])" />
         <text x="262" y="186" fill="#FFFFFF" class="matrix-danger-text">5 (4)</text>
-        <rect
-          #3
-          id="3"
-          x="282"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="282" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[3])" (click)="selectCell(CELLS[3])" />
         <text x="302" y="186" fill="#000000" class="matrix-danger-text">4</text>
-        <rect
-          #4
-          id="4"
-          x="322"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="322" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[4])" (click)="selectCell(CELLS[4])" />
         <text x="342" y="186" fill="#000000" class="matrix-danger-text">3 (4)</text>
-        <rect
-          #5
-          id="5"
-          x="362"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="362" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[5])" (click)="selectCell(CELLS[5])" />
         <text x="382" y="186" fill="#000000" class="matrix-danger-text">2 (3)</text>
-        <rect
-          #6
-          id="6"
-          x="202"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#000000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="202" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[6])" (click)="selectCell(CELLS[6])" />
         <text x="222" y="226" fill="#FFFFFF" class="matrix-danger-text">5 (4)</text>
-        <rect
-          #7
-          id="7"
-          x="242"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="242" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[7])" (click)="selectCell(CELLS[7])" />
         <text x="262" y="226" fill="#000000" class="matrix-danger-text">4</text>
-        <rect
-          #8
-          id="8"
-          x="282"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="282" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[8])" (click)="selectCell(CELLS[8])" />
         <text x="302" y="226" fill="#000000" class="matrix-danger-text">3 (4)</text>
-        <rect
-          #9
-          id="9"
-          x="322"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="322" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[9])" (click)="selectCell(CELLS[9])" />
         <text x="342" y="226" fill="#000000" class="matrix-danger-text">3</text>
-        <rect
-          #10
-          id="10"
-          x="362"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="362" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[10])" (click)="selectCell(CELLS[10])" />
         <text x="382" y="226" fill="#000000" class="matrix-danger-text">2</text>
-        <rect
-          #11
-          id="11"
-          x="202"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="202" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[11])" (click)="selectCell(CELLS[11])" />
         <text x="222" y="266" fill="#000000" class="matrix-danger-text">4</text>
-        <rect
-          #12
-          id="12"
-          x="242"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="242" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[12])" (click)="selectCell(CELLS[12])" />
         <text x="262" y="266" fill="#000000" class="matrix-danger-text">3 (4)</text>
-        <rect
-          #13
-          id="13"
-          x="282"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="282" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[13])" (click)="selectCell(CELLS[13])" />
         <text x="302" y="266" fill="#000000" class="matrix-danger-text">3</text>
-        <rect
-          #14
-          id="14"
-          x="322"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="322" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[14])" (click)="selectCell(CELLS[14])" />
         <text x="342" y="266" fill="#000000" class="matrix-danger-text">2</text>
-        <rect
-          #15
-          id="15"
-          x="362"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="362" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[15])" (click)="selectCell(CELLS[15])" />
         <text x="382" y="266" fill="#000000" class="matrix-danger-text">1 (2)</text>
 
         <rect x="442" y="122" width="200" height="160" fill="#ffffff" stroke="none" pointer-events="none" />
@@ -508,185 +358,44 @@
           {{ "snowpackStability.poor" | translate }}
         </text>
 
-        <rect
-          #16
-          id="16"
-          x="442"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="442" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[16])" (click)="selectCell(CELLS[16])" />
         <text x="462" y="186" fill="#000000" class="matrix-danger-text">5 (4)</text>
-        <rect
-          #17
-          id="17"
-          x="482"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="482" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[17])" (click)="selectCell(CELLS[17])" />
         <text x="502" y="186" fill="#000000" class="matrix-danger-text">4</text>
-        <rect
-          #18
-          id="18"
-          x="522"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="522" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[18])" (click)="selectCell(CELLS[18])" />
         <text x="542" y="186" fill="#000000" class="matrix-danger-text">4 (3)</text>
-        <rect
-          #19
-          id="19"
-          x="562"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="562" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[19])" (click)="selectCell(CELLS[19])" />
         <text x="582" y="186" fill="#000000" class="matrix-danger-text">3</text>
-        <rect
-          #20
-          id="20"
-          x="602"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="602" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[20])" (click)="selectCell(CELLS[20])" />
         <text x="622" y="186" fill="#000000" class="matrix-danger-text">2</text>
-        <rect
-          #21
-          id="21"
-          x="442"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="442" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[21])" (click)="selectCell(CELLS[21])" />
         <text x="462" y="226" fill="#000000" class="matrix-danger-text">4</text>
-        <rect
-          #22
-          id="22"
-          x="482"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff0000"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="482" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[22])" (click)="selectCell(CELLS[22])" />
         <text x="502" y="226" fill="#000000" class="matrix-danger-text">4 (3)</text>
-        <rect
-          #23
-          id="23"
-          x="522"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="522" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[23])" (click)="selectCell(CELLS[23])" />
         <text x="542" y="226" fill="#000000" class="matrix-danger-text">3</text>
-        <rect
-          #24
-          id="24"
-          x="562"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="562" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[24])" (click)="selectCell(CELLS[24])" />
         <text x="582" y="226" fill="#000000" class="matrix-danger-text">2 (3)</text>
-        <rect
-          #25
-          id="25"
-          x="602"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="602" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[25])" (click)="selectCell(CELLS[25])" />
         <text x="622" y="226" fill="#000000" class="matrix-danger-text">2</text>
         <rect
-          #26
-          id="26"
           x="442"
           y="242"
           width="40"
+          [attr.fill]="getColor(CELLS[26])"
+          (click)="selectCell(CELLS[26])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
         <text x="462" y="266" fill="#000000" class="matrix-danger-text">3 (4)</text>
-        <rect
-          #27
-          id="27"
-          x="482"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ff9900"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="482" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[27])" (click)="selectCell(CELLS[27])" />
         <text x="502" y="266" fill="#000000" class="matrix-danger-text">3</text>
-        <rect
-          #28
-          id="28"
-          x="522"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="522" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[28])" (click)="selectCell(CELLS[28])" />
         <text x="542" y="266" fill="#000000" class="matrix-danger-text">2 (3)</text>
-        <rect
-          #29
-          id="29"
-          x="562"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="562" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[29])" (click)="selectCell(CELLS[29])" />
         <text x="582" y="266" fill="#000000" class="matrix-danger-text">2</text>
-        <rect
-          #30
-          id="30"
-          x="602"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="602" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[30])" (click)="selectCell(CELLS[30])" />
         <text x="622" y="266" fill="#000000" class="matrix-danger-text">1</text>
 
         <path
@@ -774,195 +483,97 @@
         </text>
 
         <rect
-          #31
-          id="31"
           x="682"
           y="162"
           width="40"
+          [attr.fill]="getColor(CELLS[31])"
+          (click)="selectCell(CELLS[31])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
         <text x="702" y="186" fill="#000000" class="matrix-danger-text">4 (3)</text>
         <rect
-          #32
-          id="32"
           x="722"
           y="162"
           width="40"
+          [attr.fill]="getColor(CELLS[32])"
+          (click)="selectCell(CELLS[32])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
         <text x="742" y="186" fill="#000000" class="matrix-danger-text">3 (4)</text>
-        <rect
-          #33
-          id="33"
-          x="762"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="762" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[33])" (click)="selectCell(CELLS[33])" />
         <text x="782" y="186" fill="#000000" class="matrix-danger-text">3 (2)</text>
-        <rect
-          #34
-          id="34"
-          x="802"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="802" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[34])" (click)="selectCell(CELLS[34])" />
         <text x="822" y="186" fill="#000000" class="matrix-danger-text">2</text>
-        <rect
-          #35
-          id="35"
-          x="842"
-          y="162"
-          width="40"
-          height="40px"
-          fill="#ffffff"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="842" y="162" class="matrix-cell" [attr.fill]="getColor(CELLS[35])" (click)="selectCell(CELLS[35])" />
         <text x="862" y="186" fill="#000000" class="matrix-danger-text">1 (2)</text>
         <rect
-          #36
-          id="36"
           x="682"
           y="202"
           width="40"
+          [attr.fill]="getColor(CELLS[36])"
+          (click)="selectCell(CELLS[36])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
         <text x="702" y="226" fill="#000000" class="matrix-danger-text">3 (4)</text>
         <rect
-          #37
-          id="37"
           x="722"
           y="202"
           width="40"
+          [attr.fill]="getColor(CELLS[37])"
+          (click)="selectCell(CELLS[37])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
         <text x="742" y="226" fill="#000000" class="matrix-danger-text">3</text>
-        <rect
-          #38
-          id="38"
-          x="762"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="762" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[38])" (click)="selectCell(CELLS[38])" />
         <text x="782" y="226" fill="#000000" class="matrix-danger-text">2 (3)</text>
-        <rect
-          #39
-          id="39"
-          x="802"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="802" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[39])" (click)="selectCell(CELLS[39])" />
         <text x="822" y="226" fill="#000000" class="matrix-danger-text">2</text>
-        <rect
-          #40
-          id="40"
-          x="842"
-          y="202"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="842" y="202" class="matrix-cell" [attr.fill]="getColor(CELLS[40])" (click)="selectCell(CELLS[40])" />
         <text x="862" y="226" fill="#000000" class="matrix-danger-text">1 (2)</text>
         <rect
-          #41
-          id="41"
           x="682"
           y="242"
           width="40"
+          [attr.fill]="getColor(CELLS[41])"
+          (click)="selectCell(CELLS[41])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
         <text x="702" y="266" fill="#000000" class="matrix-danger-text">3</text>
         <rect
-          #42
-          id="42"
           x="722"
           y="242"
           width="40"
+          [attr.fill]="getColor(CELLS[42])"
+          (click)="selectCell(CELLS[42])"
           height="40px"
           fill="none"
           stroke="none"
-          (click)="selectDangerRating($event)"
         />
         <text x="742" y="266" fill="#000000" class="matrix-danger-text">2 (3)</text>
-        <rect
-          #43
-          id="43"
-          x="762"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ffff00"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="762" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[43])" (click)="selectCell(CELLS[43])" />
         <text x="782" y="266" fill="#000000" class="matrix-danger-text">2 (1)</text>
-        <rect
-          #44
-          id="44"
-          x="802"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="802" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[44])" (click)="selectCell(CELLS[44])" />
         <text x="822" y="266" fill="#000000" class="matrix-danger-text">1 (2)</text>
-        <rect
-          #45
-          id="45"
-          x="842"
-          y="242"
-          width="40"
-          height="40px"
-          fill="#ccff66"
-          stroke="none"
-          (click)="selectDangerRating($event)"
-        />
+        <rect x="842" y="242" class="matrix-cell" [attr.fill]="getColor(CELLS[45])" (click)="selectCell(CELLS[45])" />
         <text x="862" y="266" fill="#000000" class="matrix-danger-text">1</text>
         <rect
-          #46
-          id="46"
           x="682"
           y="282"
           width="200"
+          [attr.fill]="getColor(CELLS[46])"
+          (click)="selectCell(CELLS[46])"
           height="40px"
-          fill="#ccff66"
           stroke="#000000"
-          (click)="selectDangerRating($event)"
         />
         <text x="782" y="306" fill="#000000" class="matrix-danger-text">
           {{ "matrix.label.dangerLevel1" | translate }}
