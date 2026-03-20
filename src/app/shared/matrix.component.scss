@@ -5,8 +5,13 @@
 }
 
 .matrix-danger-text {
+  fill: black;
   font-family: "Calibri", sans-serif;
   font-size: 12px;
   text-anchor: middle;
   pointer-events: none;
+}
+
+.matrix-danger-text.white {
+  fill: white;
 }
