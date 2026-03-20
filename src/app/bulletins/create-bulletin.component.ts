@@ -48,7 +48,7 @@ import {
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
 import { ServerModel } from "app/models/server.model";
-import { emptyLangTexts, LangTexts } from "app/models/text.model";
+import { convertLangTextsToJSON, emptyLangTexts, LangTexts, toLangTexts } from "app/models/text.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
 import { debounce, orderBy } from "es-toolkit";
 import { saveAs } from "file-saver";
@@ -100,8 +100,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   public loadInternalBulletinsError: boolean;
   public loadExternalBulletins = true;
   public loadExternalBulletinsError: boolean;
-
-  public originalBulletins: Map<string, BulletinModel>;
 
   public showAfternoonMap: boolean;
 
@@ -261,7 +259,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.originalBulletins = new Map<string, BulletinModel>();
     this.activeBulletin = undefined;
     this.comparedBulletin = undefined;
     this.internBulletinsList = new Array<BulletinModel>();
@@ -645,24 +642,24 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     microRegionIds: string[],
     dangerSourceVariants: DangerSourceVariantModel[],
   ) {
-    const bulletin = new BulletinModel();
+    const bulletin = BulletinModel.parse({});
     // set bulletin properties
     bulletin.savedRegions = microRegionIds;
-    bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-    bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+    bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+    bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
     bulletin.author = this.authenticationService.getCurrentAuthor();
     bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
 
     // create avalanche problem for each danger source variant
-    const amDaytimeDescription = new BulletinDaytimeDescriptionModel();
-    const pmDaytimeDescription = new BulletinDaytimeDescriptionModel();
+    const amDaytimeDescription = BulletinDaytimeDescriptionModel.parse({});
+    const pmDaytimeDescription = BulletinDaytimeDescriptionModel.parse({});
     let amIndex = 0;
     let pmIndex = 0;
     let hasDaytimeDependency = false;
     for (const variant of dangerSourceVariants) {
       // create avalanche problem only if danger rating > 1
       if (variant.eawsMatrixInformation.dangerRating != Enums.DangerRating.low) {
-        const avalancheProblem = new AvalancheProblemModel();
+        const avalancheProblem = AvalancheProblemModel.parse({});
         avalancheProblem.aspects = variant.aspects;
         if (variant.treelineHigh) {
           avalancheProblem.treelineHigh = variant.treelineHigh;
@@ -743,7 +740,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
             variant.textcat
           : "[" + variant.textcat;
       }
-      bulletin.avActivityComment$ = {
+      bulletin.avActivityComment = convertLangTextsToJSON({
         en: "⚠ Error: Missing translation",
         de: "⚠ Error: Missing translation",
         it: "⚠ Error: Missing translation",
@@ -751,7 +748,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         es: "⚠ Error: Missing translation",
         ca: "⚠ Error: Missing translation",
         oc: "⚠ Error: Missing translation",
-      };
+      });
     }
 
     bulletin.avActivityCommentTextcat = bulletin.avActivityCommentTextcat
@@ -1016,8 +1013,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const result = new Array<BulletinModel>();
 
     for (const bulletin of this.internBulletinsList) {
-      bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-      bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+      bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+      bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
 
       // only own regions
       const saved = new Array<string>();
@@ -1041,11 +1038,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       result.push(bulletin);
     }
 
-    const jsonBulletins = [];
-    for (let i = result.length - 1; i >= 0; i--) {
-      jsonBulletins.push(result[i].toJson());
-    }
-    const sJson = JSON.stringify(jsonBulletins);
+    const sJson = JSON.stringify(result);
     const element = document.createElement("a");
     element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
     const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
@@ -1180,15 +1173,11 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   // create a copy of every bulletin (with new id)
   private copyBulletins(response) {
+    // validity
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
-      const originalBulletin = BulletinModel.createFromJson(jsonBulletin);
-
-      this.originalBulletins.set(originalBulletin.id, originalBulletin);
-
-      const bulletin = new BulletinModel(originalBulletin);
-
+      const bulletin = BulletinModel.parse(jsonBulletin);
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.additionalAuthors = new Array<string>();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
@@ -1228,7 +1217,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
-      const bulletin = BulletinModel.createFromJson(jsonBulletin);
+      const bulletin = BulletinModel.parse(jsonBulletin);
 
       if (!bulletin.ownerRegion.startsWith(this.authenticationService.getActiveRegionId())) {
         this.addInternalBulletin(bulletin);
@@ -1244,7 +1233,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const bulletinsList = new Array<BulletinModel>();
     if (response) {
       for (const jsonBulletin of response) {
-        const bulletin = BulletinModel.createFromJson(jsonBulletin);
+        const bulletin = BulletinModel.parse(jsonBulletin);
         bulletinsList.push(bulletin);
         if (this.activeBulletin && this.activeBulletin.id === bulletin.id) {
           this.activeBulletin = bulletin;
@@ -1294,7 +1283,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     const bulletinsList = new Array<BulletinModel>();
     for (const jsonBulletin of response) {
-      const bulletin = BulletinModel.createFromJson(jsonBulletin);
+      const bulletin = BulletinModel.parse(jsonBulletin);
       this.bulletinsService.undoRedo.initUndoRedoStacksFromServer(bulletin);
       if (this.activeBulletin && this.activeBulletin.id === bulletin.id) {
         // do not update active bulletin (this is currently edited) except if it is disabled
@@ -1411,13 +1400,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin = this.copyService.getBulletin();
       this.copyService.resetCopyBulletin();
     } else {
-      bulletin = new BulletinModel();
+      bulletin = BulletinModel.parse({});
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
       if (this.authenticationService.getActiveRegion()?.enableGeneralHeadline && this.internBulletinsList.length) {
         bulletin.generalHeadlineCommentTextcat = this.internBulletinsList[0].generalHeadlineCommentTextcat;
-        bulletin.generalHeadlineComment$ = this.internBulletinsList[0].generalHeadlineComment$;
+        bulletin.generalHeadlineComment = this.internBulletinsList[0].generalHeadlineComment;
         bulletin.generalHeadlineCommentNotes = this.internBulletinsList[0].generalHeadlineCommentNotes;
       }
     }
@@ -1441,15 +1430,15 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     const enabledEditableFields = this.authenticationService.getActiveRegion()?.enabledEditableFields ?? [];
     Object.values(Enums.TextcatTextfield).forEach((textfield) => {
       if (!bulletin[`${textfield}Textcat`] && !enabledEditableFields.includes(textfield)) {
-        newBulletin[`${textfield}$`] = emptyLangTexts();
+        newBulletin[textfield] = convertLangTextsToJSON(emptyLangTexts());
       }
     });
 
     if (!this.authenticationService.getActiveRegion()?.enableGeneralHeadline) {
-      newBulletin.generalHeadlineComment$ = emptyLangTexts();
+      newBulletin.generalHeadlineComment = convertLangTextsToJSON(emptyLangTexts());
     }
     if (!this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
-      newBulletin.synopsisComment$ = emptyLangTexts();
+      newBulletin.synopsisComment = convertLangTextsToJSON(emptyLangTexts());
     }
 
     this.copyService.setCopyBulletin(true);
@@ -1568,10 +1557,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
     if (
       checkTexts([
-        bulletin.avActivityHighlights$,
-        bulletin.avActivityComment$,
-        bulletin.snowpackStructureHighlights$,
-        bulletin.snowpackStructureComment$,
+        toLangTexts(bulletin.avActivityHighlights),
+        toLangTexts(bulletin.avActivityComment),
+        toLangTexts(bulletin.snowpackStructureHighlights),
+        toLangTexts(bulletin.snowpackStructureComment),
       ])
     ) {
       return true;
@@ -1746,8 +1735,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   private createBulletinOnServer(bulletin: BulletinModel) {
     if (this.isWriteDisabled()) return;
     const regionId = bulletin.getSavedAndPublishedRegions()[0];
-    bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-    bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+    bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+    bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
     this.bulletinsService.createBulletin(bulletin, this.bulletinsService.getActiveDate()).subscribe(
       (data) => {
         if (this.activeBulletin && this.activeBulletin.id == undefined) {
@@ -1775,8 +1764,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   private updateBulletinOnServerNow(bulletin: BulletinModel, checkErrors = true, writeUndoStack = true) {
     if (this.isWriteDisabled()) return;
-    bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-    bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+    bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+    bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
     if (writeUndoStack) {
       this.bulletinsService.undoRedo.pushToUndoStack(bulletin);
     }
@@ -1881,8 +1870,8 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       const regions = bulletin.publishedRegions.concat(bulletin.savedRegions);
       for (const region of regions) {
         if (region.startsWith(this.authenticationService.getActiveRegionId())) {
-          bulletin.validFrom = this.bulletinsService.getActiveDate()[0];
-          bulletin.validUntil = this.bulletinsService.getActiveDate()[1];
+          bulletin.validity.from = this.bulletinsService.getActiveDate()[0];
+          bulletin.validity.until = this.bulletinsService.getActiveDate()[1];
           result.push(bulletin);
           break;
         }

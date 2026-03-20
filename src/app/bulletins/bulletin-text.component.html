@@ -86,15 +86,13 @@
             style="white-space: pre-wrap; overflow-y: auto; resize: vertical"
           ></div>
         }
-        @if (!comparedBulletin() && bulletin() && bulletin()[bulletinTextKey]) {
+        @if (!comparedBulletin() && bulletin() && bulletinText) {
           <textarea
             class="form-control"
             [rows]="rows()"
             [disabled]="disabled() || !enableEditableFields"
-            [ngModel]="bulletin()[bulletinTextKey][translateService.getCurrentLang()] | html"
-            (ngModelChange)="
-              enableEditableFields && (bulletin()[bulletinTextKey][translateService.getCurrentLang()] = $event)
-            "
+            [ngModel]="bulletinText[translateService.getCurrentLang()] | html"
+            (ngModelChange)="enableEditableFields && (bulletinText[translateService.getCurrentLang()] = $event)"
             (focusout)="enableEditableFields && updateBulletinOnServer.emit()"
           ></textarea>
         }
@@ -107,7 +105,7 @@
           class="form-control"
           [rows]="rows()"
           [disabled]="authenticationService.isCurrentUserInRole(constantsService.roleObserver)"
-          [(ngModel)]="bulletin()[textField() + 'Notes']"
+          [(ngModel)]="bulletin()[bulletinNotesKey]"
           (focusout)="updateBulletinOnServer.emit()"
           placeholder="{{ 'bulletins.create.placeholder.notes' | translate }}"
         ></textarea>
@@ -149,12 +147,7 @@
       @for (lang of translationLanguages; track lang) {
         <div class="input-group region-form__translation-item">
           <span class="input-group-text">{{ lang | uppercase }}</span>
-          <textarea
-            class="form-control"
-            [rows]="rows()"
-            disabled
-            [ngModel]="bulletin()[bulletinTextKey][lang] | html"
-          ></textarea>
+          <textarea class="form-control" [rows]="rows()" disabled [ngModel]="bulletinText[lang] | html"></textarea>
         </div>
       }
     </div>
