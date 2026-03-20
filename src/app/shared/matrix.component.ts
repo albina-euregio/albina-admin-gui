@@ -7,9 +7,17 @@ import { BulletinDaytimeDescriptionModel } from "../models/bulletin-daytime-desc
 import { MatrixInformationModel } from "../models/matrix-information.model";
 import { ConstantsService } from "../providers/constants-service/constants.service";
 
+interface MatrixCell {
+  dangerRating: Enums.DangerRating;
+  avalancheSize: Enums.AvalancheSize;
+  snowpackStability: Enums.SnowpackStability;
+  frequency: Enums.Frequency;
+}
+
 @Component({
   selector: "app-matrix",
   templateUrl: "matrix.component.html",
+  styleUrls: ["matrix.component.scss"],
   standalone: true,
   imports: [TranslateModule],
 })
@@ -72,9 +80,299 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   readonly cell45 = viewChild<ElementRef>("45");
   readonly cell46 = viewChild<ElementRef>("46");
 
+  readonly CELLS: MatrixCell[] = [
+    undefined,
+    {
+      dangerRating: Enums.DangerRating.very_high,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.very_high,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.very_high,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.low,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.very_poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.very_high,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.low,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.poor,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.high,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.low,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.many,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.low,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.some,
+    },
+    {
+      dangerRating: Enums.DangerRating.considerable,
+      avalancheSize: Enums.AvalancheSize.extreme,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.very_large,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.moderate,
+      avalancheSize: Enums.AvalancheSize.large,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.low,
+      avalancheSize: Enums.AvalancheSize.medium,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.low,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.fair,
+      frequency: Enums.Frequency.few,
+    },
+    {
+      dangerRating: Enums.DangerRating.low,
+      avalancheSize: Enums.AvalancheSize.small,
+      snowpackStability: Enums.SnowpackStability.good,
+      frequency: Enums.Frequency.none,
+    },
+  ];
+
   ngAfterViewInit() {
     this.resetMatrix();
     this.initMatrix();
+
+    // const data = [];
+    // for (let cell = 0; cell <= 46; cell++) {
+    //   const dangerRating = this.getDangerRating(String(cell));
+    //   const avalancheSize = this.getAvalancheSize(cell);
+    //   const snowpackStability = this.getSnowpackStability(cell);
+    //   const frequency = this.getFrequency(cell);
+    //   data[cell] = { dangerRating, avalancheSize, snowpackStability, frequency };
+    // }
+    // console.log(data);
   }
 
   ngOnChanges() {
@@ -91,6 +389,32 @@ export class MatrixComponent implements AfterViewInit, OnChanges {
   initMatrix() {
     const index = this.getCell(this.matrixInformation());
     if (index != "0") this.setCellStyleActive(index);
+  }
+
+  isActive({ dangerRating, avalancheSize, snowpackStability, frequency }: MatrixCell): boolean {
+    const matrixInfo = this.matrixInformation();
+    return (
+      matrixInfo.dangerRating === dangerRating &&
+      matrixInfo.avalancheSize === avalancheSize &&
+      matrixInfo.snowpackStability === snowpackStability &&
+      matrixInfo.frequency === frequency
+    );
+  }
+
+  selectCell000({ dangerRating, avalancheSize, snowpackStability, frequency }: MatrixCell) {
+    this.matrixInformation().dangerRating = dangerRating;
+    this.matrixInformation().avalancheSize = avalancheSize;
+    this.matrixInformation().snowpackStability = snowpackStability;
+    this.matrixInformation().frequency = frequency;
+  }
+
+  getColor000(cell: MatrixCell): string {
+    if (!cell.dangerRating) {
+      return "#FFFFFF";
+    }
+    return this.isActive(cell)
+      ? this.constantsService.getDangerRatingColor(cell.dangerRating)
+      : this.constantsService.getDangerRatingColorBw(cell.dangerRating);
   }
 
   private selectCell(cell) {
