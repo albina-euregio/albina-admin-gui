@@ -19,6 +19,6 @@
   {
     "smet": ["https://lawinen.at/smet/vor/woche/{id}.smet.gz"],
     "smetOperators": "",
-    "stations": "https://lawinen.at/smet/vor/stations_vor.geojson?v=legacy"
+    "stations": "https://lawinen.at/smet/vor/stations_vor.geojson"
   }
 ]

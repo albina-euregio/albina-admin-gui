@@ -12,8 +12,13 @@ import {
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { LineaMapService } from "app/providers/map-service/linea-map.service";
-import { loadStationData } from "app/providers/station-data-service/station-data.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
+import { listingLegacy, listing } from "@albina-euregio/linea";
+import sources from "../../assets/config/stations.json";
+import type { FeatureCollectionSchema as FeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing";
+import type { FeatureCollectionSchema as LegacyFeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing-legacy";
+const FeatureCollectionSchema = listing.FeatureCollectionSchema as typeof FeatureCollectionSchema0;
+const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema as typeof LegacyFeatureCollectionSchema0;
 
 @Component({
   selector: "app-linea-export",
@@ -29,7 +34,7 @@ export class LineaExportComponent implements AfterViewInit {
   // Initially selected station
   selectedIds: string[] = [];
 
-  private mapService: LineaMapService;
+  private mapService = inject(LineaMapService);
 
   private searchTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
@@ -42,58 +47,46 @@ export class LineaExportComponent implements AfterViewInit {
 
   readonly markers = {};
 
-  constructor() {
-    this.mapService = inject(LineaMapService);
-  }
-
   async ngAfterViewInit() {
     await this.mapService.initMaps(this.stationsMap().nativeElement);
     await this.load();
   }
 
   async load() {
-    const stationData = await loadStationData();
-    stationData.forEach((station) => {
-      const id = String(station.id);
-      if (!id) {
-        return;
-      }
-
-      const marker = new CircleMarker({ lat: station.lat, lng: station.lon }, this.getModelPointOptions(false)).addTo(
-        this.mapService.stationLayer,
-      );
-      marker.feature = {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [station.lon, station.lat],
-        },
-        properties: { name: station.name ?? id },
-      };
-      this.mapService.showStationName(marker);
-
-      marker.on("click", () => {
-        if (this.selectedIds.includes(id)) {
-          this.removeStation(id);
-        } else {
-          this.addStation(id);
+    for (const source of sources) {
+      const url = source.stations;
+      const response = await fetch(url);
+      const json = await response.json();
+      const searchParams = new URL(url, location.href).searchParams;
+      const isLegacy = searchParams.get("v") === "legacy";
+      const schema = isLegacy ? LegacyFeatureCollectionSchema : FeatureCollectionSchema;
+      const collection = schema.parse(json, { reportInput: true });
+      for (const feature of collection.features) {
+        if (!new RegExp(source.smetOperators).test(feature.properties.operator)) {
+          continue;
         }
-      });
-      this.markers[id] = marker;
+        const id = feature.id;
+        const marker = new CircleMarker(
+          {
+            lat: feature.geometry.coordinates[1],
+            lng: feature.geometry.coordinates[0],
+          },
+          this.getModelPointOptions(false),
+        ).addTo(this.mapService.stationLayer);
+        this.mapService.showStationName(marker);
 
-      this.stations.push({
-        id,
-        name: String(station.name),
-        lat: station.lat,
-        lng: station.lon,
-        shortName:
-          typeof station.properties?.shortName === "string" && station.properties.shortName.length > 0
-            ? station.properties.shortName
-            : String(station.smetId ?? id),
-        smetId: String(station.smetId),
-        smet: station.$smet ?? [],
-      });
-    });
+        marker.on("click", () => void this.toggleStation(id));
+        this.markers[id] = marker;
+
+        this.stations.push({
+          id,
+          name: feature.properties?.name,
+          shortName: feature.properties?.shortName ?? "",
+          smetId: feature.properties?.shortName ?? id,
+          smet: source.smet,
+        });
+      }
+    }
   }
 
   onSearchFieldEnter(): void {
@@ -272,8 +265,6 @@ export class LineaExportComponent implements AfterViewInit {
 interface StationFeature {
   id: string;
   name: string;
-  lat: number;
-  lng: number;
   shortName: string;
   smetId: string;
   smet: string[];
