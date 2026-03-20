@@ -324,11 +324,7 @@ export class BulletinsService {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: this.authenticationService.getActiveRegionId(),
     });
-    const jsonBulletins = [];
-    for (let i = bulletins.length - 1; i >= 0; i--) {
-      jsonBulletins.push(bulletins[i]);
-    }
-    const body = JSON.stringify(jsonBulletins);
+    const body = JSON.stringify(bulletins);
     return this.http.post<BulletinModelAsJSON[]>(url, body);
   }
 

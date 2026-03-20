@@ -1041,11 +1041,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       result.push(bulletin);
     }
 
-    const jsonBulletins = [];
-    for (let i = result.length - 1; i >= 0; i--) {
-      jsonBulletins.push(result[i]);
-    }
-    const sJson = JSON.stringify(jsonBulletins);
+    const sJson = JSON.stringify(result);
     const element = document.createElement("a");
     element.setAttribute("href", "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
     const formattedDate = this.constantsService.getISODateString(this.bulletinsService.getActiveDate()[1]);
@@ -1180,6 +1176,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
 
   // create a copy of every bulletin (with new id)
   private copyBulletins(response) {
+    // validity
     this.mapService.resetInternalAggregatedRegions();
 
     for (const jsonBulletin of response) {
