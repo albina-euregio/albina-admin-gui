@@ -1,23 +1,24 @@
 import "@albina-euregio/linea/dist/linea";
-import { listingLegacy, listing } from "@albina-euregio/linea";
+import { listing, listingLegacy } from "@albina-euregio/linea";
 import type { FeatureCollectionSchema as FeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing";
 import type { FeatureCollectionSchema as LegacyFeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing-legacy";
 import { CommonModule } from "@angular/common";
 import {
+  AfterViewInit,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  viewChild,
   ElementRef,
   inject,
-  AfterViewInit,
-  ViewChildren,
   QueryList,
+  viewChild,
+  ViewChildren,
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { LineaMapService } from "app/providers/map-service/linea-map.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
 import sources from "../../assets/config/stations.json";
+
 const FeatureCollectionSchema = listing.FeatureCollectionSchema as typeof FeatureCollectionSchema0;
 const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema as typeof LegacyFeatureCollectionSchema0;
 
@@ -74,6 +75,7 @@ export class LineaExportComponent implements AfterViewInit {
           },
           this.getModelPointOptions(false),
         ).addTo(this.mapService.stationLayer);
+        marker.bindTooltip(`${feature.properties.shortName ?? ""} ${feature.properties.name}`);
         this.mapService.showStationName(marker);
 
         marker.on("click", () => void this.toggleStation(id));
@@ -82,7 +84,7 @@ export class LineaExportComponent implements AfterViewInit {
         this.stations.push({
           id,
           name: feature.properties?.name,
-          shortName: feature.properties?.shortName ?? "",
+          shortName: feature.properties?.shortName ?? feature.properties?.name,
           smetId: feature.properties?.shortName ?? id,
           smet: source.smet,
         });
