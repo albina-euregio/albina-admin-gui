@@ -256,7 +256,9 @@ export class LineaExportComponent implements AfterViewInit {
     return {
       pane: "markerPane",
       radius: 8,
-      fillColor: selected ? "red" : "blue",
+      fillColor: selected
+        ? getComputedStyle(document.documentElement).getPropertyValue("--bs-success")
+        : getComputedStyle(document.documentElement).getPropertyValue("--bs-primary-bg-subtle"),
       color: "black",
       weight: 1,
       opacity: 1,
