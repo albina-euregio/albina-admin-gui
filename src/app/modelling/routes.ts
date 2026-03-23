@@ -49,13 +49,4 @@ export default [
     component: ZamgWbtComponent,
     canActivate: [], // no authentication
   },
-  {
-    path: "graphics",
-    data: {
-      title: "Graphics",
-      modelling: "graphics",
-    } satisfies ModellingRouteData,
-    component: GraphicsComponent,
-    canActivate: [], // no authentication
-  },
 ] satisfies Routes;
