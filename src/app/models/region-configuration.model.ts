@@ -60,7 +60,6 @@ export const RegionConfigurationSchema = z.object({
     .array()
     .nullish()
     .describe("Editable textfields instead of textcat for bulletins"),
-  enableWeatherTextField: z.boolean().nullish(),
   showMatrix: z.boolean().nullish(),
   pdfColor: z.string().nullish(),
   emailColor: z.string().nullish(),

@@ -520,7 +520,7 @@
       <!-- End tendency -->
 
       <!-- Weather synopsis -->
-      @if (this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
+      @if (this.authenticationService.isTextfieldEnabled("synopsisComment")) {
         <accordion-group [isOpen]="isAccordionTendencyOpen" (isOpenChange)="accordionChanged($event, 'synopsis')">
           <!-- Weather synopsis -->
           <div accordion-heading class="accordion-header">

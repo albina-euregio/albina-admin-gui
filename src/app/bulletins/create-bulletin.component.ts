@@ -1438,7 +1438,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     if (!this.authenticationService.isTextfieldEnabled("generalHeadlineComment")) {
       newBulletin.generalHeadlineComment = convertLangTextsToJSON(emptyLangTexts());
     }
-    if (!this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
+    if (!this.authenticationService.isTextfieldEnabled("synopsisComment")) {
       newBulletin.synopsisComment = convertLangTextsToJSON(emptyLangTexts());
     }
 
