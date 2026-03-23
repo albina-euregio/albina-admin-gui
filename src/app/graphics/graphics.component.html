@@ -1,14 +1,14 @@
 <div class="graphics-page">
   <tabset>
     @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
-      <tab (selectTab)="showLineaExport()">
+      <tab [active]="activeTabIndex === 0" (selectTab)="showLineaExport()">
         <ng-template tabHeading>
           <i class="ph ph-chart-line me-1"></i>
           {{ "sidebar.lineaexport" | translate }}
         </ng-template>
         <div class="card">
           <div class="card-body">
-            @if (activeGraphicsTab === "lineaexport") {
+            @if (activeTabIndex === 0) {
               <app-linea-export></app-linea-export>
             }
           </div>
@@ -16,14 +16,14 @@
       </tab>
     }
     @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
-      <tab (selectTab)="showAwsstats()">
+      <tab [active]="activeTabIndex === 1" (selectTab)="showAwsstats()">
         <ng-template tabHeading>
           <i class="ph ph-chart-bar me-1"></i>
           {{ "sidebar.awsstats" | translate }}
         </ng-template>
         <div class="card">
           <div class="card-body">
-            @if (activeGraphicsTab === "awsstats") {
+            @if (activeTabIndex === 1) {
               <app-awsstats></app-awsstats>
             }
           </div>

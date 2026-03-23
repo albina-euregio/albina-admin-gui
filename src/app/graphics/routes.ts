@@ -4,7 +4,7 @@ import { GraphicsComponent } from "./graphics.component";
 
 export default [
   {
-    path: "",
+    path: ":tab",
     data: {
       title: "Graphics",
     },
