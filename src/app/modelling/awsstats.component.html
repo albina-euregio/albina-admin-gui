@@ -45,14 +45,6 @@
 
       <div class="awsstats-selection-row">
         <div class="small text-muted">{{ "awsstats.label.selectedMicroRegions" | translate }}</div>
-        <button
-          class="btn btn-sm btn-outline-secondary"
-          type="button"
-          [disabled]="loading"
-          (click)="clearSelectedRegions()"
-        >
-          {{ "awsstats.label.clearselection" | translate }}
-        </button>
       </div>
       <div class="awsstats-selection-text" [title]="selectedMicroRegions.join(', ')">
         {{
@@ -65,7 +57,17 @@
 
     <div class="awsstats-side-maps">
       <div class="awsstats-region-map-wrap awsstats-panel">
-        <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
+        <div class="awsstats-station-header">
+          <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            type="button"
+            [disabled]="loading || !selectedMicroRegions.length"
+            (click)="clearSelectedRegions()"
+          >
+            {{ "awsstats.label.clearselection" | translate }}
+          </button>
+        </div>
         <div #regionMapHost class="awsstats-region-map"></div>
       </div>
 
