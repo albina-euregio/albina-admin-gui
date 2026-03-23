@@ -75,6 +75,7 @@ export class LineaExportComponent implements AfterViewInit {
         ).addTo(this.mapService.stationLayer);
         this.mapService.showStationName(marker);
 
+        marker.bindTooltip(`${feature.properties.name || feature.id}`);
         marker.on("click", () => void this.toggleStation(id));
         this.markers[id] = marker;
 
