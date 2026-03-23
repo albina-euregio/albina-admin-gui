@@ -194,13 +194,12 @@ export class BulletinTextComponent {
   }
 
   createText(): string {
+    const lang = this.translateService.getCurrentLang();
     const currentBulletin = this.bulletin();
-    const currentText =
-      toLangTexts(currentBulletin?.[this.textField()])?.[this.translateService.getCurrentLang()] ?? "";
-    if (currentBulletin !== null && currentBulletin !== undefined) {
+    const currentText = toLangTexts(currentBulletin?.[this.textField()])?.[lang] ?? "";
+    if (currentBulletin) {
       const comparedBulletin = this.comparedBulletin();
-      const comparedText =
-        toLangTexts(comparedBulletin?.[this.textField()])?.[this.translateService.getCurrentLang()] ?? "";
+      const comparedText = toLangTexts(comparedBulletin?.[this.textField()])?.[lang] ?? "";
       return createWordDiff(currentText, comparedText);
     } else {
       return "";
