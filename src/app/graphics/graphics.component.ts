@@ -10,7 +10,6 @@ import { TabsModule } from "ngx-bootstrap/tabs";
   standalone: true,
   imports: [CommonModule, TranslateModule, LineaExportComponent, AwsstatsComponent, TabsModule],
   templateUrl: "./graphics.component.html",
-  styleUrls: ["./graphics.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class GraphicsComponent {

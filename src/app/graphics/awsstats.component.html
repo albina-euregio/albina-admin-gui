@@ -1,108 +1,106 @@
-<div class="awsstats-page">
-  <div class="awsstats-top mb-3">
-    <div class="awsstats-panel">
-      <div class="awsstats-panel-title">{{ "awsstats.title" | translate }}</div>
-      <div class="awsstats-controls-grid">
-        <div>
-          <label class="form-label mb-1" for="awsstats-start-date">{{ "awsstats.label.startDate" | translate }}</label>
-          <input
-            id="awsstats-start-date"
-            class="form-control"
-            type="date"
-            [disabled]="loading"
-            [value]="startDate"
-            (change)="startDate = $any($event.target).value"
-          />
-        </div>
-
-        <div>
-          <label class="form-label mb-1" for="awsstats-end-date">{{ "awsstats.label.endDate" | translate }}</label>
-          <input
-            id="awsstats-end-date"
-            class="form-control"
-            type="date"
-            [disabled]="loading"
-            [value]="endDate"
-            (change)="endDate = $any($event.target).value"
-          />
-        </div>
-
-        <div class="awsstats-actions">
-          <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateObservations()">
-            Load data
-          </button>
-          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(7)">
-            Last 7 days
-          </button>
-          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(30)">
-            Last 30 days
-          </button>
-          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
-            Last 90 days
-          </button>
-        </div>
+<div class="awsstats-top mb-3">
+  <div class="awsstats-panel">
+    <div class="awsstats-panel-title">{{ "awsstats.title" | translate }}</div>
+    <div class="awsstats-controls-grid">
+      <div>
+        <label class="form-label mb-1" for="awsstats-start-date">{{ "awsstats.label.startDate" | translate }}</label>
+        <input
+          id="awsstats-start-date"
+          class="form-control"
+          type="date"
+          [disabled]="loading"
+          [value]="startDate"
+          (change)="startDate = $any($event.target).value"
+        />
       </div>
 
-      <div class="awsstats-selection-row">
-        <div class="small text-muted">{{ "awsstats.label.selectedMicroRegions" | translate }}</div>
+      <div>
+        <label class="form-label mb-1" for="awsstats-end-date">{{ "awsstats.label.endDate" | translate }}</label>
+        <input
+          id="awsstats-end-date"
+          class="form-control"
+          type="date"
+          [disabled]="loading"
+          [value]="endDate"
+          (change)="endDate = $any($event.target).value"
+        />
       </div>
-      <div class="awsstats-selection-text" [title]="selectedMicroRegions.join(', ')">
-        {{
-          selectedMicroRegions.length
-            ? selectedMicroRegions.join(", ")
-            : ("awsstats.label.noMicroRegionsSelected" | translate)
-        }}
+
+      <div class="awsstats-actions">
+        <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateObservations()">
+          Load data
+        </button>
+        <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(7)">
+          Last 7 days
+        </button>
+        <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(30)">
+          Last 30 days
+        </button>
+        <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
+          Last 90 days
+        </button>
       </div>
     </div>
 
-    <div class="awsstats-side-maps">
-      <div class="awsstats-region-map-wrap awsstats-panel">
-        <div class="awsstats-station-header">
-          <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
-          <button
-            class="btn btn-sm btn-outline-secondary"
-            type="button"
-            [disabled]="loading || !selectedMicroRegions.length"
-            (click)="clearSelectedRegions()"
-          >
-            {{ "awsstats.label.clearselection" | translate }}
-          </button>
-        </div>
-        <div #regionMapHost class="awsstats-region-map"></div>
-      </div>
-
-      <div class="awsstats-region-map-wrap awsstats-panel">
-        <div class="awsstats-station-header">
-          <div class="awsstats-panel-title">{{ "awsstats.label.selectWeatherStation" | translate }}</div>
-          <button
-            class="btn btn-sm"
-            [class.btn-primary]="showPrecipitationOnly"
-            [class.btn-outline-secondary]="!showPrecipitationOnly"
-            type="button"
-            [disabled]="loading"
-            (click)="togglePrecipitationFilter()"
-            title="Filter to show only stations with precipitation data"
-          >
-            Precipitation
-          </button>
-        </div>
-        <div #stationMapHost class="awsstats-region-map"></div>
-      </div>
+    <div class="awsstats-selection-row">
+      <div class="small text-muted">{{ "awsstats.label.selectedMicroRegions" | translate }}</div>
+    </div>
+    <div class="awsstats-selection-text" [title]="selectedMicroRegions.join(', ')">
+      {{
+        selectedMicroRegions.length
+          ? selectedMicroRegions.join(", ")
+          : ("awsstats.label.noMicroRegionsSelected" | translate)
+      }}
     </div>
   </div>
 
-  @if (errorMessage) {
-    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  <div class="awsstats-side-maps">
+    <div class="awsstats-region-map-wrap awsstats-panel">
+      <div class="awsstats-station-header">
+        <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          type="button"
+          [disabled]="loading || !selectedMicroRegions.length"
+          (click)="clearSelectedRegions()"
+        >
+          {{ "awsstats.label.clearselection" | translate }}
+        </button>
+      </div>
+      <div #regionMapHost class="awsstats-region-map"></div>
+    </div>
+
+    <div class="awsstats-region-map-wrap awsstats-panel">
+      <div class="awsstats-station-header">
+        <div class="awsstats-panel-title">{{ "awsstats.label.selectWeatherStation" | translate }}</div>
+        <button
+          class="btn btn-sm"
+          [class.btn-primary]="showPrecipitationOnly"
+          [class.btn-outline-secondary]="!showPrecipitationOnly"
+          type="button"
+          [disabled]="loading"
+          (click)="togglePrecipitationFilter()"
+          title="Filter to show only stations with precipitation data"
+        >
+          Precipitation
+        </button>
+      </div>
+      <div #stationMapHost class="awsstats-region-map"></div>
+    </div>
+  </div>
+</div>
+
+@if (errorMessage) {
+  <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+}
+
+<div class="awsstats-output-wrap awsstats-panel" [class.is-loading]="loading">
+  @if (loading) {
+    <div class="awsstats-loading" role="status" aria-live="polite" aria-label="Loading data">
+      <span class="awsstats-spinner" aria-hidden="true"></span>
+      <span>{{ "awsstats.label.loading" | translate }}</span>
+    </div>
   }
 
-  <div class="awsstats-output-wrap awsstats-panel" [class.is-loading]="loading">
-    @if (loading) {
-      <div class="awsstats-loading" role="status" aria-live="polite" aria-label="Loading data">
-        <span class="awsstats-spinner" aria-hidden="true"></span>
-        <span>{{ "awsstats.label.loading" | translate }}</span>
-      </div>
-    }
-
-    <div #wrapperHost></div>
-  </div>
+  <div #wrapperHost></div>
 </div>
