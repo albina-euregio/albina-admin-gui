@@ -13,6 +13,7 @@ import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
+import { TextcatTextfield } from "../../enums/enums";
 
 @Injectable()
 export class AuthenticationService {
@@ -226,6 +227,14 @@ export class AuthenticationService {
       this.getActiveRegion()?.enableAvalancheProblemNoDistinctAvalancheProblem &&
         Enums.AvalancheProblem.no_distinct_avalanche_problem,
     ].filter((p) => !!p);
+  }
+
+  public isTextfieldEnabled(textfield: keyof typeof TextcatTextfield): boolean {
+    return (
+      this.getActiveRegion()?.enabledTextcatFields?.includes(TextcatTextfield[textfield]) ||
+      this.getActiveRegion()?.enabledEditableFields?.includes(TextcatTextfield[textfield]) ||
+      false
+    );
   }
 
   public getActiveRegion(): RegionConfiguration | undefined {
