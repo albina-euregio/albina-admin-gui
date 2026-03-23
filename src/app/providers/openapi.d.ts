@@ -1593,7 +1593,7 @@ export interface components {
       enableDangerSources?: boolean;
       enableObservations?: boolean;
       enableModelling?: boolean;
-      enabledEditableFields?: components["schemas"]["TextcatTextfield"][];
+      enabledEditableFields?: components["schemas"]["TextPart"][];
       enableWeatherTextField?: boolean;
       enableWeatherbox?: boolean;
       enableLineaExport?: boolean;
@@ -1688,7 +1688,7 @@ export interface components {
       | "regions_exposed_to_precipitation"
       | "regions_exposed_to_heavier_precipitation";
     /** @enum {string} */
-    TextcatTextfield:
+    TextPart:
       | "avActivityComment"
       | "avActivityHighlights"
       | "generalHeadlineComment"
@@ -1696,7 +1696,10 @@ export interface components {
       | "snowpackStructureComment"
       | "snowpackStructureHighlights"
       | "synopsisComment"
-      | "tendencyComment";
+      | "synopsisHighlights"
+      | "tendencyComment"
+      | "travelAdvisoryComment"
+      | "travelAdvisoryHighlights";
     /** @enum {string} */
     Thickness: "thick" | "thin";
     User: {

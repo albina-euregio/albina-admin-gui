@@ -1405,7 +1405,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       bulletin.author = this.authenticationService.getCurrentAuthor();
       bulletin.addAdditionalAuthor(this.authenticationService.getCurrentAuthor().name);
       bulletin.ownerRegion = this.authenticationService.getActiveRegionId();
-      if (this.authenticationService.getActiveRegion()?.enableGeneralHeadline && this.internBulletinsList.length) {
+      if (this.authenticationService.isTextfieldEnabled("generalHeadlineComment") && this.internBulletinsList.length) {
         bulletin.generalHeadlineCommentTextcat = this.internBulletinsList[0].generalHeadlineCommentTextcat;
         bulletin.generalHeadlineComment = this.internBulletinsList[0].generalHeadlineComment;
         bulletin.generalHeadlineCommentNotes = this.internBulletinsList[0].generalHeadlineCommentNotes;
@@ -1435,10 +1435,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       }
     });
 
-    if (!this.authenticationService.getActiveRegion()?.enableGeneralHeadline) {
+    if (!this.authenticationService.isTextfieldEnabled("generalHeadlineComment")) {
       newBulletin.generalHeadlineComment = convertLangTextsToJSON(emptyLangTexts());
     }
-    if (!this.authenticationService.getActiveRegion()?.enableWeatherTextField) {
+    if (!this.authenticationService.isTextfieldEnabled("synopsisComment")) {
       newBulletin.synopsisComment = convertLangTextsToJSON(emptyLangTexts());
     }
 

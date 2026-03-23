@@ -293,7 +293,7 @@ test("Weather stations", async ({ page }) => {
   await page.clock.setFixedTime(new Date("2025-03-05"));
   await changeRegion(page, "Tyrol");
   await page.getByRole("link", { name: "Observations", exact: true }).click();
-  await expect(page.locator(".keydata")).toHaveText("687 / 687", { timeout: 7000 });
+  await expect(page.locator(".keydata")).toHaveText("734 / 734", { timeout: 7000 });
   await page.getByTitle("Observations").click();
   await page.getByTitle("Weather stations").click();
   await expect

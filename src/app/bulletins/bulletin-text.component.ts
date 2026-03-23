@@ -68,7 +68,8 @@ export class BulletinTextComponent {
   }
 
   get bulletinText(): LangTexts {
-    switch (this.textField()) {
+    const textField = this.textField();
+    switch (textField) {
       case TextcatTextfield.avActivityComment:
         return toLangTexts(this.bulletin().avActivityComment);
       case TextcatTextfield.avActivityHighlights:
@@ -81,14 +82,23 @@ export class BulletinTextComponent {
         return toLangTexts(this.bulletin().snowpackStructureComment);
       case TextcatTextfield.snowpackStructureHighlights:
         return toLangTexts(this.bulletin().snowpackStructureHighlights);
+      case TextcatTextfield.synopsisHighlights:
+        return toLangTexts(this.bulletin().synopsisHighlights);
       case TextcatTextfield.synopsisComment:
         return toLangTexts(this.bulletin().synopsisComment);
       case TextcatTextfield.tendencyComment:
         return toLangTexts(this.bulletin().tendencyComment);
+      case TextcatTextfield.travelAdvisoryComment:
+        return toLangTexts(this.bulletin().travelAdvisoryComment);
+      case TextcatTextfield.travelAdvisoryHighlights:
+        return toLangTexts(this.bulletin().travelAdvisoryHighlights);
+      default:
+        throw textField satisfies never;
     }
   }
   set bulletinText(v: LangTexts) {
-    switch (this.textField()) {
+    const textField = this.textField();
+    switch (textField) {
       case TextcatTextfield.avActivityComment:
         this.bulletin().avActivityComment = convertLangTextsToJSON(v);
         break;
@@ -110,9 +120,20 @@ export class BulletinTextComponent {
       case TextcatTextfield.synopsisComment:
         this.bulletin().synopsisComment = convertLangTextsToJSON(v);
         break;
+      case TextcatTextfield.synopsisHighlights:
+        this.bulletin().synopsisHighlights = convertLangTextsToJSON(v);
+        break;
       case TextcatTextfield.tendencyComment:
         this.bulletin().tendencyComment = convertLangTextsToJSON(v);
         break;
+      case TextcatTextfield.travelAdvisoryComment:
+        this.bulletin().travelAdvisoryComment = convertLangTextsToJSON(v);
+        break;
+      case TextcatTextfield.travelAdvisoryHighlights:
+        this.bulletin().travelAdvisoryHighlights = convertLangTextsToJSON(v);
+        break;
+      default:
+        throw textField satisfies never;
     }
   }
 
@@ -173,13 +194,12 @@ export class BulletinTextComponent {
   }
 
   createText(): string {
+    const lang = this.translateService.getCurrentLang();
     const currentBulletin = this.bulletin();
-    const currentText =
-      toLangTexts(currentBulletin?.[this.textField()])?.[this.translateService.getCurrentLang()] ?? "";
-    if (currentBulletin !== null && currentBulletin !== undefined) {
+    const currentText = toLangTexts(currentBulletin?.[this.textField()])?.[lang] ?? "";
+    if (currentBulletin) {
       const comparedBulletin = this.comparedBulletin();
-      const comparedText =
-        toLangTexts(comparedBulletin?.[this.textField()])?.[this.translateService.getCurrentLang()] ?? "";
+      const comparedText = toLangTexts(comparedBulletin?.[this.textField()])?.[lang] ?? "";
       return createWordDiff(currentText, comparedText);
     } else {
       return "";
