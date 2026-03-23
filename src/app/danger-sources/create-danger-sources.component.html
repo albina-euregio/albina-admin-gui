@@ -60,12 +60,12 @@
       <!-- Status -->
       <div class="create-bulletin__status">
         <div>
-          @if (dangerSourcesService.getDangerSourceVariantType() === variantType.forecast) {
+          @if (dangerSourceVariantType === variantType.forecast) {
             <span class="badge bg-primary">
               {{ "dangerSources.status.forecast" | translate }}
             </span>
           }
-          @if (dangerSourcesService.getDangerSourceVariantType() === variantType.analysis) {
+          @if (dangerSourceVariantType === variantType.analysis) {
             <span class="badge bg-success">
               {{ "dangerSources.status.analysis" | translate }}
             </span>
