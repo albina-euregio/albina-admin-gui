@@ -17,6 +17,7 @@ export enum ObservationSource {
   Observer = "Observer",
   LwdKip = "LwdKip",
   Lawis = "Lawis",
+  LoLaObserver = "LoLaObserver",
   LoLaKronos = "LoLaKronos",
   Snobs = "Snobs",
   WikisnowECT = "WikisnowECT",

@@ -1189,7 +1189,7 @@ export function convertLoLaToGeneric(
       : `${urlPrefix}${obs.uuId}`,
     $source:
       Array.isArray(obs.entities) && obs.entities.some((e) => e.entityName === "Beobachter*in LWD Tirol")
-        ? ObservationSource.Observer
+        ? ObservationSource.LoLaObserver
         : Array.isArray(obs.entities) && obs.entities.some((e) => e.entityName === "SNOBS")
           ? ObservationSource.Snobs
           : ObservationSource.LoLaKronos,

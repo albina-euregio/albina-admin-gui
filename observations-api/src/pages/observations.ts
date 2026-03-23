@@ -32,8 +32,13 @@ export async function serveObservations(url: URL): Promise<GenericObservation[]>
   try {
     const observations = await connection.selectObservations(startDate, endDate);
     for (const o of observations) {
-      if (o.$source !== ObservationSource.LoLaKronos && o.$source !== ObservationSource.Snobs) continue;
-      o.$externalURL += "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN;
+      if (
+        o.$source === ObservationSource.LoLaKronos ||
+        o.$source === ObservationSource.LoLaObserver ||
+        o.$source === ObservationSource.Snobs
+      ) {
+        o.$externalURL += "/" + process.env.ALBINA_LOLA_KRONOS_API_TOKEN;
+      }
     }
     return observations;
   } finally {

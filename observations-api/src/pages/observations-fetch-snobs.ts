@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (observation.$externalURL?.includes("detail-by-token")) {
       observation.$externalURL += "/" + process.env.ALBINA_SNOBS_API_TOKEN;
     }
-    if (observation.$source === ObservationSource.Observer || observation.$source === ObservationSource.Snobs) {
+    if (observation.$source === ObservationSource.LoLaObserver || observation.$source === ObservationSource.Snobs) {
       observations.push(observation);
     }
     observation.$data = undefined;
