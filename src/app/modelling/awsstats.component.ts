@@ -15,6 +15,15 @@ import { firstValueFrom } from "rxjs";
 import { environment } from "../../environments/environment";
 import { type GenericObservation, toGeoJSON } from "../observations/models/generic-observation.model";
 import { BaseMapService } from "../providers/map-service/base-map.service";
+import { LineaMapService } from "../providers/map-service/linea-map.service";
+import { CircleMarker, CircleMarkerOptions } from "leaflet";
+import { listingLegacy, listing } from "@albina-euregio/linea";
+import sources from "../../assets/config/stations.json";
+import type { FeatureCollectionSchema as FeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing";
+import type { FeatureCollectionSchema as LegacyFeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing-legacy";
+
+const FeatureCollectionSchema = listing.FeatureCollectionSchema as typeof FeatureCollectionSchema0;
+const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema as typeof LegacyFeatureCollectionSchema0;
 
 @Component({
   selector: "app-awsstats",
@@ -27,7 +36,9 @@ import { BaseMapService } from "../providers/map-service/base-map.service";
 export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private http = inject(HttpClient);
   protected mapService = inject(BaseMapService);
+  protected stationsMapService = inject(LineaMapService);
   @ViewChild("regionMapHost", { static: false }) private regionMapHost?: ElementRef<HTMLElement>;
+  @ViewChild("stationMapHost", { static: false }) private stationMapHost?: ElementRef<HTMLElement>;
   @ViewChild("wrapperHost", { static: false }) private wrapperHost?: ElementRef<HTMLElement>;
 
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -7));
@@ -39,31 +50,20 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected loading = false;
   protected errorMessage = "";
   protected selectedMicroRegions: string[] = [];
+  protected selectedStationId = "";
+
+  private readonly stationMarkers: Record<string, CircleMarker> = {};
+  private readonly stationById = new Map<string, StationFeature>();
+  private readonly defaultStationSrc = "https://api.avalanche.report/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
 
   async ngAfterViewInit() {
-    if (!this.regionMapHost?.nativeElement) return;
-    try {
-      const host = this.regionMapHost.nativeElement;
-      this.mapService.removeMaps();
-      const map = await this.mapService.initMaps(host);
-      this.mapService.overlayMaps?.editSelection?.setSelectedRegions(this.selectedMicroRegions);
-      this.mapService.overlayMaps?.editSelection?.updateEditSelection();
-      requestAnimationFrame(() => map.invalidateSize(true));
-      setTimeout(() => map.invalidateSize(true), 120);
-      map.on("click", () => {
-        this.selectedMicroRegions = this.normalizeSelectedMicroRegions(this.mapService.getSelectedRegions());
-        if (this.showWrapper) {
-          this.mountWrapper();
-        }
-      });
-    } catch (error) {
-      console.error("Failed to initialize map:", error);
-    }
+    await Promise.allSettled([this.initRegionMap(), this.initStationMap()]);
   }
 
   ngOnDestroy() {
     this.revokeObservationsUrl();
     this.mapService.removeMaps();
+    this.stationsMapService.removeMaps();
   }
 
   protected setLastDays(days: number) {
@@ -78,6 +78,24 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     if (this.showWrapper) {
       this.mountWrapper();
     }
+  }
+
+  protected clearSelectedStation() {
+    if (!this.selectedStationId) return;
+    const prev = this.stationMarkers[this.selectedStationId];
+    const station = this.stationById.get(this.selectedStationId);
+    prev?.setStyle(this.getStationMarkerOptions(false, station?.hasPsum ?? false));
+    this.selectedStationId = "";
+    if (this.showWrapper) {
+      this.mountWrapper();
+    }
+  }
+
+  protected get selectedStationLabel(): string {
+    if (!this.selectedStationId) return "none";
+    const station = this.stationById.get(this.selectedStationId);
+    if (!station) return this.selectedStationId;
+    return station.shortName || station.name || station.id;
   }
 
   protected async updateObservations() {
@@ -135,7 +153,6 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   }
 
   private getObservationDateRangeParams(startDate: string, endDate: string) {
-    // Match observations page behavior: request whole days via ISO datetime params.
     const start = new Date(`${startDate}T01:00:00`);
     const end = new Date(`${endDate}T23:59:59`);
     return {
@@ -149,11 +166,10 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
 
     const host = this.wrapperHost.nativeElement;
     host.replaceChildren();
-
     const wrapper = document.createElement("aws-stats-wrapper");
     wrapper.setAttribute("chart-type", "aws-observations,aws-danger-rating,aws-danger-rating-altitude");
     wrapper.setAttribute("observations", this.observationsUrl);
-    wrapper.setAttribute("stationsrc", "https://api.avalanche.report/lawine/grafiken/smet/winter/AXLIZ1.smet.gz");
+    wrapper.setAttribute("stationsrc", this.getSelectedStationSrc());
     wrapper.setAttribute("start-date", this.wrapperStartDate);
     wrapper.setAttribute("end-date", this.wrapperEndDate);
     wrapper.setAttribute("bulletin-filter-micro-region", this.getBulletinFilterMicroRegionValue());
@@ -170,4 +186,127 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private normalizeSelectedMicroRegions(regions: string[]): string[] {
     return [...new Set((regions ?? []).filter(Boolean))];
   }
+
+  private async initRegionMap() {
+    if (!this.regionMapHost?.nativeElement) return;
+    try {
+      const host = this.regionMapHost.nativeElement;
+      this.mapService.removeMaps();
+      const map = await this.mapService.initMaps(host);
+      this.mapService.overlayMaps?.editSelection?.setSelectedRegions(this.selectedMicroRegions);
+      this.mapService.overlayMaps?.editSelection?.updateEditSelection();
+      requestAnimationFrame(() => map.invalidateSize(true));
+      setTimeout(() => map.invalidateSize(true), 120);
+      map.on("click", () => {
+        this.selectedMicroRegions = this.normalizeSelectedMicroRegions(this.mapService.getSelectedRegions());
+        if (this.showWrapper) {
+          this.mountWrapper();
+        }
+      });
+    } catch (error) {
+      console.error("Failed to initialize region map:", error);
+    }
+  }
+
+  private async initStationMap() {
+    if (!this.stationMapHost?.nativeElement) return;
+    try {
+      const host = this.stationMapHost.nativeElement;
+      this.stationsMapService.removeMaps();
+      const map = await this.stationsMapService.initMaps(host);
+      await this.loadStationMarkers();
+      requestAnimationFrame(() => map.invalidateSize(true));
+      setTimeout(() => map.invalidateSize(true), 120);
+    } catch (error) {
+      console.error("Failed to initialize station map:", error);
+    }
+  }
+
+  private async loadStationMarkers() {
+    this.stationsMapService.stationLayer.clearLayers();
+    this.stationById.clear();
+    for (const k of Object.keys(this.stationMarkers)) {
+      delete this.stationMarkers[k];
+    }
+
+    for (const source of sources) {
+      const url = source.stations;
+      const response = await fetch(url);
+      const json = await response.json();
+      const searchParams = new URL(url, location.href).searchParams;
+      const isLegacy = searchParams.get("v") === "legacy";
+      const schema = isLegacy ? LegacyFeatureCollectionSchema : FeatureCollectionSchema;
+      const collection = schema.parse(json, { reportInput: true });
+
+      for (const feature of collection.features) {
+        if (!new RegExp(source.smetOperators).test(feature.properties.operator)) {
+          continue;
+        }
+
+        // cheap check... could maybe improved
+        const hasPsum = feature.properties.PSUM_6.value != undefined;
+        const station: StationFeature = {
+          id: feature.id,
+          name: feature.properties?.name,
+          shortName: feature.properties?.shortName ?? "",
+          smetId: feature.properties?.shortName ?? feature.id,
+          smet: source.smet,
+          hasPsum,
+        };
+        this.stationById.set(station.id, station);
+
+        const marker = new CircleMarker(
+          { lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] },
+          this.getStationMarkerOptions(false, hasPsum),
+        ).addTo(this.stationsMapService.stationLayer);
+
+        marker.bindTooltip(`${station.name || station.id}`);
+        marker.on("click", () => this.selectStation(station.id));
+        this.stationMarkers[station.id] = marker;
+      }
+    }
+  }
+
+  private selectStation(id: string) {
+    if (this.selectedStationId === id) return;
+    const prev = this.stationMarkers[this.selectedStationId];
+    const prevStation = this.stationById.get(this.selectedStationId);
+    prev?.setStyle(this.getStationMarkerOptions(false, prevStation?.hasPsum ?? false));
+    this.selectedStationId = id;
+    const newStation = this.stationById.get(id);
+    this.stationMarkers[id]?.setStyle(this.getStationMarkerOptions(true, newStation?.hasPsum ?? false));
+    if (this.showWrapper) {
+      this.mountWrapper();
+    }
+  }
+
+  private getStationMarkerOptions(selected: boolean, psum: boolean): CircleMarkerOptions {
+    return {
+      pane: "markerPane",
+      radius: 7,
+      fillColor: selected ? "#d62828" : "#1d4ed8",
+      color: psum ? "#f59e0b" : "black",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 1,
+    };
+  }
+
+  private getSelectedStationSrc(): string {
+    if (!this.selectedStationId) return this.defaultStationSrc;
+    const station = this.stationById.get(this.selectedStationId);
+    if (!station) return this.defaultStationSrc;
+    const template = station.smet[1] || station.smet[0] || "";
+    const url = template ? template.replace(/\{id\}/g, station.smetId) : "";
+    return url || this.defaultStationSrc;
+  }
+}
+
+interface StationFeature {
+  id: string;
+  name: string;
+  shortName: string;
+  smetId: string;
+  smet: string[];
+  hasPsum: boolean;
 }

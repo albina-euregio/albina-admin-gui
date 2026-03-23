@@ -4,7 +4,7 @@
 
 .awsstats-top {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   gap: 1rem;
   align-items: stretch;
 }
@@ -64,10 +64,16 @@
   flex-direction: column;
 }
 
+.awsstats-side-maps {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
 .awsstats-region-map {
   width: 100%;
   flex: 1;
-  min-height: 260px;
+  min-height: 220px;
   border: 1px solid var(--bs-border-color, #dee2e6);
   border-radius: 0.375rem;
   overflow: hidden;
@@ -134,5 +140,9 @@
 
   .awsstats-region-map {
     height: 220px;
+  }
+
+  .awsstats-side-maps {
+    grid-template-rows: none;
   }
 }

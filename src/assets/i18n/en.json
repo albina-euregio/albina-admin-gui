@@ -1451,6 +1451,7 @@
       "loading": "Loading data...",
       "startDate": "Start date",
       "endDate": "End date",
+      "selectWeatherStation": "Select weather station",
       "selectMicroRegions": "Select micro-regions",
       "selectedMicroRegions": "Selected micro-regions",
       "clearselection": "Clear selection",

@@ -63,9 +63,16 @@
       </div>
     </div>
 
-    <div class="awsstats-region-map-wrap awsstats-panel">
-      <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
-      <div #regionMapHost class="awsstats-region-map"></div>
+    <div class="awsstats-side-maps">
+      <div class="awsstats-region-map-wrap awsstats-panel">
+        <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
+        <div #regionMapHost class="awsstats-region-map"></div>
+      </div>
+
+      <div class="awsstats-region-map-wrap awsstats-panel">
+        <div class="awsstats-panel-title">{{ "awsstats.label.selectWeatherStation" | translate }}</div>
+        <div #stationMapHost class="awsstats-region-map"></div>
+      </div>
     </div>
   </div>
 
@@ -75,7 +82,7 @@
 
   <div class="awsstats-output-wrap awsstats-panel" [class.is-loading]="loading">
     @if (loading) {
-      <div class="awsstats-loading" role="status" aria-live="polite" aria-label="Loading observations">
+      <div class="awsstats-loading" role="status" aria-live="polite" aria-label="Loading data">
         <span class="awsstats-spinner" aria-hidden="true"></span>
         <span>{{ "awsstats.label.loading" | translate }}</span>
       </div>
