@@ -402,13 +402,14 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
         .loadDangerSourceVariants(date, this.authenticationService.getActiveRegionId(), dangerSourceId)
         .subscribe(
           (variants) => {
-            // delete own regions of danger source
+            // delete own regions of danger source by keeping only variants of other regions and danger sources or with other type
             const resultVariants = new Array<DangerSourceVariantModel>();
 
             for (const variant of this.internVariantsList) {
               if (
                 !variant.ownerRegion.startsWith(this.authenticationService.getActiveRegionId()) ||
-                variant.dangerSource.id !== dangerSourceId
+                variant.dangerSource.id !== dangerSourceId ||
+                variant.dangerSourceVariantType !== this.dangerSourceVariantType
               ) {
                 resultVariants.push(variant);
               }
@@ -516,7 +517,6 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
   }
 
   private sortInternDangerSourcesList() {
-
     // Keep danger sources with only inactive variants at the end.
     // Inside each bucket, show newest danger sources first.
     const sortedDangerSources = orderBy(
@@ -524,10 +524,9 @@ export class CreateDangerSourcesComponent implements OnInit, OnDestroy {
       [
         (dangerSource) => {
           const variants = this.internVariantsList.filter(
-            (variant) => 
+            (variant) =>
               variant.dangerSource.id === dangerSource.id &&
-              variant.dangerSourceVariantType === this.dangerSourceVariantType
-            ,
+              variant.dangerSourceVariantType === this.dangerSourceVariantType,
           );
 
           if (!variants.length) {
