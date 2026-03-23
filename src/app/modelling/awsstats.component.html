@@ -1,0 +1,76 @@
+<div class="awsstats-page">
+  <div class="awsstats-top mb-3">
+    <div class="awsstats-panel">
+      <div class="awsstats-panel-title">Observation range</div>
+      <div class="awsstats-controls-grid">
+        <div>
+          <label class="form-label mb-1" for="awsstats-start-date">Start date</label>
+          <input
+            id="awsstats-start-date"
+            class="form-control"
+            type="date"
+            [disabled]="loading"
+            [value]="startDate"
+            (change)="startDate = $any($event.target).value"
+          />
+        </div>
+
+        <div>
+          <label class="form-label mb-1" for="awsstats-end-date">End date</label>
+          <input
+            id="awsstats-end-date"
+            class="form-control"
+            type="date"
+            [disabled]="loading"
+            [value]="endDate"
+            (change)="endDate = $any($event.target).value"
+          />
+        </div>
+
+        <div class="awsstats-actions">
+          <button class="btn btn-primary" type="button" [disabled]="loading" (click)="updateObservations()">
+            Load data
+          </button>
+          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(7)">
+            Last 7 days
+          </button>
+        </div>
+      </div>
+
+      <div class="awsstats-selection-row">
+        <div class="small text-muted">Selected micro-regions</div>
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          type="button"
+          [disabled]="loading"
+          (click)="clearSelectedRegions()"
+        >
+          Clear selection
+        </button>
+      </div>
+      <div class="awsstats-selection-text" [title]="selectedMicroRegions.join(', ')">
+        {{ selectedMicroRegions.length ? selectedMicroRegions.join(", ") : "none" }}
+      </div>
+    </div>
+
+    <div class="awsstats-region-map-wrap awsstats-panel">
+      <div class="awsstats-panel-title">Select micro-regions</div>
+      <div #regionMapHost class="awsstats-region-map"></div>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+  }
+
+  <div class="awsstats-output-wrap awsstats-panel" [class.is-loading]="loading">
+    @if (loading) {
+      <div class="awsstats-loading" role="status" aria-live="polite" aria-label="Loading observations">
+        <span class="awsstats-spinner" aria-hidden="true"></span>
+        <span>Loading observations...</span>
+      </div>
+    }
+
+    <div #wrapperHost></div>
+  </div>
+</div>

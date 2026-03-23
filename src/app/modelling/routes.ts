@@ -2,12 +2,13 @@ import { AuthGuard } from "../guards/auth.guard";
 import { AwsomeComponent } from "./awsome.component";
 import { ForecastComponent } from "./forecast.component";
 import { LineaExportComponent } from "./lineaexport.component";
+import { AwsstatsComponent } from "./awsstats.component";
 import { ZamgWbtComponent } from "./zamg-wbt.component";
 import { Routes } from "@angular/router";
 
 export interface ModellingRouteData {
   title: string;
-  modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt" | "lineaexport";
+  modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt" | "lineaexport" | "awsstats";
 }
 
 export default [
@@ -54,6 +55,15 @@ export default [
       modelling: "lineaexport",
     } satisfies ModellingRouteData,
     component: LineaExportComponent,
+    canActivate: [], // no authentication
+  },
+  {
+    path: "awsstats",
+    data: {
+      title: "AWS Stats",
+      modelling: "awsstats",
+    } satisfies ModellingRouteData,
+    component: AwsstatsComponent,
     canActivate: [], // no authentication
   },
 ] satisfies Routes;
