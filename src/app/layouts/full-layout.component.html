@@ -80,18 +80,11 @@
               </a>
             </li>
           }
-          @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                routerLinkActive="active"
-                [routerLink]="['/modelling/graphics']"
-                ngxMousetrapKey="g g"
-              >
-                {{ "sidebar.graphics" | translate }}
-              </a>
-            </li>
-          }
+          <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="['/graphics']" ngxMousetrapKey="g g">
+              {{ "sidebar.graphics" | translate }}
+            </a>
+          </li>
           <!-- dummy button for keyboard shortcut to place focus on map -->
           <li class="nav-item invisible">
             <button class="btn" type="button" (click)="focusMap()" ngxMousetrapKey="f m">Focus Map</button>
@@ -285,6 +278,12 @@
           </a>
         </li>
       }
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/graphics']">
+          <i class="ph ph-chart-bar"></i>
+          {{ "sidebar.graphics" | translate }}
+        </a>
+      </li>
     </ul>
   </div>
 </div>

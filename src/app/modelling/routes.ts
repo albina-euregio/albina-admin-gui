@@ -1,15 +1,15 @@
 import { AuthGuard } from "../guards/auth.guard";
 import { AwsomeComponent } from "./awsome.component";
 import { ForecastComponent } from "./forecast.component";
-import { LineaExportComponent } from "./lineaexport.component";
-import { AwsstatsComponent } from "./awsstats.component";
+import { LineaExportComponent } from "../graphics/lineaexport.component";
+import { AwsstatsComponent } from "../graphics/awsstats.component";
 import { ZamgWbtComponent } from "./zamg-wbt.component";
-import { GraphicsComponent } from "./graphics.component";
+import { GraphicsComponent } from "../graphics/graphics.component";
 import { Routes } from "@angular/router";
 
 export interface ModellingRouteData {
   title: string;
-  modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt" | "graphics" | "lineaexport" | "awsstats";
+  modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt" | "graphics";
 }
 
 export default [
@@ -56,24 +56,6 @@ export default [
       modelling: "graphics",
     } satisfies ModellingRouteData,
     component: GraphicsComponent,
-    canActivate: [], // no authentication
-  },
-  {
-    path: "lineaexport",
-    data: {
-      title: "Linea Export",
-      modelling: "lineaexport",
-    } satisfies ModellingRouteData,
-    component: LineaExportComponent,
-    canActivate: [], // no authentication
-  },
-  {
-    path: "awsstats",
-    data: {
-      title: "AWS Stats",
-      modelling: "awsstats",
-    } satisfies ModellingRouteData,
-    component: AwsstatsComponent,
     canActivate: [], // no authentication
   },
 ] satisfies Routes;

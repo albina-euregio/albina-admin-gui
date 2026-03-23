@@ -56,12 +56,15 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private readonly stationMarkers: Record<string, CircleMarker> = {};
   private readonly stationById = new Map<string, StationFeature>();
   private readonly defaultStationSrc = "https://api.avalanche.report/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
+  private isDestroyed = false;
 
   async ngAfterViewInit() {
+    this.isDestroyed = false;
     await Promise.allSettled([this.initRegionMap(), this.initStationMap()]);
   }
 
   ngOnDestroy() {
+    this.isDestroyed = true;
     this.revokeObservationsUrl();
     this.mapService.removeMaps();
     this.stationsMapService.removeMaps();
@@ -213,8 +216,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       const map = await this.mapService.initMaps(host);
       this.mapService.overlayMaps?.editSelection?.setSelectedRegions(this.selectedMicroRegions);
       this.mapService.overlayMaps?.editSelection?.updateEditSelection();
-      requestAnimationFrame(() => map.invalidateSize(true));
-      setTimeout(() => map.invalidateSize(true), 120);
+      this.scheduleMapInvalidate(map, () => this.mapService.map === map);
       map.on("click", () => {
         this.selectedMicroRegions = this.normalizeSelectedMicroRegions(this.mapService.getSelectedRegions());
         if (this.showWrapper) {
@@ -233,11 +235,22 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       this.stationsMapService.removeMaps();
       const map = await this.stationsMapService.initMaps(host);
       await this.loadStationMarkers();
-      requestAnimationFrame(() => map.invalidateSize(true));
-      setTimeout(() => map.invalidateSize(true), 120);
+      this.scheduleMapInvalidate(map, () => this.stationsMapService.map === map);
     } catch (error) {
       console.error("Failed to initialize station map:", error);
     }
+  }
+
+  private scheduleMapInvalidate(map: { invalidateSize: (animate?: boolean) => void }, isActive: () => boolean) {
+    const safeInvalidate = () => {
+      if (this.isDestroyed || !isActive()) return;
+      try {
+        map.invalidateSize(true);
+      } catch {
+        console.debug("Map already removed");
+      }
+    };
+    requestAnimationFrame(safeInvalidate);
   }
 
   private async loadStationMarkers() {
