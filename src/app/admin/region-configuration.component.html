@@ -636,6 +636,20 @@
           <tr>
             <td>
               <label class="col-form-label">{{
+                RegionConfigurationSchema.shape.enabledTextcatFields.description
+              }}</label>
+            </td>
+            <td>
+              <app-zod-input
+                [zodType]="RegionConfigurationSchema.shape.enabledTextcatFields"
+                [(value)]="config().enabledTextcatFields"
+                [csv]="true"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label class="col-form-label">{{
                 RegionConfigurationSchema.shape.enabledEditableFields.description
               }}</label>
             </td>
