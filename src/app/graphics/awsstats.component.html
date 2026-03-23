@@ -4,26 +4,12 @@
     <div class="awsstats-controls-grid">
       <div>
         <label class="form-label mb-1" for="awsstats-start-date">{{ "awsstats.label.startDate" | translate }}</label>
-        <input
-          id="awsstats-start-date"
-          class="form-control"
-          type="date"
-          [disabled]="loading"
-          [value]="startDate"
-          (change)="startDate = $any($event.target).value"
-        />
+        <input id="awsstats-start-date" class="form-control" type="date" [disabled]="loading" [(ngModel)]="startDate" />
       </div>
 
       <div>
         <label class="form-label mb-1" for="awsstats-end-date">{{ "awsstats.label.endDate" | translate }}</label>
-        <input
-          id="awsstats-end-date"
-          class="form-control"
-          type="date"
-          [disabled]="loading"
-          [value]="endDate"
-          (change)="endDate = $any($event.target).value"
-        />
+        <input id="awsstats-end-date" class="form-control" type="date" [disabled]="loading" [(ngModel)]="endDate" />
       </div>
 
       <div class="awsstats-actions">
@@ -51,6 +37,44 @@
           ? selectedMicroRegions.join(", ")
           : ("awsstats.label.noMicroRegionsSelected" | translate)
       }}
+    </div>
+
+    <div class="awsstats-selection-row mt-3">
+      <div class="small text-muted">{{ "awsstats.label.charttypes" | translate }}</div>
+    </div>
+    <div class="awsstats-chart-types">
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-observations']"
+          [disabled]="loading"
+          (ngModelChange)="setChartType('aws-observations', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-observations" | translate }}</span>
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-rating']"
+          [disabled]="selectedMicroRegions.length === 0 || loading"
+          (ngModelChange)="setChartType('aws-danger-rating', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-danger-rating" | translate }}</span>
+      </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-danger-rating-altitude']"
+          [disabled]="selectedMicroRegions.length !== 1 || loading"
+          (ngModelChange)="setChartType('aws-danger-rating-altitude', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-danger-rating-altitude" | translate }}</span>
+      </label>
     </div>
   </div>
 

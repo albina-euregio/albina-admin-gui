@@ -10,6 +10,7 @@ import {
   inject,
 } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { firstValueFrom } from "rxjs";
 import { environment } from "../../environments/environment";
@@ -28,7 +29,7 @@ const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema as t
 @Component({
   selector: "app-awsstats",
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: "./awsstats.component.html",
   styleUrls: ["./awsstats.component.scss"],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -37,9 +38,13 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private http = inject(HttpClient);
   protected mapService = inject(BaseMapService);
   protected stationsMapService = inject(LineaMapService);
-  @ViewChild("regionMapHost", { static: false }) private regionMapHost?: ElementRef<HTMLElement>;
-  @ViewChild("stationMapHost", { static: false }) private stationMapHost?: ElementRef<HTMLElement>;
-  @ViewChild("wrapperHost", { static: false }) private wrapperHost?: ElementRef<HTMLElement>;
+
+  @ViewChild("regionMapHost", { static: false })
+  private regionMapHost?: ElementRef<HTMLElement>;
+  @ViewChild("stationMapHost", { static: false })
+  private stationMapHost?: ElementRef<HTMLElement>;
+  @ViewChild("wrapperHost", { static: false })
+  private wrapperHost?: ElementRef<HTMLElement>;
 
   protected startDate = this.toDateInputValue(this.shiftDays(new Date(), -7));
   protected endDate = this.toDateInputValue(new Date());
@@ -52,6 +57,11 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected selectedMicroRegions: string[] = [];
   protected selectedStationId = "";
   protected showPrecipitationOnly = false;
+  protected chartTypeSelection: Record<ChartType, boolean> = {
+    "aws-observations": true,
+    "aws-danger-rating": false,
+    "aws-danger-rating-altitude": false,
+  };
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
   private readonly stationById = new Map<string, StationFeature>();
@@ -188,7 +198,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     const host = this.wrapperHost.nativeElement;
     host.replaceChildren();
     const wrapper = document.createElement("aws-stats-wrapper");
-    wrapper.setAttribute("chart-type", "aws-observations,aws-danger-rating,aws-danger-rating-altitude");
+    wrapper.setAttribute("chart-type", this.getSelectedChartTypesValue());
     wrapper.setAttribute("observations", this.observationsUrl);
     wrapper.setAttribute("stationsrc", this.getSelectedStationSrc());
     wrapper.setAttribute("start-date", this.wrapperStartDate);
@@ -196,6 +206,26 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     wrapper.setAttribute("bulletin-filter-micro-region", this.getBulletinFilterMicroRegionValue());
 
     host.appendChild(wrapper);
+  }
+
+  protected setChartType(chartType: ChartType, checked: boolean) {
+    if (checked && chartType === "aws-danger-rating" && this.selectedMicroRegions.length === 0) return;
+    if (checked && chartType === "aws-danger-rating-altitude" && this.selectedMicroRegions.length !== 1) return;
+
+    this.chartTypeSelection[chartType] = checked;
+
+    if (this.getSelectedChartTypes().length && this.showWrapper) {
+      this.mountWrapper();
+    }
+  }
+
+  private getSelectedChartTypesValue(): string {
+    const selected = this.getSelectedChartTypes();
+    return selected.length ? selected.join(",") : "aws-observations";
+  }
+
+  private getSelectedChartTypes(): ChartType[] {
+    return (Object.keys(this.chartTypeSelection) as ChartType[]).filter((key) => this.chartTypeSelection[key]);
   }
 
   private getBulletinFilterMicroRegionValue(): string {
@@ -341,3 +371,5 @@ interface StationFeature {
   smet: string[];
   hasPsum: boolean;
 }
+
+type ChartType = "aws-observations" | "aws-danger-rating" | "aws-danger-rating-altitude";

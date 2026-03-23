@@ -71,6 +71,17 @@
   overflow: auto;
 }
 
+.awsstats-chart-types {
+  margin-top: 0.35rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.awsstats-chart-types .form-check-label {
+  font-size: 0.9rem;
+  color: #334155;
+}
+
 .awsstats-region-map-wrap {
   min-width: 0;
   display: flex;
