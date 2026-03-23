@@ -35,7 +35,8 @@
     "snowpack": "SNOWPACK",
     "geosphere": "GeoSphere",
     "lineaexport": "LINEA",
-    "awsstats": "AWS Stats"
+    "awsstats": "AWS Stats",
+    "graphics": "Graphics"
   },
   "menu": {
     "logout": "Logout",

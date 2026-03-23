@@ -4,11 +4,12 @@ import { ForecastComponent } from "./forecast.component";
 import { LineaExportComponent } from "./lineaexport.component";
 import { AwsstatsComponent } from "./awsstats.component";
 import { ZamgWbtComponent } from "./zamg-wbt.component";
+import { GraphicsComponent } from "./graphics.component";
 import { Routes } from "@angular/router";
 
 export interface ModellingRouteData {
   title: string;
-  modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt" | "lineaexport" | "awsstats";
+  modelling: "geosphere" | "snowpack" | "awsome" | "zamg-wbt" | "graphics" | "lineaexport" | "awsstats";
 }
 
 export default [
@@ -46,6 +47,15 @@ export default [
       modelling: "zamg-wbt",
     } satisfies ModellingRouteData,
     component: ZamgWbtComponent,
+    canActivate: [], // no authentication
+  },
+  {
+    path: "graphics",
+    data: {
+      title: "Graphics",
+      modelling: "graphics",
+    } satisfies ModellingRouteData,
+    component: GraphicsComponent,
     canActivate: [], // no authentication
   },
   {

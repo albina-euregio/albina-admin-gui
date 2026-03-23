@@ -1,0 +1,24 @@
+<div class="graphics-page">
+  <div class="row g-4">
+    <tabset>
+      <tab heading="{{ 'sidebar.lineaexport' | translate }}" (selectTab)="showLineaExport()">
+        <div class="card">
+          <div class="card-body">
+            @if (activeGraphicsTab === "lineaexport") {
+              <app-linea-export></app-linea-export>
+            }
+          </div>
+        </div>
+      </tab>
+      <tab heading="{{ 'sidebar.awsstats' | translate }}" (selectTab)="showAwsstats()">
+        <div class="card">
+          <div class="card-body">
+            @if (activeGraphicsTab === "awsstats") {
+              <app-awsstats></app-awsstats>
+            }
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>
