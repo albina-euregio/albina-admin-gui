@@ -143,5 +143,8 @@ export enum TextcatTextfield {
   snowpackStructureComment = "snowpackStructureComment",
   snowpackStructureHighlights = "snowpackStructureHighlights",
   synopsisComment = "synopsisComment",
+  synopsisHighlights = "synopsisHighlights",
   tendencyComment = "tendencyComment",
+  travelAdvisoryComment = "travelAdvisoryComment",
+  travelAdvisoryHighlights = "travelAdvisoryHighlights",
 }

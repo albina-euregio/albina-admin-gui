@@ -332,6 +332,8 @@
         "highlights": "Special alert",
         "avActivityHighlights": "Headline avalanche situation",
         "avActivityComment": "Description of avalanche danger",
+        "travelAdvisoryHighlights": "Headline travel advisory",
+        "travelAdvisoryComment": "Description of travel advisory",
         "snowpackStructureComment": "Description of snowpack structure",
         "dangerPatterns": "Danger patterns",
         "tendencyComment": "Description of tendency",
