@@ -14,7 +14,7 @@ import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 // models
 import { BulletinModel } from "../models/bulletin.model";
-import { LangTexts } from "../models/text.model";
+import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
 // services
 import { BulletinsService } from "../providers/bulletins-service/bulletins.service";
@@ -291,10 +291,10 @@ export class AvalancheBulletinComponent implements OnInit {
       const pmData: TextcatLegacyOut = JSON.parse(e.data);
       if (pmData.textDef === undefined || pmData.textDef === "") {
         this.bulletin()[`${pmData.textField}Textcat`] = "";
-        this.bulletin()[`${pmData.textField}$`] = {} as LangTexts;
+        this.bulletin()[`${pmData.textField}`] = [];
       } else {
         this.bulletin()[`${pmData.textField}Textcat`] = pmData.textDef;
-        this.bulletin()[`${pmData.textField}$`] = convertTextcatToLangTexts(pmData);
+        this.bulletin()[`${pmData.textField}`] = convertLangTextsToJSON(convertTextcatToLangTexts(pmData));
       }
       this.hideDialog();
       this.updateBulletinOnServer();
