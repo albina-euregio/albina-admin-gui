@@ -70,7 +70,20 @@
       </div>
 
       <div class="awsstats-region-map-wrap awsstats-panel">
-        <div class="awsstats-panel-title">{{ "awsstats.label.selectWeatherStation" | translate }}</div>
+        <div class="awsstats-station-header">
+          <div class="awsstats-panel-title">{{ "awsstats.label.selectWeatherStation" | translate }}</div>
+          <button
+            class="btn btn-sm"
+            [class.btn-primary]="showPrecipitationOnly"
+            [class.btn-outline-secondary]="!showPrecipitationOnly"
+            type="button"
+            [disabled]="loading"
+            (click)="togglePrecipitationFilter()"
+            title="Filter to show only stations with precipitation data"
+          >
+            Precipitation
+          </button>
+        </div>
         <div #stationMapHost class="awsstats-region-map"></div>
       </div>
     </div>

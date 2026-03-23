@@ -51,6 +51,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected errorMessage = "";
   protected selectedMicroRegions: string[] = [];
   protected selectedStationId = "";
+  protected showPrecipitationOnly = false;
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
   private readonly stationById = new Map<string, StationFeature>();
@@ -88,6 +89,23 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     this.selectedStationId = "";
     if (this.showWrapper) {
       this.mountWrapper();
+    }
+  }
+
+  protected togglePrecipitationFilter() {
+    this.showPrecipitationOnly = !this.showPrecipitationOnly;
+    this.applyStationVisibilityFilter();
+  }
+
+  private applyStationVisibilityFilter() {
+    for (const [id, marker] of Object.entries(this.stationMarkers)) {
+      const station = this.stationById.get(id);
+      const shouldShow = !this.showPrecipitationOnly || station?.hasPsum;
+      if (shouldShow && !this.stationsMapService.stationLayer.hasLayer(marker)) {
+        marker.addTo(this.stationsMapService.stationLayer);
+      } else if (!shouldShow && this.stationsMapService.stationLayer.hasLayer(marker)) {
+        this.stationsMapService.stationLayer.removeLayer(marker);
+      }
     }
   }
 
