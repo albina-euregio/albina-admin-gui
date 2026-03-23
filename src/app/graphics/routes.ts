@@ -11,4 +11,12 @@ export default [
     component: GraphicsComponent,
     canActivate: [AuthGuard],
   },
+  {
+    path: "",
+    data: {
+      title: "Graphics",
+    },
+    component: GraphicsComponent,
+    canActivate: [AuthGuard],
+  },
 ] satisfies Routes;
