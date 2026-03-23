@@ -1,10 +1,10 @@
 <div class="awsstats-page">
   <div class="awsstats-top mb-3">
     <div class="awsstats-panel">
-      <div class="awsstats-panel-title">Observation range</div>
+      <div class="awsstats-panel-title">{{ "awsstats.title" | translate }}</div>
       <div class="awsstats-controls-grid">
         <div>
-          <label class="form-label mb-1" for="awsstats-start-date">Start date</label>
+          <label class="form-label mb-1" for="awsstats-start-date">{{ "awsstats.label.startDate" | translate }}</label>
           <input
             id="awsstats-start-date"
             class="form-control"
@@ -16,7 +16,7 @@
         </div>
 
         <div>
-          <label class="form-label mb-1" for="awsstats-end-date">End date</label>
+          <label class="form-label mb-1" for="awsstats-end-date">{{ "awsstats.label.endDate" | translate }}</label>
           <input
             id="awsstats-end-date"
             class="form-control"
@@ -34,27 +34,37 @@
           <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(7)">
             Last 7 days
           </button>
+          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(30)">
+            Last 30 days
+          </button>
+          <button class="btn btn-outline-secondary" type="button" [disabled]="loading" (click)="setLastDays(90)">
+            Last 90 days
+          </button>
         </div>
       </div>
 
       <div class="awsstats-selection-row">
-        <div class="small text-muted">Selected micro-regions</div>
+        <div class="small text-muted">{{ "awsstats.label.selectedMicroRegions" | translate }}</div>
         <button
           class="btn btn-sm btn-outline-secondary"
           type="button"
           [disabled]="loading"
           (click)="clearSelectedRegions()"
         >
-          Clear selection
+          {{ "awsstats.label.clearselection" | translate }}
         </button>
       </div>
       <div class="awsstats-selection-text" [title]="selectedMicroRegions.join(', ')">
-        {{ selectedMicroRegions.length ? selectedMicroRegions.join(", ") : "none" }}
+        {{
+          selectedMicroRegions.length
+            ? selectedMicroRegions.join(", ")
+            : ("awsstats.label.noMicroRegionsSelected" | translate)
+        }}
       </div>
     </div>
 
     <div class="awsstats-region-map-wrap awsstats-panel">
-      <div class="awsstats-panel-title">Select micro-regions</div>
+      <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
       <div #regionMapHost class="awsstats-region-map"></div>
     </div>
   </div>
@@ -67,7 +77,7 @@
     @if (loading) {
       <div class="awsstats-loading" role="status" aria-live="polite" aria-label="Loading observations">
         <span class="awsstats-spinner" aria-hidden="true"></span>
-        <span>Loading observations...</span>
+        <span>{{ "awsstats.label.loading" | translate }}</span>
       </div>
     }
 
