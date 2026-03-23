@@ -64,7 +64,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   };
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
-  private readonly stationById = new Map<string, StationFeature>();
+  readonly stationById = new Map<string, StationFeature>();
   private readonly defaultStationSrc = "https://api.avalanche.report/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
   private isDestroyed = false;
 
@@ -353,7 +353,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  private getSelectedStationSrc(): string {
+  protected getSelectedStationSrc(): string {
     if (!this.selectedStationId) return this.defaultStationSrc;
     const station = this.stationById.get(this.selectedStationId);
     if (!station) return this.defaultStationSrc;

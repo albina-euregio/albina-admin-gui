@@ -40,6 +40,26 @@
   white-space: nowrap;
 }
 
+.awsstats-inline-selection {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #5b6678;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.awsstats-inline-selection span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .awsstats-controls-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

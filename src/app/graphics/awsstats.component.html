@@ -28,17 +28,6 @@
       </div>
     </div>
 
-    <div class="awsstats-selection-row">
-      <div class="small text-muted">{{ "awsstats.label.selectedMicroRegions" | translate }}</div>
-    </div>
-    <div class="awsstats-selection-text" [title]="selectedMicroRegions.join(', ')">
-      {{
-        selectedMicroRegions.length
-          ? selectedMicroRegions.join(", ")
-          : ("awsstats.label.noMicroRegionsSelected" | translate)
-      }}
-    </div>
-
     <div class="awsstats-selection-row mt-3">
       <div class="small text-muted">{{ "awsstats.label.charttypes" | translate }}</div>
     </div>
@@ -82,6 +71,15 @@
     <div class="awsstats-region-map-wrap awsstats-panel">
       <div class="awsstats-station-header">
         <div class="awsstats-panel-title">{{ "awsstats.label.selectMicroRegions" | translate }}</div>
+        <div class="awsstats-inline-selection">
+          <span class="small text-muted" style="text-align: right">
+            {{
+              selectedMicroRegions.length
+                ? selectedMicroRegions.join(", ")
+                : ("awsstats.label.noMicroRegionsSelected" | translate)
+            }}
+          </span>
+        </div>
         <button
           class="btn btn-sm btn-outline-secondary"
           type="button"
@@ -97,6 +95,11 @@
     <div class="awsstats-region-map-wrap awsstats-panel">
       <div class="awsstats-station-header">
         <div class="awsstats-panel-title">{{ "awsstats.label.selectWeatherStation" | translate }}</div>
+        <div class="awsstats-inline-selection">
+          <span class="small text-muted" style="text-align: right">
+            {{ stationById.get(selectedStationId)?.name || "Axamer Lizum" }}
+          </span>
+        </div>
         <button
           class="btn btn-sm"
           [class.btn-primary]="showPrecipitationOnly"
