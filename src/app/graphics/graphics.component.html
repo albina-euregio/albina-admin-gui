@@ -1,30 +1,34 @@
 <div class="graphics-page">
   <tabset>
-    <tab (selectTab)="showLineaExport()">
-      <ng-template tabHeading>
-        <i class="ph ph-chart-line me-1"></i>
-        {{ "sidebar.lineaexport" | translate }}
-      </ng-template>
-      <div class="card">
-        <div class="card-body">
-          @if (activeGraphicsTab === "lineaexport") {
-            <app-linea-export></app-linea-export>
-          }
+    @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
+      <tab (selectTab)="showLineaExport()">
+        <ng-template tabHeading>
+          <i class="ph ph-chart-line me-1"></i>
+          {{ "sidebar.lineaexport" | translate }}
+        </ng-template>
+        <div class="card">
+          <div class="card-body">
+            @if (activeGraphicsTab === "lineaexport") {
+              <app-linea-export></app-linea-export>
+            }
+          </div>
         </div>
-      </div>
-    </tab>
-    <tab (selectTab)="showAwsstats()">
-      <ng-template tabHeading>
-        <i class="ph ph-chart-bar me-1"></i>
-        {{ "sidebar.awsstats" | translate }}
-      </ng-template>
-      <div class="card">
-        <div class="card-body">
-          @if (activeGraphicsTab === "awsstats") {
-            <app-awsstats></app-awsstats>
-          }
+      </tab>
+    }
+    @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
+      <tab (selectTab)="showAwsstats()">
+        <ng-template tabHeading>
+          <i class="ph ph-chart-bar me-1"></i>
+          {{ "sidebar.awsstats" | translate }}
+        </ng-template>
+        <div class="card">
+          <div class="card-body">
+            @if (activeGraphicsTab === "awsstats") {
+              <app-awsstats></app-awsstats>
+            }
+          </div>
         </div>
-      </div>
-    </tab>
+      </tab>
+    }
   </tabset>
 </div>
