@@ -43,9 +43,13 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   async ngAfterViewInit() {
     if (!this.regionMapHost?.nativeElement) return;
     try {
-      const map = await this.mapService.initMaps(this.regionMapHost.nativeElement);
+      const host = this.regionMapHost.nativeElement;
+      this.mapService.removeMaps();
+      const map = await this.mapService.initMaps(host);
       this.mapService.overlayMaps?.editSelection?.setSelectedRegions(this.selectedMicroRegions);
       this.mapService.overlayMaps?.editSelection?.updateEditSelection();
+      requestAnimationFrame(() => map.invalidateSize(true));
+      setTimeout(() => map.invalidateSize(true), 120);
       map.on("click", () => {
         this.selectedMicroRegions = this.normalizeSelectedMicroRegions(this.mapService.getSelectedRegions());
         if (this.showWrapper) {
