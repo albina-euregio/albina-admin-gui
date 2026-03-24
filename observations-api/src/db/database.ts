@@ -1,4 +1,4 @@
-import * as mysql from "mysql2/promise";
+import { SQL } from "bun";
 
 import { augmentRegion, initAugmentRegion } from "../../../src/app/providers/regions-service/augmentRegion";
 import {
@@ -47,14 +47,20 @@ interface GenericObservationTable {
 }
 
 export class ObservationDatabaseConnection {
-  constructor(private connection: mysql.Connection) {}
+  constructor(private mysql: SQL) {}
   static async createConnection(): Promise<ObservationDatabaseConnection> {
-    const conneciton = await mysql.createConnection({
-      host: process.env.MYSQL_HOST || "127.0.0.1",
-      port: process.env.MYSQL_PORT ? +process.env.MYSQL_PORT : 3306,
-      user: process.env.MYSQL_USER || "observations-api",
-      password: process.env.MYSQL_PASSWORD || "EopheekeiNg1hoomo",
-      database: process.env.MYSQL_DATABASE || "albina_dev",
+    const hostname = process.env.MYSQL_HOST || "127.0.0.1";
+    const port = process.env.MYSQL_PORT ? +process.env.MYSQL_PORT : 3306;
+    const username = process.env.MYSQL_USER || "observations-api";
+    const password = process.env.MYSQL_PASSWORD || "EopheekeiNg1hoomo";
+    const database = process.env.MYSQL_DATABASE || "albina_dev";
+    const conneciton = new SQL({
+      adapter: "mysql",
+      hostname,
+      port,
+      database,
+      username,
+      password,
     });
     return new ObservationDatabaseConnection(conneciton);
   }
@@ -83,8 +89,8 @@ export class ObservationDatabaseConnection {
     const data: GenericObservationTable = {
       ID: o.$id.slice(0, 191),
       SOURCE: o.$source.slice(0, 191),
-      ALLOW_EDIT: o.$allowEdit ?? false,
-      DELETED: o.$deleted ?? false,
+      ALLOW_EDIT: o.$allowEdit ? 1 : 0,
+      DELETED: o.$deleted ? 1 : 0,
       OBS_TYPE: o.$type ?? null,
       EXTERNAL_URL: o.$externalURL ?? null,
       EXTERNAL_IMG: Array.isArray(o.$externalImgs) ? o.$externalImgs.join("\n") : null,
@@ -109,17 +115,11 @@ export class ObservationDatabaseConnection {
       EXTRA_DIALOG_ROWS: o.$extraDialogRows ? JSON.stringify(o.$extraDialogRows) : null,
       PERSON_INVOLVEMENT: o.personInvolvement ?? null,
     };
-    const sql = `
-  REPLACE INTO generic_observations
-  (${Object.keys(data).join(", ")})
-  VALUES (${Object.keys(data)
-    .map(() => "?")
-    .join(", ")})
-  `;
     try {
-      return await this.connection.execute(sql, Object.values(data));
+      await this.mysql`DELETE FROM generic_observations WHERE SOURCE = ${o.$source} AND ID = ${o.$id}`;
+      await this.mysql`INSERT INTO generic_observations ${this.mysql(data)}`;
     } catch (err) {
-      if ((err as mysql.QueryError).code === "ER_DUP_ENTRY") {
+      if (err instanceof SQL.SQLError && err.message.includes("ER_DUP_ENTRY")) {
         console.debug("Skipping existing observation", o.$id, data);
         return;
       }
@@ -131,9 +131,8 @@ export class ObservationDatabaseConnection {
   async deleteObservation(o: GenericObservation) {
     if (!o || !o.$id) return;
     console.log("Deleting observation", o.$id, o.$source);
-    const sql = "UPDATE generic_observations SET deleted = 1 WHERE ID = ?";
     try {
-      return await this.connection.execute(sql, [o.$id]);
+      await this.mysql`UPDATE generic_observations SET deleted = 1 WHERE SOURCE = ${o.$source} AND ID = ${o.$id}`;
     } catch (err) {
       console.error(err, JSON.stringify(o));
       throw err;
@@ -141,20 +140,25 @@ export class ObservationDatabaseConnection {
   }
 
   async selectObservations(startDate: Date, endDate: Date): Promise<GenericObservation[]> {
-    const sql = "SELECT * FROM generic_observations WHERE event_date BETWEEN ? AND ? AND deleted = 0";
-    const values = [startDate.toISOString(), endDate.toISOString()];
-    return await this.query(sql, values);
+    const rows = await this.mysql`
+      SELECT *
+      FROM generic_observations
+      WHERE event_date BETWEEN ${startDate.toISOString()}
+        AND ${endDate.toISOString()}
+        AND deleted = 0`;
+    return this.mapRows(rows);
   }
 
-  async selectObservation(observation: GenericObservation): Promise<GenericObservation | undefined> {
-    const sql = "SELECT * FROM generic_observations WHERE SOURCE = ? AND ID = ?";
-    const values = [observation.$source, observation.$id];
-    const result = await this.query(sql, values);
+  async selectObservation(o: GenericObservation): Promise<GenericObservation | undefined> {
+    const rows = await this.mysql`
+      SELECT *
+      FROM generic_observations
+      WHERE SOURCE = ${o.$source} AND ID = ${o.$id}`;
+    const result = this.mapRows(rows);
     return result.length ? result[0] : undefined;
   }
 
-  private async query(sql: string, values: string[]) {
-    const [rows] = await this.connection.query(sql, values);
+  private mapRows(rows: unknown) {
     return (rows as unknown as GenericObservationTable[]).map(
       (row): GenericObservation => ({
         $id: row.ID,
@@ -191,6 +195,6 @@ export class ObservationDatabaseConnection {
   }
 
   destroy() {
-    return this.connection.destroy();
+    return this.mysql.close();
   }
 }
