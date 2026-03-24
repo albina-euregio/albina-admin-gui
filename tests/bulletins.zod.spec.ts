@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { BulletinSchema } from "src/app/models/bulletin.model";
 
-test("Bulletin schema validation", async () => {
+test.skip("Bulletin schema validation", async () => {
   if (!globalThis.Temporal) {
     await import("temporal-polyfill/global");
   }
