@@ -174,7 +174,7 @@ deploy:observations-api:
   environment:
     name: observations-api
   script:
-    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose observations-api/ $SFTP_SERVER
+    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose observations-api/dist/ $SFTP_SERVER
   rules:
     - if: "$CI_COMMIT_TAG"
       when: manual
@@ -187,7 +187,7 @@ deploy:observations-api-dev:
   environment:
     name: observations-api-dev
   script:
-    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose observations-api/ $SFTP_SERVER
+    - rsync -e 'ssh -p2201' --compress --delete --exclude=private.foto-webcam.eu.json --recursive --verbose observations-api/dist/ $SFTP_SERVER
   rules:
     - when: manual
       allow_failure: true
