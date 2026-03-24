@@ -1896,13 +1896,14 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
   }
 
   updateBulletinStatusEdit() {
-    let newStatus;
-
-    if (this.bulletinsService.hasBeenPublished5PM(this.bulletinsService.getActiveDate())) {
-      newStatus = this.bulletinStatus.updated;
-    } else {
-      newStatus = this.bulletinStatus.draft;
-    }
+    const currentStatus = this.bulletinsService.getUserRegionStatus(this.bulletinsService.getActiveDate());
+    const updatedStatuses = [
+      Enums.BulletinStatus.republished,
+      Enums.BulletinStatus.resubmitted,
+      Enums.BulletinStatus.updated,
+      Enums.BulletinStatus.published,
+    ];
+    const newStatus = updatedStatuses.includes(currentStatus) ? this.bulletinStatus.updated : this.bulletinStatus.draft;
 
     this.bulletinsService.statusMap
       .get(this.authenticationService.getActiveRegionId())
