@@ -5,8 +5,7 @@ import * as observers from "./src/pages/observers";
 import * as weatherStations from "./src/pages/weather-stations";
 import * as widgetAlpsolut from "./src/pages/widget.alpsolut.eu";
 
-Bun.serve({
-  port: 3000,
+const server = Bun.serve({
   routes: {
     "/observations": observations,
     "/observations-fetch-snobs": observationsFetchSnobs,
@@ -16,3 +15,4 @@ Bun.serve({
     "/widget.alpsolut.eu": widgetAlpsolut,
   },
 });
+console.log(`Running observations-api on ${server.hostname}:${server.port}`);
