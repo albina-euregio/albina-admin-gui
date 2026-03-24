@@ -13,6 +13,7 @@ import { environment } from "../../environments/environment";
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 // models
+import { BulletinPhotoModel } from "../models/bulletin-photo.model";
 import { BulletinModel } from "../models/bulletin.model";
 import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -78,6 +79,7 @@ export class AvalancheBulletinComponent implements OnInit {
   public isAccordionAvalancheProblemAfternoonOpen: boolean;
   public isAccordionDangerDescriptionOpen: boolean;
   public isAccordionSnowpackStructureOpen: boolean;
+  public isAccordionPhotosOpen: boolean;
   public isAccordionTendencyOpen: boolean;
   public isAccordionSynopsisOpen: boolean;
 
@@ -117,6 +119,9 @@ export class AvalancheBulletinComponent implements OnInit {
           break;
         case "snowpackStructure":
           this.isAccordionSnowpackStructureOpen = isOpen;
+          break;
+        case "photos":
+          this.isAccordionPhotosOpen = isOpen;
           break;
         case "tendency":
           this.isAccordionTendencyOpen = isOpen;
@@ -365,6 +370,29 @@ export class AvalancheBulletinComponent implements OnInit {
   hasFiveAvalancheProblems(isAfternoon: boolean) {
     const daytime = isAfternoon ? this.bulletin().afternoon : this.bulletin().forenoon;
     return daytime.avalancheProblem5 !== undefined;
+  }
+
+  newPhoto: { url?: string; locationName?: string; copyright?: string; date?: string; microregionId?: string } = {};
+
+  addPhoto() {
+    const url = this.newPhoto.url?.trim();
+    if (!url) return;
+    this.bulletin().photos.push({
+      url,
+      copyright: this.newPhoto.copyright?.trim() || undefined,
+      date: this.newPhoto.date ?? undefined,
+      locationName: this.newPhoto.locationName?.trim() || undefined,
+      microregionId: this.newPhoto.microregionId || undefined,
+    });
+    this.newPhoto = {};
+    this.updateBulletinOnServer();
+  }
+
+  removePhoto(photo: BulletinPhotoModel) {
+    const photos = this.bulletin().photos;
+    const idx = photos.indexOf(photo);
+    if (idx >= 0) photos.splice(idx, 1);
+    this.updateBulletinOnServer();
   }
 
   getRegionNames(bulletin): string {

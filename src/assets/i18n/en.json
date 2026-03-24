@@ -293,7 +293,9 @@
         "moveUpAvalancheProblem": "Move avalanche problem up",
         "moveDownAvalancheProblem": "Move avalanche problem down",
         "dangerRatingDirectionUp": "Upwards",
-        "dangerRatingDirectionDown": "Downwards"
+        "dangerRatingDirectionDown": "Downwards",
+        "addPhoto": "Add photo",
+        "removePhoto": "Remove photo"
       },
       "save": " Save",
       "discard": " Discard",
@@ -350,11 +352,18 @@
         "dangerDescription": "Description of avalanche danger",
         "forenoon": "Forenoon",
         "afternoon": "Afternoon",
+        "photos": "Photos",
         "snowpackStructure": "Snowpack structure",
         "tendency": "Tendency",
         "synopsis": "Weather",
         "showTranslations": " Show translations",
         "hideTranslations": " Hide translations"
+      },
+      "photos": {
+        "url": "Image URL",
+        "locationName": "Location",
+        "microregion": "Microregion",
+        "copyright": "Copyright"
       },
       "placeholder": {
         "notes": "Write your notes here ..."
