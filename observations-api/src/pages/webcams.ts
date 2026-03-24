@@ -1,5 +1,3 @@
-import type { APIRoute } from "astro";
-
 import type { GenericObservation } from "../../../src/app/observations/models/generic-observation.model";
 import { fetchWebcamsPromise } from "../fetch/webcams";
 
@@ -14,7 +12,7 @@ export async function serveWebcams(): Promise<GenericObservation[]> {
   return await webcams;
 }
 
-export const GET: APIRoute = async () => {
+export const GET = async () => {
   const json = JSON.stringify(await serveWebcams());
   return new Response(json, {
     status: 200,

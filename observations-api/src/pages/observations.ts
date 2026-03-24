@@ -1,5 +1,3 @@
-import type { APIRoute } from "astro";
-
 import {
   type GenericObservation,
   genericObservationSchema,
@@ -9,7 +7,7 @@ import {
 } from "../../../src/app/observations/models/generic-observation.model";
 import { ObservationDatabaseConnection } from "../db/database";
 import { fetchAndInsert } from "../fetch/observations";
-import { newDate } from "../util/newDate.ts";
+import { newDate } from "../util/newDate";
 
 let lastFetch = 0;
 
@@ -46,15 +44,15 @@ export async function serveObservations(url: URL): Promise<GenericObservation[]>
   }
 }
 
-export const GET: APIRoute = async ({ url }) => {
-  const json = JSON.stringify(await serveObservations(url));
+export const GET = async (request: Bun.BunRequest) => {
+  const json = JSON.stringify(await serveObservations(new URL(request.url)));
   return new Response(json, {
     status: 200,
     headers: { "Content-Type": "application/json" },
   });
 };
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST = async (request: Bun.BunRequest) => {
   if (request.headers.get("Content-Type") !== "application/json") {
     return new Response("Expecting application/json", { status: 415 });
   }
@@ -90,7 +88,7 @@ export const POST: APIRoute = async ({ request }) => {
   });
 };
 
-export const DELETE: APIRoute = async ({ request }) => {
+export const DELETE = async (request: Bun.BunRequest) => {
   if (request.headers.get("Content-Type") !== "application/json") {
     return new Response("Expecting application/json", { status: 415 });
   }

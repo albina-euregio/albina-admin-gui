@@ -5,17 +5,10 @@
   "license": "AGPL-3.0-or-later",
   "main": "server.ts",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "test": "astro check",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "bun server.ts",
+    "build": "bun build server.ts --target=bun --outfile=dist/observations-api.mjs"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/node": "9.5.1",
-    "astro": "5.16.4",
     "es-toolkit": "^1.38.0",
     "mysql2": "^3.14.0",
     "simple-statistics": "^7.8.7",
@@ -23,6 +16,7 @@
     "zod": "^4.3.2"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.11",
     "@types/geojson": "^7946.0.16",
     "@types/which-polygon": "^2.2.5"
   },
