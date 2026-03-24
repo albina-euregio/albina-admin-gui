@@ -11,6 +11,13 @@ import {
 import { TextSchema } from "./text.model";
 import { UserSchema } from "./user.model";
 
+const DateSchema = z.preprocess((value) => {
+  if (typeof value === "string") {
+    return value.replace(/\[UTC\]$/, "");
+  }
+  return value;
+}, z.coerce.date());
+
 export const BulletinSchema = z.object({
   id: z.string().nullish(),
 
@@ -21,8 +28,8 @@ export const BulletinSchema = z.object({
     .default(() => []),
   ownerRegion: z.string().nullish(),
 
-  updateDate: z.coerce.date().nullish(),
-  publicationDate: z.coerce.date().nullish(),
+  updateDate: DateSchema.nullish(),
+  publicationDate: DateSchema.nullish(),
 
   suggestedRegions: z
     .string()
@@ -48,8 +55,8 @@ export const BulletinSchema = z.object({
 
   validity: z
     .object({
-      from: z.coerce.date().nullish(),
-      until: z.coerce.date().nullish(),
+      from: DateSchema.nullish(),
+      until: DateSchema.nullish(),
     })
     .default(() => ({})),
 
