@@ -116,7 +116,8 @@ export class ObservationDatabaseConnection {
       PERSON_INVOLVEMENT: o.personInvolvement ?? null,
     };
     try {
-      await this.mysql`REPLACE INTO generic_observations ${this.mysql(data)}`;
+      await this.mysql`DELETE FROM generic_observations WHERE SOURCE = ${o.$source} AND ID = ${o.$id}`;
+      await this.mysql`INSERT INTO generic_observations ${this.mysql(data)}`;
     } catch (err) {
       if (err instanceof SQL.SQLError && err.message.includes("ER_DUP_ENTRY")) {
         console.debug("Skipping existing observation", o.$id, data);
@@ -131,7 +132,7 @@ export class ObservationDatabaseConnection {
     if (!o || !o.$id) return;
     console.log("Deleting observation", o.$id, o.$source);
     try {
-      await this.mysql`UPDATE generic_observations SET deleted = 1 WHERE ID = ${o.$id}`;
+      await this.mysql`UPDATE generic_observations SET deleted = 1 WHERE SOURCE = ${o.$source} AND ID = ${o.$id}`;
     } catch (err) {
       console.error(err, JSON.stringify(o));
       throw err;
@@ -148,12 +149,11 @@ export class ObservationDatabaseConnection {
     return this.mapRows(rows);
   }
 
-  async selectObservation(observation: GenericObservation): Promise<GenericObservation | undefined> {
+  async selectObservation(o: GenericObservation): Promise<GenericObservation | undefined> {
     const rows = await this.mysql`
       SELECT *
       FROM generic_observations
-      WHERE SOURCE = ${observation.$source}
-        AND ID = ${observation.$id}`;
+      WHERE SOURCE = ${o.$source} AND ID = ${o.$id}`;
     const result = this.mapRows(rows);
     return result.length ? result[0] : undefined;
   }
