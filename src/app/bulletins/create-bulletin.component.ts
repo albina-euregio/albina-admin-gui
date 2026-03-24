@@ -1111,11 +1111,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     }
   }
 
-  setTendency(event, tendency) {
-    event.stopPropagation();
-    this.activeBulletin.tendency = tendency;
-  }
-
   onShowAfternoonMapChange(checked) {
     this.showAfternoonMap = checked;
 
