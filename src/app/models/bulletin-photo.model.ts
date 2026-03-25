@@ -7,7 +7,7 @@ export const BulletinPhotoSchema = z.object({
   url: z.string(),
   copyright: z.string().nullish(),
   date: DateIsoString.nullish(),
-  microregionId: z.string().nullish(),
+  microRegionId: z.string().nullish(),
   locationName: z.string().nullish(),
   latitude: z.number().nullish(),
   longitude: z.number().nullish(),

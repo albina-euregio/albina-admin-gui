@@ -434,9 +434,9 @@
                   <i class="ph ph-copyright"></i> {{ photo.copyright }}
                 </span>
               }
-              @if (photo.microregionId) {
+              @if (photo.microRegionId) {
                 <span class="text-secondary font-xs text-nowrap">
-                  <i class="ph ph-map-trifold"></i> {{ regionsService.getRegionName(photo.microregionId) }}
+                  <i class="ph ph-map-trifold"></i> {{ regionsService.getRegionName(photo.microRegionId) }}
                 </span>
               }
               @if (photo.locationName) {
@@ -484,7 +484,7 @@
                 <label for="photoMicroregion">
                   <i class="ph ph-map-trifold"></i> {{ "bulletins.create.photos.microregion" | translate }}
                 </label>
-                <select id="photoMicroregion" class="form-select" [(ngModel)]="newPhoto.microregionId">
+                <select id="photoMicroregion" class="form-select" [(ngModel)]="newPhoto.microRegionId">
                   <option [ngValue]="undefined"></option>
                   @for (region of bulletin().getAllRegions(); track region) {
                     <option [value]="region">{{ regionsService.getRegionName(region) }}</option>

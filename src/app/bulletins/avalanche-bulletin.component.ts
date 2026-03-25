@@ -372,7 +372,7 @@ export class AvalancheBulletinComponent implements OnInit {
     return daytime.avalancheProblem5 !== undefined;
   }
 
-  newPhoto: { url?: string; locationName?: string; copyright?: string; date?: string; microregionId?: string } = {};
+  newPhoto: Partial<BulletinPhotoModel> = {};
   editingPhoto?: BulletinPhotoModel;
 
   submitPhoto() {
@@ -386,14 +386,14 @@ export class AvalancheBulletinComponent implements OnInit {
       this.editingPhoto.copyright = this.newPhoto.copyright?.trim() || undefined;
       this.editingPhoto.date = this.newPhoto.date ?? undefined;
       this.editingPhoto.locationName = this.newPhoto.locationName?.trim() || undefined;
-      this.editingPhoto.microregionId = this.newPhoto.microregionId || undefined;
+      this.editingPhoto.microRegionId = this.newPhoto.microRegionId || undefined;
     } else {
       this.bulletin().photos.push({
         url,
         copyright: this.newPhoto.copyright?.trim() || undefined,
         date: this.newPhoto.date ?? undefined,
         locationName: this.newPhoto.locationName?.trim() || undefined,
-        microregionId: this.newPhoto.microregionId || undefined,
+        microRegionId: this.newPhoto.microRegionId || undefined,
       });
     }
 
@@ -413,7 +413,7 @@ export class AvalancheBulletinComponent implements OnInit {
       copyright: photo.copyright ?? undefined,
       date: photo.date ?? undefined,
       locationName: photo.locationName ?? undefined,
-      microregionId: photo.microregionId ?? undefined,
+      microRegionId: photo.microRegionId ?? undefined,
     };
   }
 
