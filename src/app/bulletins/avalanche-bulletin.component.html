@@ -448,6 +448,18 @@
                 <button
                   type="button"
                   class="btn btn-bare btn-sm btn-icon flex-shrink-0"
+                  (click)="editPhoto(photo)"
+                  title="{{
+                    isEditingPhoto(photo)
+                      ? ('bulletins.create.tooltip.discardChanges' | translate)
+                      : ('bulletins.create.tooltip.editPhoto' | translate)
+                  }}"
+                >
+                  <i [class]="isEditingPhoto(photo) ? 'ph ph-x' : 'ph ph-pencil-line'"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-bare btn-sm btn-icon flex-shrink-0"
                   (click)="removePhoto(photo)"
                   title="{{ 'bulletins.create.tooltip.removePhoto' | translate }}"
                 >
@@ -493,11 +505,15 @@
                 <button
                   type="button"
                   class="btn btn-primary btn-icon w-100"
-                  (click)="addPhoto()"
+                  (click)="submitPhoto()"
                   [disabled]="!newPhoto.url"
-                  title="{{ 'bulletins.create.tooltip.addPhoto' | translate }}"
+                  title="{{
+                    editingPhoto
+                      ? ('bulletins.create.tooltip.saveChanges' | translate)
+                      : ('bulletins.create.tooltip.addPhoto' | translate)
+                  }}"
                 >
-                  <i class="ph ph-plus"></i>
+                  <i [class]="editingPhoto ? 'ph ph-check' : 'ph ph-plus'"></i>
                 </button>
               </div>
             </div>

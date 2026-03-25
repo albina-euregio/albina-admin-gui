@@ -373,19 +373,57 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 
   newPhoto: { url?: string; locationName?: string; copyright?: string; date?: string; microregionId?: string } = {};
+  editingPhoto?: BulletinPhotoModel;
 
-  addPhoto() {
+  submitPhoto() {
+    console.log("submitPhoto", this.newPhoto);
+    // FIXME: disable submit button if url is empty and remove this check
     const url = this.newPhoto.url?.trim();
     if (!url) return;
-    this.bulletin().photos.push({
-      url,
-      copyright: this.newPhoto.copyright?.trim() || undefined,
-      date: this.newPhoto.date ?? undefined,
-      locationName: this.newPhoto.locationName?.trim() || undefined,
-      microregionId: this.newPhoto.microregionId || undefined,
-    });
-    this.newPhoto = {};
+
+    if (this.editingPhoto) {
+      this.editingPhoto.url = url;
+      this.editingPhoto.copyright = this.newPhoto.copyright?.trim() || undefined;
+      this.editingPhoto.date = this.newPhoto.date ?? undefined;
+      this.editingPhoto.locationName = this.newPhoto.locationName?.trim() || undefined;
+      this.editingPhoto.microregionId = this.newPhoto.microregionId || undefined;
+    } else {
+      this.bulletin().photos.push({
+        url,
+        copyright: this.newPhoto.copyright?.trim() || undefined,
+        date: this.newPhoto.date ?? undefined,
+        locationName: this.newPhoto.locationName?.trim() || undefined,
+        microregionId: this.newPhoto.microregionId || undefined,
+      });
+    }
+
+    this.resetPhotoForm();
     this.updateBulletinOnServer();
+  }
+
+  editPhoto(photo: BulletinPhotoModel) {
+    if (this.isEditingPhoto(photo)) {
+      this.resetPhotoForm();
+      return;
+    }
+
+    this.editingPhoto = photo;
+    this.newPhoto = {
+      url: photo.url,
+      copyright: photo.copyright ?? undefined,
+      date: photo.date ?? undefined,
+      locationName: photo.locationName ?? undefined,
+      microregionId: photo.microregionId ?? undefined,
+    };
+  }
+
+  resetPhotoForm() {
+    this.editingPhoto = undefined;
+    this.newPhoto = {};
+  }
+
+  isEditingPhoto(photo: BulletinPhotoModel) {
+    return this.editingPhoto === photo;
   }
 
   removePhoto(photo: BulletinPhotoModel) {
@@ -393,6 +431,9 @@ export class AvalancheBulletinComponent implements OnInit {
     const idx = photos.indexOf(photo);
     if (idx >= 0) photos.splice(idx, 1);
     this.updateBulletinOnServer();
+    if (this.isEditingPhoto(photo)) {
+      this.resetPhotoForm();
+    }
   }
 
   getRegionNames(bulletin): string {

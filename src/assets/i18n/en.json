@@ -295,7 +295,8 @@
         "dangerRatingDirectionUp": "Upwards",
         "dangerRatingDirectionDown": "Downwards",
         "addPhoto": "Add photo",
-        "removePhoto": "Remove photo"
+        "removePhoto": "Remove photo",
+        "editPhoto": "Edit photo"
       },
       "save": " Save",
       "discard": " Discard",
