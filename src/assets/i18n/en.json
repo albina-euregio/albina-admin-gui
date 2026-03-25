@@ -364,7 +364,8 @@
         "url": "Image URL",
         "locationName": "Location",
         "microregion": "Microregion",
-        "copyright": "Copyright"
+        "copyright": "Copyright",
+        "date": "Date"
       },
       "placeholder": {
         "notes": "Write your notes here ..."

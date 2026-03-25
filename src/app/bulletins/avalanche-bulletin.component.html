@@ -444,6 +444,11 @@
                   <i class="ph ph-map-pin"></i> {{ photo.locationName }}
                 </span>
               }
+              @if (photo.date) {
+                <span class="text-secondary font-xs text-nowrap">
+                  <i class="ph ph-calendar"></i> {{ photo.date }}
+                </span>
+              }
               @if (!disabled()) {
                 <button
                   type="button"
@@ -498,7 +503,9 @@
                 <input id="photoLocation" type="text" class="form-control" [(ngModel)]="newPhoto.locationName" />
               </div>
               <div class="col-12 col-md-3">
-                <label for="photoDate"><i class="ph ph-calendar"></i> {{ "observations.eventDate" | translate }}</label>
+                <label for="photoDate"
+                  ><i class="ph ph-calendar"></i> {{ "bulletins.create.photos.date" | translate }}</label
+                >
                 <input id="photoDate" type="date" class="form-control" [(ngModel)]="newPhoto.date" />
               </div>
               <div class="col-12 col-md-1 d-flex align-items-end">
