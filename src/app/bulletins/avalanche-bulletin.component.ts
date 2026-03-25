@@ -13,7 +13,7 @@ import { environment } from "../../environments/environment";
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 // models
-import { BulletinPhotoModel } from "../models/bulletin-photo.model";
+import { BulletinPhotoModel, BulletinPhotoSchema } from "../models/bulletin-photo.model";
 import { BulletinModel } from "../models/bulletin.model";
 import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -388,13 +388,15 @@ export class AvalancheBulletinComponent implements OnInit {
       this.editingPhoto.locationName = this.newPhoto.locationName?.trim() || undefined;
       this.editingPhoto.microRegionId = this.newPhoto.microRegionId || undefined;
     } else {
-      this.bulletin().photos.push({
-        url,
-        copyright: this.newPhoto.copyright?.trim() || undefined,
-        date: this.newPhoto.date ?? undefined,
-        locationName: this.newPhoto.locationName?.trim() || undefined,
-        microRegionId: this.newPhoto.microRegionId || undefined,
-      });
+      this.bulletin().photos.push(
+        BulletinPhotoSchema.parse({
+          url,
+          copyright: this.newPhoto.copyright?.trim() || undefined,
+          date: this.newPhoto.date ?? undefined,
+          locationName: this.newPhoto.locationName?.trim() || undefined,
+          microRegionId: this.newPhoto.microRegionId || undefined,
+        }),
+      );
     }
 
     this.resetPhotoForm();
@@ -408,13 +410,13 @@ export class AvalancheBulletinComponent implements OnInit {
     }
 
     this.editingPhoto = photo;
-    this.newPhoto = {
+    this.newPhoto = BulletinPhotoSchema.parse({
       url: photo.url,
       copyright: photo.copyright ?? undefined,
       date: photo.date ?? undefined,
       locationName: photo.locationName ?? undefined,
       microRegionId: photo.microRegionId ?? undefined,
-    };
+    });
   }
 
   resetPhotoForm() {
