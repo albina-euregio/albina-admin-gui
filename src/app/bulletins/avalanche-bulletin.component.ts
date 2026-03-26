@@ -13,7 +13,7 @@ import { environment } from "../../environments/environment";
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 // models
-import { BulletinPhotoModel, BulletinPhotoSchema } from "../models/bulletin-photo.model";
+import { BulletinPhotoSchema } from "../models/bulletin-photo.model";
 import { BulletinModel } from "../models/bulletin.model";
 import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -24,6 +24,7 @@ import { CopyService } from "../providers/copy-service/copy.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { AvalanchePhotoComponent } from "./avalanche-photo.component";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
 
@@ -35,6 +36,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     BsDropdownModule,
     FormsModule,
     AccordionModule,
+    AvalanchePhotoComponent,
     AvalancheProblemComponent,
     BulletinTextComponent,
     DatePipe,
@@ -372,70 +374,10 @@ export class AvalancheBulletinComponent implements OnInit {
     return daytime.avalancheProblem5 !== undefined;
   }
 
-  newPhoto: Partial<BulletinPhotoModel> = {};
-  editingPhoto?: BulletinPhotoModel;
-
-  submitPhoto() {
-    console.log("submitPhoto", this.newPhoto);
-    // FIXME: disable submit button if url is empty and remove this check
-    const url = this.newPhoto.url?.trim();
-    if (!url) return;
-
-    if (this.editingPhoto) {
-      this.editingPhoto.url = url;
-      this.editingPhoto.copyright = this.newPhoto.copyright?.trim() || undefined;
-      this.editingPhoto.date = this.newPhoto.date ?? undefined;
-      this.editingPhoto.locationName = this.newPhoto.locationName?.trim() || undefined;
-      this.editingPhoto.microRegionId = this.newPhoto.microRegionId || undefined;
-    } else {
-      this.bulletin().photos.push(
-        BulletinPhotoSchema.parse({
-          url,
-          copyright: this.newPhoto.copyright?.trim() || undefined,
-          date: this.newPhoto.date ?? undefined,
-          locationName: this.newPhoto.locationName?.trim() || undefined,
-          microRegionId: this.newPhoto.microRegionId || undefined,
-        }),
-      );
-    }
-
-    this.resetPhotoForm();
+  createAvalanchePhoto() {
+    const newPhoto = BulletinPhotoSchema.parse({ url: "" });
+    this.bulletin().photos.push(newPhoto);
     this.updateBulletinOnServer();
-  }
-
-  editPhoto(photo: BulletinPhotoModel) {
-    if (this.isEditingPhoto(photo)) {
-      this.resetPhotoForm();
-      return;
-    }
-
-    this.editingPhoto = photo;
-    this.newPhoto = BulletinPhotoSchema.parse({
-      url: photo.url,
-      copyright: photo.copyright ?? undefined,
-      date: photo.date ?? undefined,
-      locationName: photo.locationName ?? undefined,
-      microRegionId: photo.microRegionId ?? undefined,
-    });
-  }
-
-  resetPhotoForm() {
-    this.editingPhoto = undefined;
-    this.newPhoto = {};
-  }
-
-  isEditingPhoto(photo: BulletinPhotoModel) {
-    return this.editingPhoto === photo;
-  }
-
-  removePhoto(photo: BulletinPhotoModel) {
-    const photos = this.bulletin().photos;
-    const idx = photos.indexOf(photo);
-    if (idx >= 0) photos.splice(idx, 1);
-    this.updateBulletinOnServer();
-    if (this.isEditingPhoto(photo)) {
-      this.resetPhotoForm();
-    }
   }
 
   getRegionNames(bulletin): string {

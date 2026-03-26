@@ -1,0 +1,31 @@
+<accordion class="avalanche-photos__accordion">
+  @for (photo of bulletin().photos; track photo.id) {
+    <accordion-group
+      [isOpen]="isPhotoOpen(photo.id)"
+      (isOpenChange)="accordionChanged($event, 'photo-' + photo.id)"
+      #accordionPhoto
+    >
+      <div accordion-heading class="avalanche-photo-preview__header">
+        @if (accordionPhoto.isOpen) {
+          <i class="accordion__arrow ph ph-caret-down"></i>
+        }
+        @if (!accordionPhoto.isOpen) {
+          <i class="accordion__arrow ph ph-caret-right"></i>
+        }
+        <app-avalanche-photo-preview
+          [photo]="photo"
+          [disabled]="disabled()"
+          (deleteAvalanchePhotoEvent)="deletePhoto(photo)"
+        ></app-avalanche-photo-preview>
+      </div>
+      <div>
+        <app-avalanche-photo-detail
+          [bulletin]="bulletin()"
+          [photo]="photo"
+          [disabled]="disabled()"
+          (changeAvalanchePhotoDetailEvent)="changeAvalanchePhotoDetail()"
+        ></app-avalanche-photo-detail>
+      </div>
+    </accordion-group>
+  }
+</accordion>

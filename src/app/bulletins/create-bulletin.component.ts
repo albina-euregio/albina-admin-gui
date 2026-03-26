@@ -25,6 +25,7 @@ import {
 } from "app/danger-sources/models/danger-source-variant.model";
 import { AvalancheProblemModel } from "app/models/avalanche-problem.model";
 import { BulletinDaytimeDescriptionModel } from "app/models/bulletin-daytime-description.model";
+import { BulletinPhotoModel } from "app/models/bulletin-photo.model";
 import { ServerModel } from "app/models/server.model";
 import { convertLangTextsToJSON, emptyLangTexts, LangTexts, toLangTexts } from "app/models/text.model";
 import { LocalStorageService } from "app/providers/local-storage-service/local-storage.service";
@@ -1292,6 +1293,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           if (this.activeBulletin.savedRegions !== bulletin.savedRegions) {
             this.activeBulletin.savedRegions = bulletin.savedRegions;
           }
+          this.syncUnsetPhotoIds(this.activeBulletin.photos, bulletin.photos);
         }
         bulletinsList.push(this.activeBulletin);
         if (this.activeBulletin.hasDaytimeDependency) {
@@ -1323,6 +1325,16 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.mapService.showEditSelection();
     } else if (this.activeBulletin) {
       this.mapService.selectAggregatedRegion(this.activeBulletin, this.comparedBulletin);
+    }
+  }
+
+  private syncUnsetPhotoIds(localPhotos: BulletinPhotoModel[], serverPhotos: BulletinPhotoModel[]) {
+    for (let i = 0; i < localPhotos.length && i < serverPhotos.length; i++) {
+      const localPhoto = localPhotos[i];
+      const serverPhoto = serverPhotos[i];
+      if (!localPhoto?.id && serverPhoto?.id) {
+        localPhoto.id = serverPhoto.id;
+      }
     }
   }
 

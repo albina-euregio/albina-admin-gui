@@ -422,109 +422,25 @@
             }
             <span>{{ "bulletins.create.title.photos" | translate }}</span>
           </h2>
+          <div class="btn-group accordion-header__buttons">
+            @if (!disabled()) {
+              <button
+                [disabled]="editRegions || !isCreator(bulletin())"
+                (click)="createAvalanchePhoto(); $event.stopPropagation()"
+                class="btn btn-primary btn-icon btn-sm"
+                title="{{ 'bulletins.create.createAvalanchePhoto' | translate }}"
+              >
+                <i class="ph ph-plus"></i>
+              </button>
+            }
+          </div>
         </div>
         <div id="region-form-photos" class="accordion-collapse -collapse show" data-bs-parent="#region-form-accordion">
-          @for (photo of bulletin().photos; track photo.id) {
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <a [href]="photo.url" target="_blank" rel="noopener" class="text-truncate flex-grow-1 font-xs">
-                <i class="ph ph-image"></i> {{ photo.url }}
-              </a>
-              @if (photo.copyright) {
-                <span class="text-secondary font-xs text-nowrap">
-                  <i class="ph ph-copyright"></i> {{ photo.copyright }}
-                </span>
-              }
-              @if (photo.microRegionId) {
-                <span class="text-secondary font-xs text-nowrap">
-                  <i class="ph ph-map-trifold"></i> {{ regionsService.getRegionName(photo.microRegionId) }}
-                </span>
-              }
-              @if (photo.locationName) {
-                <span class="text-secondary font-xs text-nowrap">
-                  <i class="ph ph-map-pin"></i> {{ photo.locationName }}
-                </span>
-              }
-              @if (photo.date) {
-                <span class="text-secondary font-xs text-nowrap">
-                  <i class="ph ph-calendar"></i> {{ photo.date }}
-                </span>
-              }
-              @if (!disabled()) {
-                <button
-                  type="button"
-                  class="btn btn-bare btn-sm btn-icon flex-shrink-0"
-                  (click)="editPhoto(photo)"
-                  title="{{
-                    isEditingPhoto(photo)
-                      ? ('bulletins.create.tooltip.discardChanges' | translate)
-                      : ('bulletins.create.tooltip.editPhoto' | translate)
-                  }}"
-                >
-                  <i [class]="isEditingPhoto(photo) ? 'ph ph-x' : 'ph ph-pencil-line'"></i>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-bare btn-sm btn-icon flex-shrink-0"
-                  (click)="removePhoto(photo)"
-                  title="{{ 'bulletins.create.tooltip.removePhoto' | translate }}"
-                >
-                  <i class="ph ph-trash"></i>
-                </button>
-              }
-            </div>
-          }
-          @if (!disabled()) {
-            <div class="row g-3 mt-2">
-              <div class="col-12 col-md-8">
-                <label for="photoURL"><i class="ph ph-link"></i> {{ "bulletins.create.photos.url" | translate }}</label>
-                <input id="photoURL" type="url" class="form-control" [(ngModel)]="newPhoto.url" />
-              </div>
-              <div class="col-12 col-md-4">
-                <label for="photoCopyright">
-                  <i class="ph ph-copyright"></i> {{ "bulletins.create.photos.copyright" | translate }}
-                </label>
-                <input id="photoCopyright" type="text" class="form-control" [(ngModel)]="newPhoto.copyright" />
-              </div>
-              <div class="col-12 col-md-4">
-                <label for="photoMicroregion">
-                  <i class="ph ph-map-trifold"></i> {{ "bulletins.create.photos.microregion" | translate }}
-                </label>
-                <select id="photoMicroregion" class="form-select" [(ngModel)]="newPhoto.microRegionId">
-                  <option [ngValue]="undefined"></option>
-                  @for (region of bulletin().getAllRegions(); track region) {
-                    <option [value]="region">{{ regionsService.getRegionName(region) }}</option>
-                  }
-                </select>
-              </div>
-              <div class="col-12 col-md-4">
-                <label for="photoLocation">
-                  <i class="ph ph-map-pin"></i> {{ "bulletins.create.photos.locationName" | translate }}
-                </label>
-                <input id="photoLocation" type="text" class="form-control" [(ngModel)]="newPhoto.locationName" />
-              </div>
-              <div class="col-12 col-md-3">
-                <label for="photoDate"
-                  ><i class="ph ph-calendar"></i> {{ "bulletins.create.photos.date" | translate }}</label
-                >
-                <input id="photoDate" type="date" class="form-control" [(ngModel)]="newPhoto.date" />
-              </div>
-              <div class="col-12 col-md-1 d-flex align-items-end">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-icon w-100"
-                  (click)="submitPhoto()"
-                  [disabled]="!newPhoto.url"
-                  title="{{
-                    editingPhoto
-                      ? ('bulletins.create.tooltip.saveChanges' | translate)
-                      : ('bulletins.create.tooltip.addPhoto' | translate)
-                  }}"
-                >
-                  <i [class]="editingPhoto ? 'ph ph-check' : 'ph ph-plus'"></i>
-                </button>
-              </div>
-            </div>
-          }
+          <app-avalanche-photo
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          ></app-avalanche-photo>
         </div>
       </accordion-group>
       <!-- End photos -->
