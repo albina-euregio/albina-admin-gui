@@ -376,7 +376,7 @@ export class AvalancheBulletinComponent implements OnInit {
   }
 
   createAvalanchePhoto() {
-    const newPhoto = BulletinPhotoSchema.parse({ url: "" });
+    const newPhoto = BulletinPhotoSchema.parse({ url: "", $accordionOpen: true });
     this.bulletin().photos.push(newPhoto);
     this.newPhoto = newPhoto;
     this.isAccordionPhotosOpen = true;

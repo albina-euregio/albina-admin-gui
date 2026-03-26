@@ -11,6 +11,7 @@ export const BulletinPhotoSchema = z.object({
   locationName: z.string().nullish(),
   latitude: z.number().nullish(),
   longitude: z.number().nullish(),
+  $accordionOpen: z.boolean().default(false),
 });
 
 export type BulletinPhotoModel = z.infer<typeof BulletinPhotoSchema>;
