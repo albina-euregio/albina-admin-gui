@@ -806,10 +806,10 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         let message =
           "<b>" + this.translateService.instant("bulletins.table.checkBulletinsDialog.message") + "</b><br><br>";
 
-        if ((data as any).length === 0) {
+        if (data.length === 0) {
           message += this.translateService.instant("bulletins.table.checkBulletinsDialog.ok");
         } else {
-          for (const entry of data as any) {
+          for (const entry of data) {
             if (entry === "missingDangerRating") {
               message +=
                 this.translateService.instant("bulletins.table.checkBulletinsDialog.missingDangerRating") + "<br>";
@@ -2154,7 +2154,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           let message =
             "<b>" + this.translateService.instant("bulletins.table.submitBulletinsDialog.message") + "</b><br><br>";
 
-          for (const entry of data as any) {
+          for (const entry of data) {
             if (entry === "duplicateRegion") {
               duplicateRegion = true;
             }
@@ -2326,7 +2326,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
           let message =
             "<b>" + this.translateService.instant("bulletins.table.publishBulletinsDialog.message") + "</b><br><br>";
 
-          for (const entry of data as any) {
+          for (const entry of data) {
             if (entry === "missingDangerRating") {
               message +=
                 this.translateService.instant("bulletins.table.publishBulletinsDialog.missingDangerRating") + "<br>";

@@ -460,7 +460,7 @@ export class BulletinsService {
       date: this.constantsService.getISOStringWithTimezoneOffset(date[0]),
       region: region,
     });
-    return this.http.get(url);
+    return this.http.get<string[]>(url);
   }
 
   getStressLevelColor(date: StressLevel["date"]) {
