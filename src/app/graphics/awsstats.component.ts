@@ -1,6 +1,4 @@
 import "@albina-euregio/linea/aws-stats";
-import { FeatureCollectionSchema as FeatureCollectionSchema } from "@albina-euregio/linea/listing";
-import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import {
@@ -17,11 +15,11 @@ import { TranslateModule } from "@ngx-translate/core";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 import { firstValueFrom } from "rxjs";
 
-import sources from "../../assets/config/stations.json";
 import { environment } from "../../environments/environment";
 import { type GenericObservation, toGeoJSON } from "../observations/models/generic-observation.model";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
+import { GraphicsService, type LineaStationFeature } from "./graphics.service";
 
 type ChartType =
   | "aws-observations"
@@ -39,6 +37,7 @@ type ChartType =
 })
 export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   private http = inject(HttpClient);
+  private graphicsService = inject(GraphicsService);
   protected mapService = inject(BaseMapService);
   protected stationsMapService = inject(LineaMapService);
 
@@ -68,7 +67,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   };
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
-  readonly stationById = new Map<string, StationFeature>();
+  readonly stationById = new Map<string, LineaStationFeature>();
   private readonly defaultStationSrc = "https://api.avalanche.report/lawine/grafiken/smet/winter/AXLIZ1.smet.gz";
   private isDestroyed = false;
 
@@ -294,41 +293,19 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
       delete this.stationMarkers[k];
     }
 
-    for (const source of sources) {
-      const url = source.stations;
-      const response = await fetch(url);
-      const json = await response.json();
-      const searchParams = new URL(url, location.href).searchParams;
-      const isLegacy = searchParams.get("v") === "legacy";
-      const schema = isLegacy ? LegacyFeatureCollectionSchema : FeatureCollectionSchema;
-      const collection = schema.parse(json, { reportInput: true });
+    const stations = await this.graphicsService.loadLineaStations();
 
-      for (const feature of collection.features) {
-        if (!new RegExp(source.smetOperators).test(feature.properties.operator)) {
-          continue;
-        }
+    for (const station of stations) {
+      this.stationById.set(station.id, station);
 
-        // cheap check... could maybe improved
-        const hasPsum = feature.properties.PSUM_6.value != undefined;
-        const station: StationFeature = {
-          id: feature.id,
-          name: feature.properties?.name,
-          shortName: feature.properties?.shortName ?? "",
-          smetId: feature.properties?.shortName ?? feature.id,
-          smet: source.smet,
-          hasPsum,
-        };
-        this.stationById.set(station.id, station);
+      const marker = new CircleMarker(
+        { lat: station.latitude, lng: station.longitude },
+        this.getStationMarkerOptions(false, station.hasPsum),
+      ).addTo(this.stationsMapService.stationLayer);
 
-        const marker = new CircleMarker(
-          { lat: feature.geometry.coordinates[1], lng: feature.geometry.coordinates[0] },
-          this.getStationMarkerOptions(false, hasPsum),
-        ).addTo(this.stationsMapService.stationLayer);
-
-        marker.bindTooltip(`${station.name || station.id}`);
-        marker.on("click", () => this.selectStation(station.id));
-        this.stationMarkers[station.id] = marker;
-      }
+      marker.bindTooltip(`${station.name || station.id}`);
+      marker.on("click", () => this.selectStation(station.id));
+      this.stationMarkers[station.id] = marker;
     }
   }
 
@@ -360,18 +337,6 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
   protected getSelectedStationSrc(): string {
     if (!this.selectedStationId) return this.defaultStationSrc;
     const station = this.stationById.get(this.selectedStationId);
-    if (!station) return this.defaultStationSrc;
-    const template = station.smet[1] || station.smet[0] || "";
-    const url = template ? template.replace(/\{id\}/g, station.smetId) : "";
-    return url || this.defaultStationSrc;
+    return this.graphicsService.resolveStationSrc(station, [1, 0], this.defaultStationSrc);
   }
-}
-
-interface StationFeature {
-  id: string;
-  name: string;
-  shortName: string;
-  smetId: string;
-  smet: string[];
-  hasPsum: boolean;
 }

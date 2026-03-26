@@ -147,6 +147,27 @@
           </label>
         </div>
       </div>
+
+      @if (showDistributionReferenceInput) {
+        <div class="yearlystats-controls-grid mt-3">
+          <div>
+            <label class="form-label mb-1" for="yearlystats-danger-rating-reference">{{
+              "yearlystats.label.dangerRatingReference" | translate
+            }}</label
+            ><br /><span class="small text-muted"
+              >Reference values for a danger rating distribution over different seasons, shown in grey</span
+            >
+            <input
+              id="yearlystats-danger-rating-reference"
+              class="form-control"
+              type="text"
+              value="19, 42, 37, 2.2, 0.1"
+              [(ngModel)]="dangerRatingReference"
+              (ngModelChange)="onReferenceChanged()"
+            />
+          </div>
+        </div>
+      }
     </div>
 
     @if (showProductsTrainingInputs) {
@@ -176,24 +197,6 @@
             placeholder="2026-01-20, 2026-03-05"
             [(ngModel)]="fieldTrainings"
             (ngModelChange)="onTrainingInputsChanged()"
-          />
-        </div>
-      </div>
-    }
-
-    @if (showDistributionReferenceInput) {
-      <div class="yearlystats-controls-grid mt-3">
-        <div>
-          <label class="form-label mb-1" for="yearlystats-danger-rating-reference">{{
-            "yearlystats.label.dangerRatingReference" | translate
-          }}</label>
-          <input
-            id="yearlystats-danger-rating-reference"
-            class="form-control"
-            type="text"
-            placeholder="19, 42, 37, 2.2, 0.1"
-            [(ngModel)]="dangerRatingReference"
-            (ngModelChange)="onReferenceChanged()"
           />
         </div>
       </div>

@@ -12,7 +12,7 @@ import { YearlystatsComponent } from "./yearlystats.component";
 @Component({
   selector: "app-graphics",
   standalone: true,
-  imports: [CommonModule, TranslateModule, LineaExportComponent, AwsstatsComponent, YearlystatsComponent, TabsModule],
+  imports: [CommonModule, TranslateModule, AwsstatsComponent, YearlystatsComponent, TabsModule, LineaExportComponent],
   templateUrl: "./graphics.component.html",
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
