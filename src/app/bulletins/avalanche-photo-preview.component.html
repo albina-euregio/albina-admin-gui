@@ -1,20 +1,14 @@
 <div class="avalanche-photo-preview">
-  <a [href]="photo().url" target="_blank" rel="noopener" class="text-truncate flex-grow-1 font-xs">
-    <i class="ph ph-image"></i> {{ photo().url }}
-  </a>
-  @if (photo().copyright) {
-    <span class="text-secondary font-xs text-nowrap"> <i class="ph ph-copyright"></i> {{ photo().copyright }} </span>
-  }
+  <span class="text-truncate flex-grow-1 font-xs ms-1">
+    <a [href]="photo().url" target="_blank" rel="noopener"> <i class="ph ph-image"></i> {{ photo().url }} </a>
+  </span>
   @if (photo().microRegionId) {
-    <span class="text-secondary font-xs text-nowrap">
+    <span class="font-s text-nowrap">
       <i class="ph ph-map-trifold"></i> {{ regionsService.getRegionName(photo().microRegionId) }}
     </span>
   }
   @if (photo().locationName) {
-    <span class="text-secondary font-xs text-nowrap"> <i class="ph ph-map-pin"></i> {{ photo().locationName }} </span>
-  }
-  @if (photo().date) {
-    <span class="text-secondary font-xs text-nowrap"> <i class="ph ph-calendar"></i> {{ photo().date }} </span>
+    <span class="font-s text-nowrap"> <i class="ph ph-map-pin"></i> {{ photo().locationName }} </span>
   }
   @if (!disabled()) {
     <button
