@@ -493,20 +493,17 @@ export class BulletinsService {
     this.accordionChangedSubject.next(event);
   }
 
-  isDateEditable(date: [Date, Date]): boolean {
-    return (
-      ((this.getUserRegionStatus(date) === Enums.BulletinStatus.missing ||
-        this.getUserRegionStatus(date) === undefined) &&
-        !this.hasBeenPublished5PM(this.getActiveDate())) ||
-      this.getUserRegionStatus(date) === Enums.BulletinStatus.updated ||
-      this.getUserRegionStatus(date) === Enums.BulletinStatus.draft
-    );
-  }
-
   updateEditable() {
     const activeDate = this.getActiveDate();
-    if (activeDate) {
-      this.setIsEditable(this.isDateEditable(activeDate));
+    if (!activeDate) {
+      return;
     }
+    this.setIsEditable(
+      ((this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.missing ||
+        this.getUserRegionStatus(activeDate) === undefined) &&
+        !this.hasBeenPublished5PM(activeDate)) ||
+        this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.updated ||
+        this.getUserRegionStatus(activeDate) === Enums.BulletinStatus.draft,
+    );
   }
 }
