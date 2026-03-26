@@ -2,11 +2,16 @@ import { formatDate } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { firstValueFrom, Observable } from "rxjs";
-import { map, mergeAll } from "rxjs/operators";
+import { map, mergeAll, toArray } from "rxjs/operators";
 
 import { environment } from "../../environments/environment";
-import { GenericObservation } from "./models/generic-observation.model";
+import { GenericObservation, toGeoJSON } from "./models/generic-observation.model";
 import { ObservationFilterService } from "./observation-filter.service";
+
+type ObservationDateRangeParams = {
+  startDate: string;
+  endDate: string;
+};
 
 @Injectable()
 export class AlbinaObservationsService {
@@ -16,6 +21,16 @@ export class AlbinaObservationsService {
   getGenericObservations(): Observable<GenericObservation> {
     const url = environment.apiBaseUrl + "../api_ext/observations";
     return this.getGenericObservations0(url, this.filter.dateRangeParams);
+  }
+
+  getGenericObservationsGeoJSON(
+    dateRangeParams: ObservationDateRangeParams = this.filter.dateRangeParams,
+  ): Observable<GeoJSON.FeatureCollection> {
+    const url = environment.apiBaseUrl + "../api_ext/observations";
+    return this.getGenericObservations0(url, dateRangeParams).pipe(
+      toArray(),
+      map((observations) => toGeoJSON(observations)),
+    );
   }
 
   getObservers(): Observable<GenericObservation> {

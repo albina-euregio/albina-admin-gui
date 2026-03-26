@@ -1,6 +1,5 @@
 import "@albina-euregio/linea/aws-stats";
 import { CommonModule } from "@angular/common";
-import { HttpClient } from "@angular/common/http";
 import {
   AfterViewInit,
   Component,
@@ -15,8 +14,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 import { firstValueFrom } from "rxjs";
 
-import { environment } from "../../environments/environment";
-import { type GenericObservation, toGeoJSON } from "../observations/models/generic-observation.model";
+import { AlbinaObservationsService } from "../observations/observations.service";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
 import { GraphicsService, type LineaStationFeature } from "./graphics.service";
@@ -36,7 +34,7 @@ type ChartType =
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AwsstatsComponent implements AfterViewInit, OnDestroy {
-  private http = inject(HttpClient);
+  private observationsService = inject(AlbinaObservationsService);
   private graphicsService = inject(GraphicsService);
   protected mapService = inject(BaseMapService);
   protected stationsMapService = inject(LineaMapService);
@@ -147,10 +145,8 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     this.errorMessage = "";
     try {
       this.showWrapper = false;
-      const url = environment.apiBaseUrl + "../api_ext/observations";
       const params = this.getObservationDateRangeParams(this.startDate, this.endDate);
-      const observations = await firstValueFrom(this.http.get<GenericObservation[]>(url, { params }));
-      const collection: GeoJSON.FeatureCollection = toGeoJSON(observations ?? []);
+      const collection = await firstValueFrom(this.observationsService.getGenericObservationsGeoJSON(params));
       const blob = new Blob([JSON.stringify(collection, undefined, 2)], { type: "application/geo+json" });
       this.revokeObservationsUrl();
       this.wrapperStartDate = this.startDate;
