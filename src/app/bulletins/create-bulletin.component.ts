@@ -252,6 +252,13 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.bulletinsService.setIsReadOnly(params.readOnly ? params.readOnly.toLocaleLowerCase() === "true" : false);
       this.loadExternalBulletins = params.external !== "false";
     });
+
+    this.bulletinsService.statusLoaded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      const activeDate = this.bulletinsService.getActiveDate();
+      if (activeDate) {
+        this.bulletinsService.setIsEditable(this.isDateEditable(activeDate));
+      }
+    });
   }
 
   @HostListener("window:resize", ["$event"])

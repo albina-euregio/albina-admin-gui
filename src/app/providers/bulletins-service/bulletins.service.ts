@@ -52,6 +52,8 @@ export class BulletinsService {
 
   private accordionChangedSubject = new Subject<AccordionChangeEvent>(); // used to synchronize accordion between compared bulletins
   accordionChanged$: Observable<AccordionChangeEvent> = this.accordionChangedSubject.asObservable();
+  private statusLoadedSubject = new Subject<void>();
+  statusLoaded$: Observable<void> = this.statusLoadedSubject.asObservable();
 
   readonly undoRedo = new UndoRedoState<BulletinModel>(
     (bulletin) => bulletin,
@@ -100,10 +102,12 @@ export class BulletinsService {
     this.getStatus(this.authenticationService.getActiveRegionId(), startDate, endDate).subscribe(
       (data) => {
         const map = new Map<number, Enums.BulletinStatus>();
-        for (let i = (data as any).length - 1; i >= 0; i--) {
-          map.set(Date.parse((data as any)[i].date), Enums.BulletinStatus[(data as any)[i].status as string]);
+        for (let i = data.length - 1; i >= 0; i--) {
+          map.set(Date.parse(data[i].date), Enums.BulletinStatus[data[i].status]);
         }
-        this.statusMap.set(this.authenticationService.getActiveRegionId(), map);
+        const region = this.authenticationService.getActiveRegionId();
+        this.statusMap.set(region, map);
+        this.statusLoadedSubject.next();
       },
       () => {
         console.error("Status {} could not be loaded!", this.authenticationService.getActiveRegionId());
@@ -113,10 +117,11 @@ export class BulletinsService {
       this.getStatus(neighborRegion, startDate, endDate).subscribe(
         (data) => {
           const map = new Map<number, Enums.BulletinStatus>();
-          for (let i = (data as any).length - 1; i >= 0; i--) {
-            map.set(Date.parse((data as any)[i].date), Enums.BulletinStatus[(data as any)[i].status as string]);
+          for (let i = data.length - 1; i >= 0; i--) {
+            map.set(Date.parse(data[i].date), Enums.BulletinStatus[data[i].status]);
           }
           this.statusMap.set(neighborRegion, map);
+          this.statusLoadedSubject.next();
         },
         () => {
           console.error("Status {} could not be loaded!", neighborRegion);
