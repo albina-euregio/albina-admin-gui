@@ -172,29 +172,9 @@
       <div class="d-inline-block">
         <select [(ngModel)]="selectedModelPoint" class="custom-select" style="max-width: 70vw">
           @for (point of dropDownOptions[selectedModelType]; track point) {
-            <option
-              [ngValue]="point"
-              [class.d-none]="showObservationConfigurations && point.$data.configuration !== observationConfiguration"
-            >
+            <option [ngValue]="point">
               {{ point.region }}:
               {{ point.locationName }}
-            </option>
-          }
-        </select>
-      </div>
-    }
-
-    @if (showObservationConfigurations) {
-      <div class="d-inline-block">
-        <select
-          class="custom-select"
-          style="max-width: 70vw"
-          [(ngModel)]="observationConfiguration"
-          (change)="setObservationConfiguration()"
-        >
-          @for (configuration of observationConfigurations; track configuration) {
-            <option [ngValue]="configuration">
-              {{ configuration }}
             </option>
           }
         </select>
@@ -222,24 +202,6 @@
       <kbd (click)="changeRun(-1)" ngxMousetrapKey="left" role="button">←</kbd>
       {{ " " }}
       <kbd (click)="changeRun(+1)" ngxMousetrapKey="right" role="button">→</kbd>
-      @if (showObservationConfigurations) {
-        {{ " " }}
-        <kbd
-          (click)="changeRun(-1, 'observationConfiguration'); setObservationConfiguration()"
-          ngxMousetrapKey="up"
-          role="button"
-          >↑</kbd
-        >
-      }
-      @if (showObservationConfigurations) {
-        {{ " " }}
-        <kbd
-          (click)="changeRun(+1, 'observationConfiguration'); setObservationConfiguration()"
-          ngxMousetrapKey="down"
-          role="button"
-          >↓</kbd
-        >
-      }
       zum Blättern
     </div>
     <button type="button" class="btn-close" aria-label="Close" (click)="modalService.hide()"></button>

@@ -28,11 +28,6 @@ test("check all links in navbar", async ({ page }) => {
     await expect(page).toHaveURL(/modelling\/geosphere/);
     await expect(page.locator("#observationsMap")).toBeVisible();
   });
-  await test.step("SNOWPACK", async () => {
-    await page.getByRole("link", { name: "SNOWPACK", exact: true }).click();
-    await expect(page).toHaveURL(/modelling\/snowpack/);
-    await expect(page.locator("#observationsMap")).toBeVisible();
-  });
   await test.step("AWSOME", async () => {
     await page.getByRole("link", { name: "AWSOME", exact: true }).click();
     await expect(page).toHaveURL(/modelling\/awsome/);
