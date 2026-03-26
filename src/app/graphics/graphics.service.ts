@@ -4,11 +4,11 @@ import { Injectable } from "@angular/core";
 
 import sources from "../../assets/config/stations.json";
 
-type LineaStationSource = {
+interface LineaStationSource {
   stations: string;
   smetOperators: string;
   smet: string[];
-};
+}
 
 export interface LineaStationFeature {
   id: string;
@@ -26,7 +26,8 @@ export class GraphicsService {
   async loadLineaStations(): Promise<LineaStationFeature[]> {
     const stationById = new Map<string, LineaStationFeature>();
 
-    for (const source of sources as LineaStationSource[]) {
+    let source: LineaStationSource;
+    for (source of sources) {
       const response = await fetch(source.stations);
       const json = await response.json();
       const searchParams = new URL(source.stations, location.href).searchParams;
