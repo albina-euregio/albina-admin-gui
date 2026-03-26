@@ -64,6 +64,17 @@
         />
         <span class="form-check-label">{{ "awsstats.charts.aws-danger-rating-altitude" | translate }}</span>
       </label>
+
+      <label class="form-check mb-0">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="chartTypeSelection['aws-avalanche-activity-index']"
+          [disabled]="loading"
+          (ngModelChange)="setChartType('aws-avalanche-activity-index', $event)"
+        />
+        <span class="form-check-label">{{ "awsstats.charts.aws-avalanche-activity-index" | translate }}</span>
+      </label>
     </div>
   </div>
 

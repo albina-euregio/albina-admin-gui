@@ -23,6 +23,12 @@ import { type GenericObservation, toGeoJSON } from "../observations/models/gener
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
 
+type ChartType =
+  | "aws-observations"
+  | "aws-danger-rating"
+  | "aws-danger-rating-altitude"
+  | "aws-avalanche-activity-index";
+
 @Component({
   selector: "app-awsstats",
   standalone: true,
@@ -58,6 +64,7 @@ export class AwsstatsComponent implements AfterViewInit, OnDestroy {
     "aws-observations": true,
     "aws-danger-rating": false,
     "aws-danger-rating-altitude": false,
+    "aws-avalanche-activity-index": false,
   };
 
   private readonly stationMarkers: Record<string, CircleMarker> = {};
@@ -368,5 +375,3 @@ interface StationFeature {
   smet: string[];
   hasPsum: boolean;
 }
-
-type ChartType = "aws-observations" | "aws-danger-rating" | "aws-danger-rating-altitude";
