@@ -13,6 +13,7 @@ import { environment } from "../../environments/environment";
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 // models
+import { BulletinPhotoSchema } from "../models/bulletin-photo.model";
 import { BulletinModel } from "../models/bulletin.model";
 import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -23,6 +24,7 @@ import { CopyService } from "../providers/copy-service/copy.service";
 import { RegionsService } from "../providers/regions-service/regions.service";
 import type { UndoOrRedo } from "../providers/undo-redo-service/undo-redo.service";
 import { NgxMousetrapDirective } from "../shared/mousetrap-directive";
+import { AvalanchePhotoComponent } from "./avalanche-photo.component";
 import { AvalancheProblemComponent } from "./avalanche-problem.component";
 import { BulletinTextComponent } from "./bulletin-text.component";
 
@@ -34,6 +36,7 @@ import { BulletinTextComponent } from "./bulletin-text.component";
     BsDropdownModule,
     FormsModule,
     AccordionModule,
+    AvalanchePhotoComponent,
     AvalancheProblemComponent,
     BulletinTextComponent,
     DatePipe,
@@ -78,6 +81,7 @@ export class AvalancheBulletinComponent implements OnInit {
   public isAccordionAvalancheProblemAfternoonOpen: boolean;
   public isAccordionDangerDescriptionOpen: boolean;
   public isAccordionSnowpackStructureOpen: boolean;
+  public isAccordionPhotosOpen: boolean;
   public isAccordionTendencyOpen: boolean;
   public isAccordionSynopsisOpen: boolean;
 
@@ -117,6 +121,9 @@ export class AvalancheBulletinComponent implements OnInit {
           break;
         case "snowpackStructure":
           this.isAccordionSnowpackStructureOpen = isOpen;
+          break;
+        case "photos":
+          this.isAccordionPhotosOpen = isOpen;
           break;
         case "tendency":
           this.isAccordionTendencyOpen = isOpen;
@@ -365,6 +372,13 @@ export class AvalancheBulletinComponent implements OnInit {
   hasFiveAvalancheProblems(isAfternoon: boolean) {
     const daytime = isAfternoon ? this.bulletin().afternoon : this.bulletin().forenoon;
     return daytime.avalancheProblem5 !== undefined;
+  }
+
+  createAvalanchePhoto() {
+    const newPhoto = BulletinPhotoSchema.parse({ url: "", $accordionOpen: true });
+    this.bulletin().photos.push(newPhoto);
+    this.isAccordionPhotosOpen = true;
+    this.updateBulletinOnServer();
   }
 
   getRegionNames(bulletin): string {

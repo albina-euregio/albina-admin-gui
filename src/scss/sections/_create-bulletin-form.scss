@@ -104,7 +104,8 @@ $region-form-width: 512px;
   }
 }
 
-.avalanche-problems__accordion {
+.avalanche-problems__accordion,
+.avalanche-photos__accordion {
   accordion-group {
     border: $region-form-border !important;
   }
@@ -132,9 +133,22 @@ $region-form-width: 512px;
 app-avalanche-problem-preview,
 .avalanche-problem-preview__header,
 .avalanche-problem__preview,
-.avalanche-problem-preview__info {
+.avalanche-problem-preview__info,
+.avalanche-photo-preview__header {
   display: flex;
   flex-flow: row;
+  align-items: center;
+}
+
+app-avalanche-photo-preview {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+.avalanche-photo-preview {
+  display: flex;
+  gap: $space-2;
   align-items: center;
 }
 
