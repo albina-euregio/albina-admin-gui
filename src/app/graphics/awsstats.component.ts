@@ -1,5 +1,8 @@
 import "@albina-euregio/linea/aws-stats";
+import { FeatureCollectionSchema as FeatureCollectionSchema } from "@albina-euregio/linea/listing";
+import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { CommonModule } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import {
   AfterViewInit,
   Component,
@@ -9,20 +12,16 @@ import {
   ViewChild,
   inject,
 } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+import { CircleMarker, CircleMarkerOptions } from "leaflet";
 import { firstValueFrom } from "rxjs";
+
+import sources from "../../assets/config/stations.json";
 import { environment } from "../../environments/environment";
 import { type GenericObservation, toGeoJSON } from "../observations/models/generic-observation.model";
 import { BaseMapService } from "../providers/map-service/base-map.service";
 import { LineaMapService } from "../providers/map-service/linea-map.service";
-import { CircleMarker, CircleMarkerOptions } from "leaflet";
-import { listingLegacy, listing } from "@albina-euregio/linea";
-import sources from "../../assets/config/stations.json";
-
-const FeatureCollectionSchema = listing.FeatureCollectionSchema;
-const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema;
 
 @Component({
   selector: "app-awsstats",
