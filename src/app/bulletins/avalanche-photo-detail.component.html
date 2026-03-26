@@ -4,9 +4,11 @@
     <input
       id="photoURL"
       type="url"
+      required
       class="form-control"
       [ngModel]="photo().url"
       (ngModelChange)="onPhotoFieldChange('url', $event)"
+      [class.is-invalid]="isPhotoUrlInvalid()"
       [disabled]="disabled()"
     />
   </div>
