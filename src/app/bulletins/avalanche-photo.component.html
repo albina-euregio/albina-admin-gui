@@ -1,10 +1,6 @@
 <accordion class="avalanche-photos__accordion">
-  @for (photo of bulletin().photos; track photo.id) {
-    <accordion-group
-      [isOpen]="isPhotoOpen(photo.id)"
-      (isOpenChange)="accordionChanged($event, 'photo-' + photo.id)"
-      #accordionPhoto
-    >
+  @for (photo of bulletin().photos; track photo) {
+    <accordion-group [isOpen]="isPhotoOpen(photo)" (isOpenChange)="accordionChanged($event, photo)" #accordionPhoto>
       <div accordion-heading class="avalanche-photo-preview__header">
         @if (accordionPhoto.isOpen) {
           <i class="accordion__arrow ph ph-caret-down"></i>

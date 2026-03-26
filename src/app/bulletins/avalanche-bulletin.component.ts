@@ -13,7 +13,7 @@ import { environment } from "../../environments/environment";
 import * as Enums from "../enums/enums";
 import { AvalancheProblemModel } from "../models/avalanche-problem.model";
 // models
-import { BulletinPhotoSchema } from "../models/bulletin-photo.model";
+import { BulletinPhotoModel, BulletinPhotoSchema } from "../models/bulletin-photo.model";
 import { BulletinModel } from "../models/bulletin.model";
 import { convertLangTextsToJSON, LangTexts } from "../models/text.model";
 import { AuthenticationService } from "../providers/authentication-service/authentication.service";
@@ -84,6 +84,7 @@ export class AvalancheBulletinComponent implements OnInit {
   public isAccordionPhotosOpen: boolean;
   public isAccordionTendencyOpen: boolean;
   public isAccordionSynopsisOpen: boolean;
+  public newPhoto: BulletinPhotoModel | undefined;
 
   public catalogOfPhrasesModalRef: BsModalRef;
   public pmUrl: SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(environment.textcatUrl);
@@ -377,6 +378,8 @@ export class AvalancheBulletinComponent implements OnInit {
   createAvalanchePhoto() {
     const newPhoto = BulletinPhotoSchema.parse({ url: "" });
     this.bulletin().photos.push(newPhoto);
+    this.newPhoto = newPhoto;
+    this.isAccordionPhotosOpen = true;
     this.updateBulletinOnServer();
   }
 
