@@ -8,12 +8,12 @@ import { map } from "rxjs/operators";
 import { z } from "zod/v4";
 
 import * as Enums from "../../enums/enums";
+import { TextcatTextfield } from "../../enums/enums";
 import { RegionConfiguration, RegionConfigurationSchema } from "../../models/region-configuration.model";
 import { ServerConfiguration } from "../../models/server-configuration.model";
 import { ServerModel, ServerSchema } from "../../models/server.model";
 import { ConstantsService } from "../constants-service/constants.service";
 import { LocalStorageService } from "../local-storage-service/local-storage.service";
-import { TextcatTextfield } from "../../enums/enums";
 
 @Injectable()
 export class AuthenticationService {
@@ -258,36 +258,13 @@ export class AuthenticationService {
     }
   }
 
-  private isCurrentUserInRole(role: Enums.UserRole): boolean {
-    const roles = this.currentAuthor?.roles ?? [];
+  public isCurrentUserInRole(...roles0: (keyof typeof Enums.UserRole)[]): boolean {
+    let roles: Enums.UserRole[] = this.currentAuthor?.roles ?? [];
     // if the user is an observer and has training mode enabled then they are temporarily upgraded to forecaster
     if (roles.includes(Enums.UserRole.OBSERVER) && this.localStorageService.isTrainingEnabled) {
-      const updatedRoles: Enums.UserRole[] = roles.map((r) =>
-        r === Enums.UserRole.OBSERVER ? Enums.UserRole.FORECASTER : r,
-      );
-      return updatedRoles.includes(role);
+      roles = roles.map((r) => (r === Enums.UserRole.OBSERVER ? Enums.UserRole.FORECASTER : r));
     }
-    return roles.includes(role);
-  }
-
-  public isCurrentUserAdmin() {
-    return this.isCurrentUserInRole(Enums.UserRole.ADMIN);
-  }
-
-  public isCurrentUserForecaster() {
-    return this.isCurrentUserInRole(Enums.UserRole.FORECASTER);
-  }
-
-  public isCurrentUserForeman() {
-    return this.isCurrentUserInRole(Enums.UserRole.FOREMAN);
-  }
-
-  public isCurrentUserForecasterOrForman() {
-    return this.isCurrentUserInRole(Enums.UserRole.FORECASTER) || this.isCurrentUserInRole(Enums.UserRole.FOREMAN);
-  }
-
-  public isCurrentUserObserver() {
-    return this.isCurrentUserInRole(Enums.UserRole.OBSERVER);
+    return roles0.some((role) => roles.includes(Enums.UserRole[role]));
   }
 
   public getCurrentAuthorRegions(): RegionConfiguration[] {

@@ -184,7 +184,7 @@
               <hr class="dropdown-divider" />
             </li>
             <li>
-              @if (authenticationService.isCurrentUserForecaster()) {
+              @if (authenticationService.isCurrentUserInRole("FORECASTER")) {
                 <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/statistics']">
                   <i class="ph ph-chart-line"></i>
                   {{ "menu.statistics" | translate }}
@@ -198,7 +198,7 @@
               </a>
             </li>
             <li>
-              @if (authenticationService.isCurrentUserAdmin()) {
+              @if (authenticationService.isCurrentUserInRole("ADMIN")) {
                 <a class="dropdown-item" routerLinkActive="active" [routerLink]="['/admin']" ngxMousetrapKey="a">
                   <i class="ph ph-detective"></i>
                   {{ "menu.admin" | translate }}

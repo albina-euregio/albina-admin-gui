@@ -81,6 +81,6 @@ export class SettingsComponent {
   }
 
   isAdmin() {
-    return this.authenticationService.isCurrentUserAdmin();
+    return this.authenticationService.isCurrentUserInRole("ADMIN");
   }
 }

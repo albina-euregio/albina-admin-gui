@@ -974,7 +974,7 @@
     </div>
 
     <div class="btn-group-vertical btn-group--border region-thumb__actions">
-      @if (!copyService.isCopyBulletin() && !authenticationService.isCurrentUserObserver()) {
+      @if (!copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole("OBSERVER")) {
         <button
           [disabled]="loading || editRegions"
           type="button"

@@ -25,7 +25,7 @@ export class RegionsConfigurationComponent implements AfterContentInit {
   public regionConfigurations: RegionConfiguration[];
 
   ngAfterContentInit() {
-    if (this.authenticationService.isCurrentUserAdmin()) {
+    if (this.authenticationService.isCurrentUserInRole("ADMIN")) {
       this.configurationService.loadRegionConfigurations().subscribe(
         (data) => {
           this.regionConfigurations = data.sort((r1, r2) =>

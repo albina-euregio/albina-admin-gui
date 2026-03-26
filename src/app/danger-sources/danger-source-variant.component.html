@@ -120,7 +120,7 @@
             <i class="ph ph-globe-hemisphere-west"></i>
           </button>
         }
-        @if (!editRegions && !authenticationService.isCurrentUserObserver()) {
+        @if (!editRegions && !authenticationService.isCurrentUserInRole("OBSERVER")) {
           <button
             (click)="copyVariant()"
             data-toggle="tooltip"

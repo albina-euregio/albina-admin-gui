@@ -87,7 +87,7 @@
             <i class="ph ph-globe-hemisphere-west"></i>
           </button>
         }
-        @if (!editRegions && !copyService.isCopyBulletin() && !authenticationService.isCurrentUserObserver()) {
+        @if (!editRegions && !copyService.isCopyBulletin() && !authenticationService.isCurrentUserInRole("OBSERVER")) {
           <button
             (click)="copyBulletin()"
             data-toggle="tooltip"
@@ -188,7 +188,11 @@
             <i class="ph ph-globe-hemisphere-west"></i>
           </button>
         }
-        @if (!isComparedBulletin() && !copyService.isCopyBulletin() && !authenticationService.isCurrentUserObserver()) {
+        @if (
+          !isComparedBulletin() &&
+          !copyService.isCopyBulletin() &&
+          !authenticationService.isCurrentUserInRole("OBSERVER")
+        ) {
           <button
             (click)="copyBulletin()"
             data-toggle="tooltip"
