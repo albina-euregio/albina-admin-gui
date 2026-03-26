@@ -8,11 +8,6 @@ import { environment } from "../../environments/environment";
 import { GenericObservation, toGeoJSON } from "./models/generic-observation.model";
 import { ObservationFilterService } from "./observation-filter.service";
 
-type ObservationDateRangeParams = {
-  startDate: string;
-  endDate: string;
-};
-
 @Injectable()
 export class AlbinaObservationsService {
   private http = inject(HttpClient);
@@ -23,9 +18,7 @@ export class AlbinaObservationsService {
     return this.getGenericObservations0(url, this.filter.dateRangeParams);
   }
 
-  getGenericObservationsGeoJSON(
-    dateRangeParams: ObservationDateRangeParams = this.filter.dateRangeParams,
-  ): Observable<GeoJSON.FeatureCollection> {
+  getGenericObservationsGeoJSON(dateRangeParams = this.filter.dateRangeParams): Observable<GeoJSON.FeatureCollection> {
     const url = environment.apiBaseUrl + "../api_ext/observations";
     return this.getGenericObservations0(url, dateRangeParams).pipe(
       toArray(),
