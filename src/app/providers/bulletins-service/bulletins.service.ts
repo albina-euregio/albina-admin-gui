@@ -494,4 +494,14 @@ export class BulletinsService {
   emitAccordionChanged(event: AccordionChangeEvent) {
     this.accordionChangedSubject.next(event);
   }
+
+  isDateEditable(date: [Date, Date]): boolean {
+    return (
+      ((this.getUserRegionStatus(date) === Enums.BulletinStatus.missing ||
+        this.getUserRegionStatus(date) === undefined) &&
+        !this.hasBeenPublished5PM(this.getActiveDate())) ||
+      this.getUserRegionStatus(date) === Enums.BulletinStatus.updated ||
+      this.getUserRegionStatus(date) === Enums.BulletinStatus.draft
+    );
+  }
 }

@@ -256,7 +256,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
     this.bulletinsService.statusLoaded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       const activeDate = this.bulletinsService.getActiveDate();
       if (activeDate) {
-        this.bulletinsService.setIsEditable(this.isDateEditable(activeDate));
+        this.bulletinsService.setIsEditable(this.bulletinsService.isDateEditable(activeDate));
       }
     });
   }
@@ -390,7 +390,7 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
         this.mapService.deselectAggregatedRegion();
       }
 
-      if (this.isDateEditable(this.bulletinsService.getActiveDate())) {
+      if (this.bulletinsService.isDateEditable(this.bulletinsService.getActiveDate())) {
         this.bulletinsService.setIsEditable(true);
       } else {
         this.bulletinsService.setIsEditable(false);
@@ -496,16 +496,6 @@ export class CreateBulletinComponent implements OnInit, OnDestroy {
       this.editRegions ||
       !this.isCreator(this.activeBulletin) ||
       this.authenticationService.isCurrentUserInRole(this.constantsService.roleObserver)
-    );
-  }
-
-  isDateEditable(date: [Date, Date]) {
-    return (
-      ((this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.missing ||
-        this.bulletinsService.getUserRegionStatus(date) === undefined) &&
-        !this.bulletinsService.hasBeenPublished5PM(this.bulletinsService.getActiveDate())) ||
-      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.updated ||
-      this.bulletinsService.getUserRegionStatus(date) === Enums.BulletinStatus.draft
     );
   }
 
