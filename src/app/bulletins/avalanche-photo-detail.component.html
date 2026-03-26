@@ -1,0 +1,69 @@
+<div class="row g-3 mt-2">
+  <div class="col-12 col-md-8">
+    <label for="photoURL"><i class="ph ph-link"></i> {{ "bulletins.create.photos.url" | translate }}</label>
+    <input
+      id="photoURL"
+      type="url"
+      required
+      class="form-control"
+      [ngModel]="photo().url"
+      (ngModelChange)="onPhotoFieldChange('url', $event)"
+      [class.is-invalid]="isPhotoUrlInvalid()"
+      [disabled]="disabled()"
+    />
+  </div>
+  <div class="col-12 col-md-4">
+    <label for="photoCopyright">
+      <i class="ph ph-copyright"></i> {{ "bulletins.create.photos.copyright" | translate }}
+    </label>
+    <input
+      id="photoCopyright"
+      type="text"
+      class="form-control"
+      [ngModel]="photo().copyright"
+      (ngModelChange)="onPhotoFieldChange('copyright', $event)"
+      [disabled]="disabled()"
+    />
+  </div>
+  <div class="col-12 col-md-4">
+    <label for="photoMicroregion">
+      <i class="ph ph-map-trifold"></i> {{ "bulletins.create.photos.microregion" | translate }}
+    </label>
+    <select
+      id="photoMicroregion"
+      class="form-select"
+      [ngModel]="photo().microRegionId"
+      (ngModelChange)="onPhotoFieldChange('microRegionId', $event)"
+      [disabled]="disabled()"
+    >
+      <option [ngValue]="undefined"></option>
+      @for (region of bulletin().getAllRegions(); track region) {
+        <option [value]="region">{{ regionsService.getRegionName(region) }}</option>
+      }
+    </select>
+  </div>
+  <div class="col-12 col-md-4">
+    <label for="photoLocation">
+      <i class="ph ph-map-pin"></i> {{ "bulletins.create.photos.locationName" | translate }}
+    </label>
+    <input
+      id="photoLocation"
+      type="text"
+      class="form-control"
+      [ngModel]="photo().locationName"
+      (ngModelChange)="onPhotoFieldChange('locationName', $event)"
+      [disabled]="disabled()"
+    />
+  </div>
+  <div class="col-12 col-md-4">
+    <label for="photoDate"><i class="ph ph-calendar"></i> {{ "bulletins.create.photos.date" | translate }}</label>
+    <input
+      id="photoDate"
+      type="date"
+      class="form-control"
+      [ngModel]="photo().date"
+      (ngModelChange)="onPhotoFieldChange('date', $event)"
+      [disabled]="disabled()"
+    />
+  </div>
+</div>

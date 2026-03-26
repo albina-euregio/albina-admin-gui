@@ -8,6 +8,7 @@ import {
   BulletinDaytimeDescriptionModel,
   BulletinDaytimeDescriptionSchema,
 } from "./bulletin-daytime-description.model";
+import { BulletinPhotoSchema } from "./bulletin-photo.model";
 import { TextSchema } from "./text.model";
 import { UserSchema } from "./user.model";
 
@@ -63,6 +64,8 @@ export const BulletinSchema = z.object({
   tendency: z.enum(Enums.Tendency).nullish(),
   dangerPattern1: z.enum(Enums.DangerPattern).nullish(),
   dangerPattern2: z.enum(Enums.DangerPattern).nullish(),
+
+  photos: BulletinPhotoSchema.array().default(() => []),
 
   avActivityComment: TextSchema.array().default(() => []),
   avActivityCommentNotes: z.string().nullish(),

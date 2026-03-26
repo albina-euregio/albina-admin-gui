@@ -410,6 +410,41 @@
       </accordion-group>
       <!-- End danger description -->
 
+      <!-- Photos -->
+      <accordion-group [isOpen]="isAccordionPhotosOpen" (isOpenChange)="accordionChanged($event, 'photos')">
+        <div accordion-heading class="accordion-header">
+          <h2 class="accordion-header__title">
+            @if (!isAccordionPhotosOpen) {
+              <i class="accordion__arrow ph ph-caret-right"></i>
+            }
+            @if (isAccordionPhotosOpen) {
+              <i class="accordion__arrow ph ph-caret-down"></i>
+            }
+            <span>{{ "bulletins.create.title.photos" | translate }}</span>
+          </h2>
+          <div class="btn-group accordion-header__buttons">
+            @if (!disabled()) {
+              <button
+                [disabled]="editRegions || !isCreator(bulletin())"
+                (click)="createAvalanchePhoto(); $event.stopPropagation()"
+                class="btn btn-primary btn-icon btn-sm"
+                title="{{ 'bulletins.create.createAvalanchePhoto' | translate }}"
+              >
+                <i class="ph ph-plus"></i>
+              </button>
+            }
+          </div>
+        </div>
+        <div id="region-form-photos" class="accordion-collapse -collapse show" data-bs-parent="#region-form-accordion">
+          <app-avalanche-photo
+            [bulletin]="bulletin()"
+            [disabled]="disabled()"
+            (updateBulletinOnServer)="updateBulletinOnServer()"
+          ></app-avalanche-photo>
+        </div>
+      </accordion-group>
+      <!-- End photos -->
+
       <!-- Snowpack structure -->
       <accordion-group
         [isOpen]="isAccordionSnowpackStructureOpen"
