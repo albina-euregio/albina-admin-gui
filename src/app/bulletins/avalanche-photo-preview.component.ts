@@ -14,7 +14,6 @@ export class AvalanchePhotoPreviewComponent {
   regionsService = inject(RegionsService);
 
   readonly disabled = input<boolean>(undefined);
-
   readonly photo = input<BulletinPhotoModel>(undefined);
   readonly deleteAvalanchePhotoEvent = output<void>();
 

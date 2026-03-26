@@ -28,14 +28,9 @@ export class AvalanchePhotoComponent {
 
   readonly bulletin = input<BulletinModel>(undefined);
   readonly disabled = input<boolean>(undefined);
-  readonly newPhoto = input<BulletinPhotoModel | undefined>(undefined);
   readonly updateBulletinOnServer = output();
 
   changeAvalanchePhotoDetail() {
-    this.updateBulletinOnServer.emit();
-  }
-
-  changeAvalanchePhotoPreview() {
     this.updateBulletinOnServer.emit();
   }
 
