@@ -49,6 +49,12 @@ export default [
     loadChildren: () => import("./modelling/routes"),
   },
   {
+    path: "graphics",
+    component: FullLayoutComponent,
+    canActivate: [AuthGuard],
+    loadChildren: () => import("./graphics/routes"),
+  },
+  {
     path: "statistics",
     component: FullLayoutComponent,
     canActivate: [AuthGuard],

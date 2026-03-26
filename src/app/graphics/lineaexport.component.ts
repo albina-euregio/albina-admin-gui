@@ -1,6 +1,4 @@
 import "@albina-euregio/linea";
-import { FeatureCollectionSchema as FeatureCollectionSchema } from "@albina-euregio/linea/listing";
-import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { CommonModule } from "@angular/common";
 import {
   AfterViewInit,
@@ -13,10 +11,10 @@ import {
   ViewChildren,
 } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
-import { LineaMapService } from "app/providers/map-service/linea-map.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
-import sources from "../../assets/config/stations.json";
+import { LineaMapService } from "../providers/map-service/linea-map.service";
+import { GraphicsService, type LineaStationFeature } from "./graphics.service";
 
 @Component({
   selector: "app-linea-export",
@@ -33,17 +31,18 @@ export class LineaExportComponent implements AfterViewInit {
   selectedIds: string[] = [];
 
   private mapService = inject(LineaMapService);
+  private graphicsService = inject(GraphicsService);
 
   private searchTimeout: ReturnType<typeof setTimeout> | undefined;
   readonly stationsMap = viewChild<ElementRef<HTMLDivElement>>("stationsMap");
-  readonly stations: StationFeature[] = [];
+  readonly stations: LineaStationFeature[] = [];
 
-  filteredStations: StationFeature[] = [];
+  filteredStations: LineaStationFeature[] = [];
   searchTerm = "";
   showDropdown = false;
   activeIndex = -1;
 
-  readonly markers = {};
+  readonly markers: Record<string, CircleMarker> = {};
 
   async ngAfterViewInit() {
     await this.mapService.initMaps(this.stationsMap().nativeElement);
@@ -51,40 +50,24 @@ export class LineaExportComponent implements AfterViewInit {
   }
 
   async load() {
-    for (const source of sources) {
-      const url = source.stations;
-      const response = await fetch(url);
-      const json = await response.json();
-      const searchParams = new URL(url, location.href).searchParams;
-      const isLegacy = searchParams.get("v") === "legacy";
-      const schema = isLegacy ? LegacyFeatureCollectionSchema : FeatureCollectionSchema;
-      const collection = schema.parse(json, { reportInput: true });
-      for (const feature of collection.features) {
-        if (!new RegExp(source.smetOperators).test(feature.properties.operator)) {
-          continue;
-        }
-        const id = feature.id;
-        const marker = new CircleMarker(
-          {
-            lat: feature.geometry.coordinates[1],
-            lng: feature.geometry.coordinates[0],
-          },
-          this.getModelPointOptions(false),
-        ).addTo(this.mapService.stationLayer);
-        marker.bindTooltip(`${feature.properties.shortName ?? ""} ${feature.properties.name}`);
-        this.mapService.showStationName(marker);
+    const stations = await this.graphicsService.loadLineaStations();
+    for (const station of stations) {
+      const id = station.id;
+      const marker = new CircleMarker(
+        {
+          lat: station.latitude,
+          lng: station.longitude,
+        },
+        this.getModelPointOptions(false),
+      ).addTo(this.mapService.stationLayer);
+      marker.bindTooltip(`${station.shortName ?? ""} ${station.name}`);
+      this.mapService.showStationName(marker);
 
-        marker.on("click", () => void this.toggleStation(id));
-        this.markers[id] = marker;
+      marker.bindTooltip(`${station.name || station.id}`);
+      marker.on("click", () => void this.toggleStation(id));
+      this.markers[id] = marker;
 
-        this.stations.push({
-          id,
-          name: feature.properties?.name,
-          shortName: feature.properties?.shortName ?? feature.properties?.name,
-          smetId: feature.properties?.shortName ?? id,
-          smet: source.smet,
-        });
-      }
+      this.stations.push(station);
     }
   }
 
@@ -193,10 +176,10 @@ export class LineaExportComponent implements AfterViewInit {
 
   getShortNameById(id: string): string {
     const station = this.stations.find((station) => station.id === id);
-    if (station.shortName && station.name) {
+    if (station?.shortName && station.name) {
       return station.shortName.split("-").length == 5 ? station.name : station.shortName;
     }
-    return station.shortName ?? id;
+    return station?.shortName ?? id;
   }
 
   // Remove a station
@@ -207,44 +190,17 @@ export class LineaExportComponent implements AfterViewInit {
 
   // linea-plot srcs
   get srcs(): string {
-    return JSON.stringify(
-      this.selectedIds
-        .map((id) => {
-          const station = this.stations.find((item) => item.id === id);
-          const template = station?.smet?.[0];
-          const smetId = station?.smetId;
-          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
-        })
-        .filter((url): url is string => !!url),
-    );
+    return JSON.stringify(this.graphicsService.getSmetUrlsByIds(this.selectedIds, this.stations, 0));
   }
 
   // linea-plot lazysrcs
   get lazysrcs(): string {
-    return JSON.stringify(
-      this.selectedIds
-        .map((id) => {
-          const station = this.stations.find((item) => item.id === id);
-          const template = station?.smet?.[1];
-          const smetId = station?.smetId;
-          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
-        })
-        .filter((url): url is string => !!url),
-    );
+    return JSON.stringify(this.graphicsService.getSmetUrlsByIds(this.selectedIds, this.stations, 1));
   }
 
   // linea-plot winter srcs
   get wintersrcs(): string {
-    return JSON.stringify(
-      this.selectedIds
-        .map((id) => {
-          const station = this.stations.find((item) => item.id === id);
-          const template = station?.smet?.[2];
-          const smetId = station?.smetId;
-          return template && smetId ? template.replace(/\{id\}/g, smetId) : undefined;
-        })
-        .filter((url): url is string => !!url),
-    );
+    return JSON.stringify(this.graphicsService.getSmetUrlsByIds(this.selectedIds, this.stations, 2));
   }
 
   // Marker style
@@ -261,12 +217,4 @@ export class LineaExportComponent implements AfterViewInit {
       fillOpacity: 1,
     };
   }
-}
-
-interface StationFeature {
-  id: string;
-  name: string;
-  shortName: string;
-  smetId: string;
-  smet: string[];
 }

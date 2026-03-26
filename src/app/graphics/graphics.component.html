@@ -1,0 +1,49 @@
+<div class="graphics-page">
+  <tabset>
+    @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
+      <tab [active]="activeTabIndex === 0" (selectTab)="showLineaExport()">
+        <ng-template tabHeading>
+          <i class="ph ph-chart-line me-1"></i>
+          {{ "sidebar.lineaexport" | translate }}
+        </ng-template>
+        <div class="card">
+          <div class="card-body">
+            @if (activeTabIndex === 0) {
+              <app-linea-export></app-linea-export>
+            }
+          </div>
+        </div>
+      </tab>
+    }
+    @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
+      <tab [active]="activeTabIndex === 1" (selectTab)="showAwsstats()">
+        <ng-template tabHeading>
+          <i class="ph ph-chart-bar me-1"></i>
+          {{ "sidebar.awsstats" | translate }}
+        </ng-template>
+        <div class="card">
+          <div class="card-body">
+            @if (activeTabIndex === 1) {
+              <app-awsstats></app-awsstats>
+            }
+          </div>
+        </div>
+      </tab>
+    }
+    @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
+      <tab [active]="activeTabIndex === 2" (selectTab)="showYearlyStats()">
+        <ng-template tabHeading>
+          <i class="ph ph-chart-bar me-1"></i>
+          {{ "sidebar.yearlystats" | translate }}
+        </ng-template>
+        <div class="card">
+          <div class="card-body">
+            @if (activeTabIndex === 2) {
+              <app-yearlystats></app-yearlystats>
+            }
+          </div>
+        </div>
+      </tab>
+    }
+  </tabset>
+</div>
