@@ -30,5 +30,20 @@
         </div>
       </tab>
     }
+    @if (authenticationService.getActiveRegion()?.enableLineaExport && authenticationService.isUserLoggedIn()) {
+      <tab [active]="activeTabIndex === 2" (selectTab)="showYearlyStats()">
+        <ng-template tabHeading>
+          <i class="ph ph-chart-bar me-1"></i>
+          {{ "sidebar.yearlystats" | translate }}
+        </ng-template>
+        <div class="card">
+          <div class="card-body">
+            @if (activeTabIndex === 2) {
+              <app-yearlystats></app-yearlystats>
+            }
+          </div>
+        </div>
+      </tab>
+    }
   </tabset>
 </div>
