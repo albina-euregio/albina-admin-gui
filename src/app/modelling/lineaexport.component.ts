@@ -1,7 +1,6 @@
-import "@albina-euregio/linea/dist/linea";
-import { listing, listingLegacy } from "@albina-euregio/linea";
-import type { FeatureCollectionSchema as FeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing";
-import type { FeatureCollectionSchema as LegacyFeatureCollectionSchema0 } from "@albina-euregio/linea/src/schema/listing-legacy";
+import "@albina-euregio/linea";
+import { FeatureCollectionSchema as FeatureCollectionSchema } from "@albina-euregio/linea/listing";
+import { FeatureCollectionSchema as LegacyFeatureCollectionSchema } from "@albina-euregio/linea/listing-legacy";
 import { CommonModule } from "@angular/common";
 import {
   AfterViewInit,
@@ -18,9 +17,6 @@ import { LineaMapService } from "app/providers/map-service/linea-map.service";
 import { CircleMarker, CircleMarkerOptions } from "leaflet";
 
 import sources from "../../assets/config/stations.json";
-
-const FeatureCollectionSchema = listing.FeatureCollectionSchema as typeof FeatureCollectionSchema0;
-const LegacyFeatureCollectionSchema = listingLegacy.FeatureCollectionSchema as typeof LegacyFeatureCollectionSchema0;
 
 @Component({
   selector: "app-linea-export",
